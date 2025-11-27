@@ -20,7 +20,7 @@ export const TeamBulletinRightPanel: React.FC<RightPanelProps> = ({
     >
       <TeamCalendar teamId={teamId || ""} />
       <Card
-        className="bc-card-padding"
+        className="p-6"
         aria-label="Upcoming events onboarding hint"
       >
         <div className="flex items-center justify-between mb-4">
@@ -28,7 +28,7 @@ export const TeamBulletinRightPanel: React.FC<RightPanelProps> = ({
             as="h2"
             id="calendar-roster-heading"
             variant="headline-md"
-            className="text-text-primary"
+            className="text-primary"
           >
             Roster
           </Typography>

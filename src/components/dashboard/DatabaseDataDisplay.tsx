@@ -32,21 +32,21 @@ export const DatabaseDataDisplay: React.FC = () => {
 
   if (showDevModeWarning) {
     return (
-      <Card className="bc-card-padding surface-card border-subtle surface-subtle">
+      <Card className="p-6 bg-surface-primary border-subtle surface-subtle">
         <div className="flex items-center">
           <Icon name="warning" size="md" color="warning" className="mr-3" />
           <div>
             <Typography
               variant="headline-sm"
-              className="text-text-warning mb-1"
+              className="text-warning mb-1"
             >
               Dev Mode Active - {devMode}
             </Typography>
-            <Typography variant="body-sm" className="text-text-warning mb-3">
+            <Typography variant="body-sm" className="text-warning mb-3">
               Currently in <strong>{devMode}</strong> mode. Switch to production
               mode to see database data.
             </Typography>
-            <Typography variant="body-xs" className="text-text-warning">
+            <Typography variant="body-xs" className="text-warning">
               Open dev tools → Switch to "Production" mode to see your loaded
               demo data
             </Typography>
@@ -58,7 +58,7 @@ export const DatabaseDataDisplay: React.FC = () => {
 
   if (loading) {
     return (
-      <Card className="bc-card-padding surface-card">
+      <Card className="p-6 bg-surface-primary">
         <div className="flex items-center justify-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-600"></div>
           <Typography variant="body-md" className="ml-3">
@@ -71,14 +71,14 @@ export const DatabaseDataDisplay: React.FC = () => {
 
   if (error) {
     return (
-      <Card className="bc-card-padding surface-card border-subtle surface-subtle">
+      <Card className="p-6 bg-surface-primary border-subtle surface-subtle">
         <div className="flex items-center">
           <Icon name="warning" size="md" color="error" className="mr-3" />
           <div>
-            <Typography variant="headline-sm" className="text-text-error mb-1">
+            <Typography variant="headline-sm" className="text-error mb-1">
               Database Error
             </Typography>
-            <Typography variant="body-sm" className="text-text-error">
+            <Typography variant="body-sm" className="text-error">
               {error}
             </Typography>
           </div>
@@ -89,7 +89,7 @@ export const DatabaseDataDisplay: React.FC = () => {
 
   if (totalCount === 0) {
     return (
-      <Card className="bc-card-padding surface-card">
+      <Card className="p-6 bg-surface-primary">
         <div className="text-center py-8">
           <Icon
             name="database"
@@ -99,11 +99,11 @@ export const DatabaseDataDisplay: React.FC = () => {
           />
           <Typography
             variant="headline-sm"
-            className="text-text-secondary mb-2"
+            className="text-secondary mb-2"
           >
             No Data Found
           </Typography>
-          <Typography variant="body-sm" className="text-text-muted">
+          <Typography variant="body-sm" className="text-muted">
             Run the demo data loader to populate your database
           </Typography>
         </div>
@@ -114,31 +114,31 @@ export const DatabaseDataDisplay: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Summary Card */}
-      <Card className="bc-card-padding surface-card bg-gradient-to-r from-surface-success to-surface-info border-subtle">
+      <Card className="p-6 bg-surface-primary bg-gradient-to-r from-surface-success to-surface-info border-subtle">
         <div className="flex items-center justify-between">
           <div>
             <Typography
               variant="headline-md"
-              className="text-text-success800 mb-1"
+              className="text-success800 mb-1"
             >
               <Icon
                 name="party-popper"
-                className="inline h-4 w-4 align-middle text-text-primary"
+                className="inline h-4 w-4 align-middle text-primary"
               />{" "}
               Demo Data Loaded Successfully!
             </Typography>
-            <Typography variant="body-md" className="text-text-success700">
+            <Typography variant="body-md" className="text-success700">
               Your BoxCall database is now populated with sample data
             </Typography>
           </div>
           <div className="text-right">
             <Typography
               variant="headline-lg"
-              className="text-text-success600 font-bold"
+              className="text-success600 font-bold"
             >
               {totalCount}
             </Typography>
-            <Typography variant="body-sm" className="text-text-success600">
+            <Typography variant="body-sm" className="text-success600">
               Total Items
             </Typography>
           </div>
@@ -148,13 +148,13 @@ export const DatabaseDataDisplay: React.FC = () => {
       {/* Data Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 bc-grid-gap">
         {/* Team Selector */}
-        <Card className="bc-card-padding surface-card">
+        <Card className="p-6 bg-surface-primary">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-jade-100 rounded-lg flex items-center justify-center mr-3">
               <Icon name="users" size="md" color="primary" />
             </div>
             <div>
-              <Typography variant="headline-sm" className="text-text-primary">
+              <Typography variant="headline-sm" className="text-primary">
                 Team Selector
               </Typography>
               <Typography variant="body-sm" color="muted">
@@ -181,7 +181,7 @@ export const DatabaseDataDisplay: React.FC = () => {
                     <div className="flex-1 text-left">
                       <Typography
                         variant="body-sm"
-                        className="font-medium truncate text-text-primary"
+                        className="font-medium truncate text-primary"
                       >
                         {team.name}
                       </Typography>
@@ -205,7 +205,7 @@ export const DatabaseDataDisplay: React.FC = () => {
             <div className="mt-4 p-4 surface-subtle border border-subtle rounded-lg">
               <Typography
                 variant="headline-sm"
-                className="text-text-success900 mb-3"
+                className="text-success900 mb-3"
               >
                 {selectedTeam.name} Details
               </Typography>
@@ -237,11 +237,11 @@ export const DatabaseDataDisplay: React.FC = () => {
                 <div className="mt-3 pt-2 border-t border-subtle">
                   <Typography
                     variant="body-xs"
-                    className="text-text-success700"
+                    className="text-success700"
                   >
                     <Icon
                       name="lightbulb"
-                      className="inline h-4 w-4 align-middle text-text-primary"
+                      className="inline h-4 w-4 align-middle text-primary"
                     />{" "}
                     In a full app, selecting a team would switch your workspace
                     context, filter playbooks/plays, and update all data to this
@@ -254,13 +254,13 @@ export const DatabaseDataDisplay: React.FC = () => {
         </Card>
 
         {/* Playbooks */}
-        <Card className="bc-card-padding surface-card">
+        <Card className="p-6 bg-surface-primary">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-surface-info rounded-lg flex items-center justify-center mr-3">
               <Icon name="book" size="md" color="info" />
             </div>
             <div>
-              <Typography variant="headline-sm" className="text-text-primary">
+              <Typography variant="headline-sm" className="text-primary">
                 Playbooks
               </Typography>
               <Typography variant="body-sm" color="muted">
@@ -273,7 +273,7 @@ export const DatabaseDataDisplay: React.FC = () => {
               <div key={playbook.id} className="p-3 surface-subtle rounded-lg">
                 <Typography
                   variant="body-sm"
-                  className="font-medium text-text-primary"
+                  className="font-medium text-primary"
                 >
                   {playbook.name}
                 </Typography>
@@ -284,8 +284,8 @@ export const DatabaseDataDisplay: React.FC = () => {
                   <span
                     className={`inline-block px-2 py-1 rounded-lg text-xs ${
                       playbook.is_active
-                        ? "bg-surface-success text-text-success"
-                        : "surface-subtle text-text-tertiary"
+                        ? "bg-surface-success text-success"
+                        : "surface-subtle text-tertiary"
                     }`}
                   >
                     {playbook.is_active ? "Active" : "Inactive"}
@@ -297,13 +297,13 @@ export const DatabaseDataDisplay: React.FC = () => {
         </Card>
 
         {/* Plays */}
-        <Card className="bc-card-padding surface-card">
+        <Card className="p-6 bg-surface-primary">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-surface-secondary rounded-lg flex items-center justify-center mr-3">
               <Icon name="zap" size="md" color="secondary" />
             </div>
             <div>
-              <Typography variant="headline-sm" className="text-text-primary">
+              <Typography variant="headline-sm" className="text-primary">
                 Plays
               </Typography>
               <Typography variant="body-sm" color="muted">
@@ -316,7 +316,7 @@ export const DatabaseDataDisplay: React.FC = () => {
               <div key={play.id} className="p-3 surface-subtle rounded-lg">
                 <Typography
                   variant="body-sm"
-                  className="font-medium text-text-primary"
+                  className="font-medium text-primary"
                 >
                   {play.play_name}
                 </Typography>
@@ -326,7 +326,7 @@ export const DatabaseDataDisplay: React.FC = () => {
                 {play.notes && (
                   <Typography
                     variant="body-xs"
-                    className="text-text-secondary mt-1"
+                    className="text-secondary mt-1"
                   >
                     {play.notes.substring(0, 50)}...
                   </Typography>
@@ -338,33 +338,33 @@ export const DatabaseDataDisplay: React.FC = () => {
       </div>
 
       {/* Next Steps */}
-      <Card className="bc-card-padding surface-card surface-subtle border-subtle">
-        <Typography variant="headline-sm" className="text-text-info mb-3">
+      <Card className="p-6 bg-surface-primary surface-subtle border-subtle">
+        <Typography variant="headline-sm" className="text-info mb-3">
           <Icon
             name="rocket"
-            className="inline h-4 w-4 align-middle text-text-primary"
+            className="inline h-4 w-4 align-middle text-primary"
           />{" "}
           Next Steps
         </Typography>
         <div className="space-y-2">
-          <Typography variant="body-sm" className="text-text-info">
+          <Typography variant="body-sm" className="text-info">
             • <strong>Try the Team Selector:</strong> Click on teams above to
             explore team details and selection functionality
           </Typography>
-          <Typography variant="body-sm" className="text-text-info">
+          <Typography variant="body-sm" className="text-info">
             • <strong>Navigate to Playbook:</strong> Go to{" "}
             <strong>/playbook</strong> to see your plays in the playbook
             interface
           </Typography>
-          <Typography variant="body-sm" className="text-text-info">
+          <Typography variant="body-sm" className="text-info">
             • <strong>Test Team Management:</strong> Use the loaded teams to
             test coaching workflows and team-specific features
           </Typography>
-          <Typography variant="body-sm" className="text-text-info">
+          <Typography variant="body-sm" className="text-info">
             • <strong>Create Additional Plays:</strong> Use the PlayBuilder
             interface to add more plays to your playbooks
           </Typography>
-          <Typography variant="body-sm" className="text-text-info">
+          <Typography variant="body-sm" className="text-info">
             • <strong>Full Authentication Flow:</strong> Test the complete login
             → use app → logout experience
           </Typography>

@@ -72,15 +72,15 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         footnote: "View profile",
         body: (
           <div className="space-y-2 text-sm">
-            <div className="flex items-center justify-between text-text-secondary">
+            <div className="flex items-center justify-between text-secondary">
               <span>Signed in as</span>
-              <span className="font-semibold text-text-primary">
+              <span className="font-semibold text-primary">
                 {profile?.display_name || profile?.full_name || "Member"}
               </span>
             </div>
-            <div className="flex items-center justify-between text-xs text-text-secondary">
+            <div className="flex items-center justify-between text-xs text-secondary">
               <span>Teams joined</span>
-              <span className="font-semibold text-text-primary">
+              <span className="font-semibold text-primary">
                 {teamMembershipCount}
               </span>
             </div>
@@ -102,13 +102,13 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         footnote: "Open activity",
         body: (
           <div className="space-y-2 text-sm">
-            <div className="flex items-center justify-between text-text-secondary">
+            <div className="flex items-center justify-between text-secondary">
               <span>Feed highlights</span>
-              <span className="font-semibold text-text-primary">Live</span>
+              <span className="font-semibold text-primary">Live</span>
             </div>
-            <div className="flex items-center justify-between text-xs text-text-secondary">
+            <div className="flex items-center justify-between text-xs text-secondary">
               <span>Mentions watched</span>
-              <span className="font-semibold text-text-primary">Auto</span>
+              <span className="font-semibold text-primary">Auto</span>
             </div>
           </div>
         ),
@@ -128,15 +128,15 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         footnote: "Jump to calendar",
         body: (
           <div className="space-y-2 text-sm">
-            <div className="flex items-center justify-between text-text-secondary">
+            <div className="flex items-center justify-between text-secondary">
               <span>Upcoming</span>
-              <span className="font-semibold text-text-primary">
+              <span className="font-semibold text-primary">
                 Stay sharp
               </span>
             </div>
-            <div className="flex items-center justify-between text-xs text-text-secondary">
+            <div className="flex items-center justify-between text-xs text-secondary">
               <span>Sync status</span>
-              <span className="font-semibold text-text-primary">Real-time</span>
+              <span className="font-semibold text-primary">Real-time</span>
             </div>
           </div>
         ),
@@ -186,7 +186,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-screen bg-background">
         <div className="text-center max-w-md px-4">
-          <Typography variant="headline-lg" className="text-text-primary mb-4">
+          <Typography variant="headline-lg" className="text-primary mb-4">
             Loading Dashboard
           </Typography>
           <Typography variant="body-lg" color="muted">
@@ -205,7 +205,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-screen bg-background">
         <div className="text-center max-w-md px-4">
-          <Typography variant="headline-lg" className="text-text-primary mb-4">
+          <Typography variant="headline-lg" className="text-primary mb-4">
             Welcome to BoxCall!
           </Typography>
           <Typography variant="body-lg" color="muted" className="mb-4">
@@ -264,13 +264,13 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         <div className="dashboard-hero-section mb-8 hidden md:block">
           <div className="rounded-xl bg-surface-primary p-6 shadow-lg backdrop-blur-sm sm:p-8">
             <div className="mb-6">
-              <Typography variant="headline-sm" className="text-text-primary">
+              <Typography variant="headline-sm" className="text-primary">
                 Welcome back,{" "}
                 {profile?.display_name || profile?.full_name || "Coach"}
               </Typography>
               <Typography
                 variant="body-sm"
-                className="text-text-secondary mt-1"
+                className="text-secondary mt-1"
               >
                 Launch the workspace you need and keep your day moving.
               </Typography>

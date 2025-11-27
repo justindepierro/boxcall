@@ -385,7 +385,7 @@ export const PersonnelConfigurationModal: React.FC<
           return (
             <div
               key={config.id}
-              className="rounded-xl border-2 border-border-default bg-surface-secondary overflow-hidden transition-all"
+              className="rounded-xl border-2 border-default bg-surface-secondary overflow-hidden transition-all"
             >
               {/* Collapsed Header */}
               <div className="flex items-center gap-3 p-4">
@@ -402,7 +402,7 @@ export const PersonnelConfigurationModal: React.FC<
                     className={`w-5 h-5 transition-colors ${
                       config.isDefault
                         ? "text-yellow-500 fill-yellow-500"
-                        : "text-text-tertiary"
+                        : "text-tertiary"
                     }`}
                   />
                 </button>
@@ -413,7 +413,7 @@ export const PersonnelConfigurationModal: React.FC<
                   className="flex-1 flex items-center justify-between text-left hover:bg-surface-tertiary/50 rounded-lg p-2 -m-2 transition-colors"
                 >
                   <div className="flex-1">
-                    <div className="font-semibold text-text-primary flex items-center gap-2">
+                    <div className="font-semibold text-primary flex items-center gap-2">
                       {config.name || "Unnamed Personnel"}
                       {config.badgeCustomization && (
                         <PersonnelBadge
@@ -429,13 +429,13 @@ export const PersonnelConfigurationModal: React.FC<
                         />
                       )}
                     </div>
-                    <div className="text-sm text-text-tertiary mt-0.5">
+                    <div className="text-sm text-tertiary mt-0.5">
                       {summary}
                     </div>
                   </div>
                   <Icon
                     name="chevron-down"
-                    className={`w-5 h-5 text-text-tertiary transition-transform ${
+                    className={`w-5 h-5 text-tertiary transition-transform ${
                       isExpanded ? "rotate-180" : ""
                     }`}
                   />
@@ -457,7 +457,7 @@ export const PersonnelConfigurationModal: React.FC<
 
               {/* Expanded Content */}
               {isExpanded && (
-                <div className="px-4 pb-4 space-y-4 border-t border-border-default pt-4">
+                <div className="px-4 pb-4 space-y-4 border-t border-default pt-4">
                   {/* Name Input */}
                   <div>
                     <Typography variant="label-md" className="mb-2">
@@ -550,15 +550,15 @@ export const PersonnelConfigurationModal: React.FC<
                             className="w-16 h-9 text-center font-mono font-bold uppercase text-sm"
                           />
 
-                          <span className="text-text-tertiary text-sm">—</span>
+                          <span className="text-tertiary text-sm">—</span>
 
                           {/* QB Position - LOCKED at top, cannot be changed */}
                           {index === 0 ? (
-                            <div className="flex-1 h-9 px-3 flex items-center justify-between rounded-lg border border-border-default bg-surface-tertiary text-sm font-medium opacity-75 cursor-not-allowed">
-                              <span className="text-text-primary">QB</span>
+                            <div className="flex-1 h-9 px-3 flex items-center justify-between rounded-lg border border-default bg-surface-tertiary text-sm font-medium opacity-75 cursor-not-allowed">
+                              <span className="text-primary">QB</span>
                               <Icon
                                 name="lock"
-                                className="w-4 h-4 text-text-tertiary"
+                                className="w-4 h-4 text-tertiary"
                               />
                             </div>
                           ) : (
@@ -572,7 +572,7 @@ export const PersonnelConfigurationModal: React.FC<
                                   e.target.value as PlayerPosition
                                 )
                               }
-                              className="flex-1 h-9 px-3 rounded-lg border border-border-default bg-surface-card text-text-primary text-sm font-medium cursor-pointer hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-brand-jade transition-colors"
+                              className="flex-1 h-9 px-3 rounded-lg border border-default bg-surface-primary text-primary text-sm font-medium cursor-pointer hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-brand-jade transition-colors"
                             >
                               <option value="RB">RB (Running Back)</option>
                               <option value="TE">TE (Tight End)</option>
@@ -589,11 +589,11 @@ export const PersonnelConfigurationModal: React.FC<
                                 onChange={() =>
                                   toggleWildcatQB(config.id, player.id)
                                 }
-                                className="w-3.5 h-3.5 rounded border-border-default text-brand-jade focus:ring-brand-jade focus:ring-offset-0"
+                                className="w-3.5 h-3.5 rounded border-default text-brand-jade focus:ring-brand-jade focus:ring-offset-0"
                               />
                               <Typography
                                 variant="caption"
-                                className="text-text-tertiary text-xs"
+                                className="text-tertiary text-xs"
                               >
                                 Wildcat QB
                               </Typography>
@@ -618,7 +618,7 @@ export const PersonnelConfigurationModal: React.FC<
                       {/* Add Player Button */}
                       <button
                         onClick={() => addSkillPlayer(config.id)}
-                        className="w-full mt-2 px-3 py-2 rounded-lg border-2 border-dashed border-border-default hover:border-brand-jade hover:bg-surface-tertiary text-text-secondary hover:text-brand-jade transition-colors flex items-center justify-center gap-2 text-sm"
+                        className="w-full mt-2 px-3 py-2 rounded-lg border-2 border-dashed border-default hover:border-brand-jade hover:bg-surface-tertiary text-secondary hover:text-brand-jade transition-colors flex items-center justify-center gap-2 text-sm"
                       >
                         <Icon name="plus" className="w-4 h-4" />
                         Add Player
@@ -643,7 +643,7 @@ export const PersonnelConfigurationModal: React.FC<
                           key={linePos.id}
                           className="flex items-center gap-2"
                         >
-                          <span className="text-xs text-text-tertiary w-6 text-right">
+                          <span className="text-xs text-tertiary w-6 text-right">
                             {index + 1}.
                           </span>
                           <Input
@@ -680,10 +680,10 @@ export const PersonnelConfigurationModal: React.FC<
 
         {/* Empty State */}
         {localConfigurations.length === 0 && (
-          <div className="text-center py-12 px-4 rounded-xl border-2 border-dashed border-border-default">
+          <div className="text-center py-12 px-4 rounded-xl border-2 border-dashed border-default">
             <Icon
               name="users"
-              className="w-12 h-12 mx-auto mb-3 text-text-tertiary"
+              className="w-12 h-12 mx-auto mb-3 text-tertiary"
             />
             <Typography variant="body-md" color="muted" className="mb-2">
               No personnel configurations yet
@@ -707,7 +707,7 @@ export const PersonnelConfigurationModal: React.FC<
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-3 pt-4 border-t border-border-default">
+      <div className="flex gap-3 pt-4 border-t border-default">
         <Button
           onClick={() => {
             triggerHapticFeedback("light");

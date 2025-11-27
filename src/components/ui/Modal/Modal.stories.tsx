@@ -146,7 +146,7 @@ export const WithFooter: Story = {
         <Typography variant="body-md">
           This modal includes a footer with action buttons.
         </Typography>
-        <Typography variant="body-sm" className="text-text-muted">
+        <Typography variant="body-sm" className="text-muted">
           Use the footer prop to add action buttons or other controls.
         </Typography>
       </div>
@@ -171,7 +171,7 @@ export const AlertModal: Story = {
           Are you sure you want to delete this player? This action cannot be
           undone.
         </Typography>
-        <Typography variant="body-sm" className="text-text-muted">
+        <Typography variant="body-sm" className="text-muted">
           This will permanently remove the player from your roster and all
           associated data.
         </Typography>

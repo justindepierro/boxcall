@@ -155,7 +155,7 @@ export const PerformanceDashboard: React.FC = () => {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-text-primary">
+        <h3 className="text-lg font-semibold text-primary">
           Real User Monitoring (RUM)
         </h3>
         <div className="flex gap-2">
@@ -176,7 +176,7 @@ export const PerformanceDashboard: React.FC = () => {
       </div>
 
       {metrics.length === 0 ? (
-        <div className="text-center py-8 text-text-secondary">
+        <div className="text-center py-8 text-secondary">
           <div className="text-4xl mb-2">📊</div>
           <p>Performance metrics are being collected...</p>
           <p className="text-xs mt-1">
@@ -191,10 +191,10 @@ export const PerformanceDashboard: React.FC = () => {
               className="flex items-center justify-between p-3 rounded-lg border bg-surface-primary"
             >
               <div>
-                <div className="font-medium text-text-primary text-sm">
+                <div className="font-medium text-primary text-sm">
                   {metric.name}
                 </div>
-                <div className="text-xs text-text-secondary mt-1">
+                <div className="text-xs text-secondary mt-1">
                   Core Web Vitals • Real User Metrics
                 </div>
               </div>
@@ -208,27 +208,27 @@ export const PerformanceDashboard: React.FC = () => {
         </div>
       )}
 
-      <div className="border-t border-border-subtle pt-4">
+      <div className="border-t border-subtle pt-4">
         <div className="flex justify-between items-center mb-3">
-          <span className="text-sm font-medium text-text-primary">
+          <span className="text-sm font-medium text-primary">
             Performance Guide
           </span>
         </div>
         <div className="grid grid-cols-3 gap-4 text-xs">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-success-500 rounded-full"></div>
-            <span className="text-text-secondary">Good</span>
+            <span className="text-secondary">Good</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-warning-500 rounded-full"></div>
-            <span className="text-text-secondary">Needs Improvement</span>
+            <span className="text-secondary">Needs Improvement</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-error-500 rounded-full"></div>
-            <span className="text-text-secondary">Poor</span>
+            <span className="text-secondary">Poor</span>
           </div>
         </div>
-        <div className="mt-3 text-xs text-text-tertiary">
+        <div className="mt-3 text-xs text-tertiary">
           Performance metrics are collected automatically and update every 5
           seconds.
         </div>

@@ -105,7 +105,7 @@ export const TrendAnalyticsDashboard: React.FC<
         <Typography variant="headline-sm" className="text-error mb-2">
           Analytics Error
         </Typography>
-        <Typography variant="body-sm" className="text-text-secondary">
+        <Typography variant="body-sm" className="text-secondary">
           {error}
         </Typography>
       </div>
@@ -142,7 +142,7 @@ export const TrendAnalyticsDashboard: React.FC<
             <Typography
               key={index}
               variant="body-xs"
-              className="text-text-secondary"
+              className="text-secondary"
             >
               {entry.dataKey === "successRate" ? "Success Rate" : entry.dataKey}
               :{" "}
@@ -177,7 +177,7 @@ export const TrendAnalyticsDashboard: React.FC<
               {trendDirection >= 0 ? "+" : ""}
               {trendDirection.toFixed(1)}%
             </Typography>
-            <Typography variant="body-sm" className="text-text-secondary">
+            <Typography variant="body-sm" className="text-secondary">
               Success Rate Trend
             </Typography>
           </div>
@@ -185,7 +185,7 @@ export const TrendAnalyticsDashboard: React.FC<
             <Typography variant="headline-lg" className="text-primary">
               {totalTrendPoints}
             </Typography>
-            <Typography variant="body-sm" className="text-text-secondary">
+            <Typography variant="body-sm" className="text-secondary">
               Weeks Analyzed
             </Typography>
           </div>
@@ -193,7 +193,7 @@ export const TrendAnalyticsDashboard: React.FC<
             <Typography variant="headline-lg" className="text-info-600">
               {avgSuccessRate.toFixed(1)}%
             </Typography>
-            <Typography variant="body-sm" className="text-text-secondary">
+            <Typography variant="body-sm" className="text-secondary">
               Average Success
             </Typography>
           </div>
@@ -213,11 +213,11 @@ export const TrendAnalyticsDashboard: React.FC<
                 <XAxis
                   dataKey="week"
                   tick={{ fontSize: 12 }}
-                  className="text-text-secondary"
+                  className="text-secondary"
                 />
                 <YAxis
                   tick={{ fontSize: 12 }}
-                  className="text-text-secondary"
+                  className="text-secondary"
                   domain={[0, 100]}
                   tickFormatter={(value) => `${value}%`}
                 />
@@ -235,7 +235,7 @@ export const TrendAnalyticsDashboard: React.FC<
               </LineChart>
             </ResponsiveContainer>
           </div>
-          <Typography variant="body-xs" className="text-text-secondary mt-2">
+          <Typography variant="body-xs" className="text-secondary mt-2">
             Success rate progression over time
           </Typography>
         </Card>
@@ -273,7 +273,7 @@ export const TrendAnalyticsDashboard: React.FC<
                       ).toFixed(1)
                     : "0.0"}
                 </Typography>
-                <Typography variant="body-xs" className="text-text-secondary">
+                <Typography variant="body-xs" className="text-secondary">
                   yds
                 </Typography>
               </div>

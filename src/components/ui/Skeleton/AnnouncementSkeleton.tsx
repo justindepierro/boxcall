@@ -8,7 +8,7 @@ import React from "react";
 
 export const AnnouncementSkeleton: React.FC = () => {
   return (
-    <article className="bg-surface-primary border-b border-border-subtle">
+    <article className="bg-surface-primary border-b border-subtle">
       <div className="px-4 py-3">
         <div className="flex gap-3">
           {/* Avatar skeleton */}

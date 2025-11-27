@@ -31,7 +31,7 @@ export const Skeleton = SkeletonBase;
  * Dashboard Card Skeleton - Matches dashboard card structure
  */
 export const DashboardCardSkeleton: React.FC = () => (
-  <div className="surface-card rounded-lg border border-subtle p-6 shadow-sm">
+  <div className="bg-surface-primary rounded-lg border border-subtle p-6 shadow-sm">
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -76,7 +76,7 @@ export const GamePlanSkeleton: React.FC = () => (
       </div>
     </div>
     {/* Footer stats */}
-    <div className="flex items-center justify-between pt-2 border-t border-border-light">
+    <div className="flex items-center justify-between pt-2 border-t border-light">
       <SkeletonBase width="3rem" height="0.875rem" />
       <SkeletonBase width="4rem" height="0.875rem" />
     </div>
@@ -87,7 +87,7 @@ export const GamePlanSkeleton: React.FC = () => (
  * Navigation Skeleton - For bottom navigation loading
  */
 export const NavigationSkeleton: React.FC = () => (
-  <div className="fixed bottom-0 left-0 right-0 surface-card border-t border-subtle pb-safe-area-inset-bottom">
+  <div className="fixed bottom-0 left-0 right-0 bg-surface-primary border-t border-subtle pb-safe-area-inset-bottom">
     <div className="px-2 py-1">
       <div className="flex justify-between items-center content-narrow">
         {Array.from({ length: 4 }).map((_, i) => (
@@ -120,7 +120,7 @@ export const ListSkeleton: React.FC<ListSkeletonProps> = ({
     {Array.from({ length: items }).map((_, i) => (
       <div
         key={i}
-        className="flex items-center space-x-3 p-4 surface-card rounded-lg border border-subtle"
+        className="flex items-center space-x-3 p-4 bg-surface-primary rounded-lg border border-subtle"
       >
         {showAvatar && (
           <SkeletonBase
@@ -144,7 +144,7 @@ export const ListSkeleton: React.FC<ListSkeletonProps> = ({
  */
 export const PageLoadingSkeleton: React.FC = () => {
   const CardSkeleton = () => (
-    <div className="surface-card rounded-lg border border-subtle p-6 shadow-sm">
+    <div className="bg-surface-primary rounded-lg border border-subtle p-6 shadow-sm">
       <div className="space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -203,7 +203,7 @@ export const PageLoadingSkeleton: React.FC = () => {
 };
 
 export const PlayCardSkeleton: React.FC = () => (
-  <div className="surface-card elevation-card rounded-lg p-4">
+  <div className="bg-surface-primary elevation-card rounded-lg p-4">
     <div className="flex items-start space-x-3">
       <SkeletonBase width="2.5rem" height="2.5rem" className="rounded-full" />
       <div className="flex-1 space-y-2">

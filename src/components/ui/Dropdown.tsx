@@ -105,7 +105,7 @@ export const DropdownMenuContent: React.FC<DropdownMenuContentProps> = ({
   const alignment = align === "end" ? "right-0" : "left-0";
   return (
     <div
-      className={`absolute z-50 mt-2 w-56 origin-top ${alignment} rounded-lg bg-surface-card shadow-lg border border-surface-subtle focus:outline-none ${className}`}
+      className={`absolute z-50 mt-2 w-56 origin-top ${alignment} rounded-lg bg-surface-primary shadow-lg border border-surface-subtle focus:outline-none ${className}`}
       role="menu"
       {...props}
     >
@@ -154,7 +154,7 @@ export const DropdownMenuItem = React.forwardRef<
         className={`w-full px-3 py-2 text-sm text-left transition-colors ${
           isActive
             ? "bg-jade-100 text-jade-700 dark:bg-jade-900/40 dark:text-jade-200"
-            : "text-text-primary hover:bg-surface-hover dark:hover:bg-surface-hover"
+            : "text-primary hover:bg-surface-hover dark:hover:bg-surface-hover"
         } ${className}`}
         role="menuitem"
         onClick={handleClick}

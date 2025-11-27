@@ -59,11 +59,11 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
           <div>
             <Typography
               variant="headline-sm"
-              className="text-text-primary font-semibold"
+              className="text-primary font-semibold"
             >
               Playbook Stats
             </Typography>
-            <Typography variant="body-xs" className="text-text-secondary">
+            <Typography variant="body-xs" className="text-secondary">
               Your playbook overview
             </Typography>
           </div>
@@ -82,19 +82,19 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
             <div>
               <Typography
                 variant="body-sm"
-                className="text-text-secondary font-medium mb-1"
+                className="text-secondary font-medium mb-1"
               >
                 Total Plays
               </Typography>
               <Typography
                 variant="display-md"
-                className="text-text-primary font-bold"
+                className="text-primary font-bold"
               >
                 {stats.totalPlays}
               </Typography>
               <Typography
                 variant="body-xs"
-                className="text-text-secondary mt-1"
+                className="text-secondary mt-1"
               >
                 {stats.playsWithDiagrams} with diagrams
               </Typography>
@@ -110,7 +110,7 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
           <div className="flex items-center justify-between mb-2">
             <Typography
               variant="body-sm"
-              className="text-text-secondary font-medium"
+              className="text-secondary font-medium"
             >
               Diagram Coverage
             </Typography>
@@ -135,19 +135,19 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
               <div>
                 <Typography
                   variant="body-sm"
-                  className="text-text-secondary font-medium"
+                  className="text-secondary font-medium"
                 >
                   Formation Mapper
                 </Typography>
                 <Typography
                   variant="headline-md"
-                  className="text-text-primary font-bold"
+                  className="text-primary font-bold"
                 >
                   {stats.formationsNeedingMapping}
                 </Typography>
                 <Typography
                   variant="body-xs"
-                  className="text-text-secondary mt-1"
+                  className="text-secondary mt-1"
                 >
                   {stats.formationsNeedingMapping === 0
                     ? "All plays mapped"
@@ -169,7 +169,7 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
         <div className="space-y-3">
           <Typography
             variant="body-sm"
-            className="text-text-secondary font-medium"
+            className="text-secondary font-medium"
           >
             Play Types
           </Typography>
@@ -185,14 +185,14 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
                 />
                 <Typography
                   variant="body-xs"
-                  className="text-text-secondary font-medium"
+                  className="text-secondary font-medium"
                 >
                   Pass
                 </Typography>
               </div>
               <Typography
                 variant="headline-md"
-                className="text-text-primary font-bold"
+                className="text-primary font-bold"
               >
                 {stats.passPlays}
               </Typography>
@@ -208,14 +208,14 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
                 />
                 <Typography
                   variant="body-xs"
-                  className="text-text-secondary font-medium"
+                  className="text-secondary font-medium"
                 >
                   Run
                 </Typography>
               </div>
               <Typography
                 variant="headline-md"
-                className="text-text-primary font-bold"
+                className="text-primary font-bold"
               >
                 {stats.runPlays}
               </Typography>
@@ -231,14 +231,14 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
                 />
                 <Typography
                   variant="body-xs"
-                  className="text-text-secondary font-medium"
+                  className="text-secondary font-medium"
                 >
                   RPO
                 </Typography>
               </div>
               <Typography
                 variant="headline-md"
-                className="text-text-primary font-bold"
+                className="text-primary font-bold"
               >
                 {stats.rpoPlays}
               </Typography>
@@ -254,14 +254,14 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
                 />
                 <Typography
                   variant="body-xs"
-                  className="text-text-secondary font-medium"
+                  className="text-secondary font-medium"
                 >
                   Play Action
                 </Typography>
               </div>
               <Typography
                 variant="headline-md"
-                className="text-text-primary font-bold"
+                className="text-primary font-bold"
               >
                 {stats.playActionPlays}
               </Typography>
@@ -276,18 +276,18 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
               <Icon
                 name="grid"
                 size="sm"
-                className="h-5 w-5 text-text-secondary"
+                className="h-5 w-5 text-secondary"
               />
               <Typography
                 variant="body-sm"
-                className="text-text-secondary font-medium"
+                className="text-secondary font-medium"
               >
                 Formations
               </Typography>
             </div>
             <Typography
               variant="headline-sm"
-              className="text-text-primary font-bold"
+              className="text-primary font-bold"
             >
               {stats.formationsCount}
             </Typography>

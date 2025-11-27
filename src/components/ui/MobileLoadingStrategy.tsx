@@ -140,11 +140,11 @@ export const MobileLoadingStrategy: React.FC<LoadingStrategyProps> = ({
         <div className="mt-4 p-3 surface-subtle rounded-lg">
           <Typography
             variant="body-sm"
-            className="text-text-warning text-center"
+            className="text-warning text-center"
           >
             <Icon
               name="wifi-off"
-              className="inline h-4 w-4 align-middle text-text-warning"
+              className="inline h-4 w-4 align-middle text-warning"
             />{" "}
             You're offline. Content will sync when connection returns.
           </Typography>
@@ -155,10 +155,10 @@ export const MobileLoadingStrategy: React.FC<LoadingStrategyProps> = ({
     if (networkStatus.isSlowConnection) {
       return (
         <div className="mt-4 p-3 surface-subtle rounded-lg">
-          <Typography variant="body-sm" className="text-text-info text-center">
+          <Typography variant="body-sm" className="text-info text-center">
             <Icon
               name="clock"
-              className="inline h-4 w-4 align-middle text-text-info"
+              className="inline h-4 w-4 align-middle text-info"
             />{" "}
             Slow connection detected. This might take a moment...
           </Typography>

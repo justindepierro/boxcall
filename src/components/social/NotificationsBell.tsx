@@ -110,7 +110,7 @@ export const NotificationsBell: React.FC<NotificationsBellProps> = ({
       {/* Notification Bell Button */}
       <button
         onClick={() => setShowDropdown(!showDropdown)}
-        className="relative p-2 text-text-secondary hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-text-info rounded-full overflow-visible"
+        className="relative p-2 text-secondary hover:text-primary focus:outline-none focus:ring-2 focus:ring-text-info rounded-full overflow-visible"
       >
         <svg
           className="w-6 h-6"
@@ -128,7 +128,7 @@ export const NotificationsBell: React.FC<NotificationsBellProps> = ({
 
         {/* Unread indicator */}
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-text-error text-text-inverse text-xs rounded-full h-5 w-5 flex items-center justify-center">
+          <span className="absolute -top-1 -right-1 bg-text-error text-inverse text-xs rounded-full h-5 w-5 flex items-center justify-center">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
@@ -142,11 +142,11 @@ export const NotificationsBell: React.FC<NotificationsBellProps> = ({
           </div>
 
           {loading ? (
-            <div className="p-4 text-center text-text-muted">
+            <div className="p-4 text-center text-muted">
               Loading notifications...
             </div>
           ) : notifications.length === 0 ? (
-            <div className="p-4 text-center text-text-muted">
+            <div className="p-4 text-center text-muted">
               No notifications yet
             </div>
           ) : (
@@ -166,10 +166,10 @@ export const NotificationsBell: React.FC<NotificationsBellProps> = ({
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-text-primary">
+                      <p className="text-sm text-primary">
                         {formatNotificationMessage(notification)}
                       </p>
-                      <p className="text-xs text-text-muted mt-1">
+                      <p className="text-xs text-muted mt-1">
                         {new Date(notification.created_at).toLocaleDateString()}
                       </p>
                     </div>
@@ -193,7 +193,7 @@ export const NotificationsBell: React.FC<NotificationsBellProps> = ({
                     if (!n.is_read) markAsRead(n.id);
                   });
                 }}
-                className="text-sm text-text-info hover:text-text-info"
+                className="text-sm text-info hover:text-info"
               >
                 Mark all as read
               </button>

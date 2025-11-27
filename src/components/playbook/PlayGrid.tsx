@@ -24,7 +24,7 @@ import { useIsMobile } from "../../hooks/useBreakpoint";
 import { useFavoritePlays } from "../../hooks/useFavoritePlays";
 import { usePersonnelConfigurations } from "../../hooks/usePersonnel";
 import { info, warn, debug } from "../../utils/logger";
-import { useSaveState } from "../../contexts/SaveStateContext";
+import { useSaveState } from "../../hooks/useSaveState";
 import {
   validatePlaybookData,
   logValidationResults,
@@ -542,12 +542,12 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
               <Typography
                 variant="headline-sm"
                 as="h2"
-                className="text-text-primary"
+                className="text-primary"
               >
                 {displayPlays.length}{" "}
                 {displayPlays.length === 1 ? "Play" : "Plays"}
                 {selectedCategory && (
-                  <span className="text-text-secondary font-normal ml-2">
+                  <span className="text-secondary font-normal ml-2">
                     in{" "}
                     {selectedCategory.charAt(0).toUpperCase() +
                       selectedCategory.slice(1).replace("-", " ")}
@@ -560,7 +560,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
             {/* Bulk Selection Controls */}
             {enableBulkOperations && (
               <div className="flex items-center space-x-2">
-                <label className="flex items-center space-x-2 text-sm text-text-secondary">
+                <label className="flex items-center space-x-2 text-sm text-secondary">
                   <input
                     type="checkbox"
                     checked={
@@ -568,7 +568,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                       displayPlays.every((p) => selectedPlayIds.has(p.id))
                     }
                     onChange={handleSelectAll}
-                    className="rounded border-border text-text-info focus:ring-text-accent"
+                    className="rounded border-border text-info focus:ring-text-accent"
                   />
                   <span>
                     {selectedPlayIds.size > 0
@@ -620,7 +620,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
             {/* One-word calls toggle */}
             <div className="flex items-center space-x-3">
-              <span className="text-sm text-text-secondary">
+              <span className="text-sm text-secondary">
                 One-word calls
               </span>
               <IconButton
@@ -641,16 +641,16 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                 {showOneWordCalls ? (
                   <Icon
                     name="toggle-right"
-                    className="h-5 w-5 text-text-info"
+                    className="h-5 w-5 text-info"
                   />
                 ) : (
                   <Icon
                     name="toggle-left"
-                    className="h-5 w-5 text-text-tertiary"
+                    className="h-5 w-5 text-tertiary"
                   />
                 )}
               </IconButton>
-              <span className="text-sm text-text-secondary">Full names</span>
+              <span className="text-sm text-secondary">Full names</span>
             </div>
 
             {/* Direction Display Format Toggle */}
@@ -673,9 +673,9 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                 variant="subtle"
                 size="sm"
               >
-                <Icon name="move" className="h-5 w-5 text-text-info" />
+                <Icon name="move" className="h-5 w-5 text-info" />
               </IconButton>
-              <span className="text-sm text-text-secondary">
+              <span className="text-sm text-secondary">
                 {(directionDisplayFormat || "full") === "full"
                   ? "Right/Left"
                   : (directionDisplayFormat || "full") === "abbrev"

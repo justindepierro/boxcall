@@ -516,7 +516,7 @@ export const ProfilePage: React.FC = () => {
           >
             Profile Not Found
           </Typography>
-          <p className="text-text-secondary">
+          <p className="text-secondary">
             Unable to load your profile information.
           </p>
         </div>
@@ -563,7 +563,7 @@ export const ProfilePage: React.FC = () => {
                 <div className="relative">
                   {/* Avatar Container - Larger Size */}
                   <div className="w-32 h-32 rounded-2xl bg-aurora-emerald p-spacing-xs shadow-lg">
-                    <div className="w-full h-full rounded-xl bg-surface-secondary flex items-center justify-center overflow-hidden">
+                    <div className="w-full h-full rounded-xl bg-secondary flex items-center justify-center overflow-hidden">
                       {profile.avatar_url ? (
                         <img
                           src={profile.avatar_url}
@@ -573,7 +573,7 @@ export const ProfilePage: React.FC = () => {
                       ) : (
                         <Typography
                           variant="headline-xl"
-                          className="text-text-muted font-bold"
+                          className="text-muted font-bold"
                         >
                           {profile.full_name?.charAt(0) ||
                             profile.display_name?.charAt(0) ||
@@ -600,7 +600,7 @@ export const ProfilePage: React.FC = () => {
                   </Typography>
                   <Typography
                     variant="body-sm"
-                    className="text-text-muted mb-spacing-md"
+                    className="text-muted mb-spacing-md"
                   >
                     Upload a new picture or edit your existing one
                   </Typography>
@@ -670,7 +670,7 @@ export const ProfilePage: React.FC = () => {
                     className="hidden"
                   />
 
-                  <Typography variant="body-xs" className="text-text-tertiary">
+                  <Typography variant="body-xs" className="text-tertiary">
                     JPG, PNG, or GIF • Max 5MB • Square images work best
                   </Typography>
                   {avatarFile && (
@@ -705,7 +705,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary mb-spacing-xs"
+                  className="block font-medium text-primary mb-spacing-xs"
                 >
                   Email Address
                 </Typography>
@@ -713,9 +713,9 @@ export const ProfilePage: React.FC = () => {
                   type="email"
                   value={profile.email || ""}
                   disabled
-                  className="bg-surface-muted"
+                  className="bg-muted"
                 />
-                <p className="text-xs text-text-muted mt-1">
+                <p className="text-xs text-muted mt-1">
                   Email cannot be changed
                 </p>
               </div>
@@ -723,7 +723,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary mb-spacing-xs"
+                  className="block font-medium text-primary mb-spacing-xs"
                 >
                   Display Name
                 </Typography>
@@ -740,7 +740,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary mb-spacing-xs"
+                  className="block font-medium text-primary mb-spacing-xs"
                 >
                   Full Name
                 </Typography>
@@ -757,7 +757,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary mb-spacing-xs"
+                  className="block font-medium text-primary mb-spacing-xs"
                 >
                   Phone Number
                 </Typography>
@@ -774,7 +774,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary mb-spacing-xs"
+                  className="block font-medium text-primary mb-spacing-xs"
                 >
                   Role & Subscription
                 </Typography>
@@ -785,7 +785,7 @@ export const ProfilePage: React.FC = () => {
                   size="md"
                   layout="wrap"
                 />
-                <p className="text-xs text-text-muted mt-spacing-xs">
+                <p className="text-xs text-muted mt-spacing-xs">
                   Role is set by team administrators
                 </p>
               </div>
@@ -793,7 +793,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary dark:text-border-light mb-spacing-xs"
+                  className="block font-medium text-primary dark:text-border-light mb-spacing-xs"
                 >
                   Address
                 </Typography>
@@ -809,7 +809,7 @@ export const ProfilePage: React.FC = () => {
               <Typography
                 variant="body-sm"
                 as="label"
-                className="block font-medium text-text-primary dark:text-border-light mb-spacing-xs"
+                className="block font-medium text-primary dark:text-border-light mb-spacing-xs"
               >
                 Bio
               </Typography>
@@ -818,7 +818,7 @@ export const ProfilePage: React.FC = () => {
                 placeholder="Tell us about yourself..."
                 value={formData.bio}
                 onChange={(e) => handleInputChange("bio", e.target.value)}
-                className="w-full px-spacing-sm py-spacing-xs border border-border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus dark:bg-text-primary dark:text-text-inverse font-sans"
+                className="w-full px-spacing-sm py-spacing-xs border border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus dark:bg-text-primary dark:text-inverse font-sans"
               />
             </div>
           </Card>
@@ -841,7 +841,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-medium text-text-primary mb-spacing-xs"
+                    className="block font-medium text-primary mb-spacing-xs"
                   >
                     Position
                   </Typography>
@@ -858,7 +858,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-medium text-text-primary mb-spacing-xs"
+                    className="block font-medium text-primary mb-spacing-xs"
                   >
                     Jersey Number
                   </Typography>
@@ -881,7 +881,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-medium text-text-primary mb-spacing-xs"
+                    className="block font-medium text-primary mb-spacing-xs"
                   >
                     Height (inches)
                   </Typography>
@@ -904,7 +904,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-medium text-text-primary mb-spacing-xs"
+                    className="block font-medium text-primary mb-spacing-xs"
                   >
                     Weight (lbs)
                   </Typography>
@@ -927,7 +927,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-medium text-text-primary mb-spacing-xs"
+                    className="block font-medium text-primary mb-spacing-xs"
                   >
                     Grade Level
                   </Typography>
@@ -936,7 +936,7 @@ export const ProfilePage: React.FC = () => {
                     onChange={(e) =>
                       handleInputChange("grade_level", e.target.value)
                     }
-                    className="w-full px-spacing-sm py-spacing-xs border border-border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus dark:bg-text-primary dark:text-text-inverse font-sans"
+                    className="w-full px-spacing-sm py-spacing-xs border border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus dark:bg-text-primary dark:text-inverse font-sans"
                   >
                     <option value="">Select grade level</option>
                     <option value="9th">9th Grade</option>
@@ -972,7 +972,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-medium text-text-primary mb-spacing-xs"
+                    className="block font-medium text-primary mb-spacing-xs"
                   >
                     Years Coaching
                   </Typography>
@@ -989,7 +989,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-medium text-text-primary mb-spacing-xs"
+                    className="block font-medium text-primary mb-spacing-xs"
                   >
                     Current School/Organization
                   </Typography>
@@ -1006,7 +1006,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-medium text-text-primary mb-spacing-xs"
+                    className="block font-medium text-primary mb-spacing-xs"
                   >
                     Coaching Experience
                   </Typography>
@@ -1023,7 +1023,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-medium text-text-primary mb-spacing-xs"
+                    className="block font-medium text-primary mb-spacing-xs"
                   >
                     Education
                   </Typography>
@@ -1040,7 +1040,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-medium text-text-primary mb-spacing-xs"
+                    className="block font-medium text-primary mb-spacing-xs"
                   >
                     Coaching Philosophy
                   </Typography>
@@ -1051,14 +1051,14 @@ export const ProfilePage: React.FC = () => {
                     onChange={(e) =>
                       handleInputChange("coaching_philosophy", e.target.value)
                     }
-                    className="w-full px-spacing-sm py-spacing-xs border border-border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus dark:bg-text-primary dark:text-text-inverse font-sans"
+                    className="w-full px-spacing-sm py-spacing-xs border border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus dark:bg-text-primary dark:text-inverse font-sans"
                   />
                 </div>
                 <div className="md:col-span-2">
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-medium text-text-primary mb-spacing-xs"
+                    className="block font-medium text-primary mb-spacing-xs"
                   >
                     Certifications
                   </Typography>
@@ -1092,7 +1092,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary mb-spacing-xs"
+                  className="block font-medium text-primary mb-spacing-xs"
                 >
                   Emergency Contact Name
                 </Typography>
@@ -1113,7 +1113,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary mb-spacing-xs"
+                  className="block font-medium text-primary mb-spacing-xs"
                 >
                   Emergency Contact Phone
                 </Typography>
@@ -1155,7 +1155,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
+                    className="block font-semibold text-primary dark:text-border-light mb-spacing-xs"
                   >
                     Years of Coaching Experience
                   </Typography>
@@ -1174,7 +1174,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
+                    className="block font-semibold text-primary dark:text-border-light mb-spacing-xs"
                   >
                     Current School/Organization
                   </Typography>
@@ -1191,7 +1191,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
+                    className="block font-semibold text-primary dark:text-border-light mb-spacing-xs"
                   >
                     Education
                   </Typography>
@@ -1208,7 +1208,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
+                    className="block font-semibold text-primary dark:text-border-light mb-spacing-xs"
                   >
                     Certifications
                   </Typography>
@@ -1225,7 +1225,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
+                    className="block font-semibold text-primary dark:text-border-light mb-spacing-xs"
                   >
                     Specializations
                   </Typography>
@@ -1242,7 +1242,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
+                    className="block font-semibold text-primary dark:text-border-light mb-spacing-xs"
                   >
                     Coaching System
                   </Typography>
@@ -1259,7 +1259,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
+                    className="block font-semibold text-primary dark:text-border-light mb-spacing-xs"
                   >
                     Previous Schools
                   </Typography>
@@ -1276,7 +1276,7 @@ export const ProfilePage: React.FC = () => {
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
+                    className="block font-semibold text-primary dark:text-border-light mb-spacing-xs"
                   >
                     Coaching Experience
                   </Typography>
@@ -1287,14 +1287,14 @@ export const ProfilePage: React.FC = () => {
                       handleInputChange("coaching_experience", e.target.value)
                     }
                     rows={3}
-                    className="w-full px-spacing-sm py-spacing-xs border border-border-primary dark:border-border-light rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none"
+                    className="w-full px-spacing-sm py-spacing-xs border border-primary dark:border-light rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none"
                   />
                 </div>
                 <div className="lg:col-span-2">
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
+                    className="block font-semibold text-primary dark:text-border-light mb-spacing-xs"
                   >
                     Coaching Philosophy
                   </Typography>
@@ -1305,14 +1305,14 @@ export const ProfilePage: React.FC = () => {
                       handleInputChange("coaching_philosophy", e.target.value)
                     }
                     rows={3}
-                    className="w-full px-spacing-sm py-spacing-xs border border-border-primary dark:border-border-light rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none"
+                    className="w-full px-spacing-sm py-spacing-xs border border-primary dark:border-light rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none"
                   />
                 </div>
                 <div className="lg:col-span-2">
                   <Typography
                     variant="body-sm"
                     as="label"
-                    className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
+                    className="block font-semibold text-primary dark:text-border-light mb-spacing-xs"
                   >
                     Mentors & Influences
                   </Typography>
@@ -1348,7 +1348,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
+                  className="block font-semibold text-primary dark:text-border-light mb-spacing-xs"
                 >
                   Personal Website
                 </Typography>
@@ -1365,7 +1365,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
+                  className="block font-semibold text-primary dark:text-border-light mb-spacing-xs"
                 >
                   Twitter/X
                 </Typography>
@@ -1382,7 +1382,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
+                  className="block font-semibold text-primary dark:text-border-light mb-spacing-xs"
                 >
                   Instagram
                 </Typography>
@@ -1399,7 +1399,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
+                  className="block font-semibold text-primary dark:text-border-light mb-spacing-xs"
                 >
                   LinkedIn
                 </Typography>
@@ -1416,7 +1416,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
+                  className="block font-semibold text-primary dark:text-border-light mb-spacing-xs"
                 >
                   TikTok
                 </Typography>
@@ -1433,7 +1433,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-semibold text-text-primary dark:text-border-light mb-spacing-xs"
+                  className="block font-semibold text-primary dark:text-border-light mb-spacing-xs"
                 >
                   YouTube
                 </Typography>
@@ -1459,7 +1459,7 @@ export const ProfilePage: React.FC = () => {
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary dark:text-border-light mb-spacing-xs"
+                  className="block font-medium text-primary dark:text-border-light mb-spacing-xs"
                 >
                   Password
                 </Typography>
@@ -1478,7 +1478,7 @@ export const ProfilePage: React.FC = () => {
                     Change Password
                   </Button>
                 </div>
-                <p className="text-xs text-text-muted mt-1">
+                <p className="text-xs text-muted mt-1">
                   A password reset link will be sent to your email
                 </p>
               </div>
@@ -1509,7 +1509,7 @@ export const ProfilePage: React.FC = () => {
           </div>
         </form>
         {/* Account Info */}
-        <div className="mt-spacing-xl surface-subtle dark:bg-surface-secondary/50 rounded-lg p-spacing-lg">
+        <div className="mt-spacing-xl surface-subtle dark:bg-secondary/50 rounded-lg p-spacing-lg">
           <Typography variant="headline-sm" as="h3" className="mb-spacing-sm">
             Account Information
           </Typography>

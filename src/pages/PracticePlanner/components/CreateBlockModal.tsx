@@ -36,7 +36,7 @@ export function CreateBlockModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="p-6">
-        <Typography variant="headline-md" className="text-text-primary mb-6">
+        <Typography variant="headline-md" className="text-primary mb-6">
           Create Custom Practice Block
         </Typography>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -44,7 +44,7 @@ export function CreateBlockModal({
             <Typography
               variant="body-sm"
               as="label"
-              className="block font-medium text-text-secondary mb-2"
+              className="block font-medium text-secondary mb-2"
             >
               Block Title
             </Typography>
@@ -60,7 +60,7 @@ export function CreateBlockModal({
             <Typography
               variant="body-sm"
               as="label"
-              className="block font-medium text-text-secondary mb-2"
+              className="block font-medium text-secondary mb-2"
             >
               Description
             </Typography>
@@ -76,7 +76,7 @@ export function CreateBlockModal({
             <Typography
               variant="body-sm"
               as="label"
-              className="block font-medium text-text-secondary mb-2"
+              className="block font-medium text-secondary mb-2"
             >
               Duration (minutes)
             </Typography>

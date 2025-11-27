@@ -176,7 +176,7 @@ export const Modal: React.FC<ModalProps> = ({
         >
           {/* Header - Enhanced with display font and substantial styling */}
           {(title || headerContent) && (
-            <div className="bc-card-padding divider-b-medium flex-shrink-0">
+            <div className="p-6 divider-b-medium flex-shrink-0">
               {headerContent ? (
                 headerContent
               ) : (
@@ -185,7 +185,7 @@ export const Modal: React.FC<ModalProps> = ({
                     id="modal-title"
                     variant="headline-sm"
                     as="h3"
-                    className={`${type === "alert" ? "text-text-error dark:text-surface-error" : ""} text-text-primary truncate flex-1 min-w-0`}
+                    className={`${type === "alert" ? "text-error dark:text-surface-error" : ""} text-primary truncate flex-1 min-w-0`}
                   >
                     {title}
                   </Typography>
@@ -215,13 +215,13 @@ export const Modal: React.FC<ModalProps> = ({
           )}
           {/* Content - More substantial padding */}
           <div
-            className={`${size === "fullscreen" ? "" : "bc-card-padding"} flex-1 overflow-y-auto min-h-0`}
+            className={`${size === "fullscreen" ? "" : "p-6"} flex-1 overflow-y-auto min-h-0`}
           >
             {children}
           </div>
           {/* Footer - Enhanced styling */}
           {footer && (
-            <div className="bc-card-padding divider-t-medium surface-subtle dark:bg-surface-primary/50">
+            <div className="p-6 divider-t-medium surface-subtle dark:bg-surface-primary/50">
               {footer}
             </div>
           )}

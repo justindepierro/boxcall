@@ -77,20 +77,20 @@ export const FormationLinkConfirmationModal: React.FC<
         {/* Formation Display */}
         <div className="grid grid-cols-3 gap-spacing-md items-center">
           {/* Left Formation */}
-          <div className="p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
+          <div className="p-spacing-md bg-surface-secondary rounded-lg border border-primary">
             <Typography
               variant="caption"
-              className="text-text-muted uppercase tracking-wide"
+              className="text-muted uppercase tracking-wide"
             >
               Left Side
             </Typography>
             <Typography
               variant="label-md"
-              className="text-text-primary mt-spacing-xs"
+              className="text-primary mt-spacing-xs"
             >
               {leftFormation.name}
             </Typography>
-            <Typography variant="caption" className="text-text-secondary">
+            <Typography variant="caption" className="text-secondary">
               Personnel: {leftFormation.personnel_name || "Not set"}
             </Typography>
             <div className="mt-spacing-sm p-spacing-xs bg-success-50 border border-success-200 rounded">
@@ -111,20 +111,20 @@ export const FormationLinkConfirmationModal: React.FC<
           </div>
 
           {/* Right Formation */}
-          <div className="p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
+          <div className="p-spacing-md bg-surface-secondary rounded-lg border border-primary">
             <Typography
               variant="caption"
-              className="text-text-muted uppercase tracking-wide"
+              className="text-muted uppercase tracking-wide"
             >
               Right Side
             </Typography>
             <Typography
               variant="label-md"
-              className="text-text-primary mt-spacing-xs"
+              className="text-primary mt-spacing-xs"
             >
               {rightFormation.name}
             </Typography>
-            <Typography variant="caption" className="text-text-secondary">
+            <Typography variant="caption" className="text-secondary">
               Personnel: {rightFormation.personnel_name || "Not set"}
             </Typography>
             <div className="mt-spacing-sm p-spacing-xs bg-success-50 border border-success-200 rounded">
@@ -140,14 +140,14 @@ export const FormationLinkConfirmationModal: React.FC<
 
         {/* Technical Note */}
         <div className="p-spacing-sm bg-surface-muted rounded text-center">
-          <Typography variant="caption" className="text-text-muted">
+          <Typography variant="caption" className="text-muted">
             💡 This ensures all linked formations have consistent direction
             fields, no matter how they're named.
           </Typography>
         </div>
 
         {/* Actions */}
-        <div className="flex gap-spacing-md justify-end pt-spacing-md border-t border-border-primary">
+        <div className="flex gap-spacing-md justify-end pt-spacing-md border-t border-primary">
           <Button onClick={onClose} variant="ghost">
             Cancel
           </Button>

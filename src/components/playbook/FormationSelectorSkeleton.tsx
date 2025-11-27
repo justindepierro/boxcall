@@ -21,15 +21,15 @@ export const FormationSelectorSkeleton = memo(() => {
       <Skeleton className="h-4 w-24 mb-spacing-xs" />
 
       {/* Dropdown Button Skeleton */}
-      <div className="w-full flex items-center justify-between px-spacing-md py-spacing-sm bg-surface-secondary border border-border-primary rounded-lg">
+      <div className="w-full flex items-center justify-between px-spacing-md py-spacing-sm bg-surface-secondary border border-primary rounded-lg">
         <div className="flex items-center gap-spacing-sm flex-1">
-          <Grid className="w-4 h-4 text-text-muted opacity-50" />
+          <Grid className="w-4 h-4 text-muted opacity-50" />
           <Skeleton className="h-4 w-36" />
         </div>
         {/* Chevron placeholder */}
         <div className="w-4 h-4 opacity-30">
           <svg
-            className="w-4 h-4 text-text-muted"
+            className="w-4 h-4 text-muted"
             fill="none"
             strokeLinecap="round"
             strokeLinejoin="round"

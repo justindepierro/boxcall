@@ -341,7 +341,7 @@ export function PlayAssignmentsModal({
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <Typography variant="body-sm" className="text-text-secondary">
+            <Typography variant="body-sm" className="text-secondary">
               {play.formation} • {play.personnel || "11 Personnel"}
             </Typography>
           </div>
@@ -387,7 +387,7 @@ export function PlayAssignmentsModal({
               <select
                 value={previewPosition || ""}
                 onChange={(e) => setPreviewPosition(e.target.value || null)}
-                className="w-full px-3 py-2 text-sm rounded-lg border border-blue-300 dark:border-blue-700 bg-white dark:bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-sm rounded-lg border border-blue-300 dark:border-blue-700 bg-white dark:bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">Select a position...</option>
                 {positions.map((position) => (
@@ -408,8 +408,8 @@ export function PlayAssignmentsModal({
 
         {/* Personnel Selector */}
         {personnelConfigurations.length > 0 && (
-          <div className="flex items-center gap-3 p-3 bg-surface-secondary rounded-lg border border-border-primary">
-            <Icon name="users" className="text-text-tertiary" />
+          <div className="flex items-center gap-3 p-3 bg-surface-secondary rounded-lg border border-primary">
+            <Icon name="users" className="text-tertiary" />
             <div className="flex-1">
               <Typography variant="label-md" className="mb-1">
                 Personnel Configuration
@@ -421,7 +421,7 @@ export function PlayAssignmentsModal({
                   setHasChanges(true);
                 }}
                 disabled={!canEdit}
-                className="w-full px-3 py-2 text-sm rounded-lg border border-border-primary bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-500 disabled:opacity-50"
+                className="w-full px-3 py-2 text-sm rounded-lg border border-primary bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-accent-500 disabled:opacity-50"
               >
                 <option value="">
                   {play.personnel
@@ -458,13 +458,13 @@ export function PlayAssignmentsModal({
         ) : (
           <>
             {/* Diagram Placeholder */}
-            <div className="bg-surface-secondary rounded-lg p-4 border border-border-primary">
+            <div className="bg-surface-secondary rounded-lg p-4 border border-primary">
               <div className="flex items-center gap-2 mb-2">
-                <Icon name="image" className="text-text-tertiary" />
+                <Icon name="image" className="text-tertiary" />
                 <Typography variant="label-md">Play Diagram</Typography>
               </div>
-              <div className="bg-surface-primary rounded border-2 border-dashed border-border-primary h-32 flex items-center justify-center">
-                <Typography variant="body-sm" className="text-text-tertiary">
+              <div className="bg-surface-primary rounded border-2 border-dashed border-primary h-32 flex items-center justify-center">
+                <Typography variant="body-sm" className="text-tertiary">
                   Diagram preview coming soon
                 </Typography>
               </div>
@@ -546,7 +546,7 @@ export function PlayAssignmentsModal({
                                   ${
                                     isCurrentPlayer
                                       ? "border-accent-500 bg-accent-50 ring-2 ring-accent-200"
-                                      : "border-border-primary bg-surface-secondary"
+                                      : "border-primary bg-surface-secondary"
                                   }
                                   ${snapshot.isDragging ? "shadow-lg ring-2 ring-accent-400" : ""}
                                 `}
@@ -557,7 +557,7 @@ export function PlayAssignmentsModal({
                                       <div {...provided.dragHandleProps}>
                                         <Icon
                                           name="grip-vertical"
-                                          className="h-4 w-4 text-text-tertiary cursor-grab active:cursor-grabbing"
+                                          className="h-4 w-4 text-tertiary cursor-grab active:cursor-grabbing"
                                         />
                                       </div>
                                     )}
@@ -643,11 +643,11 @@ export function PlayAssignmentsModal({
             </div>
 
             {/* Play Notes */}
-            <div className="bg-surface-secondary rounded-lg p-3 border border-border-primary">
+            <div className="bg-surface-secondary rounded-lg p-3 border border-primary">
               <div className="flex items-center gap-2 mb-2">
-                <Icon name="file" className="text-text-tertiary" />
+                <Icon name="file" className="text-tertiary" />
                 <Typography variant="label-md">Play Notes</Typography>
-                <Typography variant="caption" className="text-text-tertiary">
+                <Typography variant="caption" className="text-tertiary">
                   (shared with all positions)
                 </Typography>
               </div>
@@ -671,10 +671,10 @@ export function PlayAssignmentsModal({
         )}
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-3 border-t border-border-primary">
+        <div className="flex items-center justify-between pt-3 border-t border-primary">
           <div>
             {!canEdit && (
-              <Typography variant="caption" className="text-text-tertiary">
+              <Typography variant="caption" className="text-tertiary">
                 <Icon name="lock" size="sm" className="inline mr-1" />
                 View-only mode
               </Typography>

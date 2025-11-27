@@ -214,7 +214,7 @@ export function useColorTheme(
   const applyPaletteToCSS = (palette: ColorPalette) => {
     const root = document.documentElement;
     Object.entries(palette).forEach(([key, value]) => {
-      root.style.setProperty(`--semantic-${key}`, value);
+      root.style.setProperty(`--color-${key}`, value);
     });
   };
 

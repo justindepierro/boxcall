@@ -37,7 +37,7 @@ export const PracticePlannerModal: React.FC<PracticePlannerModalProps> = ({
 
   const getCategoryColor = (_category: string) => {
     // TODO: Move to utility function
-    return "bg-surface-info text-text-info";
+    return "bg-surface-info text-info";
   };
 
   const getCategoryIcon = (_category: string) => {
@@ -56,10 +56,10 @@ export const PracticePlannerModal: React.FC<PracticePlannerModalProps> = ({
       }}
     >
       <div
-        className="surface-card elevation-modal rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative"
+        className="bg-surface-primary elevation-modal rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="bc-card-padding">
+        <div className="p-6">
           <PracticePlannerHeader
             event={event}
             userRole={practiceState.userRole}

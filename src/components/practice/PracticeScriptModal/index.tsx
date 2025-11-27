@@ -103,10 +103,10 @@ export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
       }}
     >
       <div
-        className="surface-card elevation-modal rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative"
+        className="bg-surface-primary elevation-modal rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="bc-card-padding">
+        <div className="p-6">
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-semibold">

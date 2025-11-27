@@ -34,7 +34,7 @@ export function TabBar({
 }: TabBarProps) {
   return (
     <div
-      className={`flex items-stretch border-t border-border bg-surface-card ${className}`}
+      className={`flex items-stretch border-t border-border bg-surface-primary ${className}`}
       role="tablist"
       aria-label="Bottom sheet tabs"
     >

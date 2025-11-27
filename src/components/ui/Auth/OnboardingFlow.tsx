@@ -231,7 +231,7 @@ export function OnboardingFlow({ user, onComplete }: OnboardingFlowProps) {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-surface-success dark:bg-surface-success/20 rounded-full mb-6">
               <Icon
                 name={currentStepData.icon as any}
-                className="w-8 h-8 text-text-success dark:text-text-success"
+                className="w-8 h-8 text-success dark:text-success"
               />
             </div>
 

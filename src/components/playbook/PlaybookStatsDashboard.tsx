@@ -54,7 +54,7 @@ export const PlaybookStatsDashboard: React.FC<PlaybookStatsDashboardProps> = ({
     >
       <div className="flex items-center mb-4">
         <Icon name="bar-chart" className="h-5 w-5 text-jade-600 mr-2" />
-        <Typography variant="headline-sm" className="text-text-primary">
+        <Typography variant="headline-sm" className="text-primary">
           Playbook Overview
         </Typography>
       </div>
@@ -104,7 +104,7 @@ export const PlaybookStatsDashboard: React.FC<PlaybookStatsDashboardProps> = ({
         <div>
           <Typography
             variant="body-sm"
-            className="text-text-secondary mb-3 font-medium"
+            className="text-secondary mb-3 font-medium"
           >
             Play Distribution
           </Typography>
@@ -169,14 +169,14 @@ export const PlaybookStatsDashboard: React.FC<PlaybookStatsDashboardProps> = ({
         {/* Recent Activity */}
         {stats.recentActivity.length > 0 && (
           <div>
-            <Typography variant="body-sm" className="text-text-secondary mb-2">
+            <Typography variant="body-sm" className="text-secondary mb-2">
               Recent Activity
             </Typography>
             <div className="space-y-2">
               {stats.recentActivity.slice(0, 3).map((activity) => (
                 <div
                   key={activity.id}
-                  className="flex items-center text-xs text-text-secondary"
+                  className="flex items-center text-xs text-secondary"
                 >
                   <Icon
                     name={
@@ -186,10 +186,10 @@ export const PlaybookStatsDashboard: React.FC<PlaybookStatsDashboardProps> = ({
                           ? "edit"
                           : "copy"
                     }
-                    className="h-3 w-3 mr-2 text-text-muted"
+                    className="h-3 w-3 mr-2 text-muted"
                   />
                   <span className="truncate">{activity.playName}</span>
-                  <span className="ml-auto text-text-muted">
+                  <span className="ml-auto text-muted">
                     {activity.timestamp.toLocaleDateString()}
                   </span>
                 </div>

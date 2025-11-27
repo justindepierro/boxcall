@@ -163,7 +163,7 @@ export function BottomSheet({
       {/* Bottom Sheet */}
       <motion.div
         ref={sheetRef}
-        className="fixed left-0 right-0 bg-surface-card rounded-t-2xl shadow-2xl overflow-hidden flex flex-col"
+        className="fixed left-0 right-0 bg-surface-primary rounded-t-2xl shadow-2xl overflow-hidden flex flex-col"
         style={{
           y,
           bottom: 0,

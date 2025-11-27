@@ -138,7 +138,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     const labelClasses = [
       sizeConfig.label,
       size === "sm" ? "text-xs" : "text-sm",
-      "font-display font-medium text-text-primary dark:text-border-light", // Display font for labels
+      "font-display font-medium text-primary dark:text-border-light", // Display font for labels
       labelClassName,
     ]
       .filter(Boolean)
@@ -153,14 +153,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           <label htmlFor={inputId} className={labelClasses}>
             <Typography variant="label-md" color="error">
               {label}
-              {required && <span className="text-text-error ml-1">*</span>}
+              {required && <span className="text-error ml-1">*</span>}
             </Typography>
           </label>
         )}
         <div className="relative">
           {leftIcon && (
             <div
-              className={`${sizeConfig.icon} left-3 text-text-secondary dark:text-text-secondary`}
+              className={`${sizeConfig.icon} left-3 text-secondary dark:text-secondary`}
             >
               {leftIcon}
             </div>
@@ -186,7 +186,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                   onClick={togglePasswordVisibility}
                   size="xs"
                   variant="ghost"
-                  className="text-text-secondary hover:text-text-primary dark:text-text-secondary dark:hover:text-text-primary"
+                  className="text-secondary hover:text-primary dark:text-secondary dark:hover:text-primary"
                 >
                   {showPassword ? (
                     <svg
@@ -225,7 +225,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                   )}
                 </IconButton>
               ) : rightIcon ? (
-                <div className="text-text-muted dark:text-text-muted">
+                <div className="text-muted dark:text-muted">
                   {rightIcon}
                 </div>
               ) : null}

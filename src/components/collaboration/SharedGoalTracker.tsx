@@ -170,7 +170,7 @@ export const SharedGoalTracker: React.FC<SharedGoalTrackerProps> = ({
     if (progress >= 90) return "text-success";
     if (progress >= 70) return "text-primary";
     if (progress >= 40) return "text-warning";
-    return "text-text-secondary";
+    return "text-secondary";
   };
 
   return (
@@ -190,7 +190,7 @@ export const SharedGoalTracker: React.FC<SharedGoalTrackerProps> = ({
           </div>
           <Typography
             variant="label-md"
-            className="text-text-primary font-medium mb-1"
+            className="text-primary font-medium mb-1"
           >
             Team Goals
           </Typography>
@@ -240,7 +240,7 @@ export const SharedGoalTracker: React.FC<SharedGoalTrackerProps> = ({
                 <Icon
                   name="target"
                   size="lg"
-                  className="mx-auto mb-2 text-text-muted"
+                  className="mx-auto mb-2 text-muted"
                 />
                 <Typography variant="body-sm" color="muted">
                   {filter === "all"
@@ -319,7 +319,7 @@ export const SharedGoalTracker: React.FC<SharedGoalTrackerProps> = ({
                       <Icon
                         name="chevron-right"
                         size="xs"
-                        className="text-text-muted"
+                        className="text-muted"
                       />
                     </div>
                   </div>
@@ -329,9 +329,9 @@ export const SharedGoalTracker: React.FC<SharedGoalTrackerProps> = ({
           </div>
 
           {/* Team Progress Summary */}
-          <div className="border-t border-border-secondary pt-3">
+          <div className="border-t border-secondary pt-3">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-text-secondary">Team Progress</span>
+              <span className="text-secondary">Team Progress</span>
               <span className="font-medium">
                 {localGoals.filter((g) => g.status === "completed").length} /{" "}
                 {localGoals.length} goals completed

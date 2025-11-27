@@ -97,22 +97,22 @@ export class ErrorBoundary extends Component<Props, State> {
       // Default professional error UI with recovery options
       return (
         <div className="min-h-screen surface-app flex items-center justify-center p-4">
-          <div className="max-w-md w-full surface-card elevation-modal rounded-lg p-6 mx-4">
+          <div className="max-w-md w-full bg-surface-primary elevation-modal rounded-lg p-6 mx-4">
             {/* Error Icon and Title */}
             <div className="text-center mb-6">
               <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-surface-error mb-4">
                 <Icon
                   name="alert-triangle"
-                  className="h-6 w-6 text-text-error"
+                  className="h-6 w-6 text-error"
                 />
               </div>
               <Typography
                 variant="headline-lg"
-                className="text-text-primary mb-2"
+                className="text-primary mb-2"
               >
                 Something went wrong
               </Typography>
-              <Typography variant="body-md" className="text-text-secondary">
+              <Typography variant="body-md" className="text-secondary">
                 We encountered an unexpected error. Don't worry, our team has
                 been notified and is working on it.
               </Typography>
@@ -122,19 +122,19 @@ export class ErrorBoundary extends Component<Props, State> {
             {process.env.NODE_ENV === "development" && this.state.error && (
               <div className="mb-6 p-4 surface-subtle border border-subtle rounded-lg">
                 <details className="text-sm">
-                  <summary className="cursor-pointer font-medium text-text-error mb-2">
+                  <summary className="cursor-pointer font-medium text-error mb-2">
                     <Icon
                       name="wrench"
                       aria-label="wrench"
-                      className="inline h-4 w-4 align-middle text-text-primary"
+                      className="inline h-4 w-4 align-middle text-primary"
                     />{" "}
                     Error Details (Development Only)
                   </summary>
-                  <div className="mt-2 p-3 surface-card border rounded-lg text-xs font-mono">
-                    <div className="text-text-error mb-2">
+                  <div className="mt-2 p-3 bg-surface-primary border rounded-lg text-xs font-mono">
+                    <div className="text-error mb-2">
                       <strong>Message:</strong> {this.state.error.message}
                     </div>
-                    <div className="text-text-secondary whitespace-pre-wrap">
+                    <div className="text-secondary whitespace-pre-wrap">
                       <strong>Stack:</strong>
                       {this.state.error.stack}
                     </div>
@@ -171,7 +171,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 onClick={() => window.location.reload()}
                 variant="ghost"
                 size="sm"
-                className="w-full flex items-center justify-center text-text-muted hover:text-text-primary"
+                className="w-full flex items-center justify-center text-muted hover:text-primary"
                 icon={<Icon name="message" className="h-4 w-4" />}
                 iconPosition="left"
               >
@@ -181,7 +181,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
             {/* Help Text */}
             <div className="mt-6 pt-4 border-t border-subtle text-center">
-              <Typography variant="caption" className="text-text-muted">
+              <Typography variant="caption" className="text-muted">
                 If this problem persists, please contact support with the error
                 details above.
               </Typography>

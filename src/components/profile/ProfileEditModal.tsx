@@ -225,7 +225,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
         <div className="space-y-4">
           <Typography
             variant="headline-sm"
-            className="text-text-primary border-b border-subtle pb-2"
+            className="text-primary border-b border-subtle pb-2"
           >
             Profile Picture
           </Typography>
@@ -253,7 +253,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
                 onChange={(e) => setAvatarFile(e.target.files?.[0] || null)}
                 className="mb-2"
               />
-              <Typography variant="body-xs" className="text-text-muted">
+              <Typography variant="body-xs" className="text-muted">
                 Upload a new profile picture (JPG, PNG, or GIF)
               </Typography>
             </div>

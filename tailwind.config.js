@@ -1,192 +1,131 @@
 import forms from "@tailwindcss/forms";
 import typography from "@tailwindcss/typography";
-import auroraTheme from "./src/styles/tailwind/auroraTheme.js";
-import boxcallTheme from "./src/styles/tailwind/boxcallTheme.js";
-import layoutTokens from "./src/styles/tailwind/layoutTokens.js";
 
-const colorSteps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
-const statusSteps = [50, 500, 600, 700];
-
-const createScale = (tokenName, steps = colorSteps) =>
+// Helper to create color scale from CSS variables
+const createScale = (
+  tokenName,
+  steps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
+) =>
   steps.reduce((acc, step) => {
     acc[step] = `var(--color-${tokenName}-${step})`;
     return acc;
   }, {});
 
-const semanticColor = (name) => `var(--semantic-${name})`;
-
-const spacingTokens = {
-  0: "var(--space-0)",
-  0.5: "var(--spacing-fine-0-5)",
-  1: "var(--space-1)",
-  1.5: "var(--spacing-fine-1-5)",
-  2: "var(--space-2)",
-  2.5: "var(--spacing-fine-2-5)",
-  3: "var(--space-3)",
-  3.5: "var(--spacing-fine-3-5)",
-  4: "var(--space-4)",
-  5: "var(--space-5)",
-  6: "var(--space-6)",
-  8: "var(--space-8)",
-  10: "var(--space-10)",
-  12: "var(--space-12)",
-  16: "var(--space-16)",
-  px: "1px",
-  18: "4.5rem",
-  88: "22rem",
-  128: "32rem",
-  "spacing-xs": "var(--space-2)",
-  "spacing-sm": "var(--space-3)",
-  "spacing-md": "var(--space-4)",
-  "spacing-lg": "var(--space-6)",
-  "spacing-xl": "var(--space-8)",
-  "spacing-2xl": "var(--space-12)",
-  "spacing-3xl": "var(--space-16)",
-  "button-padding": "var(--spacing-buttonPadding)",
-  "button-padding-lg": "var(--spacing-buttonPaddingLarge)",
-  "card-padding": "var(--spacing-cardPadding)",
-  "card-padding-lg": "var(--spacing-cardPaddingLarge)",
-  "input-padding": "var(--spacing-inputPadding)",
-  "section-gap": "var(--spacing-sectionGap)",
-  "item-gap": "var(--spacing-itemSpacing)",
-  "list-gap": "var(--spacing-listGap)",
-  "stack-tight": "var(--spacing-stackTight)",
-  "stack-normal": "var(--spacing-stackNormal)",
-  "stack-relaxed": "var(--spacing-stackRelaxed)",
-  "stack-loose": "var(--spacing-stackLoose)",
-};
-
-const elevationTokens = {
-  none: "var(--elevation-none)",
-  sm: "var(--elevation-sm)",
-  DEFAULT: "var(--elevation-md)",
-  md: "var(--elevation-md)",
-  lg: "var(--elevation-lg)",
-  xl: "var(--elevation-xl)",
-  "2xl": "var(--elevation-2xl)",
-  focus: "var(--elevation-focus)",
-  card: "var(--elevation-card-resting)",
-  "card-hover": "var(--elevation-card-hover)",
-  "card-active": "var(--elevation-card-active)",
-  button: "var(--elevation-button-resting)",
-  "button-hover": "var(--elevation-button-hover)",
-  "button-active": "var(--elevation-button-active)",
-  dropdown: "var(--elevation-dropdown)",
-  modal: "var(--elevation-modal)",
-};
-
-const opacityTokens = {
-  0: "var(--opacity-0)",
-  5: "var(--opacity-5)",
-  10: "var(--opacity-10)",
-  15: "var(--opacity-15)",
-  20: "var(--opacity-20)",
-  30: "var(--opacity-30)",
-  40: "var(--opacity-40)",
-  50: "var(--opacity-50)",
-  60: "var(--opacity-60)",
-  70: "var(--opacity-70)",
-  75: "var(--opacity-75)",
-  80: "var(--opacity-80)",
-  90: "var(--opacity-90)",
-  95: "var(--opacity-95)",
-  100: "var(--opacity-100)",
-};
-
-const diagramTokens = {
-  annotation: "var(--color-diagram-annotationColor)",
-  "annotation-highlight": "var(--color-diagram-annotationHighlight)",
-  "annotation-connector": "var(--color-diagram-annotationConnector)",
-  "annotation-selection": "var(--color-diagram-annotationSelection)",
-  "field-background": "var(--color-diagram-fieldBackground)",
-  "field-background-dark": "var(--color-diagram-fieldBackgroundDark)",
-  "field-border": "var(--color-diagram-fieldBorder)",
-  "field-zone": "var(--color-diagram-fieldZone)",
-  grid: "var(--color-diagram-gridColor)",
-  "grid-dark": "var(--color-diagram-gridColorDark)",
-  guide: "var(--color-diagram-guideColor)",
-  "minimap-background": "var(--color-diagram-minimapBackground)",
-  "minimap-border": "var(--color-diagram-minimapBorder)",
-  offense: "var(--color-diagram-offensivePlayer)",
-  "offense-alt": "var(--color-diagram-offensivePlayerAlt)",
-  defense: "var(--color-diagram-defensivePlayer)",
-  "defense-alt": "var(--color-diagram-defensivePlayerAlt)",
-  "special-teams": "var(--color-diagram-specialTeamsPlayer)",
-  route: "var(--color-diagram-routeColor)",
-  "route-alt": "var(--color-diagram-routeColorAlt)",
-  "route-start": "var(--color-diagram-routeStart)",
-  "route-end": "var(--color-diagram-routeEnd)",
-};
-
+// Color system using design tokens
 const colors = {
+  // Brand colors
   jade: createScale("jade"),
   navy: createScale("navy"),
-  gray: createScale("gray"),
-  blue: createScale("blue"),
+
+  // Accent colors (these use accent- prefix in CSS)
+  orange: createScale("accent-orange"),
+  purple: createScale("accent-purple"),
+  pink: createScale("accent-pink"),
+  amber: createScale("accent-amber"),
+  red: createScale("accent-red"),
+  blue: createScale("accent-blue"),
   cyan: createScale("cyan"),
-  amber: createScale("amber"),
-  emerald: createScale("emerald"),
-  purple: createScale("purple"),
-  violet: createScale("violet"),
-  red: createScale("red"),
-  success: createScale("success", statusSteps),
-  warning: createScale("warning", statusSteps),
-  error: createScale("error", statusSteps),
-  brand: {
-    primary: semanticColor("primary"),
-    hover: semanticColor("primary-hover"),
-    active: semanticColor("primary-active"),
+  lime: createScale("lime"),
+  indigo: createScale("indigo"),
+
+  // Semantic colors
+  success: {
+    DEFAULT: "var(--color-success)",
+    lightest: "var(--color-success-lightest)",
+    light: "var(--color-success-light)",
+    base: "var(--color-success-base)",
+    dark: "var(--color-success-dark)",
+    darkest: "var(--color-success-darkest)",
   },
-  surface: {
-    base: semanticColor("bg-primary"),
-    secondary: semanticColor("bg-secondary"),
-    muted: semanticColor("bg-muted"),
-    subtle: semanticColor("surface-subtle-hover"),
-    inverse: semanticColor("surface-inverse"),
-    "inverse-alt": semanticColor("surface-inverse-alt"),
+  warning: {
+    DEFAULT: "var(--color-warning)",
+    lightest: "var(--color-warning-lightest)",
+    light: "var(--color-warning-light)",
+    base: "var(--color-warning-base)",
+    dark: "var(--color-warning-dark)",
+    darkest: "var(--color-warning-darkest)",
   },
+  error: {
+    DEFAULT: "var(--color-error)",
+    lightest: "var(--color-error-lightest)",
+    light: "var(--color-error-light)",
+    base: "var(--color-error-base)",
+    dark: "var(--color-error-dark)",
+    darkest: "var(--color-error-darkest)",
+  },
+  info: {
+    DEFAULT: "var(--color-info)",
+    lightest: "var(--color-info-lightest)",
+    light: "var(--color-info-light)",
+    base: "var(--color-info-base)",
+    dark: "var(--color-info-dark)",
+    darkest: "var(--color-info-darkest)",
+  },
+
+  // Text colors
   text: {
-    primary: semanticColor("text-primary"),
-    secondary: semanticColor("text-secondary"),
-    muted: semanticColor("text-muted"),
-    inverse: semanticColor("text-inverse"),
-    brand: semanticColor("text-brand"),
+    primary: "var(--color-text-primary)",
+    secondary: "var(--color-text-secondary)",
+    tertiary: "var(--color-text-tertiary)",
+    inverse: "var(--color-text-inverse)",
+    accent: "var(--color-text-accent)",
+    muted: "var(--color-text-muted)",
+    disabled: "var(--color-text-disabled)",
   },
+
+  // Background colors
+  bg: {
+    primary: "var(--color-bg-primary)",
+    secondary: "var(--color-bg-secondary)",
+    tertiary: "var(--color-bg-tertiary)",
+    surface: "var(--color-bg-surface)",
+    muted: "var(--color-bg-muted)",
+    subtle: "var(--color-bg-subtle)",
+  },
+
+  // Border colors
   border: {
-    DEFAULT: semanticColor("border"),
-    focus: semanticColor("border-focus"),
-    error: semanticColor("border-error"),
-    subtle: "var(--border-color-subtle)",
-    medium: "var(--border-color-medium)",
-    strong: "var(--border-color-strong)",
-    brand: "var(--border-color-brand)",
-    "brand-strong": "var(--border-color-brand-strong)",
-    interactive: "var(--border-color-interactive)",
-    "interactive-strong": "var(--border-color-interactive-strong)",
+    DEFAULT: "var(--color-border-primary)",
+    primary: "var(--color-border-primary)",
+    secondary: "var(--color-border-secondary)",
+    accent: "var(--color-border-accent)",
+    focus: "var(--color-border-focus)",
+    muted: "var(--color-border-muted)",
   },
-  status: {
-    success: semanticColor("success"),
-    "success-bg": semanticColor("success-bg"),
-    warning: semanticColor("warning"),
-    "warning-bg": semanticColor("warning-bg"),
-    error: semanticColor("error"),
-    "error-bg": semanticColor("error-bg"),
-    info: semanticColor("info"),
-    "info-bg": semanticColor("info-bg"),
+
+  // Interactive states (for buttons, etc.)
+  interactive: {
+    primary: {
+      base: "var(--color-interactive-primary-base)",
+      hover: "var(--color-interactive-primary-hover)",
+      active: "var(--color-interactive-primary-active)",
+      disabled: "var(--color-interactive-primary-disabled)",
+      focus: "var(--color-interactive-primary-focus)",
+    },
+    secondary: {
+      base: "var(--color-interactive-secondary-base)",
+      hover: "var(--color-interactive-secondary-hover)",
+      active: "var(--color-interactive-secondary-active)",
+      disabled: "var(--color-interactive-secondary-disabled)",
+    },
+    success: {
+      base: "var(--color-interactive-success-base)",
+      hover: "var(--color-interactive-success-hover)",
+      active: "var(--color-interactive-success-active)",
+      disabled: "var(--color-interactive-success-disabled)",
+    },
+    danger: {
+      base: "var(--color-interactive-danger-base)",
+      hover: "var(--color-interactive-danger-hover)",
+      active: "var(--color-interactive-danger-active)",
+      disabled: "var(--color-interactive-danger-disabled)",
+    },
+    ghost: {
+      base: "var(--color-interactive-ghost-base)",
+      hover: "var(--color-interactive-ghost-hover)",
+      active: "var(--color-interactive-ghost-active)",
+    },
   },
-  link: {
-    DEFAULT: "var(--color-linkColor)",
-    hover: "var(--color-linkHoverColor)",
-    visited: "var(--color-linkVisitedColor)",
-  },
-  highlight: {
-    DEFAULT: "var(--color-highlightColor)",
-    bg: "var(--color-highlightBg)",
-    selection: "var(--color-selectionColor)",
-    "selection-bg": "var(--color-selectionBg)",
-    "selection-border": "var(--color-selectionBorder)",
-  },
-  diagram: diagramTokens,
 };
 
 export default {
@@ -194,31 +133,173 @@ export default {
   darkMode: "class",
   theme: {
     // Mobile-first breakpoints aligned with useBreakpoint() hook
-    // Mobile: < 768px (default, no prefix)
-    // Tablet: 768px - 1023px (sm:)
-    // Desktop: ≥ 1024px (md:)
     screens: {
-      sm: "768px", // Tablet and up (matches useBreakpoint hook)
-      md: "1024px", // Desktop and up (matches useBreakpoint hook)
-      lg: "1280px", // Large desktop
-      xl: "1440px", // Extra large desktop
-      "2xl": "1920px", // 4K displays
+      sm: "768px",
+      md: "1024px",
+      lg: "1280px",
+      xl: "1440px",
+      "2xl": "1920px",
     },
     extend: {
       colors,
-      spacing: spacingTokens,
+
+      // Spacing system
+      spacing: {
+        0: "var(--spacing-0)",
+        1: "var(--spacing-1)",
+        2: "var(--spacing-2)",
+        3: "var(--spacing-3)",
+        4: "var(--spacing-4)",
+        5: "var(--spacing-5)",
+        6: "var(--spacing-6)",
+        8: "var(--spacing-8)",
+        10: "var(--spacing-10)",
+        12: "var(--spacing-12)",
+        16: "var(--spacing-16)",
+        20: "var(--spacing-20)",
+        24: "var(--spacing-24)",
+        32: "var(--spacing-32)",
+        px: "1px",
+        // Semantic spacing
+        xs: "var(--spacing-xs)",
+        sm: "var(--spacing-sm)",
+        md: "var(--spacing-md)",
+        lg: "var(--spacing-lg)",
+        xl: "var(--spacing-xl)",
+        "2xl": "var(--spacing-2xl)",
+        "3xl": "var(--spacing-3xl)",
+      },
+
+      // Typography
+      fontFamily: {
+        primary: "var(--font-family-primary)",
+        heading: "var(--font-family-heading)",
+        mono: "var(--font-family-mono)",
+      },
+      fontSize: {
+        xs: "var(--font-size-xs)",
+        sm: "var(--font-size-sm)",
+        base: "var(--font-size-base)",
+        md: "var(--font-size-md)",
+        lg: "var(--font-size-lg)",
+        xl: "var(--font-size-xl)",
+        "2xl": "var(--font-size-2xl)",
+        "3xl": "var(--font-size-3xl)",
+        "4xl": "var(--font-size-4xl)",
+        "5xl": "var(--font-size-5xl)",
+        "6xl": "var(--font-size-6xl)",
+      },
+      fontWeight: {
+        thin: "var(--font-weight-thin)",
+        extralight: "var(--font-weight-extralight)",
+        light: "var(--font-weight-light)",
+        normal: "var(--font-weight-normal)",
+        medium: "var(--font-weight-medium)",
+        semibold: "var(--font-weight-semibold)",
+        bold: "var(--font-weight-bold)",
+        extrabold: "var(--font-weight-extrabold)",
+        black: "var(--font-weight-black)",
+      },
+      lineHeight: {
+        none: "var(--line-height-none)",
+        tight: "var(--line-height-tight)",
+        snug: "var(--line-height-snug)",
+        normal: "var(--line-height-normal)",
+        relaxed: "var(--line-height-relaxed)",
+        loose: "var(--line-height-loose)",
+      },
+
+      // Shadows
+      boxShadow: {
+        xs: "var(--shadow-xs)",
+        sm: "var(--shadow-sm)",
+        base: "var(--shadow-base)",
+        md: "var(--shadow-md)",
+        lg: "var(--shadow-lg)",
+        xl: "var(--shadow-xl)",
+        "2xl": "var(--shadow-2xl)",
+        inner: "var(--shadow-inner)",
+        none: "var(--shadow-none)",
+      },
+
+      // Border radius
+      borderRadius: {
+        none: "var(--radius-none)",
+        sm: "var(--radius-sm)",
+        base: "var(--radius-base)",
+        md: "var(--radius-md)",
+        lg: "var(--radius-lg)",
+        xl: "var(--radius-xl)",
+        "2xl": "var(--radius-2xl)",
+        "3xl": "var(--radius-3xl)",
+        full: "var(--radius-full)",
+      },
+
+      // Background gradients for modern cards
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "gradient-mesh-jade":
+          "radial-gradient(circle at top right, rgba(79,209,197,0.15), transparent 50%), radial-gradient(circle at bottom left, rgba(79,209,197,0.1), transparent 50%)",
+        "gradient-mesh-orange":
+          "radial-gradient(circle at top right, rgba(255,159,64,0.15), transparent 50%), radial-gradient(circle at bottom left, rgba(255,159,64,0.1), transparent 50%)",
+        "gradient-mesh-purple":
+          "radial-gradient(circle at top right, rgba(168,85,247,0.15), transparent 50%), radial-gradient(circle at bottom left, rgba(168,85,247,0.1), transparent 50%)",
+      },
+
+      // Shadows (extended with brand-colored shadows)
+      boxShadow: {
+        xs: "var(--shadow-xs)",
+        sm: "var(--shadow-sm)",
+        base: "var(--shadow-base)",
+        md: "var(--shadow-md)",
+        lg: "var(--shadow-lg)",
+        xl: "var(--shadow-xl)",
+        "2xl": "var(--shadow-2xl)",
+        inner: "var(--shadow-inner)",
+        none: "var(--shadow-none)",
+        // Brand-colored shadows for modern elevation
+        "jade-sm": "0 2px 8px rgba(79, 209, 197, 0.15)",
+        "jade-md": "0 4px 16px rgba(79, 209, 197, 0.2)",
+        "jade-lg": "0 8px 32px rgba(79, 209, 197, 0.25)",
+        "orange-sm": "0 2px 8px rgba(255, 159, 64, 0.15)",
+        "orange-md": "0 4px 16px rgba(255, 159, 64, 0.2)",
+        "orange-lg": "0 8px 32px rgba(255, 159, 64, 0.25)",
+        "purple-sm": "0 2px 8px rgba(168, 85, 247, 0.15)",
+        "purple-md": "0 4px 16px rgba(168, 85, 247, 0.2)",
+        "purple-lg": "0 8px 32px rgba(168, 85, 247, 0.25)",
+        "blue-sm": "0 2px 8px rgba(59, 130, 246, 0.15)",
+        "blue-md": "0 4px 16px rgba(59, 130, 246, 0.2)",
+        "blue-lg": "0 8px 32px rgba(59, 130, 246, 0.25)",
+      },
+
+      // Animations
+      transitionDuration: {
+        instant: "var(--duration-instant)",
+        fast: "var(--duration-fast)",
+        normal: "var(--duration-normal)",
+        slow: "var(--duration-slow)",
+        slower: "var(--duration-slower)",
+        slowest: "var(--duration-slowest)",
+      },
+      transitionTimingFunction: {
+        linear: "var(--easing-linear)",
+        ease: "var(--easing-ease)",
+        "ease-in": "var(--easing-ease-in)",
+        "ease-out": "var(--easing-ease-out)",
+        "ease-in-out": "var(--easing-ease-in-out)",
+        spring: "var(--easing-spring)",
+      },
       animation: {
         "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        glow: "glow 2s ease-in-out infinite alternate",
-        "fade-in": "fadeIn 0.3s ease-in",
-        "slide-up": "slideUp 0.3s ease-out",
-        "scale-in": "scaleIn 0.2s ease-out",
+        "fade-in": "fadeIn var(--duration-normal) var(--easing-ease)",
+        "slide-up": "slideUp var(--duration-normal) var(--easing-ease-out)",
+        "scale-in": "scaleIn var(--duration-fast) var(--easing-spring)",
+        // Modern SaaS animations
+        shimmer: "shimmer 2s infinite",
+        float: "float 3s ease-in-out infinite",
+        glow: "glow 2s ease-in-out infinite",
       },
       keyframes: {
-        glow: {
-          from: { boxShadow: "0 0 5px -5px currentColor" },
-          to: { boxShadow: "0 0 20px 0px currentColor" },
-        },
         fadeIn: {
           from: { opacity: "0" },
           to: { opacity: "1" },
@@ -231,85 +312,50 @@ export default {
           from: { transform: "scale(0.95)", opacity: "0" },
           to: { transform: "scale(1)", opacity: "1" },
         },
+        // Modern shimmer effect for loading states
+        shimmer: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
+        // Floating animation for icons/badges
+        float: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+        // Glow pulse for status indicators
+        glow: {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.5" },
+        },
       },
+
+      // Layout
       maxWidth: {
-        // Layout container tokens
-        "container-xs": "var(--layout-container-xs)",
-        "container-sm": "var(--layout-container-sm)",
-        "container-md": "var(--layout-container-md)",
-        "container-lg": "var(--layout-container-lg)",
-        "container-xl": "var(--layout-container-xl)",
-        "container-2xl": "var(--layout-container-2xl)",
-        "container-3xl": "var(--layout-container-3xl)",
-        "container-4xl": "var(--layout-container-4xl)",
-        "container-5xl": "var(--layout-container-5xl)",
-        "container-6xl": "var(--layout-container-6xl)",
-        "container-7xl": "var(--layout-container-7xl)",
-        "container-full": "var(--layout-container-full)",
-        // Semantic content widths
-        "content-narrow": "var(--layout-content-narrow)",
-        "content-medium": "var(--layout-content-medium)",
-        "content-wide": "var(--layout-content-wide)",
-        "content-full": "var(--layout-content-full)",
+        xs: "var(--container-xs)",
+        sm: "var(--container-sm)",
+        md: "var(--container-md)",
+        lg: "var(--container-lg)",
+        xl: "var(--container-xl)",
+        "2xl": "var(--container-2xl)",
+        "3xl": "var(--container-3xl)",
+        "4xl": "var(--container-4xl)",
+        "5xl": "var(--container-5xl)",
+        "6xl": "var(--container-6xl)",
+        "7xl": "var(--container-7xl)",
       },
-      fontFamily: {
-        display: ["Bebas Neue", "system-ui", "sans-serif"],
-        sans: ["Inter", "system-ui", "sans-serif"],
-        mono: ["JetBrains Mono", "Consolas", "monospace"],
-      },
-      fontSize: {
-        "2xs": ["0.625rem", { lineHeight: "0.875rem", fontWeight: "400" }], // 10px - for ultra-compact UI (badges, labels)
-        xs: ["0.75rem", { lineHeight: "1rem", fontWeight: "400" }],
-        sm: ["0.875rem", { lineHeight: "1.25rem", fontWeight: "400" }],
-        base: ["1rem", { lineHeight: "1.5rem", fontWeight: "400" }],
-        lg: ["1.125rem", { lineHeight: "1.75rem", fontWeight: "500" }],
-        xl: ["1.25rem", { lineHeight: "1.75rem", fontWeight: "600" }],
-        "2xl": ["1.5rem", { lineHeight: "2rem", fontWeight: "600" }],
-        "3xl": ["1.875rem", { lineHeight: "2.25rem", fontWeight: "700" }],
-        "4xl": ["2.25rem", { lineHeight: "2.5rem", fontWeight: "700" }],
-      },
-      borderRadius: {
-        none: "var(--radius-none)",
-        sm: "var(--radius-sm)",
-        DEFAULT: "var(--radius-button)",
-        md: "var(--radius-md)",
-        lg: "var(--radius-lg)",
-        xl: "var(--radius-xl)",
-        "2xl": "var(--radius-2xl)",
-        "3xl": "var(--radius-3xl)",
-        full: "var(--radius-full)",
-      },
-      borderWidth: {
-        DEFAULT: "var(--border-width-thin)",
-        0: "0",
-        hairline: "var(--border-width-hairline)",
-        thin: "var(--border-width-thin)",
-        medium: "var(--border-width-medium)",
-        thick: "var(--border-width-thick)",
-        heavy: "var(--border-width-heavy)",
-        2: "var(--border-width-medium)",
-        3: "var(--border-width-thick)",
-        4: "var(--border-width-heavy)",
-      },
-      boxShadow: elevationTokens,
-      opacity: opacityTokens,
+
+      // Z-index
       zIndex: {
-        auto: "auto",
-        0: "0",
-        10: "10",
-        20: "20",
-        30: "30",
-        40: "40",
-        50: "50",
-        base: "0",
-        dropdown: "40",
-        sticky: "45",
-        modal: "50",
-        popover: "50",
-        toast: "55",
-        tooltip: "60",
+        dropdown: "var(--z-dropdown)",
+        sticky: "var(--z-sticky)",
+        fixed: "var(--z-fixed)",
+        overlay: "var(--z-overlay)",
+        modal: "var(--z-modal)",
+        popover: "var(--z-popover)",
+        toast: "var(--z-toast)",
+        tooltip: "var(--z-tooltip)",
       },
     },
   },
-  plugins: [forms, typography, auroraTheme, boxcallTheme, layoutTokens],
+  plugins: [forms, typography],
 };

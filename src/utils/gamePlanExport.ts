@@ -3,7 +3,7 @@
  * Handles JSON export and import for game plans with validation
  */
 
-import type { GamePlan } from "../services/gamePlanService_new";
+import type { GamePlan } from "../services/gamePlanService";
 
 export interface ExportedGamePlan {
   version: "1.0";

@@ -116,7 +116,7 @@ export const CollaborativePersonalProfile: React.FC<
       <div className="relative">
         {/* Live editing indicator */}
         {editingField && (
-          <div className="absolute top-2 right-12 z-10 bg-primary text-text-on-primary px-2 py-1 rounded-lg text-xs">
+          <div className="absolute top-2 right-12 z-10 bg-primary text-on-primary px-2 py-1 rounded-lg text-xs">
             Someone is editing {editingField}...
           </div>
         )}
@@ -129,7 +129,7 @@ export const CollaborativePersonalProfile: React.FC<
               Personal Profile
             </Typography>
             {isEditable && (
-              <div className="text-xs text-text-muted">
+              <div className="text-xs text-muted">
                 ✏️ Collaborative editing
               </div>
             )}
@@ -145,7 +145,7 @@ export const CollaborativePersonalProfile: React.FC<
           />
 
           {/* Collaboration Status */}
-          <div className="text-xs text-text-muted border-t border-border-secondary pt-2">
+          <div className="text-xs text-muted border-t border-secondary pt-2">
             Last updated: {new Date().toLocaleTimeString()}
             {isEditable && (
               <span className="ml-2 text-primary">

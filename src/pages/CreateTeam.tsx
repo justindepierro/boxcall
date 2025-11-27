@@ -382,11 +382,11 @@ export const CreateTeam: React.FC = () => {
 
               {/* Address Suggestions */}
               {addressSuggestions.length > 0 && (
-                <div className="absolute z-10 w-full mt-spacing-xs bg-surface-primary rounded-lg shadow-xl max-h-48 overflow-y-auto">
+                <div className="absolute z-10 w-full mt-spacing-xs bg-primary rounded-lg shadow-xl max-h-48 overflow-y-auto">
                   {addressSuggestions.map((suggestion) => (
                     <button
                       key={suggestion.id}
-                      className="w-full px-spacing-md py-spacing-xs text-left hover:bg-surface-secondary border-b border-border-subtle last:border-b-0"
+                      className="w-full px-spacing-md py-spacing-xs text-left hover:bg-secondary border-b border-subtle last:border-b-0"
                       onClick={() => handleSelectAddress(suggestion)}
                     >
                       <div className="font-medium">
@@ -447,7 +447,7 @@ export const CreateTeam: React.FC = () => {
 
             {/* Duplicate Warning */}
             {showDuplicateWarning && duplicateCheck && (
-              <div className="bg-orange-50 border border-orange-200 rounded-lg p-spacing-md">
+              <div className="bg-warning border border-orange-200 rounded-lg p-spacing-md">
                 <div className="flex items-start gap-spacing-sm">
                   <Icon
                     name="alert-triangle"
@@ -471,7 +471,7 @@ export const CreateTeam: React.FC = () => {
                     </Typography>
 
                     {duplicateCheck.similarTeams.length > 0 && (
-                      <div className="bg-surface-secondary rounded-lg p-spacing-sm mb-spacing-sm">
+                      <div className="bg-secondary rounded-lg p-spacing-sm mb-spacing-sm">
                         <Typography
                           variant="body-xs"
                           className="font-medium mb-spacing-xs"
@@ -547,7 +547,7 @@ export const CreateTeam: React.FC = () => {
               </div>
             )}
 
-            <div className="bg-surface-secondary p-spacing-md rounded-lg space-y-spacing-xs">
+            <div className="bg-secondary p-spacing-md rounded-lg space-y-spacing-xs">
               <div>
                 <span className="font-medium">School:</span>{" "}
                 {formData.schoolName}
@@ -666,7 +666,7 @@ export const CreateTeam: React.FC = () => {
                         ? "bg-blue-600 text-white"
                         : currentStepIndex > index
                           ? "bg-green-600 text-white"
-                          : "bg-surface-muted text-secondary"
+                          : "bg-muted text-secondary"
                     }`}
                   >
                     {index + 1}
@@ -676,7 +676,7 @@ export const CreateTeam: React.FC = () => {
                       className={`flex-1 h-1 mx-spacing-md ${
                         currentStepIndex > index
                           ? "bg-green-600"
-                          : "bg-surface-muted"
+                          : "bg-muted"
                       }`}
                     />
                   )}
@@ -691,7 +691,7 @@ export const CreateTeam: React.FC = () => {
           </div>
 
           {/* Step Content */}
-          <div className="bg-surface-primary shadow-lg rounded-lg p-spacing-lg mb-spacing-lg">
+          <div className="bg-primary shadow-lg rounded-lg p-spacing-lg mb-spacing-lg">
             {renderStepContent()}
           </div>
 
@@ -728,7 +728,7 @@ export const CreateTeam: React.FC = () => {
           {/* Loading State */}
           {isLoading && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-surface-primary p-spacing-lg rounded-lg shadow-2xl max-w-sm w-full mx-spacing-md text-center">
+              <div className="bg-primary p-spacing-lg rounded-lg shadow-2xl max-w-sm w-full mx-spacing-md text-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-spacing-md"></div>
                 <Typography variant="body-md">{loadingMessage}</Typography>
               </div>

@@ -123,7 +123,7 @@ export function BulkEditModal({
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Bulk Edit Players">
       <div className="space-y-spacing-md">
-        <Typography variant="body-sm" className="text-text-secondary">
+        <Typography variant="body-sm" className="text-secondary">
           You are about to edit <strong>{selectedCount}</strong> player
           {selectedCount !== 1 ? "s" : ""}. Only fields you check will be
           updated.
@@ -156,7 +156,7 @@ export function BulkEditModal({
             <div className="flex-1">
               <label
                 htmlFor="bulk-position"
-                className="block text-sm font-medium text-text-primary mb-2"
+                className="block text-sm font-medium text-primary mb-2"
               >
                 Position
               </label>
@@ -165,7 +165,7 @@ export function BulkEditModal({
                 value={position}
                 onChange={(e) => setPosition(e.target.value)}
                 disabled={!applyPosition}
-                className="w-full px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed"
+                className="w-full px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-surface-muted disabled:text-muted disabled:cursor-not-allowed"
               >
                 {positionOptions.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -187,7 +187,7 @@ export function BulkEditModal({
             <div className="flex-1">
               <label
                 htmlFor="bulk-grade"
-                className="block text-sm font-medium text-text-primary mb-2"
+                className="block text-sm font-medium text-primary mb-2"
               >
                 Grade Level
               </label>
@@ -196,7 +196,7 @@ export function BulkEditModal({
                 value={gradeLevel}
                 onChange={(e) => setGradeLevel(e.target.value)}
                 disabled={!applyGradeLevel}
-                className="w-full px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed"
+                className="w-full px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-surface-muted disabled:text-muted disabled:cursor-not-allowed"
               >
                 {gradeLevelOptions.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -216,7 +216,7 @@ export function BulkEditModal({
               className="mt-2 h-4 w-4 rounded border-surface-secondary text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2"
             />
             <div className="flex-1">
-              <label className="block text-sm font-medium text-text-primary mb-2">
+              <label className="block text-sm font-medium text-primary mb-2">
                 Height
               </label>
               <div className="flex gap-spacing-sm">
@@ -229,7 +229,7 @@ export function BulkEditModal({
                     disabled={!applyHeight}
                     min="3"
                     max="8"
-                    className="w-full px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed"
+                    className="w-full px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-surface-muted disabled:text-muted disabled:cursor-not-allowed"
                   />
                 </div>
                 <div className="flex-1">
@@ -241,7 +241,7 @@ export function BulkEditModal({
                     disabled={!applyHeight}
                     min="0"
                     max="11"
-                    className="w-full px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed"
+                    className="w-full px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-surface-muted disabled:text-muted disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
@@ -259,7 +259,7 @@ export function BulkEditModal({
             <div className="flex-1">
               <label
                 htmlFor="bulk-weight"
-                className="block text-sm font-medium text-text-primary mb-2"
+                className="block text-sm font-medium text-primary mb-2"
               >
                 Weight (lbs)
               </label>
@@ -272,7 +272,7 @@ export function BulkEditModal({
                 disabled={!applyWeight}
                 min="50"
                 max="500"
-                className="w-full px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-surface-muted disabled:text-text-muted disabled:cursor-not-allowed"
+                className="w-full px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-surface-muted disabled:text-muted disabled:cursor-not-allowed"
               />
             </div>
           </div>

@@ -48,7 +48,7 @@ export const RoleBasedDashboard: React.FC<RoleBasedContentProps> = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 spinner-primary mx-auto mb-4"></div>
-          <p className="text-text-secondary">Loading your dashboard...</p>
+          <p className="text-secondary">Loading your dashboard...</p>
         </div>
       </div>
     );
@@ -156,41 +156,41 @@ const AdminDashboard: React.FC = () => {
   return (
     <div className="grid-dashboard">
       {/* System Overview */}
-      <div className="surface-card rounded-lg shadow bc-card-padding">
+      <div className="bg-surface-primary rounded-lg shadow p-6">
         <Typography
           variant="headline-sm"
           as="h3"
-          className="text-text-primary dark:text-text-inverse mb-4 flex items-center"
+          className="text-primary dark:text-inverse mb-4 flex items-center"
         >
           <Icon name="database" className="mr-2" />
           System Overview
         </Typography>
         <div className="space-y-3">
           <div className="flex justify-between">
-            <span className="text-text-secondary">Active Teams</span>
-            <span className="font-medium text-text-primary dark:text-text-inverse">
+            <span className="text-secondary">Active Teams</span>
+            <span className="font-medium text-primary dark:text-inverse">
               12
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-text-secondary">Total Users</span>
-            <span className="font-medium text-text-primary dark:text-text-inverse">
+            <span className="text-secondary">Total Users</span>
+            <span className="font-medium text-primary dark:text-inverse">
               247
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-text-secondary">System Health</span>
-            <span className="text-text-success font-medium">Excellent</span>
+            <span className="text-secondary">System Health</span>
+            <span className="text-success font-medium">Excellent</span>
           </div>
         </div>
       </div>
 
       {/* User Management */}
-      <div className="surface-card rounded-lg shadow bc-card-padding">
+      <div className="bg-surface-primary rounded-lg shadow p-6">
         <Typography
           variant="headline-sm"
           as="h3"
-          className="text-text-primary dark:text-text-inverse mb-4 flex items-center"
+          className="text-primary dark:text-inverse mb-4 flex items-center"
         >
           <Icon name="users" className="mr-2" />
           User Management
@@ -209,11 +209,11 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Quick Actions */}
-      <div className="surface-card rounded-lg shadow bc-card-padding">
+      <div className="bg-surface-primary rounded-lg shadow p-6">
         <Typography
           variant="headline-sm"
           as="h3"
-          className="text-text-primary dark:text-text-inverse mb-4 flex items-center"
+          className="text-primary dark:text-inverse mb-4 flex items-center"
         >
           <Icon name="zap" className="mr-2" />
           Quick Actions

@@ -62,11 +62,11 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
     setForm({ title: "", eventType: "practice", startsAt: "", location: "" });
   }
   return (
-    <Card className="bc-card-padding">
+    <Card className="p-6">
       <div className="flex items-center justify-between mb-4">
         <Typography
           variant="headline-md"
-          className="flex items-center gap-2 text-text-primary"
+          className="flex items-center gap-2 text-primary"
         >
           <Icon name="calendar" size="md" /> Team Calendar
         </Typography>
@@ -77,7 +77,7 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
         )}
       </div>
       {isLoading && (
-        <div className="text-sm text-text-secondary">Loading events...</div>
+        <div className="text-sm text-secondary">Loading events...</div>
       )}
       {!isLoading && !events.length && (
         <OnboardingHint
@@ -111,8 +111,8 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
               key={ev.id}
               className="flex items-center justify-between text-sm surface-subtle rounded-lg px-3 py-2 hover:bg-surface-subtle/70 transition-colors"
             >
-              <span className="font-medium text-text-primary">{ev.title}</span>
-              <span className="text-text-secondary">
+              <span className="font-medium text-primary">{ev.title}</span>
+              <span className="text-secondary">
                 {new Date(ev.starts_at).toLocaleDateString(undefined, {
                   month: "short",
                   day: "numeric",

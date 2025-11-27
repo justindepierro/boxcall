@@ -13,5 +13,5 @@ export {
 export { ComplexityBadge } from "./ComplexityBadge";
 export type { BadgeProps } from "./Badge";
 
-// Import the CSS animations
+// Minimal CSS for premium badge gradient effects
 import "./Badge.css";

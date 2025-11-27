@@ -28,21 +28,21 @@ export const CalendarStats: React.FC<CalendarStatsProps> = ({
 
   return (
     <div className={`space-y-2 ${className || ""}`.trim()}>
-      <span className="Typography typography-label-sm text-text-primary">
+      <span className="Typography typography-label-sm text-primary">
         Stats (Shell)
       </span>
       <dl className="grid grid-cols-2 gap-2 text-xs">
         <div>
-          <dt className="text-text-muted">Total</dt>
+          <dt className="text-muted">Total</dt>
           <dd className="font-medium">{stats.total}</dd>
         </div>
         <div>
-          <dt className="text-text-muted">This Month</dt>
+          <dt className="text-muted">This Month</dt>
           <dd className="font-medium">{stats.monthCount}</dd>
         </div>
         {Object.entries(stats.byType).map(([type, count]) => (
           <div key={type}>
-            <dt className="text-text-muted capitalize">{type}</dt>
+            <dt className="text-muted capitalize">{type}</dt>
             <dd className="font-medium">{count}</dd>
           </div>
         ))}

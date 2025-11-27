@@ -121,7 +121,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     document.body.setAttribute("data-density", uiDensity);
   }
   return (
-    <div className="relative min-h-screen surface-app bg-surface-base text-text-primary">
+    <div className="relative min-h-screen surface-app bg-surface-base text-primary">
       <div
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 z-0 bg-aurora-radial opacity-25 transition-opacity duration-500 dark:opacity-15"
@@ -156,7 +156,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                   BoxCall
                 </Typography>
                 <div className="flex items-center gap-1.5 text-xs leading-tight">
-                  <span className="text-text-secondary truncate">
+                  <span className="text-secondary truncate">
                     {isSuperAdminEmail(profile?.email ?? null)
                       ? "Super Admin"
                       : profile?.role === "coach"
@@ -175,11 +175,11 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
           }
           footer={
-            <div className="text-xs text-center text-text-secondary">
+            <div className="text-xs text-center text-secondary">
               <p>BoxCall v0.1.5</p>
               <p>Football Management</p>
               {isDevMode && (
-                <p className="text-text-warning dark:text-text-warning font-medium mt-1">
+                <p className="text-warning dark:text-warning font-medium mt-1">
                   Dev Mode:{" "}
                   {devMode
                     .replace(/_/g, " ")

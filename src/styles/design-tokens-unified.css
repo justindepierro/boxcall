@@ -1,0 +1,600 @@
+/**
+ * ============================================
+ * BOXCALL DESIGN SYSTEM
+ * Single Source of Truth for Design Tokens
+ * ============================================
+ *
+ * Version: 2.0  
+ * Last Updated: November 27, 2025
+ * Inspired by: LiteWork design system architecture
+ * 
+ * This file contains ALL design tokens for the BoxCall application.
+ * DO NOT create duplicate token files. Edit this file to modify tokens.
+ * 
+ * Brand Colors: Jade (primary) + Navy (neutral) + Colorful accents
+ * 
+ * Table of Contents:
+ * 1. Color Tokens (Primitives)
+ * 2. Semantic Colors
+ * 3. Interactive State Colors
+ * 4. Typography Tokens
+ * 5. Spacing Tokens (Fixed + Fluid)
+ * 6. Shadow Tokens
+ * 7. Border Radius Tokens
+ * 8. Animation & Motion Tokens
+ * 9. Material Design Tokens (Glass, Surfaces)
+ * 10. Layout Tokens
+ * 11. Component Tokens
+ * 12. Z-Index Scale
+ */
+
+:root {
+  /* ============================================
+     1. COLOR TOKENS (PRIMITIVES)
+     ============================================ */
+
+  /* Primary Jade Scale (Brand) */
+  --color-jade-50: #f0fdf7;
+  --color-jade-100: #dcfce9;
+  --color-jade-200: #bbf7d5;
+  --color-jade-300: #86efb0;
+  --color-jade-400: #4ade84;
+  --color-jade-500: oklch(72% 0.18 156); /* #22c55e - primary brand */
+  --color-jade-600: #16a34a;
+  --color-jade-700: #15803d;
+  --color-jade-800: #166534;
+  --color-jade-900: #14532d;
+  --color-jade-950: #052e16;
+  --color-jade: oklch(72% 0.18 156);
+
+  /* Primary Navy Scale (Neutral) */
+  --color-navy-50: #f8fafc;
+  --color-navy-100: #f1f5f9;
+  --color-navy-200: #e2e8f0;
+  --color-navy-300: #cbd5e1;
+  --color-navy-400: #94a3b8;
+  --color-navy-500: #64748b;
+  --color-navy-600: #475569;
+  --color-navy-700: #334155;
+  --color-navy-800: #1e293b;
+  --color-navy-900: #0f172a;
+  --color-navy: #334155;
+
+  /* Neutral Gray Scale */
+  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f4f4f5;
+  --color-neutral-200: #e4e4e7;
+  --color-neutral-300: #d4d4d8;
+  --color-neutral-400: #a1a1aa;
+  --color-neutral-500: #71717a;
+  --color-neutral-600: #52525b;
+  --color-neutral-700: #3f3f46;
+  --color-neutral-800: #27272a;
+  --color-neutral-900: #18181b;
+  --color-neutral: #71717a;
+
+  /* Off-white */
+  --color-off-white: #fefefe;
+
+  /* ============================================
+     ACCENT COLORS (50-950 SCALES)
+     ============================================ */
+
+  /* Orange - Energy/Action */
+  --color-accent-orange-50: #fff7ed;
+  --color-accent-orange-100: #ffedd5;
+  --color-accent-orange-200: #fed7aa;
+  --color-accent-orange-300: #fdba74;
+  --color-accent-orange-400: #fb923c;
+  --color-accent-orange-500: oklch(68.4% 0.216 36.9); /* #ff6b35 */
+  --color-accent-orange-600: #ea5a28;
+  --color-accent-orange-700: #c2410c;
+  --color-accent-orange-800: #9a3412;
+  --color-accent-orange-900: #7c2d12;
+  --color-accent-orange-950: #431407;
+  --color-accent-orange: oklch(68.4% 0.216 36.9);
+
+  /* Purple - Premium/Achievement */
+  --color-accent-purple-50: #faf5ff;
+  --color-accent-purple-100: #f3e8ff;
+  --color-accent-purple-200: #e9d5ff;
+  --color-accent-purple-300: #d8b4fe;
+  --color-accent-purple-400: #c084fc;
+  --color-accent-purple-500: oklch(62.7% 0.215 283.5); /* #8b5cf6 */
+  --color-accent-purple-600: #7c3aed;
+  --color-accent-purple-700: #6d28d9;
+  --color-accent-purple-800: #5b21b6;
+  --color-accent-purple-900: #4c1d95;
+  --color-accent-purple-950: #2e1065;
+  --color-accent-purple: oklch(62.7% 0.215 283.5);
+
+  /* Pink - Fun/Highlight */
+  --color-accent-pink-50: #fdf2f8;
+  --color-accent-pink-100: #fce7f3;
+  --color-accent-pink-200: #fbcfe8;
+  --color-accent-pink-300: #f9a8d4;
+  --color-accent-pink-400: #f472b6;
+  --color-accent-pink-500: oklch(63.5% 0.224 342.6); /* #ec4899 */
+  --color-accent-pink-600: #db2777;
+  --color-accent-pink-700: #be185d;
+  --color-accent-pink-800: #9d174d;
+  --color-accent-pink-900: #831843;
+  --color-accent-pink-950: #500724;
+  --color-accent-pink: oklch(63.5% 0.224 342.6);
+
+  /* Amber - Warning */
+  --color-accent-amber-50: #fffbeb;
+  --color-accent-amber-100: #fef3c7;
+  --color-accent-amber-200: #fde68a;
+  --color-accent-amber-300: #fcd34d;
+  --color-accent-amber-400: #fbbf24;
+  --color-accent-amber-500: #f59e0b;
+  --color-accent-amber-600: #d97706;
+  --color-accent-amber-700: #b45309;
+  --color-accent-amber-800: #92400e;
+  --color-accent-amber-900: #78350f;
+  --color-accent-amber-950: #451a03;
+  --color-accent-amber: #f59e0b;
+
+  /* Red - Error/Alert */
+  --color-accent-red-50: #fef2f2;
+  --color-accent-red-100: #fee2e2;
+  --color-accent-red-200: #fecaca;
+  --color-accent-red-300: #fca5a5;
+  --color-accent-red-400: #f87171;
+  --color-accent-red-500: #ef4444;
+  --color-accent-red-600: #dc2626;
+  --color-accent-red-700: #b91c1c;
+  --color-accent-red-800: #991b1b;
+  --color-accent-red-900: #7f1d1d;
+  --color-accent-red-950: #450a0a;
+  --color-accent-red: #ef4444;
+
+  /* Blue - Info */
+  --color-accent-blue-50: #eff6ff;
+  --color-accent-blue-100: #dbeafe;
+  --color-accent-blue-200: #bfdbfe;
+  --color-accent-blue-300: #93c5fd;
+  --color-accent-blue-400: #60a5fa;
+  --color-accent-blue-500: #3b82f6;
+  --color-accent-blue-600: #2563eb;
+  --color-accent-blue-700: #1d4ed8;
+  --color-accent-blue-800: #1e40af;
+  --color-accent-blue-900: #1e3a8a;
+  --color-accent-blue-950: #172554;
+  --color-accent-blue: #3b82f6;
+
+  /* Cyan - Tech/Modern */
+  --color-accent-cyan-50: #ecfeff;
+  --color-accent-cyan-100: #cffafe;
+  --color-accent-cyan-200: #a5f3fc;
+  --color-accent-cyan-300: #67e8f9;
+  --color-accent-cyan-400: #22d3ee;
+  --color-accent-cyan-500: #06b6d4;
+  --color-accent-cyan-600: #0891b2;
+  --color-accent-cyan-700: #0e7490;
+  --color-accent-cyan-800: #155e75;
+  --color-accent-cyan-900: #164e63;
+  --color-accent-cyan-950: #083344;
+  --color-accent-cyan: #06b6d4;
+
+  /* Lime - Fresh/Active */
+  --color-accent-lime-50: #f7fee7;
+  --color-accent-lime-100: #ecfccb;
+  --color-accent-lime-200: #d9f99d;
+  --color-accent-lime-300: #bef264;
+  --color-accent-lime-400: #a3e635;
+  --color-accent-lime-500: #84cc16;
+  --color-accent-lime-600: #65a30d;
+  --color-accent-lime-700: #4d7c0f;
+  --color-accent-lime-800: #3f6212;
+  --color-accent-lime-900: #365314;
+  --color-accent-lime-950: #1a2e05;
+  --color-accent-lime: #84cc16;
+
+  /* Indigo - Focus/Deep */
+  --color-accent-indigo-50: #eef2ff;
+  --color-accent-indigo-100: #e0e7ff;
+  --color-accent-indigo-200: #c7d2fe;
+  --color-accent-indigo-300: #a5b4fc;
+  --color-accent-indigo-400: #818cf8;
+  --color-accent-indigo-500: #6366f1;
+  --color-accent-indigo-600: #4f46e5;
+  --color-accent-indigo-700: #4338ca;
+  --color-accent-indigo-800: #3730a6;
+  --color-accent-indigo-900: #312e81;
+  --color-accent-indigo-950: #1e1b4b;
+  --color-accent-indigo: #6366f1;
+
+  /* ============================================
+     RGB VARIANTS (FOR ALPHA TRANSPARENCY)
+     Used with rgb(var(--color-*-rgb) / 0.5) syntax
+     ============================================ */
+
+  /* Core Colors RGB */
+  --color-white-rgb: 255, 255, 255;
+  --color-black-rgb: 0, 0, 0;
+
+  /* Jade RGB */
+  --color-jade-50-rgb: 240, 253, 247;
+  --color-jade-100-rgb: 220, 252, 233;
+  --color-jade-200-rgb: 187, 247, 213;
+  --color-jade-300-rgb: 134, 239, 176;
+  --color-jade-400-rgb: 74, 222, 132;
+  --color-jade-500-rgb: 34, 197, 94;
+  --color-jade-600-rgb: 22, 163, 74;
+  --color-jade-700-rgb: 21, 128, 61;
+  --color-jade-800-rgb: 22, 101, 52;
+  --color-jade-900-rgb: 20, 83, 45;
+  --color-jade-950-rgb: 5, 46, 22;
+
+  /* Navy RGB */
+  --color-navy-50-rgb: 248, 250, 252;
+  --color-navy-100-rgb: 241, 245, 249;
+  --color-navy-200-rgb: 226, 232, 240;
+  --color-navy-300-rgb: 203, 213, 225;
+  --color-navy-400-rgb: 148, 163, 184;
+  --color-navy-500-rgb: 100, 116, 139;
+  --color-navy-600-rgb: 71, 85, 105;
+  --color-navy-700-rgb: 51, 65, 85;
+  --color-navy-800-rgb: 30, 41, 59;
+  --color-navy-900-rgb: 15, 23, 42;
+
+  /* Neutral RGB */
+  --color-neutral-50-rgb: 250, 250, 250;
+  --color-neutral-100-rgb: 244, 244, 245;
+  --color-neutral-200-rgb: 228, 228, 231;
+  --color-neutral-300-rgb: 212, 212, 216;
+  --color-neutral-400-rgb: 161, 161, 170;
+  --color-neutral-500-rgb: 113, 113, 122;
+  --color-neutral-600-rgb: 82, 82, 91;
+  --color-neutral-700-rgb: 63, 63, 70;
+  --color-neutral-800-rgb: 39, 39, 42;
+  --color-neutral-900-rgb: 24, 24, 27;
+
+  /* Orange RGB */
+  --color-accent-orange-500-rgb: 255, 107, 53;
+  --color-accent-orange-600-rgb: 234, 90, 40;
+
+  /* Purple RGB */
+  --color-accent-purple-500-rgb: 168, 85, 247;
+  --color-accent-purple-600-rgb: 147, 51, 234;
+
+  /* Pink RGB */
+  --color-accent-pink-500-rgb: 236, 72, 153;
+  --color-accent-pink-600-rgb: 219, 39, 119;
+
+  /* Amber RGB */
+  --color-accent-amber-500-rgb: 245, 158, 11;
+  --color-accent-amber-600-rgb: 217, 119, 6;
+
+  /* Red RGB */
+  --color-accent-red-500-rgb: 239, 68, 68;
+  --color-accent-red-600-rgb: 220, 38, 38;
+
+  /* Blue RGB */
+  --color-accent-blue-500-rgb: 59, 130, 246;
+  --color-accent-blue-600-rgb: 37, 99, 235;
+
+  /* Cyan RGB */
+  --color-accent-cyan-500-rgb: 6, 182, 212;
+  --color-accent-cyan-600-rgb: 8, 145, 178;
+
+  /* Lime RGB */
+  --color-accent-lime-500-rgb: 132, 204, 22;
+  --color-accent-lime-600-rgb: 101, 163, 13;
+
+  /* Indigo RGB */
+  --color-accent-indigo-500-rgb: 99, 102, 241;
+  --color-accent-indigo-600-rgb: 79, 70, 229;
+
+  /* ============================================
+     2. SEMANTIC COLORS (WITH SCALES)
+     ============================================ */
+
+  /* Success (Jade) */
+  --color-success-lightest: #f0fdf7;
+  --color-success-lighter: #dcfce9;
+  --color-success-light: #bbf7d5;
+  --color-success: #22c55e;
+  --color-success-dark: #16a34a;
+  --color-success-darker: #15803d;
+  --color-success-darkest: #14532d;
+
+  /* Warning (Amber) */
+  --color-warning-lightest: #fffbeb;
+  --color-warning-lighter: #fef3c7;
+  --color-warning-light: #fde68a;
+  --color-warning: #f59e0b;
+  --color-warning-dark: #d97706;
+  --color-warning-darker: #b45309;
+  --color-warning-darkest: #78350f;
+
+  /* Error (Red) */
+  --color-error-lightest: #fef2f2;
+  --color-error-lighter: #fee2e2;
+  --color-error-light: #fecaca;
+  --color-error: #ef4444;
+  --color-error-dark: #dc2626;
+  --color-error-darker: #b91c1c;
+  --color-error-darkest: #7f1d1d;
+
+  /* Info (Blue) */
+  --color-info-lightest: #eff6ff;
+  --color-info-lighter: #dbeafe;
+  --color-info-light: #bfdbfe;
+  --color-info: #3b82f6;
+  --color-info-dark: #2563eb;
+  --color-info-darker: #1d4ed8;
+  --color-info-darkest: #1e3a8a;
+
+  /* Neutral */
+  --color-neutral-lightest: #fafafa;
+  --color-neutral-lighter: #f4f4f5;
+  --color-neutral-light: #e4e4e7;
+  --color-neutral: #71717a;
+  --color-neutral-dark: #52525b;
+  --color-neutral-darker: #3f3f46;
+  --color-neutral-darkest: #27272a;
+
+  /* ============================================
+     3. INTERACTIVE STATE COLORS
+     ============================================ */
+
+  /* Primary (Jade) States */
+  --color-interactive-primary-base: #22c55e;
+  --color-interactive-primary-hover: #16a34a;
+  --color-interactive-primary-active: #15803d;
+  --color-interactive-primary-disabled: #bbf7d5;
+  --color-interactive-primary-focus: #22c55e;
+
+  /* Secondary (Navy) States */
+  --color-interactive-secondary-base: #334155;
+  --color-interactive-secondary-hover: #475569;
+  --color-interactive-secondary-active: #1e293b;
+  --color-interactive-secondary-disabled: #cbd5e1;
+  --color-interactive-secondary-focus: #334155;
+
+  /* Success (Jade) States */
+  --color-interactive-success-base: #22c55e;
+  --color-interactive-success-hover: #16a34a;
+  --color-interactive-success-active: #15803d;
+  --color-interactive-success-disabled: #bbf7d5;
+  --color-interactive-success-focus: #22c55e;
+
+  /* Danger (Red) States */
+  --color-interactive-danger-base: #ef4444;
+  --color-interactive-danger-hover: #dc2626;
+  --color-interactive-danger-active: #b91c1c;
+  --color-interactive-danger-disabled: #fecaca;
+  --color-interactive-danger-focus: #ef4444;
+
+  /* Ghost States */
+  --color-interactive-ghost-base: transparent;
+  --color-interactive-ghost-hover: #f8fafc;
+  --color-interactive-ghost-active: #f1f5f9;
+  --color-interactive-ghost-disabled: transparent;
+  --color-interactive-ghost-focus: #f8fafc;
+
+  /* Text Colors */
+  --color-text-primary: #334155;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #64748b;
+  --color-text-inverse: #ffffff;
+  --color-text-accent: #22c55e;
+  --color-text-muted: #94a3b8;
+  --color-text-disabled: #cbd5e1;
+
+  /* Background Colors */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f8fafc;
+  --color-bg-tertiary: #f1f5f9;
+  --color-bg-surface: #ffffff;
+  --color-bg-muted: #f8fafc;
+  --color-bg-subtle: #f1f5f9;
+
+  /* Border Colors */
+  --color-border-primary: #e2e8f0;
+  --color-border-secondary: #cbd5e1;
+  --color-border-accent: #22c55e;
+  --color-border-focus: #3b82f6;
+  --color-border-muted: #f1f5f9;
+
+  /* ============================================
+     4. TYPOGRAPHY TOKENS
+     ============================================ */
+
+  --font-family-primary: "Inter", system-ui, sans-serif;
+  --font-family-heading: "Poppins", system-ui, sans-serif;
+  --font-family-display: "Poppins", system-ui, sans-serif;
+  --font-family-mono: "Fira Code", "Courier New", monospace;
+
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-base: 1rem; /* 16px */
+  --font-size-md: 1.0625rem; /* 17px */
+  --font-size-lg: 1.125rem; /* 18px */
+  --font-size-xl: 1.25rem; /* 20px */
+  --font-size-2xl: 1.5rem; /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-4xl: 2.25rem; /* 36px */
+  --font-size-5xl: 3rem; /* 48px */
+  --font-size-6xl: 3.75rem; /* 60px */
+
+  --font-weight-thin: 100;
+  --font-weight-extralight: 200;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+
+  --line-height-none: 1;
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
+
+  --letter-spacing-tighter: -0.05em;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+  --letter-spacing-widest: 0.1em;
+
+  /* ============================================
+     5. SPACING TOKENS (FIXED + FLUID)
+     ============================================ */
+
+  /* Fixed spacing */
+  --spacing-0: 0;
+  --spacing-1: 0.25rem; /* 4px */
+  --spacing-2: 0.5rem; /* 8px */
+  --spacing-3: 0.75rem; /* 12px */
+  --spacing-4: 1rem; /* 16px */
+  --spacing-5: 1.25rem; /* 20px */
+  --spacing-6: 1.5rem; /* 24px */
+  --spacing-8: 2rem; /* 32px */
+  --spacing-10: 2.5rem; /* 40px */
+  --spacing-12: 3rem; /* 48px */
+  --spacing-16: 4rem; /* 64px */
+  --spacing-20: 5rem; /* 80px */
+  --spacing-24: 6rem; /* 96px */
+  --spacing-32: 8rem; /* 128px */
+
+  /* Semantic spacing */
+  --spacing-xs: var(--spacing-2);
+  --spacing-sm: var(--spacing-3);
+  --spacing-md: var(--spacing-4);
+  --spacing-lg: var(--spacing-6);
+  --spacing-xl: var(--spacing-8);
+  --spacing-2xl: var(--spacing-12);
+  --spacing-3xl: var(--spacing-16);
+
+  /* Fluid spacing (responsive) */
+  --space-fluid-xs: clamp(0.5rem, 1vw, 0.75rem);
+  --space-fluid-sm: clamp(0.75rem, 2vw, 1rem);
+  --space-fluid-md: clamp(1rem, 3vw, 1.5rem);
+  --space-fluid-lg: clamp(1.5rem, 4vw, 2.5rem);
+  --space-fluid-xl: clamp(2rem, 5vw, 4rem);
+  --space-fluid-2xl: clamp(3rem, 7vw, 6rem);
+  --space-fluid-3xl: clamp(4rem, 10vw, 8rem);
+
+  /* Container widths */
+  --space-container-xs: 20rem; /* 320px */
+  --space-container-sm: 24rem; /* 384px */
+  --space-container-md: 28rem; /* 448px */
+  --space-container-lg: 32rem; /* 512px */
+  --space-container-xl: 36rem; /* 576px */
+  --space-container-2xl: 42rem; /* 672px */
+  --space-container-3xl: 48rem; /* 768px */
+  --space-container-4xl: 56rem; /* 896px */
+  --space-container-5xl: 64rem; /* 1024px */
+  --space-container-6xl: 72rem; /* 1152px */
+  --space-container-7xl: 80rem; /* 1280px */
+
+  /* ============================================
+     6. SHADOW TOKENS
+     ============================================ */
+
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-base:
+    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-md:
+    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-lg:
+    0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --shadow-2xl: 0 30px 60px -15px rgb(0 0 0 / 0.3);
+  --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+  --shadow-none: 0 0 #0000;
+
+  /* ============================================
+     7. BORDER RADIUS TOKENS
+     ============================================ */
+
+  --radius-none: 0;
+  --radius-sm: 0.375rem; /* 6px */
+  --radius-md: 0.5rem; /* 8px */
+  --radius-lg: 0.75rem; /* 12px */
+  --radius-xl: 1rem; /* 16px */
+  --radius-2xl: 1.5rem; /* 24px */
+  --radius-3xl: 1.875rem; /* 30px */
+  --radius-full: 9999px;
+
+  /* ============================================
+     8. ANIMATION & MOTION TOKENS
+     ============================================ */
+
+  --duration-instant: 0ms;
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+  --duration-slower: 500ms;
+  --duration-slowest: 750ms;
+
+  --easing-linear: linear;
+  --easing-ease: ease;
+  --easing-ease-in: ease-in;
+  --easing-ease-out: ease-out;
+  --easing-ease-in-out: ease-in-out;
+  --easing-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  --transition-all: all 250ms ease-in-out;
+  --transition-colors: color, background-color, border-color 250ms ease-in-out;
+  --transition-opacity: opacity 250ms ease-in-out;
+  --transition-transform: transform 250ms ease-in-out;
+  --transition-shadow: box-shadow 250ms ease-in-out;
+
+  /* ============================================
+     9. MATERIAL DESIGN TOKENS (GLASS, SURFACES)
+     ============================================ */
+
+  --material-glass-thin: rgba(255, 255, 255, 0.6);
+  --material-glass-regular: rgba(255, 255, 255, 0.7);
+  --material-glass-thick: rgba(255, 255, 255, 0.85);
+  --material-glass-border: rgba(255, 255, 255, 0.2);
+  --material-glass-blur-sm: 4px;
+  --material-glass-blur-md: 8px;
+  --material-glass-blur-lg: 16px;
+
+  --surface-raised: 0 2px 4px rgba(0, 0, 0, 0.06);
+  --surface-overlay: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --surface-floating: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --surface-modal: 0 16px 48px rgba(0, 0, 0, 0.18);
+
+  /* ============================================
+     10. LAYOUT TOKENS
+     ============================================ */
+
+  --border-width-thin: 1px;
+  --border-width-default: 1px;
+  --border-width-medium: 2px;
+  --border-width-thick: 3px;
+  --border-width-heavy: 4px;
+
+  /* ============================================
+     11. COMPONENT TOKENS (GRADIENTS, ENERGY SURFACES)
+     ============================================ */
+
+  --bg-gradient-primary: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  --bg-gradient-secondary: linear-gradient(135deg, #f0fdf7 0%, #dcfce9 100%);
+  --bg-gradient-dark: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+  --bg-gradient-accent: linear-gradient(135deg, #22c55e 0%, #84cc16 100%);
+
+  /* ============================================
+     12. Z-INDEX SCALE
+     ============================================ */
+
+  --z-index-dropdown: 1000;
+  --z-index-sticky: 1020;
+  --z-index-fixed: 1030;
+  --z-index-modal-backdrop: 1040;
+  --z-index-modal: 1050;
+  --z-index-popover: 1060;
+  --z-index-tooltip: 1070;
+}

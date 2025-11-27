@@ -68,8 +68,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     }
   };
   return (
-    <Card className="w-full content-narrow bc-card-padding">
-      <div className="bc-card-padding">
+    <Card className="w-full content-narrow p-6">
+      <div className="p-6">
         <div className="text-center mb-6">
           <div className="flex items-center justify-center mb-4">
             <AuthLogo />
@@ -106,10 +106,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             fullWidth
           />
           {error && (
-            <div className="p-3 surface-subtle dark:bg-surface-error/10 border border-subtle dark:border-border-error rounded-lg">
+            <div className="p-3 surface-subtle dark:bg-surface-error/10 border border-subtle dark:border-error rounded-lg">
               <Typography
                 variant="body-sm"
-                className="text-text-error dark:text-text-error-hover"
+                className="text-error dark:text-error-hover"
               >
                 {error}
               </Typography>

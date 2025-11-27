@@ -87,7 +87,7 @@ export const KeyPlayerSelector: React.FC<KeyPlayerSelectorProps> = ({
   return (
     <div className="space-y-spacing-xs">
       {/* Label */}
-      <Typography variant="label-md" className="block text-text-secondary">
+      <Typography variant="label-md" className="block text-secondary">
         <Icon name="user-plus" className="h-4 w-4 mr-spacing-xs inline" />
         {label}
         {selectedPlayers.length > 0 && (
@@ -188,7 +188,7 @@ export const KeyPlayerSelector: React.FC<KeyPlayerSelectorProps> = ({
                     type="button"
                     onClick={() => onRemove(player.id)}
                     disabled={disabled}
-                    className="text-text-muted hover:text-danger-default focus:outline-none 
+                    className="text-muted hover:text-danger-default focus:outline-none 
                                focus:ring-2 focus:ring-danger-default rounded p-1
                                disabled:opacity-50 disabled:cursor-not-allowed
                                transition-colors"

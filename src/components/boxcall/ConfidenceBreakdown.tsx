@@ -91,7 +91,7 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="text-text-muted hover:text-text-primary transition-colors"
+            className="text-muted hover:text-primary transition-colors"
           >
             <Icon name="x-circle" size="md" />
           </button>
@@ -148,7 +148,7 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
                   <Typography variant="body-sm" className="font-medium mb-1">
                     Limited Data Available
                   </Typography>
-                  <Typography variant="body-xs" className="text-text-secondary">
+                  <Typography variant="body-xs" className="text-secondary">
                     This play has only been executed {executionCount} time
                     {executionCount !== 1 ? "s" : ""}. Confidence scores improve
                     with more data. Run this play 10-15+ times for reliable
@@ -167,7 +167,7 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
                   <Typography variant="body-sm" className="font-medium mb-1">
                     Moderate Data Quality
                   </Typography>
-                  <Typography variant="body-xs" className="text-text-secondary">
+                  <Typography variant="body-xs" className="text-secondary">
                     Based on {executionCount} executions. Confidence will
                     improve with 5-10 more runs.
                   </Typography>
@@ -209,7 +209,7 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
 
                   <Typography
                     variant="body-xs"
-                    className="text-text-secondary mb-2"
+                    className="text-secondary mb-2"
                   >
                     {component.description}
                   </Typography>
@@ -229,10 +229,10 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
                   </div>
 
                   {/* Contribution calculation */}
-                  <Typography variant="body-xs" className="text-text-muted">
+                  <Typography variant="body-xs" className="text-muted">
                     Contributes: {component.score}% × {component.weight}% weight
                     ={" "}
-                    <span className="font-medium text-text-primary">
+                    <span className="font-medium text-primary">
                       {component.contribution.toFixed(1)} points
                     </span>
                   </Typography>
@@ -251,7 +251,7 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
                 <Typography
                   key={c.name}
                   variant="body-xs"
-                  className="text-text-secondary"
+                  className="text-secondary"
                 >
                   {i > 0 && "+ "}
                   {c.contribution.toFixed(1)} ({c.name})
@@ -269,7 +269,7 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
             (confidence.streak.isHot || confidence.streak.isCold) && (
               <div className="bg-surface-secondary border border-border rounded-lg p-4">
                 <div className="flex items-center gap-2 mb-3">
-                  <Icon name="activity" size="sm" className="text-text-muted" />
+                  <Icon name="activity" size="sm" className="text-muted" />
                   <Typography variant="body-sm" className="font-medium">
                     Current Streak
                   </Typography>
@@ -280,7 +280,7 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
                   isCold={confidence.streak.isCold}
                   last5Results={confidence.streak.last5Results}
                 />
-                <Typography variant="body-xs" className="text-text-muted mt-3">
+                <Typography variant="body-xs" className="text-muted mt-3">
                   {confidence.streak.isHot && (
                     <>
                       This play is{" "}
@@ -314,12 +314,12 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
           {/* Execution History */}
           <div className="bg-surface-secondary border border-border rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
-              <Icon name="database" size="sm" className="text-text-muted" />
+              <Icon name="database" size="sm" className="text-muted" />
               <Typography variant="body-sm" className="font-medium">
                 Data Source
               </Typography>
             </div>
-            <Typography variant="body-xs" className="text-text-secondary">
+            <Typography variant="body-xs" className="text-secondary">
               Based on {executionCount} execution
               {executionCount !== 1 ? "s" : ""} across practice and game
               sessions.
@@ -350,7 +350,7 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
                 size="sm"
                 className="text-warning mt-0.5"
               />
-              <Typography variant="body-xs" className="text-text-secondary">
+              <Typography variant="body-xs" className="text-secondary">
                 <strong>Tip:</strong> The AI learns from every execution you
                 log. Run plays in practice and games to improve confidence
                 accuracy. High-confidence plays (70%+) have proven success in

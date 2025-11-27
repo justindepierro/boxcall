@@ -146,12 +146,12 @@ export const RosterQuickAdd: React.FC = () => {
     <Card className="p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
-          <Icon name="users" className="h-5 w-5 text-text-info" />
-          <Typography variant="headline-sm" className="text-text-primary">
+          <Icon name="users" className="h-5 w-5 text-info" />
+          <Typography variant="headline-sm" className="text-primary">
             Team Roster
           </Typography>
         </div>
-        <Typography variant="body-sm" className="text-text-secondary">
+        <Typography variant="body-sm" className="text-secondary">
           {totalCount} players
         </Typography>
       </div>
@@ -163,7 +163,7 @@ export const RosterQuickAdd: React.FC = () => {
             <div className="space-y-2 mb-4">
               <Typography
                 variant="body-sm"
-                className="text-text-secondary mb-2"
+                className="text-secondary mb-2"
               >
                 Recent additions:
               </Typography>
@@ -175,18 +175,18 @@ export const RosterQuickAdd: React.FC = () => {
                   <div className="w-8 h-8 bg-surface-info rounded-full flex items-center justify-center">
                     <Typography
                       variant="body-sm"
-                      className="text-text-info font-medium"
+                      className="text-info font-medium"
                     >
                       {player.jersey_number || "?"}
                     </Typography>
                   </div>
                   <div className="flex-1">
-                    <Typography variant="body-sm" className="text-text-primary">
+                    <Typography variant="body-sm" className="text-primary">
                       Player {player.id.slice(0, 8)}
                     </Typography>
                     <Typography
                       variant="caption"
-                      className="text-text-secondary"
+                      className="text-secondary"
                     >
                       {player.position || "Position TBD"}
                     </Typography>
@@ -196,7 +196,7 @@ export const RosterQuickAdd: React.FC = () => {
             </div>
           ) : (
             <div className="text-center py-4 mb-4">
-              <Typography variant="body-sm" className="text-text-secondary">
+              <Typography variant="body-sm" className="text-secondary">
                 No players added yet
               </Typography>
             </div>
@@ -227,7 +227,7 @@ export const RosterQuickAdd: React.FC = () => {
       ) : (
         /* Quick Add Form */
         <div className="space-y-3">
-          <Typography variant="body-sm" className="text-text-secondary mb-3">
+          <Typography variant="body-sm" className="text-secondary mb-3">
             Add a new player quickly:
           </Typography>
 
@@ -248,7 +248,7 @@ export const RosterQuickAdd: React.FC = () => {
                   firstName: e.target.value,
                 }))
               }
-              className="px-2 py-1 text-sm border border-border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
+              className="px-2 py-1 text-sm border border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
             />
             <input
               type="text"
@@ -260,7 +260,7 @@ export const RosterQuickAdd: React.FC = () => {
                   lastName: e.target.value,
                 }))
               }
-              className="px-2 py-1 text-sm border border-border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
+              className="px-2 py-1 text-sm border border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
             />
           </div>
 
@@ -273,7 +273,7 @@ export const RosterQuickAdd: React.FC = () => {
                   position: e.target.value,
                 }))
               }
-              className="px-2 py-1 text-sm border border-border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
+              className="px-2 py-1 text-sm border border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
             >
               <option value="">Position</option>
               <option value="QB">QB</option>
@@ -299,7 +299,7 @@ export const RosterQuickAdd: React.FC = () => {
                   jerseyNumber: e.target.value,
                 }))
               }
-              className="px-2 py-1 text-sm border border-border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
+              className="px-2 py-1 text-sm border border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
             />
           </div>
 
@@ -317,9 +317,9 @@ export const RosterQuickAdd: React.FC = () => {
                     heightFeet: e.target.value,
                   }))
                 }
-                className="flex-1 px-2 py-1 text-sm border border-border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
+                className="flex-1 px-2 py-1 text-sm border border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
               />
-              <span className="flex items-center text-sm text-text-secondary">
+              <span className="flex items-center text-sm text-secondary">
                 ft
               </span>
             </div>
@@ -336,9 +336,9 @@ export const RosterQuickAdd: React.FC = () => {
                     heightInches: e.target.value,
                   }))
                 }
-                className="flex-1 px-2 py-1 text-sm border border-border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
+                className="flex-1 px-2 py-1 text-sm border border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
               />
-              <span className="flex items-center text-sm text-text-secondary">
+              <span className="flex items-center text-sm text-secondary">
                 in
               </span>
             </div>

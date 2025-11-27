@@ -91,7 +91,7 @@ export const MobileGameSession: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen bg-surface-primary">
-        <Typography variant="body-lg" className="text-text-secondary">
+        <Typography variant="body-lg" className="text-secondary">
           Loading...
         </Typography>
       </div>
@@ -107,7 +107,7 @@ export const MobileGameSession: React.FC = () => {
         </Typography>
         <Typography
           variant="body-md"
-          className="text-text-secondary mb-6 text-center"
+          className="text-secondary mb-6 text-center"
         >
           {error?.message || "Game plan not found"}
         </Typography>
@@ -131,15 +131,15 @@ export const MobileGameSession: React.FC = () => {
           <div className="flex items-center gap-3 mb-2">
             <button
               onClick={() => navigate("/boxcall")}
-              className="p-2 -ml-2 text-text-secondary active:text-text-primary"
+              className="p-2 -ml-2 text-secondary active:text-primary"
             >
               <Icon name="arrow-left" className="h-6 w-6" />
             </button>
             <div className="flex-1">
-              <Typography variant="headline-md" className="text-text-primary">
+              <Typography variant="headline-md" className="text-primary">
                 {gamePlan.name}
               </Typography>
-              <Typography variant="body-sm" className="text-text-secondary">
+              <Typography variant="body-sm" className="text-secondary">
                 {mode === "live" ? "Live" : "Past"} Game Session
               </Typography>
             </div>
@@ -151,11 +151,11 @@ export const MobileGameSession: React.FC = () => {
             <div className="bg-surface-secondary rounded-lg p-4">
               <Typography
                 variant="body-sm"
-                className="text-text-secondary mb-1"
+                className="text-secondary mb-1"
               >
                 Opponent
               </Typography>
-              <Typography variant="headline-sm" className="text-text-primary">
+              <Typography variant="headline-sm" className="text-primary">
                 {gamePlan.opponent}
               </Typography>
             </div>
@@ -164,7 +164,7 @@ export const MobileGameSession: React.FC = () => {
           <div className="bg-surface-secondary rounded-lg p-4">
             <Typography
               variant="headline-sm"
-              className="mb-3 text-text-primary"
+              className="mb-3 text-primary"
             >
               Game Day Features
             </Typography>
@@ -174,7 +174,7 @@ export const MobileGameSession: React.FC = () => {
                   name="check"
                   className="h-5 w-5 text-success-600 mt-0.5 flex-shrink-0"
                 />
-                <Typography variant="body-sm" className="text-text-secondary">
+                <Typography variant="body-sm" className="text-secondary">
                   Quick down & distance updates
                 </Typography>
               </li>
@@ -183,7 +183,7 @@ export const MobileGameSession: React.FC = () => {
                   name="check"
                   className="h-5 w-5 text-success-600 mt-0.5 flex-shrink-0"
                 />
-                <Typography variant="body-sm" className="text-text-secondary">
+                <Typography variant="body-sm" className="text-secondary">
                   Large buttons for sideline use
                 </Typography>
               </li>
@@ -192,7 +192,7 @@ export const MobileGameSession: React.FC = () => {
                   name="check"
                   className="h-5 w-5 text-success-600 mt-0.5 flex-shrink-0"
                 />
-                <Typography variant="body-sm" className="text-text-secondary">
+                <Typography variant="body-sm" className="text-secondary">
                   Auto-sync when back online
                 </Typography>
               </li>
@@ -224,19 +224,19 @@ export const MobileGameSession: React.FC = () => {
           <div className="flex-1 min-w-0">
             <Typography
               variant="body-md"
-              className="text-text-primary font-medium truncate"
+              className="text-primary font-medium truncate"
             >
               {gamePlan.name}
             </Typography>
             {gamePlan.opponent && (
-              <Typography variant="body-xs" className="text-text-secondary">
+              <Typography variant="body-xs" className="text-secondary">
                 vs {gamePlan.opponent}
               </Typography>
             )}
           </div>
           <button
             onClick={endSession}
-            className="ml-3 p-2 text-text-secondary active:text-error-600 active:bg-error-bg rounded-lg transition-colors"
+            className="ml-3 p-2 text-secondary active:text-error-600 active:bg-error-bg rounded-lg transition-colors"
           >
             <Icon name="close" className="h-6 w-6" />
           </button>
@@ -251,7 +251,7 @@ export const MobileGameSession: React.FC = () => {
             <div className="flex items-center justify-center gap-3 mb-1">
               <Typography
                 variant="headline-lg"
-                className="text-text-primary font-bold"
+                className="text-primary font-bold"
               >
                 {situation
                   ? `${situation.down}${["st", "nd", "rd", "th"][situation.down - 1]} & ${situation.distance}`
@@ -259,11 +259,11 @@ export const MobileGameSession: React.FC = () => {
               </Typography>
               <Icon
                 name={showSituationPicker ? "chevron-up" : "chevron-down"}
-                className="h-5 w-5 text-text-secondary"
+                className="h-5 w-5 text-secondary"
               />
             </div>
             {situation?.yardLine && (
-              <Typography variant="body-sm" className="text-text-secondary">
+              <Typography variant="body-sm" className="text-secondary">
                 Yard Line: {situation.yardLine}
               </Typography>
             )}
@@ -273,7 +273,7 @@ export const MobileGameSession: React.FC = () => {
         {/* Quick Situation Picker */}
         {showSituationPicker && (
           <div className="p-4 bg-surface-primary border-t border-border">
-            <Typography variant="body-sm" className="text-text-secondary mb-3">
+            <Typography variant="body-sm" className="text-secondary mb-3">
               Quick Situations
             </Typography>
             <div className="grid grid-cols-2 gap-2 mb-4">
@@ -292,7 +292,7 @@ export const MobileGameSession: React.FC = () => {
                 >
                   <Typography
                     variant="body-sm"
-                    className="font-medium text-text-primary"
+                    className="font-medium text-primary"
                   >
                     {sit.label}
                   </Typography>
@@ -305,7 +305,7 @@ export const MobileGameSession: React.FC = () => {
               <div>
                 <Typography
                   variant="body-xs"
-                  className="text-text-secondary mb-1"
+                  className="text-secondary mb-1"
                 >
                   Down
                 </Typography>
@@ -317,7 +317,7 @@ export const MobileGameSession: React.FC = () => {
                       className={`flex-1 p-2 rounded ${
                         situation?.down === d
                           ? "bg-primary text-white"
-                          : "bg-surface-secondary text-text-secondary"
+                          : "bg-surface-secondary text-secondary"
                       }`}
                     >
                       {d}
@@ -328,7 +328,7 @@ export const MobileGameSession: React.FC = () => {
               <div>
                 <Typography
                   variant="body-xs"
-                  className="text-text-secondary mb-1"
+                  className="text-secondary mb-1"
                 >
                   Distance
                 </Typography>
@@ -337,7 +337,7 @@ export const MobileGameSession: React.FC = () => {
                   onChange={(e) =>
                     updateSituation({ distance: parseInt(e.target.value) })
                   }
-                  className="w-full p-2 bg-surface-secondary border border-border rounded text-text-primary"
+                  className="w-full p-2 bg-surface-secondary border border-border rounded text-primary"
                 >
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20].map((d) => (
                     <option key={d} value={d}>
@@ -349,7 +349,7 @@ export const MobileGameSession: React.FC = () => {
               <div>
                 <Typography
                   variant="body-xs"
-                  className="text-text-secondary mb-1"
+                  className="text-secondary mb-1"
                 >
                   Yard Line
                 </Typography>
@@ -363,7 +363,7 @@ export const MobileGameSession: React.FC = () => {
                       yardLine: parseInt(e.target.value) || 50,
                     })
                   }
-                  className="w-full p-2 bg-surface-secondary border border-border rounded text-text-primary"
+                  className="w-full p-2 bg-surface-secondary border border-border rounded text-primary"
                 />
               </div>
             </div>
@@ -378,14 +378,14 @@ export const MobileGameSession: React.FC = () => {
             <div className="bg-surface-secondary rounded-lg p-4">
               <Typography
                 variant="headline-md"
-                className="text-text-primary mb-2"
+                className="text-primary mb-2"
               >
                 {currentPlay.play?.name || "Select Play"}
               </Typography>
               {currentPlay.play?.formation_name && (
                 <div className="flex items-center gap-2 mb-1">
-                  <Icon name="grid" className="h-4 w-4 text-text-secondary" />
-                  <Typography variant="body-sm" className="text-text-secondary">
+                  <Icon name="grid" className="h-4 w-4 text-secondary" />
+                  <Typography variant="body-sm" className="text-secondary">
                     {currentPlay.play.formation_name}
                   </Typography>
                 </div>
@@ -393,7 +393,7 @@ export const MobileGameSession: React.FC = () => {
               {currentPlay.notes && (
                 <Typography
                   variant="body-sm"
-                  className="text-text-secondary italic mt-2"
+                  className="text-secondary italic mt-2"
                 >
                   {currentPlay.notes}
                 </Typography>
@@ -407,7 +407,7 @@ export const MobileGameSession: React.FC = () => {
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Play notes (optional)..."
-                  className="w-full bg-surface-primary border border-border rounded-lg p-3 text-text-primary placeholder-text-muted resize-none"
+                  className="w-full bg-surface-primary border border-border rounded-lg p-3 text-primary placeholder-text-muted resize-none"
                   rows={3}
                 />
               </div>
@@ -417,9 +417,9 @@ export const MobileGameSession: React.FC = () => {
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <Icon
               name="target"
-              className="h-12 w-12 text-text-secondary mb-3"
+              className="h-12 w-12 text-secondary mb-3"
             />
-            <Typography variant="body-md" className="text-text-secondary">
+            <Typography variant="body-md" className="text-secondary">
               Select a play from your game plan
             </Typography>
           </div>
@@ -432,7 +432,7 @@ export const MobileGameSession: React.FC = () => {
         <div className="px-4 pt-3 pb-2">
           <button
             onClick={() => setShowNotes(!showNotes)}
-            className="flex items-center gap-2 text-text-secondary active:text-text-primary"
+            className="flex items-center gap-2 text-secondary active:text-primary"
           >
             <Icon name="message-circle" className="h-5 w-5" />
             <Typography variant="body-sm">
@@ -447,7 +447,7 @@ export const MobileGameSession: React.FC = () => {
           <button
             onClick={() => handleQuickLog("success", 10)}
             disabled={isPaused}
-            className="flex flex-col items-center justify-center h-24 bg-success-600 active:bg-success-700 disabled:bg-surface-muted disabled:text-text-muted text-white rounded-xl shadow-lg transition-all active:scale-95"
+            className="flex flex-col items-center justify-center h-24 bg-success-600 active:bg-success-700 disabled:bg-surface-muted disabled:text-muted text-white rounded-xl shadow-lg transition-all active:scale-95"
           >
             <Icon name="trending-up" className="h-8 w-8 mb-1" />
             <Typography variant="body-md" className="font-semibold">
@@ -462,7 +462,7 @@ export const MobileGameSession: React.FC = () => {
           <button
             onClick={() => handleQuickLog("failure", 0)}
             disabled={isPaused}
-            className="flex flex-col items-center justify-center h-24 bg-error-600 active:bg-error-700 disabled:bg-surface-muted disabled:text-text-muted text-white rounded-xl shadow-lg transition-all active:scale-95"
+            className="flex flex-col items-center justify-center h-24 bg-error-600 active:bg-error-700 disabled:bg-surface-muted disabled:text-muted text-white rounded-xl shadow-lg transition-all active:scale-95"
           >
             <Icon name="alert-circle" className="h-8 w-8 mb-1" />
             <Typography variant="body-md" className="font-semibold">
@@ -481,8 +481,8 @@ export const MobileGameSession: React.FC = () => {
             disabled={isPaused}
             className="flex flex-col items-center justify-center h-16 bg-surface-primary active:bg-surface-muted disabled:opacity-50 border border-border rounded-lg transition-all active:scale-95"
           >
-            <Icon name="minus" className="h-6 w-6 text-text-secondary mb-1" />
-            <Typography variant="body-xs" className="text-text-secondary">
+            <Icon name="minus" className="h-6 w-6 text-secondary mb-1" />
+            <Typography variant="body-xs" className="text-secondary">
               Neutral
             </Typography>
           </button>
@@ -492,8 +492,8 @@ export const MobileGameSession: React.FC = () => {
             disabled={isPaused}
             className="flex flex-col items-center justify-center h-16 bg-surface-primary active:bg-surface-muted disabled:opacity-50 border border-border rounded-lg transition-all active:scale-95"
           >
-            <Icon name="shield" className="h-6 w-6 text-text-secondary mb-1" />
-            <Typography variant="body-xs" className="text-text-secondary">
+            <Icon name="shield" className="h-6 w-6 text-secondary mb-1" />
+            <Typography variant="body-xs" className="text-secondary">
               Penalty
             </Typography>
           </button>
@@ -501,7 +501,7 @@ export const MobileGameSession: React.FC = () => {
           <button
             onClick={handleQuickDownUpdate}
             disabled={isPaused}
-            className="flex flex-col items-center justify-center h-16 bg-primary active:bg-primary-600 disabled:bg-surface-muted disabled:text-text-muted text-white rounded-lg transition-all active:scale-95"
+            className="flex flex-col items-center justify-center h-16 bg-primary active:bg-primary-600 disabled:bg-surface-muted disabled:text-muted text-white rounded-lg transition-all active:scale-95"
           >
             <Icon name="arrow-right" className="h-6 w-6 mb-1" />
             <Typography variant="body-xs" className="font-medium">

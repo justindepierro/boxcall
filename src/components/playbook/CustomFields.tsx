@@ -167,9 +167,9 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
               onChange={(e) =>
                 updateFieldValue(definition.field_name, e.target.checked)
               }
-              className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-border-light rounded-lg"
+              className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-light rounded-lg"
             />
-            <span className="text-sm text-text-primary">
+            <span className="text-sm text-primary">
               {definition.field_label}
             </span>
           </label>
@@ -211,9 +211,9 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
                       : selectedValues.filter((v) => v !== option);
                     updateFieldValue(definition.field_name, newValues);
                   }}
-                  className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-border-light rounded-lg"
+                  className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-light rounded-lg"
                 />
-                <span className="text-sm text-text-primary">{option}</span>
+                <span className="text-sm text-primary">{option}</span>
               </label>
             ))}
           </div>
@@ -247,10 +247,10 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
 
   if (fieldDefinitions.length === 0) {
     return (
-      <div className={`text-center py-6 text-text-secondary ${className}`}>
+      <div className={`text-center py-6 text-secondary ${className}`}>
         <Icon
           name="settings"
-          className="h-8 w-8 mx-auto mb-2 text-text-secondary"
+          className="h-8 w-8 mx-auto mb-2 text-secondary"
         />
         <p className="text-sm">No custom fields defined for this category.</p>
         <p className="text-xs mt-1">Contact your admin to add custom fields.</p>
@@ -266,13 +266,13 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
             <Typography
               variant="body-sm"
               as="label"
-              className="flex items-center space-x-2 font-medium text-text-primary"
+              className="flex items-center space-x-2 font-medium text-primary"
             >
               {getFieldIcon(definition.field_type)}
               <span>
                 {definition.field_label}
                 {definition.is_required && (
-                  <span className="text-text-error ml-1">*</span>
+                  <span className="text-error ml-1">*</span>
                 )}
               </span>
             </Typography>
@@ -280,7 +280,7 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
 
           {definition.field_description &&
             definition.field_type !== "boolean" && (
-              <p className="text-xs text-text-secondary mb-2">
+              <p className="text-xs text-secondary mb-2">
                 {definition.field_description}
               </p>
             )}
@@ -288,7 +288,7 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
           <div className="relative">{renderFieldInput(definition)}</div>
 
           {definition.field_type === "multi_select" && (
-            <div className="text-xs text-text-secondary">
+            <div className="text-xs text-secondary">
               Selected:{" "}
               {((values[definition.field_name] as string[]) || []).length} items
             </div>
@@ -373,7 +373,7 @@ export const CustomFieldsGrouped: React.FC<CustomFieldsGroupedProps> = ({
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-text-primary flex items-center space-x-2"
+            className="text-primary flex items-center space-x-2"
           >
             <span className="text-lg">
               {categoryIcons[category as keyof typeof categoryIcons] || "📋"}

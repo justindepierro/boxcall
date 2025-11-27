@@ -84,7 +84,7 @@ export const PlayerRosterContainer: React.FC<PlayerRosterContainerProps> = ({
   if (loading) return <div className="p-4 text-sm">Loading roster…</div>;
   if (error)
     return (
-      <div className="p-4 text-sm text-text-error">
+      <div className="p-4 text-sm text-error">
         Roster error: {error}{" "}
         <Button
           variant="link"

@@ -118,7 +118,7 @@ export const TimelineLegend: React.FC<TimelineLegendProps> = ({
         })}
       </div>
 
-      <div className="mt-3 text-xs text-text-muted">
+      <div className="mt-3 text-xs text-muted">
         Total allocated: {Object.keys(timelineAllocation).length} minutes
       </div>
     </div>

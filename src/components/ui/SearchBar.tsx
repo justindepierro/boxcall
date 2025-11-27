@@ -36,7 +36,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       >
         <Icon
           name="search"
-          className={`text-text-muted ${isMobile ? "h-5 w-5" : "h-4 w-4"}`}
+          className={`text-muted ${isMobile ? "h-5 w-5" : "h-4 w-4"}`}
         />
       </div>
 
@@ -53,7 +53,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       {value && (
         <button
           onClick={handleClear}
-          className={`absolute inset-y-0 right-0 flex items-center text-text-muted hover:text-text-primary transition-colors active:scale-95 ${
+          className={`absolute inset-y-0 right-0 flex items-center text-muted hover:text-primary transition-colors active:scale-95 ${
             isMobile
               ? "pr-4 w-12 h-12 my-auto"
               : "pr-3 w-10 h-10 my-auto rounded-lg hover:bg-surface-secondary"

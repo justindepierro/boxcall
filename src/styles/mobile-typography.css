@@ -205,23 +205,23 @@
 
 /* Use with semantic color tokens */
 .text-mobile-primary {
-  color: var(--semantic-text-primary);
+  color: var(--color-text-primary);
 }
 
 .text-mobile-secondary {
-  color: var(--semantic-text-secondary);
+  color: var(--color-text-secondary);
 }
 
 .text-mobile-muted {
-  color: var(--semantic-text-muted);
+  color: var(--color-text-muted);
 }
 
 .text-mobile-inverse {
-  color: var(--semantic-text-inverse);
+  color: var(--color-text-inverse);
 }
 
 .text-mobile-brand {
-  color: var(--semantic-text-brand);
+  color: var(--color-jade-500);
 }
 
 /* ============================================================================
@@ -236,7 +236,7 @@
   font-size: 1rem; /* 16px minimum */
   line-height: 1.5rem;
   font-weight: 500; /* Slightly bolder for tappable text */
-  color: var(--semantic-text-brand);
+  color: var(--color-jade-500);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -262,14 +262,14 @@
   font-size: 0.875rem; /* 14px */
   line-height: 1.25rem;
   font-weight: 500;
-  color: var(--semantic-text-secondary);
+  color: var(--color-text-secondary);
 }
 
 .text-mobile-helper {
   font-size: 0.75rem; /* 12px */
   line-height: 1rem;
   font-weight: 400;
-  color: var(--semantic-text-muted);
+  color: var(--color-text-muted);
 }
 
 /* ============================================================================

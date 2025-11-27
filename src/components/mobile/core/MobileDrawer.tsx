@@ -49,10 +49,10 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
         onClick={onClose}
       />
       <div
-        className={`absolute top-0 bottom-0 ${side === "right" ? "right-0" : "left-0"} ${widthClass} surface-card shadow-xl border-l border-subtle flex flex-col animate-slide-in`}
+        className={`absolute top-0 bottom-0 ${side === "right" ? "right-0" : "left-0"} ${widthClass} bg-surface-primary shadow-xl border-l border-subtle flex flex-col animate-slide-in`}
       >
         <div className="flex items-center justify-between px-4 py-3 border-b border-subtle">
-          <Typography variant="label-md" as="h2" className="text-text-primary">
+          <Typography variant="label-md" as="h2" className="text-primary">
             {title}
           </Typography>
           <Tooltip content="Close drawer (Esc)">

@@ -112,7 +112,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
       </div>
       {event.description && (
         <div className="pt-3">
-          <Typography variant="body-md" className="text-text-primary">
+          <Typography variant="body-md" className="text-primary">
             {event.description}
           </Typography>
         </div>
@@ -150,7 +150,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
         <div className="mt-4 pt-4">
           <Typography
             variant="body-sm"
-            className="font-semibold mb-2 text-text-primary"
+            className="font-semibold mb-2 text-primary"
           >
             RSVP
           </Typography>
@@ -159,7 +159,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
               Loading RSVP...
             </Typography>
           ) : rsvps.isError ? (
-            <Typography variant="body-sm" className="text-text-error">
+            <Typography variant="body-sm" className="text-error">
               Failed to load RSVP
             </Typography>
           ) : (
@@ -197,7 +197,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
         <div className="mt-6 pt-4">
           <Typography
             variant="body-sm"
-            className="font-semibold mb-2 text-text-primary"
+            className="font-semibold mb-2 text-primary"
           >
             Comments
           </Typography>
@@ -206,7 +206,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
               Loading comments...
             </Typography>
           ) : comments.isError ? (
-            <Typography variant="body-sm" className="text-text-error">
+            <Typography variant="body-sm" className="text-error">
               Failed to load comments
             </Typography>
           ) : (
@@ -239,7 +239,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
                         {/* Comment Body */}
                         <Typography
                           variant="body-sm"
-                          className="text-text-primary whitespace-pre-wrap"
+                          className="text-primary whitespace-pre-wrap"
                         >
                           {c.body}
                         </Typography>
@@ -260,7 +260,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Add a comment..."
               rows={2}
-              className="w-full border border-border-medium rounded-lg px-3 py-2"
+              className="w-full border border-medium rounded-lg px-3 py-2"
               disabled={addCommentPending}
             />
             <div className="flex items-center gap-2">

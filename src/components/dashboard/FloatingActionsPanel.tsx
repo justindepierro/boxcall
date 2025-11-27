@@ -28,7 +28,7 @@ export const FloatingActionsPanel: React.FC = () => {
               {/* Collaboration button */}
               <Button
                 onClick={() => (window.location.href = "/collaborative-demo")}
-                className="w-12 h-12 rounded-full bg-text-info text-text-on-primary hover:bg-text-info/90 transition-colors duration-200 flex items-center justify-center"
+                className="w-12 h-12 rounded-full bg-text-info text-on-primary hover:bg-text-info/90 transition-colors duration-200 flex items-center justify-center"
                 title="Team Collaboration & Planning"
               >
                 <Icon name="message" size="sm" />
@@ -37,7 +37,7 @@ export const FloatingActionsPanel: React.FC = () => {
               {/* Customization button */}
               <Button
                 onClick={() => setShowCustomization(true)}
-                className="w-12 h-12 rounded-full bg-text-secondary text-text-on-primary hover:bg-text-secondary/90 transition-colors duration-200 flex items-center justify-center"
+                className="w-12 h-12 rounded-full bg-text-secondary text-on-primary hover:bg-text-secondary/90 transition-colors duration-200 flex items-center justify-center"
                 title="Dashboard Customization"
               >
                 <Icon name="settings" size="sm" />
@@ -58,7 +58,7 @@ export const FloatingActionsPanel: React.FC = () => {
             className={`w-14 h-14 rounded-full transition-all duration-200 flex items-center justify-center ${
               isExpanded
                 ? "bg-text-error hover:bg-text-error/90 text-surface-primary rotate-45"
-                : "bg-primary hover:bg-primary/90 text-text-on-primary"
+                : "bg-primary hover:bg-primary/90 text-on-primary"
             }`}
             title={isExpanded ? "Close Actions" : "Quick Actions"}
           >

@@ -35,15 +35,15 @@ export const WeeklyChallengePopover: React.FC<WeeklyChallengePopoverProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-overlay-modal">
       <div className="bg-surface-primary rounded-xl shadow-2xl max-w-md w-full max-h-[80vh] overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-primary p-6 text-text-inverse">
+        <div className="bg-gradient-primary p-6 text-inverse">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Icon name="trophy" size="lg" className="text-text-warning" />
+              <Icon name="trophy" size="lg" className="text-warning" />
               <div>
-                <Typography variant="headline-md" className="text-text-inverse">
+                <Typography variant="headline-md" className="text-inverse">
                   Weekly Challenges
                 </Typography>
-                <p className="text-text-secondary text-sm">
+                <p className="text-secondary text-sm">
                   Complete challenges to earn rewards!
                 </p>
               </div>
@@ -52,7 +52,7 @@ export const WeeklyChallengePopover: React.FC<WeeklyChallengePopoverProps> = ({
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="text-text-inverse hover:bg-surface-primary/20"
+              className="text-inverse hover:bg-surface-primary/20"
             >
               <Icon name="close" size="sm" />
             </Button>
@@ -60,7 +60,7 @@ export const WeeklyChallengePopover: React.FC<WeeklyChallengePopoverProps> = ({
 
           {/* Progress Bar */}
           <div className="mt-4">
-            <div className="flex justify-between text-sm text-text-secondary mb-2">
+            <div className="flex justify-between text-sm text-secondary mb-2">
               <span>Progress</span>
               <span>
                 {completedCount}/{totalCount} completed
@@ -83,8 +83,8 @@ export const WeeklyChallengePopover: React.FC<WeeklyChallengePopoverProps> = ({
                 key={challenge.id}
                 className={`p-4 rounded-lg border-2 transition-all ${
                   challenge.completed
-                    ? "bg-surface-success border-border-success"
-                    : "bg-surface-secondary border-border-medium"
+                    ? "bg-surface-success border-success"
+                    : "bg-surface-secondary border-medium"
                 }`}
               >
                 <div className="flex items-start justify-between">
@@ -111,7 +111,7 @@ export const WeeklyChallengePopover: React.FC<WeeklyChallengePopoverProps> = ({
                         </Badge>
                       )}
                     </div>
-                    <p className="text-sm text-text-secondary mb-3">
+                    <p className="text-sm text-secondary mb-3">
                       {challenge.description}
                     </p>
 
@@ -129,7 +129,7 @@ export const WeeklyChallengePopover: React.FC<WeeklyChallengePopoverProps> = ({
                           }}
                         />
                       </div>
-                      <span className="text-xs text-text-muted">
+                      <span className="text-xs text-muted">
                         {challenge.progress}/{challenge.target}
                       </span>
                     </div>
@@ -139,9 +139,9 @@ export const WeeklyChallengePopover: React.FC<WeeklyChallengePopoverProps> = ({
                       <Icon
                         name="trophy"
                         size="xs"
-                        className="text-text-warning"
+                        className="text-warning"
                       />
-                      <span className="text-xs text-text-secondary">
+                      <span className="text-xs text-secondary">
                         Reward: {challenge.reward}
                       </span>
                     </div>
@@ -156,12 +156,12 @@ export const WeeklyChallengePopover: React.FC<WeeklyChallengePopoverProps> = ({
               <Icon
                 name="trophy"
                 size="lg"
-                className="text-text-muted mx-auto mb-4"
+                className="text-muted mx-auto mb-4"
               />
-              <Typography variant="label-md" className="text-text-muted">
+              <Typography variant="label-md" className="text-muted">
                 No challenges available this week
               </Typography>
-              <p className="text-sm text-text-muted mt-1">
+              <p className="text-sm text-muted mt-1">
                 Check back next week for new challenges!
               </p>
             </div>
@@ -171,7 +171,7 @@ export const WeeklyChallengePopover: React.FC<WeeklyChallengePopoverProps> = ({
         {/* Footer */}
         <div className="border-t bg-surface-secondary px-6 py-4">
           <div className="flex justify-between items-center">
-            <div className="text-sm text-text-secondary">
+            <div className="text-sm text-secondary">
               Complete all challenges to unlock special rewards!
             </div>
             <Button variant="primary" size="sm" onClick={onClose}>

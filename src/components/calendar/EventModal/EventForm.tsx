@@ -47,7 +47,7 @@ export const EventForm: React.FC<EventFormProps> = ({
           <Typography
             variant="body-sm"
             as="label"
-            className="block font-medium text-text-primary mb-1"
+            className="block font-medium text-primary mb-1"
           >
             Event Type
           </Typography>
@@ -59,7 +59,7 @@ export const EventForm: React.FC<EventFormProps> = ({
                 type: e.target.value as CalendarEvent["type"],
               })
             }
-            className="w-full border border-border-medium rounded-lg px-3 py-2"
+            className="w-full border border-medium rounded-lg px-3 py-2"
           >
             <option value="practice">Practice</option>
             <option value="game">Game</option>
@@ -79,7 +79,7 @@ export const EventForm: React.FC<EventFormProps> = ({
         <Typography
           variant="body-sm"
           as="label"
-          className="block font-medium text-text-primary mb-1"
+          className="block font-medium text-primary mb-1"
         >
           Description
         </Typography>
@@ -88,7 +88,7 @@ export const EventForm: React.FC<EventFormProps> = ({
           onChange={(e) => setEvent({ ...event, description: e.target.value })}
           placeholder="Event details, notes, etc."
           rows={3}
-          className="w-full border border-border-medium rounded-lg px-3 py-2"
+          className="w-full border border-medium rounded-lg px-3 py-2"
         />
       </div>
       <div className="flex space-x-3 pt-4">

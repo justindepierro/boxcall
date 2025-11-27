@@ -243,7 +243,7 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
               <div className="mb-4">
                 <Typography
                   variant="label-md"
-                  className="mb-2 text-text-secondary uppercase tracking-wide"
+                  className="mb-2 text-secondary uppercase tracking-wide"
                 >
                   Recent combos
                 </Typography>
@@ -253,7 +253,7 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
                       key={`${combo.formation}-${combo.personnel || "none"}-${combo.playType || "any"}`}
                       variant="secondary"
                       size="sm"
-                      className="rounded-full bg-surface-secondary text-text-secondary hover:bg-surface-muted"
+                      className="rounded-full bg-surface-secondary text-secondary hover:bg-surface-muted"
                       onClick={() => {
                         updateFields({
                           formation: combo.formation,
@@ -265,7 +265,7 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
                     >
                       <Icon
                         name="zap"
-                        className="mr-2 h-4 w-4 text-text-primary"
+                        className="mr-2 h-4 w-4 text-primary"
                       />
                       <span className="truncate max-w-36">
                         {combo.formation}

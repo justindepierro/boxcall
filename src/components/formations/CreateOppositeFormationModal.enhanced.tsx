@@ -86,11 +86,11 @@ const FormationPreview: React.FC<{
 
   return (
     <div className="flex flex-col gap-spacing-sm">
-      <Typography variant="label-md" className="text-center text-text-muted">
+      <Typography variant="label-md" className="text-center text-muted">
         {label}
         {flipped && " (Flipped)"}
       </Typography>
-      <div className="relative surface-card border-2 border-border-subtle rounded-md overflow-hidden">
+      <div className="relative bg-surface-primary border-2 border-subtle rounded-md overflow-hidden">
         {/* Field background */}
         <svg
           width={CANVAS_WIDTH}
@@ -260,11 +260,11 @@ export const CreateOppositeFormationModal: React.FC<
       <div className="flex flex-col gap-spacing-lg p-spacing-lg">
         {/* Success State */}
         {success && (
-          <div className="surface-success border border-border-success rounded-md p-spacing-lg text-center">
+          <div className="surface-success border border-success rounded-md p-spacing-lg text-center">
             <div className="text-4xl mb-2">✅</div>
             <Typography
               variant="body"
-              className="text-text-success font-semibold"
+              className="text-success font-semibold"
             >
               Success! Formation created
             </Typography>
@@ -276,22 +276,22 @@ export const CreateOppositeFormationModal: React.FC<
           <>
             {/* Explanation */}
             <div className="flex flex-col gap-spacing-sm">
-              <Typography variant="body" className="text-text-primary">
+              <Typography variant="body" className="text-primary">
                 <strong>{originalFormation.name}</strong> (
                 {originalFormation.direction || "no direction"}) doesn't have an
                 opposite-side version yet.
               </Typography>
-              <Typography variant="body-sm" className="text-text-muted">
+              <Typography variant="body-sm" className="text-muted">
                 Most formations need both left and right versions for your
                 playbook. We can automatically create a flipped version for you.
               </Typography>
             </div>
 
             {/* Custom Name Input */}
-            <div className="surface-subtle border border-border-subtle rounded-md p-spacing-md">
+            <div className="surface-subtle border border-subtle rounded-md p-spacing-md">
               <div className="flex flex-col gap-spacing-sm">
                 <div className="flex items-center justify-between">
-                  <Typography variant="label-md" className="text-text-primary">
+                  <Typography variant="label-md" className="text-primary">
                     Opposite Formation Name
                   </Typography>
                   {!isEditingName && (
@@ -311,7 +311,7 @@ export const CreateOppositeFormationModal: React.FC<
                       type="text"
                       value={customName}
                       onChange={(e) => setCustomName(e.target.value)}
-                      className="flex-1 px-3 py-2 border border-border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-brand-jade"
+                      className="flex-1 px-3 py-2 border border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-brand-jade"
                       placeholder="Enter formation name..."
                       disabled={loading}
                       autoFocus
@@ -333,13 +333,13 @@ export const CreateOppositeFormationModal: React.FC<
                 ) : (
                   <Typography
                     variant="body"
-                    className="text-text-primary font-semibold"
+                    className="text-primary font-semibold"
                   >
                     "{customName}" ({oppositeDirection})
                   </Typography>
                 )}
 
-                <Typography variant="body-xs" className="text-text-muted">
+                <Typography variant="body-xs" className="text-muted">
                   💡 Tip: Use your team's naming convention (e.g., Rip/Liz,
                   Red/Blue, Twins Rt/Lt)
                 </Typography>
@@ -360,21 +360,21 @@ export const CreateOppositeFormationModal: React.FC<
             </div>
 
             {/* Formation details */}
-            <div className="surface-subtle border border-border-subtle rounded-md p-spacing-md">
+            <div className="surface-subtle border border-subtle rounded-md p-spacing-md">
               <div className="grid grid-cols-2 gap-spacing-md text-sm">
                 <div>
-                  <Typography variant="label-md" className="text-text-muted">
+                  <Typography variant="label-md" className="text-muted">
                     Personnel
                   </Typography>
-                  <Typography variant="body-sm" className="text-text-primary">
+                  <Typography variant="body-sm" className="text-primary">
                     {originalFormation.personnel_name || "None"}
                   </Typography>
                 </div>
                 <div>
-                  <Typography variant="label-md" className="text-text-muted">
+                  <Typography variant="label-md" className="text-muted">
                     Category
                   </Typography>
-                  <Typography variant="body-sm" className="text-text-primary">
+                  <Typography variant="body-sm" className="text-primary">
                     {originalFormation.category || "Uncategorized"}
                   </Typography>
                 </div>
@@ -383,8 +383,8 @@ export const CreateOppositeFormationModal: React.FC<
 
             {/* Error message */}
             {error && (
-              <div className="surface-error border border-border-error rounded-md p-spacing-md">
-                <Typography variant="body-sm" className="text-text-error">
+              <div className="surface-error border border-error rounded-md p-spacing-md">
+                <Typography variant="body-sm" className="text-error">
                   ❌ {error}
                 </Typography>
               </div>
@@ -435,7 +435,7 @@ export const CreateOppositeFormationModal: React.FC<
             {/* Help text */}
             <Typography
               variant="body-xs"
-              className="text-text-muted text-center"
+              className="text-muted text-center"
             >
               You can always create or link formations later from the Formation
               Manager.

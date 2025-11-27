@@ -124,9 +124,9 @@ export const LazyComponent: React.FC<LazyComponentProps> = ({
 
   if (error) {
     return (
-      <div className="p-4 text-center text-text-error">
+      <div className="p-4 text-center text-error">
         <p>Failed to load component</p>
-        <p className="text-sm text-text-secondary mt-1">{error.message}</p>
+        <p className="text-sm text-secondary mt-1">{error.message}</p>
       </div>
     );
   }

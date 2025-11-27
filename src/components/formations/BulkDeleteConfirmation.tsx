@@ -80,7 +80,7 @@ export function BulkDeleteConfirmation({
         </div>
 
         {/* Delete opposites option */}
-        <div className="p-spacing-sm surface-subtle border border-border-subtle rounded-md">
+        <div className="p-spacing-sm surface-subtle border border-subtle rounded-md">
           <label className="flex items-start gap-spacing-sm cursor-pointer">
             <input
               type="checkbox"
@@ -89,10 +89,10 @@ export function BulkDeleteConfirmation({
               className="mt-0.5 text-primary-500"
             />
             <div>
-              <div className="text-sm font-medium text-text-primary">
+              <div className="text-sm font-medium text-primary">
                 Also delete opposite formations
               </div>
-              <div className="text-xs text-text-muted mt-spacing-xs">
+              <div className="text-xs text-muted mt-spacing-xs">
                 If checked, will also delete the linked left/right variants of
                 these formations
               </div>
@@ -101,14 +101,14 @@ export function BulkDeleteConfirmation({
         </div>
 
         {/* Info */}
-        <div className="text-xs text-text-muted">
+        <div className="text-xs text-muted">
           {deleteOpposites
             ? "This will delete the selected formations AND their opposite variants."
             : "This will only delete the selected formations. Their opposites will be unlinked."}
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-end gap-spacing-sm pt-spacing-md border-t border-border-subtle">
+        <div className="flex items-center justify-end gap-spacing-sm pt-spacing-md border-t border-subtle">
           <Button
             type="button"
             variant="secondary"

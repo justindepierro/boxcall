@@ -209,7 +209,7 @@ export function DesktopPlaybookView({
           />
 
           {/* Filters - Moved to top */}
-          <Card variant="glass">
+          <Card variant="default">
             <AdvancedFilters
               activeFilters={state.advancedFilters}
               onFiltersChange={handleFiltersChange}
@@ -217,18 +217,18 @@ export function DesktopPlaybookView({
           </Card>
 
           {/* Stats Dashboard */}
-          <Card variant="glass">
+          <Card variant="default">
             <PlaybookStatsDashboard stats={playbookStats} />
           </Card>
 
           {/* Recent Activity */}
-          <Card variant="glass">
+          <Card variant="default">
             <RecentActivityFeed activities={playbookStats.recentActivity} />
           </Card>
 
           {/* Bulk Actions - Only show when items are selected */}
           {(state.selectedPlayIds?.size || 0) > 0 && (
-            <Card variant="glass">
+            <Card variant="default">
               <BulkActionsToolbar
                 selectedCount={state.selectedPlayIds?.size || 0}
                 onClearSelection={handleClearSelection}
@@ -240,14 +240,14 @@ export function DesktopPlaybookView({
 
         {/* Right Side - Main Content Area */}
         <div className="lg:col-span-3 overflow-visible">
-          <Card variant="glass" size="lg">
+          <Card variant="default" size="lg">
             {state.currentView === "playbook" && (
               <ErrorBoundary
                 fallback={
                   <div className="p-spacing-lg text-center">
                     <Typography
                       variant="body-md"
-                      className="text-text-secondary"
+                      className="text-secondary"
                     >
                       Failed to load plays. Please refresh the page.
                     </Typography>
@@ -289,7 +289,7 @@ export function DesktopPlaybookView({
                 <div className="flex justify-between items-center">
                   <Typography
                     variant="headline-md"
-                    className="text-text-primary"
+                    className="text-primary"
                   >
                     Practice Scripts
                   </Typography>
@@ -324,7 +324,7 @@ export function DesktopPlaybookView({
                 <div className="flex justify-between items-center">
                   <Typography
                     variant="headline-md"
-                    className="text-text-primary"
+                    className="text-primary"
                   >
                     Game Plans
                   </Typography>
@@ -342,17 +342,17 @@ export function DesktopPlaybookView({
                 <div className="text-center py-12">
                   <Icon
                     name="target"
-                    className="h-16 w-16 text-text-muted mx-auto mb-4"
+                    className="h-16 w-16 text-muted mx-auto mb-4"
                   />
                   <Typography
                     variant="headline-sm"
-                    className="text-text-secondary mb-2"
+                    className="text-secondary mb-2"
                   >
                     No Game Plans Yet
                   </Typography>
                   <Typography
                     variant="body-sm"
-                    className="text-text-muted mb-6"
+                    className="text-muted mb-6"
                   >
                     Create your first game plan to strategize plays for upcoming
                     matches.

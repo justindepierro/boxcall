@@ -20,12 +20,12 @@ const reactionIcons: Record<ReactionType, React.ComponentType<any>> = {
 };
 
 const reactionColors: Record<ReactionType, string> = {
-  like: "text-text-info",
-  love: "text-text-error",
-  laugh: "text-text-warning",
-  wow: "text-text-primary",
-  sad: "text-text-secondary",
-  angry: "text-text-warning",
+  like: "text-info",
+  love: "text-error",
+  laugh: "text-warning",
+  wow: "text-primary",
+  sad: "text-secondary",
+  angry: "text-warning",
 };
 
 export const ReactionButton: React.FC<ReactionButtonProps> = ({
@@ -136,7 +136,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
           className={`flex items-center gap-1 ${buttonSizeClasses[size]} rounded-full transition-colors ${
             userReaction
               ? `${reactionColors[userReaction]} bg-opacity-10 hover:bg-opacity-20`
-              : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
+              : "text-secondary hover:text-primary hover:bg-surface-secondary"
           }`}
           disabled={isLoading}
         >
@@ -145,7 +145,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
               className: `${sizeClasses[size]} ${reactionColors[userReaction]}`,
             })
           ) : (
-            <Heart className={`${sizeClasses[size]} text-text-secondary`} />
+            <Heart className={`${sizeClasses[size]} text-secondary`} />
           )}
           {showCount && totalCount > 0 && (
             <span className="text-sm font-medium">{totalCount}</span>
@@ -194,7 +194,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
   return (
     <button
       onClick={() => setShowPicker(!showPicker)}
-      className={`flex items-center gap-2 ${buttonSizeClasses[size]} border border-border-light rounded-lg transition-colors ${
+      className={`flex items-center gap-2 ${buttonSizeClasses[size]} border border-light rounded-lg transition-colors ${
         userReaction
           ? "bg-surface-secondary border-text-secondary"
           : "hover:bg-surface-secondary"
@@ -217,8 +217,8 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
         </>
       ) : (
         <>
-          <Heart className={`${sizeClasses[size]} text-text-secondary`} />
-          <span className="text-sm text-text-muted">React</span>
+          <Heart className={`${sizeClasses[size]} text-secondary`} />
+          <span className="text-sm text-muted">React</span>
         </>
       )}
 

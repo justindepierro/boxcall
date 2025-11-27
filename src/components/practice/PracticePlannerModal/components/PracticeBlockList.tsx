@@ -51,13 +51,13 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
         <div className="text-right">
           <div
             className={`text-lg font-bold ${
-              isOvertime ? "text-text-error" : "text-text-success"
+              isOvertime ? "text-error" : "text-success"
             }`}
           >
             {totalDuration} / {scheduledDuration} min
           </div>
           {isOvertime && (
-            <div className="text-sm text-text-error flex items-center">
+            <div className="text-sm text-error flex items-center">
               <Icon name="alert-triangle" size="xs" className="mr-1" />
               {totalDuration - scheduledDuration} min overtime
             </div>
@@ -75,7 +75,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
               className={`space-y-3 min-h-48 p-4 rounded-lg placeholder-zone transition-colors ${
                 snapshot.isDraggingOver
                   ? "border-text-info surface-subtle"
-                  : "border-border-light surface-subtle"
+                  : "border-light surface-subtle"
               }`}
             >
               {practiceBlocks.length === 0 ? (
@@ -83,7 +83,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                   <Icon
                     name="plus-circle"
                     size="lg"
-                    className="mx-auto mb-2 text-text-muted"
+                    className="mx-auto mb-2 text-muted"
                   />
                   <Typography variant="body-md" color="muted">
                     No practice blocks yet
@@ -120,7 +120,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                                 <Icon
                                   name="menu"
                                   size="sm"
-                                  className="text-text-muted"
+                                  className="text-muted"
                                 />
                               </div>
 
@@ -158,7 +158,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                             {(block.location || block.notes) && (
                               <div className="ml-10 space-y-1">
                                 {block.location && (
-                                  <div className="flex items-center text-sm text-text-secondary">
+                                  <div className="flex items-center text-sm text-secondary">
                                     <Icon
                                       name="map"
                                       size="xs"
@@ -168,7 +168,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                                   </div>
                                 )}
                                 {block.notes && (
-                                  <div className="flex items-start text-sm text-text-secondary">
+                                  <div className="flex items-start text-sm text-secondary">
                                     <Icon
                                       name="message"
                                       size="xs"
@@ -238,7 +238,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                               {block.groups.map((group) => (
                                 <div
                                   key={group.id}
-                                  className="flex items-center justify-between p-2 surface-card/50 rounded-lg"
+                                  className="flex items-center justify-between p-2 bg-surface-primary/50 rounded-lg"
                                 >
                                   <div className="flex-1">
                                     <Typography

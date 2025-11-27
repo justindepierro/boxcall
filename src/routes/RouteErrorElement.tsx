@@ -107,7 +107,7 @@ export const RouteErrorElement: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center surface-app p-6">
       <div className="text-center max-w-lg">
         <div className="mb-4">
-          <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-surface-error text-text-error">
+          <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-surface-error text-error">
             {!isOnline ? "📶" : "!"}
           </span>
         </div>
@@ -117,14 +117,14 @@ export const RouteErrorElement: React.FC = () => {
         </Typography>
 
         {statusText && (
-          <p className="text-xs text-text-tertiary mb-1">{statusText}</p>
+          <p className="text-xs text-tertiary mb-1">{statusText}</p>
         )}
 
-        <p className="text-text-secondary mb-4">{message}</p>
+        <p className="text-secondary mb-4">{message}</p>
 
         {!isOnline && (
           <div className="mb-4 p-3 bg-surface-warning/10 border border-surface-warning/20 rounded-md">
-            <p className="text-sm text-text-warning">
+            <p className="text-sm text-warning">
               You're currently offline. Some features may not be available.
             </p>
           </div>
@@ -154,7 +154,7 @@ export const RouteErrorElement: React.FC = () => {
         </div>
 
         {retryCount >= 3 && (
-          <p className="text-xs text-text-tertiary mt-4">
+          <p className="text-xs text-tertiary mt-4">
             Still having issues? Try refreshing the page or contact support.
           </p>
         )}

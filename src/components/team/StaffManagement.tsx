@@ -64,15 +64,15 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ teamId }) => {
   const getRoleColor = (role: TeamRole) => {
     switch (role) {
       case "head_coach":
-        return "bg-surface-primary text-text-primary";
+        return "bg-surface-primary text-primary";
       case "assistant_coach":
-        return "bg-surface-info text-text-info";
+        return "bg-surface-info text-info";
       case "coordinator":
-        return "bg-surface-success text-text-success";
+        return "bg-surface-success text-success";
       case "manager":
-        return "bg-surface-warning text-text-warning";
+        return "bg-surface-warning text-warning";
       default:
-        return "bg-surface-secondary text-text-secondary";
+        return "bg-surface-secondary text-secondary";
     }
   };
 
@@ -117,7 +117,7 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ teamId }) => {
       {/* Staff Header */}
       <div className="flex justify-between items-center">
         <div>
-          <Typography variant="headline-lg" className="text-text-primary">
+          <Typography variant="headline-lg" className="text-primary">
             Coaching Staff
           </Typography>
           <Typography variant="body-md" color="muted" className="mt-1">
@@ -165,7 +165,7 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ teamId }) => {
                   <div>
                     <Typography
                       variant="headline-sm"
-                      className="text-text-primary"
+                      className="text-primary"
                     >
                       {member.name}
                     </Typography>
@@ -175,10 +175,10 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ teamId }) => {
                   </div>
                 </div>
                 <div className="flex space-x-1">
-                  <button className="p-1 text-text-muted hover:text-text-secondary">
+                  <button className="p-1 text-muted hover:text-secondary">
                     <Icon name="edit" className="h-4 w-4" />
                   </button>
-                  <button className="p-1 text-text-muted hover:text-text-error">
+                  <button className="p-1 text-muted hover:text-error">
                     <Icon name="delete" className="h-4 w-4" />
                   </button>
                 </div>
@@ -205,10 +205,10 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ teamId }) => {
                   <span
                     className={`px-2 py-1 rounded-lg text-xs ${
                       member.status === "active"
-                        ? "bg-surface-success text-text-success"
+                        ? "bg-surface-success text-success"
                         : member.status === "pending"
-                          ? "bg-surface-warning text-text-warning"
-                          : "bg-surface-secondary text-text-primary"
+                          ? "bg-surface-warning text-warning"
+                          : "bg-surface-secondary text-primary"
                     }`}
                   >
                     {member.status === "active"

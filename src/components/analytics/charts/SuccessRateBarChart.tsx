@@ -66,10 +66,10 @@ export const SuccessRateBarChart: React.FC<SuccessRateBarChartProps> = ({
           <Typography variant="body-sm" className="font-medium mb-1">
             {label}
           </Typography>
-          <Typography variant="body-xs" className="text-text-secondary">
+          <Typography variant="body-xs" className="text-secondary">
             Success Rate: {data.successRate}%
           </Typography>
-          <Typography variant="body-xs" className="text-text-secondary">
+          <Typography variant="body-xs" className="text-secondary">
             {data.successfulPlays}/{data.totalPlays} plays successful
           </Typography>
         </div>
@@ -100,12 +100,12 @@ export const SuccessRateBarChart: React.FC<SuccessRateBarChartProps> = ({
             <XAxis
               dataKey="name"
               tick={{ fontSize: 12 }}
-              className="text-text-secondary"
+              className="text-secondary"
             />
             <YAxis
               tickFormatter={formatYAxisTick}
               tick={{ fontSize: 12 }}
-              className="text-text-secondary"
+              className="text-secondary"
               domain={[0, 100]}
             />
             <Tooltip content={<CustomTooltip />} />
@@ -120,7 +120,7 @@ export const SuccessRateBarChart: React.FC<SuccessRateBarChartProps> = ({
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <Typography variant="body-xs" className="text-text-secondary mt-2">
+      <Typography variant="body-xs" className="text-secondary mt-2">
         Success rates by formation (higher is better)
       </Typography>
     </Card>

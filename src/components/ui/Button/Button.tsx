@@ -37,7 +37,7 @@ const buttonVariants: ButtonStylesConfig = {
   },
   gradient: {
     // Gradient not in component tokens - keep custom
-    base: "text-text-inverse bg-gradient-to-r from-electric-600 to-electric-700 transition-all duration-200",
+    base: "text-inverse bg-gradient-to-r from-electric-600 to-electric-700 transition-all duration-200",
     hover: "hover:from-electric-500 hover:to-electric-600",
     active: "active:from-electric-700 active:to-electric-800",
     disabled:
@@ -46,11 +46,11 @@ const buttonVariants: ButtonStylesConfig = {
   },
   glass: {
     // Glass not in component tokens - keep custom
-    base: "bg-surface-base/10 backdrop-blur-md text-text-primary transition-colors duration-200",
+    base: "bg-surface-base/10 backdrop-blur-md text-primary transition-colors duration-200",
     hover: "hover:bg-surface-base/20",
     active: "active:bg-surface-base/30",
     disabled:
-      "disabled:bg-surface-base/5 disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-60",
+      "disabled:bg-surface-base/5 disabled:text-muted disabled:cursor-not-allowed disabled:opacity-60",
     focus: "focus-ring",
   },
   ghost: {
@@ -85,10 +85,10 @@ const buttonVariants: ButtonStylesConfig = {
   },
   neutralLink: {
     // Keep custom (neutral link variant)
-    base: "text-text-secondary p-0 h-auto",
-    hover: "hover:text-text-primary hover:underline",
-    active: "active:text-text-primary",
-    disabled: "disabled:text-text-muted disabled:cursor-not-allowed",
+    base: "text-secondary p-0 h-auto",
+    hover: "hover:text-primary hover:underline",
+    active: "active:text-primary",
+    disabled: "disabled:text-muted disabled:cursor-not-allowed",
     focus: "focus-ring",
   },
   infoLink: {

@@ -129,6 +129,9 @@ export interface Play {
   check_into?: string; // text
   notes?: string; // text
 
+  // Play diagram (NEW - November 27, 2025)
+  diagram_image_url?: string | null; // text - Supabase Storage URL for uploaded diagram image
+
   // Performance metrics
   confidence_base: number; // integer DEFAULT 70
   times_called: number; // integer DEFAULT 0

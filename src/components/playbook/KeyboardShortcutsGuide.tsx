@@ -58,7 +58,7 @@ export const KeyboardShortcutsGuide: React.FC<KeyboardShortcutsGuideProps> = ({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div
-        className="bg-surface-card elevation-modal rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        className="bg-surface-primary elevation-modal rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6">
@@ -69,10 +69,10 @@ export const KeyboardShortcutsGuide: React.FC<KeyboardShortcutsGuideProps> = ({
                 <span className="text-jade-600 font-mono text-lg">⌨️</span>
               </div>
               <div>
-                <Typography variant="headline-md" className="text-text-primary">
+                <Typography variant="headline-md" className="text-primary">
                   Keyboard Shortcuts
                 </Typography>
-                <Typography variant="body-sm" className="text-text-secondary">
+                <Typography variant="body-sm" className="text-secondary">
                   Boost your productivity with these keyboard shortcuts
                 </Typography>
               </div>
@@ -88,7 +88,7 @@ export const KeyboardShortcutsGuide: React.FC<KeyboardShortcutsGuideProps> = ({
               <div key={category}>
                 <Typography
                   variant="headline-sm"
-                  className="text-text-primary mb-3"
+                  className="text-primary mb-3"
                 >
                   {category}
                 </Typography>
@@ -102,11 +102,11 @@ export const KeyboardShortcutsGuide: React.FC<KeyboardShortcutsGuideProps> = ({
                       >
                         <Typography
                           variant="body-sm"
-                          className="text-text-secondary"
+                          className="text-secondary"
                         >
                           {shortcut.description}
                         </Typography>
-                        <kbd className="px-2 py-1 bg-surface-primary rounded-lg text-xs font-mono text-text-secondary shadow-sm">
+                        <kbd className="px-2 py-1 bg-surface-primary rounded-lg text-xs font-mono text-secondary shadow-sm">
                           {shortcut.key}
                         </kbd>
                       </div>
@@ -119,7 +119,7 @@ export const KeyboardShortcutsGuide: React.FC<KeyboardShortcutsGuideProps> = ({
           {/* Footer */}
           <div className="mt-6 pt-4 border-t border-border">
             <div className="flex items-center justify-between">
-              <Typography variant="body-xs" className="text-text-muted">
+              <Typography variant="body-xs" className="text-muted">
                 Press{" "}
                 <kbd className="px-1 py-0.5 bg-surface-muted border rounded-lg text-xs">
                   ?

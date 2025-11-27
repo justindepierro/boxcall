@@ -105,15 +105,15 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   const getActivityIcon = (type: ActivityType): React.ReactNode => {
     switch (type) {
       case "reaction_added":
-        return <Heart className="w-4 h-4 text-text-error" />;
+        return <Heart className="w-4 h-4 text-error" />;
       case "follow_started":
-        return <UserPlus className="w-4 h-4 text-text-info" />;
+        return <UserPlus className="w-4 h-4 text-info" />;
       case "comment_posted":
-        return <MessageCircle className="w-4 h-4 text-text-success" />;
+        return <MessageCircle className="w-4 h-4 text-success" />;
       case "play_created":
-        return <Play className="w-4 h-4 text-text-primary" />;
+        return <Play className="w-4 h-4 text-primary" />;
       case "game_plan_created":
-        return <FileText className="w-4 h-4 text-text-warning" />;
+        return <FileText className="w-4 h-4 text-warning" />;
       default:
         return <div className="w-4 h-4 bg-border-light rounded-full" />;
     }
@@ -170,7 +170,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
 
   if (activities.length === 0) {
     return (
-      <div className="text-center py-8 text-text-muted">
+      <div className="text-center py-8 text-muted">
         <div className="text-4xl mb-2">📭</div>
         <p>No activity yet</p>
       </div>
@@ -191,15 +191,15 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
 
           {/* Activity Content */}
           <div className="flex-1 min-w-0">
-            <p className="text-sm text-text-primary">
+            <p className="text-sm text-primary">
               {formatActivityMessage(activity)}
             </p>
             {activity.content_title && (
-              <p className="text-sm text-text-info font-medium mt-1">
+              <p className="text-sm text-info font-medium mt-1">
                 "{activity.content_title}"
               </p>
             )}
-            <p className="text-xs text-text-muted mt-1">
+            <p className="text-xs text-muted mt-1">
               {formatTimeAgo(activity.created_at)}
             </p>
           </div>

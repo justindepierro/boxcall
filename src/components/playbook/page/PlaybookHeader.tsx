@@ -51,12 +51,12 @@ export const PlaybookHeader: React.FC<PlaybookHeaderProps> = ({
         <div className="container-page container-padding">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <Icon name="file" className="h-8 w-8 text-text-success mr-3" />
+              <Icon name="file" className="h-8 w-8 text-success mr-3" />
               <div className="flex flex-col">
                 <Typography
                   variant="headline-md"
                   as="h1"
-                  className="text-text-primary"
+                  className="text-primary"
                 >
                   {title}
                 </Typography>
@@ -111,7 +111,7 @@ export const PlaybookHeader: React.FC<PlaybookHeaderProps> = ({
                 >
                   <Icon
                     name="settings"
-                    className="h-5 w-5 text-text-secondary group-hover:text-text-secondary"
+                    className="h-5 w-5 text-secondary group-hover:text-secondary"
                   />
                 </button>
               )}
@@ -124,7 +124,7 @@ export const PlaybookHeader: React.FC<PlaybookHeaderProps> = ({
               >
                 <Icon
                   name="trophy"
-                  className="h-5 w-5 text-text-secondary group-hover:text-text-primary"
+                  className="h-5 w-5 text-secondary group-hover:text-primary"
                 />
               </button>
             </div>

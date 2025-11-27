@@ -25,7 +25,7 @@ export const OfflineBanner: React.FC = () => {
         ${
           isTransitioning
             ? 'bg-status-success text-white'
-            : 'bg-status-warning text-text-primary'
+            : 'bg-status-warning text-primary'
         }
         px-4 py-3
         shadow-elevation-md

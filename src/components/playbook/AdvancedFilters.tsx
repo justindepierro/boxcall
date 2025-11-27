@@ -195,20 +195,20 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
         {/* Filter Trigger Button */}
         <button
           onClick={() => setShowAdvanced(true)}
-          className="w-full px-4 py-3 bg-surface-primary rounded-lg shadow-sm border border-border-subtle flex items-center justify-between active:scale-98 transition-transform"
+          className="w-full px-4 py-3 bg-surface-primary rounded-lg shadow-sm border border-subtle flex items-center justify-between active:scale-98 transition-transform"
         >
           <div className="flex items-center gap-2">
             <Icon name="filter" className="h-5 w-5 text-accent" />
-            <span className="text-sm font-medium text-text-primary">
+            <span className="text-sm font-medium text-primary">
               Filters
             </span>
             {activeFilters.length > 0 && (
-              <span className="px-2 py-0.5 text-xs bg-accent text-text-inverse rounded-full">
+              <span className="px-2 py-0.5 text-xs bg-accent text-inverse rounded-full">
                 {activeFilters.length}
               </span>
             )}
           </div>
-          <Icon name="chevron-right" className="h-5 w-5 text-text-muted" />
+          <Icon name="chevron-right" className="h-5 w-5 text-muted" />
         </button>
 
         {/* Active Filters Chips */}
@@ -217,12 +217,12 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
             {activeFilters.map((filter) => (
               <div
                 key={filter.id}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-secondary text-text-secondary text-xs rounded-full border border-border-subtle"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-secondary text-secondary text-xs rounded-full border border-subtle"
               >
                 <span className="truncate max-w-36">{filter.label}</span>
                 <button
                   onClick={() => removeFilter(filter.id)}
-                  className="text-text-muted hover:text-text-secondary rounded-full p-0.5 active:scale-90 transition-transform"
+                  className="text-muted hover:text-secondary rounded-full p-0.5 active:scale-90 transition-transform"
                 >
                   <Icon name="close" className="h-3 w-3" />
                 </button>
@@ -242,11 +242,11 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           >
             <div className="flex flex-col h-full bg-surface-primary">
               {/* Header */}
-              <div className="sticky top-0 z-10 px-4 py-4 bg-surface-primary border-b border-border-subtle">
+              <div className="sticky top-0 z-10 px-4 py-4 bg-surface-primary border-b border-subtle">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <Icon name="filter" className="h-5 w-5 text-accent" />
-                    <h3 className="text-lg font-semibold text-text-primary">
+                    <h3 className="text-lg font-semibold text-primary">
                       Advanced Filters
                     </h3>
                   </div>
@@ -254,7 +254,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                     onClick={() => setShowAdvanced(false)}
                     className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-surface-secondary active:scale-95 transition-all"
                   >
-                    <Icon name="close" className="h-5 w-5 text-text-muted" />
+                    <Icon name="close" className="h-5 w-5 text-muted" />
                   </button>
                 </div>
 
@@ -271,12 +271,12 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                 {activeFilters.length > 0 && (
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <h4 className="text-sm font-medium text-text-secondary">
+                      <h4 className="text-sm font-medium text-secondary">
                         Active Filters ({activeFilters.length})
                       </h4>
                       <button
                         onClick={clearAllFilters}
-                        className="px-3 py-1.5 text-xs text-text-error hover:text-text-error-hover hover:bg-surface-error-hover rounded-lg active:scale-95 transition-all"
+                        className="px-3 py-1.5 text-xs text-error hover:text-error-hover hover:bg-surface-error-hover rounded-lg active:scale-95 transition-all"
                       >
                         Clear All
                       </button>
@@ -285,9 +285,9 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                       {activeFilters.map((filter) => (
                         <div
                           key={filter.id}
-                          className="flex items-center justify-between p-3 bg-surface-secondary rounded-lg border border-border-subtle"
+                          className="flex items-center justify-between p-3 bg-surface-secondary rounded-lg border border-subtle"
                         >
-                          <span className="text-sm text-text-primary flex-1 truncate">
+                          <span className="text-sm text-primary flex-1 truncate">
                             {filter.label}
                           </span>
                           <button
@@ -296,7 +296,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                           >
                             <Icon
                               name="close"
-                              className="h-4 w-4 text-text-error"
+                              className="h-4 w-4 text-error"
                             />
                           </button>
                         </div>
@@ -307,23 +307,23 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
 
                 {/* Add Custom Filter */}
                 <div>
-                  <h4 className="text-sm font-medium text-text-secondary mb-3">
+                  <h4 className="text-sm font-medium text-secondary mb-3">
                     Add Custom Filter
                   </h4>
 
                   {!showAddFilter ? (
                     <button
                       onClick={() => setShowAddFilter(true)}
-                      className="w-full px-4 py-3 text-sm text-text-secondary border border-dashed border-border-medium rounded-lg hover:border-border hover:bg-surface-secondary transition-colors active:scale-98"
+                      className="w-full px-4 py-3 text-sm text-secondary border border-dashed border-medium rounded-lg hover:border-border hover:bg-surface-secondary transition-colors active:scale-98"
                     >
                       <Icon name="plus" className="h-5 w-5 inline mr-2" />
                       Add Custom Filter
                     </button>
                   ) : (
-                    <div className="p-4 bg-surface-secondary rounded-lg border border-border-subtle space-y-3">
+                    <div className="p-4 bg-surface-secondary rounded-lg border border-subtle space-y-3">
                       {/* Field Select */}
                       <div>
-                        <label className="block text-sm font-medium text-text-primary mb-2">
+                        <label className="block text-sm font-medium text-primary mb-2">
                           Field
                         </label>
                         <select
@@ -336,7 +336,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                               value: "",
                             }))
                           }
-                          className="w-full h-12 px-3 text-sm border border-border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
+                          className="w-full h-12 px-3 text-sm border border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
                         >
                           <option value="">Select field...</option>
                           {FILTER_FIELDS.map((field) => (
@@ -350,7 +350,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                       {/* Value Input */}
                       {newFilter.field && (
                         <div>
-                          <label className="block text-sm font-medium text-text-primary mb-2">
+                          <label className="block text-sm font-medium text-primary mb-2">
                             Value
                           </label>
                           {selectedField?.type === "select" ? (
@@ -362,7 +362,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                                   value: e.target.value,
                                 }))
                               }
-                              className="w-full h-12 px-3 text-sm border border-border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
+                              className="w-full h-12 px-3 text-sm border border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
                             >
                               <option value="">Select value...</option>
                               {selectedField.options?.map(
@@ -391,7 +391,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                                 }))
                               }
                               placeholder="Enter value..."
-                              className="w-full h-12 px-3 text-sm border border-border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
+                              className="w-full h-12 px-3 text-sm border border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
                             />
                           )}
                         </div>
@@ -403,7 +403,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                           <button
                             onClick={addFilter}
                             disabled={!newFilter.field || !newFilter.value}
-                            className="flex-1 h-12 bg-accent text-text-inverse text-sm font-medium rounded-lg hover:bg-accent-hover disabled:bg-surface-disabled disabled:cursor-not-allowed disabled:text-text-disabled active:scale-98 transition-all"
+                            className="flex-1 h-12 bg-accent text-inverse text-sm font-medium rounded-lg hover:bg-accent-hover disabled:bg-surface-disabled disabled:cursor-not-allowed disabled:text-disabled active:scale-98 transition-all"
                           >
                             Add Filter
                           </button>
@@ -416,7 +416,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                                 value: "",
                               });
                             }}
-                            className="px-4 h-12 text-text-muted hover:text-text-secondary text-sm border border-border-subtle rounded-lg hover:bg-surface-muted active:scale-98 transition-all"
+                            className="px-4 h-12 text-muted hover:text-secondary text-sm border border-subtle rounded-lg hover:bg-surface-muted active:scale-98 transition-all"
                           >
                             Cancel
                           </button>
@@ -428,10 +428,10 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
               </div>
 
               {/* Footer with Apply Button */}
-              <div className="sticky bottom-0 z-10 p-4 bg-surface-primary border-t border-border-subtle pb-safe">
+              <div className="sticky bottom-0 z-10 p-4 bg-surface-primary border-t border-subtle pb-safe">
                 <button
                   onClick={() => setShowAdvanced(false)}
-                  className="w-full h-12 bg-accent text-text-inverse text-sm font-semibold rounded-lg hover:bg-accent-hover active:scale-98 transition-all shadow-sm"
+                  className="w-full h-12 bg-accent text-inverse text-sm font-semibold rounded-lg hover:bg-accent-hover active:scale-98 transition-all shadow-sm"
                 >
                   Apply Filters
                   {activeFilters.length > 0 && ` (${activeFilters.length})`}
@@ -448,7 +448,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
   return (
     <div className="bg-surface-primary rounded-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_1px_3px_rgba(0,0,0,0.1)] overflow-visible">
       {/* Quick Filter Presets */}
-      <div className="p-4 border-b border-border-subtle">
+      <div className="p-4 border-b border-subtle">
         <QuickFilterPresets
           activePresetId={activePresetId}
           onPresetSelect={handlePresetSelect}
@@ -467,7 +467,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                 name={showAdvanced ? "chevron-down" : "chevron-right"}
                 className="h-4 w-4 transition-transform"
               />
-              <Icon name="filter" className="h-4 w-4 text-text-muted" />
+              <Icon name="filter" className="h-4 w-4 text-muted" />
               <span>Advanced Filters</span>
               {activeFilters.length > 0 && (
                 <span className="px-1.5 py-0.5 text-xs bg-accent/10 text-accent rounded-full">
@@ -480,7 +480,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
             {activeFilters.length > 0 && (
               <button
                 onClick={clearAllFilters}
-                className="px-2 py-1 text-xs text-text-error hover:text-text-error-hover hover:bg-surface-error-hover rounded-lg active:scale-95 transition-all"
+                className="px-2 py-1 text-xs text-error hover:text-error-hover hover:bg-surface-error-hover rounded-lg active:scale-95 transition-all"
                 title="Clear all filters"
               >
                 Clear All
@@ -497,12 +497,12 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
             {activeFilters.map((filter) => (
               <div
                 key={filter.id}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-secondary text-text-secondary text-xs rounded-full border border-border-subtle hover:border-border-medium transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-secondary text-secondary text-xs rounded-full border border-subtle hover:border-medium transition-colors"
               >
                 <span className="truncate max-w-40">{filter.label}</span>
                 <button
                   onClick={() => removeFilter(filter.id)}
-                  className="text-text-muted hover:text-text-secondary hover:bg-surface-muted rounded-full p-0.5 active:scale-90 transition-all"
+                  className="text-muted hover:text-secondary hover:bg-surface-muted rounded-full p-0.5 active:scale-90 transition-all"
                 >
                   <Icon name="close" className="h-3 w-3" />
                 </button>
@@ -518,7 +518,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           {!showAddFilter && (
             <button
               onClick={() => setShowAddFilter(true)}
-              className="w-full px-3 py-2 text-sm text-text-secondary border border-dashed border-border-medium rounded-lg hover:border-border hover:bg-surface-secondary transition-colors active:scale-98"
+              className="w-full px-3 py-2 text-sm text-secondary border border-dashed border-medium rounded-lg hover:border-border hover:bg-surface-secondary transition-colors active:scale-98"
             >
               <Icon name="plus" className="h-4 w-4 inline mr-2" />
               Add Custom Filter
@@ -527,10 +527,10 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
 
           {/* Compact Add Filter */}
           {showAddFilter && (
-            <div className="p-3 bg-surface-secondary rounded-lg border border-border-subtle space-y-2">
+            <div className="p-3 bg-surface-secondary rounded-lg border border-subtle space-y-2">
               <div className="flex gap-2 items-end">
                 <div className="flex-1 min-w-0">
-                  <label className="block text-xs text-text-muted mb-1">
+                  <label className="block text-xs text-muted mb-1">
                     Field
                   </label>
                   <select
@@ -543,7 +543,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                         value: "",
                       }))
                     }
-                    className="w-full px-2 py-1.5 text-xs border border-border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
+                    className="w-full px-2 py-1.5 text-xs border border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
                   >
                     <option value="">Select field...</option>
                     {FILTER_FIELDS.map((field) => (
@@ -556,7 +556,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
 
                 {newFilter.field && (
                   <div className="flex-1 min-w-0">
-                    <label className="block text-xs text-text-muted mb-1">
+                    <label className="block text-xs text-muted mb-1">
                       Value
                     </label>
                     {selectedField?.type === "select" ? (
@@ -568,7 +568,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                             value: e.target.value,
                           }))
                         }
-                        className="w-full px-2 py-1.5 text-xs border border-border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
+                        className="w-full px-2 py-1.5 text-xs border border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
                       >
                         <option value="">Select value...</option>
                         {selectedField.options?.map(
@@ -595,7 +595,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                           }))
                         }
                         placeholder="Enter value..."
-                        className="w-full px-2 py-1.5 text-xs border border-border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
+                        className="w-full px-2 py-1.5 text-xs border border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
                       />
                     )}
                   </div>
@@ -607,7 +607,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                   <button
                     onClick={addFilter}
                     disabled={!newFilter.field || !newFilter.value}
-                    className="flex-1 px-3 py-1.5 bg-accent text-text-inverse text-xs rounded-lg hover:bg-accent-hover disabled:bg-surface-disabled disabled:cursor-not-allowed disabled:text-text-disabled active:scale-95 transition-all"
+                    className="flex-1 px-3 py-1.5 bg-accent text-inverse text-xs rounded-lg hover:bg-accent-hover disabled:bg-surface-disabled disabled:cursor-not-allowed disabled:text-disabled active:scale-95 transition-all"
                   >
                     Add Filter
                   </button>
@@ -620,7 +620,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                         value: "",
                       });
                     }}
-                    className="px-3 py-1.5 text-text-muted hover:text-text-secondary text-xs border border-border-subtle rounded-lg hover:bg-surface-muted active:scale-95 transition-all"
+                    className="px-3 py-1.5 text-muted hover:text-secondary text-xs border border-subtle rounded-lg hover:bg-surface-muted active:scale-95 transition-all"
                   >
                     Cancel
                   </button>

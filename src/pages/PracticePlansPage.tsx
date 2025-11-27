@@ -347,15 +347,15 @@ export default function PracticePlansPage() {
         onOpen: handleCreateScript,
         body: (
           <div className="space-y-2 text-sm">
-            <div className="flex items-center justify-between text-text-secondary">
+            <div className="flex items-center justify-between text-secondary">
               <span>Total scripts</span>
-              <span className="font-semibold text-text-primary">
+              <span className="font-semibold text-primary">
                 {activeScripts.length}
               </span>
             </div>
-            <div className="flex items-center justify-between text-xs text-text-secondary">
+            <div className="flex items-center justify-between text-xs text-secondary">
               <span>Latest build</span>
-              <span className="font-semibold text-text-primary">
+              <span className="font-semibold text-primary">
                 {activeScripts[0]?.updatedAt
                   ? new Date(activeScripts[0].updatedAt).toLocaleDateString()
                   : "—"}
@@ -377,13 +377,13 @@ export default function PracticePlansPage() {
         onOpen: () => toast.info("Template library coming soon!"),
         body: (
           <div className="space-y-2 text-sm">
-            <div className="flex items-center justify-between text-text-secondary">
+            <div className="flex items-center justify-between text-secondary">
               <span>Quick add</span>
-              <span className="font-semibold text-text-primary">Soon</span>
+              <span className="font-semibold text-primary">Soon</span>
             </div>
-            <div className="flex items-center justify-between text-xs text-text-secondary">
+            <div className="flex items-center justify-between text-xs text-secondary">
               <span>Most used</span>
-              <span className="font-semibold text-text-primary">—</span>
+              <span className="font-semibold text-primary">—</span>
             </div>
           </div>
         ),
@@ -401,15 +401,15 @@ export default function PracticePlansPage() {
         onOpen: scrollToList,
         body: (
           <div className="space-y-2 text-sm">
-            <div className="flex items-center justify-between text-text-secondary">
+            <div className="flex items-center justify-between text-secondary">
               <span>Active scripts</span>
-              <span className="font-semibold text-text-primary">
+              <span className="font-semibold text-primary">
                 {activeScripts.length}
               </span>
             </div>
-            <div className="flex items-center justify-between text-xs text-text-secondary">
+            <div className="flex items-center justify-between text-xs text-secondary">
               <span>Archived</span>
-              <span className="font-semibold text-text-primary">
+              <span className="font-semibold text-primary">
                 {archivedScripts.length}
               </span>
             </div>
@@ -445,15 +445,12 @@ export default function PracticePlansPage() {
       >
         {/* Aurora Dashboard Tiles */}
         <div className="mb-8">
-          <div className="rounded-xl bg-surface-primary p-5 shadow-lg backdrop-blur-sm sm:p-6 xl:p-7">
+          <div className="rounded-xl bg-primary p-5 shadow-lg backdrop-blur-sm sm:p-6 xl:p-7">
             <div className="mb-6">
-              <Typography variant="headline-sm" className="text-text-primary">
+              <Typography variant="headline-sm" className="text-primary">
                 Set the tone for practice
               </Typography>
-              <Typography
-                variant="body-sm"
-                className="text-text-secondary mt-1"
-              >
+              <Typography variant="body-sm" className="text-secondary mt-1">
                 Launch scripts, pull templates, or share the agenda in seconds.
               </Typography>
             </div>
@@ -526,9 +523,9 @@ export default function PracticePlansPage() {
 
         {isLoading ? (
           <div className="space-y-4 py-10" aria-busy="true">
-            <div className="h-32 rounded-xl bg-surface-secondary animate-pulse" />
-            <div className="h-32 rounded-xl bg-surface-secondary animate-pulse" />
-            <div className="h-32 rounded-xl bg-surface-secondary animate-pulse" />
+            <div className="h-32 rounded-xl bg-secondary animate-pulse" />
+            <div className="h-32 rounded-xl bg-secondary animate-pulse" />
+            <div className="h-32 rounded-xl bg-secondary animate-pulse" />
           </div>
         ) : activeScripts.length === 0 &&
           archivedScripts.length === 0 &&
@@ -536,18 +533,15 @@ export default function PracticePlansPage() {
           activeFilters.length === 0 ? (
           // Empty State
           <div className="py-16 text-center">
-            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-surface-muted">
-              <Icon name="file" className="h-12 w-12 text-text-muted" />
+            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-muted">
+              <Icon name="file" className="h-12 w-12 text-muted" />
             </div>
-            <Typography
-              variant="headline-md"
-              className="mb-2 text-text-primary"
-            >
+            <Typography variant="headline-md" className="mb-2 text-primary">
               No Practice Scripts Yet
             </Typography>
             <Typography
               variant="body-lg"
-              className="mx-auto mb-8 max-w-md text-text-secondary"
+              className="mx-auto mb-8 max-w-md text-secondary"
             >
               Create your first practice script to organize plays for your
               team's training sessions.
@@ -575,16 +569,16 @@ export default function PracticePlansPage() {
               <div>
                 <Typography
                   variant="headline-md"
-                  className="text-text-primary font-semibold"
+                  className="text-primary font-semibold"
                 >
                   Your Practice Scripts
                 </Typography>
-                <div className="mt-1 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-wide text-text-secondary">
-                  <span className="inline-flex items-center rounded-full bg-surface-secondary px-2.5 py-1">
+                <div className="mt-1 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-wide text-secondary">
+                  <span className="inline-flex items-center rounded-full bg-secondary px-2.5 py-1">
                     {activeScripts.length} Active
                   </span>
                   {archivedScripts.length > 0 && (
-                    <span className="inline-flex items-center rounded-full bg-surface-secondary px-2.5 py-1">
+                    <span className="inline-flex items-center rounded-full bg-secondary px-2.5 py-1">
                       {archivedScripts.length} Archived
                     </span>
                   )}
@@ -605,20 +599,20 @@ export default function PracticePlansPage() {
               {activeScripts.map((script) => (
                 <div
                   key={script.id}
-                  className="bg-surface-primary rounded-2xl border border-border p-5 hover:shadow-lg transition-all hover:border-border-hover"
+                  className="bg-primary rounded-2xl border border-border p-5 shadow-orange-md hover:shadow-orange-lg hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 hover:border-hover cursor-pointer"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0 space-y-1.5">
                       <Typography
                         variant="headline-sm"
-                        className="text-text-primary font-semibold leading-tight line-clamp-2"
+                        className="text-primary font-semibold leading-tight line-clamp-2"
                       >
                         {script.title || script.name || "Untitled Script"}
                       </Typography>
                       {script.description && (
                         <Typography
                           variant="body-sm"
-                          className="text-text-secondary line-clamp-2"
+                          className="text-secondary line-clamp-2"
                         >
                           {script.description}
                         </Typography>
@@ -627,7 +621,7 @@ export default function PracticePlansPage() {
                   </div>
 
                   {/* Stats */}
-                  <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-text-secondary">
+                  <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-secondary">
                     <span className="inline-flex items-center gap-2">
                       <Icon name="play" className="h-4 w-4" />
                       {script.plays?.length || 0} plays
@@ -644,13 +638,13 @@ export default function PracticePlansPage() {
                       {script.tags.slice(0, 3).map((tag, idx) => (
                         <span
                           key={idx}
-                          className="px-2 py-1 text-xs rounded bg-surface-secondary text-text-secondary"
+                          className="px-2 py-1 text-xs rounded-full bg-gradient-to-r from-orange-50 to-orange-100 text-orange-900 border border-orange-200"
                         >
                           {tag}
                         </span>
                       ))}
                       {script.tags.length > 3 && (
-                        <span className="px-2 py-1 text-xs rounded bg-surface-secondary text-text-muted">
+                        <span className="px-2 py-1 text-xs rounded bg-secondary text-muted">
                           +{script.tags.length - 3} more
                         </span>
                       )}
@@ -659,34 +653,34 @@ export default function PracticePlansPage() {
 
                   {/* Actions */}
                   <div className="flex items-center justify-between pt-4 border-t border-border">
-                    <Typography variant="body-sm" className="text-text-muted">
+                    <Typography variant="body-sm" className="text-muted">
                       {new Date(script.updatedAt).toLocaleDateString()}
                     </Typography>
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => handleEditScript(script)}
-                        className="p-2 text-text-muted hover:text-text-primary hover:bg-surface-secondary rounded transition-colors"
+                        className="p-2 text-muted hover:text-primary hover:bg-secondary rounded transition-colors"
                         title="Edit script"
                       >
                         <Icon name="edit" className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleDuplicateScript(script)}
-                        className="p-2 text-text-muted hover:text-text-primary hover:bg-surface-secondary rounded transition-colors"
+                        className="p-2 text-muted hover:text-primary hover:bg-secondary rounded transition-colors"
                         title="Duplicate script"
                       >
                         <Icon name="copy" className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleArchiveScript(script)}
-                        className="p-2 text-text-muted hover:text-text-primary hover:bg-surface-secondary rounded transition-colors"
+                        className="p-2 text-muted hover:text-primary hover:bg-secondary rounded transition-colors"
                         title="Archive script"
                       >
                         <Icon name="folder" className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleDeleteScript(script.id)}
-                        className="p-2 text-text-muted hover:text-error-600 hover:bg-error-50 rounded transition-colors"
+                        className="p-2 text-muted hover:text-error-600 hover:bg-error-50 rounded transition-colors"
                         title="Delete script"
                       >
                         <Icon name="delete" className="h-4 w-4" />
@@ -702,7 +696,7 @@ export default function PracticePlansPage() {
               <div className="mt-12">
                 <Typography
                   variant="headline-sm"
-                  className="text-text-secondary mb-4"
+                  className="text-secondary mb-4"
                 >
                   Archived Scripts ({archivedScripts.length})
                 </Typography>
@@ -710,24 +704,24 @@ export default function PracticePlansPage() {
                   {archivedScripts.map((script) => (
                     <div
                       key={script.id}
-                      className="bg-surface-muted/50 rounded-lg border border-border p-4 opacity-60"
+                      className="bg-muted/50 rounded-lg border border-border p-4 opacity-60"
                     >
                       <div className="flex items-start justify-between mb-2">
                         <Typography
                           variant="body-md"
-                          className="text-text-secondary truncate flex-1"
+                          className="text-secondary truncate flex-1"
                         >
                           {script.title || script.name || "Untitled Script"}
                         </Typography>
                         <button
                           onClick={() => handleArchiveScript(script)}
-                          className="p-1 text-text-muted hover:text-text-primary rounded transition-colors"
+                          className="p-1 text-muted hover:text-primary rounded transition-colors"
                           title="Restore script"
                         >
                           <Icon name="inbox" className="h-4 w-4" />
                         </button>
                       </div>
-                      <Typography variant="body-sm" className="text-text-muted">
+                      <Typography variant="body-sm" className="text-muted">
                         {script.plays?.length || 0} plays • Archived
                       </Typography>
                     </div>

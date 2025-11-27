@@ -79,14 +79,14 @@ const PageHeader: React.FC<PageHeaderProps> = ({
           {title && (
             <Typography
               variant="display-lg"
-              className="text-text-primary mb-3"
+              className="text-primary mb-3"
               as="h1"
             >
               {title}
             </Typography>
           )}
           {subtitle && (
-            <Typography variant="body-lg" className="text-text-secondary">
+            <Typography variant="body-lg" className="text-secondary">
               {subtitle}
             </Typography>
           )}

@@ -75,12 +75,12 @@ export const UserMenu: React.FC = () => {
         onClick={() => setIsOpen(!isOpen)}
         variant="ghost"
         size="sm"
-        className="gap-2 px-4 py-2 h-10 font-medium text-text-secondary hover:text-text-primary min-w-44"
+        className="gap-2 px-4 py-2 h-10 font-medium text-secondary hover:text-primary min-w-44"
         disabled={loading}
       >
         {/* Profile picture matching ProfileCard style */}
-        <div className="w-8 h-8 bg-surface-secondary rounded-full flex items-center justify-center border border-border-subtle flex-shrink-0">
-          <Typography variant="body-sm" className="font-bold text-text-primary">
+        <div className="w-8 h-8 bg-surface-secondary rounded-full flex items-center justify-center border border-subtle flex-shrink-0">
+          <Typography variant="body-sm" className="font-bold text-primary">
             {getInitials(userName)}
           </Typography>
         </div>
@@ -104,18 +104,18 @@ export const UserMenu: React.FC = () => {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 bg-surface-card/98 backdrop-blur-xl rounded-lg shadow-2xl border border-border-medium/40 z-[70] overflow-hidden max-h-[calc(100vh-5rem)]">
+        <div className="absolute right-0 mt-2 w-56 bg-surface-primary/98 backdrop-blur-xl rounded-lg shadow-2xl border border-medium/40 z-[70] overflow-hidden max-h-[calc(100vh-5rem)]">
           <div className="py-1">
             {/* User Info */}
-            <div className="px-4 py-3 border-b border-border-medium/40 bg-surface-subtle/20">
+            <div className="px-4 py-3 border-b border-medium/40 bg-surface-subtle/20">
               <Typography
                 variant="body-sm"
                 as="p"
-                className="font-medium text-text-primary"
+                className="font-medium text-primary"
               >
                 {userName}
               </Typography>
-              <p className="text-xs text-text-secondary truncate mt-0.5">
+              <p className="text-xs text-secondary truncate mt-0.5">
                 {userEmail}
               </p>
             </div>
@@ -127,7 +127,7 @@ export const UserMenu: React.FC = () => {
               }}
               variant="ghost"
               size="xs"
-              className="w-full justify-start px-4 py-2.5 h-auto text-sm text-text-secondary hover:text-text-primary hover:bg-surface-hover rounded-none"
+              className="w-full justify-start px-4 py-2.5 h-auto text-sm text-secondary hover:text-primary hover:bg-surface-hover rounded-none"
             >
               Profile Settings
             </Button>
@@ -139,12 +139,12 @@ export const UserMenu: React.FC = () => {
               }}
               variant="ghost"
               size="xs"
-              className="w-full justify-start px-4 py-2.5 h-auto text-sm text-text-secondary hover:text-text-primary hover:bg-surface-hover rounded-none"
+              className="w-full justify-start px-4 py-2.5 h-auto text-sm text-secondary hover:text-primary hover:bg-surface-hover rounded-none"
             >
               Team Settings
             </Button>
 
-            <div className="border-t border-border-medium/50 my-1" />
+            <div className="border-t border-medium/50 my-1" />
 
             {/* Logout with confirmation */}
             {!showLogoutConfirm ? (
@@ -153,15 +153,15 @@ export const UserMenu: React.FC = () => {
                 disabled={loading}
                 variant="ghost"
                 size="xs"
-                className="w-full justify-start px-4 py-2.5 h-auto text-sm text-text-error hover:text-text-error hover:bg-surface-error/10 rounded-none"
+                className="w-full justify-start px-4 py-2.5 h-auto text-sm text-error hover:text-error hover:bg-surface-error/10 rounded-none"
               >
                 Sign Out
               </Button>
             ) : (
-              <div className="px-4 py-3 bg-surface-error/5 border-t border-border-error/20">
+              <div className="px-4 py-3 bg-surface-error/5 border-t border-error/20">
                 <Typography
                   variant="body-xs"
-                  className="text-text-secondary mb-2"
+                  className="text-secondary mb-2"
                 >
                   Are you sure you want to sign out?
                 </Typography>
@@ -171,7 +171,7 @@ export const UserMenu: React.FC = () => {
                     disabled={loading}
                     variant="ghost"
                     size="xs"
-                    className="flex-1 bg-surface-error/10 hover:bg-surface-error/20 text-text-error text-xs py-1.5"
+                    className="flex-1 bg-surface-error/10 hover:bg-surface-error/20 text-error text-xs py-1.5"
                   >
                     {loading ? "Signing out..." : "Yes, sign out"}
                   </Button>

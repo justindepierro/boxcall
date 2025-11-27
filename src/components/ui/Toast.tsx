@@ -128,10 +128,10 @@ const ToastItem: React.FC<{
       : "translate-x-full opacity-0 scale-95";
 
     const typeStyles = {
-      success: "surface-subtle border-subtle text-text-success",
-      error: "surface-subtle border-subtle text-text-error",
-      warning: "surface-subtle border-subtle text-text-warning",
-      info: "surface-subtle border-subtle text-text-info",
+      success: "surface-subtle border-subtle text-success",
+      error: "surface-subtle border-subtle text-error",
+      warning: "surface-subtle border-subtle text-warning",
+      info: "surface-subtle border-subtle text-info",
     };
 
     return `${baseStyles} ${animationStyles} ${typeStyles[toast.type]}`;

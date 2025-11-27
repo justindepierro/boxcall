@@ -96,7 +96,7 @@ export const FormationBadge: React.FC<FormationBadgeProps> = ({
   if (loading) {
     return (
       <span
-        className={`inline-flex items-center gap-1 px-2 py-0.5 bg-surface-muted text-text-secondary border border-border rounded-full ${
+        className={`inline-flex items-center gap-1 px-2 py-0.5 bg-surface-muted text-secondary border border-border rounded-full ${
           size === "sm" ? "text-xs" : "text-sm"
         } font-medium ${className}`}
       >

@@ -50,7 +50,7 @@ export const PracticeScriptPlayList: React.FC<PracticeScriptPlayListProps> = ({
     <div className="space-y-4">
       {/* Play List */}
       {plays.length === 0 ? (
-        <div className="text-center py-8 text-text-muted">
+        <div className="text-center py-8 text-muted">
           No plays added yet. Click "Add Play" to get started.
         </div>
       ) : (
@@ -115,7 +115,7 @@ export const PracticeScriptPlayList: React.FC<PracticeScriptPlayListProps> = ({
                     variant="ghost"
                     size="sm"
                     onClick={() => onDeletePlay(index)}
-                    className="text-text-error hover:text-text-error"
+                    className="text-error hover:text-error"
                   >
                     Delete
                   </Button>

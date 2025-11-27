@@ -27,7 +27,7 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
     <div className={`relative inline-block ${className}`}>
       <label
         htmlFor={selectId}
-        className="mb-2 block text-sm text-text-secondary sm:mb-0 sm:inline sm:mr-2"
+        className="mb-2 block text-sm text-secondary sm:mb-0 sm:inline sm:mr-2"
       >
         <span className="sr-only sm:not-sr-only">{label}:</span>
       </label>
@@ -42,7 +42,7 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
           border border-border
           rounded-lg
           px-4 py-2 pr-10
-          text-sm text-text-primary
+          text-sm text-primary
           cursor-pointer
           hover:border-primary
           focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent
@@ -56,7 +56,7 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
         ))}
       </select>
       <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-        <Icon name="chevron-down" className="h-4 w-4 text-text-muted" />
+        <Icon name="chevron-down" className="h-4 w-4 text-muted" />
       </div>
     </div>
   );

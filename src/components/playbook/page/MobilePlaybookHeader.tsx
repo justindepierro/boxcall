@@ -49,7 +49,7 @@ export const MobilePlaybookHeader: React.FC<MobilePlaybookHeaderProps> = ({
       className={`
         flex items-center justify-between
         h-16 px-4 py-3
-        bg-surface-primary border-b border-border-subtle
+        bg-surface-primary border-b border-subtle
         ${className}
       `}
     >
@@ -57,13 +57,13 @@ export const MobilePlaybookHeader: React.FC<MobilePlaybookHeaderProps> = ({
       <div className="flex-1 min-w-0">
         <Typography
           variant="headline-sm"
-          className="text-text-primary font-semibold leading-tight truncate"
+          className="text-primary font-semibold leading-tight truncate"
         >
           {title}
         </Typography>
         <Typography
           variant="body-xs"
-          className="text-text-secondary leading-tight"
+          className="text-secondary leading-tight"
         >
           {playCount} {playCount === 1 ? "play" : "plays"}
         </Typography>

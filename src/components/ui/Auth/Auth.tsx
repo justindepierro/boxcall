@@ -161,7 +161,7 @@ export function LoginForm({
             <span className="mr-2">
               <Icon
                 name="link"
-                className="inline h-4 w-4 align-middle text-text-primary"
+                className="inline h-4 w-4 align-middle text-primary"
               />
             </span>
             Continue with Google
@@ -171,7 +171,7 @@ export function LoginForm({
               <div className="w-full" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 surface-card text-text-secondary">
+              <span className="px-2 bg-surface-primary text-secondary">
                 Or continue with email
               </span>
             </div>
@@ -210,12 +210,12 @@ export function LoginForm({
           type="checkbox"
           checked={formData.rememberMe}
           onChange={(e) => handleInputChange("rememberMe", e.target.checked)}
-          className="h-4 w-4 text-text-primary focus:ring-text-primary rounded-lg"
+          className="h-4 w-4 text-primary focus:ring-text-primary rounded-lg"
           disabled={loading}
         />
         <label
           htmlFor="remember-me"
-          className="ml-2 block text-sm text-text-primary dark:text-border-light"
+          className="ml-2 block text-sm text-primary dark:text-border-light"
         >
           Remember me
         </label>
@@ -322,7 +322,7 @@ export function SignupForm({
         <div className="p-3 surface-subtle dark:bg-surface-error/20 rounded-lg">
           <Typography
             variant="body-sm"
-            className="text-text-error dark:text-text-error"
+            className="text-error dark:text-error"
           >
             {error}
           </Typography>
@@ -335,7 +335,7 @@ export function SignupForm({
             <span className="mr-2">
               <Icon
                 name="link"
-                className="inline h-4 w-4 align-middle text-text-primary"
+                className="inline h-4 w-4 align-middle text-primary"
               />
             </span>
             Sign up with Google
@@ -345,7 +345,7 @@ export function SignupForm({
               <div className="w-full" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 surface-card text-text-secondary">
+              <span className="px-2 bg-surface-primary text-secondary">
                 Or sign up with email
               </span>
             </div>
@@ -387,7 +387,7 @@ export function SignupForm({
           onChange={(e) =>
             handleInputChange("role", e.target.value as SignupData["role"])
           }
-          className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600 surface-card dark:bg-surface-secondary text-text-primary"
+          className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600 bg-surface-primary dark:bg-surface-secondary text-primary"
           disabled={loading}
         >
           <option value="player">Player</option>
@@ -439,24 +439,24 @@ export function SignupForm({
             type="checkbox"
             checked={formData.acceptTerms}
             onChange={(e) => handleInputChange("acceptTerms", e.target.checked)}
-            className="h-4 w-4 text-text-info focus:ring-jade-500 rounded-lg mt-1"
+            className="h-4 w-4 text-info focus:ring-jade-500 rounded-lg mt-1"
             disabled={loading}
           />
           <label
             htmlFor="accept-terms"
-            className="ml-2 block text-sm text-text-primary dark:text-border-light"
+            className="ml-2 block text-sm text-primary dark:text-border-light"
           >
             I agree to the{" "}
             <a
               href="/terms"
-              className="text-text-primary hover:text-text-secondary"
+              className="text-primary hover:text-secondary"
             >
               Terms of Service
             </a>{" "}
             and{" "}
             <a
               href="/privacy"
-              className="text-text-primary hover:text-text-secondary"
+              className="text-primary hover:text-secondary"
             >
               Privacy Policy
             </a>
@@ -465,7 +465,7 @@ export function SignupForm({
         {validationErrors.acceptTerms && (
           <Typography
             variant="caption"
-            className="text-text-error dark:text-text-error"
+            className="text-error dark:text-error"
           >
             {validationErrors.acceptTerms}
           </Typography>
@@ -568,7 +568,7 @@ export function ResetPasswordForm({
         <div className="p-3 surface-subtle dark:bg-surface-error/20 rounded-lg">
           <Typography
             variant="body-sm"
-            className="text-text-error dark:text-text-error"
+            className="text-error dark:text-error"
           >
             {error}
           </Typography>

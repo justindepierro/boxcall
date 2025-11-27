@@ -293,7 +293,7 @@ export const TeamVoteWidget: React.FC<TeamVoteWidgetProps> = ({
           </div>
           <Typography
             variant="label-md"
-            className="text-text-primary font-medium mb-1"
+            className="text-primary font-medium mb-1"
           >
             Team Votes
           </Typography>
@@ -317,7 +317,7 @@ export const TeamVoteWidget: React.FC<TeamVoteWidgetProps> = ({
                 <Icon
                   name="users"
                   size="lg"
-                  className="mx-auto mb-2 text-text-muted"
+                  className="mx-auto mb-2 text-muted"
                 />
                 <Typography variant="body-sm" color="muted">
                   No active votes. Team decisions will appear here.
@@ -359,7 +359,7 @@ export const TeamVoteWidget: React.FC<TeamVoteWidgetProps> = ({
                           className={`px-2 py-1 rounded-lg text-xs ${
                             vote.status === "active"
                               ? "bg-success/10 text-success"
-                              : "bg-text-muted/10 text-text-muted"
+                              : "bg-text-muted/10 text-muted"
                           }`}
                         >
                           {vote.status}
@@ -367,7 +367,7 @@ export const TeamVoteWidget: React.FC<TeamVoteWidgetProps> = ({
                       </div>
 
                       {/* Vote Info */}
-                      <div className="flex items-center gap-4 mt-2 text-xs text-text-secondary">
+                      <div className="flex items-center gap-4 mt-2 text-xs text-secondary">
                         <span>
                           <Icon
                             name="users"
@@ -408,8 +408,8 @@ export const TeamVoteWidget: React.FC<TeamVoteWidgetProps> = ({
                             key={option.id}
                             className={`relative p-3 rounded-lg border cursor-pointer transition-colors ${
                               canVote && !userHasVoted
-                                ? "hover:bg-surface-secondary border-border-primary"
-                                : "border-border-secondary"
+                                ? "hover:bg-surface-secondary border-primary"
+                                : "border-secondary"
                             } ${isSelected ? "bg-primary/5 border-primary" : ""}`}
                             onClick={
                               canVote && !userHasVoted
@@ -460,7 +460,7 @@ export const TeamVoteWidget: React.FC<TeamVoteWidgetProps> = ({
                     )}
 
                     {!canVote && vote.status === "active" && (
-                      <div className="mt-3 flex items-center gap-2 text-text-muted text-sm">
+                      <div className="mt-3 flex items-center gap-2 text-muted text-sm">
                         <Icon name="info" size="xs" />
                         Only {vote.allowedVoters} can vote on this
                       </div>

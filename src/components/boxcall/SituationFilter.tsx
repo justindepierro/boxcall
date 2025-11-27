@@ -139,7 +139,7 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
         <Typography variant="body-md" className="font-medium">
           Recommended Plays
         </Typography>
-        <Typography variant="body-sm" className="text-text-muted">
+        <Typography variant="body-sm" className="text-muted">
           {filteredPlays.length} of {allPlays.length} plays
         </Typography>
       </div>
@@ -150,7 +150,7 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
           <Icon
             name="alert-circle"
             size="lg"
-            className="mb-3 text-text-muted"
+            className="mb-3 text-muted"
           />
           <Typography variant="body-md" className="mb-2">
             No plays match this situation
@@ -249,7 +249,7 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
                       <div className="flex items-center gap-1">
                         <Typography
                           variant="body-xs"
-                          className="text-text-muted"
+                          className="text-muted"
                         >
                           AI Confidence
                         </Typography>
@@ -291,7 +291,7 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
                     {!loading && confidence.executionCount > 0 && (
                       <Typography
                         variant="body-xs"
-                        className="text-text-muted mt-1"
+                        className="text-muted mt-1"
                       >
                         Based on {confidence.executionCount} execution
                         {confidence.executionCount !== 1 ? "s" : ""} • Click for
@@ -336,7 +336,7 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
       <div className="bg-surface-secondary border border-border rounded-lg p-3">
         <div className="flex items-start gap-2">
           <Icon name="lightbulb" size="sm" className="text-warning mt-0.5" />
-          <Typography variant="body-xs" className="text-text-secondary">
+          <Typography variant="body-xs" className="text-secondary">
             <strong>Tip:</strong> Plays are filtered using Billick Situations
             (down, distance, field zone). Adjust filters in your game plan if
             needed.

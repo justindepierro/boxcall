@@ -31,7 +31,7 @@ import { useBulkSelection } from "./BulkSelectionContext";
 import type { FormationTemplate } from "../../data/formationTemplates";
 import { supabase } from "../../lib/supabase";
 import { error as logError } from "../../utils/logger";
-import { useSaveState } from "../../contexts/SaveStateContext";
+import { useSaveState } from "../../hooks/useSaveState";
 import type {
   Formation,
   FormationCategory,
@@ -649,7 +649,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
       if (loading) {
         return (
           <div className="flex items-center justify-center py-spacing-xl">
-            <Typography variant="body-md" className="text-text-muted">
+            <Typography variant="body-md" className="text-muted">
               Loading formations...
             </Typography>
           </div>
@@ -673,7 +673,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
 
               {/* Skeleton Tabs */}
               {!hideSubTabs && (
-                <div className="flex gap-spacing-xs border-b border-border-primary">
+                <div className="flex gap-spacing-xs border-b border-primary">
                   {[1, 2, 3, 4].map((i) => (
                     <div
                       key={i}
@@ -695,11 +695,11 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
               {/* Loading Overlay - Show when refetching data */}
               {loading && allFormations.length > 0 && (
                 <div className="absolute inset-0 bg-surface-primary/70 backdrop-blur-sm z-50 flex items-center justify-center rounded-lg">
-                  <div className="bg-surface-primary border border-border-primary rounded-lg p-spacing-lg shadow-lg flex flex-col items-center gap-spacing-md">
+                  <div className="bg-surface-primary border border-primary rounded-lg p-spacing-lg shadow-lg flex flex-col items-center gap-spacing-md">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
                     <Typography
                       variant="body-sm"
-                      className="text-text-secondary"
+                      className="text-secondary"
                     >
                       Loading formations...
                     </Typography>
@@ -712,7 +712,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                 <div className="flex items-center justify-between">
                   <Typography
                     variant="headline-md"
-                    className="text-text-primary"
+                    className="text-primary"
                   >
                     Formation Manager
                   </Typography>
@@ -742,7 +742,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
               {/* Tab Navigation - Hide if parent modal has unified tabs */}
               {!hideSubTabs && (
                 <div
-                  className={`flex ${isMobile ? "gap-0" : "gap-spacing-xs"} border-b border-border-primary`}
+                  className={`flex ${isMobile ? "gap-0" : "gap-spacing-xs"} border-b border-primary`}
                 >
                   {tabs.map((tab) => {
                     const Icon = tab.icon;
@@ -757,7 +757,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                   ${
                     isActive
                       ? "border-primary-500 text-primary-700 bg-primary-50"
-                      : "border-transparent text-text-secondary hover:text-text-primary hover:bg-surface-muted"
+                      : "border-transparent text-secondary hover:text-primary hover:bg-surface-muted"
                   }
                 `}
                       >
@@ -780,7 +780,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                   <div className="flex flex-col gap-spacing-xs">
                     <Typography
                       variant="body-md"
-                      className="text-text-primary font-medium"
+                      className="text-primary font-medium"
                     >
                       Quick Start
                     </Typography>
@@ -791,14 +791,14 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                       }}
                       disabled={loading}
                     />
-                    <Typography variant="caption" className="text-text-muted">
+                    <Typography variant="caption" className="text-muted">
                       Start with a professional NFL formation template, or
                       select an existing formation below to edit.
                     </Typography>
                   </div>
 
                   {/* Divider */}
-                  <div className="border-t border-border-secondary"></div>
+                  <div className="border-t border-secondary"></div>
 
                   {/* Formation Details Content (original content) */}
 
@@ -807,7 +807,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                     <div className="flex items-center justify-between">
                       <Typography
                         variant="body-md"
-                        className="text-text-primary font-medium"
+                        className="text-primary font-medium"
                       >
                         Select Formation
                       </Typography>
@@ -830,10 +830,10 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                           >
                             Select All
                           </button>
-                          <span className="text-text-muted">•</span>
+                          <span className="text-muted">•</span>
                           <button
                             onClick={clearSelection}
-                            className={`text-xs text-text-muted hover:underline ${isMobile ? "px-spacing-sm py-spacing-xs min-h-[44px] flex items-center" : "px-spacing-xs"}`}
+                            className={`text-xs text-muted hover:underline ${isMobile ? "px-spacing-sm py-spacing-xs min-h-[44px] flex items-center" : "px-spacing-xs"}`}
                             type="button"
                           >
                             Clear
@@ -843,14 +843,14 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                     </div>
 
                     {loading ? (
-                      <div className="p-spacing-md text-center text-text-muted">
+                      <div className="p-spacing-md text-center text-muted">
                         Loading formations...
                       </div>
                     ) : visibleFormations.length === 0 ? (
-                      <div className="p-spacing-md bg-surface-muted rounded border border-border-secondary text-center">
+                      <div className="p-spacing-md bg-surface-muted rounded border border-secondary text-center">
                         <Typography
                           variant="body-sm"
-                          className="text-text-muted"
+                          className="text-muted"
                         >
                           No formations found. Create formations by adding plays
                           with formation names first.
@@ -871,7 +871,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                                   ? "bg-success-50 border-success-300 shadow-sm"
                                   : selected
                                     ? "bg-primary-50 border-primary-300"
-                                    : "bg-surface-primary border-border-subtle hover:border-border-primary hover:shadow-sm"
+                                    : "bg-surface-primary border-subtle hover:border-primary hover:shadow-sm"
                               }`}
                             >
                               {/* Checkbox */}
@@ -890,7 +890,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                                 className="flex-1 text-left min-w-0"
                               >
                                 <div className="flex items-center justify-between gap-spacing-sm">
-                                  <span className="text-sm font-medium text-text-primary truncate">
+                                  <span className="text-sm font-medium text-primary truncate">
                                     {formation.name}
                                   </span>
                                   <div className="flex items-center gap-spacing-xs flex-shrink-0">
@@ -900,7 +900,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                                       </span>
                                     )}
                                     {formation.direction && (
-                                      <span className="text-xs bg-surface-muted text-text-muted px-spacing-xs py-0.5 rounded">
+                                      <span className="text-xs bg-surface-muted text-muted px-spacing-xs py-0.5 rounded">
                                         {formation.direction === "left"
                                           ? "← Left"
                                           : "→ Right"}
@@ -917,7 +917,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                                   </div>
                                 </div>
                                 {formation.personnel_name && (
-                                  <span className="text-xs text-text-muted">
+                                  <span className="text-xs text-muted">
                                     {formation.personnel_name}
                                   </span>
                                 )}
@@ -929,7 +929,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                     )}
 
                     {selectedFormation && (
-                      <div className="mt-spacing-xs p-spacing-sm bg-surface-secondary rounded border border-border-primary">
+                      <div className="mt-spacing-xs p-spacing-sm bg-surface-secondary rounded border border-primary">
                         <FormationBadge
                           formationId={selectedFormation.id}
                           direction={selectedFormation.direction}
@@ -960,18 +960,18 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
 
                   {/* New Formation Form - Shows when no formation selected */}
                   {!selectedFormation && (
-                    <div className="p-spacing-lg bg-surface-secondary rounded-lg border border-border-primary">
+                    <div className="p-spacing-lg bg-surface-secondary rounded-lg border border-primary">
                       <div className="space-y-spacing-md">
                         <div>
                           <Typography
                             variant="headline-sm"
-                            className="text-text-primary mb-spacing-xs"
+                            className="text-primary mb-spacing-xs"
                           >
                             Create New Formation
                           </Typography>
                           <Typography
                             variant="body-sm"
-                            className="text-text-muted"
+                            className="text-muted"
                           >
                             Enter formation details to create a new formation.
                             You can add player positions on the "Draw Formation"
@@ -981,7 +981,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
 
                         {/* Formation Name */}
                         <div>
-                          <label className="block text-sm font-medium text-text-primary mb-spacing-xs">
+                          <label className="block text-sm font-medium text-primary mb-spacing-xs">
                             Formation Name *
                           </label>
                           <input
@@ -991,13 +991,13 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                               setNewFormationName(e.target.value)
                             }
                             placeholder="e.g., Trips Right, I Formation, Shotgun Spread"
-                            className="w-full px-spacing-md py-spacing-sm border border-border-primary rounded-md bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500"
+                            className="w-full px-spacing-md py-spacing-sm border border-primary rounded-md bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary-500"
                           />
                         </div>
 
                         {/* Personnel Package */}
                         <div>
-                          <label className="block text-sm font-medium text-text-primary mb-spacing-xs">
+                          <label className="block text-sm font-medium text-primary mb-spacing-xs">
                             Personnel Package *
                           </label>
                           <select
@@ -1005,7 +1005,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                             onChange={(e) =>
                               setNewFormationPersonnelId(e.target.value)
                             }
-                            className="w-full px-spacing-md py-spacing-sm border border-border-primary rounded-md bg-surface-primary text-text-primary"
+                            className="w-full px-spacing-md py-spacing-sm border border-primary rounded-md bg-surface-primary text-primary"
                           >
                             <option value="">Select personnel...</option>
                             {availablePersonnel.map((personnel) => (
@@ -1018,7 +1018,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
 
                         {/* Category */}
                         <div>
-                          <label className="block text-sm font-medium text-text-primary mb-spacing-xs">
+                          <label className="block text-sm font-medium text-primary mb-spacing-xs">
                             Category
                           </label>
                           <select
@@ -1026,7 +1026,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                             onChange={(e) =>
                               setCategory(e.target.value as FormationCategory)
                             }
-                            className="w-full px-spacing-md py-spacing-sm border border-border-primary rounded-md bg-surface-primary text-text-primary"
+                            className="w-full px-spacing-md py-spacing-sm border border-primary rounded-md bg-surface-primary text-primary"
                           >
                             <option value="">Select category...</option>
                             {FORMATION_CATEGORIES.map((cat) => (
@@ -1125,7 +1125,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
 
                         <Typography
                           variant="caption"
-                          className="text-text-muted text-center block"
+                          className="text-muted text-center block"
                         >
                           💡 Tip: After creating, switch to "Draw Formation" to
                           add player positions
@@ -1164,26 +1164,26 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                       )}
 
                       {/* Personnel Packages */}
-                      <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
+                      <div className="p-spacing-sm bg-surface-secondary rounded border border-primary">
                         <Typography
                           variant="body-sm"
-                          className="text-text-primary font-medium mb-spacing-xs"
+                          className="text-primary font-medium mb-spacing-xs"
                         >
                           Personnel Packages
                         </Typography>
                         <Typography
                           variant="caption"
-                          className="text-text-secondary mb-spacing-sm"
+                          className="text-secondary mb-spacing-sm"
                         >
                           Select which personnel packages can run this
                           formation:
                         </Typography>
 
                         {availablePersonnel.length === 0 ? (
-                          <div className="p-spacing-sm bg-surface-muted rounded border border-border-secondary text-center">
+                          <div className="p-spacing-sm bg-surface-muted rounded border border-secondary text-center">
                             <Typography
                               variant="caption"
-                              className="text-text-muted"
+                              className="text-muted"
                             >
                               No personnel configurations found. Create
                               personnel packages first.
@@ -1201,7 +1201,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                         ${
                           selectedPersonnelIds.includes(personnel.id)
                             ? "border-primary-500 bg-primary-50 text-primary-700"
-                            : "border-border-primary bg-surface-primary text-text-secondary hover:border-primary-300"
+                            : "border-primary bg-surface-primary text-secondary hover:border-primary-300"
                         }
                       `}
                                 >
@@ -1238,10 +1238,10 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                       </div>
 
                       {/* Category */}
-                      <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
+                      <div className="p-spacing-sm bg-surface-secondary rounded border border-primary">
                         <Typography
                           variant="body-sm"
-                          className="text-text-primary font-medium mb-spacing-xs"
+                          className="text-primary font-medium mb-spacing-xs"
                         >
                           Formation Category
                         </Typography>
@@ -1254,7 +1254,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                                 e.target.value as FormationCategory | ""
                               )
                             }
-                            className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 appearance-none pr-spacing-lg"
+                            className="w-full px-spacing-sm py-spacing-xs border border-primary rounded bg-surface-primary text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 appearance-none pr-spacing-lg"
                           >
                             <option value="">No category</option>
                             {FORMATION_CATEGORIES.map((cat) => (
@@ -1263,15 +1263,15 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                               </option>
                             ))}
                           </select>
-                          <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
+                          <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
                         </div>
                       </div>
 
                       {/* Formation Type */}
-                      <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
+                      <div className="p-spacing-sm bg-surface-secondary rounded border border-primary">
                         <Typography
                           variant="body-sm"
-                          className="text-text-primary font-medium mb-spacing-xs"
+                          className="text-primary font-medium mb-spacing-xs"
                         >
                           Formation Type
                         </Typography>
@@ -1286,7 +1286,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                                   : null
                               )
                             }
-                            className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 appearance-none pr-spacing-lg"
+                            className="w-full px-spacing-sm py-spacing-xs border border-primary rounded bg-surface-primary text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 appearance-none pr-spacing-lg"
                           >
                             <option value="">No type specified</option>
                             {FORMATION_TYPES.map((type) => (
@@ -1295,15 +1295,15 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                               </option>
                             ))}
                           </select>
-                          <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
+                          <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
                         </div>
                       </div>
 
                       {/* Run Strength */}
-                      <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
+                      <div className="p-spacing-sm bg-surface-secondary rounded border border-primary">
                         <Typography
                           variant="body-sm"
-                          className="text-text-primary font-medium mb-spacing-xs"
+                          className="text-primary font-medium mb-spacing-xs"
                         >
                           Run Strength
                         </Typography>
@@ -1324,7 +1324,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                     ${
                       runStrength === option.value
                         ? "border-primary-500 bg-primary-50 text-primary-700"
-                        : "border-border-primary bg-surface-primary text-text-secondary hover:border-primary-300 hover:bg-surface-muted"
+                        : "border-primary bg-surface-primary text-secondary hover:border-primary-300 hover:bg-surface-muted"
                     }
                   `}
                             >
@@ -1341,10 +1341,10 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                       </div>
 
                       {/* Pass Strength */}
-                      <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
+                      <div className="p-spacing-sm bg-surface-secondary rounded border border-primary">
                         <Typography
                           variant="body-sm"
-                          className="text-text-primary font-medium mb-spacing-xs"
+                          className="text-primary font-medium mb-spacing-xs"
                         >
                           Pass Strength
                         </Typography>
@@ -1365,7 +1365,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                     ${
                       passStrength === option.value
                         ? "border-primary-500 bg-primary-50 text-primary-700"
-                        : "border-border-primary bg-surface-primary text-text-secondary hover:border-primary-300 hover:bg-surface-muted"
+                        : "border-primary bg-surface-primary text-secondary hover:border-primary-300 hover:bg-surface-muted"
                     }
                   `}
                             >
@@ -1382,10 +1382,10 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                       </div>
 
                       {/* Tags */}
-                      <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
+                      <div className="p-spacing-sm bg-surface-secondary rounded border border-primary">
                         <Typography
                           variant="body-sm"
-                          className="text-text-primary font-medium mb-spacing-xs"
+                          className="text-primary font-medium mb-spacing-xs"
                         >
                           Tags
                         </Typography>
@@ -1395,15 +1395,15 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                           value={tags}
                           onChange={(e) => setTags(e.target.value)}
                           placeholder="twins, compressed, unbalanced"
-                          className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
+                          className="w-full px-spacing-sm py-spacing-xs border border-primary rounded bg-surface-primary text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
                         />
                       </div>
 
                       {/* Description */}
-                      <div className="p-spacing-sm bg-surface-secondary rounded border border-border-primary">
+                      <div className="p-spacing-sm bg-surface-secondary rounded border border-primary">
                         <Typography
                           variant="body-sm"
-                          className="text-text-primary font-medium mb-spacing-xs"
+                          className="text-primary font-medium mb-spacing-xs"
                         >
                           Description
                         </Typography>
@@ -1413,12 +1413,12 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                           onChange={(e) => setDescription(e.target.value)}
                           placeholder="Optional notes about this formation..."
                           rows={2}
-                          className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded bg-surface-primary text-text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 resize-none"
+                          className="w-full px-spacing-sm py-spacing-xs border border-primary rounded bg-surface-primary text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 resize-none"
                         />
                       </div>
 
                       {/* Manual Save Button and Opposite Formation Creation */}
-                      <div className="flex justify-between items-center pt-spacing-xs border-t border-border-primary">
+                      <div className="flex justify-between items-center pt-spacing-xs border-t border-primary">
                         {/* Create Opposite Button - Only show if formation doesn't have one */}
                         {selectedFormation &&
                           !selectedFormation.opposite_formation_id && (
@@ -1455,8 +1455,8 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                   )}
 
                   {!selectedFormation && (
-                    <div className="p-spacing-lg bg-surface-muted rounded border border-border-secondary text-center">
-                      <Typography variant="body-sm" className="text-text-muted">
+                    <div className="p-spacing-lg bg-surface-muted rounded border border-secondary text-center">
+                      <Typography variant="body-sm" className="text-muted">
                         👆 Select a formation above to edit its details
                       </Typography>
                     </div>
@@ -1515,8 +1515,8 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
 
               {/* Incomplete Formations Tab (Placeholder for Phase 2) - Hide if parent modal has unified tabs */}
               {!hideSubTabs && activeTab === "incomplete" && (
-                <div className="p-spacing-lg bg-surface-muted rounded border border-border-secondary text-center">
-                  <Typography variant="body-sm" className="text-text-muted">
+                <div className="p-spacing-lg bg-surface-muted rounded border border-secondary text-center">
+                  <Typography variant="body-sm" className="text-muted">
                     Incomplete Formations panel coming in Phase 2...
                   </Typography>
                 </div>

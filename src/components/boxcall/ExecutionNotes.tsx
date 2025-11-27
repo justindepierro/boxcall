@@ -45,7 +45,7 @@ export const ExecutionNotes: React.FC<ExecutionNotesProps> = ({
     return (
       <div className={`flex items-center gap-2 ${className}`}>
         {notes && (
-          <div className="flex items-center gap-1 text-text-muted">
+          <div className="flex items-center gap-1 text-muted">
             <Icon name="message-circle" size="sm" />
             <Typography variant="body-xs" className="italic line-clamp-1">
               {notes}
@@ -54,7 +54,7 @@ export const ExecutionNotes: React.FC<ExecutionNotesProps> = ({
         )}
         {tags && tags.length > 0 && (
           <div className="flex items-center gap-1">
-            <Icon name="tag" size="sm" className="text-text-muted" />
+            <Icon name="tag" size="sm" className="text-muted" />
             <Typography variant="body-xs" color="muted">
               {tags.length} tag{tags.length !== 1 ? "s" : ""}
             </Typography>
@@ -92,7 +92,7 @@ export const ExecutionNotes: React.FC<ExecutionNotesProps> = ({
             Notes:
           </Typography>
           <div className="bg-surface-secondary border border-border rounded-lg p-2">
-            <Typography variant="body-xs" className="text-text-secondary">
+            <Typography variant="body-xs" className="text-secondary">
               {notes}
             </Typography>
           </div>

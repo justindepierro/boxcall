@@ -92,13 +92,13 @@ export function ImportPracticeScriptsModal({
       <div className="w-full max-w-lg rounded-lg border border-border bg-surface-primary p-6 shadow-xl">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
-          <Typography variant="headline-sm" className="text-text-primary">
+          <Typography variant="headline-sm" className="text-primary">
             Import Practice Scripts
           </Typography>
           <button
             onClick={handleClose}
             disabled={importing}
-            className="text-text-secondary hover:text-text-primary transition-colors disabled:opacity-50"
+            className="text-secondary hover:text-primary transition-colors disabled:opacity-50"
           >
             <Icon name="close" className="h-5 w-5" />
           </button>
@@ -108,7 +108,7 @@ export function ImportPracticeScriptsModal({
         <div className="space-y-6">
           {/* File Upload */}
           <div>
-            <label className="mb-2 block text-sm font-medium text-text-primary">
+            <label className="mb-2 block text-sm font-medium text-primary">
               Select JSON File
             </label>
             <div className="flex items-center gap-3">
@@ -139,13 +139,13 @@ export function ImportPracticeScriptsModal({
                   className="h-5 w-5 text-success-600"
                 />
                 <div className="flex-1">
-                  <Typography variant="body-sm" className="text-text-primary">
+                  <Typography variant="body-sm" className="text-primary">
                     {selectedFile.name}
                   </Typography>
                   {parsedData && (
                     <Typography
                       variant="body-xs"
-                      className="text-text-secondary"
+                      className="text-secondary"
                     >
                       {parsedData.scripts.length} script
                       {parsedData.scripts.length !== 1 ? "s" : ""} found
@@ -158,7 +158,7 @@ export function ImportPracticeScriptsModal({
             {validationError && (
               <div className="mt-2 flex items-center gap-2 rounded-md bg-error-bg p-3">
                 <Icon name="alert-circle" className="h-5 w-5 text-error-600" />
-                <Typography variant="body-sm" className="text-text-primary">
+                <Typography variant="body-sm" className="text-primary">
                   {validationError}
                 </Typography>
               </div>
@@ -170,22 +170,22 @@ export function ImportPracticeScriptsModal({
             <div className="rounded-md border border-border bg-surface-secondary p-4">
               <Typography
                 variant="body-sm"
-                className="mb-3 font-medium text-text-primary"
+                className="mb-3 font-medium text-primary"
               >
                 Import Summary
               </Typography>
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-text-secondary">
+                  <span className="text-secondary">
                     Scripts to import:
                   </span>
-                  <span className="font-medium text-text-primary">
+                  <span className="font-medium text-primary">
                     {parsedData.scripts.length}
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-text-secondary">Total plays:</span>
-                  <span className="font-medium text-text-primary">
+                  <span className="text-secondary">Total plays:</span>
+                  <span className="font-medium text-primary">
                     {parsedData.scripts.reduce(
                       (sum, s) => sum + s.plays.length,
                       0
@@ -193,8 +193,8 @@ export function ImportPracticeScriptsModal({
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-text-secondary">Exported:</span>
-                  <span className="font-medium text-text-primary">
+                  <span className="text-secondary">Exported:</span>
+                  <span className="font-medium text-primary">
                     {new Date(parsedData.exportedAt).toLocaleDateString()}
                   </span>
                 </div>
@@ -213,13 +213,13 @@ export function ImportPracticeScriptsModal({
                 <div>
                   <Typography
                     variant="body-sm"
-                    className="text-text-primary font-medium"
+                    className="text-primary font-medium"
                   >
                     Import Note
                   </Typography>
                   <Typography
                     variant="body-xs"
-                    className="text-text-secondary mt-1"
+                    className="text-secondary mt-1"
                   >
                     Scripts will be imported as new items. Existing scripts will
                     not be modified.

@@ -167,7 +167,7 @@ export const CollaborativeDashboardDemo: React.FC<
           <Typography variant="headline-lg" as="h1" className="text-center">
             Real-Time Collaborative Dashboard
           </Typography>
-          <p className="text-text-secondary container-content">
+          <p className="text-secondary container-content">
             This demo showcases Phase 2B Sprint 4 collaboration features.
             Multiple users can edit widgets simultaneously with live cursor
             tracking and real-time data synchronization.
@@ -190,19 +190,19 @@ export const CollaborativeDashboardDemo: React.FC<
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-3 h-3 bg-text-success rounded-full"></div>
-              <span className="font-medium text-text-primary">
+              <span className="font-medium text-primary">
                 Connected to Collaboration Session
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-text-secondary">
+              <span className="text-sm text-secondary">
                 {mockCollaborationData.participants.length} participants
               </span>
               <div className="flex -space-x-1">
                 {mockCollaborationData.participants.map((participant) => (
                   <div
                     key={participant.id}
-                    className="w-8 h-8 bg-primary text-text-on-primary rounded-full flex items-center justify-center text-sm font-medium border-2 border-surface-primary"
+                    className="w-8 h-8 bg-primary text-on-primary rounded-full flex items-center justify-center text-sm font-medium border-2 border-surface-primary"
                     title={participant.name}
                   >
                     {participant.name.charAt(0)}
@@ -326,11 +326,11 @@ export const CollaborativeDashboardDemo: React.FC<
         {/* Technical Details */}
         <Card className="p-4 bg-surface-secondary">
           <details>
-            <summary className="cursor-pointer font-medium text-text-primary mb-2 flex items-center gap-2">
+            <summary className="cursor-pointer font-medium text-primary mb-2 flex items-center gap-2">
               <Icon name="settings" size="sm" />
               Technical Implementation Details
             </summary>
-            <div className="text-sm text-text-secondary space-y-2 mt-3">
+            <div className="text-sm text-secondary space-y-2 mt-3">
               <p>
                 <strong>CollaborativeWidget:</strong> Higher-order component
                 that wraps any dashboard widget with real-time collaboration

@@ -139,8 +139,8 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
 
   if (playbooks.length === 0) {
     return (
-      <div className="flex items-center gap-spacing-sm p-spacing-sm bg-surface-muted rounded-lg border border-border-secondary">
-        <Typography variant="body-sm" className="text-text-muted">
+      <div className="flex items-center gap-spacing-sm p-spacing-sm bg-surface-muted rounded-lg border border-secondary">
+        <Typography variant="body-sm" className="text-muted">
           No playbooks found
         </Typography>
         <Button
@@ -165,18 +165,18 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
         className="flex items-center gap-spacing-xs px-3 py-2 bg-surface-primary hover:bg-surface-secondary border-2 border-emerald-500 rounded-xl transition-colors w-45 h-11 shadow-md"
       >
         <div className="flex-1 text-left">
-          <Typography variant="caption" className="text-text-muted text-xs">
+          <Typography variant="caption" className="text-muted text-xs">
             Playbook
           </Typography>
           <Typography
             variant="body-sm"
-            className="text-text-primary font-semibold leading-tight"
+            className="text-primary font-semibold leading-tight"
           >
             {activePlaybook?.name || "Select..."}
           </Typography>
         </div>
         <ChevronDown
-          className={`w-4 h-4 text-text-muted transition-transform ${
+          className={`w-4 h-4 text-muted transition-transform ${
             isOpen ? "rotate-180" : ""
           }`}
         />
@@ -224,7 +224,7 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
                           type="text"
                           value={editingName}
                           onChange={(e) => setEditingName(e.target.value)}
-                          className="flex-1 px-spacing-sm py-spacing-xs border border-border-primary rounded text-text-primary bg-surface-primary focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          className="flex-1 px-spacing-sm py-spacing-xs border border-primary rounded text-primary bg-surface-primary focus:outline-none focus:ring-2 focus:ring-primary-500"
                           autoFocus
                           onKeyDown={(e) => {
                             if (e.key === "Enter") {
@@ -246,7 +246,7 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
                         <button
                           onClick={handleCancelEdit}
                           disabled={saving}
-                          className="p-spacing-xs text-text-muted hover:bg-surface-muted rounded transition-colors"
+                          className="p-spacing-xs text-muted hover:bg-surface-muted rounded transition-colors"
                           title="Cancel"
                         >
                           <X className="w-4 h-4" />
@@ -269,14 +269,14 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
                                 className={`font-medium ${
                                   playbook.id === activePlaybookId
                                     ? "text-primary-600"
-                                    : "text-text-primary"
+                                    : "text-primary"
                                 }`}
                               >
                                 {playbook.name}
                               </Typography>
                               <Typography
                                 variant="caption"
-                                className="text-text-secondary"
+                                className="text-secondary"
                               >
                                 {playbook.play_count || 0} play
                                 {playbook.play_count !== 1 ? "s" : ""}
@@ -289,7 +289,7 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
                         </button>
                         <button
                           onClick={(e) => handleStartEdit(playbook, e)}
-                          className="p-spacing-xs text-text-muted hover:text-text-primary hover:bg-surface-muted rounded transition-colors"
+                          className="p-spacing-xs text-muted hover:text-primary hover:bg-surface-muted rounded transition-colors"
                           title="Rename playbook"
                         >
                           <Edit2 className="w-4 h-4" />
@@ -301,7 +301,7 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
               </div>
 
               {/* Create New Playbook */}
-              <div className="border-t border-border-secondary p-spacing-xs">
+              <div className="border-t border-secondary p-spacing-xs">
                 <button
                   onClick={() => {
                     setIsOpen(false);

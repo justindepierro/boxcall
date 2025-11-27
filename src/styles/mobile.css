@@ -296,7 +296,7 @@
 
   .touch-target:focus {
     border-color: var(--color-black);
-    outline: 3px solid #ffbf47;
+    outline: 3px solid var(--color-yellow-400);
     outline-offset: 2px;
   }
 }

@@ -98,10 +98,10 @@ const PlayerDashboardPage: React.FC = () => {
                 <Icon name={stat.icon} className="text-primary" />
               </span>
               <div className="space-y-1">
-                <Typography variant="body-sm" className="text-text-secondary">
+                <Typography variant="body-sm" className="text-secondary">
                   {stat.label}
                 </Typography>
-                <Typography variant="headline-sm" className="text-text-primary">
+                <Typography variant="headline-sm" className="text-primary">
                   {stat.value}
                 </Typography>
               </div>
@@ -133,10 +133,10 @@ const PlayerDashboardPage: React.FC = () => {
                   <Typography variant="body-sm" className="font-medium">
                     {event.title}
                   </Typography>
-                  <Typography variant="body-xs" className="text-text-secondary">
+                  <Typography variant="body-xs" className="text-secondary">
                     {event.subtitle}
                   </Typography>
-                  <Typography variant="caption" className="text-text-secondary">
+                  <Typography variant="caption" className="text-secondary">
                     {event.detail}
                   </Typography>
                 </div>
@@ -159,10 +159,10 @@ const PlayerDashboardPage: React.FC = () => {
           </div>
           <div className="pt-4 space-y-4">
             <div>
-              <Typography variant="body-sm" className="text-text-secondary">
+              <Typography variant="body-sm" className="text-secondary">
                 Last Game
               </Typography>
-              <Typography variant="headline-sm" className="text-text-primary">
+              <Typography variant="headline-sm" className="text-primary">
                 17 pts • 8 rebounds • 5 assists
               </Typography>
             </div>
@@ -174,11 +174,11 @@ const PlayerDashboardPage: React.FC = () => {
                 >
                   <Typography
                     variant="headline-sm"
-                    className="text-text-primary"
+                    className="text-primary"
                   >
                     {metric.value}
                   </Typography>
-                  <Typography variant="caption" className="text-text-secondary">
+                  <Typography variant="caption" className="text-secondary">
                     {metric.label}
                   </Typography>
                 </div>
@@ -191,10 +191,10 @@ const PlayerDashboardPage: React.FC = () => {
       <section className="mt-6">
         <Card className="p-5">
           <div className="flex items-center justify-between mb-4">
-            <Typography variant="headline-sm" className="text-text-primary">
+            <Typography variant="headline-sm" className="text-primary">
               Quick Actions
             </Typography>
-            <Typography variant="body-xs" className="text-text-secondary">
+            <Typography variant="body-xs" className="text-secondary">
               Jump into the tools you use most.
             </Typography>
           </div>

@@ -30,15 +30,15 @@ const TemplatesPage: React.FC = () => {
         onOpen: () => navigate("/practice-plans"),
         body: (
           <div className="space-y-2 text-sm">
-            <div className="flex items-center justify-between text-text-secondary">
+            <div className="flex items-center justify-between text-secondary">
               <span>Highlights</span>
-              <span className="font-semibold text-text-primary">
+              <span className="font-semibold text-primary">
                 Install, OTA
               </span>
             </div>
-            <div className="flex items-center justify-between text-xs text-text-secondary">
+            <div className="flex items-center justify-between text-xs text-secondary">
               <span>Status</span>
-              <span className="font-semibold text-text-primary">Launching</span>
+              <span className="font-semibold text-primary">Launching</span>
             </div>
           </div>
         ),
@@ -56,15 +56,15 @@ const TemplatesPage: React.FC = () => {
         onOpen: () => navigate("/game-plans"),
         body: (
           <div className="space-y-2 text-sm">
-            <div className="flex items-center justify-between text-text-secondary">
+            <div className="flex items-center justify-between text-secondary">
               <span>Assets</span>
-              <span className="font-semibold text-text-primary">
+              <span className="font-semibold text-primary">
                 Scripts, PDF
               </span>
             </div>
-            <div className="flex items-center justify-between text-xs text-text-secondary">
+            <div className="flex items-center justify-between text-xs text-secondary">
               <span>Availability</span>
-              <span className="font-semibold text-text-primary">Q4</span>
+              <span className="font-semibold text-primary">Q4</span>
             </div>
           </div>
         ),
@@ -82,13 +82,13 @@ const TemplatesPage: React.FC = () => {
         onOpen: scrollToOverview,
         body: (
           <div className="space-y-2 text-sm">
-            <div className="flex items-center justify-between text-text-secondary">
+            <div className="flex items-center justify-between text-secondary">
               <span>Focus</span>
-              <span className="font-semibold text-text-primary">Staff ops</span>
+              <span className="font-semibold text-primary">Staff ops</span>
             </div>
-            <div className="flex items-center justify-between text-xs text-text-secondary">
+            <div className="flex items-center justify-between text-xs text-secondary">
               <span>ETA</span>
-              <span className="font-semibold text-text-primary">2026</span>
+              <span className="font-semibold text-primary">2026</span>
             </div>
           </div>
         ),
@@ -105,14 +105,14 @@ const TemplatesPage: React.FC = () => {
         variant="detail"
       >
         <div className="mb-8">
-          <div className="rounded-xl bg-surface-primary p-5 shadow-lg backdrop-blur-sm sm:p-6 xl:p-7">
+          <div className="rounded-xl bg-primary p-5 shadow-lg backdrop-blur-sm sm:p-6 xl:p-7">
             <div className="mb-6">
-              <Typography variant="headline-sm" className="text-text-primary">
+              <Typography variant="headline-sm" className="text-primary">
                 Launch a template workspace
               </Typography>
               <Typography
                 variant="body-sm"
-                className="text-text-secondary mt-1"
+                className="text-secondary mt-1"
               >
                 Choose the toolkit you need and we’ll drop you into the right
                 builder.

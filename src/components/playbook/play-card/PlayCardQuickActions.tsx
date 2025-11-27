@@ -31,7 +31,7 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
 
   return (
     <div className="flex items-center justify-between pt-spacing-sm mt-spacing-sm divider-t">
-      <Typography variant="label-md" as="h4" className="text-text-primary">
+      <Typography variant="label-md" as="h4" className="text-primary">
         QUICK ACTIONS
       </Typography>
       <div className="flex items-center gap-spacing-xs">
@@ -44,7 +44,7 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
           className={
             play.diagram_url
               ? ""
-              : "surface-subtle hover:bg-surface-warning text-text-warning border-surface-primary"
+              : "surface-subtle hover:bg-surface-warning text-warning border-surface-primary"
           }
         >
           {play.diagram_url && (
@@ -70,10 +70,10 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
               ? `Used in ${status.practiceCount} practice script${status.practiceCount > 1 ? "s" : ""}`
               : "Add this play to a practice script"
           }
-          className="surface-subtle hover:bg-surface-info text-text-info border-surface-primary"
+          className="surface-subtle hover:bg-surface-info text-info border-surface-primary"
         >
           {status.practiceCount > 0 && (
-            <span className="inline-flex items-center justify-center font-bold mr-1 text-text-info">
+            <span className="inline-flex items-center justify-center font-bold mr-1 text-info">
               {status.practiceCount}
             </span>
           )}
@@ -90,10 +90,10 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
               ? `Used in ${status.gamePlanCount} game plan${status.gamePlanCount > 1 ? "s" : ""}`
               : "Add this play to a game plan"
           }
-          className="surface-subtle hover:bg-surface-success text-text-success border-surface-primary"
+          className="surface-subtle hover:bg-surface-success text-success border-surface-primary"
         >
           {status.gamePlanCount > 0 && (
-            <span className="inline-flex items-center justify-center font-bold mr-1 text-text-success">
+            <span className="inline-flex items-center justify-center font-bold mr-1 text-success">
               {status.gamePlanCount}
             </span>
           )}

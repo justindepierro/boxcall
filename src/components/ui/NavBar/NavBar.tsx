@@ -145,7 +145,7 @@ const NavBarItemComponent: React.FC<{
         <div
           className={`
           ${isMobile ? "ml-4 mt-1" : "absolute left-0 mt-2 w-48"}
-          surface-card rounded-lg shadow-lg z-50
+          bg-surface-primary rounded-lg shadow-lg z-50
         `}
         >
           {item.children?.map((childItem, index) => (
@@ -155,8 +155,8 @@ const NavBarItemComponent: React.FC<{
                 block px-4 py-2 text-sm cursor-pointer
                 ${
                   childItem.disabled
-                    ? "text-text-secondary"
-                    : "text-text-primary surface-subtle-hover dark:hover:bg-text-tertiary dark:hover:text-surface-primary"
+                    ? "text-secondary"
+                    : "text-primary surface-subtle-hover dark:hover:bg-text-tertiary dark:hover:text-surface-primary"
                 }
               `}
               onClick={() => {

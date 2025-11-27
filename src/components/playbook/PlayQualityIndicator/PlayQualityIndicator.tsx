@@ -199,7 +199,7 @@ export const PlayQualityIndicator: React.FC<PlayQualityIndicatorProps> = ({
                 <Icon
                   name="chevron-right"
                   size="xs"
-                  className="text-text-muted mt-0.5 flex-shrink-0"
+                  className="text-muted mt-0.5 flex-shrink-0"
                   aria-hidden="true"
                 />
                 <span>{rec}</span>
@@ -211,7 +211,7 @@ export const PlayQualityIndicator: React.FC<PlayQualityIndicatorProps> = ({
 
       {/* Completeness Label */}
       <div className="mt-spacing-sm">
-        <Typography variant="body-xs" className="text-text-muted text-center">
+        <Typography variant="body-xs" className="text-muted text-center">
           Completeness: <strong>{score.completeness}</strong>
         </Typography>
       </div>

@@ -128,7 +128,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
 
   // Handle create new formation
   const handleCreateNew = (side: "left" | "right") => {
-    // TODO: Open FormationBuilderModal
+    // TODO: Add formation creation flow with image upload
     alert(`Create new ${side} formation - Coming soon with Phase 3!`);
   };
 
@@ -165,7 +165,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
         <div className="flex flex-col gap-spacing-lg p-spacing-md">
           {loading && (
             <div className="text-center py-spacing-lg">
-              <Typography variant="body" className="text-text-muted">
+              <Typography variant="body" className="text-muted">
                 Loading formations...
               </Typography>
             </div>
@@ -179,7 +179,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
                 <div className="flex flex-col gap-spacing-sm">
                   <Typography
                     variant="headline-md"
-                    className="text-text-primary"
+                    className="text-primary"
                   >
                     Left Side Formation
                   </Typography>
@@ -198,7 +198,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
                           setLeftFormation(formation || null);
                         }
                       }}
-                      className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
+                      className="w-full px-spacing-sm py-spacing-xs border border-primary rounded-lg bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
                     >
                       <option value="">Select left formation...</option>
                       {allFormations.map(renderFormationOption)}
@@ -206,12 +206,12 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
                         ➕ Create New Formation
                       </option>
                     </select>
-                    <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
+                    <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
                   </div>
 
                   {/* Left Formation Preview */}
                   {leftFormation && (
-                    <div className="mt-spacing-md p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
+                    <div className="mt-spacing-md p-spacing-md bg-surface-secondary rounded-lg border border-primary">
                       <FormationBadge
                         formationId={leftFormation.id}
                         direction={leftFormation.direction}
@@ -219,21 +219,21 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
                       <div className="mt-spacing-sm space-y-spacing-xs">
                         <Typography
                           variant="caption"
-                          className="text-text-secondary"
+                          className="text-secondary"
                         >
                           <strong>Personnel:</strong>{" "}
                           {leftFormation.personnel_name || "Not set"}
                         </Typography>
                         <Typography
                           variant="caption"
-                          className="text-text-secondary"
+                          className="text-secondary"
                         >
                           <strong>Category:</strong>{" "}
                           {leftFormation.category || "Not set"}
                         </Typography>
                         <Typography
                           variant="caption"
-                          className="text-text-secondary"
+                          className="text-secondary"
                         >
                           <strong>Usage:</strong> {leftFormation.usage_count}{" "}
                           plays
@@ -241,7 +241,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
                         {leftFormation.description && (
                           <Typography
                             variant="caption"
-                            className="text-text-muted italic"
+                            className="text-muted italic"
                           >
                             {leftFormation.description}
                           </Typography>
@@ -268,7 +268,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
                   </Button>
                   <Typography
                     variant="caption"
-                    className="text-text-muted mt-spacing-xs text-center"
+                    className="text-muted mt-spacing-xs text-center"
                   >
                     Click to
                     <br />
@@ -280,7 +280,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
                 <div className="flex flex-col gap-spacing-sm">
                   <Typography
                     variant="headline-md"
-                    className="text-text-primary"
+                    className="text-primary"
                   >
                     Right Side Formation
                   </Typography>
@@ -299,7 +299,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
                           setRightFormation(formation || null);
                         }
                       }}
-                      className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
+                      className="w-full px-spacing-sm py-spacing-xs border border-primary rounded-lg bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
                     >
                       <option value="">Select right formation...</option>
                       {allFormations.map(renderFormationOption)}
@@ -307,12 +307,12 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
                         ➕ Create New Formation
                       </option>
                     </select>
-                    <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
+                    <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
                   </div>
 
                   {/* Right Formation Preview */}
                   {rightFormation && (
-                    <div className="mt-spacing-md p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
+                    <div className="mt-spacing-md p-spacing-md bg-surface-secondary rounded-lg border border-primary">
                       <FormationBadge
                         formationId={rightFormation.id}
                         direction={rightFormation.direction}
@@ -320,21 +320,21 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
                       <div className="mt-spacing-sm space-y-spacing-xs">
                         <Typography
                           variant="caption"
-                          className="text-text-secondary"
+                          className="text-secondary"
                         >
                           <strong>Personnel:</strong>{" "}
                           {rightFormation.personnel_name || "Not set"}
                         </Typography>
                         <Typography
                           variant="caption"
-                          className="text-text-secondary"
+                          className="text-secondary"
                         >
                           <strong>Category:</strong>{" "}
                           {rightFormation.category || "Not set"}
                         </Typography>
                         <Typography
                           variant="caption"
-                          className="text-text-secondary"
+                          className="text-secondary"
                         >
                           <strong>Usage:</strong> {rightFormation.usage_count}{" "}
                           plays
@@ -342,7 +342,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
                         {rightFormation.description && (
                           <Typography
                             variant="caption"
-                            className="text-text-muted italic"
+                            className="text-muted italic"
                           >
                             {rightFormation.description}
                           </Typography>
@@ -354,8 +354,8 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
               </div>
 
               {/* Help Text */}
-              <div className="mt-spacing-md p-spacing-sm bg-surface-muted rounded border border-border-secondary">
-                <Typography variant="caption" className="text-text-muted">
+              <div className="mt-spacing-md p-spacing-sm bg-surface-muted rounded border border-secondary">
+                <Typography variant="caption" className="text-muted">
                   <strong>💡 Tip:</strong> Select formations from both sides and
                   click the link button to create a bi-directional relationship.
                   Linked formations can be used in duplicate + flip workflows.
@@ -364,7 +364,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
 
               {/* Status Display */}
               {(leftFormation || rightFormation) && (
-                <div className="flex items-center justify-center gap-spacing-sm text-text-secondary">
+                <div className="flex items-center justify-center gap-spacing-sm text-secondary">
                   {leftFormation && (
                     <Typography variant="caption">
                       {isLinked(leftFormation) ? "🔗 Linked" : "🔓 Unlinked"}
@@ -382,7 +382,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
           )}
 
           {/* Footer Actions */}
-          <div className="flex justify-end gap-spacing-sm pt-spacing-md border-t border-border-primary">
+          <div className="flex justify-end gap-spacing-sm pt-spacing-md border-t border-primary">
             <Button onClick={onClose} variant="outline" disabled={saving}>
               Cancel
             </Button>

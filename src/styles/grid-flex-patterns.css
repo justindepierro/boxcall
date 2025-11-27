@@ -153,62 +153,62 @@
 .grid-auto-sm {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-  gap: var(--semantic-layout-grid-gap);
+  gap: var(--space-4);
 }
 
 .grid-auto-md {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-  gap: var(--semantic-layout-grid-gap);
+  gap: var(--space-4);
 }
 
 .grid-auto-lg {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(24rem, 1fr));
-  gap: var(--semantic-layout-grid-gap);
+  gap: var(--space-4);
 }
 
 .grid-auto-xl {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
-  gap: var(--semantic-layout-grid-gap);
+  gap: var(--space-4);
 }
 
 /* Fixed column grids */
 .grid-cols-1 {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  gap: var(--semantic-layout-grid-gap);
+  gap: var(--space-4);
 }
 
 .grid-cols-2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--semantic-layout-grid-gap);
+  gap: var(--space-4);
 }
 
 .grid-cols-3 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--semantic-layout-grid-gap);
+  gap: var(--space-4);
 }
 
 .grid-cols-4 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--semantic-layout-grid-gap);
+  gap: var(--space-4);
 }
 
 .grid-cols-5 {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: var(--semantic-layout-grid-gap);
+  gap: var(--space-4);
 }
 
 .grid-cols-6 {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: var(--semantic-layout-grid-gap);
+  gap: var(--space-4);
 }
 
 /* Responsive grid breakpoints */
@@ -237,25 +237,25 @@
 .stack-tight {
   display: flex;
   flex-direction: column;
-  gap: var(--semantic-spacing-stack-tight);
+  gap: var(--space-2);
 }
 
 .stack-normal {
   display: flex;
   flex-direction: column;
-  gap: var(--semantic-spacing-stack-normal);
+  gap: var(--space-4);
 }
 
 .stack-relaxed {
   display: flex;
   flex-direction: column;
-  gap: var(--semantic-spacing-stack-relaxed);
+  gap: var(--space-6);
 }
 
 .stack-loose {
   display: flex;
   flex-direction: column;
-  gap: var(--semantic-spacing-stack-loose);
+  gap: var(--space-8);
 }
 
 /* ============================================================================
@@ -266,14 +266,14 @@
 .layout-sidebar-left {
   display: grid;
   grid-template-columns: var(--layout-sidebar-standard) 1fr;
-  gap: var(--semantic-layout-grid-gap);
+  gap: var(--space-4);
 }
 
 /* Right sidebar layout */
 .layout-sidebar-right {
   display: grid;
   grid-template-columns: 1fr var(--layout-sidebar-standard);
-  gap: var(--semantic-layout-grid-gap);
+  gap: var(--space-4);
 }
 
 /* Two sidebars layout */
@@ -282,14 +282,14 @@
   grid-template-columns: var(--layout-sidebar-narrow) 1fr var(
       --layout-sidebar-narrow
     );
-  gap: var(--semantic-layout-grid-gap);
+  gap: var(--space-4);
 }
 
 /* Collapsible sidebar (mobile-first) */
 .layout-sidebar-responsive {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--semantic-layout-grid-gap);
+  gap: var(--space-4);
 }
 
 @media (min-width: 768px) {
@@ -324,28 +324,28 @@
 .card-grid-compact {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-  gap: var(--semantic-layout-grid-gap-tight);
+  gap: var(--space-4-tight);
 }
 
 /* Standard cards */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-  gap: var(--semantic-layout-grid-gap);
+  gap: var(--space-4);
 }
 
 /* Wide cards (dashboards) */
 .card-grid-wide {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(24rem, 1fr));
-  gap: var(--semantic-layout-grid-gap-loose);
+  gap: var(--space-4-loose);
 }
 
 /* Large hero cards */
 .card-grid-hero {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
-  gap: var(--semantic-layout-grid-gap-wide);
+  gap: var(--space-4-wide);
 }
 
 /* ============================================================================
@@ -356,14 +356,14 @@
 .form-vertical {
   display: flex;
   flex-direction: column;
-  gap: var(--semantic-spacing-item-spacing);
+  gap: var(--space-3);
 }
 
 /* Horizontal form fields */
 .form-horizontal {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: var(--semantic-spacing-item-spacing);
+  gap: var(--space-3);
   align-items: center;
 }
 
@@ -371,7 +371,7 @@
 .form-two-column {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--semantic-spacing-item-spacing);
+  gap: var(--space-3);
 }
 
 @media (max-width: 640px) {
@@ -384,7 +384,7 @@
 .form-inline {
   display: flex;
   flex-direction: row;
-  gap: var(--semantic-spacing-item-spacing);
+  gap: var(--space-3);
   align-items: center;
   flex-wrap: wrap;
 }
@@ -396,19 +396,19 @@
 .list-tight {
   display: flex;
   flex-direction: column;
-  gap: var(--semantic-spacing-list-gap);
+  gap: var(--space-2);
 }
 
 .list-normal {
   display: flex;
   flex-direction: column;
-  gap: var(--semantic-spacing-item-spacing);
+  gap: var(--space-3);
 }
 
 .list-relaxed {
   display: flex;
   flex-direction: column;
-  gap: var(--semantic-spacing-stack-relaxed);
+  gap: var(--space-6);
 }
 
 /* ============================================================================
@@ -419,7 +419,7 @@
 .split-view {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--semantic-layout-grid-gap);
+  gap: var(--space-4);
 }
 
 @media (max-width: 768px) {
@@ -432,7 +432,7 @@
 .master-detail {
   display: grid;
   grid-template-columns: 1fr 2fr;
-  gap: var(--semantic-layout-grid-gap);
+  gap: var(--space-4);
 }
 
 @media (max-width: 768px) {
@@ -446,7 +446,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--semantic-spacing-item-spacing);
+  gap: var(--space-3);
   flex-wrap: wrap;
 }
 
@@ -455,7 +455,7 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: var(--semantic-spacing-list-gap);
+  gap: var(--space-2);
   flex-wrap: wrap;
 }
 
@@ -463,7 +463,7 @@
 .section-block {
   display: flex;
   flex-direction: column;
-  gap: var(--semantic-spacing-stack-normal);
+  gap: var(--space-4);
 }
 
 /* Inline label + value */
@@ -471,7 +471,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--semantic-spacing-item-spacing);
+  gap: var(--space-3);
 }
 
 /* ============================================================================

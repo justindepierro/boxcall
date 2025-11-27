@@ -34,7 +34,7 @@ export function BulkActionToolbar({
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 z-30 bg-surface-primary border-t border-border-primary shadow-xl">
+      <div className="fixed bottom-0 left-0 right-0 z-30 bg-surface-primary border-t border-primary shadow-xl">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-4">
             {/* Selection count */}
@@ -54,7 +54,7 @@ export function BulkActionToolbar({
                   />
                 </svg>
               </div>
-              <span className="text-sm font-medium text-text-primary">
+              <span className="text-sm font-medium text-primary">
                 {selectionCount} formation{selectionCount !== 1 ? "s" : ""}{" "}
                 selected
               </span>
@@ -64,14 +64,14 @@ export function BulkActionToolbar({
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowMetadataModal(true)}
-                className="px-4 py-2 text-sm font-medium text-text-primary bg-white border border-border-primary rounded-md hover:bg-surface-secondary transition-colors"
+                className="px-4 py-2 text-sm font-medium text-primary bg-white border border-primary rounded-md hover:bg-surface-secondary transition-colors"
               >
                 📝 Edit Metadata
               </button>
 
               <button
                 onClick={() => setShowDirectionModal(true)}
-                className="px-4 py-2 text-sm font-medium text-text-primary bg-white border border-border-primary rounded-md hover:bg-surface-secondary transition-colors"
+                className="px-4 py-2 text-sm font-medium text-primary bg-white border border-primary rounded-md hover:bg-surface-secondary transition-colors"
               >
                 ↔️ Set Direction
               </button>
@@ -87,7 +87,7 @@ export function BulkActionToolbar({
 
               <button
                 onClick={clearSelection}
-                className="px-4 py-2 text-sm font-medium text-text-muted hover:text-text-primary transition-colors"
+                className="px-4 py-2 text-sm font-medium text-muted hover:text-primary transition-colors"
               >
                 ✕ Clear Selection
               </button>

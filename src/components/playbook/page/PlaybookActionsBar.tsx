@@ -113,7 +113,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                 <select
                   value={activeServerPresetId || activePresetId || ""}
                   onChange={(e) => onApplyPreset(e.target.value)}
-                  className="text-sm border-border-light rounded-lg px-2 py-1 min-w-60"
+                  className="text-sm border-light rounded-lg px-2 py-1 min-w-60"
                   disabled={serverPresetsLoading}
                   aria-busy={serverPresetsLoading}
                 >
@@ -209,7 +209,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                   type="checkbox"
                   checked={enableBulkOperations}
                   onChange={() => {}}
-                  className="h-4 w-4 mr-2 rounded-lg border-border-light text-text-info"
+                  className="h-4 w-4 mr-2 rounded-lg border-light text-info"
                 />
                 Bulk Edit
               </Button>
@@ -227,7 +227,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                   <Icon name="download" className="h-4 w-4 mr-2" /> Export
                   <Icon
                     name="chevron-down"
-                    className="h-3 w-3 ml-1 text-text-secondary"
+                    className="h-3 w-3 ml-1 text-secondary"
                   />
                 </Button>
                 <div className="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition pointer-events-none group-hover:pointer-events-auto absolute right-0 mt-1 min-w-44 surface-popover rounded-lg shadow-lg border border-subtle py-1 z-40">
@@ -292,11 +292,11 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                 )}
               </div>
               {enableBulkOperations && (
-                <div className="text-xs text-text-secondary flex items-center gap-3 ml-2">
+                <div className="text-xs text-secondary flex items-center gap-3 ml-2">
                   <span>
                     Selected: <strong>{selectedCount}</strong>
                   </span>
-                  <span className="text-text-secondary">
+                  <span className="text-secondary">
                     (persists across searches)
                   </span>
                   {selectedCount > 0 && (

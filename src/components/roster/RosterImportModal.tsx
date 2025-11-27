@@ -107,7 +107,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
           {step === "upload" && (
             <div className="text-center py-12">
               <div className="mx-auto w-24 h-24 bg-surface-info rounded-full flex items-center justify-center mb-spacing-lg">
-                <Icon name="upload" className="h-12 w-12 text-text-info" />
+                <Icon name="upload" className="h-12 w-12 text-info" />
               </div>
               <Typography variant="headline-md" className="mb-spacing-md">
                 Upload Roster CSV
@@ -142,7 +142,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
                   </Button>
                 </label>
 
-                <div className="text-sm text-text-secondary">
+                <div className="text-sm text-secondary">
                   <p className="mb-spacing-xs">Expected CSV format:</p>
                   <div className="bg-surface-secondary p-spacing-sm rounded-lg text-left font-mono text-xs">
                     First Name,Last Name,Jersey
@@ -175,20 +175,20 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
 
               {/* Errors and Warnings */}
               {errors.length > 0 && (
-                <Card className="border-border-error bg-surface-error">
+                <Card className="border-error bg-surface-error">
                   <div className="flex items-start space-x-spacing-sm">
                     <Icon
                       name="alert"
-                      className="h-5 w-5 text-text-error mt-0.5"
+                      className="h-5 w-5 text-error mt-0.5"
                     />
                     <div>
                       <Typography
                         variant="body-sm"
-                        className="text-text-error font-medium"
+                        className="text-error font-medium"
                       >
                         Import Errors ({errors.length})
                       </Typography>
-                      <ul className="mt-spacing-xs text-sm text-text-error-hover space-y-1">
+                      <ul className="mt-spacing-xs text-sm text-error-hover space-y-1">
                         {errors.map((error, index) => (
                           <li key={index}>• {error}</li>
                         ))}
@@ -199,20 +199,20 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
               )}
 
               {warnings.length > 0 && (
-                <Card className="border-border-warning bg-surface-warning">
+                <Card className="border-warning bg-surface-warning">
                   <div className="flex items-start space-x-spacing-sm">
                     <Icon
                       name="alert"
-                      className="h-5 w-5 text-text-warning mt-0.5"
+                      className="h-5 w-5 text-warning mt-0.5"
                     />
                     <div>
                       <Typography
                         variant="body-sm"
-                        className="text-text-warning-hover font-medium"
+                        className="text-warning-hover font-medium"
                       >
                         Warnings ({warnings.length})
                       </Typography>
-                      <ul className="mt-spacing-xs text-sm text-text-warning-hover space-y-1">
+                      <ul className="mt-spacing-xs text-sm text-warning-hover space-y-1">
                         {warnings.map((warning, index) => (
                           <li key={index}>• {warning}</li>
                         ))}
@@ -228,22 +228,22 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
                   <table className="min-w-full divide-y divide-border">
                     <thead className="bg-surface-secondary">
                       <tr>
-                        <th className="px-spacing-lg py-spacing-sm text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                        <th className="px-spacing-lg py-spacing-sm text-left text-xs font-medium text-muted uppercase tracking-wider">
                           Name
                         </th>
-                        <th className="px-spacing-lg py-spacing-sm text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                        <th className="px-spacing-lg py-spacing-sm text-left text-xs font-medium text-muted uppercase tracking-wider">
                           Jersey
                         </th>
-                        <th className="px-spacing-lg py-spacing-sm text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                        <th className="px-spacing-lg py-spacing-sm text-left text-xs font-medium text-muted uppercase tracking-wider">
                           Position
                         </th>
-                        <th className="px-spacing-lg py-spacing-sm text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                        <th className="px-spacing-lg py-spacing-sm text-left text-xs font-medium text-muted uppercase tracking-wider">
                           Grade
                         </th>
-                        <th className="px-spacing-lg py-spacing-sm text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                        <th className="px-spacing-lg py-spacing-sm text-left text-xs font-medium text-muted uppercase tracking-wider">
                           Height
                         </th>
-                        <th className="px-spacing-lg py-spacing-sm text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                        <th className="px-spacing-lg py-spacing-sm text-left text-xs font-medium text-muted uppercase tracking-wider">
                           Weight
                         </th>
                       </tr>
@@ -251,22 +251,22 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
                     <tbody className="bg-surface-primary divide-y divide-border">
                       {csvData.slice(0, 10).map((player, index) => (
                         <tr key={index}>
-                          <td className="px-spacing-lg py-spacing-md whitespace-nowrap text-sm font-medium text-text-primary">
+                          <td className="px-spacing-lg py-spacing-md whitespace-nowrap text-sm font-medium text-primary">
                             {player.firstName} {player.lastName}
                           </td>
-                          <td className="px-spacing-lg py-spacing-md whitespace-nowrap text-sm text-text-muted">
+                          <td className="px-spacing-lg py-spacing-md whitespace-nowrap text-sm text-muted">
                             {player.jerseyNumber || "-"}
                           </td>
-                          <td className="px-spacing-lg py-spacing-md whitespace-nowrap text-sm text-text-muted">
+                          <td className="px-spacing-lg py-spacing-md whitespace-nowrap text-sm text-muted">
                             {player.position || "-"}
                           </td>
-                          <td className="px-spacing-lg py-spacing-md whitespace-nowrap text-sm text-text-muted">
+                          <td className="px-spacing-lg py-spacing-md whitespace-nowrap text-sm text-muted">
                             {player.grade || "-"}
                           </td>
-                          <td className="px-spacing-lg py-spacing-md whitespace-nowrap text-sm text-text-muted">
+                          <td className="px-spacing-lg py-spacing-md whitespace-nowrap text-sm text-muted">
                             {player.height || "-"}
                           </td>
-                          <td className="px-spacing-lg py-spacing-md whitespace-nowrap text-sm text-text-muted">
+                          <td className="px-spacing-lg py-spacing-md whitespace-nowrap text-sm text-muted">
                             {player.weight || "-"}
                           </td>
                         </tr>
@@ -275,7 +275,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
                         <tr>
                           <td
                             colSpan={6}
-                            className="px-spacing-lg py-spacing-md text-center text-sm text-text-muted"
+                            className="px-spacing-lg py-spacing-md text-center text-sm text-muted"
                           >
                             ... and {csvData.length - 10} more players
                           </td>

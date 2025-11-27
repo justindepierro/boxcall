@@ -340,7 +340,7 @@ const TeamBulletin: React.FC = React.memo(() => {
       <Aurora variant="shell" fullHeight>
         <div className="py-6">
           <div className="container-content text-center">
-            <div className="surface-card elevation-card border-subtle rounded-lg p-8">
+            <div className="bg-primary elevation-card border-subtle rounded-lg p-8">
               <LogoIcon size="xl" color="brand" className="mx-auto mb-4" />
               <Typography variant="headline-lg" className="mb-2">
                 No Team Found
@@ -361,7 +361,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                     <Icon
                       name="unlock"
                       size="sm"
-                      className="text-text-primary"
+                      className="text-primary"
                     />
                   )}
                 </Button>
@@ -395,7 +395,7 @@ const TeamBulletin: React.FC = React.memo(() => {
         {/* Skip link for keyboard users */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-jade-600 text-text-inverse px-4 py-2 rounded-lg z-50"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-jade-600 text-inverse px-4 py-2 rounded-lg z-50"
         >
           Skip to main content
         </a>
@@ -451,7 +451,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                   </div>
                   <button
                     onClick={() => setIsSeasonStatsModalOpen(true)}
-                    className="ml-auto flex items-center gap-2 px-4 py-2 bg-surface-primary rounded-full shadow-md hover:shadow-lg transition-all"
+                    className="ml-auto flex items-center gap-2 px-4 py-2 bg-primary rounded-full shadow-md hover:shadow-lg transition-all"
                   >
                     <Icon
                       name="trending-up"
@@ -490,7 +490,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                   <Card className="p-4">
                     <button
                       onClick={() => setIsTrophyCaseModalOpen(true)}
-                      className="w-full text-left hover:bg-surface-muted rounded-lg p-3 transition-colors"
+                      className="w-full text-left hover:bg-muted rounded-lg p-3 transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         <Icon
@@ -518,7 +518,7 @@ const TeamBulletin: React.FC = React.memo(() => {
 
                     <button
                       onClick={() => setIsTeamGoalsModalOpen(true)}
-                      className="w-full text-left hover:bg-surface-muted rounded-lg p-3 transition-colors mt-2"
+                      className="w-full text-left hover:bg-muted rounded-lg p-3 transition-colors mt-2"
                     >
                       <div className="flex items-center gap-3">
                         <Icon
@@ -546,7 +546,7 @@ const TeamBulletin: React.FC = React.memo(() => {
 
                     <button
                       onClick={() => setIsTeamVotesModalOpen(true)}
-                      className="w-full text-left hover:bg-surface-muted rounded-lg p-3 transition-colors mt-2"
+                      className="w-full text-left hover:bg-muted rounded-lg p-3 transition-colors mt-2"
                     >
                       <div className="flex items-center gap-3">
                         <Icon
@@ -580,7 +580,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                   <div className="lg:hidden flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
                     <button
                       onClick={() => setIsTrophyCaseModalOpen(true)}
-                      className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-surface-primary rounded-xl shadow-md hover:shadow-lg transition-all"
+                      className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-primary rounded-xl shadow-md hover:shadow-lg transition-all"
                     >
                       <Icon
                         name="award"
@@ -593,7 +593,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                     </button>
                     <button
                       onClick={() => setIsTeamGoalsModalOpen(true)}
-                      className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-surface-primary rounded-xl shadow-md hover:shadow-lg transition-all"
+                      className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-primary rounded-xl shadow-md hover:shadow-lg transition-all"
                     >
                       <Icon
                         name="target"
@@ -606,7 +606,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                     </button>
                     <button
                       onClick={() => setIsTeamVotesModalOpen(true)}
-                      className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-surface-primary rounded-xl shadow-md hover:shadow-lg transition-all"
+                      className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-primary rounded-xl shadow-md hover:shadow-lg transition-all"
                     >
                       <Icon
                         name="message"
@@ -619,7 +619,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                     </button>
                     <button
                       onClick={() => setIsSeasonStatsModalOpen(true)}
-                      className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-surface-primary rounded-xl shadow-md hover:shadow-lg transition-all"
+                      className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-primary rounded-xl shadow-md hover:shadow-lg transition-all"
                     >
                       <Icon
                         name="trending-up"

@@ -19,7 +19,7 @@ export function TemplatesModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="p-6">
-        <Typography variant="headline-md" className="text-text-primary mb-6">
+        <Typography variant="headline-md" className="text-primary mb-6">
           Practice Templates
         </Typography>
         <div className="space-y-3">
@@ -33,7 +33,7 @@ export function TemplatesModal({
                   <Typography variant="body-lg" className="font-medium">
                     {template.name}
                   </Typography>
-                  <Typography variant="body-sm" className="text-text-secondary">
+                  <Typography variant="body-sm" className="text-secondary">
                     {template.duration} min • {template.blocks.length} blocks
                   </Typography>
                 </div>

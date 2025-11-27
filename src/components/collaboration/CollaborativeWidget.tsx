@@ -134,7 +134,7 @@ export const CollaborativeWidget: React.FC<CollaborativeWidgetProps> = ({
             {activeParticipants.slice(0, 3).map((participant) => (
               <div
                 key={participant.id}
-                className="w-6 h-6 rounded-full border-2 border-surface-primary bg-text-info flex items-center justify-center text-xs font-medium text-text-on-primary"
+                className="w-6 h-6 rounded-full border-2 border-surface-primary bg-text-info flex items-center justify-center text-xs font-medium text-on-primary"
                 title={participant.name}
               >
                 {participant.name.charAt(0).toUpperCase()}
@@ -142,7 +142,7 @@ export const CollaborativeWidget: React.FC<CollaborativeWidgetProps> = ({
             ))}
           </div>
           {activeParticipants.length > 3 && (
-            <div className="w-6 h-6 rounded-full bg-surface-secondary border-2 border-surface-primary flex items-center justify-center text-xs font-medium text-text-secondary">
+            <div className="w-6 h-6 rounded-full bg-surface-secondary border-2 border-surface-primary flex items-center justify-center text-xs font-medium text-secondary">
               +{activeParticipants.length - 3}
             </div>
           )}
@@ -172,7 +172,7 @@ export const CollaborativeWidget: React.FC<CollaborativeWidgetProps> = ({
             <Typography variant="headline-sm" as="h3" className="mb-4">
               Collaboration Conflict
             </Typography>
-            <p className="text-text-secondary mb-4">
+            <p className="text-secondary mb-4">
               {conflictData.user.name} made changes that conflict with your
               current data. How would you like to resolve this?
             </p>
@@ -205,7 +205,7 @@ export const CollaborativeWidget: React.FC<CollaborativeWidgetProps> = ({
 
       {/* Connection status */}
       {!isConnected && (
-        <div className="absolute top-2 left-2 bg-warning text-text-on-warning px-2 py-1 rounded-lg text-xs">
+        <div className="absolute top-2 left-2 bg-warning text-on-warning px-2 py-1 rounded-lg text-xs">
           Reconnecting...
         </div>
       )}

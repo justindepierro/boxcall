@@ -129,7 +129,7 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
     return (
       <div className="flex items-center justify-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-text-accent"></div>
-        <Typography variant="body-sm" className="ml-3 text-text-secondary">
+        <Typography variant="body-sm" className="ml-3 text-secondary">
           Loading practice scripts...
         </Typography>
       </div>
@@ -143,10 +143,10 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
           name="alert-triangle"
           className="h-16 w-16 text-error mx-auto mb-4"
         />
-        <Typography variant="headline-sm" className="text-text-secondary mb-2">
+        <Typography variant="headline-sm" className="text-secondary mb-2">
           Error Loading Scripts
         </Typography>
-        <Typography variant="body-sm" className="text-text-muted mb-6">
+        <Typography variant="body-sm" className="text-muted mb-6">
           {fetchError}
         </Typography>
         <Button onClick={loadScripts} variant="outline">
@@ -160,11 +160,11 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
   if (scripts.length === 0) {
     return (
       <div className="text-center py-12">
-        <Icon name="file" className="h-16 w-16 text-text-muted mx-auto mb-4" />
-        <Typography variant="headline-sm" className="text-text-secondary mb-2">
+        <Icon name="file" className="h-16 w-16 text-muted mx-auto mb-4" />
+        <Typography variant="headline-sm" className="text-secondary mb-2">
           No Practice Scripts Yet
         </Typography>
-        <Typography variant="body-sm" className="text-text-muted mb-6">
+        <Typography variant="body-sm" className="text-muted mb-6">
           Create your first practice script to get started with organized
           practice planning.
         </Typography>
@@ -182,13 +182,13 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
         {scripts.map((script) => (
           <div
             key={script.id}
-            className="surface-card rounded-lg border border-subtle p-6 hover:border-border-light transition-all hover:shadow-md flex flex-col min-h-72"
+            className="bg-surface-primary rounded-lg border border-subtle p-6 hover:border-light transition-all hover:shadow-md flex flex-col min-h-72"
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1 min-w-0">
                 <Typography
                   variant="headline-sm"
-                  className="text-text-primary truncate mb-1"
+                  className="text-primary truncate mb-1"
                   title={script.title || script.name}
                 >
                   {script.title || script.name}
@@ -196,7 +196,7 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
                 {script.description && (
                   <Typography
                     variant="body-sm"
-                    className="text-text-secondary line-clamp-2"
+                    className="text-secondary line-clamp-2"
                     title={script.description}
                   >
                     {script.description}
@@ -210,7 +210,7 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
               )}
             </div>
 
-            <div className="flex items-center gap-4 mb-4 text-sm text-text-secondary">
+            <div className="flex items-center gap-4 mb-4 text-sm text-secondary">
               <div className="flex items-center gap-1">
                 <Icon name="clock" className="h-4 w-4" />
                 <span>{formatDuration(script.duration)}</span>
@@ -236,9 +236,9 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
               </div>
             )}
 
-            <div className="mt-auto pt-4 border-t border-border-subtle">
+            <div className="mt-auto pt-4 border-t border-subtle">
               <div className="flex items-center justify-between mb-3">
-                <Typography variant="caption" className="text-text-muted">
+                <Typography variant="caption" className="text-muted">
                   Updated {formatDate(script.updatedAt)}
                 </Typography>
               </div>

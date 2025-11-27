@@ -100,7 +100,7 @@ export const MobileQuickActionGrid: React.FC<MobileQuickActionGridProps> = ({
       {/* Header */}
       <Typography
         variant="headline-sm"
-        className="text-text-primary font-semibold px-1"
+        className="text-primary font-semibold px-1"
       >
         Quick Actions
       </Typography>
@@ -131,13 +131,13 @@ export const MobileQuickActionGrid: React.FC<MobileQuickActionGridProps> = ({
             {/* Icon */}
             <Icon
               name={action.icon}
-              className={`w-6 h-6 ${action.color || "text-text-primary"}`}
+              className={`w-6 h-6 ${action.color || "text-primary"}`}
             />
 
             {/* Label */}
             <Typography
               variant="body-sm"
-              className={`${action.color || "text-text-primary"} font-semibold text-center`}
+              className={`${action.color || "text-primary"} font-semibold text-center`}
             >
               {action.label}
             </Typography>

@@ -119,7 +119,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
             } rounded-full whitespace-nowrap transition-all ${
               activeSection === section.id
                 ? "bg-brand-jade text-white shadow-md"
-                : "bg-surface-secondary text-text-secondary hover:bg-surface-tertiary"
+                : "bg-surface-secondary text-secondary hover:bg-surface-tertiary"
             }`}
           >
             <Icon
@@ -161,7 +161,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                     } rounded-xl border-2 transition-all ${
                       localSettings.theme === theme
                         ? "border-brand-jade bg-brand-jade/10"
-                        : "border-border-default hover:border-border-medium"
+                        : "border-default hover:border-medium"
                     }`}
                   >
                     <Icon
@@ -201,7 +201,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                     } rounded-xl border-2 transition-all ${
                       localSettings.gridDensity === density
                         ? "border-brand-jade bg-brand-jade/10"
-                        : "border-border-default hover:border-border-medium"
+                        : "border-default hover:border-medium"
                     }`}
                   >
                     <Typography
@@ -430,7 +430,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
 
       {/* Action Buttons - Sticky on Mobile */}
       <div
-        className={`flex gap-3 pt-4 border-t border-border-default ${
+        className={`flex gap-3 pt-4 border-t border-default ${
           isMobile
             ? "sticky bottom-0 bg-surface-primary pb-safe -mx-4 px-4"
             : ""

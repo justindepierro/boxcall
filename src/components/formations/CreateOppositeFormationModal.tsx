@@ -106,11 +106,11 @@ const FormationPreview: React.FC<{
 
   return (
     <div className="flex flex-col gap-spacing-sm">
-      <Typography variant="label-md" className="text-center text-text-muted">
+      <Typography variant="label-md" className="text-center text-muted">
         {label}
         {flipped && " (Flipped)"}
       </Typography>
-      <div className="relative surface-card border-2 border-border-subtle rounded-md overflow-hidden">
+      <div className="relative bg-surface-primary border-2 border-subtle rounded-md overflow-hidden">
         {/* Field background */}
         <svg
           width={CANVAS_WIDTH}
@@ -307,7 +307,7 @@ export const CreateOppositeFormationModal: React.FC<
         <div>
           <Typography
             variant="label-md"
-            className="text-text-secondary mb-spacing-sm"
+            className="text-secondary mb-spacing-sm"
           >
             Preview: Side-by-Side Comparison
           </Typography>
@@ -315,7 +315,7 @@ export const CreateOppositeFormationModal: React.FC<
             <div className="flex flex-col items-center">
               <Typography
                 variant="body-sm"
-                className="text-text-primary font-semibold mb-spacing-xs"
+                className="text-primary font-semibold mb-spacing-xs"
               >
                 ✅ Current Formation
               </Typography>
@@ -323,7 +323,7 @@ export const CreateOppositeFormationModal: React.FC<
                 positions={originalFormation.player_positions}
                 label={originalFormation.name}
               />
-              <Typography variant="caption" className="text-text-muted mt-1">
+              <Typography variant="caption" className="text-muted mt-1">
                 {originalFormation.direction === "left" && "← Left side"}
                 {originalFormation.direction === "right" && "Right side →"}
                 {!originalFormation.direction && "No direction set"}
@@ -342,7 +342,7 @@ export const CreateOppositeFormationModal: React.FC<
                 label={customName || suggestedName || originalFormation.name}
                 flipped
               />
-              <Typography variant="caption" className="text-text-muted mt-1">
+              <Typography variant="caption" className="text-muted mt-1">
                 {oppositeDirection === "left" && "← Left side"}
                 {oppositeDirection === "right" && "Right side →"}
               </Typography>
@@ -351,11 +351,11 @@ export const CreateOppositeFormationModal: React.FC<
         </div>
 
         {/* Simplified naming section */}
-        <div className="bg-surface-secondary border border-border-primary rounded-md p-spacing-md">
+        <div className="bg-surface-secondary border border-primary rounded-md p-spacing-md">
           <div className="flex items-center justify-between mb-spacing-sm">
             <Typography
               variant="label-md"
-              className="text-text-primary font-semibold"
+              className="text-primary font-semibold"
             >
               Name for New Formation
             </Typography>
@@ -377,10 +377,10 @@ export const CreateOppositeFormationModal: React.FC<
               value={customName}
               onChange={(e) => setCustomName(e.target.value)}
               placeholder="Enter name for opposite formation..."
-              className="w-full px-spacing-md py-spacing-sm border-2 border-border-primary rounded-md bg-surface-primary text-text-primary text-base focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="w-full px-spacing-md py-spacing-sm border-2 border-primary rounded-md bg-surface-primary text-primary text-base focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               disabled={loading}
             />
-            <Typography variant="body-xs" className="text-text-muted">
+            <Typography variant="body-xs" className="text-muted">
               {!suggestedName || suggestedName === originalFormation.name ? (
                 <>
                   💡 Tip: Name it differently from "{originalFormation.name}"
@@ -399,29 +399,29 @@ export const CreateOppositeFormationModal: React.FC<
         <div className="bg-success-bg border border-success-border rounded-md p-spacing-md">
           <Typography
             variant="label-md"
-            className="text-text-success font-semibold mb-spacing-sm flex items-center gap-2"
+            className="text-success font-semibold mb-spacing-sm flex items-center gap-2"
           >
             <span>✓</span> What Gets Copied to New Formation
           </Typography>
           <div className="grid grid-cols-2 gap-spacing-md text-sm">
             <div>
-              <Typography variant="caption" className="text-text-success">
+              <Typography variant="caption" className="text-success">
                 Personnel:
               </Typography>
               <Typography
                 variant="body-sm"
-                className="text-text-primary font-medium"
+                className="text-primary font-medium"
               >
                 {originalFormation.personnel_name || "None"}
               </Typography>
             </div>
             <div>
-              <Typography variant="caption" className="text-text-success">
+              <Typography variant="caption" className="text-success">
                 Category:
               </Typography>
               <Typography
                 variant="body-sm"
-                className="text-text-primary font-medium"
+                className="text-primary font-medium"
               >
                 {originalFormation.category || "Uncategorized"}
               </Typography>
@@ -429,7 +429,7 @@ export const CreateOppositeFormationModal: React.FC<
           </div>
           <Typography
             variant="caption"
-            className="text-text-success mt-2 block"
+            className="text-success mt-2 block"
           >
             ⚡ Player positions will be flipped horizontally
           </Typography>
@@ -437,15 +437,15 @@ export const CreateOppositeFormationModal: React.FC<
 
         {/* Error message */}
         {error && (
-          <div className="surface-error border border-border-error rounded-md p-spacing-md">
-            <Typography variant="body-sm" className="text-text-error">
+          <div className="surface-error border border-error rounded-md p-spacing-md">
+            <Typography variant="body-sm" className="text-error">
               ❌ {error}
             </Typography>
           </div>
         )}
 
         {/* Action buttons with clearer labels */}
-        <div className="flex flex-col gap-spacing-sm pt-spacing-md border-t border-border-primary">
+        <div className="flex flex-col gap-spacing-sm pt-spacing-md border-t border-primary">
           <Button
             variant="primary"
             size="lg"
@@ -487,7 +487,7 @@ export const CreateOppositeFormationModal: React.FC<
 
           <Typography
             variant="caption"
-            className="text-text-muted text-center mt-2"
+            className="text-muted text-center mt-2"
           >
             💡 You can create or link formations later in the Formation Manager
           </Typography>

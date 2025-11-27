@@ -60,8 +60,8 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-text-primary bg-opacity-50 flex items-center justify-center z-50">
-      <div className="surface-card elevation-modal rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto mx-4">
-        <div className="bc-card-padding">
+      <div className="bg-surface-primary elevation-modal rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto mx-4">
+        <div className="p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
               <Typography variant="headline-lg" className="text-navy-900">
@@ -77,7 +77,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="text-text-muted hover:text-text-primary"
+              className="text-muted hover:text-primary"
             >
               <Icon name="close" size="lg" />
             </Button>
@@ -103,19 +103,19 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
                       {script.description}
                     </Typography>
                     <div className="flex items-center space-x-4 text-sm">
-                      <span className="flex items-center text-text-secondary">
+                      <span className="flex items-center text-secondary">
                         <Icon name="clock" size="xs" className="mr-1" />
                         {script.duration} min
                       </span>
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-medium ${
                           script.category === "offense"
-                            ? "bg-surface-info text-text-info"
+                            ? "bg-surface-info text-info"
                             : script.category === "defense"
-                              ? "bg-surface-error text-text-error"
+                              ? "bg-surface-error text-error"
                               : script.category === "special-teams"
-                                ? "bg-surface-success text-text-success"
-                                : "bg-surface-secondary text-text-primary"
+                                ? "bg-surface-success text-success"
+                                : "bg-surface-secondary text-primary"
                         }`}
                       >
                         {script.category.replace("-", " ")}

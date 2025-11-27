@@ -101,13 +101,13 @@ export const MentionsInput: React.FC<MentionsInputProps> = ({
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className={`w-full p-3 border border-border-medium rounded-lg resize-none focus:ring-2 focus:ring-focus-info focus:border-border-info ${className}`}
+        className={`w-full p-3 border border-medium rounded-lg resize-none focus:ring-2 focus:ring-focus-info focus:border-info ${className}`}
         rows={3}
       />
 
       {/* Suggestions dropdown */}
       {showSuggestions && suggestions.length > 0 && (
-        <div className="absolute z-10 w-full mt-1 bg-surface-primary border border-border-medium rounded-lg shadow-lg max-h-48 overflow-y-auto">
+        <div className="absolute z-10 w-full mt-1 bg-surface-primary border border-medium rounded-lg shadow-lg max-h-48 overflow-y-auto">
           {suggestions.map((suggestion) => (
             <button
               key={suggestion.id}
@@ -122,13 +122,13 @@ export const MentionsInput: React.FC<MentionsInputProps> = ({
                 />
               ) : (
                 <div className="w-6 h-6 bg-border-light rounded-full flex items-center justify-center">
-                  <span className="text-xs text-text-secondary">
+                  <span className="text-xs text-secondary">
                     {suggestion.display_name.charAt(0).toUpperCase()}
                   </span>
                 </div>
               )}
               <span className="text-sm">{suggestion.display_name}</span>
-              <span className="text-xs text-text-muted ml-auto">
+              <span className="text-xs text-muted ml-auto">
                 {suggestion.type}
               </span>
             </button>

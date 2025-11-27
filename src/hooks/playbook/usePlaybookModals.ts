@@ -13,7 +13,6 @@ export interface PlaybookModalState {
   showAddNewPlayModal: boolean;
   showPlaybookSettingsModal: boolean;
   showPersonnelModal: boolean;
-  showFormationBuilderModal: boolean;
   showPlaybookHealthModal: boolean;
   showKeyboardShortcuts: boolean;
   showStatsSheet: boolean;
@@ -34,7 +33,6 @@ export interface PlaybookModalActions {
   openAddNewPlayModal: () => void;
   openPlaybookSettingsModal: () => void;
   openPersonnelModal: () => void;
-  openFormationBuilderModal: () => void;
   openPlaybookHealthModal: () => void;
   openKeyboardShortcuts: () => void;
   openStatsSheet: () => void;
@@ -45,7 +43,6 @@ export interface PlaybookModalActions {
   closeAddNewPlayModal: () => void;
   closePlaybookSettingsModal: () => void;
   closePersonnelModal: () => void;
-  closeFormationBuilderModal: () => void;
   closePlaybookHealthModal: () => void;
   closeKeyboardShortcuts: () => void;
   closeStatsSheet: () => void;
@@ -61,9 +58,9 @@ export interface PlaybookModalActions {
 export function usePlaybookModals() {
   // Modal visibility states
   const [showAddNewPlayModal, setShowAddNewPlayModal] = useState(false);
-  const [showPlaybookSettingsModal, setShowPlaybookSettingsModal] = useState(false);
+  const [showPlaybookSettingsModal, setShowPlaybookSettingsModal] =
+    useState(false);
   const [showPersonnelModal, setShowPersonnelModal] = useState(false);
-  const [showFormationBuilderModal, setShowFormationBuilderModal] = useState(false);
   const [showPlaybookHealthModal, setShowPlaybookHealthModal] = useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [showStatsSheet, setShowStatsSheet] = useState(false);
@@ -80,7 +77,6 @@ export function usePlaybookModals() {
     showAddNewPlayModal,
     showPlaybookSettingsModal,
     showPersonnelModal,
-    showFormationBuilderModal,
     showPlaybookHealthModal,
     showKeyboardShortcuts,
     showStatsSheet,
@@ -97,7 +93,6 @@ export function usePlaybookModals() {
     openAddNewPlayModal: () => setShowAddNewPlayModal(true),
     openPlaybookSettingsModal: () => setShowPlaybookSettingsModal(true),
     openPersonnelModal: () => setShowPersonnelModal(true),
-    openFormationBuilderModal: () => setShowFormationBuilderModal(true),
     openPlaybookHealthModal: () => setShowPlaybookHealthModal(true),
     openKeyboardShortcuts: () => setShowKeyboardShortcuts(true),
     openStatsSheet: () => setShowStatsSheet(true),
@@ -111,7 +106,6 @@ export function usePlaybookModals() {
     closeAddNewPlayModal: () => setShowAddNewPlayModal(false),
     closePlaybookSettingsModal: () => setShowPlaybookSettingsModal(false),
     closePersonnelModal: () => setShowPersonnelModal(false),
-    closeFormationBuilderModal: () => setShowFormationBuilderModal(false),
     closePlaybookHealthModal: () => setShowPlaybookHealthModal(false),
     closeKeyboardShortcuts: () => setShowKeyboardShortcuts(false),
     closeStatsSheet: () => setShowStatsSheet(false),

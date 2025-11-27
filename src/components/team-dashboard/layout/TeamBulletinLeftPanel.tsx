@@ -21,12 +21,12 @@ export const TeamBulletinLeftPanel: React.FC<LeftPanelProps> = ({
       aria-labelledby="team-actions-heading"
     >
       <TeamTrophyCase teamId={teamId || ""} />
-      <Card className="bc-card-padding">
+      <Card className="p-6">
         <Typography
           as="h2"
           id="team-actions-heading"
           variant="headline-md"
-          className="mb-4 text-text-primary"
+          className="mb-4 text-primary"
         >
           Team Actions
         </Typography>

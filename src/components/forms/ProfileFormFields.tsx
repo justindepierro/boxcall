@@ -93,7 +93,7 @@ export const FormField = memo<FormFieldProps>(
                         );
                       }
                     }}
-                    className="rounded border-border-medium text-jade-600 focus:ring-jade-500"
+                    className="rounded border-medium text-jade-600 focus:ring-jade-500"
                   />
                   <Typography variant="body-sm">{option.label}</Typography>
                 </label>
@@ -154,22 +154,22 @@ export const FormField = memo<FormFieldProps>(
         <label className="block">
           <Typography
             variant="body-sm"
-            className="font-medium text-text-primary mb-1"
+            className="font-medium text-primary mb-1"
           >
             {field.label}
-            {field.required && <span className="text-text-error ml-1">*</span>}
+            {field.required && <span className="text-error ml-1">*</span>}
           </Typography>
           {renderInput()}
         </label>
 
         {field.description && (
-          <Typography variant="body-xs" className="text-text-muted">
+          <Typography variant="body-xs" className="text-muted">
             {field.description}
           </Typography>
         )}
 
         {error && (
-          <Typography variant="body-xs" className="text-text-error">
+          <Typography variant="body-xs" className="text-error">
             {error}
           </Typography>
         )}
@@ -194,7 +194,7 @@ export const ProfileFormSection = memo<ProfileFormSectionProps>(
       <div className="space-y-spacing-md">
         <Typography
           variant="headline-sm"
-          className="text-text-primary border-b border-subtle pb-spacing-xs"
+          className="text-primary border-b border-subtle pb-spacing-xs"
         >
           {title}
         </Typography>

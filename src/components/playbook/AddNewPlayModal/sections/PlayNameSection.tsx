@@ -70,7 +70,7 @@ export const PlayNameSection: React.FC<PlayNameSectionProps> = ({
           variant="ghost"
           size="sm"
           onClick={() => onPlayShowInNameChange(!playShowInName)}
-          className={`p-spacing-xs ${playShowInName ? "text-text-info" : "text-text-muted"}`}
+          className={`p-spacing-xs ${playShowInName ? "text-info" : "text-muted"}`}
         >
           <Icon name="eye" className="h-4 w-4" />
         </Button>

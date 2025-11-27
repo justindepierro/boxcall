@@ -58,7 +58,7 @@ export const DownDistanceTracker: React.FC<DownDistanceTrackerProps> = ({
     <div className={`space-y-4 ${className}`}>
       {/* Current Situation Display */}
       <div className="bg-surface-secondary border-2 border-primary rounded-lg p-4">
-        <Typography variant="body-xs" className="text-text-muted mb-1">
+        <Typography variant="body-xs" className="text-muted mb-1">
           Current Situation
         </Typography>
         <Typography variant="headline-lg" className="font-mono">
@@ -91,7 +91,7 @@ export const DownDistanceTracker: React.FC<DownDistanceTrackerProps> = ({
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="block mb-2">
-            <Typography variant="body-sm" className="text-text-secondary">
+            <Typography variant="body-sm" className="text-secondary">
               Quarter
             </Typography>
           </label>
@@ -113,7 +113,7 @@ export const DownDistanceTracker: React.FC<DownDistanceTrackerProps> = ({
 
         <div>
           <label className="block mb-2">
-            <Typography variant="body-sm" className="text-text-secondary">
+            <Typography variant="body-sm" className="text-secondary">
               Time Remaining
             </Typography>
           </label>
@@ -123,7 +123,7 @@ export const DownDistanceTracker: React.FC<DownDistanceTrackerProps> = ({
             onChange={(e) => onUpdate({ timeRemaining: e.target.value })}
             placeholder="15:00"
             disabled={disabled}
-            className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-text-primary font-mono text-center focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+            className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-primary font-mono text-center focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
           />
         </div>
       </div>
@@ -132,7 +132,7 @@ export const DownDistanceTracker: React.FC<DownDistanceTrackerProps> = ({
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="block mb-2">
-            <Typography variant="body-sm" className="text-text-secondary">
+            <Typography variant="body-sm" className="text-secondary">
               Down
             </Typography>
           </label>
@@ -154,7 +154,7 @@ export const DownDistanceTracker: React.FC<DownDistanceTrackerProps> = ({
 
         <div>
           <label className="block mb-2">
-            <Typography variant="body-sm" className="text-text-secondary">
+            <Typography variant="body-sm" className="text-secondary">
               Distance (yards)
             </Typography>
           </label>
@@ -167,7 +167,7 @@ export const DownDistanceTracker: React.FC<DownDistanceTrackerProps> = ({
             min={1}
             max={99}
             disabled={disabled}
-            className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-text-primary font-mono text-center focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+            className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-primary font-mono text-center focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
           />
         </div>
       </div>
@@ -175,7 +175,7 @@ export const DownDistanceTracker: React.FC<DownDistanceTrackerProps> = ({
       {/* Yard Line Slider */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <Typography variant="body-sm" className="text-text-secondary">
+          <Typography variant="body-sm" className="text-secondary">
             Yard Line
           </Typography>
           <Typography variant="body-sm" className="font-mono font-medium">
@@ -205,7 +205,7 @@ export const DownDistanceTracker: React.FC<DownDistanceTrackerProps> = ({
             }}
           />
           {/* Field markers */}
-          <div className="flex justify-between mt-1 text-xs text-text-muted font-mono">
+          <div className="flex justify-between mt-1 text-xs text-muted font-mono">
             <span>G</span>
             <span>25</span>
             <span>50</span>
@@ -218,7 +218,7 @@ export const DownDistanceTracker: React.FC<DownDistanceTrackerProps> = ({
       {/* Hash Mark */}
       <div>
         <label className="block mb-2">
-          <Typography variant="body-sm" className="text-text-secondary">
+          <Typography variant="body-sm" className="text-secondary">
             Hash Mark
           </Typography>
         </label>
@@ -264,7 +264,7 @@ export const DownDistanceTracker: React.FC<DownDistanceTrackerProps> = ({
       {/* Field Zone Indicator */}
       <div className="bg-surface-secondary rounded-lg p-3">
         <div className="flex items-center justify-between">
-          <Typography variant="body-xs" className="text-text-muted">
+          <Typography variant="body-xs" className="text-muted">
             Field Zone
           </Typography>
           <Typography

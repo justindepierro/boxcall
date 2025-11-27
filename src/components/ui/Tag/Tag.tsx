@@ -28,18 +28,18 @@ const sizeStyles: Record<NonNullable<TagProps["size"]>, string> = {
 // Semantic palette aligned with psychological system but lower elevation than Badge
 const variantStyles: Record<TagVariant, string> = {
   neutral:
-    "surface-subtle text-text-secondary dark:bg-surface-secondary dark:text-text-inverse dark:border-text-tertiary",
-  info: "surface-subtle text-text-info dark:bg-surface-info dark:text-text-info dark:border-text-info",
+    "surface-subtle text-secondary dark:bg-surface-secondary dark:text-inverse dark:border-text-tertiary",
+  info: "surface-subtle text-info dark:bg-surface-info dark:text-info dark:border-text-info",
   success:
-    "surface-subtle text-text-success dark:bg-surface-success dark:text-text-success dark:border-text-success",
+    "surface-subtle text-success dark:bg-surface-success dark:text-success dark:border-text-success",
   warning:
-    "surface-subtle text-text-warning dark:bg-surface-warning dark:text-text-warning dark:border-text-warning",
+    "surface-subtle text-warning dark:bg-surface-warning dark:text-warning dark:border-text-warning",
   danger:
-    "surface-subtle text-text-error dark:bg-surface-error dark:text-text-error dark:border-text-error",
+    "surface-subtle text-error dark:bg-surface-error dark:text-error dark:border-text-error",
   accent:
     "surface-subtle text-jade-700 dark:bg-jade-900/30 dark:text-jade-300 dark:border-jade-700",
   outline:
-    "text-text-secondary dark:border-text-tertiary dark:text-border-light",
+    "text-secondary dark:border-text-tertiary dark:text-border-light",
 };
 
 export const Tag: React.FC<TagProps> = ({

@@ -202,7 +202,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <Icon
             name="search"
-            className="h-4 w-4 text-text-secondary"
+            className="h-4 w-4 text-secondary"
             aria-hidden="true"
           />
         </div>
@@ -216,7 +216,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
           onFocus={handleFocus}
           onBlur={handleBlur}
           placeholder="Search plays, formations, players..."
-          className="w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-surface focus:ring-2 focus:ring-primary focus:border-transparent text-text-primary placeholder-text-secondary"
+          className="w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-surface focus:ring-2 focus:ring-primary focus:border-transparent text-primary placeholder-text-secondary"
           aria-label="Global search"
         />
 
@@ -232,7 +232,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
           >
             <Icon
               name="close"
-              className="h-4 w-4 text-text-secondary hover:text-text-primary"
+              className="h-4 w-4 text-secondary hover:text-primary"
             />
           </button>
         )}
@@ -245,7 +245,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
           <div className="absolute top-full left-0 right-0 mt-1 bg-surface border border-border rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
             {isLoading ? (
               <div className="px-4 py-3 text-center">
-                <Typography variant="body-sm" className="text-text-secondary">
+                <Typography variant="body-sm" className="text-secondary">
                   Searching...
                 </Typography>
               </div>
@@ -266,13 +266,13 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
                     <div className="flex-1 min-w-0">
                       <Typography
                         variant="body-sm"
-                        className="font-medium text-text-primary truncate"
+                        className="font-medium text-primary truncate"
                       >
                         {result.title}
                       </Typography>
                       <Typography
                         variant="body-xs"
-                        className="text-text-secondary truncate"
+                        className="text-secondary truncate"
                       >
                         {result.subtitle}
                       </Typography>
@@ -282,7 +282,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
               </div>
             ) : query.length >= 2 ? (
               <div className="px-4 py-3 text-center">
-                <Typography variant="body-sm" className="text-text-secondary">
+                <Typography variant="body-sm" className="text-secondary">
                   No results found for "{query}"
                 </Typography>
               </div>

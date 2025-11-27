@@ -70,7 +70,7 @@ export const AdaptiveContentWidget: React.FC<AdaptiveContentWidgetProps> = ({
         ))}
       </div>
 
-      <div className="mt-3 pt-3 border-t border-border-primary">
+      <div className="mt-3 pt-3 border-t border-primary">
         <Button variant="ghost" size="sm" className="w-full">
           <Typography variant="body-sm" className="text-accent-primary">
             View All Recommendations

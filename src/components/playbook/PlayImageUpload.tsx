@@ -166,7 +166,7 @@ export const PlayImageUpload: React.FC<PlayImageUploadProps> = ({
             </Button>
           )}
 
-          <Typography variant="caption" className="text-text-tertiary text-center">
+          <Typography variant="caption" className="text-tertiary text-center">
             {isMobile
               ? 'Take a photo or select from your device'
               : 'Maximum file size: 5MB (will be compressed to 1MB)'}
@@ -179,7 +179,7 @@ export const PlayImageUpload: React.FC<PlayImageUploadProps> = ({
         <div className="flex items-center justify-center p-8 bg-surface-secondary rounded-lg">
           <div className="flex flex-col items-center gap-2">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-primary" />
-            <Typography variant="body-sm" className="text-text-secondary">
+            <Typography variant="body-sm" className="text-secondary">
               Compressing image...
             </Typography>
           </div>
@@ -218,7 +218,7 @@ export const PlayImageUpload: React.FC<PlayImageUploadProps> = ({
 
           {/* Image info */}
           <div className="absolute bottom-2 left-2 bg-surface-primary/90 backdrop-blur-sm rounded px-3 py-1">
-            <Typography variant="caption" className="text-text-secondary">
+            <Typography variant="caption" className="text-secondary">
               {rotation !== 0 && `Rotated ${rotation}°`}
             </Typography>
           </div>

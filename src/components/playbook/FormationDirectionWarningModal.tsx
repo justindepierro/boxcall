@@ -57,19 +57,19 @@ export const FormationDirectionWarningModal: React.FC<
 
         {/* Current Input */}
         <div className="space-y-spacing-sm">
-          <Typography variant="label" className="text-text-secondary">
+          <Typography variant="label" className="text-secondary">
             What you typed:
           </Typography>
-          <div className="p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
+          <div className="p-spacing-md bg-surface-secondary rounded-lg border border-primary">
             <Typography
               variant="body-lg"
-              className="font-mono text-text-primary"
+              className="font-mono text-primary"
             >
               "{detection.originalInput}"
             </Typography>
             <Typography
               variant="caption"
-              className="text-text-muted mt-spacing-xs"
+              className="text-muted mt-spacing-xs"
             >
               Contains direction keyword: "{detection.directionKeyword}"
             </Typography>
@@ -146,7 +146,7 @@ export const FormationDirectionWarningModal: React.FC<
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-spacing-sm pt-spacing-md border-t border-border-primary">
+        <div className="flex gap-spacing-sm pt-spacing-md border-t border-primary">
           <Button
             variant="primary"
             className="flex-1"

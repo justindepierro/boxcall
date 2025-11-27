@@ -77,7 +77,7 @@ export const SessionAnalyticsDashboard: React.FC<
         <Typography variant="headline-sm" className="text-error mb-2">
           Analytics Error
         </Typography>
-        <Typography variant="body-sm" className="text-text-secondary">
+        <Typography variant="body-sm" className="text-secondary">
           {error}
         </Typography>
       </div>
@@ -88,10 +88,10 @@ export const SessionAnalyticsDashboard: React.FC<
     return (
       <div className="p-6 text-center">
         <Icon name="bar-chart" className="h-12 w-12 text-muted mx-auto mb-4" />
-        <Typography variant="headline-sm" className="text-text-secondary mb-2">
+        <Typography variant="headline-sm" className="text-secondary mb-2">
           No Analytics Data
         </Typography>
-        <Typography variant="body-sm" className="text-text-secondary">
+        <Typography variant="body-sm" className="text-secondary">
           No data available for this session.
         </Typography>
       </div>
@@ -130,7 +130,7 @@ export const SessionAnalyticsDashboard: React.FC<
             <Typography variant="headline-lg" className="text-success-600">
               {analytics.successRate}%
             </Typography>
-            <Typography variant="body-sm" className="text-text-secondary">
+            <Typography variant="body-sm" className="text-secondary">
               Overall Success
             </Typography>
           </div>
@@ -138,7 +138,7 @@ export const SessionAnalyticsDashboard: React.FC<
             <Typography variant="headline-lg" className="text-primary">
               {analytics.totalPlays}
             </Typography>
-            <Typography variant="body-sm" className="text-text-secondary">
+            <Typography variant="body-sm" className="text-secondary">
               Total Plays
             </Typography>
           </div>
@@ -146,7 +146,7 @@ export const SessionAnalyticsDashboard: React.FC<
             <Typography variant="headline-lg" className="text-warning-600">
               {analytics.avgYardsPerPlay.toFixed(1)}
             </Typography>
-            <Typography variant="body-sm" className="text-text-secondary">
+            <Typography variant="body-sm" className="text-secondary">
               Avg Yards/Play
             </Typography>
           </div>
@@ -154,13 +154,13 @@ export const SessionAnalyticsDashboard: React.FC<
             <Typography variant="headline-lg" className="text-info-600">
               {analytics.totalYards}
             </Typography>
-            <Typography variant="body-sm" className="text-text-secondary">
+            <Typography variant="body-sm" className="text-secondary">
               Total Yards
             </Typography>
           </div>
         </div>
         {analytics.opponent && (
-          <Typography variant="body-sm" className="text-text-secondary mt-4">
+          <Typography variant="body-sm" className="text-secondary mt-4">
             Opponent: {analytics.opponent}
           </Typography>
         )}

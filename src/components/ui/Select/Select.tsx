@@ -25,7 +25,7 @@ const selectStyles: SelectStylesConfig = {
     fullWidth: "w-full",
   },
   trigger: {
-    base: "relative flex items-center justify-between w-full rounded-lg border-subtle transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer surface-card text-text-primary ring-text-info",
+    base: "relative flex items-center justify-between w-full rounded-lg border-subtle transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer surface-card text-primary ring-text-info",
     variants: {
       default: "",
       filled: "surface-subtle bg-surface-secondary",
@@ -60,11 +60,11 @@ const selectStyles: SelectStylesConfig = {
     maxHeight: "max-h-60 overflow-y-auto",
   },
   option: {
-    base: "flex items-center px-3 py-2 cursor-pointer transition-colors duration-150 text-text-primary surface-subtle-hover",
+    base: "flex items-center px-3 py-2 cursor-pointer transition-colors duration-150 text-primary surface-subtle-hover",
     states: {
       default: "",
-      highlighted: "surface-subtle bg-surface-info/30 text-text-info",
-      selected: "font-medium bg-surface-info text-text-info",
+      highlighted: "surface-subtle bg-surface-info/30 text-info",
+      selected: "font-medium bg-surface-info text-info",
       disabled: "opacity-50 cursor-not-allowed",
     },
     withIcon: "pl-10",
@@ -77,9 +77,9 @@ const selectStyles: SelectStylesConfig = {
       lg: "text-base",
     },
   },
-  placeholder: "text-text-secondary",
-  noOptions: "px-3 py-2 text-text-secondary text-center italic",
-  loading: "px-3 py-2 text-center text-text-secondary",
+  placeholder: "text-secondary",
+  noOptions: "px-3 py-2 text-secondary text-center italic",
+  loading: "px-3 py-2 text-center text-secondary",
 };
 /**
  * Select Component
@@ -368,7 +368,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
           <div className="flex-1">
             <div>{option.label}</div>
             {option.description && (
-              <div className="text-xs text-text-secondary">
+              <div className="text-xs text-secondary">
                 {option.description}
               </div>
             )}
@@ -391,9 +391,9 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
       <div className={containerClasses} ref={containerRef}>
         {label && (
           <label htmlFor={selectId} className={labelClassName}>
-            <Typography variant="label-md" className="text-text-primary">
+            <Typography variant="label-md" className="text-primary">
               {label}
-              {required && <span className="text-text-error ml-1">*</span>}
+              {required && <span className="text-error ml-1">*</span>}
             </Typography>
           </label>
         )}
@@ -503,7 +503,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
                   className={`${selectStyles.option.base} border-t border-subtle`}
                   onClick={() => onCreateOption?.(searchTerm)}
                 >
-                  <span className="text-text-info">Create "{searchTerm}"</span>
+                  <span className="text-info">Create "{searchTerm}"</span>
                 </div>
               )}
           </div>

@@ -161,7 +161,7 @@ export const FormationDirectionReviewPanel: React.FC<
           <div className="h-32 bg-surface-subtle rounded animate-pulse"></div>
         </div>
 
-        <Typography variant="body-sm" className="text-text-muted text-center">
+        <Typography variant="body-sm" className="text-muted text-center">
           Scanning formations for direction issues...
         </Typography>
       </div>
@@ -298,7 +298,7 @@ const FormationIssueSection: React.FC<FormationIssueSectionProps> = ({
     <div>
       <Typography
         variant="headline-sm"
-        className="text-text-primary mb-spacing-md"
+        className="text-primary mb-spacing-md"
       >
         {title}
       </Typography>
@@ -306,23 +306,23 @@ const FormationIssueSection: React.FC<FormationIssueSectionProps> = ({
         {issues.map((issue) => (
           <div
             key={issue.id}
-            className="p-spacing-md bg-surface-secondary rounded-lg border border-border-primary hover:border-border-emphasis transition-colors"
+            className="p-spacing-md bg-surface-secondary rounded-lg border border-primary hover:border-emphasis transition-colors"
           >
             <div className="flex items-center justify-between gap-spacing-md">
               <div className="flex-1">
                 <div className="flex items-center gap-spacing-sm">
-                  <Typography variant="label-md" className="text-text-primary">
+                  <Typography variant="label-md" className="text-primary">
                     {issue.name}
                   </Typography>
                   {issue.direction && (
-                    <span className="px-spacing-xs py-0.5 bg-surface-muted text-text-muted text-xs rounded">
+                    <span className="px-spacing-xs py-0.5 bg-surface-muted text-muted text-xs rounded">
                       {issue.direction}
                     </span>
                   )}
                 </div>
                 <Typography
                   variant="body-xs"
-                  className="text-text-muted mt-spacing-xs"
+                  className="text-muted mt-spacing-xs"
                 >
                   Used in {issue.usage_count} play
                   {issue.usage_count === 1 ? "" : "s"}

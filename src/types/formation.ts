@@ -67,9 +67,7 @@ export interface FormationPlayerPosition {
  */
 export type FormationCreationSource =
   | "play_builder" // Created while building a play (AddNewPlayModal)
-  | "diagram_editor" // Created from diagram editor
   | "formation_library" // Created directly in formation library
-  | "formation_builder" // Created via FormationBuilderModal
   | "bulk_import" // Imported from CSV/file
   | "api" // Created via API
   | "migration" // Created during data migration

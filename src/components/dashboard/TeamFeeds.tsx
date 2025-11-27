@@ -104,10 +104,10 @@ const TeamFeeds: React.FC = () => {
   const [quickMessage, setQuickMessage] = useState("");
   // TODO: Only show quick add for user's own dashboard (add context check if needed)
   return (
-    <Card variant="glass" className="compact-card h-full surface-card relative">
+    <Card variant="default" size="lg" className="h-full relative">
       {/* Header */}
       <div className="flex items-center justify-between pb-2">
-        <Typography variant="headline-md" className="text-text-primary">
+        <Typography variant="headline-md" className="text-primary">
           Team Feeds
         </Typography>
         <div className="flex items-center space-x-2">
@@ -133,10 +133,10 @@ const TeamFeeds: React.FC = () => {
             color="navy"
             className="mb-4 opacity-50"
           />
-          <Typography variant="body-lg" className="text-text-secondary mb-2">
+          <Typography variant="body-lg" className="text-secondary mb-2">
             No team activity yet
           </Typography>
-          <Typography variant="body-sm" className="text-text-muted">
+          <Typography variant="body-sm" className="text-muted">
             Join a team to see updates and announcements
           </Typography>
         </div>
@@ -156,7 +156,7 @@ const TeamFeeds: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <Typography
                     variant="body-sm"
-                    className="font-medium text-text-primary truncate"
+                    className="font-medium text-primary truncate"
                   >
                     {feed.team}
                   </Typography>
@@ -166,7 +166,7 @@ const TeamFeeds: React.FC = () => {
                 </div>
                 <Typography
                   variant="body-sm"
-                  className="text-text-secondary mt-0.5 leading-snug"
+                  className="text-secondary mt-0.5 leading-snug"
                 >
                   {feed.title}
                 </Typography>

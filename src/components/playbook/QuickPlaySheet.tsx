@@ -24,7 +24,6 @@ interface QuickPlaySheetProps {
     playType?: string;
   }) => Promise<void>;
   onOpenFullEditor: () => void;
-  onOpenFormationBuilder: () => void;
   playbookId?: string;
   suggestions: {
     formations: string[];
@@ -42,7 +41,6 @@ export const QuickPlaySheet: React.FC<QuickPlaySheetProps> = ({
   onClose,
   onCreate,
   onOpenFullEditor,
-  onOpenFormationBuilder,
   playbookId,
   suggestions,
   recentCombos,
@@ -165,7 +163,7 @@ export const QuickPlaySheet: React.FC<QuickPlaySheetProps> = ({
               setError(null);
               onClose();
             }}
-            className="rounded-full p-2 text-text-muted hover:text-text-primary"
+            className="rounded-full p-2 text-muted hover:text-primary"
             disabled={isSubmitting}
             aria-label="Close quick create sheet"
           >
@@ -177,7 +175,7 @@ export const QuickPlaySheet: React.FC<QuickPlaySheetProps> = ({
           <div>
             <Typography
               variant="label-md"
-              className="mb-2 text-text-secondary uppercase tracking-wide"
+              className="mb-2 text-secondary uppercase tracking-wide"
             >
               Recent combos
             </Typography>
@@ -214,9 +212,9 @@ export const QuickPlaySheet: React.FC<QuickPlaySheetProps> = ({
                     }
                     setPlayType(combo.playType);
                   }}
-                  className="inline-flex items-center gap-2 rounded-full bg-surface-secondary px-3 py-1.5 text-sm font-medium text-text-secondary hover:bg-surface-muted transition-colors"
+                  className="inline-flex items-center gap-2 rounded-full bg-surface-secondary px-3 py-1.5 text-sm font-medium text-secondary hover:bg-surface-muted transition-colors"
                 >
-                  <Icon name="zap" className="h-4 w-4 text-text-primary" />
+                  <Icon name="zap" className="h-4 w-4 text-primary" />
                   <span className="truncate max-w-40">
                     {combo.formation}
                     {combo.personnel ? ` • ${combo.personnel}` : ""}
@@ -242,17 +240,17 @@ export const QuickPlaySheet: React.FC<QuickPlaySheetProps> = ({
               }}
               onCreateNew={() => {
                 onClose();
-                onOpenFormationBuilder();
+                onOpenFullEditor();
               }}
               onFormationsLoaded={setAvailableFormations}
             />
           ) : (
-            <div className="rounded-lg border border-border bg-surface-secondary/80 p-4 text-sm text-text-secondary">
+            <div className="rounded-lg border border-border bg-surface-secondary/80 p-4 text-sm text-secondary">
               Select a playbook before creating quick plays.
             </div>
           )}
           <div>
-            <label className="text-sm font-semibold text-text-secondary mb-1 block">
+            <label className="text-sm font-semibold text-secondary mb-1 block">
               Play Name
             </label>
             <Input
@@ -262,7 +260,7 @@ export const QuickPlaySheet: React.FC<QuickPlaySheetProps> = ({
             />
           </div>
           <div>
-            <label className="text-sm font-semibold text-text-secondary mb-1 block">
+            <label className="text-sm font-semibold text-secondary mb-1 block">
               Personnel (optional)
             </label>
             <Input
@@ -272,7 +270,7 @@ export const QuickPlaySheet: React.FC<QuickPlaySheetProps> = ({
             />
           </div>
           <div>
-            <label className="text-sm font-semibold text-text-secondary mb-2 block">
+            <label className="text-sm font-semibold text-secondary mb-2 block">
               Play Type
             </label>
             <div className="flex flex-wrap gap-2">
@@ -287,7 +285,7 @@ export const QuickPlaySheet: React.FC<QuickPlaySheetProps> = ({
                   className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-semibold transition-all ${
                     playType === option.value
                       ? "border-brand-jade bg-brand-jade/10 text-brand-jade"
-                      : "border-border text-text-secondary hover:border-border-hover"
+                      : "border-border text-secondary hover:border-hover"
                   }`}
                 >
                   {option.label}
@@ -295,7 +293,7 @@ export const QuickPlaySheet: React.FC<QuickPlaySheetProps> = ({
               ))}
               <button
                 onClick={() => setPlayType(undefined)}
-                className="inline-flex items-center gap-2 rounded-full border border-dashed border-border px-3 py-1.5 text-sm text-text-muted hover:border-border-hover"
+                className="inline-flex items-center gap-2 rounded-full border border-dashed border-border px-3 py-1.5 text-sm text-muted hover:border-hover"
               >
                 Clear
               </button>

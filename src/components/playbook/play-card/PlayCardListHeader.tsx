@@ -89,14 +89,14 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
               isCompact ? "text-base" : "text-lg"
             } ${
               showOneWordCalls && play.one_word_play
-                ? "text-text-info"
-                : "text-text-xssssrimary"
+                ? "text-info"
+                : "text-xssssrimary"
             } text-left`}
           >
             {displayName}
           </h3>
           {subtitleText && (
-            <span className="shrink-0 text-xs text-text-secondary italic">
+            <span className="shrink-0 text-xs text-secondary italic">
               {subtitleText}
             </span>
           )}

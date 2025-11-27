@@ -50,8 +50,8 @@ export const PlayerCard = React.memo<PlayerCardProps>(
         onClick={() => onNavigate(player.id)}
         className={`p-spacing-md transition-all duration-300 cursor-pointer ${
           isSelected
-            ? "ring-2 ring-cyan-400 bg-cyan-50/30 shadow-lg shadow-cyan-500/10"
-            : "hover:shadow-lg hover:shadow-jade-500/5"
+            ? "ring-2 ring-cyan-400 bg-cyan-50/30 shadow-blue-lg"
+            : "shadow-blue-md hover:shadow-blue-lg hover:scale-[1.02] hover:-translate-y-1"
         }`}
       >
         <div className="flex items-start justify-between mb-spacing-md">
@@ -128,7 +128,7 @@ export const PlayerCard = React.memo<PlayerCardProps>(
                 onEdit(player);
               }}
               aria-label="Edit player"
-              className="hover:bg-jade-50 hover:text-jade-700 transition-colors"
+              className="hover:bg-accent hover:text-jade-700 transition-colors"
             >
               <Icon name="edit" className="w-4 h-4" />
             </Button>
@@ -137,7 +137,7 @@ export const PlayerCard = React.memo<PlayerCardProps>(
 
         <div className="space-y-spacing-xs text-sm">
           <div className="flex justify-between">
-            <span className="text-text-secondary">Height:</span>
+            <span className="text-secondary">Height:</span>
             <span className="font-medium">
               {player.height_inches
                 ? `${Math.floor(player.height_inches / 12)}'${
@@ -147,13 +147,13 @@ export const PlayerCard = React.memo<PlayerCardProps>(
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-text-secondary">Weight:</span>
+            <span className="text-secondary">Weight:</span>
             <span className="font-medium">
               {player.weight_lbs ? `${player.weight_lbs} lbs` : "Not set"}
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-text-secondary">Status:</span>
+            <span className="text-secondary">Status:</span>
             <button
               onClick={(e) => onToggleStatus(player, e)}
               className={`capitalize px-3 py-1 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer shadow-sm ${

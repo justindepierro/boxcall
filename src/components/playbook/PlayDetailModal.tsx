@@ -118,7 +118,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
 
           {/* Action Bar - Sticky on mobile, more compact */}
           <div
-            className={`flex items-center justify-between border-b border-border-subtle bg-surface-secondary/50 flex-shrink-0 ${
+            className={`flex items-center justify-between border-b border-subtle bg-surface-secondary/50 flex-shrink-0 ${
               isMobile ? "px-4 py-2 sticky top-0 z-10" : "px-6 py-3"
             }`}
           >

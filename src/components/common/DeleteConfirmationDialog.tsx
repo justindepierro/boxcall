@@ -82,9 +82,9 @@ export function DeleteConfirmationDialog({
     >
       <div className="space-y-4">
         {/* Entity name */}
-        <Typography variant="body-md" className="text-text-secondary">
+        <Typography variant="body-md" className="text-secondary">
           Are you sure you want to delete{" "}
-          <strong className="text-text-primary">{entityName}</strong>?
+          <strong className="text-primary">{entityName}</strong>?
         </Typography>
 
         {/* Usage warning or safe message */}

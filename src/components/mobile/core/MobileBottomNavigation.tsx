@@ -105,8 +105,8 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
                   active:scale-95 
                   focus-visible:ring-2 focus-visible:ring-jade-500 
                   transition-all duration-200
-                  ${item.isActive ? "text-brand-jade dark:text-brand-jade-light bg-primary-50/10 dark:bg-primary-50/5" : "text-text-muted hover:text-text-primary dark:hover:text-text-secondary"} 
-                  text-text-secondary
+                  ${item.isActive ? "text-brand-jade dark:text-brand-jade-light bg-primary-50/10 dark:bg-primary-50/5" : "text-muted hover:text-primary dark:hover:text-secondary"} 
+                  text-secondary
                 `}
                 style={{ minHeight: "60px" }}
                 aria-label={`Navigate to ${item.label}`}

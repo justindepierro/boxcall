@@ -98,13 +98,13 @@ const getSidebarItemStyles = (item: SidebarItem, level: number = 0) => {
     return `my-2`;
   }
   if (item.disabled) {
-    return `${baseStyles} text-text-tertiary dark:text-text-tertiary cursor-not-allowed opacity-50`;
+    return `${baseStyles} text-tertiary dark:text-tertiary cursor-not-allowed opacity-50`;
   }
   if (item.active) {
     // Enhanced active state with better contrast and modern styling
     return `${baseStyles} bg-jade-50 dark:bg-jade-900/30 text-jade-700 dark:text-jade-300 border-l-4 border-jade-500 shadow-sm`;
   }
-  return `${baseStyles} text-text-secondary dark:text-text-secondary hover:bg-surface-hover dark:hover:bg-surface-hover hover:text-text-primary dark:hover:text-text-primary hover:shadow-sm`;
+  return `${baseStyles} text-secondary dark:text-secondary hover:bg-surface-hover dark:hover:bg-surface-hover hover:text-primary dark:hover:text-primary hover:shadow-sm`;
 };
 const getBadgeStyles = () => {
   return `
@@ -422,7 +422,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="px-4 py-3">
               <div className="relative">
                 <svg
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-muted"
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -470,9 +470,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 />
               ))
             ) : searchQuery ? (
-              <div className="px-4 py-8 text-center text-text-muted">
+              <div className="px-4 py-8 text-center text-muted">
                 <svg
-                  className="w-12 h-12 mx-auto mb-3 text-text-tertiary"
+                  className="w-12 h-12 mx-auto mb-3 text-tertiary"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

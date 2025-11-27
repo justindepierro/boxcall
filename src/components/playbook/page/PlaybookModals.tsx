@@ -18,11 +18,6 @@ const PersonnelConfigurationModal = lazy(() =>
     default: module.PersonnelConfigurationModal,
   }))
 );
-const FormationBuilderModal = lazy(() =>
-  import("../FormationBuilderModal").then((module) => ({
-    default: module.FormationBuilderModal,
-  }))
-);
 const PlaybookHealthModal = lazy(() =>
   import("../PlaybookHealthModal").then((module) => ({
     default: module.PlaybookHealthModal,
@@ -38,11 +33,6 @@ const KeyboardShortcutsGuide = lazy(() =>
     default: module.KeyboardShortcutsGuide,
   }))
 );
-const PlayDiagramBuilder = lazy(() =>
-  import("../diagram-editor/DiagramEditor").then((module) => ({
-    default: module.DiagramEditor,
-  }))
-);
 const PracticeScriptBuilder = lazy(() =>
   import("../PracticeScriptBuilder").then((module) => ({
     default: module.PracticeScriptBuilder,
@@ -54,11 +44,9 @@ interface PlaybookModalsProps {
   showAddNewPlayModal: boolean;
   showPlaybookSettingsModal: boolean;
   showPersonnelModal: boolean;
-  showFormationBuilderModal: boolean;
   showPlaybookHealthModal: boolean;
   showAssignmentsModal: boolean;
   showKeyboardShortcutsModal: boolean;
-  showDiagramBuilder: boolean;
   showPracticeScriptBuilder: boolean;
   showPostToBulletinModal: boolean;
 
@@ -73,11 +61,9 @@ interface PlaybookModalsProps {
   setShowAddNewPlayModal: (show: boolean) => void;
   setShowPlaybookSettingsModal: (show: boolean) => void;
   setShowPersonnelModal: (show: boolean) => void;
-  setShowFormationBuilderModal: (show: boolean) => void;
   setShowPlaybookHealthModal: (show: boolean) => void;
   setShowAssignmentsModal: (show: boolean) => void;
   setShowKeyboardShortcutsModal: (show: boolean) => void;
-  setShowDiagramBuilder: (show: boolean) => void;
   setShowPracticeScriptBuilder: (show: boolean) => void;
   setShowPostToBulletinModal: (show: boolean) => void;
 
@@ -99,11 +85,9 @@ export function PlaybookModals({
   showAddNewPlayModal,
   showPlaybookSettingsModal,
   showPersonnelModal,
-  showFormationBuilderModal,
   showPlaybookHealthModal,
   showAssignmentsModal,
   showKeyboardShortcutsModal,
-  showDiagramBuilder,
   showPracticeScriptBuilder,
   showPostToBulletinModal,
   diagramPlay,
@@ -114,11 +98,9 @@ export function PlaybookModals({
   setShowAddNewPlayModal,
   setShowPlaybookSettingsModal,
   setShowPersonnelModal,
-  setShowFormationBuilderModal,
   setShowPlaybookHealthModal,
   setShowAssignmentsModal,
   setShowKeyboardShortcutsModal,
-  setShowDiagramBuilder,
   setShowPracticeScriptBuilder,
   setShowPostToBulletinModal,
   setDiagramPlay,
@@ -183,22 +165,6 @@ export function PlaybookModals({
         </Modal>
       )}
 
-      {/* Formation Builder Modal */}
-      {showFormationBuilderModal && (
-        <Modal
-          isOpen={showFormationBuilderModal}
-          onClose={() => setShowFormationBuilderModal(false)}
-          title="Formation Builder"
-          size="xl"
-        >
-          <Suspense fallback={<div>Loading...</div>}>
-            <FormationBuilderModal
-              onClose={() => setShowFormationBuilderModal(false)}
-            />
-          </Suspense>
-        </Modal>
-      )}
-
       {/* Playbook Health Modal */}
       {showPlaybookHealthModal && (
         <Modal
@@ -249,36 +215,6 @@ export function PlaybookModals({
           <Suspense fallback={<div>Loading...</div>}>
             <KeyboardShortcutsGuide
               onClose={() => setShowKeyboardShortcutsModal(false)}
-            />
-          </Suspense>
-        </Modal>
-      )}
-
-      {/* Diagram Builder Modal */}
-      {showDiagramBuilder && diagramPlay && (
-        <Modal
-          isOpen={showDiagramBuilder}
-          onClose={() => {
-            setShowDiagramBuilder(false);
-            setDiagramPlay(null);
-          }}
-          title={`Edit Diagram - ${diagramPlay.name}`}
-          size="xl"
-          fullScreen
-        >
-          <Suspense fallback={<div>Loading diagram editor...</div>}>
-            <PlayDiagramBuilder
-              play={diagramPlay}
-              mode={diagramMode}
-              onClose={() => {
-                setShowDiagramBuilder(false);
-                setDiagramPlay(null);
-              }}
-              onSave={(updatedPlay) => {
-                handleSavePlay(updatedPlay);
-                setShowDiagramBuilder(false);
-                setDiagramPlay(null);
-              }}
             />
           </Suspense>
         </Modal>

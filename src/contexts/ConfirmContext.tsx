@@ -80,7 +80,7 @@ export const ConfirmProvider: React.FC<{ children: React.ReactNode }> = ({
             role="dialog"
             aria-modal="true"
             aria-labelledby={`${active.id}-title`}
-            className="relative surface-card elevation-modal max-w-sm w-full mx-4 rounded-md border-subtle p-6 animate-scale-in"
+            className="relative bg-surface-primary elevation-modal max-w-sm w-full mx-4 rounded-md border-subtle p-6 animate-scale-in"
           >
             {active.options.title && (
               <Typography
@@ -92,7 +92,7 @@ export const ConfirmProvider: React.FC<{ children: React.ReactNode }> = ({
                 {active.options.title}
               </Typography>
             )}
-            <div className="text-text-secondary mb-6 text-sm">
+            <div className="text-secondary mb-6 text-sm">
               {active.options.message}
             </div>
             <div className="flex justify-end gap-2">

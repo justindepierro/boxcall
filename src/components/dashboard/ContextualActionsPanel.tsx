@@ -30,7 +30,7 @@ export function ContextualActionsPanel({
     <Card className={`p-4 ${className}`}>
       <div className="space-y-3">
         <Typography variant="headline-sm" className="flex items-center gap-2">
-          <Icon name="sparkles" size={16} className="text-text-info" />
+          <Icon name="sparkles" size={16} className="text-info" />
           Smart Actions
         </Typography>
 
@@ -44,7 +44,7 @@ export function ContextualActionsPanel({
               onClick={action.action}
             >
               {/* @ts-expect-error - Dynamic icon names */}
-              <Icon name={action.icon} size={16} className="text-text-info" />
+              <Icon name={action.icon} size={16} className="text-info" />
               <div className="text-left">
                 <div className="font-medium">{action.title}</div>
                 <Typography variant="body-sm" color="muted">

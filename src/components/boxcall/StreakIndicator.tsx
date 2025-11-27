@@ -62,11 +62,11 @@ export const StreakIndicator: React.FC<StreakIndicatorProps> = ({
       case "failure":
         return "text-error";
       case "neutral":
-        return "text-text-muted";
+        return "text-muted";
       case "skipped":
-        return "text-text-muted";
+        return "text-muted";
       default:
-        return "text-text-muted";
+        return "text-muted";
     }
   };
 
@@ -120,7 +120,7 @@ export const StreakIndicator: React.FC<StreakIndicatorProps> = ({
       {/* Last 5 Results */}
       {last5Results.length > 0 && (
         <div className="flex items-center gap-2">
-          <Typography variant="body-xs" className="text-text-muted">
+          <Typography variant="body-xs" className="text-muted">
             Last {last5Results.length}:
           </Typography>
           <div className="flex items-center gap-1">

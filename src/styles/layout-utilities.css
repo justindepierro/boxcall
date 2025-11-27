@@ -73,18 +73,18 @@
    ============================================================================ */
 
 .page-container {
-  max-width: var(--semantic-layout-page-container);
+  max-width: var(--layout-page-max-width);
   margin-inline: auto;
   padding-inline: var(--space-4);
 }
 
 .page-content {
-  max-width: var(--semantic-layout-page-content-width);
+  max-width: var(--space-container-4xl);
   margin-inline: auto;
 }
 
 .article-width {
-  max-width: var(--semantic-layout-article-width);
+  max-width: var(--space-container-2xl);
   margin-inline: auto;
 }
 
@@ -110,7 +110,7 @@
 
 /* Semantic grid gaps */
 .grid-gap {
-  gap: var(--semantic-layout-grid-gap);
+  gap: var(--space-4);
 }
 
 /* ============================================================================
@@ -118,15 +118,15 @@
    ============================================================================ */
 
 .dashboard-sidebar {
-  width: var(--semantic-layout-dashboard-sidebar);
+  width: var(--space-64);
 }
 
 .dashboard-header {
-  height: var(--semantic-layout-dashboard-header);
+  height: var(--space-16);
 }
 
 .dashboard-content {
-  width: var(--semantic-layout-dashboard-content);
+  width: var(100%);
 }
 
 /* ============================================================================
@@ -134,12 +134,12 @@
    ============================================================================ */
 
 .form-container-small {
-  max-width: var(--semantic-layout-form-container-small);
+  max-width: var(--space-container-md);
   margin-inline: auto;
 }
 
 .form-container-large {
-  max-width: var(--semantic-layout-form-container-large);
+  max-width: var(--space-container-xl);
   margin-inline: auto;
 }
 
@@ -274,7 +274,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: var(--semantic-layout-page-container);
+  max-width: var(--space-container-7xl);
   margin-inline: auto;
   padding-inline: var(--space-4);
 }
@@ -299,26 +299,26 @@
 .stack-layout {
   display: flex;
   flex-direction: column;
-  gap: var(--semantic-layout-grid-gap);
+  gap: var(--space-4);
 }
 
 /* Grid of cards */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-  gap: var(--semantic-layout-grid-gap);
+  gap: var(--space-4);
 }
 
 /* Compact card grid */
 .card-grid-compact {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-  gap: var(--semantic-layout-grid-gap-tight);
+  gap: var(--space-4-tight);
 }
 
 /* Wide card grid */
 .card-grid-wide {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(24rem, 1fr));
-  gap: var(--semantic-layout-grid-gap-loose);
+  gap: var(--space-4-loose);
 }

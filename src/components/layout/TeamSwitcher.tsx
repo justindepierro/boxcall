@@ -60,7 +60,7 @@ export const TeamSwitcher: React.FC<TeamSwitcherProps> = ({ teams }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-64">
-        <Typography variant="body-sm" className="px-3 py-2 text-text-muted">
+        <Typography variant="body-sm" className="px-3 py-2 text-muted">
           Your Teams
         </Typography>
         {teams.map((team) => (

@@ -260,7 +260,7 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
   const getRarityColor = (rarity: Achievement["rarity"]) => {
     switch (rarity) {
       case "common":
-        return "text-text-muted";
+        return "text-muted";
       case "rare":
         return "text-primary";
       case "epic":
@@ -268,7 +268,7 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
       case "legendary":
         return "text-warning";
       default:
-        return "text-text-muted";
+        return "text-muted";
     }
   };
 
@@ -286,7 +286,7 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
       case "attendance":
         return "bg-warning/10 text-warning border-warning/20";
       default:
-        return "bg-text-muted/10 text-text-muted border-border-secondary";
+        return "bg-text-muted/10 text-muted border-secondary";
     }
   };
 
@@ -371,7 +371,7 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
                   <Icon
                     name="arrow-up"
                     size="lg"
-                    className="text-text-muted mx-auto mb-2"
+                    className="text-muted mx-auto mb-2"
                   />
                   <Typography variant="body-sm" color="muted">
                     No progress metrics yet
@@ -410,7 +410,7 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
                                 ? "text-success"
                                 : metric.trend === "down"
                                   ? "text-danger"
-                                  : "text-text-muted"
+                                  : "text-muted"
                             }
                           />
                         </div>
@@ -421,7 +421,7 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
                           <span>
                             {metric.value} {metric.unit}
                           </span>
-                          <span className="text-text-muted">
+                          <span className="text-muted">
                             Target: {metric.target} {metric.unit}
                           </span>
                         </div>
@@ -452,7 +452,7 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
                   <Icon
                     name="award"
                     size="lg"
-                    className="text-text-muted mx-auto mb-2"
+                    className="text-muted mx-auto mb-2"
                   />
                   <Typography variant="body-sm" color="muted">
                     No achievements yet
@@ -534,7 +534,7 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
                   <Icon
                     name="info"
                     size="lg"
-                    className="text-text-muted mx-auto mb-2"
+                    className="text-muted mx-auto mb-2"
                   />
                   <Typography variant="body-sm" color="muted">
                     No insights available yet
@@ -595,7 +595,7 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
                                 ? "bg-danger/10 text-danger"
                                 : insight.priority === "medium"
                                   ? "bg-warning/10 text-warning"
-                                  : "bg-text-muted/10 text-text-muted"
+                                  : "bg-text-muted/10 text-muted"
                             }`}
                           >
                             {insight.priority} priority

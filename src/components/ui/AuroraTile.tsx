@@ -98,7 +98,7 @@ export const AuroraTile: React.FC<AuroraTileProps> = ({
             <div className="flex flex-col">
               <Typography
                 variant="headline-sm"
-                className="font-semibold text-text-primary dark:text-slate-50 text-base md:text-lg"
+                className="font-semibold text-primary dark:text-slate-50 text-base md:text-lg"
               >
                 {title}
               </Typography>
@@ -117,7 +117,7 @@ export const AuroraTile: React.FC<AuroraTileProps> = ({
         <Typography
           variant="body-sm"
           color="muted"
-          className="max-w-56 leading-snug text-text-secondary opacity-90 dark:text-slate-300"
+          className="max-w-56 leading-snug text-secondary opacity-90 dark:text-slate-300"
         >
           {description}
         </Typography>
@@ -130,7 +130,7 @@ export const AuroraTile: React.FC<AuroraTileProps> = ({
           <Typography
             as="span"
             variant="body-xs"
-            className="inline-flex items-center gap-2 text-text-secondary opacity-80"
+            className="inline-flex items-center gap-2 text-secondary opacity-80"
           >
             <Icon name="grid" size="xs" className="text-brand-primary" />
             Open workspace

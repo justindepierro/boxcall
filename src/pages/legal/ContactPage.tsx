@@ -18,7 +18,7 @@ export const ContactPage: React.FC = () => {
           <Typography
             variant="headline-sm"
             as="h2"
-            className="mb-6 text-text-primary"
+            className="mb-6 text-primary"
           >
             Get in Touch
           </Typography>
@@ -26,13 +26,13 @@ export const ContactPage: React.FC = () => {
           <div className="space-y-6">
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0">
-                <div className="w-10 h-10 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-accent dark:bg-accent-dark rounded-lg flex items-center justify-center">
                   <Icon name="mail" size="sm" color="primary" />
                 </div>
               </div>
               <div>
-                <h3 className="font-medium text-text-primary">Email Support</h3>
-                <p className="text-sm mt-1 text-text-secondary">
+                <h3 className="font-medium text-primary">Email Support</h3>
+                <p className="text-sm mt-1 text-secondary">
                   Get help with your account, billing, or technical issues
                 </p>
                 <a
@@ -46,33 +46,33 @@ export const ContactPage: React.FC = () => {
 
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0">
-                <div className="w-10 h-10 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-accent dark:bg-accent-dark rounded-lg flex items-center justify-center">
                   <Icon name="phone" size="sm" color="primary" />
                 </div>
               </div>
               <div>
-                <h3 className="font-medium text-text-primary">Phone Support</h3>
-                <p className="text-sm mt-1 text-text-secondary">
+                <h3 className="font-medium text-primary">Phone Support</h3>
+                <p className="text-sm mt-1 text-secondary">
                   Speak directly with our coaching support team
                 </p>
                 <p className="text-interaction-jade font-medium">
                   1-800-BOXCALL
                 </p>
-                <p className="text-text-muted text-sm">Mon-Fri 9AM-6PM EST</p>
+                <p className="text-muted text-sm">Mon-Fri 9AM-6PM EST</p>
               </div>
             </div>
 
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0">
-                <div className="w-10 h-10 bg-surface-jade dark:bg-surface-jade-dark rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-accent dark:bg-accent-dark rounded-lg flex items-center justify-center">
                   <Icon name="info" size="sm" color="primary" />
                 </div>
               </div>
               <div>
-                <h3 className="font-medium text-text-primary">
+                <h3 className="font-medium text-primary">
                   Business Address
                 </h3>
-                <p className="text-sm mt-1 text-text-secondary">
+                <p className="text-sm mt-1 text-secondary">
                   BoxCall, Inc.
                   <br />
                   123 Football Drive
@@ -86,24 +86,24 @@ export const ContactPage: React.FC = () => {
           </div>
 
           {/* Business Hours */}
-          <div className="mt-8 p-4 surface-subtle dark:bg-surface-tertiary rounded-lg">
-            <h3 className="font-medium mb-3 text-text-primary">
+          <div className="mt-8 p-4 surface-subtle dark:bg-muted rounded-lg">
+            <h3 className="font-medium mb-3 text-primary">
               Support Hours
             </h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-text-secondary">Monday - Friday</span>
-                <span className="text-text-primary">9:00 AM - 6:00 PM EST</span>
+                <span className="text-secondary">Monday - Friday</span>
+                <span className="text-primary">9:00 AM - 6:00 PM EST</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-text-secondary">Saturday</span>
-                <span className="text-text-primary">
+                <span className="text-secondary">Saturday</span>
+                <span className="text-primary">
                   10:00 AM - 2:00 PM EST
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-text-secondary">Sunday</span>
-                <span className="text-text-primary">Closed</span>
+                <span className="text-secondary">Sunday</span>
+                <span className="text-primary">Closed</span>
               </div>
             </div>
           </div>
@@ -114,7 +114,7 @@ export const ContactPage: React.FC = () => {
           <Typography
             variant="headline-sm"
             as="h2"
-            className="mb-6 text-text-primary"
+            className="mb-6 text-primary"
           >
             Send us a Message
           </Typography>
@@ -124,7 +124,7 @@ export const ContactPage: React.FC = () => {
               <Typography
                 variant="body-sm"
                 as="label"
-                className="block font-medium text-text-primary dark:text-border-light mb-2"
+                className="block font-medium text-primary dark:text-border-light mb-2"
               >
                 Name
               </Typography>
@@ -132,7 +132,7 @@ export const ContactPage: React.FC = () => {
                 type="text"
                 id="name"
                 name="name"
-                className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-surface-tertiary dark:text-text-inverse"
+                className="w-full px-3 py-2 border border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-muted dark:text-inverse"
                 placeholder="Your full name"
               />
             </div>
@@ -141,7 +141,7 @@ export const ContactPage: React.FC = () => {
               <Typography
                 variant="body-sm"
                 as="label"
-                className="block font-medium text-text-primary dark:text-border-light mb-2"
+                className="block font-medium text-primary dark:text-border-light mb-2"
               >
                 Email
               </Typography>
@@ -149,7 +149,7 @@ export const ContactPage: React.FC = () => {
                 type="email"
                 id="email"
                 name="email"
-                className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-surface-tertiary dark:text-text-inverse"
+                className="w-full px-3 py-2 border border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-muted dark:text-inverse"
                 placeholder="your.email@example.com"
               />
             </div>
@@ -158,14 +158,14 @@ export const ContactPage: React.FC = () => {
               <Typography
                 variant="body-sm"
                 as="label"
-                className="block font-medium text-text-primary dark:text-border-light mb-2"
+                className="block font-medium text-primary dark:text-border-light mb-2"
               >
                 Subject
               </Typography>
               <select
                 id="subject"
                 name="subject"
-                className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-surface-tertiary dark:text-text-inverse"
+                className="w-full px-3 py-2 border border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-muted dark:text-inverse"
               >
                 <option value="">Select a topic</option>
                 <option value="support">Technical Support</option>
@@ -180,7 +180,7 @@ export const ContactPage: React.FC = () => {
               <Typography
                 variant="body-sm"
                 as="label"
-                className="block font-medium text-text-primary dark:text-border-light mb-2"
+                className="block font-medium text-primary dark:text-border-light mb-2"
               >
                 Message
               </Typography>
@@ -188,7 +188,7 @@ export const ContactPage: React.FC = () => {
                 id="message"
                 name="message"
                 rows={6}
-                className="w-full px-3 py-2 border border-border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-surface-tertiary dark:text-text-inverse"
+                className="w-full px-3 py-2 border border-medium dark:border-text-tertiary rounded-lg shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-muted dark:text-inverse"
                 placeholder="Tell us how we can help..."
               />
             </div>
@@ -206,15 +206,15 @@ export const ContactPage: React.FC = () => {
 
       {/* FAQ Link */}
       <div className="mt-12 text-center">
-        <div className="surface-subtle dark:bg-surface-tertiary rounded-lg p-6">
+        <div className="surface-subtle dark:bg-muted rounded-lg p-6">
           <Typography
             variant="headline-sm"
             as="h3"
-            className="mb-2 text-text-primary"
+            className="mb-2 text-primary"
           >
             Looking for Quick Answers?
           </Typography>
-          <p className="mb-4 text-text-secondary">
+          <p className="mb-4 text-secondary">
             Check out our FAQ section for common questions about BoxCall
             features and usage.
           </p>

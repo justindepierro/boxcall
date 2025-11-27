@@ -105,7 +105,7 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(
     const isPinned = isOptimisticPinned;
 
     return (
-      <article className="bg-surface-primary border-b border-border-subtle hover:bg-surface-subtle/30 transition-colors">
+      <article className="bg-surface-primary border-b border-subtle hover:bg-surface-subtle/30 transition-colors">
         {/* Compact Header - Twitter/LinkedIn style */}
         <div className="px-4 py-3">
           <div className="flex gap-3">
@@ -259,7 +259,7 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(
         {isExpanded && (
           <div
             id={`comments-${announcement.id}`}
-            className="border-t border-border-subtle bg-surface-subtle/50"
+            className="border-t border-subtle bg-surface-subtle/50"
           >
             <AnnouncementComments
               announcementId={announcement.id}

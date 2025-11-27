@@ -1,13 +1,13 @@
 /**
  * useMobileTouchTarget Hook
- * 
+ *
  * Enforces 44px minimum touch targets on mobile devices
  * per Apple HIG and Google Material Design guidelines
  */
 
-import { useIsMobile } from './useBreakpoint';
+import { useIsMobile } from "./useBreakpoint";
 
-export type TouchTargetSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type TouchTargetSize = "xs" | "sm" | "md" | "lg" | "xl";
 
 interface TouchTargetProps {
   size: TouchTargetSize;
@@ -18,20 +18,20 @@ interface TouchTargetProps {
 
 /**
  * Returns touch-friendly sizing for interactive elements
- * 
+ *
  * Minimum sizes:
  * - Mobile: 44px (Apple HIG minimum)
  * - Desktop: Preserves original size
- * 
+ *
  * @param originalSize - Desired size on desktop
  * @param isPrimary - Whether this is a primary action (uses 48px on mobile)
  * @returns Props to spread on interactive element
- * 
+ *
  * @example
  * ```tsx
  * const ActionButton = () => {
  *   const touchProps = useMobileTouchTarget('md', true);
- *   
+ *
  *   return (
  *     <button {...touchProps}>
  *       Primary Action
@@ -41,7 +41,7 @@ interface TouchTargetProps {
  * ```
  */
 export function useMobileTouchTarget(
-  originalSize: TouchTargetSize = 'md',
+  originalSize: TouchTargetSize = "md",
   isPrimary: boolean = false
 ): TouchTargetProps {
   const isMobile = useIsMobile();
@@ -52,12 +52,12 @@ export function useMobileTouchTarget(
 
   // Mobile: Enforce minimum touch targets
   const mobileSize = getMobileTouchSize(originalSize, isPrimary);
-  
+
   return {
     size: mobileSize,
-    className: 'min-h-[44px] min-w-[44px]',
-    minHeight: isPrimary ? '48px' : '44px',
-    minWidth: isPrimary ? '48px' : '44px',
+    className: isPrimary ? "min-h-12 min-w-12" : "min-h-11 min-w-11",
+    minHeight: isPrimary ? "48px" : "44px",
+    minWidth: isPrimary ? "48px" : "44px",
   };
 }
 
@@ -70,15 +70,15 @@ function getMobileTouchSize(
 ): TouchTargetSize {
   if (isPrimary) {
     // Primary actions: Always large or XL
-    if (size === 'xs' || size === 'sm' || size === 'md') {
-      return 'xl'; // 48px
+    if (size === "xs" || size === "sm" || size === "md") {
+      return "xl"; // 48px
     }
-    return 'xl';
+    return "xl";
   }
 
   // Secondary actions: Minimum large (44px)
-  if (size === 'xs' || size === 'sm') {
-    return 'lg'; // 44px
+  if (size === "xs" || size === "sm") {
+    return "lg"; // 44px
   }
 
   return size;
@@ -94,11 +94,11 @@ export function useMobileTouchTargetStyle(isPrimary: boolean = false): {
   const isMobile = useIsMobile();
 
   if (!isMobile) {
-    return { minHeight: 'auto', minWidth: 'auto' };
+    return { minHeight: "auto", minWidth: "auto" };
   }
 
   return {
-    minHeight: isPrimary ? '48px' : '44px',
-    minWidth: isPrimary ? '48px' : '44px',
+    minHeight: isPrimary ? "48px" : "44px",
+    minWidth: isPrimary ? "48px" : "44px",
   };
 }

@@ -201,7 +201,7 @@ export const FormationDataDiagnostic: React.FC<{ playbookId?: string }> = ({
 
   if (loading) {
     return (
-      <div className="p-spacing-lg bg-surface-secondary rounded border border-border-primary">
+      <div className="p-spacing-lg bg-surface-secondary rounded border border-primary">
         <Typography variant="body">Loading formation data...</Typography>
       </div>
     );
@@ -220,7 +220,7 @@ export const FormationDataDiagnostic: React.FC<{ playbookId?: string }> = ({
   if (!stats) return null;
 
   return (
-    <div className="p-spacing-lg bg-surface-secondary rounded border border-border-primary space-y-spacing-md">
+    <div className="p-spacing-lg bg-surface-secondary rounded border border-primary space-y-spacing-md">
       <div className="flex items-center justify-between">
         <Typography variant="headline-md">Formation Data Diagnostic</Typography>
         <Button onClick={loadStats} size="sm" variant="secondary">
@@ -230,7 +230,7 @@ export const FormationDataDiagnostic: React.FC<{ playbookId?: string }> = ({
 
       {stats.total === 0 ? (
         <div className="p-spacing-md bg-surface-muted rounded text-center">
-          <Typography variant="body" className="text-text-muted">
+          <Typography variant="body" className="text-muted">
             No formations found{" "}
             {playbookId ? "in this playbook" : "in database"}
           </Typography>
@@ -239,8 +239,8 @@ export const FormationDataDiagnostic: React.FC<{ playbookId?: string }> = ({
         <>
           {/* Overview Stats */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-spacing-sm">
-            <div className="p-spacing-sm bg-surface-primary rounded border border-border-primary">
-              <Typography variant="caption" className="text-text-muted">
+            <div className="p-spacing-sm bg-surface-primary rounded border border-primary">
+              <Typography variant="caption" className="text-muted">
                 Total Formations
               </Typography>
               <Typography variant="headline-lg" className="text-primary-600">
@@ -248,8 +248,8 @@ export const FormationDataDiagnostic: React.FC<{ playbookId?: string }> = ({
               </Typography>
             </div>
 
-            <div className="p-spacing-sm bg-surface-primary rounded border border-border-primary">
-              <Typography variant="caption" className="text-text-muted">
+            <div className="p-spacing-sm bg-surface-primary rounded border border-primary">
+              <Typography variant="caption" className="text-muted">
                 With Direction
               </Typography>
               <Typography variant="headline-lg" className="text-primary-600">
@@ -257,8 +257,8 @@ export const FormationDataDiagnostic: React.FC<{ playbookId?: string }> = ({
               </Typography>
             </div>
 
-            <div className="p-spacing-sm bg-surface-primary rounded border border-border-primary">
-              <Typography variant="caption" className="text-text-muted">
+            <div className="p-spacing-sm bg-surface-primary rounded border border-primary">
+              <Typography variant="caption" className="text-muted">
                 With Opposites
               </Typography>
               <Typography variant="headline-lg" className="text-success-600">
@@ -266,8 +266,8 @@ export const FormationDataDiagnostic: React.FC<{ playbookId?: string }> = ({
               </Typography>
             </div>
 
-            <div className="p-spacing-sm bg-surface-primary rounded border border-border-primary">
-              <Typography variant="caption" className="text-text-muted">
+            <div className="p-spacing-sm bg-surface-primary rounded border border-primary">
+              <Typography variant="caption" className="text-muted">
                 Standalone
               </Typography>
               <Typography variant="headline-lg" className="text-info-600">
@@ -275,8 +275,8 @@ export const FormationDataDiagnostic: React.FC<{ playbookId?: string }> = ({
               </Typography>
             </div>
 
-            <div className="p-spacing-sm bg-surface-primary rounded border border-border-primary">
-              <Typography variant="caption" className="text-text-muted">
+            <div className="p-spacing-sm bg-surface-primary rounded border border-primary">
+              <Typography variant="caption" className="text-muted">
                 Needing Attention
               </Typography>
               <Typography variant="headline-lg" className="text-warning-600">
@@ -292,7 +292,7 @@ export const FormationDataDiagnostic: React.FC<{ playbookId?: string }> = ({
             </Typography>
             <div className="grid grid-cols-3 gap-spacing-xs">
               <div className="p-spacing-xs bg-primary-50 rounded text-center">
-                <Typography variant="caption" className="text-text-muted">
+                <Typography variant="caption" className="text-muted">
                   Left
                 </Typography>
                 <Typography variant="body" className="font-medium">
@@ -300,7 +300,7 @@ export const FormationDataDiagnostic: React.FC<{ playbookId?: string }> = ({
                 </Typography>
               </div>
               <div className="p-spacing-xs bg-primary-50 rounded text-center">
-                <Typography variant="caption" className="text-text-muted">
+                <Typography variant="caption" className="text-muted">
                   Right
                 </Typography>
                 <Typography variant="body" className="font-medium">
@@ -308,7 +308,7 @@ export const FormationDataDiagnostic: React.FC<{ playbookId?: string }> = ({
                 </Typography>
               </div>
               <div className="p-spacing-xs bg-surface-muted rounded text-center">
-                <Typography variant="caption" className="text-text-muted">
+                <Typography variant="caption" className="text-muted">
                   No Direction
                 </Typography>
                 <Typography variant="body" className="font-medium">
@@ -374,13 +374,13 @@ export const FormationDataDiagnostic: React.FC<{ playbookId?: string }> = ({
               {stats.topFormations.map((f, i) => (
                 <div
                   key={i}
-                  className="p-spacing-sm bg-surface-primary rounded border border-border-primary flex items-center justify-between"
+                  className="p-spacing-sm bg-surface-primary rounded border border-primary flex items-center justify-between"
                 >
                   <div className="flex-1">
                     <Typography variant="body-sm" className="font-medium">
                       {f.name}
                     </Typography>
-                    <Typography variant="caption" className="text-text-muted">
+                    <Typography variant="caption" className="text-muted">
                       Direction: {f.direction || "none"} | Uses: {f.usage_count}
                     </Typography>
                   </div>
@@ -407,7 +407,7 @@ export const FormationDataDiagnostic: React.FC<{ playbookId?: string }> = ({
           </div>
 
           {/* Debug Mode Toggle */}
-          <div className="pt-spacing-md border-t border-border-primary">
+          <div className="pt-spacing-md border-t border-primary">
             <Button
               onClick={() => setShowDebug(!showDebug)}
               size="sm"
@@ -420,7 +420,7 @@ export const FormationDataDiagnostic: React.FC<{ playbookId?: string }> = ({
 
           {/* Debug View */}
           {showDebug && rawData && (
-            <div className="p-spacing-md bg-surface-muted rounded border border-border-secondary">
+            <div className="p-spacing-md bg-surface-muted rounded border border-secondary">
               <pre className="overflow-x-auto font-mono text-xs p-spacing-sm bg-surface-primary rounded">
                 {JSON.stringify(rawData, null, 2)}
               </pre>

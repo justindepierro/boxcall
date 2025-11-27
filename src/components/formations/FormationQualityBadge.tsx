@@ -122,10 +122,10 @@ export const FormationQualityBadge: React.FC<FormationQualityBadgeProps> = ({
         `}
         >
           <div className="flex items-start gap-spacing-xs mb-spacing-xs">
-            <AlertCircle className="w-4 h-4 text-text-muted flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-4 h-4 text-muted flex-shrink-0 mt-0.5" />
             <Typography
               variant="caption"
-              className="text-text-secondary font-medium"
+              className="text-secondary font-medium"
             >
               Missing Fields:
             </Typography>
@@ -133,7 +133,7 @@ export const FormationQualityBadge: React.FC<FormationQualityBadgeProps> = ({
           <ul className="list-disc list-inside space-y-spacing-xxs ml-spacing-sm">
             {missingFields.map((field) => (
               <li key={field}>
-                <Typography variant="caption" className="text-text-muted">
+                <Typography variant="caption" className="text-muted">
                   {formatFieldName(field)}
                 </Typography>
               </li>

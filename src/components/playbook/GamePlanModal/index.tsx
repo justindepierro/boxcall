@@ -208,10 +208,10 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
       }}
     >
       <div
-        className="surface-card elevation-modal rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto relative"
+        className="bg-surface-primary elevation-modal rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto relative"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="bc-card-padding">
+        <div className="p-6">
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
             <Typography variant="display-lg">
@@ -219,7 +219,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
             </Typography>
             <button
               onClick={onClose}
-              className="text-text-secondary hover:text-text-primary transition-colors"
+              className="text-secondary hover:text-primary transition-colors"
               aria-label="Close modal"
             >
               ✕
@@ -229,7 +229,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
           {/* Game Plan Form */}
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div>
-              <label className="block text-text-secondary text-sm font-medium mb-2">
+              <label className="block text-secondary text-sm font-medium mb-2">
                 Game Plan Name *
               </label>
               <input
@@ -238,12 +238,12 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
-                className="w-full px-4 py-2 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-base bg-surface-base text-text-primary"
+                className="w-full px-4 py-2 border border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-base bg-surface-base text-primary"
                 placeholder="e.g., Week 7 vs Eagles"
               />
             </div>
             <div>
-              <label className="block text-text-secondary text-sm font-medium mb-2">
+              <label className="block text-secondary text-sm font-medium mb-2">
                 Opponent *
               </label>
               <input
@@ -252,12 +252,12 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
                 onChange={(e) =>
                   setFormData({ ...formData, opponent: e.target.value })
                 }
-                className="w-full px-4 py-2 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-base bg-surface-base text-text-primary"
+                className="w-full px-4 py-2 border border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-base bg-surface-base text-primary"
                 placeholder="e.g., Philadelphia Eagles"
               />
             </div>
             <div>
-              <label className="block text-text-secondary text-sm font-medium mb-2">
+              <label className="block text-secondary text-sm font-medium mb-2">
                 Game Date
               </label>
               <input
@@ -266,11 +266,11 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
                 onChange={(e) =>
                   setFormData({ ...formData, gameDate: e.target.value })
                 }
-                className="w-full px-4 py-2 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-base bg-surface-base text-text-primary"
+                className="w-full px-4 py-2 border border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-base bg-surface-base text-primary"
               />
             </div>
             <div>
-              <label className="block text-text-secondary text-sm font-medium mb-2">
+              <label className="block text-secondary text-sm font-medium mb-2">
                 Location
               </label>
               <select
@@ -285,7 +285,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
                       | undefined,
                   })
                 }
-                className="w-full px-4 py-2 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-base bg-surface-base text-text-primary"
+                className="w-full px-4 py-2 border border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-base bg-surface-base text-primary"
               >
                 <option value="">Select...</option>
                 <option value="Home">Home</option>
@@ -317,13 +317,13 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
                     onClick={() => setActiveSituation(situation.type)}
                     className={`
                       px-3 py-2 rounded-lg text-sm font-medium transition-all
-                      ${isActive ? colorClasses.bg + " " + colorClasses.text : "bg-surface-elevated text-text-secondary hover:bg-surface-overlay"}
-                      ${playCount > 0 ? "border-2 border-primary-light" : "border border-border-subtle"}
+                      ${isActive ? colorClasses.bg + " " + colorClasses.text : "bg-surface-elevated text-secondary hover:bg-surface-overlay"}
+                      ${playCount > 0 ? "border-2 border-primary-light" : "border border-subtle"}
                     `}
                   >
                     {situation.label}
                     {playCount > 0 && (
-                      <span className="ml-2 inline-flex items-center justify-center w-5 h-5 text-xs rounded-full bg-primary-base text-text-inverse">
+                      <span className="ml-2 inline-flex items-center justify-center w-5 h-5 text-xs rounded-full bg-primary-base text-inverse">
                         {playCount}
                       </span>
                     )}
@@ -335,13 +335,13 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
 
           {/* Active Situation Content */}
           {currentSituationConfig && currentSituation && (
-            <div className="border border-border-subtle rounded-lg p-6 mb-6">
+            <div className="border border-subtle rounded-lg p-6 mb-6">
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <Typography variant="display-md" className="mb-1">
                     {currentSituationConfig.label}
                   </Typography>
-                  <Typography variant="body-sm" className="text-text-secondary">
+                  <Typography variant="body-sm" className="text-secondary">
                     {currentSituationConfig.description}
                   </Typography>
                 </div>
@@ -356,7 +356,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
 
               {/* Play List for Current Situation */}
               {currentSituation.plays.length === 0 ? (
-                <div className="text-center py-8 text-text-secondary">
+                <div className="text-center py-8 text-secondary">
                   <Typography variant="body-sm">
                     No plays assigned to this situation yet.
                   </Typography>
@@ -386,10 +386,10 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className={`flex items-center justify-between p-3 border border-border-subtle rounded-lg bg-surface-base hover:bg-surface-elevated transition-colors ${snapshot.isDragging ? "shadow-lg" : ""}`}
+                                  className={`flex items-center justify-between p-3 border border-subtle rounded-lg bg-surface-base hover:bg-surface-elevated transition-colors ${snapshot.isDragging ? "shadow-lg" : ""}`}
                                 >
                                   <div className="flex items-center gap-3">
-                                    <span className="text-sm font-bold text-text-secondary w-6">
+                                    <span className="text-sm font-bold text-secondary w-6">
                                       {play.priority}
                                     </span>
                                     <div>
@@ -403,7 +403,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
                                         {play.formation && (
                                           <Typography
                                             variant="body-sm"
-                                            className="text-text-secondary"
+                                            className="text-secondary"
                                           >
                                             {play.formation}
                                           </Typography>
@@ -411,7 +411,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
                                         {play.personnel && (
                                           <Typography
                                             variant="body-sm"
-                                            className="text-text-secondary"
+                                            className="text-secondary"
                                           >
                                             {play.personnel}
                                           </Typography>
@@ -426,7 +426,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
                                   </div>
                                   <button
                                     onClick={() => handleRemovePlay(play.id)}
-                                    className="text-text-secondary hover:text-status-error transition-colors"
+                                    className="text-secondary hover:text-status-error transition-colors"
                                     aria-label="Remove play"
                                   >
                                     ✕
@@ -445,7 +445,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
           )}
 
           {/* Footer Actions */}
-          <div className="flex justify-between items-center pt-4 border-t border-border-subtle">
+          <div className="flex justify-between items-center pt-4 border-t border-subtle">
             <Button
               variant="secondary"
               onClick={handleExportPDF}

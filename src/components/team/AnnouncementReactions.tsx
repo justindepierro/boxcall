@@ -138,7 +138,7 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
               ${
                 hasReacted
                   ? "bg-brand-primary-light text-brand-primary ring-1 ring-brand-primary/30"
-                  : "bg-surface-secondary text-text-secondary hover:bg-surface-muted"
+                  : "bg-surface-secondary text-secondary hover:bg-surface-muted"
               }
             `}
             title={`${REACTION_LABELS[type]}${hasReacted ? " (You reacted)" : ""}`}

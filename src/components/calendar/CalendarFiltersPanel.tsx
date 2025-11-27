@@ -36,7 +36,7 @@ export const CalendarFiltersPanel: React.FC<CalendarFiltersPanelProps> = ({
       <Card className="p-6 mb-6">
         <div className="flex items-center gap-2 mb-4">
           <Icon name="search" size="lg" className="text-navy-600" />
-          <Typography variant="headline-md" className="text-text-primary">
+          <Typography variant="headline-md" className="text-primary">
             Universal Search
           </Typography>
         </div>
@@ -62,7 +62,7 @@ export const CalendarFiltersPanel: React.FC<CalendarFiltersPanelProps> = ({
       <Card className="p-6 mb-6">
         <div className="flex items-center gap-2 mb-4">
           <Icon name="filter" size="lg" className="text-navy-600" />
-          <Typography variant="headline-md" className="text-text-primary">
+          <Typography variant="headline-md" className="text-primary">
             Filters
           </Typography>
         </div>
@@ -77,7 +77,7 @@ export const CalendarFiltersPanel: React.FC<CalendarFiltersPanelProps> = ({
                 <label key={type} className="flex items-center">
                   <input
                     type="checkbox"
-                    className="rounded border-border-medium text-jade-600 focus:ring-jade-500"
+                    className="rounded border-medium text-jade-600 focus:ring-jade-500"
                     checked={filters.eventTypes?.includes(type) || false}
                     onChange={(e) => {
                       const newTypes = e.target.checked

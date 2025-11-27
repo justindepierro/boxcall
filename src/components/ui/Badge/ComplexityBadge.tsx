@@ -71,10 +71,10 @@ export const ComplexityBadge: React.FC<ComplexityBadgeProps> = ({
 
       {showDetails && (
         <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-          <div className="bg-surface-inverse text-text-inverse text-xs rounded-lg p-3 shadow-lg min-w-48">
+          <div className="bg-surface-inverse text-inverse text-xs rounded-lg p-3 shadow-lg min-w-48">
             <div className="text-center mb-2">
               <div className="font-semibold">{badgeInfo.title}</div>
-              <div className="text-text-secondary">{badgeInfo.description}</div>
+              <div className="text-secondary">{badgeInfo.description}</div>
             </div>
 
             <div className="divider-t pt-2 space-y-1">
@@ -144,7 +144,7 @@ const ComplexityProgress: React.FC<{ complexity: ComplexityMetrics }> = ({
 
   return (
     <div className="divider-t pt-2 mt-2">
-      <div className="text-xs text-text-secondary mb-1">
+      <div className="text-xs text-secondary mb-1">
         Next: {currentLevel.name} ({pointsToNext} points to go)
       </div>
       <div className="w-full bg-surface-secondary rounded-full h-1.5">

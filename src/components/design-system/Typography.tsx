@@ -119,17 +119,17 @@ const typographyClasses: Record<TypographyVariant, string> = {
   "label-md":
     "font-sans text-[0.62rem] font-semibold uppercase tracking-[0.18em]",
   button: "font-sans text-[0.85rem] font-semibold",
-  caption: "font-sans text-[0.7rem] text-text-muted leading-[1.3]",
+  caption: "font-sans text-[0.7rem] text-muted leading-[1.3]",
 };
-// Color class mappings - Updated to use semantic design system classes
+// Color class mappings - Fixed to use correct Tailwind utilities from tailwind.config.js
 const colorClasses: Record<NonNullable<TypographyProps["color"]>, string> = {
-  primary: "text-text-primary", // Primary text color
-  secondary: "text-text-secondary", // Secondary text color
-  success: "text-success", // Success color
-  warning: "text-warning", // Warning color
-  error: "text-error", // Error color
-  muted: "text-text-muted", // Muted text color
-  inverse: "text-text-inverse", // Inverse text color
+  primary: "text-primary", // Uses var(--color-text-primary) from Tailwind config
+  secondary: "text-secondary", // Uses var(--color-text-secondary)
+  success: "text-success", // Uses var(--color-success)
+  warning: "text-warning", // Uses var(--color-warning)
+  error: "text-error", // Uses var(--color-error)
+  muted: "text-muted", // Uses var(--color-text-muted)
+  inverse: "text-inverse", // Uses var(--color-text-inverse)
 };
 // Text alignment classes
 const alignClasses: Record<NonNullable<TypographyProps["align"]>, string> = {
@@ -243,7 +243,7 @@ const TypographyBase = React.forwardRef(function TypographyBase<
   // Build class string
   const classes = [
     typographyClasses[actualVariant],
-    color ? colorClasses[color] : "text-text-primary", // Default text color when no color specified
+    color ? colorClasses[color] : "text-primary", // Default text color when no color specified
     align && alignClasses[align],
     truncate && "truncate",
     className,

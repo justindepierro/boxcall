@@ -78,7 +78,7 @@ export const MobileEventCard: React.FC<MobileEventCardProps> = ({
       case "meeting":
         return "text-info";
       default:
-        return "text-text-secondary";
+        return "text-secondary";
     }
   };
 
@@ -95,16 +95,16 @@ export const MobileEventCard: React.FC<MobileEventCardProps> = ({
   const displayedEvents = events.slice(0, maxEvents);
 
   return (
-    <div className="rounded-xl bg-surface-card border border-border p-4 shadow-sm">
+    <div className="rounded-xl bg-surface-primary border border-border p-4 shadow-sm">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <Typography
           variant="headline-sm"
-          className="text-text-primary font-semibold"
+          className="text-primary font-semibold"
         >
           Upcoming Events
         </Typography>
-        <Icon name="calendar" className="w-5 h-5 text-text-secondary" />
+        <Icon name="calendar" className="w-5 h-5 text-secondary" />
       </div>
 
       {/* Events List */}
@@ -126,7 +126,7 @@ export const MobileEventCard: React.FC<MobileEventCardProps> = ({
                   {/* Date/Time */}
                   <Typography
                     variant="body-sm"
-                    className="text-text-secondary font-medium mb-0.5"
+                    className="text-secondary font-medium mb-0.5"
                   >
                     {formatEventDate(event.date)}
                   </Typography>
@@ -134,7 +134,7 @@ export const MobileEventCard: React.FC<MobileEventCardProps> = ({
                   {/* Title */}
                   <Typography
                     variant="body-md"
-                    className="text-text-primary font-semibold truncate"
+                    className="text-primary font-semibold truncate"
                   >
                     {event.title}
                   </Typography>
@@ -144,11 +144,11 @@ export const MobileEventCard: React.FC<MobileEventCardProps> = ({
                     <div className="flex items-center gap-1 mt-1">
                       <Icon
                         name="map-pin"
-                        className="w-3 h-3 text-text-muted flex-shrink-0"
+                        className="w-3 h-3 text-muted flex-shrink-0"
                       />
                       <Typography
                         variant="body-xs"
-                        className="text-text-muted truncate"
+                        className="text-muted truncate"
                       >
                         {event.location}
                       </Typography>
@@ -161,11 +161,11 @@ export const MobileEventCard: React.FC<MobileEventCardProps> = ({
                       <div className="flex items-center gap-1 mt-1">
                         <Icon
                           name="users"
-                          className="w-3 h-3 text-text-muted flex-shrink-0"
+                          className="w-3 h-3 text-muted flex-shrink-0"
                         />
                         <Typography
                           variant="body-xs"
-                          className="text-text-muted"
+                          className="text-muted"
                         >
                           {event.attendanceCount}/{event.totalRoster} attending
                         </Typography>
@@ -186,12 +186,12 @@ export const MobileEventCard: React.FC<MobileEventCardProps> = ({
         <div className="text-center py-8">
           <Icon
             name="calendar"
-            className="w-12 h-12 text-text-muted mx-auto mb-2"
+            className="w-12 h-12 text-muted mx-auto mb-2"
           />
-          <Typography variant="body-md" className="text-text-secondary mb-1">
+          <Typography variant="body-md" className="text-secondary mb-1">
             No upcoming events
           </Typography>
-          <Typography variant="body-sm" className="text-text-muted">
+          <Typography variant="body-sm" className="text-muted">
             Your schedule is clear
           </Typography>
         </div>
@@ -211,7 +211,7 @@ export const MobileEventCard: React.FC<MobileEventCardProps> = ({
       {events.length > maxEvents && (
         <Typography
           variant="body-xs"
-          className="text-text-muted text-center mt-2"
+          className="text-muted text-center mt-2"
         >
           + {events.length - maxEvents} more event
           {events.length - maxEvents !== 1 ? "s" : ""}

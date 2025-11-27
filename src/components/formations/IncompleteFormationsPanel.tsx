@@ -85,7 +85,7 @@ export const IncompleteFormationsPanel: React.FC<
           <div className="h-32 bg-surface-subtle rounded animate-pulse"></div>
           <div className="h-32 bg-surface-subtle rounded animate-pulse"></div>
         </div>
-        <Typography variant="body-sm" className="text-text-muted text-center">
+        <Typography variant="body-sm" className="text-muted text-center">
           Loading incomplete formations...
         </Typography>
       </div>
@@ -115,11 +115,11 @@ export const IncompleteFormationsPanel: React.FC<
           <div>
             <Typography
               variant="headline-sm"
-              className="text-text-primary mb-spacing-xs"
+              className="text-primary mb-spacing-xs"
             >
               All formations are complete! 🎉
             </Typography>
-            <Typography variant="body-sm" className="text-text-muted">
+            <Typography variant="body-sm" className="text-muted">
               No formations need metadata improvements.
             </Typography>
           </div>
@@ -151,11 +151,11 @@ export const IncompleteFormationsPanel: React.FC<
         <div className="flex-1">
           <Typography
             variant="headline-sm"
-            className="text-text-primary mb-spacing-xs"
+            className="text-primary mb-spacing-xs"
           >
             Incomplete Formations ({formations.length})
           </Typography>
-          <Typography variant="body-sm" className="text-text-muted">
+          <Typography variant="body-sm" className="text-muted">
             These formations were created during play building and need better
             metadata. Add missing information to improve organization and
             searchability.
@@ -168,7 +168,7 @@ export const IncompleteFormationsPanel: React.FC<
         <div className="space-y-spacing-md">
           <div className="flex items-center gap-spacing-sm">
             <div className="w-2 h-2 rounded-full bg-warning-500"></div>
-            <Typography variant="label-md" className="text-text-secondary">
+            <Typography variant="label-md" className="text-secondary">
               Needs Work ({needsWork.length})
             </Typography>
           </div>
@@ -180,7 +180,7 @@ export const IncompleteFormationsPanel: React.FC<
               return (
                 <div
                   key={formation.id}
-                  className="surface-card border border-warning-200 rounded-lg p-spacing-md hover:shadow-md transition-shadow"
+                  className="bg-surface-primary border border-warning-200 rounded-lg p-spacing-md hover:shadow-md transition-shadow"
                 >
                   <div className="flex items-start justify-between gap-spacing-md">
                     <div className="flex-1 space-y-spacing-sm">
@@ -192,7 +192,7 @@ export const IncompleteFormationsPanel: React.FC<
                         />
                         <Typography
                           variant="body-md"
-                          className="font-medium text-text-primary"
+                          className="font-medium text-primary"
                         >
                           {formation.name}
                         </Typography>
@@ -203,7 +203,7 @@ export const IncompleteFormationsPanel: React.FC<
                         <div className="flex items-center gap-spacing-xs flex-wrap">
                           <Typography
                             variant="body-xs"
-                            className="text-text-muted"
+                            className="text-muted"
                           >
                             Missing:
                           </Typography>
@@ -219,7 +219,7 @@ export const IncompleteFormationsPanel: React.FC<
                       )}
 
                       {/* Current metadata */}
-                      <div className="flex items-center gap-spacing-md text-xs text-text-muted">
+                      <div className="flex items-center gap-spacing-md text-xs text-muted">
                         {formation.personnel_name && (
                           <span>👥 {formation.personnel_name}</span>
                         )}
@@ -257,7 +257,7 @@ export const IncompleteFormationsPanel: React.FC<
         <div className="space-y-spacing-md">
           <div className="flex items-center gap-spacing-sm">
             <div className="w-2 h-2 rounded-full bg-error-500"></div>
-            <Typography variant="label-md" className="text-text-secondary">
+            <Typography variant="label-md" className="text-secondary">
               Incomplete ({incomplete.length})
             </Typography>
           </div>
@@ -269,7 +269,7 @@ export const IncompleteFormationsPanel: React.FC<
               return (
                 <div
                   key={formation.id}
-                  className="surface-card border border-error-200 rounded-lg p-spacing-md hover:shadow-md transition-shadow"
+                  className="bg-surface-primary border border-error-200 rounded-lg p-spacing-md hover:shadow-md transition-shadow"
                 >
                   <div className="flex items-start justify-between gap-spacing-md">
                     <div className="flex-1 space-y-spacing-sm">
@@ -281,7 +281,7 @@ export const IncompleteFormationsPanel: React.FC<
                         />
                         <Typography
                           variant="body-md"
-                          className="font-medium text-text-primary"
+                          className="font-medium text-primary"
                         >
                           {formation.name}
                         </Typography>
@@ -292,7 +292,7 @@ export const IncompleteFormationsPanel: React.FC<
                         <div className="flex items-center gap-spacing-xs flex-wrap">
                           <Typography
                             variant="body-xs"
-                            className="text-text-muted"
+                            className="text-muted"
                           >
                             Missing:
                           </Typography>
@@ -308,7 +308,7 @@ export const IncompleteFormationsPanel: React.FC<
                       )}
 
                       {/* Current metadata */}
-                      <div className="flex items-center gap-spacing-md text-xs text-text-muted">
+                      <div className="flex items-center gap-spacing-md text-xs text-muted">
                         {formation.personnel_name && (
                           <span>👥 {formation.personnel_name}</span>
                         )}
@@ -342,8 +342,8 @@ export const IncompleteFormationsPanel: React.FC<
       )}
 
       {/* Help text */}
-      <div className="surface-subtle border border-border-subtle rounded-md p-spacing-md">
-        <Typography variant="body-sm" className="text-text-muted">
+      <div className="surface-subtle border border-subtle rounded-md p-spacing-md">
+        <Typography variant="body-sm" className="text-muted">
           💡 <strong>Tip:</strong> Click "Edit" to add missing information.
           Complete metadata helps with searching, filtering, and playbook
           organization.

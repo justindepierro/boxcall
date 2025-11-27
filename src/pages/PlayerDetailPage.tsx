@@ -74,7 +74,7 @@ export default function PlayerDetailPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-spacing-lg">
               {[...Array(3)].map((_, i) => (
                 <Card key={i} className="animate-pulse">
-                  <div className="h-48 bg-surface-muted rounded-lg"></div>
+                  <div className="h-48 bg-muted rounded-lg"></div>
                 </Card>
               ))}
             </div>
@@ -140,7 +140,7 @@ export default function PlayerDetailPage() {
             <Button
               variant="ghost"
               onClick={() => navigate("/roster")}
-              className="text-text-secondary"
+              className="text-secondary"
             >
               <Icon name="chevron-left" className="w-4 h-4 mr-spacing-xs" />
               Back to Roster
@@ -161,17 +161,17 @@ export default function PlayerDetailPage() {
                 </Typography>
                 <dl className="space-y-spacing-sm">
                   <div>
-                    <dt className="text-text-secondary text-sm">Full Name</dt>
+                    <dt className="text-secondary text-sm">Full Name</dt>
                     <dd className="font-medium">
                       {player.first_name} {player.last_name}
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-text-secondary text-sm">Position</dt>
+                    <dt className="text-secondary text-sm">Position</dt>
                     <dd className="font-medium">{player.position || "N/A"}</dd>
                   </div>
                   <div>
-                    <dt className="text-text-secondary text-sm">
+                    <dt className="text-secondary text-sm">
                       Jersey Number
                     </dt>
                     <dd className="font-medium">
@@ -179,19 +179,19 @@ export default function PlayerDetailPage() {
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-text-secondary text-sm">Grade Level</dt>
+                    <dt className="text-secondary text-sm">Grade Level</dt>
                     <dd className="font-medium">
                       {player.grade_level || "N/A"}
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-text-secondary text-sm">Status</dt>
+                    <dt className="text-secondary text-sm">Status</dt>
                     <dd>
                       <span
                         className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                           player.is_active
                             ? "bg-green-100 text-green-800"
-                            : "bg-gray-100 text-gray-800"
+                            : "bg-muted text-gray-800"
                         }`}
                       >
                         {player.roster_status ||
@@ -211,11 +211,11 @@ export default function PlayerDetailPage() {
                 </Typography>
                 <dl className="space-y-spacing-sm">
                   <div>
-                    <dt className="text-text-secondary text-sm">Height</dt>
+                    <dt className="text-secondary text-sm">Height</dt>
                     <dd className="font-medium">{height}</dd>
                   </div>
                   <div>
-                    <dt className="text-text-secondary text-sm">Weight</dt>
+                    <dt className="text-secondary text-sm">Weight</dt>
                     <dd className="font-medium">{weight}</dd>
                   </div>
                 </dl>
@@ -228,7 +228,7 @@ export default function PlayerDetailPage() {
                 <Typography variant="headline-md" className="mb-spacing-md">
                   Additional Information
                 </Typography>
-                <Typography variant="body-sm" className="text-text-secondary">
+                <Typography variant="body-sm" className="text-secondary">
                   Additional player information and notes will be available
                   soon.
                 </Typography>

@@ -134,7 +134,7 @@ export function ProgressiveAuthFlow({
         {/* Logo and branding */}
         <div className="mb-6">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-surface-secondary rounded-full mb-4">
-            <Icon name="target" size="xl" className="text-text-primary" />
+            <Icon name="target" size="xl" className="text-primary" />
           </div>
           <Typography variant="headline-lg" className="mb-2">
             Welcome to BoxCall
@@ -213,14 +213,14 @@ export function ProgressiveAuthFlow({
           <Typography variant="caption" color="muted">
             By continuing, you agree to our{" "}
             <button
-              className="text-text-primary hover:underline"
+              className="text-primary hover:underline"
               onClick={() => navigate(ROUTES.TERMS)}
             >
               Terms of Service
             </button>{" "}
             and{" "}
             <button
-              className="text-text-primary hover:underline"
+              className="text-primary hover:underline"
               onClick={() => navigate(ROUTES.PRIVACY)}
             >
               Privacy Policy

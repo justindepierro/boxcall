@@ -89,7 +89,7 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
       )}
 
       {/* Helper text directing coaches to Formation Builder */}
-      <Typography variant="caption" className="text-text-muted mt-spacing-sm">
+      <Typography variant="caption" className="text-muted mt-spacing-sm">
         💡 Tip: Use the Formation Builder tile on the main page to create
         formations with visual positioning
       </Typography>

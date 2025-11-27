@@ -73,13 +73,13 @@ export const PlayerPerformanceDashboard: React.FC<
         <div className="text-center">
           <Icon
             name="alert-triangle"
-            className="text-text-error mx-auto mb-4"
+            className="text-error mx-auto mb-4"
             size="lg"
           />
           <Typography variant="headline-sm" className="mb-2">
             Error Loading Analytics
           </Typography>
-          <Typography variant="body-sm" className="text-text-secondary mb-4">
+          <Typography variant="body-sm" className="text-secondary mb-4">
             {error}
           </Typography>
           <Button onClick={loadPerformanceData} variant="outline">
@@ -123,33 +123,33 @@ export const PlayerPerformanceDashboard: React.FC<
           <div className="text-center">
             <Typography
               variant="display-lg"
-              className="text-3xl font-bold text-text-info"
+              className="text-3xl font-bold text-info"
             >
               {overview.totalPlayers}
             </Typography>
-            <Typography variant="body-sm" className="text-text-secondary">
+            <Typography variant="body-sm" className="text-secondary">
               Active Players
             </Typography>
           </div>
           <div className="text-center">
             <Typography
               variant="display-lg"
-              className="text-3xl font-bold text-text-success"
+              className="text-3xl font-bold text-success"
             >
               {overview.topPerformers.length}
             </Typography>
-            <Typography variant="body-sm" className="text-text-secondary">
+            <Typography variant="body-sm" className="text-secondary">
               Top Performers
             </Typography>
           </div>
           <div className="text-center">
             <Typography
               variant="display-lg"
-              className="text-3xl font-bold text-text-warning"
+              className="text-3xl font-bold text-warning"
             >
               {overview.playersNeedingAttention.length}
             </Typography>
-            <Typography variant="body-sm" className="text-text-secondary">
+            <Typography variant="body-sm" className="text-secondary">
               Need Attention
             </Typography>
           </div>
@@ -171,7 +171,7 @@ export const PlayerPerformanceDashboard: React.FC<
                 </div>
                 <Typography
                   variant="body-sm"
-                  className="text-text-secondary mb-1"
+                  className="text-secondary mb-1"
                 >
                   Avg Rating: {data.averageRating.toFixed(1)}/10
                 </Typography>
@@ -202,7 +202,7 @@ export const PlayerPerformanceDashboard: React.FC<
                   <Typography variant="body-sm" className="font-medium">
                     {player.playerName}
                   </Typography>
-                  <Typography variant="body-xs" className="text-text-secondary">
+                  <Typography variant="body-xs" className="text-secondary">
                     {player.position}
                   </Typography>
                 </div>
@@ -210,11 +210,11 @@ export const PlayerPerformanceDashboard: React.FC<
               <div className="text-right">
                 <Typography
                   variant="body-sm"
-                  className="font-bold text-text-success"
+                  className="font-bold text-success"
                 >
                   {player.averageRating}/10
                 </Typography>
-                <Typography variant="body-xs" className="text-text-secondary">
+                <Typography variant="body-xs" className="text-secondary">
                   {player.totalActivities} activities
                 </Typography>
               </div>
@@ -237,14 +237,14 @@ export const PlayerPerformanceDashboard: React.FC<
                 onClick={() => setSelectedPlayer(player)}
               >
                 <div className="flex items-center space-x-3">
-                  <Icon name="alert-triangle" className="text-text-warning" />
+                  <Icon name="alert-triangle" className="text-warning" />
                   <div>
                     <Typography variant="body-sm" className="font-medium">
                       {player.playerName}
                     </Typography>
                     <Typography
                       variant="body-xs"
-                      className="text-text-secondary"
+                      className="text-secondary"
                     >
                       {player.position}
                     </Typography>
@@ -253,7 +253,7 @@ export const PlayerPerformanceDashboard: React.FC<
                 <div className="text-right">
                   <Typography
                     variant="body-sm"
-                    className="font-bold text-text-warning"
+                    className="font-bold text-warning"
                   >
                     {player.averageRating}/10
                   </Typography>
@@ -304,10 +304,10 @@ export const PlayerPerformanceDashboard: React.FC<
                       }
                       className={
                         alert.type === "critical"
-                          ? "text-text-error"
+                          ? "text-error"
                           : alert.type === "warning"
-                            ? "text-text-warning"
-                            : "text-text-info"
+                            ? "text-warning"
+                            : "text-info"
                       }
                     />
                     <Typography variant="body-sm">{alert.message}</Typography>
@@ -369,7 +369,7 @@ export const PlayerPerformanceDashboard: React.FC<
                     </Badge>
                     <Typography
                       variant="body-xs"
-                      className="text-text-secondary"
+                      className="text-secondary"
                     >
                       {trend.period}
                     </Typography>
@@ -464,7 +464,7 @@ const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                 <div>
                   <Typography
                     variant="body"
-                    className="font-medium text-text-success mb-1"
+                    className="font-medium text-success mb-1"
                   >
                     Strengths:
                   </Typography>
@@ -479,7 +479,7 @@ const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                 <div>
                   <Typography
                     variant="body"
-                    className="font-medium text-text-warning mb-1"
+                    className="font-medium text-warning mb-1"
                   >
                     Weaknesses:
                   </Typography>
@@ -509,13 +509,13 @@ const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                     <Typography variant="body" className="font-medium">
                       {performance.activity}
                     </Typography>
-                    <Typography variant="body" className="text-text-secondary">
+                    <Typography variant="body" className="text-secondary">
                       {performance.date}
                     </Typography>
                     {performance.notes && (
                       <Typography
                         variant="body"
-                        className="text-text-muted italic"
+                        className="text-muted italic"
                       >
                         {performance.notes}
                       </Typography>

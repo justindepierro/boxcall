@@ -35,19 +35,19 @@
 
 /* Semantic line height utilities */
 .leading-heading {
-  line-height: var(--semantic-typography-heading-line-height);
+  line-height: var(--line-height-tight);
 }
 
 .leading-body {
-  line-height: var(--semantic-typography-body-line-height);
+  line-height: var(--line-height-normal);
 }
 
 .leading-caption {
-  line-height: var(--semantic-typography-caption-line-height);
+  line-height: var(--line-height-snug);
 }
 
 .leading-display {
-  line-height: var(--semantic-typography-display-line-height);
+  line-height: var(--line-height-tight);
 }
 
 /* ============================================================================
@@ -80,19 +80,19 @@
 
 /* Semantic letter spacing utilities */
 .tracking-heading {
-  letter-spacing: var(--semantic-typography-heading-letter-spacing);
+  letter-spacing: var(--letter-spacing-tight);
 }
 
 .tracking-body {
-  letter-spacing: var(--semantic-typography-body-letter-spacing);
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 .tracking-caption {
-  letter-spacing: var(--semantic-typography-caption-letter-spacing);
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 .tracking-display {
-  letter-spacing: var(--semantic-typography-display-letter-spacing);
+  letter-spacing: var(--letter-spacing-tight);
 }
 
 /* ============================================================================
@@ -121,29 +121,29 @@
 
 /* Heading typography pattern */
 .typography-heading {
-  line-height: var(--semantic-typography-heading-line-height);
-  letter-spacing: var(--semantic-typography-heading-letter-spacing);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
   font-weight: var(--font-weight-semibold);
 }
 
 /* Body text typography pattern */
 .typography-body {
-  line-height: var(--semantic-typography-body-line-height);
-  letter-spacing: var(--semantic-typography-body-letter-spacing);
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--letter-spacing-normal);
   font-weight: var(--font-weight-normal);
 }
 
 /* Caption/small text typography pattern */
 .typography-caption {
-  line-height: var(--semantic-typography-caption-line-height);
-  letter-spacing: var(--semantic-typography-caption-letter-spacing);
+  line-height: var(--line-height-snug);
+  letter-spacing: var(--letter-spacing-normal);
   font-weight: var(--font-weight-normal);
 }
 
 /* Display/hero text typography pattern */
 .typography-display {
-  line-height: var(--semantic-typography-display-line-height);
-  letter-spacing: var(--semantic-typography-display-letter-spacing);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
   font-weight: var(--font-weight-bold);
 }
 
@@ -430,24 +430,24 @@
 /* Responsive heading (scales with viewport) */
 .text-responsive-heading {
   font-size: clamp(1.5rem, 2vw + 1rem, 2.25rem);
-  line-height: var(--semantic-typography-heading-line-height);
-  letter-spacing: var(--semantic-typography-heading-letter-spacing);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
   font-weight: var(--font-weight-bold);
 }
 
 /* Responsive body text (scales with viewport) */
 .text-responsive-body {
   font-size: clamp(0.875rem, 1vw + 0.5rem, 1rem);
-  line-height: var(--semantic-typography-body-line-height);
-  letter-spacing: var(--semantic-typography-body-letter-spacing);
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--letter-spacing-normal);
   font-weight: var(--font-weight-normal);
 }
 
 /* Responsive display text (hero) */
 .text-responsive-display {
   font-size: clamp(2rem, 4vw + 1rem, 4rem);
-  line-height: var(--semantic-typography-display-line-height);
-  letter-spacing: var(--semantic-typography-display-letter-spacing);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
   font-weight: var(--font-weight-bold);
 }
 

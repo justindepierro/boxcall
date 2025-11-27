@@ -26,7 +26,7 @@ export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = ({
         </div>
         <Typography
           variant="label-md"
-          className="text-text-primary font-medium mb-1"
+          className="text-primary font-medium mb-1"
         >
           Trophy Case
         </Typography>
@@ -55,7 +55,7 @@ export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = ({
           This area will display season goals, helmet stickers, medals, and
           academic/community awards as you begin using the platform.
         </Typography>
-        <ol className="list-decimal list-inside space-y-1 text-sm text-text-secondary mb-4">
+        <ol className="list-decimal list-inside space-y-1 text-sm text-secondary mb-4">
           <li className="text-truncate">Record a game or practice result</li>
           <li className="text-truncate">Award a player a sticker</li>
           <li className="text-truncate">Add a season goal</li>

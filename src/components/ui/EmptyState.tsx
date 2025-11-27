@@ -78,20 +78,20 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         <div
           className={`bg-surface-secondary rounded-full flex items-center justify-center ${styles.icon}`}
         >
-          <Icon name={icon} className={`${styles.icon} text-text-muted`} />
+          <Icon name={icon} className={`${styles.icon} text-muted`} />
         </div>
       </div>
 
       {/* Content */}
       <Typography
         variant={styles.title as any}
-        className="text-text-primary mb-2"
+        className="text-primary mb-2"
       >
         {title}
       </Typography>
       <Typography
         variant={styles.description as any}
-        className="text-text-secondary mb-8 content-narrow"
+        className="text-secondary mb-8 content-narrow"
       >
         {description}
       </Typography>

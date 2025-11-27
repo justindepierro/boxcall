@@ -338,7 +338,7 @@ export const createPlayDetailsFields = ({
             </span>
           ))
         ) : (
-          <span className="text-sm text-text-secondary italic">
+          <span className="text-sm text-secondary italic">
             No variations
           </span>
         )}
@@ -360,7 +360,7 @@ export const createPlayDetailsFields = ({
             </span>
           ))
         ) : (
-          <span className="text-sm text-text-secondary italic">
+          <span className="text-sm text-secondary italic">
             No key positions
           </span>
         )}
@@ -375,13 +375,13 @@ export const createPlayDetailsFields = ({
           optimisticPlay.key_players.map((_playerId, index) => (
             <span
               key={index}
-              className="inline-flex items-center px-2 py-1 text-xs rounded-full bg-surface-success/10 text-text-success border border-border-success"
+              className="inline-flex items-center px-2 py-1 text-xs rounded-full bg-surface-success/10 text-success border border-success"
             >
               Player {index + 1}
             </span>
           ))
         ) : (
-          <span className="text-sm text-text-secondary italic">
+          <span className="text-sm text-secondary italic">
             No key players
           </span>
         )}

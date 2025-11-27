@@ -48,7 +48,7 @@ export const PlayGridErrorState = memo<PlayGridErrorStateProps>(
         {/* Error Message */}
         <Typography
           variant="headline-md"
-          className="text-text-primary mb-2 text-center"
+          className="text-primary mb-2 text-center"
         >
           {isNetworkError && "Connection Error"}
           {isAuthError && "Authentication Error"}
@@ -57,7 +57,7 @@ export const PlayGridErrorState = memo<PlayGridErrorStateProps>(
 
         <Typography
           variant="body"
-          className="text-text-secondary mb-6 text-center max-w-md"
+          className="text-secondary mb-6 text-center max-w-md"
         >
           {isNetworkError &&
             "Unable to load plays. Please check your internet connection."}
@@ -71,7 +71,7 @@ export const PlayGridErrorState = memo<PlayGridErrorStateProps>(
         {/* Technical Details (for debugging) */}
         {process.env.NODE_ENV === "development" && (
           <details className="mb-6 max-w-md w-full">
-            <summary className="cursor-pointer text-sm text-text-muted hover:text-text-secondary">
+            <summary className="cursor-pointer text-sm text-muted hover:text-secondary">
               Technical Details
             </summary>
             <pre className="mt-2 p-3 bg-surface-muted rounded-lg text-xs overflow-auto">
@@ -94,7 +94,7 @@ export const PlayGridErrorState = memo<PlayGridErrorStateProps>(
         </div>
 
         {/* Help Link */}
-        <Typography variant="body-sm" className="text-text-muted mt-6">
+        <Typography variant="body-sm" className="text-muted mt-6">
           Still having issues?{" "}
           <a
             href="/contact"

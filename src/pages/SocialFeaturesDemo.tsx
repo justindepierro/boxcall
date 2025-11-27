@@ -28,10 +28,10 @@ const SocialFeaturesDemo: React.FC = () => {
         <div className="absolute top-0 right-0">
           <NotificationsBell userId={demoUserId} />
         </div>
-        <h1 className="text-3xl font-bold text-text-primary mb-2">
+        <h1 className="text-3xl font-bold text-primary mb-2">
           🤝 Social Features Demo
         </h1>
-        <p className="text-text-secondary mb-6">
+        <p className="text-secondary mb-6">
           Experience the complete social interaction system in BoxCall
         </p>
 
@@ -58,7 +58,7 @@ const SocialFeaturesDemo: React.FC = () => {
         <div className="space-y-6">
           {/* Activity Feed */}
           <Card variant="elevated" className="p-6">
-            <h2 className="text-2xl font-semibold mb-6 text-text-primary">
+            <h2 className="text-2xl font-semibold mb-6 text-primary">
               📱 Live Activity Feed
             </h2>
             <ActivityFeed userId={demoUserId} limit={10} />
@@ -68,20 +68,20 @@ const SocialFeaturesDemo: React.FC = () => {
           <div className="grid-dashboard gap-4 md:gap-5">
             <Card variant="glass" className="p-4 text-center">
               <div className="text-2xl mb-2">🔥</div>
-              <div className="text-xl font-bold text-text-primary">24</div>
-              <div className="text-sm text-text-secondary">Active Today</div>
+              <div className="text-xl font-bold text-primary">24</div>
+              <div className="text-sm text-secondary">Active Today</div>
             </Card>
             <Card variant="glass" className="p-4 text-center">
               <div className="text-2xl mb-2">💬</div>
-              <div className="text-xl font-bold text-text-primary">156</div>
-              <div className="text-sm text-text-secondary">
+              <div className="text-xl font-bold text-primary">156</div>
+              <div className="text-sm text-secondary">
                 Comments This Week
               </div>
             </Card>
             <Card variant="glass" className="p-4 text-center">
               <div className="text-2xl mb-2">❤️</div>
-              <div className="text-xl font-bold text-text-primary">89</div>
-              <div className="text-sm text-text-secondary">Reactions Given</div>
+              <div className="text-xl font-bold text-primary">89</div>
+              <div className="text-sm text-secondary">Reactions Given</div>
             </Card>
           </div>
         </div>
@@ -98,10 +98,10 @@ const SocialFeaturesDemo: React.FC = () => {
                   <Badge variant="info">Popular</Badge>
                   <Badge variant="warning">High Success</Badge>
                 </div>
-                <h2 className="text-xl font-semibold text-text-primary">
+                <h2 className="text-xl font-semibold text-primary">
                   Triple Option Play
                 </h2>
-                <p className="text-text-secondary mt-1">
+                <p className="text-secondary mt-1">
                   A classic triple option with multiple read options for the QB.
                   Perfect for keeping defenses honest.
                 </p>
@@ -151,16 +151,16 @@ const SocialFeaturesDemo: React.FC = () => {
               </div>
               <div className="text-center z-10">
                 <div className="text-4xl mb-2">🏈</div>
-                <span className="text-text-muted font-medium">
+                <span className="text-muted font-medium">
                   Interactive Play Diagram
                 </span>
-                <p className="text-xs text-text-muted mt-1">
+                <p className="text-xs text-muted mt-1">
                   Click and drag to explore formations
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center justify-between text-sm text-text-muted">
+            <div className="flex items-center justify-between text-sm text-muted">
               <div className="flex gap-6">
                 <span>📈 89% Success Rate</span>
                 <span>🏈 23 Uses This Season</span>
@@ -179,7 +179,7 @@ const SocialFeaturesDemo: React.FC = () => {
 
           {/* Comments Section */}
           <Card variant="glass" className="p-6">
-            <h3 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-primary mb-4 flex items-center gap-2">
               💬 Discussion
               <Badge variant="neutral">12 comments</Badge>
             </h3>
@@ -193,7 +193,7 @@ const SocialFeaturesDemo: React.FC = () => {
 
           {/* Quick Actions */}
           <Card variant="outlined" className="p-4">
-            <h4 className="font-semibold text-text-primary mb-3">
+            <h4 className="font-semibold text-primary mb-3">
               Quick Actions
             </h4>
             <div className="flex flex-wrap gap-3">
@@ -221,18 +221,18 @@ const SocialFeaturesDemo: React.FC = () => {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-4">
                 <div className="w-20 h-20 bg-aurora-teal rounded-full flex items-center justify-center shadow-lg">
-                  <span className="text-3xl font-bold text-text-inverse">
+                  <span className="text-3xl font-bold text-inverse">
                     BC
                   </span>
                 </div>
                 <div>
-                  <h3 className="text-2xl font-semibold text-text-primary">
+                  <h3 className="text-2xl font-semibold text-primary">
                     BoxCall High School
                   </h3>
-                  <p className="text-text-secondary">
+                  <p className="text-secondary">
                     Varsity Football Team • Est. 2024 • 3x Conference Champions
                   </p>
-                  <div className="flex gap-4 mt-2 text-sm text-text-muted">
+                  <div className="flex gap-4 mt-2 text-sm text-muted">
                     <span>📍 Springfield, IL</span>
                     <span>👔 Coach Johnson</span>
                     <span>🏆 89-23 Record</span>
@@ -253,25 +253,25 @@ const SocialFeaturesDemo: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              <div className="text-center p-4 bg-surface-success/10 rounded-lg">
-                <div className="text-2xl font-bold text-text-success">24</div>
-                <div className="text-sm text-text-secondary">
+              <div className="text-center p-4 bg-success/10 rounded-lg">
+                <div className="text-2xl font-bold text-success">24</div>
+                <div className="text-sm text-secondary">
                   Active Players
                 </div>
               </div>
-              <div className="text-center p-4 bg-surface-info/10 rounded-lg">
-                <div className="text-2xl font-bold text-text-info">156</div>
-                <div className="text-sm text-text-secondary">
+              <div className="text-center p-4 bg-info/10 rounded-lg">
+                <div className="text-2xl font-bold text-info">156</div>
+                <div className="text-sm text-secondary">
                   Total Followers
                 </div>
               </div>
-              <div className="text-center p-4 bg-surface-warning/10 rounded-lg">
-                <div className="text-2xl font-bold text-text-warning">89</div>
-                <div className="text-sm text-text-secondary">Plays Created</div>
+              <div className="text-center p-4 bg-warning/10 rounded-lg">
+                <div className="text-2xl font-bold text-warning">89</div>
+                <div className="text-sm text-secondary">Plays Created</div>
               </div>
-              <div className="text-center p-4 bg-surface-error/10 rounded-lg">
-                <div className="text-2xl font-bold text-text-error">12</div>
-                <div className="text-sm text-text-secondary">
+              <div className="text-center p-4 bg-error/10 rounded-lg">
+                <div className="text-2xl font-bold text-error">12</div>
+                <div className="text-sm text-secondary">
                   Wins This Season
                 </div>
               </div>
@@ -286,7 +286,7 @@ const SocialFeaturesDemo: React.FC = () => {
 
           {/* Team Members Spotlight */}
           <Card variant="glass" className="p-6">
-            <h3 className="text-xl font-semibold text-text-primary mb-4">
+            <h3 className="text-xl font-semibold text-primary mb-4">
               🌟 Team Spotlight
             </h3>
             <div className="grid-dashboard gap-4">
@@ -316,17 +316,17 @@ const SocialFeaturesDemo: React.FC = () => {
                   className="p-4 text-center"
                 >
                   <div className="w-12 h-12 bg-aurora-emerald rounded-full flex items-center justify-center mx-auto mb-3">
-                    <span className="text-text-inverse font-bold">
+                    <span className="text-inverse font-bold">
                       {player.avatar}
                     </span>
                   </div>
-                  <h4 className="font-semibold text-text-primary">
+                  <h4 className="font-semibold text-primary">
                     {player.name}
                   </h4>
-                  <p className="text-sm text-text-secondary mb-2">
+                  <p className="text-sm text-secondary mb-2">
                     {player.role}
                   </p>
-                  <p className="text-xs text-text-muted">{player.stat}</p>
+                  <p className="text-xs text-muted">{player.stat}</p>
                   <div className="mt-3">
                     <FollowButton
                       followingType="user"
@@ -342,7 +342,7 @@ const SocialFeaturesDemo: React.FC = () => {
 
           {/* Team Activity */}
           <Card variant="elevated" className="p-6">
-            <h3 className="text-xl font-semibold text-text-primary mb-4">
+            <h3 className="text-xl font-semibold text-primary mb-4">
               📊 Team Activity
             </h3>
             <div className="space-y-4">
@@ -374,7 +374,7 @@ const SocialFeaturesDemo: React.FC = () => {
               ].map((activity, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-4 p-3 bg-surface-secondary/50 rounded-lg"
+                  className="flex items-center gap-4 p-3 bg-secondary/50 rounded-lg"
                 >
                   <div className="w-8 h-8 bg-electric-500/20 rounded-full flex items-center justify-center">
                     {activity.type === "play" && "🏈"}
@@ -383,11 +383,11 @@ const SocialFeaturesDemo: React.FC = () => {
                     {activity.type === "media" && "📸"}
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm text-text-primary">
+                    <p className="text-sm text-primary">
                       <span className="font-medium">{activity.user}</span>{" "}
                       {activity.action}
                     </p>
-                    <p className="text-xs text-text-muted">{activity.time}</p>
+                    <p className="text-xs text-muted">{activity.time}</p>
                   </div>
                   <Button variant="ghost" size="sm">
                     View
@@ -403,8 +403,8 @@ const SocialFeaturesDemo: React.FC = () => {
       <Card variant="glass" className="p-4">
         <div className="flex items-center justify-between">
           <div>
-            <h4 className="font-semibold text-text-primary">Demo Controls</h4>
-            <p className="text-sm text-text-secondary">
+            <h4 className="font-semibold text-primary">Demo Controls</h4>
+            <p className="text-sm text-secondary">
               Try all the interactive features above!
             </p>
           </div>

@@ -35,8 +35,8 @@ export const DESIGN_SYSTEM_MAPPING = {
 
   // Card Styles
   "bg-white rounded-lg border border-gray-200":
-    "surface-card rounded-lg border border-border",
-  "bg-white border border-gray-200": "surface-card border border-border",
+    "bg-surface-primary rounded-lg border border-border",
+  "bg-white border border-gray-200": "bg-surface-primary border border-border",
 
   // Button Styles (these should use Button component variants instead)
   "bg-gray-100 hover:bg-gray-200": "bg-surface-secondary hover:bg-border",

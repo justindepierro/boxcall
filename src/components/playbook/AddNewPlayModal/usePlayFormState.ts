@@ -40,6 +40,9 @@ export interface PlayFormData {
   wristbandNumber: string;
   description: string;
 
+  // Play diagram upload (NEW - November 27, 2025)
+  diagram_image_url: string | null;
+
   // Tags & Roles (LEGACY - for backwards compatibility)
   positions: string[];
   players: string[];
@@ -109,6 +112,9 @@ export const usePlayFormState = (options: UsePlayFormStateOptions = {}) => {
     wristbandNumber: existingPlay?.wristband_number || "",
     description: existingPlay?.notes || "",
 
+    // Play diagram
+    diagram_image_url: existingPlay?.diagram_image_url || null,
+
     // Tags & Roles (LEGACY)
     positions: [],
     players: [],
@@ -167,6 +173,7 @@ export const usePlayFormState = (options: UsePlayFormStateOptions = {}) => {
       oneWordPlay: "",
       wristbandNumber: "",
       description: "",
+      diagram_image_url: null,
       positions: [],
       players: [],
       flags: [],

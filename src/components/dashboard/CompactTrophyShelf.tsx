@@ -65,7 +65,7 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
 
   if (error) {
     return (
-      <div className="flex items-center gap-2 text-text-error">
+      <div className="flex items-center gap-2 text-error">
         <Icon name="trophy" size="sm" />
         <Typography variant="caption">Error loading achievements</Typography>
       </div>
@@ -230,7 +230,7 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
               </Typography>
             </div>
 
-            <div className="text-center p-4 bg-gradient-to-br from-surface-muted to-surface-card rounded-lg">
+            <div className="text-center p-4 bg-gradient-to-br from-surface-muted to-bg-surface-primary rounded-lg">
               <Icon
                 name="star"
                 size="md"
@@ -247,7 +247,7 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
               </Typography>
             </div>
 
-            <div className="text-center p-4 bg-gradient-to-br from-surface-muted to-surface-card rounded-lg">
+            <div className="text-center p-4 bg-gradient-to-br from-surface-muted to-bg-surface-primary rounded-lg">
               <Icon
                 name="award"
                 size="md"
@@ -314,7 +314,7 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
                         </Typography>
                         <Typography
                           variant="caption"
-                          className="text-text-muted"
+                          className="text-muted"
                         >
                           Awarded by {sticker.awardedByName}
                         </Typography>
@@ -355,19 +355,19 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
                         className={
                           medal.earned
                             ? "trophy-stat-secondary"
-                            : "text-text-muted"
+                            : "text-muted"
                         }
                       />
                       <div className="flex-1">
                         <Typography
                           variant="body-sm"
-                          className={`font-semibold ${medal.earned ? "" : "text-text-muted"}`}
+                          className={`font-semibold ${medal.earned ? "" : "text-muted"}`}
                         >
                           {medal.name}
                         </Typography>
                         <Typography
                           variant="caption"
-                          className="text-text-muted"
+                          className="text-muted"
                         >
                           {medal.description}
                         </Typography>
@@ -387,7 +387,7 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
                               </div>
                               <Typography
                                 variant="caption"
-                                className="text-text-muted"
+                                className="text-muted"
                               >
                                 {medal.progress}/{medal.maxProgress}
                               </Typography>
@@ -416,7 +416,7 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
                 </Typography>
                 <Typography
                   variant="body-sm"
-                  className="text-text-muted content-narrow"
+                  className="text-muted content-narrow"
                 >
                   Start earning achievements by completing tasks, connecting
                   with your team, and reaching your goals. Your coach can award

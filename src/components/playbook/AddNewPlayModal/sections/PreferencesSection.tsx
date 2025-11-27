@@ -36,7 +36,7 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
     <div className="bg-surface-secondary/30 rounded-lg p-spacing-md">
       <Typography
         variant="label-lg"
-        className="block mb-spacing-sm text-text-primary"
+        className="block mb-spacing-sm text-primary"
       >
         Situational Preferences
       </Typography>
@@ -44,14 +44,14 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
         <div>
           <Typography
             variant="label-md"
-            className="block mb-spacing-xs text-text-secondary"
+            className="block mb-spacing-xs text-secondary"
           >
             Down
           </Typography>
           <select
             value={prefDown}
             onChange={(e) => onPrefDownChange(e.target.value)}
-            className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+            className="w-full px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
           >
             <option value="">Any</option>
             {downOptions.map((opt) => (
@@ -64,14 +64,14 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
         <div>
           <Typography
             variant="label-md"
-            className="block mb-spacing-xs text-text-secondary"
+            className="block mb-spacing-xs text-secondary"
           >
             Distance
           </Typography>
           <select
             value={prefDistance}
             onChange={(e) => onPrefDistanceChange(e.target.value)}
-            className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+            className="w-full px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
           >
             <option value="">Any</option>
             {distanceOptions.map((opt) => (
@@ -84,14 +84,14 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
         <div>
           <Typography
             variant="label-md"
-            className="block mb-spacing-xs text-text-secondary"
+            className="block mb-spacing-xs text-secondary"
           >
             Hash
           </Typography>
           <select
             value={prefHash}
             onChange={(e) => onPrefHashChange(e.target.value)}
-            className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+            className="w-full px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
           >
             <option value="">Any</option>
             {hashOptions.map((opt) => (
@@ -104,7 +104,7 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
         <div>
           <Typography
             variant="label-md"
-            className="block mb-spacing-xs text-text-secondary"
+            className="block mb-spacing-xs text-secondary"
           >
             Coverage
           </Typography>
@@ -113,13 +113,13 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
             value={prefCoverage}
             onChange={(e) => onPrefCoverageChange(e.target.value)}
             placeholder="e.g., Man, Zone"
-            className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+            className="w-full px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
           />
         </div>
         <div>
           <Typography
             variant="label-md"
-            className="block mb-spacing-xs text-text-secondary"
+            className="block mb-spacing-xs text-secondary"
           >
             Defensive Front
           </Typography>
@@ -128,7 +128,7 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
             value={prefFront}
             onChange={(e) => onPrefFrontChange(e.target.value)}
             placeholder="e.g., 4-3, 3-4"
-            className="w-full px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+            className="w-full px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
           />
         </div>
       </div>

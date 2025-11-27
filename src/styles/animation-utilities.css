@@ -97,19 +97,19 @@
 
 /* Semantic transitions for common interactions */
 .transition-hover {
-  transition: var(--semantic-animation-hover-transition);
+  transition: var(--transition-all);
 }
 
 .transition-press {
-  transition: var(--semantic-animation-press-transition);
+  transition: var(--transition-transform);
 }
 
 .transition-base {
-  transition: var(--semantic-animation-base-transition);
+  transition: var(--transition-all);
 }
 
 .transition-modal {
-  transition: var(--semantic-animation-modal-transition);
+  transition: var(--transition-opacity);
 }
 
 /* ============================================================================
@@ -279,7 +279,7 @@
 }
 
 .animate-spin {
-  animation: spin var(--semantic-animation-loading-duration)
+  animation: spin var(--duration-slow)
     var(--animation-timing-linear) infinite;
 }
 
@@ -300,7 +300,7 @@
 }
 
 .animate-pulse {
-  animation: pulse var(--semantic-animation-loading-duration)
+  animation: pulse var(--duration-slow)
     var(--animation-timing-ease-in-out) infinite;
 }
 
@@ -366,10 +366,10 @@
 /* Hover lift effect */
 .hover-lift {
   transition:
-    transform var(--semantic-animation-hover-duration)
-      var(--semantic-animation-hover-timing),
-    box-shadow var(--semantic-animation-hover-duration)
-      var(--semantic-animation-hover-timing);
+    transform var(--duration-fast)
+      var(ease-in-out),
+    box-shadow var(--duration-fast)
+      var(ease-in-out);
 }
 
 .hover-lift:hover {
@@ -378,8 +378,8 @@
 
 /* Hover scale effect */
 .hover-scale {
-  transition: transform var(--semantic-animation-hover-duration)
-    var(--semantic-animation-hover-timing);
+  transition: transform var(--duration-fast)
+    var(ease-in-out);
 }
 
 .hover-scale:hover {
@@ -388,8 +388,8 @@
 
 /* Hover glow effect */
 .hover-glow {
-  transition: box-shadow var(--semantic-animation-hover-duration)
-    var(--semantic-animation-hover-timing);
+  transition: box-shadow var(--duration-fast)
+    var(ease-in-out);
 }
 
 .hover-glow:hover {
@@ -398,8 +398,8 @@
 
 /* Press effect (active state) */
 .press-effect {
-  transition: transform var(--semantic-animation-press-duration)
-    var(--semantic-animation-press-timing);
+  transition: transform var(--duration-instant)
+    var(ease-out);
 }
 
 .press-effect:active {

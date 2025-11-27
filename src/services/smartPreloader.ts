@@ -8,7 +8,7 @@
 interface PreloadableResource {
   id: string;
   loader: () => Promise<any>;
-  priority: 'high' | 'medium' | 'low';
+  priority: "high" | "medium" | "low";
   size: number; // Estimated size in KB
   context: string[]; // Contexts where this should be preloaded
 }
@@ -70,7 +70,7 @@ export class SmartPreloader {
    * Manually preload a specific resource
    */
   async preloadResource(resourceId: string): Promise<void> {
-    const resource = this.preloadQueue.find(r => r.id === resourceId);
+    const resource = this.preloadQueue.find((r) => r.id === resourceId);
     if (!resource || this.preloadedResources.has(resourceId)) {
       return;
     }
@@ -87,8 +87,8 @@ export class SmartPreloader {
    * Preload resources for a specific context
    */
   async preloadForContext(context: string): Promise<void> {
-    const relevantResources = this.preloadQueue.filter(r =>
-      r.context.includes(context) && !this.preloadedResources.has(r.id)
+    const relevantResources = this.preloadQueue.filter(
+      (r) => r.context.includes(context) && !this.preloadedResources.has(r.id)
     );
 
     // Sort by priority
@@ -98,8 +98,10 @@ export class SmartPreloader {
     });
 
     // Preload high priority resources first
-    const highPriority = relevantResources.filter(r => r.priority === 'high');
-    const mediumPriority = relevantResources.filter(r => r.priority === 'medium');
+    const highPriority = relevantResources.filter((r) => r.priority === "high");
+    const mediumPriority = relevantResources.filter(
+      (r) => r.priority === "medium"
+    );
 
     await this.preloadBatch(highPriority);
     await this.preloadBatch(mediumPriority);
@@ -122,30 +124,32 @@ export class SmartPreloader {
   /**
    * Analyze user action patterns to predict next actions
    */
-  private analyzePatterns(actions: UserAction[]): Array<{ context: string; confidence: number }> {
+  private analyzePatterns(
+    actions: UserAction[]
+  ): Array<{ context: string; confidence: number }> {
     const predictions: Array<{ context: string; confidence: number }> = [];
 
     // Pattern: User opened playbook → likely to create/edit plays
-    if (actions.some(a => a.type === 'view_playbook')) {
-      predictions.push({ context: 'playbook_editing', confidence: 0.8 });
+    if (actions.some((a) => a.type === "view_playbook")) {
+      predictions.push({ context: "playbook_editing", confidence: 0.8 });
     }
 
     // Pattern: User viewed analytics → likely to continue analyzing
-    if (actions.some(a => a.type === 'view_analytics')) {
-      predictions.push({ context: 'analytics_deep_dive', confidence: 0.7 });
+    if (actions.some((a) => a.type === "view_analytics")) {
+      predictions.push({ context: "analytics_deep_dive", confidence: 0.7 });
     }
 
     // Pattern: User created a play → likely to create more
-    if (actions.some(a => a.type === 'create_play')) {
-      predictions.push({ context: 'formation_builder', confidence: 0.9 });
+    if (actions.some((a) => a.type === "create_play")) {
+      predictions.push({ context: "formation_builder", confidence: 0.9 });
     }
 
     // Pattern: User viewed team bulletin → likely to engage socially
-    if (actions.some(a => a.type === 'view_bulletin')) {
-      predictions.push({ context: 'social_interaction', confidence: 0.6 });
+    if (actions.some((a) => a.type === "view_bulletin")) {
+      predictions.push({ context: "social_interaction", confidence: 0.6 });
     }
 
-    return predictions.filter(p => p.confidence > 0.5);
+    return predictions.filter((p) => p.confidence > 0.5);
   }
 
   /**
@@ -161,12 +165,12 @@ export class SmartPreloader {
       for (let i = 0; i < resources.length; i += this.MAX_CONCURRENT_PRELOADS) {
         const batch = resources.slice(i, i + this.MAX_CONCURRENT_PRELOADS);
         await Promise.allSettled(
-          batch.map(resource => this.preloadResource(resource.id))
+          batch.map((resource) => this.preloadResource(resource.id))
         );
 
         // Small delay between batches
         if (i + this.MAX_CONCURRENT_PRELOADS < resources.length) {
-          await new Promise(resolve => setTimeout(resolve, 100));
+          await new Promise((resolve) => setTimeout(resolve, 100));
         }
       }
     } finally {
@@ -180,32 +184,18 @@ export class SmartPreloader {
   private initializePreloadableResources(): void {
     this.preloadQueue = [
       {
-        id: 'formation-builder-modal',
-        loader: () => import('../components/playbook/FormationBuilderModal'),
-        priority: 'high',
-        size: 120,
-        context: ['playbook_editing', 'formation_builder'],
-      },
-      {
-        id: 'diagram-editor',
-        loader: () => import('../components/playbook/diagram-editor/DiagramEditor'),
-        priority: 'high',
-        size: 150,
-        context: ['playbook_editing', 'diagram_editing'],
-      },
-      {
-        id: 'game-plan-modal',
-        loader: () => import('../components/playbook/GamePlanModal'),
-        priority: 'medium',
+        id: "game-plan-modal",
+        loader: () => import("../components/playbook/GamePlanModal"),
+        priority: "medium",
         size: 80,
-        context: ['game_planning'],
+        context: ["game_planning"],
       },
       {
-        id: 'practice-script-modal',
-        loader: () => import('../components/practice/PracticeScriptModal'),
-        priority: 'low',
+        id: "practice-script-modal",
+        loader: () => import("../components/practice/PracticeScriptModal"),
+        priority: "low",
         size: 40,
-        context: ['practice_planning'],
+        context: ["practice_planning"],
       },
     ];
   }

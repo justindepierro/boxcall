@@ -524,7 +524,7 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   return (
     <div ref={containerRef} className="relative">
       {label && (
-        <label className="block text-sm font-medium text-text-primary mb-2">
+        <label className="block text-sm font-medium text-primary mb-2">
           {label}
           {required && <span className="text-status-error ml-1">*</span>}
         </label>
@@ -550,9 +550,9 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
             ${
               error
                 ? "border-status-error focus:ring-status-error/50 focus:border-status-error focus:shadow-red-500/10"
-                : "border-border-medium hover:border-jade-300 dark:hover:border-jade-600"
+                : "border-medium hover:border-jade-300 dark:hover:border-jade-600"
             }
-            ${disabled ? "bg-surface-subtle text-text-muted cursor-not-allowed" : "bg-white/80 dark:bg-surface-primary dark:bg-gray-900/80"}
+            ${disabled ? "bg-surface-subtle text-muted cursor-not-allowed" : "bg-white/80 dark:bg-surface-primary dark:bg-gray-900/80"}
             ${className}
           `}
         />

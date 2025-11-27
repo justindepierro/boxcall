@@ -113,7 +113,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
       {/* Rep Counter Dots */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <Typography variant="body-sm" className="text-text-secondary">
+          <Typography variant="body-sm" className="text-secondary">
             Rep Progress
           </Typography>
           <Typography variant="body-sm" className="font-medium">
@@ -143,7 +143,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
                       ? "bg-success border-success text-white"
                       : isCurrent
                         ? "bg-primary border-primary text-white ring-2 ring-primary/30"
-                        : "bg-surface-secondary border-border text-text-muted hover:border-primary/50"
+                        : "bg-surface-secondary border-border text-muted hover:border-primary/50"
                   }
                   ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
                 `}
@@ -171,7 +171,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
             </Typography>
             <button
               onClick={() => setShowNotes(false)}
-              className="text-text-muted hover:text-text-primary"
+              className="text-muted hover:text-primary"
             >
               <Icon name="x-circle" size="sm" />
             </button>
@@ -179,7 +179,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
 
           {/* Quick Tags */}
           <div>
-            <Typography variant="body-xs" className="text-text-muted mb-2">
+            <Typography variant="body-xs" className="text-muted mb-2">
               Quick Tags
             </Typography>
             <div className="flex flex-wrap gap-2">
@@ -195,7 +195,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
                       ${
                         isSelected
                           ? "bg-primary text-white border-primary"
-                          : "bg-surface-primary border-border text-text-secondary hover:border-primary/50"
+                          : "bg-surface-primary border-border text-secondary hover:border-primary/50"
                       }
                     `}
                   >
@@ -208,7 +208,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
 
           {/* Notes Textarea */}
           <div>
-            <Typography variant="body-xs" className="text-text-muted mb-2">
+            <Typography variant="body-xs" className="text-muted mb-2">
               Notes
             </Typography>
             <textarea
@@ -226,7 +226,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
       {/* Quick Result Buttons */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <Typography variant="body-sm" className="text-text-secondary">
+          <Typography variant="body-sm" className="text-secondary">
             Quick Result (or use keyboard: S/F/N/K)
           </Typography>
           {!showNotes && (
@@ -297,7 +297,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
                 <Typography variant="body-md" className="font-semibold">
                   Neutral
                 </Typography>
-                <Typography variant="body-xs" className="text-text-muted">
+                <Typography variant="body-xs" className="text-muted">
                   Press N
                 </Typography>
               </div>
@@ -318,7 +318,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
                 <Typography variant="body-md" className="font-semibold">
                   Skip
                 </Typography>
-                <Typography variant="body-xs" className="text-text-muted">
+                <Typography variant="body-xs" className="text-muted">
                   Press K
                 </Typography>
               </div>
@@ -331,7 +331,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
       <div className="bg-surface-secondary border border-border rounded-lg p-3">
         <div className="flex items-start gap-2">
           <Icon name="info" size="sm" className="text-primary mt-0.5" />
-          <Typography variant="body-xs" className="text-text-secondary">
+          <Typography variant="body-xs" className="text-secondary">
             <strong>Success:</strong> Rep executed well
             <br />
             <strong>Failure:</strong> Rep did not work

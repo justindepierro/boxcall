@@ -21,11 +21,11 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
         <div>
           <span className="block">
             {/* Replaces raw h2 utility heading with Typography semantic */}
-            <span className="Typography typography-headline-sm text-text-primary tracking-tight">
+            <span className="Typography typography-headline-sm text-primary tracking-tight">
               Master Calendar
             </span>
           </span>
-          <p className="text-xs text-text-secondary mt-0.5">
+          <p className="text-xs text-secondary mt-0.5">
             Unified schedule & event management
           </p>
         </div>

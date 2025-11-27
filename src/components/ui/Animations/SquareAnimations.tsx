@@ -61,12 +61,12 @@ export const SquareProgressBar: React.FC<ProgressBarProps> = ({
       {(label || showPercentage) && (
         <div className="flex justify-between items-center mb-2">
           {label && (
-            <span className="text-sm font-sans font-medium text-text-primary dark:text-border-light">
+            <span className="text-sm font-sans font-medium text-primary dark:text-border-light">
               {label}
             </span>
           )}
           {showPercentage && (
-            <span className="text-sm font-mono font-bold text-text-secondary">
+            <span className="text-sm font-mono font-bold text-secondary">
               {clampedValue}%
             </span>
           )}
@@ -133,7 +133,7 @@ export const SquareLoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         aria-hidden="true"
       />
       {label && (
-        <span className="text-sm font-sans font-medium text-text-secondary">
+        <span className="text-sm font-sans font-medium text-secondary">
           {label}
         </span>
       )}
@@ -208,7 +208,7 @@ export const SquarePulseIndicator: React.FC<PulseIndicatorProps> = ({
     <div className="flex items-center space-x-2">
       <div className={`${getSize()} ${getColors()} rounded-lg animate-pulse`} />
       {label && (
-        <span className="text-sm font-sans font-medium text-text-primary dark:text-border-light">
+        <span className="text-sm font-sans font-medium text-primary dark:text-border-light">
           {label}
         </span>
       )}
@@ -244,7 +244,7 @@ export const FootballLoadingSpinner: React.FC<{ message?: string }> = ({
         </div>
       </div>
       <div className="text-center">
-        <p className="text-lg font-display font-semibold mb-1 text-text-primary">
+        <p className="text-lg font-display font-semibold mb-1 text-primary">
           {message}
         </p>
         <SquareProgressBar

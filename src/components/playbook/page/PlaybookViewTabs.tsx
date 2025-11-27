@@ -76,7 +76,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               <Typography
                 variant="headline-md"
                 as="h1"
-                className="text-text-primary font-semibold"
+                className="text-primary font-semibold"
               >
                 {title}
               </Typography>

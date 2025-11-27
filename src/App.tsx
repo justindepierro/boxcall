@@ -17,7 +17,8 @@ import {
   AnalyticsDebugger,
 } from "./components/analytics/AnalyticsProvider";
 import { AppProvider } from "./components/core";
-import { SaveStateProvider, useSaveState } from "./contexts/SaveStateContext";
+import { SaveStateProvider } from "./contexts/SaveStateContext";
+import { useSaveState } from "./hooks/useSaveState";
 import { UndoRedoProvider } from "./contexts/UndoRedoContext";
 import { PopoverProvider } from "./contexts/PopoverContext";
 import { PendingSavesNotification } from "./components/notifications/PendingSavesNotification";

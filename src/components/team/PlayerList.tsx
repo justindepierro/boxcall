@@ -58,7 +58,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
   };
   if (players.length === 0) {
     return (
-      <div className="surface-card rounded-lg shadow-sm p-8">
+      <div className="bg-surface-primary rounded-lg shadow-sm p-8">
         <div className="text-center">
           <div className="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full surface-subtle0/10 text-jade-600 dark:text-jade-400">
             <Icon name="users" size="lg" />
@@ -66,11 +66,11 @@ export const PlayerList: React.FC<PlayerListProps> = ({
           <Typography
             variant="headline-sm"
             as="h3"
-            className="text-text-primary mb-2"
+            className="text-primary mb-2"
           >
             No Players Yet
           </Typography>
-          <p className="text-text-secondary mb-6">
+          <p className="text-secondary mb-6">
             Start building your roster by adding players manually or importing
             from CSV.
           </p>
@@ -92,9 +92,9 @@ export const PlayerList: React.FC<PlayerListProps> = ({
     );
   }
   return (
-    <div className="surface-card rounded-lg shadow-sm">
+    <div className="bg-surface-primary rounded-lg shadow-sm">
       {/* Search and Filters */}
-      <div className="bc-card-padding">
+      <div className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {/* Search */}
           <div className="md:col-span-2">
@@ -111,7 +111,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             <select
               value={filterLevel}
               onChange={(e) => setFilterLevel(e.target.value)}
-              className="w-full px-3 py-2 border border-border-medium dark:border-border-medium rounded-lg shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle text-text-primary font-sans"
+              className="w-full px-3 py-2 border border-medium dark:border-medium rounded-lg shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle text-primary font-sans"
             >
               <option value="all">All Levels</option>
               {TEAM_LEVELS.map((level) => (
@@ -126,7 +126,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             <select
               value={filterPosition}
               onChange={(e) => setFilterPosition(e.target.value)}
-              className="w-full px-3 py-2 border border-border-medium dark:border-border-medium rounded-lg shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle text-text-primary font-sans"
+              className="w-full px-3 py-2 border border-medium dark:border-medium rounded-lg shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle text-primary font-sans"
             >
               <option value="all">All Positions</option>
               {allPositions.map((position) => (
@@ -156,10 +156,10 @@ export const PlayerList: React.FC<PlayerListProps> = ({
         </div>
       </div>
       {/* Player Grid */}
-      <div className="bc-card-padding">
+      <div className="p-6">
         {filteredPlayers.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-text-muted">
+            <p className="text-muted">
               No players match your search criteria.
             </p>
           </div>
@@ -174,7 +174,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center space-x-3">
                     {/* Jersey Number */}
-                    <div className="w-12 h-12 surface-subtle0 rounded-lg flex items-center justify-center text-text-inverse font-display font-bold">
+                    <div className="w-12 h-12 surface-subtle0 rounded-lg flex items-center justify-center text-inverse font-display font-bold">
                       {player.jersey_number || "?"}
                     </div>
                     {/* Name and Level with UserAvatar */}
@@ -196,7 +196,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                         </Typography>
                       )}
                       <span
-                        className={`inline-block px-2 py-1 font-medium rounded-full text-text-inverse bg-${getTeamLevelColor(player.team_level)}-600 mt-1`}
+                        className={`inline-block px-2 py-1 font-medium rounded-full text-inverse bg-${getTeamLevelColor(player.team_level)}-600 mt-1`}
                       >
                         <Typography variant="caption" as="span">
                           {getTeamLevelLabel(player.team_level)}
@@ -213,7 +213,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                         size="xs"
                         onClick={() => onEditPlayer(player)}
                         aria-label="Edit Player"
-                        className="p-1 h-auto w-auto text-text-secondary hover:text-brand-jade"
+                        className="p-1 h-auto w-auto text-secondary hover:text-brand-jade"
                       >
                         <Icon name="edit" size="sm" />
                       </Button>
@@ -225,7 +225,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                         size="xs"
                         onClick={() => onDeletePlayer(player.id)}
                         aria-label="Remove Player"
-                        className="p-1 h-auto w-auto text-text-secondary hover:text-text-error"
+                        className="p-1 h-auto w-auto text-secondary hover:text-error"
                       >
                         <Icon name="delete" size="sm" />
                       </Button>
@@ -238,7 +238,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                     {player.positions.map((position) => (
                       <span
                         key={position}
-                        className="inline-block px-2 py-1 font-medium surface-subtle text-text-secondary rounded-lg"
+                        className="inline-block px-2 py-1 font-medium surface-subtle text-secondary rounded-lg"
                       >
                         <Typography variant="caption" as="span">
                           #{position}

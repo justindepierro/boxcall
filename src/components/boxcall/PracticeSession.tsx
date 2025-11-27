@@ -180,7 +180,7 @@ const PracticeSession: React.FC = () => {
               <Typography variant="body-md" className="mb-4">
                 <strong>Session Overview:</strong>
               </Typography>
-              <ul className="space-y-2 text-text-secondary">
+              <ul className="space-y-2 text-secondary">
                 <li className="flex items-start gap-2">
                   <Icon name="check" size="sm" className="mt-0.5" />
                   <Typography variant="body-sm">
@@ -280,7 +280,7 @@ const PracticeSession: React.FC = () => {
           {/* Overall Progress Bar */}
           <div className="mt-4">
             <div className="flex items-center justify-between mb-2">
-              <Typography variant="body-sm" className="text-text-secondary">
+              <Typography variant="body-sm" className="text-secondary">
                 Overall Progress
               </Typography>
               <Typography variant="body-sm" className="font-medium">
@@ -348,7 +348,7 @@ const PracticeSession: React.FC = () => {
                     <div className="flex items-center justify-between mb-2">
                       <Typography
                         variant="body-sm"
-                        className="text-text-secondary"
+                        className="text-secondary"
                       >
                         Play Progress
                       </Typography>
@@ -368,7 +368,7 @@ const PracticeSession: React.FC = () => {
                     <div className="bg-surface-secondary rounded-lg p-3">
                       <Typography
                         variant="body-sm"
-                        className="text-text-secondary"
+                        className="text-secondary"
                       >
                         <strong>Coach Notes:</strong> {currentPlay.notes}
                       </Typography>
@@ -423,7 +423,7 @@ const PracticeSession: React.FC = () => {
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Add notes for this rep..."
-                  className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-text-primary resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-primary resize-none focus:outline-none focus:ring-2 focus:ring-primary"
                   rows={3}
                   disabled={isPaused}
                 />

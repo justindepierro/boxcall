@@ -45,10 +45,10 @@ export const TagInput: React.FC<TagInputProps> = ({
 }) => {
   const getTagColorClasses = () => {
     const colors = {
-      info: "bg-text-info/10 text-text-info border-text-info/20",
-      success: "bg-text-success/10 text-text-success border-text-success/20",
-      warning: "bg-text-warning/10 text-text-warning border-text-warning/20",
-      error: "bg-text-error/10 text-text-error border-text-error/20",
+      info: "bg-text-info/10 text-info border-text-info/20",
+      success: "bg-text-success/10 text-success border-text-success/20",
+      warning: "bg-text-warning/10 text-warning border-text-warning/20",
+      error: "bg-text-error/10 text-error border-text-error/20",
     };
     return colors[tagColor];
   };
@@ -68,7 +68,7 @@ export const TagInput: React.FC<TagInputProps> = ({
     <div className={className}>
       <Typography
         variant="label-md"
-        className="block mb-spacing-xs text-text-secondary"
+        className="block mb-spacing-xs text-secondary"
       >
         {icon && (
           <Icon name={icon as any} className="h-4 w-4 mr-spacing-xs inline" />
@@ -118,7 +118,7 @@ export const TagInput: React.FC<TagInputProps> = ({
             onChange={(e) => onNewTagChange(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            className="flex-1 px-spacing-sm py-spacing-xs text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+            className="flex-1 px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
           />
           <Button
             size="sm"

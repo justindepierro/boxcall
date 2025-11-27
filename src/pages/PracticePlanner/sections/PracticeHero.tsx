@@ -37,15 +37,15 @@ export function PracticeHero({
       onOpen: () => scrollToSection("practice-schedule-blocks"),
       body: (
         <div className="space-y-2 text-sm">
-          <div className="flex items-center justify-between text-text-secondary">
+          <div className="flex items-center justify-between text-secondary">
             <span>Total blocks</span>
-            <span className="font-semibold text-text-primary">
+            <span className="font-semibold text-primary">
               {currentBlocks.length}
             </span>
           </div>
-          <div className="flex items-center justify-between text-xs text-text-secondary">
+          <div className="flex items-center justify-between text-xs text-secondary">
             <span>Duration planned</span>
-            <span className="font-semibold text-text-primary">
+            <span className="font-semibold text-primary">
               {totalDurationMinutes} min
             </span>
           </div>
@@ -65,15 +65,15 @@ export function PracticeHero({
       onOpen: () => scrollToSection("practice-controls"),
       body: (
         <div className="space-y-2 text-sm">
-          <div className="flex items-center justify-between text-text-secondary">
+          <div className="flex items-center justify-between text-secondary">
             <span>Elapsed</span>
-            <span className="font-semibold text-text-primary">
+            <span className="font-semibold text-primary">
               {practiceElapsed || "00:00"}
             </span>
           </div>
-          <div className="flex items-center justify-between text-xs text-text-secondary">
+          <div className="flex items-center justify-between text-xs text-secondary">
             <span>Time to finish</span>
-            <span className="font-semibold text-text-primary">
+            <span className="font-semibold text-primary">
               {practiceFinishEta || "--:--"}
             </span>
           </div>
@@ -93,15 +93,15 @@ export function PracticeHero({
       onOpen: () => scrollToSection("practice-schedule-summary"),
       body: (
         <div className="space-y-2 text-sm">
-          <div className="flex items-center justify-between text-text-secondary">
+          <div className="flex items-center justify-between text-secondary">
             <span>Next session</span>
-            <span className="font-semibold text-text-primary">
+            <span className="font-semibold text-primary">
               {scheduleDateLabel}
             </span>
           </div>
-          <div className="flex items-center justify-between text-xs text-text-secondary">
+          <div className="flex items-center justify-between text-xs text-secondary">
             <span>Location</span>
-            <span className="font-semibold text-text-primary">
+            <span className="font-semibold text-primary">
               {scheduleLocationLabel}
             </span>
           </div>
@@ -112,12 +112,12 @@ export function PracticeHero({
 
   return (
     <div className="mb-8">
-      <div className="rounded-xl bg-surface-primary p-5 shadow-lg backdrop-blur-sm sm:p-6 xl:p-7">
+      <div className="rounded-xl bg-primary p-5 shadow-lg backdrop-blur-sm sm:p-6 xl:p-7">
         <div className="mb-6">
-          <Typography variant="headline-sm" className="text-text-primary">
+          <Typography variant="headline-sm" className="text-primary">
             Command your practice flow
           </Typography>
-          <Typography variant="body-sm" className="text-text-secondary mt-1">
+          <Typography variant="body-sm" className="text-secondary mt-1">
             Jump straight into blocks, timing, or logistics with a single tap.
           </Typography>
         </div>

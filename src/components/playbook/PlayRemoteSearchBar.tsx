@@ -48,7 +48,7 @@ export const PlayRemoteSearchBar: React.FC<PlayRemoteSearchBarProps> = ({
       </label>
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Icon name="search" className="h-4 w-4 text-text-muted" />
+          <Icon name="search" className="h-4 w-4 text-muted" />
         </div>
         <input
           id={inputId}
@@ -57,20 +57,20 @@ export const PlayRemoteSearchBar: React.FC<PlayRemoteSearchBarProps> = ({
           onChange={(e) => setQuery(e.target.value)}
           placeholder={placeholder}
           autoComplete="off"
-          className="block w-full pl-10 pr-10 py-2 rounded-lg border-subtle surface-card text-sm
+          className="block w-full pl-10 pr-10 py-2 rounded-lg border-subtle bg-surface-primary text-sm
                      focus:ring-2 focus:ring-jade-500 focus:border-jade-600 transition-colors"
         />
         {loading && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
             <Icon
               name="refresh-cw"
-              className="h-4 w-4 animate-spin text-text-muted"
+              className="h-4 w-4 animate-spin text-muted"
             />
           </div>
         )}
       </div>
       {query.trim().length >= 2 && (results.length > 0 || loading || error) && (
-        <div className="absolute z-50 mt-1 w-full max-h-72 overflow-auto rounded-lg border-subtle surface-card elevation-dropdown shadow-sm">
+        <div className="absolute z-50 mt-1 w-full max-h-72 overflow-auto rounded-lg border-subtle bg-surface-primary elevation-dropdown shadow-sm">
           <div className="py-1">
             {error && (
               <div className="px-3 py-2 text-xsssss text-error flex items-center gap-2">
@@ -78,7 +78,7 @@ export const PlayRemoteSearchBar: React.FC<PlayRemoteSearchBarProps> = ({
               </div>
             )}
             {!error && !loading && results.length === 0 && (
-              <div className="px-3 py-2 text-xsssss text-text-muted">
+              <div className="px-3 py-2 text-xsssss text-muted">
                 No matches
               </div>
             )}
@@ -94,17 +94,17 @@ export const PlayRemoteSearchBar: React.FC<PlayRemoteSearchBarProps> = ({
                 >
                   <span className="truncate flex-1">{r.play_id}</span>
                   {r.rank !== undefined && (
-                    <span className="ml-2 text-2xs text-text-muted">
+                    <span className="ml-2 text-2xs text-muted">
                       r:{r.rank?.toFixed(3)}
                     </span>
                   )}
                   {r.similarity !== undefined && (
-                    <span className="ml-2 text-2xs text-text-muted">
+                    <span className="ml-2 text-2xs text-muted">
                       s:{r.similarity?.toFixed(3)}
                     </span>
                   )}
                   {r.source === "fuzzy" && (
-                    <span className="ml-2 rounded-lg surface-subtle0/15 text-text-warning px-1 py-0.5 text-2xs">
+                    <span className="ml-2 rounded-lg surface-subtle0/15 text-warning px-1 py-0.5 text-2xs">
                       fuzzy
                     </span>
                   )}
@@ -114,7 +114,7 @@ export const PlayRemoteSearchBar: React.FC<PlayRemoteSearchBarProps> = ({
           {attemptedFuzzy &&
             results.length > 0 &&
             results[0].source === "fuzzy" && (
-              <div className="px-3 py-1 border-t-subtle text-2xs text-text-muted flex justify-between">
+              <div className="px-3 py-1 border-t-subtle text-2xs text-muted flex justify-between">
                 <span>Fuzzy fallback results</span>
                 <span className="opacity-70">pg_trgm</span>
               </div>

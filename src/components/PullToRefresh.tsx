@@ -164,7 +164,7 @@ export function PullToRefresh({
         >
           <Icon
             name="refresh-cw"
-            className={`h-5 w-5 ${isRefreshing ? "text-brand-primary" : "text-text-secondary"}`}
+            className={`h-5 w-5 ${isRefreshing ? "text-brand-primary" : "text-secondary"}`}
           />
         </motion.div>
       </motion.div>

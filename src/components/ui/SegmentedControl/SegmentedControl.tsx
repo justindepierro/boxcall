@@ -26,7 +26,7 @@ export function SegmentedControl<T extends string = string>({
     <div
       role="tablist"
       aria-label={ariaLabel}
-      className={`inline-flex items-center p-0.5 border rounded-xl bg-[var(--semantic-bg-secondary)] border-[var(--semantic-border)] ${className}`}
+      className={`inline-flex items-center p-0.5 border rounded-xl bg-[var(--color-bg-secondary)] border-[var(--color-border-default)] ${className}`}
       style={{
         boxShadow: "var(--panel-shadow)",
       }}
@@ -41,7 +41,7 @@ export function SegmentedControl<T extends string = string>({
             size="xs"
             variant={selected ? "subtle" : "ghost"}
             className={`inline-flex items-center gap-2 px-3 h-8 rounded-lg text-sm ${
-              selected ? "surface-card" : ""
+              selected ? "bg-surface-primary" : ""
             }`}
           >
             {opt.icon ? <span className="w-4 h-4">{opt.icon}</span> : null}

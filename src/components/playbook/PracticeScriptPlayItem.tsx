@@ -142,12 +142,12 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
   };
 
   return (
-    <div className="bg-surface-card border border-border rounded-lg p-4 hover:shadow-sm transition-shadow">
+    <div className="bg-surface-primary border border-border rounded-lg p-4 hover:shadow-sm transition-shadow">
       <div className="flex items-start space-x-4">
         {/* Drag Handle */}
         <div
           {...dragHandleProps}
-          className="flex-shrink-0 mt-1 cursor-grab active:cursor-grabbing text-text-muted hover:text-text-primary"
+          className="flex-shrink-0 mt-1 cursor-grab active:cursor-grabbing text-muted hover:text-primary"
         >
           <Icon name="move" className="h-5 w-5" />
         </div>
@@ -165,7 +165,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
             <div className="flex-1 min-w-0">
               <Typography
                 variant="body-sm"
-                className="text-text-primary font-medium truncate"
+                className="text-primary font-medium truncate"
               >
                 {displayName}
               </Typography>
@@ -173,7 +173,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                 <Badge variant="neutral" size="sm">
                   {play.p_type}
                 </Badge>
-                <Typography variant="caption" className="text-text-secondary">
+                <Typography variant="caption" className="text-secondary">
                   {play.formation}
                 </Typography>
               </div>
@@ -185,7 +185,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsEditingNotes(!isEditingNotes)}
-                className="text-text-secondary hover:text-text-primary"
+                className="text-secondary hover:text-primary"
               >
                 <Icon
                   name={isEditingNotes ? "check" : "edit"}
@@ -196,7 +196,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                 variant="ghost"
                 size="sm"
                 onClick={onRemove}
-                className="text-text-secondary hover:text-error"
+                className="text-secondary hover:text-error"
               >
                 <Icon name="delete" className="h-4 w-4" />
               </Button>
@@ -226,7 +226,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                 </div>
               </div>
             ) : (
-              <Typography variant="body-sm" className="text-text-secondary">
+              <Typography variant="body-sm" className="text-secondary">
                 {scriptPlay.notes || "No notes added"}
               </Typography>
             )}
@@ -238,7 +238,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
             <div className="mb-4">
               <Typography
                 variant="caption"
-                className="text-text-secondary font-medium mb-2 block"
+                className="text-secondary font-medium mb-2 block"
               >
                 Repetitions
               </Typography>
@@ -256,11 +256,11 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                 <div className="flex-1 text-center">
                   <Typography
                     variant="body-lg"
-                    className="font-bold text-text-primary"
+                    className="font-bold text-primary"
                   >
                     {repetitionsValue}
                   </Typography>
-                  <Typography variant="caption" className="text-text-muted">
+                  <Typography variant="caption" className="text-muted">
                     reps
                   </Typography>
                 </div>
@@ -283,14 +283,14 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
               <div className="flex flex-col space-y-2">
                 <Typography
                   variant="caption"
-                  className="text-text-secondary font-medium"
+                  className="text-secondary font-medium"
                 >
                   Hash Mark
                 </Typography>
                 <select
                   value={hash}
                   onChange={(e) => handleScenarioChange("hash", e.target.value)}
-                  className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-card text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
                 >
                   <option value="left">Left Hash</option>
                   <option value="middle">Middle</option>
@@ -302,7 +302,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
               <div className="flex flex-col space-y-2">
                 <Typography
                   variant="caption"
-                  className="text-text-secondary font-medium"
+                  className="text-secondary font-medium"
                 >
                   Down & Distance
                 </Typography>
@@ -311,7 +311,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                   onChange={(e) =>
                     handleScenarioChange("downDistance", e.target.value)
                   }
-                  className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-card text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
                 >
                   <option value="1st & 10">1st & 10</option>
                   <option value="1st & 5">1st & 5</option>
@@ -331,7 +331,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
               <div className="flex flex-col space-y-2">
                 <Typography
                   variant="caption"
-                  className="text-text-secondary font-medium"
+                  className="text-secondary font-medium"
                 >
                   Field Position
                 </Typography>
@@ -340,7 +340,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                   onChange={(e) =>
                     handleScenarioChange("fieldPosition", e.target.value)
                   }
-                  className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-card text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
                 >
                   <option value="plus_territory">
                     Plus Territory (Opp 40-50)
@@ -355,7 +355,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
               <div className="flex flex-col space-y-2">
                 <Typography
                   variant="caption"
-                  className="text-text-secondary font-medium"
+                  className="text-secondary font-medium"
                 >
                   Defensive Front
                 </Typography>
@@ -369,7 +369,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                         handleScenarioChange("defensiveFront", e.target.value);
                       }
                     }}
-                    className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-card text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
                   >
                     <option value="base">Base Defense</option>
                     <option value="4-3">4-3 Front</option>
@@ -408,7 +408,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                           setCustomDefensiveFront("");
                         }
                       }}
-                      className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-card text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50 flex-1"
+                      className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50 flex-1"
                       placeholder="Custom front..."
                       autoFocus
                     />
@@ -428,7 +428,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
               <div className="flex flex-col space-y-2">
                 <Typography
                   variant="caption"
-                  className="text-text-secondary font-medium"
+                  className="text-secondary font-medium"
                 >
                   Coverage
                 </Typography>
@@ -442,7 +442,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                         handleScenarioChange("coverage", e.target.value);
                       }
                     }}
-                    className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-card text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
                   >
                     <option value="cover_2">Cover 2</option>
                     <option value="cover_3">Cover 3</option>
@@ -483,7 +483,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                       }}
                       placeholder="Type custom coverage..."
                       autoFocus
-                      className="flex-1 px-3 py-2 text-sm rounded-lg border border-border bg-surface-card text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      className="flex-1 px-3 py-2 text-sm rounded-lg border border-border bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
                     />
                     <Button
                       variant="ghost"
@@ -504,7 +504,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
               <div className="flex flex-col space-y-2">
                 <Typography
                   variant="caption"
-                  className="text-text-secondary font-medium"
+                  className="text-secondary font-medium"
                 >
                   Blitz Package
                 </Typography>
@@ -518,7 +518,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                         handleScenarioChange("blitz", e.target.value);
                       }
                     }}
-                    className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-card text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
                   >
                     <option value="none">No Blitz</option>
                     <option value="edge">Edge Blitz</option>
@@ -552,7 +552,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                       }}
                       placeholder="Type custom blitz..."
                       autoFocus
-                      className="flex-1 px-3 py-2 text-sm rounded-lg border border-border bg-surface-card text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      className="flex-1 px-3 py-2 text-sm rounded-lg border border-border bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
                     />
                     <Button
                       variant="ghost"

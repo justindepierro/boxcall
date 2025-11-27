@@ -64,11 +64,11 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
     setIsEditing(false);
   };
   return (
-    <Card className="p-6 surface-card">
+    <Card variant="default" size="lg">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2 mb-6">
-          <Icon name="user" size="lg" className="text-text-secondary" />
-          <Typography variant="headline-md" className="text-text-primary">
+          <Icon name="user" size="lg" className="text-secondary" />
+          <Typography variant="headline-md" className="text-primary">
             My Profile
           </Typography>
         </div>
@@ -100,7 +100,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
         <div>
           <Typography
             variant="body-sm"
-            className="font-semibold mb-2 text-text-primary"
+            className="font-semibold mb-2 text-primary"
           >
             About Me
           </Typography>
@@ -111,7 +111,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
                 setEditedProfile((prev) => ({ ...prev, bio: e.target.value }))
               }
               placeholder="Tell everyone about yourself..."
-              className="w-full p-3 border border-border-medium dark:border-text-tertiary rounded-lg surface-card text-text-primary"
+              className="w-full p-3 border border-medium dark:border-text-tertiary rounded-lg bg-surface-primary text-primary"
               rows={3}
             />
           ) : (
@@ -126,7 +126,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
             <div>
               <Typography
                 variant="body-sm"
-                className="font-semibold mb-2 text-text-primary"
+                className="font-semibold mb-2 text-primary"
               >
                 <Icon name="bar-chart" className="w-4 h-4 inline" /> GPA
               </Typography>
@@ -157,7 +157,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
             <div>
               <Typography
                 variant="body-sm"
-                className="font-semibold mb-2 text-text-primary"
+                className="font-semibold mb-2 text-primary"
               >
                 <Icon name="award" className="w-4 h-4 inline" /> Favorite
                 Position
@@ -186,11 +186,11 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
           <div>
             <Typography
               variant="body-sm"
-              className="font-semibold mb-3 text-text-primary"
+              className="font-semibold mb-3 text-primary"
             >
               <Icon
                 name="shirt"
-                className="inline h-4 w-4 align-middle text-text-secondary"
+                className="inline h-4 w-4 align-middle text-secondary"
               />{" "}
               My Gear (Drip)
             </Typography>
@@ -201,7 +201,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
                   leftIcon={
                     <Icon
                       name="shield"
-                      className="inline h-4 w-4 align-middle text-text-secondary"
+                      className="inline h-4 w-4 align-middle text-secondary"
                     />
                   }
                   value={editedProfile.gear.helmet}
@@ -218,7 +218,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
                   leftIcon={
                     <Icon
                       name="hand"
-                      className="inline h-4 w-4 align-middle text-text-secondary"
+                      className="inline h-4 w-4 align-middle text-secondary"
                     />
                   }
                   value={editedProfile.gear.gloves}
@@ -235,7 +235,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
                   leftIcon={
                     <Icon
                       name="circle"
-                      className="inline h-4 w-4 align-middle text-text-secondary"
+                      className="inline h-4 w-4 align-middle text-secondary"
                     />
                   }
                   value={editedProfile.gear.cleats}
@@ -251,10 +251,10 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
             ) : (
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-text-secondary">
+                  <span className="text-secondary">
                     <Icon
                       name="shield"
-                      className="inline h-4 w-4 align-middle text-text-secondary"
+                      className="inline h-4 w-4 align-middle text-secondary"
                     />{" "}
                     Helmet:
                   </span>
@@ -263,10 +263,10 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-text-secondary">
+                  <span className="text-secondary">
                     <Icon
                       name="hand"
-                      className="inline h-4 w-4 align-middle text-text-secondary"
+                      className="inline h-4 w-4 align-middle text-secondary"
                     />{" "}
                     Gloves:
                   </span>
@@ -275,10 +275,10 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-text-secondary">
+                  <span className="text-secondary">
                     <Icon
                       name="circle"
-                      className="inline h-4 w-4 align-middle text-text-secondary"
+                      className="inline h-4 w-4 align-middle text-secondary"
                     />{" "}
                     Cleats:
                   </span>
@@ -295,25 +295,25 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
           <div>
             <Typography
               variant="body-sm"
-              className="font-semibold mb-3 text-text-primary"
+              className="font-semibold mb-3 text-primary"
             >
               <Icon
                 name="graduation-cap"
-                className="inline h-4 w-4 align-middle text-text-secondary"
+                className="inline h-4 w-4 align-middle text-secondary"
               />{" "}
               Coaching Background
             </Typography>
             <div className="space-y-2">
               <div className="flex justify-between">
-                <span className="text-text-secondary">Experience:</span>
+                <span className="text-secondary">Experience:</span>
                 <span className="font-semibold">15 years</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-text-secondary">Certifications:</span>
+                <span className="text-secondary">Certifications:</span>
                 <span className="font-semibold">NFHS, USA Football</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-text-secondary">Specialty:</span>
+                <span className="text-secondary">Specialty:</span>
                 <span className="font-semibold">Offensive Coordinator</span>
               </div>
             </div>
@@ -324,7 +324,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
       <div className="mt-6 pt-4 border-t border-subtle dark:border-text-tertiary">
         <Typography
           variant="body-sm"
-          className="font-semibold mb-3 text-text-primary"
+          className="font-semibold mb-3 text-primary"
         >
           <Icon name="trending-up" className="w-4 h-4 inline" /> Profile Stats
         </Typography>
@@ -341,7 +341,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
             </Typography>
           </div>
           <div>
-            <Typography variant="body-lg" className="font-bold text-text-info">
+            <Typography variant="body-lg" className="font-bold text-info">
               3
             </Typography>
             <Typography variant="caption" color="muted">
@@ -349,10 +349,7 @@ export const PersonalProfile: React.FC<PersonalProfileProps> = ({
             </Typography>
           </div>
           <div>
-            <Typography
-              variant="body-lg"
-              className="font-bold text-text-primary"
-            >
+            <Typography variant="body-lg" className="font-bold text-primary">
               15
             </Typography>
             <Typography variant="caption" color="muted">

@@ -165,7 +165,7 @@ export const InlineEditableTextDemo: React.FC = () => {
         <Typography variant="headline-md" className="mb-4">
           Visual States
         </Typography>
-        <Typography variant="body-sm" className="mb-4 text-text-secondary">
+        <Typography variant="body-sm" className="mb-4 text-secondary">
           Try editing the fields below to see different validation states:
         </Typography>
         <div className="space-y-4">

@@ -175,7 +175,7 @@ export function FormationSelector({
       ) : (
         <>
           {/* Label */}
-          <label className="block text-sm font-medium text-text-primary mb-spacing-xs">
+          <label className="block text-sm font-medium text-primary mb-spacing-xs">
             Formation *
           </label>
 
@@ -184,14 +184,14 @@ export function FormationSelector({
             type="button"
             onClick={() => !disabled && setIsOpen(!isOpen)}
             disabled={disabled}
-            className="w-full flex items-center justify-between px-spacing-md py-spacing-sm bg-surface-secondary border border-border-primary rounded-lg text-text-primary hover:border-border-accent focus:outline-none focus:ring-2 focus:ring-accent-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full flex items-center justify-between px-spacing-md py-spacing-sm bg-surface-secondary border border-primary rounded-lg text-primary hover:border-accent focus:outline-none focus:ring-2 focus:ring-accent-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <div className="flex items-center gap-spacing-sm">
-              <Grid className="w-4 h-4 text-text-muted" />
+              <Grid className="w-4 h-4 text-muted" />
               {selectedFormation ? (
                 <div className="flex items-center gap-spacing-xs">
                   <span className="font-medium">{selectedFormation.name}</span>
-                  <span className="text-xs text-text-muted">
+                  <span className="text-xs text-muted">
                     {getDirectionLabel(selectedFormation.direction)}
                   </span>
                   {selectedFormation.personnel_name && (
@@ -201,11 +201,11 @@ export function FormationSelector({
                   )}
                 </div>
               ) : (
-                <span className="text-text-muted">Select formation...</span>
+                <span className="text-muted">Select formation...</span>
               )}
             </div>
             <ChevronDown
-              className={`w-4 h-4 text-text-muted transition-transform ${isOpen ? "rotate-180" : ""}`}
+              className={`w-4 h-4 text-muted transition-transform ${isOpen ? "rotate-180" : ""}`}
             />
           </button>
         </>
@@ -216,7 +216,7 @@ export function FormationSelector({
 
       {/* Dropdown Menu */}
       {isOpen && !isLoading && (
-        <div className="absolute z-50 mt-1 w-full bg-surface-secondary border border-border-primary rounded-lg shadow-lg max-h-96 overflow-y-auto">
+        <div className="absolute z-50 mt-1 w-full bg-surface-secondary border border-primary rounded-lg shadow-lg max-h-96 overflow-y-auto">
           {/* Create New Formation Button */}
           {onCreateNew && (
             <button
@@ -225,14 +225,14 @@ export function FormationSelector({
                 onCreateNew();
                 setIsOpen(false);
               }}
-              className="w-full px-spacing-md py-spacing-md flex items-center gap-spacing-sm bg-accent-500/10 hover:bg-accent-500/20 transition-colors border-b border-border-primary"
+              className="w-full px-spacing-md py-spacing-md flex items-center gap-spacing-sm bg-accent-500/10 hover:bg-accent-500/20 transition-colors border-b border-primary"
             >
               <Plus className="w-5 h-5 text-accent-500" />
               <div className="flex flex-col items-start">
                 <span className="font-semibold text-accent-500">
                   Create New Formation
                 </span>
-                <span className="text-xs text-text-muted">
+                <span className="text-xs text-muted">
                   Open Formation Builder to design a new formation
                 </span>
               </div>
@@ -244,8 +244,8 @@ export function FormationSelector({
             Object.keys(groupedFormations).map((category) => (
               <div key={category}>
                 {/* Category Header */}
-                <div className="px-spacing-md py-spacing-xs bg-surface-tertiary border-b border-border-primary">
-                  <span className="text-xs font-medium text-text-muted uppercase tracking-wide">
+                <div className="px-spacing-md py-spacing-xs bg-surface-tertiary border-b border-primary">
+                  <span className="text-xs font-medium text-muted uppercase tracking-wide">
                     {categoryLabels[category] || category}
                   </span>
                 </div>
@@ -265,15 +265,15 @@ export function FormationSelector({
                     >
                       <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-spacing-sm">
-                          <span className="font-medium text-text-primary">
+                          <span className="font-medium text-primary">
                             {formation.name}
                           </span>
-                          <span className="text-xs text-text-muted">
+                          <span className="text-xs text-muted">
                             {getDirectionLabel(formation.direction)}
                           </span>
                         </div>
                         {formation.description && (
-                          <span className="text-xs text-text-muted line-clamp-1">
+                          <span className="text-xs text-muted line-clamp-1">
                             {formation.description}
                           </span>
                         )}
@@ -286,7 +286,7 @@ export function FormationSelector({
                           </span>
                         )}
                         {formation.usage_count > 0 && (
-                          <span className="text-xs text-text-muted">
+                          <span className="text-xs text-muted">
                             {formation.usage_count}x
                           </span>
                         )}
@@ -300,7 +300,7 @@ export function FormationSelector({
                       className="px-spacing-sm py-spacing-sm hover:bg-surface-primary transition-colors group"
                       title="Manage formation variants"
                     >
-                      <Link2 className="w-4 h-4 text-text-muted group-hover:text-accent-500" />
+                      <Link2 className="w-4 h-4 text-muted group-hover:text-accent-500" />
                     </button>
                   </div>
                 ))}
@@ -311,14 +311,14 @@ export function FormationSelector({
 
       {/* No Formations Message */}
       {isOpen && !isLoading && visibleFormations.length === 0 && (
-        <div className="absolute z-50 mt-1 w-full bg-surface-secondary border border-border-primary rounded-lg shadow-lg p-spacing-lg text-center">
-          <Grid className="w-8 h-8 text-text-muted mx-auto mb-spacing-sm" />
-          <p className="text-sm text-text-muted mb-spacing-xs">
+        <div className="absolute z-50 mt-1 w-full bg-surface-secondary border border-primary rounded-lg shadow-lg p-spacing-lg text-center">
+          <Grid className="w-8 h-8 text-muted mx-auto mb-spacing-sm" />
+          <p className="text-sm text-muted mb-spacing-xs">
             {formations.length > 0
               ? "All base formations have been linked to variants"
               : "No formations yet"}
           </p>
-          <p className="text-xs text-text-muted">
+          <p className="text-xs text-muted">
             {formations.length > 0
               ? "Use the Link button to manage formation variants"
               : "Create formations using the Formation Builder"}

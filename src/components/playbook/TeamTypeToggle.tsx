@@ -56,7 +56,7 @@ export const TeamTypeToggle: React.FC<TeamTypeToggleProps> = ({
           >
             <span className="text-sm font-medium">{config.label}</span>
             {config.comingSoon && (
-              <span className="ml-2 text-xs text-text-muted font-normal">
+              <span className="ml-2 text-xs text-muted font-normal">
                 Coming soon
               </span>
             )}

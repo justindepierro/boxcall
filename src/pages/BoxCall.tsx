@@ -105,7 +105,7 @@ const BoxCall: React.FC = () => {
       <div className="container-page">
         {/* Header */}
         <div className="mb-8">
-          <Typography variant="headline-xl" className="text-text-primary">
+          <Typography variant="headline-xl" className="text-primary">
             BoxCall Live
           </Typography>
           <Typography variant="body-lg" color="muted" className="mt-2">
@@ -134,14 +134,14 @@ const BoxCall: React.FC = () => {
             {/* Practice Script Selector */}
             <div className="mb-4">
               <label className="block mb-2">
-                <Typography variant="body-sm" className="text-text-secondary">
+                <Typography variant="body-sm" className="text-secondary">
                   Select Practice Script
                 </Typography>
               </label>
               <select
                 value={selectedPracticeScript}
                 onChange={(e) => setSelectedPracticeScript(e.target.value)}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border rounded-lg bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary"
                 disabled={practiceScripts.length === 0}
               >
                 <option value="">
@@ -201,14 +201,14 @@ const BoxCall: React.FC = () => {
             {/* Game Plan Selector */}
             <div className="mb-4">
               <label className="block mb-2">
-                <Typography variant="body-sm" className="text-text-secondary">
+                <Typography variant="body-sm" className="text-secondary">
                   Select Game Plan
                 </Typography>
               </label>
               <select
                 value={selectedGamePlan}
                 onChange={(e) => setSelectedGamePlan(e.target.value)}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border rounded-lg bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary"
                 disabled={gamePlans.length === 0}
               >
                 <option value="">
@@ -266,7 +266,7 @@ const BoxCall: React.FC = () => {
           {recentSessions.length === 0 ? (
             <div className="text-center py-8">
               <div className="flex justify-center mb-3">
-                <Icon name="calendar" size="lg" className="text-text-muted" />
+                <Icon name="calendar" size="lg" className="text-muted" />
               </div>
               <Typography variant="body-md" color="muted">
                 No sessions recorded yet
@@ -280,7 +280,7 @@ const BoxCall: React.FC = () => {
               {recentSessions.map((session) => (
                 <div
                   key={session.id}
-                  className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-surface-secondary transition-colors cursor-pointer"
+                  className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-secondary transition-colors cursor-pointer"
                   onClick={() =>
                     navigate(`/boxcall/${session.type}/${session.id}`)
                   }

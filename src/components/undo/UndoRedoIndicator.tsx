@@ -5,7 +5,7 @@
  * Displays in bottom-right corner of the screen.
  */
 
-import { useUndoRedo } from "../../contexts/UndoRedoContext";
+import { useUndoRedo } from "../../hooks/useUndoRedo";
 
 export function UndoRedoIndicator() {
   const { canUndo, canRedo, state, undo, redo } = useUndoRedo();

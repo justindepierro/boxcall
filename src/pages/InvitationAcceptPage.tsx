@@ -198,7 +198,7 @@ export function InvitationAcceptPage() {
   if (pageState === "invalid-token") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-surface p-4">
-        <div className="max-w-md w-full bg-surface-primary rounded-lg shadow-2xl p-8">
+        <div className="max-w-md w-full bg-primary rounded-lg shadow-2xl p-8">
           <Alert variant="error" className="mb-4">
             <h2 className="text-lg font-semibold mb-2">Invalid Invitation</h2>
             <p>This invitation link is not valid.</p>
@@ -214,7 +214,7 @@ export function InvitationAcceptPage() {
   if (pageState === "expired-token") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-surface p-4">
-        <div className="max-w-md w-full bg-surface-primary rounded-lg shadow-2xl p-8">
+        <div className="max-w-md w-full bg-primary rounded-lg shadow-2xl p-8">
           <Alert variant="warning" className="mb-4">
             <h2 className="text-lg font-semibold mb-2">Invitation Expired</h2>
             <p>
@@ -233,7 +233,7 @@ export function InvitationAcceptPage() {
   if (pageState === "already-accepted") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-surface p-4">
-        <div className="max-w-md w-full bg-surface-primary rounded-lg shadow-2xl p-8">
+        <div className="max-w-md w-full bg-primary rounded-lg shadow-2xl p-8">
           <Alert variant="info" className="mb-4">
             <h2 className="text-lg font-semibold mb-2">Already a Member</h2>
             <p>You are already a member of this team.</p>
@@ -265,7 +265,7 @@ export function InvitationAcceptPage() {
   if (pageState === "success") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-surface p-4">
-        <div className="max-w-md w-full bg-surface-primary rounded-lg shadow-2xl p-8">
+        <div className="max-w-md w-full bg-primary rounded-lg shadow-2xl p-8">
           <div className="text-center">
             <div className="w-16 h-16 bg-success-bg rounded-full flex items-center justify-center mx-auto mb-4">
               <svg
@@ -308,7 +308,7 @@ export function InvitationAcceptPage() {
   if (pageState === "error") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-surface p-4">
-        <div className="max-w-md w-full bg-surface-primary rounded-lg shadow-2xl p-8">
+        <div className="max-w-md w-full bg-primary rounded-lg shadow-2xl p-8">
           <Alert variant="error" className="mb-4">
             <h2 className="text-lg font-semibold mb-2">Error</h2>
             <p>{errorMessage || "An unexpected error occurred"}</p>
@@ -327,7 +327,7 @@ export function InvitationAcceptPage() {
       <div className="max-w-md w-full">
         {/* Team Header */}
         {team && invitation && (
-          <div className="bg-surface-primary rounded-lg shadow-md p-6 mb-4">
+          <div className="bg-primary rounded-lg shadow-md p-6 mb-4">
             <div className="text-center">
               <h1 className="text-2xl font-bold text-primary mb-2">
                 Join {team.name}
@@ -337,7 +337,7 @@ export function InvitationAcceptPage() {
                   {team.school_name}
                 </p>
               )}
-              <div className="bg-surface-secondary rounded-lg p-4">
+              <div className="bg-secondary rounded-lg p-4">
                 <p className="text-sm text-secondary mb-1">
                   You've been invited as:
                 </p>
@@ -359,9 +359,9 @@ export function InvitationAcceptPage() {
         )}
 
         {/* Auth Forms */}
-        <div className="bg-surface-primary rounded-lg shadow-2xl p-6">
+        <div className="bg-primary rounded-lg shadow-2xl p-6">
           {/* Tab Switcher */}
-          <div className="flex border-b border-border-subtle mb-6">
+          <div className="flex border-b border-subtle mb-6">
             <button
               onClick={() => setAuthMode("signup")}
               className={`flex-1 py-2 text-sm font-medium border-b-2 transition-colors ${

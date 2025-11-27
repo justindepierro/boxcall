@@ -158,17 +158,18 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
 
   return (
     <Card
-      variant="glass"
-      className={`compact-card h-full relative overflow-hidden ${cardClassName}`}
+      variant="default"
+      size="lg"
+      className={`h-full relative overflow-hidden ${cardClassName}`}
     >
       {/* Enhanced Header with gradient background */}
-      <div className="relative bg-surface-secondary -mx-spacing-lg -mt-spacing-lg px-spacing-lg pt-spacing-lg pb-spacing-md md:pb-spacing-sm mb-spacing-md border-b border-border-subtle">
+      <div className="relative bg-surface-secondary -mx-spacing-lg -mt-spacing-lg px-spacing-lg pt-spacing-lg pb-spacing-md md:pb-spacing-sm mb-spacing-md border-b border-subtle">
         <div className="relative flex items-center justify-between min-h-11">
           <div className="flex items-center space-x-spacing-sm">
             <User className="w-5 h-5 md:w-4 md:h-4 text-brand-primary" />
             <Typography
               variant="headline-md"
-              className="text-text-primary font-bold text-lg md:text-base"
+              className="text-primary font-bold text-lg md:text-base"
             >
               Profile
             </Typography>
@@ -228,7 +229,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="absolute -bottom-1 -right-1 bg-surface-base rounded-full p-2 md:p-1.5 shadow-md hover:shadow-lg hover:scale-110 transition-all duration-200 min-w-9 min-h-9 md:min-w-auto md:min-h-auto border border-border-subtle"
+                  className="absolute -bottom-1 -right-1 bg-surface-base rounded-full p-2 md:p-1.5 shadow-md hover:shadow-lg hover:scale-110 transition-all duration-200 min-w-9 min-h-9 md:min-w-auto md:min-h-auto border border-subtle"
                   aria-label="Edit profile picture"
                   onClick={handleProfileEdit}
                 >
@@ -247,7 +248,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             >
               <Typography
                 variant="body-lg"
-                className="font-bold text-text-primary truncate hover:text-brand-primary transition-colors"
+                className="font-bold text-primary truncate hover:text-brand-primary transition-colors"
               >
                 {displayName}
               </Typography>
@@ -328,17 +329,14 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         {achLoading && (
           <div className="flex items-center justify-center py-spacing-md">
             <div className="w-6 h-6 border-2 border-brand-primary/30 border-t-brand-primary rounded-full animate-spin"></div>
-            <Typography
-              variant="body-xs"
-              className="text-text-muted ml-spacing-xs"
-            >
+            <Typography variant="body-xs" className="text-muted ml-spacing-xs">
               Loading achievements…
             </Typography>
           </div>
         )}
         {/* Enhanced Bio with Inline Editing */}
         <div className="pt-spacing-md relative">
-          <div className="bg-surface-muted rounded-lg p-spacing-sm border border-border-subtle">
+          <div className="bg-surface-muted rounded-lg p-spacing-sm border border-subtle">
             <div className="flex items-center justify-between mb-spacing-xs">
               <Typography
                 variant="body-sm"
@@ -367,12 +365,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   value={bioText}
                   onChange={(e) => setBioText(e.target.value)}
                   placeholder="Tell others about yourself..."
-                  className="w-full p-spacing-xs text-sm bg-surface-primary border border-border-primary rounded-lg focus:ring-2 focus:ring-brand-secondary focus:border-transparent resize-none"
+                  className="w-full p-spacing-xs text-sm bg-surface-primary border border-primary rounded-lg focus:ring-2 focus:ring-brand-secondary focus:border-transparent resize-none"
                   rows={3}
                   maxLength={200}
                 />
                 <div className="flex items-center justify-between">
-                  <Typography variant="body-xs" className="text-text-muted">
+                  <Typography variant="body-xs" className="text-muted">
                     {bioText.length}/200
                   </Typography>
                   <div className="flex items-center space-x-spacing-xs">
@@ -407,7 +405,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   <>
                     <Typography
                       variant="body-sm"
-                      className="text-text-secondary leading-relaxed"
+                      className="text-secondary leading-relaxed"
                     >
                       {showFullBio
                         ? profile.bio
@@ -425,10 +423,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                     )}
                   </>
                 ) : (
-                  <Typography
-                    variant="body-sm"
-                    className="text-text-muted italic"
-                  >
+                  <Typography variant="body-sm" className="text-muted italic">
                     {isOwnProfile
                       ? "Click the edit icon to add a bio..."
                       : "No bio added yet"}
@@ -461,7 +456,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         {profile?.phone && !isViewMode && (
           <div className="flex items-center space-x-spacing-xs pt-spacing-sm px-spacing-sm py-spacing-xs bg-surface-secondary/50 rounded-lg">
             <Icon name="phone" size="xs" color="navy" />
-            <Typography variant="body-sm" className="text-text-secondary">
+            <Typography variant="body-sm" className="text-secondary">
               {profile.phone}
             </Typography>
           </div>

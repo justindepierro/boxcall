@@ -118,12 +118,12 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       };
       iconName = smartIconMap[smartIcon] || "star";
     }
-    return <Icon name={iconName} size="sm" className="text-text-secondary" />;
+    return <Icon name={iconName} size="sm" className="text-secondary" />;
   };
   // Show loading state
   if (loading) {
     return (
-      <Card variant="glass" className="compact-card">
+      <Card variant="default" size="lg">
         <div className="flex items-center justify-center h-24">
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-jade-600"></div>
         </div>
@@ -134,33 +134,28 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
   if (error) {
     return (
       <Card
-        variant="glass"
-        className="compact-card surface-card bg-surface-error border-subtle dark:border-text-error"
+        variant="default"
+        size="lg"
+        className="bg-surface-error border-subtle dark:border-text-error"
       >
-        <Typography
-          variant="headline-md"
-          className="text-text-error text-center"
-        >
+        <Typography variant="headline-md" className="text-error text-center">
           Failed to load achievements
         </Typography>
       </Card>
     );
   }
   return (
-    <Card variant="glass" className="compact-card">
+    <Card variant="default" size="lg">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Icon name="trophy" size="sm" className="text-text-warning" />
-          <Typography variant="headline-md" className="text-text-primary">
+          <Icon name="trophy" size="sm" className="text-warning" />
+          <Typography variant="headline-md" className="text-primary">
             Trophy Shelf
           </Typography>
         </div>
         <div className="flex-1 flex justify-center">
-          <Typography
-            variant="body-sm"
-            className="font-semibold text-text-primary"
-          >
+          <Typography variant="body-sm" className="font-semibold text-primary">
             BoxCall Achievements
           </Typography>
         </div>
@@ -177,13 +172,13 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
       <div className="flex gap-3 h-full">
         {/* Left: Vertical Stats Stack */}
         <div className="flex flex-col gap-2 w-20">
-          <div className="text-center p-2 surface-card/50 dark:surface-card/30 rounded-lg">
+          <div className="text-center p-2 bg-surface-secondary rounded-lg">
             <div className="flex items-center justify-center mb-1">
-              <Icon name="zap" size="sm" className="text-text-warning" />
+              <Icon name="zap" size="sm" className="text-warning" />
             </div>
             <Typography
               variant="body-sm"
-              className="font-bold text-text-warning text-center"
+              className="font-bold text-warning text-center"
             >
               {weeklyStreak}
             </Typography>
@@ -195,7 +190,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
               Streak
             </Typography>
           </div>
-          <div className="text-center p-2 surface-card/50 dark:surface-card/30 rounded-lg">
+          <div className="text-center p-2 bg-surface-secondary rounded-lg">
             <div className="flex items-center justify-center mb-1">
               <Icon name="star" size="sm" className="text-jade-600" />
             </div>
@@ -213,13 +208,13 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
               Stickers
             </Typography>
           </div>
-          <div className="text-center p-2 surface-card/50 dark:surface-card/30 rounded-lg">
+          <div className="text-center p-2 bg-surface-secondary rounded-lg">
             <div className="flex items-center justify-center mb-1">
-              <Icon name="award" size="sm" className="text-text-info" />
+              <Icon name="award" size="sm" className="text-info" />
             </div>
             <Typography
               variant="body-sm"
-              className="font-bold text-text-info text-center"
+              className="font-bold text-info text-center"
             >
               {boxcallMedals.filter((m) => m.earned).length}
             </Typography>
@@ -231,13 +226,13 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
               Medals
             </Typography>
           </div>
-          <div className="text-center p-2 surface-card/50 dark:surface-card/30 rounded-lg">
+          <div className="text-center p-2 bg-surface-secondary rounded-lg">
             <div className="flex items-center justify-center mb-1">
-              <Icon name="target" size="sm" className="text-text-primary" />
+              <Icon name="target" size="sm" className="text-primary" />
             </div>
             <Typography
               variant="body-sm"
-              className="font-bold text-text-primary text-center"
+              className="font-bold text-primary text-center"
             >
               {boxcallMedals.length}
             </Typography>
@@ -260,7 +255,7 @@ export const PersonalTrophyShelf: React.FC<PersonalTrophyShelfProps> = ({
                 allAchievements.map((achievement) => (
                   <div
                     key={`${achievement.type}-${achievement.id}`}
-                    className="flex items-center space-x-3 py-2 px-3 h-10 mb-1 surface-card/60 dark:surface-card/40 rounded-lg border border-subtle dark:border-text-tertiary/30"
+                    className="flex items-center space-x-3 py-2 px-3 h-10 mb-1 bg-surface-primary/60 dark:bg-surface-primary/40 rounded-lg border border-subtle dark:border-text-tertiary/30"
                   >
                     <div
                       className={`flex-shrink-0 w-4 h-4 flex items-center justify-center ${achievement.earned ? "" : "grayscale opacity-50"}`}

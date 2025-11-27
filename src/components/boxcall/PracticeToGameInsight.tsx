@@ -87,14 +87,14 @@ export const PracticeToGameInsight: React.FC<PracticeToGameInsightProps> = ({
         <div className="bg-surface-secondary border border-border rounded-lg p-3">
           <div className="flex items-center gap-2 mb-2">
             <Icon name="target" size="sm" className="text-primary" />
-            <Typography variant="body-xs" className="text-text-muted">
+            <Typography variant="body-xs" className="text-muted">
               Practice
             </Typography>
           </div>
           <Typography variant="headline-sm" className="mb-1">
             {practiceStats.successRate}%
           </Typography>
-          <Typography variant="body-xs" className="text-text-muted">
+          <Typography variant="body-xs" className="text-muted">
             {practiceStats.executions} rep
             {practiceStats.executions !== 1 ? "s" : ""}
           </Typography>
@@ -104,14 +104,14 @@ export const PracticeToGameInsight: React.FC<PracticeToGameInsightProps> = ({
         <div className="bg-surface-secondary border border-border rounded-lg p-3">
           <div className="flex items-center gap-2 mb-2">
             <Icon name="zap" size="sm" className="text-warning" />
-            <Typography variant="body-xs" className="text-text-muted">
+            <Typography variant="body-xs" className="text-muted">
               Games
             </Typography>
           </div>
           <Typography variant="headline-sm" className="mb-1">
             {gameStats.successRate}%
           </Typography>
-          <Typography variant="body-xs" className="text-text-muted">
+          <Typography variant="body-xs" className="text-muted">
             {gameStats.executions} play{gameStats.executions !== 1 ? "s" : ""}
           </Typography>
         </div>
@@ -154,7 +154,7 @@ export const PracticeToGameInsight: React.FC<PracticeToGameInsightProps> = ({
               }}
             />
           </div>
-          <Typography variant="body-xs" className="text-text-muted mt-2">
+          <Typography variant="body-xs" className="text-muted mt-2">
             {transferRate >= 10
               ? "🎯 Game performance exceeds practice"
               : transferRate >= 0
@@ -170,7 +170,7 @@ export const PracticeToGameInsight: React.FC<PracticeToGameInsightProps> = ({
       <div className="bg-surface-secondary border border-border rounded-lg p-3">
         <div className="flex items-start gap-2">
           <Icon name="lightbulb" size="sm" className="text-warning mt-0.5" />
-          <Typography variant="body-xs" className="text-text-secondary">
+          <Typography variant="body-xs" className="text-secondary">
             <strong>Recommendation:</strong> {getRecommendation()}
           </Typography>
         </div>

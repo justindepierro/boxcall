@@ -79,7 +79,7 @@ export const PlayTypeDistributionChart: React.FC<
           <Typography variant="body-sm" className="font-medium">
             {data.name}
           </Typography>
-          <Typography variant="body-xs" className="text-text-secondary">
+          <Typography variant="body-xs" className="text-secondary">
             {data.value} plays (
             {(
               (data.value /
@@ -129,7 +129,7 @@ export const PlayTypeDistributionChart: React.FC<
           </PieChart>
         </ResponsiveContainer>
       </div>
-      <Typography variant="body-xs" className="text-text-secondary mt-2">
+      <Typography variant="body-xs" className="text-secondary mt-2">
         Distribution of play types in your playbook
       </Typography>
     </Card>

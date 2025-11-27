@@ -150,15 +150,15 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
   };
   return (
     <div className="fixed inset-0 bg-text-primary/50 flex items-center justify-center z-50 p-4">
-      <div className="surface-card elevation-modal rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-surface-primary elevation-modal rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="bc-card-padding border-b border-subtle dark:border-border-light">
+        <div className="p-6 border-b border-subtle dark:border-light">
           <Typography variant="headline-sm" as="h2">
             {player ? "Edit Player" : "Add New Player"}
           </Typography>
         </div>
         {/* Form */}
-        <form onSubmit={handleSubmit} className="bc-card-padding space-y-6">
+        <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Basic Information */}
           <div>
             <Typography variant="headline-sm" as="h3" className="mb-4">
@@ -169,7 +169,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary dark:text-border-light mb-1"
+                  className="block font-medium text-primary dark:text-border-light mb-1"
                 >
                   First Name *
                 </Typography>
@@ -182,7 +182,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   placeholder="John"
                 />
                 {errors.first_name && (
-                  <p className="text-text-error text-sm mt-1">
+                  <p className="text-error text-sm mt-1">
                     {errors.first_name}
                   </p>
                 )}
@@ -191,7 +191,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary dark:text-border-light mb-1"
+                  className="block font-medium text-primary dark:text-border-light mb-1"
                 >
                   Last Name *
                 </Typography>
@@ -204,7 +204,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   placeholder="Smith"
                 />
                 {errors.last_name && (
-                  <p className="text-text-error text-sm mt-1">
+                  <p className="text-error text-sm mt-1">
                     {errors.last_name}
                   </p>
                 )}
@@ -213,7 +213,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary dark:text-border-light mb-1"
+                  className="block font-medium text-primary dark:text-border-light mb-1"
                 >
                   Email
                 </Typography>
@@ -224,14 +224,14 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   placeholder="john.smith@email.com"
                 />
                 {errors.email && (
-                  <p className="text-text-error text-sm mt-1">{errors.email}</p>
+                  <p className="text-error text-sm mt-1">{errors.email}</p>
                 )}
               </div>
               <div>
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary dark:text-border-light mb-1"
+                  className="block font-medium text-primary dark:text-border-light mb-1"
                 >
                   Phone Number
                 </Typography>
@@ -246,7 +246,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary dark:text-border-light mb-1"
+                  className="block font-medium text-primary dark:text-border-light mb-1"
                 >
                   Parent Email
                 </Typography>
@@ -259,7 +259,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   placeholder="parent@email.com"
                 />
                 {errors.parent_email && (
-                  <p className="text-text-error text-sm mt-1">
+                  <p className="text-error text-sm mt-1">
                     {errors.parent_email}
                   </p>
                 )}
@@ -271,7 +271,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             <Typography
               variant="headline-sm"
               as="h3"
-              className="mb-4 text-text-primary"
+              className="mb-4 text-primary"
             >
               Positions *
             </Typography>
@@ -287,7 +287,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   className={
                     formData.positions?.includes(position)
                       ? ""
-                      : "surface-subtle dark:bg-surface-secondary surface-subtle-hover dark:hover:bg-surface-tertiary text-text-secondary dark:text-text-secondary"
+                      : "surface-subtle dark:bg-surface-secondary surface-subtle-hover dark:hover:bg-surface-tertiary text-secondary dark:text-secondary"
                   }
                   onClick={() => handlePositionToggle(position)}
                 >
@@ -296,7 +296,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
               ))}
             </div>
             {errors.positions && (
-              <p className="text-text-error text-sm mt-2">{errors.positions}</p>
+              <p className="text-error text-sm mt-2">{errors.positions}</p>
             )}
           </div>
           {/* Physical Information */}
@@ -304,7 +304,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             <Typography
               variant="headline-sm"
               as="h3"
-              className="mb-4 text-text-primary"
+              className="mb-4 text-primary"
             >
               Physical Information
             </Typography>
@@ -313,7 +313,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary dark:text-border-light mb-1"
+                  className="block font-medium text-primary dark:text-border-light mb-1"
                 >
                   Jersey Number
                 </Typography>
@@ -331,7 +331,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   placeholder="12"
                 />
                 {errors.jersey_number && (
-                  <p className="text-text-error text-sm mt-1">
+                  <p className="text-error text-sm mt-1">
                     {errors.jersey_number}
                   </p>
                 )}
@@ -340,7 +340,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary dark:text-border-light mb-1"
+                  className="block font-medium text-primary dark:text-border-light mb-1"
                 >
                   Height
                 </Typography>
@@ -355,7 +355,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary dark:text-border-light mb-1"
+                  className="block font-medium text-primary dark:text-border-light mb-1"
                 >
                   Weight (lbs)
                 </Typography>
@@ -372,7 +372,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   placeholder="185"
                 />
                 {errors.weight && (
-                  <p className="text-text-error text-sm mt-1">
+                  <p className="text-error text-sm mt-1">
                     {errors.weight}
                   </p>
                 )}
@@ -381,7 +381,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                 <Typography
                   variant="body-sm"
                   as="label"
-                  className="block font-medium text-text-primary dark:text-border-light mb-1"
+                  className="block font-medium text-primary dark:text-border-light mb-1"
                 >
                   Graduation Year
                 </Typography>
@@ -399,7 +399,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   placeholder="2026"
                 />
                 {errors.graduation_year && (
-                  <p className="text-text-error text-sm mt-1">
+                  <p className="text-error text-sm mt-1">
                     {errors.graduation_year}
                   </p>
                 )}
@@ -411,7 +411,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             <Typography
               variant="headline-sm"
               as="h3"
-              className="mb-4 text-text-primary"
+              className="mb-4 text-primary"
             >
               Team Level
             </Typography>
@@ -427,7 +427,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   className={
                     formData.team_level === level.value
                       ? ""
-                      : "surface-card text-text-primary border-subtle surface-subtle-hover"
+                      : "surface-card text-primary border-subtle surface-subtle-hover"
                   }
                   onClick={() => handleInputChange("team_level", level.value)}
                 >
@@ -437,7 +437,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             </div>
           </div>
           {/* Actions */}
-          <div className="flex justify-end space-x-3 pt-4 border-t border-subtle dark:border-border-light">
+          <div className="flex justify-end space-x-3 pt-4 border-t border-subtle dark:border-light">
             <Button
               type="button"
               variant="ghost"

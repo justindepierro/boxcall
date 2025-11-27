@@ -183,7 +183,7 @@ export const SuperAdminAnalyticsTestPage: React.FC = () => {
   >("heatmap");
 
   return (
-    <div className="min-h-screen bg-surface-primary p-8">
+    <div className="min-h-screen bg-primary p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -339,7 +339,7 @@ export const SuperAdminAnalyticsTestPage: React.FC = () => {
                         This component needs a valid session ID from your
                         database. Create a practice or game session first, then
                         use:{" "}
-                        <code className="px-1 py-0.5 bg-surface-muted rounded text-xs">
+                        <code className="px-1 py-0.5 bg-muted rounded text-xs">
                           &lt;SessionAnalyticsDashboard
                           sessionId="your-session-id" /&gt;
                         </code>
@@ -395,7 +395,7 @@ export const SuperAdminAnalyticsTestPage: React.FC = () => {
                       <Typography variant="body-sm" className="text-secondary">
                         This component needs a valid play ID or formation ID.
                         Use:{" "}
-                        <code className="px-1 py-0.5 bg-surface-muted rounded text-xs">
+                        <code className="px-1 py-0.5 bg-muted rounded text-xs">
                           &lt;TrendAnalyticsDashboard playId="uuid"
                           teamId="uuid" /&gt;
                         </code>

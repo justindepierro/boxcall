@@ -10,7 +10,7 @@ import { Typography } from "../../design-system";
 import type { TextAreaProps } from "./TextArea.types";
 // TextArea styles using only Tailwind dark mode classes
 const textareaStyles = {
-  base: "block w-full rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 surface-card text-text-primary placeholder-text-secondary disabled:surface-subtle disabled:bg-surface-secondary disabled:text-text-secondary disabled:cursor-not-allowed",
+  base: "block w-full rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-surface-primary text-primary placeholder-text-secondary disabled:surface-subtle disabled:bg-surface-secondary disabled:text-secondary disabled:cursor-not-allowed",
   statuses: {
     default: "focus:border-text-info ring-text-info",
     error:
@@ -130,7 +130,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     const labelClasses = [
       "block",
       size === "sm" ? "text-xs" : "text-sm",
-      "font-medium text-text-primary text-border-light",
+      "font-medium text-primary text-border-light",
       labelClassName,
     ]
       .filter(Boolean)
@@ -141,7 +141,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           <label htmlFor={textareaId} className={labelClasses}>
             <Typography variant="label-md" color="error">
               {label}
-              {required && <span className="text-text-error ml-1">*</span>}
+              {required && <span className="text-error ml-1">*</span>}
             </Typography>
           </label>
         )}

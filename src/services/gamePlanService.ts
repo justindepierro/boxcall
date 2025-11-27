@@ -1,504 +1,454 @@
-// @ts-nocheck
-// NOTE: TypeScript checking disabled for this file due to Supabase generated types being overly strict.
-// All data is validated before database operations. Re-enable checking when Supabase types are fixed.
-
 /**
- * Unified Game Plan Service
+ * Game Plan Service - Billick Situational Method
  *
- * Consolidates game management functionality from:
- * - gamePlanService.ts (game planning with situational organization)
- * - gameResultsService.ts (game results tracking)
- *
- * Inspired by Brian Billick's "Developing an Offensive Game Plan"
- * Organizes plays by down/distance, field position, and game situations
+ * Manages game plans organized by down/distance/field zone using the database.
+ * Replaces mock data with real Supabase integration.
  */
 
 import { supabase } from "../lib/supabase";
-import type { PostgrestError } from "@supabase/supabase-js";
 import type { Play } from "../types/play";
-import { ActivityService } from "./activityService";
+import type { BillickSituationType } from "../constants/gamePlanSituations";
+import { getAllBillickSituations } from "../constants/gamePlanSituations";
+
+// ===========================================
+// TYPES & INTERFACES
+// ===========================================
+
+export interface GamePlan {
+  id: string;
+  teamId: string;
+  name: string; // e.g., "vs. Central High - Week 8"
+  opponent?: string;
+  gameDate?: string; // ISO date string
+  gameLocation?: string; // "Home", "Away", "Neutral"
+  notes?: string;
+  createdBy?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  isArchived: boolean;
+  situations?: GamePlanSituation[];
+}
 
 export interface GamePlanSituation {
   id: string;
-  name: string;
-  description: string;
-  plays: GamePlanPlay[];
-  category:
-    | "base_run"
-    | "base_pass"
-    | "second_long"
-    | "third_down"
-    | "red_zone"
-    | "goal_line"
-    | "two_minute"
-    | "short_yardage"
-    | "special_situations";
-  priority: number; // 1-10, higher = more important
+  gamePlanId: string;
+  situationType: BillickSituationType;
+  displayOrder: number;
+  notes?: string;
+  createdAt: Date;
+  plays?: GamePlanPlay[];
 }
 
 export interface GamePlanPlay {
   id: string;
+  situationId: string;
   playId: string;
-  play: Play;
-  situations: string[]; // Situation IDs this play can be used in
-  priority: number; // 1-5, 1 = primary call, 5 = backup
+  play?: Play; // Populated via join
+  priority: number; // Order within situation (1 = highest priority)
   notes?: string;
-  successRate?: number;
-  timesUsed: number;
-  addedAt: Date;
-}
-
-export interface GamePlan {
-  id: string;
-  name: string;
-  weekNumber: number;
-  opponent: string;
-  date: Date;
-  teamId: string;
-  createdBy: string;
   createdAt: Date;
   updatedAt: Date;
-  isTemplate: boolean;
-  situations: GamePlanSituation[];
-  totalPlays: number;
-  notes?: string;
-  tags: string[];
 }
 
 export interface CreateGamePlanData {
-  name: string;
-  weekNumber: number;
-  opponent: string;
-  date: Date;
   teamId: string;
-  isTemplate?: boolean;
-  copyFromGamePlanId?: string;
-  tags?: string[];
+  name: string;
+  opponent?: string;
+  gameDate?: string;
+  gameLocation?: string;
+  notes?: string;
 }
 
 export interface AddPlayToGamePlanData {
-  gamePlanId: string;
   situationId: string;
   playId: string;
   priority?: number;
   notes?: string;
 }
 
+export interface CreateGamePlanSituationData {
+  gamePlanId: string;
+  situationType: BillickSituationType;
+  displayOrder?: number;
+  notes?: string;
+}
+
+export interface UpdateGamePlanData {
+  name?: string;
+  opponent?: string;
+  gameDate?: string;
+  gameLocation?: string;
+  notes?: string;
+  isArchived?: boolean;
+}
+
+// ===========================================
+// SERVICE CLASS
+// ===========================================
+
 export class GamePlanService {
-  // Mock data for development - replace with actual API calls
-  private static gamePlans: GamePlan[] = [];
-
   /**
-   * Default game plan situations based on Brian Billick's methodology
-   */
-  private static getDefaultSituations(): GamePlanSituation[] {
-    return [
-      {
-        id: "base_run",
-        name: "Base Run",
-        description: "1st & 10, 2nd & short running plays",
-        plays: [],
-        category: "base_run",
-        priority: 10,
-      },
-      {
-        id: "base_pass",
-        name: "Base Pass",
-        description: "1st & 10, 2nd & medium passing plays",
-        plays: [],
-        category: "base_pass",
-        priority: 10,
-      },
-      {
-        id: "second_long",
-        name: "2nd Long",
-        description: "2nd & 7+, need chunk plays",
-        plays: [],
-        category: "second_long",
-        priority: 8,
-      },
-      {
-        id: "third_11_plus",
-        name: "3rd 11+",
-        description: "3rd & 11+, need big plays",
-        plays: [],
-        category: "third_down",
-        priority: 9,
-      },
-      {
-        id: "third_7_10",
-        name: "3rd 7-10",
-        description: "3rd & 7-10, intermediate routes",
-        plays: [],
-        category: "third_down",
-        priority: 9,
-      },
-      {
-        id: "third_4_6",
-        name: "3rd 4-6",
-        description: "3rd & 4-6, possession routes",
-        plays: [],
-        category: "third_down",
-        priority: 9,
-      },
-      {
-        id: "third_2_3",
-        name: "3rd 2-3",
-        description: "3rd & 2-3, short routes & runs",
-        plays: [],
-        category: "third_down",
-        priority: 9,
-      },
-      {
-        id: "red_zone",
-        name: "Pred Red Zone",
-        description: "20-yard line to 10-yard line",
-        plays: [],
-        category: "red_zone",
-        priority: 8,
-      },
-      {
-        id: "red_zone_run",
-        name: "Red Zone Run",
-        description: "10-yard line to 5-yard line runs",
-        plays: [],
-        category: "red_zone",
-        priority: 8,
-      },
-      {
-        id: "goal_line",
-        name: "Goal",
-        description: "5-yard line and in",
-        plays: [],
-        category: "goal_line",
-        priority: 7,
-      },
-      {
-        id: "plus_10",
-        name: "+10",
-        description: "Plus territory, field position plays",
-        plays: [],
-        category: "special_situations",
-        priority: 6,
-      },
-      {
-        id: "two_minute",
-        name: "2-Minute",
-        description: "End of half/game situations",
-        plays: [],
-        category: "two_minute",
-        priority: 7,
-      },
-    ];
-  }
-
-  /**
-   * Create a new game plan
+   * Create a new game plan with all 12 Billick situations
    */
   static async createGamePlan(data: CreateGamePlanData): Promise<GamePlan> {
-    let situations = this.getDefaultSituations();
+    const { data: userData } = await supabase.auth.getUser();
 
-    // If copying from existing game plan, copy the plays
-    if (data.copyFromGamePlanId) {
-      const sourceGamePlan = this.gamePlans.find(
-        (gp) => gp.id === data.copyFromGamePlanId
-      );
-      if (sourceGamePlan) {
-        situations = sourceGamePlan.situations.map((situation) => ({
-          ...situation,
-          id: `${situation.id}_${Date.now()}`,
-          plays: situation.plays.map((play) => ({
-            ...play,
-            id: `${play.id}_${Date.now()}`,
-            addedAt: new Date(),
-          })),
-        }));
-      }
+    const { data: gamePlan, error } = await supabase
+      .from("game_plans")
+      .insert({
+        team_id: data.teamId,
+        name: data.name,
+        opponent: data.opponent || null,
+        game_date: data.gameDate || null,
+        game_location: data.gameLocation || null,
+        notes: data.notes || null,
+        created_by: userData.user?.id || null,
+        is_archived: false,
+      } as any)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("❌ Error creating game plan:", error);
+      throw new Error(`Failed to create game plan: ${error.message}`);
     }
 
-    const gamePlan: GamePlan = {
-      id: `gameplan-${Date.now()}`,
-      name: data.name,
-      weekNumber: data.weekNumber,
-      opponent: data.opponent,
-      date: data.date,
-      teamId: data.teamId,
-      createdBy: "current-user", // Replace with actual user ID
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      isTemplate: data.isTemplate || false,
-      situations,
-      totalPlays: situations.reduce((total, s) => total + s.plays.length, 0),
-      tags: data.tags || [],
-    };
+    // Create all 12 Billick situations
+    const situations = getAllBillickSituations();
+    const situationInserts = situations.map((config) => ({
+      game_plan_id: (gamePlan as any).id,
+      situation_type: config.type,
+      display_order: config.displayOrder,
+    }));
 
-    this.gamePlans.push(gamePlan);
-    return gamePlan;
-  }
+    const { error: situationsError } = await supabase
+      .from("game_plan_situations")
+      .insert(situationInserts as any);
 
-  /**
-   * Add a play to a specific situation in the game plan
-   */
-  static async addPlayToGamePlan(
-    data: AddPlayToGamePlanData,
-    play: Play
-  ): Promise<GamePlan> {
-    const gamePlanIndex = this.gamePlans.findIndex(
-      (gp) => gp.id === data.gamePlanId
-    );
-
-    if (gamePlanIndex === -1) {
-      throw new Error("Game plan not found");
+    if (situationsError) {
+      console.error("❌ Error creating situations:", situationsError);
+      // Don't fail the whole operation, situations can be added later
     }
 
-    const gamePlan = this.gamePlans[gamePlanIndex];
-    const situation = gamePlan.situations.find(
-      (s) => s.id === data.situationId
-    );
-
-    if (!situation) {
-      throw new Error("Situation not found");
-    }
-
-    const gamePlanPlay: GamePlanPlay = {
-      id: `gameplan-play-${Date.now()}`,
-      playId: data.playId,
-      play,
-      situations: [data.situationId],
-      priority: data.priority || 3,
-      notes: data.notes,
-      timesUsed: 0,
-      addedAt: new Date(),
-    };
-
-    situation.plays.push(gamePlanPlay);
-    gamePlan.totalPlays += 1;
-    gamePlan.updatedAt = new Date();
-
-    this.gamePlans[gamePlanIndex] = gamePlan;
-
-    // Record activity for adding play to game plan
-    await ActivityService.recordActivity({
-      type: "added_to_gameplan",
-      playId: data.playId,
-      playName: play.play_name,
-      teamId: gamePlan.teamId,
-      details: {
-        gamePlanId: data.gamePlanId,
-        gamePlanName: gamePlan.name,
-        situationId: data.situationId,
-        situationName: situation.name,
-        priority: data.priority || 3,
-      },
-    });
-
-    return gamePlan;
+    return this.getGamePlan((gamePlan as any).id);
   }
 
   /**
    * Get all game plans for a team
    */
-  static async getGamePlans(teamId: string): Promise<GamePlan[]> {
-    return this.gamePlans.filter((gp) => gp.teamId === teamId);
-  }
+  static async getGamePlans(
+    teamId: string,
+    includeArchived = false
+  ): Promise<GamePlan[]> {
+    let query = supabase
+      .from("game_plans")
+      .select(
+        `
+        *,
+        game_plan_situations (
+          *,
+          game_plan_plays (
+            *,
+            plays (*)
+          )
+        )
+      `
+      )
+      .eq("team_id", teamId)
+      .order("game_date", { ascending: false, nullsFirst: false })
+      .order("created_at", { ascending: false });
 
-  /**
-   * Get a specific game plan by ID
-   */
-  static async getGamePlan(gamePlanId: string): Promise<GamePlan | null> {
-    return this.gamePlans.find((gp) => gp.id === gamePlanId) || null;
-  }
-
-  /**
-   * Generate a practice script based on game plan priorities
-   */
-  static async generatePracticeScriptFromGamePlan(gamePlanId: string): Promise<{
-    name: string;
-    description: string;
-    plays: Array<{
-      play: Play;
-      situation: string;
-      priority: number;
-      repetitions: number;
-      estimatedTime: number;
-    }>;
-  }> {
-    const gamePlan = await this.getGamePlan(gamePlanId);
-    if (!gamePlan) {
-      throw new Error("Game plan not found");
+    if (!includeArchived) {
+      query = query.eq("is_archived", false);
     }
 
-    // Create practice script with plays organized by priority
-    const practiceData = {
-      name: `${gamePlan.name} Practice Script`,
-      description: `Auto-generated from ${gamePlan.name} game plan`,
-      plays: [] as Array<{
-        play: Play;
-        situation: string;
-        priority: number;
-        repetitions: number;
-        estimatedTime: number;
-      }>,
-    };
-
-    // Add high-priority plays from each situation
-    gamePlan.situations.forEach((situation) => {
-      const priorityPlays = situation.plays
-        .filter((play) => play.priority <= 2) // Primary and secondary calls
-        .sort((a, b) => a.priority - b.priority);
-
-      priorityPlays.forEach((play) => {
-        practiceData.plays.push({
-          play: play.play,
-          situation: situation.name,
-          priority: play.priority,
-          repetitions: play.priority === 1 ? 8 : 5, // More reps for primary calls
-          estimatedTime: 4,
-        });
-      });
-    });
-
-    return practiceData;
-  }
-
-  /**
-   * Quick game plan creation for workflow integration
-   */
-  static async createQuickGamePlan(
-    opponent: string,
-    teamId: string
-  ): Promise<GamePlan> {
-    return this.createGamePlan({
-      name: `Week vs ${opponent}`,
-      weekNumber: Math.ceil(
-        (Date.now() - new Date().getTime()) / (7 * 24 * 60 * 60 * 1000)
-      ),
-      opponent,
-      date: new Date(),
-      teamId,
-      tags: ["quick-add", "workflow"],
-    });
-  }
-
-  // ============================================
-  // GAME RESULTS TRACKING
-  // (Consolidated from gameResultsService.ts)
-  // ============================================
-
-  /**
-   * List all game results for a team
-   */
-  static async listGameResults(teamId: string): Promise<GameResultListItem[]> {
-    if (!teamId) return [];
-
-    const { data, error, status } = await supabase
-      .from("game_results")
-      .select(GAME_RESULT_COLUMNS)
-      .eq("team_id", teamId)
-      .order("game_date", { ascending: false });
+    const { data, error } = await query;
 
     if (error) {
-      const pgErr = error as PostgrestError;
-      if (status === 404 || pgErr?.code === "42P01") {
-        if (process.env.NODE_ENV !== "production") {
-          console.warn(
-            "game_results relation not found (likely migrations pending) – returning empty list"
-          );
-        }
-        return [];
-      }
-      throw error;
+      console.error("❌ Error fetching game plans:", error);
+      throw new Error(`Failed to fetch game plans: ${error.message}`);
     }
 
-    return data ?? [];
+    return (data || []).map(this.mapGamePlanFromDb);
   }
 
   /**
-   * Log a game result (win/loss/tie)
+   * Get a single game plan by ID
    */
-  static async logGameResult(input: LogGameResultInput) {
-    const {
-      teamId,
-      gameDate,
-      opponent,
-      venue,
-      pointsFor,
-      pointsAgainst,
-      homeAway,
-      notes,
-    } = input;
-
-    // Fetch current user for created_by (required by schema & RLS)
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError) throw authError;
-    if (!user) throw new Error("No authenticated user");
-
-    // Calculate result based on scores
-    let result: "win" | "loss" | "tie" | null = null;
-    if (pointsFor > pointsAgainst) result = "win";
-    else if (pointsFor < pointsAgainst) result = "loss";
-    else result = "tie";
-
+  static async getGamePlan(gamePlanId: string): Promise<GamePlan> {
     const { data, error } = await supabase
-      .from("game_results")
-      .insert({
-        team_id: teamId,
-        game_date: gameDate,
-        opponent,
-        venue,
-        our_score: pointsFor,
-        opponent_score: pointsAgainst,
-        result,
-        home_away: homeAway,
-        notes,
-      })
-      .select(GAME_RESULT_COLUMNS)
+      .from("game_plans")
+      .select(
+        `
+        *,
+        game_plan_situations (
+          *,
+          game_plan_plays (
+            *,
+            plays (*)
+          )
+        )
+      `
+      )
+      .eq("id", gamePlanId)
       .single();
 
-    if (error) throw error;
-    return data;
+    if (error) {
+      console.error("❌ Error fetching game plan:", error);
+      throw new Error(`Failed to fetch game plan: ${error.message}`);
+    }
+
+    return this.mapGamePlanFromDb(data);
+  }
+
+  /**
+   * Update a game plan
+   */
+  static async updateGamePlan(
+    gamePlanId: string,
+    updates: UpdateGamePlanData
+  ): Promise<GamePlan> {
+    const { data, error } = await supabase
+      .from("game_plans")
+      // @ts-expect-error - Type will be correct after regenerating Supabase types
+      .update({
+        name: updates.name,
+        opponent: updates.opponent,
+        game_date: updates.gameDate,
+        game_location: updates.gameLocation,
+        notes: updates.notes,
+        is_archived: updates.isArchived,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", gamePlanId)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("❌ Error updating game plan:", error);
+      throw new Error(`Failed to update game plan: ${error.message}`);
+    }
+
+    return this.mapGamePlanFromDb(data);
+  }
+
+  /**
+   * Delete a game plan (cascades to situations and plays)
+   */
+  static async deleteGamePlan(gamePlanId: string): Promise<void> {
+    const { error } = await supabase
+      .from("game_plans")
+      .delete()
+      .eq("id", gamePlanId);
+
+    if (error) {
+      console.error("❌ Error deleting game plan:", error);
+      throw new Error(`Failed to delete game plan: ${error.message}`);
+    }
+  }
+
+  /**
+   * Archive a game plan
+   */
+  static async archiveGamePlan(gamePlanId: string): Promise<GamePlan> {
+    return this.updateGamePlan(gamePlanId, { isArchived: true });
+  }
+
+  /**
+   * Unarchive a game plan
+   */
+  static async unarchiveGamePlan(gamePlanId: string): Promise<GamePlan> {
+    return this.updateGamePlan(gamePlanId, { isArchived: false });
+  }
+
+  /**
+   * Create a situation within a game plan
+   */
+  static async createSituation(
+    data: CreateGamePlanSituationData
+  ): Promise<GamePlanSituation> {
+    const { data: situation, error } = await supabase
+      .from("game_plan_situations")
+      .insert({
+        game_plan_id: data.gamePlanId,
+        situation_type: data.situationType,
+        display_order: data.displayOrder || 1,
+        notes: data.notes || null,
+      } as any)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("❌ Error creating situation:", error);
+      throw new Error(`Failed to create situation: ${error.message}`);
+    }
+
+    return this.mapSituationFromDb(situation);
+  }
+
+  /**
+   * Add a play to a situation
+   */
+  static async addPlayToSituation(
+    data: AddPlayToGamePlanData
+  ): Promise<GamePlanPlay> {
+    const { data: gamePlanPlay, error } = await supabase
+      .from("game_plan_plays")
+      .insert({
+        situation_id: data.situationId,
+        play_id: data.playId,
+        priority: data.priority || 1,
+        notes: data.notes || null,
+      } as any)
+      .select(
+        `
+        *,
+        plays (*)
+      `
+      )
+      .single();
+
+    if (error) {
+      console.error("❌ Error adding play to situation:", error);
+      throw new Error(`Failed to add play to situation: ${error.message}`);
+    }
+
+    return this.mapPlayFromDb(gamePlanPlay);
+  }
+
+  /**
+   * Remove a play from a situation
+   */
+  static async removePlayFromSituation(gamePlanPlayId: string): Promise<void> {
+    const { error } = await supabase
+      .from("game_plan_plays")
+      .delete()
+      .eq("id", gamePlanPlayId);
+
+    if (error) {
+      console.error("❌ Error removing play from situation:", error);
+      throw new Error(`Failed to remove play from situation: ${error.message}`);
+    }
+  }
+
+  /**
+   * Update play priority within a situation
+   */
+  static async updatePlayPriority(
+    gamePlanPlayId: string,
+    priority: number
+  ): Promise<void> {
+    const { error } = await supabase
+      .from("game_plan_plays")
+      // @ts-expect-error - Type will be correct after regenerating Supabase types
+      .update({ priority, updated_at: new Date().toISOString() })
+      .eq("id", gamePlanPlayId);
+
+    if (error) {
+      console.error("❌ Error updating play priority:", error);
+      throw new Error(`Failed to update play priority: ${error.message}`);
+    }
+  }
+
+  /**
+   * Duplicate a game plan
+   */
+  static async duplicateGamePlan(
+    gamePlanId: string,
+    newName: string
+  ): Promise<GamePlan> {
+    // Get original game plan with all situations and plays
+    const original = await this.getGamePlan(gamePlanId);
+
+    // Create new game plan
+    const newGamePlan = await this.createGamePlan({
+      teamId: original.teamId,
+      name: newName,
+      opponent: original.opponent,
+      gameDate: original.gameDate,
+      gameLocation: original.gameLocation,
+      notes: original.notes,
+    });
+
+    // Copy all plays from original situations to new situations
+    if (original.situations && newGamePlan.situations) {
+      for (const origSituation of original.situations) {
+        // Find matching situation in new game plan
+        const newSituation = newGamePlan.situations.find(
+          (s) => s.situationType === origSituation.situationType
+        );
+
+        if (newSituation && origSituation.plays) {
+          // Copy plays to new situation
+          for (const play of origSituation.plays) {
+            await this.addPlayToSituation({
+              situationId: newSituation.id,
+              playId: play.playId,
+              priority: play.priority,
+              notes: play.notes,
+            });
+          }
+        }
+      }
+    }
+
+    return this.getGamePlan(newGamePlan.id);
+  }
+
+  // ===========================================
+  // MAPPING HELPERS
+  // ===========================================
+
+  private static mapGamePlanFromDb(data: any): GamePlan {
+    return {
+      id: data.id,
+      teamId: data.team_id,
+      name: data.name,
+      opponent: data.opponent,
+      gameDate: data.game_date,
+      gameLocation: data.game_location,
+      notes: data.notes,
+      createdBy: data.created_by,
+      createdAt: new Date(data.created_at),
+      updatedAt: new Date(data.updated_at),
+      isArchived: data.is_archived || false,
+      situations: data.game_plan_situations
+        ? data.game_plan_situations
+            .map(this.mapSituationFromDb)
+            .sort(
+              (a: GamePlanSituation, b: GamePlanSituation) =>
+                a.displayOrder - b.displayOrder
+            )
+        : undefined,
+    };
+  }
+
+  private static mapSituationFromDb(data: any): GamePlanSituation {
+    return {
+      id: data.id,
+      gamePlanId: data.game_plan_id,
+      situationType: data.situation_type,
+      displayOrder: data.display_order,
+      notes: data.notes,
+      createdAt: new Date(data.created_at),
+      plays: data.game_plan_plays
+        ? data.game_plan_plays
+            .map(this.mapPlayFromDb)
+            .sort((a: GamePlanPlay, b: GamePlanPlay) => a.priority - b.priority)
+        : undefined,
+    };
+  }
+
+  private static mapPlayFromDb(data: any): GamePlanPlay {
+    return {
+      id: data.id,
+      situationId: data.situation_id,
+      playId: data.play_id,
+      play: data.plays,
+      priority: data.priority,
+      notes: data.notes,
+      createdAt: new Date(data.created_at),
+      updatedAt: new Date(data.updated_at),
+    };
   }
 }
-
-// ============================================
-// GAME RESULTS TYPES
-// (Consolidated from gameResultsService.ts)
-// ============================================
-
-export interface GameResultListItem {
-  id: string;
-  team_id: string;
-  game_date: string;
-  opponent: string;
-  venue: string | null;
-  our_score: number;
-  opponent_score: number;
-  result: string | null;
-  home_away: string | null;
-  created_at: string | null;
-}
-
-export interface LogGameResultInput {
-  teamId: string;
-  gameDate: string; // YYYY-MM-DD
-  opponent: string;
-  venue?: string;
-  pointsFor: number;
-  pointsAgainst: number;
-  homeAway?: "home" | "away";
-  notes?: string;
-}
-
-const GAME_RESULT_COLUMNS =
-  "id, team_id, game_date, opponent, venue, our_score, opponent_score, result, home_away, created_at" as const;
-
-// ============================================
-// LEGACY EXPORTS (for backward compatibility)
-// ============================================
-
-export const listGameResults = GamePlanService.listGameResults;
-export const logGameResult = GamePlanService.logGameResult;

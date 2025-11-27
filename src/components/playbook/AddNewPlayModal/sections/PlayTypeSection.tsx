@@ -108,7 +108,7 @@ export const PlayTypeSection: React.FC<PlayTypeSectionProps> = ({
               }}
               placeholder="Type name..."
               autoFocus
-              className="px-spacing-sm py-1 text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+              className="px-spacing-sm py-1 text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
               maxLength={50}
             />
             <Button

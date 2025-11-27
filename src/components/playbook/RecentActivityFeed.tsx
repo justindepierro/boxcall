@@ -46,17 +46,17 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
   const getActivityColor = (type: ActivityItem["type"]) => {
     switch (type) {
       case "created":
-        return "text-text-success";
+        return "text-success";
       case "updated":
-        return "text-text-info";
+        return "text-info";
       case "duplicated":
-        return "text-text-primary";
+        return "text-primary";
       case "added_to_script":
-        return "text-text-warning";
+        return "text-warning";
       case "added_to_gameplan":
-        return "text-text-primary";
+        return "text-primary";
       default:
-        return "text-text-tertiary";
+        return "text-tertiary";
     }
   };
 
@@ -103,18 +103,18 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
     >
       <div className="flex items-center mb-4">
         <Icon name="activity" className="h-5 w-5 text-jade-600 mr-2" />
-        <Typography variant="headline-sm" className="text-text-primary">
+        <Typography variant="headline-sm" className="text-primary">
           Recent Activity
         </Typography>
       </div>
 
       {displayedActivities.length === 0 ? (
-        <div className="text-center py-6 text-text-muted">
+        <div className="text-center py-6 text-muted">
           <Icon
             name="activity"
             className="h-8 w-8 mx-auto mb-2 text-border-light"
           />
-          <Typography variant="body-sm" className="text-text-muted">
+          <Typography variant="body-sm" className="text-muted">
             No recent activity
           </Typography>
         </div>
@@ -134,18 +134,18 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
                 <div className="flex items-center justify-between">
                   <Typography
                     variant="body-sm"
-                    className="text-text-primary font-medium truncate"
+                    className="text-primary font-medium truncate"
                   >
                     {activity.playName}
                   </Typography>
                   <Typography
                     variant="body-xs"
-                    className="text-text-muted ml-2 flex-shrink-0"
+                    className="text-muted ml-2 flex-shrink-0"
                   >
                     {formatTimeAgo(activity.timestamp)}
                   </Typography>
                 </div>
-                <Typography variant="body-xs" className="text-text-secondary">
+                <Typography variant="body-xs" className="text-secondary">
                   {getActivityLabel(activity.type)}
                   {activity.details && ` • ${activity.details}`}
                 </Typography>
@@ -156,8 +156,8 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
       )}
 
       {activities.length > maxItems && (
-        <div className="mt-4 pt-3 border-t border-border-light">
-          <Typography variant="body-xs" className="text-text-muted text-center">
+        <div className="mt-4 pt-3 border-t border-light">
+          <Typography variant="body-xs" className="text-muted text-center">
             +{activities.length - maxItems} more activities
           </Typography>
         </div>

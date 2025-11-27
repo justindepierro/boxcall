@@ -61,7 +61,7 @@ export const KeyPositionSelector: React.FC<KeyPositionSelectorProps> = ({
   return (
     <div className="space-y-spacing-xs">
       {/* Label */}
-      <Typography variant="label-md" className="block text-text-secondary">
+      <Typography variant="label-md" className="block text-secondary">
         <Icon name="users" className="h-4 w-4 mr-spacing-xs inline" />
         {label}
         {positions.length > 0 && (

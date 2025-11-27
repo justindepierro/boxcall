@@ -8,7 +8,7 @@ export const PrivacyPolicyPage: React.FC = () => {
   return (
     <PageLayout title="Privacy Policy" variant="detail">
       <div className="prose dark:prose-invert max-w-none">
-        <p className="text-sm mb-8 text-text-secondary">
+        <p className="text-sm mb-8 text-secondary">
           Last updated: {lastUpdated}
         </p>
 
@@ -16,17 +16,17 @@ export const PrivacyPolicyPage: React.FC = () => {
           <Typography
             variant="headline-sm"
             as="h2"
-            className="mb-4 text-text-primary"
+            className="mb-4 text-primary"
           >
             Introduction
           </Typography>
-          <p className="text-text-primary dark:text-text-secondary mb-4">
+          <p className="text-primary dark:text-secondary mb-4">
             BoxCall ("we," "our," or "us") is committed to protecting your
             privacy. This Privacy Policy explains how we collect, use, disclose,
             and safeguard your information when you use our football coaching
             management platform and related services.
           </p>
-          <p className="text-text-primary dark:text-text-secondary">
+          <p className="text-primary dark:text-secondary">
             By using BoxCall, you consent to the data practices described in
             this Privacy Policy.
           </p>
@@ -36,7 +36,7 @@ export const PrivacyPolicyPage: React.FC = () => {
           <Typography
             variant="headline-sm"
             as="h2"
-            className="mb-4 text-text-primary"
+            className="mb-4 text-primary"
           >
             Information We Collect
           </Typography>
@@ -44,11 +44,11 @@ export const PrivacyPolicyPage: React.FC = () => {
           <Typography
             variant="headline-sm"
             as="h3"
-            className="mb-3 text-text-primary"
+            className="mb-3 text-primary"
           >
             Personal Information
           </Typography>
-          <ul className="list-disc pl-6 text-text-primary dark:text-text-secondary mb-4">
+          <ul className="list-disc pl-6 text-primary dark:text-secondary mb-4">
             <li>Account information (name, email address, phone number)</li>
             <li>Team and coaching information</li>
             <li>Player roster data (names, positions, contact information)</li>
@@ -59,11 +59,11 @@ export const PrivacyPolicyPage: React.FC = () => {
           <Typography
             variant="headline-sm"
             as="h3"
-            className="mb-3 text-text-primary"
+            className="mb-3 text-primary"
           >
             Usage Information
           </Typography>
-          <ul className="list-disc pl-6 text-text-primary dark:text-text-secondary mb-4">
+          <ul className="list-disc pl-6 text-primary dark:text-secondary mb-4">
             <li>How you use our platform and services</li>
             <li>
               Device information (IP address, browser type, operating system)
@@ -75,11 +75,11 @@ export const PrivacyPolicyPage: React.FC = () => {
           <Typography
             variant="headline-sm"
             as="h3"
-            className="mb-3 text-text-primary"
+            className="mb-3 text-primary"
           >
             Team and Playbook Data
           </Typography>
-          <ul className="list-disc pl-6 text-text-primary dark:text-text-secondary">
+          <ul className="list-disc pl-6 text-primary dark:text-secondary">
             <li>Playbook content and formations</li>
             <li>Practice plans and drill information</li>
             <li>Team statistics and performance data</li>
@@ -91,11 +91,11 @@ export const PrivacyPolicyPage: React.FC = () => {
           <Typography
             variant="headline-sm"
             as="h2"
-            className="mb-4 text-text-primary"
+            className="mb-4 text-primary"
           >
             How We Use Your Information
           </Typography>
-          <ul className="list-disc pl-6 text-text-primary dark:text-text-secondary">
+          <ul className="list-disc pl-6 text-primary dark:text-secondary">
             <li>Provide and maintain our coaching platform services</li>
             <li>Process payments and manage subscriptions</li>
             <li>Communicate with you about your account and our services</li>
@@ -110,15 +110,15 @@ export const PrivacyPolicyPage: React.FC = () => {
           <Typography
             variant="headline-sm"
             as="h2"
-            className="mb-4 text-text-primary"
+            className="mb-4 text-primary"
           >
             Information Sharing and Disclosure
           </Typography>
-          <p className="text-text-primary dark:text-text-secondary mb-4">
+          <p className="text-primary dark:text-secondary mb-4">
             We do not sell, trade, or otherwise transfer your personal
             information to third parties, except in the following circumstances:
           </p>
-          <ul className="list-disc pl-6 text-text-primary dark:text-text-secondary">
+          <ul className="list-disc pl-6 text-primary dark:text-secondary">
             <li>
               <strong>With your consent:</strong> When you explicitly authorize
               us to share information
@@ -146,16 +146,16 @@ export const PrivacyPolicyPage: React.FC = () => {
           <Typography
             variant="headline-sm"
             as="h2"
-            className="mb-4 text-text-primary"
+            className="mb-4 text-primary"
           >
             Data Security
           </Typography>
-          <p className="text-text-primary dark:text-text-secondary mb-4">
+          <p className="text-primary dark:text-secondary mb-4">
             We implement appropriate technical and organizational security
             measures to protect your personal information against unauthorized
             access, alteration, disclosure, or destruction.
           </p>
-          <ul className="list-disc pl-6 text-text-primary dark:text-text-secondary">
+          <ul className="list-disc pl-6 text-primary dark:text-secondary">
             <li>Encryption of data in transit and at rest</li>
             <li>Regular security audits and updates</li>
             <li>Access controls and authentication measures</li>
@@ -167,14 +167,14 @@ export const PrivacyPolicyPage: React.FC = () => {
           <Typography
             variant="headline-sm"
             as="h2"
-            className="mb-4 text-text-primary"
+            className="mb-4 text-primary"
           >
             Your Rights and Choices
           </Typography>
-          <p className="text-text-primary dark:text-text-secondary mb-4">
+          <p className="text-primary dark:text-secondary mb-4">
             You have the following rights regarding your personal information:
           </p>
-          <ul className="list-disc pl-6 text-text-primary dark:text-text-secondary">
+          <ul className="list-disc pl-6 text-primary dark:text-secondary">
             <li>
               <strong>Access:</strong> Request a copy of your personal
               information
@@ -202,11 +202,11 @@ export const PrivacyPolicyPage: React.FC = () => {
           <Typography
             variant="headline-sm"
             as="h2"
-            className="mb-4 text-text-primary"
+            className="mb-4 text-primary"
           >
             Children's Privacy
           </Typography>
-          <p className="text-text-primary dark:text-text-secondary">
+          <p className="text-primary dark:text-secondary">
             BoxCall is designed for use by coaches and team administrators. We
             do not knowingly collect personal information from children under
             13. If you believe we have collected information from a child under
@@ -218,11 +218,11 @@ export const PrivacyPolicyPage: React.FC = () => {
           <Typography
             variant="headline-sm"
             as="h2"
-            className="mb-4 text-text-primary"
+            className="mb-4 text-primary"
           >
             Changes to This Privacy Policy
           </Typography>
-          <p className="text-text-primary dark:text-text-secondary">
+          <p className="text-primary dark:text-secondary">
             We may update this Privacy Policy from time to time. We will notify
             you of any changes by posting the new Privacy Policy on this page
             and updating the "Last updated" date. Your continued use of BoxCall
@@ -234,16 +234,16 @@ export const PrivacyPolicyPage: React.FC = () => {
           <Typography
             variant="headline-sm"
             as="h2"
-            className="mb-4 text-text-primary"
+            className="mb-4 text-primary"
           >
             Contact Us
           </Typography>
-          <p className="text-text-primary dark:text-text-secondary mb-4">
+          <p className="text-primary dark:text-secondary mb-4">
             If you have any questions about this Privacy Policy or our data
             practices, please contact us:
           </p>
-          <div className="surface-subtle dark:bg-surface-secondary p-4 rounded-lg">
-            <p className="text-text-primary dark:text-text-secondary">
+          <div className="surface-subtle dark:bg-secondary p-4 rounded-lg">
+            <p className="text-primary dark:text-secondary">
               <strong>BoxCall Privacy Team</strong>
               <br />
               Email: privacy@boxcall.com

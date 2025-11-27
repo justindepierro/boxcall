@@ -40,7 +40,7 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <Icon
             name="search"
-            className={`h-4 w-4 ${isFocused ? "text-text-info" : "text-text-secondary"}`}
+            className={`h-4 w-4 ${isFocused ? "text-info" : "text-secondary"}`}
             aria-hidden="true"
           />
         </div>
@@ -65,7 +65,7 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({
           <Tooltip content="Clear search">
             <button
               onClick={handleClear}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-text-secondary"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted hover:text-secondary"
               type="button"
               aria-label="Clear search"
             >

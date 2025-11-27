@@ -119,7 +119,7 @@ export const WithHeaderAndFooter: Story = {
     header: (
       <div>
         <Typography variant="headline-md">Team Statistics</Typography>
-        <Typography variant="body-sm" className="text-text-muted">
+        <Typography variant="body-sm" className="text-muted">
           Last updated: 2 hours ago
         </Typography>
       </div>

@@ -58,7 +58,6 @@ export const FormationSection: React.FC<FormationSectionProps> = ({
               onFormationChange(formationObj.name);
             }
           }}
-          onCreateNew={onCreateFormation}
           className="flex-1"
         />
       ) : (
@@ -103,7 +102,7 @@ export const FormationSection: React.FC<FormationSectionProps> = ({
           variant="ghost"
           size="sm"
           onClick={() => onFormationShowInNameChange(!formationShowInName)}
-          className={`p-spacing-xs ${formationShowInName ? "text-text-info" : "text-text-muted"}`}
+          className={`p-spacing-xs ${formationShowInName ? "text-info" : "text-muted"}`}
         >
           <Icon name="eye" className="h-4 w-4" />
         </Button>

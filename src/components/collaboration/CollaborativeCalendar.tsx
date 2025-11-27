@@ -301,7 +301,7 @@ export const CollaborativeCalendar: React.FC<CollaborativeCalendarProps> = ({
       case "meeting":
         return "bg-warning/10 text-warning border-warning/20";
       default:
-        return "bg-text-muted/10 text-text-muted border-border-secondary";
+        return "bg-text-muted/10 text-muted border-secondary";
     }
   };
 
@@ -372,14 +372,14 @@ export const CollaborativeCalendar: React.FC<CollaborativeCalendarProps> = ({
                 className={`p-3 rounded-lg border transition-colors ${
                   isToday
                     ? "bg-primary/5 border-primary/20"
-                    : "bg-surface-secondary border-border-secondary"
+                    : "bg-surface-secondary border-secondary"
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
                   <Typography
                     variant="body-sm"
                     className={`font-medium ${
-                      isToday ? "text-primary" : "text-text-primary"
+                      isToday ? "text-primary" : "text-primary"
                     }`}
                   >
                     {dayDate.toLocaleDateString("en-US", {
@@ -389,7 +389,7 @@ export const CollaborativeCalendar: React.FC<CollaborativeCalendarProps> = ({
                     })}
                   </Typography>
                   {dayEvents.length > 0 && (
-                    <span className="text-xs text-text-muted">
+                    <span className="text-xs text-muted">
                       {dayEvents.length} event{dayEvents.length > 1 ? "s" : ""}
                     </span>
                   )}
@@ -433,7 +433,7 @@ export const CollaborativeCalendar: React.FC<CollaborativeCalendarProps> = ({
                                 </Typography>
                                 {event.location && (
                                   <>
-                                    <span className="text-text-muted">•</span>
+                                    <span className="text-muted">•</span>
                                     <Typography variant="caption" color="muted">
                                       {event.location}
                                     </Typography>
@@ -469,7 +469,7 @@ export const CollaborativeCalendar: React.FC<CollaborativeCalendarProps> = ({
                                   className={
                                     isAttending
                                       ? "text-success"
-                                      : "text-text-muted"
+                                      : "text-muted"
                                   }
                                 >
                                   <Icon
@@ -497,7 +497,7 @@ export const CollaborativeCalendar: React.FC<CollaborativeCalendarProps> = ({
         </div>
 
         {/* Quick Stats */}
-        <div className="flex items-center justify-between text-xs text-text-muted mt-4 pt-3 border-t border-border-secondary">
+        <div className="flex items-center justify-between text-xs text-muted mt-4 pt-3 border-t border-secondary">
           <span>{weekEvents.length} events this week</span>
           <span>
             {weekEvents.filter((e) => e.attendees.includes(userId)).length}{" "}

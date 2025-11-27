@@ -109,7 +109,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
           </div>
           <Typography
             variant="label-md"
-            className="text-text-primary font-medium mb-1"
+            className="text-primary font-medium mb-1"
           >
             Season Stats
           </Typography>
@@ -120,15 +120,15 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
       ) : (
         <>
           <div className="flex items-center justify-between mb-4">
-            <Typography variant="headline-md" className="text-text-primary">
+            <Typography variant="headline-md" className="text-primary">
               Season Stats
             </Typography>
           </div>
           {statsLoading && (
-            <div className="text-sm text-text-muted">Loading stats...</div>
+            <div className="text-sm text-muted">Loading stats...</div>
           )}
           {!statsLoading && !stats && (
-            <div className="text-sm text-text-muted">
+            <div className="text-sm text-muted">
               No stats yet – log your first game.
             </div>
           )}
@@ -138,7 +138,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                 <Typography
                   variant="label-md"
                   as="div"
-                  className="text-text-secondary"
+                  className="text-secondary"
                 >
                   Wins
                 </Typography>
@@ -148,7 +148,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                 <Typography
                   variant="label-md"
                   as="div"
-                  className="text-text-secondary"
+                  className="text-secondary"
                 >
                   Losses
                 </Typography>
@@ -158,7 +158,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                 <Typography
                   variant="label-md"
                   as="div"
-                  className="text-text-secondary"
+                  className="text-secondary"
                 >
                   Win %
                 </Typography>
@@ -168,7 +168,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                 <Typography
                   variant="label-md"
                   as="div"
-                  className="text-text-secondary"
+                  className="text-secondary"
                 >
                   PF
                 </Typography>
@@ -178,7 +178,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                 <Typography
                   variant="label-md"
                   as="div"
-                  className="text-text-secondary"
+                  className="text-secondary"
                 >
                   PA
                 </Typography>
@@ -188,7 +188,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                 <Typography
                   variant="label-md"
                   as="div"
-                  className="text-text-secondary"
+                  className="text-secondary"
                 >
                   GP
                 </Typography>
@@ -209,16 +209,16 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                 const outcome = pf > pa ? "W" : pf < pa ? "L" : "T";
                 const color =
                   outcome === "W"
-                    ? "bg-surface-success text-text-success"
+                    ? "bg-surface-success text-success"
                     : outcome === "L"
-                      ? "bg-surface-error text-text-error"
-                      : "surface-subtle text-text-primary";
+                      ? "bg-surface-error text-error"
+                      : "surface-subtle text-primary";
                 return (
                   <li
                     key={r.id}
                     className="flex items-center justify-between py-1"
                   >
-                    <span className="flex items-center gap-2 font-medium text-text-primary">
+                    <span className="flex items-center gap-2 font-medium text-primary">
                       <span
                         className={`inline-flex items-center justify-center rounded-lg px-1.5 py-0.5 text-xs font-semibold ${color}`}
                       >
@@ -226,7 +226,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                       </span>
                       {pf}-{pa} vs {r.opponent}
                     </span>
-                    <span className="text-text-muted">
+                    <span className="text-muted">
                       {new Date(r.game_date).toLocaleDateString(undefined, {
                         month: "short",
                         day: "numeric",
@@ -262,7 +262,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
         >
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             {!!errors.length && (
-              <div className="rounded border border-subtle border-text-error surface-subtle bg-surface-error p-3 text-sm text-text-error text-text-error">
+              <div className="rounded border border-subtle border-text-error surface-subtle bg-surface-error p-3 text-sm text-error text-error">
                 <ul className="list-disc list-inside space-y-0.5">
                   {errors.map((er) => (
                     <li key={er}>{er}</li>

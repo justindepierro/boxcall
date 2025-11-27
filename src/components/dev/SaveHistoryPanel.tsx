@@ -6,8 +6,8 @@
  */
 
 import { useState } from "react";
-import { useSaveState } from "../../contexts/SaveStateContext";
-import { useUndoRedo } from "../../contexts/UndoRedoContext";
+import { useSaveState } from "../../hooks/useSaveState";
+import { useUndoRedo } from "../../hooks/useUndoRedo";
 
 interface SaveHistoryEntry {
   id: string;

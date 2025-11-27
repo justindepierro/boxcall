@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Icon } from "../../ui/Icon/Icon";
 import { Button } from "../../ui/Button/Button";
-import { Typography } from "../../../design-system/Typography";
+import { Typography } from "../../design-system/Typography";
 import { ErrorBoundary } from "../../ui/ErrorBoundary";
 import { PullToRefresh } from "../../PullToRefresh";
 import { FloatingActionButton } from "../../FloatingActionButton";
@@ -123,11 +123,11 @@ export function MobilePlaybookView({
 
       {/* Search Bar - Always visible at top (before any content) */}
       {state.playsCreated > 0 && (
-        <div className="sticky top-0 z-30 bg-surface-primary/95 backdrop-blur-md border-b border-border-subtle/50 px-4 py-3 shadow-sm">
+        <div className="sticky top-0 z-30 bg-surface-primary/95 backdrop-blur-md border-b border-subtle/50 px-4 py-3 shadow-sm">
           <div className="relative">
             <Icon
               name="search"
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-text-muted pointer-events-none"
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted pointer-events-none"
             />
             <input
               type="search"
@@ -136,7 +136,7 @@ export function MobilePlaybookView({
               onChange={(e) =>
                 dispatch({ type: "SET_SEARCH", query: e.target.value })
               }
-              className="w-full h-12 pl-10 pr-10 bg-surface-secondary border border-border-subtle rounded-lg text-base text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-jade focus:border-transparent transition-all"
+              className="w-full h-12 pl-10 pr-10 bg-surface-secondary border border-subtle rounded-lg text-base text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-jade focus:border-transparent transition-all"
             />
             {/* 🚀 PERFORMANCE: Instant search feedback - shows while debouncing */}
             {state.isSearchPending && state.searchQuery && (
@@ -170,7 +170,7 @@ export function MobilePlaybookView({
               >
                 <Icon
                   name="close"
-                  className="h-4 w-4 text-text-secondary hover:text-text-primary"
+                  className="h-4 w-4 text-secondary hover:text-primary"
                 />
               </motion.button>
             )}
@@ -289,7 +289,7 @@ export function MobilePlaybookView({
             <ErrorBoundary
               fallback={
                 <div className="p-spacing-lg text-center">
-                  <Typography variant="body-md" className="text-text-secondary">
+                  <Typography variant="body-md" className="text-secondary">
                     Failed to load plays. Please refresh the page.
                   </Typography>
                 </div>
@@ -382,8 +382,8 @@ export function MobilePlaybookView({
         >
           <div className="flex flex-col h-full">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 pb-4 border-b border-border-subtle">
-              <Typography variant="headline-md" className="text-text-primary">
+            <div className="flex items-center justify-between p-6 pb-4 border-b border-subtle">
+              <Typography variant="headline-md" className="text-primary">
                 Filters & Search
               </Typography>
               <Button
@@ -406,7 +406,7 @@ export function MobilePlaybookView({
             </div>
 
             {/* Action Footer - Fixed at Bottom */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 bg-surface-primary border-t border-border-subtle shadow-lg">
+            <div className="absolute bottom-0 left-0 right-0 p-4 bg-surface-primary border-t border-subtle shadow-lg">
               <div className="flex gap-3">
                 <Button
                   onClick={() => {
@@ -430,7 +430,7 @@ export function MobilePlaybookView({
                 </Button>
               </div>
               {Object.keys(state.advancedFilters).length > 0 && (
-                <p className="text-center text-xs text-text-secondary mt-2">
+                <p className="text-center text-xs text-secondary mt-2">
                   {Object.keys(state.advancedFilters).length} filter
                   {Object.keys(state.advancedFilters).length === 1
                     ? ""

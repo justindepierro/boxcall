@@ -135,7 +135,7 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
           onFocus={() => onShowSuggestionsChange(true)}
           onBlur={() => setTimeout(() => onShowSuggestionsChange(false), 200)}
           placeholder={placeholder}
-          className={`w-full border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0 ${
+          className={`w-full border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0 ${
             isMobile
               ? "px-5 py-4 text-base" // Mobile: 48px height, 16px font (prevents iOS zoom)
               : "px-spacing-sm py-spacing-xs" // Desktop: normal spacing
@@ -159,7 +159,7 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
                   {getSuggestionLabel(suggestion.type) && (
                     <Typography
                       variant="caption"
-                      className="text-text-muted opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="text-muted opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                       {getSuggestionLabel(suggestion.type)}
                     </Typography>

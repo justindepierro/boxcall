@@ -123,10 +123,10 @@ export function PasswordStrengthIndicator({
         variant="caption"
         className={`font-medium ${
           validation.strength === "strong"
-            ? "text-text-success"
+            ? "text-success"
             : validation.strength === "medium"
-              ? "text-text-warning"
-              : "text-text-error"
+              ? "text-warning"
+              : "text-error"
         }`}
       >
         {validation.message}

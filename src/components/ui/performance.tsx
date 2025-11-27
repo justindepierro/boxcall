@@ -91,7 +91,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   if (hasError) {
     return (
       <div
-        className={`bg-border flex items-center justify-center text-text-secondary text-sm ${className}`}
+        className={`bg-border flex items-center justify-center text-secondary text-sm ${className}`}
         style={{ width, height }}
       >
         Failed to load image

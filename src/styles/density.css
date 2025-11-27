@@ -1,6 +1,6 @@
 :root {
-  --bc-surface: #fcfdfc;
-  --bc-surface-alt: #f6f9f7;
+  --bc-surface: var(--color-bg-primary); /* Use design token */
+  --bc-surface-alt: var(--color-bg-secondary); /* Use design token */
   --bc-card-padding: 0.9rem; /* 14px default */
   --bc-grid-gap: 1.125rem; /* 18px default */
 }

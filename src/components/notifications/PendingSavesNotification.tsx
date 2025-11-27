@@ -9,7 +9,7 @@
  */
 
 import React, { useEffect, useState } from "react";
-import { useSaveState } from "../../contexts/SaveStateContext";
+import { useSaveState } from "../../hooks/useSaveState";
 import { loadOperations } from "../../utils/saveQueueDB";
 import { Button } from "../ui/Button";
 import { Icon } from "../ui/Icon/Icon";
@@ -63,7 +63,7 @@ export const PendingSavesNotification: React.FC = () => {
         </div>
 
         <div className="flex-1 min-w-0">
-          <Typography variant="headline-sm" className="text-text-primary mb-1">
+          <Typography variant="headline-sm" className="text-primary mb-1">
             Pending Saves from Last Session
           </Typography>
 
@@ -94,7 +94,7 @@ export const PendingSavesNotification: React.FC = () => {
           <Icon
             name="close"
             size="sm"
-            className="text-text-secondary hover:text-text-primary"
+            className="text-secondary hover:text-primary"
           />
         </button>
       </div>

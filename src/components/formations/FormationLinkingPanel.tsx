@@ -273,7 +273,7 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
   if (loading) {
     return (
       <div className="flex items-center justify-center py-spacing-xl">
-        <Typography variant="body-md" className="text-text-muted">
+        <Typography variant="body-md" className="text-muted">
           Loading formations...
         </Typography>
       </div>
@@ -298,7 +298,7 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
         >
           {/* Left Formation Column */}
           <div className="flex flex-col gap-spacing-sm">
-            <Typography variant="headline-md" className="text-text-primary">
+            <Typography variant="headline-md" className="text-primary">
               Left Side Formation
             </Typography>
 
@@ -315,37 +315,37 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
                     setLeftFormation(formation || null);
                   }
                 }}
-                className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
+                className="w-full px-spacing-sm py-spacing-xs border border-primary rounded-lg bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
               >
                 <option value="">Select left formation...</option>
                 {leftSideFormations.map(renderFormationOption)}
                 <option value="CREATE_NEW">➕ Create New Formation</option>
               </select>
-              <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
+              <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
             </div>
 
             {leftFormation && (
-              <div className="mt-spacing-md p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
+              <div className="mt-spacing-md p-spacing-md bg-surface-secondary rounded-lg border border-primary">
                 <FormationBadge
                   formationId={leftFormation.id}
                   direction={leftFormation.direction}
                 />
                 <div className="mt-spacing-sm space-y-spacing-xs">
-                  <Typography variant="caption" className="text-text-secondary">
+                  <Typography variant="caption" className="text-secondary">
                     <strong>Personnel:</strong>{" "}
                     {leftFormation.personnel_name || "Not set"}
                   </Typography>
-                  <Typography variant="caption" className="text-text-secondary">
+                  <Typography variant="caption" className="text-secondary">
                     <strong>Category:</strong>{" "}
                     {leftFormation.category || "Not set"}
                   </Typography>
-                  <Typography variant="caption" className="text-text-secondary">
+                  <Typography variant="caption" className="text-secondary">
                     <strong>Usage:</strong> {leftFormation.usage_count} plays
                   </Typography>
                   {leftFormation.description && (
                     <Typography
                       variant="caption"
-                      className="text-text-muted italic"
+                      className="text-muted italic"
                     >
                       {leftFormation.description}
                     </Typography>
@@ -383,7 +383,7 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
             </Button>
             <Typography
               variant="caption"
-              className="text-text-muted mt-spacing-xs text-center"
+              className="text-muted mt-spacing-xs text-center"
             >
               Click to
               <br />
@@ -393,7 +393,7 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
 
           {/* Right Formation Column */}
           <div className="flex flex-col gap-spacing-sm">
-            <Typography variant="headline-md" className="text-text-primary">
+            <Typography variant="headline-md" className="text-primary">
               Right Side Formation
             </Typography>
 
@@ -410,37 +410,37 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
                     setRightFormation(formation || null);
                   }
                 }}
-                className="w-full px-spacing-sm py-spacing-xs border border-border-primary rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
+                className="w-full px-spacing-sm py-spacing-xs border border-primary rounded-lg bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
               >
                 <option value="">Select right formation...</option>
                 {rightSideFormations.map(renderFormationOption)}
                 <option value="CREATE_NEW">➕ Create New Formation</option>
               </select>
-              <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
+              <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
             </div>
 
             {rightFormation && (
-              <div className="mt-spacing-md p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
+              <div className="mt-spacing-md p-spacing-md bg-surface-secondary rounded-lg border border-primary">
                 <FormationBadge
                   formationId={rightFormation.id}
                   direction={rightFormation.direction}
                 />
                 <div className="mt-spacing-sm space-y-spacing-xs">
-                  <Typography variant="caption" className="text-text-secondary">
+                  <Typography variant="caption" className="text-secondary">
                     <strong>Personnel:</strong>{" "}
                     {rightFormation.personnel_name || "Not set"}
                   </Typography>
-                  <Typography variant="caption" className="text-text-secondary">
+                  <Typography variant="caption" className="text-secondary">
                     <strong>Category:</strong>{" "}
                     {rightFormation.category || "Not set"}
                   </Typography>
-                  <Typography variant="caption" className="text-text-secondary">
+                  <Typography variant="caption" className="text-secondary">
                     <strong>Usage:</strong> {rightFormation.usage_count} plays
                   </Typography>
                   {rightFormation.description && (
                     <Typography
                       variant="caption"
-                      className="text-text-muted italic"
+                      className="text-muted italic"
                     >
                       {rightFormation.description}
                     </Typography>
@@ -453,16 +453,16 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
 
         {/* Personnel Packages Selection */}
         {(leftFormation || rightFormation) && availablePersonnel.length > 0 && (
-          <div className="mt-spacing-lg p-spacing-md bg-surface-secondary rounded-lg border border-border-primary">
+          <div className="mt-spacing-lg p-spacing-md bg-surface-secondary rounded-lg border border-primary">
             <Typography
               variant="headline-sm"
-              className="text-text-primary mb-spacing-sm"
+              className="text-primary mb-spacing-sm"
             >
               Personnel Packages
             </Typography>
             <Typography
               variant="caption"
-              className="text-text-secondary mb-spacing-md"
+              className="text-secondary mb-spacing-md"
             >
               Select which personnel packages can be run from{" "}
               {isSameFormationName() ? "these formations" : "this formation"}:
@@ -478,7 +478,7 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
                   ${
                     selectedPersonnelIds.includes(personnel.id)
                       ? "border-primary-500 bg-primary-50 text-primary-700"
-                      : "border-border-primary bg-surface-primary text-text-secondary hover:border-primary-300"
+                      : "border-primary bg-surface-primary text-secondary hover:border-primary-300"
                   }
                 `}
                 >
@@ -502,8 +502,8 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
         )}
 
         {/* Help Text */}
-        <div className="mt-spacing-md p-spacing-sm bg-surface-muted rounded border border-border-secondary">
-          <Typography variant="caption" className="text-text-muted">
+        <div className="mt-spacing-md p-spacing-sm bg-surface-muted rounded border border-secondary">
+          <Typography variant="caption" className="text-muted">
             <strong>💡 How it works:</strong> Left dropdown shows formations
             with "Left" direction or unlinked standalone formations. Right
             dropdown shows formations with "Right" direction or unlinked
@@ -514,7 +514,7 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
 
         {/* Status Display */}
         {(leftFormation || rightFormation) && (
-          <div className="flex items-center justify-center gap-spacing-sm text-text-secondary">
+          <div className="flex items-center justify-center gap-spacing-sm text-secondary">
             {leftFormation && (
               <Typography variant="caption">
                 {isLinked(leftFormation) ? "🔗 Linked" : "🔓 Unlinked"}

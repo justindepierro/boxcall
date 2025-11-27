@@ -103,14 +103,14 @@ export const PersonnelCreationPanel: React.FC<PersonnelCreationPanelProps> = ({
       >
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-spacing-lg border-b border-border-medium">
+          <div className="flex items-center justify-between p-spacing-lg border-b border-medium">
             <div>
-              <Typography variant="headline-md" className="text-text-primary">
+              <Typography variant="headline-md" className="text-primary">
                 Create Personnel
               </Typography>
               <Typography
                 variant="body-sm"
-                className="text-text-secondary mt-1"
+                className="text-secondary mt-1"
               >
                 Quick personnel setup for this play
               </Typography>
@@ -131,13 +131,13 @@ export const PersonnelCreationPanel: React.FC<PersonnelCreationPanelProps> = ({
             <div>
               <Typography
                 variant="label-md"
-                className="mb-spacing-sm text-text-primary"
+                className="mb-spacing-sm text-primary"
               >
                 Common Personnel
               </Typography>
               <Typography
                 variant="body-sm"
-                className="mb-spacing-md text-text-secondary"
+                className="mb-spacing-md text-secondary"
               >
                 Choose a standard configuration
               </Typography>
@@ -147,25 +147,25 @@ export const PersonnelCreationPanel: React.FC<PersonnelCreationPanelProps> = ({
                     key={p.name}
                     onClick={() => handleQuickCreate(p.name, p.description)}
                     disabled={isCreating}
-                    className="w-full flex items-center justify-between p-spacing-md rounded-lg border border-border-medium hover:border-border-strong hover:bg-surface-secondary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full flex items-center justify-between p-spacing-md rounded-lg border border-medium hover:border-strong hover:bg-surface-secondary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <div className="text-left">
                       <Typography
                         variant="body-md"
-                        className="text-text-primary font-medium"
+                        className="text-primary font-medium"
                       >
                         {p.name}
                       </Typography>
                       <Typography
                         variant="body-sm"
-                        className="text-text-secondary"
+                        className="text-secondary"
                       >
                         {p.description}
                       </Typography>
                     </div>
                     <Icon
                       name="chevron-right"
-                      className="h-5 w-5 text-text-tertiary"
+                      className="h-5 w-5 text-tertiary"
                     />
                   </button>
                 ))}
@@ -175,12 +175,12 @@ export const PersonnelCreationPanel: React.FC<PersonnelCreationPanelProps> = ({
             {/* Divider */}
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-border-medium" />
+                <div className="w-full border-t border-medium" />
               </div>
               <div className="relative flex justify-center">
                 <Typography
                   variant="body-sm"
-                  className="px-spacing-md bg-surface-primary text-text-tertiary"
+                  className="px-spacing-md bg-surface-primary text-tertiary"
                 >
                   Or create custom
                 </Typography>
@@ -191,7 +191,7 @@ export const PersonnelCreationPanel: React.FC<PersonnelCreationPanelProps> = ({
             <div className="space-y-spacing-md">
               <div>
                 <label className="block mb-spacing-xs">
-                  <Typography variant="label-md" className="text-text-primary">
+                  <Typography variant="label-md" className="text-primary">
                     Personnel Name *
                   </Typography>
                 </label>
@@ -200,14 +200,14 @@ export const PersonnelCreationPanel: React.FC<PersonnelCreationPanelProps> = ({
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g., Spread, Jumbo, Goal Line"
-                  className="w-full px-spacing-sm py-spacing-sm text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0 bg-surface-primary text-text-primary"
+                  className="w-full px-spacing-sm py-spacing-sm text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0 bg-surface-primary text-primary"
                   maxLength={50}
                 />
               </div>
 
               <div>
                 <label className="block mb-spacing-xs">
-                  <Typography variant="label-md" className="text-text-primary">
+                  <Typography variant="label-md" className="text-primary">
                     Description
                   </Typography>
                 </label>
@@ -216,7 +216,7 @@ export const PersonnelCreationPanel: React.FC<PersonnelCreationPanelProps> = ({
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Describe this personnel package..."
                   rows={3}
-                  className="w-full px-spacing-sm py-spacing-sm text-sm border border-border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0 bg-surface-primary text-text-primary resize-none"
+                  className="w-full px-spacing-sm py-spacing-sm text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0 bg-surface-primary text-primary resize-none"
                   maxLength={200}
                 />
               </div>
@@ -245,20 +245,20 @@ export const PersonnelCreationPanel: React.FC<PersonnelCreationPanelProps> = ({
             </div>
 
             {/* Help Text */}
-            <div className="p-spacing-md bg-surface-secondary/50 rounded-lg border border-border-medium">
+            <div className="p-spacing-md bg-surface-secondary/50 rounded-lg border border-medium">
               <div className="flex items-start gap-spacing-sm">
                 <Icon
                   name="info"
-                  className="h-5 w-5 text-text-info mt-0.5 flex-shrink-0"
+                  className="h-5 w-5 text-info mt-0.5 flex-shrink-0"
                 />
                 <div>
                   <Typography
                     variant="label-md"
-                    className="text-text-primary mb-1"
+                    className="text-primary mb-1"
                   >
                     Quick Setup
                   </Typography>
-                  <Typography variant="body-sm" className="text-text-secondary">
+                  <Typography variant="body-sm" className="text-secondary">
                     Create a basic personnel config now. You can add player
                     positions and customize badges later in the Personnel
                     Manager.
@@ -269,7 +269,7 @@ export const PersonnelCreationPanel: React.FC<PersonnelCreationPanelProps> = ({
           </div>
 
           {/* Footer */}
-          <div className="p-spacing-lg border-t border-border-medium">
+          <div className="p-spacing-lg border-t border-medium">
             <Button
               variant="outline"
               onClick={handleClose}

@@ -102,7 +102,7 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
       onClose={onClose}
       size="xl"
       headerContent={
-        <Typography variant="headline-sm" as="h3" className="text-text-primary">
+        <Typography variant="headline-sm" as="h3" className="text-primary">
           {title}
         </Typography>
       }
@@ -125,7 +125,7 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
             <select
               value={selectedFormation}
               onChange={(e) => setSelectedFormation(e.target.value)}
-              className="px-3 py-2 border border-border rounded-lg text-sm bg-surface-card text-text-primary"
+              className="px-3 py-2 border border-border rounded-lg text-sm bg-surface-primary text-primary"
             >
               <option value="">All Formations</option>
               {formations.map((formation) => (
@@ -138,7 +138,7 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
             <select
               value={selectedPlayType}
               onChange={(e) => setSelectedPlayType(e.target.value)}
-              className="px-3 py-2 border border-border rounded-lg text-sm bg-surface-card text-text-primary"
+              className="px-3 py-2 border border-border rounded-lg text-sm bg-surface-primary text-primary"
             >
               <option value="">All Play Types</option>
               {playTypes.map((type) => (
@@ -154,7 +154,7 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
         <div className="max-h-96 overflow-y-auto">
           {loading ? (
             <div className="text-center py-8">
-              <Typography variant="body-sm" className="text-text-secondary">
+              <Typography variant="body-sm" className="text-secondary">
                 Loading plays...
               </Typography>
             </div>
@@ -162,15 +162,15 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
             <div className="text-center py-8">
               <Icon
                 name="file"
-                className="h-12 w-12 text-text-muted mx-auto mb-4"
+                className="h-12 w-12 text-muted mx-auto mb-4"
               />
               <Typography
                 variant="headline-sm"
-                className="text-text-secondary mb-2"
+                className="text-secondary mb-2"
               >
                 No plays found
               </Typography>
-              <Typography variant="body-sm" className="text-text-muted">
+              <Typography variant="body-sm" className="text-muted">
                 {searchQuery || selectedFormation || selectedPlayType
                   ? "Try adjusting your search or filters"
                   : "Add some plays to your playbook first"}
@@ -188,7 +188,7 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
                     <div className="flex-1 min-w-0">
                       <Typography
                         variant="body-sm"
-                        className="text-text-primary font-medium mb-1"
+                        className="text-primary font-medium mb-1"
                       >
                         {getDisplayName(play)}
                       </Typography>
@@ -218,7 +218,7 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
                       {play.notes && (
                         <Typography
                           variant="caption"
-                          className="text-text-secondary line-clamp-2"
+                          className="text-secondary line-clamp-2"
                         >
                           {play.notes}
                         </Typography>
@@ -239,7 +239,7 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
 
         {/* Footer */}
         <div className="flex justify-between items-center pt-4 border-t border-border">
-          <Typography variant="caption" className="text-text-secondary">
+          <Typography variant="caption" className="text-secondary">
             {filteredPlays.length} play{filteredPlays.length !== 1 ? "s" : ""}{" "}
             available
           </Typography>

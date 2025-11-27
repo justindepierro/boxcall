@@ -47,7 +47,7 @@ export const TimelineContainer: React.FC<TimelineContainerProps> = ({
       </div>
 
       <div
-        className="flex border border-border-medium rounded-lg overflow-hidden relative cursor-crosshair"
+        className="flex border border-medium rounded-lg overflow-hidden relative cursor-crosshair"
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseUp}
       >
@@ -92,7 +92,7 @@ export const TimelineContainer: React.FC<TimelineContainerProps> = ({
               }}
             >
               {minute % 5 === 0 && minute > 0 && (
-                <div className="absolute -top-4 left-0 text-xs text-text-secondary font-medium">
+                <div className="absolute -top-4 left-0 text-xs text-secondary font-medium">
                   {minute}
                 </div>
               )}

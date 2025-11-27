@@ -222,7 +222,7 @@ export const JoinTeam: React.FC = () => {
                   className={
                     method.primary
                       ? "p-6 h-auto w-full justify-start text-left rounded-lg"
-                      : "p-6 h-auto w-full justify-start text-left rounded-lg border-subtle dark:border-text-tertiary bg-surface-primary"
+                      : "p-6 h-auto w-full justify-start text-left rounded-lg border-subtle dark:border-text-tertiary bg-primary"
                   }
                 >
                   <div className="flex items-start gap-4">
@@ -237,7 +237,7 @@ export const JoinTeam: React.FC = () => {
                       <Typography variant="headline-sm" className="mb-2">
                         {method.title}
                         {method.primary && (
-                          <span className="ml-2 bg-surface-jade0 text-text-primary text-xs px-2 py-1 rounded-full">
+                          <span className="ml-2 bg-accent0 text-primary text-xs px-2 py-1 rounded-full">
                             Most Common
                           </span>
                         )}
@@ -277,7 +277,7 @@ export const JoinTeam: React.FC = () => {
                 onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
                 placeholder="ABC123"
                 maxLength={6}
-                className="w-full px-4 py-3 text-center font-mono text-3xl leading-none border border-border-medium rounded-lg focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus tracking-widest"
+                className="w-full px-4 py-3 text-center font-mono text-3xl leading-none border border-medium rounded-lg focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus tracking-widest"
                 aria-label="Invite code"
               />
               <Typography variant="body-sm" color="muted" className="mt-2">
@@ -337,7 +337,7 @@ export const JoinTeam: React.FC = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search by school or team name..."
-                  className="flex-1 px-4 py-3 border border-border-medium rounded-lg focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus"
+                  className="flex-1 px-4 py-3 border border-medium rounded-lg focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus"
                   onKeyPress={(e) => e.key === "Enter" && handleTeamSearch()}
                 />
                 <Button
@@ -383,7 +383,7 @@ export const JoinTeam: React.FC = () => {
                           >
                             {team.school} • {team.sport} • {team.level}
                           </Typography>
-                          <div className="flex items-center gap-4 text-sm text-text-secondary">
+                          <div className="flex items-center gap-4 text-sm text-secondary">
                             <span>{team.memberCount} members</span>
                             <span>Coach: {team.coachName}</span>
                           </div>
@@ -452,8 +452,8 @@ export const JoinTeam: React.FC = () => {
               request is approved.
             </Typography>
 
-            <div className="surface-subtle dark:bg-surface-info/20 border border-subtle dark:border-text-info rounded-lg p-4 mb-6">
-              <Typography variant="body-sm" className="text-text-info">
+            <div className="surface-subtle dark:bg-info/20 border border-subtle dark:border-text-info rounded-lg p-4 mb-6">
+              <Typography variant="body-sm" className="text-info">
                 <strong>What's next?</strong>
                 <br />
                 The team's coaching staff will review your request and either
@@ -562,7 +562,7 @@ export const JoinTeam: React.FC = () => {
                 variant="link"
                 size="sm"
                 onClick={() => setCurrentStep("method")}
-                className="flex items-center gap-1 text-text-secondary hover:text-text-primary"
+                className="flex items-center gap-1 text-secondary hover:text-primary"
               >
                 <Icon name="chevron-left" size="sm" /> Back to join methods
               </Button>
@@ -570,7 +570,7 @@ export const JoinTeam: React.FC = () => {
           )}
 
           {/* Step Content */}
-          <div className="surface-card elevation-card border-subtle rounded-lg p-8">
+          <div className="bg-primary elevation-card border-subtle rounded-lg p-8">
             {renderStepContent()}
           </div>
 

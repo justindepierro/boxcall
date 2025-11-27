@@ -135,7 +135,7 @@ export const UnifiedSettingsPanel: React.FC = () => {
       {/* Main floating button */}
       <div className="fixed bottom-6 right-6 z-50">
         {isOpen && (
-          <div className="absolute bottom-16 right-0 w-80 bg-surface-card rounded-lg shadow-xl border border-subtle animate-in slide-in-from-bottom-2 fade-in duration-200">
+          <div className="absolute bottom-16 right-0 w-80 bg-surface-primary rounded-lg shadow-xl border border-subtle animate-in slide-in-from-bottom-2 fade-in duration-200">
             <div className="p-4 border-b border-subtle">
               <Typography
                 variant="headline-sm"
@@ -204,7 +204,7 @@ export const UnifiedSettingsPanel: React.FC = () => {
                                     {item.label}
                                   </div>
                                   {item.description && (
-                                    <div className="text-xs text-text-muted">
+                                    <div className="text-xs text-muted">
                                       {item.description}
                                     </div>
                                   )}
@@ -226,8 +226,8 @@ export const UnifiedSettingsPanel: React.FC = () => {
           onClick={() => setIsOpen(!isOpen)}
           className={`w-14 h-14 rounded-full transition-all duration-200 flex items-center justify-center ${
             isOpen
-              ? "bg-text-error hover:bg-text-error/90 text-text-on-primary rotate-45"
-              : "bg-primary hover:bg-primary/90 text-text-on-primary"
+              ? "bg-text-error hover:bg-text-error/90 text-on-primary rotate-45"
+              : "bg-primary hover:bg-primary/90 text-on-primary"
           }`}
           title={isOpen ? "Close Settings" : "Settings & Tools"}
         >
@@ -243,7 +243,7 @@ export const UnifiedSettingsPanel: React.FC = () => {
 
       {isDev && showDevTools && (
         <div className="fixed inset-0 bg-text-primary/50 z-[60] flex items-center justify-center">
-          <div className="bg-surface-card rounded-lg shadow-xl max-w-4xl max-h-[80vh] w-full mx-4 overflow-hidden">
+          <div className="bg-surface-primary rounded-lg shadow-xl max-w-4xl max-h-[80vh] w-full mx-4 overflow-hidden">
             <div className="p-4 border-b border-subtle flex justify-between items-center">
               <Typography variant="headline-sm">Development Tools</Typography>
               <Button variant="ghost" onClick={() => setShowDevTools(false)}>
@@ -251,7 +251,7 @@ export const UnifiedSettingsPanel: React.FC = () => {
               </Button>
             </div>
             <div className="p-4 max-h-96 overflow-y-auto">
-              <Typography variant="body-md" className="text-text-muted">
+              <Typography variant="body-md" className="text-muted">
                 Development tools interface will be embedded here.
                 <br />
                 <small>

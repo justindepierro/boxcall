@@ -99,8 +99,8 @@ export const CleanSidebar: React.FC<CleanSidebarProps> = ({
                     flex items-center gap-3 px-3 py-2 rounded-lg transition-colors duration-200 group relative
                     ${
                       item.isActive
-                        ? "bg-primary text-text-on-primary"
-                        : "text-text-primary hover:bg-surface-hover"
+                        ? "bg-primary text-on-primary"
+                        : "text-primary hover:bg-surface-hover"
                     }
                   `}
                   aria-current={item.isActive ? "page" : undefined}
@@ -110,8 +110,8 @@ export const CleanSidebar: React.FC<CleanSidebarProps> = ({
                     size="sm"
                     className={
                       item.isActive
-                        ? "text-text-on-primary"
-                        : "text-text-muted group-hover:text-text-primary"
+                        ? "text-on-primary"
+                        : "text-muted group-hover:text-primary"
                     }
                   />
                   <span className="flex-1 font-medium">{item.label}</span>
@@ -123,8 +123,8 @@ export const CleanSidebar: React.FC<CleanSidebarProps> = ({
                       px-2 py-1 text-xs font-medium rounded-full min-w-5 text-center
                       ${
                         item.isActive
-                          ? "bg-surface-primary bg-opacity-20 text-text-on-primary"
-                          : "bg-primary text-text-on-primary"
+                          ? "bg-surface-primary bg-opacity-20 text-on-primary"
+                          : "bg-primary text-on-primary"
                       }
                     `}
                     >

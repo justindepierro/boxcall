@@ -103,7 +103,7 @@ export const WorkflowStatusBar: React.FC<WorkflowStatusBarProps> = ({
             </div>
           </div>
 
-          <div className="text-xs text-text-info">
+          <div className="text-xs text-info">
             ⌨️ <strong>Shortcuts:</strong> Ctrl+P (Practice) • Ctrl+G (Game
             Plan)
           </div>

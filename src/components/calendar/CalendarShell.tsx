@@ -80,7 +80,7 @@ export const CalendarShell: React.FC = () => {
           <Card className="calendar-card">
             <div className="flex items-center gap-spacing-xs mb-spacing-md">
               <Icon name="bar-chart" size="lg" className="text-navy-600" />
-              <span className="Typography typography-label-lg text-text-primary">
+              <span className="Typography typography-label-lg text-primary">
                 Stats
               </span>
             </div>

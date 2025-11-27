@@ -114,15 +114,15 @@ export function FormationTemplateSelector({
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute z-50 mt-spacing-sm w-full max-w-md bg-surface-primary border border-border-primary rounded-lg shadow-lg max-h-96 overflow-y-auto">
+        <div className="absolute z-50 mt-spacing-sm w-full max-w-md bg-surface-primary border border-primary rounded-lg shadow-lg max-h-96 overflow-y-auto">
           {/* Header */}
-          <div className="sticky top-0 bg-surface-secondary border-b border-border-primary p-spacing-md">
+          <div className="sticky top-0 bg-surface-secondary border-b border-primary p-spacing-md">
             <div className="flex items-start gap-spacing-sm">
               <Info className="w-4 h-4 text-info-500 flex-shrink-0 mt-0.5" />
               <div>
                 <Typography
                   variant="body-sm"
-                  className="text-text-secondary leading-snug"
+                  className="text-secondary leading-snug"
                 >
                   Choose from 10 professional NFL formations with correct
                   positioning and depths. Select a template to create a new
@@ -146,17 +146,17 @@ export function FormationTemplateSelector({
                       <span className="text-base">{group.icon}</span>
                       <Typography
                         variant="label-md"
-                        className="font-semibold text-text-primary"
+                        className="font-semibold text-primary"
                       >
                         {group.label}
                       </Typography>
-                      <span className="text-xs text-text-muted">
+                      <span className="text-xs text-muted">
                         ({templates.length})
                       </span>
                     </div>
                     <Typography
                       variant="caption"
-                      className="text-text-muted ml-6"
+                      className="text-muted ml-6"
                     >
                       {group.description}
                     </Typography>
@@ -168,14 +168,14 @@ export function FormationTemplateSelector({
                       <button
                         key={template.id}
                         onClick={() => handleTemplateClick(template)}
-                        className="w-full text-left p-spacing-sm rounded-md hover:bg-surface-muted transition-colors border border-transparent hover:border-border-primary group"
+                        className="w-full text-left p-spacing-sm rounded-md hover:bg-surface-muted transition-colors border border-transparent hover:border-primary group"
                       >
                         <div className="flex items-start justify-between gap-spacing-sm">
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-spacing-xs mb-spacing-xs">
                               <Typography
                                 variant="body-md"
-                                className="font-medium text-text-primary group-hover:text-primary-600 transition-colors"
+                                className="font-medium text-primary group-hover:text-primary-600 transition-colors"
                               >
                                 {template.name}
                               </Typography>
@@ -187,7 +187,7 @@ export function FormationTemplateSelector({
                             </div>
                             <Typography
                               variant="caption"
-                              className="text-text-secondary line-clamp-2"
+                              className="text-secondary line-clamp-2"
                             >
                               {template.description}
                             </Typography>
@@ -202,10 +202,10 @@ export function FormationTemplateSelector({
           </div>
 
           {/* Footer */}
-          <div className="sticky bottom-0 bg-surface-secondary border-t border-border-primary p-spacing-sm">
+          <div className="sticky bottom-0 bg-surface-secondary border-t border-primary p-spacing-sm">
             <Typography
               variant="caption"
-              className="text-text-muted text-center"
+              className="text-muted text-center"
             >
               {FORMATION_TEMPLATES.length} professional templates available
             </Typography>

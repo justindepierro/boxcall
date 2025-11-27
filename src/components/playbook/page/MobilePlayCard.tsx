@@ -122,12 +122,12 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
         {/* Formation & Personnel badges */}
         <div className="flex flex-wrap gap-2">
           {formation && (
-            <span className="inline-flex items-center rounded-full bg-surface-secondary px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-text-secondary">
+            <span className="inline-flex items-center rounded-full bg-surface-secondary px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-secondary">
               {formation}
             </span>
           )}
           {personnel && (
-            <span className="inline-flex items-center rounded-full bg-surface-secondary px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-text-secondary">
+            <span className="inline-flex items-center rounded-full bg-surface-secondary px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-secondary">
               {personnel}
             </span>
           )}

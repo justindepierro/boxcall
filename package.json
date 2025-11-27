@@ -124,7 +124,6 @@
     "fuse.js": "^7.1.0",
     "jszip": "^3.10.1",
     "lucide-react": "^0.536.0",
-    "pixi.js": "^8.14.0",
     "prosemirror-view": "^1.41.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

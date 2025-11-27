@@ -41,7 +41,7 @@ const getBreadcrumbStyles = (size: BreadcrumbProps["size"]) => {
   return `
     flex items-center space-x-1
     ${sizeStyles[size || "md"]}
-    text-[var(--semantic-text-secondary)]
+    text-[var(--color-text-secondary)]
   `;
 };
 const getBreadcrumbItemStyles = (item: BreadcrumbItem) => {
@@ -49,17 +49,17 @@ const getBreadcrumbItemStyles = (item: BreadcrumbItem) => {
     flex items-center transition-colors duration-200 ease-in-out
   `;
   if (item.current) {
-    return `${baseStyles} text-[var(--semantic-text-primary)] font-medium cursor-default`;
+    return `${baseStyles} text-[var(--color-text-primary)] font-medium cursor-default`;
   }
   if (item.onClick || item.href) {
-    return `${baseStyles} text-[var(--semantic-text-secondary)] hover:text-[var(--semantic-text-primary)] cursor-pointer hover:underline`;
+    return `${baseStyles} text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] cursor-pointer hover:underline`;
   }
-  return `${baseStyles} text-[var(--semantic-text-muted, var(--semantic-text-secondary))]`;
+  return `${baseStyles} text-[var(--color-text-muted, var(--color-text-secondary))]`;
 };
 const getSeparatorStyles = () => {
   return `
     mx-2 flex-shrink-0
-    text-[var(--semantic-text-secondary)]
+    text-[var(--color-text-secondary)]
   `;
 };
 const DefaultSeparator: React.FC = () => (
@@ -94,7 +94,7 @@ const CollapsedIndicator: React.FC<{
         ...
       </Button>
       {isExpanded && (
-        <div className="absolute top-full left-0 mt-1 py-1 z-10 min-w-48 surface-card elevation-dropdown border-subtle rounded-lg">
+        <div className="absolute top-full left-0 mt-1 py-1 z-10 min-w-48 bg-surface-primary elevation-dropdown border-subtle rounded-lg">
           {hiddenItems.map((item) => (
             <Button
               key={item.id}

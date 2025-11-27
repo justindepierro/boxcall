@@ -46,14 +46,14 @@ export function getTokenColor(path: string): string {
 export const tokenClasses = {
   // Primary button styles
   buttonPrimary:
-    "bg-brand-jade hover:bg-interaction-jade focus:bg-interaction-jade text-[var(--semantic-text-inverse)] font-semibold py-2 px-4 rounded-lg transition-colors",
+    "bg-brand-jade hover:bg-interaction-jade focus:bg-interaction-jade text-white font-semibold py-2 px-4 rounded-lg transition-colors",
 
   // Secondary button styles
   buttonSecondary:
     "bg-surface-jade hover:bg-surface-jade-dark text-brand-jade-dark font-semibold py-2 px-4 rounded-lg border border-surface-jade-dark transition-colors",
 
   // Card styles
-  card: "surface-card border border-surface-jade-dark rounded-xl shadow-sm",
+  card: "bg-surface-primary border border-surface-jade-dark rounded-xl shadow-sm",
   cardHover:
     "hover:shadow-md hover:border-brand-jade transition-all duration-200",
 
@@ -74,7 +74,7 @@ export const tokenClasses = {
 
   // Interactive states
   interactive:
-    "hover:bg-interaction-jade hover:text-[var(--semantic-text-inverse)] transition-colors cursor-pointer",
+    "hover:bg-interaction-jade hover:text-white transition-colors cursor-pointer",
 
   // Status styles
   success: "surface-subtle text-text-success border border-subtle",

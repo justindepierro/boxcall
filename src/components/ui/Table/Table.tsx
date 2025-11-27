@@ -87,8 +87,8 @@ const getTableStyles = (size?: "sm" | "md" | "lg") => {
   };
   return [
     "w-full table-auto",
-    "surface-card",
-    "text-text-primary dark:text-surface-secondary",
+    "bg-surface-primary",
+    "text-primary dark:text-surface-secondary",
     sizeStyles[size || "md"],
   ]
     .filter(Boolean)
@@ -104,7 +104,7 @@ const getHeaderStyles = (size?: "sm" | "md" | "lg") => {
     "divider-b",
     "surface-subtle dark:bg-surface-tertiary",
     "text-left font-semibold",
-    "text-text-primary dark:text-surface-secondary",
+    "text-primary dark:text-surface-secondary",
     sizeStyles[size || "md"],
   ].join(" ");
 };
@@ -124,7 +124,7 @@ const getCellStyles = (
   };
   return [
     "divider-b",
-    "text-text-primary dark:text-surface-secondary",
+    "text-primary dark:text-surface-secondary",
     sizeStyles[size || "md"],
     alignStyles[align || "left"],
   ].join(" ");
@@ -149,7 +149,7 @@ const SortIcon: React.FC<{ direction: SortDirection }> = ({ direction }) => {
   if (!direction) {
     return (
       <svg
-        className="w-4 h-4 text-text-muted dark:text-text-muted"
+        className="w-4 h-4 text-muted dark:text-muted"
         fill="currentColor"
         viewBox="0 0 20 20"
       >
@@ -183,7 +183,7 @@ const LoadingSpinner: React.FC = () => (
 const EmptyState: React.FC<{ message: string }> = ({ message }) => (
   <div className="flex flex-col items-center justify-center py-12">
     <svg
-      className="w-12 h-12 mb-4 text-text-muted dark:text-text-secondary"
+      className="w-12 h-12 mb-4 text-muted dark:text-secondary"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -195,7 +195,7 @@ const EmptyState: React.FC<{ message: string }> = ({ message }) => (
         d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2 2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
       />
     </svg>
-    <p className="text-sm text-text-secondary">{message}</p>
+    <p className="text-sm text-secondary">{message}</p>
   </div>
 );
 export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
@@ -337,7 +337,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
                       if (el) el.indeterminate = isIndeterminate;
                     }}
                     onChange={(e) => handleSelectAll(e.target.checked)}
-                    className="rounded-lg border-border-medium dark:border-text-tertiary text-jade-600 focus:ring-jade-500"
+                    className="rounded-lg border-medium dark:border-text-tertiary text-jade-600 focus:ring-jade-500"
                   />
                 </th>
               )}
@@ -394,7 +394,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
                           onChange={(e) =>
                             handleSelectRow(row.id, e.target.checked)
                           }
-                          className="rounded-lg border-border-medium dark:border-text-tertiary text-jade-600 focus:ring-jade-500"
+                          className="rounded-lg border-medium dark:border-text-tertiary text-jade-600 focus:ring-jade-500"
                         />
                       </td>
                     )}
@@ -422,7 +422,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
       </div>
       {pagination && (
         <div className="flex items-center justify-between">
-          <div className="text-sm text-text-primary dark:text-border-light">
+          <div className="text-sm text-primary dark:text-border-light">
             Showing {currentPage * pageSize + 1} to{" "}
             {Math.min(
               (currentPage + 1) * pageSize,
@@ -439,7 +439,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
             >
               Previous
             </Button>
-            <span className="text-sm text-text-primary dark:text-border-light">
+            <span className="text-sm text-primary dark:text-border-light">
               Page {currentPage + 1} of {totalPages}
             </span>
             <Button

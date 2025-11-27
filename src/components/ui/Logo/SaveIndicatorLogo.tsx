@@ -14,7 +14,7 @@
 
 import React from "react";
 import { LogoIcon } from "./Logo";
-import { useSaveState } from "../../../contexts/SaveStateContext";
+import { useSaveState } from "../../../hooks/useSaveState";
 
 export interface SaveIndicatorLogoProps {
   /** Base size of the logo */

@@ -32,7 +32,7 @@ export const PlayGridSkeleton = memo<PlayGridSkeletonProps>(
       `}
       >
         {Array.from({ length: count }).map((_, i) => (
-          <Card key={i} variant="glass">
+          <Card key={i} variant="default">
             <div
               className={`space-y-3 ${isMobile && viewMode === "grid" ? "p-3" : ""}`}
             >

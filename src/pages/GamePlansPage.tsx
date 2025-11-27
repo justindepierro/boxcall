@@ -29,7 +29,7 @@ import { GamePlanPDFService } from "../services/gamePlanPdfService";
 import {
   GamePlanService,
   type GamePlan as ServiceGamePlan,
-} from "../services/gamePlanService_new";
+} from "../services/gamePlanService";
 import type { GamePlan as ModalGamePlan } from "../components/playbook/GamePlanModal/types";
 import { useAuth } from "../app/auth-store";
 import { useToast } from "../hooks/useToast";
@@ -554,15 +554,15 @@ export default function GamePlansPage() {
         onOpen: handleCreatePlan,
         body: (
           <div className="space-y-2 text-sm">
-            <div className="flex items-center justify-between text-text-secondary">
+            <div className="flex items-center justify-between text-secondary">
               <span>Active plans</span>
-              <span className="font-semibold text-text-primary">
+              <span className="font-semibold text-primary">
                 {activePlans.length}
               </span>
             </div>
-            <div className="flex items-center justify-between text-xs text-text-secondary">
+            <div className="flex items-center justify-between text-xs text-secondary">
               <span>Total plays</span>
-              <span className="font-semibold text-text-primary">
+              <span className="font-semibold text-primary">
                 {activePlans.reduce((sum, p) => sum + getTotalPlays(p), 0)}
               </span>
             </div>
@@ -582,13 +582,13 @@ export default function GamePlansPage() {
         onOpen: () => navigate("/playbook"),
         body: (
           <div className="space-y-2 text-sm">
-            <div className="flex items-center justify-between text-text-secondary">
+            <div className="flex items-center justify-between text-secondary">
               <span>Playbook link</span>
-              <span className="font-semibold text-text-primary">Ready</span>
+              <span className="font-semibold text-primary">Ready</span>
             </div>
-            <div className="flex items-center justify-between text-xs text-text-secondary">
+            <div className="flex items-center justify-between text-xs text-secondary">
               <span>Opponent focus</span>
-              <span className="font-semibold text-text-primary">Set later</span>
+              <span className="font-semibold text-primary">Set later</span>
             </div>
           </div>
         ),
@@ -606,15 +606,15 @@ export default function GamePlansPage() {
         onOpen: scrollToList,
         body: (
           <div className="space-y-2 text-sm">
-            <div className="flex items-center justify-between text-text-secondary">
+            <div className="flex items-center justify-between text-secondary">
               <span>Active plans</span>
-              <span className="font-semibold text-text-primary">
+              <span className="font-semibold text-primary">
                 {activePlans.length}
               </span>
             </div>
-            <div className="flex items-center justify-between text-xs text-text-secondary">
+            <div className="flex items-center justify-between text-xs text-secondary">
               <span>Archived</span>
-              <span className="font-semibold text-text-primary">
+              <span className="font-semibold text-primary">
                 {archivedPlans.length}
               </span>
             </div>
@@ -655,15 +655,12 @@ export default function GamePlansPage() {
         }
       >
         <div className="mb-8">
-          <div className="rounded-xl bg-surface-primary p-5 shadow-lg backdrop-blur-sm sm:p-6 xl:p-7">
+          <div className="rounded-xl bg-primary p-5 shadow-lg backdrop-blur-sm sm:p-6 xl:p-7">
             <div className="mb-6">
-              <Typography variant="headline-sm" className="text-text-primary">
+              <Typography variant="headline-sm" className="text-primary">
                 Dial in this week’s script
               </Typography>
-              <Typography
-                variant="body-sm"
-                className="text-text-secondary mt-1"
-              >
+              <Typography variant="body-sm" className="text-secondary mt-1">
                 Launch the workspace you need for planning, film, and
                 distribution.
               </Typography>
@@ -729,27 +726,24 @@ export default function GamePlansPage() {
 
         {isLoading ? (
           <div className="space-y-4 py-10" aria-busy="true">
-            <div className="h-32 rounded-xl bg-surface-secondary animate-pulse" />
-            <div className="h-32 rounded-xl bg-surface-secondary animate-pulse" />
-            <div className="h-32 rounded-xl bg-surface-secondary animate-pulse" />
+            <div className="h-32 rounded-xl bg-secondary animate-pulse" />
+            <div className="h-32 rounded-xl bg-secondary animate-pulse" />
+            <div className="h-32 rounded-xl bg-secondary animate-pulse" />
           </div>
         ) : activePlans.length === 0 &&
           archivedPlans.length === 0 &&
           !searchQuery ? (
           // Empty State
           <div className="py-16 text-center">
-            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-surface-muted">
-              <Icon name="target" className="h-12 w-12 text-text-muted" />
+            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-muted">
+              <Icon name="target" className="h-12 w-12 text-muted" />
             </div>
-            <Typography
-              variant="headline-md"
-              className="mb-2 text-text-primary"
-            >
+            <Typography variant="headline-md" className="mb-2 text-primary">
               No Game Plans Yet
             </Typography>
             <Typography
               variant="body-lg"
-              className="mx-auto mb-8 max-w-md text-text-secondary"
+              className="mx-auto mb-8 max-w-md text-secondary"
             >
               Create your first game plan to strategize plays and formations for
               upcoming matches.
@@ -777,10 +771,7 @@ export default function GamePlansPage() {
               <>
                 {/* Header with Create Button */}
                 <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <Typography
-                    variant="headline-md"
-                    className="text-text-primary"
-                  >
+                  <Typography variant="headline-md" className="text-primary">
                     Active Game Plans ({activePlans.length})
                   </Typography>
                   <Button
@@ -798,7 +789,7 @@ export default function GamePlansPage() {
                   {activePlans.map((plan) => (
                     <div
                       key={plan.id}
-                      className="bg-surface-primary rounded-2xl border border-border p-5 hover:shadow-lg transition-all cursor-pointer"
+                      className="bg-primary rounded-2xl border border-border p-5 shadow-purple-md hover:shadow-purple-lg hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 cursor-pointer"
                       onClick={() => handleEditPlan(plan)}
                     >
                       <div className="flex flex-col gap-4">
@@ -806,23 +797,23 @@ export default function GamePlansPage() {
                           <div className="flex-1 min-w-0 space-y-1.5">
                             <Typography
                               variant="headline-sm"
-                              className="text-text-primary font-semibold leading-tight line-clamp-2"
+                              className="text-primary font-semibold leading-tight line-clamp-2"
                             >
                               {plan.name}
                             </Typography>
-                            <div className="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-wide text-text-secondary">
+                            <div className="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-wide">
                               {plan.opponent && (
-                                <span className="inline-flex items-center rounded-full bg-surface-secondary px-2.5 py-1">
+                                <span className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-500 to-purple-600 text-white px-2.5 py-1 shadow-purple-sm">
                                   vs {plan.opponent}
                                 </span>
                               )}
-                              <span className="inline-flex items-center rounded-full bg-surface-secondary px-2.5 py-1">
+                              <span className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-50 to-purple-100 text-purple-900 border border-purple-200 px-2.5 py-1">
                                 {plan.gameDate
                                   ? new Date(plan.gameDate).toLocaleDateString()
                                   : "Date TBD"}
                               </span>
                               {plan.gameLocation && (
-                                <span className="inline-flex items-center rounded-full bg-surface-secondary px-2.5 py-1">
+                                <span className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-50 to-purple-100 text-purple-900 border border-purple-200 px-2.5 py-1">
                                   {plan.gameLocation}
                                 </span>
                               )}
@@ -834,7 +825,7 @@ export default function GamePlansPage() {
                                 e.stopPropagation();
                                 handleExportPDF(plan);
                               }}
-                              className="flex h-12 w-12 items-center justify-center rounded-xl bg-surface-secondary text-text-muted transition-colors hover:bg-surface-muted hover:text-text-info focus:outline-none focus:ring-2 focus:ring-brand-jade focus:ring-offset-2"
+                              className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary text-muted transition-colors hover:bg-muted hover:text-info focus:outline-none focus:ring-2 focus:ring-brand-jade focus:ring-offset-2"
                               title="Export PDF"
                               aria-label="Export plan as PDF"
                             >
@@ -845,7 +836,7 @@ export default function GamePlansPage() {
                                 e.stopPropagation();
                                 handleDuplicatePlan(plan);
                               }}
-                              className="flex h-12 w-12 items-center justify-center rounded-xl bg-surface-secondary text-text-muted transition-colors hover:bg-surface-muted hover:text-text-secondary focus:outline-none focus:ring-2 focus:ring-brand-jade focus:ring-offset-2"
+                              className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary text-muted transition-colors hover:bg-muted hover:text-secondary focus:outline-none focus:ring-2 focus:ring-brand-jade focus:ring-offset-2"
                               title="Duplicate plan"
                               aria-label="Duplicate plan"
                             >
@@ -857,7 +848,7 @@ export default function GamePlansPage() {
                                   e.stopPropagation();
                                   handleEditPlan(plan);
                                 }}
-                                className="flex h-12 w-12 items-center justify-center rounded-xl bg-surface-secondary text-text-muted transition-colors hover:bg-surface-muted hover:text-text-secondary focus:outline-none focus:ring-2 focus:ring-brand-jade focus:ring-offset-2"
+                                className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary text-muted transition-colors hover:bg-muted hover:text-secondary focus:outline-none focus:ring-2 focus:ring-brand-jade focus:ring-offset-2"
                                 title="Edit plan"
                                 aria-label="Edit plan"
                               >
@@ -869,7 +860,7 @@ export default function GamePlansPage() {
                                 e.stopPropagation();
                                 handleArchivePlan(plan);
                               }}
-                              className="flex h-12 w-12 items-center justify-center rounded-xl bg-surface-secondary text-text-muted transition-colors hover:bg-surface-muted hover:text-text-warning focus:outline-none focus:ring-2 focus:ring-brand-jade focus:ring-offset-2"
+                              className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary text-muted transition-colors hover:bg-muted hover:text-warning focus:outline-none focus:ring-2 focus:ring-brand-jade focus:ring-offset-2"
                               title="Archive plan"
                               aria-label="Archive plan"
                             >
@@ -880,7 +871,7 @@ export default function GamePlansPage() {
                                 e.stopPropagation();
                                 handleDeletePlan(plan.id);
                               }}
-                              className="flex h-12 w-12 items-center justify-center rounded-xl bg-surface-secondary text-text-muted transition-colors hover:bg-surface-muted hover:text-text-error focus:outline-none focus:ring-2 focus:ring-brand-jade focus:ring-offset-2"
+                              className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary text-muted transition-colors hover:bg-muted hover:text-error focus:outline-none focus:ring-2 focus:ring-brand-jade focus:ring-offset-2"
                               title="Delete plan"
                               aria-label="Delete plan"
                             >
@@ -890,7 +881,7 @@ export default function GamePlansPage() {
                         </div>
                       </div>
 
-                      <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-sm text-text-secondary">
+                      <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-sm text-secondary">
                         <span className="inline-flex items-center gap-2 font-medium">
                           <Icon name="list" className="h-4 w-4" />
                           {getTotalPlays(plan)} plays
@@ -909,37 +900,34 @@ export default function GamePlansPage() {
             {/* Archived Plans Section */}
             {archivedPlans.length > 0 && (
               <div className="mt-12">
-                <Typography
-                  variant="headline-md"
-                  className="text-text-primary mb-4"
-                >
+                <Typography variant="headline-md" className="text-primary mb-4">
                   Archived Game Plans ({archivedPlans.length})
                 </Typography>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
                   {archivedPlans.map((plan) => (
                     <div
                       key={plan.id}
-                      className="bg-surface-secondary/80 rounded-2xl border border-border p-5 opacity-90"
+                      className="bg-secondary/80 rounded-2xl border border-border p-5 opacity-90"
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1 min-w-0 space-y-1.5">
                           <Typography
                             variant="headline-sm"
-                            className="text-text-primary font-semibold leading-tight line-clamp-2"
+                            className="text-primary font-semibold leading-tight line-clamp-2"
                           >
                             {plan.name}
                           </Typography>
                         </div>
                         <button
                           onClick={() => handleArchivePlan(plan)}
-                          className="flex h-12 w-12 items-center justify-center rounded-xl bg-surface-primary text-text-muted transition-colors hover:bg-surface-muted hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-jade focus:ring-offset-2"
+                          className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-muted transition-colors hover:bg-muted hover:text-primary focus:outline-none focus:ring-2 focus:ring-brand-jade focus:ring-offset-2"
                           title="Restore plan"
                           aria-label="Restore plan"
                         >
                           <Icon name="inbox" className="h-5 w-5" />
                         </button>
                       </div>
-                      <div className="mt-4 space-y-2 text-sm text-text-secondary">
+                      <div className="mt-4 space-y-2 text-sm text-secondary">
                         <span className="inline-flex items-center gap-2">
                           <Icon name="list" className="h-4 w-4" />
                           {getTotalPlays(plan)} plays

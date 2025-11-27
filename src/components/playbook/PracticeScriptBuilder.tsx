@@ -558,7 +558,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
           <Typography
             variant="headline-sm"
             as="h3"
-            className="text-text-primary"
+            className="text-primary"
           >
             {currentScript ? "Edit Practice Script" : "Create Practice Script"}
           </Typography>
@@ -601,7 +601,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
         {/* Script Details */}
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">
+            <label className="block text-sm font-medium text-primary mb-2">
               Script Name *
             </label>
             {isEditing ? (
@@ -614,14 +614,14 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
                 className="w-full"
               />
             ) : (
-              <Typography variant="headline-sm" className="text-text-primary">
+              <Typography variant="headline-sm" className="text-primary">
                 {scriptName}
               </Typography>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">
+            <label className="block text-sm font-medium text-primary mb-2">
               Description
             </label>
             {isEditing ? (
@@ -635,7 +635,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
                 className="w-full"
               />
             ) : (
-              <Typography variant="body-sm" className="text-text-secondary">
+              <Typography variant="body-sm" className="text-secondary">
                 {scriptDescription || "No description provided"}
               </Typography>
             )}
@@ -659,7 +659,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
             <Typography
               variant="headline-sm"
               as="h4"
-              className="text-text-primary"
+              className="text-primary"
             >
               Practice Plays
             </Typography>
@@ -679,7 +679,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
           {isLoadingPlays ? (
             <div className="text-center py-12">
               <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent mb-4"></div>
-              <Typography variant="body-sm" className="text-text-muted">
+              <Typography variant="body-sm" className="text-muted">
                 Loading selected plays...
               </Typography>
             </div>
@@ -687,15 +687,15 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
             <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
               <Icon
                 name="file"
-                className="h-16 w-16 text-text-muted mx-auto mb-4"
+                className="h-16 w-16 text-muted mx-auto mb-4"
               />
               <Typography
                 variant="headline-sm"
-                className="text-text-secondary mb-2"
+                className="text-secondary mb-2"
               >
                 No plays added yet
               </Typography>
-              <Typography variant="body-sm" className="text-text-muted mb-6">
+              <Typography variant="body-sm" className="text-muted mb-6">
                 Add plays from your playbook to create a structured practice
                 session.
               </Typography>
@@ -771,10 +771,10 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
             <div className="bg-surface-secondary rounded-lg p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <Typography variant="body-sm" className="text-text-secondary">
+                  <Typography variant="body-sm" className="text-secondary">
                     Total Plays: {totalPlays}
                   </Typography>
-                  <Typography variant="body-sm" className="text-text-secondary">
+                  <Typography variant="body-sm" className="text-secondary">
                     Total Reps:{" "}
                     {currentScript.plays.reduce(
                       (sum, play) => sum + play.repetitions,

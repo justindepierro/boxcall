@@ -131,7 +131,7 @@ export const NotificationBell: React.FC = () => {
       {showDropdown && (
         <div className="absolute right-0 top-full mt-2 w-96 bg-surface-primary rounded-lg shadow-xl z-50 max-h-96 overflow-hidden flex flex-col">
           {/* Header */}
-          <div className="p-4 border-b border-border-subtle flex items-center justify-between">
+          <div className="p-4 border-b border-subtle flex items-center justify-between">
             <h3 className="font-semibold text-primary">Notifications</h3>
             {unreadCount > 0 && (
               <button

@@ -163,9 +163,9 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
       <div className="mt-3 w-full px-2">
         <ScrollingText
           as="h3"
-          className={`font-mono font-bold leading-tight text-text-primary text-center ${
+          className={`font-mono font-bold leading-tight text-primary text-center ${
             isMobile ? "text-base" : "text-sm"
-          } ${showOneWordCalls && play.one_word_play ? "text-text-info" : ""}`}
+          } ${showOneWordCalls && play.one_word_play ? "text-info" : ""}`}
           title={tileTitle}
           speed={50}
         >
@@ -173,7 +173,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
         </ScrollingText>
         {tileSubtitle && (
           <p
-            className={`text-text-secondary text-center mt-1 ${isMobile ? "text-sm" : "text-xs"}`}
+            className={`text-secondary text-center mt-1 ${isMobile ? "text-sm" : "text-xs"}`}
           >
             {tileSubtitle}
           </p>

@@ -30,7 +30,7 @@ const BulkEditModal = lazy(() =>
     default: m.BulkEditModal,
   }))
 );
-import { useMobileModal } from '../hooks/useMobileModal';
+import { useMobileModal } from "../hooks/useMobileModal";
 import type { BulkEditUpdates } from "../components/roster/BulkEditModal";
 import { info, error as logError } from "../utils/logger";
 import { useToast } from "../hooks/useToast";
@@ -121,7 +121,7 @@ export default function RosterPage() {
 
   // Modal and form state (not extracted - specific to this page)
   const [showAddModal, setShowAddModal] = useState(false);
-  const modalSize = useMobileModal('lg');
+  const modalSize = useMobileModal("lg");
   const [showEditModal, setShowEditModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -782,7 +782,7 @@ export default function RosterPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-spacing-md">
               {[...Array(4)].map((_, i) => (
                 <Card key={`stat-${i}`} className="animate-pulse">
-                  <div className="h-24 bg-surface-muted rounded-lg"></div>
+                  <div className="h-24 bg-muted rounded-lg"></div>
                 </Card>
               ))}
             </div>
@@ -798,29 +798,29 @@ export default function RosterPage() {
                     {/* Header skeleton */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-spacing-sm">
-                        <div className="w-4 h-4 bg-surface-muted rounded"></div>
-                        <div className="h-6 w-32 bg-surface-muted rounded"></div>
+                        <div className="w-4 h-4 bg-muted rounded"></div>
+                        <div className="h-6 w-32 bg-muted rounded"></div>
                       </div>
-                      <div className="w-8 h-8 bg-surface-muted rounded"></div>
+                      <div className="w-8 h-8 bg-muted rounded"></div>
                     </div>
 
                     {/* Badges skeleton */}
                     <div className="flex flex-wrap gap-spacing-xs">
-                      <div className="h-6 w-12 bg-surface-muted rounded-full"></div>
-                      <div className="h-6 w-16 bg-surface-muted rounded-full"></div>
-                      <div className="h-6 w-20 bg-surface-muted rounded-full"></div>
+                      <div className="h-6 w-12 bg-muted rounded-full"></div>
+                      <div className="h-6 w-16 bg-muted rounded-full"></div>
+                      <div className="h-6 w-20 bg-muted rounded-full"></div>
                     </div>
 
                     {/* Stats skeleton */}
                     <div className="flex gap-spacing-md pt-spacing-sm">
-                      <div className="h-4 w-24 bg-surface-muted rounded"></div>
-                      <div className="h-4 w-24 bg-surface-muted rounded"></div>
+                      <div className="h-4 w-24 bg-muted rounded"></div>
+                      <div className="h-4 w-24 bg-muted rounded"></div>
                     </div>
 
                     {/* Footer skeleton */}
                     <div className="flex items-center justify-between pt-spacing-sm">
-                      <div className="h-8 w-20 bg-surface-muted rounded"></div>
-                      <div className="h-8 w-16 bg-surface-muted rounded"></div>
+                      <div className="h-8 w-20 bg-muted rounded"></div>
+                      <div className="h-8 w-16 bg-muted rounded"></div>
                     </div>
                   </div>
                 </Card>
@@ -1005,10 +1005,9 @@ export default function RosterPage() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2 border border-border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-surface-primary text-sm w-full sm:w-auto sm:min-w-40 cursor-pointer hover:border-primary transition-colors"
-                style={{ height: "42px" }}
+                className="px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-primary text-sm w-full sm:w-auto sm:min-w-40 cursor-pointer hover:border-primary transition-colors h-11"
               >
-                <option value="" className="text-text-secondary">
+                <option value="" className="text-secondary">
                   All Status
                 </option>
                 {statusOptions.map((status) => (
@@ -1270,7 +1269,7 @@ export default function RosterPage() {
                       </option>
                     ))}
                   </select>
-                  <p className="text-xs text-text-secondary mt-1">
+                  <p className="text-xs text-secondary mt-1">
                     Select multiple positions if player plays more than one
                   </p>
                 </div>
@@ -1387,7 +1386,7 @@ export default function RosterPage() {
                 <Button
                   variant="outline"
                   onClick={() => handleSendInvitation()}
-                  className="w-full border-jade-600 text-jade-700 hover:bg-jade-50 dark:border-jade-500 dark:text-jade-400 dark:hover:bg-jade-950"
+                  className="w-full border-jade-600 text-jade-700 hover:bg-accent dark:border-jade-500 dark:text-jade-400 dark:hover:bg-jade-950"
                 >
                   <Icon name="mail" className="w-4 h-4 mr-spacing-xs" />
                   Invite {playerForm.first_name || "Player"} to Team
@@ -1444,8 +1443,8 @@ export default function RosterPage() {
 
               {/* Autosave Status Indicator */}
               {showEditModal && editingPlayer && (
-                <div className="flex items-center justify-between px-spacing-sm py-spacing-xs rounded-lg bg-surface-secondary/50">
-                  <Typography variant="body-sm" className="text-text-secondary">
+                <div className="flex items-center justify-between px-spacing-sm py-spacing-xs rounded-lg bg-secondary/50">
+                  <Typography variant="body-sm" className="text-secondary">
                     {autosavePlayer.status === "saving" &&
                       "💾 Saving changes..."}
                     {autosavePlayer.status === "saved" && "✓ All changes saved"}
@@ -1464,10 +1463,7 @@ export default function RosterPage() {
                       "Ready to edit"}
                   </Typography>
                   {autosavePlayer.lastSaved && (
-                    <Typography
-                      variant="body-xs"
-                      className="text-text-tertiary"
-                    >
+                    <Typography variant="body-xs" className="text-tertiary">
                       {new Date(autosavePlayer.lastSaved).toLocaleTimeString()}
                     </Typography>
                   )}
@@ -1561,7 +1557,7 @@ export default function RosterPage() {
                       </option>
                     ))}
                   </select>
-                  <p className="text-xs text-text-secondary mt-1">
+                  <p className="text-xs text-secondary mt-1">
                     Select multiple positions if player plays more than one
                   </p>
                 </div>
@@ -1678,7 +1674,7 @@ export default function RosterPage() {
                 <Button
                   variant="outline"
                   onClick={() => handleSendInvitation()}
-                  className="w-full border-jade-600 text-jade-700 hover:bg-jade-50 dark:border-jade-500 dark:text-jade-400 dark:hover:bg-jade-950"
+                  className="w-full border-jade-600 text-jade-700 hover:bg-accent dark:border-jade-500 dark:text-jade-400 dark:hover:bg-jade-950"
                 >
                   <Icon name="mail" className="w-4 h-4 mr-spacing-xs" />
                   {editingPlayer?.invitation_status === "pending"
@@ -1740,7 +1736,7 @@ export default function RosterPage() {
             title="Change Player Status"
           >
             <div className="space-y-spacing-md">
-              <Typography variant="body-sm" className="text-text-secondary">
+              <Typography variant="body-sm" className="text-secondary">
                 You are about to change the status for{" "}
                 <strong>{selectedPlayerIds.size}</strong> player
                 {selectedPlayerIds.size !== 1 ? "s" : ""}. This will affect
@@ -1764,7 +1760,7 @@ export default function RosterPage() {
               <div>
                 <label
                   htmlFor="bulk-status"
-                  className="block text-sm font-medium text-text-primary mb-2"
+                  className="block text-sm font-medium text-primary mb-2"
                 >
                   New Status
                 </label>

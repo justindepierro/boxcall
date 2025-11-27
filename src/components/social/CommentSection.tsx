@@ -78,7 +78,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
 
   return (
     <div
-      className={`${depth > 0 ? "ml-spacing-xl border-l-2 border-border-medium pl-spacing-md" : ""}`}
+      className={`${depth > 0 ? "ml-spacing-xl border-l-2 border-medium pl-spacing-md" : ""}`}
     >
       <div className="flex gap-spacing-sm">
         {/* Avatar */}
@@ -91,7 +91,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 className="w-8 h-8 rounded-full"
               />
             ) : (
-              <span className="text-sm font-medium text-text-secondary">
+              <span className="text-sm font-medium text-secondary">
                 {(comment.user?.display_name || "U")[0].toUpperCase()}
               </span>
             )}
@@ -101,14 +101,14 @@ const CommentItem: React.FC<CommentItemProps> = ({
         {/* Comment Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-spacing-xs mb-1">
-            <span className="font-medium text-sm text-text-primary">
+            <span className="font-medium text-sm text-primary">
               {comment.user?.display_name || "Anonymous"}
             </span>
-            <span className="text-xs text-text-muted">
+            <span className="text-xs text-muted">
               {new Date(comment.created_at).toLocaleDateString()}
             </span>
             {comment.is_edited && (
-              <span className="text-xs text-text-muted">(edited)</span>
+              <span className="text-xs text-muted">(edited)</span>
             )}
           </div>
 
@@ -117,7 +117,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
               <textarea
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
-                className="w-full px-spacing-sm py-spacing-xs border border-border-medium rounded-lg resize-none focus:ring-2 focus:ring-focus-info focus:border-border-info"
+                className="w-full px-spacing-sm py-spacing-xs border border-medium rounded-lg resize-none focus:ring-2 focus:ring-focus-info focus:border-info"
                 rows={3}
                 maxLength={1000}
               />
@@ -125,7 +125,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 <button
                   onClick={handleEdit}
                   disabled={isSubmitting || !editContent.trim()}
-                  className="px-spacing-sm py-1 bg-surface-info text-text-inverse text-sm rounded-lg hover:bg-surface-info-hover disabled:opacity-50"
+                  className="px-spacing-sm py-1 bg-surface-info text-inverse text-sm rounded-lg hover:bg-surface-info-hover disabled:opacity-50"
                 >
                   {isSubmitting ? "Saving..." : "Save"}
                 </button>
@@ -134,14 +134,14 @@ const CommentItem: React.FC<CommentItemProps> = ({
                     setIsEditing(false);
                     setEditContent(comment.content);
                   }}
-                  className="px-spacing-sm py-1 text-text-secondary text-sm hover:text-text-primary"
+                  className="px-spacing-sm py-1 text-secondary text-sm hover:text-primary"
                 >
                   Cancel
                 </button>
               </div>
             </div>
           ) : (
-            <p className="text-text-secondary whitespace-pre-wrap">
+            <p className="text-secondary whitespace-pre-wrap">
               {comment.content}
             </p>
           )}
@@ -160,7 +160,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
             {depth < maxDepth && onReply && (
               <button
                 onClick={() => onReply(comment)}
-                className="flex items-center gap-1 text-sm text-text-muted hover:text-text-secondary"
+                className="flex items-center gap-1 text-sm text-muted hover:text-secondary"
               >
                 <Reply className="w-4 h-4" />
                 Reply
@@ -171,7 +171,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
               <div className="relative">
                 <button
                   onClick={() => setShowMenu(!showMenu)}
-                  className="p-1 text-text-muted hover:text-text-secondary rounded-lg"
+                  className="p-1 text-muted hover:text-secondary rounded-lg"
                 >
                   <MoreVertical className="w-4 h-4" />
                 </button>
@@ -302,13 +302,13 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
         <div className="flex gap-spacing-sm">
           <div className="flex-shrink-0">
             <div className="w-8 h-8 bg-surface-secondary rounded-full flex items-center justify-center">
-              <span className="text-sm font-medium text-text-secondary">U</span>
+              <span className="text-sm font-medium text-secondary">U</span>
             </div>
           </div>
 
           <div className="flex-1">
             {replyTo && (
-              <div className="mb-spacing-xs text-sm text-text-secondary">
+              <div className="mb-spacing-xs text-sm text-secondary">
                 Replying to{" "}
                 <span className="font-medium">
                   {replyTo.user?.display_name || "User"}
@@ -318,7 +318,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
                     setReplyTo(null);
                     setNewComment("");
                   }}
-                  className="ml-spacing-xs text-text-muted hover:text-text-secondary"
+                  className="ml-spacing-xs text-muted hover:text-secondary"
                 >
                   ×
                 </button>
@@ -337,7 +337,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
             />
 
             <div className="flex justify-between items-center mt-spacing-xs">
-              <span className="text-xs text-text-muted">
+              <span className="text-xs text-muted">
                 {newComment.length}/1000 characters
               </span>
 
@@ -348,7 +348,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
                       setNewComment("");
                       setReplyTo(null);
                     }}
-                    className="px-spacing-sm py-1 text-text-secondary text-sm hover:text-text-primary"
+                    className="px-spacing-sm py-1 text-secondary text-sm hover:text-primary"
                   >
                     Cancel
                   </button>
@@ -357,7 +357,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
                 <button
                   onClick={handleSubmitComment}
                   disabled={isSubmitting || !newComment.trim()}
-                  className="flex items-center gap-spacing-xs px-spacing-sm py-1 bg-surface-info text-text-inverse text-sm rounded-lg hover:bg-surface-info-hover disabled:opacity-50"
+                  className="flex items-center gap-spacing-xs px-spacing-sm py-1 bg-surface-info text-inverse text-sm rounded-lg hover:bg-surface-info-hover disabled:opacity-50"
                 >
                   <Send className="w-4 h-4" />
                   {isSubmitting ? "Posting..." : replyTo ? "Reply" : "Comment"}
@@ -383,8 +383,8 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
             ))}
           </div>
         ) : comments.length === 0 ? (
-          <div className="text-center py-spacing-xl text-text-muted">
-            <MessageCircle className="w-12 h-12 mx-auto mb-spacing-sm text-text-muted" />
+          <div className="text-center py-spacing-xl text-muted">
+            <MessageCircle className="w-12 h-12 mx-auto mb-spacing-sm text-muted" />
             <p>No comments yet. Be the first to share your thoughts!</p>
           </div>
         ) : (

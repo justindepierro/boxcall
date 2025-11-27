@@ -125,7 +125,7 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
       {/* Search Input */}
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Icon name="search" className="h-4 w-4 text-text-muted" />
+          <Icon name="search" className="h-4 w-4 text-muted" />
         </div>
 
         <input
@@ -140,7 +140,7 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
           className="block w-full pl-10 pr-10 py-3 border-subtle rounded-lg 
                    focus:ring-2 focus:ring-jade-500 focus:border-jade-600 
                    placeholder-text-secondary text-sm transition-colors duration-200
-       surface-card shadow-sm hover:border-border-medium"
+       bg-surface-primary shadow-sm hover:border-medium"
         />
 
         {searchQuery && (
@@ -149,7 +149,7 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
               onClick={clearSearch}
               variant="ghost"
               size="xs"
-              className="absolute inset-y-0 right-0 pr-3 flex items-center h-auto text-text-muted hover:text-text-secondary"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center h-auto text-muted hover:text-secondary"
               type="button"
               aria-label="Clear search"
             >
@@ -163,7 +163,7 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
       {isOpen && suggestions.length > 0 && (
         <div
           ref={dropdownRef}
-          className="absolute z-50 w-full mt-1 surface-card rounded-lg elevation-dropdown 
+          className="absolute z-50 w-full mt-1 bg-surface-primary rounded-lg elevation-dropdown 
        border-subtle max-h-64 overflow-y-auto"
         >
           <div className="py-1">
@@ -181,21 +181,21 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
                   size="sm"
                   className={`w-full justify-start px-4 py-2 text-left text-sm flex items-center space-x-3 rounded-none ${
                     isSelected
-                      ? "surface-subtle text-text-info dark:bg-surface-info/40"
-                      : "text-text-secondary surface-subtle-hover"
+                      ? "surface-subtle text-info dark:bg-surface-info/40"
+                      : "text-secondary surface-subtle-hover"
                   }`}
                 >
                   {isHistory ? (
-                    <Icon name="clock" className="h-3 w-3 text-text-muted" />
+                    <Icon name="clock" className="h-3 w-3 text-muted" />
                   ) : (
                     <Icon
                       name="trending-up"
-                      className="h-3 w-3 text-text-muted"
+                      className="h-3 w-3 text-muted"
                     />
                   )}
                   <span className="truncate">{suggestion}</span>
                   {isHistory && (
-                    <span className="text-xs text-text-muted ml-auto">
+                    <span className="text-xs text-muted ml-auto">
                       Recent
                     </span>
                   )}

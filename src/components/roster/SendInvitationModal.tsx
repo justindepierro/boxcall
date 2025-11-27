@@ -84,7 +84,7 @@ export function SendInvitationModal({
         <div>
           <Typography
             variant="body-md"
-            className="text-text-secondary mb-spacing-sm"
+            className="text-secondary mb-spacing-sm"
           >
             Sending invitation to:
           </Typography>
@@ -94,7 +94,7 @@ export function SendInvitationModal({
           {player.nickname && (
             <Typography
               variant="body-sm"
-              className="text-text-secondary italic"
+              className="text-secondary italic"
             >
               "{player.nickname}"
             </Typography>

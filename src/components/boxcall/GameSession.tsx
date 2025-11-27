@@ -203,7 +203,7 @@ const GameSession: React.FC = () => {
               <Typography variant="body-md" className="mb-4">
                 <strong>Game Session Features:</strong>
               </Typography>
-              <ul className="space-y-2 text-text-secondary">
+              <ul className="space-y-2 text-secondary">
                 <li className="flex items-start gap-2">
                   <Icon name="check" size="sm" className="mt-0.5" />
                   <Typography variant="body-sm">
@@ -364,7 +364,7 @@ const GameSession: React.FC = () => {
                       <label className="block mb-2">
                         <Typography
                           variant="body-sm"
-                          className="text-text-secondary"
+                          className="text-secondary"
                         >
                           Result
                         </Typography>
@@ -375,7 +375,7 @@ const GameSession: React.FC = () => {
                           setResult(e.target.value as ExecutionResult)
                         }
                         disabled={isPaused}
-                        className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                        className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary"
                       >
                         <option value="success">Success</option>
                         <option value="failure">Failure</option>
@@ -387,7 +387,7 @@ const GameSession: React.FC = () => {
                       <label className="block mb-2">
                         <Typography
                           variant="body-sm"
-                          className="text-text-secondary"
+                          className="text-secondary"
                         >
                           Yards Gained
                         </Typography>
@@ -398,7 +398,7 @@ const GameSession: React.FC = () => {
                         onChange={(e) => setYardsGained(e.target.value)}
                         placeholder="0"
                         disabled={isPaused}
-                        className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-text-primary font-mono focus:outline-none focus:ring-2 focus:ring-primary"
+                        className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-primary font-mono focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                     </div>
                   </div>
@@ -444,7 +444,7 @@ const GameSession: React.FC = () => {
                       <label className="block mb-2">
                         <Typography
                           variant="body-sm"
-                          className="text-text-secondary"
+                          className="text-secondary"
                         >
                           Penalty Yards
                         </Typography>
@@ -455,7 +455,7 @@ const GameSession: React.FC = () => {
                         onChange={(e) => setPenaltyYards(e.target.value)}
                         placeholder="0"
                         disabled={isPaused}
-                        className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-text-primary font-mono focus:outline-none focus:ring-2 focus:ring-primary"
+                        className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-primary font-mono focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                     </div>
                   )}
@@ -465,7 +465,7 @@ const GameSession: React.FC = () => {
                     <label className="block mb-2">
                       <Typography
                         variant="body-sm"
-                        className="text-text-secondary"
+                        className="text-secondary"
                       >
                         Opponent Coverage
                       </Typography>
@@ -476,7 +476,7 @@ const GameSession: React.FC = () => {
                         setOpponentCoverage(e.target.value as OpponentCoverage)
                       }
                       disabled={isPaused}
-                      className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary"
                     >
                       <option value="Unknown">Unknown</option>
                       <option value="Cover 0">Cover 0 (Man, 0 deep)</option>
@@ -493,7 +493,7 @@ const GameSession: React.FC = () => {
                     </select>
                     <Typography
                       variant="body-xs"
-                      className="text-text-tertiary mt-1"
+                      className="text-tertiary mt-1"
                     >
                       What defense did they show?
                     </Typography>
@@ -504,7 +504,7 @@ const GameSession: React.FC = () => {
                     <label className="block mb-2">
                       <Typography
                         variant="body-sm"
-                        className="text-text-secondary"
+                        className="text-secondary"
                       >
                         Quick Tags (Optional)
                       </Typography>
@@ -539,7 +539,7 @@ const GameSession: React.FC = () => {
                               ${
                                 isSelected
                                   ? "bg-primary text-white border-primary"
-                                  : "bg-surface-primary border-border text-text-secondary hover:border-primary/50"
+                                  : "bg-surface-primary border-border text-secondary hover:border-primary/50"
                               }
                               ${isPaused ? "opacity-50 cursor-not-allowed" : ""}
                             `}
@@ -556,7 +556,7 @@ const GameSession: React.FC = () => {
                     <label className="block mb-2">
                       <Typography
                         variant="body-sm"
-                        className="text-text-secondary"
+                        className="text-secondary"
                       >
                         Notes (Optional)
                       </Typography>
@@ -566,7 +566,7 @@ const GameSession: React.FC = () => {
                       onChange={(e) => setNotes(e.target.value)}
                       placeholder="Add notes about this play..."
                       disabled={isPaused}
-                      className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-text-primary resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-primary resize-none focus:outline-none focus:ring-2 focus:ring-primary"
                       rows={2}
                     />
                   </div>

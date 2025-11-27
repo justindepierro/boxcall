@@ -183,7 +183,7 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
                 <div>
                   <Typography
                     variant="label-md"
-                    className="text-text-secondary mb-2"
+                    className="text-secondary mb-2"
                   >
                     Overall Health Score
                   </Typography>
@@ -193,7 +193,7 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
                       className="text-primary-700"
                     >
                       {healthScore.overall}
-                      <span className="text-2xl text-text-tertiary">/100</span>
+                      <span className="text-2xl text-tertiary">/100</span>
                     </Typography>
                     <Badge
                       variant={getHealthColor(healthScore.overall) as any}
@@ -209,11 +209,11 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
 
                 {/* Quick Stats */}
                 <div className="text-right space-y-1">
-                  <Typography variant="label-md" className="text-text-tertiary">
+                  <Typography variant="label-md" className="text-tertiary">
                     {healthScore.stats.totalPlays} plays (
                     {healthScore.stats.uniquePlayNames} unique)
                   </Typography>
-                  <Typography variant="label-md" className="text-text-tertiary">
+                  <Typography variant="label-md" className="text-tertiary">
                     {healthScore.stats.totalFormations} formations
                   </Typography>
                   <Typography variant="label-md" className="text-accent-600">
@@ -273,7 +273,7 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
                         </div>
                         <Typography
                           variant="body-sm"
-                          className="text-text-secondary"
+                          className="text-secondary"
                         >
                           {score}/{max}
                         </Typography>
@@ -315,7 +315,7 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
                       />
                       <Typography
                         variant="body-sm"
-                        className="text-text-primary"
+                        className="text-primary"
                       >
                         {rec}
                       </Typography>
@@ -370,27 +370,27 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
                               </Badge>
                               <Typography
                                 variant="label-md"
-                                className="text-text-tertiary"
+                                className="text-tertiary"
                               >
                                 {issue.category}
                               </Typography>
                             </div>
                             <Typography
                               variant="body-md"
-                              className="text-text-primary font-medium mb-1"
+                              className="text-primary font-medium mb-1"
                             >
                               {issue.description}
                             </Typography>
                             <Typography
                               variant="body-sm"
-                              className="text-text-secondary"
+                              className="text-secondary"
                             >
                               {issue.howToFix}
                             </Typography>
                             {issue.affectedItems.length > 0 && (
                               <Typography
                                 variant="label-md"
-                                className="text-text-tertiary mt-2 text-xs"
+                                className="text-tertiary mt-2 text-xs"
                               >
                                 Affects {issue.affectedItems.length} item(s)
                               </Typography>

@@ -369,7 +369,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
         <div
           ref={popoverRef}
           className={`
-            fixed z-[9999] w-80 rounded-lg shadow-2xl border border-border-subtle
+            fixed z-[9999] w-80 rounded-lg shadow-2xl border border-subtle
             bg-surface-primary/95 backdrop-blur-xl
             transform transition-all duration-200 ease-out
           `}

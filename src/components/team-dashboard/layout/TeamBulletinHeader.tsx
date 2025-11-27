@@ -103,7 +103,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
               className={
                 localLogo
                   ? "w-20 h-20 rounded-none border-subtle dark:border-text-tertiary surface-subtle dark:bg-surface-tertiary overflow-hidden"
-                  : "w-20 h-20 rounded-none border-border-light dark:border-text-tertiary surface-subtle dark:bg-surface-tertiary hover:border-text-secondary dark:hover:border-text-secondary"
+                  : "w-20 h-20 rounded-none border-light dark:border-text-tertiary surface-subtle dark:bg-surface-tertiary hover:border-text-secondary dark:hover:border-text-secondary"
               }
             >
               {localLogo ? (
@@ -113,7 +113,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
                   className="object-cover w-full h-full"
                 />
               ) : (
-                <div className="text-center flex flex-col items-center text-text-secondary dark:text-border-light">
+                <div className="text-center flex flex-col items-center text-secondary dark:text-border-light">
                   <LogoIcon size="lg" color="brand" />
                   <span className="text-2xs font-medium mt-1">
                     {uploading ? "Uploading..." : isCoach ? "Add Logo" : "Logo"}
@@ -130,7 +130,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
             />
             {!isCoach && !localLogo && (
               <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="bg-surface-secondary text-text-inverse text-xss py-1 px-2 rounded-lg whitespace-nowrap">
+                <div className="bg-surface-secondary text-inverse text-xss py-1 px-2 rounded-lg whitespace-nowrap">
                   Coaches can add team logo
                 </div>
               </div>
@@ -141,18 +141,18 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
               variant="headline-xl"
               as="h1"
               id={headingId}
-              className="text-text-primary"
+              className="text-primary"
             >
               {teamName}
             </Typography>
             <Typography
               variant="body-lg"
-              className="mt-0.5 text-text-secondary dark:text-border-light"
+              className="mt-0.5 text-secondary dark:text-border-light"
             >
               {seasonDisplay} • Record: {record.wins}-{record.losses}
             </Typography>
             {schoolName && (
-              <div className="text-xss text-text-secondary dark:text-border-light mt-1">
+              <div className="text-xss text-secondary dark:text-border-light mt-1">
                 {schoolName}
                 {mascot ? ` ${mascot}` : ""}
               </div>
@@ -168,13 +168,13 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
           <div className="text-right">
             <Typography
               variant="body-sm"
-              className="text-text-secondary dark:text-border-light"
+              className="text-secondary dark:text-border-light"
             >
               Next Game
             </Typography>
             <Typography
               variant="body-md"
-              className="font-semibold text-text-primary"
+              className="font-semibold text-primary"
             >
               {nextGame}
             </Typography>
@@ -182,13 +182,13 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
           <div className="text-right">
             <Typography
               variant="body-sm"
-              className="text-text-secondary dark:text-border-light"
+              className="text-secondary dark:text-border-light"
             >
               Team Members
             </Typography>
             <Typography
               variant="body-md"
-              className="font-semibold text-text-primary"
+              className="font-semibold text-primary"
             >
               {memberCount}
             </Typography>

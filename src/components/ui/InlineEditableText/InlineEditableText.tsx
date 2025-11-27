@@ -201,7 +201,7 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   const getDisplayClasses = () => {
     const baseClasses = `
       inline-flex items-center gap-2 rounded-lg transition-all duration-200 cursor-pointer
-      border-2 border-surface-primary hover:border-border-light hover:border-text-tertiary
+      border-2 border-surface-primary hover:border-light hover:border-text-tertiary
       ${sizeClasses[size]}
       ${className}
     `;
@@ -223,7 +223,7 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
     const baseClasses = "flex-1 truncate";
 
     if (!value && placeholder) {
-      return `${baseClasses} text-text-secondary italic`;
+      return `${baseClasses} text-secondary italic`;
     }
 
     return baseClasses;
@@ -232,16 +232,16 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   const getInputClasses = () => {
     const baseClasses = `
       flex-1 bg-surface-primary border-none outline-none p-0 m-0
-      text-text-primary font-inherit leading-inherit
-      placeholder:text-text-secondary
+      text-primary font-inherit leading-inherit
+      placeholder:text-secondary
     `;
 
     if (validationResult.isValid) {
-      return `${baseClasses} text-text-success`;
+      return `${baseClasses} text-success`;
     } else if (validationResult.level === "warning") {
-      return `${baseClasses} text-text-warning`;
+      return `${baseClasses} text-warning`;
     } else {
-      return `${baseClasses} text-text-error`;
+      return `${baseClasses} text-error`;
     }
   };
 
@@ -251,8 +251,8 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
 
     const messageClasses =
       validationResult.level === "warning"
-        ? "text-text-warning"
-        : "text-text-error";
+        ? "text-warning"
+        : "text-error";
 
     return (
       <div className={`text-xs mt-1 ${messageClasses}`}>
@@ -298,7 +298,7 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
           <>
             <span className={getTextClasses()}>{value || placeholder}</span>
             {icon && (
-              <span className="flex-shrink-0 text-text-muted dark:text-text-muted">
+              <span className="flex-shrink-0 text-muted dark:text-muted">
                 {icon}
               </span>
             )}
@@ -306,7 +306,7 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
               <Icon
                 name="edit"
                 size="sm"
-                className="flex-shrink-0 text-text-muted dark:text-text-muted opacity-0 group-hover:opacity-100 transition-opacity"
+                className="flex-shrink-0 text-muted dark:text-muted opacity-0 group-hover:opacity-100 transition-opacity"
               />
             )}
           </>

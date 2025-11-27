@@ -187,7 +187,7 @@ export const FamilyPermissionsSettings: React.FC<
         {PERMISSION_TOGGLES.map((toggle) => (
           <div
             key={toggle.key}
-            className="flex items-start justify-between p-spacing-md border border-border-medium rounded-lg hover:border-border-strong transition-colors"
+            className="flex items-start justify-between p-spacing-md border border-medium rounded-lg hover:border-strong transition-colors"
           >
             <div className="flex items-start gap-spacing-md flex-1">
               <div className="mt-1">
@@ -196,7 +196,7 @@ export const FamilyPermissionsSettings: React.FC<
                   className={`h-5 w-5 ${
                     permissions[toggle.key]
                       ? "text-jade-600 dark:text-jade-400"
-                      : "text-text-tertiary"
+                      : "text-tertiary"
                   }`}
                 />
               </div>
@@ -273,7 +273,7 @@ export const FamilyPermissionsSettings: React.FC<
           {hasChanges && (
             <button
               onClick={handleReset}
-              className="px-spacing-md py-spacing-sm text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
+              className="px-spacing-md py-spacing-sm text-sm font-medium text-secondary hover:text-primary transition-colors"
               disabled={isSaving}
             >
               Reset

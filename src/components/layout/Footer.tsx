@@ -31,7 +31,7 @@ export const Footer: React.FC = () => {
   }, []);
 
   return (
-    <footer className="surface-header border-t border-border-medium">
+    <footer className="surface-header border-t border-medium">
       {/* Mobile-first footer with proper spacing and safe area support */}
       <div className="container-page py-4 pb-safe sm:py-6 bc-container-padding">
         <div className="flex flex-col items-center space-y-3 text-center md:flex-row md:justify-between md:space-y-0 md:text-left">
@@ -48,28 +48,28 @@ export const Footer: React.FC = () => {
             <Link
               ref={aboutRef}
               to="/about"
-              className="text-sm text-text-secondary hover:text-text-primary transition-colors min-h-11 flex items-center px-2"
+              className="text-sm text-secondary hover:text-primary transition-colors min-h-11 flex items-center px-2"
             >
               About
             </Link>
             <Link
               ref={privacyRef}
               to="/privacy-policy"
-              className="text-sm text-text-secondary hover:text-text-primary transition-colors min-h-11 flex items-center px-2"
+              className="text-sm text-secondary hover:text-primary transition-colors min-h-11 flex items-center px-2"
             >
               Privacy Policy
             </Link>
             <Link
               ref={termsRef}
               to="/terms-of-service"
-              className="text-sm text-text-secondary hover:text-text-primary transition-colors min-h-11 flex items-center px-2"
+              className="text-sm text-secondary hover:text-primary transition-colors min-h-11 flex items-center px-2"
             >
               Terms of Service
             </Link>
             <Link
               ref={contactRef}
               to="/contact"
-              className="text-sm text-text-secondary hover:text-text-primary transition-colors min-h-11 flex items-center px-2"
+              className="text-sm text-secondary hover:text-primary transition-colors min-h-11 flex items-center px-2"
             >
               Contact
             </Link>

@@ -214,7 +214,7 @@ export default function EditPlayerModal({
 
         {/* Basic Information */}
         <div className="space-y-4">
-          <Typography variant="headline-sm" className="text-text-primary">
+          <Typography variant="headline-sm" className="text-primary">
             Basic Information
           </Typography>
 
@@ -246,7 +246,7 @@ export default function EditPlayerModal({
 
         {/* Roster Information */}
         <div className="space-y-4">
-          <Typography variant="headline-sm" className="text-text-primary">
+          <Typography variant="headline-sm" className="text-primary">
             Roster Information
           </Typography>
 
@@ -296,7 +296,7 @@ export default function EditPlayerModal({
                 </option>
               ))}
             </select>
-            <p className="text-xs text-text-secondary mt-1">
+            <p className="text-xs text-secondary mt-1">
               Select multiple positions if player plays more than one
             </p>
           </div>
@@ -336,7 +336,7 @@ export default function EditPlayerModal({
 
         {/* Physical Information */}
         <div className="space-y-4">
-          <Typography variant="headline-sm" className="text-text-primary">
+          <Typography variant="headline-sm" className="text-primary">
             Physical Information
           </Typography>
 

@@ -24,11 +24,11 @@ const sizeStyles = {
 
 const variantStyles = {
   ghost:
-    "text-text-secondary hover:text-text-xsrimary hover:bg-surface-neutral active:bg-surface-neutral-dark",
+    "text-secondary hover:text-xsrimary hover:bg-surface-neutral active:bg-surface-neutral-dark",
   subtle:
-    "text-text-muted hover:text-text-xsrimary hover:bg-surface-neutral/60 active:bg-surface-neutral-dark/60",
+    "text-muted hover:text-xsrimary hover:bg-surface-neutral/60 active:bg-surface-neutral-dark/60",
   danger:
-    "text-text-error hover:text-text-error hover:surface-subtle active:bg-surface-error",
+    "text-error hover:text-error hover:surface-subtle active:bg-surface-error",
 };
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(

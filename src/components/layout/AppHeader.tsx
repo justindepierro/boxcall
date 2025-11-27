@@ -9,7 +9,7 @@ import { useActiveTeamStore } from "../../stores/activeTeamStore";
 import { useRoles } from "../../hooks/useRoles";
 import { useAuthProfile } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
-import { useSaveState } from "../../contexts/SaveStateContext";
+import { useSaveState } from "../../hooks/useSaveState";
 import {
   isPWAInstallAvailable,
   requestPWAInstallPrompt,
@@ -173,7 +173,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                 <Icon
                   name="bell"
                   size="md"
-                  className="text-text-secondary hover:text-text-primary transition-colors"
+                  className="text-secondary hover:text-primary transition-colors"
                 />
               </Button>
               <UserMenu />
@@ -259,7 +259,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                 )}
               </div>
               <div className="flex items-center gap-1.5 text-xs leading-tight">
-                <span className="text-text-secondary truncate">
+                <span className="text-secondary truncate">
                   {roleDisplay}
                 </span>
                 {showDevBadge && (

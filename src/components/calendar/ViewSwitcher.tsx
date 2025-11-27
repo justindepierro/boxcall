@@ -100,10 +100,10 @@ export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
             size="xs"
             className={
               (selected
-                ? "!bg-brand-jade-dark text-text-inverse border-brand-jade-dark"
+                ? "!bg-brand-jade-dark text-inverse border-brand-jade-dark"
                 : [
                     // Base unselected adopts subtle surface vs raw gray
-                    "surface-card text-text-primary border-subtle",
+                    "surface-card text-primary border-subtle",
                     // Hover / focus for better affordance using semantic hover
                     "hover:surface-subtle-hover",
                     "focus-visible:ring-2 focus-visible:ring-brand-jade focus-visible:ring-offset-1 focus-visible:outline-none",

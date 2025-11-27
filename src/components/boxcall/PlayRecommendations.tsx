@@ -36,7 +36,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
     return (
       <div className={`text-center py-8 ${className}`}>
         <Icon name="loader" size="lg" className="animate-spin text-primary" />
-        <Typography variant="body-sm" className="text-text-muted mt-2">
+        <Typography variant="body-sm" className="text-muted mt-2">
           Analyzing plays...
         </Typography>
       </div>
@@ -51,12 +51,12 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
         <Icon
           name="alert-circle"
           size="lg"
-          className="text-text-muted mx-auto mb-2"
+          className="text-muted mx-auto mb-2"
         />
-        <Typography variant="body-sm" className="text-text-muted">
+        <Typography variant="body-sm" className="text-muted">
           No plays match this situation.
         </Typography>
-        <Typography variant="body-xs" className="text-text-muted mt-1">
+        <Typography variant="body-xs" className="text-muted mt-1">
           Try adjusting your game plan or filters.
         </Typography>
       </div>
@@ -67,7 +67,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
     <div className={`space-y-3 ${className}`}>
       <div className="flex items-center justify-between mb-4">
         <Typography variant="headline-sm">Recommended Plays</Typography>
-        <Typography variant="body-xs" className="text-text-muted">
+        <Typography variant="body-xs" className="text-muted">
           Top {recommendations.length} for this situation
         </Typography>
       </div>
@@ -88,7 +88,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
                     ? "bg-success text-white"
                     : index === 1
                       ? "bg-primary text-white"
-                      : "bg-surface-secondary text-text-muted border border-border"
+                      : "bg-surface-secondary text-muted border border-border"
                 }`}
               >
                 {index + 1}
@@ -127,7 +127,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
               <Typography variant="headline-sm" className="text-primary">
                 {rec.overallScore}%
               </Typography>
-              <Typography variant="body-xs" className="text-text-muted">
+              <Typography variant="body-xs" className="text-muted">
                 Match Score
               </Typography>
             </div>
@@ -137,7 +137,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
           <div className="grid grid-cols-2 gap-3 mb-3 pt-3 border-t border-border">
             <div className="bg-surface-secondary rounded-lg p-2">
               <div className="flex items-center justify-between mb-1">
-                <Typography variant="body-xs" className="text-text-muted">
+                <Typography variant="body-xs" className="text-muted">
                   AI Confidence
                 </Typography>
                 <Typography variant="body-xs" className="font-medium">
@@ -160,7 +160,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
 
             <div className="bg-surface-secondary rounded-lg p-2">
               <div className="flex items-center justify-between mb-1">
-                <Typography variant="body-xs" className="text-text-muted">
+                <Typography variant="body-xs" className="text-muted">
                   Situation Fit
                 </Typography>
                 <Typography variant="body-xs" className="font-medium">
@@ -192,7 +192,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
                     size="sm"
                     className="text-success mt-0.5"
                   />
-                  <Typography variant="body-xs" className="text-text-secondary">
+                  <Typography variant="body-xs" className="text-secondary">
                     {reason}
                   </Typography>
                 </div>
@@ -204,7 +204,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
           {rec.stats && rec.stats.executionCount > 0 && (
             <div className="flex items-center gap-4 pt-3 border-t border-border">
               <div>
-                <Typography variant="body-xs" className="text-text-muted">
+                <Typography variant="body-xs" className="text-muted">
                   Success Rate
                 </Typography>
                 <Typography variant="body-sm" className="font-medium">
@@ -212,7 +212,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
                 </Typography>
               </div>
               <div>
-                <Typography variant="body-xs" className="text-text-muted">
+                <Typography variant="body-xs" className="text-muted">
                   Avg Yards
                 </Typography>
                 <Typography variant="body-sm" className="font-medium">
@@ -220,7 +220,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
                 </Typography>
               </div>
               <div>
-                <Typography variant="body-xs" className="text-text-muted">
+                <Typography variant="body-xs" className="text-muted">
                   Executions
                 </Typography>
                 <Typography variant="body-sm" className="font-medium">
@@ -237,14 +237,14 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
                 <Icon name="shield" size="sm" className="text-primary" />
                 <Typography
                   variant="body-xs"
-                  className="text-text-muted font-medium"
+                  className="text-muted font-medium"
                 >
                   vs {rec.coverageStats.coverage}
                 </Typography>
               </div>
               <div className="flex items-center gap-4">
                 <div>
-                  <Typography variant="body-xs" className="text-text-muted">
+                  <Typography variant="body-xs" className="text-muted">
                     Success Rate
                   </Typography>
                   <Typography
@@ -261,7 +261,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
                   </Typography>
                 </div>
                 <div>
-                  <Typography variant="body-xs" className="text-text-muted">
+                  <Typography variant="body-xs" className="text-muted">
                     Avg Yards
                   </Typography>
                   <Typography variant="body-sm" className="font-medium">
@@ -269,7 +269,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
                   </Typography>
                 </div>
                 <div>
-                  <Typography variant="body-xs" className="text-text-muted">
+                  <Typography variant="body-xs" className="text-muted">
                     Plays
                   </Typography>
                   <Typography variant="body-sm" className="font-medium">
@@ -301,7 +301,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
                 <Icon name="map-pin" size="sm" className="text-primary" />
                 <Typography
                   variant="body-xs"
-                  className="text-text-muted font-medium"
+                  className="text-muted font-medium"
                 >
                   Hash Preference
                 </Typography>
@@ -310,7 +310,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
               {/* Current hash indicator */}
               {rec.hashStats.currentHash && (
                 <div className="mb-2">
-                  <Typography variant="body-xs" className="text-text-tertiary">
+                  <Typography variant="body-xs" className="text-tertiary">
                     Current:{" "}
                     {rec.hashStats.currentHash.charAt(0).toUpperCase() +
                       rec.hashStats.currentHash.slice(1)}{" "}
@@ -343,7 +343,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
                         <Typography
                           variant="body-xs"
                           className={`font-medium ${
-                            isBest ? "text-success" : "text-text-secondary"
+                            isBest ? "text-success" : "text-secondary"
                           }`}
                         >
                           {hash.charAt(0).toUpperCase() + hash.slice(1)}
@@ -370,7 +370,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
                       </Typography>
                       <Typography
                         variant="body-xs"
-                        className="text-text-tertiary"
+                        className="text-tertiary"
                       >
                         ({stats.executionCount})
                       </Typography>
@@ -404,7 +404,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
       <div className="bg-primary/10 border border-primary/30 rounded-lg p-3 mt-4">
         <div className="flex items-start gap-2">
           <Icon name="lightbulb" size="sm" className="text-primary mt-0.5" />
-          <Typography variant="body-xs" className="text-text-secondary">
+          <Typography variant="body-xs" className="text-secondary">
             <strong>How it works:</strong> Recommendations combine AI confidence
             (70%) with situation fit (30%). Higher scores mean better match for
             this exact game context.

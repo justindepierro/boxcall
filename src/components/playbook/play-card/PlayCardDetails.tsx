@@ -4,6 +4,7 @@ import { Typography } from "../../design-system/Typography";
 import Icon from "../../ui/Icon/Icon";
 import { InlineEditField } from "../../ui/InlineEditField";
 import { Button } from "../../ui/Button/Button";
+import { ImageUpload } from "../../ui/ImageUpload";
 import { DISTANCE_OPTIONS, DOWN_OPTIONS, HASH_OPTIONS } from "./constants";
 import {
   addFlag,
@@ -112,7 +113,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-text-xssssssssrimary flex items-center mb-spacing-sm"
+            className="text-xssssssssrimary flex items-center mb-spacing-sm"
           >
             <Icon name="target" className="h-4 w-4 mr-spacing-xs" /> Formation
           </Typography>
@@ -149,7 +150,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                             <div className="flex items-center gap-spacing-xs mb-spacing-xs">
                               <div
                                 {...provided.dragHandleProps}
-                                className="cursor-grab active:cursor-grabbing text-text-tertiary hover:text-text-secondary transition-colors"
+                                className="cursor-grab active:cursor-grabbing text-tertiary hover:text-secondary transition-colors"
                               >
                                 <Icon
                                   name="grip-vertical"
@@ -159,8 +160,8 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                               <dt
                                 className={`font-medium text-sm ${
                                   isVisible
-                                    ? "text-text-xssssssssrimary"
-                                    : "text-text-tertiary line-through"
+                                    ? "text-xssssssssrimary"
+                                    : "text-tertiary line-through"
                                 }`}
                               >
                                 {field.label}
@@ -169,7 +170,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                                 onClick={() =>
                                   toggleFieldVisibility(fieldKey, "formation")
                                 }
-                                className="flex-shrink-0 p-spacing-xs rounded-lg hover:bg-surface-hover text-text-tertiary hover:text-text-secondary transition-colors ml-auto"
+                                className="flex-shrink-0 p-spacing-xs rounded-lg hover:bg-surface-hover text-tertiary hover:text-secondary transition-colors ml-auto"
                                 title={
                                   isVisible
                                     ? "Hide from display name"
@@ -205,7 +206,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-text-xssssssssrimary flex items-center mb-spacing-sm"
+            className="text-xssssssssrimary flex items-center mb-spacing-sm"
           >
             <Icon name="hash" className="h-4 w-4 mr-spacing-xs" /> Play Details
           </Typography>
@@ -244,7 +245,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                             <div className="flex items-center gap-spacing-sm mb-spacing-xs">
                               <div
                                 {...provided.dragHandleProps}
-                                className="cursor-grab active:cursor-grabbing text-text-tertiary hover:text-text-secondary transition-colors"
+                                className="cursor-grab active:cursor-grabbing text-tertiary hover:text-secondary transition-colors"
                               >
                                 <Icon
                                   name="grip-vertical"
@@ -254,8 +255,8 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                               <dt
                                 className={`font-medium text-sm ${
                                   isVisible
-                                    ? "text-text-xssssssssrimary"
-                                    : "text-text-tertiary line-through"
+                                    ? "text-xssssssssrimary"
+                                    : "text-tertiary line-through"
                                 }`}
                               >
                                 {field.label}
@@ -264,7 +265,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                                 onClick={() =>
                                   toggleFieldVisibility(fieldKey, "playDetails")
                                 }
-                                className="flex-shrink-0 p-spacing-xs rounded-lg hover:bg-surface-hover text-text-tertiary hover:text-text-secondary transition-colors ml-auto"
+                                className="flex-shrink-0 p-spacing-xs rounded-lg hover:bg-surface-hover text-tertiary hover:text-secondary transition-colors ml-auto"
                                 title={
                                   isVisible
                                     ? "Hide from display name"
@@ -300,14 +301,14 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-text-xssssssssrimary flex items-center mb-spacing-sm"
+            className="text-xssssssssrimary flex items-center mb-spacing-sm"
           >
             <Icon name="settings" className="h-4 w-4 mr-spacing-xs" />{" "}
             Preferences
           </Typography>
           <dl className="space-y-spacing-sm text-sm">
             <div className="flex items-center gap-spacing-sm">
-              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
+              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
                 Down
               </dt>
               <dd className="flex-1">
@@ -322,7 +323,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               </dd>
             </div>
             <div className="flex items-center gap-spacing-sm">
-              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
+              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
                 Distance
               </dt>
               <dd className="flex-1">
@@ -337,7 +338,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               </dd>
             </div>
             <div className="flex items-center gap-spacing-sm">
-              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
+              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
                 Hash
               </dt>
               <dd className="flex-1">
@@ -352,7 +353,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               </dd>
             </div>
             <div className="flex items-center gap-spacing-sm">
-              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
+              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
                 Coverage
               </dt>
               <dd className="flex-1">
@@ -365,7 +366,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               </dd>
             </div>
             <div className="flex items-center gap-spacing-sm">
-              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
+              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
                 Front
               </dt>
               <dd className="flex-1">
@@ -384,34 +385,34 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-text-xssssssssrimary flex items-center mb-spacing-sm"
+            className="text-xssssssssrimary flex items-center mb-spacing-sm"
           >
             <Icon name="clock" className="h-4 w-4 mr-spacing-xs" /> Usage &
             Stats
           </Typography>
           <dl className="space-y-spacing-xs text-sm">
             <div className="flex items-center gap-spacing-sm">
-              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-28 text-xs">
+              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-28 text-xs">
                 Times Called
               </dt>
-              <dd className="text-text-xssssssssrimary font-mono text-xs">
+              <dd className="text-xssssssssrimary font-mono text-xs">
                 {play.times_called}
               </dd>
             </div>
             <div className="flex items-center gap-spacing-sm">
-              <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-28 text-xs">
+              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-28 text-xs">
                 Times Successful
               </dt>
-              <dd className="text-text-xssssssssrimary font-mono text-xs">
+              <dd className="text-xssssssssrimary font-mono text-xs">
                 {play.times_successful}
               </dd>
             </div>
             {play.last_used_at && (
               <div className="flex items-center gap-spacing-sm">
-                <dt className="text-text-xssssssssrimary font-medium flex-shrink-0 w-28 text-xs">
+                <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-28 text-xs">
                   Last Used
                 </dt>
-                <dd className="text-text-xssssssssrimary font-mono text-xs">
+                <dd className="text-xssssssssrimary font-mono text-xs">
                   {new Date(play.last_used_at).toLocaleDateString()}
                 </dd>
               </div>
@@ -424,7 +425,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
         <Typography
           variant="label-lg"
           as="h4"
-          className="text-text-xssssssssrimary flex items-center mb-spacing-md"
+          className="text-xssssssssrimary flex items-center mb-spacing-md"
         >
           <Icon name="file" className="h-4 w-4 mr-spacing-xs" /> Notes
         </Typography>
@@ -443,7 +444,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-text-xssssssssrimary mb-spacing-xs"
+            className="text-xssssssssrimary mb-spacing-xs"
           >
             Tags & Roles
           </Typography>
@@ -460,13 +461,13 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           {summaryChips.slice(0, 8).map((chip) => (
             <span
               key={chip}
-              className="px-spacing-xs py-spacing-xs text-xs rounded-lg bg-surface-secondary text-text-xssssssssrimary"
+              className="px-spacing-xs py-spacing-xs text-xs rounded-lg bg-surface-secondary text-xssssssssrimary"
             >
               {chip}
             </span>
           ))}
           {totalFlagsCount > 8 && (
-            <span className="text-xsssssssss text-text-secondary">
+            <span className="text-xsssssssss text-secondary">
               +{totalFlagsCount - 8} more
             </span>
           )}
@@ -474,7 +475,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
         {showTagsEditor && (
           <div className="mt-spacing-sm grid grid-cols-1 md:grid-cols-3 gap-spacing-sm">
             <div>
-              <div className="text-xsssssssss text-text-secondary mb-spacing-xs">
+              <div className="text-xsssssssss text-secondary mb-spacing-xs">
                 Positions
               </div>
               <div className="flex flex-wrap gap-spacing-xs">
@@ -521,7 +522,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               </div>
             </div>
             <div>
-              <div className="text-xsssssssss text-text-secondary mb-spacing-xs">
+              <div className="text-xsssssssss text-secondary mb-spacing-xs">
                 Players
               </div>
               <div className="flex flex-wrap gap-spacing-xs">
@@ -560,7 +561,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               </div>
             </div>
             <div>
-              <div className="text-xsssssssss text-text-secondary mb-spacing-xs">
+              <div className="text-xsssssssss text-secondary mb-spacing-xs">
                 Flags
               </div>
               <div className="flex flex-wrap gap-spacing-xs">
@@ -600,6 +601,34 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
             </div>
           </div>
         )}
+      </div>
+
+      {/* Play Diagram Section */}
+      <div className="mt-spacing-md">
+        <Typography
+          variant="label-lg"
+          as="h4"
+          className="text-primary flex items-center mb-spacing-sm"
+        >
+          <Icon name="camera" className="h-4 w-4 mr-spacing-xs" /> Play Diagram
+        </Typography>
+        <div className="surface-subtle rounded-lg p-spacing-sm">
+          <ImageUpload
+            value={optimisticPlay.diagram_image_url || undefined}
+            onChange={async (url) => {
+              await handleInlineSave("diagram_image_url", url || null);
+            }}
+            bucket="play-diagrams"
+            path={`plays/${play.playbook_id}/${play.id}`}
+            maxSizeBytes={5 * 1024 * 1024}
+            acceptedFormats={[
+              "image/jpeg",
+              "image/png",
+              "image/webp",
+              "image/heic",
+            ]}
+          />
+        </div>
       </div>
     </div>
   );

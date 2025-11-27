@@ -12,7 +12,6 @@ import { useFormationAudit } from "../hooks/useFormationAudit";
 import { useActiveTeamStore } from "../stores/activeTeamStore";
 import type { Play } from "../types/play";
 import { FormationSelector } from "../components/playbook/FormationSelector";
-import { FormationBuilderModal } from "../components/playbook/FormationBuilderModal";
 import { ensureValidFormation } from "../utils/formationGuard";
 import { SecurePlaysService } from "../services/securePlaysService";
 import { triggerHapticFeedback } from "../lib/hapticFeedback";
@@ -569,7 +568,7 @@ export default function FormationMapperPage() {
       <div
         key={play.id}
         className={cn(
-          "rounded-lg border border-border bg-surface-secondary/70 p-4 transition-shadow",
+          "rounded-lg border border-border bg-secondary/70 p-4 transition-shadow",
           isSelected && "border-brand-jade shadow-lg shadow-brand-jade/20"
         )}
       >
@@ -589,13 +588,13 @@ export default function FormationMapperPage() {
                 >
                   {play.play_name || "Untitled Play"}
                 </Typography>
-                <Typography variant="caption" className="text-text-muted">
+                <Typography variant="caption" className="text-muted">
                   Updated {updatedAt}
                 </Typography>
                 {formationsLoading && suggestions.length === 0 ? (
                   <Typography
                     variant="caption"
-                    className="text-text-secondary mt-2"
+                    className="text-secondary mt-2"
                   >
                     Loading suggestions…
                   </Typography>
@@ -624,7 +623,7 @@ export default function FormationMapperPage() {
                 ) : (
                   <Typography
                     variant="caption"
-                    className="text-text-secondary mt-2"
+                    className="text-secondary mt-2"
                   >
                     No smart suggestions yet — assign manually to train the
                     mapper.
@@ -634,21 +633,21 @@ export default function FormationMapperPage() {
             </div>
           </div>
           <div className="space-y-1">
-            <Typography variant="caption" className="text-text-muted uppercase">
+            <Typography variant="caption" className="text-muted uppercase">
               Formation String
             </Typography>
             <Typography
               variant="body-sm"
-              className="text-text-primary break-words"
+              className="text-primary break-words"
             >
               {play.formation || "—"}
             </Typography>
           </div>
           <div className="space-y-1">
-            <Typography variant="caption" className="text-text-muted uppercase">
+            <Typography variant="caption" className="text-muted uppercase">
               Personnel
             </Typography>
-            <Typography variant="body-sm" className="text-text-primary">
+            <Typography variant="body-sm" className="text-primary">
               {play.personnel || "—"}
             </Typography>
           </div>
@@ -695,7 +694,7 @@ export default function FormationMapperPage() {
             <select
               value={selectedPlaybookId}
               onChange={(event) => handlePlaybookChange(event.target.value)}
-              className="rounded-lg border border-border bg-surface-secondary px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-jade"
+              className="rounded-lg border border-border bg-secondary px-3 py-2 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-brand-jade"
             >
               {teamPlaybooks.map((playbook) => (
                 <option key={playbook.id} value={playbook.id}>
@@ -741,31 +740,31 @@ export default function FormationMapperPage() {
         <Card variant="glass" size="lg">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <Typography variant="headline-sm" className="text-text-primary">
+              <Typography variant="headline-sm" className="text-primary">
                 Mapping Overview
               </Typography>
-              <Typography variant="body-sm" className="text-text-secondary">
+              <Typography variant="body-sm" className="text-secondary">
                 {selectedPlaybook
                   ? `Playbook: ${selectedPlaybook.name}`
                   : "Select a playbook to review formation mappings."}
               </Typography>
               <Typography
                 variant="body-xs"
-                className="text-text-secondary mt-1"
+                className="text-secondary mt-1"
               >
                 {unresolved === 0
                   ? "All plays are synced to formations."
                   : `${unresolved} play${unresolved === 1 ? "" : "s"} need formation mapping.`}
               </Typography>
             </div>
-            <div className="flex gap-4 text-sm text-text-muted">
+            <div className="flex gap-4 text-sm text-muted">
               <div>
                 <Typography variant="caption" className="uppercase">
                   Total plays
                 </Typography>
                 <Typography
                   variant="body-md"
-                  className="font-semibold text-text-primary"
+                  className="font-semibold text-primary"
                 >
                   {total}
                 </Typography>
@@ -776,7 +775,7 @@ export default function FormationMapperPage() {
                 </Typography>
                 <Typography
                   variant="body-md"
-                  className="font-semibold text-text-primary"
+                  className="font-semibold text-primary"
                 >
                   {lastUpdated || "—"}
                 </Typography>
@@ -811,9 +810,9 @@ export default function FormationMapperPage() {
             <div className="flex items-center gap-2">
               <Icon
                 name="loader"
-                className="h-5 w-5 animate-spin text-text-muted"
+                className="h-5 w-5 animate-spin text-muted"
               />
-              <Typography variant="body-sm" className="text-text-secondary">
+              <Typography variant="body-sm" className="text-secondary">
                 Loading plays needing formation mapping...
               </Typography>
             </div>
@@ -824,10 +823,10 @@ export default function FormationMapperPage() {
               name="check-circle"
               className="mx-auto h-10 w-10 text-success-500"
             />
-            <Typography variant="headline-sm" className="text-text-primary">
+            <Typography variant="headline-sm" className="text-primary">
               All synced!
             </Typography>
-            <Typography variant="body-sm" className="text-text-secondary">
+            <Typography variant="body-sm" className="text-secondary">
               Every play in this playbook is linked to a formation.
             </Typography>
             <Button variant="secondary" onClick={() => navigate("/playbook")}>
@@ -843,17 +842,17 @@ export default function FormationMapperPage() {
 
       {selectedCount > 0 && (
         <div className="fixed bottom-4 left-1/2 z-40 w-full max-w-4xl -translate-x-1/2 px-4">
-          <div className="rounded-xl border border-border bg-surface-primary shadow-xl flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="rounded-xl border border-border bg-primary shadow-xl flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <Icon name="check-circle" className="h-5 w-5 text-success-500" />
               <div>
                 <Typography
                   variant="body-md"
-                  className="font-semibold text-text-primary"
+                  className="font-semibold text-primary"
                 >
                   {selectedCount} play{selectedCount === 1 ? "" : "s"} selected
                 </Typography>
-                <Typography variant="caption" className="text-text-secondary">
+                <Typography variant="caption" className="text-secondary">
                   {selectedSuggestionsCount > 0
                     ? `${selectedSuggestionsCount} selection${selectedSuggestionsCount === 1 ? "" : "s"} have suggestions ready`
                     : "No suggestions available yet"}
@@ -905,10 +904,10 @@ export default function FormationMapperPage() {
         {editingPlay && (
           <div className="space-y-5">
             <div>
-              <Typography variant="body-md" className="text-text-primary">
+              <Typography variant="body-md" className="text-primary">
                 {editingPlay.play_name || "Untitled Play"}
               </Typography>
-              <Typography variant="caption" className="text-text-secondary">
+              <Typography variant="caption" className="text-secondary">
                 Current string: {editingPlay.formation || "—"}
               </Typography>
             </div>
@@ -962,13 +961,13 @@ export default function FormationMapperPage() {
         size="md"
       >
         <div className="space-y-5">
-          <Typography variant="body-sm" className="text-text-secondary">
+          <Typography variant="body-sm" className="text-secondary">
             Choose a formation to link to the selected plays.
           </Typography>
-          <div className="max-h-48 overflow-y-auto rounded-lg border border-border bg-surface-secondary/60 p-3">
+          <div className="max-h-48 overflow-y-auto rounded-lg border border-border bg-secondary/60 p-3">
             <Typography
               variant="caption"
-              className="text-text-muted uppercase tracking-wide"
+              className="text-muted uppercase tracking-wide"
             >
               Selected plays
             </Typography>
@@ -976,18 +975,18 @@ export default function FormationMapperPage() {
               {selectedPlays.slice(0, 6).map((play) => (
                 <li
                   key={play.id}
-                  className="text-sm text-text-primary truncate"
+                  className="text-sm text-primary truncate"
                 >
                   {play.play_name || "Untitled Play"}
                 </li>
               ))}
               {selectedCount > 6 && (
-                <li className="text-xs text-text-secondary">
+                <li className="text-xs text-secondary">
                   +{selectedCount - 6} more
                 </li>
               )}
               {selectedCount === 0 && (
-                <li className="text-xs text-text-secondary">
+                <li className="text-xs text-secondary">
                   No plays selected
                 </li>
               )}
@@ -1033,21 +1032,6 @@ export default function FormationMapperPage() {
           </div>
         </div>
       </Modal>
-
-      {showBuilder && editingPlay && (
-        <FormationBuilderModal
-          isOpen={showBuilder}
-          onClose={() => setShowBuilder(false)}
-          playbookId={editingPlay.playbook_id}
-          onSaved={(formation) => {
-            if (formation) {
-              setSelectedFormation(formation);
-              void loadFormations(editingPlay.playbook_id);
-            }
-            setShowBuilder(false);
-          }}
-        />
-      )}
     </PageLayout>
   );
 }

@@ -160,7 +160,7 @@ export const AdaptiveChart: React.FC<AdaptiveChartProps> = ({
 
     return (
       <div className="chart-insights mt-3 p-3 bg-surface-secondary rounded-lg">
-        <h4 className="text-sm font-medium text-text-primary mb-2">
+        <h4 className="text-sm font-medium text-primary mb-2">
           Smart Insights
         </h4>
         <div className="space-y-2">
@@ -176,15 +176,15 @@ export const AdaptiveChart: React.FC<AdaptiveChartProps> = ({
     <div className={`adaptive-chart ${className}`}>
       {/* Chart header with metadata */}
       <div className="chart-header mb-2">
-        <h3 className="text-lg font-medium text-text-primary">{data.name}</h3>
-        <div className="flex items-center gap-2 text-sm text-text-muted">
+        <h3 className="text-lg font-medium text-primary">{data.name}</h3>
+        <div className="flex items-center gap-2 text-sm text-muted">
           <span>Type: {chartConfig.type}</span>
           <span>•</span>
           <span>{data.data.length} data points</span>
           {insights.length > 0 && (
             <>
               <span>•</span>
-              <span className="text-text-info">{insights.length} insights</span>
+              <span className="text-info">{insights.length} insights</span>
             </>
           )}
         </div>
@@ -198,7 +198,7 @@ export const AdaptiveChart: React.FC<AdaptiveChartProps> = ({
 
       {/* Chart configuration debug info (dev only) */}
       {process.env.NODE_ENV === "development" && (
-        <details className="mt-2 text-xs text-text-muted">
+        <details className="mt-2 text-xs text-muted">
           <summary>Chart Config (Dev)</summary>
           <pre>{JSON.stringify(chartConfig, null, 2)}</pre>
         </details>
@@ -217,13 +217,13 @@ interface InsightBadgeProps {
 const InsightBadge: React.FC<InsightBadgeProps> = ({ insight }) => {
   const getInsightColor = (type: DataInsight["type"]) => {
     const colors = {
-      trend: "bg-surface-info text-text-info",
-      anomaly: "bg-surface-warning text-text-warning",
-      achievement: "bg-surface-success text-text-success",
-      concern: "bg-surface-error text-text-error",
-      opportunity: "bg-surface-tertiary text-text-tertiary",
+      trend: "bg-surface-info text-info",
+      anomaly: "bg-surface-warning text-warning",
+      achievement: "bg-surface-success text-success",
+      concern: "bg-surface-error text-error",
+      opportunity: "bg-surface-tertiary text-tertiary",
     };
-    return colors[type] || "bg-surface-secondary text-text-primary";
+    return colors[type] || "bg-surface-secondary text-primary";
   };
 
   const getPriorityIcon = (priority: DataInsight["priority"]) => {

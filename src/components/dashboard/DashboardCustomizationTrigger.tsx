@@ -28,7 +28,7 @@ export const DashboardCustomizationTrigger: React.FC<
       aria-label="Customize dashboard layout"
       title="Customize Dashboard"
     >
-      <Icon name="settings" size="lg" className="text-text-inverse" />
+      <Icon name="settings" size="lg" className="text-inverse" />
     </Button>
   );
 };

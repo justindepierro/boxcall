@@ -77,7 +77,7 @@ export const MobileHeroStatsCard: React.FC<HeroStatsCardProps> = ({
   ];
 
   return (
-    <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-brand-primary/10 via-surface-card to-brand-secondary/10 p-5 shadow-md backdrop-blur-sm border border-border">
+    <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-brand-primary/10 via-bg-surface-primary to-brand-secondary/10 p-5 shadow-md backdrop-blur-sm border border-border">
       {/* Decorative background elements */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-brand-primary/5 rounded-full -mr-16 -mt-16" />
       <div className="absolute bottom-0 left-0 w-24 h-24 bg-brand-secondary/5 rounded-full -ml-12 -mb-12" />
@@ -88,7 +88,7 @@ export const MobileHeroStatsCard: React.FC<HeroStatsCardProps> = ({
         <div className="mb-4">
           <Typography
             variant="headline-md"
-            className="text-text-primary font-bold"
+            className="text-primary font-bold"
           >
             {getGreeting()}, {userName}! 👋
           </Typography>
@@ -112,7 +112,7 @@ export const MobileHeroStatsCard: React.FC<HeroStatsCardProps> = ({
               </Typography>
               <Typography
                 variant="body-xs"
-                className="text-text-secondary mt-0.5 font-medium"
+                className="text-secondary mt-0.5 font-medium"
               >
                 {stat.label}
               </Typography>

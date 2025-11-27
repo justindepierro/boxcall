@@ -48,9 +48,9 @@ interface LazyPDFExportProps {
 }
 
 const PDFLoadingSpinner = () => (
-  <div className="flex items-center justify-center bc-card-padding">
+  <div className="flex items-center justify-center p-6">
     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-600"></div>
-    <span className="ml-3 text-text-secondary">Loading PDF Export...</span>
+    <span className="ml-3 text-secondary">Loading PDF Export...</span>
   </div>
 );
 

@@ -61,14 +61,14 @@ export const DashboardCustomizationPanel: React.FC<
 
   const renderWidgetsTab = () => (
     <div className="space-y-spacing-md">
-      <Typography variant="headline-sm" className="text-text-primary">
+      <Typography variant="headline-sm" className="text-primary">
         Widget Configuration
       </Typography>
 
       {currentLayout?.widgets.map((widget) => (
         <div
           key={widget.id}
-          className="flex items-center justify-between p-spacing-md bg-surface-card rounded-lg border border-subtle"
+          className="flex items-center justify-between p-spacing-md bg-surface-primary rounded-lg border border-subtle"
         >
           <div className="flex items-center space-x-spacing-sm">
             <Button
@@ -82,7 +82,7 @@ export const DashboardCustomizationPanel: React.FC<
                 name={widget.visible ? "eye" : "eye-off"}
                 size="sm"
                 className={
-                  widget.visible ? "text-text-primary" : "text-text-muted"
+                  widget.visible ? "text-primary" : "text-muted"
                 }
               />
             </Button>
@@ -131,7 +131,7 @@ export const DashboardCustomizationPanel: React.FC<
   const renderLayoutsTab = () => (
     <div className="space-y-spacing-md">
       <div className="flex items-center justify-between">
-        <Typography variant="headline-sm" className="text-text-primary">
+        <Typography variant="headline-sm" className="text-primary">
           Layout Presets
         </Typography>
         <Button
@@ -146,7 +146,7 @@ export const DashboardCustomizationPanel: React.FC<
       </div>
 
       {showCreateLayout && (
-        <div className="p-spacing-md bg-surface-card rounded-lg border border-subtle">
+        <div className="p-spacing-md bg-surface-primary rounded-lg border border-subtle">
           <Typography variant="body-md" className="mb-spacing-sm font-medium">
             Create New Layout
           </Typography>
@@ -157,7 +157,7 @@ export const DashboardCustomizationPanel: React.FC<
               onChange={(e) => setNewLayoutName(e.target.value)}
               placeholder="Layout name..."
               className="flex-1 px-spacing-sm py-spacing-xs bg-surface-app border border-subtle rounded-lg 
-                         text-text-primary placeholder-text-muted focus:outline-none 
+                         text-primary placeholder-text-muted focus:outline-none 
                          focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus"
               onKeyDown={(e) => e.key === "Enter" && handleCreateLayout()}
             />
@@ -178,10 +178,10 @@ export const DashboardCustomizationPanel: React.FC<
       {availableLayouts.map((layout) => (
         <div
           key={layout.id}
-          className={`p-spacing-md bg-surface-card rounded-lg border transition-colors ${
+          className={`p-spacing-md bg-surface-primary rounded-lg border transition-colors ${
             currentLayout?.id === layout.id
               ? "border-component-badge-primary bg-component-badge-primary-bg"
-              : "border-subtle hover:border-border-medium"
+              : "border-subtle hover:border-medium"
           }`}
         >
           <div className="flex items-center justify-between">
@@ -218,7 +218,7 @@ export const DashboardCustomizationPanel: React.FC<
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-text-error hover:text-text-error"
+                  className="text-error hover:text-error"
                   onClick={() => {
                     // TODO: Implement layout deletion
                     console.info("Delete layout:", layout.id);
@@ -236,7 +236,7 @@ export const DashboardCustomizationPanel: React.FC<
 
   const renderSettingsTab = () => (
     <div className="space-y-spacing-lg">
-      <Typography variant="headline-sm" className="text-text-primary">
+      <Typography variant="headline-sm" className="text-primary">
         Dashboard Settings
       </Typography>
 
@@ -257,7 +257,7 @@ export const DashboardCustomizationPanel: React.FC<
                   compactMode: e.target.checked,
                 })
               }
-              className="w-4 h-4 text-component-checkbox-primary bg-surface-app border-border-medium rounded-lg 
+              className="w-4 h-4 text-component-checkbox-primary bg-surface-app border-medium rounded-lg 
                          focus:ring-interaction-focus focus:ring-2"
             />
             <Typography variant="body-sm">Compact mode</Typography>
@@ -273,7 +273,7 @@ export const DashboardCustomizationPanel: React.FC<
                   showWelcomeMessages: e.target.checked,
                 })
               }
-              className="w-4 h-4 text-component-checkbox-primary bg-surface-app border-border-medium rounded-lg 
+              className="w-4 h-4 text-component-checkbox-primary bg-surface-app border-medium rounded-lg 
                          focus:ring-interaction-focus focus:ring-2"
             />
             <Typography variant="body-sm">Show welcome messages</Typography>
@@ -298,7 +298,7 @@ export const DashboardCustomizationPanel: React.FC<
                   enableNotifications: e.target.checked,
                 })
               }
-              className="w-4 h-4 text-component-checkbox-primary bg-surface-app border-border-medium rounded-lg 
+              className="w-4 h-4 text-component-checkbox-primary bg-surface-app border-medium rounded-lg 
                          focus:ring-interaction-focus focus:ring-2"
             />
             <Typography variant="body-sm">Enable notifications</Typography>
@@ -314,7 +314,7 @@ export const DashboardCustomizationPanel: React.FC<
                   autoRefresh: e.target.checked,
                 })
               }
-              className="w-4 h-4 text-component-checkbox-primary bg-surface-app border-border-medium rounded-lg 
+              className="w-4 h-4 text-component-checkbox-primary bg-surface-app border-medium rounded-lg 
                          focus:ring-interaction-focus focus:ring-2"
             />
             <Typography variant="body-sm">Auto-refresh dashboard</Typography>
@@ -337,7 +337,7 @@ export const DashboardCustomizationPanel: React.FC<
             })
           }
           className="w-full px-spacing-sm py-spacing-xs bg-surface-app border border-subtle rounded-lg 
-                     text-text-primary focus:outline-none focus:ring-2 focus:ring-interaction-focus 
+                     text-primary focus:outline-none focus:ring-2 focus:ring-interaction-focus 
                      focus:border-interaction-focus"
           disabled={!personalizationSettings.autoRefresh}
         >
@@ -363,7 +363,7 @@ export const DashboardCustomizationPanel: React.FC<
         {/* Header */}
         <div className="flex items-center justify-between p-spacing-lg border-b border-subtle">
           <div>
-            <Typography variant="headline-lg" className="text-text-primary">
+            <Typography variant="headline-lg" className="text-primary">
               Customize Dashboard
             </Typography>
             <Typography variant="body-sm" color="muted">
@@ -388,14 +388,14 @@ export const DashboardCustomizationPanel: React.FC<
         {error && (
           <div className="p-spacing-md bg-surface-error border-b border-text-error">
             <div className="flex items-center justify-between">
-              <Typography variant="body-sm" className="text-text-error">
+              <Typography variant="body-sm" className="text-error">
                 {error}
               </Typography>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={clearError}
-                className="text-text-error hover:text-text-error"
+                className="text-error hover:text-error"
               >
                 <Icon name="close" size="sm" />
               </Button>
@@ -421,7 +421,7 @@ export const DashboardCustomizationPanel: React.FC<
                 className={`flex items-center space-x-spacing-xs py-spacing-md border-b-2 transition-colors ${
                   activeTab === tab.id
                     ? "border-component-badge-primary text-component-badge-primary"
-                    : "border-border text-text-muted hover:text-text-primary"
+                    : "border-border text-muted hover:text-primary"
                 }`}
               >
                 <Icon name={tab.icon} size="sm" />

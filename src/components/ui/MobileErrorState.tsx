@@ -35,7 +35,7 @@ const ERROR_CONFIGURATIONS = {
     icon: "wifi-off" as const,
     defaultTitle: "Network Error",
     defaultMessage: "Please check your internet connection and try again.",
-    color: "text-text-warning",
+    color: "text-warning",
     bgColor: "bg-surface-warning",
   },
   server: {
@@ -43,7 +43,7 @@ const ERROR_CONFIGURATIONS = {
     defaultTitle: "Server Error",
     defaultMessage:
       "Our servers are experiencing issues. Please try again in a moment.",
-    color: "text-text-error",
+    color: "text-error",
     bgColor: "bg-surface-error",
   },
   offline: {
@@ -51,21 +51,21 @@ const ERROR_CONFIGURATIONS = {
     defaultTitle: "You're Offline",
     defaultMessage:
       "Check your connection and try again when you're back online.",
-    color: "text-text-tertiary",
+    color: "text-tertiary",
     bgColor: "surface-subtle",
   },
   timeout: {
     icon: "refresh-cw" as const,
     defaultTitle: "Request Timeout",
     defaultMessage: "This is taking longer than usual. Please try again.",
-    color: "text-text-warning",
+    color: "text-warning",
     bgColor: "bg-surface-warning",
   },
   generic: {
     icon: "alert-triangle" as const,
     defaultTitle: "Something went wrong",
     defaultMessage: "We encountered an unexpected error. Please try again.",
-    color: "text-text-error",
+    color: "text-error",
     bgColor: "bg-surface-error",
   },
 };
@@ -106,7 +106,7 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
   if (compact) {
     return (
       <div
-        className={`flex items-center justify-between p-4 surface-card rounded-lg ${className}`}
+        className={`flex items-center justify-between p-4 bg-surface-primary rounded-lg ${className}`}
       >
         <div className="flex items-center space-x-3">
           <div className={`p-2 rounded-full ${config.bgColor}`}>
@@ -115,11 +115,11 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
           <div>
             <Typography
               variant="body-sm"
-              className="text-text-primary font-medium"
+              className="text-primary font-medium"
             >
               {title || config.defaultTitle}
             </Typography>
-            <Typography variant="caption" className="text-text-muted">
+            <Typography variant="caption" className="text-muted">
               {message || config.defaultMessage}
             </Typography>
           </div>
@@ -150,12 +150,12 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
 
       {/* Error Content */}
       <div className="mb-6">
-        <Typography variant="headline-md" className="text-text-primary mb-2">
+        <Typography variant="headline-md" className="text-primary mb-2">
           {title || config.defaultTitle}
         </Typography>
         <Typography
           variant="body-md"
-          className="text-text-secondary content-narrow"
+          className="text-secondary content-narrow"
         >
           {message || config.defaultMessage}
         </Typography>

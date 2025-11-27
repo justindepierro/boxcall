@@ -34,8 +34,8 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
           <span
             className={`px-2 py-1 rounded-lg text-xs font-medium flex items-center ${
               userRole === "head_coach"
-                ? "bg-surface-info text-text-info"
-                : "bg-surface-success text-text-success"
+                ? "bg-surface-info text-info"
+                : "bg-surface-success text-success"
             }`}
           >
             {userRole === "head_coach" ? (
@@ -63,7 +63,7 @@ export const PracticePlannerHeader: React.FC<PracticePlannerHeaderProps> = ({
           onClick={onClose}
           variant="ghost"
           size="sm"
-          className="text-text-muted hover:text-text-primary"
+          className="text-muted hover:text-primary"
         >
           <Icon name="close" size="lg" />
         </Button>

@@ -91,15 +91,15 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       <div className={`p-spacing-2xl text-center ${className}`}>
         <Icon
           name="alert-triangle"
-          className="h-12 w-12 text-text-error mx-auto mb-spacing-md"
+          className="h-12 w-12 text-error mx-auto mb-spacing-md"
         />
         <Typography
           variant="headline-sm"
-          className="text-text-error mb-spacing-xs"
+          className="text-error mb-spacing-xs"
         >
           Analytics Error
         </Typography>
-        <Typography variant="body-sm" className="text-text-error mb-spacing-md">
+        <Typography variant="body-sm" className="text-error mb-spacing-md">
           {error}
         </Typography>
         <Button onClick={loadAnalytics} variant="secondary">
@@ -114,15 +114,15 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       <div className={`p-spacing-2xl text-center ${className}`}>
         <Icon
           name="bar-chart"
-          className="h-12 w-12 text-text-muted mx-auto mb-spacing-md"
+          className="h-12 w-12 text-muted mx-auto mb-spacing-md"
         />
         <Typography
           variant="headline-sm"
-          className="text-text-secondary mb-spacing-xs"
+          className="text-secondary mb-spacing-xs"
         >
           No Analytics Data
         </Typography>
-        <Typography variant="body-sm" className="text-text-secondary">
+        <Typography variant="body-sm" className="text-secondary">
           {playbookId
             ? "No plays found in this playbook yet."
             : "Select a playbook to view analytics."}
@@ -226,22 +226,22 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       footnote: selectedView === "overview" ? "Active view" : "Tap to open",
       buttonLabel: "Overview",
       renderContent: () => (
-        <div className="grid gap-spacing-xs text-sm text-text-secondary">
+        <div className="grid gap-spacing-xs text-sm text-secondary">
           <div className="flex items-center justify-between">
             <span>Total plays</span>
-            <span className="font-semibold text-text-primary">
+            <span className="font-semibold text-primary">
               {analytics.totalPlays}
             </span>
           </div>
           <div className="flex items-center justify-between">
             <span>Avg success</span>
-            <span className="font-semibold text-text-primary">
+            <span className="font-semibold text-primary">
               {formatPercent(analytics.averageSuccessRate)}
             </span>
           </div>
           <div className="flex items-center justify-between">
             <span>Avg complexity</span>
-            <span className="font-semibold text-text-primary">
+            <span className="font-semibold text-primary">
               {formatDecimal(analytics.averageComplexity)}
             </span>
           </div>
@@ -261,18 +261,18 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       buttonLabel: "Formations",
       renderContent: () => (
         <div className="space-y-spacing-xs text-sm">
-          <div className="text-text-secondary">Top formation</div>
+          <div className="text-secondary">Top formation</div>
           <div className="flex items-baseline justify-between gap-spacing-md">
-            <span className="font-semibold text-text-primary truncate">
+            <span className="font-semibold text-primary truncate">
               {bestFormation?.formation ?? "No data"}
             </span>
-            <span className="text-text-secondary">
+            <span className="text-secondary">
               {bestFormation ? formatPercent(bestFormation.successRate) : "0%"}
             </span>
           </div>
-          <div className="flex items-center justify-between text-xs text-text-secondary">
+          <div className="flex items-center justify-between text-xs text-secondary">
             <span>Avg complexity</span>
-            <span className="font-semibold text-text-primary">
+            <span className="font-semibold text-primary">
               {bestFormation
                 ? formatDecimal(bestFormation.averageComplexity)
                 : "0.0"}
@@ -294,18 +294,18 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       buttonLabel: "Situational",
       renderContent: () => (
         <div className="space-y-spacing-xs text-sm">
-          <div className="text-text-secondary">Best down & distance</div>
+          <div className="text-secondary">Best down & distance</div>
           <div className="flex items-baseline justify-between gap-spacing-md">
-            <span className="font-semibold text-text-primary truncate">
+            <span className="font-semibold text-primary truncate">
               {bestDown ? bestDown[0] : "No data"}
             </span>
-            <span className="text-text-secondary">
+            <span className="text-secondary">
               {bestDown ? formatPercent(bestDown[1].rate) : "0%"}
             </span>
           </div>
-          <div className="flex items-center justify-between text-xs text-text-secondary">
+          <div className="flex items-center justify-between text-xs text-secondary">
             <span>Calls tracked</span>
-            <span className="font-semibold text-text-primary">
+            <span className="font-semibold text-primary">
               {bestDown ? bestDown[1].called : 0}
             </span>
           </div>
@@ -325,12 +325,12 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       buttonLabel: "Performance",
       renderContent: () => (
         <div className="space-y-spacing-xs text-sm">
-          <div className="text-text-secondary">Focus</div>
+          <div className="text-secondary">Focus</div>
           <div className="flex items-baseline justify-between gap-spacing-md">
-            <span className="font-semibold text-text-primary capitalize">
+            <span className="font-semibold text-primary capitalize">
               {complexityCopy[complexityFocusLevel]}
             </span>
-            <span className="text-text-secondary">
+            <span className="text-secondary">
               {totalComplexityCount
                 ? `${Math.round(
                     (complexityFocusCount / totalComplexityCount) * 100
@@ -338,9 +338,9 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                 : "0% share"}
             </span>
           </div>
-          <div className="flex items-center justify-between text-xs text-text-secondary">
+          <div className="flex items-center justify-between text-xs text-secondary">
             <span>Install balance</span>
-            <span className="font-semibold text-text-primary">
+            <span className="font-semibold text-primary">
               {`${complexityTotals.low}/${complexityTotals.medium}/${complexityTotals.high}`}
             </span>
           </div>
@@ -361,18 +361,18 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       buttonLabel: "Players",
       renderContent: () => (
         <div className="space-y-spacing-xs text-sm">
-          <div className="text-text-secondary">Top performing play</div>
+          <div className="text-secondary">Top performing play</div>
           <div className="flex items-baseline justify-between gap-spacing-md">
-            <span className="font-semibold text-text-primary truncate">
+            <span className="font-semibold text-primary truncate">
               {topPlay?.playName ?? "No data"}
             </span>
-            <span className="text-text-secondary">
+            <span className="text-secondary">
               {topPlay ? formatPercent(topPlay.successRate) : "0%"}
             </span>
           </div>
-          <div className="flex items-center justify-between text-xs text-text-secondary">
+          <div className="flex items-center justify-between text-xs text-secondary">
             <span>Calls / success</span>
-            <span className="font-semibold text-text-primary">
+            <span className="font-semibold text-primary">
               {topPlay
                 ? `${topPlay.timesCalled}/${topPlay.timesSuccessful}`
                 : "0/0"}
@@ -395,18 +395,18 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       buttonLabel: "Game Planning",
       renderContent: () => (
         <div className="space-y-spacing-xs text-sm">
-          <div className="text-text-secondary">Personnel advantage</div>
+          <div className="text-secondary">Personnel advantage</div>
           <div className="flex items-baseline justify-between gap-spacing-md">
-            <span className="font-semibold text-text-primary truncate">
+            <span className="font-semibold text-primary truncate">
               {bestPersonnel ? bestPersonnel[0] : "No data"}
             </span>
-            <span className="text-text-secondary">
+            <span className="text-secondary">
               {bestPersonnel ? formatPercent(bestPersonnel[1].rate) : "0%"}
             </span>
           </div>
-          <div className="flex items-center justify-between text-xs text-text-secondary">
+          <div className="flex items-center justify-between text-xs text-secondary">
             <span>Calls tagged</span>
-            <span className="font-semibold text-text-primary">
+            <span className="font-semibold text-primary">
               {bestPersonnel ? bestPersonnel[1].called : 0}
             </span>
           </div>
@@ -427,16 +427,16 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       buttonLabel: "Sessions",
       renderContent: () => (
         <div className="space-y-spacing-xs text-sm">
-          <div className="text-text-secondary">Session insights</div>
+          <div className="text-secondary">Session insights</div>
           <div className="flex items-baseline justify-between gap-spacing-md">
-            <span className="font-semibold text-text-primary">
+            <span className="font-semibold text-primary">
               Performance tracking
             </span>
-            <span className="text-text-secondary">Coming soon</span>
+            <span className="text-secondary">Coming soon</span>
           </div>
-          <div className="flex items-center justify-between text-xs text-text-secondary">
+          <div className="flex items-center justify-between text-xs text-secondary">
             <span>Advanced metrics</span>
-            <span className="font-semibold text-text-primary">Ready</span>
+            <span className="font-semibold text-primary">Ready</span>
           </div>
         </div>
       ),
@@ -455,16 +455,16 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       buttonLabel: "Trends",
       renderContent: () => (
         <div className="space-y-spacing-xs text-sm">
-          <div className="text-text-secondary">Trend analysis</div>
+          <div className="text-secondary">Trend analysis</div>
           <div className="flex items-baseline justify-between gap-spacing-md">
-            <span className="font-semibold text-text-primary">
+            <span className="font-semibold text-primary">
               Historical data
             </span>
-            <span className="text-text-secondary">Coming soon</span>
+            <span className="text-secondary">Coming soon</span>
           </div>
-          <div className="flex items-center justify-between text-xs text-text-secondary">
+          <div className="flex items-center justify-between text-xs text-secondary">
             <span>Season insights</span>
-            <span className="font-semibold text-text-primary">Ready</span>
+            <span className="font-semibold text-primary">Ready</span>
           </div>
         </div>
       ),
@@ -477,12 +477,12 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         <div className="mb-spacing-lg flex flex-col gap-spacing-xs">
           <Typography
             variant="headline-md"
-            className="flex items-center gap-3 text-text-primary"
+            className="flex items-center gap-3 text-primary"
           >
             <Icon name="bar-chart" className="h-6 w-6 text-jade-600" />
             Advanced Analytics
           </Typography>
-          <Typography variant="body-sm" className="text-text-secondary">
+          <Typography variant="body-sm" className="text-secondary">
             Choose a workspace to dive deeper into your playbook trends.
           </Typography>
         </div>
@@ -554,56 +554,56 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
     <Card className="p-spacing-lg">
       <div className="flex items-center justify-between">
         <div>
-          <Typography variant="body-sm" className="text-text-secondary">
+          <Typography variant="body-sm" className="text-secondary">
             Total Plays
           </Typography>
-          <Typography variant="headline-lg" className="text-text-primary">
+          <Typography variant="headline-lg" className="text-primary">
             {analytics.totalPlays}
           </Typography>
         </div>
-        <Icon name="file" className="h-8 w-8 text-text-info" />
+        <Icon name="file" className="h-8 w-8 text-info" />
       </div>
     </Card>
 
     <Card className="p-spacing-lg">
       <div className="flex items-center justify-between">
         <div>
-          <Typography variant="body-sm" className="text-text-secondary">
+          <Typography variant="body-sm" className="text-secondary">
             Avg Success Rate
           </Typography>
-          <Typography variant="headline-lg" className="text-text-primary">
+          <Typography variant="headline-lg" className="text-primary">
             {analytics.averageSuccessRate}%
           </Typography>
         </div>
-        <Icon name="target" className="h-8 w-8 text-text-success" />
+        <Icon name="target" className="h-8 w-8 text-success" />
       </div>
     </Card>
 
     <Card className="p-spacing-lg">
       <div className="flex items-center justify-between">
         <div>
-          <Typography variant="body-sm" className="text-text-secondary">
+          <Typography variant="body-sm" className="text-secondary">
             Avg Complexity
           </Typography>
-          <Typography variant="headline-lg" className="text-text-primary">
+          <Typography variant="headline-lg" className="text-primary">
             {analytics.averageComplexity}/10
           </Typography>
         </div>
-        <Icon name="zap" className="h-8 w-8 text-text-warning" />
+        <Icon name="zap" className="h-8 w-8 text-warning" />
       </div>
     </Card>
 
     <Card className="p-spacing-lg">
       <div className="flex items-center justify-between">
         <div>
-          <Typography variant="body-sm" className="text-text-secondary">
+          <Typography variant="body-sm" className="text-secondary">
             Formations
           </Typography>
-          <Typography variant="headline-lg" className="text-text-primary">
+          <Typography variant="headline-lg" className="text-primary">
             {analytics.formationsCount}
           </Typography>
         </div>
-        <Icon name="grid" className="h-8 w-8 text-text-primary" />
+        <Icon name="grid" className="h-8 w-8 text-primary" />
       </div>
     </Card>
 
@@ -614,7 +614,7 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
       </Typography>
       <div className="space-y-spacing-sm">
         <div className="flex justify-between items-center">
-          <span className="text-sm text-text-secondary">Low (1-3)</span>
+          <span className="text-sm text-secondary">Low (1-3)</span>
           <div className="flex items-center space-x-spacing-xs">
             <div className="w-24 bg-border rounded-full h-2">
               <div
@@ -630,7 +630,7 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-sm text-text-secondary">Medium (4-7)</span>
+          <span className="text-sm text-secondary">Medium (4-7)</span>
           <div className="flex items-center space-x-spacing-xs">
             <div className="w-24 bg-border rounded-full h-2">
               <div
@@ -646,7 +646,7 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-sm text-text-secondary">High (8-10)</span>
+          <span className="text-sm text-secondary">High (8-10)</span>
           <div className="flex items-center space-x-spacing-xs">
             <div className="w-24 bg-border rounded-full h-2">
               <div
@@ -686,7 +686,7 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
                 <Typography variant="body-sm" className="font-medium">
                   {play.playName}
                 </Typography>
-                <Typography variant="body-xs" className="text-text-secondary">
+                <Typography variant="body-xs" className="text-secondary">
                   {play.formation} • {play.playType}
                 </Typography>
               </div>
@@ -694,11 +694,11 @@ const OverviewView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
             <div className="text-right">
               <Typography
                 variant="body-sm"
-                className="font-medium text-text-success"
+                className="font-medium text-success"
               >
                 {play.successRate}%
               </Typography>
-              <Typography variant="body-xs" className="text-text-secondary">
+              <Typography variant="body-xs" className="text-secondary">
                 {play.timesCalled} calls
               </Typography>
             </div>
@@ -745,11 +745,11 @@ const FormationCard: React.FC<{ formation: FormationAnalytics }> = ({
 
     <div className="space-y-spacing-sm">
       <div className="flex justify-between">
-        <span className="text-sm text-text-secondary">Total Plays</span>
+        <span className="text-sm text-secondary">Total Plays</span>
         <span className="font-medium">{formation.totalPlays}</span>
       </div>
       <div className="flex justify-between">
-        <span className="text-sm text-text-secondary">Avg Complexity</span>
+        <span className="text-sm text-secondary">Avg Complexity</span>
         <span className="font-medium">{formation.averageComplexity}/10</span>
       </div>
     </div>
@@ -757,7 +757,7 @@ const FormationCard: React.FC<{ formation: FormationAnalytics }> = ({
     <div className="mt-spacing-md">
       <Typography
         variant="body-xs"
-        className="text-text-secondary mb-spacing-xs"
+        className="text-secondary mb-spacing-xs"
       >
         Personnel Usage
       </Typography>
@@ -791,10 +791,10 @@ const SituationalView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
           {Object.entries(analytics.situationalPerformance.byDown).map(
             ([down, stats]) => (
               <div key={down} className="flex justify-between items-center">
-                <span className="text-sm text-text-secondary">{down}</span>
+                <span className="text-sm text-secondary">{down}</span>
                 <div className="text-right">
                   <span className="font-medium">{stats.rate.toFixed(1)}%</span>
-                  <span className="text-xs text-text-muted ml-2">
+                  <span className="text-xs text-muted ml-2">
                     ({stats.called})
                   </span>
                 </div>
@@ -813,10 +813,10 @@ const SituationalView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
           {Object.entries(analytics.situationalPerformance.byFieldPosition).map(
             ([position, stats]) => (
               <div key={position} className="flex justify-between items-center">
-                <span className="text-sm text-text-secondary">{position}</span>
+                <span className="text-sm text-secondary">{position}</span>
                 <div className="text-right">
                   <span className="font-medium">{stats.rate.toFixed(1)}%</span>
-                  <span className="text-xs text-text-muted ml-spacing-xs">
+                  <span className="text-xs text-muted ml-spacing-xs">
                     ({stats.called})
                   </span>
                 </div>
@@ -838,10 +838,10 @@ const SituationalView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
                 key={personnel}
                 className="flex justify-between items-center"
               >
-                <span className="text-sm text-text-secondary">{personnel}</span>
+                <span className="text-sm text-secondary">{personnel}</span>
                 <div className="text-right">
                   <span className="font-medium">{stats.rate.toFixed(1)}%</span>
-                  <span className="text-xs text-text-muted ml-spacing-xs">
+                  <span className="text-xs text-muted ml-spacing-xs">
                     ({stats.called})
                   </span>
                 </div>
@@ -869,7 +869,7 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
         </Typography>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-spacing-md">
           <div className="text-center p-spacing-md bg-surface-success rounded-lg">
-            <Typography variant="headline-md" className="text-text-success">
+            <Typography variant="headline-md" className="text-success">
               {analytics.topPerformingPlays.length > 0
                 ? Math.max(
                     ...analytics.topPerformingPlays.map((p) => p.successRate)
@@ -877,31 +877,31 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
                 : 0}
               %
             </Typography>
-            <Typography variant="body-xs" className="text-text-success">
+            <Typography variant="body-xs" className="text-success">
               Best Play
             </Typography>
           </div>
           <div className="text-center p-spacing-md bg-surface-info rounded-lg">
-            <Typography variant="headline-md" className="text-text-info">
+            <Typography variant="headline-md" className="text-info">
               {analytics.averageSuccessRate.toFixed(1)}%
             </Typography>
-            <Typography variant="body-xs" className="text-text-info">
+            <Typography variant="body-xs" className="text-info">
               Average
             </Typography>
           </div>
           <div className="text-center p-spacing-md bg-surface-warning rounded-lg">
-            <Typography variant="headline-md" className="text-text-warning">
+            <Typography variant="headline-md" className="text-warning">
               {analytics.averageComplexity.toFixed(1)}/10
             </Typography>
-            <Typography variant="body-xs" className="text-text-warning">
+            <Typography variant="body-xs" className="text-warning">
               Complexity
             </Typography>
           </div>
           <div className="text-center p-spacing-md bg-surface-secondary rounded-lg">
-            <Typography variant="headline-md" className="text-text-primary">
+            <Typography variant="headline-md" className="text-primary">
               {analytics.formationsCount}
             </Typography>
-            <Typography variant="body-xs" className="text-text-primary">
+            <Typography variant="body-xs" className="text-primary">
               Formations
             </Typography>
           </div>
@@ -916,7 +916,7 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
         <div className="space-y-spacing-sm">
           {analytics.averageSuccessRate < 60 && (
             <div className="p-spacing-sm bg-surface-warning border border-text-warning rounded-lg">
-              <Typography variant="body-sm" className="text-text-warning">
+              <Typography variant="body-sm" className="text-warning">
                 <Icon
                   name="alert-triangle"
                   className="h-4 w-4 inline mr-spacing-xs"
@@ -928,7 +928,7 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
           )}
           {analytics.averageComplexity > 7 && (
             <div className="p-spacing-sm bg-surface-error border border-text-error rounded-lg">
-              <Typography variant="body-sm" className="text-text-error">
+              <Typography variant="body-sm" className="text-error">
                 <Icon name="zap" className="h-4 w-4 inline mr-spacing-xs" />
                 High complexity plays may be causing execution issues.
               </Typography>
@@ -936,7 +936,7 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
           )}
           {analytics.formationsCount < 3 && (
             <div className="p-spacing-sm bg-surface-info border border-text-info rounded-lg">
-              <Typography variant="body-sm" className="text-text-info">
+              <Typography variant="body-sm" className="text-info">
                 <Icon name="grid" className="h-4 w-4 inline mr-spacing-xs" />
                 Consider adding more formations for situational variety.
               </Typography>
@@ -945,7 +945,7 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
           {analytics.topPerformingPlays.length > 0 &&
             analytics.topPerformingPlays[0].successRate > 80 && (
               <div className="p-spacing-sm bg-surface-success border border-text-success rounded-lg">
-                <Typography variant="body-sm" className="text-text-success">
+                <Typography variant="body-sm" className="text-success">
                   <Icon
                     name="check-circle"
                     className="h-4 w-4 inline mr-spacing-xs"

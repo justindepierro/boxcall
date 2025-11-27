@@ -10,10 +10,10 @@ export const ROSTER_TOKENS = {
   badges: {
     // Jersey Number - Primary Brand (Jade)
     jersey: {
-      bg: "bg-[var(--semantic-primary)]",
-      text: "text-[var(--semantic-text-inverse)]",
+      bg: "bg-[var(--color-jade-500)]",
+      text: "text-white",
       border: "",
-      hover: "hover:bg-[var(--semantic-primary-hover)]",
+      hover: "hover:bg-[var(--color-jade-600)]",
     },
 
     // Position - Information (Blue)
@@ -26,10 +26,10 @@ export const ROSTER_TOKENS = {
 
     // Grade Level - Neutral (Gray/Muted)
     gradeLevel: {
-      bg: "bg-[var(--semantic-bg-muted)]",
-      text: "text-[var(--semantic-text-primary)]",
-      border: "border-[var(--semantic-border)]",
-      hover: "hover:bg-[var(--semantic-surface-subtle-hover)]",
+      bg: "bg-[var(--color-bg-muted)]",
+      text: "text-[var(--color-text-primary)]",
+      border: "border-[var(--color-border-default)]",
+      hover: "hover:bg-[var(--color-bg-surface-hover)]",
     },
 
     // Status: Active - Achievement (Green)
@@ -42,10 +42,10 @@ export const ROSTER_TOKENS = {
 
     // Status: Inactive - Muted (Gray)
     statusInactive: {
-      bg: "bg-[var(--semantic-bg-muted)]",
-      text: "text-[var(--semantic-text-muted)]",
-      border: "border-[var(--semantic-border)]",
-      hover: "hover:bg-[var(--semantic-surface-subtle-hover)]",
+      bg: "bg-[var(--color-bg-muted)]",
+      text: "text-[var(--color-text-muted)]",
+      border: "border-[var(--color-border-default)]",
+      hover: "hover:bg-[var(--color-bg-surface-hover)]",
     },
   },
 
@@ -60,25 +60,25 @@ export const ROSTER_TOKENS = {
 
     // Grade level filter chips - Neutral
     gradeLevel: {
-      bg: "bg-[var(--semantic-bg-muted)]",
-      text: "text-[var(--semantic-text-primary)]",
-      hover: "hover:bg-[var(--semantic-surface-subtle-hover)]",
+      bg: "bg-[var(--color-bg-muted)]",
+      text: "text-[var(--color-text-primary)]",
+      hover: "hover:bg-[var(--color-bg-surface-hover)]",
     },
   },
 
   // Icon Colors
   icons: {
     // Primary icons (users icon)
-    primary: "text-[var(--semantic-primary)]",
+    primary: "text-[var(--color-jade-500)]",
 
     // Success icons (check-circle for active players)
-    success: "text-[var(--semantic-success)]",
+    success: "text-[var(--color-green-500)]",
 
     // Information icons (filter icon)
-    information: "text-[var(--semantic-text-secondary)]",
+    information: "text-[var(--color-text-secondary)]",
 
     // Selected/Check icons
-    selected: "text-[var(--semantic-primary)]",
+    selected: "text-[var(--color-jade-500)]",
   },
 } as const;
 

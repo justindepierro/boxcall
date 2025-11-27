@@ -130,7 +130,7 @@ export function PracticePlanner() {
   if (!teamId) {
     return (
       <div className="min-h-screen surface-app flex items-center justify-center">
-        <Typography variant="body-lg" className="text-text-secondary">
+        <Typography variant="body-lg" className="text-secondary">
           Team not found
         </Typography>
       </div>
@@ -164,12 +164,12 @@ export function PracticePlanner() {
             <Button
               variant="ghost"
               onClick={() => navigate(`/team/${teamId}`)}
-              className="text-text-secondary hover:text-text-primary"
+              className="text-secondary hover:text-primary"
             >
               ← Back to Team
             </Button>
             {selectedSchedule && (
-              <div className="text-sm text-text-secondary">
+              <div className="text-sm text-secondary">
                 {format(selectedSchedule.date, "MMM d, yyyy")} •{" "}
                 {selectedSchedule.location}
               </div>
@@ -204,7 +204,7 @@ export function PracticePlanner() {
                   <div className="flex items-center justify-between mb-6">
                     <Typography
                       variant="headline-md"
-                      className="text-text-primary"
+                      className="text-primary"
                     >
                       Practice Blocks
                     </Typography>
@@ -216,7 +216,7 @@ export function PracticePlanner() {
                       <Button
                         onClick={() => setIsPDFExportOpen(true)}
                         variant="secondary"
-                        className="surface-card border-subtle text-text-secondary hover:text-text-primary surface-subtle-hover flex items-center gap-2"
+                        className="bg-primary border-subtle text-secondary hover:text-primary surface-subtle-hover flex items-center gap-2"
                         disabled={currentBlocks.length === 0}
                       >
                         <Icon name="pdf" size="sm" />
@@ -230,7 +230,7 @@ export function PracticePlanner() {
                             navigate(`/teams/${teamId}/season-schedule`)
                           }
                           variant="secondary"
-                          className="surface-card border-subtle text-text-secondary hover:text-text-primary surface-subtle-hover flex items-center gap-2"
+                          className="bg-primary border-subtle text-secondary hover:text-primary surface-subtle-hover flex items-center gap-2"
                         >
                           <Icon name="plus-circle" size="sm" />
                           Add/Edit Season Schedule
@@ -248,7 +248,7 @@ export function PracticePlanner() {
                           <Icon
                             name="play"
                             size="sm"
-                            className="text-text-primary"
+                            className="text-primary"
                           />
                           Start Practice
                         </Button>
@@ -262,7 +262,7 @@ export function PracticePlanner() {
                             <Icon
                               name="power"
                               size="sm"
-                              className="text-text-error"
+                              className="text-error"
                             />
                             End Practice
                           </Button>
@@ -302,13 +302,13 @@ export function PracticePlanner() {
                             <div className="text-center py-8">
                               <Typography
                                 variant="body-lg"
-                                className="text-text-muted mb-4"
+                                className="text-muted mb-4"
                               >
                                 No practice blocks yet
                               </Typography>
                               <Typography
                                 variant="body-sm"
-                                className="text-text-muted"
+                                className="text-muted"
                               >
                                 Add blocks using the quick actions or create
                                 custom blocks
@@ -326,7 +326,7 @@ export function PracticePlanner() {
                                   <div
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
-                                    className={`surface-card border-subtle rounded-lg p-4 shadow-sm transition-shadow ${
+                                    className={`bg-primary border-subtle rounded-lg p-4 shadow-sm transition-shadow ${
                                       snapshot.isDragging
                                         ? "shadow-lg"
                                         : "hover:shadow-md"
@@ -348,7 +348,7 @@ export function PracticePlanner() {
                                           <div className="flex items-center space-x-3">
                                             <Typography
                                               variant="body-lg"
-                                              className="font-semibold text-text-primary"
+                                              className="font-semibold text-primary"
                                             >
                                               {block.title}
                                             </Typography>
@@ -356,10 +356,10 @@ export function PracticePlanner() {
                                               <Icon
                                                 name="lock"
                                                 size="sm"
-                                                className="text-text-warning"
+                                                className="text-warning"
                                               />
                                             )}
-                                            <span className="px-2 py-1 surface-subtle text-text-secondary rounded-lg text-sm font-mono">
+                                            <span className="px-2 py-1 surface-subtle text-secondary rounded-lg text-sm font-mono">
                                               {block.duration}min
                                             </span>
                                             {practiceStarted && (
@@ -376,7 +376,7 @@ export function PracticePlanner() {
                                           {block.description && (
                                             <Typography
                                               variant="body-sm"
-                                              className="text-text-secondary mt-1"
+                                              className="text-secondary mt-1"
                                             >
                                               {block.description}
                                             </Typography>
@@ -417,7 +417,7 @@ export function PracticePlanner() {
                                             handleDeleteBlock(block.id)
                                           }
                                           disabled={lockedSchedule}
-                                          className="text-text-error hover:text-text-error hover:surface-subtle"
+                                          className="text-error hover:text-error hover:surface-subtle"
                                         >
                                           <Icon name="delete" size="sm" />
                                         </Button>
@@ -445,7 +445,7 @@ export function PracticePlanner() {
                   <div className="p-4">
                     <Typography
                       variant="headline-sm"
-                      className="text-text-primary mb-4"
+                      className="text-primary mb-4"
                     >
                       Quick Add Blocks
                     </Typography>
@@ -455,7 +455,7 @@ export function PracticePlanner() {
                           <div key={key} className="space-y-2">
                             <Typography
                               variant="body-sm"
-                              className="font-medium text-text-secondary"
+                              className="font-medium text-secondary"
                             >
                               {config.title}
                             </Typography>
@@ -492,7 +492,7 @@ export function PracticePlanner() {
                   <div className="p-4">
                     <Typography
                       variant="headline-sm"
-                      className="text-text-primary mb-4"
+                      className="text-primary mb-4"
                     >
                       Custom Block
                     </Typography>
@@ -512,7 +512,7 @@ export function PracticePlanner() {
                   <div className="p-4">
                     <Typography
                       variant="headline-sm"
-                      className="text-text-primary mb-4"
+                      className="text-primary mb-4"
                     >
                       Practice Templates
                     </Typography>

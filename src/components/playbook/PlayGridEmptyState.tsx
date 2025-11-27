@@ -96,12 +96,12 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
                 <div className="flex-1">
                   <Typography
                     variant="body-sm"
-                    className="font-semibold text-text-primary mb-1"
+                    className="font-semibold text-primary mb-1"
                   >
                     {totalPlayCount} {totalPlayCount === 1 ? "Play" : "Plays"}{" "}
                     Hidden by Filters
                   </Typography>
-                  <Typography variant="body-xs" className="text-text-secondary">
+                  <Typography variant="body-xs" className="text-secondary">
                     Your active filters are hiding all plays. Tap below to see
                     your entire playbook.
                   </Typography>
@@ -149,14 +149,14 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
 
             <Typography
               variant="headline-lg"
-              className="text-text-primary mb-2 text-center"
+              className="text-primary mb-2 text-center"
             >
               No Plays Found
             </Typography>
 
             <Typography
               variant="body"
-              className="text-text-secondary mb-8 text-center max-w-md"
+              className="text-secondary mb-8 text-center max-w-md"
             >
               {searchQuery
                 ? `No plays match "${searchQuery}"`
@@ -224,11 +224,11 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
                 <div>
                   <Typography
                     variant="body-sm"
-                    className="font-semibold mb-1 text-text-primary"
+                    className="font-semibold mb-1 text-primary"
                   >
                     Quick Tip
                   </Typography>
-                  <Typography variant="body-xs" className="text-text-secondary">
+                  <Typography variant="body-xs" className="text-secondary">
                     Clear individual filters in the filter menu, or use the
                     button above to reset everything at once.
                   </Typography>
@@ -265,14 +265,14 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
 
         <Typography
           variant="headline-lg"
-          className="text-text-primary mb-2 text-center"
+          className="text-primary mb-2 text-center"
         >
           Your Playbook is Empty
         </Typography>
 
         <Typography
           variant="body"
-          className="text-text-secondary mb-8 text-center max-w-md"
+          className="text-secondary mb-8 text-center max-w-md"
         >
           Get started by creating your first play or try one of our sample
           templates below.
@@ -298,7 +298,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
         <div className="max-w-3xl w-full mb-8">
           <Typography
             variant="body-sm"
-            className="text-text-secondary text-center mb-4 font-semibold"
+            className="text-secondary text-center mb-4 font-semibold"
           >
             Popular Starting Templates
           </Typography>
@@ -307,7 +307,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleCreatePlay}
-              className="p-4 rounded-xl bg-surface-secondary hover:bg-surface-tertiary border border-border-subtle hover:border-brand-jade transition-all text-left"
+              className="p-4 rounded-xl bg-surface-secondary hover:bg-surface-tertiary border border-subtle hover:border-brand-jade transition-all text-left"
             >
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center flex-shrink-0">
@@ -316,11 +316,11 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
                 <div>
                   <Typography
                     variant="body-sm"
-                    className="font-semibold mb-1 text-text-primary"
+                    className="font-semibold mb-1 text-primary"
                   >
                     Quick Pass
                   </Typography>
-                  <Typography variant="body-xs" className="text-text-muted">
+                  <Typography variant="body-xs" className="text-muted">
                     Shotgun • 3-step drop
                   </Typography>
                 </div>
@@ -331,7 +331,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleCreatePlay}
-              className="p-4 rounded-xl bg-surface-secondary hover:bg-surface-tertiary border border-border-subtle hover:border-brand-jade transition-all text-left"
+              className="p-4 rounded-xl bg-surface-secondary hover:bg-surface-tertiary border border-subtle hover:border-brand-jade transition-all text-left"
             >
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center flex-shrink-0">
@@ -340,11 +340,11 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
                 <div>
                   <Typography
                     variant="body-sm"
-                    className="font-semibold mb-1 text-text-primary"
+                    className="font-semibold mb-1 text-primary"
                   >
                     Power Run
                   </Typography>
-                  <Typography variant="body-xs" className="text-text-muted">
+                  <Typography variant="body-xs" className="text-muted">
                     I-Form • Inside zone
                   </Typography>
                 </div>
@@ -355,7 +355,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleCreatePlay}
-              className="p-4 rounded-xl bg-surface-secondary hover:bg-surface-tertiary border border-border-subtle hover:border-brand-jade transition-all text-left"
+              className="p-4 rounded-xl bg-surface-secondary hover:bg-surface-tertiary border border-subtle hover:border-brand-jade transition-all text-left"
             >
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
@@ -364,11 +364,11 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
                 <div>
                   <Typography
                     variant="body-sm"
-                    className="font-semibold mb-1 text-text-primary"
+                    className="font-semibold mb-1 text-primary"
                   >
                     Play Action
                   </Typography>
-                  <Typography variant="body-xs" className="text-text-muted">
+                  <Typography variant="body-xs" className="text-muted">
                     Under Center • Boot
                   </Typography>
                 </div>
@@ -402,7 +402,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
             <Typography variant="body-sm" className="font-semibold mb-1">
               Quick Builder
             </Typography>
-            <Typography variant="body-xs" className="text-text-muted">
+            <Typography variant="body-xs" className="text-muted">
               Create plays in seconds with our step-by-step wizard
             </Typography>
           </div>
@@ -414,7 +414,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
             <Typography variant="body-sm" className="font-semibold mb-1">
               CSV Import
             </Typography>
-            <Typography variant="body-xs" className="text-text-muted">
+            <Typography variant="body-xs" className="text-muted">
               Bulk import your existing plays from spreadsheets
             </Typography>
           </div>
@@ -426,7 +426,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
             <Typography variant="body-sm" className="font-semibold mb-1">
               Visual Diagrams
             </Typography>
-            <Typography variant="body-xs" className="text-text-muted">
+            <Typography variant="body-xs" className="text-muted">
               Draw routes and formations with our diagram tool
             </Typography>
           </div>

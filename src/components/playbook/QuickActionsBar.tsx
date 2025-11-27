@@ -62,7 +62,7 @@ export const QuickActionsBar: React.FC<QuickActionsBarProps> = ({
             >
               {/* Mobile: Show label outside button */}
               {isMobile && (
-                <span className="text-sm font-medium text-text-primary px-3 py-2 bg-surface-card rounded-lg shadow-md">
+                <span className="text-sm font-medium text-primary px-3 py-2 bg-surface-primary rounded-lg shadow-md">
                   {action.label}
                 </span>
               )}

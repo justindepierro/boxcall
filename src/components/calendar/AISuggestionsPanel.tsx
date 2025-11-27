@@ -22,8 +22,8 @@ export const AISuggestionsPanel: React.FC<AISuggestionsPanelProps> = ({
   return (
     <Card className={`calendar-card ${className || ""}`.trim()}>
       <div className="flex items-center gap-2 mb-4">
-        <Icon name="lightbulb" size="lg" className="text-text-warning" />
-        <Typography variant="label-lg" className="text-text-primary">
+        <Icon name="lightbulb" size="lg" className="text-warning" />
+        <Typography variant="label-lg" className="text-primary">
           Smart Suggestions
         </Typography>
       </div>
@@ -83,9 +83,9 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({
   };
 
   const getConfidenceColor = (confidence: number) => {
-    if (confidence >= 0.8) return "text-text-success";
-    if (confidence >= 0.6) return "text-text-warning";
-    return "text-text-error";
+    if (confidence >= 0.8) return "text-success";
+    if (confidence >= 0.6) return "text-warning";
+    return "text-error";
   };
 
   return (
@@ -99,7 +99,7 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({
           />
           <Typography
             variant="body-sm"
-            className="font-medium text-text-primary"
+            className="font-medium text-primary"
           >
             {suggestion.title}
           </Typography>
@@ -137,14 +137,14 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({
         <div className="mb-3">
           <Typography
             variant="caption"
-            className="text-text-error font-medium mb-1"
+            className="text-error font-medium mb-1"
           >
             ⚠️ Potential conflicts:
           </Typography>
           <ul className="ml-2">
             {suggestion.conflicts.map((conflict, index) => (
               <li key={index}>
-                <Typography variant="caption" className="text-text-error">
+                <Typography variant="caption" className="text-error">
                   • {conflict}
                 </Typography>
               </li>
@@ -159,7 +159,7 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({
             <Typography
               key={index}
               variant="caption"
-              className="bg-surface-success text-text-success px-2 py-1 rounded-lg"
+              className="bg-surface-success text-success px-2 py-1 rounded-lg"
               as="span"
             >
               {benefit}
@@ -169,7 +169,7 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({
 
         <button
           onClick={onApply}
-          className="bg-navy-600 text-text-inverse px-3 py-1 rounded-lg hover:bg-navy-700 transition-colors"
+          className="bg-navy-600 text-inverse px-3 py-1 rounded-lg hover:bg-navy-700 transition-colors"
         >
           <Typography variant="caption" as="span">
             Apply

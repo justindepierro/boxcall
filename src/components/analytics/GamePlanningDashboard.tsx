@@ -66,7 +66,7 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
           <Typography variant="headline-sm" className="mb-2">
             Error Loading Analytics
           </Typography>
-          <Typography variant="body-sm" className="text-text-secondary mb-4">
+          <Typography variant="body-sm" className="text-secondary mb-4">
             {error}
           </Typography>
           <Button onClick={loadAnalytics} variant="outline">
@@ -90,7 +90,7 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
       <div className="flex items-center justify-between">
         <div>
           <Typography variant="headline-lg">Game Planning Analytics</Typography>
-          <Typography variant="body-sm" className="text-text-secondary mt-1">
+          <Typography variant="body-sm" className="text-secondary mt-1">
             Brian Billick methodology insights and optimization opportunities
           </Typography>
         </div>
@@ -107,7 +107,7 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
             <div>
               <Typography
                 variant="body-xs"
-                className="text-text-secondary uppercase tracking-wide"
+                className="text-secondary uppercase tracking-wide"
               >
                 Total Game Plans
               </Typography>
@@ -124,7 +124,7 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
             <div>
               <Typography
                 variant="body-xs"
-                className="text-text-secondary uppercase tracking-wide"
+                className="text-secondary uppercase tracking-wide"
               >
                 Active Plans
               </Typography>
@@ -141,7 +141,7 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
             <div>
               <Typography
                 variant="body-xs"
-                className="text-text-secondary uppercase tracking-wide"
+                className="text-secondary uppercase tracking-wide"
               >
                 Situation Coverage
               </Typography>
@@ -158,7 +158,7 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
             <div>
               <Typography
                 variant="body-xs"
-                className="text-text-secondary uppercase tracking-wide"
+                className="text-secondary uppercase tracking-wide"
               >
                 Play Assignments
               </Typography>
@@ -178,12 +178,12 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
         </Typography>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="text-center">
-            <div className="text-2xl font-bold text-text-secondary">
+            <div className="text-2xl font-bold text-secondary">
               {insights.preparationStatus.draft}
             </div>
             <Typography
               variant="body-xs"
-              className="text-text-secondary uppercase tracking-wide"
+              className="text-secondary uppercase tracking-wide"
             >
               Draft
             </Typography>
@@ -194,7 +194,7 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
             </div>
             <Typography
               variant="body-xs"
-              className="text-text-secondary uppercase tracking-wide"
+              className="text-secondary uppercase tracking-wide"
             >
               In Progress
             </Typography>
@@ -205,7 +205,7 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
             </div>
             <Typography
               variant="body-xs"
-              className="text-text-secondary uppercase tracking-wide"
+              className="text-secondary uppercase tracking-wide"
             >
               Complete
             </Typography>
@@ -216,7 +216,7 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
             </div>
             <Typography
               variant="body-xs"
-              className="text-text-secondary uppercase tracking-wide"
+              className="text-secondary uppercase tracking-wide"
             >
               Game Ready
             </Typography>
@@ -246,7 +246,7 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
           ) : (
             <Typography
               variant="body-sm"
-              className="text-text-secondary italic"
+              className="text-secondary italic"
             >
               No significant strengths identified yet
             </Typography>
@@ -275,7 +275,7 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
           ) : (
             <Typography
               variant="body-sm"
-              className="text-text-secondary italic"
+              className="text-secondary italic"
             >
               No significant weaknesses identified
             </Typography>
@@ -307,7 +307,7 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
             )}
           </div>
         ) : (
-          <Typography variant="body-sm" className="text-text-secondary italic">
+          <Typography variant="body-sm" className="text-secondary italic">
             No specific recommendations at this time
           </Typography>
         )}
@@ -341,8 +341,8 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
                         insights.coachingEffectiveness.averageExecutionQuality /
                           2
                       )
-                        ? "text-text-warning fill-current"
-                        : "text-text-muted"
+                        ? "text-warning fill-current"
+                        : "text-muted"
                     }`}
                   />
                 ))}
@@ -373,11 +373,11 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
                     <Icon
                       name="message"
                       size="sm"
-                      className="text-text-secondary mt-0.5 mr-2 flex-shrink-0"
+                      className="text-secondary mt-0.5 mr-2 flex-shrink-0"
                     />
                     <Typography
                       variant="body-xs"
-                      className="text-text-secondary"
+                      className="text-secondary"
                     >
                       {assessment}
                     </Typography>
@@ -399,7 +399,7 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
             {insights.optimizationOpportunities.map((opportunity, index) => (
               <div
                 key={index}
-                className="border border-border-medium rounded-lg p-4"
+                className="border border-medium rounded-lg p-4"
               >
                 <div className="flex items-start justify-between mb-2">
                   <div>
@@ -408,7 +408,7 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
                     </Typography>
                     <Typography
                       variant="body-xs"
-                      className="text-text-secondary"
+                      className="text-secondary"
                     >
                       Situation: {opportunity.situationId}
                     </Typography>
@@ -435,7 +435,7 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
                     Current: {opportunity.currentPriority} → Suggested:{" "}
                     {opportunity.suggestedPriority}
                   </span>
-                  <div className="text-text-secondary">
+                  <div className="text-secondary">
                     Success Rate:{" "}
                     {opportunity.historicalData.successRate.toFixed(1)}% |
                     Executions: {opportunity.historicalData.executionCount}

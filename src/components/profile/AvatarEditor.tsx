@@ -186,7 +186,7 @@ export const AvatarEditor: React.FC<AvatarEditorProps> = ({
         </div>
 
         {/* Help Text */}
-        <div className="flex items-center justify-center gap-2 mb-spacing-md text-text-secondary">
+        <div className="flex items-center justify-center gap-2 mb-spacing-md text-secondary">
           <Move className="w-4 h-4" />
           <Typography variant="body-xs">
             Drag to position • Zoom to size • Rotate to adjust

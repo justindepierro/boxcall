@@ -16,33 +16,35 @@ import type { CardProps, CardStylesConfig } from "./Card.types";
  * - Similar to Linear, Notion, Figma
  * - Borders reserved for inputs, dividers only
  * - Shadows create visual hierarchy
+ * - Enhanced with modern dramatic hover states
  *
  * Uses surfaceTokens from design-system/tokens.ts
  */
 const cardStyles: CardStylesConfig = {
-  base: "rounded-lg transition-all duration-200 ease-in-out overflow-visible",
+  base: "rounded-lg transition-all duration-300 ease-out overflow-visible",
   variants: {
     // Default: Standard card with medium shadow (MOST COMMON)
-    default: "bg-surface-primary shadow-md hover:shadow-lg",
+    default: "bg-white shadow-md hover:shadow-xl",
 
-    // Elevated: Stronger shadow for prominent cards
-    elevated: "bg-surface-primary shadow-lg hover:shadow-xl",
+    // Elevated: Stronger shadow for prominent cards - MORE DRAMATIC
+    elevated: "bg-white shadow-lg hover:shadow-2xl",
 
     // Subtle: Minimal shadow for secondary content
-    subtle: "bg-surface-secondary shadow-sm hover:shadow-md",
+    subtle: "bg-gray-50 shadow-sm hover:shadow-lg",
 
     // Glass: Translucent with backdrop blur
-    glass: "bg-surface-primary/80 backdrop-blur-sm shadow-lg hover:shadow-xl",
+    glass:
+      "bg-white/80 backdrop-blur-sm shadow-lg hover:shadow-2xl border border-gray-200",
 
     // Filled: Muted background, no elevation (for backgrounds)
-    filled: "bg-surface-muted shadow-none hover:shadow-sm",
+    filled: "bg-gray-100 shadow-none hover:shadow-md",
 
-    // Accent: Brand gradient with shadow
+    // Accent: Brand gradient with shadow - MORE VIBRANT
     accent:
-      "bg-gradient-to-br from-brand-primary/15 via-surface-secondary to-surface-muted hover:from-brand-primary/20 shadow-md hover:shadow-lg",
+      "bg-gradient-to-br from-jade-500/15 via-gray-50 to-gray-100 hover:from-jade-500/25 shadow-lg hover:shadow-xl",
 
     // Floating: Maximum shadow for modals/overlays
-    floating: "bg-surface-primary shadow-2xl",
+    floating: "bg-white shadow-2xl",
   },
   sizes: {
     sm: "p-3", // 12px - compact
@@ -51,7 +53,7 @@ const cardStyles: CardStylesConfig = {
     xl: "p-8", // 32px - hero sections
   },
   interactive:
-    "cursor-pointer hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus:ring-2 focus:ring-brand-primary/20",
+    "cursor-pointer hover:-translate-y-1 hover:scale-[1.01] active:translate-y-0 active:scale-100 focus-visible:outline-none focus:ring-2 focus:ring-brand-primary/20",
   disabled: "opacity-50 cursor-not-allowed",
   loading: "animate-pulse",
 };

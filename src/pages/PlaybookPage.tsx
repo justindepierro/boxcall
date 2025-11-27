@@ -305,8 +305,6 @@ export default function PlaybookPage() {
   const [showPlaybookSettingsModal, setShowPlaybookSettingsModal] =
     useState(false);
   const [showPersonnelModal, setShowPersonnelModal] = useState(false);
-  const [showFormationBuilderModal, setShowFormationBuilderModal] =
-    useState(false);
   const [showPlaybookHealthModal, setShowPlaybookHealthModal] = useState(false);
   const [showStatsSheet, setShowStatsSheet] = useState(false);
   const [showPostToBulletinModal, setShowPostToBulletinModal] = useState(false);
@@ -607,18 +605,6 @@ export default function PlaybookPage() {
     // Wait 2s after page load, then preload heavy components
     const preloadTimer = setTimeout(() => {
       debug("[PlaybookPage] Preloading heavy modals during idle time...");
-
-      // Preload FormationBuilderModal (~120KB)
-      import("../components/playbook/FormationBuilderModal").catch(() => {
-        // Silent fail - will load on demand if preload fails
-      });
-
-      // Preload DiagramEditor (~150KB+)
-      import("../components/playbook/diagram-editor/DiagramEditor").catch(
-        () => {
-          // Silent fail
-        }
-      );
 
       // Preload AddNewPlayModal
       import("../components/playbook/AddNewPlayModal").catch(() => {
@@ -1016,7 +1002,6 @@ export default function PlaybookPage() {
           showAddNewPlayModal={showAddNewPlayModal}
           showPlaybookSettingsModal={showPlaybookSettingsModal}
           showPersonnelModal={showPersonnelModal}
-          showFormationBuilderModal={showFormationBuilderModal}
           showPlaybookHealthModal={showPlaybookHealthModal}
           showAssignmentsModal={showAssignmentsModal}
           showKeyboardShortcutsModal={showKeyboardShortcutsModal}
@@ -1031,7 +1016,6 @@ export default function PlaybookPage() {
           setShowAddNewPlayModal={setShowAddNewPlayModal}
           setShowPlaybookSettingsModal={setShowPlaybookSettingsModal}
           setShowPersonnelModal={setShowPersonnelModal}
-          setShowFormationBuilderModal={setShowFormationBuilderModal}
           setShowPlaybookHealthModal={setShowPlaybookHealthModal}
           setShowAssignmentsModal={setShowAssignmentsModal}
           setShowKeyboardShortcutsModal={setShowKeyboardShortcutsModal}
@@ -1065,8 +1049,8 @@ export default function PlaybookPage() {
           >
             <div className="flex flex-col h-full">
               {/* Header */}
-              <div className="flex items-center justify-between p-6 pb-4 border-b border-border-subtle">
-                <Typography variant="headline-md" className="text-text-primary">
+              <div className="flex items-center justify-between p-6 pb-4 border-b border-subtle">
+                <Typography variant="headline-md" className="text-primary">
                   Filters & Search
                 </Typography>
                 <Button
@@ -1087,7 +1071,7 @@ export default function PlaybookPage() {
               </div>
 
               {/* Action Footer - Fixed at Bottom */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 bg-surface-primary border-t border-border-subtle shadow-lg">
+              <div className="absolute bottom-0 left-0 right-0 p-4 bg-primary border-t border-subtle shadow-lg">
                 <div className="flex gap-3">
                   <Button
                     onClick={() => {
@@ -1111,7 +1095,7 @@ export default function PlaybookPage() {
                   </Button>
                 </div>
                 {Object.keys(state.advancedFilters).length > 0 && (
-                  <p className="text-center text-xs text-text-secondary mt-2">
+                  <p className="text-center text-xs text-secondary mt-2">
                     {Object.keys(state.advancedFilters).length} filter
                     {Object.keys(state.advancedFilters).length === 1
                       ? ""

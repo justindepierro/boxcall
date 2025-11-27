@@ -65,7 +65,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
                 onClick={() => handleAction("add-tags")}
                 className="flex items-center justify-end gap-3 group"
               >
-                <span className="px-3 py-2 bg-surface-primary rounded-lg shadow-md text-sm font-medium text-text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                <span className="px-3 py-2 bg-surface-primary rounded-lg shadow-md text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   Add Tags
                 </span>
                 <div className="w-12 h-12 bg-surface-primary rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform">
@@ -77,11 +77,11 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
                 onClick={() => handleAction("duplicate")}
                 className="flex items-center justify-end gap-3 group"
               >
-                <span className="px-3 py-2 bg-surface-primary rounded-lg shadow-md text-sm font-medium text-text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                <span className="px-3 py-2 bg-surface-primary rounded-lg shadow-md text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   Duplicate
                 </span>
                 <div className="w-12 h-12 bg-surface-primary rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform">
-                  <Icon name="copy" className="w-5 h-5 text-text-secondary" />
+                  <Icon name="copy" className="w-5 h-5 text-secondary" />
                 </div>
               </button>
 
@@ -89,7 +89,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
                 onClick={() => handleAction("add-to-practice")}
                 className="flex items-center justify-end gap-3 group"
               >
-                <span className="px-3 py-2 bg-surface-primary rounded-lg shadow-md text-sm font-medium text-text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                <span className="px-3 py-2 bg-surface-primary rounded-lg shadow-md text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   Add to Practice
                 </span>
                 <div className="w-12 h-12 bg-brand-jade rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform">
@@ -101,11 +101,11 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
                 onClick={() => handleAction("batch-edit")}
                 className="flex items-center justify-end gap-3 group"
               >
-                <span className="px-3 py-2 bg-surface-primary rounded-lg shadow-md text-sm font-medium text-text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                <span className="px-3 py-2 bg-surface-primary rounded-lg shadow-md text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   Edit Properties
                 </span>
                 <div className="w-12 h-12 bg-surface-primary rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform">
-                  <Icon name="edit" className="w-5 h-5 text-text-secondary" />
+                  <Icon name="edit" className="w-5 h-5 text-secondary" />
                 </div>
               </button>
 
@@ -113,13 +113,13 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
                 onClick={() => handleAction("export")}
                 className="flex items-center justify-end gap-3 group"
               >
-                <span className="px-3 py-2 bg-surface-primary rounded-lg shadow-md text-sm font-medium text-text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                <span className="px-3 py-2 bg-surface-primary rounded-lg shadow-md text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   Export
                 </span>
                 <div className="w-12 h-12 bg-surface-primary rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform">
                   <Icon
                     name="download"
-                    className="w-5 h-5 text-text-secondary"
+                    className="w-5 h-5 text-secondary"
                   />
                 </div>
               </button>
@@ -128,7 +128,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
                 onClick={() => handleAction("delete")}
                 className="flex items-center justify-end gap-3 group"
               >
-                <span className="px-3 py-2 bg-surface-primary rounded-lg shadow-md text-sm font-medium text-text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                <span className="px-3 py-2 bg-surface-primary rounded-lg shadow-md text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   Delete
                 </span>
                 <div className="w-12 h-12 bg-error-500 rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform">
@@ -140,11 +140,11 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
                 onClick={handleClear}
                 className="flex items-center justify-end gap-3 group"
               >
-                <span className="px-3 py-2 bg-surface-primary rounded-lg shadow-md text-sm font-medium text-text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                <span className="px-3 py-2 bg-surface-primary rounded-lg shadow-md text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   Clear Selection
                 </span>
                 <div className="w-12 h-12 bg-surface-primary rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform">
-                  <Icon name="close" className="w-5 h-5 text-text-muted" />
+                  <Icon name="close" className="w-5 h-5 text-muted" />
                 </div>
               </button>
             </div>
@@ -175,14 +175,14 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
 
   // Desktop: Horizontal Toolbar
   return (
-    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 surface-card rounded-lg shadow-lg border border-border-medium p-3 z-50">
+    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-surface-primary rounded-lg shadow-lg border border-medium p-3 z-50">
       <div className="flex items-center space-x-4">
         {/* Selection Count */}
         <div className="flex items-center space-x-2">
           <Typography
             variant="body-sm"
             as="span"
-            className="font-medium text-text-primary"
+            className="font-medium text-primary"
           >
             {selectedCount} play{selectedCount !== 1 ? "s" : ""} selected
           </Typography>
@@ -194,7 +194,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
               icon={<Icon name="close" className="w-4 h-4" />}
               iconPosition="only"
               aria-label="Clear selection"
-              className="text-text-muted hover:text-text-secondary [&_svg]:w-4 [&_svg]:h-4"
+              className="text-muted hover:text-secondary [&_svg]:w-4 [&_svg]:h-4"
             />
           </Tooltip>
         </div>
@@ -209,7 +209,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
             variant="ghost"
             size="sm"
             icon={<Icon name="tag" className="w-4 h-4" />}
-            className="text-text-secondary hover:text-text-primary"
+            className="text-secondary hover:text-primary"
             title="Add tags to selected plays"
           >
             Tag
@@ -220,7 +220,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
             variant="ghost"
             size="sm"
             icon={<Icon name="copy" className="w-4 h-4" />}
-            className="text-text-secondary hover:text-text-primary"
+            className="text-secondary hover:text-primary"
             title="Duplicate selected plays"
           >
             Duplicate
@@ -251,7 +251,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
             variant="ghost"
             size="sm"
             icon={<Icon name="download" className="w-4 h-4" />}
-            className="text-text-secondary hover:text-text-primary"
+            className="text-secondary hover:text-primary"
             title="Export selected plays"
           >
             Export

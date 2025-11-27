@@ -145,7 +145,7 @@ export const CollaborativeAdaptiveChart: React.FC<
         {/* Interactive Data Editing Overlay */}
         {isEditingData && allowDataEditing && (
           <div className="absolute top-8 left-0 right-0 bg-surface-secondary/90 backdrop-blur-sm rounded-lg p-2 z-10">
-            <div className="text-xs text-text-secondary mb-2">
+            <div className="text-xs text-secondary mb-2">
               Click and drag data points to edit values (changes will be shared
               with collaborators)
             </div>
@@ -159,13 +159,13 @@ export const CollaborativeAdaptiveChart: React.FC<
                     onChange={(e) =>
                       handleLocalDataEdit(Number(e.target.value), index)
                     }
-                    className="w-12 px-1 py-0.5 text-xs border border-border-primary rounded-lg"
+                    className="w-12 px-1 py-0.5 text-xs border border-primary rounded-lg"
                     step="0.1"
                   />
                 </div>
               ))}
               {localData.data.length > 5 && (
-                <span className="text-xs text-text-muted">
+                <span className="text-xs text-muted">
                   +{localData.data.length - 5} more...
                 </span>
               )}
@@ -181,7 +181,7 @@ export const CollaborativeAdaptiveChart: React.FC<
         />
 
         {/* Data Summary for Collaboration Context */}
-        <div className="mt-2 text-xs text-text-muted">
+        <div className="mt-2 text-xs text-muted">
           {localData.data.length} data points • Last updated:{" "}
           {new Date().toLocaleTimeString()}
           {allowDataEditing && (
