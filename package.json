@@ -41,7 +41,7 @@
     "type-check": "tsc --noEmit",
     "test": "NODE_OPTIONS='--max-old-space-size=4096' vitest run",
     "test:unit": "NODE_OPTIONS='--max-old-space-size=4096' vitest run --project=unit",
-    "test:ci": "NODE_OPTIONS='--max-old-space-size=4096' vitest run --project=unit",
+    "test:ci": "NODE_OPTIONS='--max-old-space-size=4096' vitest run --project=unit --reporter=basic --no-coverage",
     "test:storybook:vitest": "NODE_OPTIONS='--max-old-space-size=4096' vitest run --project=storybook",
     "test:watch": "NODE_OPTIONS='--max-old-space-size=4096' vitest --watch --project=unit",
     "test:coverage": "NODE_OPTIONS='--max-old-space-size=4096' vitest run --project=unit --coverage",
