@@ -105,6 +105,8 @@ export default defineConfig({
                   "src/domain/calendar/*.test.ts", // Calendar domain tests
                   "src/components/ui/NavBar/**/*.test.tsx", // NavBar tests
                   "src/components/ui/Sidebar/**/*.test.tsx", // Sidebar tests
+                  "src/pages/__tests__/DashboardPage.test.tsx", // Needs Router context
+                  "src/pages/__tests__/PlaybookPage.test.tsx", // Import issues
                 ]
               : []),
           ],

@@ -42,10 +42,11 @@ export class OfflineExecutionQueue {
     // Respect max queue size, but keep unsynced items
     if (queue.length > MAX_QUEUE_SIZE) {
       const unsynced = queue.filter((e) => !e.synced);
+      const availableSpace = Math.max(0, MAX_QUEUE_SIZE - unsynced.length);
       const synced = queue
         .filter((e) => e.synced)
         .sort((a, b) => b.timestamp - a.timestamp)
-        .slice(0, Math.max(0, MAX_QUEUE_SIZE - unsynced.length));
+        .slice(0, availableSpace);
       this.saveQueue([...unsynced, ...synced]);
     } else {
       this.saveQueue(queue);
