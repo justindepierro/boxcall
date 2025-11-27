@@ -202,37 +202,45 @@ h6 {
 /* Directional divider utilities - iOS-style subtle separators */
 @layer components {
   .divider-t {
-    @apply border-t border-muted;
+    border-top-width: 1px;
+    border-top-color: var(--color-border-muted);
   }
 
   .divider-b {
-    @apply border-b border-muted;
+    border-bottom-width: 1px;
+    border-bottom-color: var(--color-border-muted);
   }
 
   .divider-l {
-    @apply border-l border-divider;
+    border-left-width: 1px;
+    border-left-color: var(--color-border-muted);
   }
 
   .divider-r {
-    @apply border-r border-divider;
+    border-right-width: 1px;
+    border-right-color: var(--color-border-muted);
   }
 
   /* Medium strength dividers - still subtle */
   .divider-t-medium {
-    @apply border-t border-secondary;
+    border-top-width: 1px;
+    border-top-color: var(--color-border-secondary);
   }
 
   .divider-b-medium {
-    @apply border-b border-secondary;
+    border-bottom-width: 1px;
+    border-bottom-color: var(--color-border-secondary);
   }
 
   /* Strong dividers - for when you really need separation */
   .divider-t-strong {
-    @apply border-t border-primary;
+    border-top-width: 1px;
+    border-top-color: var(--color-border-primary);
   }
 
   .divider-b-strong {
-    @apply border-b border-primary;
+    border-bottom-width: 1px;
+    border-bottom-color: var(--color-border-primary);
   }
 }
 
