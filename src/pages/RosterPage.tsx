@@ -30,6 +30,7 @@ const BulkEditModal = lazy(() =>
     default: m.BulkEditModal,
   }))
 );
+import { useMobileModal } from '../hooks/useMobileModal';
 import type { BulkEditUpdates } from "../components/roster/BulkEditModal";
 import { info, error as logError } from "../utils/logger";
 import { useToast } from "../hooks/useToast";
@@ -120,6 +121,7 @@ export default function RosterPage() {
 
   // Modal and form state (not extracted - specific to this page)
   const [showAddModal, setShowAddModal] = useState(false);
+  const modalSize = useMobileModal('lg');
   const [showEditModal, setShowEditModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);

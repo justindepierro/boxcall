@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Modal } from "../ui/Modal";
+import { useMobileModal } from '../../hooks/useMobileModal';
 import { Button } from "../ui";
 import { Typography } from "../design-system/Typography";
 import { ProfileFormSection, type FormValue } from "../forms/ProfileFormFields";
@@ -33,6 +34,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
   const config = getProfileConfigForRole(userRole);
   const navigate = useNavigate();
   const [formValues, setFormValues] = useState<Record<string, FormValue>>({});
+  const modalSize = useMobileModal('lg');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
@@ -215,7 +217,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
           ? "Quick Edit Profile"
           : `Edit ${userRole.charAt(0).toUpperCase() + userRole.slice(1)} Profile`
       }
-      size="lg"
+      size={modalSize}
       className="max-h-[90vh] overflow-y-auto"
     >
       <form onSubmit={handleSubmit} className="space-y-6">

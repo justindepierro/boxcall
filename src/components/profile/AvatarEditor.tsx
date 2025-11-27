@@ -1,6 +1,7 @@
 import React, { useState, useRef, useCallback } from "react";
 import { Button } from "../ui/Button";
 import { Modal } from "../ui/Modal";
+import { useMobileModal } from '../../hooks/useMobileModal';
 import { Typography } from "../design-system/Typography";
 import { ZoomIn, ZoomOut, RotateCw, Move, Crop } from "lucide-react";
 
@@ -18,6 +19,7 @@ export const AvatarEditor: React.FC<AvatarEditorProps> = ({
   onSave,
 }) => {
   const [imageUrl, setImageUrl] = useState<string>("");
+  const modalSize = useMobileModal('lg');
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -140,7 +142,7 @@ export const AvatarEditor: React.FC<AvatarEditorProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Edit Avatar" size="lg">
+    <Modal isOpen={isOpen} onClose={onClose} title="Edit Avatar" size={modalSize}>
       <div className="p-spacing-md">
         {/* Preview Area */}
         <div className="relative bg-surface-secondary rounded-lg overflow-hidden mb-spacing-md">
