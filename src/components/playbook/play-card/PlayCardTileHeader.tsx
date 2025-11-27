@@ -144,14 +144,16 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
           </div>
         )}
 
-        {/* Confidence badge - top-right */}
-        <div className="absolute -top-3 -right-3">
-          <ConfidenceBadge
-            confidence={optimisticPlay.confidence_base}
-            size="md"
-            showLabel
-          />
-        </div>
+        {/* Confidence badge - ONLY SHOW WHEN EXPANDED (3-tier design) */}
+        {isExpanded && (
+          <div className="absolute -top-3 -right-3">
+            <ConfidenceBadge
+              confidence={optimisticPlay.confidence_base}
+              size="md"
+              showLabel
+            />
+          </div>
+        )}
 
         {/* Assignments Button */}
         <button
@@ -186,19 +188,30 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
             {tileSubtitle}
           </p>
         )}
+        
+        {/* 3-TIER DESIGN: Compact metadata when collapsed */}
+        {!isExpanded && (
+          <div className="flex items-center gap-2 mt-1.5 text-muted text-xs">
+            {optimisticPlay.p_type && (
+              <span className="flex items-center gap-1">
+                <Icon name="zap" className="h-3 w-3" />
+                {optimisticPlay.p_type}
+              </span>
+            )}
+            {optimisticPlay.times_called !== undefined && optimisticPlay.times_called > 0 && (
+              <span className="flex items-center gap-1">
+                <Icon name="repeat" className="h-3 w-3" />
+                {optimisticPlay.times_called}x
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
-      {/* Badges - wristband, personnel and installation phase */}
+      {/* Badges - PRIMARY INFO ONLY (personnel badge) */}
+      {/* 3-TIER DESIGN: Show only essential info in collapsed state */}
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        {/* Wristband badge */}
-        {optimisticPlay.wristband_number && (
-          <WristbandBadge
-            wristbandNumber={optimisticPlay.wristband_number}
-            size="sm"
-          />
-        )}
-
-        {/* Personnel badge */}
+        {/* Personnel badge - ALWAYS VISIBLE (critical for coaches) */}
         {optimisticPlay.personnel && (
           <PersonnelBadge
             personnel={optimisticPlay.personnel}
@@ -207,15 +220,29 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
           />
         )}
 
-        {/* Installation phase badge */}
-        {phaseLabel && (
-          <span className="px-2 py-0.5 bg-warning-500 text-primary rounded-full text-2xs font-semibold tracking-wide uppercase border border-warning-600">
-            {phaseLabel}
-          </span>
+        {/* Secondary badges - ONLY SHOW WHEN EXPANDED */}
+        {isExpanded && (
+          <>
+            {/* Wristband badge */}
+            {optimisticPlay.wristband_number && (
+              <WristbandBadge
+                wristbandNumber={optimisticPlay.wristband_number}
+                size="sm"
+              />
+            )}
+
+            {/* Installation phase badge */}
+            {phaseLabel && (
+              <span className="px-2 py-0.5 bg-warning-500 text-primary rounded-full text-2xs font-semibold tracking-wide uppercase border border-warning-600">
+                {phaseLabel}
+              </span>
+            )}
+          </>
         )}
       </div>
 
       {/* Details button - outside the tile */}
+      {/* 3-TIER DESIGN: Clear expand/collapse action */}
       {onToggleExpand && (
         <div className="mt-4">
           <Button
@@ -224,7 +251,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
               e.preventDefault();
               onToggleExpand();
             }}
-            variant="outline"
+            variant={isExpanded ? "ghost" : "outline"}
             size="sm"
             icon={
               isExpanded ? (
@@ -236,7 +263,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
             iconPosition="right"
             className="w-full"
           >
-            {isExpanded ? "Collapse" : "Details"}
+            {isExpanded ? "Hide Details" : "Show More"}
           </Button>
         </div>
       )}

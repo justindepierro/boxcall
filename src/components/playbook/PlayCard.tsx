@@ -441,6 +441,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             />
 
             {/* Animated expansion for tile details */}
+            {/* 3-TIER DESIGN: Fast expand/collapse animation (Facebook-fast: 200ms) */}
             <AnimatePresence>
               {isExpanded && (
                 <motion.div
@@ -448,9 +449,9 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={{
-                    duration: 0.3,
+                    duration: 0.2,
                     ease: [0.4, 0, 0.2, 1],
-                    opacity: { duration: 0.2 },
+                    opacity: { duration: 0.15 },
                   }}
                   className="overflow-hidden"
                 >
