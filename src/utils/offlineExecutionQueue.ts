@@ -166,9 +166,7 @@ export class OfflineExecutionQueue {
     const queue = this.getAll();
     const threshold = Date.now() - thresholdMs;
 
-    this.saveQueue(
-      queue.filter((e) => !e.synced || e.timestamp > threshold)
-    );
+    this.saveQueue(queue.filter((e) => !e.synced || e.timestamp > threshold));
   }
 
   /**

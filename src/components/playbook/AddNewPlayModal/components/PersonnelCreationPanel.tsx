@@ -108,10 +108,7 @@ export const PersonnelCreationPanel: React.FC<PersonnelCreationPanelProps> = ({
               <Typography variant="headline-md" className="text-primary">
                 Create Personnel
               </Typography>
-              <Typography
-                variant="body-sm"
-                className="text-secondary mt-1"
-              >
+              <Typography variant="body-sm" className="text-secondary mt-1">
                 Quick personnel setup for this play
               </Typography>
             </div>
@@ -129,16 +126,10 @@ export const PersonnelCreationPanel: React.FC<PersonnelCreationPanelProps> = ({
           <div className="flex-1 p-6 space-y-6 overflow-y-auto">
             {/* Quick Create - Common Personnel */}
             <div>
-              <Typography
-                variant="label-md"
-                className="mb-3 text-primary"
-              >
+              <Typography variant="label-md" className="mb-3 text-primary">
                 Common Personnel
               </Typography>
-              <Typography
-                variant="body-sm"
-                className="mb-4 text-secondary"
-              >
+              <Typography variant="body-sm" className="mb-4 text-secondary">
                 Choose a standard configuration
               </Typography>
               <div className="space-y-2">
@@ -156,10 +147,7 @@ export const PersonnelCreationPanel: React.FC<PersonnelCreationPanelProps> = ({
                       >
                         {p.name}
                       </Typography>
-                      <Typography
-                        variant="body-sm"
-                        className="text-secondary"
-                      >
+                      <Typography variant="body-sm" className="text-secondary">
                         {p.description}
                       </Typography>
                     </div>
@@ -252,10 +240,7 @@ export const PersonnelCreationPanel: React.FC<PersonnelCreationPanelProps> = ({
                   className="h-5 w-5 text-info mt-0.5 flex-shrink-0"
                 />
                 <div>
-                  <Typography
-                    variant="label-md"
-                    className="text-primary mb-1"
-                  >
+                  <Typography variant="label-md" className="text-primary mb-1">
                     Quick Setup
                   </Typography>
                   <Typography variant="body-sm" className="text-secondary">

@@ -790,10 +790,7 @@ export default function RosterPage() {
             {/* Loading skeleton for player cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
               {[...Array(9)].map((_, i) => (
-                <Card
-                  key={`player-${i}`}
-                  className="animate-pulse p-md"
-                >
+                <Card key={`player-${i}`} className="animate-pulse p-md">
                   <div className="space-y-sm">
                     {/* Header skeleton */}
                     <div className="flex items-center justify-between">

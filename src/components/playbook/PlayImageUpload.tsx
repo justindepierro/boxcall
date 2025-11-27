@@ -1,6 +1,6 @@
 /**
  * Play Image Upload Component
- * 
+ *
  * Mobile-optimized image upload with:
  * - Native camera capture (rear camera)
  * - Image compression (max 1MB)
@@ -8,13 +8,13 @@
  * - File library selection
  */
 
-import React, { useRef, useState, useCallback } from 'react';
-import imageCompression from 'browser-image-compression';
-import { useIsMobile } from '../../hooks/useBreakpoint';
-import { Button } from '../ui/Button/Button';
-import { Icon } from '../ui/Icon';
-import { Typography } from '../design-system/Typography';
-import { useToast } from '../../hooks/useToast';
+import React, { useRef, useState, useCallback } from "react";
+import imageCompression from "browser-image-compression";
+import { useIsMobile } from "../../hooks/useBreakpoint";
+import { Button } from "../ui/Button/Button";
+import { Icon } from "../ui/Icon";
+import { Typography } from "../design-system/Typography";
+import { useToast } from "../../hooks/useToast";
 
 interface PlayImageUploadProps {
   onImageSelected: (file: File, preview: string) => void;
@@ -42,8 +42,8 @@ export const PlayImageUpload: React.FC<PlayImageUploadProps> = ({
       if (!file) return;
 
       // Validate file type
-      if (!file.type.startsWith('image/')) {
-        toast.error('Please select an image file');
+      if (!file.type.startsWith("image/")) {
+        toast.error("Please select an image file");
         return;
       }
 
@@ -55,7 +55,7 @@ export const PlayImageUpload: React.FC<PlayImageUploadProps> = ({
           maxSizeMB,
           maxWidthOrHeight,
           useWebWorker: true,
-          fileType: 'image/jpeg' as const,
+          fileType: "image/jpeg" as const,
         };
 
         // Compress image
@@ -73,13 +73,13 @@ export const PlayImageUpload: React.FC<PlayImageUploadProps> = ({
           `Image compressed: ${(file.size / 1024 / 1024).toFixed(2)}MB → ${(compressedFile.size / 1024 / 1024).toFixed(2)}MB`
         );
       } catch (error) {
-        console.error('Image compression error:', error);
-        toast.error('Failed to process image. Please try again.');
+        console.error("Image compression error:", error);
+        toast.error("Failed to process image. Please try again.");
       } finally {
         setIsCompressing(false);
         // Reset input to allow same file selection
         if (fileInputRef.current) {
-          fileInputRef.current.value = '';
+          fileInputRef.current.value = "";
         }
       }
     },
@@ -89,7 +89,7 @@ export const PlayImageUpload: React.FC<PlayImageUploadProps> = ({
   const handleCameraClick = () => {
     if (fileInputRef.current) {
       // Ensure capture attribute is set for camera
-      fileInputRef.current.setAttribute('capture', 'environment');
+      fileInputRef.current.setAttribute("capture", "environment");
       fileInputRef.current.click();
     }
   };
@@ -97,7 +97,7 @@ export const PlayImageUpload: React.FC<PlayImageUploadProps> = ({
   const handleLibraryClick = () => {
     if (fileInputRef.current) {
       // Remove capture attribute to allow library selection
-      fileInputRef.current.removeAttribute('capture');
+      fileInputRef.current.removeAttribute("capture");
       fileInputRef.current.click();
     }
   };
@@ -110,7 +110,7 @@ export const PlayImageUpload: React.FC<PlayImageUploadProps> = ({
     setPreview(undefined);
     setRotation(0);
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
@@ -168,8 +168,8 @@ export const PlayImageUpload: React.FC<PlayImageUploadProps> = ({
 
           <Typography variant="caption" className="text-tertiary text-center">
             {isMobile
-              ? 'Take a photo or select from your device'
-              : 'Maximum file size: 5MB (will be compressed to 1MB)'}
+              ? "Take a photo or select from your device"
+              : "Maximum file size: 5MB (will be compressed to 1MB)"}
           </Typography>
         </div>
       )}

@@ -15,19 +15,21 @@ Found **5 categories of invalid Tailwind classes** causing styling failures acro
 **Valid Tailwind**: Should be `p-lg`, `gap-2`, `pt-sm`, `mb-md`
 
 **Affected Files** (20+ instances):
+
 - `src/pages/PlannerPage.tsx` - 20+ instances
-- `src/pages/TeamSettings.tsx` - 10+ instances  
+- `src/pages/TeamSettings.tsx` - 10+ instances
 - `src/pages/ProfilePage.tsx` - 20+ instances
 - `src/pages/PlayerDetailPage.tsx` - 7 instances
 - `src/components/playbook/play-card/PlayCardQuickActions.tsx` - **FIXED**
 
 **Fix Required**:
+
 ```tsx
 // ❌ WRONG
-className="p-spacing-lg gap-spacing-xs mt-spacing-md"
+className = "p-spacing-lg gap-spacing-xs mt-spacing-md";
 
 // ✅ CORRECT
-className="p-lg gap-2 mt-md"
+className = "p-lg gap-2 mt-md";
 ```
 
 ---
@@ -37,6 +39,7 @@ className="p-lg gap-2 mt-md"
 **Problem**: Using `border-subtle`, `border-medium`, `border-strong` which don't exist in Tailwind config.
 
 **Valid Tailwind Border Colors**:
+
 - `border-primary` → `var(--color-border-primary)`
 - `border-secondary` → `var(--color-border-secondary)`
 - `border-muted` → `var(--color-border-muted)`
@@ -44,6 +47,7 @@ className="p-lg gap-2 mt-md"
 - `border-focus` → `var(--color-border-focus)`
 
 **Affected Files** (30+ instances):
+
 - `src/pages/CreateCoachAccount.tsx` - 15+ instances of `border-medium`, `border-subtle`
 - `src/pages/JoinTeam.tsx` - 5+ instances
 - `src/pages/TeamSettings.tsx` - 3 instances
@@ -51,14 +55,15 @@ className="p-lg gap-2 mt-md"
 - `src/components/onboarding/ActivationChecklist.tsx`
 
 **Fix Required**:
+
 ```tsx
 // ❌ WRONG
-className="border border-medium"
-className="border-subtle"
+className = "border border-medium";
+className = "border-subtle";
 
 // ✅ CORRECT
-className="border border-secondary"
-className="border-muted"
+className = "border border-secondary";
+className = "border-muted";
 ```
 
 ---
@@ -69,26 +74,29 @@ className="border-muted"
 
 **Valid Tailwind**:  
 These don't exist. Should use `bg-{color}` classes:
+
 - `bg-bg-subtle`
-- `bg-info-lightest`  
+- `bg-info-lightest`
 - `bg-success-lightest`
 - `bg-bg-primary`
 
 **Affected Files** (20+ instances):
+
 - `src/pages/CreateCoachAccount.tsx` - Multiple `surface-subtle` instances
 - `src/pages/JoinTeam.tsx`
 - `src/pages/PracticePlanner.tsx`
 - `src/pages/legal/*.tsx`
 
 **Fix Required**:
+
 ```tsx
 // ❌ WRONG
-className="surface-subtle"
-className="surface-info"
+className = "surface-subtle";
+className = "surface-info";
 
 // ✅ CORRECT
-className="bg-bg-subtle"
-className="bg-info-lightest"
+className = "bg-bg-subtle";
+className = "bg-info-lightest";
 ```
 
 ---
@@ -97,23 +105,26 @@ className="bg-info-lightest"
 
 **Problem**: Using `text-text-*`, `bg-bg-*`, `border-border-*` double prefixes.
 
-**Status**: 
+**Status**:
+
 - ✅ `border-border-secondary` → `border-secondary` - **FIXED in PlayCard.tsx**
 - ⚠️ Still exists in utility files (`src/design-system/utils.ts`, `src/lib/designSystemMapping.ts`)
 
 **Affected Files**:
+
 - `src/design-system/utils.ts` - 10+ instances of `text-text-*`
 - `src/lib/designSystemMapping.ts` - Multiple double-prefix mappings
 - `src/lib/hapticFeedback.ts`
 - `src/components/practice/utils.ts`
 
 **Fix Required**:
+
 ```tsx
 // ❌ WRONG
-className="text-text-primary bg-bg-subtle border-border-secondary"
+className = "text-text-primary bg-bg-subtle border-border-secondary";
 
 // ✅ CORRECT
-className="text-primary bg-bg-subtle border-secondary"
+className = "text-primary bg-bg-subtle border-secondary";
 ```
 
 ---
@@ -125,6 +136,7 @@ className="text-primary bg-bg-subtle border-secondary"
 **Status**: ✅ **FIXED** - Changed to direct CSS var references in `src/index.css`
 
 **Solution Applied**:
+
 ```css
 /* ✅ CORRECT - Direct CSS vars */
 .divider-t {
@@ -138,6 +150,7 @@ className="text-primary bg-bg-subtle border-secondary"
 ## Fixes Completed
 
 ### ✅ Already Fixed:
+
 1. `border-border-secondary` → `border-secondary` in PlayCard.tsx
 2. CSS divider utilities (`.divider-t`, `.divider-b`, etc.) - Direct CSS vars
 3. `pt-spacing-sm` → `pt-sm` in PlayCardQuickActions.tsx
@@ -151,6 +164,7 @@ className="text-primary bg-bg-subtle border-secondary"
 ### HIGH PRIORITY - Breaks Styling Now
 
 **1. Fix all `*-spacing-*` utilities** (Est. 50+ instances)
+
 ```bash
 # Files to fix:
 src/pages/PlannerPage.tsx
@@ -160,6 +174,7 @@ src/pages/PlayerDetailPage.tsx
 ```
 
 **2. Fix all `border-subtle`, `border-medium`, `border-strong`** (Est. 30+ instances)
+
 ```bash
 # Files to fix:
 src/pages/CreateCoachAccount.tsx (15+ instances)
@@ -169,6 +184,7 @@ src/pages/legal/*.tsx
 ```
 
 **3. Fix all `surface-*` standalone classes** (Est. 20+ instances)
+
 ```bash
 # Files to fix:
 src/pages/CreateCoachAccount.tsx
@@ -180,6 +196,7 @@ src/pages/legal/*.tsx
 ### MEDIUM PRIORITY - Affects Consistency
 
 **4. Fix double-prefix classes in utility files**
+
 ```bash
 # Files to fix:
 src/design-system/utils.ts
@@ -219,6 +236,7 @@ grep -r "text-text-\|bg-bg-\|border-border-" src/ --include="*.tsx" --include="*
 ### Step 3: Add ESLint Rule (Future)
 
 Create custom rule to catch invalid class patterns:
+
 - `*-spacing-*` (invalid)
 - `border-subtle|medium|strong` (invalid)
 - `surface-*` as standalone (invalid)

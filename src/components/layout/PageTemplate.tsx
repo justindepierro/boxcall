@@ -1,9 +1,9 @@
 /**
  * PageTemplate - Unified Page Architecture
- * 
+ *
  * Single source of truth for page design language across BoxCall.
  * All pages should use this template for consistency.
- * 
+ *
  * Features:
  * - Shadow-based card elevation (LiteWork pattern)
  * - Consistent spacing and typography
@@ -11,7 +11,7 @@
  * - Loading states with skeletons
  * - Error boundaries
  * - Automatic haptic feedback
- * 
+ *
  * @example
  * ```tsx
  * <PageTemplate
@@ -153,7 +153,13 @@ export interface ContentSectionProps {
   /** Use Card wrapper */
   card?: boolean;
   /** Card variant */
-  cardVariant?: "default" | "glass" | "elevated" | "outlined" | "filled" | "accent";
+  cardVariant?:
+    | "default"
+    | "glass"
+    | "elevated"
+    | "outlined"
+    | "filled"
+    | "accent";
   /** Additional class names */
   className?: string;
 }

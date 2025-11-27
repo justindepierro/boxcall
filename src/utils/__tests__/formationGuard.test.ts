@@ -4,8 +4,8 @@ import { ensureValidFormation } from "../formationGuard";
 // Mock supabase
 vi.mock("../../lib/supabase", () => ({
   supabase: {
-    from: vi.fn()
-  }
+    from: vi.fn(),
+  },
 }));
 
 import { supabase } from "../../lib/supabase";

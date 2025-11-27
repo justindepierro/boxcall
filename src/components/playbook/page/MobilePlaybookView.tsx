@@ -153,7 +153,9 @@ export function MobilePlaybookView({
       )}
 
       {/* Content area with padding for fixed search bar */}
-      <div className={`px-4 py-6 space-y-6 pb-32 ${state.playsCreated > 0 ? 'pt-20' : ''}`}>
+      <div
+        className={`px-4 py-6 space-y-6 pb-32 ${state.playsCreated > 0 ? "pt-20" : ""}`}
+      >
         {/* pt-20 (~80px) accounts for fixed search bar height. pb-32 prevents FAB overlap */}
 
         {/* Empty State - Hero CTA */}

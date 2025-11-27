@@ -115,7 +115,7 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
             isCompact ? "mt-1.5" : "mt-2"
           }`}
         >
-          {/* 🎯 COLLAPSED STATE: Show only essential info (Personnel + Play Type) */}
+          {/* 🎯 COLLAPSED STATE: Show essential info + preview data */}
           {!isExpanded && (
             <>
               {/* Personnel badge - Most important identifier */}
@@ -140,6 +140,27 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
                   wristbandNumber={optimisticPlay.wristband_number}
                   size="sm"
                 />
+              )}
+
+              {/* Formation info - helps identify play quickly */}
+              {optimisticPlay.formation && (
+                <span className="px-2 py-0.5 bg-purple-50 text-purple-700 border border-purple-200 rounded-lg text-xs font-medium">
+                  {optimisticPlay.formation}
+                </span>
+              )}
+
+              {/* Hash info - important for run plays */}
+              {optimisticPlay.hash && (
+                <span className="px-2 py-0.5 bg-neutral-100 text-neutral-700 border border-neutral-300 rounded-lg text-xs font-medium">
+                  {optimisticPlay.hash}
+                </span>
+              )}
+
+              {/* Play concept/tags - quick context */}
+              {optimisticPlay.play_concept && (
+                <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-lg text-xs font-medium italic">
+                  {optimisticPlay.play_concept}
+                </span>
               )}
             </>
           )}
@@ -186,30 +207,31 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
               </span>
 
               {/* Usage stats badges */}
-              {optimisticPlay.times_called && optimisticPlay.times_called > 0 && (
-                <>
-                  <span className="px-2 py-0.5 bg-info-50 text-info-700 border border-info-200 rounded-full text-xs font-medium flex items-center gap-1">
-                    <Icon name="trending-up" size={12} />
-                    {optimisticPlay.times_called}x called
-                  </span>
-
-                  {optimisticPlay.times_successful !== undefined && (
-                    <span
-                      className={`px-2 py-0.5 rounded-full text-xs font-medium ${getSuccessRateBadgeColor(
-                        optimisticPlay.times_successful /
-                          optimisticPlay.times_called
-                      )}`}
-                    >
-                      {Math.round(
-                        (optimisticPlay.times_successful /
-                          optimisticPlay.times_called) *
-                          100
-                      )}
-                      % success
+              {optimisticPlay.times_called &&
+                optimisticPlay.times_called > 0 && (
+                  <>
+                    <span className="px-2 py-0.5 bg-info-50 text-info-700 border border-info-200 rounded-full text-xs font-medium flex items-center gap-1">
+                      <Icon name="trending-up" size={12} />
+                      {optimisticPlay.times_called}x called
                     </span>
-                  )}
-                </>
-              )}
+
+                    {optimisticPlay.times_successful !== undefined && (
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-xs font-medium ${getSuccessRateBadgeColor(
+                          optimisticPlay.times_successful /
+                            optimisticPlay.times_called
+                        )}`}
+                      >
+                        {Math.round(
+                          (optimisticPlay.times_successful /
+                            optimisticPlay.times_called) *
+                            100
+                        )}
+                        % success
+                      </span>
+                    )}
+                  </>
+                )}
             </>
           )}
         </div>

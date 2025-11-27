@@ -188,7 +188,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
             {tileSubtitle}
           </p>
         )}
-        
+
         {/* 3-TIER DESIGN: Compact metadata when collapsed */}
         {!isExpanded && (
           <div className="flex items-center gap-2 mt-1.5 text-muted text-xs">
@@ -198,12 +198,13 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
                 {optimisticPlay.p_type}
               </span>
             )}
-            {optimisticPlay.times_called !== undefined && optimisticPlay.times_called > 0 && (
-              <span className="flex items-center gap-1">
-                <Icon name="repeat" className="h-3 w-3" />
-                {optimisticPlay.times_called}x
-              </span>
-            )}
+            {optimisticPlay.times_called !== undefined &&
+              optimisticPlay.times_called > 0 && (
+                <span className="flex items-center gap-1">
+                  <Icon name="repeat" className="h-3 w-3" />
+                  {optimisticPlay.times_called}x
+                </span>
+              )}
           </div>
         )}
       </div>

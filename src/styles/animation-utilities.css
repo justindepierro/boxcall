@@ -279,8 +279,7 @@
 }
 
 .animate-spin {
-  animation: spin var(--duration-slow)
-    var(--animation-timing-linear) infinite;
+  animation: spin var(--duration-slow) var(--animation-timing-linear) infinite;
 }
 
 .animate-spin-fast {
@@ -300,8 +299,8 @@
 }
 
 .animate-pulse {
-  animation: pulse var(--duration-slow)
-    var(--animation-timing-ease-in-out) infinite;
+  animation: pulse var(--duration-slow) var(--animation-timing-ease-in-out)
+    infinite;
 }
 
 /* Bounce animation */
@@ -366,10 +365,8 @@
 /* Hover lift effect */
 .hover-lift {
   transition:
-    transform var(--duration-fast)
-      ease-in-out,
-    box-shadow var(--duration-fast)
-      ease-in-out;
+    transform var(--duration-fast) ease-in-out,
+    box-shadow var(--duration-fast) ease-in-out;
 }
 
 .hover-lift:hover {
@@ -378,8 +375,7 @@
 
 /* Hover scale effect */
 .hover-scale {
-  transition: transform var(--duration-fast)
-    ease-in-out;
+  transition: transform var(--duration-fast) ease-in-out;
 }
 
 .hover-scale:hover {
@@ -388,8 +384,7 @@
 
 /* Hover glow effect */
 .hover-glow {
-  transition: box-shadow var(--duration-fast)
-    ease-in-out;
+  transition: box-shadow var(--duration-fast) ease-in-out;
 }
 
 .hover-glow:hover {
@@ -398,8 +393,7 @@
 
 /* Press effect (active state) */
 .press-effect {
-  transition: transform var(--duration-instant)
-    ease-out;
+  transition: transform var(--duration-instant) ease-out;
 }
 
 .press-effect:active {
