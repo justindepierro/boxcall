@@ -328,6 +328,60 @@ vi.mock("@services", () => ({
   PlayActivityItem: {},
 }));
 
+// Mock Supabase to prevent heavy initialization in tests
+vi.mock("../lib/supabase", () => {
+  const mockSupabaseClient = {
+    auth: {
+      getSession: vi.fn(() =>
+        Promise.resolve({ data: { session: null }, error: null })
+      ),
+      onAuthStateChange: vi.fn(() => ({
+        data: { subscription: { unsubscribe: vi.fn() } },
+      })),
+      signInWithPassword: vi.fn(() =>
+        Promise.resolve({ data: { session: null }, error: null })
+      ),
+      signOut: vi.fn(() => Promise.resolve({ error: null })),
+      getUser: vi.fn(() =>
+        Promise.resolve({ data: { user: null }, error: null })
+      ),
+    },
+    from: vi.fn(() => ({
+      select: vi.fn(() => ({
+        eq: vi.fn(() => ({
+          single: vi.fn(() => Promise.resolve({ data: null, error: null })),
+          maybeSingle: vi.fn(() =>
+            Promise.resolve({ data: null, error: null })
+          ),
+          order: vi.fn(() => Promise.resolve({ data: [], error: null })),
+          limit: vi.fn(() => Promise.resolve({ data: [], error: null })),
+        })),
+        single: vi.fn(() => Promise.resolve({ data: null, error: null })),
+        maybeSingle: vi.fn(() => Promise.resolve({ data: null, error: null })),
+        order: vi.fn(() => ({
+          limit: vi.fn(() => Promise.resolve({ data: [], error: null })),
+        })),
+      })),
+      insert: vi.fn(() => ({
+        select: vi.fn(() => ({
+          single: vi.fn(() => Promise.resolve({ data: null, error: null })),
+        })),
+      })),
+      update: vi.fn(() => ({
+        eq: vi.fn(() => Promise.resolve({ error: null })),
+      })),
+      delete: vi.fn(() => ({
+        eq: vi.fn(() => Promise.resolve({ error: null })),
+      })),
+    })),
+  };
+
+  return {
+    supabase: mockSupabaseClient,
+    default: mockSupabaseClient,
+  };
+});
+
 // Global cleanup after each test to prevent memory leaks
 import { afterEach } from "vitest";
 import { cleanup } from "@testing-library/react";

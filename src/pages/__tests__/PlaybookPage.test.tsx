@@ -62,8 +62,8 @@ describe("PlaybookPage Import", () => {
 
   it("mocks are properly configured", () => {
     // Test that our mocks are working
-    const { playbookService } = require("../../services/playsService");
-    expect(playbookService.getPlays).toBeDefined();
-    expect(typeof playbookService.getPlays).toBe("function");
+    const { PlaysService } = require("@services");
+    expect(PlaysService).toBeDefined();
+    expect(typeof PlaysService).toBe("object");
   });
 });

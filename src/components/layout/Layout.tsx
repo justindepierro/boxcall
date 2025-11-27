@@ -12,7 +12,7 @@ import { Sidebar } from "../ui/Sidebar";
 import { DevTools } from "../dev";
 import { SidebarLogo } from "../ui/Logo";
 import { AppHeader } from "./AppHeader";
-import { OfflineBanner } from '../ui/OfflineBanner/OfflineBanner';
+// import { OfflineBanner } from '../ui/OfflineBanner/OfflineBanner';
 import { Footer } from "./Footer";
 import type { DevMode } from "../../types/dev";
 import { emitTelemetry } from "../../lib/telemetry";

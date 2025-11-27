@@ -209,7 +209,7 @@ export default {
         loose: "var(--line-height-loose)",
       },
 
-      // Shadows
+      // Shadows (includes brand-colored shadows for modern elevation)
       boxShadow: {
         xs: "var(--shadow-xs)",
         sm: "var(--shadow-sm)",
@@ -220,6 +220,19 @@ export default {
         "2xl": "var(--shadow-2xl)",
         inner: "var(--shadow-inner)",
         none: "var(--shadow-none)",
+        // Brand-colored shadows for modern elevation
+        "jade-sm": "0 2px 8px rgba(79, 209, 197, 0.15)",
+        "jade-md": "0 4px 16px rgba(79, 209, 197, 0.2)",
+        "jade-lg": "0 8px 32px rgba(79, 209, 197, 0.25)",
+        "orange-sm": "0 2px 8px rgba(255, 159, 64, 0.15)",
+        "orange-md": "0 4px 16px rgba(255, 159, 64, 0.2)",
+        "orange-lg": "0 8px 32px rgba(255, 159, 64, 0.25)",
+        "purple-sm": "0 2px 8px rgba(168, 85, 247, 0.15)",
+        "purple-md": "0 4px 16px rgba(168, 85, 247, 0.2)",
+        "purple-lg": "0 8px 32px rgba(168, 85, 247, 0.25)",
+        "blue-sm": "0 2px 8px rgba(59, 130, 246, 0.15)",
+        "blue-md": "0 4px 16px rgba(59, 130, 246, 0.2)",
+        "blue-lg": "0 8px 32px rgba(59, 130, 246, 0.25)",
       },
 
       // Border radius
@@ -244,32 +257,6 @@ export default {
           "radial-gradient(circle at top right, rgba(255,159,64,0.15), transparent 50%), radial-gradient(circle at bottom left, rgba(255,159,64,0.1), transparent 50%)",
         "gradient-mesh-purple":
           "radial-gradient(circle at top right, rgba(168,85,247,0.15), transparent 50%), radial-gradient(circle at bottom left, rgba(168,85,247,0.1), transparent 50%)",
-      },
-
-      // Shadows (extended with brand-colored shadows)
-      boxShadow: {
-        xs: "var(--shadow-xs)",
-        sm: "var(--shadow-sm)",
-        base: "var(--shadow-base)",
-        md: "var(--shadow-md)",
-        lg: "var(--shadow-lg)",
-        xl: "var(--shadow-xl)",
-        "2xl": "var(--shadow-2xl)",
-        inner: "var(--shadow-inner)",
-        none: "var(--shadow-none)",
-        // Brand-colored shadows for modern elevation
-        "jade-sm": "0 2px 8px rgba(79, 209, 197, 0.15)",
-        "jade-md": "0 4px 16px rgba(79, 209, 197, 0.2)",
-        "jade-lg": "0 8px 32px rgba(79, 209, 197, 0.25)",
-        "orange-sm": "0 2px 8px rgba(255, 159, 64, 0.15)",
-        "orange-md": "0 4px 16px rgba(255, 159, 64, 0.2)",
-        "orange-lg": "0 8px 32px rgba(255, 159, 64, 0.25)",
-        "purple-sm": "0 2px 8px rgba(168, 85, 247, 0.15)",
-        "purple-md": "0 4px 16px rgba(168, 85, 247, 0.2)",
-        "purple-lg": "0 8px 32px rgba(168, 85, 247, 0.25)",
-        "blue-sm": "0 2px 8px rgba(59, 130, 246, 0.15)",
-        "blue-md": "0 4px 16px rgba(59, 130, 246, 0.2)",
-        "blue-lg": "0 8px 32px rgba(59, 130, 246, 0.25)",
       },
 
       // Animations

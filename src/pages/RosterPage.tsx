@@ -121,7 +121,7 @@ export default function RosterPage() {
 
   // Modal and form state (not extracted - specific to this page)
   const [showAddModal, setShowAddModal] = useState(false);
-  const modalSize = useMobileModal("lg");
+  const _modalSize = useMobileModal("lg");
   const [showEditModal, setShowEditModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);

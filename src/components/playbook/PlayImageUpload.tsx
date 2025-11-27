@@ -83,7 +83,7 @@ export const PlayImageUpload: React.FC<PlayImageUploadProps> = ({
         }
       }
     },
-    [maxSizeMB, maxWidthOrHeight, onImageSelected]
+    [maxSizeMB, maxWidthOrHeight, onImageSelected, toast]
   );
 
   const handleCameraClick = () => {

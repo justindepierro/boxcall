@@ -31,7 +31,7 @@ export const FormationSection: React.FC<FormationSectionProps> = ({
   formationDir,
   formationShowInName,
   playbookId,
-  onCreateFormation,
+  onCreateFormation: _onCreateFormation,
   onFormationChange,
   onFormationIdChange,
   onFormationDirChange,

@@ -475,7 +475,7 @@ export default function PlaybookPage() {
     setShowPlaybookSettingsModal(true);
   }, []);
 
-  const handleOpenWhiteboard = useCallback(() => {
+  const _handleOpenWhiteboard = useCallback(() => {
     // Open diagram builder in whiteboard mode - simplified for now
     toast.info("Whiteboard mode coming soon!");
   }, [toast]);

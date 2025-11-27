@@ -300,7 +300,7 @@ export interface EmptyStateProps {
 }
 
 export function EmptyState({
-  icon = "inbox",
+  icon: _icon = "inbox",
   title,
   description,
   action,

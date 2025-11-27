@@ -26,6 +26,8 @@ export class OfflineExecutionQueue {
    * Add execution to offline queue
    */
   static add(execution: CreatePlayExecutionData): void {
+    if (!this.hasLocalStorage()) return;
+
     const queue = this.getAll();
 
     const item: QueueItem = {
@@ -43,7 +45,7 @@ export class OfflineExecutionQueue {
       const synced = queue
         .filter((e) => e.synced)
         .sort((a, b) => b.timestamp - a.timestamp)
-        .slice(0, MAX_QUEUE_SIZE - unsynced.length);
+        .slice(0, Math.max(0, MAX_QUEUE_SIZE - unsynced.length));
       this.saveQueue([...unsynced, ...synced]);
     } else {
       this.saveQueue(queue);
@@ -51,16 +53,29 @@ export class OfflineExecutionQueue {
   }
 
   /**
+   * Check if localStorage is available
+   */
+  private static hasLocalStorage(): boolean {
+    try {
+      return typeof localStorage !== "undefined" && localStorage !== null;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
    * Get all executions from queue
    */
   static getAll(): QueueItem[] {
-    const stored = localStorage.getItem(QUEUE_STORAGE_KEY);
-
-    if (!stored) {
-      return [];
-    }
+    if (!this.hasLocalStorage()) return [];
 
     try {
+      const stored = localStorage.getItem(QUEUE_STORAGE_KEY);
+
+      if (!stored) {
+        return [];
+      }
+
       const parsed = JSON.parse(stored);
       return Array.isArray(parsed) ? parsed : [];
     } catch (err) {
@@ -73,7 +88,13 @@ export class OfflineExecutionQueue {
    * Save queue to localStorage
    */
   private static saveQueue(queue: QueueItem[]): void {
-    localStorage.setItem(QUEUE_STORAGE_KEY, JSON.stringify(queue));
+    if (!this.hasLocalStorage()) return;
+
+    try {
+      localStorage.setItem(QUEUE_STORAGE_KEY, JSON.stringify(queue));
+    } catch (err) {
+      console.error("Failed to save queue to localStorage:", err);
+    }
   }
 
   /**
@@ -121,7 +142,20 @@ export class OfflineExecutionQueue {
    * Clear all executions
    */
   static clearAll(): void {
-    localStorage.removeItem(QUEUE_STORAGE_KEY);
+    if (!this.hasLocalStorage()) return;
+
+    try {
+      localStorage.removeItem(QUEUE_STORAGE_KEY);
+    } catch (err) {
+      console.error("Failed to clear queue from localStorage:", err);
+    }
+  }
+
+  /**
+   * Check if online
+   */
+  static isOnline(): boolean {
+    return typeof navigator !== "undefined" && navigator.onLine;
   }
 
   /**
