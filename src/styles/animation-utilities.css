@@ -367,9 +367,9 @@
 .hover-lift {
   transition:
     transform var(--duration-fast)
-      var(ease-in-out),
+      ease-in-out,
     box-shadow var(--duration-fast)
-      var(ease-in-out);
+      ease-in-out;
 }
 
 .hover-lift:hover {
@@ -379,7 +379,7 @@
 /* Hover scale effect */
 .hover-scale {
   transition: transform var(--duration-fast)
-    var(ease-in-out);
+    ease-in-out;
 }
 
 .hover-scale:hover {
@@ -389,7 +389,7 @@
 /* Hover glow effect */
 .hover-glow {
   transition: box-shadow var(--duration-fast)
-    var(ease-in-out);
+    ease-in-out;
 }
 
 .hover-glow:hover {
@@ -399,7 +399,7 @@
 /* Press effect (active state) */
 .press-effect {
   transition: transform var(--duration-instant)
-    var(ease-out);
+    ease-out;
 }
 
 .press-effect:active {
