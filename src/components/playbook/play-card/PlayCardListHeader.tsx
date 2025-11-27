@@ -144,22 +144,36 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
 
               {/* Formation info - helps identify play quickly */}
               {optimisticPlay.formation && (
-                <span className="px-2 py-0.5 bg-purple-50 text-purple-700 border border-purple-200 rounded-lg text-xs font-medium">
+                <span className="px-2 py-1 bg-purple-50 text-purple-700 border border-purple-200 rounded-lg text-xs font-medium">
                   {optimisticPlay.formation}
                 </span>
               )}
 
-              {/* Hash info - important for run plays */}
-              {optimisticPlay.hash && (
-                <span className="px-2 py-0.5 bg-neutral-100 text-neutral-700 border border-neutral-300 rounded-lg text-xs font-medium">
-                  {optimisticPlay.hash}
+              {/* Preferred hash - important for run plays */}
+              {optimisticPlay.pref_hash && (
+                <span className="px-2 py-1 bg-slate-100 text-slate-700 border border-slate-300 rounded-lg text-xs font-medium">
+                  {optimisticPlay.pref_hash}
                 </span>
               )}
 
-              {/* Play concept/tags - quick context */}
-              {optimisticPlay.play_concept && (
-                <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-lg text-xs font-medium italic">
-                  {optimisticPlay.play_concept}
+              {/* Protection scheme - important for pass plays */}
+              {optimisticPlay.protection && (
+                <span className="px-2 py-1 bg-orange-50 text-orange-700 border border-orange-200 rounded-lg text-xs font-medium">
+                  {optimisticPlay.protection}
+                </span>
+              )}
+
+              {/* Motion - visual identifier */}
+              {optimisticPlay.motion && (
+                <span className="px-2 py-1 bg-cyan-50 text-cyan-700 border border-cyan-200 rounded-lg text-xs font-medium">
+                  ↗️ {optimisticPlay.motion}
+                </span>
+              )}
+
+              {/* Preferred down/distance */}
+              {optimisticPlay.pref_down && (
+                <span className="px-2 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-lg text-xs font-semibold">
+                  {optimisticPlay.pref_down}
                 </span>
               )}
             </>

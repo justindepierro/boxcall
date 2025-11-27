@@ -108,23 +108,21 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
             />
           )}
         </Button>
-      </div>
 
-      {/* Secondary action - Post to Bulletin (if handler provided) */}
-      {onPostToTeamBulletin && (
-        <div className="mt-2">
+        {/* Share to Team Button (if handler provided) */}
+        {onPostToTeamBulletin && (
           <Button
             variant="secondary"
             size="sm"
             onClick={() => onPostToTeamBulletin(play)}
             title="Share this play on the team bulletin"
-            className="w-full bg-jade-50 hover:bg-jade-100 text-jade-700 border-jade-200 transition-all"
+            className="bg-jade-50 hover:bg-jade-100 text-jade-700 border-jade-200 transition-all hover:shadow-sm"
           >
-            <Icon name="message-circle" className="h-4 w-4 mr-2" />
-            <span className="text-sm font-medium">Share to Team</span>
+            <Icon name="share-2" className="h-3.5 w-3.5" />
+            <span className="text-xs font-medium">Share</span>
           </Button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
