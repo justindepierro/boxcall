@@ -1,4 +1,3 @@
-import React from "react";
 import { Icon } from "../../ui/Icon/Icon";
 import { Button } from "../../ui/Button/Button";
 import { Typography } from "../../design-system/Typography";
@@ -95,8 +94,8 @@ export function DesktopPlaybookView({
   return (
     <div className="min-h-screen bg-surface-primary">
       {/* Aurora Hero Tiles - Football-Specific Actions */}
-      <div className="px-4 sm:px-6 lg:px-8 -mt-4 mb-2 py-2 overflow-visible">
-        <div className="flex items-center justify-center gap-3 md:gap-4 lg:gap-3 xl:gap-4 flex-wrap overflow-visible">
+      <div className="px-4 sm:px-6 lg:px-8 -mt-4 mb-6 py-4 overflow-visible">
+        <div className="flex items-center justify-center gap-4 md:gap-5 lg:gap-4 xl:gap-5 flex-wrap overflow-visible">
           <AppIconTile
             title="New Play"
             subtitle={`${state.playsCreated} plays`}
@@ -184,8 +183,9 @@ export function DesktopPlaybookView({
       </div>
 
       {formationAudit.plays.length > 0 && (
-        <div className="px-4 sm:px-6 lg:px-8 mb-6">
-          <FormationSyncPanel
+        <div className="px-4 sm:px-6 lg:px-8 mb-6 transition-all duration-300">
+          <div className="rounded-xl shadow-md shadow-jade-500/10 hover:shadow-lg hover:shadow-jade-500/20 transition-all duration-300">
+            <FormationSyncPanel
             plays={formationAudit.plays}
             loading={formationAudit.loading}
             error={formationAudit.error}
@@ -193,6 +193,7 @@ export function DesktopPlaybookView({
             onResolve={handleEditPlay}
             onOpenMapper={() => navigate("/playbook/formation-mapper")}
           />
+          </div>
         </div>
       )}
 
@@ -201,46 +202,57 @@ export function DesktopPlaybookView({
         {/* Left Sidebar - Controls */}
         <div className="lg:col-span-1 space-y-6 overflow-visible">
           {/* Selection Mode Toggle - NEW! */}
-          <SelectionModeToggle
-            isActive={state.enableBulkOperations}
-            onToggle={() => dispatch({ type: "TOGGLE_BULK" })}
-            selectedCount={state.selectedPlayIds?.size || 0}
-            label="Select Plays"
-          />
+          <div className="rounded-xl shadow-md shadow-jade-500/10 hover:shadow-lg hover:shadow-jade-500/20 transition-all duration-300 hover:scale-[1.01] hover:-translate-y-0.5">
+            <SelectionModeToggle
+              isActive={state.enableBulkOperations}
+              onToggle={() => dispatch({ type: "TOGGLE_BULK" })}
+              selectedCount={state.selectedPlayIds?.size || 0}
+              label="Select Plays"
+            />
+          </div>
 
           {/* Filters - Moved to top */}
-          <Card variant="default">
-            <AdvancedFilters
-              activeFilters={state.advancedFilters}
-              onFiltersChange={handleFiltersChange}
-            />
-          </Card>
+          <div className="rounded-xl shadow-md shadow-jade-500/10 hover:shadow-lg hover:shadow-jade-500/20 transition-all duration-300 hover:scale-[1.01] hover:-translate-y-0.5">
+            <Card variant="default">
+              <AdvancedFilters
+                activeFilters={state.advancedFilters}
+                onFiltersChange={handleFiltersChange}
+              />
+            </Card>
+          </div>
 
           {/* Stats Dashboard */}
-          <Card variant="default">
-            <PlaybookStatsDashboard stats={playbookStats} />
-          </Card>
+          <div className="rounded-xl shadow-md shadow-jade-500/10 hover:shadow-lg hover:shadow-jade-500/20 transition-all duration-300 hover:scale-[1.01] hover:-translate-y-0.5">
+            <Card variant="default">
+              <PlaybookStatsDashboard stats={playbookStats} />
+            </Card>
+          </div>
 
           {/* Recent Activity */}
-          <Card variant="default">
-            <RecentActivityFeed activities={playbookStats.recentActivity} />
-          </Card>
+          <div className="rounded-xl shadow-md shadow-jade-500/10 hover:shadow-lg hover:shadow-jade-500/20 transition-all duration-300 hover:scale-[1.01] hover:-translate-y-0.5">
+            <Card variant="default">
+              <RecentActivityFeed activities={playbookStats.recentActivity} />
+            </Card>
+          </div>
 
           {/* Bulk Actions - Only show when items are selected */}
           {(state.selectedPlayIds?.size || 0) > 0 && (
-            <Card variant="default">
-              <BulkActionsToolbar
-                selectedCount={state.selectedPlayIds?.size || 0}
-                onClearSelection={handleClearSelection}
-                onBulkAction={handleBulkAction}
-              />
-            </Card>
+            <div className="rounded-xl shadow-md shadow-emerald-500/10 hover:shadow-lg hover:shadow-emerald-500/20 transition-all duration-300 hover:scale-[1.01] hover:-translate-y-0.5">
+              <Card variant="default">
+                <BulkActionsToolbar
+                  selectedCount={state.selectedPlayIds?.size || 0}
+                  onClearSelection={handleClearSelection}
+                  onBulkAction={handleBulkAction}
+                />
+              </Card>
+            </div>
           )}
         </div>
 
         {/* Right Side - Main Content Area */}
         <div className="lg:col-span-3 overflow-visible">
-          <Card variant="default" size="lg">
+          <div className="rounded-xl shadow-lg shadow-jade-500/15 hover:shadow-2xl hover:shadow-jade-500/30 transition-all duration-300 hover:scale-[1.005] hover:-translate-y-1">
+            <Card variant="default" size="lg">
             {state.currentView === "playbook" && (
               <ErrorBoundary
                 fallback={
@@ -368,7 +380,8 @@ export function DesktopPlaybookView({
                 </div>
               </div>
             )}
-          </Card>
+            </Card>
+          </div>
         </div>
       </div>
     </div>

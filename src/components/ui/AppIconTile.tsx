@@ -43,17 +43,17 @@ export const AppIconTile = memo<AppIconTileProps>(
           )}
 
           {/* App Icon - iPhone Style - Centered */}
-          <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-22 md:h-22 overflow-visible">
+          <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-22 md:h-22 overflow-visible transition-all duration-300 group-hover:-translate-y-1 group-hover:scale-[1.05]">
             {/* Icon Container with Gradient and shine effect */}
             <div
-              className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${gradient} transition-all duration-base group-hover:scale-base group-active:scale-press overflow-visible before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:pointer-events-none shadow-2xl`}
+              className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${gradient} transition-all duration-300 group-hover:scale-[1.02] overflow-visible before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-tr before:from-white/30 before:via-white/20 before:to-transparent before:pointer-events-none shadow-lg shadow-jade-500/20 group-hover:shadow-2xl group-hover:shadow-jade-500/40`}
             />
 
             {/* Icon - Absolutely centered - Large size for better visibility */}
             <Icon
               name={icon}
               size={40}
-              className="absolute inset-0 m-auto text-white drop-shadow-lg flex-shrink-0 z-10 sm:w-12 sm:h-12"
+              className="absolute inset-0 m-auto text-white drop-shadow-lg flex-shrink-0 z-10 sm:w-12 sm:h-12 transition-transform duration-300 group-hover:scale-110 group-hover:drop-shadow-2xl"
               aria-hidden="true"
             />
 
