@@ -87,9 +87,9 @@ export function DesktopPlaybookView({
   mobileButtonSize,
 }: DesktopPlaybookViewProps) {
   return (
-    <div className="min-h-screen bg-surface-primary">
+    <div className="min-h-screen bg-jade-50/30">
       {/* Quick Action Buttons */}
-      <div className="px-6 py-4 border-b border-divider bg-white">
+      <div className="px-8 py-5 border-b border-jade-200/50 bg-white/80 backdrop-blur-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button
@@ -146,7 +146,7 @@ export function DesktopPlaybookView({
       </div>
 
       {formationAudit.plays.length > 0 && (
-        <div className="px-6 mb-6">
+        <div className="px-8 pt-6 mb-6">
           <FormationSyncPanel
             plays={formationAudit.plays}
             loading={formationAudit.loading}
@@ -160,11 +160,11 @@ export function DesktopPlaybookView({
 
       {/* Main Content - Optimized Desktop Layout (20%/80% split) */}
       <div className="max-w-screen-2xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 px-6 py-6 overflow-visible">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-spacing-lg px-8 py-6 overflow-visible">
         {/* Left Sidebar - Controls (20% width on desktop) */}
-        <div className="lg:col-span-1 space-y-4 overflow-visible">
+        <div className="lg:col-span-1 space-y-spacing-md overflow-visible">
           {/* Selection Mode Toggle - NEW! */}
-          <Card variant="default" interactive>
+          <Card variant="default" interactive className="border-jade-200/60 hover:border-jade-400">
             <SelectionModeToggle
               isActive={state.enableBulkOperations}
               onToggle={() => dispatch({ type: "TOGGLE_BULK" })}
@@ -174,7 +174,7 @@ export function DesktopPlaybookView({
           </Card>
 
           {/* Filters - Moved to top */}
-          <Card variant="default">
+          <Card variant="default" className="border-jade-200/60">
             <AdvancedFilters
               activeFilters={state.advancedFilters}
               onFiltersChange={handleFiltersChange}
@@ -182,18 +182,18 @@ export function DesktopPlaybookView({
           </Card>
 
           {/* Stats Dashboard */}
-          <Card variant="elevated">
+          <Card variant="elevated" className="border-jade-200/60">
             <PlaybookStatsDashboard stats={playbookStats} />
           </Card>
 
           {/* Recent Activity */}
-          <Card variant="default">
+          <Card variant="default" className="border-jade-200/60">
             <RecentActivityFeed activities={playbookStats.recentActivity} />
           </Card>
 
           {/* Bulk Actions - Only show when items are selected */}
           {(state.selectedPlayIds?.size || 0) > 0 && (
-            <Card variant="elevated">
+            <Card variant="elevated" className="border-jade-500">
               <BulkActionsToolbar
                 selectedCount={state.selectedPlayIds?.size || 0}
                 onClearSelection={handleClearSelection}
@@ -205,7 +205,7 @@ export function DesktopPlaybookView({
 
         {/* Main Content Area (80% width on desktop) */}
         <div className="lg:col-span-4 overflow-visible">
-          <Card variant="elevated" size="md">
+          <Card variant="elevated" size="md" className="border-jade-200/60">
             {state.currentView === "playbook" && (
               <ErrorBoundary
                 fallback={

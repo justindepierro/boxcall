@@ -82,7 +82,7 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
 
       {/* Photo thumbnail (if available) */}
       {play.diagram_image_url && (
-        <div className="shrink-0 w-20 h-14 rounded-lg overflow-hidden shadow-sm">
+        <div className="shrink-0 w-20 h-14 rounded-xl overflow-hidden shadow-sm shadow-jade-500/10">
           <img
             src={play.diagram_image_url}
             alt={`${displayName} diagram`}
@@ -117,7 +117,7 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
         >
           {/* Play type badge */}
           <span
-            className={`px-2.5 py-1 rounded-lg text-xs font-semibold shadow-sm ${getPlayTypeColor(optimisticPlay.p_type)}`}
+            className={`px-2.5 py-1 rounded-xl text-xs font-semibold shadow-sm ${getPlayTypeColor(optimisticPlay.p_type)}`}
           >
             {optimisticPlay.p_type}
           </span>

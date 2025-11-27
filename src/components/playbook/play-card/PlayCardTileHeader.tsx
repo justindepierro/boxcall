@@ -98,7 +98,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
 
         {/* Photo or Gradient Card */}
         <motion.div
-          className={`relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 ${isExpanded ? "ring-2 ring-jade-500" : ""}`}
+          className={`relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-md shadow-jade-500/10 hover:shadow-xl hover:shadow-jade-500/20 transition-all duration-300 ${isExpanded ? "ring-2 ring-jade-500" : ""}`}
           whileHover={{ scale: 1.03 }}
           transition={{ type: "spring", stiffness: 400, damping: 17 }}
         >
@@ -158,7 +158,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
             e.stopPropagation();
             onOpenAssignments();
           }}
-          className="absolute -bottom-3 -left-3 w-11 h-11 rounded-full bg-blue-500 shadow-md flex items-center justify-center border-2 border-white dark:border-slate-800 hover:bg-blue-600 transition-colors cursor-pointer z-10"
+          className="absolute -bottom-3 -left-3 w-11 h-11 rounded-full bg-jade-500 shadow-lg shadow-jade-500/30 flex items-center justify-center border-2 border-white hover:bg-jade-600 transition-colors cursor-pointer z-10"
           title="Player Assignments"
           aria-label="Player Assignments"
         >
