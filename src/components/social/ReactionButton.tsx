@@ -136,7 +136,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
           className={`flex items-center gap-1 ${buttonSizeClasses[size]} rounded-full transition-colors ${
             userReaction
               ? `${reactionColors[userReaction]} bg-opacity-10 hover:bg-opacity-20`
-              : "text-secondary hover:text-primary hover:bg-surface-secondary"
+              : "text-secondary hover:text-primary hover:bg-secondary"
           }`}
           disabled={isLoading}
         >
@@ -153,7 +153,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
         </button>
 
         {showPicker && (
-          <div className="absolute bottom-full mb-2 left-0 bg-surface-primary border border-border rounded-lg shadow-lg p-2 flex gap-1 z-10">
+          <div className="absolute bottom-full mb-2 left-0 bg-primary border border-border rounded-lg shadow-lg p-2 flex gap-1 z-10">
             {(Object.keys(reactionIcons) as ReactionType[]).map(
               (reactionType) => {
                 const Icon = reactionIcons[reactionType];
@@ -165,8 +165,8 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
                     onClick={() => handleReaction(reactionType)}
                     className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-colors ${
                       userReaction === reactionType
-                        ? "bg-surface-secondary"
-                        : "hover:bg-surface-secondary"
+                        ? "bg-secondary"
+                        : "hover:bg-secondary"
                     }`}
                     disabled={isLoading}
                   >
@@ -196,8 +196,8 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
       onClick={() => setShowPicker(!showPicker)}
       className={`flex items-center gap-2 ${buttonSizeClasses[size]} border border-light rounded-lg transition-colors ${
         userReaction
-          ? "bg-surface-secondary border-text-secondary"
-          : "hover:bg-surface-secondary"
+          ? "bg-secondary border-text-secondary"
+          : "hover:bg-secondary"
       }`}
       disabled={isLoading}
     >
@@ -223,7 +223,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
       )}
 
       {showPicker && (
-        <div className="absolute top-full mt-2 left-0 bg-surface-primary/95 dark:bg-surface-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl p-2 flex gap-1 z-10">
+        <div className="absolute top-full mt-2 left-0 bg-primary/95 dark:bg-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl p-2 flex gap-1 z-10">
           {(Object.keys(reactionIcons) as ReactionType[]).map(
             (reactionType) => {
               const Icon = reactionIcons[reactionType];
@@ -235,8 +235,8 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
                   onClick={() => handleReaction(reactionType)}
                   className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-colors ${
                     userReaction === reactionType
-                      ? "bg-surface-secondary"
-                      : "hover:bg-surface-secondary"
+                      ? "bg-secondary"
+                      : "hover:bg-secondary"
                   }`}
                   disabled={isLoading}
                 >

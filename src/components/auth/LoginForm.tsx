@@ -106,7 +106,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             fullWidth
           />
           {error && (
-            <div className="p-3 surface-subtle dark:bg-surface-error/10 border border-subtle dark:border-error rounded-lg">
+            <div className="p-3 bg-subtle dark:bg-surface-error/10 border border-muted dark:border-error rounded-lg">
               <Typography
                 variant="body-sm"
                 className="text-error dark:text-error-hover"

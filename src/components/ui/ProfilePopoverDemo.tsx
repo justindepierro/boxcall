@@ -131,7 +131,7 @@ export const ProfilePopoverDemo: React.FC = () => {
           {mockUsers.map((user) => (
             <div
               key={user.id}
-              className="flex items-center justify-between p-4 bg-surface-secondary rounded-lg"
+              className="flex items-center justify-between p-4 bg-secondary rounded-lg"
             >
               <UserAvatar
                 userId={user.id}
@@ -162,7 +162,7 @@ export const ProfilePopoverDemo: React.FC = () => {
           Activity Feed Example
         </Typography>
         <div className="space-y-4">
-          <div className="flex items-start gap-3 p-4 bg-surface-secondary rounded-lg">
+          <div className="flex items-start gap-3 p-4 bg-secondary rounded-lg">
             <UserAvatar
               userId={mockUsers[0].id}
               name={mockUsers[0].name}
@@ -193,7 +193,7 @@ export const ProfilePopoverDemo: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-start gap-3 p-4 bg-surface-secondary rounded-lg">
+          <div className="flex items-start gap-3 p-4 bg-secondary rounded-lg">
             <UserAvatar
               userId={mockUsers[1].id}
               name={mockUsers[1].name}
@@ -236,7 +236,7 @@ export const ProfilePopoverDemo: React.FC = () => {
             <Typography variant="headline-sm" className="text-primary mb-3">
               Staff Management Cards
             </Typography>
-            <div className="bg-surface-secondary p-4 rounded-lg">
+            <div className="bg-secondary p-4 rounded-lg">
               <div className="flex items-center gap-3">
                 <UserAvatar
                   userId="staff-1"
@@ -267,7 +267,7 @@ export const ProfilePopoverDemo: React.FC = () => {
             <Typography variant="headline-sm" className="text-primary mb-3">
               Play Creator Attribution
             </Typography>
-            <div className="bg-surface-secondary p-4 rounded-lg">
+            <div className="bg-secondary p-4 rounded-lg">
               <div className="flex items-center justify-between">
                 <div>
                   <Typography
@@ -280,7 +280,7 @@ export const ProfilePopoverDemo: React.FC = () => {
                     <span className="px-2 py-0.5 bg-purple-600 text-white rounded-full text-xs font-medium">
                       Pass
                     </span>
-                    <span className="px-2 py-0.5 bg-surface-muted text-primary border rounded-full text-xs font-medium">
+                    <span className="px-2 py-0.5 bg-muted text-primary border rounded-full text-xs font-medium">
                       85%
                     </span>
                     <div className="flex items-center gap-1">
@@ -307,7 +307,7 @@ export const ProfilePopoverDemo: React.FC = () => {
             <Typography variant="headline-sm" className="text-primary mb-3">
               Calendar Event Comments
             </Typography>
-            <div className="bg-surface-secondary p-4 rounded-lg space-y-3">
+            <div className="bg-secondary p-4 rounded-lg space-y-3">
               <div className="flex items-start gap-2">
                 <UserAvatar
                   userId="coach-calendar"

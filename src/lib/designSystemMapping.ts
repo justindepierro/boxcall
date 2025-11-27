@@ -7,41 +7,41 @@
 
 export const DESIGN_SYSTEM_MAPPING = {
   // Background Colors
-  "bg-white": "bg-surface-primary",
-  "bg-gray-50": "bg-surface-secondary",
-  "bg-gray-100": "bg-surface-secondary",
+  "bg-white": "bg-primary",
+  "bg-gray-50": "bg-secondary",
+  "bg-gray-100": "bg-secondary",
 
   // Text Colors
-  "text-gray-900": "text-text-primary",
-  "text-gray-700": "text-text-secondary",
-  "text-gray-500": "text-text-secondary",
-  "text-gray-400": "text-text-secondary",
-  "text-gray-600": "text-text-tertiary",
-  "text-white": "text-surface-primary",
+  "text-gray-900": "text-primary",
+  "text-gray-700": "text-secondary",
+  "text-gray-500": "text-secondary",
+  "text-gray-400": "text-secondary",
+  "text-gray-600": "text-tertiary",
+  "text-white": "text-bg-primary",
 
   // Border Colors
   "border-gray-200": "border-border",
-  "border-gray-300": "border-border-light",
-  "border-gray-100": "border-surface-secondary",
+  "border-gray-300": "border-light",
+  "border-gray-100": "border-bg-secondary",
 
   // Hover States
-  "hover:bg-gray-50": "hover:bg-surface-secondary",
-  "hover:bg-white": "hover:bg-surface-primary",
-  "hover:text-gray-900": "hover:text-text-primary",
+  "hover:bg-gray-50": "hover:bg-secondary",
+  "hover:bg-white": "hover:bg-primary",
+  "hover:text-gray-900": "hover:text-primary",
 
   // Focus States
-  "focus:border-gray-300": "focus:border-border-light",
+  "focus:border-gray-300": "focus:border-light",
   "focus:ring-gray-300": "focus:ring-border-light",
 
   // Card Styles
   "bg-white rounded-lg border border-gray-200":
-    "bg-surface-primary rounded-lg border border-border",
-  "bg-white border border-gray-200": "bg-surface-primary border border-border",
+    "bg-primary rounded-lg border border-border",
+  "bg-white border border-gray-200": "bg-primary border border-border",
 
   // Button Styles (these should use Button component variants instead)
-  "bg-gray-100 hover:bg-gray-200": "bg-surface-secondary hover:bg-border",
+  "bg-gray-100 hover:bg-gray-200": "bg-secondary hover:bg-border",
   "text-gray-600 hover:text-gray-900":
-    "text-text-tertiary hover:text-text-primary",
+    "text-tertiary hover:text-primary",
 } as const;
 
 /**
@@ -53,7 +53,7 @@ export const DESIGN_SYSTEM_MAPPING = {
  * - --semantic-bg-primary: Main background
  * - --semantic-bg-secondary: Secondary background
  * - --semantic-bg-muted: Muted background
- * - --semantic-surface-subtle-hover: Hover state for surfaces
+ * - --semantic-hover:bg-muted: Hover state for surfaces
  *
  * Text:
  * - --semantic-text-primary: Primary text color

@@ -85,8 +85,8 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
         onClick={handleFollowToggle}
         className={`flex items-center gap-1 ${buttonSizeClasses[size]} rounded-full transition-colors ${
           is_following
-            ? "text-success bg-surface-success hover:bg-surface-success"
-            : "text-tertiary hover:text-primary hover:bg-surface-secondary"
+            ? "text-success bg-success/20 hover:bg-success/20"
+            : "text-tertiary hover:text-primary hover:bg-secondary"
         }`}
         disabled={isLoading}
         title={is_following ? "Unfollow" : "Follow"}
@@ -109,8 +109,8 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
       onClick={handleFollowToggle}
       className={`flex items-center gap-2 ${buttonSizeClasses[size]} border rounded-lg font-medium transition-colors ${
         is_following
-          ? "border-text-success bg-surface-success text-success hover:bg-surface-success"
-          : "border-light bg-surface-primary text-primary hover:bg-surface-secondary"
+          ? "border-text-success bg-success/20 text-success hover:bg-success/20"
+          : "border-light bg-primary text-primary hover:bg-secondary"
       }`}
       disabled={isLoading}
     >

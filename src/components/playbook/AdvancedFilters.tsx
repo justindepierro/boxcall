@@ -195,7 +195,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
         {/* Filter Trigger Button */}
         <button
           onClick={() => setShowAdvanced(true)}
-          className="w-full px-4 py-3 bg-surface-primary rounded-lg shadow-sm border border-subtle flex items-center justify-between active:scale-98 transition-transform"
+          className="w-full px-4 py-3 bg-primary rounded-lg shadow-sm border border-muted flex items-center justify-between active:scale-98 transition-transform"
         >
           <div className="flex items-center gap-2">
             <Icon name="filter" className="h-5 w-5 text-accent" />
@@ -217,7 +217,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
             {activeFilters.map((filter) => (
               <div
                 key={filter.id}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-secondary text-secondary text-xs rounded-full border border-subtle"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary text-secondary text-xs rounded-full border border-muted"
               >
                 <span className="truncate max-w-36">{filter.label}</span>
                 <button
@@ -240,9 +240,9 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
             backdropOpacity={0.5}
             zIndex={50}
           >
-            <div className="flex flex-col h-full bg-surface-primary">
+            <div className="flex flex-col h-full bg-primary">
               {/* Header */}
-              <div className="sticky top-0 z-10 px-4 py-4 bg-surface-primary border-b border-subtle">
+              <div className="sticky top-0 z-10 px-4 py-4 bg-primary border-b border-muted">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <Icon name="filter" className="h-5 w-5 text-accent" />
@@ -252,7 +252,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                   </div>
                   <button
                     onClick={() => setShowAdvanced(false)}
-                    className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-surface-secondary active:scale-95 transition-all"
+                    className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-secondary active:scale-95 transition-all"
                   >
                     <Icon name="close" className="h-5 w-5 text-muted" />
                   </button>
@@ -285,7 +285,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                       {activeFilters.map((filter) => (
                         <div
                           key={filter.id}
-                          className="flex items-center justify-between p-3 bg-surface-secondary rounded-lg border border-subtle"
+                          className="flex items-center justify-between p-3 bg-secondary rounded-lg border border-muted"
                         >
                           <span className="text-sm text-primary flex-1 truncate">
                             {filter.label}
@@ -314,13 +314,13 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                   {!showAddFilter ? (
                     <button
                       onClick={() => setShowAddFilter(true)}
-                      className="w-full px-4 py-3 text-sm text-secondary border border-dashed border-medium rounded-lg hover:border-border hover:bg-surface-secondary transition-colors active:scale-98"
+                      className="w-full px-4 py-3 text-sm text-secondary border border-dashed border-secondary rounded-lg hover:border-border hover:bg-secondary transition-colors active:scale-98"
                     >
                       <Icon name="plus" className="h-5 w-5 inline mr-2" />
                       Add Custom Filter
                     </button>
                   ) : (
-                    <div className="p-4 bg-surface-secondary rounded-lg border border-subtle space-y-3">
+                    <div className="p-4 bg-secondary rounded-lg border border-muted space-y-3">
                       {/* Field Select */}
                       <div>
                         <label className="block text-sm font-medium text-primary mb-2">
@@ -336,7 +336,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                               value: "",
                             }))
                           }
-                          className="w-full h-12 px-3 text-sm border border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
+                          className="w-full h-12 px-3 text-sm border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-primary"
                         >
                           <option value="">Select field...</option>
                           {FILTER_FIELDS.map((field) => (
@@ -362,7 +362,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                                   value: e.target.value,
                                 }))
                               }
-                              className="w-full h-12 px-3 text-sm border border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
+                              className="w-full h-12 px-3 text-sm border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-primary"
                             >
                               <option value="">Select value...</option>
                               {selectedField.options?.map(
@@ -391,7 +391,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                                 }))
                               }
                               placeholder="Enter value..."
-                              className="w-full h-12 px-3 text-sm border border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
+                              className="w-full h-12 px-3 text-sm border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-primary"
                             />
                           )}
                         </div>
@@ -416,7 +416,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                                 value: "",
                               });
                             }}
-                            className="px-4 h-12 text-muted hover:text-secondary text-sm border border-subtle rounded-lg hover:bg-surface-muted active:scale-98 transition-all"
+                            className="px-4 h-12 text-muted hover:text-secondary text-sm border border-muted rounded-lg hover:bg-muted active:scale-98 transition-all"
                           >
                             Cancel
                           </button>
@@ -428,7 +428,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
               </div>
 
               {/* Footer with Apply Button */}
-              <div className="sticky bottom-0 z-10 p-4 bg-surface-primary border-t border-subtle pb-safe">
+              <div className="sticky bottom-0 z-10 p-4 bg-primary border-t border-muted pb-safe">
                 <button
                   onClick={() => setShowAdvanced(false)}
                   className="w-full h-12 bg-accent text-inverse text-sm font-semibold rounded-lg hover:bg-accent-hover active:scale-98 transition-all shadow-sm"
@@ -446,9 +446,9 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
 
   // Desktop: Sidebar panel
   return (
-    <div className="bg-surface-primary rounded-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_1px_3px_rgba(0,0,0,0.1)] overflow-visible">
+    <div className="bg-primary rounded-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_1px_3px_rgba(0,0,0,0.1)] overflow-visible">
       {/* Quick Filter Presets */}
-      <div className="p-4 border-b border-subtle">
+      <div className="p-4 border-b border-muted">
         <QuickFilterPresets
           activePresetId={activePresetId}
           onPresetSelect={handlePresetSelect}
@@ -497,12 +497,12 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
             {activeFilters.map((filter) => (
               <div
                 key={filter.id}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-secondary text-secondary text-xs rounded-full border border-subtle hover:border-medium transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary text-secondary text-xs rounded-full border border-muted hover:border-secondary transition-colors"
               >
                 <span className="truncate max-w-40">{filter.label}</span>
                 <button
                   onClick={() => removeFilter(filter.id)}
-                  className="text-muted hover:text-secondary hover:bg-surface-muted rounded-full p-0.5 active:scale-90 transition-all"
+                  className="text-muted hover:text-secondary hover:bg-muted rounded-full p-0.5 active:scale-90 transition-all"
                 >
                   <Icon name="close" className="h-3 w-3" />
                 </button>
@@ -518,7 +518,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           {!showAddFilter && (
             <button
               onClick={() => setShowAddFilter(true)}
-              className="w-full px-3 py-2 text-sm text-secondary border border-dashed border-medium rounded-lg hover:border-border hover:bg-surface-secondary transition-colors active:scale-98"
+              className="w-full px-3 py-2 text-sm text-secondary border border-dashed border-secondary rounded-lg hover:border-border hover:bg-secondary transition-colors active:scale-98"
             >
               <Icon name="plus" className="h-4 w-4 inline mr-2" />
               Add Custom Filter
@@ -527,7 +527,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
 
           {/* Compact Add Filter */}
           {showAddFilter && (
-            <div className="p-3 bg-surface-secondary rounded-lg border border-subtle space-y-2">
+            <div className="p-3 bg-secondary rounded-lg border border-muted space-y-2">
               <div className="flex gap-2 items-end">
                 <div className="flex-1 min-w-0">
                   <label className="block text-xs text-muted mb-1">
@@ -543,7 +543,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                         value: "",
                       }))
                     }
-                    className="w-full px-2 py-1.5 text-xs border border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
+                    className="w-full px-2 py-1.5 text-xs border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-primary"
                   >
                     <option value="">Select field...</option>
                     {FILTER_FIELDS.map((field) => (
@@ -568,7 +568,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                             value: e.target.value,
                           }))
                         }
-                        className="w-full px-2 py-1.5 text-xs border border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
+                        className="w-full px-2 py-1.5 text-xs border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-primary"
                       >
                         <option value="">Select value...</option>
                         {selectedField.options?.map(
@@ -595,7 +595,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                           }))
                         }
                         placeholder="Enter value..."
-                        className="w-full px-2 py-1.5 text-xs border border-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-surface-primary"
+                        className="w-full px-2 py-1.5 text-xs border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-primary"
                       />
                     )}
                   </div>
@@ -620,7 +620,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                         value: "",
                       });
                     }}
-                    className="px-3 py-1.5 text-muted hover:text-secondary text-xs border border-subtle rounded-lg hover:bg-surface-muted active:scale-95 transition-all"
+                    className="px-3 py-1.5 text-muted hover:text-secondary text-xs border border-muted rounded-lg hover:bg-muted active:scale-95 transition-all"
                   >
                     Cancel
                   </button>

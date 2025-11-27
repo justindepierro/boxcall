@@ -345,7 +345,7 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 mb-4 p-1 bg-surface-secondary rounded-lg">
+        <div className="flex gap-1 mb-4 p-1 bg-secondary rounded-lg">
           {(["progress", "achievements", "insights"] as const).map((tab) => (
             <Button
               key={tab}
@@ -426,7 +426,7 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
                           </span>
                         </div>
 
-                        <div className="w-full bg-surface-secondary rounded-full h-2">
+                        <div className="w-full bg-secondary rounded-full h-2">
                           <div
                             className="bg-primary rounded-full h-2 transition-all duration-300"
                             style={{ width: `${percentage}%` }}

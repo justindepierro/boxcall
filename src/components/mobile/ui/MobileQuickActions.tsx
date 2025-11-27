@@ -101,10 +101,10 @@ function QuickActionButton({
   onTap,
 }: QuickAction) {
   const variantStyles = {
-    default: "bg-surface-secondary hover:bg-surface-subtle",
+    default: "bg-secondary hover:bg-subtle",
     primary:
       "bg-gradient-to-br from-brand-jade/10 to-emerald-500/10 hover:from-brand-jade/20 hover:to-emerald-500/20",
-    secondary: "bg-surface-secondary hover:bg-surface-subtle",
+    secondary: "bg-secondary hover:bg-subtle",
   };
 
   const iconColorStyles = {

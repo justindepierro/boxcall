@@ -125,7 +125,7 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
             <select
               value={selectedFormation}
               onChange={(e) => setSelectedFormation(e.target.value)}
-              className="px-3 py-2 border border-border rounded-lg text-sm bg-surface-primary text-primary"
+              className="px-3 py-2 border border-border rounded-lg text-sm bg-primary text-primary"
             >
               <option value="">All Formations</option>
               {formations.map((formation) => (
@@ -138,7 +138,7 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
             <select
               value={selectedPlayType}
               onChange={(e) => setSelectedPlayType(e.target.value)}
-              className="px-3 py-2 border border-border rounded-lg text-sm bg-surface-primary text-primary"
+              className="px-3 py-2 border border-border rounded-lg text-sm bg-primary text-primary"
             >
               <option value="">All Play Types</option>
               {playTypes.map((type) => (
@@ -181,7 +181,7 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
               {filteredPlays.map((play) => (
                 <div
                   key={play.id}
-                  className="border border-border rounded-lg p-4 hover:bg-surface-secondary cursor-pointer transition-colors"
+                  className="border border-border rounded-lg p-4 hover:bg-secondary cursor-pointer transition-colors"
                   onClick={() => handlePlaySelect(play)}
                 >
                   <div className="flex items-start justify-between">

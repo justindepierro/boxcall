@@ -56,7 +56,7 @@ export const PracticeScriptPlayList: React.FC<PracticeScriptPlayListProps> = ({
       ) : (
         <div className="space-y-3">
           {plays.map((play, index) => (
-            <div key={play.id} className="border border-subtle rounded-lg p-4">
+            <div key={play.id} className="border border-muted rounded-lg p-4">
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <h4 className="font-medium">{play.playName}</h4>
@@ -137,7 +137,7 @@ export const PracticeScriptPlayList: React.FC<PracticeScriptPlayListProps> = ({
 
       {/* Add/Edit Play Form */}
       {(isAddingPlay || editingIndex !== null) && (
-        <div className="border border-subtle rounded-lg p-4 bg-surface-secondary">
+        <div className="border border-muted rounded-lg p-4 bg-secondary">
           <h4 className="font-medium mb-4">
             {isAddingPlay ? "Add New Play" : "Edit Play"}
           </h4>

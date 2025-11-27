@@ -207,7 +207,7 @@ export const SharedGoalTracker: React.FC<SharedGoalTrackerProps> = ({
             </Typography>
             <div className="flex items-center gap-2">
               {/* Filter Options */}
-              <div className="flex bg-surface-secondary rounded-lg p-1">
+              <div className="flex bg-secondary rounded-lg p-1">
                 <Button
                   variant={filter === "all" ? "primary" : "ghost"}
                   size="xs"

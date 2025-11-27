@@ -176,7 +176,7 @@ const PracticeSession: React.FC = () => {
               </Typography>
             </div>
 
-            <div className="bg-surface-secondary rounded-lg p-6 mb-6">
+            <div className="bg-secondary rounded-lg p-6 mb-6">
               <Typography variant="body-md" className="mb-4">
                 <strong>Session Overview:</strong>
               </Typography>
@@ -287,7 +287,7 @@ const PracticeSession: React.FC = () => {
                 {Math.round(overallProgress)}%
               </Typography>
             </div>
-            <div className="w-full bg-surface-secondary rounded-full h-2">
+            <div className="w-full bg-secondary rounded-full h-2">
               <div
                 className="bg-primary rounded-full h-2 transition-all duration-300"
                 style={{ width: `${overallProgress}%` }}
@@ -356,7 +356,7 @@ const PracticeSession: React.FC = () => {
                         {Math.round(playProgress)}%
                       </Typography>
                     </div>
-                    <div className="w-full bg-surface-secondary rounded-full h-2">
+                    <div className="w-full bg-secondary rounded-full h-2">
                       <div
                         className="bg-success rounded-full h-2 transition-all duration-300"
                         style={{ width: `${playProgress}%` }}
@@ -365,7 +365,7 @@ const PracticeSession: React.FC = () => {
                   </div>
 
                   {currentPlay.notes && (
-                    <div className="bg-surface-secondary rounded-lg p-3">
+                    <div className="bg-secondary rounded-lg p-3">
                       <Typography
                         variant="body-sm"
                         className="text-secondary"
@@ -423,7 +423,7 @@ const PracticeSession: React.FC = () => {
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Add notes for this rep..."
-                  className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-primary resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-3 py-2 border border-border rounded-lg bg-primary text-primary resize-none focus:outline-none focus:ring-2 focus:ring-primary"
                   rows={3}
                   disabled={isPaused}
                 />

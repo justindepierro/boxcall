@@ -35,9 +35,9 @@ export const FormationDirectionWarningModal: React.FC<
       title="Direction Detected in Formation Name"
       size="md"
     >
-      <div className="space-y-spacing-lg">
+      <div className="space-y-lg">
         {/* Warning Icon */}
-        <div className="flex items-start gap-spacing-md p-spacing-md bg-warning-50 border border-warning-200 rounded-lg">
+        <div className="flex items-start gap-md p-md bg-warning-50 border border-warning-200 rounded-lg">
           <AlertTriangle className="w-6 h-6 text-warning-600 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
             <Typography
@@ -48,7 +48,7 @@ export const FormationDirectionWarningModal: React.FC<
             </Typography>
             <Typography
               variant="body-sm"
-              className="text-warning-700 mt-spacing-xs"
+              className="text-warning-700 mt-xs"
             >
               This can cause issues with play organization and flip workflows.
             </Typography>
@@ -56,11 +56,11 @@ export const FormationDirectionWarningModal: React.FC<
         </div>
 
         {/* Current Input */}
-        <div className="space-y-spacing-sm">
+        <div className="space-y-sm">
           <Typography variant="label" className="text-secondary">
             What you typed:
           </Typography>
-          <div className="p-spacing-md bg-surface-secondary rounded-lg border border-primary">
+          <div className="p-md bg-secondary rounded-lg border border-primary">
             <Typography
               variant="body-lg"
               className="font-mono text-primary"
@@ -69,7 +69,7 @@ export const FormationDirectionWarningModal: React.FC<
             </Typography>
             <Typography
               variant="caption"
-              className="text-muted mt-spacing-xs"
+              className="text-muted mt-xs"
             >
               Contains direction keyword: "{detection.directionKeyword}"
             </Typography>
@@ -77,12 +77,12 @@ export const FormationDirectionWarningModal: React.FC<
         </div>
 
         {/* Suggested Fix */}
-        <div className="space-y-spacing-sm">
+        <div className="space-y-sm">
           <Typography variant="label" className="text-success-700 font-medium">
             ✅ Recommended (Best Practice):
           </Typography>
-          <div className="p-spacing-md bg-success-50 rounded-lg border-2 border-success-300">
-            <div className="flex items-center gap-spacing-md">
+          <div className="p-md bg-success-50 rounded-lg border-2 border-success-300">
+            <div className="flex items-center gap-md">
               <div className="flex-1">
                 <Typography
                   variant="caption"
@@ -92,7 +92,7 @@ export const FormationDirectionWarningModal: React.FC<
                 </Typography>
                 <Typography
                   variant="body-lg"
-                  className="font-mono text-success-900 mt-spacing-xs"
+                  className="font-mono text-success-900 mt-xs"
                 >
                   "{detection.suggestedFormationName}"
                 </Typography>
@@ -106,7 +106,7 @@ export const FormationDirectionWarningModal: React.FC<
                   Direction:
                 </Typography>
                 <div
-                  className={`inline-block px-spacing-md py-spacing-xs rounded-full bg-${directionColor}-100 border border-${directionColor}-300 mt-spacing-xs`}
+                  className={`inline-block px-md py-xs rounded-full bg-${directionColor}-100 border border-${directionColor}-300 mt-xs`}
                 >
                   <Typography
                     variant="body-md"
@@ -119,7 +119,7 @@ export const FormationDirectionWarningModal: React.FC<
             </div>
             <Typography
               variant="caption"
-              className="text-success-700 mt-spacing-md"
+              className="text-success-700 mt-md"
             >
               💡 This keeps your data clean and makes duplicate + flip workflows
               work properly
@@ -128,14 +128,14 @@ export const FormationDirectionWarningModal: React.FC<
         </div>
 
         {/* Why This Matters */}
-        <div className="p-spacing-md bg-info-50 rounded-lg border border-info-200">
+        <div className="p-md bg-info-50 rounded-lg border border-info-200">
           <Typography
             variant="body-sm"
-            className="text-info-800 font-medium mb-spacing-sm"
+            className="text-info-800 font-medium mb-sm"
           >
             Why use separate direction field?
           </Typography>
-          <ul className="space-y-spacing-xs text-info-700 text-sm">
+          <ul className="space-y-xs text-info-700 text-sm">
             <li>✓ Easier to flip plays (Right → Left automatically)</li>
             <li>✓ Better formation organization and linking</li>
             <li>✓ Consistent with how other coaches structure playbooks</li>
@@ -146,7 +146,7 @@ export const FormationDirectionWarningModal: React.FC<
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-spacing-sm pt-spacing-md border-t border-primary">
+        <div className="flex gap-sm pt-md border-t border-primary">
           <Button
             variant="primary"
             className="flex-1"

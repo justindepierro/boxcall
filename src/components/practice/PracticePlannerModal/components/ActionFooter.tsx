@@ -12,7 +12,7 @@ export const ActionFooter: React.FC<ActionFooterProps> = ({
   onSave,
 }) => {
   return (
-    <div className="flex justify-between pt-4 border-t border-subtle">
+    <div className="flex justify-between pt-4 border-t border-muted">
       <div>{/* Simplified footer without overtime warnings */}</div>
       <div className="flex space-x-3">
         <Button variant="ghost" onClick={onClose}>

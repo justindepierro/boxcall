@@ -72,20 +72,20 @@ export const MentionList = forwardRef<MentionListRef, MentionListProps>(
 
     if (props.items.length === 0) {
       return (
-        <div className="bg-surface-primary rounded-lg shadow-xl p-2 text-sm text-muted">
+        <div className="bg-primary rounded-lg shadow-xl p-2 text-sm text-muted">
           No results
         </div>
       );
     }
 
     return (
-      <div className="bg-surface-primary rounded-lg shadow-xl overflow-hidden max-h-64 overflow-y-auto">
+      <div className="bg-primary rounded-lg shadow-xl overflow-hidden max-h-64 overflow-y-auto">
         {props.items.map((item, index) => (
           <button
             key={item.id}
             type="button"
-            className={`w-full text-left px-3 py-2 flex items-center gap-2 hover:bg-surface-muted transition-colors ${
-              index === selectedIndex ? "bg-surface-muted" : ""
+            className={`w-full text-left px-3 py-2 flex items-center gap-2 hover:bg-muted transition-colors ${
+              index === selectedIndex ? "bg-muted" : ""
             }`}
             onClick={() => selectItem(index)}
           >

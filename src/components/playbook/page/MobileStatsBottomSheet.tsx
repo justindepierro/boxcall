@@ -69,7 +69,7 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="h-8 w-8 flex items-center justify-center hover:bg-surface-tertiary rounded-full transition-colors"
+            className="h-8 w-8 flex items-center justify-center hover:bg-tertiary rounded-full transition-colors"
             aria-label="Close stats"
           >
             <Icon name="close" size="sm" className="h-4 w-4" />
@@ -106,7 +106,7 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
         </div>
 
         {/* Diagram Coverage */}
-        <div className="bg-surface-secondary rounded-lg p-4">
+        <div className="bg-secondary rounded-lg p-4">
           <div className="flex items-center justify-between mb-2">
             <Typography
               variant="body-sm"
@@ -121,7 +121,7 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
               {diagramPercentage}%
             </Typography>
           </div>
-          <div className="w-full bg-surface-tertiary rounded-full h-2 overflow-hidden">
+          <div className="w-full bg-tertiary rounded-full h-2 overflow-hidden">
             <div
               className="bg-brand-jade h-full rounded-full transition-all duration-300"
               style={{ width: `${diagramPercentage}%` }}
@@ -130,7 +130,7 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
         </div>
 
         {typeof stats.formationsNeedingMapping === "number" && (
-          <div className="bg-surface-secondary rounded-lg p-4">
+          <div className="bg-secondary rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
                 <Typography
@@ -176,7 +176,7 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
 
           <div className="grid grid-cols-2 gap-3">
             {/* Pass Plays */}
-            <div className="bg-surface-secondary rounded-lg p-3">
+            <div className="bg-secondary rounded-lg p-3">
               <div className="flex items-center gap-2 mb-1">
                 <Icon
                   name="arrow-right"
@@ -199,7 +199,7 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
             </div>
 
             {/* Run Plays */}
-            <div className="bg-surface-secondary rounded-lg p-3">
+            <div className="bg-secondary rounded-lg p-3">
               <div className="flex items-center gap-2 mb-1">
                 <Icon
                   name="arrow-up"
@@ -222,7 +222,7 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
             </div>
 
             {/* RPO Plays */}
-            <div className="bg-surface-secondary rounded-lg p-3">
+            <div className="bg-secondary rounded-lg p-3">
               <div className="flex items-center gap-2 mb-1">
                 <Icon
                   name="zap"
@@ -245,7 +245,7 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
             </div>
 
             {/* Play Action */}
-            <div className="bg-surface-secondary rounded-lg p-3">
+            <div className="bg-secondary rounded-lg p-3">
               <div className="flex items-center gap-2 mb-1">
                 <Icon
                   name="activity"
@@ -270,7 +270,7 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
         </div>
 
         {/* Formations */}
-        <div className="bg-surface-secondary rounded-lg p-4">
+        <div className="bg-secondary rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Icon

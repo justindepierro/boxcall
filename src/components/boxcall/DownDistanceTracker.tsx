@@ -57,7 +57,7 @@ export const DownDistanceTracker: React.FC<DownDistanceTrackerProps> = ({
   return (
     <div className={`space-y-4 ${className}`}>
       {/* Current Situation Display */}
-      <div className="bg-surface-secondary border-2 border-primary rounded-lg p-4">
+      <div className="bg-secondary border-2 border-primary rounded-lg p-4">
         <Typography variant="body-xs" className="text-muted mb-1">
           Current Situation
         </Typography>
@@ -123,7 +123,7 @@ export const DownDistanceTracker: React.FC<DownDistanceTrackerProps> = ({
             onChange={(e) => onUpdate({ timeRemaining: e.target.value })}
             placeholder="15:00"
             disabled={disabled}
-            className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-primary font-mono text-center focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+            className="w-full px-3 py-2 border border-border rounded-lg bg-primary text-primary font-mono text-center focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
           />
         </div>
       </div>
@@ -167,7 +167,7 @@ export const DownDistanceTracker: React.FC<DownDistanceTrackerProps> = ({
             min={1}
             max={99}
             disabled={disabled}
-            className="w-full px-3 py-2 border border-border rounded-lg bg-surface-primary text-primary font-mono text-center focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+            className="w-full px-3 py-2 border border-border rounded-lg bg-primary text-primary font-mono text-center focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
           />
         </div>
       </div>
@@ -195,13 +195,13 @@ export const DownDistanceTracker: React.FC<DownDistanceTrackerProps> = ({
             max={100}
             step={1}
             disabled={disabled}
-            className="w-full h-2 bg-surface-secondary rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+            className="w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
             style={{
               background: `linear-gradient(to right, 
                 var(--color-primary) 0%, 
                 var(--color-primary) ${situation.yardLine}%, 
-                var(--color-surface-secondary) ${situation.yardLine}%, 
-                var(--color-surface-secondary) 100%)`,
+                var(--color-bg-secondary) ${situation.yardLine}%, 
+                var(--color-bg-secondary) 100%)`,
             }}
           />
           {/* Field markers */}
@@ -262,7 +262,7 @@ export const DownDistanceTracker: React.FC<DownDistanceTrackerProps> = ({
       </div>
 
       {/* Field Zone Indicator */}
-      <div className="bg-surface-secondary rounded-lg p-3">
+      <div className="bg-secondary rounded-lg p-3">
         <div className="flex items-center justify-between">
           <Typography variant="body-xs" className="text-muted">
             Field Zone
@@ -274,7 +274,7 @@ export const DownDistanceTracker: React.FC<DownDistanceTrackerProps> = ({
             {fieldZone}
           </Typography>
         </div>
-        <div className="mt-2 h-1 rounded-full bg-surface-primary overflow-hidden">
+        <div className="mt-2 h-1 rounded-full bg-primary overflow-hidden">
           <div
             className={`h-full transition-all ${
               situation.yardLine >= 95

@@ -92,7 +92,7 @@ export const MobilePracticeSession: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-surface-primary">
+      <div className="flex items-center justify-center h-screen bg-primary">
         <Typography variant="body-lg" className="text-secondary">
           Loading...
         </Typography>
@@ -102,7 +102,7 @@ export const MobilePracticeSession: React.FC = () => {
 
   if (error || !practiceScript) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-surface-primary p-4">
+      <div className="flex flex-col items-center justify-center h-screen bg-primary p-4">
         <Icon name="alert-circle" className="h-16 w-16 text-error-600 mb-4" />
         <Typography variant="headline-md" className="mb-2 text-center">
           Error Loading Practice Script
@@ -128,9 +128,9 @@ export const MobilePracticeSession: React.FC = () => {
   // Pre-session start screen
   if (!isSessionActive) {
     return (
-      <div className="flex flex-col h-screen bg-surface-primary">
+      <div className="flex flex-col h-screen bg-primary">
         {/* Header */}
-        <div className="bg-surface-secondary p-4 shadow-sm">
+        <div className="bg-secondary p-4 shadow-sm">
           <div className="flex items-center gap-3 mb-2">
             <button
               onClick={() => navigate("/boxcall")}
@@ -151,7 +151,7 @@ export const MobilePracticeSession: React.FC = () => {
 
         {/* Content */}
         <div className="flex-1 overflow-auto p-4 space-y-4">
-          <div className="bg-surface-secondary rounded-lg p-4">
+          <div className="bg-secondary rounded-lg p-4">
             <Typography
               variant="headline-sm"
               className="mb-3 text-primary"
@@ -191,7 +191,7 @@ export const MobilePracticeSession: React.FC = () => {
         </div>
 
         {/* Bottom CTA */}
-        <div className="p-4 bg-surface-secondary shadow-lg border-t border-border">
+        <div className="p-4 bg-secondary shadow-lg border-t border-border">
           <Button
             variant="primary"
             size="lg"
@@ -209,12 +209,12 @@ export const MobilePracticeSession: React.FC = () => {
   // Active session screen
   return (
     <div
-      className="flex flex-col h-screen bg-surface-primary"
+      className="flex flex-col h-screen bg-primary"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
       {/* Compact Header */}
-      <div className="bg-surface-secondary p-3 shadow-sm flex-shrink-0">
+      <div className="bg-secondary p-3 shadow-sm flex-shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex-1 min-w-0">
             <Typography
@@ -237,7 +237,7 @@ export const MobilePracticeSession: React.FC = () => {
         </div>
 
         {/* Progress bar */}
-        <div className="mt-2 bg-surface-primary rounded-full h-1.5 overflow-hidden">
+        <div className="mt-2 bg-primary rounded-full h-1.5 overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-primary to-primary-600 transition-all duration-300"
             style={{ width: `${overallProgress}%` }}
@@ -258,7 +258,7 @@ export const MobilePracticeSession: React.FC = () => {
                     ? "bg-success-600"
                     : idx === currentRepNumber - 1
                       ? "bg-primary ring-4 ring-primary/20 scale-125"
-                      : "bg-surface-secondary"
+                      : "bg-secondary"
                 }`}
               />
             ))}
@@ -266,7 +266,7 @@ export const MobilePracticeSession: React.FC = () => {
 
           {/* Play Details */}
           {currentPlay?.play && (
-            <div className="bg-surface-secondary rounded-lg p-4 space-y-2">
+            <div className="bg-secondary rounded-lg p-4 space-y-2">
               {currentPlay.play.formation_name && (
                 <div className="flex items-center gap-2">
                   <Icon name="grid" className="h-4 w-4 text-secondary" />
@@ -298,12 +298,12 @@ export const MobilePracticeSession: React.FC = () => {
 
           {/* Notes Input (optional) */}
           {showNotes && (
-            <div className="bg-surface-secondary rounded-lg p-4">
+            <div className="bg-secondary rounded-lg p-4">
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Add notes for this rep..."
-                className="w-full bg-surface-primary border border-border rounded-lg p-3 text-primary placeholder-text-muted resize-none"
+                className="w-full bg-primary border border-border rounded-lg p-3 text-primary placeholder-text-muted resize-none"
                 rows={3}
               />
             </div>
@@ -312,7 +312,7 @@ export const MobilePracticeSession: React.FC = () => {
       </div>
 
       {/* Bottom Action Bar - Thumb Zone */}
-      <div className="flex-shrink-0 bg-surface-secondary shadow-2xl border-t border-border">
+      <div className="flex-shrink-0 bg-secondary shadow-2xl border-t border-border">
         {/* Notes Toggle */}
         <div className="px-4 pt-3 pb-2">
           <button
@@ -332,7 +332,7 @@ export const MobilePracticeSession: React.FC = () => {
           <button
             onClick={() => handleQuickLog("success")}
             disabled={isPaused}
-            className="flex flex-col items-center justify-center h-24 bg-success-600 active:bg-success-700 disabled:bg-surface-muted disabled:text-muted text-white rounded-xl shadow-lg transition-all active:scale-95"
+            className="flex flex-col items-center justify-center h-24 bg-success-600 active:bg-success-700 disabled:bg-muted disabled:text-muted text-white rounded-xl shadow-lg transition-all active:scale-95"
           >
             <Icon name="check-circle" className="h-8 w-8 mb-1" />
             <Typography variant="body-md" className="font-semibold">
@@ -344,7 +344,7 @@ export const MobilePracticeSession: React.FC = () => {
           <button
             onClick={() => handleQuickLog("failure")}
             disabled={isPaused}
-            className="flex flex-col items-center justify-center h-24 bg-error-600 active:bg-error-700 disabled:bg-surface-muted disabled:text-muted text-white rounded-xl shadow-lg transition-all active:scale-95"
+            className="flex flex-col items-center justify-center h-24 bg-error-600 active:bg-error-700 disabled:bg-muted disabled:text-muted text-white rounded-xl shadow-lg transition-all active:scale-95"
           >
             <Icon name="x-circle" className="h-8 w-8 mb-1" />
             <Typography variant="body-md" className="font-semibold">
@@ -358,7 +358,7 @@ export const MobilePracticeSession: React.FC = () => {
           <button
             onClick={() => handleQuickLog("neutral")}
             disabled={isPaused}
-            className="flex flex-col items-center justify-center h-16 bg-surface-primary active:bg-surface-muted disabled:opacity-50 border border-border rounded-lg transition-all active:scale-95"
+            className="flex flex-col items-center justify-center h-16 bg-primary active:bg-muted disabled:opacity-50 border border-border rounded-lg transition-all active:scale-95"
           >
             <Icon
               name="minus-circle"
@@ -372,7 +372,7 @@ export const MobilePracticeSession: React.FC = () => {
           <button
             onClick={() => skipRep()}
             disabled={isPaused}
-            className="flex flex-col items-center justify-center h-16 bg-surface-primary active:bg-surface-muted disabled:opacity-50 border border-border rounded-lg transition-all active:scale-95"
+            className="flex flex-col items-center justify-center h-16 bg-primary active:bg-muted disabled:opacity-50 border border-border rounded-lg transition-all active:scale-95"
           >
             <Icon
               name="skip-forward"
@@ -386,7 +386,7 @@ export const MobilePracticeSession: React.FC = () => {
           <button
             onClick={nextPlay}
             disabled={isPaused || isLastPlay}
-            className="flex flex-col items-center justify-center h-16 bg-primary active:bg-primary-600 disabled:bg-surface-muted disabled:text-muted text-white rounded-lg transition-all active:scale-95"
+            className="flex flex-col items-center justify-center h-16 bg-primary active:bg-primary-600 disabled:bg-muted disabled:text-muted text-white rounded-lg transition-all active:scale-95"
           >
             <Icon name="chevron-right" className="h-6 w-6 mb-1" />
             <Typography variant="body-xs" className="font-medium">
@@ -396,7 +396,7 @@ export const MobilePracticeSession: React.FC = () => {
         </div>
 
         {/* Safe area padding for iOS */}
-        <div className="h-safe-area-inset-bottom bg-surface-secondary" />
+        <div className="h-safe-area-inset-bottom bg-secondary" />
       </div>
     </div>
   );

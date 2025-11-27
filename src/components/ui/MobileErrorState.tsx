@@ -36,7 +36,7 @@ const ERROR_CONFIGURATIONS = {
     defaultTitle: "Network Error",
     defaultMessage: "Please check your internet connection and try again.",
     color: "text-warning",
-    bgColor: "bg-surface-warning",
+    bgColor: "bg-warning/20",
   },
   server: {
     icon: "server" as const,
@@ -52,14 +52,14 @@ const ERROR_CONFIGURATIONS = {
     defaultMessage:
       "Check your connection and try again when you're back online.",
     color: "text-tertiary",
-    bgColor: "surface-subtle",
+    bgColor: "bg-subtle",
   },
   timeout: {
     icon: "refresh-cw" as const,
     defaultTitle: "Request Timeout",
     defaultMessage: "This is taking longer than usual. Please try again.",
     color: "text-warning",
-    bgColor: "bg-surface-warning",
+    bgColor: "bg-warning/20",
   },
   generic: {
     icon: "alert-triangle" as const,
@@ -106,7 +106,7 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
   if (compact) {
     return (
       <div
-        className={`flex items-center justify-between p-4 bg-surface-primary rounded-lg ${className}`}
+        className={`flex items-center justify-between p-4 bg-primary rounded-lg ${className}`}
       >
         <div className="flex items-center space-x-3">
           <div className={`p-2 rounded-full ${config.bgColor}`}>
@@ -129,7 +129,7 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
             onClick={handleRetry}
             variant="ghost"
             size="xs"
-            className="flex-shrink-0 p-2 h-auto text-team-primary hover:surface-subtle"
+            className="flex-shrink-0 p-2 h-auto text-team-primary hover:bg-subtle"
             icon={<Icon name="refresh-cw" size="sm" />}
             iconPosition="only"
             aria-label="Retry"

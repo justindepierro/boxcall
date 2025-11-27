@@ -139,9 +139,9 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         <div className={contentClasses}>
           {loading ? (
             <div className="space-y-3">
-              <div className="h-4 rounded-lg animate-pulse bg-surface-muted"></div>
-              <div className="h-4 rounded-lg animate-pulse w-3/4 bg-surface-muted"></div>
-              <div className="h-4 rounded-lg animate-pulse w-1/2 bg-surface-muted"></div>
+              <div className="h-4 rounded-lg animate-pulse bg-muted"></div>
+              <div className="h-4 rounded-lg animate-pulse w-3/4 bg-muted"></div>
+              <div className="h-4 rounded-lg animate-pulse w-1/2 bg-muted"></div>
             </div>
           ) : (
             children

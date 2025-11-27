@@ -26,7 +26,7 @@ export const TestModal: React.FC = () => {
           size="sm"
           className="bg-text-error border-8 border-text-info"
         >
-          <div className="p-4 bg-surface-warning">
+          <div className="p-4 bg-warning/20">
             <p>This is a test modal to debug rendering issues.</p>
             <Button onClick={() => setIsOpen(false)} className="mt-2">
               Close

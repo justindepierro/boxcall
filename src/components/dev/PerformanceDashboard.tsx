@@ -136,7 +136,7 @@ export const PerformanceDashboard: React.FC = () => {
       case "poor":
         return "text-error-600 bg-error-bg border-error-200";
       default:
-        return "text-secondary bg-surface-secondary border";
+        return "text-secondary bg-secondary border";
     }
   };
 
@@ -162,13 +162,13 @@ export const PerformanceDashboard: React.FC = () => {
           <button
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="px-3 py-1 bg-surface-secondary rounded-lg text-sm hover:bg-surface-hover disabled:opacity-50 transition-colors"
+            className="px-3 py-1 bg-secondary rounded-lg text-sm hover:bg-surface-hover disabled:opacity-50 transition-colors"
           >
             {isRefreshing ? "↻" : "🔄"} Refresh
           </button>
           <button
             onClick={handleLogMetrics}
-            className="px-3 py-1 bg-surface-secondary rounded-lg text-sm hover:bg-surface-hover transition-colors"
+            className="px-3 py-1 bg-secondary rounded-lg text-sm hover:bg-surface-hover transition-colors"
           >
             📋 Log to Console
           </button>
@@ -188,7 +188,7 @@ export const PerformanceDashboard: React.FC = () => {
           {metrics.map((metric) => (
             <div
               key={metric.name}
-              className="flex items-center justify-between p-3 rounded-lg border bg-surface-primary"
+              className="flex items-center justify-between p-3 rounded-lg border bg-primary"
             >
               <div>
                 <div className="font-medium text-primary text-sm">
@@ -208,7 +208,7 @@ export const PerformanceDashboard: React.FC = () => {
         </div>
       )}
 
-      <div className="border-t border-subtle pt-4">
+      <div className="border-t border-muted pt-4">
         <div className="flex justify-between items-center mb-3">
           <span className="text-sm font-medium text-primary">
             Performance Guide

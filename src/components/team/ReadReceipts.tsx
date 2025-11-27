@@ -84,7 +84,7 @@ export function ReadReceipts({
         {/* Mini Progress Bar */}
         {isCoach && (
           <div className="flex-1 w-16">
-            <div className="h-1 bg-surface-secondary rounded-full overflow-hidden">
+            <div className="h-1 bg-secondary rounded-full overflow-hidden">
               <div
                 className="h-full bg-brand-primary transition-all duration-500"
                 style={{ width: `${view_percentage}%` }}
@@ -96,7 +96,7 @@ export function ReadReceipts({
 
       {/* Detailed View (Coaches Only) */}
       {isCoach && showDetails && (
-        <div className="mt-3 p-4 bg-surface-secondary rounded-lg space-y-4">
+        <div className="mt-3 p-4 bg-secondary rounded-lg space-y-4">
           {/* Viewers */}
           {viewers.length > 0 && (
             <div>
@@ -108,7 +108,7 @@ export function ReadReceipts({
                 {viewers.map((viewer) => (
                   <li
                     key={viewer.user_id}
-                    className="text-sm flex items-center justify-between py-1 px-2 hover:bg-surface-secondary rounded"
+                    className="text-sm flex items-center justify-between py-1 px-2 hover:bg-secondary rounded"
                   >
                     <div className="flex items-center gap-2">
                       <span className="text-primary">{viewer.user_name}</span>
@@ -139,7 +139,7 @@ export function ReadReceipts({
                 {non_viewers.map((member) => (
                   <li
                     key={member.user_id}
-                    className="text-sm flex items-center gap-2 py-1 px-2 hover:bg-surface-secondary rounded"
+                    className="text-sm flex items-center gap-2 py-1 px-2 hover:bg-secondary rounded"
                   >
                     <span className="text-muted">{member.user_name}</span>
                     <span className="text-xs text-muted capitalize">

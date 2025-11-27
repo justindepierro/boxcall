@@ -135,8 +135,8 @@ export const UnifiedSettingsPanel: React.FC = () => {
       {/* Main floating button */}
       <div className="fixed bottom-6 right-6 z-50">
         {isOpen && (
-          <div className="absolute bottom-16 right-0 w-80 bg-surface-primary rounded-lg shadow-xl border border-subtle animate-in slide-in-from-bottom-2 fade-in duration-200">
-            <div className="p-4 border-b border-subtle">
+          <div className="absolute bottom-16 right-0 w-80 bg-primary rounded-lg shadow-xl border border-muted animate-in slide-in-from-bottom-2 fade-in duration-200">
+            <div className="p-4 border-b border-muted">
               <Typography
                 variant="headline-sm"
                 className="flex items-center justify-between"
@@ -243,8 +243,8 @@ export const UnifiedSettingsPanel: React.FC = () => {
 
       {isDev && showDevTools && (
         <div className="fixed inset-0 bg-text-primary/50 z-[60] flex items-center justify-center">
-          <div className="bg-surface-primary rounded-lg shadow-xl max-w-4xl max-h-[80vh] w-full mx-4 overflow-hidden">
-            <div className="p-4 border-b border-subtle flex justify-between items-center">
+          <div className="bg-primary rounded-lg shadow-xl max-w-4xl max-h-[80vh] w-full mx-4 overflow-hidden">
+            <div className="p-4 border-b border-muted flex justify-between items-center">
               <Typography variant="headline-sm">Development Tools</Typography>
               <Button variant="ghost" onClick={() => setShowDevTools(false)}>
                 <Icon name="close" size="sm" />

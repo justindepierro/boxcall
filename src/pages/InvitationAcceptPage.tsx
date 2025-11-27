@@ -361,7 +361,7 @@ export function InvitationAcceptPage() {
         {/* Auth Forms */}
         <div className="bg-primary rounded-lg shadow-2xl p-6">
           {/* Tab Switcher */}
-          <div className="flex border-b border-subtle mb-6">
+          <div className="flex border-b border-muted mb-6">
             <button
               onClick={() => setAuthMode("signup")}
               className={`flex-1 py-2 text-sm font-medium border-b-2 transition-colors ${

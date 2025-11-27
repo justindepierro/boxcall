@@ -69,7 +69,7 @@ export const CompleteMobilePage: Story = {
         subtitle="0/100 plays"
         badge={<Badge variant="info">0%</Badge>}
         actions={
-          <button className="p-2 rounded-lg hover:bg-surface-subtle">
+          <button className="p-2 rounded-lg hover:bg-subtle">
             <Icon name="filter" size="md" />
           </button>
         }
@@ -210,7 +210,7 @@ export const PageHeaders: Story = {
         subtitle="0/100 plays"
         badge={<Badge variant="info">0%</Badge>}
         actions={
-          <button className="p-2 rounded-lg hover:bg-surface-subtle">
+          <button className="p-2 rounded-lg hover:bg-subtle">
             <Icon name="settings" size="md" />
           </button>
         }
@@ -225,7 +225,7 @@ export const PageHeaders: Story = {
         subtitle="Head Coach"
         avatar={<Avatar name="Justin DePierro" userId="123" size="md" />}
         actions={
-          <button className="p-2 rounded-lg hover:bg-surface-subtle">
+          <button className="p-2 rounded-lg hover:bg-subtle">
             <Icon name="bell" size="md" />
             <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
           </button>
@@ -259,14 +259,14 @@ export const Sections: Story = {
 
       {/* Tight Spacing */}
       <MobileSection title="Tight Spacing" spacing="tight">
-        <div className="px-4 p-4 bg-surface-secondary rounded-lg">
+        <div className="px-4 p-4 bg-secondary rounded-lg">
           <p className="text-sm">Content with tight spacing (16px margin)</p>
         </div>
       </MobileSection>
 
       {/* Comfortable Spacing (default) */}
       <MobileSection title="Comfortable Spacing" spacing="comfortable">
-        <div className="px-4 p-4 bg-surface-secondary rounded-lg">
+        <div className="px-4 p-4 bg-secondary rounded-lg">
           <p className="text-sm">
             Content with comfortable spacing (24px margin)
           </p>
@@ -275,7 +275,7 @@ export const Sections: Story = {
 
       {/* Spacious */}
       <MobileSection title="Spacious Spacing" spacing="spacious">
-        <div className="px-4 p-4 bg-surface-secondary rounded-lg">
+        <div className="px-4 p-4 bg-secondary rounded-lg">
           <p className="text-sm">Content with spacious spacing (32px margin)</p>
         </div>
       </MobileSection>
@@ -286,7 +286,7 @@ export const Sections: Story = {
         action="See All"
         onAction={() => alert("See all clicked!")}
       >
-        <div className="px-4 p-4 bg-surface-secondary rounded-lg">
+        <div className="px-4 p-4 bg-secondary rounded-lg">
           <p className="text-sm">Section with action link</p>
         </div>
       </MobileSection>
@@ -298,7 +298,7 @@ export const Sections: Story = {
         onAction={() => alert("See all clicked!")}
         defaultCollapsed={true}
       >
-        <div className="px-4 p-4 bg-surface-secondary rounded-lg">
+        <div className="px-4 p-4 bg-secondary rounded-lg">
           <p className="text-sm">This section can be collapsed/expanded</p>
         </div>
       </MobileSection>

@@ -139,7 +139,7 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
 
   if (playbooks.length === 0) {
     return (
-      <div className="flex items-center gap-spacing-sm p-spacing-sm bg-surface-muted rounded-lg border border-secondary">
+      <div className="flex items-center gap-sm p-sm bg-muted rounded-lg border border-secondary">
         <Typography variant="body-sm" className="text-muted">
           No playbooks found
         </Typography>
@@ -147,7 +147,7 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
           onClick={handleCreateNew}
           variant="secondary"
           size="sm"
-          className="gap-spacing-xs"
+          className="gap-xs"
         >
           <Plus className="w-4 h-4" />
           Create Playbook
@@ -162,7 +162,7 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
       <button
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-spacing-xs px-3 py-2 bg-surface-primary hover:bg-surface-secondary border-2 border-emerald-500 rounded-xl transition-colors w-45 h-11 shadow-md"
+        className="flex items-center gap-xs px-3 py-2 bg-primary hover:bg-secondary border-2 border-emerald-500 rounded-xl transition-colors w-45 h-11 shadow-md"
       >
         <div className="flex-1 text-left">
           <Typography variant="caption" className="text-muted text-xs">
@@ -197,7 +197,7 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
 
             {/* Menu - Positioned at button location */}
             <div
-              className="fixed bg-surface-primary rounded-lg shadow-2xl z-[110] max-h-96 overflow-y-auto"
+              className="fixed bg-primary rounded-lg shadow-2xl z-[110] max-h-96 overflow-y-auto"
               style={{
                 top: `${dropdownPosition.top}px`,
                 left: `${dropdownPosition.left}px`,
@@ -206,25 +206,25 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
               onClick={(e) => e.stopPropagation()}
             >
               {/* Playbook List */}
-              <div className="p-spacing-xs">
+              <div className="p-xs">
                 {playbooks.map((playbook) => (
                   <div
                     key={playbook.id}
-                    className={`flex items-center gap-spacing-sm p-spacing-sm rounded hover:bg-surface-muted transition-colors ${
+                    className={`flex items-center gap-sm p-sm rounded hover:bg-muted transition-colors ${
                       playbook.id === activePlaybookId ? "bg-primary-50" : ""
                     }`}
                   >
                     {editingId === playbook.id ? (
                       // Edit Mode
                       <div
-                        className="flex-1 flex items-center gap-spacing-xs"
+                        className="flex-1 flex items-center gap-xs"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <input
                           type="text"
                           value={editingName}
                           onChange={(e) => setEditingName(e.target.value)}
-                          className="flex-1 px-spacing-sm py-spacing-xs border border-primary rounded text-primary bg-surface-primary focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          className="flex-1 px-sm py-xs border border-primary rounded text-primary bg-primary focus:outline-none focus:ring-2 focus:ring-primary-500"
                           autoFocus
                           onKeyDown={(e) => {
                             if (e.key === "Enter") {
@@ -238,7 +238,7 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
                         <button
                           onClick={handleSaveEdit}
                           disabled={saving}
-                          className="p-spacing-xs text-success-600 hover:bg-success-100 rounded transition-colors"
+                          className="p-xs text-success-600 hover:bg-success-100 rounded transition-colors"
                           title="Save"
                         >
                           <Check className="w-4 h-4" />
@@ -246,7 +246,7 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
                         <button
                           onClick={handleCancelEdit}
                           disabled={saving}
-                          className="p-spacing-xs text-muted hover:bg-surface-muted rounded transition-colors"
+                          className="p-xs text-muted hover:bg-muted rounded transition-colors"
                           title="Cancel"
                         >
                           <X className="w-4 h-4" />
@@ -262,7 +262,7 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
                           }}
                           className="flex-1 text-left"
                         >
-                          <div className="flex items-center gap-spacing-sm">
+                          <div className="flex items-center gap-sm">
                             <div className="flex-1">
                               <Typography
                                 variant="body-md"
@@ -289,7 +289,7 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
                         </button>
                         <button
                           onClick={(e) => handleStartEdit(playbook, e)}
-                          className="p-spacing-xs text-muted hover:text-primary hover:bg-surface-muted rounded transition-colors"
+                          className="p-xs text-muted hover:text-primary hover:bg-muted rounded transition-colors"
                           title="Rename playbook"
                         >
                           <Edit2 className="w-4 h-4" />
@@ -301,13 +301,13 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
               </div>
 
               {/* Create New Playbook */}
-              <div className="border-t border-secondary p-spacing-xs">
+              <div className="border-t border-secondary p-xs">
                 <button
                   onClick={() => {
                     setIsOpen(false);
                     handleCreateNew();
                   }}
-                  className="w-full flex items-center gap-spacing-sm p-spacing-sm rounded hover:bg-surface-muted transition-colors text-primary-600"
+                  className="w-full flex items-center gap-sm p-sm rounded hover:bg-muted transition-colors text-primary-600"
                 >
                   <Plus className="w-4 h-4" />
                   <Typography variant="body-md" className="font-medium">

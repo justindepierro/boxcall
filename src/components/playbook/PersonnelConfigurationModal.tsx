@@ -385,14 +385,14 @@ export const PersonnelConfigurationModal: React.FC<
           return (
             <div
               key={config.id}
-              className="rounded-xl border-2 border-default bg-surface-secondary overflow-hidden transition-all"
+              className="rounded-xl border-2 border-default bg-secondary overflow-hidden transition-all"
             >
               {/* Collapsed Header */}
               <div className="flex items-center gap-3 p-4">
                 {/* Star button for default */}
                 <button
                   onClick={() => toggleDefault(config.id)}
-                  className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center hover:bg-surface-tertiary transition-colors"
+                  className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center hover:bg-tertiary transition-colors"
                   title={
                     config.isDefault ? "Default personnel" : "Set as default"
                   }
@@ -410,7 +410,7 @@ export const PersonnelConfigurationModal: React.FC<
                 {/* Config name and summary */}
                 <button
                   onClick={() => toggleExpanded(config.id)}
-                  className="flex-1 flex items-center justify-between text-left hover:bg-surface-tertiary/50 rounded-lg p-2 -m-2 transition-colors"
+                  className="flex-1 flex items-center justify-between text-left hover:bg-tertiary/50 rounded-lg p-2 -m-2 transition-colors"
                 >
                   <div className="flex-1">
                     <div className="font-semibold text-primary flex items-center gap-2">
@@ -554,7 +554,7 @@ export const PersonnelConfigurationModal: React.FC<
 
                           {/* QB Position - LOCKED at top, cannot be changed */}
                           {index === 0 ? (
-                            <div className="flex-1 h-9 px-3 flex items-center justify-between rounded-lg border border-default bg-surface-tertiary text-sm font-medium opacity-75 cursor-not-allowed">
+                            <div className="flex-1 h-9 px-3 flex items-center justify-between rounded-lg border border-default bg-tertiary text-sm font-medium opacity-75 cursor-not-allowed">
                               <span className="text-primary">QB</span>
                               <Icon
                                 name="lock"
@@ -572,7 +572,7 @@ export const PersonnelConfigurationModal: React.FC<
                                   e.target.value as PlayerPosition
                                 )
                               }
-                              className="flex-1 h-9 px-3 rounded-lg border border-default bg-surface-primary text-primary text-sm font-medium cursor-pointer hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-brand-jade transition-colors"
+                              className="flex-1 h-9 px-3 rounded-lg border border-default bg-primary text-primary text-sm font-medium cursor-pointer hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-brand-jade transition-colors"
                             >
                               <option value="RB">RB (Running Back)</option>
                               <option value="TE">TE (Tight End)</option>
@@ -618,7 +618,7 @@ export const PersonnelConfigurationModal: React.FC<
                       {/* Add Player Button */}
                       <button
                         onClick={() => addSkillPlayer(config.id)}
-                        className="w-full mt-2 px-3 py-2 rounded-lg border-2 border-dashed border-default hover:border-brand-jade hover:bg-surface-tertiary text-secondary hover:text-brand-jade transition-colors flex items-center justify-center gap-2 text-sm"
+                        className="w-full mt-2 px-3 py-2 rounded-lg border-2 border-dashed border-default hover:border-brand-jade hover:bg-tertiary text-secondary hover:text-brand-jade transition-colors flex items-center justify-center gap-2 text-sm"
                       >
                         <Icon name="plus" className="w-4 h-4" />
                         Add Player
@@ -757,7 +757,7 @@ export const PersonnelConfigurationModal: React.FC<
                 triggerHapticFeedback("light");
                 onClose();
               }}
-              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-tertiary"
+              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-tertiary"
             >
               <Icon name="close" className="w-5 h-5" />
             </button>

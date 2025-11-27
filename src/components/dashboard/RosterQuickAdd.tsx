@@ -132,10 +132,10 @@ export const RosterQuickAdd: React.FC = () => {
     return (
       <Card className="p-6">
         <div className="animate-pulse">
-          <div className="h-4 bg-surface-muted rounded-lg w-3/4 mb-4"></div>
+          <div className="h-4 bg-muted rounded-lg w-3/4 mb-4"></div>
           <div className="space-y-2">
-            <div className="h-3 bg-surface-muted rounded-lg"></div>
-            <div className="h-3 bg-surface-muted rounded-lg w-5/6"></div>
+            <div className="h-3 bg-muted rounded-lg"></div>
+            <div className="h-3 bg-muted rounded-lg w-5/6"></div>
           </div>
         </div>
       </Card>
@@ -170,9 +170,9 @@ export const RosterQuickAdd: React.FC = () => {
               {recentPlayers.map((player) => (
                 <div
                   key={player.id}
-                  className="flex items-center space-x-3 p-2 bg-surface-subtle rounded-lg"
+                  className="flex items-center space-x-3 p-2 bg-subtle rounded-lg"
                 >
-                  <div className="w-8 h-8 bg-surface-info rounded-full flex items-center justify-center">
+                  <div className="w-8 h-8 bg-info/20 rounded-full flex items-center justify-center">
                     <Typography
                       variant="body-sm"
                       className="text-info font-medium"
@@ -248,7 +248,7 @@ export const RosterQuickAdd: React.FC = () => {
                   firstName: e.target.value,
                 }))
               }
-              className="px-2 py-1 text-sm border border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
+              className="px-2 py-1 text-sm border border-secondary rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
             />
             <input
               type="text"
@@ -260,7 +260,7 @@ export const RosterQuickAdd: React.FC = () => {
                   lastName: e.target.value,
                 }))
               }
-              className="px-2 py-1 text-sm border border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
+              className="px-2 py-1 text-sm border border-secondary rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
             />
           </div>
 
@@ -273,7 +273,7 @@ export const RosterQuickAdd: React.FC = () => {
                   position: e.target.value,
                 }))
               }
-              className="px-2 py-1 text-sm border border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
+              className="px-2 py-1 text-sm border border-secondary rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
             >
               <option value="">Position</option>
               <option value="QB">QB</option>
@@ -299,7 +299,7 @@ export const RosterQuickAdd: React.FC = () => {
                   jerseyNumber: e.target.value,
                 }))
               }
-              className="px-2 py-1 text-sm border border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
+              className="px-2 py-1 text-sm border border-secondary rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
             />
           </div>
 
@@ -317,7 +317,7 @@ export const RosterQuickAdd: React.FC = () => {
                     heightFeet: e.target.value,
                   }))
                 }
-                className="flex-1 px-2 py-1 text-sm border border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
+                className="flex-1 px-2 py-1 text-sm border border-secondary rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
               />
               <span className="flex items-center text-sm text-secondary">
                 ft
@@ -336,7 +336,7 @@ export const RosterQuickAdd: React.FC = () => {
                     heightInches: e.target.value,
                   }))
                 }
-                className="flex-1 px-2 py-1 text-sm border border-medium rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
+                className="flex-1 px-2 py-1 text-sm border border-secondary rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
               />
               <span className="flex items-center text-sm text-secondary">
                 in

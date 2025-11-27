@@ -141,7 +141,7 @@ const CollaborationDemo: React.FC = () => {
                 {participants.map((participant, index) => (
                   <div
                     key={index}
-                    className="p-2 bg-surface-secondary rounded flex items-center gap-2"
+                    className="p-2 bg-secondary rounded flex items-center gap-2"
                   >
                     <img
                       src={participant.avatar}
@@ -240,7 +240,7 @@ const CollaborationDemo: React.FC = () => {
               {recentUpdates.map((update, index) => (
                 <div
                   key={index}
-                  className="p-3 bg-surface-secondary rounded text-sm"
+                  className="p-3 bg-secondary rounded text-sm"
                 >
                   <div className="flex justify-between items-start">
                     <div>
@@ -328,7 +328,7 @@ const CollaborativeCursorDemo: React.FC = () => {
 
         <div
           ref={elementRef}
-          className="w-full h-48 bg-surface-muted border-2 border-dashed border rounded-lg flex items-center justify-center cursor-crosshair"
+          className="w-full h-48 bg-muted border-2 border-dashed border rounded-lg flex items-center justify-center cursor-crosshair"
         >
           <span className="text-muted">Move mouse here</span>
         </div>

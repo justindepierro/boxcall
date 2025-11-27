@@ -286,7 +286,7 @@ export const TermsOfServicePage: React.FC = () => {
             If you have any questions about these Terms of Service, please
             contact us:
           </p>
-          <div className="surface-subtle dark:bg-secondary p-4 rounded-lg">
+          <div className="bg-subtle dark:bg-secondary p-4 rounded-lg">
             <p className="text-primary dark:text-border-light">
               <strong>BoxCall Legal Team</strong>
               <br />

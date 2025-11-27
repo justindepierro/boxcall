@@ -109,7 +109,7 @@ export const PlayerRosterContainer: React.FC<PlayerRosterContainerProps> = ({
             const playerTrigger = (
               <div
                 key={player.id}
-                className="flex items-center gap-3 p-2 hover:bg-surface-secondary rounded-lg transition-colors cursor-pointer"
+                className="flex items-center gap-3 p-2 hover:bg-secondary rounded-lg transition-colors cursor-pointer"
               >
                 <div className="w-8 h-8 bg-brand-primary/10 rounded-full flex items-center justify-center text-xs font-bold text-brand-primary flex-shrink-0">
                   {player.jersey_number || "?"}

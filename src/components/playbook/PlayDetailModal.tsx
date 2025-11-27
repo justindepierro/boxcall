@@ -55,7 +55,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
         <div
           className={`relative w-full flex flex-col ${
             isMobile
-              ? "h-full bg-surface-primary dark:bg-slate-900"
+              ? "h-full bg-primary dark:bg-slate-900"
               : "max-w-6xl max-h-[94vh] mx-4 backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 rounded-2xl border-2 border-white/30 dark:border-slate-700/30 shadow-2xl animate-genie-open"
           }`}
           onClick={(e) => e.stopPropagation()}
@@ -118,7 +118,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
 
           {/* Action Bar - Sticky on mobile, more compact */}
           <div
-            className={`flex items-center justify-between border-b border-subtle bg-surface-secondary/50 flex-shrink-0 ${
+            className={`flex items-center justify-between border-b border-muted bg-secondary/50 flex-shrink-0 ${
               isMobile ? "px-4 py-2 sticky top-0 z-10" : "px-6 py-3"
             }`}
           >
@@ -133,7 +133,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                   } ${
                     activeTab === tab
                       ? "bg-electric-100 dark:bg-electric-900/30 text-electric-700 dark:text-electric-400"
-                      : "text-secondary dark:text-muted hover:bg-surface-muted dark:hover:bg-slate-800"
+                      : "text-secondary dark:text-muted hover:bg-muted dark:hover:bg-slate-800"
                   }`}
                 >
                   {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -211,7 +211,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                       isMobile ? "grid-cols-2" : "grid-cols-2 md:grid-cols-4"
                     }`}
                   >
-                    <div className="backdrop-blur-xl bg-surface-secondary rounded-xl p-4 shadow-md">
+                    <div className="backdrop-blur-xl bg-secondary rounded-xl p-4 shadow-md">
                       <div className="text-xs font-semibold text-muted mb-2 uppercase tracking-wide">
                         Type
                       </div>
@@ -219,7 +219,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                         {play.p_type}
                       </div>
                     </div>
-                    <div className="backdrop-blur-xl bg-surface-secondary rounded-xl p-4 shadow-md">
+                    <div className="backdrop-blur-xl bg-secondary rounded-xl p-4 shadow-md">
                       <div className="text-xs font-semibold text-muted mb-2 uppercase tracking-wide">
                         Confidence
                       </div>
@@ -227,7 +227,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                         {play.confidence_base}%
                       </div>
                     </div>
-                    <div className="backdrop-blur-xl bg-surface-secondary rounded-xl p-4 shadow-md">
+                    <div className="backdrop-blur-xl bg-secondary rounded-xl p-4 shadow-md">
                       <div className="text-xs font-semibold text-muted mb-2 uppercase tracking-wide">
                         Called
                       </div>
@@ -235,7 +235,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                         {play.times_called}x
                       </div>
                     </div>
-                    <div className="backdrop-blur-xl bg-surface-secondary rounded-xl p-4 shadow-md">
+                    <div className="backdrop-blur-xl bg-secondary rounded-xl p-4 shadow-md">
                       <div className="text-xs font-semibold text-muted mb-2 uppercase tracking-wide">
                         Success
                       </div>
@@ -251,7 +251,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                   </div>
 
                   {/* Key Information - More compact */}
-                  <div className="backdrop-blur-xl bg-surface-secondary rounded-2xl p-5 shadow-md">
+                  <div className="backdrop-blur-xl bg-secondary rounded-2xl p-5 shadow-md">
                     <h3 className="text-lg font-bold text-primary mb-4 flex items-center gap-2">
                       <Icon
                         name="shield"
@@ -307,7 +307,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
 
               {activeTab === "details" && (
                 <div className="space-y-4">
-                  <div className="backdrop-blur-xl bg-surface-secondary rounded-2xl p-5 shadow-md">
+                  <div className="backdrop-blur-xl bg-secondary rounded-2xl p-5 shadow-md">
                     <h3 className="text-lg font-bold text-primary mb-4">
                       Play Execution
                     </h3>
@@ -341,7 +341,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
 
                   {/* Tags */}
                   {(play.p_tag1 || play.p_tag2 || play.ftag1 || play.ftag2) && (
-                    <div className="backdrop-blur-xl bg-surface-secondary rounded-2xl p-5 shadow-md">
+                    <div className="backdrop-blur-xl bg-secondary rounded-2xl p-5 shadow-md">
                       <h3 className="text-lg font-bold text-primary mb-3">
                         Tags
                       </h3>
@@ -351,7 +351,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                           .map((tag, i) => (
                             <span
                               key={i}
-                              className="px-3 py-1 rounded-lg bg-surface-primary shadow-sm text-secondary text-sm font-medium"
+                              className="px-3 py-1 rounded-lg bg-primary shadow-sm text-secondary text-sm font-medium"
                             >
                               {tag}
                             </span>
@@ -364,7 +364,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
 
               {activeTab === "analytics" && (
                 <div className="space-y-4">
-                  <div className="backdrop-blur-xl bg-surface-secondary rounded-2xl p-5 shadow-md">
+                  <div className="backdrop-blur-xl bg-secondary rounded-2xl p-5 shadow-md">
                     <h3 className="text-lg font-bold text-primary mb-4">
                       Performance Metrics
                     </h3>
@@ -384,7 +384,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                             %
                           </span>
                         </div>
-                        <div className="w-full h-3 rounded-full bg-surface-muted overflow-hidden">
+                        <div className="w-full h-3 rounded-full bg-muted overflow-hidden">
                           <div
                             className="h-full bg-gradient-to-r from-jade-500 to-emerald-500 rounded-full transition-all duration-500"
                             style={{

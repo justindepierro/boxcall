@@ -133,7 +133,7 @@ const ToastDemo: React.FC = () => {
         </div>
 
         {toasts.length > 0 && (
-          <div className="p-3 bg-surface-secondary rounded-lg">
+          <div className="p-3 bg-secondary rounded-lg">
             <Typography variant="body-xs" color="muted">
               Toast IDs: {toasts.map((t) => t.id.slice(0, 8)).join(", ")}
             </Typography>

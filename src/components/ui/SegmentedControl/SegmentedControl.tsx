@@ -41,7 +41,7 @@ export function SegmentedControl<T extends string = string>({
             size="xs"
             variant={selected ? "subtle" : "ghost"}
             className={`inline-flex items-center gap-2 px-3 h-8 rounded-lg text-sm ${
-              selected ? "bg-surface-primary" : ""
+              selected ? "bg-primary" : ""
             }`}
           >
             {opt.icon ? <span className="w-4 h-4">{opt.icon}</span> : null}

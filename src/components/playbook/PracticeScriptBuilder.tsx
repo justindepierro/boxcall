@@ -768,7 +768,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
         {currentScript &&
           currentScript.plays &&
           currentScript.plays.length > 0 && (
-            <div className="bg-surface-secondary rounded-lg p-4">
+            <div className="bg-secondary rounded-lg p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <Typography variant="body-sm" className="text-secondary">

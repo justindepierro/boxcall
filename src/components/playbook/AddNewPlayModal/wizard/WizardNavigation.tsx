@@ -101,7 +101,7 @@ export const WizardNavigation: React.FC<WizardNavigationProps> = ({
   return (
     <div
       className={cn(
-        "flex-shrink-0 p-6 border-t border-border bg-surface-primary",
+        "flex-shrink-0 p-6 border-t border-border bg-primary",
         "mobile-wizard-navigation", // For testing/debugging
         className
       )}

@@ -103,7 +103,7 @@ export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
       }}
     >
       <div
-        className="bg-surface-primary elevation-modal rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative"
+        className="bg-primary elevation-modal rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6">
@@ -139,7 +139,7 @@ export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
           </div>
 
           {/* Action Footer */}
-          <div className="flex justify-end space-x-3 pt-6 border-t border-subtle mt-6">
+          <div className="flex justify-end space-x-3 pt-6 border-t border-muted mt-6">
             <Button variant="ghost" onClick={onClose}>
               Cancel
             </Button>

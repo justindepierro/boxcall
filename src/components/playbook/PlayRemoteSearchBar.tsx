@@ -57,7 +57,7 @@ export const PlayRemoteSearchBar: React.FC<PlayRemoteSearchBarProps> = ({
           onChange={(e) => setQuery(e.target.value)}
           placeholder={placeholder}
           autoComplete="off"
-          className="block w-full pl-10 pr-10 py-2 rounded-lg border-subtle bg-surface-primary text-sm
+          className="block w-full pl-10 pr-10 py-2 rounded-lg border-muted bg-primary text-sm
                      focus:ring-2 focus:ring-jade-500 focus:border-jade-600 transition-colors"
         />
         {loading && (
@@ -70,7 +70,7 @@ export const PlayRemoteSearchBar: React.FC<PlayRemoteSearchBarProps> = ({
         )}
       </div>
       {query.trim().length >= 2 && (results.length > 0 || loading || error) && (
-        <div className="absolute z-50 mt-1 w-full max-h-72 overflow-auto rounded-lg border-subtle bg-surface-primary elevation-dropdown shadow-sm">
+        <div className="absolute z-50 mt-1 w-full max-h-72 overflow-auto rounded-lg border-muted bg-primary elevation-dropdown shadow-sm">
           <div className="py-1">
             {error && (
               <div className="px-3 py-2 text-xsssss text-error flex items-center gap-2">
@@ -89,7 +89,7 @@ export const PlayRemoteSearchBar: React.FC<PlayRemoteSearchBarProps> = ({
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="w-full justify-start px-3 py-2 text-left text-xsssss surface-subtle-hover"
+                  className="w-full justify-start px-3 py-2 text-left text-xsssss hover:bg-muted"
                   onClick={() => handleSelect(r.play_id)}
                 >
                   <span className="truncate flex-1">{r.play_id}</span>

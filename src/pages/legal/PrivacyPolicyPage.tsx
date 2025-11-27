@@ -242,7 +242,7 @@ export const PrivacyPolicyPage: React.FC = () => {
             If you have any questions about this Privacy Policy or our data
             practices, please contact us:
           </p>
-          <div className="surface-subtle dark:bg-secondary p-4 rounded-lg">
+          <div className="bg-subtle dark:bg-secondary p-4 rounded-lg">
             <p className="text-primary dark:text-secondary">
               <strong>BoxCall Privacy Team</strong>
               <br />

@@ -62,14 +62,14 @@ export const CalendarShell: React.FC = () => {
   if (error) return <CalendarErrorSkeleton message={error} />;
 
   return (
-    <div className="calendar-shell-root space-y-spacing-lg">
+    <div className="calendar-shell-root space-y-lg">
       <CalendarHeader
         canAddEvent={canAddEvent}
         onExport={handleExportCalendar}
         onAddEvent={handleAddEvent}
       />
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-spacing-md">
-        <div className="lg:col-span-1 space-y-spacing-md">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-md">
+        <div className="lg:col-span-1 space-y-md">
           <CalendarFiltersPanel
             searchQuery={searchQuery}
             onSearchQueryChange={setSearchQuery}
@@ -78,7 +78,7 @@ export const CalendarShell: React.FC = () => {
             onFilterChange={handleFilterChange}
           />
           <Card className="calendar-card">
-            <div className="flex items-center gap-spacing-xs mb-spacing-md">
+            <div className="flex items-center gap-xs mb-md">
               <Icon name="bar-chart" size="lg" className="text-navy-600" />
               <span className="Typography typography-label-lg text-primary">
                 Stats

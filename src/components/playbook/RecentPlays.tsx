@@ -28,7 +28,7 @@ export const RecentPlays: React.FC<RecentPlaysProps> = ({
   }
 
   return (
-    <div className="flex items-center gap-2 p-2 bg-surface-secondary rounded-lg border border-subtle">
+    <div className="flex items-center gap-2 p-2 bg-secondary rounded-lg border border-muted">
       <Icon name="clock" className="text-muted flex-shrink-0" size={16} />
       <span className="text-sm text-secondary flex-shrink-0">Recent:</span>
       <div className="flex gap-2 overflow-x-auto scrollbar-hide">
@@ -36,7 +36,7 @@ export const RecentPlays: React.FC<RecentPlaysProps> = ({
           <button
             key={play.id}
             onClick={() => onPlayClick?.(play)}
-            className="px-3 py-1 text-sm bg-surface-primary rounded shadow-sm hover:shadow-md transition-all whitespace-nowrap flex-shrink-0"
+            className="px-3 py-1 text-sm bg-primary rounded shadow-sm hover:shadow-md transition-all whitespace-nowrap flex-shrink-0"
             title={`View ${play.play_name || play.formation}`}
           >
             {play.play_name || play.formation || "Unnamed Play"}

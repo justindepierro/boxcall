@@ -122,7 +122,7 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
 
   return (
     <div className={className}>
-      <Typography variant="label-md" className="block mb-spacing-sm">
+      <Typography variant="label-md" className="block mb-sm">
         {label}
         {required && " *"}
       </Typography>
@@ -135,23 +135,23 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
           onFocus={() => onShowSuggestionsChange(true)}
           onBlur={() => setTimeout(() => onShowSuggestionsChange(false), 200)}
           placeholder={placeholder}
-          className={`w-full border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0 ${
+          className={`w-full border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0 ${
             isMobile
               ? "px-5 py-4 text-base" // Mobile: 48px height, 16px font (prevents iOS zoom)
-              : "px-spacing-sm py-spacing-xs" // Desktop: normal spacing
+              : "px-sm py-xs" // Desktop: normal spacing
           }`}
           required={required}
         />
         {showSuggestions && allSuggestions.length > 0 && (
-          <div className="absolute top-full left-0 right-0 bg-surface-primary/95 dark:bg-surface-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-10 max-h-40 overflow-y-auto mt-spacing-xs">
+          <div className="absolute top-full left-0 right-0 bg-primary/95 dark:bg-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-10 max-h-40 overflow-y-auto mt-xs">
             {allSuggestions.map((suggestion, index) => (
               <button
                 key={index}
                 type="button"
                 onClick={() => handleSelectSuggestion(suggestion.text)}
-                className="w-full text-left px-spacing-sm py-spacing-xs hover:bg-surface-secondary/50 first:rounded-t-lg last:rounded-b-lg transition-colors group"
+                className="w-full text-left px-sm py-xs hover:bg-secondary/50 first:rounded-t-lg last:rounded-b-lg transition-colors group"
               >
-                <div className="flex items-center gap-spacing-xs">
+                <div className="flex items-center gap-xs">
                   {getSuggestionIcon(suggestion.type)}
                   <Typography variant="body-sm" className="flex-1">
                     {suggestion.text}

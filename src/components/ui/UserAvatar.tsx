@@ -122,7 +122,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
     >
       {/* Avatar */}
       <div
-        className={`${sizeClasses.avatar} rounded-full overflow-hidden bg-surface-muted flex items-center justify-center flex-shrink-0`}
+        className={`${sizeClasses.avatar} rounded-full overflow-hidden bg-muted flex items-center justify-center flex-shrink-0`}
       >
         {avatarUrl ? (
           <img

@@ -215,7 +215,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
                 comments.data.map((c) => (
                   <div
                     key={c.id}
-                    className="p-3 surface-subtle rounded-lg border border-subtle"
+                    className="p-3 bg-subtle rounded-lg border border-muted"
                   >
                     <div className="flex items-start gap-3">
                       {/* User Avatar with Profile Popover */}
@@ -260,7 +260,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Add a comment..."
               rows={2}
-              className="w-full border border-medium rounded-lg px-3 py-2"
+              className="w-full border border-secondary rounded-lg px-3 py-2"
               disabled={addCommentPending}
             />
             <div className="flex items-center gap-2">

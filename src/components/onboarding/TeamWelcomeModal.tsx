@@ -48,7 +48,7 @@ export const TeamWelcomeModal: React.FC<TeamWelcomeModalProps> = ({
         </Typography>
 
         {/* Feature Highlights */}
-        <div className="bg-surface-subtle rounded-lg p-6 mb-8 text-left">
+        <div className="bg-subtle rounded-lg p-6 mb-8 text-left">
           <Typography variant="headline-sm" className="mb-4 text-center">
             What you can do now:
           </Typography>

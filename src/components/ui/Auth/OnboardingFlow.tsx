@@ -207,7 +207,7 @@ export function OnboardingFlow({ user, onComplete }: OnboardingFlowProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-surface-success to-surface-info dark:from-surface-primary dark:to-surface-secondary flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-bg-success/20 to-bg-info/20 dark:from-bg-primary dark:to-bg-secondary flex items-center justify-center p-4">
       <Card className="w-full container-content shadow-xl">
         <div className="p-8">
           {/* Progress Indicator */}
@@ -219,7 +219,7 @@ export function OnboardingFlow({ user, onComplete }: OnboardingFlowProps) {
                   className={`h-2 w-8 rounded-full transition-colors ${
                     index <= currentStep
                       ? "bg-text-success"
-                      : "bg-border dark:bg-surface-secondary"
+                      : "bg-border dark:bg-secondary"
                   }`}
                 />
               ))}
@@ -228,7 +228,7 @@ export function OnboardingFlow({ user, onComplete }: OnboardingFlowProps) {
 
           {/* Step Content */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-surface-success dark:bg-surface-success/20 rounded-full mb-6">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-success/20 dark:bg-success/20/20 rounded-full mb-6">
               <Icon
                 name={currentStepData.icon as any}
                 className="w-8 h-8 text-success dark:text-success"

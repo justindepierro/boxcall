@@ -208,7 +208,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
       }}
     >
       <div
-        className="bg-surface-primary elevation-modal rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto relative"
+        className="bg-primary elevation-modal rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto relative"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6">
@@ -238,7 +238,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
-                className="w-full px-4 py-2 border border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-base bg-surface-base text-primary"
+                className="w-full px-4 py-2 border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-base bg-surface-base text-primary"
                 placeholder="e.g., Week 7 vs Eagles"
               />
             </div>
@@ -252,7 +252,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
                 onChange={(e) =>
                   setFormData({ ...formData, opponent: e.target.value })
                 }
-                className="w-full px-4 py-2 border border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-base bg-surface-base text-primary"
+                className="w-full px-4 py-2 border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-base bg-surface-base text-primary"
                 placeholder="e.g., Philadelphia Eagles"
               />
             </div>
@@ -266,7 +266,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
                 onChange={(e) =>
                   setFormData({ ...formData, gameDate: e.target.value })
                 }
-                className="w-full px-4 py-2 border border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-base bg-surface-base text-primary"
+                className="w-full px-4 py-2 border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-base bg-surface-base text-primary"
               />
             </div>
             <div>
@@ -285,7 +285,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
                       | undefined,
                   })
                 }
-                className="w-full px-4 py-2 border border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-base bg-surface-base text-primary"
+                className="w-full px-4 py-2 border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-base bg-surface-base text-primary"
               >
                 <option value="">Select...</option>
                 <option value="Home">Home</option>
@@ -318,7 +318,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
                     className={`
                       px-3 py-2 rounded-lg text-sm font-medium transition-all
                       ${isActive ? colorClasses.bg + " " + colorClasses.text : "bg-surface-elevated text-secondary hover:bg-surface-overlay"}
-                      ${playCount > 0 ? "border-2 border-primary-light" : "border border-subtle"}
+                      ${playCount > 0 ? "border-2 border-primary-light" : "border border-muted"}
                     `}
                   >
                     {situation.label}
@@ -335,7 +335,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
 
           {/* Active Situation Content */}
           {currentSituationConfig && currentSituation && (
-            <div className="border border-subtle rounded-lg p-6 mb-6">
+            <div className="border border-muted rounded-lg p-6 mb-6">
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <Typography variant="display-md" className="mb-1">
@@ -386,7 +386,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className={`flex items-center justify-between p-3 border border-subtle rounded-lg bg-surface-base hover:bg-surface-elevated transition-colors ${snapshot.isDragging ? "shadow-lg" : ""}`}
+                                  className={`flex items-center justify-between p-3 border border-muted rounded-lg bg-surface-base hover:bg-surface-elevated transition-colors ${snapshot.isDragging ? "shadow-lg" : ""}`}
                                 >
                                   <div className="flex items-center gap-3">
                                     <span className="text-sm font-bold text-secondary w-6">
@@ -445,7 +445,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
           )}
 
           {/* Footer Actions */}
-          <div className="flex justify-between items-center pt-4 border-t border-subtle">
+          <div className="flex justify-between items-center pt-4 border-t border-muted">
             <Button
               variant="secondary"
               onClick={handleExportPDF}

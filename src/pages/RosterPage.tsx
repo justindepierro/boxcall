@@ -777,9 +777,9 @@ export default function RosterPage() {
     return (
       <Aurora variant="shell" fullHeight>
         <PageLayout title="Roster" subtitle="Loading team roster...">
-          <div className="space-y-spacing-lg">
+          <div className="space-y-lg">
             {/* Loading skeleton for stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-spacing-md">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md">
               {[...Array(4)].map((_, i) => (
                 <Card key={`stat-${i}`} className="animate-pulse">
                   <div className="h-24 bg-muted rounded-lg"></div>
@@ -788,16 +788,16 @@ export default function RosterPage() {
             </div>
 
             {/* Loading skeleton for player cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
               {[...Array(9)].map((_, i) => (
                 <Card
                   key={`player-${i}`}
-                  className="animate-pulse p-spacing-md"
+                  className="animate-pulse p-md"
                 >
-                  <div className="space-y-spacing-sm">
+                  <div className="space-y-sm">
                     {/* Header skeleton */}
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-spacing-sm">
+                      <div className="flex items-center gap-sm">
                         <div className="w-4 h-4 bg-muted rounded"></div>
                         <div className="h-6 w-32 bg-muted rounded"></div>
                       </div>
@@ -805,20 +805,20 @@ export default function RosterPage() {
                     </div>
 
                     {/* Badges skeleton */}
-                    <div className="flex flex-wrap gap-spacing-xs">
+                    <div className="flex flex-wrap gap-xs">
                       <div className="h-6 w-12 bg-muted rounded-full"></div>
                       <div className="h-6 w-16 bg-muted rounded-full"></div>
                       <div className="h-6 w-20 bg-muted rounded-full"></div>
                     </div>
 
                     {/* Stats skeleton */}
-                    <div className="flex gap-spacing-md pt-spacing-sm">
+                    <div className="flex gap-md pt-sm">
                       <div className="h-4 w-24 bg-muted rounded"></div>
                       <div className="h-4 w-24 bg-muted rounded"></div>
                     </div>
 
                     {/* Footer skeleton */}
-                    <div className="flex items-center justify-between pt-spacing-sm">
+                    <div className="flex items-center justify-between pt-sm">
                       <div className="h-8 w-20 bg-muted rounded"></div>
                       <div className="h-8 w-16 bg-muted rounded"></div>
                     </div>
@@ -851,11 +851,11 @@ export default function RosterPage() {
           className="mb-4"
         />
 
-        <div className="space-y-spacing-lg relative z-10">
+        <div className="space-y-lg relative z-10">
           {/* Selection Bar */}
           {selectedPlayerIds.size > 0 && (
-            <div className="flex items-center justify-between gap-spacing-md bg-primary-50 p-spacing-sm rounded-lg border border-primary-200">
-              <div className="flex items-center gap-spacing-md">
+            <div className="flex items-center justify-between gap-md bg-primary-50 p-sm rounded-lg border border-primary-200">
+              <div className="flex items-center gap-md">
                 <Typography
                   variant="body-sm"
                   className="text-primary-700 font-medium"
@@ -872,7 +872,7 @@ export default function RosterPage() {
                   }}
                   className="border-primary-300 text-primary-700 hover:bg-primary-100"
                 >
-                  <Icon name="edit" className="w-4 h-4 mr-spacing-xs" />
+                  <Icon name="edit" className="w-4 h-4 mr-xs" />
                   Change Status
                 </Button>
                 <Button
@@ -881,7 +881,7 @@ export default function RosterPage() {
                   onClick={() => setShowBulkEditModal(true)}
                   className="border-primary-300 text-primary-700 hover:bg-primary-100"
                 >
-                  <Icon name="edit" className="w-4 h-4 mr-spacing-xs" />
+                  <Icon name="edit" className="w-4 h-4 mr-xs" />
                   Edit Selected
                 </Button>
                 <Button size="sm" variant="ghost" onClick={clearSelection}>
@@ -892,8 +892,8 @@ export default function RosterPage() {
           )}
 
           {/* Header Actions */}
-          <div className="flex flex-col sm:flex-row gap-spacing-md justify-between items-start sm:items-center">
-            <div className="flex flex-col sm:flex-row gap-spacing-md">
+          <div className="flex flex-col sm:flex-row gap-md justify-between items-start sm:items-center">
+            <div className="flex flex-col sm:flex-row gap-md">
               <Button
                 onClick={() => {
                   console.log("[RosterPage] Add Player button clicked");
@@ -901,7 +901,7 @@ export default function RosterPage() {
                 }}
                 className="bg-primary hover:bg-primary/90"
               >
-                <Icon name="plus" className="w-4 h-4 mr-spacing-xs" />
+                <Icon name="plus" className="w-4 h-4 mr-xs" />
                 Add Player
               </Button>
               <Button
@@ -911,7 +911,7 @@ export default function RosterPage() {
                   setShowImportModal(true);
                 }}
               >
-                <Icon name="upload" className="w-4 h-4 mr-spacing-xs" />
+                <Icon name="upload" className="w-4 h-4 mr-xs" />
                 Import CSV
               </Button>
               <Button
@@ -919,7 +919,7 @@ export default function RosterPage() {
                 onClick={() => handleExportCSV()}
                 disabled={filteredPlayers.length === 0}
               >
-                <Icon name="download" className="w-4 h-4 mr-spacing-xs" />
+                <Icon name="download" className="w-4 h-4 mr-xs" />
                 Export CSV
               </Button>
               <Button
@@ -931,7 +931,7 @@ export default function RosterPage() {
                 }
                 disabled={filteredPlayers.length === 0}
               >
-                <Icon name="check" className="w-4 h-4 mr-spacing-xs" />
+                <Icon name="check" className="w-4 h-4 mr-xs" />
                 {selectedPlayerIds.size === filteredPlayers.length
                   ? "Deselect All"
                   : "Select All"}
@@ -939,7 +939,7 @@ export default function RosterPage() {
             </div>
 
             {/* Search and Filters */}
-            <div className="flex flex-wrap gap-spacing-sm items-center w-full">
+            <div className="flex flex-wrap gap-sm items-center w-full">
               <Input
                 placeholder="Search players by name, nickname, position..."
                 value={searchTerm}
@@ -1029,7 +1029,7 @@ export default function RosterPage() {
                   onClick={clearAllFilters}
                   className="whitespace-nowrap transition-all hover:scale-105 text-warning-600 hover:text-warning-600 hover:bg-warning-bg"
                 >
-                  <Icon name="close" className="w-4 h-4 mr-spacing-xs" />
+                  <Icon name="close" className="w-4 h-4 mr-xs" />
                   Clear Filters
                 </Button>
               )}
@@ -1037,13 +1037,13 @@ export default function RosterPage() {
 
             {/* Active Filter Chips */}
             {(positionFilters.length > 0 || gradeLevelFilters.length > 0) && (
-              <div className="flex flex-wrap gap-spacing-xs animate-fade-in">
+              <div className="flex flex-wrap gap-xs animate-fade-in">
                 {/* Position Filter Chips - Blue theme */}
                 {positionFilters.map((pos) => (
                   <button
                     key={pos}
                     onClick={() => togglePositionFilter(pos)}
-                    className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-xs bg-blue-100 text-blue-700 rounded-full text-sm hover:bg-blue-200 transition-all shadow-sm border border-blue-300"
+                    className="inline-flex items-center gap-xs px-sm py-xs bg-blue-100 text-blue-700 rounded-full text-sm hover:bg-blue-200 transition-all shadow-sm border border-blue-300"
                   >
                     <span className="font-medium">{pos}</span>
                     <Icon name="close" className="w-3 h-3" />
@@ -1054,7 +1054,7 @@ export default function RosterPage() {
                   <button
                     key={grade}
                     onClick={() => toggleGradeLevelFilter(grade)}
-                    className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-xs bg-purple-100 text-purple-700 rounded-full text-sm hover:bg-purple-200 transition-all shadow-sm border border-purple-300"
+                    className="inline-flex items-center gap-xs px-sm py-xs bg-purple-100 text-purple-700 rounded-full text-sm hover:bg-purple-200 transition-all shadow-sm border border-purple-300"
                   >
                     <span className="font-medium">Grade {grade}</span>
                     <Icon name="close" className="w-3 h-3" />
@@ -1074,10 +1074,10 @@ export default function RosterPage() {
 
           {/* Loading State */}
           {loading && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <Card key={i} className="p-spacing-md">
-                  <div className="flex items-start gap-spacing-sm mb-spacing-sm">
+                <Card key={i} className="p-md">
+                  <div className="flex items-start gap-sm mb-sm">
                     <Skeleton className="w-12 h-12 rounded-full" />
                     <div className="flex-1 space-y-2">
                       <Skeleton className="h-6 w-32" />
@@ -1120,7 +1120,7 @@ export default function RosterPage() {
           {/* Player Grid */}
           {!loading && filteredPlayers.length > 0 && (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md animate-fade-in">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md animate-fade-in">
                 {paginatedPlayers.map((player) => (
                   <PlayerCard
                     key={player.id}
@@ -1142,7 +1142,7 @@ export default function RosterPage() {
                 onPageChange={goToPage}
                 itemsPerPage={50}
                 totalItems={filteredPlayers.length}
-                className="mt-spacing-lg"
+                className="mt-lg"
               />
             </>
           )}
@@ -1156,9 +1156,9 @@ export default function RosterPage() {
             }}
             title="Add New Player"
           >
-            <div className="space-y-spacing-md">
+            <div className="space-y-md">
               {formError && (
-                <div className="p-spacing-sm bg-error-100 dark:bg-error-900/30 border border-error-500 rounded-lg">
+                <div className="p-sm bg-error-100 dark:bg-error-900/30 border border-error-500 rounded-lg">
                   <Typography
                     variant="body-sm"
                     className="text-error-700 dark:text-error-300"
@@ -1168,7 +1168,7 @@ export default function RosterPage() {
                 </div>
               )}
 
-              <div className="grid grid-cols-2 gap-spacing-md">
+              <div className="grid grid-cols-2 gap-md">
                 <Input
                   label="First Name"
                   value={playerForm.first_name}
@@ -1205,9 +1205,9 @@ export default function RosterPage() {
                 placeholder="e.g., Johnny"
               />
 
-              <div className="grid grid-cols-2 gap-spacing-md">
+              <div className="grid grid-cols-2 gap-md">
                 <div>
-                  <label className="block text-sm font-medium mb-spacing-xs">
+                  <label className="block text-sm font-medium mb-xs">
                     Position(s) *
                   </label>
                   {/* Selected Positions Display */}
@@ -1260,7 +1260,7 @@ export default function RosterPage() {
                         }
                       }
                     }}
-                    className="w-full px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-sm py-xs border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                     <option value="">+ Add Position</option>
                     {positionOptions.map((pos) => (
@@ -1299,7 +1299,7 @@ export default function RosterPage() {
                         grade_level: e.target.value,
                       }))
                     }
-                    className="w-full px-3 py-2 border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-3 py-2 border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                     <option value="">Select Grade</option>
                     <option value="freshman">Freshman</option>
@@ -1388,7 +1388,7 @@ export default function RosterPage() {
                   onClick={() => handleSendInvitation()}
                   className="w-full border-jade-600 text-jade-700 hover:bg-accent dark:border-jade-500 dark:text-jade-400 dark:hover:bg-jade-950"
                 >
-                  <Icon name="mail" className="w-4 h-4 mr-spacing-xs" />
+                  <Icon name="mail" className="w-4 h-4 mr-xs" />
                   Invite {playerForm.first_name || "Player"} to Team
                 </Button>
               )}
@@ -1431,7 +1431,7 @@ export default function RosterPage() {
           >
             <div className="space-y-4">
               {formError && (
-                <div className="p-spacing-sm bg-error-100 dark:bg-error-900/30 border border-error-500 rounded-lg">
+                <div className="p-sm bg-error-100 dark:bg-error-900/30 border border-error-500 rounded-lg">
                   <Typography
                     variant="body-sm"
                     className="text-error-700 dark:text-error-300"
@@ -1443,7 +1443,7 @@ export default function RosterPage() {
 
               {/* Autosave Status Indicator */}
               {showEditModal && editingPlayer && (
-                <div className="flex items-center justify-between px-spacing-sm py-spacing-xs rounded-lg bg-secondary/50">
+                <div className="flex items-center justify-between px-sm py-xs rounded-lg bg-secondary/50">
                   <Typography variant="body-sm" className="text-secondary">
                     {autosavePlayer.status === "saving" &&
                       "💾 Saving changes..."}
@@ -1548,7 +1548,7 @@ export default function RosterPage() {
                         }
                       }
                     }}
-                    className="w-full px-3 py-2 border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-3 py-2 border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                     <option value="">+ Add Position</option>
                     {positionOptions.map((pos) => (
@@ -1587,7 +1587,7 @@ export default function RosterPage() {
                         grade_level: e.target.value,
                       }))
                     }
-                    className="w-full px-3 py-2 border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-3 py-2 border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                     <option value="">Select Grade</option>
                     <option value="freshman">Freshman</option>
@@ -1676,7 +1676,7 @@ export default function RosterPage() {
                   onClick={() => handleSendInvitation()}
                   className="w-full border-jade-600 text-jade-700 hover:bg-accent dark:border-jade-500 dark:text-jade-400 dark:hover:bg-jade-950"
                 >
-                  <Icon name="mail" className="w-4 h-4 mr-spacing-xs" />
+                  <Icon name="mail" className="w-4 h-4 mr-xs" />
                   {editingPlayer?.invitation_status === "pending"
                     ? "Resend Invitation"
                     : `Invite ${playerForm.first_name || "Player"} to Team`}
@@ -1735,7 +1735,7 @@ export default function RosterPage() {
             onClose={() => setShowBulkStatusDialog(false)}
             title="Change Player Status"
           >
-            <div className="space-y-spacing-md">
+            <div className="space-y-md">
               <Typography variant="body-sm" className="text-secondary">
                 You are about to change the status for{" "}
                 <strong>{selectedPlayerIds.size}</strong> player
@@ -1743,8 +1743,8 @@ export default function RosterPage() {
                 their access to team features.
               </Typography>
 
-              <div className="bg-warning-bg border border-warning rounded-lg p-spacing-sm">
-                <div className="flex gap-spacing-xs">
+              <div className="bg-warning-bg border border-warning rounded-lg p-sm">
+                <div className="flex gap-xs">
                   <Icon
                     name="info"
                     className="w-5 h-5 text-warning-600 flex-shrink-0 mt-0.5"
@@ -1768,7 +1768,7 @@ export default function RosterPage() {
                   id="bulk-status"
                   value={bulkStatusValue}
                   onChange={(e) => setBulkStatusValue(e.target.value)}
-                  className="w-full px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-sm py-xs border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   {statusOptions.map((status) => (
                     <option key={status.value} value={status.value}>
@@ -1778,7 +1778,7 @@ export default function RosterPage() {
                 </select>
               </div>
 
-              <div className="flex justify-end gap-spacing-sm pt-spacing-md">
+              <div className="flex justify-end gap-sm pt-md">
                 <Button
                   variant="outline"
                   onClick={() => setShowBulkStatusDialog(false)}

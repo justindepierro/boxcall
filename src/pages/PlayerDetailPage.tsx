@@ -70,8 +70,8 @@ export default function PlayerDetailPage() {
     return (
       <Aurora variant="shell" fullHeight>
         <PageLayout title="Loading Player..." subtitle="Please wait...">
-          <div className="space-y-spacing-lg">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-spacing-lg">
+          <div className="space-y-lg">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-lg">
               {[...Array(3)].map((_, i) => (
                 <Card key={i} className="animate-pulse">
                   <div className="h-48 bg-muted rounded-lg"></div>
@@ -92,7 +92,7 @@ export default function PlayerDetailPage() {
           subtitle="The requested player could not be found"
         >
           <Button onClick={() => navigate("/roster")}>
-            <Icon name="chevron-left" className="w-4 h-4 mr-spacing-xs" />
+            <Icon name="chevron-left" className="w-4 h-4 mr-xs" />
             Back to Roster
           </Button>
         </PageLayout>
@@ -134,7 +134,7 @@ export default function PlayerDetailPage() {
           className="mb-4"
         />
 
-        <div className="space-y-spacing-lg relative z-10">
+        <div className="space-y-lg relative z-10">
           {/* Header Actions */}
           <div className="flex items-center justify-between">
             <Button
@@ -142,24 +142,24 @@ export default function PlayerDetailPage() {
               onClick={() => navigate("/roster")}
               className="text-secondary"
             >
-              <Icon name="chevron-left" className="w-4 h-4 mr-spacing-xs" />
+              <Icon name="chevron-left" className="w-4 h-4 mr-xs" />
               Back to Roster
             </Button>
             <Button onClick={() => setShowEditModal(true)}>
-              <Icon name="edit" className="w-4 h-4 mr-spacing-xs" />
+              <Icon name="edit" className="w-4 h-4 mr-xs" />
               Edit Player
             </Button>
           </div>
 
           {/* Player Profile Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-spacing-lg">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-lg">
             {/* Basic Information Card */}
             <Card>
-              <div className="p-spacing-md">
-                <Typography variant="headline-md" className="mb-spacing-md">
+              <div className="p-md">
+                <Typography variant="headline-md" className="mb-md">
                   Basic Information
                 </Typography>
-                <dl className="space-y-spacing-sm">
+                <dl className="space-y-sm">
                   <div>
                     <dt className="text-secondary text-sm">Full Name</dt>
                     <dd className="font-medium">
@@ -205,11 +205,11 @@ export default function PlayerDetailPage() {
 
             {/* Physical Information Card */}
             <Card>
-              <div className="p-spacing-md">
-                <Typography variant="headline-md" className="mb-spacing-md">
+              <div className="p-md">
+                <Typography variant="headline-md" className="mb-md">
                   Physical Information
                 </Typography>
-                <dl className="space-y-spacing-sm">
+                <dl className="space-y-sm">
                   <div>
                     <dt className="text-secondary text-sm">Height</dt>
                     <dd className="font-medium">{height}</dd>
@@ -224,8 +224,8 @@ export default function PlayerDetailPage() {
 
             {/* Additional Info Card */}
             <Card>
-              <div className="p-spacing-md">
-                <Typography variant="headline-md" className="mb-spacing-md">
+              <div className="p-md">
+                <Typography variant="headline-md" className="mb-md">
                   Additional Information
                 </Typography>
                 <Typography variant="body-sm" className="text-secondary">
@@ -238,8 +238,8 @@ export default function PlayerDetailPage() {
 
           {/* Statistics Placeholder (Phase 4) */}
           <Card>
-            <div className="p-spacing-md">
-              <Typography variant="headline-md" className="mb-spacing-md">
+            <div className="p-md">
+              <Typography variant="headline-md" className="mb-md">
                 Player Statistics
               </Typography>
               <EmptyState

@@ -14,14 +14,14 @@ interface FormFieldProps {
 export const FormField = memo<FormFieldProps>(
   ({ field, value, onChange, error }) => {
     const baseInputClasses = `
-    w-full p-spacing-sm border rounded-lg transition-colors
+    w-full p-sm border rounded-lg transition-colors
     ${
       error
         ? "border-error focus:border-error"
         : "border-border focus:border-text-primary"
     }
     focus:outline-none focus:ring-2 focus:ring-text-primary/20
-    bg-surface-primary
+    bg-primary
   `;
 
     const renderInput = () => {
@@ -73,11 +73,11 @@ export const FormField = memo<FormFieldProps>(
         case "multi-select": {
           const selectedValues = Array.isArray(value) ? value : [];
           return (
-            <div className="space-y-spacing-xs">
+            <div className="space-y-xs">
               {field.options?.map((option) => (
                 <label
                   key={option.value}
-                  className="flex items-center space-x-spacing-xs"
+                  className="flex items-center space-x-xs"
                 >
                   <input
                     type="checkbox"
@@ -93,7 +93,7 @@ export const FormField = memo<FormFieldProps>(
                         );
                       }
                     }}
-                    className="rounded border-medium text-jade-600 focus:ring-jade-500"
+                    className="rounded border-secondary text-jade-600 focus:ring-jade-500"
                   />
                   <Typography variant="body-sm">{option.label}</Typography>
                 </label>
@@ -191,14 +191,14 @@ interface ProfileFormSectionProps {
 export const ProfileFormSection = memo<ProfileFormSectionProps>(
   ({ title, fields, values, onChange, errors = {} }) => {
     return (
-      <div className="space-y-spacing-md">
+      <div className="space-y-md">
         <Typography
           variant="headline-sm"
-          className="text-primary border-b border-subtle pb-spacing-xs"
+          className="text-primary border-b border-muted pb-xs"
         >
           {title}
         </Typography>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
           {fields.map((field) => (
             <div
               key={field.key}

@@ -88,7 +88,7 @@ export function MobileListItem({
         className={`
           w-full px-4 py-3
           flex items-center gap-3
-          bg-surface-base hover:bg-surface-subtle
+          bg-surface-base hover:bg-subtle
           transition-colors
           ${onTap ? "cursor-pointer active:scale-[0.99]" : "cursor-default"}
           ${hasSwipeActions ? "touch-pan-x" : ""}
@@ -186,7 +186,7 @@ export function MobileListGroup({
     <div
       className={`
         bg-surface-card rounded-xl overflow-hidden
-        ${dividers ? "divide-y divide-border-subtle" : ""}
+        ${dividers ? "divide-y divide-border-muted" : ""}
         ${className}
       `}
     >

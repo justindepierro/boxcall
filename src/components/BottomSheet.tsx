@@ -163,7 +163,7 @@ export function BottomSheet({
       {/* Bottom Sheet */}
       <motion.div
         ref={sheetRef}
-        className="fixed left-0 right-0 bg-surface-primary rounded-t-2xl shadow-2xl overflow-hidden flex flex-col"
+        className="fixed left-0 right-0 bg-primary rounded-t-2xl shadow-2xl overflow-hidden flex flex-col"
         style={{
           y,
           bottom: 0,
@@ -218,7 +218,7 @@ export function BottomSheetHeader({
       {onClose && (
         <button
           onClick={onClose}
-          className="p-2 rounded-lg hover:bg-surface-secondary transition-colors"
+          className="p-2 rounded-lg hover:bg-secondary transition-colors"
           aria-label="Close"
         >
           <svg

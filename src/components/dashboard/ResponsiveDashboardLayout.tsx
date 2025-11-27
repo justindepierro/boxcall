@@ -262,7 +262,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
 
         {/* Aurora hero tiles - Desktop only */}
         <div className="dashboard-hero-section mb-8 hidden md:block">
-          <div className="rounded-xl bg-surface-primary p-6 shadow-lg backdrop-blur-sm sm:p-8">
+          <div className="rounded-xl bg-primary p-6 shadow-lg backdrop-blur-sm sm:p-8">
             <div className="mb-6">
               <Typography variant="headline-sm" className="text-primary">
                 Welcome back,{" "}

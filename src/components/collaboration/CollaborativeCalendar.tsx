@@ -372,7 +372,7 @@ export const CollaborativeCalendar: React.FC<CollaborativeCalendarProps> = ({
                 className={`p-3 rounded-lg border transition-colors ${
                   isToday
                     ? "bg-primary/5 border-primary/20"
-                    : "bg-surface-secondary border-secondary"
+                    : "bg-secondary border-secondary"
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">

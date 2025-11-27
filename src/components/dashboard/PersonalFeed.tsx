@@ -16,7 +16,7 @@ export const PersonalFeed: React.FC = () => {
 
   return (
     <Card className="h-full">
-      <div className="p-4 border-b border-subtle">
+      <div className="p-4 border-b border-muted">
         <div className="flex items-center gap-2 mb-2">
           <Icon name="bell" size="sm" className="text-primary" />
           <Typography variant="headline-sm" className="text-primary">

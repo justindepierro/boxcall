@@ -59,22 +59,22 @@ export const TeamSettings: React.FC = () => {
 
         <div className="container-wide">
           {/* Tab Navigation */}
-          <div className="mb-spacing-xl">
-            <div className="border-b border-medium">
-              <nav className="-mb-px flex space-x-spacing-xl">
+          <div className="mb-xl">
+            <div className="border-b border-secondary">
+              <nav className="-mb-px flex space-x-xl">
                 {tabs.map((tab) => (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as any)}
-                    className={`py-spacing-xs px-spacing-xs border-b-2 font-medium text-sm ${
+                    className={`py-xs px-xs border-b-2 font-medium text-sm ${
                       activeTab === tab.id
                         ? "border-text-info text-info"
-                        : "border-transparent text-secondary hover:text-primary hover:border-strong"
+                        : "border-transparent text-secondary hover:text-primary hover:border-accent"
                     }`}
                   >
                     <Icon
                       name={tab.icon as any}
-                      className="h-4 w-4 mr-spacing-xs inline"
+                      className="h-4 w-4 mr-xs inline"
                     />
                     {tab.label}
                   </button>
@@ -85,22 +85,22 @@ export const TeamSettings: React.FC = () => {
 
           {/* Tab Content */}
           {activeTab === "overview" && (
-            <div className="space-y-spacing-lg">
-              <Card className="p-spacing-lg">
-                <Typography variant="headline-lg" className="mb-spacing-md">
+            <div className="space-y-lg">
+              <Card className="p-lg">
+                <Typography variant="headline-lg" className="mb-md">
                   Team Overview
                 </Typography>
                 <Typography
                   variant="body-lg"
                   color="muted"
-                  className="mb-spacing-lg"
+                  className="mb-lg"
                 >
                   Get a high-level view of your team's configuration and
                   performance.
                 </Typography>
 
-                <div className="grid-dashboard gap-spacing-lg">
-                  <div className="text-center p-spacing-md bg-secondary rounded-lg">
+                <div className="grid-dashboard gap-lg">
+                  <div className="text-center p-md bg-secondary rounded-lg">
                     <Typography
                       variant="headline-lg"
                       className="text-info"
@@ -111,7 +111,7 @@ export const TeamSettings: React.FC = () => {
                       Active Players
                     </Typography>
                   </div>
-                  <div className="text-center p-spacing-md bg-secondary rounded-lg">
+                  <div className="text-center p-md bg-secondary rounded-lg">
                     <Typography
                       variant="headline-lg"
                       className="text-info"
@@ -122,7 +122,7 @@ export const TeamSettings: React.FC = () => {
                       Staff Members
                     </Typography>
                   </div>
-                  <div className="text-center p-spacing-md bg-secondary rounded-lg">
+                  <div className="text-center p-md bg-secondary rounded-lg">
                     <Typography
                       variant="headline-lg"
                       className="text-info"
@@ -136,17 +136,17 @@ export const TeamSettings: React.FC = () => {
                 </div>
               </Card>
 
-              <Card className="p-spacing-lg">
-                <Typography variant="headline-md" className="mb-spacing-md">
+              <Card className="p-lg">
+                <Typography variant="headline-md" className="mb-md">
                   Quick Actions
                 </Typography>
-                <div className="grid-form gap-spacing-md">
+                <div className="grid-form gap-md">
                   <Button
                     variant="outline"
-                    className="justify-start h-auto p-spacing-md"
+                    className="justify-start h-auto p-md"
                     onClick={() => window.open("/roster", "_blank")}
                   >
-                    <Icon name="users" className="h-5 w-5 mr-spacing-sm" />
+                    <Icon name="users" className="h-5 w-5 mr-sm" />
                     <div className="text-left">
                       <Typography variant="body-md">Manage Roster</Typography>
                       <Typography variant="caption" color="muted">
@@ -156,10 +156,10 @@ export const TeamSettings: React.FC = () => {
                   </Button>
                   <Button
                     variant="outline"
-                    className="justify-start h-auto p-spacing-md"
+                    className="justify-start h-auto p-md"
                     onClick={() => window.open("/playbook", "_blank")}
                   >
-                    <Icon name="book" className="h-5 w-5 mr-spacing-sm" />
+                    <Icon name="book" className="h-5 w-5 mr-sm" />
                     <div className="text-left">
                       <Typography variant="body-md">Edit Playbook</Typography>
                       <Typography variant="caption" color="muted">
@@ -175,7 +175,7 @@ export const TeamSettings: React.FC = () => {
           {activeTab === "staff" && <StaffManagement teamId={teamId} />}
 
           {activeTab === "settings" && (
-            <div className="space-y-spacing-lg">
+            <div className="space-y-lg">
               {/* Family Permissions Section */}
               <FamilyPermissionsSettings
                 teamId={teamId}
@@ -187,20 +187,20 @@ export const TeamSettings: React.FC = () => {
               />
 
               {/* Team Preferences Section */}
-              <Card className="p-spacing-lg">
-                <Typography variant="headline-lg" className="mb-spacing-md">
+              <Card className="p-lg">
+                <Typography variant="headline-lg" className="mb-md">
                   Team Preferences
                 </Typography>
                 <Typography
                   variant="body-lg"
                   color="muted"
-                  className="mb-spacing-lg"
+                  className="mb-lg"
                 >
                   Configure team-wide settings and preferences.
                 </Typography>
 
-                <div className="space-y-spacing-md">
-                  <div className="flex items-center justify-between p-spacing-md border border-medium rounded-lg">
+                <div className="space-y-md">
+                  <div className="flex items-center justify-between p-md border border-secondary rounded-lg">
                     <div>
                       <Typography variant="body-md">Time Zone</Typography>
                       <Typography variant="caption" color="muted">
@@ -212,7 +212,7 @@ export const TeamSettings: React.FC = () => {
                     </Button>
                   </div>
 
-                  <div className="flex items-center justify-between p-spacing-md border border-medium rounded-lg">
+                  <div className="flex items-center justify-between p-md border border-secondary rounded-lg">
                     <div>
                       <Typography variant="body-md">Default Sport</Typography>
                       <Typography variant="caption" color="muted">

@@ -122,7 +122,7 @@ export function BulkEditModal({
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Bulk Edit Players">
-      <div className="space-y-spacing-md">
+      <div className="space-y-md">
         <Typography variant="body-sm" className="text-secondary">
           You are about to edit <strong>{selectedCount}</strong> player
           {selectedCount !== 1 ? "s" : ""}. Only fields you check will be
@@ -130,8 +130,8 @@ export function BulkEditModal({
         </Typography>
 
         {hasInactiveOrAlumni && (
-          <div className="bg-warning-bg border border-warning rounded-lg p-spacing-sm">
-            <div className="flex gap-spacing-xs">
+          <div className="bg-warning-bg border border-warning rounded-lg p-sm">
+            <div className="flex gap-xs">
               <Icon
                 name="info"
                 className="w-5 h-5 text-warning-600 flex-shrink-0 mt-0.5"
@@ -144,14 +144,14 @@ export function BulkEditModal({
           </div>
         )}
 
-        <div className="space-y-spacing-lg pt-spacing-sm">
+        <div className="space-y-lg pt-sm">
           {/* Position Field */}
-          <div className="flex items-start gap-spacing-sm">
+          <div className="flex items-start gap-sm">
             <input
               type="checkbox"
               checked={applyPosition}
               onChange={(e) => setApplyPosition(e.target.checked)}
-              className="mt-2 h-4 w-4 rounded border-surface-secondary text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              className="mt-2 h-4 w-4 rounded border-bg-secondary text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2"
             />
             <div className="flex-1">
               <label
@@ -165,7 +165,7 @@ export function BulkEditModal({
                 value={position}
                 onChange={(e) => setPosition(e.target.value)}
                 disabled={!applyPosition}
-                className="w-full px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-surface-muted disabled:text-muted disabled:cursor-not-allowed"
+                className="w-full px-sm py-xs border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-muted disabled:text-muted disabled:cursor-not-allowed"
               >
                 {positionOptions.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -177,12 +177,12 @@ export function BulkEditModal({
           </div>
 
           {/* Grade Level Field */}
-          <div className="flex items-start gap-spacing-sm">
+          <div className="flex items-start gap-sm">
             <input
               type="checkbox"
               checked={applyGradeLevel}
               onChange={(e) => setApplyGradeLevel(e.target.checked)}
-              className="mt-2 h-4 w-4 rounded border-surface-secondary text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              className="mt-2 h-4 w-4 rounded border-bg-secondary text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2"
             />
             <div className="flex-1">
               <label
@@ -196,7 +196,7 @@ export function BulkEditModal({
                 value={gradeLevel}
                 onChange={(e) => setGradeLevel(e.target.value)}
                 disabled={!applyGradeLevel}
-                className="w-full px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-surface-muted disabled:text-muted disabled:cursor-not-allowed"
+                className="w-full px-sm py-xs border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-muted disabled:text-muted disabled:cursor-not-allowed"
               >
                 {gradeLevelOptions.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -208,18 +208,18 @@ export function BulkEditModal({
           </div>
 
           {/* Height Field */}
-          <div className="flex items-start gap-spacing-sm">
+          <div className="flex items-start gap-sm">
             <input
               type="checkbox"
               checked={applyHeight}
               onChange={(e) => setApplyHeight(e.target.checked)}
-              className="mt-2 h-4 w-4 rounded border-surface-secondary text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              className="mt-2 h-4 w-4 rounded border-bg-secondary text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2"
             />
             <div className="flex-1">
               <label className="block text-sm font-medium text-primary mb-2">
                 Height
               </label>
-              <div className="flex gap-spacing-sm">
+              <div className="flex gap-sm">
                 <div className="flex-1">
                   <input
                     type="number"
@@ -229,7 +229,7 @@ export function BulkEditModal({
                     disabled={!applyHeight}
                     min="3"
                     max="8"
-                    className="w-full px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-surface-muted disabled:text-muted disabled:cursor-not-allowed"
+                    className="w-full px-sm py-xs border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-muted disabled:text-muted disabled:cursor-not-allowed"
                   />
                 </div>
                 <div className="flex-1">
@@ -241,7 +241,7 @@ export function BulkEditModal({
                     disabled={!applyHeight}
                     min="0"
                     max="11"
-                    className="w-full px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-surface-muted disabled:text-muted disabled:cursor-not-allowed"
+                    className="w-full px-sm py-xs border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-muted disabled:text-muted disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
@@ -249,12 +249,12 @@ export function BulkEditModal({
           </div>
 
           {/* Weight Field */}
-          <div className="flex items-start gap-spacing-sm">
+          <div className="flex items-start gap-sm">
             <input
               type="checkbox"
               checked={applyWeight}
               onChange={(e) => setApplyWeight(e.target.checked)}
-              className="mt-2 h-4 w-4 rounded border-surface-secondary text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              className="mt-2 h-4 w-4 rounded border-bg-secondary text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2"
             />
             <div className="flex-1">
               <label
@@ -272,13 +272,13 @@ export function BulkEditModal({
                 disabled={!applyWeight}
                 min="50"
                 max="500"
-                className="w-full px-spacing-sm py-spacing-xs border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-surface-muted disabled:text-muted disabled:cursor-not-allowed"
+                className="w-full px-sm py-xs border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-muted disabled:text-muted disabled:cursor-not-allowed"
               />
             </div>
           </div>
         </div>
 
-        <div className="flex justify-end gap-spacing-sm pt-spacing-md border-t border-surface-secondary">
+        <div className="flex justify-end gap-sm pt-md border-t border-bg-secondary">
           <Button variant="outline" onClick={handleClose} disabled={saving}>
             Cancel
           </Button>

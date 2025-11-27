@@ -17,23 +17,23 @@ export const useThemeColors = () => {
     theme: config.theme,
     // Surface colors
     surface: {
-      primary: isDark ? "bg-dark-surface-primary" : "bg-surface-primary",
-      secondary: isDark ? "bg-dark-surface-secondary" : "bg-surface-secondary",
-      tertiary: isDark ? "bg-dark-surface-tertiary" : "bg-surface-tertiary",
+      primary: isDark ? "bg-dark-bg-primary" : "bg-primary",
+      secondary: isDark ? "bg-dark-bg-secondary" : "bg-secondary",
+      tertiary: isDark ? "bg-dark-bg-tertiary" : "bg-tertiary",
       accent: isDark ? "bg-dark-surface-accent" : "bg-navy-900",
     },
     // Text colors
     text: {
-      primary: isDark ? "text-dark-text-primary" : "text-text-primary",
-      secondary: isDark ? "text-dark-text-secondary" : "text-text-secondary",
-      tertiary: isDark ? "text-dark-text-tertiary" : "text-text-tertiary",
-      inverse: isDark ? "text-dark-text-inverse" : "text-surface-primary",
+      primary: isDark ? "text-dark-text-primary" : "text-primary",
+      secondary: isDark ? "text-dark-text-secondary" : "text-secondary",
+      tertiary: isDark ? "text-dark-text-tertiary" : "text-tertiary",
+      inverse: isDark ? "text-dark-text-inverse" : "text-bg-primary",
     },
     // Interactive colors
     interactive: {
       hover: isDark
         ? "hover:bg-dark-interactive-hover"
-        : "hover:bg-surface-tertiary",
+        : "hover:bg-tertiary",
       active: isDark ? "active:bg-dark-interactive-active" : "active:bg-border",
       focus: "focus:ring-electric-500",
     },

@@ -200,9 +200,9 @@ export default function EditPlayerModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Edit Player" size={modalSize}>
-      <div className="space-y-4 p-spacing-md">
+      <div className="space-y-4 p-md">
         {formError && (
-          <div className="p-spacing-sm bg-error-100 dark:bg-error-900/30 border border-error-500 rounded-lg">
+          <div className="p-sm bg-error-100 dark:bg-error-900/30 border border-error-500 rounded-lg">
             <Typography
               variant="body-sm"
               className="text-error-700 dark:text-error-300"
@@ -287,7 +287,7 @@ export default function EditPlayerModal({
                 }
               }}
               disabled={saving}
-              className="w-full px-3 py-2 border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-surface-primary dark:bg-surface-secondary"
+              className="w-full px-3 py-2 border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-primary dark:bg-secondary"
             >
               <option value="">+ Add Position</option>
               {positionOptions.map((pos) => (
@@ -321,7 +321,7 @@ export default function EditPlayerModal({
                   handleFieldChange("grade_level", e.target.value)
                 }
                 disabled={saving}
-                className="w-full px-3 py-2 border border-surface-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-surface-primary dark:bg-surface-secondary"
+                className="w-full px-3 py-2 border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-primary dark:bg-secondary"
               >
                 <option value="">Select Grade</option>
                 {gradeOptions.map((grade) => (
@@ -371,7 +371,7 @@ export default function EditPlayerModal({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex justify-end gap-spacing-sm pt-4 border-t border-surface-secondary">
+        <div className="flex justify-end gap-sm pt-4 border-t border-bg-secondary">
           <Button variant="outline" onClick={onClose} disabled={saving}>
             Cancel
           </Button>

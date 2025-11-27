@@ -388,7 +388,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
       size="lg"
       footer={
         <div
-          className={`flex justify-end gap-spacing-sm ${isMobile ? "flex-col" : ""}`}
+          className={`flex justify-end gap-sm ${isMobile ? "flex-col" : ""}`}
         >
           <Button
             type="button"
@@ -414,7 +414,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
               <>
                 <Icon
                   name={existingPlay ? "edit" : "plus"}
-                  className="h-4 w-4 mr-spacing-xs"
+                  className="h-4 w-4 mr-xs"
                 />
                 {existingPlay ? "Update Play" : "Create Play"}
               </>
@@ -423,9 +423,9 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         </div>
       }
     >
-      <div className="space-y-spacing-lg">
-        <div className="flex items-center gap-spacing-sm mb-spacing-lg">
-          <div className="p-spacing-xs bg-surface-secondary rounded-lg">
+      <div className="space-y-lg">
+        <div className="flex items-center gap-sm mb-lg">
+          <div className="p-xs bg-secondary rounded-lg">
             <Icon name="plus" className="h-6 w-6 text-primary" />
           </div>
           <div>
@@ -439,7 +439,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
         {/* Error Message */}
         {errorMessage && (
-          <div className="bg-danger-subtle border border-danger-default rounded-lg p-spacing-md flex items-start gap-spacing-sm">
+          <div className="bg-danger-subtle border border-danger-default rounded-lg p-md flex items-start gap-sm">
             <Icon
               name="alert-triangle"
               className="h-5 w-5 text-danger-default flex-shrink-0 mt-0.5"
@@ -464,7 +464,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
         {/* Rate Limit Warning */}
         {!existingPlay && rateLimitFeedback.isNearLimit && (
-          <div className="bg-warning-subtle border border-warning-default rounded-lg p-spacing-md flex items-center gap-spacing-sm">
+          <div className="bg-warning-subtle border border-warning-default rounded-lg p-md flex items-center gap-sm">
             <Icon name="clock" className="h-5 w-5 text-warning-default" />
             <div className="flex-1">
               <Typography
@@ -481,7 +481,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
         {/* Rate Limit Exceeded */}
         {!existingPlay && rateLimitFeedback.isLimited && (
-          <div className="bg-danger-subtle border border-danger-default rounded-lg p-spacing-md flex items-center gap-spacing-sm">
+          <div className="bg-danger-subtle border border-danger-default rounded-lg p-md flex items-center gap-sm">
             <Icon
               name="alert-triangle"
               className="h-5 w-5 text-danger-default"
@@ -499,7 +499,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-spacing-lg">
+        <form onSubmit={handleSubmit} className="space-y-lg">
           {/* Formation Section */}
           <FormationSection
             formation={formData.formation}
@@ -734,7 +734,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
           />
 
           {/* Play Diagram Upload */}
-          <div className="space-y-spacing-sm border-t border-primary pt-spacing-lg">
+          <div className="space-y-sm border-t border-primary pt-lg">
             <Typography
               variant="label"
               className="text-primary font-semibold"

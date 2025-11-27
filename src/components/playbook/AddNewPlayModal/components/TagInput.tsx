@@ -68,10 +68,10 @@ export const TagInput: React.FC<TagInputProps> = ({
     <div className={className}>
       <Typography
         variant="label-md"
-        className="block mb-spacing-xs text-secondary"
+        className="block mb-xs text-secondary"
       >
         {icon && (
-          <Icon name={icon as any} className="h-4 w-4 mr-spacing-xs inline" />
+          <Icon name={icon as any} className="h-4 w-4 mr-xs inline" />
         )}
         {label}
         {maxTags && (
@@ -79,7 +79,7 @@ export const TagInput: React.FC<TagInputProps> = ({
             variant="caption"
             as="span"
             color="muted"
-            className="ml-spacing-xs"
+            className="ml-xs"
           >
             ({tags.length}/{maxTags})
           </Typography>
@@ -88,11 +88,11 @@ export const TagInput: React.FC<TagInputProps> = ({
 
       {/* Display existing tags */}
       {tags.length > 0 && (
-        <div className="flex flex-wrap gap-spacing-xs mb-spacing-xs">
+        <div className="flex flex-wrap gap-xs mb-xs">
           {tags.map((tag, index) => (
             <span
               key={index}
-              className={`inline-flex items-center gap-spacing-xs px-spacing-xs py-spacing-xs text-xs rounded-full border ${getTagColorClasses()}`}
+              className={`inline-flex items-center gap-xs px-xs py-xs text-xs rounded-full border ${getTagColorClasses()}`}
             >
               {tag}
               {onRemoveTag && (
@@ -112,13 +112,13 @@ export const TagInput: React.FC<TagInputProps> = ({
 
       {/* Add new tag input */}
       {canAddMore && (
-        <div className="flex gap-spacing-xs">
+        <div className="flex gap-xs">
           <input
             value={newTagValue}
             onChange={(e) => onNewTagChange(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            className="flex-1 px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+            className="flex-1 px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
           />
           <Button
             size="sm"

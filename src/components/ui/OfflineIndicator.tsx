@@ -56,7 +56,7 @@ export function OfflineIndicator() {
           <Button
             onClick={skipWaiting}
             size="sm"
-            className="bg-white text-success-600 hover:bg-surface-muted"
+            className="bg-white text-success-600 hover:bg-muted"
           >
             Update Now
           </Button>

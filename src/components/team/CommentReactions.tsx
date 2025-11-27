@@ -133,8 +133,8 @@ export const CommentReactions: React.FC<CommentReactionsProps> = ({
                 hasReacted
                   ? "bg-brand-primary-light text-brand-primary-dark"
                   : count > 0
-                    ? "bg-surface-primary text-primary hover:bg-jade-50"
-                    : "bg-transparent text-secondary hover:bg-surface-subtle"
+                    ? "bg-primary text-primary hover:bg-jade-50"
+                    : "bg-transparent text-secondary hover:bg-subtle"
               }
             `}
             title={`${REACTION_LABELS[type]}${

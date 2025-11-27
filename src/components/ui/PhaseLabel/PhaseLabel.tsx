@@ -30,7 +30,7 @@ export const PhaseLabel: React.FC<PhaseLabelProps> = ({
   className = "",
 }) => {
   const variantClasses = {
-    default: "bg-surface-muted text-primary border-subtle",
+    default: "bg-muted text-primary border-muted",
     warning: "bg-warning-500 text-primary border-warning-600",
     success: "bg-success-500 text-white border-success-600",
     info: "bg-info-500 text-white border-info-600",

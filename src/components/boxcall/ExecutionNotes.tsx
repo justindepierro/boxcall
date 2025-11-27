@@ -76,7 +76,7 @@ export const ExecutionNotes: React.FC<ExecutionNotesProps> = ({
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="px-2 py-0.5 bg-surface-secondary border border-border rounded-full text-xs"
+                className="px-2 py-0.5 bg-secondary border border-border rounded-full text-xs"
               >
                 {formatTagLabel(tag)}
               </span>
@@ -91,7 +91,7 @@ export const ExecutionNotes: React.FC<ExecutionNotesProps> = ({
           <Typography variant="body-xs" color="muted" className="mb-1">
             Notes:
           </Typography>
-          <div className="bg-surface-secondary border border-border rounded-lg p-2">
+          <div className="bg-secondary border border-border rounded-lg p-2">
             <Typography variant="body-xs" className="text-secondary">
               {notes}
             </Typography>

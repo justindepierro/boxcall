@@ -69,7 +69,7 @@ export function MobilePageHeader({
         px-4 py-3 
         sm:px-6 sm:py-4
         bg-surface-base
-        border-b border-subtle
+        border-b border-muted
         ${className}
       `}
     >

@@ -8,22 +8,22 @@ import { Card, Button } from "../ui";
 export const CalendarSidebarSkeleton: React.FC = () => (
   <div className="space-y-6" aria-label="Loading calendar sidebar">
     <Card className="p-6 space-y-4 animate-pulse">
-      <div className="h-5 w-40 rounded-lg surface-subtle" />
-      <div className="h-9 w-full rounded-lg surface-subtle" />
-      <div className="h-9 w-5/6 rounded-lg surface-subtle" />
-      <div className="h-9 w-2/3 rounded-lg surface-subtle" />
+      <div className="h-5 w-40 rounded-lg bg-subtle" />
+      <div className="h-9 w-full rounded-lg bg-subtle" />
+      <div className="h-9 w-5/6 rounded-lg bg-subtle" />
+      <div className="h-9 w-2/3 rounded-lg bg-subtle" />
     </Card>
     <Card className="p-6 space-y-4 animate-pulse">
-      <div className="h-5 w-28 rounded-lg surface-subtle" />
+      <div className="h-5 w-28 rounded-lg bg-subtle" />
       <div className="flex gap-3">
-        <div className="h-6 w-12 rounded-lg surface-subtle" />
-        <div className="h-6 w-10 rounded-lg surface-subtle" />
-        <div className="h-6 w-14 rounded-lg surface-subtle" />
+        <div className="h-6 w-12 rounded-lg bg-subtle" />
+        <div className="h-6 w-10 rounded-lg bg-subtle" />
+        <div className="h-6 w-14 rounded-lg bg-subtle" />
       </div>
       <div className="space-y-2 pt-2">
-        <div className="h-3 w-5/6 rounded-lg surface-subtle" />
-        <div className="h-3 w-2/3 rounded-lg surface-subtle" />
-        <div className="h-3 w-3/5 rounded-lg surface-subtle" />
+        <div className="h-3 w-5/6 rounded-lg bg-subtle" />
+        <div className="h-3 w-2/3 rounded-lg bg-subtle" />
+        <div className="h-3 w-3/5 rounded-lg bg-subtle" />
       </div>
     </Card>
   </div>
@@ -32,10 +32,10 @@ export const CalendarSidebarSkeleton: React.FC = () => (
 export const CalendarGridSkeleton: React.FC = () => (
   <Card className="p-6 animate-pulse" aria-label="Loading calendar grid">
     <div className="flex items-center justify-between mb-6">
-      <div className="h-9 w-56 rounded-lg surface-subtle" />
+      <div className="h-9 w-56 rounded-lg bg-subtle" />
       <div className="flex gap-3">
-        <div className="h-9 w-20 rounded-lg surface-subtle" />
-        <div className="h-9 w-24 rounded-lg surface-subtle" />
+        <div className="h-9 w-20 rounded-lg bg-subtle" />
+        <div className="h-9 w-24 rounded-lg bg-subtle" />
       </div>
     </div>
     {/* eslint-disable-next-line boxcall-design/no-arbitrary-spacing, boxcall-design/no-raw-tailwind-colors -- Matches FullCalendar fixed height */}
@@ -43,9 +43,9 @@ export const CalendarGridSkeleton: React.FC = () => (
       {Array.from({ length: 35 }).map((_, i) => (
         <div
           key={`skel-${i}`}
-          className="rounded border border-subtle/60 surface-subtle relative overflow-hidden"
+          className="rounded border border-muted/60 bg-subtle relative overflow-hidden"
         >
-          <div className="h-4 w-8 surface-subtle rounded-lg mt-1 ml-1" />
+          <div className="h-4 w-8 bg-subtle rounded-lg mt-1 ml-1" />
           <div className="absolute inset-0 opacity-60" />
         </div>
       ))}
@@ -55,13 +55,13 @@ export const CalendarGridSkeleton: React.FC = () => (
 
 export const CalendarPageSkeleton: React.FC = () => (
   <div className="min-h-screen surface-app">
-    <div className="surface-header border-b border-subtle">
+    <div className="surface-header border-b border-muted">
       <div className="container-page container-padding py-6 animate-pulse">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full surface-subtle" />
+          <div className="h-10 w-10 rounded-full bg-subtle" />
           <div className="space-y-2">
-            <div className="h-6 w-56 rounded-lg surface-subtle" />
-            <div className="h-4 w-72 rounded-lg surface-subtle" />
+            <div className="h-6 w-56 rounded-lg bg-subtle" />
+            <div className="h-4 w-72 rounded-lg bg-subtle" />
           </div>
         </div>
       </div>

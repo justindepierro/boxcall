@@ -129,7 +129,7 @@ export const PracticeScriptForm: React.FC<PracticeScriptFormProps> = ({
               {tags.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center gap-1 px-3 py-1 bg-surface-muted text-secondary text-sm rounded-full"
+                  className="inline-flex items-center gap-1 px-3 py-1 bg-muted text-secondary text-sm rounded-full"
                 >
                   {tag}
                   <button

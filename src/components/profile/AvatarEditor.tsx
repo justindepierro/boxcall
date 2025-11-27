@@ -143,9 +143,9 @@ export const AvatarEditor: React.FC<AvatarEditorProps> = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Edit Avatar" size={modalSize}>
-      <div className="p-spacing-md">
+      <div className="p-md">
         {/* Preview Area */}
-        <div className="relative bg-surface-secondary rounded-lg overflow-hidden mb-spacing-md">
+        <div className="relative bg-secondary rounded-lg overflow-hidden mb-md">
           {/* Crop Circle Overlay - Dark outside, clear inside */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
             <div className="relative w-80 h-80">
@@ -186,7 +186,7 @@ export const AvatarEditor: React.FC<AvatarEditorProps> = ({
         </div>
 
         {/* Help Text */}
-        <div className="flex items-center justify-center gap-2 mb-spacing-md text-secondary">
+        <div className="flex items-center justify-center gap-2 mb-md text-secondary">
           <Move className="w-4 h-4" />
           <Typography variant="body-xs">
             Drag to position • Zoom to size • Rotate to adjust
@@ -194,13 +194,13 @@ export const AvatarEditor: React.FC<AvatarEditorProps> = ({
         </div>
 
         {/* Controls */}
-        <div className="space-y-spacing-md">
+        <div className="space-y-md">
           {/* Zoom Controls */}
-          <div className="flex items-center gap-spacing-md">
+          <div className="flex items-center gap-md">
             <Typography variant="body-sm" className="w-20 font-medium">
               Zoom
             </Typography>
-            <div className="flex items-center gap-spacing-sm flex-1">
+            <div className="flex items-center gap-sm flex-1">
               <Button
                 variant="outline"
                 size="sm"
@@ -233,11 +233,11 @@ export const AvatarEditor: React.FC<AvatarEditorProps> = ({
           </div>
 
           {/* Rotation Control */}
-          <div className="flex items-center gap-spacing-md">
+          <div className="flex items-center gap-md">
             <Typography variant="body-sm" className="w-20 font-medium">
               Rotate
             </Typography>
-            <div className="flex items-center gap-spacing-sm flex-1">
+            <div className="flex items-center gap-sm flex-1">
               <Button variant="outline" size="sm" onClick={handleRotate}>
                 <RotateCw className="w-4 h-4 mr-2" />
                 Rotate 90°
@@ -249,7 +249,7 @@ export const AvatarEditor: React.FC<AvatarEditorProps> = ({
           </div>
 
           {/* Reset Button */}
-          <div className="flex justify-center pt-spacing-sm">
+          <div className="flex justify-center pt-sm">
             <Button variant="ghost" size="sm" onClick={handleReset}>
               Reset to Original
             </Button>
@@ -260,7 +260,7 @@ export const AvatarEditor: React.FC<AvatarEditorProps> = ({
         <canvas ref={canvasRef} className="hidden" />
 
         {/* Action Buttons */}
-        <div className="flex justify-end gap-spacing-sm mt-spacing-lg pt-spacing-md border-t border-surface-secondary">
+        <div className="flex justify-end gap-sm mt-lg pt-md border-t border-bg-secondary">
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>

@@ -1038,7 +1038,7 @@ export default function PlaybookPage() {
           >
             <div className="flex flex-col h-full">
               {/* Header */}
-              <div className="flex items-center justify-between p-6 pb-4 border-b border-subtle">
+              <div className="flex items-center justify-between p-6 pb-4 border-b border-muted">
                 <Typography variant="headline-md" className="text-primary">
                   Filters & Search
                 </Typography>
@@ -1060,7 +1060,7 @@ export default function PlaybookPage() {
               </div>
 
               {/* Action Footer - Fixed at Bottom */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 bg-primary border-t border-subtle shadow-lg">
+              <div className="absolute bottom-0 left-0 right-0 p-4 bg-primary border-t border-muted shadow-lg">
                 <div className="flex gap-3">
                   <Button
                     onClick={() => {

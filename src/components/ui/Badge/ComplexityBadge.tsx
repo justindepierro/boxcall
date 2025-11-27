@@ -147,7 +147,7 @@ const ComplexityProgress: React.FC<{ complexity: ComplexityMetrics }> = ({
       <div className="text-xs text-secondary mb-1">
         Next: {currentLevel.name} ({pointsToNext} points to go)
       </div>
-      <div className="w-full bg-surface-secondary rounded-full h-1.5">
+      <div className="w-full bg-secondary rounded-full h-1.5">
         <div
           className="surface-subtle0 h-1.5 rounded-full transition-all duration-300"
           style={{ width: `${Math.min(progressPercent, 100)}%` }}

@@ -30,7 +30,7 @@ export const FilterChips: React.FC<FilterChipsProps> = ({
             ${
               chip.active
                 ? "bg-primary text-white shadow-sm"
-                : "bg-surface-muted text-secondary hover:bg-surface-secondary"
+                : "bg-muted text-secondary hover:bg-secondary"
             }
           `}
           type="button"

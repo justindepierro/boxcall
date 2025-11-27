@@ -163,7 +163,7 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(
                         className={`p-1.5 rounded-md transition-colors ${
                           isPinned
                             ? "text-brand-primary hover:bg-brand-primary-light"
-                            : "text-muted hover:text-primary hover:bg-surface-secondary"
+                            : "text-muted hover:text-primary hover:bg-secondary"
                         }`}
                         title={isPinned ? "Unpin" : "Pin"}
                       >
@@ -175,7 +175,7 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(
                     {onEdit && (
                       <button
                         onClick={() => onEdit(announcement)}
-                        className="p-1.5 text-muted hover:text-primary hover:bg-surface-secondary rounded-md transition-colors"
+                        className="p-1.5 text-muted hover:text-primary hover:bg-secondary rounded-md transition-colors"
                         title="Edit"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
@@ -259,7 +259,7 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(
         {isExpanded && (
           <div
             id={`comments-${announcement.id}`}
-            className="border-t border-subtle bg-surface-secondary"
+            className="border-t border-muted bg-secondary"
           >
             <AnnouncementComments
               announcementId={announcement.id}

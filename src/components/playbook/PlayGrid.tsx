@@ -579,7 +579,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           {/* Play Name Display Toggle & View Mode */}
           <div className="flex items-center space-x-6">
             {/* View Mode Toggle */}
-            <div className="flex items-center space-x-2 px-2 py-1 rounded-xl bg-surface-muted">
+            <div className="flex items-center space-x-2 px-2 py-1 rounded-xl bg-muted">
               <IconButton
                 aria-label="List view"
                 tooltip="List view"

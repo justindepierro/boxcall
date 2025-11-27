@@ -99,9 +99,9 @@ export function FormationTemplateSelector({
         }}
         disabled={disabled}
         variant="secondary"
-        className="w-full flex items-center justify-between gap-spacing-sm"
+        className="w-full flex items-center justify-between gap-sm"
       >
-        <div className="flex items-center gap-spacing-sm">
+        <div className="flex items-center gap-sm">
           <Sparkles className="w-4 h-4" />
           <span>Insert NFL Template</span>
         </div>
@@ -114,10 +114,10 @@ export function FormationTemplateSelector({
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute z-50 mt-spacing-sm w-full max-w-md bg-surface-primary border border-primary rounded-lg shadow-lg max-h-96 overflow-y-auto">
+        <div className="absolute z-50 mt-sm w-full max-w-md bg-primary border border-primary rounded-lg shadow-lg max-h-96 overflow-y-auto">
           {/* Header */}
-          <div className="sticky top-0 bg-surface-secondary border-b border-primary p-spacing-md">
-            <div className="flex items-start gap-spacing-sm">
+          <div className="sticky top-0 bg-secondary border-b border-primary p-md">
+            <div className="flex items-start gap-sm">
               <Info className="w-4 h-4 text-info-500 flex-shrink-0 mt-0.5" />
               <div>
                 <Typography
@@ -133,16 +133,16 @@ export function FormationTemplateSelector({
           </div>
 
           {/* Category Groups */}
-          <div className="p-spacing-sm">
+          <div className="p-sm">
             {categoryGroups.map((group) => {
               const templates = getTemplatesByCategory(group.category);
               if (templates.length === 0) return null;
 
               return (
-                <div key={group.category} className="mb-spacing-md last:mb-0">
+                <div key={group.category} className="mb-md last:mb-0">
                   {/* Category Header */}
-                  <div className="px-spacing-sm py-spacing-xs bg-surface-muted rounded-md mb-spacing-xs">
-                    <div className="flex items-center gap-spacing-xs">
+                  <div className="px-sm py-xs bg-muted rounded-md mb-xs">
+                    <div className="flex items-center gap-xs">
                       <span className="text-base">{group.icon}</span>
                       <Typography
                         variant="label-md"
@@ -163,16 +163,16 @@ export function FormationTemplateSelector({
                   </div>
 
                   {/* Templates in Category */}
-                  <div className="space-y-spacing-xs">
+                  <div className="space-y-xs">
                     {templates.map((template) => (
                       <button
                         key={template.id}
                         onClick={() => handleTemplateClick(template)}
-                        className="w-full text-left p-spacing-sm rounded-md hover:bg-surface-muted transition-colors border border-transparent hover:border-primary group"
+                        className="w-full text-left p-sm rounded-md hover:bg-muted transition-colors border border-transparent hover:border-primary group"
                       >
-                        <div className="flex items-start justify-between gap-spacing-sm">
+                        <div className="flex items-start justify-between gap-sm">
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-spacing-xs mb-spacing-xs">
+                            <div className="flex items-center gap-xs mb-xs">
                               <Typography
                                 variant="body-md"
                                 className="font-medium text-primary group-hover:text-primary-600 transition-colors"
@@ -180,7 +180,7 @@ export function FormationTemplateSelector({
                                 {template.name}
                               </Typography>
                               {/* Personnel Badge */}
-                              <span className="inline-flex items-center gap-0.5 px-spacing-xs py-0.5 bg-primary-100 text-primary-700 rounded text-xs font-semibold">
+                              <span className="inline-flex items-center gap-0.5 px-xs py-0.5 bg-primary-100 text-primary-700 rounded text-xs font-semibold">
                                 <Users className="w-3 h-3" />
                                 {template.personnel}
                               </span>
@@ -202,7 +202,7 @@ export function FormationTemplateSelector({
           </div>
 
           {/* Footer */}
-          <div className="sticky bottom-0 bg-surface-secondary border-t border-primary p-spacing-sm">
+          <div className="sticky bottom-0 bg-secondary border-t border-primary p-sm">
             <Typography
               variant="caption"
               className="text-muted text-center"

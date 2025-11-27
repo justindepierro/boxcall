@@ -885,10 +885,10 @@ export const elevationTokens = {
 
 export const surfaceTokens = {
   // Surface backgrounds - semantic color tokens
-  primary: "bg-surface-primary", // White in light mode, dark in dark mode
-  secondary: "bg-surface-secondary", // Gray-50 in light, dark gray in dark
-  muted: "bg-surface-muted", // Gray-100 in light, darker in dark
-  subtle: "bg-surface-subtle", // Very subtle background difference
+  primary: "bg-primary", // White in light mode, dark in dark mode
+  secondary: "bg-secondary", // Gray-50 in light, dark gray in dark
+  muted: "bg-muted", // Gray-100 in light, darker in dark
+  subtle: "bg-subtle", // Very subtle background difference
 
   // Elevation shadows (shadow-only design - NO BORDERS)
   // Use these instead of border+shadow combinations
@@ -929,32 +929,32 @@ export const surfaceTokens = {
   // These are pre-built combinations for common use cases
   patterns: {
     // Standard card (most common - use this as default)
-    card: "bg-surface-primary rounded-lg shadow-md",
+    card: "bg-primary rounded-lg shadow-md",
 
     // Interactive card (clickable, with hover lift)
     cardInteractive:
-      "bg-surface-primary rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 active:shadow-md active:translate-y-0 transition-all cursor-pointer",
+      "bg-primary rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 active:shadow-md active:translate-y-0 transition-all cursor-pointer",
 
     // Card with hover only (no lift, just shadow change)
     cardHover:
-      "bg-surface-primary rounded-lg shadow-md hover:shadow-lg transition-shadow",
+      "bg-primary rounded-lg shadow-md hover:shadow-lg transition-shadow",
 
     // Panel (sidebar, secondary containers)
-    panel: "bg-surface-secondary rounded-lg shadow-sm",
-    panelMuted: "bg-surface-muted rounded-lg shadow-none",
+    panel: "bg-secondary rounded-lg shadow-sm",
+    panelMuted: "bg-muted rounded-lg shadow-none",
 
     // Floating elements (dropdowns, tooltips, popovers)
-    floating: "bg-surface-primary rounded-lg shadow-xl",
-    floatingLarge: "bg-surface-primary rounded-lg shadow-2xl",
+    floating: "bg-primary rounded-lg shadow-xl",
+    floatingLarge: "bg-primary rounded-lg shadow-2xl",
 
     // Modal/overlay
-    modal: "bg-surface-primary rounded-xl shadow-2xl",
-    overlay: "bg-surface-primary/95 backdrop-blur-sm rounded-xl shadow-2xl",
+    modal: "bg-primary rounded-xl shadow-2xl",
+    overlay: "bg-primary/95 backdrop-blur-sm rounded-xl shadow-2xl",
 
     // Stat cards (dashboard widgets)
-    stat: "bg-surface-primary rounded-lg shadow-md p-6",
+    stat: "bg-primary rounded-lg shadow-md p-6",
     statInteractive:
-      "bg-surface-primary rounded-lg shadow-md hover:shadow-lg transition-shadow p-6",
+      "bg-primary rounded-lg shadow-md hover:shadow-lg transition-shadow p-6",
   },
 } as const;
 

@@ -428,7 +428,7 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
                 </button>
                 <button
                   onClick={handleCancel}
-                  className="flex items-center justify-center w-8 h-8 text-muted hover:text-primary hover:bg-surface-secondary rounded-lg transition-colors"
+                  className="flex items-center justify-center w-8 h-8 text-muted hover:text-primary hover:bg-secondary rounded-lg transition-colors"
                   title="Cancel (Escape)"
                 >
                   <Icon name="close" className="h-4 w-4" />
@@ -442,7 +442,7 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
         {showSuggestions && filteredSuggestions.length > 0 && (
           <div
             ref={suggestionsRef}
-            className="absolute left-0 top-full mt-2 w-full bg-surface-primary/95 dark:bg-surface-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-50 max-h-48 overflow-y-auto"
+            className="absolute left-0 top-full mt-2 w-full bg-primary/95 dark:bg-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-50 max-h-48 overflow-y-auto"
           >
             {filteredSuggestions.map((suggestion, index) => (
               <button
@@ -451,7 +451,7 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
                   e.preventDefault(); // Prevent blur
                   handleSuggestionSelect(suggestion);
                 }}
-                className="w-full text-left px-4 py-3 text-sm text-content-primary hover:bg-surface-secondary/50 focus:bg-surface-secondary/50 focus:outline-none border-b border-subtle last:border-b-0 transition-colors"
+                className="w-full text-left px-4 py-3 text-sm text-content-primary hover:bg-secondary/50 focus:bg-secondary/50 focus:outline-none border-b border-muted last:border-b-0 transition-colors"
               >
                 {suggestion}
               </button>

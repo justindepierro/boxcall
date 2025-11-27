@@ -78,9 +78,9 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-surface-primary border border-border rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-primary border border-border rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-surface-primary border-b border-border p-4 flex items-start justify-between">
+        <div className="sticky top-0 bg-primary border-b border-border p-4 flex items-start justify-between">
           <div className="flex-1">
             <Typography variant="headline-sm" className="mb-1">
               AI Confidence Breakdown
@@ -99,7 +99,7 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
 
         <div className="p-6 space-y-6">
           {/* Overall Score */}
-          <div className="bg-surface-secondary border border-border rounded-lg p-4">
+          <div className="bg-secondary border border-border rounded-lg p-4">
             <div className="flex items-center justify-between mb-3">
               <Typography variant="body-md" className="font-medium">
                 Overall Confidence
@@ -121,7 +121,7 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
                 </span>
               </div>
             </div>
-            <div className="w-full bg-surface-primary rounded-full h-3">
+            <div className="w-full bg-primary rounded-full h-3">
               <div
                 className={`h-3 rounded-full transition-all ${
                   overallScore >= 70
@@ -186,7 +186,7 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
               {contributions.map((component) => (
                 <div
                   key={component.name}
-                  className="bg-surface-secondary border border-border rounded-lg p-4"
+                  className="bg-secondary border border-border rounded-lg p-4"
                 >
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2">
@@ -198,7 +198,7 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
                       <Typography variant="body-sm" className="font-medium">
                         {component.name}
                       </Typography>
-                      <span className="px-2 py-0.5 bg-surface-primary border border-border rounded text-xs">
+                      <span className="px-2 py-0.5 bg-primary border border-border rounded text-xs">
                         {component.weight}% weight
                       </span>
                     </div>
@@ -215,7 +215,7 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
                   </Typography>
 
                   {/* Progress bar */}
-                  <div className="w-full bg-surface-primary rounded-full h-2 mb-2">
+                  <div className="w-full bg-primary rounded-full h-2 mb-2">
                     <div
                       className={`h-2 rounded-full ${
                         component.score >= 70
@@ -267,7 +267,7 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
           {/* Streak Tracker (Phase 12.3) */}
           {confidence.streak &&
             (confidence.streak.isHot || confidence.streak.isCold) && (
-              <div className="bg-surface-secondary border border-border rounded-lg p-4">
+              <div className="bg-secondary border border-border rounded-lg p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <Icon name="activity" size="sm" className="text-muted" />
                   <Typography variant="body-sm" className="font-medium">
@@ -301,7 +301,7 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
 
           {/* Practice-to-Game Analytics (Phase 12.4) */}
           {confidence.practiceToGame && (
-            <div className="bg-surface-secondary border border-border rounded-lg p-4">
+            <div className="bg-secondary border border-border rounded-lg p-4">
               <PracticeToGameInsight
                 practiceStats={confidence.practiceToGame.practiceStats}
                 gameStats={confidence.practiceToGame.gameStats}
@@ -312,7 +312,7 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
           )}
 
           {/* Execution History */}
-          <div className="bg-surface-secondary border border-border rounded-lg p-4">
+          <div className="bg-secondary border border-border rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
               <Icon name="database" size="sm" className="text-muted" />
               <Typography variant="body-sm" className="font-medium">
@@ -343,7 +343,7 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
           </div>
 
           {/* Help Text */}
-          <div className="bg-surface-secondary border border-border rounded-lg p-4">
+          <div className="bg-secondary border border-border rounded-lg p-4">
             <div className="flex items-start gap-2">
               <Icon
                 name="lightbulb"
@@ -361,7 +361,7 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="sticky bottom-0 bg-surface-primary border-t border-border p-4">
+        <div className="sticky bottom-0 bg-primary border-t border-border p-4">
           <button
             onClick={onClose}
             className="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"

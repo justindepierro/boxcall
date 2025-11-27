@@ -134,7 +134,7 @@ export const TrendAnalyticsDashboard: React.FC<
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-surface-primary rounded-lg p-3 shadow-xl">
+        <div className="bg-primary rounded-lg p-3 shadow-xl">
           <Typography variant="body-sm" className="font-medium mb-1">
             {label}
           </Typography>

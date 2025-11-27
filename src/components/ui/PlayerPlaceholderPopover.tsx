@@ -149,9 +149,9 @@ export const PlayerPlaceholderPopover: React.FC<
             left: `${popoverPosition.left}px`,
           }}
         >
-          <div className="bg-surface-primary/95 backdrop-blur-xl border border-border shadow-2xl rounded-xl w-80 overflow-hidden">
+          <div className="bg-primary/95 backdrop-blur-xl border border-border shadow-2xl rounded-xl w-80 overflow-hidden">
             {/* Header */}
-            <div className="p-4 border-b border-subtle bg-surface-subtle/50">
+            <div className="p-4 border-b border-muted bg-subtle/50">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-base text-primary truncate">

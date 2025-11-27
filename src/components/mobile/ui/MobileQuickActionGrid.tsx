@@ -112,7 +112,7 @@ export const MobileQuickActionGrid: React.FC<MobileQuickActionGridProps> = ({
             key={action.id}
             onClick={() => handleActionClick(action)}
             className={`
-              ${action.bgColor || "bg-surface-secondary"}
+              ${action.bgColor || "bg-secondary"}
               rounded-xl p-4 
               min-h-20
               flex flex-col items-center justify-center gap-2

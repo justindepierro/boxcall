@@ -202,7 +202,7 @@ const PlayGridDemo = (args: any) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-surface-secondary p-6">
+    <div className="min-h-screen bg-secondary p-6">
       <Card className="w-full container-page p-6">
         <div className="space-y-6">
           <div>
@@ -391,7 +391,7 @@ const PlayGridDemo = (args: any) => {
             <div className="space-y-3">
               <div className="p-3 border rounded-lg">
                 <h5 className="font-medium text-sm mb-2">Basic Grid</h5>
-                <pre className="text-xs bg-surface-muted p-2 rounded">
+                <pre className="text-xs bg-muted p-2 rounded">
                   {`<PlayGrid
   searchQuery={searchQuery}
   filters={filters}
@@ -404,7 +404,7 @@ const PlayGridDemo = (args: any) => {
                 <h5 className="font-medium text-sm mb-2">
                   With Bulk Operations
                 </h5>
-                <pre className="text-xs bg-surface-muted p-2 rounded">
+                <pre className="text-xs bg-muted p-2 rounded">
                   {`<PlayGrid
   searchQuery={searchQuery}
   filters={filters}
@@ -420,7 +420,7 @@ const PlayGridDemo = (args: any) => {
                 <h5 className="font-medium text-sm mb-2">
                   With Category Filtering
                 </h5>
-                <pre className="text-xs bg-surface-muted p-2 rounded">
+                <pre className="text-xs bg-muted p-2 rounded">
                   {`<PlayGrid
   searchQuery={searchQuery}
   selectedCategory="run"

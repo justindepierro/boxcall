@@ -82,7 +82,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
   }
 
   return (
-    <div className="bg-surface-secondary dark:bg-surface-secondary rounded-lg mb-3 shadow-md p-3">
+    <div className="bg-secondary dark:bg-secondary rounded-lg mb-3 shadow-md p-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           {/* Team Logo / Uploader */}
@@ -102,8 +102,8 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
               }
               className={
                 localLogo
-                  ? "w-20 h-20 rounded-none border-subtle dark:border-text-tertiary surface-subtle dark:bg-surface-tertiary overflow-hidden"
-                  : "w-20 h-20 rounded-none border-light dark:border-text-tertiary surface-subtle dark:bg-surface-tertiary hover:border-text-secondary dark:hover:border-text-secondary"
+                  ? "w-20 h-20 rounded-none border-muted dark:border-text-tertiary bg-subtle dark:bg-tertiary overflow-hidden"
+                  : "w-20 h-20 rounded-none border-light dark:border-text-tertiary bg-subtle dark:bg-tertiary hover:border-text-secondary dark:hover:border-text-secondary"
               }
             >
               {localLogo ? (
@@ -130,7 +130,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
             />
             {!isCoach && !localLogo && (
               <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="bg-surface-secondary text-inverse text-xss py-1 px-2 rounded-lg whitespace-nowrap">
+                <div className="bg-secondary text-inverse text-xss py-1 px-2 rounded-lg whitespace-nowrap">
                   Coaches can add team logo
                 </div>
               </div>

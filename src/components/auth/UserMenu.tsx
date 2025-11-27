@@ -79,7 +79,7 @@ export const UserMenu: React.FC = () => {
         disabled={loading}
       >
         {/* Profile picture matching ProfileCard style */}
-        <div className="w-8 h-8 bg-surface-secondary rounded-full flex items-center justify-center border border-subtle flex-shrink-0">
+        <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center border border-muted flex-shrink-0">
           <Typography variant="body-sm" className="font-bold text-primary">
             {getInitials(userName)}
           </Typography>
@@ -104,10 +104,10 @@ export const UserMenu: React.FC = () => {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 bg-surface-primary/98 backdrop-blur-xl rounded-lg shadow-2xl border border-medium/40 z-[70] overflow-hidden max-h-[calc(100vh-5rem)]">
+        <div className="absolute right-0 mt-2 w-56 bg-primary/98 backdrop-blur-xl rounded-lg shadow-2xl border border-secondary/40 z-[70] overflow-hidden max-h-[calc(100vh-5rem)]">
           <div className="py-1">
             {/* User Info */}
-            <div className="px-4 py-3 border-b border-medium/40 bg-surface-subtle/20">
+            <div className="px-4 py-3 border-b border-secondary/40 bg-subtle/20">
               <Typography
                 variant="body-sm"
                 as="p"
@@ -144,7 +144,7 @@ export const UserMenu: React.FC = () => {
               Team Settings
             </Button>
 
-            <div className="border-t border-medium/50 my-1" />
+            <div className="border-t border-secondary/50 my-1" />
 
             {/* Logout with confirmation */}
             {!showLogoutConfirm ? (

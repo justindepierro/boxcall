@@ -116,7 +116,7 @@ export const NotificationBell: React.FC = () => {
       {/* Bell Icon */}
       <button
         onClick={() => setShowDropdown(!showDropdown)}
-        className="relative p-2 rounded-lg hover:bg-surface-muted transition-colors"
+        className="relative p-2 rounded-lg hover:bg-muted transition-colors"
         title="Notifications"
       >
         <Bell className="w-5 h-5 text-secondary" />
@@ -129,9 +129,9 @@ export const NotificationBell: React.FC = () => {
 
       {/* Dropdown */}
       {showDropdown && (
-        <div className="absolute right-0 top-full mt-2 w-96 bg-surface-primary rounded-lg shadow-xl z-50 max-h-96 overflow-hidden flex flex-col">
+        <div className="absolute right-0 top-full mt-2 w-96 bg-primary rounded-lg shadow-xl z-50 max-h-96 overflow-hidden flex flex-col">
           {/* Header */}
-          <div className="p-4 border-b border-subtle flex items-center justify-between">
+          <div className="p-4 border-b border-muted flex items-center justify-between">
             <h3 className="font-semibold text-primary">Notifications</h3>
             {unreadCount > 0 && (
               <button
@@ -162,7 +162,7 @@ export const NotificationBell: React.FC = () => {
                     onClick={() => handleNotificationClick(notification)}
                     className={`
                       p-4 border-b border-border last:border-b-0 cursor-pointer
-                      hover:bg-surface-muted transition-colors
+                      hover:bg-muted transition-colors
                       ${!notification.read ? "bg-blue-50" : ""}
                     `}
                   >
@@ -201,7 +201,7 @@ export const NotificationBell: React.FC = () => {
                             onClick={(e) =>
                               handleMarkAsRead(notification.id, e)
                             }
-                            className="p-1 rounded hover:bg-surface-secondary transition-colors"
+                            className="p-1 rounded hover:bg-secondary transition-colors"
                             title="Mark as read"
                           >
                             <Check className="w-4 h-4 text-accent" />
@@ -211,7 +211,7 @@ export const NotificationBell: React.FC = () => {
                           onClick={(e) =>
                             handleDeleteNotification(notification.id, e)
                           }
-                          className="p-1 rounded hover:bg-surface-secondary transition-colors"
+                          className="p-1 rounded hover:bg-secondary transition-colors"
                           title="Delete"
                         >
                           <X className="w-4 h-4 text-secondary" />

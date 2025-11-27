@@ -201,22 +201,22 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   const getDisplayClasses = () => {
     const baseClasses = `
       inline-flex items-center gap-2 rounded-lg transition-all duration-200 cursor-pointer
-      border-2 border-surface-primary hover:border-light hover:border-text-tertiary
+      border-2 border-bg-primary hover:border-light hover:border-text-tertiary
       ${sizeClasses[size]}
       ${className}
     `;
 
     if (isEditing) {
       if (validationResult.isValid) {
-        return `${baseClasses} bg-surface-success border-text-success`;
+        return `${baseClasses} bg-success/20 border-text-success`;
       } else if (validationResult.level === "warning") {
-        return `${baseClasses} bg-surface-warning border-text-warning`;
+        return `${baseClasses} bg-warning/20 border-text-warning`;
       } else {
         return `${baseClasses} bg-surface-error border-text-error`;
       }
     }
 
-    return `${baseClasses} hover:bg-surface-secondary`;
+    return `${baseClasses} hover:bg-secondary`;
   };
 
   const getTextClasses = () => {
@@ -231,7 +231,7 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
 
   const getInputClasses = () => {
     const baseClasses = `
-      flex-1 bg-surface-primary border-none outline-none p-0 m-0
+      flex-1 bg-primary border-none outline-none p-0 m-0
       text-primary font-inherit leading-inherit
       placeholder:text-secondary
     `;

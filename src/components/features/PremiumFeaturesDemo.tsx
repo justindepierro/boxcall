@@ -81,7 +81,7 @@ const PremiumFeature: React.FC<PremiumFeatureProps> = ({
       {requiresPremium ? (
         <PremiumGate
           fallback={
-            <div className="text-center py-8 bg-surface-secondary rounded-lg border-2 border-dashed border-divider">
+            <div className="text-center py-8 bg-secondary rounded-lg border-2 border-dashed border-divider">
               <Lock className="w-8 h-8 text-muted mx-auto mb-3" />
               <p className="text-secondary font-medium mb-2">Premium Feature</p>
               <p className="text-sm text-muted mb-4">
@@ -187,7 +187,7 @@ const VideoAnalysis: React.FC = () => {
       requiresPremium={!can("canAccessVideoAnalysis")}
     >
       <div className="space-y-4">
-        <div className="bg-surface-muted aspect-video rounded-lg flex items-center justify-center">
+        <div className="bg-muted aspect-video rounded-lg flex items-center justify-center">
           <div className="text-center">
             <Video className="w-12 h-12 text-muted mx-auto mb-2" />
             <p className="text-secondary">Upload game footage</p>

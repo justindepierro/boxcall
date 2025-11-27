@@ -281,7 +281,7 @@ export const TeamOnboardingWizard: React.FC<TeamOnboardingWizardProps> = ({
                 Team Setup
               </Typography>
             </div>
-            <div className="w-full bg-surface-muted rounded-full h-2">
+            <div className="w-full bg-muted rounded-full h-2">
               <div
                 className="bg-gradient-to-r from-jade-500 to-emerald-600 h-2 rounded-full transition-all duration-500 ease-out"
                 style={{ width: `${progress}%` }}
@@ -291,7 +291,7 @@ export const TeamOnboardingWizard: React.FC<TeamOnboardingWizardProps> = ({
         )}
 
         {/* Step content */}
-        <div className="bg-white dark:bg-surface-secondary rounded-xl shadow-lg border p-8">
+        <div className="bg-white dark:bg-secondary rounded-xl shadow-lg border p-8">
           {renderStepContent()}
         </div>
 

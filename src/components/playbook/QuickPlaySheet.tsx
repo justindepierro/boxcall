@@ -212,7 +212,7 @@ export const QuickPlaySheet: React.FC<QuickPlaySheetProps> = ({
                     }
                     setPlayType(combo.playType);
                   }}
-                  className="inline-flex items-center gap-2 rounded-full bg-surface-secondary px-3 py-1.5 text-sm font-medium text-secondary hover:bg-surface-muted transition-colors"
+                  className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1.5 text-sm font-medium text-secondary hover:bg-muted transition-colors"
                 >
                   <Icon name="zap" className="h-4 w-4 text-primary" />
                   <span className="truncate max-w-40">
@@ -245,7 +245,7 @@ export const QuickPlaySheet: React.FC<QuickPlaySheetProps> = ({
               onFormationsLoaded={setAvailableFormations}
             />
           ) : (
-            <div className="rounded-lg border border-border bg-surface-secondary/80 p-4 text-sm text-secondary">
+            <div className="rounded-lg border border-border bg-secondary/80 p-4 text-sm text-secondary">
               Select a playbook before creating quick plays.
             </div>
           )}

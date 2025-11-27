@@ -90,7 +90,7 @@ export const WizardProgress: React.FC<WizardProgressProps> = ({
                   // Color
                   isCompleted && "bg-primary",
                   isCurrent && "bg-primary",
-                  isFuture && "bg-surface-muted border border-border"
+                  isFuture && "bg-muted border border-border"
                 )}
                 aria-label={`Step ${stepNumber}`}
               />
@@ -102,7 +102,7 @@ export const WizardProgress: React.FC<WizardProgressProps> = ({
                 className={cn(
                   "h-1 w-8",
                   "transition-colors duration-300",
-                  stepNumber < currentStep ? "bg-primary" : "bg-surface-muted"
+                  stepNumber < currentStep ? "bg-primary" : "bg-muted"
                 )}
               />
             )}

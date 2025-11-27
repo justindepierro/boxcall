@@ -55,13 +55,13 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
         placeholder={
           isLoading ? "Loading personnel..." : "Select personnel grouping"
         }
-        className="mb-spacing-sm"
+        className="mb-sm"
         disabled={isLoading || !playbookId}
       />
 
       {/* Quick-select buttons for common personnel */}
       {!isLoading && configurations && configurations.length > 0 && (
-        <div className="flex flex-wrap gap-spacing-xs">
+        <div className="flex flex-wrap gap-xs">
           {configurations.slice(0, 4).map((config) => (
             <Button
               key={config.id}
@@ -82,14 +82,14 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
             onClick={handleAddNewPersonnel}
             className="border-dashed"
           >
-            <Icon name="plus" className="h-4 w-4 mr-spacing-xs" />
+            <Icon name="plus" className="h-4 w-4 mr-xs" />
             Add New
           </Button>
         </div>
       )}
 
       {/* Helper text directing coaches to Formation Builder */}
-      <Typography variant="caption" className="text-muted mt-spacing-sm">
+      <Typography variant="caption" className="text-muted mt-sm">
         💡 Tip: Use the Formation Builder tile on the main page to create
         formations with visual positioning
       </Typography>

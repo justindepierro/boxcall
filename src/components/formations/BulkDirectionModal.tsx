@@ -59,14 +59,14 @@ export function BulkDirectionModal({
       title={`Set Direction for ${formationIds.length} Formation${formationIds.length !== 1 ? "s" : ""}`}
       size="md"
     >
-      <form onSubmit={handleSubmit} className="space-y-spacing-md">
+      <form onSubmit={handleSubmit} className="space-y-md">
         {/* Direction Selection */}
         <div>
-          <label className="block text-sm font-medium text-primary mb-spacing-sm">
+          <label className="block text-sm font-medium text-primary mb-sm">
             Formation Direction
           </label>
-          <div className="space-y-spacing-sm">
-            <label className="flex items-center gap-spacing-sm p-spacing-sm surface-subtle border border-primary rounded-md cursor-pointer hover:border-primary-500 transition-colors">
+          <div className="space-y-sm">
+            <label className="flex items-center gap-sm p-sm bg-subtle border border-primary rounded-md cursor-pointer hover:border-primary-500 transition-colors">
               <input
                 type="radio"
                 name="direction"
@@ -85,7 +85,7 @@ export function BulkDirectionModal({
               </div>
             </label>
 
-            <label className="flex items-center gap-spacing-sm p-spacing-sm surface-subtle border border-primary rounded-md cursor-pointer hover:border-primary-500 transition-colors">
+            <label className="flex items-center gap-sm p-sm bg-subtle border border-primary rounded-md cursor-pointer hover:border-primary-500 transition-colors">
               <input
                 type="radio"
                 name="direction"
@@ -104,7 +104,7 @@ export function BulkDirectionModal({
               </div>
             </label>
 
-            <label className="flex items-center gap-spacing-sm p-spacing-sm surface-subtle border border-primary rounded-md cursor-pointer hover:border-primary-500 transition-colors">
+            <label className="flex items-center gap-sm p-sm bg-subtle border border-primary rounded-md cursor-pointer hover:border-primary-500 transition-colors">
               <input
                 type="radio"
                 name="direction"
@@ -127,8 +127,8 @@ export function BulkDirectionModal({
 
         {/* Auto-create opposites option */}
         {direction === "both" && (
-          <div className="p-spacing-sm bg-info-50 border border-info-200 rounded-md">
-            <label className="flex items-start gap-spacing-sm cursor-pointer">
+          <div className="p-sm bg-info-50 border border-info-200 rounded-md">
+            <label className="flex items-start gap-sm cursor-pointer">
               <input
                 type="checkbox"
                 checked={autoCreateOpposites}
@@ -139,7 +139,7 @@ export function BulkDirectionModal({
                 <div className="text-sm font-medium text-primary">
                   Auto-create opposite formations
                 </div>
-                <div className="text-xs text-muted mt-spacing-xs">
+                <div className="text-xs text-muted mt-xs">
                   Automatically create left/right pairs for formations that
                   don't have opposites yet
                 </div>
@@ -149,7 +149,7 @@ export function BulkDirectionModal({
         )}
 
         {/* Actions */}
-        <div className="flex items-center justify-end gap-spacing-sm pt-spacing-md border-t border-subtle">
+        <div className="flex items-center justify-end gap-sm pt-md border-t border-muted">
           <Button
             type="button"
             variant="secondary"

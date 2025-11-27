@@ -209,10 +209,10 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                 const outcome = pf > pa ? "W" : pf < pa ? "L" : "T";
                 const color =
                   outcome === "W"
-                    ? "bg-surface-success text-success"
+                    ? "bg-success/20 text-success"
                     : outcome === "L"
                       ? "bg-surface-error text-error"
-                      : "surface-subtle text-primary";
+                      : "bg-subtle text-primary";
                 return (
                   <li
                     key={r.id}
@@ -262,7 +262,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
         >
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             {!!errors.length && (
-              <div className="rounded border border-subtle border-text-error surface-subtle bg-surface-error p-3 text-sm text-error text-error">
+              <div className="rounded border border-muted border-text-error bg-subtle bg-surface-error p-3 text-sm text-error text-error">
                 <ul className="list-disc list-inside space-y-0.5">
                   {errors.map((er) => (
                     <li key={er}>{er}</li>

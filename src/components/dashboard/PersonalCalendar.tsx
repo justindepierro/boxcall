@@ -104,7 +104,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
               variant="secondary"
               size="xs"
               onClick={() => setShowQuickAdd(!showQuickAdd)}
-              className="border-subtle text-jade-600 hover:text-jade-700"
+              className="border-muted text-jade-600 hover:text-jade-700"
             >
               + Add
             </Button>
@@ -113,7 +113,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
 
         {/* Quick Add Event Form */}
         {showQuickAdd && (
-          <div className="mb-4 p-3 surface-subtle rounded-lg border border-subtle">
+          <div className="mb-4 p-3 bg-subtle rounded-lg border border-muted">
             <div className="flex space-x-2">
               <Typography variant="body-sm" className="flex-1">
                 <input
@@ -121,7 +121,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                   value={quickEventTitle}
                   onChange={(e) => setQuickEventTitle(e.target.value)}
                   placeholder="Event title..."
-                  className="w-full px-3 py-2 border border-medium rounded-lg focus:ring-jade-500 focus:border-jade-500"
+                  className="w-full px-3 py-2 border border-secondary rounded-lg focus:ring-jade-500 focus:border-jade-500"
                   onKeyPress={(e) => e.key === "Enter" && handleQuickAdd()}
                 />
               </Typography>
@@ -168,7 +168,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                   <div
                     key={event.id}
                     onClick={() => handleEventClick(event)}
-                    className="flex items-start space-x-3 p-3 rounded-lg surface-subtle-hover transition-colors cursor-pointer border border-medium"
+                    className="flex items-start space-x-3 p-3 rounded-lg hover:bg-muted transition-colors cursor-pointer border border-secondary"
                   >
                     {/* Event Icon */}
                     <div className="flex-shrink-0 mt-1">
@@ -235,7 +235,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
       {/* Event Detail Modal */}
       {selectedEvent && (
         <div className="fixed inset-0 bg-text-primary bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-surface-primary rounded-lg shadow-xl max-w-md w-full max-h-96 overflow-y-auto">
+          <div className="bg-primary rounded-lg shadow-xl max-w-md w-full max-h-96 overflow-y-auto">
             <div className="p-6">
               <div className="flex items-start justify-between mb-4">
                 <Typography variant="headline-md" className="text-primary pr-4">

@@ -171,7 +171,7 @@ export function LoginForm({
               <div className="w-full" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-surface-primary text-secondary">
+              <span className="px-2 bg-primary text-secondary">
                 Or continue with email
               </span>
             </div>
@@ -319,7 +319,7 @@ export function SignupForm({
     >
       {/* Error Message */}
       {error && (
-        <div className="p-3 surface-subtle dark:bg-surface-error/20 rounded-lg">
+        <div className="p-3 bg-subtle dark:bg-surface-error/20 rounded-lg">
           <Typography
             variant="body-sm"
             className="text-error dark:text-error"
@@ -345,7 +345,7 @@ export function SignupForm({
               <div className="w-full" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-surface-primary text-secondary">
+              <span className="px-2 bg-primary text-secondary">
                 Or sign up with email
               </span>
             </div>
@@ -387,7 +387,7 @@ export function SignupForm({
           onChange={(e) =>
             handleInputChange("role", e.target.value as SignupData["role"])
           }
-          className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600 bg-surface-primary dark:bg-surface-secondary text-primary"
+          className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600 bg-primary dark:bg-secondary text-primary"
           disabled={loading}
         >
           <option value="player">Player</option>
@@ -565,7 +565,7 @@ export function ResetPasswordForm({
     >
       {/* Error Message */}
       {error && (
-        <div className="p-3 surface-subtle dark:bg-surface-error/20 rounded-lg">
+        <div className="p-3 bg-subtle dark:bg-surface-error/20 rounded-lg">
           <Typography
             variant="body-sm"
             className="text-error dark:text-error"

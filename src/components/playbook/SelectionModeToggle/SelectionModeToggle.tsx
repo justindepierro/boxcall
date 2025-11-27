@@ -88,7 +88,7 @@ export const SelectionModeToggle: React.FC<SelectionModeToggleProps> = ({
         className={`relative p-2.5 rounded-lg transition-all ${
           isActive
             ? "bg-success-bg text-success-text"
-            : "bg-surface-muted text-secondary hover:bg-surface-subtle hover:text-primary"
+            : "bg-muted text-secondary hover:bg-subtle hover:text-primary"
         } ${className}`}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}

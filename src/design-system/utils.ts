@@ -53,13 +53,13 @@ export const tokenClasses = {
     "bg-surface-jade hover:bg-surface-jade-dark text-brand-jade-dark font-semibold py-2 px-4 rounded-lg border border-surface-jade-dark transition-colors",
 
   // Card styles
-  card: "bg-surface-primary border border-surface-jade-dark rounded-xl shadow-sm",
+  card: "bg-primary border border-surface-jade-dark rounded-xl shadow-sm",
   cardHover:
     "hover:shadow-md hover:border-brand-jade transition-all duration-200",
 
   // Navigation styles
   navItem:
-    "text-text-secondary hover:text-interaction-jade hover:bg-surface-jade p-2 rounded-lg transition-colors",
+    "text-secondary hover:text-interaction-jade hover:bg-surface-jade p-2 rounded-lg transition-colors",
   navBrand: "text-interaction-jade font-bold text-xl",
 
   // Form styles
@@ -69,17 +69,17 @@ export const tokenClasses = {
 
   // Text styles
   heading: "text-brand-navy-dark font-bold",
-  body: "text-text-primary",
-  muted: "text-text-muted",
+  body: "text-primary",
+  muted: "text-muted",
 
   // Interactive states
   interactive:
     "hover:bg-interaction-jade hover:text-white transition-colors cursor-pointer",
 
   // Status styles
-  success: "surface-subtle text-text-success border border-subtle",
-  warning: "surface-subtle text-text-warning border border-subtle",
-  error: "surface-subtle text-text-error border border-subtle",
+  success: "bg-subtle text-success border border-muted",
+  warning: "bg-subtle text-warning border border-muted",
+  error: "bg-subtle text-error border border-muted",
 
   // Icon color standardization - Professional consistency
   iconBrand: `text-[${componentTokens.icon.jade}]`,

@@ -133,7 +133,7 @@ export function ProgressiveAuthFlow({
       <div className="text-center p-8">
         {/* Logo and branding */}
         <div className="mb-6">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-surface-secondary rounded-full mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-secondary rounded-full mb-4">
             <Icon name="target" size="xl" className="text-primary" />
           </div>
           <Typography variant="headline-lg" className="mb-2">

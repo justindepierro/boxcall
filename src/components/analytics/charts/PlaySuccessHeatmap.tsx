@@ -251,7 +251,7 @@ export const PlaySuccessHeatmap: React.FC<PlaySuccessHeatmapProps> = ({
 
         {/* Selected Zone Details */}
         {selectedZone && (
-          <div className="mt-6 p-4 bg-surface-secondary rounded-lg">
+          <div className="mt-6 p-4 bg-secondary rounded-lg">
             <div className="flex items-start justify-between mb-3">
               <div>
                 <Typography variant="body-sm" className="font-semibold mb-1">
@@ -302,7 +302,7 @@ export const PlaySuccessHeatmap: React.FC<PlaySuccessHeatmapProps> = ({
           {data.map((zone) => (
             <div
               key={zone.zone}
-              className="flex items-center justify-between p-3 bg-surface-secondary rounded-lg cursor-pointer hover:bg-surface-muted transition-colors"
+              className="flex items-center justify-between p-3 bg-secondary rounded-lg cursor-pointer hover:bg-muted transition-colors"
               onClick={() => setSelectedZone(zone)}
             >
               <div className="flex items-center gap-3">

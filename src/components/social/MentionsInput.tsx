@@ -101,18 +101,18 @@ export const MentionsInput: React.FC<MentionsInputProps> = ({
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className={`w-full p-3 border border-medium rounded-lg resize-none focus:ring-2 focus:ring-focus-info focus:border-info ${className}`}
+        className={`w-full p-3 border border-secondary rounded-lg resize-none focus:ring-2 focus:ring-focus-info focus:border-info ${className}`}
         rows={3}
       />
 
       {/* Suggestions dropdown */}
       {showSuggestions && suggestions.length > 0 && (
-        <div className="absolute z-10 w-full mt-1 bg-surface-primary border border-medium rounded-lg shadow-lg max-h-48 overflow-y-auto">
+        <div className="absolute z-10 w-full mt-1 bg-primary border border-secondary rounded-lg shadow-lg max-h-48 overflow-y-auto">
           {suggestions.map((suggestion) => (
             <button
               key={suggestion.id}
               onClick={() => handleSuggestionClick(suggestion)}
-              className="w-full px-3 py-2 text-left hover:bg-surface-secondary flex items-center space-x-2"
+              className="w-full px-3 py-2 text-left hover:bg-secondary flex items-center space-x-2"
             >
               {suggestion.avatar_url ? (
                 <img

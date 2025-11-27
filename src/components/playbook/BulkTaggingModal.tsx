@@ -84,7 +84,7 @@ export const BulkTaggingModal: React.FC<BulkTaggingModalProps> = ({
         className="absolute inset-0 bg-text-xssrimary/40"
         onClick={onClose}
       />
-      <div className="relative bg-surface-primary elevation-modal rounded-lg shadow-lg w-full max-w-lg mx-4 p-6 animate-fade-in">
+      <div className="relative bg-primary elevation-modal rounded-lg shadow-lg w-full max-w-lg mx-4 p-6 animate-fade-in">
         <div className="flex items-start justify-between mb-4">
           <div>
             <Typography
@@ -124,7 +124,7 @@ export const BulkTaggingModal: React.FC<BulkTaggingModalProps> = ({
                   handleAddTag(input);
                 }
               }}
-              className="flex-1 border-subtle rounded-lg px-2 py-1 text-sm"
+              className="flex-1 border-muted rounded-lg px-2 py-1 text-sm"
               placeholder="Type tag and press Enter"
             />
             <Button

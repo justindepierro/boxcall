@@ -397,7 +397,7 @@ export function RichTextEditor({
   }
 
   return (
-    <div className="border border-border rounded-lg bg-surface-primary">
+    <div className="border border-border rounded-lg bg-primary">
       {/* Toolbar */}
       <div className="flex items-center gap-1 p-2 border-b border-border flex-wrap">
         {/* Bold */}
@@ -405,9 +405,9 @@ export function RichTextEditor({
           type="button"
           onClick={() => editor.chain().focus().toggleBold().run()}
           disabled={disabled}
-          className={`p-2 rounded hover:bg-surface-muted transition-colors ${
+          className={`p-2 rounded hover:bg-muted transition-colors ${
             editor.isActive("bold")
-              ? "bg-surface-muted text-accent"
+              ? "bg-muted text-accent"
               : "text-secondary"
           }`}
           title="Bold"
@@ -432,9 +432,9 @@ export function RichTextEditor({
           type="button"
           onClick={() => editor.chain().focus().toggleItalic().run()}
           disabled={disabled}
-          className={`p-2 rounded hover:bg-surface-muted transition-colors ${
+          className={`p-2 rounded hover:bg-muted transition-colors ${
             editor.isActive("italic")
-              ? "bg-surface-muted text-accent"
+              ? "bg-muted text-accent"
               : "text-secondary"
           }`}
           title="Italic"
@@ -462,9 +462,9 @@ export function RichTextEditor({
           type="button"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           disabled={disabled}
-          className={`p-2 rounded hover:bg-surface-muted transition-colors ${
+          className={`p-2 rounded hover:bg-muted transition-colors ${
             editor.isActive("bulletList")
-              ? "bg-surface-muted text-accent"
+              ? "bg-muted text-accent"
               : "text-secondary"
           }`}
           title="Bullet List"
@@ -489,9 +489,9 @@ export function RichTextEditor({
           type="button"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           disabled={disabled}
-          className={`p-2 rounded hover:bg-surface-muted transition-colors ${
+          className={`p-2 rounded hover:bg-muted transition-colors ${
             editor.isActive("orderedList")
-              ? "bg-surface-muted text-accent"
+              ? "bg-muted text-accent"
               : "text-secondary"
           }`}
           title="Numbered List"
@@ -524,14 +524,14 @@ export function RichTextEditor({
               setShowFontMenu(!showFontMenu);
             }}
             disabled={disabled}
-            className="p-2 rounded hover:bg-surface-muted transition-colors text-secondary flex items-center gap-1"
+            className="p-2 rounded hover:bg-muted transition-colors text-secondary flex items-center gap-1"
             title="Font Family"
           >
             <Type className="w-4 h-4" />
             <ChevronDown className="w-3 h-3" />
           </button>
           {showFontMenu && (
-            <div className="absolute top-full left-0 mt-1 bg-surface-primary rounded-lg shadow-xl z-50 w-40">
+            <div className="absolute top-full left-0 mt-1 bg-primary rounded-lg shadow-xl z-50 w-40">
               {fonts.map((font) => (
                 <button
                   key={font.name}
@@ -544,7 +544,7 @@ export function RichTextEditor({
                     }
                     setShowFontMenu(false);
                   }}
-                  className="w-full text-left px-3 py-2 hover:bg-surface-muted text-sm"
+                  className="w-full text-left px-3 py-2 hover:bg-muted text-sm"
                   style={{ fontFamily: font.value || undefined }}
                 >
                   {font.name}
@@ -564,14 +564,14 @@ export function RichTextEditor({
               setShowColorMenu(!showColorMenu);
             }}
             disabled={disabled}
-            className="p-2 rounded hover:bg-surface-muted transition-colors text-secondary flex items-center gap-1"
+            className="p-2 rounded hover:bg-muted transition-colors text-secondary flex items-center gap-1"
             title="Text Color"
           >
             <Palette className="w-4 h-4" />
             <ChevronDown className="w-3 h-3" />
           </button>
           {showColorMenu && (
-            <div className="absolute top-full left-0 mt-1 bg-surface-primary rounded-lg shadow-xl z-50 p-2">
+            <div className="absolute top-full left-0 mt-1 bg-primary rounded-lg shadow-xl z-50 p-2">
               <div className="grid grid-cols-6 gap-1">
                 {colors.map((color) => (
                   <button
@@ -593,7 +593,7 @@ export function RichTextEditor({
                   editor.chain().focus().unsetColor().run();
                   setShowColorMenu(false);
                 }}
-                className="w-full mt-2 px-2 py-1 text-xs bg-surface-muted hover:bg-surface-secondary rounded"
+                className="w-full mt-2 px-2 py-1 text-xs bg-muted hover:bg-secondary rounded"
               >
                 Reset Color
               </button>
@@ -611,9 +611,9 @@ export function RichTextEditor({
               setShowHighlightMenu(!showHighlightMenu);
             }}
             disabled={disabled}
-            className={`p-2 rounded hover:bg-surface-muted transition-colors flex items-center gap-1 ${
+            className={`p-2 rounded hover:bg-muted transition-colors flex items-center gap-1 ${
               editor.isActive("highlight")
-                ? "bg-surface-muted text-accent"
+                ? "bg-muted text-accent"
                 : "text-secondary"
             }`}
             title="Highlight"
@@ -622,7 +622,7 @@ export function RichTextEditor({
             <ChevronDown className="w-3 h-3" />
           </button>
           {showHighlightMenu && (
-            <div className="absolute top-full left-0 mt-1 bg-surface-primary rounded-lg shadow-xl z-50 w-32">
+            <div className="absolute top-full left-0 mt-1 bg-primary rounded-lg shadow-xl z-50 w-32">
               {highlightColors.map((highlight) => (
                 <button
                   key={highlight.name}
@@ -639,7 +639,7 @@ export function RichTextEditor({
                     }
                     setShowHighlightMenu(false);
                   }}
-                  className="w-full text-left px-3 py-2 hover:bg-surface-muted text-sm flex items-center gap-2"
+                  className="w-full text-left px-3 py-2 hover:bg-muted text-sm flex items-center gap-2"
                 >
                   <span
                     className="w-4 h-4 rounded border border-border"
@@ -662,7 +662,7 @@ export function RichTextEditor({
           type="button"
           onClick={handleAddImage}
           disabled={disabled}
-          className="p-2 rounded hover:bg-surface-muted transition-colors text-secondary"
+          className="p-2 rounded hover:bg-muted transition-colors text-secondary"
           title="Add Image"
         >
           <svg

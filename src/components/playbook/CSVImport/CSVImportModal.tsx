@@ -169,12 +169,12 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   };
 
   const renderUploadStep = () => (
-    <div className="space-y-spacing-lg">
+    <div className="space-y-lg">
       <div className="text-center">
         <Typography
           variant="headline-sm"
           as="h3"
-          className="text-primary mb-spacing-xs"
+          className="text-primary mb-xs"
         >
           Import Plays from CSV
         </Typography>
@@ -184,9 +184,9 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       </div>
 
       <div
-        className={`relative placeholder-zone rounded-lg p-spacing-2xl text-center transition-colors ${
+        className={`relative placeholder-zone rounded-lg p-2xl text-center transition-colors ${
           dragActive
-            ? "border-electric-400 surface-subtle"
+            ? "border-electric-400 bg-subtle"
             : "border-border hover:border-light"
         }`}
         onDragEnter={handleDrag}
@@ -195,7 +195,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         onDrop={handleDrop}
       >
         {isProcessing ? (
-          <div className="space-y-spacing-md">
+          <div className="space-y-md">
             <Icon
               name="refresh-cw"
               className="h-12 w-12 text-jade-600 mx-auto animate-spin"
@@ -203,7 +203,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             <p className="text-secondary">Processing your CSV file...</p>
           </div>
         ) : (
-          <div className="space-y-spacing-md">
+          <div className="space-y-md">
             <Icon
               name="upload"
               className="h-12 w-12 text-secondary mx-auto"
@@ -221,7 +221,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                   />
                 </label>
               </p>
-              <p className="text-xs text-tertiary mt-spacing-xs">
+              <p className="text-xs text-tertiary mt-xs">
                 Supports CSV files up to 10MB
               </p>
             </div>
@@ -229,21 +229,21 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         )}
       </div>
 
-      <div className="surface-subtle border border-subtle rounded-lg p-spacing-md">
+      <div className="bg-subtle border border-muted rounded-lg p-md">
         <div className="flex items-start">
           <Icon
             name="info"
-            className="h-5 w-5 text-info mt-spacing-xs mr-spacing-sm flex-shrink-0"
+            className="h-5 w-5 text-info mt-xs mr-sm flex-shrink-0"
           />
           <div>
             <Typography
               variant="body-sm"
               as="h4"
-              className="font-medium text-primary mb-spacing-xs tracking-tight"
+              className="font-medium text-primary mb-xs tracking-tight"
             >
               Expected CSV Format
             </Typography>
-            <p className="text-sm text-secondary mb-spacing-xs">
+            <p className="text-sm text-secondary mb-xs">
               Your CSV should include columns for: formation, play_name, p_type,
               personnel, one_word_play, etc.
             </p>
@@ -255,11 +255,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       </div>
 
       {csvFile && (
-        <div className="surface-subtle border border-subtle rounded-lg p-spacing-md">
+        <div className="bg-subtle border border-muted rounded-lg p-md">
           <div className="flex items-center">
             <Icon
               name="check-circle"
-              className="h-5 w-5 text-success mr-spacing-sm"
+              className="h-5 w-5 text-success mr-sm"
             />
             <div>
               <Typography
@@ -292,10 +292,10 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   const renderPreviewStep = () => {
     if (!parseResult) {
       return (
-        <div className="text-center py-spacing-2xl">
+        <div className="text-center py-2xl">
           <Icon
             name="error"
-            className="h-12 w-12 text-error mx-auto mb-spacing-md"
+            className="h-12 w-12 text-error mx-auto mb-md"
           />
           <p className="text-secondary">No data to preview</p>
         </div>
@@ -305,12 +305,12 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
     const { previews, summary } = parseResult;
 
     return (
-      <div className="space-y-spacing-lg">
+      <div className="space-y-lg">
         <div className="text-center">
           <Typography
             variant="headline-sm"
             as="h3"
-            className="text-primary mb-spacing-xs"
+            className="text-primary mb-xs"
           >
             Review Your Plays
           </Typography>
@@ -320,9 +320,9 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         </div>
 
         {/* Summary Stats */}
-        <div className="grid grid-cols-4 gap-spacing-md surface-subtle rounded-lg p-spacing-md">
+        <div className="grid grid-cols-4 gap-md bg-subtle rounded-lg p-md">
           <div className="text-center">
-            <Typography variant="headline-sm" as="p" className="mb-spacing-xs">
+            <Typography variant="headline-sm" as="p" className="mb-xs">
               {summary.totalRows}
             </Typography>
             <Typography variant="caption" className="text-secondary">
@@ -333,7 +333,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             <Typography
               variant="headline-sm"
               as="p"
-              className="text-success mb-spacing-xs"
+              className="text-success mb-xs"
             >
               {summary.validPlays}
             </Typography>
@@ -345,7 +345,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             <Typography
               variant="headline-sm"
               as="p"
-              className="text-error mb-spacing-xs"
+              className="text-error mb-xs"
             >
               {summary.invalidPlays}
             </Typography>
@@ -357,7 +357,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             <Typography
               variant="headline-sm"
               as="p"
-              className="text-warning mb-spacing-xs"
+              className="text-warning mb-xs"
             >
               {summary.warnings}
             </Typography>
@@ -369,32 +369,32 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
         {/* Column Mapping Info */}
         {Object.keys(summary.suggestedMappings).length > 0 && (
-          <div className="surface-subtle border border-subtle rounded-lg p-spacing-md">
+          <div className="bg-subtle border border-muted rounded-lg p-md">
             <div className="flex items-start">
               <Icon
                 name="info"
-                className="h-5 w-5 text-info mt-spacing-xs mr-spacing-sm flex-shrink-0"
+                className="h-5 w-5 text-info mt-xs mr-sm flex-shrink-0"
               />
               <div>
                 <Typography
                   variant="body-sm"
                   as="h4"
-                  className="font-medium text-primary mb-spacing-xs tracking-tight"
+                  className="font-medium text-primary mb-xs tracking-tight"
                 >
                   Smart Column Mapping Applied
                 </Typography>
-                <p className="text-sm text-secondary mb-spacing-xs">
+                <p className="text-sm text-secondary mb-xs">
                   We automatically detected and mapped your columns:
                 </p>
-                <div className="text-xs text-secondary space-y-spacing-xs">
+                <div className="text-xs text-secondary space-y-xs">
                   {Object.entries(summary.suggestedMappings).map(
                     ([original, mapped]) => (
                       <div key={original}>
-                        <span className="font-mono bg-surface-secondary px-spacing-xs rounded-lg">
+                        <span className="font-mono bg-secondary px-xs rounded-lg">
                           {original}
                         </span>
                         {" → "}
-                        <span className="font-mono bg-surface-secondary px-spacing-xs rounded-lg">
+                        <span className="font-mono bg-secondary px-xs rounded-lg">
                           {mapped}
                         </span>
                       </div>
@@ -407,8 +407,8 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         )}
 
         {/* Plays Table */}
-        <div className="border border-subtle rounded-lg overflow-hidden">
-          <div className="surface-subtle px-spacing-md py-spacing-xs divider-b">
+        <div className="border border-muted rounded-lg overflow-hidden">
+          <div className="bg-subtle px-md py-xs divider-b">
             <Typography
               variant="body-sm"
               as="h4"
@@ -420,25 +420,25 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
           <div className="max-h-80 overflow-y-auto">
             <table className="w-full text-sm">
-              <thead className="surface-subtle sticky top-0">
+              <thead className="bg-subtle sticky top-0">
                 <tr>
-                  <th className="px-spacing-sm py-spacing-xs text-left text-xs font-medium text-secondary w-8"></th>
-                  <th className="px-spacing-sm py-spacing-xs text-left text-xs font-medium text-secondary">
+                  <th className="px-sm py-xs text-left text-xs font-medium text-secondary w-8"></th>
+                  <th className="px-sm py-xs text-left text-xs font-medium text-secondary">
                     Personnel
                   </th>
-                  <th className="px-spacing-sm py-spacing-xs text-left text-xs font-medium text-secondary">
+                  <th className="px-sm py-xs text-left text-xs font-medium text-secondary">
                     Formation
                   </th>
-                  <th className="px-spacing-sm py-spacing-xs text-left text-xs font-medium text-secondary">
+                  <th className="px-sm py-xs text-left text-xs font-medium text-secondary">
                     Play Name
                   </th>
-                  <th className="px-spacing-sm py-spacing-xs text-left text-xs font-medium text-secondary">
+                  <th className="px-sm py-xs text-left text-xs font-medium text-secondary">
                     Type
                   </th>
-                  <th className="px-spacing-sm py-spacing-xs text-left text-xs font-medium text-secondary">
+                  <th className="px-sm py-xs text-left text-xs font-medium text-secondary">
                     Status
                   </th>
-                  <th className="px-spacing-sm py-spacing-xs text-left text-xs font-medium text-secondary w-8">
+                  <th className="px-sm py-xs text-left text-xs font-medium text-secondary w-8">
                     ...
                   </th>
                 </tr>
@@ -447,37 +447,37 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                 {previews.map((preview) => (
                   <React.Fragment key={preview.rowNumber}>
                     <tr
-                      className={`${preview.isValid ? "bg-surface-primary" : "surface-subtle"} hover:surface-subtle`}
+                      className={`${preview.isValid ? "bg-primary" : "bg-subtle"} hover:bg-subtle`}
                     >
-                      <td className="px-spacing-sm py-spacing-xs text-xs text-secondary">
+                      <td className="px-sm py-xs text-xs text-secondary">
                         {preview.rowNumber}
                       </td>
-                      <td className="px-spacing-sm py-spacing-xs font-mono text-xs">
+                      <td className="px-sm py-xs font-mono text-xs">
                         {preview.data.personnel || "-"}
                       </td>
-                      <td className="px-spacing-sm py-spacing-xs font-medium text-xs">
+                      <td className="px-sm py-xs font-medium text-xs">
                         {preview.data.formation}
                       </td>
-                      <td className="px-spacing-sm py-spacing-xs text-xs">
+                      <td className="px-sm py-xs text-xs">
                         {preview.data.play_name}
                       </td>
-                      <td className="px-spacing-sm py-spacing-xs text-xs">
+                      <td className="px-sm py-xs text-xs">
                         <span
-                          className={`inline-flex items-center px-spacing-xs py-spacing-xs rounded-full text-xs font-medium ${
+                          className={`inline-flex items-center px-xs py-xs rounded-full text-xs font-medium ${
                             preview.data.p_type === "Pass"
-                              ? "bg-surface-info text-info"
+                              ? "bg-info/20 text-info"
                               : preview.data.p_type === "Run"
-                                ? "bg-surface-success text-success"
+                                ? "bg-success/20 text-success"
                                 : preview.data.p_type === "RPO"
                                   ? "bg-surface-accent text-accent"
-                                  : "surface-subtle text-primary"
+                                  : "bg-subtle text-primary"
                           }`}
                         >
                           {preview.data.p_type || "Unknown"}
                         </span>
                       </td>
-                      <td className="px-spacing-sm py-spacing-xs">
-                        <div className="flex items-center space-x-spacing-xs">
+                      <td className="px-sm py-xs">
+                        <div className="flex items-center space-x-xs">
                           {preview.isValid ? (
                             <Icon
                               name="check-circle"
@@ -497,7 +497,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                           )}
                         </div>
                       </td>
-                      <td className="px-spacing-sm py-spacing-xs">
+                      <td className="px-sm py-xs">
                         <Button
                           onClick={() => toggleRowExpansion(preview.rowNumber)}
                           variant="neutralLink"
@@ -521,11 +521,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
                     {/* Expanded Details */}
                     {expandedRows.has(preview.rowNumber) && (
-                      <tr className="surface-subtle">
-                        <td colSpan={7} className="px-spacing-sm py-spacing-md">
-                          <div className="space-y-spacing-sm">
+                      <tr className="bg-subtle">
+                        <td colSpan={7} className="px-sm py-md">
+                          <div className="space-y-sm">
                             {/* Additional Play Details */}
-                            <div className="grid grid-cols-3 gap-spacing-md text-xs">
+                            <div className="grid grid-cols-3 gap-md text-xs">
                               <div>
                                 <span className="font-medium text-secondary">
                                   Audible:
@@ -554,11 +554,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
                             {/* Errors */}
                             {preview.errors.length > 0 && (
-                              <div className="bg-surface-error border border-subtle rounded-lg p-spacing-xs">
-                                <p className="text-xs font-medium text-error mb-spacing-xs">
+                              <div className="bg-surface-error border border-muted rounded-lg p-xs">
+                                <p className="text-xs font-medium text-error mb-xs">
                                   Errors:
                                 </p>
-                                <ul className="text-xs text-error space-y-spacing-xs">
+                                <ul className="text-xs text-error space-y-xs">
                                   {preview.errors.map((error, idx) => (
                                     <li key={idx}>• {error}</li>
                                   ))}
@@ -568,11 +568,11 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
                             {/* Warnings */}
                             {preview.warnings.length > 0 && (
-                              <div className="bg-surface-warning border border-subtle rounded-lg p-spacing-xs">
-                                <p className="text-xs font-medium text-warning mb-spacing-xs">
+                              <div className="bg-warning/20 border border-muted rounded-lg p-xs">
+                                <p className="text-xs font-medium text-warning mb-xs">
                                   Warnings:
                                 </p>
-                                <ul className="text-xs text-warning space-y-spacing-xs">
+                                <ul className="text-xs text-warning space-y-xs">
                                   {preview.warnings.map((warning, idx) => (
                                     <li key={idx}>• {warning}</li>
                                   ))}
@@ -591,7 +591,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex justify-between gap-spacing-sm">
+        <div className="flex justify-between gap-sm">
           <Button onClick={() => setStep("upload")} variant="ghost" size="sm">
             Back
           </Button>
@@ -609,16 +609,16 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   };
 
   const renderImportingStep = () => (
-    <div className="text-center space-y-spacing-lg">
+    <div className="text-center space-y-lg">
       <div>
         <Icon
           name="refresh-cw"
-          className="h-16 w-16 text-accent mx-auto mb-spacing-md animate-spin"
+          className="h-16 w-16 text-accent mx-auto mb-md animate-spin"
         />
         <Typography
           variant="headline-sm"
           as="h3"
-          className="text-primary mb-spacing-xs"
+          className="text-primary mb-xs"
         >
           Importing Plays...
         </Typography>
@@ -626,7 +626,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           Processing your CSV file and adding plays to the database
         </p>
       </div>
-      <div className="surface-subtle rounded-lg p-spacing-md">
+      <div className="bg-subtle rounded-lg p-md">
         <p className="text-sm text-secondary">
           Please wait while we process your plays. This may take a moment for
           large files.
@@ -636,18 +636,18 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   );
 
   const renderCompleteStep = () => (
-    <div className="text-center space-y-spacing-lg">
+    <div className="text-center space-y-lg">
       <div>
         {importResult?.success ? (
           <>
             <Icon
               name="check-circle"
-              className="h-16 w-16 text-success mx-auto mb-spacing-md"
+              className="h-16 w-16 text-success mx-auto mb-md"
             />
             <Typography
               variant="headline-sm"
               as="h3"
-              className="text-primary mb-spacing-xs"
+              className="text-primary mb-xs"
             >
               Import Complete!
             </Typography>
@@ -660,12 +660,12 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           <>
             <Icon
               name="error"
-              className="h-16 w-16 text-error mx-auto mb-spacing-md"
+              className="h-16 w-16 text-error mx-auto mb-md"
             />
             <Typography
               variant="headline-sm"
               as="h3"
-              className="text-primary mb-spacing-xs"
+              className="text-primary mb-xs"
             >
               Import Had Issues
             </Typography>
@@ -678,13 +678,13 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       </div>
 
       {importResult && (
-        <div className="surface-subtle rounded-lg p-spacing-md">
-          <div className="grid grid-cols-4 gap-spacing-md text-center">
+        <div className="bg-subtle rounded-lg p-md">
+          <div className="grid grid-cols-4 gap-md text-center">
             <div>
               <Typography
                 variant="headline-sm"
                 as="p"
-                className="text-success mb-spacing-xs"
+                className="text-success mb-xs"
               >
                 {importResult.importedPlays}
               </Typography>
@@ -696,7 +696,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
               <Typography
                 variant="headline-sm"
                 as="p"
-                className="text-info mb-spacing-xs"
+                className="text-info mb-xs"
               >
                 {importResult.totalRows}
               </Typography>
@@ -708,7 +708,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
               <Typography
                 variant="headline-sm"
                 as="p"
-                className="text-error mb-spacing-xs"
+                className="text-error mb-xs"
               >
                 {importResult.errors.length}
               </Typography>
@@ -720,7 +720,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
               <Typography
                 variant="headline-sm"
                 as="p"
-                className="text-warning mb-spacing-xs"
+                className="text-warning mb-xs"
               >
                 {importResult.warnings?.length || 0}
               </Typography>
@@ -733,15 +733,15 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       )}
 
       {importResult?.warnings && importResult.warnings.length > 0 && (
-        <div className="surface-subtle border border-subtle rounded-lg p-spacing-md text-left">
+        <div className="bg-subtle border border-muted rounded-lg p-md text-left">
           <Typography
             variant="body-sm"
             as="h4"
-            className="font-medium text-warning mb-spacing-xs tracking-tight"
+            className="font-medium text-warning mb-xs tracking-tight"
           >
             Import Warnings:
           </Typography>
-          <ul className="text-sm text-warning list-disc list-inside space-y-spacing-xs">
+          <ul className="text-sm text-warning list-disc list-inside space-y-xs">
             {importResult.warnings
               .slice(0, 5)
               .map((warning: string, index: number) => (
@@ -755,15 +755,15 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       )}
 
       {importResult?.errors && importResult.errors.length > 0 && (
-        <div className="surface-subtle border border-subtle rounded-lg p-spacing-md text-left">
+        <div className="bg-subtle border border-muted rounded-lg p-md text-left">
           <Typography
             variant="body-sm"
             as="h4"
-            className="font-medium text-error mb-spacing-xs tracking-tight"
+            className="font-medium text-error mb-xs tracking-tight"
           >
             Import Errors:
           </Typography>
-          <ul className="text-sm text-error list-disc list-inside space-y-spacing-xs">
+          <ul className="text-sm text-error list-disc list-inside space-y-xs">
             {importResult.errors
               .slice(0, 5)
               .map((error: string, index: number) => (
@@ -805,13 +805,13 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       aria-label="CSV import modal"
       tabIndex={0}
     >
-      <div className="flex items-center justify-center min-h-screen pt-spacing-md px-spacing-md pb-20 text-center sm:block sm:p-0">
+      <div className="flex items-center justify-center min-h-screen pt-md px-md pb-20 text-center sm:block sm:p-0">
         <div
           className="fixed inset-0 bg-text-primary bg-opacity-50 transition-opacity"
           onClick={onClose}
         />
-        <div className="inline-block align-bottom bg-surface-primary elevation-modal rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-          <div className="surface-subtle px-spacing-lg py-spacing-md divider-b flex items-center justify-between">
+        <div className="inline-block align-bottom bg-primary elevation-modal rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+          <div className="bg-subtle px-lg py-md divider-b flex items-center justify-between">
             <Typography
               variant="headline-sm"
               as="h2"
@@ -828,7 +828,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
               aria-label="Close modal"
             />
           </div>
-          <div className="bg-surface-primary px-spacing-lg py-spacing-2xl">
+          <div className="bg-primary px-lg py-2xl">
             {renderStep()}
           </div>
         </div>

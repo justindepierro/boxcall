@@ -49,7 +49,7 @@ export const hoverAnimations = {
     "hover:animate-card-hover hover:animate-card-glow transition-all duration-300",
 
   /** Subtle background change */
-  subtle: "hover:bg-surface-secondary/50 transition-colors duration-200",
+  subtle: "hover:bg-secondary/50 transition-colors duration-200",
 } as const;
 
 /**

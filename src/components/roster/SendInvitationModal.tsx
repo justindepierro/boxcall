@@ -80,11 +80,11 @@ export function SendInvitationModal({
       onClose={onClose}
       title={`${isResend ? "Resend" : "Send"} Invitation`}
     >
-      <div className="space-y-spacing-md">
+      <div className="space-y-md">
         <div>
           <Typography
             variant="body-md"
-            className="text-secondary mb-spacing-sm"
+            className="text-secondary mb-sm"
           >
             Sending invitation to:
           </Typography>
@@ -104,7 +104,7 @@ export function SendInvitationModal({
         <div>
           <label
             htmlFor="invitation-email"
-            className="block text-sm font-medium mb-spacing-xs"
+            className="block text-sm font-medium mb-xs"
           >
             Email Address
           </label>
@@ -121,14 +121,14 @@ export function SendInvitationModal({
             className={error ? "border-error" : ""}
           />
           {error && (
-            <Typography variant="body-sm" className="text-error mt-spacing-xs">
+            <Typography variant="body-sm" className="text-error mt-xs">
               {error}
             </Typography>
           )}
         </div>
 
         {isResend && (
-          <div className="bg-warning-bg border border-warning rounded-md p-spacing-sm">
+          <div className="bg-warning-bg border border-warning rounded-md p-sm">
             <Typography variant="body-sm" className="text-warning-600">
               This player was previously invited. They will receive a reminder
               email.
@@ -136,7 +136,7 @@ export function SendInvitationModal({
           </div>
         )}
 
-        <div className="flex gap-spacing-sm justify-end">
+        <div className="flex gap-sm justify-end">
           <Button variant="ghost" onClick={onClose} disabled={isLoading}>
             Cancel
           </Button>

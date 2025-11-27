@@ -134,7 +134,7 @@ export const StreakIndicator: React.FC<StreakIndicatorProps> = ({
                     ? "bg-success/10 border-success/30"
                     : result === "failure"
                       ? "bg-error/10 border-error/30"
-                      : "bg-surface-secondary border-border"
+                      : "bg-secondary border-border"
                 }`}
                 title={result}
               >

@@ -73,7 +73,7 @@ export const WorkflowStatusBar: React.FC<WorkflowStatusBarProps> = ({
 
   return (
     <div
-      className={`fixed bottom-0 left-0 right-0 z-40 bg-surface-info/95 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_-4px_12px_rgba(0,0,0,0.15)] px-4 py-3 transition-transform duration-300 ${
+      className={`fixed bottom-0 left-0 right-0 z-40 bg-info/20/95 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_-4px_12px_rgba(0,0,0,0.15)] px-4 py-3 transition-transform duration-300 ${
         isVisible ? "translate-y-0" : "translate-y-full"
       } ${className}`}
     >

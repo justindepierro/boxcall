@@ -142,7 +142,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
   };
 
   return (
-    <div className="bg-surface-primary border border-border rounded-lg p-4 hover:shadow-sm transition-shadow">
+    <div className="bg-primary border border-border rounded-lg p-4 hover:shadow-sm transition-shadow">
       <div className="flex items-start space-x-4">
         {/* Drag Handle */}
         <div
@@ -248,7 +248,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                   size="sm"
                   onClick={() => handleRepetitionsChange(repetitionsValue - 1)}
                   disabled={repetitionsValue <= 1}
-                  className="h-10 w-10 p-0 rounded-lg border border-border hover:bg-surface-subtle"
+                  className="h-10 w-10 p-0 rounded-lg border border-border hover:bg-subtle"
                   aria-label="Decrease repetitions"
                 >
                   <Icon name="minus" className="h-4 w-4" />
@@ -269,7 +269,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                   size="sm"
                   onClick={() => handleRepetitionsChange(repetitionsValue + 1)}
                   disabled={repetitionsValue >= 20}
-                  className="h-10 w-10 p-0 rounded-lg border border-border hover:bg-surface-subtle"
+                  className="h-10 w-10 p-0 rounded-lg border border-border hover:bg-subtle"
                   aria-label="Increase repetitions"
                 >
                   <Icon name="plus" className="h-4 w-4" />
@@ -290,7 +290,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                 <select
                   value={hash}
                   onChange={(e) => handleScenarioChange("hash", e.target.value)}
-                  className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="px-3 py-2 text-sm rounded-lg border border-border bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
                 >
                   <option value="left">Left Hash</option>
                   <option value="middle">Middle</option>
@@ -311,7 +311,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                   onChange={(e) =>
                     handleScenarioChange("downDistance", e.target.value)
                   }
-                  className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="px-3 py-2 text-sm rounded-lg border border-border bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
                 >
                   <option value="1st & 10">1st & 10</option>
                   <option value="1st & 5">1st & 5</option>
@@ -340,7 +340,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                   onChange={(e) =>
                     handleScenarioChange("fieldPosition", e.target.value)
                   }
-                  className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="px-3 py-2 text-sm rounded-lg border border-border bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
                 >
                   <option value="plus_territory">
                     Plus Territory (Opp 40-50)
@@ -369,7 +369,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                         handleScenarioChange("defensiveFront", e.target.value);
                       }
                     }}
-                    className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    className="px-3 py-2 text-sm rounded-lg border border-border bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
                   >
                     <option value="base">Base Defense</option>
                     <option value="4-3">4-3 Front</option>
@@ -408,7 +408,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                           setCustomDefensiveFront("");
                         }
                       }}
-                      className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50 flex-1"
+                      className="px-3 py-2 text-sm rounded-lg border border-border bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50 flex-1"
                       placeholder="Custom front..."
                       autoFocus
                     />
@@ -442,7 +442,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                         handleScenarioChange("coverage", e.target.value);
                       }
                     }}
-                    className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    className="px-3 py-2 text-sm rounded-lg border border-border bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
                   >
                     <option value="cover_2">Cover 2</option>
                     <option value="cover_3">Cover 3</option>
@@ -483,7 +483,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                       }}
                       placeholder="Type custom coverage..."
                       autoFocus
-                      className="flex-1 px-3 py-2 text-sm rounded-lg border border-border bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      className="flex-1 px-3 py-2 text-sm rounded-lg border border-border bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
                     />
                     <Button
                       variant="ghost"
@@ -518,7 +518,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                         handleScenarioChange("blitz", e.target.value);
                       }
                     }}
-                    className="px-3 py-2 text-sm rounded-lg border border-border bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    className="px-3 py-2 text-sm rounded-lg border border-border bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
                   >
                     <option value="none">No Blitz</option>
                     <option value="edge">Edge Blitz</option>
@@ -552,7 +552,7 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                       }}
                       placeholder="Type custom blitz..."
                       autoFocus
-                      className="flex-1 px-3 py-2 text-sm rounded-lg border border-border bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      className="flex-1 px-3 py-2 text-sm rounded-lg border border-border bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
                     />
                     <Button
                       variant="ghost"

@@ -59,7 +59,7 @@ export function MobileCTACard({
 }: MobileCTACardProps) {
   const variantStyles = {
     primary: "bg-gradient-to-br from-brand-primary/5 to-brand-primary/10",
-    secondary: "bg-surface-secondary",
+    secondary: "bg-secondary",
     accent: "bg-gradient-to-br from-purple-500/5 to-purple-600/10",
   };
 

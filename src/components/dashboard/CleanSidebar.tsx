@@ -67,7 +67,7 @@ export const CleanSidebar: React.FC<CleanSidebarProps> = ({
         aria-label="Main navigation"
       >
         {/* Header */}
-        <div className="p-4 border-b border-subtle">
+        <div className="p-4 border-b border-muted">
           <div className="flex items-center justify-between">
             <Typography variant="headline-sm" className="font-bold">
               BoxCall
@@ -123,7 +123,7 @@ export const CleanSidebar: React.FC<CleanSidebarProps> = ({
                       px-2 py-1 text-xs font-medium rounded-full min-w-5 text-center
                       ${
                         item.isActive
-                          ? "bg-surface-primary bg-opacity-20 text-on-primary"
+                          ? "bg-primary bg-opacity-20 text-on-primary"
                           : "bg-primary text-on-primary"
                       }
                     `}

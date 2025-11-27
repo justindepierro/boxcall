@@ -408,7 +408,7 @@ export const TeamVoteWidget: React.FC<TeamVoteWidgetProps> = ({
                             key={option.id}
                             className={`relative p-3 rounded-lg border cursor-pointer transition-colors ${
                               canVote && !userHasVoted
-                                ? "hover:bg-surface-secondary border-primary"
+                                ? "hover:bg-secondary border-primary"
                                 : "border-secondary"
                             } ${isSelected ? "bg-primary/5 border-primary" : ""}`}
                             onClick={

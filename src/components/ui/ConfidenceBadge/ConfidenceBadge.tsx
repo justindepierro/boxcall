@@ -69,7 +69,7 @@ export const ConfidenceBadge: React.FC<ConfidenceBadgeProps> = ({
 
   return (
     <div
-      className={`${config.container} rounded-full bg-surface-primary shadow-lg flex items-center justify-center border-2 border-surface-primary ${className}`}
+      className={`${config.container} rounded-full bg-primary shadow-lg flex items-center justify-center border-2 border-bg-primary ${className}`}
       role="meter"
       aria-valuenow={confidence}
       aria-valuemin={0}

@@ -181,7 +181,7 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
       className="h-screen rounded-none" // No rounded corners on mobile
     >
       {/* Modal Header */}
-      <div className="flex-shrink-0 px-6 py-4 border-b border-border bg-surface-primary">
+      <div className="flex-shrink-0 px-6 py-4 border-b border-border bg-primary">
         <div className="flex items-center justify-between">
           <button
             type="button"
@@ -253,7 +253,7 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
                       key={`${combo.formation}-${combo.personnel || "none"}-${combo.playType || "any"}`}
                       variant="secondary"
                       size="sm"
-                      className="rounded-full bg-surface-secondary text-secondary hover:bg-surface-muted"
+                      className="rounded-full bg-secondary text-secondary hover:bg-muted"
                       onClick={() => {
                         updateFields({
                           formation: combo.formation,

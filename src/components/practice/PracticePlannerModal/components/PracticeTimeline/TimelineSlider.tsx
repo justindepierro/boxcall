@@ -26,7 +26,7 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({
   const maxDuration = Math.min(50, scheduledDuration - selectedBlock.start);
 
   return (
-    <div className="mt-4 p-4 surface-subtle rounded-lg border-2 border-subtle">
+    <div className="mt-4 p-4 bg-subtle rounded-lg border-2 border-muted">
       <div className="flex items-center justify-between mb-3">
         <div>
           <Typography
@@ -77,7 +77,7 @@ export const TimelineSlider: React.FC<TimelineSliderProps> = ({
             max={maxDuration}
             value={sliderValue}
             onChange={(e) => onSliderChange(parseInt(e.target.value))}
-            className="w-full h-3 bg-surface-info rounded-lg appearance-none cursor-pointer slider"
+            className="w-full h-3 bg-info/20 rounded-lg appearance-none cursor-pointer slider"
             style={{
               background: `linear-gradient(to right, var(--color-text-info) 0%, var(--color-text-info) ${(sliderValue / maxDuration) * 100}%, var(--color-border) ${(sliderValue / maxDuration) * 100}%, var(--color-border) 100%)`,
             }}

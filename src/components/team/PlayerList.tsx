@@ -58,7 +58,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
   };
   if (players.length === 0) {
     return (
-      <div className="bg-surface-primary rounded-lg shadow-sm p-8">
+      <div className="bg-primary rounded-lg shadow-sm p-8">
         <div className="text-center">
           <div className="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full surface-subtle0/10 text-jade-600 dark:text-jade-400">
             <Icon name="users" size="lg" />
@@ -92,7 +92,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
     );
   }
   return (
-    <div className="bg-surface-primary rounded-lg shadow-sm">
+    <div className="bg-primary rounded-lg shadow-sm">
       {/* Search and Filters */}
       <div className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -111,7 +111,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             <select
               value={filterLevel}
               onChange={(e) => setFilterLevel(e.target.value)}
-              className="w-full px-3 py-2 border border-medium dark:border-medium rounded-lg shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle text-primary font-sans"
+              className="w-full px-3 py-2 border border-secondary dark:border-secondary rounded-lg shadow-sm focus:ring-jade-500 focus:border-jade-500 bg-subtle text-primary font-sans"
             >
               <option value="all">All Levels</option>
               {TEAM_LEVELS.map((level) => (
@@ -126,7 +126,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             <select
               value={filterPosition}
               onChange={(e) => setFilterPosition(e.target.value)}
-              className="w-full px-3 py-2 border border-medium dark:border-medium rounded-lg shadow-sm focus:ring-jade-500 focus:border-jade-500 surface-subtle text-primary font-sans"
+              className="w-full px-3 py-2 border border-secondary dark:border-secondary rounded-lg shadow-sm focus:ring-jade-500 focus:border-jade-500 bg-subtle text-primary font-sans"
             >
               <option value="all">All Positions</option>
               {allPositions.map((position) => (
@@ -168,7 +168,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             {filteredPlayers.map((player) => (
               <div
                 key={player.id}
-                className="bg-surface-primary rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow"
+                className="bg-primary rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow"
               >
                 {/* Player Header */}
                 <div className="flex items-start justify-between mb-3">
@@ -238,7 +238,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                     {player.positions.map((position) => (
                       <span
                         key={position}
-                        className="inline-block px-2 py-1 font-medium surface-subtle text-secondary rounded-lg"
+                        className="inline-block px-2 py-1 font-medium bg-subtle text-secondary rounded-lg"
                       >
                         <Typography variant="caption" as="span">
                           #{position}

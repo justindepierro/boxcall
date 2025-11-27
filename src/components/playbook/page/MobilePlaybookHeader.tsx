@@ -49,7 +49,7 @@ export const MobilePlaybookHeader: React.FC<MobilePlaybookHeaderProps> = ({
       className={`
         flex items-center justify-between
         h-16 px-4 py-3
-        bg-surface-primary border-b border-subtle
+        bg-primary border-b border-muted
         ${className}
       `}
     >

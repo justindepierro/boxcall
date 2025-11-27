@@ -106,7 +106,7 @@ const MobileNavigationDemo = () => {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-surface-muted rounded-full flex items-center justify-center">
+                    <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
                       <span className="text-sm font-medium">
                         {item.icon.charAt(0).toUpperCase()}
                       </span>

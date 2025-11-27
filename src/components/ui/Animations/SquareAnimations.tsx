@@ -37,7 +37,7 @@ export const SquareProgressBar: React.FC<ProgressBarProps> = ({
       case "navy":
         return "bg-navy-100 dark:bg-navy-900/20";
       case "gray":
-        return "surface-subtle dark:bg-text-primary/20";
+        return "bg-subtle dark:bg-text-primary/20";
       default:
         return "bg-jade-100 dark:bg-jade-900/20";
     }
@@ -159,7 +159,7 @@ export const SquareSkeleton: React.FC<SkeletonProps> = ({
       {Array.from({ length: lines }).map((_, index) => (
         <div
           key={index}
-          className={`${width} ${height} surface-subtle dark:bg-text-primary rounded-lg animate-pulse`}
+          className={`${width} ${height} bg-subtle dark:bg-text-primary rounded-lg animate-pulse`}
           style={{
             animationDelay: `${index * 0.1}s`,
             width: index === lines - 1 ? "75%" : "100%", // Last line shorter
@@ -228,10 +228,10 @@ export const FootballLoadingSpinner: React.FC<{ message?: string }> = ({
       <div className="relative">
         {/* Spinning football field */}
         <div
-          className="w-16 h-16 border-4 border-subtle dark:border-jade-800 rounded-lg animate-spin"
+          className="w-16 h-16 border-4 border-muted dark:border-jade-800 rounded-lg animate-spin"
           aria-hidden="true"
         >
-          <div className="absolute inset-2 bg-surface-success dark:bg-text-success/20 rounded-lg flex items-center justify-center">
+          <div className="absolute inset-2 bg-success/20 dark:bg-text-success/20 rounded-lg flex items-center justify-center">
             <Icon name="award" className="w-5 h-5" aria-hidden="true" />
           </div>
         </div>

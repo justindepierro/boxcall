@@ -56,7 +56,7 @@ const getNavItemStyles = (item: NavBarItem) => {
 const getBadgeStyles = () => {
   return `
     absolute -top-1 -right-1 px-1.5 py-0.5 text-xs font-medium rounded-full
-    bg-text-primary text-surface-primary
+    bg-text-primary text-bg-primary
   `;
 };
 const NavBarItemComponent: React.FC<{
@@ -145,7 +145,7 @@ const NavBarItemComponent: React.FC<{
         <div
           className={`
           ${isMobile ? "ml-4 mt-1" : "absolute left-0 mt-2 w-48"}
-          bg-surface-primary rounded-lg shadow-lg z-50
+          bg-primary rounded-lg shadow-lg z-50
         `}
         >
           {item.children?.map((childItem, index) => (
@@ -156,7 +156,7 @@ const NavBarItemComponent: React.FC<{
                 ${
                   childItem.disabled
                     ? "text-secondary"
-                    : "text-primary surface-subtle-hover dark:hover:bg-text-tertiary dark:hover:text-surface-primary"
+                    : "text-primary hover:bg-muted dark:hover:bg-text-tertiary dark:hover:text-bg-primary"
                 }
               `}
               onClick={() => {

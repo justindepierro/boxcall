@@ -153,7 +153,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
 
       {isOpen && (
         <div
-          className="absolute z-50 mt-1 w-full bg-surface-primary rounded-lg shadow-xl max-h-60 overflow-auto"
+          className="absolute z-50 mt-1 w-full bg-primary rounded-lg shadow-xl max-h-60 overflow-auto"
           role="listbox"
           aria-multiselectable="true"
           aria-label={ariaLabel || "Select options"}
@@ -173,7 +173,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                   tabIndex={0}
                   onClick={() => toggleOption(option.value)}
                   onKeyDown={(e) => handleKeyDown(e, option.value)}
-                  className="flex items-center px-3 py-2 hover:bg-surface-muted cursor-pointer transition-colors focus:outline-none focus:bg-surface-muted"
+                  className="flex items-center px-3 py-2 hover:bg-muted cursor-pointer transition-colors focus:outline-none focus:bg-muted"
                 >
                   <input
                     type="checkbox"

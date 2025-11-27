@@ -105,7 +105,7 @@ export const DropdownMenuContent: React.FC<DropdownMenuContentProps> = ({
   const alignment = align === "end" ? "right-0" : "left-0";
   return (
     <div
-      className={`absolute z-50 mt-2 w-56 origin-top ${alignment} rounded-lg bg-surface-primary shadow-lg border border-surface-subtle focus:outline-none ${className}`}
+      className={`absolute z-50 mt-2 w-56 origin-top ${alignment} rounded-lg bg-primary shadow-lg border border-bg-subtle focus:outline-none ${className}`}
       role="menu"
       {...props}
     >

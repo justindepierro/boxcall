@@ -85,12 +85,12 @@ const FormationPreview: React.FC<{
   const CANVAS_HEIGHT = 160;
 
   return (
-    <div className="flex flex-col gap-spacing-sm">
+    <div className="flex flex-col gap-sm">
       <Typography variant="label-md" className="text-center text-muted">
         {label}
         {flipped && " (Flipped)"}
       </Typography>
-      <div className="relative bg-surface-primary border-2 border-subtle rounded-md overflow-hidden">
+      <div className="relative bg-primary border-2 border-muted rounded-md overflow-hidden">
         {/* Field background */}
         <svg
           width={CANVAS_WIDTH}
@@ -257,10 +257,10 @@ export const CreateOppositeFormationModal: React.FC<
       closeOnBackdropClick={!loading}
       closeOnEscape={!loading}
     >
-      <div className="flex flex-col gap-spacing-lg p-spacing-lg">
+      <div className="flex flex-col gap-lg p-lg">
         {/* Success State */}
         {success && (
-          <div className="surface-success border border-success rounded-md p-spacing-lg text-center">
+          <div className="bg-success/20 border border-success rounded-md p-lg text-center">
             <div className="text-4xl mb-2">✅</div>
             <Typography
               variant="body"
@@ -275,7 +275,7 @@ export const CreateOppositeFormationModal: React.FC<
         {!success && (
           <>
             {/* Explanation */}
-            <div className="flex flex-col gap-spacing-sm">
+            <div className="flex flex-col gap-sm">
               <Typography variant="body" className="text-primary">
                 <strong>{originalFormation.name}</strong> (
                 {originalFormation.direction || "no direction"}) doesn't have an
@@ -288,8 +288,8 @@ export const CreateOppositeFormationModal: React.FC<
             </div>
 
             {/* Custom Name Input */}
-            <div className="surface-subtle border border-subtle rounded-md p-spacing-md">
-              <div className="flex flex-col gap-spacing-sm">
+            <div className="bg-subtle border border-muted rounded-md p-md">
+              <div className="flex flex-col gap-sm">
                 <div className="flex items-center justify-between">
                   <Typography variant="label-md" className="text-primary">
                     Opposite Formation Name
@@ -306,7 +306,7 @@ export const CreateOppositeFormationModal: React.FC<
                 </div>
 
                 {isEditingName ? (
-                  <div className="flex gap-spacing-sm">
+                  <div className="flex gap-sm">
                     <input
                       type="text"
                       value={customName}
@@ -347,7 +347,7 @@ export const CreateOppositeFormationModal: React.FC<
             </div>
 
             {/* Side-by-side preview */}
-            <div className="grid grid-cols-2 gap-spacing-lg">
+            <div className="grid grid-cols-2 gap-lg">
               <FormationPreview
                 positions={originalFormation.player_positions}
                 label={`Original (${originalFormation.direction || "Standalone"})`}
@@ -360,8 +360,8 @@ export const CreateOppositeFormationModal: React.FC<
             </div>
 
             {/* Formation details */}
-            <div className="surface-subtle border border-subtle rounded-md p-spacing-md">
-              <div className="grid grid-cols-2 gap-spacing-md text-sm">
+            <div className="bg-subtle border border-muted rounded-md p-md">
+              <div className="grid grid-cols-2 gap-md text-sm">
                 <div>
                   <Typography variant="label-md" className="text-muted">
                     Personnel
@@ -383,7 +383,7 @@ export const CreateOppositeFormationModal: React.FC<
 
             {/* Error message */}
             {error && (
-              <div className="surface-error border border-error rounded-md p-spacing-md">
+              <div className="surface-error border border-error rounded-md p-md">
                 <Typography variant="body-sm" className="text-error">
                   ❌ {error}
                 </Typography>
@@ -391,7 +391,7 @@ export const CreateOppositeFormationModal: React.FC<
             )}
 
             {/* Action buttons */}
-            <div className="flex flex-col gap-spacing-md">
+            <div className="flex flex-col gap-md">
               <Button
                 variant="primary"
                 size="lg"
@@ -411,7 +411,7 @@ export const CreateOppositeFormationModal: React.FC<
                 )}
               </Button>
 
-              <div className="grid grid-cols-2 gap-spacing-md">
+              <div className="grid grid-cols-2 gap-md">
                 <Button
                   variant="secondary"
                   size="lg"

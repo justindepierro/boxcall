@@ -31,7 +31,7 @@ export const PlayNameSection: React.FC<PlayNameSectionProps> = ({
   onShowSuggestionsChange,
 }) => {
   return (
-    <div className="flex gap-spacing-sm items-end">
+    <div className="flex gap-sm items-end">
       <FuzzySearchInput
         label="Play"
         value={playName}
@@ -46,13 +46,13 @@ export const PlayNameSection: React.FC<PlayNameSectionProps> = ({
         className="flex-1"
       />
 
-      <div className="flex gap-spacing-xs">
+      <div className="flex gap-xs">
         <Button
           type="button"
           variant={playDir === "Left" ? "primary" : "outline"}
           size="sm"
           onClick={() => onPlayDirChange(playDir === "Left" ? "" : "Left")}
-          className="px-spacing-sm"
+          className="px-sm"
         >
           Left
         </Button>
@@ -61,7 +61,7 @@ export const PlayNameSection: React.FC<PlayNameSectionProps> = ({
           variant={playDir === "Right" ? "primary" : "outline"}
           size="sm"
           onClick={() => onPlayDirChange(playDir === "Right" ? "" : "Right")}
-          className="px-spacing-sm"
+          className="px-sm"
         >
           Right
         </Button>
@@ -70,7 +70,7 @@ export const PlayNameSection: React.FC<PlayNameSectionProps> = ({
           variant="ghost"
           size="sm"
           onClick={() => onPlayShowInNameChange(!playShowInName)}
-          className={`p-spacing-xs ${playShowInName ? "text-info" : "text-muted"}`}
+          className={`p-xs ${playShowInName ? "text-info" : "text-muted"}`}
         >
           <Icon name="eye" className="h-4 w-4" />
         </Button>

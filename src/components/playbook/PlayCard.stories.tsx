@@ -273,7 +273,7 @@ const PlayCardDemo = (args: any) => {
           <div className="space-y-3">
             <div className="p-3 border rounded-lg">
               <h5 className="font-medium text-sm mb-2">Basic Display</h5>
-              <pre className="text-xs bg-surface-muted p-2 rounded">
+              <pre className="text-xs bg-muted p-2 rounded">
                 {`<PlayCard
   play={play}
   density="compact"
@@ -283,7 +283,7 @@ const PlayCardDemo = (args: any) => {
 
             <div className="p-3 border rounded-lg">
               <h5 className="font-medium text-sm mb-2">With Editing</h5>
-              <pre className="text-xs bg-surface-muted p-2 rounded">
+              <pre className="text-xs bg-muted p-2 rounded">
                 {`<PlayCard
   play={play}
   onSave={handleSave}
@@ -295,7 +295,7 @@ const PlayCardDemo = (args: any) => {
 
             <div className="p-3 border rounded-lg">
               <h5 className="font-medium text-sm mb-2">Bulk Selection</h5>
-              <pre className="text-xs bg-surface-muted p-2 rounded">
+              <pre className="text-xs bg-muted p-2 rounded">
                 {`<PlayCard
   play={play}
   isSelected={selectedPlays.has(play.id)}

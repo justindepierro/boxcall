@@ -89,7 +89,7 @@ export function ImportPracticeScriptsModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="w-full max-w-lg rounded-lg border border-border bg-surface-primary p-6 shadow-xl">
+      <div className="w-full max-w-lg rounded-lg border border-border bg-primary p-6 shadow-xl">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
           <Typography variant="headline-sm" className="text-primary">
@@ -167,7 +167,7 @@ export function ImportPracticeScriptsModal({
 
           {/* Import Details */}
           {parsedData && !validationError && (
-            <div className="rounded-md border border-border bg-surface-secondary p-4">
+            <div className="rounded-md border border-border bg-secondary p-4">
               <Typography
                 variant="body-sm"
                 className="mb-3 font-medium text-primary"

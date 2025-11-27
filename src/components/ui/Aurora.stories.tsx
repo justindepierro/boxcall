@@ -248,7 +248,7 @@ export const ComplexLayout: Story = {
                 {[1, 2, 3, 4].map((i) => (
                   <div
                     key={i}
-                    className="bg-surface-secondary rounded-lg p-4 border border"
+                    className="bg-secondary rounded-lg p-4 border border"
                   >
                     <p className="text-xs text-muted">Metric {i}</p>
                     <p className="text-2xl font-bold text-primary">1,234</p>

@@ -115,7 +115,7 @@ const TeamFeeds: React.FC = () => {
           <Button
             variant="ghost"
             size="xs"
-            className="bg-surface-primary rounded-full p-1 border border-subtle hover:bg-jade-50 hover:border-jade-200 transition-colors"
+            className="bg-primary rounded-full p-1 border border-muted hover:bg-jade-50 hover:border-jade-200 transition-colors"
             aria-label="Quick add message"
             onClick={() => setQuickAddOpen(true)}
           >
@@ -145,7 +145,7 @@ const TeamFeeds: React.FC = () => {
           {displayedFeeds.map((feed) => (
             <div
               key={feed.id}
-              className="flex items-start space-x-3 p-2 rounded-lg surface-subtle-hover transition-colors cursor-pointer"
+              className="flex items-start space-x-3 p-2 rounded-lg hover:bg-muted transition-colors cursor-pointer"
             >
               {/* Feed Icon */}
               <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-jade-100 flex items-center justify-center mt-0.5">

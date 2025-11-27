@@ -225,7 +225,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
         <div className="space-y-4">
           <Typography
             variant="headline-sm"
-            className="text-primary border-b border-subtle pb-2"
+            className="text-primary border-b border-muted pb-2"
           >
             Profile Picture
           </Typography>
@@ -324,7 +324,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
         )}
 
         {/* Submit Buttons */}
-        <div className="flex items-center justify-between pt-6 border-t border-subtle gap-3">
+        <div className="flex items-center justify-between pt-6 border-t border-muted gap-3">
           {mode === "quick" && (
             <Button
               type="button"

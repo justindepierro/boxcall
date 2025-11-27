@@ -144,7 +144,7 @@ export const InlineSelectField: React.FC<InlineSelectFieldProps> = ({
             </button>
             <button
               onClick={handleCancel}
-              className="flex items-center justify-center w-8 h-8 text-muted hover:text-primary hover:bg-surface-secondary rounded-lg transition-colors"
+              className="flex items-center justify-center w-8 h-8 text-muted hover:text-primary hover:bg-secondary rounded-lg transition-colors"
               title="Cancel (Escape)"
             >
               <Icon name="close" className="h-4 w-4" />

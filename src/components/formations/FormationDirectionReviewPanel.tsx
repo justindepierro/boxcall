@@ -145,20 +145,20 @@ export const FormationDirectionReviewPanel: React.FC<
 
   if (loading) {
     return (
-      <div className="p-spacing-lg space-y-spacing-md">
+      <div className="p-lg space-y-md">
         {/* Skeleton for back button */}
         {onBack && (
-          <div className="h-8 w-48 bg-surface-subtle rounded animate-pulse"></div>
+          <div className="h-8 w-48 bg-subtle rounded animate-pulse"></div>
         )}
 
         {/* Skeleton for summary */}
-        <div className="h-24 bg-surface-subtle rounded animate-pulse"></div>
+        <div className="h-24 bg-subtle rounded animate-pulse"></div>
 
         {/* Skeleton for formation list */}
-        <div className="space-y-spacing-sm">
-          <div className="h-8 bg-surface-subtle rounded w-1/3 animate-pulse"></div>
-          <div className="h-32 bg-surface-subtle rounded animate-pulse"></div>
-          <div className="h-32 bg-surface-subtle rounded animate-pulse"></div>
+        <div className="space-y-sm">
+          <div className="h-8 bg-subtle rounded w-1/3 animate-pulse"></div>
+          <div className="h-32 bg-subtle rounded animate-pulse"></div>
+          <div className="h-32 bg-subtle rounded animate-pulse"></div>
         </div>
 
         <Typography variant="body-sm" className="text-muted text-center">
@@ -170,8 +170,8 @@ export const FormationDirectionReviewPanel: React.FC<
 
   if (issues.length === 0) {
     return (
-      <div className="p-spacing-lg bg-success-50 rounded-lg border border-success-200">
-        <div className="flex items-center gap-spacing-md">
+      <div className="p-lg bg-success-50 rounded-lg border border-success-200">
+        <div className="flex items-center gap-md">
           <Check className="w-6 h-6 text-success-600 flex-shrink-0" />
           <div>
             <Typography variant="headline-md" className="text-success-800">
@@ -179,7 +179,7 @@ export const FormationDirectionReviewPanel: React.FC<
             </Typography>
             <Typography
               variant="body-sm"
-              className="text-success-700 mt-spacing-xs"
+              className="text-success-700 mt-xs"
             >
               Every formation has proper direction setup.
             </Typography>
@@ -195,7 +195,7 @@ export const FormationDirectionReviewPanel: React.FC<
   const lowPriority = issues.filter((i) => i.severity === "low");
 
   return (
-    <div className="space-y-spacing-lg">
+    <div className="space-y-lg">
       {/* Back Button */}
       {onBack && (
         <div className="flex justify-start">
@@ -207,8 +207,8 @@ export const FormationDirectionReviewPanel: React.FC<
       )}
 
       {/* Summary */}
-      <div className="p-spacing-md bg-warning-50 border border-warning-200 rounded-lg">
-        <div className="flex items-start gap-spacing-md">
+      <div className="p-md bg-warning-50 border border-warning-200 rounded-lg">
+        <div className="flex items-start gap-md">
           <AlertCircle className="w-6 h-6 text-warning-600 flex-shrink-0" />
           <div className="flex-1">
             <Typography variant="headline-md" className="text-warning-800">
@@ -217,7 +217,7 @@ export const FormationDirectionReviewPanel: React.FC<
             </Typography>
             <Typography
               variant="body-sm"
-              className="text-warning-700 mt-spacing-xs"
+              className="text-warning-700 mt-xs"
             >
               These formations should have opposite-side versions for a complete
               playbook.
@@ -298,31 +298,31 @@ const FormationIssueSection: React.FC<FormationIssueSectionProps> = ({
     <div>
       <Typography
         variant="headline-sm"
-        className="text-primary mb-spacing-md"
+        className="text-primary mb-md"
       >
         {title}
       </Typography>
-      <div className="space-y-spacing-sm">
+      <div className="space-y-sm">
         {issues.map((issue) => (
           <div
             key={issue.id}
-            className="p-spacing-md bg-surface-secondary rounded-lg border border-primary hover:border-emphasis transition-colors"
+            className="p-md bg-secondary rounded-lg border border-primary hover:border-emphasis transition-colors"
           >
-            <div className="flex items-center justify-between gap-spacing-md">
+            <div className="flex items-center justify-between gap-md">
               <div className="flex-1">
-                <div className="flex items-center gap-spacing-sm">
+                <div className="flex items-center gap-sm">
                   <Typography variant="label-md" className="text-primary">
                     {issue.name}
                   </Typography>
                   {issue.direction && (
-                    <span className="px-spacing-xs py-0.5 bg-surface-muted text-muted text-xs rounded">
+                    <span className="px-xs py-0.5 bg-muted text-muted text-xs rounded">
                       {issue.direction}
                     </span>
                   )}
                 </div>
                 <Typography
                   variant="body-xs"
-                  className="text-muted mt-spacing-xs"
+                  className="text-muted mt-xs"
                 >
                   Used in {issue.usage_count} play
                   {issue.usage_count === 1 ? "" : "s"}
@@ -333,7 +333,7 @@ const FormationIssueSection: React.FC<FormationIssueSectionProps> = ({
                   {issue.issue === "both" && " • No direction or opposite"}
                 </Typography>
               </div>
-              <div className="flex gap-spacing-sm flex-shrink-0">
+              <div className="flex gap-sm flex-shrink-0">
                 <Button
                   variant="primary"
                   size="sm"
@@ -344,7 +344,7 @@ const FormationIssueSection: React.FC<FormationIssueSectionProps> = ({
                     "Loading..."
                   ) : (
                     <>
-                      <ArrowLeftRight className="w-4 h-4 mr-spacing-xs" />
+                      <ArrowLeftRight className="w-4 h-4 mr-xs" />
                       Create Opposite
                     </>
                   )}

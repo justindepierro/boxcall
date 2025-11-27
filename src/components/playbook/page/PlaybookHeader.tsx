@@ -47,7 +47,7 @@ export const PlaybookHeader: React.FC<PlaybookHeaderProps> = ({
 
   return (
     <>
-      <header className="surface-subtle shadow-sm">
+      <header className="bg-subtle shadow-sm">
         <div className="container-page container-padding">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
@@ -106,7 +106,7 @@ export const PlaybookHeader: React.FC<PlaybookHeaderProps> = ({
               {onOpenSettings && (
                 <button
                   onClick={onOpenSettings}
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-surface-muted hover:bg-border transition-colors group"
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-muted hover:bg-border transition-colors group"
                   title="Playbook Settings"
                 >
                   <Icon
@@ -119,7 +119,7 @@ export const PlaybookHeader: React.FC<PlaybookHeaderProps> = ({
               {/* Weekly Challenges Trophy Icon */}
               <button
                 onClick={() => setShowChallenges(true)}
-                className="flex items-center justify-center w-10 h-10 rounded-full bg-surface-secondary hover:bg-surface-tertiary transition-colors group"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-secondary hover:bg-tertiary transition-colors group"
                 title="Weekly Challenges"
               >
                 <Icon

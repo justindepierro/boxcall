@@ -105,12 +105,12 @@ const FormationPreview: React.FC<{
   const CANVAS_HEIGHT = 160;
 
   return (
-    <div className="flex flex-col gap-spacing-sm">
+    <div className="flex flex-col gap-sm">
       <Typography variant="label-md" className="text-center text-muted">
         {label}
         {flipped && " (Flipped)"}
       </Typography>
-      <div className="relative bg-surface-primary border-2 border-subtle rounded-md overflow-hidden">
+      <div className="relative bg-primary border-2 border-muted rounded-md overflow-hidden">
         {/* Field background */}
         <svg
           width={CANVAS_WIDTH}
@@ -284,14 +284,14 @@ export const CreateOppositeFormationModal: React.FC<
       closeOnBackdropClick={false}
       closeOnEscape={!loading}
     >
-      <div className="flex flex-col gap-spacing-lg p-spacing-lg">
+      <div className="flex flex-col gap-lg p-lg">
         {/* Clear Explanation */}
-        <div className="flex items-start gap-spacing-md p-spacing-md bg-blue-50 border border-blue-200 rounded-lg">
+        <div className="flex items-start gap-md p-md bg-blue-50 border border-blue-200 rounded-lg">
           <div className="text-3xl">🔄</div>
           <div className="flex-1">
             <Typography
               variant="body-md"
-              className="text-blue-900 font-semibold mb-spacing-xs"
+              className="text-blue-900 font-semibold mb-xs"
             >
               Create a Flipped Version of "{originalFormation.name}"
             </Typography>
@@ -307,15 +307,15 @@ export const CreateOppositeFormationModal: React.FC<
         <div>
           <Typography
             variant="label-md"
-            className="text-secondary mb-spacing-sm"
+            className="text-secondary mb-sm"
           >
             Preview: Side-by-Side Comparison
           </Typography>
-          <div className="grid grid-cols-2 gap-spacing-md">
+          <div className="grid grid-cols-2 gap-md">
             <div className="flex flex-col items-center">
               <Typography
                 variant="body-sm"
-                className="text-primary font-semibold mb-spacing-xs"
+                className="text-primary font-semibold mb-xs"
               >
                 ✅ Current Formation
               </Typography>
@@ -333,7 +333,7 @@ export const CreateOppositeFormationModal: React.FC<
             <div className="flex flex-col items-center">
               <Typography
                 variant="body-sm"
-                className="text-primary-600 font-semibold mb-spacing-xs"
+                className="text-primary-600 font-semibold mb-xs"
               >
                 🆕 New Formation (Flipped)
               </Typography>
@@ -351,8 +351,8 @@ export const CreateOppositeFormationModal: React.FC<
         </div>
 
         {/* Simplified naming section */}
-        <div className="bg-surface-secondary border border-primary rounded-md p-spacing-md">
-          <div className="flex items-center justify-between mb-spacing-sm">
+        <div className="bg-secondary border border-primary rounded-md p-md">
+          <div className="flex items-center justify-between mb-sm">
             <Typography
               variant="label-md"
               className="text-primary font-semibold"
@@ -371,13 +371,13 @@ export const CreateOppositeFormationModal: React.FC<
           </div>
 
           {/* Name input */}
-          <div className="flex flex-col gap-spacing-xs">
+          <div className="flex flex-col gap-xs">
             <input
               type="text"
               value={customName}
               onChange={(e) => setCustomName(e.target.value)}
               placeholder="Enter name for opposite formation..."
-              className="w-full px-spacing-md py-spacing-sm border-2 border-primary rounded-md bg-surface-primary text-primary text-base focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="w-full px-md py-sm border-2 border-primary rounded-md bg-primary text-primary text-base focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               disabled={loading}
             />
             <Typography variant="body-xs" className="text-muted">
@@ -396,14 +396,14 @@ export const CreateOppositeFormationModal: React.FC<
         </div>
 
         {/* What will be copied */}
-        <div className="bg-success-bg border border-success-border rounded-md p-spacing-md">
+        <div className="bg-success-bg border border-success-border rounded-md p-md">
           <Typography
             variant="label-md"
-            className="text-success font-semibold mb-spacing-sm flex items-center gap-2"
+            className="text-success font-semibold mb-sm flex items-center gap-2"
           >
             <span>✓</span> What Gets Copied to New Formation
           </Typography>
-          <div className="grid grid-cols-2 gap-spacing-md text-sm">
+          <div className="grid grid-cols-2 gap-md text-sm">
             <div>
               <Typography variant="caption" className="text-success">
                 Personnel:
@@ -437,7 +437,7 @@ export const CreateOppositeFormationModal: React.FC<
 
         {/* Error message */}
         {error && (
-          <div className="surface-error border border-error rounded-md p-spacing-md">
+          <div className="surface-error border border-error rounded-md p-md">
             <Typography variant="body-sm" className="text-error">
               ❌ {error}
             </Typography>
@@ -445,7 +445,7 @@ export const CreateOppositeFormationModal: React.FC<
         )}
 
         {/* Action buttons with clearer labels */}
-        <div className="flex flex-col gap-spacing-sm pt-spacing-md border-t border-primary">
+        <div className="flex flex-col gap-sm pt-md border-t border-primary">
           <Button
             variant="primary"
             size="lg"
@@ -465,7 +465,7 @@ export const CreateOppositeFormationModal: React.FC<
             )}
           </Button>
 
-          <div className="grid grid-cols-2 gap-spacing-sm">
+          <div className="grid grid-cols-2 gap-sm">
             <Button
               variant="outline"
               size="md"

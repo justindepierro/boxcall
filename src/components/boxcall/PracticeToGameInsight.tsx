@@ -84,7 +84,7 @@ export const PracticeToGameInsight: React.FC<PracticeToGameInsightProps> = ({
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-4">
         {/* Practice Stats */}
-        <div className="bg-surface-secondary border border-border rounded-lg p-3">
+        <div className="bg-secondary border border-border rounded-lg p-3">
           <div className="flex items-center gap-2 mb-2">
             <Icon name="target" size="sm" className="text-primary" />
             <Typography variant="body-xs" className="text-muted">
@@ -101,7 +101,7 @@ export const PracticeToGameInsight: React.FC<PracticeToGameInsightProps> = ({
         </div>
 
         {/* Game Stats */}
-        <div className="bg-surface-secondary border border-border rounded-lg p-3">
+        <div className="bg-secondary border border-border rounded-lg p-3">
           <div className="flex items-center gap-2 mb-2">
             <Icon name="zap" size="sm" className="text-warning" />
             <Typography variant="body-xs" className="text-muted">
@@ -144,7 +144,7 @@ export const PracticeToGameInsight: React.FC<PracticeToGameInsightProps> = ({
               {transferRate}%
             </Typography>
           </div>
-          <div className="w-full bg-surface-primary rounded-full h-2">
+          <div className="w-full bg-primary rounded-full h-2">
             <div
               className={`h-2 rounded-full transition-all ${
                 transferRate >= 0 ? "bg-success" : "bg-error"
@@ -167,7 +167,7 @@ export const PracticeToGameInsight: React.FC<PracticeToGameInsightProps> = ({
       )}
 
       {/* Coaching Recommendation */}
-      <div className="bg-surface-secondary border border-border rounded-lg p-3">
+      <div className="bg-secondary border border-border rounded-lg p-3">
         <div className="flex items-start gap-2">
           <Icon name="lightbulb" size="sm" className="text-warning mt-0.5" />
           <Typography variant="body-xs" className="text-secondary">

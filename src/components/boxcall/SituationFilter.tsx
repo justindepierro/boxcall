@@ -112,7 +112,7 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
               Situational Filter Active
             </Typography>
             <div className="flex flex-wrap gap-2">
-              <span className="px-2 py-1 bg-surface-primary border border-border rounded text-xs font-medium">
+              <span className="px-2 py-1 bg-primary border border-border rounded text-xs font-medium">
                 {situation.down}
                 {situation.down === 1
                   ? "st"
@@ -123,10 +123,10 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
                       : "th"}{" "}
                 Down
               </span>
-              <span className="px-2 py-1 bg-surface-primary border border-border rounded text-xs font-medium">
+              <span className="px-2 py-1 bg-primary border border-border rounded text-xs font-medium">
                 {distanceCategory} ({situation.distance} yds)
               </span>
-              <span className="px-2 py-1 bg-surface-primary border border-border rounded text-xs font-medium">
+              <span className="px-2 py-1 bg-primary border border-border rounded text-xs font-medium">
                 {fieldZone}
               </span>
             </div>
@@ -146,7 +146,7 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
 
       {/* Filtered Plays List */}
       {sortedPlays.length === 0 ? (
-        <div className="text-center py-8 bg-surface-secondary rounded-lg border-2 border-dashed border-border">
+        <div className="text-center py-8 bg-secondary rounded-lg border-2 border-dashed border-border">
           <Icon
             name="alert-circle"
             size="lg"
@@ -175,7 +175,7 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
                   ${
                     isSelected
                       ? "border-primary bg-primary/10 shadow-md"
-                      : "border-border hover:border-primary/50 hover:bg-surface-secondary"
+                      : "border-border hover:border-primary/50 hover:bg-secondary"
                   }
                   ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
                 `}
@@ -193,12 +193,12 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
 
                     <div className="flex flex-wrap gap-2 mt-2">
                       {play.formation && (
-                        <span className="px-2 py-0.5 bg-surface-secondary border border-border rounded text-xs">
+                        <span className="px-2 py-0.5 bg-secondary border border-border rounded text-xs">
                           {play.formation}
                         </span>
                       )}
                       {(play as any).personnel && (
-                        <span className="px-2 py-0.5 bg-surface-secondary border border-border rounded text-xs">
+                        <span className="px-2 py-0.5 bg-secondary border border-border rounded text-xs">
                           {(play as any).personnel}
                         </span>
                       )}
@@ -243,7 +243,7 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
                           "Unknown Play",
                       });
                     }}
-                    className="mt-3 pt-3 border-t border-border w-full text-left hover:bg-surface-primary/50 rounded-lg -mx-2 px-2 py-2 transition-colors group"
+                    className="mt-3 pt-3 border-t border-border w-full text-left hover:bg-primary/50 rounded-lg -mx-2 px-2 py-2 transition-colors group"
                   >
                     <div className="flex items-center justify-between mb-1">
                       <div className="flex items-center gap-1">
@@ -276,7 +276,7 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
                         </span>
                       </div>
                     </div>
-                    <div className="w-full bg-surface-secondary rounded-full h-1.5">
+                    <div className="w-full bg-secondary rounded-full h-1.5">
                       <div
                         className={`h-1.5 rounded-full transition-all ${
                           confidence.overallScore >= 70
@@ -333,7 +333,7 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
       )}
 
       {/* Filter Tips */}
-      <div className="bg-surface-secondary border border-border rounded-lg p-3">
+      <div className="bg-secondary border border-border rounded-lg p-3">
         <div className="flex items-start gap-2">
           <Icon name="lightbulb" size="sm" className="text-warning mt-0.5" />
           <Typography variant="body-xs" className="text-secondary">

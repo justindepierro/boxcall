@@ -74,7 +74,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
     .map((v) => filterPresets.find((p) => p.id === v.id))
     .filter(Boolean) as { id: string; name: string }[];
   return (
-    <div className="surface-subtle border-b border-subtle sticky top-0 z-30">
+    <div className="bg-subtle border-b border-muted sticky top-0 z-30">
       <div className="container-page container-padding">
         <div className="py-2">
           <div className="flex flex-wrap items-center justify-between gap-2">
@@ -230,7 +230,7 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                     className="h-3 w-3 ml-1 text-secondary"
                   />
                 </Button>
-                <div className="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition pointer-events-none group-hover:pointer-events-auto absolute right-0 mt-1 min-w-44 surface-popover rounded-lg shadow-lg border border-subtle py-1 z-40">
+                <div className="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition pointer-events-none group-hover:pointer-events-auto absolute right-0 mt-1 min-w-44 surface-popover rounded-lg shadow-lg border border-muted py-1 z-40">
                   <Button
                     variant="ghost"
                     size="xs"

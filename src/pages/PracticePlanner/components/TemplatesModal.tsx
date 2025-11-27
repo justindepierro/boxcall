@@ -26,7 +26,7 @@ export function TemplatesModal({
           {templates.map((template) => (
             <div
               key={template.id}
-              className="border-subtle rounded-lg p-4 surface-subtle-hover"
+              className="border-muted rounded-lg p-4 hover:bg-muted"
             >
               <div className="flex items-center justify-between">
                 <div>

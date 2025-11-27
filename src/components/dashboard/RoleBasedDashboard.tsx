@@ -156,7 +156,7 @@ const AdminDashboard: React.FC = () => {
   return (
     <div className="grid-dashboard">
       {/* System Overview */}
-      <div className="bg-surface-primary rounded-lg shadow p-6">
+      <div className="bg-primary rounded-lg shadow p-6">
         <Typography
           variant="headline-sm"
           as="h3"
@@ -186,7 +186,7 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* User Management */}
-      <div className="bg-surface-primary rounded-lg shadow p-6">
+      <div className="bg-primary rounded-lg shadow p-6">
         <Typography
           variant="headline-sm"
           as="h3"
@@ -209,7 +209,7 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-surface-primary rounded-lg shadow p-6">
+      <div className="bg-primary rounded-lg shadow p-6">
         <Typography
           variant="headline-sm"
           as="h3"

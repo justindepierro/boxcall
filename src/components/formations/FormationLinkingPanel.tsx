@@ -272,7 +272,7 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-spacing-xl">
+      <div className="flex items-center justify-center py-xl">
         <Typography variant="body-md" className="text-muted">
           Loading formations...
         </Typography>
@@ -282,10 +282,10 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
 
   return (
     <>
-      <div className="flex flex-col gap-spacing-lg p-spacing-md">
+      <div className="flex flex-col gap-lg p-md">
         {/* Import Status */}
         {importStatus && (
-          <div className="p-spacing-sm bg-success-50 border border-success-200 rounded-lg">
+          <div className="p-sm bg-success-50 border border-success-200 rounded-lg">
             <Typography variant="caption" className="text-success-700">
               {importStatus}
             </Typography>
@@ -294,10 +294,10 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
 
         {/* Mirrored Dropdown Layout */}
         <div
-          className={`${isMobile ? "flex flex-col gap-spacing-lg" : "grid grid-cols-[1fr_auto_1fr] gap-spacing-md items-start"}`}
+          className={`${isMobile ? "flex flex-col gap-lg" : "grid grid-cols-[1fr_auto_1fr] gap-md items-start"}`}
         >
           {/* Left Formation Column */}
-          <div className="flex flex-col gap-spacing-sm">
+          <div className="flex flex-col gap-sm">
             <Typography variant="headline-md" className="text-primary">
               Left Side Formation
             </Typography>
@@ -315,22 +315,22 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
                     setLeftFormation(formation || null);
                   }
                 }}
-                className="w-full px-spacing-sm py-spacing-xs border border-primary rounded-lg bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
+                className="w-full px-sm py-xs border border-primary rounded-lg bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-lg"
               >
                 <option value="">Select left formation...</option>
                 {leftSideFormations.map(renderFormationOption)}
                 <option value="CREATE_NEW">➕ Create New Formation</option>
               </select>
-              <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
             </div>
 
             {leftFormation && (
-              <div className="mt-spacing-md p-spacing-md bg-surface-secondary rounded-lg border border-primary">
+              <div className="mt-md p-md bg-secondary rounded-lg border border-primary">
                 <FormationBadge
                   formationId={leftFormation.id}
                   direction={leftFormation.direction}
                 />
-                <div className="mt-spacing-sm space-y-spacing-xs">
+                <div className="mt-sm space-y-xs">
                   <Typography variant="caption" className="text-secondary">
                     <strong>Personnel:</strong>{" "}
                     {leftFormation.personnel_name || "Not set"}
@@ -356,7 +356,7 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
 
             {/* Same-name notification for left side */}
             {isSameFormationName() && leftFormation && (
-              <div className="mt-spacing-sm p-spacing-sm bg-blue-50 border border-blue-200 rounded">
+              <div className="mt-sm p-sm bg-blue-50 border border-blue-200 rounded">
                 <Typography variant="caption" className="text-blue-700">
                   ℹ️ <strong>{leftFormation.name} Left</strong> and{" "}
                   <strong>{leftFormation.name} Right</strong> variants will be
@@ -367,7 +367,7 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
           </div>
 
           {/* Center Link Button */}
-          <div className="flex flex-col items-center justify-center pt-spacing-xl">
+          <div className="flex flex-col items-center justify-center pt-xl">
             <Button
               onClick={handleLink}
               disabled={!leftFormation || !rightFormation || saving}
@@ -383,7 +383,7 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
             </Button>
             <Typography
               variant="caption"
-              className="text-muted mt-spacing-xs text-center"
+              className="text-muted mt-xs text-center"
             >
               Click to
               <br />
@@ -392,7 +392,7 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
           </div>
 
           {/* Right Formation Column */}
-          <div className="flex flex-col gap-spacing-sm">
+          <div className="flex flex-col gap-sm">
             <Typography variant="headline-md" className="text-primary">
               Right Side Formation
             </Typography>
@@ -410,22 +410,22 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
                     setRightFormation(formation || null);
                   }
                 }}
-                className="w-full px-spacing-sm py-spacing-xs border border-primary rounded-lg bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
+                className="w-full px-sm py-xs border border-primary rounded-lg bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-lg"
               >
                 <option value="">Select right formation...</option>
                 {rightSideFormations.map(renderFormationOption)}
                 <option value="CREATE_NEW">➕ Create New Formation</option>
               </select>
-              <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
             </div>
 
             {rightFormation && (
-              <div className="mt-spacing-md p-spacing-md bg-surface-secondary rounded-lg border border-primary">
+              <div className="mt-md p-md bg-secondary rounded-lg border border-primary">
                 <FormationBadge
                   formationId={rightFormation.id}
                   direction={rightFormation.direction}
                 />
-                <div className="mt-spacing-sm space-y-spacing-xs">
+                <div className="mt-sm space-y-xs">
                   <Typography variant="caption" className="text-secondary">
                     <strong>Personnel:</strong>{" "}
                     {rightFormation.personnel_name || "Not set"}
@@ -453,32 +453,32 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
 
         {/* Personnel Packages Selection */}
         {(leftFormation || rightFormation) && availablePersonnel.length > 0 && (
-          <div className="mt-spacing-lg p-spacing-md bg-surface-secondary rounded-lg border border-primary">
+          <div className="mt-lg p-md bg-secondary rounded-lg border border-primary">
             <Typography
               variant="headline-sm"
-              className="text-primary mb-spacing-sm"
+              className="text-primary mb-sm"
             >
               Personnel Packages
             </Typography>
             <Typography
               variant="caption"
-              className="text-secondary mb-spacing-md"
+              className="text-secondary mb-md"
             >
               Select which personnel packages can be run from{" "}
               {isSameFormationName() ? "these formations" : "this formation"}:
             </Typography>
 
-            <div className="flex flex-wrap gap-spacing-sm">
+            <div className="flex flex-wrap gap-sm">
               {availablePersonnel.map((personnel) => (
                 <button
                   key={personnel.id}
                   onClick={() => togglePersonnel(personnel.id)}
                   className={`
-                  px-spacing-md py-spacing-sm rounded-lg border-2 transition-all
+                  px-md py-sm rounded-lg border-2 transition-all
                   ${
                     selectedPersonnelIds.includes(personnel.id)
                       ? "border-primary-500 bg-primary-50 text-primary-700"
-                      : "border-primary bg-surface-primary text-secondary hover:border-primary-300"
+                      : "border-primary bg-primary text-secondary hover:border-primary-300"
                   }
                 `}
                 >
@@ -491,7 +491,7 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
             </div>
 
             {selectedPersonnelIds.length > 0 && (
-              <div className="mt-spacing-sm p-spacing-sm bg-primary-50 border border-primary-200 rounded">
+              <div className="mt-sm p-sm bg-primary-50 border border-primary-200 rounded">
                 <Typography variant="caption" className="text-primary-700">
                   ✓ {selectedPersonnelIds.length} personnel package
                   {selectedPersonnelIds.length > 1 ? "s" : ""} selected
@@ -502,7 +502,7 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
         )}
 
         {/* Help Text */}
-        <div className="mt-spacing-md p-spacing-sm bg-surface-muted rounded border border-secondary">
+        <div className="mt-md p-sm bg-muted rounded border border-secondary">
           <Typography variant="caption" className="text-muted">
             <strong>💡 How it works:</strong> Left dropdown shows formations
             with "Left" direction or unlinked standalone formations. Right
@@ -514,7 +514,7 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
 
         {/* Status Display */}
         {(leftFormation || rightFormation) && (
-          <div className="flex items-center justify-center gap-spacing-sm text-secondary">
+          <div className="flex items-center justify-center gap-sm text-secondary">
             {leftFormation && (
               <Typography variant="caption">
                 {isLinked(leftFormation) ? "🔗 Linked" : "🔓 Unlinked"}

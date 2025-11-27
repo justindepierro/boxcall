@@ -80,7 +80,7 @@ export const ConfirmProvider: React.FC<{ children: React.ReactNode }> = ({
             role="dialog"
             aria-modal="true"
             aria-labelledby={`${active.id}-title`}
-            className="relative bg-surface-primary elevation-modal max-w-sm w-full mx-4 rounded-md border-subtle p-6 animate-scale-in"
+            className="relative bg-primary elevation-modal max-w-sm w-full mx-4 rounded-md border-muted p-6 animate-scale-in"
           >
             {active.options.title && (
               <Typography

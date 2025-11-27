@@ -47,7 +47,7 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
               ? `Used in ${status.practiceCount} practice script${status.practiceCount > 1 ? "s" : ""}`
               : "Add this play to a practice script"
           }
-          className="surface-subtle hover:bg-surface-info text-info border-surface-primary"
+          className="bg-subtle hover:bg-info/20 text-info border-bg-primary"
         >
           {status.practiceCount > 0 && (
             <span className="inline-flex items-center justify-center font-bold mr-1 text-info">
@@ -67,7 +67,7 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
               ? `Used in ${status.gamePlanCount} game plan${status.gamePlanCount > 1 ? "s" : ""}`
               : "Add this play to a game plan"
           }
-          className="surface-subtle hover:bg-surface-success text-success border-surface-primary"
+          className="bg-subtle hover:bg-success/20 text-success border-bg-primary"
         >
           {status.gamePlanCount > 0 && (
             <span className="inline-flex items-center justify-center font-bold mr-1 text-success">
@@ -86,7 +86,7 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
               ? "Assignments created - Click to view/edit"
               : "Manage player assignments for this play"
           }
-          className="surface-subtle hover:bg-surface-info text-blue-500 border-surface-primary"
+          className="bg-subtle hover:bg-info/20 text-blue-500 border-bg-primary"
         >
           {status.hasAssignments && (
             <Icon
@@ -103,9 +103,9 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
           size="xs"
           onClick={() => onPostToTeamBulletin?.(play)}
           title="Share this play on the team bulletin"
-          className="surface-subtle hover:bg-brand-primary/10 text-brand-primary border-surface-primary"
+          className="bg-subtle hover:bg-brand-primary/10 text-brand-primary border-bg-primary"
         >
-          <Icon name="message" className="h-3 w-3 mr-spacing-xs" /> Post
+          <Icon name="message" className="h-3 w-3 mr-xs" /> Post
         </Button>
       </div>
     </div>

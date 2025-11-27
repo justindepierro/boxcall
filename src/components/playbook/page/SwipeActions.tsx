@@ -263,10 +263,10 @@ export const SwipeActions: React.FC<SwipeActionsProps> = ({
             className="
               flex flex-col items-center justify-center
               w-20 h-full
-              bg-surface-muted
+              bg-muted
               text-primary
-              hover:bg-surface-secondary
-              active:bg-surface-tertiary
+              hover:bg-secondary
+              active:bg-tertiary
               transition-colors duration-150
             "
             aria-label="Archive play"
@@ -279,7 +279,7 @@ export const SwipeActions: React.FC<SwipeActionsProps> = ({
 
       {/* Card (swipeable) */}
       <div
-        className="relative bg-surface-primary transition-transform duration-200 ease-out"
+        className="relative bg-primary transition-transform duration-200 ease-out"
         style={{
           transform: `translateX(${swipeX}px)`,
         }}

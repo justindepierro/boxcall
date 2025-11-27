@@ -159,8 +159,8 @@ export const FamilyPermissionsSettings: React.FC<
 
   if (isLoading) {
     return (
-      <Card className="p-spacing-lg">
-        <div className="flex items-center justify-center py-spacing-xl">
+      <Card className="p-lg">
+        <div className="flex items-center justify-center py-xl">
           <Typography variant="body-md" color="muted">
             Loading permissions...
           </Typography>
@@ -170,9 +170,9 @@ export const FamilyPermissionsSettings: React.FC<
   }
 
   return (
-    <Card className="p-spacing-lg">
-      <div className="mb-spacing-lg">
-        <Typography variant="headline-lg" className="mb-spacing-xs">
+    <Card className="p-lg">
+      <div className="mb-lg">
+        <Typography variant="headline-lg" className="mb-xs">
           Family Member Permissions
         </Typography>
         <Typography variant="body-md" color="muted">
@@ -183,13 +183,13 @@ export const FamilyPermissionsSettings: React.FC<
       </div>
 
       {/* Permission Toggles */}
-      <div className="space-y-spacing-md mb-spacing-xl">
+      <div className="space-y-md mb-xl">
         {PERMISSION_TOGGLES.map((toggle) => (
           <div
             key={toggle.key}
-            className="flex items-start justify-between p-spacing-md border border-medium rounded-lg hover:border-strong transition-colors"
+            className="flex items-start justify-between p-md border border-secondary rounded-lg hover:border-accent transition-colors"
           >
-            <div className="flex items-start gap-spacing-md flex-1">
+            <div className="flex items-start gap-md flex-1">
               <div className="mt-1">
                 <Icon
                   name={toggle.icon as any}
@@ -227,7 +227,7 @@ export const FamilyPermissionsSettings: React.FC<
             >
               <span
                 aria-hidden="true"
-                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-surface-primary shadow ring-0 transition duration-200 ease-in-out ${
+                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-primary shadow ring-0 transition duration-200 ease-in-out ${
                   permissions[toggle.key] ? "translate-x-5" : "translate-x-0"
                 }`}
               />
@@ -237,8 +237,8 @@ export const FamilyPermissionsSettings: React.FC<
       </div>
 
       {/* Info Banner */}
-      <div className="mb-spacing-lg p-spacing-md bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
-        <div className="flex items-start gap-spacing-sm">
+      <div className="mb-lg p-md bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
+        <div className="flex items-start gap-sm">
           <Icon
             name="info"
             className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5"
@@ -269,11 +269,11 @@ export const FamilyPermissionsSettings: React.FC<
             </Typography>
           )}
         </div>
-        <div className="flex gap-spacing-sm">
+        <div className="flex gap-sm">
           {hasChanges && (
             <button
               onClick={handleReset}
-              className="px-spacing-md py-spacing-sm text-sm font-medium text-secondary hover:text-primary transition-colors"
+              className="px-md py-sm text-sm font-medium text-secondary hover:text-primary transition-colors"
               disabled={isSaving}
             >
               Reset
@@ -282,7 +282,7 @@ export const FamilyPermissionsSettings: React.FC<
           <button
             onClick={handleSave}
             disabled={!hasChanges || isSaving}
-            className={`px-spacing-lg py-spacing-sm rounded-lg text-sm font-semibold transition-all ${
+            className={`px-lg py-sm rounded-lg text-sm font-semibold transition-all ${
               hasChanges && !isSaving
                 ? "bg-jade-600 hover:bg-jade-700 text-white shadow-sm hover:shadow-md"
                 : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed"

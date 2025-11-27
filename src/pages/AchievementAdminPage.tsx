@@ -266,7 +266,7 @@ export const AchievementAdminPage: React.FC = () => {
           </p>
         </div>
         <div className="flex gap-4">
-          <label className="inline-flex items-center px-4 py-2 border border-medium rounded-lg shadow-sm text-sm font-medium text-secondary bg-primary hover:bg-secondary cursor-pointer">
+          <label className="inline-flex items-center px-4 py-2 border border-secondary rounded-lg shadow-sm text-sm font-medium text-secondary bg-primary hover:bg-secondary cursor-pointer">
             <Icon name="upload" className="w-4 h-4 mr-2" />
             Upload CSV/JSON
             <input

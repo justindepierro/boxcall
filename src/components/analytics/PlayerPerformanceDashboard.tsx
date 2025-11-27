@@ -193,7 +193,7 @@ export const PlayerPerformanceDashboard: React.FC<
           {overview.topPerformers.map((player, index) => (
             <div
               key={player.playerId}
-              className="flex items-center justify-between p-3 border rounded-lg hover:bg-surface-secondary cursor-pointer"
+              className="flex items-center justify-between p-3 border rounded-lg hover:bg-secondary cursor-pointer"
               onClick={() => setSelectedPlayer(player)}
             >
               <div className="flex items-center space-x-3">
@@ -233,7 +233,7 @@ export const PlayerPerformanceDashboard: React.FC<
             {overview.playersNeedingAttention.map((player) => (
               <div
                 key={player.playerId}
-                className="flex items-center justify-between p-3 border border-text-warning rounded-lg bg-surface-warning cursor-pointer"
+                className="flex items-center justify-between p-3 border border-text-warning rounded-lg bg-warning/20 cursor-pointer"
                 onClick={() => setSelectedPlayer(player)}
               >
                 <div className="flex items-center space-x-3">
@@ -293,8 +293,8 @@ export const PlayerPerformanceDashboard: React.FC<
                     alert.type === "critical"
                       ? "border-text-error bg-surface-error"
                       : alert.type === "warning"
-                        ? "border-text-warning bg-surface-warning"
-                        : "border-text-info bg-surface-info"
+                        ? "border-text-warning bg-warning/20"
+                        : "border-text-info bg-info/20"
                   }`}
                 >
                   <div className="flex items-center space-x-2">
@@ -328,7 +328,7 @@ export const PlayerPerformanceDashboard: React.FC<
               {insights.recommendations.map((rec, index) => (
                 <div
                   key={index}
-                  className="p-3 border rounded-lg bg-surface-info border-text-info"
+                  className="p-3 border rounded-lg bg-info/20 border-text-info"
                 >
                   <Typography variant="body-sm">{rec}</Typography>
                 </div>
@@ -405,7 +405,7 @@ const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
   onClose,
 }) => {
   return (
-    <div className="fixed inset-0 bg-surface-primary bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-primary bg-opacity-50 flex items-center justify-center p-4 z-50">
       <Card className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">

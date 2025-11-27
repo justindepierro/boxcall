@@ -224,7 +224,7 @@ export const PracticePDFExportDialog: React.FC<
           </div>
         </div>
         {/* Practice Info Preview */}
-        <div className="surface-subtle rounded-lg p-4 mb-6">
+        <div className="bg-subtle rounded-lg p-4 mb-6">
           <Typography
             variant="body-sm"
             className="font-medium text-primary mb-2"
@@ -266,7 +266,7 @@ export const PracticePDFExportDialog: React.FC<
                   type="checkbox"
                   checked={exportOptions.includeEverything}
                   onChange={() => handleOptionChange("includeEverything")}
-                  className="h-4 w-4 focus:ring-jade-500 border-medium rounded-lg"
+                  className="h-4 w-4 focus:ring-jade-500 border-secondary rounded-lg"
                 />
                 <Typography variant="body-sm" as="span" className="font-medium">
                   Everything
@@ -275,17 +275,17 @@ export const PracticePDFExportDialog: React.FC<
                   (All practice blocks and activities)
                 </span>
               </label>
-              <div className="ml-4 space-y-2 border-l-2 border-subtle pl-4">
+              <div className="ml-4 space-y-2 border-l-2 border-muted pl-4">
                 <label className="flex items-center space-x-3 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={exportOptions.includeOffense}
                     onChange={() => handleOptionChange("includeOffense")}
                     disabled={exportOptions.includeEverything}
-                    className="h-4 w-4 focus:ring-jade-500 border-medium rounded-lg disabled:opacity-50"
+                    className="h-4 w-4 focus:ring-jade-500 border-secondary rounded-lg disabled:opacity-50"
                   />
                   <span className="text-sm">Offense</span>
-                  <span className="px-2 py-1 bg-surface-info text-info text-xs rounded-lg">
+                  <span className="px-2 py-1 bg-info/20 text-info text-xs rounded-lg">
                     <Icon name="award" className="w-4 h-4 inline" /> Offensive
                     drills and plays
                   </span>
@@ -296,7 +296,7 @@ export const PracticePDFExportDialog: React.FC<
                     checked={exportOptions.includeDefense}
                     onChange={() => handleOptionChange("includeDefense")}
                     disabled={exportOptions.includeEverything}
-                    className="h-4 w-4 focus:ring-text-error border-medium rounded-lg disabled:opacity-50"
+                    className="h-4 w-4 focus:ring-text-error border-secondary rounded-lg disabled:opacity-50"
                   />
                   <span className="text-sm">Defense</span>
                   <span className="px-2 py-1 bg-surface-error text-error text-xs rounded-lg">
@@ -310,10 +310,10 @@ export const PracticePDFExportDialog: React.FC<
                     checked={exportOptions.includeSpecial}
                     onChange={() => handleOptionChange("includeSpecial")}
                     disabled={exportOptions.includeEverything}
-                    className="h-4 w-4 focus:ring-text-success border-medium rounded-lg disabled:opacity-50"
+                    className="h-4 w-4 focus:ring-text-success border-secondary rounded-lg disabled:opacity-50"
                   />
                   <span className="text-sm">Special Teams</span>
-                  <span className="px-2 py-1 bg-surface-success text-success text-xs rounded-lg">
+                  <span className="px-2 py-1 bg-success/20 text-success text-xs rounded-lg">
                     <Icon name="zap" className="w-4 h-4 inline" /> Special teams
                     plays
                   </span>
@@ -335,7 +335,7 @@ export const PracticePDFExportDialog: React.FC<
                   type="checkbox"
                   checked={exportOptions.addScripts}
                   onChange={() => handleOptionChange("addScripts")}
-                  className="h-4 w-4 focus:ring-jade-500 border-medium rounded-lg"
+                  className="h-4 w-4 focus:ring-jade-500 border-secondary rounded-lg"
                 />
                 <span className="text-sm">Add Scripts</span>
                 <span className="text-xs text-muted">
@@ -347,7 +347,7 @@ export const PracticePDFExportDialog: React.FC<
                   type="checkbox"
                   checked={exportOptions.addNotes}
                   onChange={() => handleOptionChange("addNotes")}
-                  className="h-4 w-4 focus:ring-jade-500 border-medium rounded-lg"
+                  className="h-4 w-4 focus:ring-jade-500 border-secondary rounded-lg"
                 />
                 <span className="text-sm">Add Notes</span>
                 <span className="text-xs text-muted">
@@ -357,7 +357,7 @@ export const PracticePDFExportDialog: React.FC<
             </div>
           </div>
           {/* Preview Summary */}
-          <div className="surface-subtle border border-subtle rounded-lg p-4">
+          <div className="bg-subtle border border-muted rounded-lg p-4">
             <Typography
               variant="body-sm"
               className="font-medium text-info mb-2"
@@ -395,7 +395,7 @@ export const PracticePDFExportDialog: React.FC<
           >
             {isExporting ? (
               <div className="flex items-center space-x-2">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-surface-primary"></div>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-bg-primary"></div>
                 <span>Generating PDF...</span>
               </div>
             ) : (

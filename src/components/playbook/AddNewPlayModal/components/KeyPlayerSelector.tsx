@@ -85,17 +85,17 @@ export const KeyPlayerSelector: React.FC<KeyPlayerSelectorProps> = ({
   const noPlayers = teamPlayers.length === 0;
 
   return (
-    <div className="space-y-spacing-xs">
+    <div className="space-y-2">
       {/* Label */}
       <Typography variant="label-md" className="block text-secondary">
-        <Icon name="user-plus" className="h-4 w-4 mr-spacing-xs inline" />
+        <Icon name="user-plus" className="h-4 w-4 mr-2 inline" />
         {label}
         {selectedPlayers.length > 0 && (
           <Typography
             variant="caption"
             as="span"
             color="muted"
-            className="ml-spacing-xs"
+            className="ml-2"
           >
             ({selectedPlayers.length} selected)
           </Typography>
@@ -111,20 +111,20 @@ export const KeyPlayerSelector: React.FC<KeyPlayerSelectorProps> = ({
 
       {/* Loading state */}
       {loading ? (
-        <div className="p-spacing-sm bg-surface-secondary rounded-md border border-border">
+        <div className="p-3 bg-secondary rounded-md border border-muted">
           <Typography variant="body-sm" color="muted" className="italic">
             <Icon
               name="refresh-cw"
-              className="h-4 w-4 mr-spacing-xs inline animate-spin"
+              className="h-4 w-4 mr-2 inline animate-spin"
             />
             Loading roster...
           </Typography>
         </div>
       ) : noPlayers ? (
         /* No players warning */
-        <div className="p-spacing-sm bg-surface-secondary rounded-md border border-border">
+        <div className="p-3 bg-secondary rounded-md border border-muted">
           <Typography variant="body-sm" color="muted" className="italic">
-            <Icon name="info" className="h-4 w-4 mr-spacing-xs inline" />
+            <Icon name="info" className="h-4 w-4 mr-2 inline" />
             No players found in roster
           </Typography>
         </div>
@@ -134,9 +134,9 @@ export const KeyPlayerSelector: React.FC<KeyPlayerSelectorProps> = ({
           <select
             onChange={handleSelectChange}
             disabled={disabled || availablePlayers.length === 0}
-            className="w-full px-spacing-sm py-spacing-xs border border-border rounded-md
+            className="w-full px-3 py-2 border border-muted rounded-md
                        focus:ring-2 focus:ring-primary-default focus:border-transparent
-                       disabled:bg-surface-muted disabled:cursor-not-allowed text-sm"
+                       disabled:bg-muted disabled:cursor-not-allowed text-sm"
             aria-label="Select key player"
           >
             <option value="">
@@ -153,15 +153,15 @@ export const KeyPlayerSelector: React.FC<KeyPlayerSelectorProps> = ({
 
           {/* Selected players (profile cards) */}
           {selectedPlayers.length > 0 && (
-            <div className="space-y-spacing-xs mt-spacing-sm">
+            <div className="space-y-2 mt-3">
               {selectedPlayers.map((player) => (
                 <div
                   key={player.id}
-                  className="flex items-center justify-between px-spacing-sm py-spacing-xs 
-                             bg-surface-secondary rounded-md border border-border
-                             hover:bg-surface-tertiary transition-colors"
+                  className="flex items-center justify-between px-3 py-2 
+                             bg-secondary rounded-md border border-muted
+                             hover:bg-tertiary transition-colors"
                 >
-                  <div className="flex items-center gap-spacing-sm">
+                  <div className="flex items-center gap-2">
                     {/* Jersey number badge */}
                     <div
                       className="w-8 h-8 rounded-full bg-primary-default text-white 

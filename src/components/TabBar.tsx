@@ -34,7 +34,7 @@ export function TabBar({
 }: TabBarProps) {
   return (
     <div
-      className={`flex items-stretch border-t border-border bg-surface-primary ${className}`}
+      className={`flex items-stretch border-t border-border bg-primary ${className}`}
       role="tablist"
       aria-label="Bottom sheet tabs"
     >
@@ -55,7 +55,7 @@ export function TabBar({
               ${
                 isActive
                   ? "text-primary"
-                  : "text-secondary hover:text-primary hover:bg-surface-secondary/50"
+                  : "text-secondary hover:text-primary hover:bg-secondary/50"
               }
             `}
           >

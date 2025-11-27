@@ -49,10 +49,10 @@ export function BulkDeleteConfirmation({
 
   return (
     <Modal isOpen={true} onClose={onClose} title="Delete Formations" size="md">
-      <div className="space-y-spacing-md">
+      <div className="space-y-md">
         {/* Warning */}
-        <div className="p-spacing-md bg-error-50 border border-error-200 rounded-md">
-          <div className="flex items-start gap-spacing-sm">
+        <div className="p-md bg-error-50 border border-error-200 rounded-md">
+          <div className="flex items-start gap-sm">
             <svg
               className="w-5 h-5 text-error-600 flex-shrink-0"
               fill="none"
@@ -71,7 +71,7 @@ export function BulkDeleteConfirmation({
                 You are about to delete {formationIds.length} formation
                 {formationIds.length !== 1 ? "s" : ""}
               </div>
-              <div className="text-xs text-error-700 mt-spacing-xs">
+              <div className="text-xs text-error-700 mt-xs">
                 This action cannot be undone. Any plays using these formations
                 will need to be updated.
               </div>
@@ -80,8 +80,8 @@ export function BulkDeleteConfirmation({
         </div>
 
         {/* Delete opposites option */}
-        <div className="p-spacing-sm surface-subtle border border-subtle rounded-md">
-          <label className="flex items-start gap-spacing-sm cursor-pointer">
+        <div className="p-sm bg-subtle border border-muted rounded-md">
+          <label className="flex items-start gap-sm cursor-pointer">
             <input
               type="checkbox"
               checked={deleteOpposites}
@@ -92,7 +92,7 @@ export function BulkDeleteConfirmation({
               <div className="text-sm font-medium text-primary">
                 Also delete opposite formations
               </div>
-              <div className="text-xs text-muted mt-spacing-xs">
+              <div className="text-xs text-muted mt-xs">
                 If checked, will also delete the linked left/right variants of
                 these formations
               </div>
@@ -108,7 +108,7 @@ export function BulkDeleteConfirmation({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-end gap-spacing-sm pt-spacing-md border-t border-subtle">
+        <div className="flex items-center justify-end gap-sm pt-md border-t border-muted">
           <Button
             type="button"
             variant="secondary"

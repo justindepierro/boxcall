@@ -58,7 +58,7 @@ export const KeyboardShortcutsGuide: React.FC<KeyboardShortcutsGuideProps> = ({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div
-        className="bg-surface-primary elevation-modal rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        className="bg-primary elevation-modal rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6">
@@ -98,7 +98,7 @@ export const KeyboardShortcutsGuide: React.FC<KeyboardShortcutsGuideProps> = ({
                     .map((shortcut, index) => (
                       <div
                         key={index}
-                        className="flex items-center justify-between py-2 px-3 bg-surface-secondary rounded-lg"
+                        className="flex items-center justify-between py-2 px-3 bg-secondary rounded-lg"
                       >
                         <Typography
                           variant="body-sm"
@@ -106,7 +106,7 @@ export const KeyboardShortcutsGuide: React.FC<KeyboardShortcutsGuideProps> = ({
                         >
                           {shortcut.description}
                         </Typography>
-                        <kbd className="px-2 py-1 bg-surface-primary rounded-lg text-xs font-mono text-secondary shadow-sm">
+                        <kbd className="px-2 py-1 bg-primary rounded-lg text-xs font-mono text-secondary shadow-sm">
                           {shortcut.key}
                         </kbd>
                       </div>
@@ -121,7 +121,7 @@ export const KeyboardShortcutsGuide: React.FC<KeyboardShortcutsGuideProps> = ({
             <div className="flex items-center justify-between">
               <Typography variant="body-xs" className="text-muted">
                 Press{" "}
-                <kbd className="px-1 py-0.5 bg-surface-muted border rounded-lg text-xs">
+                <kbd className="px-1 py-0.5 bg-muted border rounded-lg text-xs">
                   ?
                 </kbd>{" "}
                 anywhere to show this guide

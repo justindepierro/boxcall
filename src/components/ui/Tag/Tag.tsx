@@ -28,16 +28,16 @@ const sizeStyles: Record<NonNullable<TagProps["size"]>, string> = {
 // Semantic palette aligned with psychological system but lower elevation than Badge
 const variantStyles: Record<TagVariant, string> = {
   neutral:
-    "surface-subtle text-secondary dark:bg-surface-secondary dark:text-inverse dark:border-text-tertiary",
-  info: "surface-subtle text-info dark:bg-surface-info dark:text-info dark:border-text-info",
+    "bg-subtle text-secondary dark:bg-secondary dark:text-inverse dark:border-text-tertiary",
+  info: "bg-subtle text-info dark:bg-info/20 dark:text-info dark:border-text-info",
   success:
-    "surface-subtle text-success dark:bg-surface-success dark:text-success dark:border-text-success",
+    "bg-subtle text-success dark:bg-success/20 dark:text-success dark:border-text-success",
   warning:
-    "surface-subtle text-warning dark:bg-surface-warning dark:text-warning dark:border-text-warning",
+    "bg-subtle text-warning dark:bg-warning/20 dark:text-warning dark:border-text-warning",
   danger:
-    "surface-subtle text-error dark:bg-surface-error dark:text-error dark:border-text-error",
+    "bg-subtle text-error dark:bg-surface-error dark:text-error dark:border-text-error",
   accent:
-    "surface-subtle text-jade-700 dark:bg-jade-900/30 dark:text-jade-300 dark:border-jade-700",
+    "bg-subtle text-jade-700 dark:bg-jade-900/30 dark:text-jade-300 dark:border-jade-700",
   outline:
     "text-secondary dark:border-text-tertiary dark:text-border-light",
 };

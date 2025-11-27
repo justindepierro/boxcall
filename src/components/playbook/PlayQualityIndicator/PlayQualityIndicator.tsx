@@ -62,7 +62,7 @@ export const PlayQualityIndicator: React.FC<PlayQualityIndicatorProps> = ({
   if (compact) {
     return (
       <div
-        className={`flex items-center gap-spacing-sm ${className}`}
+        className={`flex items-center gap-sm ${className}`}
         role="status"
         aria-label={`Data quality score: ${score.total} out of 100, Grade ${score.grade}`}
       >
@@ -80,7 +80,7 @@ export const PlayQualityIndicator: React.FC<PlayQualityIndicatorProps> = ({
           Data Quality:
         </Typography>
         <span
-          className={`px-spacing-sm py-spacing-xs rounded-md border font-semibold text-sm ${getBadgeColor()}`}
+          className={`px-sm py-xs rounded-md border font-semibold text-sm ${getBadgeColor()}`}
           data-testid="quality-score-badge"
         >
           {score.total}/100 ({score.grade})
@@ -100,13 +100,13 @@ export const PlayQualityIndicator: React.FC<PlayQualityIndicatorProps> = ({
 
   return (
     <div
-      className={`bg-surface-secondary border border-default rounded-lg p-spacing-md ${className}`}
+      className={`bg-secondary border border-default rounded-lg p-md ${className}`}
       role="region"
       aria-label="Play data quality analysis"
     >
       {/* Header with Score */}
-      <div className="flex items-center justify-between mb-spacing-sm">
-        <div className="flex items-center gap-spacing-sm">
+      <div className="flex items-center justify-between mb-sm">
+        <div className="flex items-center gap-sm">
           <Icon
             name={getIcon()}
             size="md"
@@ -117,15 +117,15 @@ export const PlayQualityIndicator: React.FC<PlayQualityIndicatorProps> = ({
             Data Quality Score
           </Typography>
         </div>
-        <div className="flex items-center gap-spacing-sm">
+        <div className="flex items-center gap-sm">
           <span
-            className={`px-spacing-md py-spacing-sm rounded-md border font-bold text-lg ${getBadgeColor()}`}
+            className={`px-md py-sm rounded-md border font-bold text-lg ${getBadgeColor()}`}
             data-testid="quality-score-full"
           >
             {score.total}/100
           </span>
           <span
-            className={`px-spacing-sm py-spacing-xs rounded-md bg-surface-muted text-primary font-semibold text-sm`}
+            className={`px-sm py-xs rounded-md bg-muted text-primary font-semibold text-sm`}
           >
             Grade: {score.grade}
           </span>
@@ -133,11 +133,11 @@ export const PlayQualityIndicator: React.FC<PlayQualityIndicatorProps> = ({
       </div>
 
       {/* Score Breakdown */}
-      <div className="grid grid-cols-3 gap-spacing-sm mb-spacing-md">
+      <div className="grid grid-cols-3 gap-sm mb-md">
         <div className="text-center">
           <Typography
             variant="body-sm"
-            className="text-secondary mb-spacing-xs"
+            className="text-secondary mb-xs"
           >
             Required
           </Typography>
@@ -152,7 +152,7 @@ export const PlayQualityIndicator: React.FC<PlayQualityIndicatorProps> = ({
         <div className="text-center">
           <Typography
             variant="body-sm"
-            className="text-secondary mb-spacing-xs"
+            className="text-secondary mb-xs"
           >
             Metadata
           </Typography>
@@ -167,7 +167,7 @@ export const PlayQualityIndicator: React.FC<PlayQualityIndicatorProps> = ({
         <div className="text-center">
           <Typography
             variant="body-sm"
-            className="text-secondary mb-spacing-xs"
+            className="text-secondary mb-xs"
           >
             Advanced
           </Typography>
@@ -183,18 +183,18 @@ export const PlayQualityIndicator: React.FC<PlayQualityIndicatorProps> = ({
 
       {/* Recommendations */}
       {score.recommendations.length > 0 && (
-        <div className="border-t border-default pt-spacing-sm">
+        <div className="border-t border-default pt-sm">
           <Typography
             variant="body-sm"
-            className="text-primary font-semibold mb-spacing-xs"
+            className="text-primary font-semibold mb-xs"
           >
             💡 Suggestions to improve quality:
           </Typography>
-          <ul className="space-y-spacing-xs">
+          <ul className="space-y-xs">
             {score.recommendations.map((rec, index) => (
               <li
                 key={index}
-                className="flex items-start gap-spacing-xs text-sm text-secondary"
+                className="flex items-start gap-xs text-sm text-secondary"
               >
                 <Icon
                   name="chevron-right"
@@ -210,7 +210,7 @@ export const PlayQualityIndicator: React.FC<PlayQualityIndicatorProps> = ({
       )}
 
       {/* Completeness Label */}
-      <div className="mt-spacing-sm">
+      <div className="mt-sm">
         <Typography variant="body-xs" className="text-muted text-center">
           Completeness: <strong>{score.completeness}</strong>
         </Typography>

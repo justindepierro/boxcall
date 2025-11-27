@@ -32,7 +32,7 @@ export const TeamTypeToggle: React.FC<TeamTypeToggleProps> = ({
   onTypeChange,
 }) => {
   return (
-    <div className="flex items-center space-x-1 bg-surface-secondary rounded-lg p-1">
+    <div className="flex items-center space-x-1 bg-secondary rounded-lg p-1">
       {(Object.keys(teamTypeConfig) as TeamType[]).map((type) => {
         const config = teamTypeConfig[type];
         const isActive = currentType === type;

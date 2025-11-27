@@ -74,8 +74,8 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
               ref={provided.innerRef}
               className={`space-y-3 min-h-48 p-4 rounded-lg placeholder-zone transition-colors ${
                 snapshot.isDraggingOver
-                  ? "border-text-info surface-subtle"
-                  : "border-light surface-subtle"
+                  ? "border-text-info bg-subtle"
+                  : "border-light bg-subtle"
               }`}
             >
               {practiceBlocks.length === 0 ? (
@@ -227,7 +227,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
 
                         {/* Groups within block */}
                         {block.groups && block.groups.length > 0 && (
-                          <div className="ml-10 mt-3 pl-4 border-l-2 border-subtle">
+                          <div className="ml-10 mt-3 pl-4 border-l-2 border-muted">
                             <Typography
                               variant="body-sm"
                               className="font-medium mb-2"
@@ -238,7 +238,7 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
                               {block.groups.map((group) => (
                                 <div
                                   key={group.id}
-                                  className="flex items-center justify-between p-2 bg-surface-primary/50 rounded-lg"
+                                  className="flex items-center justify-between p-2 bg-primary/50 rounded-lg"
                                 >
                                   <div className="flex-1">
                                     <Typography

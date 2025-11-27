@@ -87,8 +87,8 @@ const getTableStyles = (size?: "sm" | "md" | "lg") => {
   };
   return [
     "w-full table-auto",
-    "bg-surface-primary",
-    "text-primary dark:text-surface-secondary",
+    "bg-primary",
+    "text-primary dark:text-bg-secondary",
     sizeStyles[size || "md"],
   ]
     .filter(Boolean)
@@ -102,9 +102,9 @@ const getHeaderStyles = (size?: "sm" | "md" | "lg") => {
   };
   return [
     "divider-b",
-    "surface-subtle dark:bg-surface-tertiary",
+    "bg-subtle dark:bg-tertiary",
     "text-left font-semibold",
-    "text-primary dark:text-surface-secondary",
+    "text-primary dark:text-bg-secondary",
     sizeStyles[size || "md"],
   ].join(" ");
 };
@@ -124,7 +124,7 @@ const getCellStyles = (
   };
   return [
     "divider-b",
-    "text-primary dark:text-surface-secondary",
+    "text-primary dark:text-bg-secondary",
     sizeStyles[size || "md"],
     alignStyles[align || "left"],
   ].join(" ");
@@ -137,9 +137,9 @@ const getRowStyles = (
 ) => {
   return [
     "transition-colors duration-200",
-    hoverable && "surface-subtle-hover",
-    isSelected && "surface-subtle dark:bg-navy-900/20",
-    striped && isEven && "surface-subtle dark:bg-surface-tertiary",
+    hoverable && "hover:bg-muted",
+    isSelected && "bg-subtle dark:bg-navy-900/20",
+    striped && isEven && "bg-subtle dark:bg-tertiary",
   ]
     .filter(Boolean)
     .join(" ");
@@ -337,7 +337,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
                       if (el) el.indeterminate = isIndeterminate;
                     }}
                     onChange={(e) => handleSelectAll(e.target.checked)}
-                    className="rounded-lg border-medium dark:border-text-tertiary text-jade-600 focus:ring-jade-500"
+                    className="rounded-lg border-secondary dark:border-text-tertiary text-jade-600 focus:ring-jade-500"
                   />
                 </th>
               )}
@@ -394,7 +394,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
                           onChange={(e) =>
                             handleSelectRow(row.id, e.target.checked)
                           }
-                          className="rounded-lg border-medium dark:border-text-tertiary text-jade-600 focus:ring-jade-500"
+                          className="rounded-lg border-secondary dark:border-text-tertiary text-jade-600 focus:ring-jade-500"
                         />
                       </td>
                     )}

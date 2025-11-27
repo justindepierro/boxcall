@@ -46,7 +46,7 @@ export const FormationSection: React.FC<FormationSectionProps> = ({
   const useFormationSelector = Boolean(playbookId);
 
   return (
-    <div className="flex gap-spacing-sm items-end">
+    <div className="flex gap-sm items-end">
       {useFormationSelector ? (
         <FormationSelector
           playbookId={playbookId!}
@@ -75,7 +75,7 @@ export const FormationSection: React.FC<FormationSectionProps> = ({
         />
       )}
 
-      <div className="flex gap-spacing-xs">
+      <div className="flex gap-xs">
         <Button
           type="button"
           variant={formationDir ? "primary" : "outline"}
@@ -89,7 +89,7 @@ export const FormationSection: React.FC<FormationSectionProps> = ({
                   : "Left";
             onFormationDirChange(nextValue);
           }}
-          className="px-spacing-sm min-w-24"
+          className="px-sm min-w-24"
         >
           {formationDir
             ? formationDir.toLowerCase() === "left"
@@ -102,7 +102,7 @@ export const FormationSection: React.FC<FormationSectionProps> = ({
           variant="ghost"
           size="sm"
           onClick={() => onFormationShowInNameChange(!formationShowInName)}
-          className={`p-spacing-xs ${formationShowInName ? "text-info" : "text-muted"}`}
+          className={`p-xs ${formationShowInName ? "text-info" : "text-muted"}`}
         >
           <Icon name="eye" className="h-4 w-4" />
         </Button>

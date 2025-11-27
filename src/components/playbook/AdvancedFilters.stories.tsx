@@ -210,7 +210,7 @@ const AdvancedFiltersDemo = (args: any) => {
           <div className="space-y-3">
             <div className="p-3 border rounded-lg">
               <h5 className="font-medium text-sm mb-2">Basic Usage</h5>
-              <pre className="text-xs bg-surface-muted p-2 rounded">
+              <pre className="text-xs bg-muted p-2 rounded">
                 {`const [activeFilters, setActiveFilters] = useState([]);
 
 <AdvancedFilters
@@ -224,7 +224,7 @@ const AdvancedFiltersDemo = (args: any) => {
               <h5 className="font-medium text-sm mb-2">
                 With Filter Application
               </h5>
-              <pre className="text-xs bg-surface-muted p-2 rounded">
+              <pre className="text-xs bg-muted p-2 rounded">
                 {`function PlaybookGrid({ plays }) {
   const [filters, setFilters] = useState([]);
 
@@ -252,7 +252,7 @@ const AdvancedFiltersDemo = (args: any) => {
 
             <div className="p-3 border rounded-lg">
               <h5 className="font-medium text-sm mb-2">Filter Persistence</h5>
-              <pre className="text-xs bg-surface-muted p-2 rounded">
+              <pre className="text-xs bg-muted p-2 rounded">
                 {`function PersistentFilters() {
   const [filters, setFilters] = useState(() => {
     const saved = localStorage.getItem('playbook-filters');

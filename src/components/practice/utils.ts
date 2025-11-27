@@ -18,21 +18,21 @@ export const formatDuration = (minutes: number): string => {
 export const getCategoryColor = (category: PracticeBlock["category"]) => {
   switch (category) {
     case "offense":
-      return "bg-surface-info text-text-info";
+      return "bg-info/20 text-info";
     case "defense":
-      return "bg-surface-error text-text-error";
+      return "bg-surface-error text-error";
     case "special-teams":
-      return "bg-surface-success text-text-success";
+      return "bg-success/20 text-success";
     case "meeting":
-      return "bg-surface-tertiary text-text-tertiary";
+      return "bg-tertiary text-tertiary";
     case "weight-room":
-      return "bg-surface-warning text-text-warning";
+      return "bg-warning/20 text-warning";
     case "transition":
-      return "surface-subtle text-text-primary";
+      return "bg-subtle text-primary";
     case "break":
-      return "bg-surface-warning text-text-warning";
+      return "bg-warning/20 text-warning";
     default:
-      return "surface-subtle text-text-primary";
+      return "bg-subtle text-primary";
   }
 };
 /**

@@ -138,7 +138,7 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
               ${
                 hasReacted
                   ? "bg-brand-primary-light text-brand-primary ring-1 ring-brand-primary/30"
-                  : "bg-surface-secondary text-secondary hover:bg-surface-muted"
+                  : "bg-secondary text-secondary hover:bg-muted"
               }
             `}
             title={`${REACTION_LABELS[type]}${hasReacted ? " (You reacted)" : ""}`}
@@ -171,7 +171,7 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
                 className={`
                   p-1 rounded-full text-base
                   transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
-                  hover:bg-surface-secondary hover:scale-110
+                  hover:bg-secondary hover:scale-110
                   ${isAnimating ? "scale-125" : "scale-100"}
                 `}
                 title={REACTION_LABELS[type]}

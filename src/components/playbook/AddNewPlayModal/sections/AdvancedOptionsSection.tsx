@@ -135,7 +135,7 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
   };
 
   return (
-    <div className="border-t border-medium pt-spacing-lg">
+    <div className="border-t border-secondary pt-lg">
       <Button
         type="button"
         variant="ghost"
@@ -150,21 +150,21 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
       </Button>
 
       {isOpen && (
-        <div className="space-y-spacing-lg mt-spacing-lg">
+        <div className="space-y-lg mt-lg">
           {/* Formation Details */}
-          <div className="bg-surface-secondary/30 rounded-lg p-spacing-md">
+          <div className="bg-secondary/30 rounded-lg p-md">
             <Typography
               variant="label-lg"
-              className="flex items-center mb-spacing-sm text-primary"
+              className="flex items-center mb-sm text-primary"
             >
-              <Icon name="target" className="h-4 w-4 mr-spacing-xs" />
+              <Icon name="target" className="h-4 w-4 mr-xs" />
               Formation Details
             </Typography>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-sm">
               <div>
                 <Typography
                   variant="label-md"
-                  className="block mb-spacing-xs text-secondary"
+                  className="block mb-xs text-secondary"
                 >
                   Formation Type
                 </Typography>
@@ -173,20 +173,20 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                   value={formationType}
                   onChange={(e) => onFormationTypeChange(e.target.value)}
                   placeholder="e.g., Spread, Tight"
-                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                  className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
                 />
               </div>
               <div>
                 <Typography
                   variant="label-md"
-                  className="block mb-spacing-xs text-secondary"
+                  className="block mb-xs text-secondary"
                 >
                   Direction
                 </Typography>
                 <select
                   value={formationDir}
                   onChange={(e) => onFormationDirChange(e.target.value)}
-                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                  className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
                 >
                   <option value="">None</option>
                   {directionOptions.map((opt) => (
@@ -199,38 +199,38 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
               <div className="md:col-span-2">
                 <Typography
                   variant="label-md"
-                  className="block mb-spacing-xs text-secondary"
+                  className="block mb-xs text-secondary"
                 >
                   Backfield & Motion
                 </Typography>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-xs">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-xs">
                   <input
                     type="text"
                     value={backAlign}
                     onChange={(e) => onBackAlignChange(e.target.value)}
                     placeholder="Backfield alignment"
-                    className="px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                    className="px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
                   />
                   <input
                     type="text"
                     value={shift}
                     onChange={(e) => onShiftChange(e.target.value)}
                     placeholder="Pre-snap shift"
-                    className="px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                    className="px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
                   />
                   <input
                     type="text"
                     value={motion}
                     onChange={(e) => onMotionChange(e.target.value)}
                     placeholder="Pre-snap motion"
-                    className="px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                    className="px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
                   />
                 </div>
               </div>
               <div>
                 <Typography
                   variant="label-md"
-                  className="block mb-spacing-xs text-secondary"
+                  className="block mb-xs text-secondary"
                 >
                   Formation Tags
                 </Typography>
@@ -239,30 +239,30 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                   value={formationTags}
                   onChange={(e) => onFormationTagsChange(e.target.value)}
                   placeholder="e.g., Nickel, Dime"
-                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                  className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
                 />
               </div>
               <div>
                 <Typography
                   variant="label-md"
-                  className="block mb-spacing-xs text-secondary"
+                  className="block mb-xs text-secondary"
                 >
                   Strength
                 </Typography>
-                <div className="grid grid-cols-2 gap-spacing-xs">
+                <div className="grid grid-cols-2 gap-xs">
                   <input
                     type="text"
                     value={runStrength}
                     onChange={(e) => onRunStrengthChange(e.target.value)}
                     placeholder="Run strength"
-                    className="px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                    className="px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
                   />
                   <input
                     type="text"
                     value={passStrength}
                     onChange={(e) => onPassStrengthChange(e.target.value)}
                     placeholder="Pass strength"
-                    className="px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                    className="px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
                   />
                 </div>
               </div>
@@ -270,26 +270,26 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
           </div>
 
           {/* Play Details */}
-          <div className="bg-surface-secondary/30 rounded-lg p-spacing-md">
+          <div className="bg-secondary/30 rounded-lg p-md">
             <Typography
               variant="label-lg"
-              className="flex items-center mb-spacing-sm text-primary"
+              className="flex items-center mb-sm text-primary"
             >
-              <Icon name="hash" className="h-4 w-4 mr-spacing-xs" />
+              <Icon name="hash" className="h-4 w-4 mr-xs" />
               Play Details
             </Typography>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-sm">
               <div>
                 <Typography
                   variant="label-md"
-                  className="block mb-spacing-xs text-secondary"
+                  className="block mb-xs text-secondary"
                 >
                   Direction
                 </Typography>
                 <select
                   value={playDir}
                   onChange={(e) => onPlayDirChange(e.target.value)}
-                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                  className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
                 >
                   <option value="">None</option>
                   {directionOptions.map((opt) => (
@@ -302,7 +302,7 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
               <div>
                 <Typography
                   variant="label-md"
-                  className="block mb-spacing-xs text-secondary"
+                  className="block mb-xs text-secondary"
                 >
                   Pass Protection
                 </Typography>
@@ -311,13 +311,13 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                   value={protection}
                   onChange={(e) => onProtectionChange(e.target.value)}
                   placeholder="e.g., 5-man, Slide"
-                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                  className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
                 />
               </div>
               <div className="md:col-span-2">
                 <Typography
                   variant="label-md"
-                  className="block mb-spacing-xs text-secondary"
+                  className="block mb-xs text-secondary"
                 >
                   Play Tags
                 </Typography>
@@ -326,26 +326,26 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                   value={playTags}
                   onChange={(e) => onPlayTagsChange(e.target.value)}
                   placeholder="e.g., Red Zone, 3rd&Short"
-                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                  className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
                 />
               </div>
             </div>
           </div>
 
           {/* Confidence */}
-          <div className="bg-surface-secondary/30 rounded-lg p-spacing-md">
+          <div className="bg-secondary/30 rounded-lg p-md">
             <Typography
               variant="label-lg"
-              className="block mb-spacing-sm text-primary"
+              className="block mb-sm text-primary"
             >
               Confidence Level
             </Typography>
-            <div className="space-y-spacing-sm">
+            <div className="space-y-sm">
               <div className="flex items-center justify-between">
                 <Typography variant="body-sm" className="text-secondary">
                   How confident are you in this play?
                 </Typography>
-                <span className="text-sm font-medium text-primary bg-surface-primary px-spacing-xs py-spacing-xs rounded-lg">
+                <span className="text-sm font-medium text-primary bg-primary px-xs py-xs rounded-lg">
                   {confidence}%
                 </span>
               </div>
@@ -355,7 +355,7 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                 max="100"
                 value={confidence}
                 onChange={(e) => onConfidenceChange(Number(e.target.value))}
-                className="w-full h-2 bg-surface-muted rounded-lg appearance-none cursor-pointer"
+                className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer"
               />
               <div className="flex justify-between text-xs text-muted">
                 <span>Low</span>
@@ -366,15 +366,15 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
           </div>
 
           {/* Tags & Metadata */}
-          <div className="bg-surface-secondary/30 rounded-lg p-spacing-md">
+          <div className="bg-secondary/30 rounded-lg p-md">
             <Typography
               variant="label-lg"
-              className="flex items-center mb-spacing-sm text-primary"
+              className="flex items-center mb-sm text-primary"
             >
-              <Icon name="tag" className="h-4 w-4 mr-spacing-xs" />
+              <Icon name="tag" className="h-4 w-4 mr-xs" />
               Tags & Metadata
             </Typography>
-            <div className="space-y-spacing-md">
+            <div className="space-y-md">
               {/* Play Variation Tags */}
               <TagInput
                 label="Play Variations"
@@ -424,18 +424,18 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
           </div>
 
           {/* Additional Info */}
-          <div className="bg-surface-secondary/30 rounded-lg p-spacing-md">
+          <div className="bg-secondary/30 rounded-lg p-md">
             <Typography
               variant="label-lg"
-              className="block mb-spacing-sm text-primary"
+              className="block mb-sm text-primary"
             >
               Additional Information
             </Typography>
-            <div className="space-y-spacing-sm">
+            <div className="space-y-sm">
               <div>
                 <Typography
                   variant="label-md"
-                  className="block mb-spacing-xs text-secondary"
+                  className="block mb-xs text-secondary"
                 >
                   One Word Call
                 </Typography>
@@ -444,13 +444,13 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                   value={oneWordPlay}
                   onChange={(e) => onOneWordPlayChange(e.target.value)}
                   placeholder="e.g., POWER, SLANT"
-                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                  className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
                 />
               </div>
               <div>
                 <Typography
                   variant="label-md"
-                  className="block mb-spacing-xs text-secondary"
+                  className="block mb-xs text-secondary"
                 >
                   Wristband Number
                 </Typography>
@@ -459,13 +459,13 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                   value={wristbandNumber}
                   onChange={(e) => onWristbandNumberChange(e.target.value)}
                   placeholder="e.g., 23, 8A, Q12"
-                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+                  className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
                 />
               </div>
               <div>
                 <Typography
                   variant="label-md"
-                  className="block mb-spacing-xs text-secondary"
+                  className="block mb-xs text-secondary"
                 >
                   Description
                 </Typography>
@@ -474,7 +474,7 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                   onChange={(e) => onDescriptionChange(e.target.value)}
                   placeholder="Brief description of the play..."
                   rows={2}
-                  className="w-full px-spacing-sm py-spacing-xs text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0 resize-none"
+                  className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0 resize-none"
                 />
               </div>
             </div>

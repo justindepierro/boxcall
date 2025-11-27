@@ -88,40 +88,40 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
   return (
     <div
       id={`play-details-${play.id}`}
-      className="mt-spacing-sm pt-spacing-sm divider-t space-y-spacing-sm"
+      className="mt-sm pt-sm divider-t space-y-sm"
       role="region"
       aria-label={`Details for ${play.play_name}`}
     >
       {/* Only render badge row if there are badges to show */}
       {(phaseLabel || (optimisticPlay.one_word_play && !showOneWordCalls)) && (
-        <div className="flex flex-wrap items-center gap-spacing-xs">
+        <div className="flex flex-wrap items-center gap-xs">
           {phaseLabel && (
-            <span className="px-spacing-xs py-spacing-xs bg-warning-500 text-primary rounded-full text-2xs font-semibold uppercase border border-warning-600">
+            <span className="px-xs py-xs bg-warning-500 text-primary rounded-full text-2xs font-semibold uppercase border border-warning-600">
               {phaseLabel}
             </span>
           )}
           {optimisticPlay.one_word_play && !showOneWordCalls && (
-            <span className="px-spacing-xs py-spacing-xs bg-electric-100 text-electric-800 border border-electric-200 rounded-full text-xs font-medium">
+            <span className="px-xs py-xs bg-electric-100 text-electric-800 border border-electric-200 rounded-full text-xs font-medium">
               Code: {optimisticPlay.one_word_play.toUpperCase()}
             </span>
           )}
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-spacing-md">
-        <div className="surface-subtle rounded-lg p-spacing-sm">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-md">
+        <div className="bg-subtle rounded-lg p-sm">
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-xssssssssrimary flex items-center mb-spacing-sm"
+            className="text-xssssssssrimary flex items-center mb-sm"
           >
-            <Icon name="target" className="h-4 w-4 mr-spacing-xs" /> Formation
+            <Icon name="target" className="h-4 w-4 mr-xs" /> Formation
           </Typography>
           <DragDropContext onDragEnd={handleFormationDragEnd}>
             <Droppable droppableId="formation-fields">
               {(provided) => (
                 <dl
-                  className="space-y-spacing-xs text-sm"
+                  className="space-y-xs text-sm"
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                 >
@@ -141,13 +141,13 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
-                            className={`p-spacing-xs rounded transition-all duration-150 ${
+                            className={`p-xs rounded transition-all duration-150 ${
                               snapshot.isDragging
                                 ? "bg-surface-hover shadow-md scale-[1.02]"
                                 : "hover:bg-surface-hover"
                             }`}
                           >
-                            <div className="flex items-center gap-spacing-xs mb-spacing-xs">
+                            <div className="flex items-center gap-xs mb-xs">
                               <div
                                 {...provided.dragHandleProps}
                                 className="cursor-grab active:cursor-grabbing text-tertiary hover:text-secondary transition-colors"
@@ -170,7 +170,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                                 onClick={() =>
                                   toggleFieldVisibility(fieldKey, "formation")
                                 }
-                                className="flex-shrink-0 p-spacing-xs rounded-lg hover:bg-surface-hover text-tertiary hover:text-secondary transition-colors ml-auto"
+                                className="flex-shrink-0 p-xs rounded-lg hover:bg-surface-hover text-tertiary hover:text-secondary transition-colors ml-auto"
                                 title={
                                   isVisible
                                     ? "Hide from display name"
@@ -202,13 +202,13 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           </DragDropContext>
         </div>
 
-        <div className="surface-subtle rounded-lg p-spacing-sm">
+        <div className="bg-subtle rounded-lg p-sm">
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-xssssssssrimary flex items-center mb-spacing-sm"
+            className="text-xssssssssrimary flex items-center mb-sm"
           >
-            <Icon name="hash" className="h-4 w-4 mr-spacing-xs" /> Play Details
+            <Icon name="hash" className="h-4 w-4 mr-xs" /> Play Details
           </Typography>
           <DragDropContext onDragEnd={handlePlayDetailsDragEnd}>
             <Droppable droppableId="play-details">
@@ -216,7 +216,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 <div
                   {...provided.droppableProps}
                   ref={provided.innerRef}
-                  className="space-y-spacing-xs text-sm"
+                  className="space-y-xs text-sm"
                 >
                   {playDetailsFieldOrder.map((fieldKey, index) => {
                     const field =
@@ -236,13 +236,13 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
-                            className={`p-spacing-xs rounded transition-all duration-150 ${
+                            className={`p-xs rounded transition-all duration-150 ${
                               snapshot.isDragging
                                 ? "bg-surface-hover shadow-md scale-[1.02]"
                                 : "hover:bg-surface-hover"
                             }`}
                           >
-                            <div className="flex items-center gap-spacing-sm mb-spacing-xs">
+                            <div className="flex items-center gap-sm mb-xs">
                               <div
                                 {...provided.dragHandleProps}
                                 className="cursor-grab active:cursor-grabbing text-tertiary hover:text-secondary transition-colors"
@@ -265,7 +265,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                                 onClick={() =>
                                   toggleFieldVisibility(fieldKey, "playDetails")
                                 }
-                                className="flex-shrink-0 p-spacing-xs rounded-lg hover:bg-surface-hover text-tertiary hover:text-secondary transition-colors ml-auto"
+                                className="flex-shrink-0 p-xs rounded-lg hover:bg-surface-hover text-tertiary hover:text-secondary transition-colors ml-auto"
                                 title={
                                   isVisible
                                     ? "Hide from display name"
@@ -297,17 +297,17 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           </DragDropContext>
         </div>
 
-        <div className="surface-subtle rounded-lg p-spacing-sm">
+        <div className="bg-subtle rounded-lg p-sm">
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-xssssssssrimary flex items-center mb-spacing-sm"
+            className="text-xssssssssrimary flex items-center mb-sm"
           >
-            <Icon name="settings" className="h-4 w-4 mr-spacing-xs" />{" "}
+            <Icon name="settings" className="h-4 w-4 mr-xs" />{" "}
             Preferences
           </Typography>
-          <dl className="space-y-spacing-sm text-sm">
-            <div className="flex items-center gap-spacing-sm">
+          <dl className="space-y-sm text-sm">
+            <div className="flex items-center gap-sm">
               <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
                 Down
               </dt>
@@ -322,7 +322,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 />
               </dd>
             </div>
-            <div className="flex items-center gap-spacing-sm">
+            <div className="flex items-center gap-sm">
               <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
                 Distance
               </dt>
@@ -337,7 +337,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 />
               </dd>
             </div>
-            <div className="flex items-center gap-spacing-sm">
+            <div className="flex items-center gap-sm">
               <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
                 Hash
               </dt>
@@ -352,7 +352,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 />
               </dd>
             </div>
-            <div className="flex items-center gap-spacing-sm">
+            <div className="flex items-center gap-sm">
               <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
                 Coverage
               </dt>
@@ -365,7 +365,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 />
               </dd>
             </div>
-            <div className="flex items-center gap-spacing-sm">
+            <div className="flex items-center gap-sm">
               <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
                 Front
               </dt>
@@ -381,17 +381,17 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           </dl>
         </div>
 
-        <div className="surface-subtle rounded-lg p-spacing-sm">
+        <div className="bg-subtle rounded-lg p-sm">
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-xssssssssrimary flex items-center mb-spacing-sm"
+            className="text-xssssssssrimary flex items-center mb-sm"
           >
-            <Icon name="clock" className="h-4 w-4 mr-spacing-xs" /> Usage &
+            <Icon name="clock" className="h-4 w-4 mr-xs" /> Usage &
             Stats
           </Typography>
-          <dl className="space-y-spacing-xs text-sm">
-            <div className="flex items-center gap-spacing-sm">
+          <dl className="space-y-xs text-sm">
+            <div className="flex items-center gap-sm">
               <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-28 text-xs">
                 Times Called
               </dt>
@@ -399,7 +399,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 {play.times_called}
               </dd>
             </div>
-            <div className="flex items-center gap-spacing-sm">
+            <div className="flex items-center gap-sm">
               <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-28 text-xs">
                 Times Successful
               </dt>
@@ -408,7 +408,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               </dd>
             </div>
             {play.last_used_at && (
-              <div className="flex items-center gap-spacing-sm">
+              <div className="flex items-center gap-sm">
                 <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-28 text-xs">
                   Last Used
                 </dt>
@@ -421,13 +421,13 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
         </div>
       </div>
 
-      <div className="surface-subtle rounded-lg p-spacing-md">
+      <div className="bg-subtle rounded-lg p-md">
         <Typography
           variant="label-lg"
           as="h4"
-          className="text-xssssssssrimary flex items-center mb-spacing-md"
+          className="text-xssssssssrimary flex items-center mb-md"
         >
-          <Icon name="file" className="h-4 w-4 mr-spacing-xs" /> Notes
+          <Icon name="file" className="h-4 w-4 mr-xs" /> Notes
         </Typography>
         <InlineEditField
           value={optimisticPlay.notes || ""}
@@ -439,12 +439,12 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
         />
       </div>
 
-      <div className="surface-subtle rounded-lg p-spacing-sm">
+      <div className="bg-subtle rounded-lg p-sm">
         <div className="flex items-center justify-between">
           <Typography
             variant="label-lg"
             as="h4"
-            className="text-xssssssssrimary mb-spacing-xs"
+            className="text-xssssssssrimary mb-xs"
           >
             Tags & Roles
           </Typography>
@@ -457,11 +457,11 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
             {showTagsEditor ? "Hide" : "Edit"}
           </Button>
         </div>
-        <div className="mt-spacing-xs flex flex-wrap gap-spacing-xs">
+        <div className="mt-xs flex flex-wrap gap-xs">
           {summaryChips.slice(0, 8).map((chip) => (
             <span
               key={chip}
-              className="px-spacing-xs py-spacing-xs text-xs rounded-lg bg-surface-secondary text-xssssssssrimary"
+              className="px-xs py-xs text-xs rounded-lg bg-secondary text-xssssssssrimary"
             >
               {chip}
             </span>
@@ -473,18 +473,18 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           )}
         </div>
         {showTagsEditor && (
-          <div className="mt-spacing-sm grid grid-cols-1 md:grid-cols-3 gap-spacing-sm">
+          <div className="mt-sm grid grid-cols-1 md:grid-cols-3 gap-sm">
             <div>
-              <div className="text-xsssssssss text-secondary mb-spacing-xs">
+              <div className="text-xsssssssss text-secondary mb-xs">
                 Positions
               </div>
-              <div className="flex flex-wrap gap-spacing-xs">
+              <div className="flex flex-wrap gap-xs">
                 {flags.positions.map((pos) => (
                   <Button
                     key={pos}
                     size="xs"
                     variant="subtle"
-                    className="!h-auto px-spacing-xs py-spacing-xs text-xs"
+                    className="!h-auto px-xs py-xs text-xs"
                     onClick={() =>
                       setFlags(removeFlag(play.id, "positions", pos))
                     }
@@ -494,11 +494,11 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                   </Button>
                 ))}
               </div>
-              <div className="mt-spacing-xs flex items-center gap-spacing-xs">
+              <div className="mt-xs flex items-center gap-xs">
                 <select
                   value={newPosition}
                   onChange={(e) => setNewPosition(e.target.value)}
-                  className="border-subtle rounded-lg px-2 py-1 text-xsssssssss"
+                  className="border-muted rounded-lg px-2 py-1 text-xsssssssss"
                 >
                   <option value="">Select…</option>
                   {POSITION_OPTIONS.map((opt: string) => (
@@ -522,16 +522,16 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               </div>
             </div>
             <div>
-              <div className="text-xsssssssss text-secondary mb-spacing-xs">
+              <div className="text-xsssssssss text-secondary mb-xs">
                 Players
               </div>
-              <div className="flex flex-wrap gap-spacing-xs">
+              <div className="flex flex-wrap gap-xs">
                 {flags.players.map((pl) => (
                   <Button
                     key={pl}
                     size="xs"
                     variant="subtle"
-                    className="!h-auto px-spacing-xs py-spacing-xs text-xs"
+                    className="!h-auto px-xs py-xs text-xs"
                     onClick={() => setFlags(removeFlag(play.id, "players", pl))}
                     title="Remove"
                   >
@@ -539,12 +539,12 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                   </Button>
                 ))}
               </div>
-              <div className="mt-spacing-xs flex items-center gap-spacing-xs">
+              <div className="mt-xs flex items-center gap-xs">
                 <input
                   value={newPlayer}
                   onChange={(e) => setNewPlayer(e.target.value)}
                   placeholder="Add player (e.g., Z, WR1)"
-                  className="border-subtle rounded-lg px-2 py-1 text-xsssssssss flex-1"
+                  className="border-muted rounded-lg px-2 py-1 text-xsssssssss flex-1"
                 />
                 <Button
                   size="xs"
@@ -561,16 +561,16 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               </div>
             </div>
             <div>
-              <div className="text-xsssssssss text-secondary mb-spacing-xs">
+              <div className="text-xsssssssss text-secondary mb-xs">
                 Flags
               </div>
-              <div className="flex flex-wrap gap-spacing-xs">
+              <div className="flex flex-wrap gap-xs">
                 {flags.flags.map((fl) => (
                   <Button
                     key={fl}
                     size="xs"
                     variant="subtle"
-                    className="!h-auto px-spacing-xs py-spacing-xs text-xs"
+                    className="!h-auto px-xs py-xs text-xs"
                     onClick={() => setFlags(removeFlag(play.id, "flags", fl))}
                     title="Remove"
                   >
@@ -578,12 +578,12 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                   </Button>
                 ))}
               </div>
-              <div className="mt-spacing-xs flex items-center gap-spacing-xs">
+              <div className="mt-xs flex items-center gap-xs">
                 <input
                   value={newFlag}
                   onChange={(e) => setNewFlag(e.target.value)}
                   placeholder="Add flag (e.g., Red Zone, 3rd&Short)"
-                  className="border-subtle rounded-lg px-2 py-1 text-xsssssssss flex-1"
+                  className="border-muted rounded-lg px-2 py-1 text-xsssssssss flex-1"
                 />
                 <Button
                   size="xs"
@@ -604,15 +604,15 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
       </div>
 
       {/* Play Diagram Section */}
-      <div className="mt-spacing-md">
+      <div className="mt-md">
         <Typography
           variant="label-lg"
           as="h4"
-          className="text-primary flex items-center mb-spacing-sm"
+          className="text-primary flex items-center mb-sm"
         >
-          <Icon name="camera" className="h-4 w-4 mr-spacing-xs" /> Play Diagram
+          <Icon name="camera" className="h-4 w-4 mr-xs" /> Play Diagram
         </Typography>
-        <div className="surface-subtle rounded-lg p-spacing-sm">
+        <div className="bg-subtle rounded-lg p-sm">
           <ImageUpload
             value={optimisticPlay.diagram_image_url || undefined}
             onChange={async (url) => {

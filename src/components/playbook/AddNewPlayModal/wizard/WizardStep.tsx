@@ -85,7 +85,7 @@ export const WizardStep: React.FC<WizardStepProps> = ({
           </Typography>
 
           {optional && (
-            <span className="px-2 py-0.5 bg-surface-muted text-muted text-xs font-medium rounded">
+            <span className="px-2 py-0.5 bg-muted text-muted text-xs font-medium rounded">
               Optional
             </span>
           )}

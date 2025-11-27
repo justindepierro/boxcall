@@ -55,7 +55,7 @@ export function ConflictDialog<T extends Record<string, unknown>>({
         if (e.target === e.currentTarget) conflict.onCancel();
       }}
     >
-      <div className="bg-surface-primary border rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-primary border rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="bg-warning-50 border-b border-warning-200 p-4">
           <div className="flex items-start justify-between">
@@ -110,7 +110,7 @@ export function ConflictDialog<T extends Record<string, unknown>>({
               Resolution Strategy:
             </label>
             <div className="space-y-2">
-              <label className="flex items-start gap-3 p-3 border rounded-lg hover:bg-surface-secondary cursor-pointer">
+              <label className="flex items-start gap-3 p-3 border rounded-lg hover:bg-secondary cursor-pointer">
                 <input
                   type="radio"
                   name="strategy"
@@ -133,7 +133,7 @@ export function ConflictDialog<T extends Record<string, unknown>>({
                 </div>
               </label>
 
-              <label className="flex items-start gap-3 p-3 border rounded-lg hover:bg-surface-secondary cursor-pointer">
+              <label className="flex items-start gap-3 p-3 border rounded-lg hover:bg-secondary cursor-pointer">
                 <input
                   type="radio"
                   name="strategy"
@@ -156,7 +156,7 @@ export function ConflictDialog<T extends Record<string, unknown>>({
                 </div>
               </label>
 
-              <label className="flex items-start gap-3 p-3 border rounded-lg hover:bg-surface-secondary cursor-pointer">
+              <label className="flex items-start gap-3 p-3 border rounded-lg hover:bg-secondary cursor-pointer">
                 <input
                   type="radio"
                   name="strategy"
@@ -188,7 +188,7 @@ export function ConflictDialog<T extends Record<string, unknown>>({
             {conflict.conflicts.map((fieldConflict) => (
               <div
                 key={fieldConflict.field}
-                className="border rounded-lg p-4 bg-surface-secondary"
+                className="border rounded-lg p-4 bg-secondary"
               >
                 <div className="font-medium text-primary mb-3">
                   {getFieldLabel(fieldConflict.field)}
@@ -200,7 +200,7 @@ export function ConflictDialog<T extends Record<string, unknown>>({
                     <div className="text-xs font-medium text-secondary mb-1">
                       Your Version:
                     </div>
-                    <div className="bg-surface-primary border rounded p-2 text-sm font-mono text-primary break-all">
+                    <div className="bg-primary border rounded p-2 text-sm font-mono text-primary break-all">
                       {formatValue(fieldConflict.yourValue)}
                     </div>
                     {selectedStrategy === "merge" && (
@@ -223,7 +223,7 @@ export function ConflictDialog<T extends Record<string, unknown>>({
                     <div className="text-xs font-medium text-secondary mb-1">
                       Their Version:
                     </div>
-                    <div className="bg-surface-primary border rounded p-2 text-sm font-mono text-primary break-all">
+                    <div className="bg-primary border rounded p-2 text-sm font-mono text-primary break-all">
                       {formatValue(fieldConflict.theirValue)}
                     </div>
                     {selectedStrategy === "merge" && (
@@ -247,7 +247,7 @@ export function ConflictDialog<T extends Record<string, unknown>>({
         </div>
 
         {/* Footer */}
-        <div className="border-t bg-surface-secondary p-4 flex items-center justify-between">
+        <div className="border-t bg-secondary p-4 flex items-center justify-between">
           <div className="text-sm text-secondary">
             Version conflict: Your v{conflict.yourVersion} vs Server v
             {conflict.currentVersion}
@@ -256,7 +256,7 @@ export function ConflictDialog<T extends Record<string, unknown>>({
           <div className="flex gap-2">
             <button
               onClick={conflict.onCancel}
-              className="px-4 py-2 border rounded-lg text-secondary hover:bg-surface-muted"
+              className="px-4 py-2 border rounded-lg text-secondary hover:bg-muted"
             >
               Cancel
             </button>

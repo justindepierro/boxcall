@@ -75,15 +75,15 @@ export const IncompleteFormationsPanel: React.FC<
   // Loading skeleton
   if (loading) {
     return (
-      <div className="p-spacing-lg space-y-spacing-md">
+      <div className="p-lg space-y-md">
         {onBack && (
-          <div className="h-8 w-48 bg-surface-subtle rounded animate-pulse"></div>
+          <div className="h-8 w-48 bg-subtle rounded animate-pulse"></div>
         )}
-        <div className="h-24 bg-surface-subtle rounded animate-pulse"></div>
-        <div className="space-y-spacing-sm">
-          <div className="h-8 bg-surface-subtle rounded w-1/3 animate-pulse"></div>
-          <div className="h-32 bg-surface-subtle rounded animate-pulse"></div>
-          <div className="h-32 bg-surface-subtle rounded animate-pulse"></div>
+        <div className="h-24 bg-subtle rounded animate-pulse"></div>
+        <div className="space-y-sm">
+          <div className="h-8 bg-subtle rounded w-1/3 animate-pulse"></div>
+          <div className="h-32 bg-subtle rounded animate-pulse"></div>
+          <div className="h-32 bg-subtle rounded animate-pulse"></div>
         </div>
         <Typography variant="body-sm" className="text-muted text-center">
           Loading incomplete formations...
@@ -95,27 +95,27 @@ export const IncompleteFormationsPanel: React.FC<
   // Empty state
   if (formations.length === 0) {
     return (
-      <div className="p-spacing-lg">
+      <div className="p-lg">
         {onBack && (
           <Button
             variant="ghost"
             size="sm"
             onClick={onBack}
-            className="mb-spacing-md"
+            className="mb-md"
           >
-            <ArrowLeft className="w-4 h-4 mr-spacing-xs" />
+            <ArrowLeft className="w-4 h-4 mr-xs" />
             Back to Formation Details
           </Button>
         )}
 
-        <div className="flex flex-col items-center justify-center py-spacing-xl gap-spacing-md text-center">
+        <div className="flex flex-col items-center justify-center py-xl gap-md text-center">
           <div className="w-16 h-16 rounded-full bg-success-50 flex items-center justify-center">
             <CheckCircle className="w-8 h-8 text-success-600" />
           </div>
           <div>
             <Typography
               variant="headline-sm"
-              className="text-primary mb-spacing-xs"
+              className="text-primary mb-xs"
             >
               All formations are complete! 🎉
             </Typography>
@@ -129,29 +129,29 @@ export const IncompleteFormationsPanel: React.FC<
   }
 
   return (
-    <div className="p-spacing-lg space-y-spacing-lg">
+    <div className="p-lg space-y-lg">
       {/* Back button */}
       {onBack && (
         <Button
           variant="ghost"
           size="sm"
           onClick={onBack}
-          className="mb-spacing-md"
+          className="mb-md"
         >
-          <ArrowLeft className="w-4 h-4 mr-spacing-xs" />
+          <ArrowLeft className="w-4 h-4 mr-xs" />
           Back to Formation Details
         </Button>
       )}
 
       {/* Header */}
-      <div className="flex items-start gap-spacing-md">
+      <div className="flex items-start gap-md">
         <div className="w-12 h-12 rounded-full bg-warning-50 flex items-center justify-center flex-shrink-0">
           <AlertCircle className="w-6 h-6 text-warning-600" />
         </div>
         <div className="flex-1">
           <Typography
             variant="headline-sm"
-            className="text-primary mb-spacing-xs"
+            className="text-primary mb-xs"
           >
             Incomplete Formations ({formations.length})
           </Typography>
@@ -165,27 +165,27 @@ export const IncompleteFormationsPanel: React.FC<
 
       {/* Needs Work Section */}
       {needsWork.length > 0 && (
-        <div className="space-y-spacing-md">
-          <div className="flex items-center gap-spacing-sm">
+        <div className="space-y-md">
+          <div className="flex items-center gap-sm">
             <div className="w-2 h-2 rounded-full bg-warning-500"></div>
             <Typography variant="label-md" className="text-secondary">
               Needs Work ({needsWork.length})
             </Typography>
           </div>
 
-          <div className="space-y-spacing-sm">
+          <div className="space-y-sm">
             {needsWork.map((formation) => {
               const missingFields = getMissingFields(formation);
 
               return (
                 <div
                   key={formation.id}
-                  className="bg-surface-primary border border-warning-200 rounded-lg p-spacing-md hover:shadow-md transition-shadow"
+                  className="bg-primary border border-warning-200 rounded-lg p-md hover:shadow-md transition-shadow"
                 >
-                  <div className="flex items-start justify-between gap-spacing-md">
-                    <div className="flex-1 space-y-spacing-sm">
+                  <div className="flex items-start justify-between gap-md">
+                    <div className="flex-1 space-y-sm">
                       {/* Formation name and badge */}
-                      <div className="flex items-center gap-spacing-sm">
+                      <div className="flex items-center gap-sm">
                         <FormationBadge
                           formationId={formation.id}
                           direction={formation.direction}
@@ -200,7 +200,7 @@ export const IncompleteFormationsPanel: React.FC<
 
                       {/* Missing fields */}
                       {missingFields.length > 0 && (
-                        <div className="flex items-center gap-spacing-xs flex-wrap">
+                        <div className="flex items-center gap-xs flex-wrap">
                           <Typography
                             variant="body-xs"
                             className="text-muted"
@@ -210,7 +210,7 @@ export const IncompleteFormationsPanel: React.FC<
                           {missingFields.map((field, idx) => (
                             <span
                               key={idx}
-                              className="px-spacing-xs py-spacing-xxs bg-warning-50 text-warning-700 text-xs rounded"
+                              className="px-xs py-spacing-xxs bg-warning-50 text-warning-700 text-xs rounded"
                             >
                               {field}
                             </span>
@@ -219,7 +219,7 @@ export const IncompleteFormationsPanel: React.FC<
                       )}
 
                       {/* Current metadata */}
-                      <div className="flex items-center gap-spacing-md text-xs text-muted">
+                      <div className="flex items-center gap-md text-xs text-muted">
                         {formation.personnel_name && (
                           <span>👥 {formation.personnel_name}</span>
                         )}
@@ -241,7 +241,7 @@ export const IncompleteFormationsPanel: React.FC<
                       size="sm"
                       onClick={() => onFormationEdit?.(formation)}
                     >
-                      <Edit3 className="w-4 h-4 mr-spacing-xs" />
+                      <Edit3 className="w-4 h-4 mr-xs" />
                       Edit
                     </Button>
                   </div>
@@ -254,27 +254,27 @@ export const IncompleteFormationsPanel: React.FC<
 
       {/* Incomplete Section */}
       {incomplete.length > 0 && (
-        <div className="space-y-spacing-md">
-          <div className="flex items-center gap-spacing-sm">
+        <div className="space-y-md">
+          <div className="flex items-center gap-sm">
             <div className="w-2 h-2 rounded-full bg-error-500"></div>
             <Typography variant="label-md" className="text-secondary">
               Incomplete ({incomplete.length})
             </Typography>
           </div>
 
-          <div className="space-y-spacing-sm">
+          <div className="space-y-sm">
             {incomplete.map((formation) => {
               const missingFields = getMissingFields(formation);
 
               return (
                 <div
                   key={formation.id}
-                  className="bg-surface-primary border border-error-200 rounded-lg p-spacing-md hover:shadow-md transition-shadow"
+                  className="bg-primary border border-error-200 rounded-lg p-md hover:shadow-md transition-shadow"
                 >
-                  <div className="flex items-start justify-between gap-spacing-md">
-                    <div className="flex-1 space-y-spacing-sm">
+                  <div className="flex items-start justify-between gap-md">
+                    <div className="flex-1 space-y-sm">
                       {/* Formation name and badge */}
-                      <div className="flex items-center gap-spacing-sm">
+                      <div className="flex items-center gap-sm">
                         <FormationBadge
                           formationId={formation.id}
                           direction={formation.direction}
@@ -289,7 +289,7 @@ export const IncompleteFormationsPanel: React.FC<
 
                       {/* Missing fields */}
                       {missingFields.length > 0 && (
-                        <div className="flex items-center gap-spacing-xs flex-wrap">
+                        <div className="flex items-center gap-xs flex-wrap">
                           <Typography
                             variant="body-xs"
                             className="text-muted"
@@ -299,7 +299,7 @@ export const IncompleteFormationsPanel: React.FC<
                           {missingFields.map((field, idx) => (
                             <span
                               key={idx}
-                              className="px-spacing-xs py-spacing-xxs bg-error-50 text-error-700 text-xs rounded"
+                              className="px-xs py-spacing-xxs bg-error-50 text-error-700 text-xs rounded"
                             >
                               {field}
                             </span>
@@ -308,7 +308,7 @@ export const IncompleteFormationsPanel: React.FC<
                       )}
 
                       {/* Current metadata */}
-                      <div className="flex items-center gap-spacing-md text-xs text-muted">
+                      <div className="flex items-center gap-md text-xs text-muted">
                         {formation.personnel_name && (
                           <span>👥 {formation.personnel_name}</span>
                         )}
@@ -330,7 +330,7 @@ export const IncompleteFormationsPanel: React.FC<
                       size="sm"
                       onClick={() => onFormationEdit?.(formation)}
                     >
-                      <Edit3 className="w-4 h-4 mr-spacing-xs" />
+                      <Edit3 className="w-4 h-4 mr-xs" />
                       Edit
                     </Button>
                   </div>
@@ -342,7 +342,7 @@ export const IncompleteFormationsPanel: React.FC<
       )}
 
       {/* Help text */}
-      <div className="surface-subtle border border-subtle rounded-md p-spacing-md">
+      <div className="bg-subtle border border-muted rounded-md p-md">
         <Typography variant="body-sm" className="text-muted">
           💡 <strong>Tip:</strong> Click "Edit" to add missing information.
           Complete metadata helps with searching, filtering, and playbook

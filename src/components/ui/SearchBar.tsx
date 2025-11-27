@@ -56,7 +56,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           className={`absolute inset-y-0 right-0 flex items-center text-muted hover:text-primary transition-colors active:scale-95 ${
             isMobile
               ? "pr-4 w-12 h-12 my-auto"
-              : "pr-3 w-10 h-10 my-auto rounded-lg hover:bg-surface-secondary"
+              : "pr-3 w-10 h-10 my-auto rounded-lg hover:bg-secondary"
           }`}
           type="button"
           aria-label="Clear search"

@@ -63,7 +63,7 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
       Run: "text-success-700 bg-success-100 border border-success-200",
       RPO: "text-warning-700 bg-warning-100 border border-warning-200",
       "Play Action": "text-info-700 bg-info-100 border border-info-200",
-    }[play.p_type] || "text-secondary bg-surface-muted border border-border";
+    }[play.p_type] || "text-secondary bg-muted border border-border";
 
   return (
     <div
@@ -72,13 +72,13 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
         flex items-start gap-4
         w-full
         px-4 py-4
-        bg-surface-primary
+        bg-primary
         border border-transparent
         rounded-xl
         cursor-pointer
         transition-all duration-200
         hover:border-primary-200
-        hover:bg-surface-secondary/60
+        hover:bg-secondary/60
         hover:shadow-md
         active:scale-[0.98]
         min-h-28
@@ -95,7 +95,7 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
       }}
     >
       {/* Play Thumbnail */}
-      <div className="w-18 h-18 flex-shrink-0 rounded-xl overflow-hidden bg-surface-muted shadow-inner">
+      <div className="w-18 h-18 flex-shrink-0 rounded-xl overflow-hidden bg-muted shadow-inner">
         {play.diagram_url ? (
           <img
             src={play.diagram_url}
@@ -122,12 +122,12 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
         {/* Formation & Personnel badges */}
         <div className="flex flex-wrap gap-2">
           {formation && (
-            <span className="inline-flex items-center rounded-full bg-surface-secondary px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-secondary">
+            <span className="inline-flex items-center rounded-full bg-secondary px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-secondary">
               {formation}
             </span>
           )}
           {personnel && (
-            <span className="inline-flex items-center rounded-full bg-surface-secondary px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-secondary">
+            <span className="inline-flex items-center rounded-full bg-secondary px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-secondary">
               {personnel}
             </span>
           )}
@@ -166,8 +166,8 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
             flex items-center justify-center
             w-12 h-12
             rounded-xl
-            bg-surface-secondary/90
-            hover:bg-surface-muted
+            bg-secondary/90
+            hover:bg-muted
             active:scale-95
             transition-all duration-150
             "
@@ -184,8 +184,8 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
             flex items-center justify-center
             w-12 h-12
             rounded-xl
-            bg-surface-secondary/90
-            hover:bg-surface-muted
+            bg-secondary/90
+            hover:bg-muted
             active:scale-95
             transition-all duration-150
           "

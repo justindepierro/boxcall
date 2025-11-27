@@ -134,7 +134,7 @@ const AboutPage: React.FC = () => {
       </div>
 
       {/* Contact CTA */}
-      <div className="text-center surface-subtle dark:bg-secondary rounded-lg p-8">
+      <div className="text-center bg-subtle dark:bg-secondary rounded-lg p-8">
         <Typography variant="headline-sm" as="h3" className="mb-4">
           Ready to Transform Your Coaching?
         </Typography>
@@ -145,13 +145,13 @@ const AboutPage: React.FC = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a
             href="/create-team"
-            className="inline-flex items-center justify-center px-6 py-3 border border-surface-primary text-base font-medium rounded-lg text-primary bg-interaction-jade hover:bg-brand-jade-dark transition-colors"
+            className="inline-flex items-center justify-center px-6 py-3 border border-bg-primary text-base font-medium rounded-lg text-primary bg-interaction-jade hover:bg-brand-jade-dark transition-colors"
           >
             Start Your Team
           </a>
           <a
             href="/contact"
-            className="inline-flex items-center justify-center px-6 py-3 border-subtle text-base font-medium rounded-lg text-primary bg-primary surface-subtle-hover transition-colors"
+            className="inline-flex items-center justify-center px-6 py-3 border-muted text-base font-medium rounded-lg text-primary bg-primary hover:bg-muted transition-colors"
           >
             Contact Us
           </a>

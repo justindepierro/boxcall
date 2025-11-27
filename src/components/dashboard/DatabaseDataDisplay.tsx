@@ -32,7 +32,7 @@ export const DatabaseDataDisplay: React.FC = () => {
 
   if (showDevModeWarning) {
     return (
-      <Card className="p-6 bg-surface-primary border-subtle surface-subtle">
+      <Card className="p-6 bg-primary border-muted bg-subtle">
         <div className="flex items-center">
           <Icon name="warning" size="md" color="warning" className="mr-3" />
           <div>
@@ -58,7 +58,7 @@ export const DatabaseDataDisplay: React.FC = () => {
 
   if (loading) {
     return (
-      <Card className="p-6 bg-surface-primary">
+      <Card className="p-6 bg-primary">
         <div className="flex items-center justify-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-jade-600"></div>
           <Typography variant="body-md" className="ml-3">
@@ -71,7 +71,7 @@ export const DatabaseDataDisplay: React.FC = () => {
 
   if (error) {
     return (
-      <Card className="p-6 bg-surface-primary border-subtle surface-subtle">
+      <Card className="p-6 bg-primary border-muted bg-subtle">
         <div className="flex items-center">
           <Icon name="warning" size="md" color="error" className="mr-3" />
           <div>
@@ -89,7 +89,7 @@ export const DatabaseDataDisplay: React.FC = () => {
 
   if (totalCount === 0) {
     return (
-      <Card className="p-6 bg-surface-primary">
+      <Card className="p-6 bg-primary">
         <div className="text-center py-8">
           <Icon
             name="database"
@@ -114,7 +114,7 @@ export const DatabaseDataDisplay: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Summary Card */}
-      <Card className="p-6 bg-surface-primary bg-gradient-to-r from-surface-success to-surface-info border-subtle">
+      <Card className="p-6 bg-primary bg-gradient-to-r from-bg-success/20 to-bg-info/20 border-muted">
         <div className="flex items-center justify-between">
           <div>
             <Typography
@@ -148,7 +148,7 @@ export const DatabaseDataDisplay: React.FC = () => {
       {/* Data Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 bc-grid-gap">
         {/* Team Selector */}
-        <Card className="p-6 bg-surface-primary">
+        <Card className="p-6 bg-primary">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 bg-jade-100 rounded-lg flex items-center justify-center mr-3">
               <Icon name="users" size="md" color="primary" />
@@ -173,8 +173,8 @@ export const DatabaseDataDisplay: React.FC = () => {
                   size="sm"
                   className={`w-full justify-start px-3 py-3 ${
                     isActive
-                      ? "surface-subtle border border-jade-300 shadow-sm"
-                      : "surface-subtle surface-subtle-hover"
+                      ? "bg-subtle border border-jade-300 shadow-sm"
+                      : "bg-subtle hover:bg-muted"
                   }`}
                 >
                   <div className="flex items-center justify-between w-full">
@@ -202,7 +202,7 @@ export const DatabaseDataDisplay: React.FC = () => {
 
           {/* Selected Team Details */}
           {selectedTeam && (
-            <div className="mt-4 p-4 surface-subtle border border-subtle rounded-lg">
+            <div className="mt-4 p-4 bg-subtle border border-muted rounded-lg">
               <Typography
                 variant="headline-sm"
                 className="text-success900 mb-3"
@@ -234,7 +234,7 @@ export const DatabaseDataDisplay: React.FC = () => {
                     {selectedTeam.season_year}
                   </Typography>
                 </div>
-                <div className="mt-3 pt-2 border-t border-subtle">
+                <div className="mt-3 pt-2 border-t border-muted">
                   <Typography
                     variant="body-xs"
                     className="text-success700"
@@ -254,9 +254,9 @@ export const DatabaseDataDisplay: React.FC = () => {
         </Card>
 
         {/* Playbooks */}
-        <Card className="p-6 bg-surface-primary">
+        <Card className="p-6 bg-primary">
           <div className="flex items-center mb-4">
-            <div className="w-10 h-10 bg-surface-info rounded-lg flex items-center justify-center mr-3">
+            <div className="w-10 h-10 bg-info/20 rounded-lg flex items-center justify-center mr-3">
               <Icon name="book" size="md" color="info" />
             </div>
             <div>
@@ -270,7 +270,7 @@ export const DatabaseDataDisplay: React.FC = () => {
           </div>
           <div className="space-y-3">
             {playbooks.map((playbook) => (
-              <div key={playbook.id} className="p-3 surface-subtle rounded-lg">
+              <div key={playbook.id} className="p-3 bg-subtle rounded-lg">
                 <Typography
                   variant="body-sm"
                   className="font-medium text-primary"
@@ -284,8 +284,8 @@ export const DatabaseDataDisplay: React.FC = () => {
                   <span
                     className={`inline-block px-2 py-1 rounded-lg text-xs ${
                       playbook.is_active
-                        ? "bg-surface-success text-success"
-                        : "surface-subtle text-tertiary"
+                        ? "bg-success/20 text-success"
+                        : "bg-subtle text-tertiary"
                     }`}
                   >
                     {playbook.is_active ? "Active" : "Inactive"}
@@ -297,9 +297,9 @@ export const DatabaseDataDisplay: React.FC = () => {
         </Card>
 
         {/* Plays */}
-        <Card className="p-6 bg-surface-primary">
+        <Card className="p-6 bg-primary">
           <div className="flex items-center mb-4">
-            <div className="w-10 h-10 bg-surface-secondary rounded-lg flex items-center justify-center mr-3">
+            <div className="w-10 h-10 bg-secondary rounded-lg flex items-center justify-center mr-3">
               <Icon name="zap" size="md" color="secondary" />
             </div>
             <div>
@@ -313,7 +313,7 @@ export const DatabaseDataDisplay: React.FC = () => {
           </div>
           <div className="space-y-3 max-h-64 overflow-y-auto">
             {plays.map((play) => (
-              <div key={play.id} className="p-3 surface-subtle rounded-lg">
+              <div key={play.id} className="p-3 bg-subtle rounded-lg">
                 <Typography
                   variant="body-sm"
                   className="font-medium text-primary"
@@ -338,7 +338,7 @@ export const DatabaseDataDisplay: React.FC = () => {
       </div>
 
       {/* Next Steps */}
-      <Card className="p-6 bg-surface-primary surface-subtle border-subtle">
+      <Card className="p-6 bg-primary bg-subtle border-muted">
         <Typography variant="headline-sm" className="text-info mb-3">
           <Icon
             name="rocket"

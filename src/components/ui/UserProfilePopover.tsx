@@ -369,8 +369,8 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
         <div
           ref={popoverRef}
           className={`
-            fixed z-[9999] w-80 rounded-lg shadow-2xl border border-subtle
-            bg-surface-primary/95 backdrop-blur-xl
+            fixed z-[9999] w-80 rounded-lg shadow-2xl border border-muted
+            bg-primary/95 backdrop-blur-xl
             transform transition-all duration-200 ease-out
           `}
           style={{
@@ -407,10 +407,10 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                       <img
                         src={profile.avatar_url}
                         alt={profile.full_name || "User"}
-                        className="w-16 h-16 rounded-full border-3 border-surface-primary object-cover"
+                        className="w-16 h-16 rounded-full border-3 border-bg-primary object-cover"
                       />
                     ) : (
-                      <div className="w-16 h-16 rounded-full border-3 border-surface-primary bg-surface-primary flex items-center justify-center">
+                      <div className="w-16 h-16 rounded-full border-3 border-bg-primary bg-primary flex items-center justify-center">
                         <Typography
                           variant="body-lg"
                           className="text-secondary font-semibold"
@@ -420,7 +420,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                       </div>
                     )}
                     {/* Online status indicator */}
-                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-success-500 rounded-full border-2 border-surface-primary"></div>
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-success-500 rounded-full border-2 border-bg-primary"></div>
                   </div>
 
                   {/* Name and role */}
@@ -448,7 +448,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
               <div className="p-4 space-y-4">
                 {/* Team Role (if teamId provided) */}
                 {teamMember && (
-                  <div className="p-3 bg-surface-secondary rounded-lg">
+                  <div className="p-3 bg-secondary rounded-lg">
                     <div className="flex items-center gap-2 mb-2">
                       {getRoleIcon(teamMember.team_role)}
                       <Typography
@@ -468,7 +468,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
 
                 {/* Player Information (if they're a player) */}
                 {playerInfo && (
-                  <div className="p-3 bg-surface-secondary rounded-lg">
+                  <div className="p-3 bg-secondary rounded-lg">
                     <div className="flex items-center gap-2 mb-3">
                       <Hash className="w-4 h-4 text-blue-500" />
                       <Typography

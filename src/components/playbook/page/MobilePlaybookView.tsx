@@ -97,7 +97,7 @@ export function MobilePlaybookView({
     <>
       {/* Search Bar - FIXED at top (always visible, no scroll needed) */}
       {state.playsCreated > 0 && (
-        <div className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/95 backdrop-blur-md border-b border-muted px-4 py-3 shadow-md">
+        <div className="fixed top-0 left-0 right-0 z-50 bg-primary/95 backdrop-blur-md border-b border-muted px-4 py-3 shadow-md">
           <div className="relative">
             <Icon
               name="search"
@@ -110,7 +110,7 @@ export function MobilePlaybookView({
               onChange={(e) =>
                 dispatch({ type: "SET_SEARCH", query: e.target.value })
               }
-              className="w-full h-12 pl-10 pr-10 bg-surface-secondary border border-subtle rounded-lg text-base text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-jade focus:border-transparent transition-all"
+              className="w-full h-12 pl-10 pr-10 bg-secondary border border-muted rounded-lg text-base text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-jade focus:border-transparent transition-all"
             />
             {/* 🚀 PERFORMANCE: Instant search feedback - shows while debouncing */}
             {state.isSearchPending && state.searchQuery && (
@@ -139,7 +139,7 @@ export function MobilePlaybookView({
                   triggerHapticFeedback("light");
                   dispatch({ type: "SET_SEARCH", query: "" });
                 }}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 flex items-center justify-center hover:bg-surface-tertiary rounded-full transition-colors"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 flex items-center justify-center hover:bg-tertiary rounded-full transition-colors"
                 aria-label="Clear search"
               >
                 <Icon
@@ -263,7 +263,7 @@ export function MobilePlaybookView({
           <PullToRefresh onRefresh={handlePullRefresh}>
             <ErrorBoundary
               fallback={
-                <div className="p-spacing-lg text-center">
+                <div className="p-lg text-center">
                   <Typography variant="body-md" className="text-secondary">
                     Failed to load plays. Please refresh the page.
                   </Typography>
@@ -356,7 +356,7 @@ export function MobilePlaybookView({
         >
           <div className="flex flex-col h-full">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 pb-4 border-b border-subtle">
+            <div className="flex items-center justify-between p-6 pb-4 border-b border-muted">
               <Typography variant="headline-md" className="text-primary">
                 Filters & Search
               </Typography>
@@ -380,7 +380,7 @@ export function MobilePlaybookView({
             </div>
 
             {/* Action Footer - Fixed at Bottom */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 bg-surface-primary border-t border-subtle shadow-lg">
+            <div className="absolute bottom-0 left-0 right-0 p-4 bg-primary border-t border-muted shadow-lg">
               <div className="flex gap-3">
                 <Button
                   onClick={() => {

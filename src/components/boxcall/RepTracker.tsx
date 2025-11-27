@@ -143,7 +143,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
                       ? "bg-success border-success text-white"
                       : isCurrent
                         ? "bg-primary border-primary text-white ring-2 ring-primary/30"
-                        : "bg-surface-secondary border-border text-muted hover:border-primary/50"
+                        : "bg-secondary border-border text-muted hover:border-primary/50"
                   }
                   ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
                 `}
@@ -164,7 +164,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
 
       {/* Optional Notes Section - Phase 12.1 */}
       {showNotes && (
-        <div className="bg-surface-secondary border border-border rounded-lg p-4 space-y-3">
+        <div className="bg-secondary border border-border rounded-lg p-4 space-y-3">
           <div className="flex items-center justify-between">
             <Typography variant="body-sm" className="font-medium">
               Add Notes (Optional)
@@ -195,7 +195,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
                       ${
                         isSelected
                           ? "bg-primary text-white border-primary"
-                          : "bg-surface-primary border-border text-secondary hover:border-primary/50"
+                          : "bg-primary border-border text-secondary hover:border-primary/50"
                       }
                     `}
                   >
@@ -216,7 +216,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
               onChange={(e) => setNotes(e.target.value)}
               placeholder="e.g., QB made great read, RB stumbled at the line..."
               rows={3}
-              className="w-full px-3 py-2 bg-surface-primary border border-border rounded-lg
+              className="w-full px-3 py-2 bg-primary border border-border rounded-lg
                 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
           </div>
@@ -328,7 +328,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
       </div>
 
       {/* Help Text */}
-      <div className="bg-surface-secondary border border-border rounded-lg p-3">
+      <div className="bg-secondary border border-border rounded-lg p-3">
         <div className="flex items-start gap-2">
           <Icon name="info" size="sm" className="text-primary mt-0.5" />
           <Typography variant="body-xs" className="text-secondary">

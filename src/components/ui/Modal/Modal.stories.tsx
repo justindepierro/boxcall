@@ -287,7 +287,7 @@ export const ScrollableContent: Story = {
         </Typography>
 
         {Array.from({ length: 20 }, (_, i) => (
-          <div key={i} className="p-3 bg-surface-secondary rounded">
+          <div key={i} className="p-3 bg-secondary rounded">
             <Typography variant="body-sm">Content block {i + 1}</Typography>
             <Typography variant="caption">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do

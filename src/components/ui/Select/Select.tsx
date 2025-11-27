@@ -25,10 +25,10 @@ const selectStyles: SelectStylesConfig = {
     fullWidth: "w-full",
   },
   trigger: {
-    base: "relative flex items-center justify-between w-full rounded-lg border-subtle transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer surface-card text-primary ring-text-info",
+    base: "relative flex items-center justify-between w-full rounded-lg border-muted transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer surface-card text-primary ring-text-info",
     variants: {
       default: "",
-      filled: "surface-subtle bg-surface-secondary",
+      filled: "bg-subtle bg-secondary",
       outlined: "border-2",
     },
     sizes: {
@@ -39,11 +39,11 @@ const selectStyles: SelectStylesConfig = {
     statuses: {
       default: "",
       error:
-        "border-text-error focus:border-text-error ring-text-error surface-subtle bg-surface-error/20",
+        "border-text-error focus:border-text-error ring-text-error bg-subtle bg-surface-error/20",
       success:
-        "border-text-success focus:border-text-success ring-text-success surface-subtle bg-surface-success/20",
+        "border-text-success focus:border-text-success ring-text-success bg-subtle bg-success/20/20",
       warning:
-        "border-text-warning focus:border-text-warning ring-text-warning surface-subtle bg-surface-warning/20",
+        "border-text-warning focus:border-text-warning ring-text-warning bg-subtle bg-warning/20/20",
     },
     states: {
       disabled: "opacity-50 cursor-not-allowed",
@@ -52,7 +52,7 @@ const selectStyles: SelectStylesConfig = {
     },
   },
   menu: {
-    base: "absolute z-50 w-full mt-1 rounded-lg border-subtle elevation-dropdown overflow-hidden surface-card",
+    base: "absolute z-50 w-full mt-1 rounded-lg border-muted elevation-dropdown overflow-hidden surface-card",
     positions: {
       top: "bottom-full mb-1 mt-0",
       bottom: "top-full mt-1",
@@ -60,17 +60,17 @@ const selectStyles: SelectStylesConfig = {
     maxHeight: "max-h-60 overflow-y-auto",
   },
   option: {
-    base: "flex items-center px-3 py-2 cursor-pointer transition-colors duration-150 text-primary surface-subtle-hover",
+    base: "flex items-center px-3 py-2 cursor-pointer transition-colors duration-150 text-primary hover:bg-muted",
     states: {
       default: "",
-      highlighted: "surface-subtle bg-surface-info/30 text-info",
-      selected: "font-medium bg-surface-info text-info",
+      highlighted: "bg-subtle bg-info/20/30 text-info",
+      selected: "font-medium bg-info/20 text-info",
       disabled: "opacity-50 cursor-not-allowed",
     },
     withIcon: "pl-10",
   },
   input: {
-    base: "flex-1 bg-surface-primary border-none outline-none placeholder-text-secondary",
+    base: "flex-1 bg-primary border-none outline-none placeholder-text-secondary",
     sizes: {
       sm: "text-sm",
       md: "text-sm",
@@ -500,7 +500,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
                 (opt) => opt.label.toLowerCase() === searchTerm.toLowerCase()
               ) && (
                 <div
-                  className={`${selectStyles.option.base} border-t border-subtle`}
+                  className={`${selectStyles.option.base} border-t border-muted`}
                   onClick={() => onCreateOption?.(searchTerm)}
                 >
                   <span className="text-info">Create "{searchTerm}"</span>

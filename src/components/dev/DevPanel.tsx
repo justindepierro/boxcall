@@ -114,19 +114,19 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
   };
 
   return (
-    <div className="space-y-spacing-md">
+    <div className="space-y-md">
       <h3 className="text-lg font-semibold text-primary">
         🔐 Auth Monitor
       </h3>
 
       {/* Health Status */}
-      <div className="space-y-spacing-xs">
+      <div className="space-y-xs">
         <h4 className="font-medium text-secondary">System Health</h4>
-        <div className="grid grid-cols-2 gap-spacing-xs text-sm">
+        <div className="grid grid-cols-2 gap-xs text-sm">
           <div>
             <strong>Status:</strong>
             <span
-              className={`ml-spacing-xs px-spacing-xs py-spacing-xs rounded-lg text-xs ${
+              className={`ml-xs px-xs py-xs rounded-lg text-xs ${
                 monitoringData.health.overall === "healthy"
                   ? "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300"
                   : monitoringData.health.overall === "warning"
@@ -161,9 +161,9 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
       </div>
 
       {/* Current Auth State */}
-      <div className="space-y-spacing-xs">
+      <div className="space-y-xs">
         <h4 className="font-medium text-secondary">Current State</h4>
-        <div className="grid grid-cols-2 gap-spacing-xs text-sm">
+        <div className="grid grid-cols-2 gap-xs text-sm">
           <div>
             <strong>Authenticated:</strong> {user ? "✅ Yes" : "❌ No"}
           </div>
@@ -183,7 +183,7 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
           </div>
         </div>
         {error && (
-          <div className="mt-spacing-xs p-spacing-xs bg-error-bg dark:bg-error-900/20 border border-error-200 dark:border-error-800 rounded-lg text-sm text-error-600 dark:text-error-400">
+          <div className="mt-xs p-xs bg-error-bg dark:bg-error-900/20 border border-error-200 dark:border-error-800 rounded-lg text-sm text-error-600 dark:text-error-400">
             <strong>Error:</strong> {error}
           </div>
         )}
@@ -191,9 +191,9 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
 
       {/* User Info */}
       {user && (
-        <div className="space-y-spacing-xs">
+        <div className="space-y-xs">
           <h4 className="font-medium text-secondary">User Info</h4>
-          <div className="text-sm space-y-spacing-xs">
+          <div className="text-sm space-y-xs">
             <div>
               <strong>Email:</strong> {user.email}
             </div>
@@ -215,9 +215,9 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
 
       {/* Session Info */}
       {sessionInfo && (
-        <div className="space-y-spacing-xs">
+        <div className="space-y-xs">
           <h4 className="font-medium text-secondary">Session Info</h4>
-          <div className="text-sm space-y-spacing-xs">
+          <div className="text-sm space-y-xs">
             <div>
               <strong>Expires:</strong> {formatTime(sessionInfo.expiresAt)}
             </div>
@@ -233,19 +233,19 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
       )}
 
       {/* Actions */}
-      <div className="space-y-spacing-xs">
+      <div className="space-y-xs">
         <h4 className="font-medium text-secondary">Actions</h4>
-        <div className="flex gap-spacing-xs">
+        <div className="flex gap-xs">
           <button
             onClick={handleRefreshSession}
             disabled={loading}
-            className="px-spacing-sm py-spacing-xs bg-status-info-bg0 text-white rounded-lg text-sm hover:bg-blue-600 disabled:opacity-50"
+            className="px-sm py-xs bg-status-info-bg0 text-white rounded-lg text-sm hover:bg-blue-600 disabled:opacity-50"
           >
             {loading ? "Refreshing..." : "Refresh Session"}
           </button>
           <button
             onClick={() => setAuthEvents([])}
-            className="px-spacing-sm py-spacing-xs bg-surface-secondary rounded-lg text-sm hover:bg-surface-hover"
+            className="px-sm py-xs bg-secondary rounded-lg text-sm hover:bg-surface-hover"
           >
             Clear Events
           </button>
@@ -253,14 +253,14 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
       </div>
 
       {/* Auth Events Log */}
-      <div className="space-y-spacing-xs">
+      <div className="space-y-xs">
         <h4 className="font-medium text-secondary">Recent Events</h4>
-        <div className="max-h-32 overflow-y-auto bg-surface-secondary rounded-lg p-spacing-xs text-xs font-mono">
+        <div className="max-h-32 overflow-y-auto bg-secondary rounded-lg p-xs text-xs font-mono">
           {authEvents.length === 0 ? (
             <div className="text-muted">No events yet</div>
           ) : (
             authEvents.map((event, index) => (
-              <div key={index} className="mb-spacing-xs text-secondary">
+              <div key={index} className="mb-xs text-secondary">
                 {event}
               </div>
             ))
@@ -269,9 +269,9 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
       </div>
 
       {/* Monitoring Metrics */}
-      <div className="space-y-spacing-xs">
+      <div className="space-y-xs">
         <h4 className="font-medium text-secondary">Metrics</h4>
-        <div className="grid grid-cols-2 gap-spacing-xs text-sm">
+        <div className="grid grid-cols-2 gap-xs text-sm">
           <div>
             <strong>Sign-in Attempts:</strong>{" "}
             {monitoringData.metrics.signInAttempts}
@@ -308,13 +308,13 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
 
       {/* Recent Errors */}
       {monitoringData.recentErrors.length > 0 && (
-        <div className="space-y-spacing-xs">
+        <div className="space-y-xs">
           <h4 className="font-medium text-secondary">Recent Errors</h4>
-          <div className="max-h-32 overflow-y-auto bg-error-bg dark:bg-error-900/10 border border-error-200 dark:border-error-800 rounded-lg p-spacing-xs text-xs">
+          <div className="max-h-32 overflow-y-auto bg-error-bg dark:bg-error-900/10 border border-error-200 dark:border-error-800 rounded-lg p-xs text-xs">
             {monitoringData.recentErrors.map((error, index) => (
               <div
                 key={index}
-                className="mb-spacing-xs text-error-600 dark:text-error-400"
+                className="mb-xs text-error-600 dark:text-error-400"
               >
                 <div className="font-medium">{error.operation}</div>
                 <div className="text-error-600 dark:text-error-500">
@@ -332,13 +332,13 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
 
       {/* Monitoring Events */}
       {monitoringData.recentEvents.length > 0 && (
-        <div className="space-y-spacing-xs">
+        <div className="space-y-xs">
           <h4 className="font-medium text-secondary">Monitoring Events</h4>
-          <div className="max-h-32 overflow-y-auto bg-status-info-bg dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800 rounded-lg p-spacing-xs text-xs">
+          <div className="max-h-32 overflow-y-auto bg-status-info-bg dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800 rounded-lg p-xs text-xs">
             {monitoringData.recentEvents.map((event, index) => (
               <div
                 key={index}
-                className="mb-spacing-xs text-blue-700 dark:text-blue-300"
+                className="mb-xs text-blue-700 dark:text-blue-300"
               >
                 <span className="font-medium">{event.event}</span>
                 {event.userId && (
@@ -469,7 +469,7 @@ const DevPanel: React.FC<DevPanelProps> = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className="fixed z-[9999] bg-surface-primary/95 backdrop-blur-md border border-subtle rounded-lg shadow-2xl overflow-hidden"
+      className="fixed z-[9999] bg-primary/95 backdrop-blur-md border border-muted rounded-lg shadow-2xl overflow-hidden"
       style={{
         left: position.x,
         top: position.y,
@@ -480,7 +480,7 @@ const DevPanel: React.FC<DevPanelProps> = ({ isOpen, onClose }) => {
     >
       {/* Header */}
       <div
-        className="bg-surface-secondary/90 px-spacing-md py-spacing-sm border-b border-subtle flex items-center justify-between cursor-grab active:cursor-grabbing"
+        className="bg-secondary/90 px-md py-sm border-b border-muted flex items-center justify-between cursor-grab active:cursor-grabbing"
         onMouseDown={handleMouseDown}
       >
         <h2 className="text-lg font-semibold text-primary">
@@ -488,38 +488,38 @@ const DevPanel: React.FC<DevPanelProps> = ({ isOpen, onClose }) => {
         </h2>
         <button
           onClick={onClose}
-          className="text-secondary hover:text-primary p-spacing-xs"
+          className="text-secondary hover:text-primary p-xs"
         >
           ✕
         </button>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-subtle">
+      <div className="flex border-b border-muted">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-spacing-md py-spacing-xs text-sm font-medium transition-colors ${
+            className={`px-md py-xs text-sm font-medium transition-colors ${
               activeTab === tab.id
-                ? "bg-surface-info text-info border-b-2 border-text-info"
+                ? "bg-info/20 text-info border-b-2 border-text-info"
                 : "text-secondary hover:text-primary hover:bg-surface-hover"
             }`}
           >
-            <span className="mr-spacing-xs">{tab.icon}</span>
+            <span className="mr-xs">{tab.icon}</span>
             {tab.label}
           </button>
         ))}
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-auto p-spacing-md">
+      <div className="flex-1 overflow-auto p-md">
         {activeTab === "design-system" && (
-          <div className="space-y-spacing-md">
+          <div className="space-y-md">
             <h3 className="text-lg font-semibold text-primary">
               Design System
             </h3>
-            <div className="grid grid-cols-2 gap-spacing-md text-sm">
+            <div className="grid grid-cols-2 gap-md text-sm">
               <div>
                 <strong>Theme:</strong> {config.theme}
               </div>
@@ -534,16 +534,16 @@ const DevPanel: React.FC<DevPanelProps> = ({ isOpen, onClose }) => {
                 {config.glassmorphism ? "✅" : "❌"}
               </div>
             </div>
-            <div className="mt-spacing-md">
-              <h4 className="font-medium mb-spacing-xs">Quick Actions</h4>
-              <div className="flex gap-spacing-xs">
+            <div className="mt-md">
+              <h4 className="font-medium mb-xs">Quick Actions</h4>
+              <div className="flex gap-xs">
                 <button
                   onClick={() =>
                     updateConfig({
                       theme: config.theme === "dark" ? "light" : "dark",
                     })
                   }
-                  className="px-spacing-sm py-spacing-xs bg-surface-secondary rounded-lg text-sm hover:bg-surface-hover"
+                  className="px-sm py-xs bg-secondary rounded-lg text-sm hover:bg-surface-hover"
                 >
                   Toggle Theme
                 </button>
@@ -556,7 +556,7 @@ const DevPanel: React.FC<DevPanelProps> = ({ isOpen, onClose }) => {
                           : "compact",
                     })
                   }
-                  className="px-spacing-sm py-spacing-xs bg-surface-secondary rounded-lg text-sm hover:bg-surface-hover"
+                  className="px-sm py-xs bg-secondary rounded-lg text-sm hover:bg-surface-hover"
                 >
                   Toggle Density
                 </button>
@@ -568,32 +568,32 @@ const DevPanel: React.FC<DevPanelProps> = ({ isOpen, onClose }) => {
         {activeTab === "auth" && <AuthMonitorTab />}
 
         {activeTab === "performance" && (
-          <div className="p-spacing-md">
+          <div className="p-md">
             <PerformanceDashboard />
           </div>
         )}
 
         {activeTab === "console" && (
-          <div className="space-y-spacing-md">
+          <div className="space-y-md">
             <h3 className="text-lg font-semibold text-primary">
               Console Tools
             </h3>
-            <div className="space-y-spacing-xs">
+            <div className="space-y-xs">
               <button
                 onClick={() => console.clear()}
-                className="w-full px-spacing-sm py-spacing-xs bg-surface-secondary rounded-lg text-sm hover:bg-surface-hover text-left"
+                className="w-full px-sm py-xs bg-secondary rounded-lg text-sm hover:bg-surface-hover text-left"
               >
                 🧹 Clear Console
               </button>
               <button
                 onClick={() => console.log("Current user:", user)}
-                className="w-full px-spacing-sm py-spacing-xs bg-surface-secondary rounded-lg text-sm hover:bg-surface-hover text-left"
+                className="w-full px-sm py-xs bg-secondary rounded-lg text-sm hover:bg-surface-hover text-left"
               >
                 👤 Log Current User
               </button>
               <button
                 onClick={() => console.log("Design system config:", config)}
-                className="w-full px-spacing-sm py-spacing-xs bg-surface-secondary rounded-lg text-sm hover:bg-surface-hover text-left"
+                className="w-full px-sm py-xs bg-secondary rounded-lg text-sm hover:bg-surface-hover text-left"
               >
                 🎨 Log Design Config
               </button>
@@ -602,11 +602,11 @@ const DevPanel: React.FC<DevPanelProps> = ({ isOpen, onClose }) => {
         )}
 
         {activeTab === "debug" && (
-          <div className="space-y-spacing-md">
+          <div className="space-y-md">
             <h3 className="text-lg font-semibold text-primary">
               Debug Tools
             </h3>
-            <div className="space-y-spacing-xs">
+            <div className="space-y-xs">
               <div className="flex items-center justify-between">
                 <span>Contrast Debug Overlay</span>
                 <button
@@ -618,7 +618,7 @@ const DevPanel: React.FC<DevPanelProps> = ({ isOpen, onClose }) => {
                     );
                     window.location.reload();
                   }}
-                  className="px-spacing-sm py-spacing-xs bg-surface-secondary rounded-lg text-sm hover:bg-surface-hover"
+                  className="px-sm py-xs bg-secondary rounded-lg text-sm hover:bg-surface-hover"
                 >
                   Toggle
                 </button>
@@ -628,7 +628,7 @@ const DevPanel: React.FC<DevPanelProps> = ({ isOpen, onClose }) => {
                   // Force re-render diagnostics
                   window.location.reload();
                 }}
-                className="w-full px-spacing-sm py-spacing-xs bg-surface-secondary rounded-lg text-sm hover:bg-surface-hover text-left"
+                className="w-full px-sm py-xs bg-secondary rounded-lg text-sm hover:bg-surface-hover text-left"
               >
                 🔄 Force Reload
               </button>
@@ -637,11 +637,11 @@ const DevPanel: React.FC<DevPanelProps> = ({ isOpen, onClose }) => {
         )}
 
         {activeTab === "settings" && (
-          <div className="space-y-spacing-md">
+          <div className="space-y-md">
             <h3 className="text-lg font-semibold text-primary">
               Dev Settings
             </h3>
-            <div className="space-y-spacing-xs text-sm">
+            <div className="space-y-xs text-sm">
               <div>
                 <strong>User:</strong> {user?.email}
               </div>
@@ -651,7 +651,7 @@ const DevPanel: React.FC<DevPanelProps> = ({ isOpen, onClose }) => {
               <div>
                 <strong>Hotkey:</strong> Ctrl+Shift+D
               </div>
-              <div className="mt-spacing-md pt-spacing-md border-t border-subtle">
+              <div className="mt-md pt-md border-t border-muted">
                 <p className="text-xs text-secondary">
                   This panel is only visible to authorized developers.
                 </p>

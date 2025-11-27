@@ -211,7 +211,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
       )}
 
       {/* Filter controls */}
-      <div className="bg-surface-primary rounded-lg shadow-md p-4 space-y-4">
+      <div className="bg-primary rounded-lg shadow-md p-4 space-y-4">
         {/* Search bar */}
         <div className="flex items-center gap-2">
           <input
@@ -245,7 +245,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
                   (e.target.value as AnnouncementVisibility) || undefined,
               })
             }
-            className="rounded-md bg-surface-primary px-3 py-2 focus:ring-2 focus:ring-blue-500"
+            className="rounded-md bg-primary px-3 py-2 focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All</option>
             <option value="all">Everyone</option>
@@ -309,7 +309,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
       </div>
 
       {/* Announcements Feed - Compact, Twitter-style */}
-      <div className="bg-surface-primary rounded-lg shadow-md overflow-hidden">
+      <div className="bg-primary rounded-lg shadow-md overflow-hidden">
         {filteredAnnouncements.map((announcement) => (
           <AnnouncementItem
             key={announcement.id}

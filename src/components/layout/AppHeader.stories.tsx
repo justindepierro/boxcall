@@ -78,7 +78,7 @@ export const WithScrollSimulation: Story = {
           {Array.from({ length: 20 }, (_, i) => (
             <div
               key={i}
-              className="h-16 bg-surface-muted rounded-lg flex items-center justify-center"
+              className="h-16 bg-muted rounded-lg flex items-center justify-center"
             >
               Content Block {i + 1}
             </div>

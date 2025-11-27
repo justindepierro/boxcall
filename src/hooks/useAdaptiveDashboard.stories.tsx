@@ -122,7 +122,7 @@ const AdaptiveDashboardDemo: React.FC = () => {
                 {userActivity.slice(-3).map((activity, index) => (
                   <div
                     key={index}
-                    className="p-2 bg-surface-secondary rounded text-sm"
+                    className="p-2 bg-secondary rounded text-sm"
                   >
                     <div>
                       <strong>{activity.widgetId}</strong> - {activity.action}

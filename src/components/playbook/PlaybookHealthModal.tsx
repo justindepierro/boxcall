@@ -259,7 +259,7 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
                   return (
                     <div
                       key={category}
-                      className="bg-surface-secondary rounded-lg p-4 hover:bg-surface-tertiary transition-colors"
+                      className="bg-secondary rounded-lg p-4 hover:bg-tertiary transition-colors"
                     >
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center space-x-3">
@@ -278,7 +278,7 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
                           {score}/{max}
                         </Typography>
                       </div>
-                      <div className="h-2 bg-surface-muted rounded-full overflow-hidden">
+                      <div className="h-2 bg-muted rounded-full overflow-hidden">
                         <div
                           className={cn(
                             "h-full transition-all duration-300 rounded-full",

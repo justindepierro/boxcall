@@ -81,10 +81,10 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-overlay-modal flex items-center justify-center z-50 p-spacing-md">
-      <div className="bg-surface-primary rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
+    <div className="fixed inset-0 bg-overlay-modal flex items-center justify-center z-50 p-md">
+      <div className="bg-primary rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="p-spacing-lg">
+        <div className="p-lg">
           <div className="flex items-center justify-between">
             <Typography variant="headline-lg">Import Team Roster</Typography>
             <button
@@ -92,37 +92,37 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
                 resetModal();
                 onClose();
               }}
-              className="p-spacing-xs hover:bg-surface-muted rounded-lg"
+              className="p-xs hover:bg-muted rounded-lg"
             >
               <Icon name="close" className="h-5 w-5" />
             </button>
           </div>
-          <Typography variant="body-md" color="muted" className="mt-spacing-xs">
+          <Typography variant="body-md" color="muted" className="mt-xs">
             Upload a CSV file in MaxPreps format to import your team roster
           </Typography>
         </div>
 
         {/* Content */}
-        <div className="p-spacing-lg overflow-y-auto max-h-[60vh]">
+        <div className="p-lg overflow-y-auto max-h-[60vh]">
           {step === "upload" && (
             <div className="text-center py-12">
-              <div className="mx-auto w-24 h-24 bg-surface-info rounded-full flex items-center justify-center mb-spacing-lg">
+              <div className="mx-auto w-24 h-24 bg-info/20 rounded-full flex items-center justify-center mb-lg">
                 <Icon name="upload" className="h-12 w-12 text-info" />
               </div>
-              <Typography variant="headline-md" className="mb-spacing-md">
+              <Typography variant="headline-md" className="mb-md">
                 Upload Roster CSV
               </Typography>
               <Typography
                 variant="body-lg"
                 color="muted"
-                className="mb-spacing-lg content-narrow"
+                className="mb-lg content-narrow"
               >
                 Select a CSV file exported from MaxPreps or in the standard
                 roster format. The file should include player names, jersey
                 numbers, and positions.
               </Typography>
 
-              <div className="space-y-spacing-md">
+              <div className="space-y-md">
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -137,14 +137,14 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
                     size="lg"
                     onClick={() => fileInputRef.current?.click()}
                   >
-                    <Icon name="upload" className="h-5 w-5 mr-spacing-xs" />
+                    <Icon name="upload" className="h-5 w-5 mr-xs" />
                     Choose CSV File
                   </Button>
                 </label>
 
                 <div className="text-sm text-secondary">
-                  <p className="mb-spacing-xs">Expected CSV format:</p>
-                  <div className="bg-surface-secondary p-spacing-sm rounded-lg text-left font-mono text-xs">
+                  <p className="mb-xs">Expected CSV format:</p>
+                  <div className="bg-secondary p-sm rounded-lg text-left font-mono text-xs">
                     First Name,Last Name,Jersey
                     Number,Position,Grade,Height,Weight,Email
                     <br />
@@ -158,7 +158,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
           )}
 
           {step === "preview" && (
-            <div className="space-y-spacing-lg">
+            <div className="space-y-lg">
               <div className="flex items-center justify-between">
                 <Typography variant="headline-md">
                   Preview Import ({csvData.length} players)
@@ -168,7 +168,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
                   size="sm"
                   onClick={() => setStep("upload")}
                 >
-                  <Icon name="arrow-left" className="h-4 w-4 mr-spacing-xs" />
+                  <Icon name="arrow-left" className="h-4 w-4 mr-xs" />
                   Back to Upload
                 </Button>
               </div>
@@ -176,7 +176,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
               {/* Errors and Warnings */}
               {errors.length > 0 && (
                 <Card className="border-error bg-surface-error">
-                  <div className="flex items-start space-x-spacing-sm">
+                  <div className="flex items-start space-x-sm">
                     <Icon
                       name="alert"
                       className="h-5 w-5 text-error mt-0.5"
@@ -188,7 +188,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
                       >
                         Import Errors ({errors.length})
                       </Typography>
-                      <ul className="mt-spacing-xs text-sm text-error-hover space-y-1">
+                      <ul className="mt-xs text-sm text-error-hover space-y-1">
                         {errors.map((error, index) => (
                           <li key={index}>• {error}</li>
                         ))}
@@ -199,8 +199,8 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
               )}
 
               {warnings.length > 0 && (
-                <Card className="border-warning bg-surface-warning">
-                  <div className="flex items-start space-x-spacing-sm">
+                <Card className="border-warning bg-warning/20">
+                  <div className="flex items-start space-x-sm">
                     <Icon
                       name="alert"
                       className="h-5 w-5 text-warning mt-0.5"
@@ -212,7 +212,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
                       >
                         Warnings ({warnings.length})
                       </Typography>
-                      <ul className="mt-spacing-xs text-sm text-warning-hover space-y-1">
+                      <ul className="mt-xs text-sm text-warning-hover space-y-1">
                         {warnings.map((warning, index) => (
                           <li key={index}>• {warning}</li>
                         ))}
@@ -226,47 +226,47 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
               <div className="border border-border rounded-lg overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-border">
-                    <thead className="bg-surface-secondary">
+                    <thead className="bg-secondary">
                       <tr>
-                        <th className="px-spacing-lg py-spacing-sm text-left text-xs font-medium text-muted uppercase tracking-wider">
+                        <th className="px-lg py-sm text-left text-xs font-medium text-muted uppercase tracking-wider">
                           Name
                         </th>
-                        <th className="px-spacing-lg py-spacing-sm text-left text-xs font-medium text-muted uppercase tracking-wider">
+                        <th className="px-lg py-sm text-left text-xs font-medium text-muted uppercase tracking-wider">
                           Jersey
                         </th>
-                        <th className="px-spacing-lg py-spacing-sm text-left text-xs font-medium text-muted uppercase tracking-wider">
+                        <th className="px-lg py-sm text-left text-xs font-medium text-muted uppercase tracking-wider">
                           Position
                         </th>
-                        <th className="px-spacing-lg py-spacing-sm text-left text-xs font-medium text-muted uppercase tracking-wider">
+                        <th className="px-lg py-sm text-left text-xs font-medium text-muted uppercase tracking-wider">
                           Grade
                         </th>
-                        <th className="px-spacing-lg py-spacing-sm text-left text-xs font-medium text-muted uppercase tracking-wider">
+                        <th className="px-lg py-sm text-left text-xs font-medium text-muted uppercase tracking-wider">
                           Height
                         </th>
-                        <th className="px-spacing-lg py-spacing-sm text-left text-xs font-medium text-muted uppercase tracking-wider">
+                        <th className="px-lg py-sm text-left text-xs font-medium text-muted uppercase tracking-wider">
                           Weight
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="bg-surface-primary divide-y divide-border">
+                    <tbody className="bg-primary divide-y divide-border">
                       {csvData.slice(0, 10).map((player, index) => (
                         <tr key={index}>
-                          <td className="px-spacing-lg py-spacing-md whitespace-nowrap text-sm font-medium text-primary">
+                          <td className="px-lg py-md whitespace-nowrap text-sm font-medium text-primary">
                             {player.firstName} {player.lastName}
                           </td>
-                          <td className="px-spacing-lg py-spacing-md whitespace-nowrap text-sm text-muted">
+                          <td className="px-lg py-md whitespace-nowrap text-sm text-muted">
                             {player.jerseyNumber || "-"}
                           </td>
-                          <td className="px-spacing-lg py-spacing-md whitespace-nowrap text-sm text-muted">
+                          <td className="px-lg py-md whitespace-nowrap text-sm text-muted">
                             {player.position || "-"}
                           </td>
-                          <td className="px-spacing-lg py-spacing-md whitespace-nowrap text-sm text-muted">
+                          <td className="px-lg py-md whitespace-nowrap text-sm text-muted">
                             {player.grade || "-"}
                           </td>
-                          <td className="px-spacing-lg py-spacing-md whitespace-nowrap text-sm text-muted">
+                          <td className="px-lg py-md whitespace-nowrap text-sm text-muted">
                             {player.height || "-"}
                           </td>
-                          <td className="px-spacing-lg py-spacing-md whitespace-nowrap text-sm text-muted">
+                          <td className="px-lg py-md whitespace-nowrap text-sm text-muted">
                             {player.weight || "-"}
                           </td>
                         </tr>
@@ -275,7 +275,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
                         <tr>
                           <td
                             colSpan={6}
-                            className="px-spacing-lg py-spacing-md text-center text-sm text-muted"
+                            className="px-lg py-md text-center text-sm text-muted"
                           >
                             ... and {csvData.length - 10} more players
                           </td>
@@ -290,8 +290,8 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
 
           {step === "importing" && (
             <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-text-info mx-auto mb-spacing-md"></div>
-              <Typography variant="headline-md" className="mb-spacing-xs">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-text-info mx-auto mb-md"></div>
+              <Typography variant="headline-md" className="mb-xs">
                 Importing Roster...
               </Typography>
               <Typography variant="body-md" color="muted">
@@ -303,8 +303,8 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
 
         {/* Footer */}
         {step === "preview" && (
-          <div className="p-spacing-lg bg-surface-secondary">
-            <div className="flex justify-end space-x-spacing-sm">
+          <div className="p-lg bg-secondary">
+            <div className="flex justify-end space-x-sm">
               <Button
                 variant="secondary"
                 onClick={() => {
@@ -319,7 +319,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
                 onClick={handleImport}
                 disabled={errors.length > 0}
               >
-                <Icon name="upload" className="h-4 w-4 mr-spacing-xs" />
+                <Icon name="upload" className="h-4 w-4 mr-xs" />
                 Import {csvData.length} Players
               </Button>
             </div>

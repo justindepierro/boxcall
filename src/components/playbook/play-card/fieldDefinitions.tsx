@@ -134,8 +134,8 @@ export const createFormationFields = ({
   back_position: {
     label: "Back Position",
     render: (optimisticPlay, handleInlineSave, savingFields) => (
-      <div className="flex items-center gap-spacing-sm">
-        <label className="flex items-center gap-spacing-xs cursor-pointer group">
+      <div className="flex items-center gap-sm">
+        <label className="flex items-center gap-xs cursor-pointer group">
           <input
             type="checkbox"
             checked={optimisticPlay.back_left_of_qb || false}
@@ -149,7 +149,7 @@ export const createFormationFields = ({
             ← Left of QB
           </span>
         </label>
-        <label className="flex items-center gap-spacing-xs cursor-pointer group">
+        <label className="flex items-center gap-xs cursor-pointer group">
           <input
             type="checkbox"
             checked={optimisticPlay.back_right_of_qb || false}
@@ -375,7 +375,7 @@ export const createPlayDetailsFields = ({
           optimisticPlay.key_players.map((_playerId, index) => (
             <span
               key={index}
-              className="inline-flex items-center px-2 py-1 text-xs rounded-full bg-surface-success/10 text-success border border-success"
+              className="inline-flex items-center px-2 py-1 text-xs rounded-full bg-success/20/10 text-success border border-success"
             >
               Player {index + 1}
             </span>

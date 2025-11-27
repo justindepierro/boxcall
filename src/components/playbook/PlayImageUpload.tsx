@@ -176,7 +176,7 @@ export const PlayImageUpload: React.FC<PlayImageUploadProps> = ({
 
       {/* Compression indicator */}
       {isCompressing && (
-        <div className="flex items-center justify-center p-8 bg-surface-secondary rounded-lg">
+        <div className="flex items-center justify-center p-8 bg-secondary rounded-lg">
           <div className="flex flex-col items-center gap-2">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-primary" />
             <Typography variant="body-sm" className="text-secondary">
@@ -188,7 +188,7 @@ export const PlayImageUpload: React.FC<PlayImageUploadProps> = ({
 
       {/* Image preview with edit options */}
       {preview && !isCompressing && (
-        <div className="relative rounded-lg overflow-hidden bg-surface-secondary">
+        <div className="relative rounded-lg overflow-hidden bg-secondary">
           <img
             src={preview}
             alt="Play diagram preview"
@@ -202,7 +202,7 @@ export const PlayImageUpload: React.FC<PlayImageUploadProps> = ({
               size="sm"
               variant="secondary"
               onClick={handleRotate}
-              className="bg-surface-primary/90 backdrop-blur-sm"
+              className="bg-primary/90 backdrop-blur-sm"
             >
               <Icon name="rotate-cw" size="sm" />
             </Button>
@@ -210,14 +210,14 @@ export const PlayImageUpload: React.FC<PlayImageUploadProps> = ({
               size="sm"
               variant="danger"
               onClick={handleRemove}
-              className="bg-surface-primary/90 backdrop-blur-sm"
+              className="bg-primary/90 backdrop-blur-sm"
             >
               <Icon name="trash" size="sm" />
             </Button>
           </div>
 
           {/* Image info */}
-          <div className="absolute bottom-2 left-2 bg-surface-primary/90 backdrop-blur-sm rounded px-3 py-1">
+          <div className="absolute bottom-2 left-2 bg-primary/90 backdrop-blur-sm rounded px-3 py-1">
             <Typography variant="caption" className="text-secondary">
               {rotation !== 0 && `Rotated ${rotation}°`}
             </Typography>

@@ -100,5 +100,5 @@ export const getFilterChipClasses = (
   variant: keyof typeof ROSTER_TOKENS.filterChips
 ): string => {
   const chip = ROSTER_TOKENS.filterChips[variant];
-  return `inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-xs ${chip.bg} ${chip.text} rounded-full text-sm ${chip.hover} transition-colors`.trim();
+  return `inline-flex items-center gap-xs px-sm py-xs ${chip.bg} ${chip.text} rounded-full text-sm ${chip.hover} transition-colors`.trim();
 };

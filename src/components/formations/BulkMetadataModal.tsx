@@ -67,10 +67,10 @@ export function BulkMetadataModal({
       title={`Edit ${formationIds.length} Formation${formationIds.length !== 1 ? "s" : ""}`}
       size="md"
     >
-      <form onSubmit={handleSubmit} className="space-y-spacing-md">
+      <form onSubmit={handleSubmit} className="space-y-md">
         {/* Mode Selection */}
-        <div className="flex items-center gap-spacing-md surface-subtle border border-subtle rounded-md p-spacing-sm">
-          <label className="flex items-center gap-spacing-xs cursor-pointer">
+        <div className="flex items-center gap-md bg-subtle border border-muted rounded-md p-sm">
+          <label className="flex items-center gap-xs cursor-pointer">
             <input
               type="radio"
               name="mode"
@@ -83,7 +83,7 @@ export function BulkMetadataModal({
               Replace existing values
             </span>
           </label>
-          <label className="flex items-center gap-spacing-xs cursor-pointer">
+          <label className="flex items-center gap-xs cursor-pointer">
             <input
               type="radio"
               name="mode"
@@ -98,13 +98,13 @@ export function BulkMetadataModal({
 
         {/* Category */}
         <div>
-          <label className="block text-sm font-medium text-primary mb-spacing-xs">
+          <label className="block text-sm font-medium text-primary mb-xs">
             Category
           </label>
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full px-spacing-sm py-spacing-xs border border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full px-sm py-xs border border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             <option value="">-- Keep existing --</option>
             <option value="run">Run</option>
@@ -115,7 +115,7 @@ export function BulkMetadataModal({
 
         {/* Personnel */}
         <div>
-          <label className="block text-sm font-medium text-primary mb-spacing-xs">
+          <label className="block text-sm font-medium text-primary mb-xs">
             Personnel
           </label>
           <input
@@ -123,13 +123,13 @@ export function BulkMetadataModal({
             value={personnelName}
             onChange={(e) => setPersonnelName(e.target.value)}
             placeholder="e.g., 11 Personnel"
-            className="w-full px-spacing-sm py-spacing-xs border border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full px-sm py-xs border border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </div>
 
         {/* Tags */}
         <div>
-          <label className="block text-sm font-medium text-primary mb-spacing-xs">
+          <label className="block text-sm font-medium text-primary mb-xs">
             Tags (comma-separated)
           </label>
           <input
@@ -137,10 +137,10 @@ export function BulkMetadataModal({
             value={tags}
             onChange={(e) => setTags(e.target.value)}
             placeholder="e.g., spread, shotgun, empty"
-            className="w-full px-spacing-sm py-spacing-xs border border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full px-sm py-xs border border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
           {mode === "merge" && (
-            <p className="text-xs text-muted mt-spacing-xs">
+            <p className="text-xs text-muted mt-xs">
               These tags will be added to existing tags
             </p>
           )}
@@ -148,13 +148,13 @@ export function BulkMetadataModal({
 
         {/* Formation Type */}
         <div>
-          <label className="block text-sm font-medium text-primary mb-spacing-xs">
+          <label className="block text-sm font-medium text-primary mb-xs">
             Formation Type
           </label>
           <select
             value={formationType}
             onChange={(e) => setFormationType(e.target.value)}
-            className="w-full px-spacing-sm py-spacing-xs border border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full px-sm py-xs border border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             <option value="">-- Keep existing --</option>
             <option value="standard">Standard</option>
@@ -163,7 +163,7 @@ export function BulkMetadataModal({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-end gap-spacing-sm pt-spacing-md border-t border-subtle">
+        <div className="flex items-center justify-end gap-sm pt-md border-t border-muted">
           <Button
             type="button"
             variant="secondary"

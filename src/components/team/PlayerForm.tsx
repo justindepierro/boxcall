@@ -150,9 +150,9 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
   };
   return (
     <div className="fixed inset-0 bg-text-primary/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-surface-primary elevation-modal rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-primary elevation-modal rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="p-6 border-b border-subtle dark:border-light">
+        <div className="p-6 border-b border-muted dark:border-light">
           <Typography variant="headline-sm" as="h2">
             {player ? "Edit Player" : "Add New Player"}
           </Typography>
@@ -287,7 +287,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   className={
                     formData.positions?.includes(position)
                       ? ""
-                      : "surface-subtle dark:bg-surface-secondary surface-subtle-hover dark:hover:bg-surface-tertiary text-secondary dark:text-secondary"
+                      : "bg-subtle dark:bg-secondary hover:bg-muted dark:hover:bg-tertiary text-secondary dark:text-secondary"
                   }
                   onClick={() => handlePositionToggle(position)}
                 >
@@ -427,7 +427,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   className={
                     formData.team_level === level.value
                       ? ""
-                      : "surface-card text-primary border-subtle surface-subtle-hover"
+                      : "surface-card text-primary border-muted hover:bg-muted"
                   }
                   onClick={() => handleInputChange("team_level", level.value)}
                 >
@@ -437,7 +437,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
             </div>
           </div>
           {/* Actions */}
-          <div className="flex justify-end space-x-3 pt-4 border-t border-subtle dark:border-light">
+          <div className="flex justify-end space-x-3 pt-4 border-t border-muted dark:border-light">
             <Button
               type="button"
               variant="ghost"

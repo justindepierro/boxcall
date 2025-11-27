@@ -25,9 +25,9 @@ export interface RosterStatsProps {
 export const RosterStats = React.memo<RosterStatsProps>(
   ({ totalPlayers, activePlayerCount, filteredCount, selectedCount }) => {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-spacing-md">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md">
         {/* Total Players - Navy gradient */}
-        <Card className="p-spacing-md bg-gradient-to-br from-navy-50 to-navy-100 border-l-4 border-navy-600 transition-all duration-300 hover:shadow-lg">
+        <Card className="p-md bg-gradient-to-br from-navy-50 to-navy-100 border-l-4 border-navy-600 transition-all duration-300 hover:shadow-lg">
           <div className="flex items-center justify-between">
             <div>
               <Typography
@@ -45,7 +45,7 @@ export const RosterStats = React.memo<RosterStatsProps>(
         </Card>
 
         {/* Active Players - Emerald gradient */}
-        <Card className="p-spacing-md bg-gradient-to-br from-emerald-50 to-emerald-100 border-l-4 border-emerald-600 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/10">
+        <Card className="p-md bg-gradient-to-br from-emerald-50 to-emerald-100 border-l-4 border-emerald-600 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/10">
           <div className="flex items-center justify-between">
             <div>
               <Typography
@@ -63,7 +63,7 @@ export const RosterStats = React.memo<RosterStatsProps>(
         </Card>
 
         {/* Filtered Count - Blue gradient */}
-        <Card className="p-spacing-md bg-gradient-to-br from-blue-50 to-blue-100 border-l-4 border-blue-600 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
+        <Card className="p-md bg-gradient-to-br from-blue-50 to-blue-100 border-l-4 border-blue-600 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
           <div className="flex items-center justify-between">
             <div>
               <Typography
@@ -81,7 +81,7 @@ export const RosterStats = React.memo<RosterStatsProps>(
         </Card>
 
         {/* Selected Count - Amber gradient (attention/selection) */}
-        <Card className="p-spacing-md bg-gradient-to-br from-amber-50 to-amber-100 border-l-4 border-warning-600 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/10">
+        <Card className="p-md bg-gradient-to-br from-amber-50 to-amber-100 border-l-4 border-warning-600 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/10">
           <div className="flex items-center justify-between">
             <div>
               <Typography

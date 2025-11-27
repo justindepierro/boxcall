@@ -52,11 +52,11 @@ const getModalTypeStyles = (type: ModalProps["type"]) => {
   const baseStyles = "rounded-lg shadow-xl border-2"; // Square corners, stronger shadows
   switch (type) {
     case "alert":
-      return `${baseStyles} surface-subtle dark:bg-surface-error/20 border-text-error dark:border-text-error`;
+      return `${baseStyles} bg-subtle dark:bg-surface-error/20 border-text-error dark:border-text-error`;
     case "confirm":
-      return `${baseStyles} surface-subtle dark:bg-surface-warning/20 border-text-warning dark:border-text-warning`;
+      return `${baseStyles} bg-subtle dark:bg-warning/20/20 border-text-warning dark:border-text-warning`;
     default:
-      return `${baseStyles} surface-card elevation-modal border-subtle`;
+      return `${baseStyles} surface-card elevation-modal border-muted`;
   }
 };
 const getBackdropStyles = () => {
@@ -164,7 +164,7 @@ export const Modal: React.FC<ModalProps> = ({
         <div
           ref={modalRef}
           className={`
-            ${size === "fullscreen" ? "w-full h-full bg-surface-primary rounded-lg border-2 border-border shadow-xl overflow-hidden flex flex-col" : `w-full ${getModalSizeStyles(size)}`}
+            ${size === "fullscreen" ? "w-full h-full bg-primary rounded-lg border-2 border-border shadow-xl overflow-hidden flex flex-col" : `w-full ${getModalSizeStyles(size)}`}
             ${size === "fullscreen" ? "" : `${getModalTypeStyles(type)} max-h-[90vh] overflow-hidden flex flex-col`}
             transform transition-all duration-300 scale-100 opacity-100
             ${className}
@@ -221,7 +221,7 @@ export const Modal: React.FC<ModalProps> = ({
           </div>
           {/* Footer - Enhanced styling */}
           {footer && (
-            <div className="p-6 divider-t-medium surface-subtle dark:bg-surface-primary/50">
+            <div className="p-6 divider-t-medium bg-subtle dark:bg-primary/50">
               {footer}
             </div>
           )}

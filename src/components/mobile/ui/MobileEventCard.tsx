@@ -95,7 +95,7 @@ export const MobileEventCard: React.FC<MobileEventCardProps> = ({
   const displayedEvents = events.slice(0, maxEvents);
 
   return (
-    <div className="rounded-xl bg-surface-primary border border-border p-4 shadow-sm">
+    <div className="rounded-xl bg-primary border border-border p-4 shadow-sm">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <Typography

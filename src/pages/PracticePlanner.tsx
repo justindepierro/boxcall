@@ -216,7 +216,7 @@ export function PracticePlanner() {
                       <Button
                         onClick={() => setIsPDFExportOpen(true)}
                         variant="secondary"
-                        className="bg-primary border-subtle text-secondary hover:text-primary surface-subtle-hover flex items-center gap-2"
+                        className="bg-primary border-muted text-secondary hover:text-primary hover:bg-muted flex items-center gap-2"
                         disabled={currentBlocks.length === 0}
                       >
                         <Icon name="pdf" size="sm" />
@@ -230,7 +230,7 @@ export function PracticePlanner() {
                             navigate(`/teams/${teamId}/season-schedule`)
                           }
                           variant="secondary"
-                          className="bg-primary border-subtle text-secondary hover:text-primary surface-subtle-hover flex items-center gap-2"
+                          className="bg-primary border-muted text-secondary hover:text-primary hover:bg-muted flex items-center gap-2"
                         >
                           <Icon name="plus-circle" size="sm" />
                           Add/Edit Season Schedule
@@ -294,8 +294,8 @@ export function PracticePlanner() {
                           ref={provided.innerRef}
                           className={`space-y-3 min-h-48 p-4 rounded-lg placeholder-zone transition-colors ${
                             snapshot.isDraggingOver
-                              ? "border-component-badge-primary surface-subtle"
-                              : "border-subtle surface-subtle"
+                              ? "border-component-badge-primary bg-subtle"
+                              : "border-muted bg-subtle"
                           }`}
                         >
                           {currentBlocks.length === 0 ? (
@@ -326,7 +326,7 @@ export function PracticePlanner() {
                                   <div
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
-                                    className={`bg-primary border-subtle rounded-lg p-4 shadow-sm transition-shadow ${
+                                    className={`bg-primary border-muted rounded-lg p-4 shadow-sm transition-shadow ${
                                       snapshot.isDragging
                                         ? "shadow-lg"
                                         : "hover:shadow-md"
@@ -359,7 +359,7 @@ export function PracticePlanner() {
                                                 className="text-warning"
                                               />
                                             )}
-                                            <span className="px-2 py-1 surface-subtle text-secondary rounded-lg text-sm font-mono">
+                                            <span className="px-2 py-1 bg-subtle text-secondary rounded-lg text-sm font-mono">
                                               {block.duration}min
                                             </span>
                                             {practiceStarted && (
@@ -417,7 +417,7 @@ export function PracticePlanner() {
                                             handleDeleteBlock(block.id)
                                           }
                                           disabled={lockedSchedule}
-                                          className="text-error hover:text-error hover:surface-subtle"
+                                          className="text-error hover:text-error hover:bg-subtle"
                                         >
                                           <Icon name="delete" size="sm" />
                                         </Button>

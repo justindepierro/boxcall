@@ -76,7 +76,7 @@ export function CollaborativeCursor({
 
         {/* User label */}
         <div
-          className={`absolute left-5 top-0 px-2 py-1 rounded-lg text-xs font-medium text-surface-primary whitespace-nowrap ${cursorColor
+          className={`absolute left-5 top-0 px-2 py-1 rounded-lg text-xs font-medium text-bg-primary whitespace-nowrap ${cursorColor
             .replace("border-", "bg-")
             .replace("bg-", "bg-")}`}
         >

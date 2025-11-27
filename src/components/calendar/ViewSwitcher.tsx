@@ -51,7 +51,7 @@ export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
       role="tablist"
       aria-orientation={orientation}
       className={
-        "inline-flex rounded-lg surface-subtle border-subtle shadow-sm p-0.5 gap-0.5 " +
+        "inline-flex rounded-lg bg-subtle border-muted shadow-sm p-0.5 gap-0.5 " +
         (className || "")
       }
       onKeyDown={(e) => {
@@ -103,12 +103,12 @@ export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
                 ? "!bg-brand-jade-dark text-inverse border-brand-jade-dark"
                 : [
                     // Base unselected adopts subtle surface vs raw gray
-                    "surface-card text-primary border-subtle",
+                    "surface-card text-primary border-muted",
                     // Hover / focus for better affordance using semantic hover
-                    "hover:surface-subtle-hover",
+                    "hover:hover:bg-muted",
                     "focus-visible:ring-2 focus-visible:ring-brand-jade focus-visible:ring-offset-1 focus-visible:outline-none",
                     // Active press feedback
-                    "active:surface-subtle",
+                    "active:bg-subtle",
                   ].join(" ")) +
               " rounded-lg min-w-14 font-medium transition-colors"
             }

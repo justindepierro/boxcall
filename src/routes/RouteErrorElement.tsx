@@ -123,7 +123,7 @@ export const RouteErrorElement: React.FC = () => {
         <p className="text-secondary mb-4">{message}</p>
 
         {!isOnline && (
-          <div className="mb-4 p-3 bg-surface-warning/10 border border-surface-warning/20 rounded-md">
+          <div className="mb-4 p-3 bg-warning/20/10 border border-warning/20/20 rounded-md">
             <p className="text-sm text-warning">
               You're currently offline. Some features may not be available.
             </p>

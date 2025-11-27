@@ -119,7 +119,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
             } rounded-full whitespace-nowrap transition-all ${
               activeSection === section.id
                 ? "bg-brand-jade text-white shadow-md"
-                : "bg-surface-secondary text-secondary hover:bg-surface-tertiary"
+                : "bg-secondary text-secondary hover:bg-tertiary"
             }`}
           >
             <Icon
@@ -161,7 +161,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                     } rounded-xl border-2 transition-all ${
                       localSettings.theme === theme
                         ? "border-brand-jade bg-brand-jade/10"
-                        : "border-default hover:border-medium"
+                        : "border-default hover:border-secondary"
                     }`}
                   >
                     <Icon
@@ -201,7 +201,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                     } rounded-xl border-2 transition-all ${
                       localSettings.gridDensity === density
                         ? "border-brand-jade bg-brand-jade/10"
-                        : "border-default hover:border-medium"
+                        : "border-default hover:border-secondary"
                     }`}
                   >
                     <Typography
@@ -220,7 +220,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
               <label
                 className={`flex items-center justify-between ${
                   isMobile ? "p-4 min-h-[64px]" : "p-3"
-                } rounded-xl bg-surface-secondary`}
+                } rounded-xl bg-secondary`}
               >
                 <div className="flex items-center gap-3">
                   <Icon
@@ -252,7 +252,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
               <label
                 className={`flex items-center justify-between ${
                   isMobile ? "p-4 min-h-[64px]" : "p-3"
-                } rounded-xl bg-surface-secondary`}
+                } rounded-xl bg-secondary`}
               >
                 <div className="flex items-center gap-3">
                   <Icon
@@ -292,7 +292,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
 
             {/* Bulk Operations */}
             <div
-              className={`space-y-4 ${isMobile ? "p-5" : "p-4"} rounded-xl bg-surface-secondary`}
+              className={`space-y-4 ${isMobile ? "p-5" : "p-4"} rounded-xl bg-secondary`}
             >
               <Typography
                 variant="label-md"
@@ -432,7 +432,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
       <div
         className={`flex gap-3 pt-4 border-t border-default ${
           isMobile
-            ? "sticky bottom-0 bg-surface-primary pb-safe -mx-4 px-4"
+            ? "sticky bottom-0 bg-primary pb-safe -mx-4 px-4"
             : ""
         }`}
       >
@@ -482,7 +482,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                 triggerHapticFeedback("light");
                 onClose();
               }}
-              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-tertiary"
+              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-tertiary"
             >
               <Icon name="close" className="w-5 h-5" />
             </button>

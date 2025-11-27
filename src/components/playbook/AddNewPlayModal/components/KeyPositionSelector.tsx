@@ -59,17 +59,17 @@ export const KeyPositionSelector: React.FC<KeyPositionSelectorProps> = ({
   );
 
   return (
-    <div className="space-y-spacing-xs">
+    <div className="space-y-2">
       {/* Label */}
       <Typography variant="label-md" className="block text-secondary">
-        <Icon name="users" className="h-4 w-4 mr-spacing-xs inline" />
+        <Icon name="users" className="h-4 w-4 mr-2 inline" />
         {label}
         {positions.length > 0 && (
           <Typography
             variant="caption"
             as="span"
             color="muted"
-            className="ml-spacing-xs"
+            className="ml-2"
           >
             ({positions.length} selected)
           </Typography>
@@ -85,9 +85,9 @@ export const KeyPositionSelector: React.FC<KeyPositionSelectorProps> = ({
 
       {/* No personnel warning */}
       {noPersonnel ? (
-        <div className="p-spacing-sm bg-surface-secondary rounded-md border border-border">
+        <div className="p-3 bg-secondary rounded-md border border-muted">
           <Typography variant="body-sm" color="muted" className="italic">
-            <Icon name="info" className="h-4 w-4 mr-spacing-xs inline" />
+            <Icon name="info" className="h-4 w-4 mr-2 inline" />
             Select personnel first to choose key positions
           </Typography>
         </div>
@@ -97,9 +97,9 @@ export const KeyPositionSelector: React.FC<KeyPositionSelectorProps> = ({
           <select
             onChange={handleSelectChange}
             disabled={disabled || availableToSelect.length === 0}
-            className="w-full px-spacing-sm py-spacing-xs border border-border rounded-md
+            className="w-full px-3 py-2 border border-muted rounded-md
                        focus:ring-2 focus:ring-primary-default focus:border-transparent
-                       disabled:bg-surface-muted disabled:cursor-not-allowed text-sm"
+                       disabled:bg-muted disabled:cursor-not-allowed text-sm"
             aria-label="Select key position"
           >
             <option value="">
@@ -123,11 +123,11 @@ export const KeyPositionSelector: React.FC<KeyPositionSelectorProps> = ({
 
           {/* Selected positions (chips) */}
           {positions.length > 0 && (
-            <div className="flex flex-wrap gap-spacing-xs mt-spacing-sm p-spacing-sm bg-surface-secondary rounded-md border border-border">
+            <div className="flex flex-wrap gap-xs mt-sm p-sm bg-secondary rounded-md border border-border">
               {positions.map((pos, index) => (
                 <div
                   key={index}
-                  className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-xs 
+                  className="inline-flex items-center gap-xs px-sm py-xs 
                              bg-success-subtle text-success-default rounded-md text-sm font-medium
                              border border-success-muted transition-colors hover:bg-success-muted"
                 >

@@ -78,7 +78,7 @@ const ThemeDemo: React.FC = () => {
           </div>
         </div>
 
-        <div className="p-4 rounded-lg bg-surface-secondary">
+        <div className="p-4 rounded-lg bg-secondary">
           <Typography variant="body-sm">
             This card demonstrates how the theme affects component styling. The
             background and text colors change based on the selected theme.

@@ -182,7 +182,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
       {activities.map((activity) => (
         <div
           key={activity.id}
-          className="flex items-start space-x-3 p-3 hover:bg-surface-secondary rounded-lg"
+          className="flex items-start space-x-3 p-3 hover:bg-secondary rounded-lg"
         >
           {/* Activity Icon */}
           <div className="flex-shrink-0 mt-1">

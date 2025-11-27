@@ -214,7 +214,7 @@ export const FeaturesOverview: Story = {
         </div>
       </div>
 
-      <div className="mt-8 p-4 bg-surface-secondary rounded-lg">
+      <div className="mt-8 p-4 bg-secondary rounded-lg">
         <h4 className="font-medium mb-3">Typical Workflow:</h4>
         <ol className="text-sm space-y-1 list-decimal list-inside">
           <li>Create new script or edit existing one</li>

@@ -33,7 +33,7 @@ export function PasswordStrengthIndicator({
       case "strong":
         return "bg-success";
       default:
-        return "bg-surface-muted";
+        return "bg-muted";
     }
   };
 

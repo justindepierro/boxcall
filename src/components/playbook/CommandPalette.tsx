@@ -150,7 +150,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                 } ${
                   idx === selectedIndex
                     ? "bg-brand-primary/10 border-brand-primary border-2"
-                    : "hover:bg-surface-muted border border-transparent"
+                    : "hover:bg-muted border border-transparent"
                 }`}
               >
                 <Icon
@@ -167,7 +167,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                 </span>
                 {/* Show shortcuts only on desktop */}
                 {!isMobile && cmd.shortcut && (
-                  <kbd className="px-2 py-1 text-xs bg-surface-secondary rounded border border-subtle font-mono">
+                  <kbd className="px-2 py-1 text-xs bg-secondary rounded border border-muted font-mono">
                     {cmd.shortcut}
                   </kbd>
                 )}
@@ -178,21 +178,21 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
         {/* Keyboard Hints - Hide on mobile */}
         {!isMobile && (
-          <div className="mt-4 pt-4 border-t border-subtle text-xs text-muted text-center space-x-4">
+          <div className="mt-4 pt-4 border-t border-muted text-xs text-muted text-center space-x-4">
             <span>
-              <kbd className="px-1.5 py-0.5 bg-surface-secondary rounded text-2xs">
+              <kbd className="px-1.5 py-0.5 bg-secondary rounded text-2xs">
                 ↑↓
               </kbd>{" "}
               Navigate
             </span>
             <span>
-              <kbd className="px-1.5 py-0.5 bg-surface-secondary rounded text-2xs">
+              <kbd className="px-1.5 py-0.5 bg-secondary rounded text-2xs">
                 ↵
               </kbd>{" "}
               Select
             </span>
             <span>
-              <kbd className="px-1.5 py-0.5 bg-surface-secondary rounded text-2xs">
+              <kbd className="px-1.5 py-0.5 bg-secondary rounded text-2xs">
                 Esc
               </kbd>{" "}
               Close

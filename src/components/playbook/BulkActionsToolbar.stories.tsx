@@ -129,7 +129,7 @@ export const AvailableActions: Story = {
         </div>
       </div>
 
-      <div className="mt-6 p-4 bg-surface-secondary rounded-lg">
+      <div className="mt-6 p-4 bg-secondary rounded-lg">
         <h4 className="font-medium mb-2">Usage Context:</h4>
         <p className="text-sm text-secondary">
           This toolbar appears as a floating element at the bottom of the screen

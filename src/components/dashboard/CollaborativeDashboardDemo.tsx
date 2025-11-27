@@ -186,7 +186,7 @@ export const CollaborativeDashboardDemo: React.FC<
         </div>
 
         {/* Collaboration Status */}
-        <Card className="bg-surface-secondary p-4">
+        <Card className="bg-secondary p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-3 h-3 bg-text-success rounded-full"></div>
@@ -202,7 +202,7 @@ export const CollaborativeDashboardDemo: React.FC<
                 {mockCollaborationData.participants.map((participant) => (
                   <div
                     key={participant.id}
-                    className="w-8 h-8 bg-primary text-on-primary rounded-full flex items-center justify-center text-sm font-medium border-2 border-surface-primary"
+                    className="w-8 h-8 bg-primary text-on-primary rounded-full flex items-center justify-center text-sm font-medium border-2 border-bg-primary"
                     title={participant.name}
                   >
                     {participant.name.charAt(0)}
@@ -324,7 +324,7 @@ export const CollaborativeDashboardDemo: React.FC<
         </DashboardGrid>
 
         {/* Technical Details */}
-        <Card className="p-4 bg-surface-secondary">
+        <Card className="p-4 bg-secondary">
           <details>
             <summary className="cursor-pointer font-medium text-primary mb-2 flex items-center gap-2">
               <Icon name="settings" size="sm" />

@@ -44,7 +44,7 @@ Used by coaches to create structured practice scripts that organize which plays 
   },
   decorators: [
     (Story) => (
-      <div className="min-h-screen bg-surface-muted p-4">
+      <div className="min-h-screen bg-muted p-4">
         <Story />
       </div>
     ),

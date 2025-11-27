@@ -79,7 +79,7 @@ const getSidebarStyles = (headerVisible: boolean) => {
   const topPosition = headerVisible ? "top-16" : "top-0";
   return `
     fixed ${topPosition} bottom-0 z-[50] flex flex-col
-    bg-surface-primary/95 dark:bg-surface-secondary/95
+    bg-primary/95 dark:bg-secondary/95
     shadow-2xl backdrop-blur-md
     transform transition-all duration-300 ease-out
     motion-reduce:transition-none motion-reduce:transform-none
@@ -109,7 +109,7 @@ const getSidebarItemStyles = (item: SidebarItem, level: number = 0) => {
 const getBadgeStyles = () => {
   return `
     ml-auto px-2 py-0.5 text-xs font-medium rounded-full
-    bg-jade-600 dark:bg-jade-600 text-surface-primary
+    bg-jade-600 dark:bg-jade-600 text-bg-primary
   `;
 };
 const SidebarItemComponent: React.FC<{
@@ -377,7 +377,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   variant="primary"
                   size="md"
                   onClick={onToggle}
-                  className="!p-spacing-sm rounded-radius-md flex-shrink-0"
+                  className="!p-sm rounded-radius-md flex-shrink-0"
                   aria-label="Toggle menu"
                 >
                   <Icon name="menu" size="md" />
@@ -439,7 +439,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   placeholder="Search navigation..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 text-sm bg-surface-secondary dark:bg-surface-muted rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-jade-400 focus:border-transparent transition-colors duration-200"
+                  className="w-full pl-10 pr-4 py-2 text-sm bg-secondary dark:bg-muted rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-jade-400 focus:border-transparent transition-colors duration-200"
                   aria-label="Search navigation items"
                 />
               </div>

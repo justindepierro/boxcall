@@ -58,7 +58,7 @@ export function SaveHistoryPanel() {
       case "conflict":
         return "text-warning-600 bg-warning-50";
       default:
-        return "text-secondary bg-surface-secondary";
+        return "text-secondary bg-secondary";
     }
   };
 
@@ -129,7 +129,7 @@ export function SaveHistoryPanel() {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-20 right-4 z-30 flex items-center gap-2 px-3 py-2 bg-surface-primary border rounded-lg shadow-lg hover:bg-surface-secondary transition-colors"
+        className="fixed bottom-20 right-4 z-30 flex items-center gap-2 px-3 py-2 bg-primary border rounded-lg shadow-lg hover:bg-secondary transition-colors"
         title="Open Save History Panel"
       >
         <svg
@@ -154,9 +154,9 @@ export function SaveHistoryPanel() {
 
   // Full panel (max-w-2xl ≈ 672px, max-h-screen for responsiveness)
   return (
-    <div className="fixed bottom-4 right-4 z-30 w-full max-w-2xl h-128 bg-surface-primary border rounded-lg shadow-2xl flex flex-col">
+    <div className="fixed bottom-4 right-4 z-30 w-full max-w-2xl h-128 bg-primary border rounded-lg shadow-2xl flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b bg-surface-secondary">
+      <div className="flex items-center justify-between p-4 border-b bg-secondary">
         <div className="flex items-center gap-3">
           <svg
             className="w-5 h-5 text-primary"
@@ -181,7 +181,7 @@ export function SaveHistoryPanel() {
         <div className="flex items-center gap-2">
           <button
             onClick={exportHistory}
-            className="p-2 hover:bg-surface-muted rounded"
+            className="p-2 hover:bg-muted rounded"
             title="Export history as JSON"
           >
             <svg
@@ -201,7 +201,7 @@ export function SaveHistoryPanel() {
 
           <button
             onClick={() => setIsOpen(false)}
-            className="p-2 hover:bg-surface-muted rounded"
+            className="p-2 hover:bg-muted rounded"
             title="Close panel"
           >
             <svg
@@ -222,7 +222,7 @@ export function SaveHistoryPanel() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 p-4 bg-surface-secondary border-b">
+      <div className="grid grid-cols-3 gap-4 p-4 bg-secondary border-b">
         <div className="text-center">
           <div className="text-2xl font-bold text-primary">{queueLength}</div>
           <div className="text-xs text-secondary">Queue Length</div>
@@ -263,7 +263,7 @@ export function SaveHistoryPanel() {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex gap-1 p-2 border-b bg-surface-secondary">
+      <div className="flex gap-1 p-2 border-b bg-secondary">
         {(["all", "success", "error", "warning"] as const).map((status) => (
           <button
             key={status}
@@ -273,7 +273,7 @@ export function SaveHistoryPanel() {
               ${
                 filter === status
                   ? "bg-primary-100 text-primary-700 font-medium"
-                  : "text-secondary hover:bg-surface-muted"
+                  : "text-secondary hover:bg-muted"
               }
             `}
           >
@@ -310,7 +310,7 @@ export function SaveHistoryPanel() {
             .map((entry) => (
               <div
                 key={entry.id}
-                className="flex items-start gap-3 p-3 rounded-lg border bg-surface-secondary hover:bg-surface-muted transition-colors"
+                className="flex items-start gap-3 p-3 rounded-lg border bg-secondary hover:bg-muted transition-colors"
               >
                 {/* Status Icon */}
                 <div

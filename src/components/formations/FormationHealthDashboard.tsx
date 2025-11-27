@@ -223,7 +223,7 @@ export const FormationHealthDashboard: React.FC<
                       actionLoading === `standalone-${formation.id}` ||
                       actionLoading !== null
                     }
-                    className="px-3 py-1 text-sm border rounded hover:bg-surface-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-3 py-1 text-sm border rounded hover:bg-secondary disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {actionLoading === `standalone-${formation.id}`
                       ? "Marking..."
@@ -240,7 +240,7 @@ export const FormationHealthDashboard: React.FC<
                       {matches[formation.id].map((match) => (
                         <div
                           key={match.formation.id}
-                          className="flex items-center justify-between bg-surface-secondary rounded p-3"
+                          className="flex items-center justify-between bg-secondary rounded p-3"
                         >
                           <div className="flex-1">
                             <div className="flex items-center gap-2">

@@ -159,7 +159,7 @@ export const AdaptiveChart: React.FC<AdaptiveChartProps> = ({
     if (!showInsights || insights.length === 0) return null;
 
     return (
-      <div className="chart-insights mt-3 p-3 bg-surface-secondary rounded-lg">
+      <div className="chart-insights mt-3 p-3 bg-secondary rounded-lg">
         <h4 className="text-sm font-medium text-primary mb-2">
           Smart Insights
         </h4>
@@ -217,13 +217,13 @@ interface InsightBadgeProps {
 const InsightBadge: React.FC<InsightBadgeProps> = ({ insight }) => {
   const getInsightColor = (type: DataInsight["type"]) => {
     const colors = {
-      trend: "bg-surface-info text-info",
-      anomaly: "bg-surface-warning text-warning",
-      achievement: "bg-surface-success text-success",
+      trend: "bg-info/20 text-info",
+      anomaly: "bg-warning/20 text-warning",
+      achievement: "bg-success/20 text-success",
       concern: "bg-surface-error text-error",
-      opportunity: "bg-surface-tertiary text-tertiary",
+      opportunity: "bg-tertiary text-tertiary",
     };
-    return colors[type] || "bg-surface-secondary text-primary";
+    return colors[type] || "bg-secondary text-primary";
   };
 
   const getPriorityIcon = (priority: DataInsight["priority"]) => {

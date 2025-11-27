@@ -182,7 +182,7 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
         {scripts.map((script) => (
           <div
             key={script.id}
-            className="bg-surface-primary rounded-lg border border-subtle p-6 hover:border-light transition-all hover:shadow-md flex flex-col min-h-72"
+            className="bg-primary rounded-lg border border-muted p-6 hover:border-light transition-all hover:shadow-md flex flex-col min-h-72"
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1 min-w-0">
@@ -236,7 +236,7 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
               </div>
             )}
 
-            <div className="mt-auto pt-4 border-t border-subtle">
+            <div className="mt-auto pt-4 border-t border-muted">
               <div className="flex items-center justify-between mb-3">
                 <Typography variant="caption" className="text-muted">
                   Updated {formatDate(script.updatedAt)}

@@ -187,7 +187,7 @@ const UserTeamMembershipsDemo = () => {
               {pendingMemberships.map((membership: any) => (
                 <div
                   key={membership.id}
-                  className="p-4 border rounded-lg hover:bg-surface-secondary border-yellow-200 bg-yellow-50"
+                  className="p-4 border rounded-lg hover:bg-secondary border-yellow-200 bg-yellow-50"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div>
@@ -231,7 +231,7 @@ const UserTeamMembershipsDemo = () => {
             <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-gray-300">
                 <thead>
-                  <tr className="bg-surface-secondary">
+                  <tr className="bg-secondary">
                     <th className="border border px-4 py-2 text-left">Team</th>
                     <th className="border border px-4 py-2 text-left">Role</th>
                     <th className="border border px-4 py-2 text-left">

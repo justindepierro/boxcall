@@ -64,15 +64,15 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ teamId }) => {
   const getRoleColor = (role: TeamRole) => {
     switch (role) {
       case "head_coach":
-        return "bg-surface-primary text-primary";
+        return "bg-primary text-primary";
       case "assistant_coach":
-        return "bg-surface-info text-info";
+        return "bg-info/20 text-info";
       case "coordinator":
-        return "bg-surface-success text-success";
+        return "bg-success/20 text-success";
       case "manager":
-        return "bg-surface-warning text-warning";
+        return "bg-warning/20 text-warning";
       default:
-        return "bg-surface-secondary text-secondary";
+        return "bg-secondary text-secondary";
     }
   };
 
@@ -205,10 +205,10 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ teamId }) => {
                   <span
                     className={`px-2 py-1 rounded-lg text-xs ${
                       member.status === "active"
-                        ? "bg-surface-success text-success"
+                        ? "bg-success/20 text-success"
                         : member.status === "pending"
-                          ? "bg-surface-warning text-warning"
-                          : "bg-surface-secondary text-primary"
+                          ? "bg-warning/20 text-warning"
+                          : "bg-secondary text-primary"
                     }`}
                   >
                     {member.status === "active"

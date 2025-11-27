@@ -34,7 +34,7 @@ export function BulkActionToolbar({
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 z-30 bg-surface-primary border-t border-primary shadow-xl">
+      <div className="fixed bottom-0 left-0 right-0 z-30 bg-primary border-t border-primary shadow-xl">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-4">
             {/* Selection count */}
@@ -64,14 +64,14 @@ export function BulkActionToolbar({
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowMetadataModal(true)}
-                className="px-4 py-2 text-sm font-medium text-primary bg-white border border-primary rounded-md hover:bg-surface-secondary transition-colors"
+                className="px-4 py-2 text-sm font-medium text-primary bg-white border border-primary rounded-md hover:bg-secondary transition-colors"
               >
                 📝 Edit Metadata
               </button>
 
               <button
                 onClick={() => setShowDirectionModal(true)}
-                className="px-4 py-2 text-sm font-medium text-primary bg-white border border-primary rounded-md hover:bg-surface-secondary transition-colors"
+                className="px-4 py-2 text-sm font-medium text-primary bg-white border border-primary rounded-md hover:bg-secondary transition-colors"
               >
                 ↔️ Set Direction
               </button>
@@ -83,7 +83,7 @@ export function BulkActionToolbar({
                 🗑️ Delete
               </button>
 
-              <div className="w-px h-6 bg-border-subtle" />
+              <div className="w-px h-6 bg-border-muted" />
 
               <button
                 onClick={clearSelection}

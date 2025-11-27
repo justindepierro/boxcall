@@ -136,7 +136,7 @@ export const ReactionPicker: React.FC<ReactionPickerProps> = ({
                 ${
                   user_has_reacted
                     ? "bg-blue-100 text-blue-700 border-2 border-blue-500 hover:bg-blue-200"
-                    : "bg-surface-secondary text-secondary border hover:bg-surface-muted hover:border-gray-300"
+                    : "bg-secondary text-secondary border hover:bg-muted hover:border-gray-300"
                 }
               `}
             >
@@ -188,7 +188,7 @@ export const ReactionPicker: React.FC<ReactionPickerProps> = ({
           disabled={loading}
           className="
             flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium
-            bg-surface-muted text-secondary border hover:bg-surface-secondary
+            bg-muted text-secondary border hover:bg-secondary
             transition-colors disabled:opacity-50 disabled:cursor-not-allowed
           "
           title="Add reaction"
@@ -199,7 +199,7 @@ export const ReactionPicker: React.FC<ReactionPickerProps> = ({
 
         {/* Reaction picker dropdown */}
         {showPicker && (
-          <div className="absolute bottom-full left-0 mb-2 bg-surface-primary rounded-lg shadow-xl p-2 z-50">
+          <div className="absolute bottom-full left-0 mb-2 bg-primary rounded-lg shadow-xl p-2 z-50">
             <div className="grid grid-cols-4 gap-1">
               {allReactionTypes.map((type) => {
                 const existingSummary = summary.find(
@@ -212,7 +212,7 @@ export const ReactionPicker: React.FC<ReactionPickerProps> = ({
                     key={type}
                     onClick={() => handleToggleReaction(type)}
                     className={`
-                      p-2 rounded-lg text-2xl hover:bg-surface-muted transition-colors
+                      p-2 rounded-lg text-2xl hover:bg-muted transition-colors
                       ${hasReacted ? "bg-blue-50 ring-2 ring-blue-500" : ""}
                     `}
                     title={REACTION_LABELS[type]}

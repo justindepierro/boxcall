@@ -48,14 +48,14 @@ export const PlayerCard = React.memo<PlayerCardProps>(
     return (
       <Card
         onClick={() => onNavigate(player.id)}
-        className={`p-spacing-md transition-all duration-300 cursor-pointer ${
+        className={`p-md transition-all duration-300 cursor-pointer ${
           isSelected
             ? "ring-2 ring-cyan-400 bg-cyan-50/30 shadow-blue-lg"
             : "shadow-blue-md hover:shadow-blue-lg hover:scale-[1.02] hover:-translate-y-1"
         }`}
       >
-        <div className="flex items-start justify-between mb-spacing-md">
-          <div className="flex items-center gap-spacing-sm">
+        <div className="flex items-start justify-between mb-md">
+          <div className="flex items-center gap-sm">
             {/* Selection Checkbox */}
             <input
               type="checkbox"
@@ -119,7 +119,7 @@ export const PlayerCard = React.memo<PlayerCardProps>(
               </div>
             </div>
           </div>
-          <div className="flex gap-spacing-xs">
+          <div className="flex gap-xs">
             <Button
               size="sm"
               variant="ghost"
@@ -135,7 +135,7 @@ export const PlayerCard = React.memo<PlayerCardProps>(
           </div>
         </div>
 
-        <div className="space-y-spacing-xs text-sm">
+        <div className="space-y-xs text-sm">
           <div className="flex justify-between">
             <span className="text-secondary">Height:</span>
             <span className="font-medium">
@@ -174,7 +174,7 @@ export const PlayerCard = React.memo<PlayerCardProps>(
 
         {/* Invitation Actions */}
         {onSendInvite && !player.user_id && (
-          <div className="mt-spacing-md pt-spacing-md border-t border-surface-border">
+          <div className="mt-md pt-md border-t border-surface-border">
             <Button
               size="sm"
               variant={

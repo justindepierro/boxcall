@@ -26,8 +26,8 @@ export function UndoRedoIndicator() {
           transition-all duration-200
           ${
             canUndo
-              ? "bg-surface-primary border-primary-300 hover:bg-primary-50 hover:border-primary-400 text-primary cursor-pointer"
-              : "bg-surface-muted border-muted text-muted cursor-not-allowed opacity-50"
+              ? "bg-primary border-primary-300 hover:bg-primary-50 hover:border-primary-400 text-primary cursor-pointer"
+              : "bg-muted border-muted text-muted cursor-not-allowed opacity-50"
           }
         `}
         title={
@@ -50,7 +50,7 @@ export function UndoRedoIndicator() {
           />
         </svg>
         <span className="text-sm font-medium">Undo</span>
-        <kbd className="text-xs px-1.5 py-0.5 bg-surface-secondary rounded border">
+        <kbd className="text-xs px-1.5 py-0.5 bg-secondary rounded border">
           ⌘Z
         </kbd>
       </button>
@@ -64,8 +64,8 @@ export function UndoRedoIndicator() {
           transition-all duration-200
           ${
             canRedo
-              ? "bg-surface-primary border-primary-300 hover:bg-primary-50 hover:border-primary-400 text-primary cursor-pointer"
-              : "bg-surface-muted border-muted text-muted cursor-not-allowed opacity-50"
+              ? "bg-primary border-primary-300 hover:bg-primary-50 hover:border-primary-400 text-primary cursor-pointer"
+              : "bg-muted border-muted text-muted cursor-not-allowed opacity-50"
           }
         `}
         title={
@@ -88,14 +88,14 @@ export function UndoRedoIndicator() {
           />
         </svg>
         <span className="text-sm font-medium">Redo</span>
-        <kbd className="text-xs px-1.5 py-0.5 bg-surface-secondary rounded border">
+        <kbd className="text-xs px-1.5 py-0.5 bg-secondary rounded border">
           ⌘⇧Z
         </kbd>
       </button>
 
       {/* History Count */}
       <div
-        className="flex items-center gap-1 px-3 py-2 rounded-lg border border-muted bg-surface-secondary text-secondary"
+        className="flex items-center gap-1 px-3 py-2 rounded-lg border border-muted bg-secondary text-secondary"
         title={`Undo stack: ${state.undoStack.length} | Redo stack: ${state.redoStack.length}`}
       >
         <svg

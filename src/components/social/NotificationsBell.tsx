@@ -136,7 +136,7 @@ export const NotificationsBell: React.FC<NotificationsBellProps> = ({
 
       {/* Notifications Dropdown */}
       {showDropdown && (
-        <div className="absolute right-0 mt-2 w-80 bg-surface-primary border border-border rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
+        <div className="absolute right-0 mt-2 w-80 bg-primary border border-border rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
           <div className="p-4 border-b border-border">
             <h3 className="text-lg font-semibold">Notifications</h3>
           </div>
@@ -155,8 +155,8 @@ export const NotificationsBell: React.FC<NotificationsBellProps> = ({
                 <button
                   key={notification.id}
                   onClick={() => handleNotificationClick(notification)}
-                  className={`w-full p-4 text-left hover:bg-surface-secondary focus:outline-none focus:bg-surface-secondary ${
-                    !notification.is_read ? "bg-surface-info" : ""
+                  className={`w-full p-4 text-left hover:bg-secondary focus:outline-none focus:bg-secondary ${
+                    !notification.is_read ? "bg-info/20" : ""
                   }`}
                 >
                   <div className="flex items-start space-x-3">

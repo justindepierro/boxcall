@@ -177,7 +177,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
                     <button
                       key={query}
                       onClick={() => handleSuggestedSearch(query)}
-                      className="px-3 py-1 text-sm bg-surface-secondary hover:bg-surface-muted rounded-lg border border-subtle transition-colors"
+                      className="px-3 py-1 text-sm bg-secondary hover:bg-muted rounded-lg border border-muted transition-colors"
                     >
                       {label}
                     </button>
@@ -214,7 +214,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="mt-8 p-4 rounded-xl bg-surface-secondary max-w-md w-full"
+              className="mt-8 p-4 rounded-xl bg-secondary max-w-md w-full"
             >
               <div className="flex items-start gap-3">
                 <Icon
@@ -307,7 +307,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleCreatePlay}
-              className="p-4 rounded-xl bg-surface-secondary hover:bg-surface-tertiary border border-subtle hover:border-brand-jade transition-all text-left"
+              className="p-4 rounded-xl bg-secondary hover:bg-tertiary border border-muted hover:border-brand-jade transition-all text-left"
             >
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center flex-shrink-0">
@@ -331,7 +331,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleCreatePlay}
-              className="p-4 rounded-xl bg-surface-secondary hover:bg-surface-tertiary border border-subtle hover:border-brand-jade transition-all text-left"
+              className="p-4 rounded-xl bg-secondary hover:bg-tertiary border border-muted hover:border-brand-jade transition-all text-left"
             >
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center flex-shrink-0">
@@ -355,7 +355,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleCreatePlay}
-              className="p-4 rounded-xl bg-surface-secondary hover:bg-surface-tertiary border border-subtle hover:border-brand-jade transition-all text-left"
+              className="p-4 rounded-xl bg-secondary hover:bg-tertiary border border-muted hover:border-brand-jade transition-all text-left"
             >
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
@@ -395,7 +395,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
 
         {/* Quick Tips */}
         <div className="max-w-2xl w-full grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
-          <div className="text-center p-4 rounded-2xl bg-surface-secondary dark:bg-slate-800/50">
+          <div className="text-center p-4 rounded-2xl bg-secondary dark:bg-slate-800/50">
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-electric-500 to-purple-500 flex items-center justify-center mx-auto mb-3">
               <Icon name="zap" className="w-6 h-6 text-white" />
             </div>
@@ -407,7 +407,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
             </Typography>
           </div>
 
-          <div className="text-center p-4 rounded-2xl bg-surface-secondary dark:bg-slate-800/50">
+          <div className="text-center p-4 rounded-2xl bg-secondary dark:bg-slate-800/50">
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mx-auto mb-3">
               <Icon name="upload" className="w-6 h-6 text-white" />
             </div>
@@ -419,7 +419,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
             </Typography>
           </div>
 
-          <div className="text-center p-4 rounded-2xl bg-surface-secondary dark:bg-slate-800/50">
+          <div className="text-center p-4 rounded-2xl bg-secondary dark:bg-slate-800/50">
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-jade-500 to-emerald-500 flex items-center justify-center mx-auto mb-3">
               <Icon name="image" className="w-6 h-6 text-white" />
             </div>

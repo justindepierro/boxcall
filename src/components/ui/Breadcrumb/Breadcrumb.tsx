@@ -94,13 +94,13 @@ const CollapsedIndicator: React.FC<{
         ...
       </Button>
       {isExpanded && (
-        <div className="absolute top-full left-0 mt-1 py-1 z-10 min-w-48 bg-surface-primary elevation-dropdown border-subtle rounded-lg">
+        <div className="absolute top-full left-0 mt-1 py-1 z-10 min-w-48 bg-primary elevation-dropdown border-muted rounded-lg">
           {hiddenItems.map((item) => (
             <Button
               key={item.id}
               variant="neutralLink"
               size="xs"
-              className="w-full justify-start px-3 py-2 h-auto surface-subtle-hover"
+              className="w-full justify-start px-3 py-2 h-auto hover:bg-muted"
               onClick={() => {
                 onItemClick(item);
                 setIsExpanded(false);

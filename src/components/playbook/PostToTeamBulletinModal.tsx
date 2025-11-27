@@ -124,7 +124,7 @@ export const PostToTeamBulletinModal: React.FC<
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} size="md">
-      <div className="bg-surface-primary rounded-xl shadow-2xl max-w-2xl w-full">
+      <div className="bg-primary rounded-xl shadow-2xl max-w-2xl w-full">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-border">
           <div className="flex items-center gap-3">
@@ -153,7 +153,7 @@ export const PostToTeamBulletinModal: React.FC<
         {/* Content */}
         <div className="p-6 space-y-4">
           {/* Play Preview */}
-          <div className="bg-surface-subtle rounded-lg p-4 border border-border">
+          <div className="bg-subtle rounded-lg p-4 border border-border">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-lg bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
                 <Icon name="file" className="w-6 h-6 text-brand-primary" />
@@ -182,7 +182,7 @@ export const PostToTeamBulletinModal: React.FC<
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Add a message about this play... (e.g., 'Check out this new play we're installing this week!')"
-              className="w-full px-4 py-3 bg-surface-primary border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none transition-colors"
+              className="w-full px-4 py-3 bg-primary border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none transition-colors"
               rows={4}
               disabled={isSubmitting}
             />
@@ -202,7 +202,7 @@ export const PostToTeamBulletinModal: React.FC<
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-3 p-6 border-t border-border bg-surface-subtle/50">
+        <div className="flex items-center justify-end gap-3 p-6 border-t border-border bg-subtle/50">
           <Button
             variant="ghost"
             size="md"

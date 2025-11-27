@@ -55,10 +55,10 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
 
   if (loading) {
     return (
-      <div className="flex items-center gap-3 bg-surface-secondary/50 rounded-lg px-3 py-2">
-        <div className="w-4 h-4 bg-surface-muted rounded-lg animate-pulse"></div>
-        <div className="w-12 h-3 bg-surface-muted rounded-lg animate-pulse"></div>
-        <div className="w-8 h-3 bg-surface-muted rounded-lg animate-pulse"></div>
+      <div className="flex items-center gap-3 bg-secondary/50 rounded-lg px-3 py-2">
+        <div className="w-4 h-4 bg-muted rounded-lg animate-pulse"></div>
+        <div className="w-12 h-3 bg-muted rounded-lg animate-pulse"></div>
+        <div className="w-8 h-3 bg-muted rounded-lg animate-pulse"></div>
       </div>
     );
   }
@@ -157,7 +157,7 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
         {/* Recent Achievement Icons with Animation */}
         {recentAchievements.length > 0 && (
           <>
-            <div className="w-px h-8 bg-gradient-to-b from-border to-border-subtle"></div>
+            <div className="w-px h-8 bg-gradient-to-b from-border to-border-muted"></div>
             <div className="flex flex-col items-center gap-2">
               <Typography
                 variant="caption"
@@ -230,7 +230,7 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
               </Typography>
             </div>
 
-            <div className="text-center p-4 bg-gradient-to-br from-surface-muted to-bg-surface-primary rounded-lg">
+            <div className="text-center p-4 bg-gradient-to-br from-bg-muted to-bg-primary rounded-lg">
               <Icon
                 name="star"
                 size="md"
@@ -247,7 +247,7 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
               </Typography>
             </div>
 
-            <div className="text-center p-4 bg-gradient-to-br from-surface-muted to-bg-surface-primary rounded-lg">
+            <div className="text-center p-4 bg-gradient-to-br from-bg-muted to-bg-primary rounded-lg">
               <Icon
                 name="award"
                 size="md"
@@ -301,7 +301,7 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
                   {helmetStickers.map((sticker) => (
                     <div
                       key={sticker.id}
-                      className="flex items-center gap-3 p-3 bg-surface-secondary rounded-lg"
+                      className="flex items-center gap-3 p-3 bg-secondary rounded-lg"
                     >
                       <Icon
                         name="star"
@@ -345,8 +345,8 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
                       key={medal.id}
                       className={`flex items-center gap-3 p-3 rounded-lg ${
                         medal.earned
-                          ? "bg-surface-secondary"
-                          : "bg-surface-muted opacity-60"
+                          ? "bg-secondary"
+                          : "bg-muted opacity-60"
                       }`}
                     >
                       <Icon
@@ -375,7 +375,7 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
                           medal.progress !== undefined &&
                           medal.maxProgress && (
                             <div className="mt-1">
-                              <div className="w-full bg-surface-muted rounded-full h-2">
+                              <div className="w-full bg-muted rounded-full h-2">
                                 <div
                                   className="h-2 rounded-full"
                                   style={{

@@ -124,7 +124,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               className={`px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm ${
                 currentView === "playbook"
                   ? "bg-interactive-primary-base hover:bg-interactive-primary-hover text-white shadow-lg"
-                  : "bg-bg-subtle hover:bg-bg-muted dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-jade-600 dark:text-jade-400"
+                  : "bg-subtle hover:bg-muted dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-jade-600 dark:text-jade-400"
               }`}
               icon={
                 <Icon
@@ -152,7 +152,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               className={`px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm ${
                 currentView === "practice-script"
                   ? "bg-interactive-primary-base hover:bg-interactive-primary-hover text-white shadow-lg"
-                  : "bg-bg-subtle hover:bg-bg-muted dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-jade-600 dark:text-jade-400"
+                  : "bg-subtle hover:bg-muted dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-jade-600 dark:text-jade-400"
               }`}
               icon={
                 <Icon
@@ -180,7 +180,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               className={`px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm ${
                 currentView === "game-plan"
                   ? "bg-interactive-primary-base hover:bg-interactive-primary-hover text-white shadow-lg"
-                  : "bg-bg-subtle hover:bg-bg-muted dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-jade-600 dark:text-jade-400"
+                  : "bg-subtle hover:bg-muted dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-jade-600 dark:text-jade-400"
               }`}
               icon={
                 <Icon
@@ -208,7 +208,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               className={`px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm ${
                 currentView === "analytics"
                   ? "bg-interactive-primary-base hover:bg-interactive-primary-hover text-white shadow-lg"
-                  : "bg-bg-subtle hover:bg-bg-muted dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-jade-600 dark:text-jade-400"
+                  : "bg-subtle hover:bg-muted dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-jade-600 dark:text-jade-400"
               }`}
               icon={
                 <Icon

@@ -70,7 +70,7 @@ export function LandscapePrompt({
         {/* Continue anyway button */}
         <button
           onClick={handleContinue}
-          className="mt-8 rounded-lg border border-border bg-surface-secondary px-6 py-3 text-sm font-medium text-secondary transition-colors hover:bg-surface-muted focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          className="mt-8 rounded-lg border border-border bg-secondary px-6 py-3 text-sm font-medium text-secondary transition-colors hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           type="button"
         >
           Continue in portrait anyway

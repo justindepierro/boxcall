@@ -51,7 +51,7 @@ export const AdaptiveContentWidget: React.FC<AdaptiveContentWidgetProps> = ({
         {recommendations.slice(0, 3).map((rec, index) => (
           <div
             key={index}
-            className="flex items-center justify-between p-2 rounded-lg bg-surface-secondary hover:bg-surface-hover transition-colors cursor-pointer"
+            className="flex items-center justify-between p-2 rounded-lg bg-secondary hover:bg-surface-hover transition-colors cursor-pointer"
           >
             <div className="flex items-center space-x-2">
               <Icon

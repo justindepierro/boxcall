@@ -102,7 +102,7 @@ export function Form({
   };
   const variantClasses = {
     default: "space-y-6",
-    card: "bg-surface-primary elevation-card rounded-lg border-subtle p-6 space-y-6",
+    card: "bg-primary elevation-card rounded-lg border-muted p-6 space-y-6",
     inline: "space-y-4",
     modal: "space-y-4",
   };
@@ -144,7 +144,7 @@ export function Form({
       {/* Form Content */}
       <div className={loading ? "relative" : ""}>
         {loading && (
-          <div className="absolute inset-0 bg-surface-primary/50 dark:bg-surface-primary/50 backdrop-blur-sm rounded-lg z-10 flex items-center justify-center">
+          <div className="absolute inset-0 bg-primary/50 dark:bg-primary/50 backdrop-blur-sm rounded-lg z-10 flex items-center justify-center">
             <div className="flex items-center space-x-2">
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-jade-600"></div>
               <Typography variant="body-sm" color="muted">
@@ -157,7 +157,7 @@ export function Form({
       </div>
       {/* Form Footer */}
       {footer && (
-        <div className="pt-4 border-t border-subtle dark:border-text-tertiary">
+        <div className="pt-4 border-t border-muted dark:border-text-tertiary">
           {footer}
         </div>
       )}

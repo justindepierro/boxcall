@@ -19,14 +19,14 @@ export const ConflictsPanel: React.FC<ConflictsPanelProps> = ({
 
   return (
     <Card className={`calendar-card ${className || ""}`.trim()}>
-      <div className="flex items-center gap-spacing-xs mb-spacing-md">
+      <div className="flex items-center gap-xs mb-md">
         <Icon name="alert-triangle" size="lg" className="text-error" />
         <Typography variant="label-lg" className="text-primary">
           Scheduling Conflicts ({conflicts.length})
         </Typography>
       </div>
 
-      <div className="space-y-spacing-sm">
+      <div className="space-y-sm">
         {conflicts.map((conflict) => (
           <ConflictCard key={conflict.eventId} conflict={conflict} />
         ))}
@@ -47,14 +47,14 @@ const ConflictCard: React.FC<ConflictCardProps> = ({ conflict }) => {
   const getSeverityColor = (severity: string) => {
     return severity === "error"
       ? "text-error border-text-error bg-surface-error"
-      : "text-warning border-text-warning bg-surface-warning";
+      : "text-warning border-text-warning bg-warning/20";
   };
 
   return (
     <div
-      className={`border rounded-lg p-spacing-sm ${getSeverityColor(conflict.severity)}`}
+      className={`border rounded-lg p-sm ${getSeverityColor(conflict.severity)}`}
     >
-      <div className="flex items-start gap-spacing-xs mb-spacing-xs">
+      <div className="flex items-start gap-xs mb-xs">
         <Icon name={getSeverityIcon()} size="sm" />
         <div className="flex-1">
           <Typography
@@ -74,7 +74,7 @@ const ConflictCard: React.FC<ConflictCardProps> = ({ conflict }) => {
         {conflict.conflictingEvents.slice(0, 3).map((event, index) => (
           <div
             key={index}
-            className="bg-surface-primary/50 rounded-lg px-spacing-xs py-1"
+            className="bg-primary/50 rounded-lg px-xs py-1"
           >
             <Typography variant="caption" as="span" className="font-medium">
               {event.title}

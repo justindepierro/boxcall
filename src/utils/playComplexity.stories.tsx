@@ -116,22 +116,22 @@ const PlayComplexityDemo = () => {
   }));
 
   return (
-    <Card className="w-full max-w-6xl p-spacing-lg">
-      <div className="space-y-spacing-lg">
+    <Card className="w-full max-w-6xl p-lg">
+      <div className="space-y-lg">
         <div>
-          <h3 className="text-lg font-semibold mb-spacing-xs">
+          <h3 className="text-lg font-semibold mb-xs">
             Play Complexity Analysis
           </h3>
-          <p className="text-sm text-secondary mb-spacing-md">
+          <p className="text-sm text-secondary mb-md">
             Analyze football plays for complexity and award appropriate badges
             based on routes, formations, personnel, and concepts.
           </p>
         </div>
 
         {/* Badge Legend */}
-        <div className="space-y-spacing-md">
+        <div className="space-y-md">
           <h4 className="font-medium">Complexity Badge System</h4>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-spacing-md">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-md">
             {(
               [
                 "beginner",
@@ -145,13 +145,13 @@ const PlayComplexityDemo = () => {
               return (
                 <div
                   key={badge}
-                  className="p-spacing-sm border rounded-lg text-center"
+                  className="p-sm border rounded-lg text-center"
                 >
-                  <div className="text-2xl mb-spacing-xs">{info.icon}</div>
+                  <div className="text-2xl mb-xs">{info.icon}</div>
                   <div className="font-medium text-sm">{info.title}</div>
                   <Badge
                     variant={info.color as any}
-                    className="mt-spacing-xs text-xs"
+                    className="mt-xs text-xs"
                   >
                     {badge}
                   </Badge>
@@ -162,10 +162,10 @@ const PlayComplexityDemo = () => {
         </div>
 
         {/* Analyzed Plays */}
-        <div className="space-y-spacing-md">
+        <div className="space-y-md">
           <h4 className="font-medium">Play Analysis Examples</h4>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
             {analyzedPlays.map((play) => {
               const badgeInfo = getComplexityBadgeInfo(play.metrics.badge);
               const maxScore = 100;
@@ -175,9 +175,9 @@ const PlayComplexityDemo = () => {
               return (
                 <div
                   key={play.id}
-                  className="p-spacing-md border rounded-lg hover:bg-gray-50"
+                  className="p-md border rounded-lg hover:bg-gray-50"
                 >
-                  <div className="flex items-start justify-between mb-spacing-md">
+                  <div className="flex items-start justify-between mb-md">
                     <div>
                       <h5 className="font-medium">
                         {play.p_type} - {play.formation}
@@ -190,14 +190,14 @@ const PlayComplexityDemo = () => {
                   </div>
 
                   {/* Complexity Score */}
-                  <div className="space-y-spacing-xs mb-spacing-md">
+                  <div className="space-y-xs mb-md">
                     <div className="flex items-center justify-between text-sm">
                       <span>Complexity Score</span>
                       <span className="font-medium">
                         {play.metrics.totalScore}/100
                       </span>
                     </div>
-                    <div className="w-full bg-surface-muted rounded-full h-2">
+                    <div className="w-full bg-muted rounded-full h-2">
                       <div
                         className="bg-blue-600 h-2 rounded-full"
                         style={{ width: `${progressPercentage}%` }}
@@ -206,8 +206,8 @@ const PlayComplexityDemo = () => {
                   </div>
 
                   {/* Metrics Breakdown */}
-                  <div className="grid grid-cols-2 gap-spacing-sm text-sm">
-                    <div className="space-y-spacing-xs">
+                  <div className="grid grid-cols-2 gap-sm text-sm">
+                    <div className="space-y-xs">
                       <div className="flex justify-between">
                         <span>Routes:</span>
                         <span className="font-medium">
@@ -221,7 +221,7 @@ const PlayComplexityDemo = () => {
                         </span>
                       </div>
                     </div>
-                    <div className="space-y-spacing-xs">
+                    <div className="space-y-xs">
                       <div className="flex justify-between">
                         <span>Personnel:</span>
                         <span className="font-medium">
@@ -239,14 +239,14 @@ const PlayComplexityDemo = () => {
 
                   {/* Tags */}
                   {/* Note: Tags are not part of the core Play interface but can be derived from other fields */}
-                  <div className="mt-spacing-sm">
+                  <div className="mt-sm">
                     <div className="text-xs text-gray-500">
                       Tags derived from play characteristics
                     </div>
                   </div>
 
                   {/* Success Rate */}
-                  <div className="mt-spacing-sm pt-spacing-sm border-t">
+                  <div className="mt-sm pt-sm border-t">
                     <div className="flex items-center justify-between text-sm">
                       <span>Success Rate:</span>
                       <span
@@ -260,7 +260,7 @@ const PlayComplexityDemo = () => {
                         %
                       </span>
                     </div>
-                    <div className="text-xs text-secondary mt-spacing-xs">
+                    <div className="text-xs text-secondary mt-xs">
                       Called: {play.times_called} | Successful:{" "}
                       {play.times_successful}
                     </div>
@@ -272,12 +272,12 @@ const PlayComplexityDemo = () => {
         </div>
 
         {/* Scoring System */}
-        <div className="space-y-spacing-md">
+        <div className="space-y-md">
           <h4 className="font-medium">Scoring System</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg">
-            <div className="space-y-spacing-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
+            <div className="space-y-sm">
               <h5 className="font-medium text-sm">Play Type Base Scores</h5>
-              <div className="space-y-spacing-xs text-sm">
+              <div className="space-y-xs text-sm">
                 <div className="flex justify-between">
                   <span>Run:</span>
                   <span className="font-medium">10 points</span>
@@ -297,9 +297,9 @@ const PlayComplexityDemo = () => {
               </div>
             </div>
 
-            <div className="space-y-spacing-sm">
+            <div className="space-y-sm">
               <h5 className="font-medium text-sm">Personnel Complexity</h5>
-              <div className="space-y-spacing-xs text-sm">
+              <div className="space-y-xs text-sm">
                 <div className="flex justify-between">
                   <span>11 Personnel:</span>
                   <span className="font-medium">10 points</span>
@@ -322,9 +322,9 @@ const PlayComplexityDemo = () => {
         </div>
 
         {/* Function Signatures */}
-        <div className="space-y-spacing-md">
+        <div className="space-y-md">
           <h4 className="font-medium">Function Signatures</h4>
-          <div className="text-sm space-y-spacing-xs text-secondary">
+          <div className="text-sm space-y-xs text-secondary">
             <div>
               <code>analyzePlayComplexity(play: Play): ComplexityMetrics</code>
             </div>
@@ -343,26 +343,26 @@ const PlayComplexityDemo = () => {
         </div>
 
         {/* Badge Thresholds */}
-        <div className="space-y-spacing-md">
+        <div className="space-y-md">
           <h4 className="font-medium">Badge Thresholds</h4>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-spacing-md text-sm">
-            <div className="p-spacing-sm border rounded-lg text-center">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-md text-sm">
+            <div className="p-sm border rounded-lg text-center">
               <div className="font-medium text-blue-600">0-25</div>
               <div>Beginner</div>
             </div>
-            <div className="p-spacing-sm border rounded-lg text-center">
+            <div className="p-sm border rounded-lg text-center">
               <div className="font-medium text-yellow-600">26-50</div>
               <div>Intermediate</div>
             </div>
-            <div className="p-spacing-sm border rounded-lg text-center">
+            <div className="p-sm border rounded-lg text-center">
               <div className="font-medium text-green-600">51-75</div>
               <div>Advanced</div>
             </div>
-            <div className="p-spacing-sm border rounded-lg text-center">
+            <div className="p-sm border rounded-lg text-center">
               <div className="font-medium text-purple-600">76-90</div>
               <div>Expert</div>
             </div>
-            <div className="p-spacing-sm border rounded-lg text-center">
+            <div className="p-sm border rounded-lg text-center">
               <div className="font-medium text-purple-800">91+</div>
               <div>Innovative</div>
             </div>
@@ -397,17 +397,17 @@ export const BadgeSystem: StoryObj = {
     ];
 
     return (
-      <Card className="p-spacing-lg max-w-2xl">
-        <h3 className="text-lg font-semibold mb-spacing-md">
+      <Card className="p-lg max-w-2xl">
+        <h3 className="text-lg font-semibold mb-md">
           Complexity Badge System
         </h3>
-        <div className="space-y-spacing-md">
+        <div className="space-y-md">
           {badges.map((badge) => {
             const info = getComplexityBadgeInfo(badge);
             return (
               <div
                 key={badge}
-                className="flex items-center gap-spacing-md p-spacing-sm border rounded-lg"
+                className="flex items-center gap-md p-sm border rounded-lg"
               >
                 <div className="text-2xl">{info.icon}</div>
                 <div className="flex-1">
@@ -456,14 +456,14 @@ export const ComplexityBreakdown: StoryObj = {
     const badgeInfo = getComplexityBadgeInfo(metrics.badge);
 
     return (
-      <Card className="p-spacing-lg max-w-md">
-        <h3 className="text-lg font-semibold mb-spacing-md">
+      <Card className="p-lg max-w-md">
+        <h3 className="text-lg font-semibold mb-md">
           Complexity Breakdown
         </h3>
-        <div className="space-y-spacing-md">
+        <div className="space-y-md">
           <div className="text-center">
-            <div className="text-3xl mb-spacing-xs">{badgeInfo.icon}</div>
-            <Badge variant={badgeInfo.color as any} className="mb-spacing-xs">
+            <div className="text-3xl mb-xs">{badgeInfo.icon}</div>
+            <Badge variant={badgeInfo.color as any} className="mb-xs">
               {badgeInfo.title}
             </Badge>
             <div className="text-sm text-secondary">
@@ -471,7 +471,7 @@ export const ComplexityBreakdown: StoryObj = {
             </div>
           </div>
 
-          <div className="space-y-spacing-sm">
+          <div className="space-y-sm">
             <div className="flex justify-between items-center">
               <span>Total Score:</span>
               <span className="font-bold text-lg">
@@ -479,7 +479,7 @@ export const ComplexityBreakdown: StoryObj = {
               </span>
             </div>
 
-            <div className="space-y-spacing-xs">
+            <div className="space-y-xs">
               <div className="flex justify-between text-sm">
                 <span>Route Complexity:</span>
                 <span>{metrics.routeCount} pts</span>
@@ -499,7 +499,7 @@ export const ComplexityBreakdown: StoryObj = {
             </div>
           </div>
 
-          <div className="pt-spacing-sm border-t">
+          <div className="pt-sm border-t">
             <div className="text-sm text-secondary">
               <div>
                 <strong>Play Type:</strong> {testPlay.p_type}
@@ -546,11 +546,11 @@ export const MilestoneTracking: StoryObj = {
     ];
 
     return (
-      <Card className="p-spacing-lg max-w-2xl">
-        <h3 className="text-lg font-semibold mb-spacing-md">
+      <Card className="p-lg max-w-2xl">
+        <h3 className="text-lg font-semibold mb-md">
           Complexity Milestones
         </h3>
-        <div className="space-y-spacing-md">
+        <div className="space-y-md">
           {plays.map((play, index) => {
             const mockMetrics = {
               totalScore: play.score,
@@ -562,8 +562,8 @@ export const MilestoneTracking: StoryObj = {
             );
 
             return (
-              <div key={index} className="p-spacing-sm border rounded-lg">
-                <div className="flex items-center justify-between mb-spacing-xs">
+              <div key={index} className="p-sm border rounded-lg">
+                <div className="flex items-center justify-between mb-xs">
                   <span className="font-medium">
                     Score: {play.score} (Previous: {play.previous})
                   </span>
@@ -583,11 +583,11 @@ export const MilestoneTracking: StoryObj = {
           })}
         </div>
 
-        <div className="mt-spacing-md p-spacing-sm bg-status-info-bg rounded-lg">
-          <h5 className="font-medium text-sm mb-spacing-xs">
+        <div className="mt-md p-sm bg-status-info-bg rounded-lg">
+          <h5 className="font-medium text-sm mb-xs">
             Milestone Thresholds
           </h5>
-          <div className="text-sm text-secondary space-y-spacing-xs">
+          <div className="text-sm text-secondary space-y-xs">
             <div>• 26+ points: First Intermediate Play</div>
             <div>• 51+ points: Advanced Play Designer</div>
             <div>• 76+ points: Expert Level Reached</div>

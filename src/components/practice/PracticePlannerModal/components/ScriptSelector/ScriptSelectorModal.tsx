@@ -60,7 +60,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-text-primary bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-surface-primary elevation-modal rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto mx-4">
+      <div className="bg-primary elevation-modal rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto mx-4">
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -87,7 +87,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
             {MOCK_SCRIPTS.map((script) => (
               <div
                 key={script.id}
-                className="p-4 border border-subtle rounded-lg hover:border-text-info hover:surface-subtle cursor-pointer transition-colors"
+                className="p-4 border border-muted rounded-lg hover:border-text-info hover:bg-subtle cursor-pointer transition-colors"
                 onClick={() => handleScriptSelect(script)}
               >
                 <div className="flex items-start justify-between">
@@ -110,12 +110,12 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-medium ${
                           script.category === "offense"
-                            ? "bg-surface-info text-info"
+                            ? "bg-info/20 text-info"
                             : script.category === "defense"
                               ? "bg-surface-error text-error"
                               : script.category === "special-teams"
-                                ? "bg-surface-success text-success"
-                                : "bg-surface-secondary text-primary"
+                                ? "bg-success/20 text-success"
+                                : "bg-secondary text-primary"
                         }`}
                       >
                         {script.category.replace("-", " ")}
@@ -130,7 +130,7 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
             ))}
           </div>
 
-          <div className="mt-6 pt-4 border-t border-subtle flex justify-between">
+          <div className="mt-6 pt-4 border-t border-muted flex justify-between">
             <Button variant="ghost" onClick={onClose}>
               Cancel
             </Button>

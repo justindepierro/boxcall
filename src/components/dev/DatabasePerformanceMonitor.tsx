@@ -74,7 +74,7 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
   if (!isExpanded) {
     return (
       <div
-        className={`inline-flex items-center gap-2 p-2 bg-surface-secondary rounded-lg cursor-pointer hover:bg-surface-muted transition-colors ${className}`}
+        className={`inline-flex items-center gap-2 p-2 bg-secondary rounded-lg cursor-pointer hover:bg-muted transition-colors ${className}`}
       >
         <button
           onClick={() => setIsExpanded(true)}
@@ -103,9 +103,9 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
   }
 
   return (
-    <div className={`bg-surface-primary rounded-lg shadow-md ${className}`}>
+    <div className={`bg-primary rounded-lg shadow-md ${className}`}>
       {/* Header */}
-      <div className="px-4 py-3 border-b border-subtle flex items-center justify-between">
+      <div className="px-4 py-3 border-b border-muted flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div
             className={`w-3 h-3 rounded-full ${
@@ -126,7 +126,7 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
             className={`text-xs px-2 py-1 rounded-lg ${
               autoRefresh
                 ? "bg-success-bg text-success-600"
-                : "bg-surface-muted text-primary"
+                : "bg-muted text-primary"
             }`}
           >
             {autoRefresh ? "Auto" : "Manual"}
@@ -161,7 +161,7 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
       {/* Metrics Grid */}
       <div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
         {/* Total Queries */}
-        <div className="bg-surface-secondary p-3 rounded-lg">
+        <div className="bg-secondary p-3 rounded-lg">
           <div className="text-xs text-secondary font-medium">
             Total Queries
           </div>
@@ -171,7 +171,7 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
         </div>
 
         {/* Average Response Time */}
-        <div className="bg-surface-secondary p-3 rounded-lg">
+        <div className="bg-secondary p-3 rounded-lg">
           <div className="text-xs text-secondary font-medium">Avg Response</div>
           <div className={`text-lg font-bold ${performanceStatus.color}`}>
             {formatDuration(databaseMetrics.averageResponseTime)}
@@ -179,7 +179,7 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
         </div>
 
         {/* Cache Hit Rate */}
-        <div className="bg-surface-secondary p-3 rounded-lg">
+        <div className="bg-secondary p-3 rounded-lg">
           <div className="text-xs text-secondary font-medium">
             Cache Hit Rate
           </div>
@@ -197,7 +197,7 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
         </div>
 
         {/* Error Rate */}
-        <div className="bg-surface-secondary p-3 rounded-lg">
+        <div className="bg-secondary p-3 rounded-lg">
           <div className="text-xs text-secondary font-medium">Error Rate</div>
           <div
             className={`text-lg font-bold ${
@@ -290,7 +290,7 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
             <h4 className="text-sm font-semibold text-primary mb-2">
               Recent Queries
             </h4>
-            <div className="bg-surface-secondary rounded-lg max-h-32 overflow-y-auto">
+            <div className="bg-secondary rounded-lg max-h-32 overflow-y-auto">
               {databaseMetrics.recentMetrics
                 .slice(0, 5)
                 .map((metric: any, index: number) => (

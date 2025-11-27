@@ -86,9 +86,9 @@ export const FormationQualityBadge: React.FC<FormationQualityBadgeProps> = ({
 
   // Size classes
   const sizeClasses = {
-    sm: "px-spacing-xs py-spacing-xxs text-xs",
-    md: "px-spacing-sm py-spacing-xs text-sm",
-    lg: "px-spacing-md py-spacing-sm text-base",
+    sm: "px-xs py-spacing-xxs text-xs",
+    md: "px-sm py-xs text-sm",
+    lg: "px-md py-sm text-base",
   };
 
   const iconSizes = {
@@ -98,11 +98,11 @@ export const FormationQualityBadge: React.FC<FormationQualityBadgeProps> = ({
   };
 
   return (
-    <div className="inline-flex flex-col gap-spacing-xs">
+    <div className="inline-flex flex-col gap-xs">
       {/* Main Badge */}
       <div
         className={`
-          inline-flex items-center gap-spacing-xs
+          inline-flex items-center gap-xs
           ${config.bgColor} ${config.textColor} ${config.borderColor}
           border rounded-md ${sizeClasses[size]}
           font-medium
@@ -117,11 +117,11 @@ export const FormationQualityBadge: React.FC<FormationQualityBadgeProps> = ({
       {showDetails && missingFields.length > 0 && (
         <div
           className={`
-          p-spacing-sm ${config.bgColor} ${config.borderColor}
+          p-sm ${config.bgColor} ${config.borderColor}
           border rounded-md
         `}
         >
-          <div className="flex items-start gap-spacing-xs mb-spacing-xs">
+          <div className="flex items-start gap-xs mb-xs">
             <AlertCircle className="w-4 h-4 text-muted flex-shrink-0 mt-0.5" />
             <Typography
               variant="caption"
@@ -130,7 +130,7 @@ export const FormationQualityBadge: React.FC<FormationQualityBadgeProps> = ({
               Missing Fields:
             </Typography>
           </div>
-          <ul className="list-disc list-inside space-y-spacing-xxs ml-spacing-sm">
+          <ul className="list-disc list-inside space-y-spacing-xxs ml-sm">
             {missingFields.map((field) => (
               <li key={field}>
                 <Typography variant="caption" className="text-muted">

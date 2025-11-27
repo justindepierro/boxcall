@@ -46,7 +46,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
   if (recommendations.length === 0) {
     return (
       <div
-        className={`text-center py-8 bg-surface-secondary rounded-lg border border-border ${className}`}
+        className={`text-center py-8 bg-secondary rounded-lg border border-border ${className}`}
       >
         <Icon
           name="alert-circle"
@@ -76,7 +76,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
         <button
           key={rec.play.id}
           onClick={() => onSelectPlay?.(rec.play.id)}
-          className="w-full text-left bg-surface-primary border border-border rounded-lg p-4 hover:bg-surface-secondary hover:border-primary transition-all cursor-pointer"
+          className="w-full text-left bg-primary border border-border rounded-lg p-4 hover:bg-secondary hover:border-primary transition-all cursor-pointer"
         >
           {/* Rank + Overall Score */}
           <div className="flex items-start justify-between mb-3">
@@ -88,7 +88,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
                     ? "bg-success text-white"
                     : index === 1
                       ? "bg-primary text-white"
-                      : "bg-surface-secondary text-muted border border-border"
+                      : "bg-secondary text-muted border border-border"
                 }`}
               >
                 {index + 1}
@@ -103,7 +103,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
                 </Typography>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {rec.play.formation && (
-                    <span className="px-2 py-0.5 bg-surface-secondary border border-border rounded text-xs">
+                    <span className="px-2 py-0.5 bg-secondary border border-border rounded text-xs">
                       {rec.play.formation}
                     </span>
                   )}
@@ -135,7 +135,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
 
           {/* Score Breakdown */}
           <div className="grid grid-cols-2 gap-3 mb-3 pt-3 border-t border-border">
-            <div className="bg-surface-secondary rounded-lg p-2">
+            <div className="bg-secondary rounded-lg p-2">
               <div className="flex items-center justify-between mb-1">
                 <Typography variant="body-xs" className="text-muted">
                   AI Confidence
@@ -144,7 +144,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
                   {rec.confidenceScore}%
                 </Typography>
               </div>
-              <div className="w-full bg-surface-primary rounded-full h-1.5">
+              <div className="w-full bg-primary rounded-full h-1.5">
                 <div
                   className={`h-1.5 rounded-full ${
                     rec.confidenceScore >= 70
@@ -158,7 +158,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
               </div>
             </div>
 
-            <div className="bg-surface-secondary rounded-lg p-2">
+            <div className="bg-secondary rounded-lg p-2">
               <div className="flex items-center justify-between mb-1">
                 <Typography variant="body-xs" className="text-muted">
                   Situation Fit
@@ -167,7 +167,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
                   {rec.situationMatchScore}%
                 </Typography>
               </div>
-              <div className="w-full bg-surface-primary rounded-full h-1.5">
+              <div className="w-full bg-primary rounded-full h-1.5">
                 <div
                   className={`h-1.5 rounded-full ${
                     rec.situationMatchScore >= 70
@@ -336,7 +336,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
                           ? "bg-success/10 border-success"
                           : isCurrent
                             ? "bg-primary/10 border-primary"
-                            : "bg-surface-secondary border-border"
+                            : "bg-secondary border-border"
                       }`}
                     >
                       <div className="flex items-center gap-1 mb-1">

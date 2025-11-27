@@ -87,9 +87,9 @@ export function DesktopPlaybookView({
   mobileButtonSize,
 }: DesktopPlaybookViewProps) {
   return (
-    <div className="min-h-screen bg-bg-subtle">
+    <div className="min-h-screen bg-subtle">
       {/* Quick Action Buttons */}
-      <div className="px-8 py-5 border-b border-muted bg-bg-primary/80 backdrop-blur-sm">
+      <div className="px-8 py-5 border-b border-muted bg-primary/80 backdrop-blur-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button
@@ -160,9 +160,9 @@ export function DesktopPlaybookView({
 
       {/* Main Content - Optimized Desktop Layout (20%/80% split) */}
       <div className="max-w-screen-2xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-spacing-lg px-8 py-6 overflow-visible">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-lg px-8 py-6 overflow-visible">
           {/* Left Sidebar - Controls (20% width on desktop) */}
-          <div className="lg:col-span-1 space-y-spacing-md overflow-visible">
+          <div className="lg:col-span-1 space-y-md overflow-visible">
             {/* Selection Mode Toggle - NEW! */}
             <Card
               variant="default"
@@ -213,7 +213,7 @@ export function DesktopPlaybookView({
               {state.currentView === "playbook" && (
                 <ErrorBoundary
                   fallback={
-                    <div className="p-spacing-lg text-center">
+                    <div className="p-lg text-center">
                       <Typography variant="body-md" className="text-secondary">
                         Failed to load plays. Please refresh the page.
                       </Typography>

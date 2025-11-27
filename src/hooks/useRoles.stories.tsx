@@ -124,7 +124,7 @@ const RolesDemo: React.FC = () => {
                 {roleContext.teamMemberships.map((membership, index) => (
                   <div
                     key={index}
-                    className="p-3 bg-surface-secondary rounded-lg"
+                    className="p-3 bg-secondary rounded-lg"
                   >
                     <div>Team: {membership.teamId}</div>
                     <div>Role: {membership.teamRole}</div>
@@ -156,7 +156,7 @@ const RolesDemo: React.FC = () => {
           </Button>
 
           {capabilityResult !== null && (
-            <div className="p-3 bg-surface-secondary rounded-lg">
+            <div className="p-3 bg-secondary rounded-lg">
               <strong>Has Capability:</strong> {capabilityResult ? "Yes" : "No"}
             </div>
           )}

@@ -22,14 +22,14 @@ export const getPlayTypeColor = (type: string): string => {
 
 export const getConfidenceColor = (confidence: number): string => {
   if (confidence >= 85)
-    return "text-text-inverse bg-brand-primary px-1.5 py-0.5 rounded font-semibold";
+    return "text-white bg-brand-primary px-1.5 py-0.5 rounded font-semibold";
   if (confidence >= 70)
     return "text-jade-800 bg-jade-100 px-1.5 py-0.5 rounded font-medium";
   if (confidence >= 60)
     return "text-amber-800 bg-status-warning-bg px-1.5 py-0.5 rounded font-medium";
   if (confidence >= 50)
     return "text-orange-800 bg-orange-100 px-1.5 py-0.5 rounded font-medium";
-  return "text-text-inverse bg-status-error px-1.5 py-0.5 rounded font-semibold";
+  return "text-white bg-status-error px-1.5 py-0.5 rounded font-semibold";
 };
 
 export const getTileGradient = (type: string): string => {

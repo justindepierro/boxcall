@@ -89,7 +89,7 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({
   };
 
   return (
-    <div className="border border-border rounded-lg p-3 hover:bg-surface-secondary transition-colors">
+    <div className="border border-border rounded-lg p-3 hover:bg-secondary transition-colors">
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">
           <Icon
@@ -159,7 +159,7 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({
             <Typography
               key={index}
               variant="caption"
-              className="bg-surface-success text-success px-2 py-1 rounded-lg"
+              className="bg-success/20 text-success px-2 py-1 rounded-lg"
               as="span"
             >
               {benefit}

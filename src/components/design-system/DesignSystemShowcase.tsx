@@ -474,10 +474,10 @@ export function DesignSystemShowcase() {
                       </p>
                     </div>
                     <div className="flex gap-2">
-                      <span className="px-2 py-1 bg-surface-success text-success text-xs rounded-lg">
+                      <span className="px-2 py-1 bg-success/20 text-success text-xs rounded-lg">
                         Run
                       </span>
-                      <span className="px-2 py-1 bg-surface-info text-info text-xs rounded-lg">
+                      <span className="px-2 py-1 bg-info/20 text-info text-xs rounded-lg">
                         Popular
                       </span>
                     </div>
@@ -500,7 +500,7 @@ export function DesignSystemShowcase() {
                       </p>
                     </div>
                     <div className="flex gap-2">
-                      <span className="px-2 py-1 bg-surface-warning text-warning text-xs rounded-lg">
+                      <span className="px-2 py-1 bg-warning/20 text-warning text-xs rounded-lg">
                         Pass
                       </span>
                       <span className="px-2 py-1 bg-surface-error text-error text-xs rounded-lg">
@@ -606,7 +606,7 @@ export function DesignSystemShowcase() {
                 Page Transitions
               </h3>
               <div className="space-y-4">
-                <div className="p-4 bg-surface-muted rounded-lg">
+                <div className="p-4 bg-muted rounded-lg">
                   <p className="text-sm text-secondary mb-2">
                     Smooth fade transitions between pages
                   </p>
@@ -661,7 +661,7 @@ export function DesignSystemShowcase() {
             </div>
           </div>
 
-          <div className="mt-6 p-4 bg-surface-success/10 border border-surface-success rounded-lg">
+          <div className="mt-6 p-4 bg-success/20/10 border border-success/20 rounded-lg">
             <h4 className="font-semibold text-success mb-2">
               ✅ Zero Design Violations
             </h4>

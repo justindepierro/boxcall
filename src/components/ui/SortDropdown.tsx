@@ -38,7 +38,7 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
         className="
           w-full
           appearance-none
-          bg-surface-primary
+          bg-primary
           border border-border
           rounded-lg
           px-4 py-2 pr-10

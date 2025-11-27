@@ -162,9 +162,9 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
         title="Link Formation Variants"
         size="xl"
       >
-        <div className="flex flex-col gap-spacing-lg p-spacing-md">
+        <div className="flex flex-col gap-lg p-md">
           {loading && (
-            <div className="text-center py-spacing-lg">
+            <div className="text-center py-lg">
               <Typography variant="body" className="text-muted">
                 Loading formations...
               </Typography>
@@ -174,9 +174,9 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
           {!loading && (
             <>
               {/* Mirrored Dropdown Layout */}
-              <div className="grid grid-cols-[1fr_auto_1fr] gap-spacing-md items-start">
+              <div className="grid grid-cols-[1fr_auto_1fr] gap-md items-start">
                 {/* Left Formation Column */}
-                <div className="flex flex-col gap-spacing-sm">
+                <div className="flex flex-col gap-sm">
                   <Typography
                     variant="headline-md"
                     className="text-primary"
@@ -198,7 +198,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
                           setLeftFormation(formation || null);
                         }
                       }}
-                      className="w-full px-spacing-sm py-spacing-xs border border-primary rounded-lg bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
+                      className="w-full px-sm py-xs border border-primary rounded-lg bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-lg"
                     >
                       <option value="">Select left formation...</option>
                       {allFormations.map(renderFormationOption)}
@@ -206,17 +206,17 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
                         ➕ Create New Formation
                       </option>
                     </select>
-                    <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
+                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
                   </div>
 
                   {/* Left Formation Preview */}
                   {leftFormation && (
-                    <div className="mt-spacing-md p-spacing-md bg-surface-secondary rounded-lg border border-primary">
+                    <div className="mt-md p-md bg-secondary rounded-lg border border-primary">
                       <FormationBadge
                         formationId={leftFormation.id}
                         direction={leftFormation.direction}
                       />
-                      <div className="mt-spacing-sm space-y-spacing-xs">
+                      <div className="mt-sm space-y-xs">
                         <Typography
                           variant="caption"
                           className="text-secondary"
@@ -252,7 +252,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
                 </div>
 
                 {/* Center Link Button */}
-                <div className="flex flex-col items-center justify-center pt-spacing-xl">
+                <div className="flex flex-col items-center justify-center pt-xl">
                   <Button
                     onClick={handleLink}
                     disabled={!leftFormation || !rightFormation || saving}
@@ -268,7 +268,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
                   </Button>
                   <Typography
                     variant="caption"
-                    className="text-muted mt-spacing-xs text-center"
+                    className="text-muted mt-xs text-center"
                   >
                     Click to
                     <br />
@@ -277,7 +277,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
                 </div>
 
                 {/* Right Formation Column */}
-                <div className="flex flex-col gap-spacing-sm">
+                <div className="flex flex-col gap-sm">
                   <Typography
                     variant="headline-md"
                     className="text-primary"
@@ -299,7 +299,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
                           setRightFormation(formation || null);
                         }
                       }}
-                      className="w-full px-spacing-sm py-spacing-xs border border-primary rounded-lg bg-surface-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-spacing-lg"
+                      className="w-full px-sm py-xs border border-primary rounded-lg bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none pr-lg"
                     >
                       <option value="">Select right formation...</option>
                       {allFormations.map(renderFormationOption)}
@@ -307,17 +307,17 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
                         ➕ Create New Formation
                       </option>
                     </select>
-                    <ChevronDown className="absolute right-spacing-sm top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
+                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
                   </div>
 
                   {/* Right Formation Preview */}
                   {rightFormation && (
-                    <div className="mt-spacing-md p-spacing-md bg-surface-secondary rounded-lg border border-primary">
+                    <div className="mt-md p-md bg-secondary rounded-lg border border-primary">
                       <FormationBadge
                         formationId={rightFormation.id}
                         direction={rightFormation.direction}
                       />
-                      <div className="mt-spacing-sm space-y-spacing-xs">
+                      <div className="mt-sm space-y-xs">
                         <Typography
                           variant="caption"
                           className="text-secondary"
@@ -354,7 +354,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
               </div>
 
               {/* Help Text */}
-              <div className="mt-spacing-md p-spacing-sm bg-surface-muted rounded border border-secondary">
+              <div className="mt-md p-sm bg-muted rounded border border-secondary">
                 <Typography variant="caption" className="text-muted">
                   <strong>💡 Tip:</strong> Select formations from both sides and
                   click the link button to create a bi-directional relationship.
@@ -364,7 +364,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
 
               {/* Status Display */}
               {(leftFormation || rightFormation) && (
-                <div className="flex items-center justify-center gap-spacing-sm text-secondary">
+                <div className="flex items-center justify-center gap-sm text-secondary">
                   {leftFormation && (
                     <Typography variant="caption">
                       {isLinked(leftFormation) ? "🔗 Linked" : "🔓 Unlinked"}
@@ -382,7 +382,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
           )}
 
           {/* Footer Actions */}
-          <div className="flex justify-end gap-spacing-sm pt-spacing-md border-t border-primary">
+          <div className="flex justify-end gap-sm pt-md border-t border-primary">
             <Button onClick={onClose} variant="outline" disabled={saving}>
               Cancel
             </Button>

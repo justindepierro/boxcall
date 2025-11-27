@@ -153,7 +153,7 @@ export function MobileCardFooter({
     <div
       className={`
         mt-4 pt-3 
-        border-t border-subtle
+        border-t border-muted
         ${className}
       `}
     >

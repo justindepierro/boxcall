@@ -204,7 +204,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
     return (
       <div key={comment.id} className={`${depth > 0 ? "ml-6 mt-3" : "mt-4"}`}>
         {/* Comment */}
-        <div className="rounded-xl p-4 bg-surface-primary hover:bg-surface-subtle transition-colors border border-subtle">
+        <div className="rounded-xl p-4 bg-primary hover:bg-subtle transition-colors border border-muted">
           <div className="flex items-start gap-3 mb-2">
             {/* Avatar with Popover */}
             <UserProfilePopover
@@ -286,7 +286,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
                     setEditContent("");
                   }}
                   disabled={submitting}
-                  className="px-3 py-1 border rounded text-sm hover:bg-surface-secondary transition-colors"
+                  className="px-3 py-1 border rounded text-sm hover:bg-secondary transition-colors"
                 >
                   Cancel
                 </button>
@@ -357,7 +357,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
                     setReplyContent("");
                   }}
                   disabled={submitting}
-                  className="px-3 py-1 border rounded text-sm hover:bg-surface-secondary transition-colors"
+                  className="px-3 py-1 border rounded text-sm hover:bg-secondary transition-colors"
                 >
                   Cancel
                 </button>

@@ -255,8 +255,8 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
                   <button
                     key={`${result.type}-${result.id}`}
                     onClick={() => handleResultClick(result)}
-                    className={`w-full px-4 py-3 text-left hover:bg-surface-muted flex items-start space-x-3 ${
-                      index === selectedIndex ? "bg-surface-muted" : ""
+                    className={`w-full px-4 py-3 text-left hover:bg-muted flex items-start space-x-3 ${
+                      index === selectedIndex ? "bg-muted" : ""
                     }`}
                   >
                     <Icon

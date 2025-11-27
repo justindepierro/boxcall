@@ -399,7 +399,7 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
             {insights.optimizationOpportunities.map((opportunity, index) => (
               <div
                 key={index}
-                className="border border-medium rounded-lg p-4"
+                className="border border-secondary rounded-lg p-4"
               >
                 <div className="flex items-start justify-between mb-2">
                   <div>

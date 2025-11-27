@@ -234,7 +234,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   }, []);
 
   return (
-    <div className={`space-y-spacing-sm ${compact ? "text-sm" : ""}`}>
+    <div className={`space-y-sm ${compact ? "text-sm" : ""}`}>
       {/* Preview */}
       {showPreview && previewUrl && (
         <div className="relative inline-block">
@@ -265,8 +265,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           onDragOver={handleDrag}
           onDrop={handleDrop}
           className={`
-            border-2 border-dashed rounded-lg p-spacing-md text-center transition-colors
-            ${dragActive ? "border-jade-500 bg-jade-50" : "border-primary bg-surface-muted"}
+            border-2 border-dashed rounded-lg p-md text-center transition-colors
+            ${dragActive ? "border-jade-500 bg-jade-50" : "border-primary bg-muted"}
             ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:border-jade-400"}
           `}
           onClick={!disabled ? handleButtonClick : undefined}
@@ -282,7 +282,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           />
 
           {uploading ? (
-            <div className="space-y-spacing-sm">
+            <div className="space-y-sm">
               <div className="animate-spin text-jade-600 mx-auto w-8 h-8 border-4 border-jade-600 border-t-transparent rounded-full" />
               <p className="text-sm text-secondary">
                 Uploading... {uploadProgress}%
@@ -295,7 +295,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
               </div>
             </div>
           ) : (
-            <div className="space-y-spacing-sm">
+            <div className="space-y-sm">
               <Icon
                 name="camera"
                 size="lg"

@@ -80,10 +80,10 @@ export const PlayTypeSection: React.FC<PlayTypeSectionProps> = ({
 
   return (
     <div>
-      <Typography variant="label-md" className="block mb-spacing-sm">
+      <Typography variant="label-md" className="block mb-sm">
         Play Type
       </Typography>
-      <div className="flex flex-wrap gap-spacing-xs">
+      <div className="flex flex-wrap gap-xs">
         {allTypes.map((type) => (
           <Button
             key={type}
@@ -97,7 +97,7 @@ export const PlayTypeSection: React.FC<PlayTypeSectionProps> = ({
         ))}
 
         {isAddingType ? (
-          <div className="flex items-center gap-spacing-xs">
+          <div className="flex items-center gap-xs">
             <input
               type="text"
               value={newTypeName}
@@ -108,7 +108,7 @@ export const PlayTypeSection: React.FC<PlayTypeSectionProps> = ({
               }}
               placeholder="Type name..."
               autoFocus
-              className="px-spacing-sm py-1 text-sm border border-medium rounded-lg focus:ring-2 focus:ring-text-info focus:border-surface-primary/0"
+              className="px-sm py-1 text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
               maxLength={50}
             />
             <Button
@@ -136,7 +136,7 @@ export const PlayTypeSection: React.FC<PlayTypeSectionProps> = ({
             onClick={handleAddNewType}
             className="border-dashed"
           >
-            <Icon name="plus" className="h-4 w-4 mr-spacing-xs" />
+            <Icon name="plus" className="h-4 w-4 mr-xs" />
             Add New
           </Button>
         )}

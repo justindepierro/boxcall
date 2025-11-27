@@ -78,7 +78,7 @@ const ProgressiveLoadingDemo = () => {
             </Badge>
           </div>
 
-          <div className="w-full bg-surface-muted rounded-full h-3">
+          <div className="w-full bg-muted rounded-full h-3">
             <div
               className="bg-blue-600 h-3 rounded-full transition-all duration-300"
               style={{ width: `${progressPercentage}%` }}
@@ -145,7 +145,7 @@ const ProgressiveLoadingDemo = () => {
                   className={`p-4 border rounded-lg text-center transition-all duration-500 ${
                     visible
                       ? "border-green-500 bg-green-50 opacity-100 transform scale-100"
-                      : "border bg-surface-secondary opacity-50 transform scale-95"
+                      : "border bg-secondary opacity-50 transform scale-95"
                   }`}
                 >
                   <div className="text-2xl font-bold mb-1">
@@ -288,7 +288,7 @@ export const FastLoading: StoryObj = {
               className={`p-3 border rounded transition-all duration-200 ${
                 isStepVisible(step)
                   ? "bg-green-50 border-green-200"
-                  : "bg-surface-secondary border-gray-200"
+                  : "bg-secondary border-gray-200"
               }`}
             >
               Step {step}: {isStepVisible(step) ? "Visible" : "Hidden"}
@@ -324,7 +324,7 @@ export const SlowLoading: StoryObj = {
               className={`p-3 border rounded transition-all duration-500 ${
                 isStepVisible(step)
                   ? "bg-status-info-bg border-blue-200"
-                  : "bg-surface-secondary border-gray-200"
+                  : "bg-secondary border-gray-200"
               }`}
             >
               Step {step}: {isStepVisible(step) ? "Visible" : "Hidden"}

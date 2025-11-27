@@ -10,15 +10,15 @@ import { Typography } from "../../design-system";
 import type { TextAreaProps } from "./TextArea.types";
 // TextArea styles using only Tailwind dark mode classes
 const textareaStyles = {
-  base: "block w-full rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-surface-primary text-primary placeholder-text-secondary disabled:surface-subtle disabled:bg-surface-secondary disabled:text-secondary disabled:cursor-not-allowed",
+  base: "block w-full rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-primary text-primary placeholder-text-secondary disabled:bg-subtle disabled:bg-secondary disabled:text-secondary disabled:cursor-not-allowed",
   statuses: {
     default: "focus:border-text-info ring-text-info",
     error:
-      "focus:border-text-error ring-text-error surface-subtle bg-surface-error/20",
+      "focus:border-text-error ring-text-error bg-subtle bg-surface-error/20",
     success:
-      "focus:border-text-success ring-text-success surface-subtle bg-surface-success/20",
+      "focus:border-text-success ring-text-success bg-subtle bg-success/20/20",
     warning:
-      "focus:border-text-warning ring-text-warning surface-subtle bg-surface-warning/20",
+      "focus:border-text-warning ring-text-warning bg-subtle bg-warning/20/20",
   },
 };
 /**

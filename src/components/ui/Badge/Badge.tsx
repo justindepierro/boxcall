@@ -130,8 +130,8 @@ export const Badge: React.FC<BadgeProps> = ({
     danger: "badge badge-error", // maps to error variant
     accent: "badge badge-primary", // maps to primary variant
     premium: cn(
-      "badge premium-badge decorative-gradient bg-gradient-to-r from-surface-accent to-surface-info text-accent border-card-elevated",
-      "hover:from-surface-accent hover:to-surface-info hover:text-accent"
+      "badge premium-badge decorative-gradient bg-gradient-to-r from-surface-accent to-bg-info/20 text-accent border-card-elevated",
+      "hover:from-surface-accent hover:to-bg-info/20 hover:text-accent"
     ),
   };
 

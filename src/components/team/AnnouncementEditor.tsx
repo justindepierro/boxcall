@@ -191,7 +191,7 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
 
       {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
-        <div className="relative bg-surface-primary rounded-lg shadow-2xl max-w-2xl w-full p-6">
+        <div className="relative bg-primary rounded-lg shadow-2xl max-w-2xl w-full p-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold">
@@ -200,7 +200,7 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
             <button
               onClick={handleCancel}
               disabled={saving}
-              className="p-2 rounded-lg hover:bg-surface-muted transition-colors disabled:opacity-50"
+              className="p-2 rounded-lg hover:bg-muted transition-colors disabled:opacity-50"
               aria-label="Close"
             >
               <X className="w-5 h-5" />
@@ -302,7 +302,7 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
                 type="button"
                 onClick={handleCancel}
                 disabled={saving}
-                className="px-4 py-2 border rounded-lg hover:bg-surface-secondary transition-colors disabled:opacity-50"
+                className="px-4 py-2 border rounded-lg hover:bg-secondary transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>

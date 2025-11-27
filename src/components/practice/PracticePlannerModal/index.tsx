@@ -37,7 +37,7 @@ export const PracticePlannerModal: React.FC<PracticePlannerModalProps> = ({
 
   const getCategoryColor = (_category: string) => {
     // TODO: Move to utility function
-    return "bg-surface-info text-info";
+    return "bg-info/20 text-info";
   };
 
   const getCategoryIcon = (_category: string) => {
@@ -56,7 +56,7 @@ export const PracticePlannerModal: React.FC<PracticePlannerModalProps> = ({
       }}
     >
       <div
-        className="bg-surface-primary elevation-modal rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative"
+        className="bg-primary elevation-modal rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-6">

@@ -139,7 +139,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             <div className="flex-1 flex items-center justify-center gap-3">
               <Suspense
                 fallback={
-                  <div className="w-64 h-10 animate-pulse bg-surface-muted rounded-lg" />
+                  <div className="w-64 h-10 animate-pulse bg-muted rounded-lg" />
                 }
               >
                 <GlobalSearch className="w-64" />

@@ -91,7 +91,7 @@ const PostItem: React.FC<PostItemProps> = ({
   const avatarUrl = authorData?.avatar_url;
 
   return (
-    <li className="rounded-lg border border-subtle bg-surface-primary elevation-card p-4 hover:shadow-md transition-shadow">
+    <li className="rounded-lg border border-muted bg-primary elevation-card p-4 hover:shadow-md transition-shadow">
       {/* Post Header with Author Info */}
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-3">
@@ -133,7 +133,7 @@ const PostItem: React.FC<PostItemProps> = ({
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               {is_pinned && (
-                <span className="inline-flex items-center gap-1 text-warning bg-surface-warning px-2 py-0.5 rounded-full text-xs font-medium">
+                <span className="inline-flex items-center gap-1 text-warning bg-warning/20 px-2 py-0.5 rounded-full text-xs font-medium">
                   <Icon name="star" size="sm" />
                   Pinned
                 </span>
@@ -163,7 +163,7 @@ const PostItem: React.FC<PostItemProps> = ({
             aria-label={is_pinned ? "Unpin post" : "Pin post"}
             className={
               is_pinned
-                ? "bg-surface-warning border border-text-warning text-warning"
+                ? "bg-warning/20 border border-text-warning text-warning"
                 : "text-secondary hover:text-primary"
             }
           >
@@ -192,7 +192,7 @@ const PostItem: React.FC<PostItemProps> = ({
       </div>
 
       {/* Post Actions */}
-      <div className="flex items-center justify-between pt-3 border-t border-subtle">
+      <div className="flex items-center justify-between pt-3 border-t border-muted">
         <div className="flex items-center gap-4">
           <Button
             type="button"
@@ -212,7 +212,7 @@ const PostItem: React.FC<PostItemProps> = ({
             type="button"
             size="xs"
             variant="ghost"
-            className="text-secondary hover:text-info hover:bg-surface-info p-2"
+            className="text-secondary hover:text-info hover:bg-info/20 p-2"
             onClick={() => onComment?.(id)}
             aria-label="Comment on post"
           >
@@ -224,7 +224,7 @@ const PostItem: React.FC<PostItemProps> = ({
             type="button"
             size="xs"
             variant="ghost"
-            className={`text-secondary hover:text-success hover:bg-surface-success p-2 ${
+            className={`text-secondary hover:text-success hover:bg-success/20 p-2 ${
               isShared ? "text-success" : ""
             }`}
             onClick={() => onShare?.(id)}
@@ -534,16 +534,16 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
           {Array.from({ length: 3 }).map((_, i) => (
             <li
               key={i}
-              className="animate-pulse rounded-lg border-subtle bg-surface-primary p-3"
+              className="animate-pulse rounded-lg border-muted bg-primary p-3"
             >
-              <div className="h-4 surface-subtle dark:bg-text-tertiary rounded-lg w-5/6 mb-2" />
-              <div className="h-4 surface-subtle dark:bg-text-tertiary rounded-lg w-2/3" />
+              <div className="h-4 bg-subtle dark:bg-text-tertiary rounded-lg w-5/6 mb-2" />
+              <div className="h-4 bg-subtle dark:bg-text-tertiary rounded-lg w-2/3" />
             </li>
           ))}
         </ul>
       )}
       {!!error && (
-        <div className="rounded border border-text-error surface-subtle bg-surface-error p-4 text-sm text-error">
+        <div className="rounded border border-text-error bg-subtle bg-surface-error p-4 text-sm text-error">
           Failed to load posts.
           <Button
             type="button"
@@ -561,7 +561,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
       )}
       {canCreate && !isLoading && !error && posts.length > 0 && (
         <div
-          className="border-subtle bg-surface-primary elevation-card rounded-lg p-4"
+          className="border-muted bg-primary elevation-card rounded-lg p-4"
           aria-label="Quick post composer"
         >
           <form onSubmit={handleSubmit} className="space-y-3" noValidate>

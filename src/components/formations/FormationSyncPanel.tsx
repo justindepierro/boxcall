@@ -89,7 +89,7 @@ export const FormationSyncPanel: React.FC<FormationSyncPanelProps> = ({
         {topPlays.map((play) => (
           <div
             key={play.id}
-            className="flex items-center justify-between gap-3 rounded-lg border border-border p-3 bg-surface-secondary/60"
+            className="flex items-center justify-between gap-3 rounded-lg border border-border p-3 bg-secondary/60"
           >
             <div className="flex flex-col gap-1 min-w-0">
               <Typography variant="body-md" className="font-semibold truncate">
