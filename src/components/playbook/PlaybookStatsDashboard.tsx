@@ -147,16 +147,16 @@ export const PlaybookStatsDashboard: React.FC<PlaybookStatsDashboardProps> = ({
                 </span>
               </div>
             )}
-            {/* Play Action - Amber gradient */}
+            {/* Play Action - Orange gradient */}
             {stats.playActionPlays > 0 && (
-              <div className="flex justify-between items-center p-4 bg-gradient-to-r from-amber-50 to-amber-100/50 rounded-xl border-l-4 border-amber-600">
+              <div className="flex justify-between items-center p-4 bg-gradient-to-r from-orange-50 to-orange-100/50 rounded-xl border-l-4 border-orange-600">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-amber-600 rounded-full"></div>
-                  <span className="text-sm font-semibold text-amber-800">
+                  <div className="w-2 h-2 bg-orange-600 rounded-full"></div>
+                  <span className="text-sm font-semibold text-orange-800">
                     Play Action
                   </span>
                 </div>
-                <span className="text-sm font-bold text-amber-800">
+                <span className="text-sm font-bold text-orange-800">
                   {stats.playActionPlays}
                 </span>
               </div>
