@@ -42,7 +42,8 @@ export default defineConfig({
     poolOptions: {
       threads: {
         // Limit total threads across all test projects
-        maxThreads: 4,
+        maxThreads: 2,
+        minThreads: 1,
       },
     },
 

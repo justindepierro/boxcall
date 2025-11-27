@@ -209,7 +209,6 @@ export default defineConfig({
             "@fullcalendar/interaction",
             "@fullcalendar/react",
           ],
-          "pixi": ["pixi.js"],
           "pdf-core": ["@react-pdf/renderer"],
           "pdf-utils": ["jszip"],
           "charts": ["recharts"],

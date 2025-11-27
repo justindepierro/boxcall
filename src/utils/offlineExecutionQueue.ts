@@ -6,84 +6,143 @@
 // @ts-nocheck
 // TODO: Fix types when integrating Stage 3 (Session Management)
 
-import type {
-  CreatePlayExecutionData,
-  OfflineExecution,
-  OfflineQueue,
-} from "../types/session";
+import type { CreatePlayExecutionData } from "../types/session";
 import { ExecutionTrackingService } from "../services/executionTrackingService";
 
 const QUEUE_STORAGE_KEY = "boxcall_offline_executions";
-const _MAX_RETRY_ATTEMPTS = 3;
+const MAX_QUEUE_SIZE = 100;
+
+// Simplified queue item for tests
+interface QueueItem {
+  id: string;
+  data: CreatePlayExecutionData;
+  timestamp: number;
+  synced: boolean;
+  error?: string;
+}
 
 export class OfflineExecutionQueue {
   /**
    * Add execution to offline queue
    */
-  async addExecution(execution: CreatePlayExecutionData): Promise<void> {
-    const queue = await this.getQueue();
+  static add(execution: CreatePlayExecutionData): void {
+    const queue = this.getAll();
 
-    const offlineExecution: OfflineExecution = {
+    const item: QueueItem = {
       id: crypto.randomUUID(),
-      execution,
-      timestamp: new Date(),
+      data: execution,
+      timestamp: Date.now(),
       synced: false,
     };
 
-    queue.executions.push(offlineExecution);
-    queue.pendingCount = queue.executions.filter((e) => !e.synced).length;
+    queue.push(item);
 
-    this.saveQueue(queue);
+    // Respect max queue size, but keep unsynced items
+    if (queue.length > MAX_QUEUE_SIZE) {
+      const unsynced = queue.filter((e) => !e.synced);
+      const synced = queue
+        .filter((e) => e.synced)
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .slice(0, MAX_QUEUE_SIZE - unsynced.length);
+      this.saveQueue([...unsynced, ...synced]);
+    } else {
+      this.saveQueue(queue);
+    }
   }
 
   /**
-   * Get current offline queue
+   * Get all executions from queue
    */
-  async getQueue(): Promise<OfflineQueue> {
+  static getAll(): QueueItem[] {
     const stored = localStorage.getItem(QUEUE_STORAGE_KEY);
 
     if (!stored) {
-      return {
-        executions: [],
-        pendingCount: 0,
-      };
+      return [];
     }
 
     try {
       const parsed = JSON.parse(stored);
-      return {
-        executions: parsed.executions.map((e: any) => ({
-          ...e,
-          timestamp: new Date(e.timestamp),
-        })),
-        lastSyncAttempt: parsed.lastSyncAttempt
-          ? new Date(parsed.lastSyncAttempt)
-          : undefined,
-        pendingCount: parsed.executions.filter((e: any) => !e.synced).length,
-      };
+      return Array.isArray(parsed) ? parsed : [];
     } catch (err) {
       console.error("Failed to parse offline queue:", err);
-      return {
-        executions: [],
-        pendingCount: 0,
-      };
+      return [];
     }
   }
 
   /**
    * Save queue to localStorage
    */
-  private saveQueue(queue: OfflineQueue): void {
+  private static saveQueue(queue: QueueItem[]): void {
     localStorage.setItem(QUEUE_STORAGE_KEY, JSON.stringify(queue));
+  }
+
+  /**
+   * Mark execution as synced
+   */
+  static markSynced(id: string): void {
+    const queue = this.getAll();
+    const index = queue.findIndex((e) => e.id === id);
+    if (index !== -1) {
+      queue[index].synced = true;
+      delete queue[index].error;
+    }
+    this.saveQueue(queue);
+  }
+
+  /**
+   * Mark execution as failed with error
+   */
+  static markFailed(id: string, error: string): void {
+    const queue = this.getAll();
+    const index = queue.findIndex((e) => e.id === id);
+    if (index !== -1) {
+      queue[index].synced = false;
+      queue[index].error = error;
+    }
+    this.saveQueue(queue);
+  }
+
+  /**
+   * Get only unsynced executions
+   */
+  static getUnsynced(): QueueItem[] {
+    return this.getAll().filter((e) => !e.synced);
+  }
+
+  /**
+   * Remove specific execution by ID
+   */
+  static remove(id: string): void {
+    const queue = this.getAll();
+    this.saveQueue(queue.filter((e) => e.id !== id));
+  }
+
+  /**
+   * Clear all executions
+   */
+  static clearAll(): void {
+    localStorage.removeItem(QUEUE_STORAGE_KEY);
+  }
+
+  /**
+   * Clear synced items older than threshold (in milliseconds)
+   */
+  static clearSynced(thresholdMs: number): void {
+    const queue = this.getAll();
+    const threshold = Date.now() - thresholdMs;
+
+    this.saveQueue(
+      queue.filter((e) => !e.synced || e.timestamp > threshold)
+    );
   }
 
   /**
    * Sync pending executions to database
    * Returns number of successfully synced executions
    */
-  async syncQueue(): Promise<number> {
-    const queue = await this.getQueue();
-    const pending = queue.executions.filter((e) => !e.synced);
+  static async syncQueue(): Promise<number> {
+    const queue = this.getAll();
+    const pending = queue.filter((e) => !e.synced);
 
     if (pending.length === 0) {
       return 0;
@@ -95,89 +154,39 @@ export class OfflineExecutionQueue {
       return 0;
     }
 
-    queue.lastSyncAttempt = new Date();
     let syncedCount = 0;
 
     // Sync each execution individually
-    for (const offlineExec of pending) {
+    for (const item of pending) {
       try {
-        await ExecutionTrackingService.logExecution(offlineExec.execution);
-
-        // Mark as synced
-        const index = queue.executions.findIndex(
-          (e) => e.id === offlineExec.id
-        );
-        if (index !== -1) {
-          queue.executions[index].synced = true;
-        }
-
+        await ExecutionTrackingService.logExecution(item.data);
+        this.markSynced(item.id);
         syncedCount++;
       } catch (err) {
-        console.error(`Failed to sync execution ${offlineExec.id}:`, err);
-
-        // Store error for debugging
-        const index = queue.executions.findIndex(
-          (e) => e.id === offlineExec.id
+        console.error(`Failed to sync execution ${item.id}:`, err);
+        this.markFailed(
+          item.id,
+          err instanceof Error ? err.message : "Unknown error"
         );
-        if (index !== -1) {
-          queue.executions[index].syncError =
-            err instanceof Error ? err.message : "Unknown error";
-        }
       }
     }
-
-    // Update pending count
-    queue.pendingCount = queue.executions.filter((e) => !e.synced).length;
-
-    // Save updated queue
-    this.saveQueue(queue);
-
-    // Clean up old synced executions (keep last 100)
-    await this.cleanupQueue();
 
     return syncedCount;
   }
 
   /**
-   * Clean up old synced executions
-   */
-  async cleanupQueue(): Promise<void> {
-    const queue = await this.getQueue();
-
-    // Keep all unsynced + last 100 synced
-    const unsynced = queue.executions.filter((e) => !e.synced);
-    const synced = queue.executions
-      .filter((e) => e.synced)
-      .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
-      .slice(0, 100);
-
-    queue.executions = [...unsynced, ...synced];
-    queue.pendingCount = unsynced.length;
-
-    this.saveQueue(queue);
-  }
-
-  /**
-   * Clear entire queue (use with caution!)
-   */
-  async clearQueue(): Promise<void> {
-    localStorage.removeItem(QUEUE_STORAGE_KEY);
-  }
-
-  /**
    * Get pending execution count
    */
-  async getPendingCount(): Promise<number> {
-    const queue = await this.getQueue();
-    return queue.pendingCount;
+  static getPendingCount(): number {
+    return this.getUnsynced().length;
   }
 
   /**
    * Retry failed syncs
    */
-  async retryFailedSync(): Promise<number> {
-    const queue = await this.getQueue();
-    const failed = queue.executions.filter((e) => !e.synced && e.syncError);
+  static async retryFailedSync(): Promise<number> {
+    const queue = this.getAll();
+    const failed = queue.filter((e) => !e.synced && e.error);
 
     if (failed.length === 0) {
       return 0;
@@ -187,9 +196,9 @@ export class OfflineExecutionQueue {
 
     // Clear errors and retry
     for (const exec of failed) {
-      const index = queue.executions.findIndex((e) => e.id === exec.id);
+      const index = queue.findIndex((e) => e.id === exec.id);
       if (index !== -1) {
-        delete queue.executions[index].syncError;
+        delete queue[index].error;
       }
     }
 

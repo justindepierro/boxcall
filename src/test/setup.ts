@@ -327,3 +327,16 @@ vi.mock("@services", () => ({
   GamePlanService: {},
   PlayActivityItem: {},
 }));
+
+// Global cleanup after each test to prevent memory leaks
+import { afterEach } from "vitest";
+import { cleanup } from "@testing-library/react";
+
+afterEach(() => {
+  cleanup();
+  vi.clearAllMocks();
+  // Force garbage collection if available (in Node with --expose-gc flag)
+  if (global.gc) {
+    global.gc();
+  }
+});

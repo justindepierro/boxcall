@@ -1,12 +1,15 @@
 import { describe, it, expect, vi } from "vitest";
 
 // Mock all the services and components that PlaybookPage depends on
-vi.mock("@services", () => ({
+vi.mock("../../services/playsService", () => ({
   playbookService: {
     getPlays: vi.fn(),
     searchPlays: vi.fn(),
     getPlayCategories: vi.fn(),
   },
+}));
+
+vi.mock("../../services/playAnalyticsService", () => ({
   analyticsService: {
     trackEvent: vi.fn(),
   },
@@ -59,7 +62,7 @@ describe("PlaybookPage Import", () => {
 
   it("mocks are properly configured", () => {
     // Test that our mocks are working
-    const { playbookService } = require("@services");
+    const { playbookService } = require("../../services/playsService");
     expect(playbookService.getPlays).toBeDefined();
     expect(typeof playbookService.getPlays).toBe("function");
   });
