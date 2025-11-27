@@ -380,7 +380,7 @@ export function DesktopPlaybookView({
                 </div>
               </div>
             )}
-            </Card>
+          </Card>
           </div>
         </div>
       </div>
