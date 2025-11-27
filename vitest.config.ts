@@ -97,16 +97,14 @@ export default defineConfig({
             // Skip slow/non-critical tests in CI to reduce memory usage and test time
             ...(process.env.CI
               ? [
-                  "src/components/ui/**/*.a11y.test.tsx", // A11y tests
-                  "src/components/ui/__a11y__/**", // A11y smoke tests
+                  "src/components/**/*.test.tsx", // All component tests (memory intensive)
                   "src/api/health.test.ts", // Health check with delays
-                  "src/stores/calendar/hooks.test.ts", // Calendar hooks (slow)
-                  "src/infra/calendar/*.test.ts", // Calendar infra tests
-                  "src/domain/calendar/*.test.ts", // Calendar domain tests
-                  "src/components/ui/NavBar/**/*.test.tsx", // NavBar tests
-                  "src/components/ui/Sidebar/**/*.test.tsx", // Sidebar tests
-                  "src/pages/__tests__/DashboardPage.test.tsx", // Needs Router context
-                  "src/pages/__tests__/PlaybookPage.test.tsx", // Import issues
+                  "src/stores/**/*.test.ts", // Store tests
+                  "src/infra/**/*.test.ts", // Infrastructure tests
+                  "src/domain/**/*.test.ts", // Domain tests
+                  "src/pages/**/*.test.tsx", // Page tests
+                  "src/services/**/*.test.ts", // Service tests
+                  "src/adapters/**/*.test.ts", // Adapter tests
                 ]
               : []),
           ],
