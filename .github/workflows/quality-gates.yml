@@ -1,10 +1,11 @@
 name: Quality Gates
 
 on:
-  pull_request:
-    branches: [main, develop]
+  # Disabled - duplicates CI workflow
+  # pull_request:
+  #   branches: [main, develop]
   push:
-    branches: [main, develop]
+    branches: [develop] # Only run on develop, not main (CI handles main)
 
 jobs:
   quality-checks:
