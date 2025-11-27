@@ -183,9 +183,8 @@ export function DesktopPlaybookView({
       </div>
 
       {formationAudit.plays.length > 0 && (
-        <div className="px-4 sm:px-6 lg:px-8 mb-6 transition-all duration-300">
-          <div className="rounded-xl shadow-md shadow-jade-500/10 hover:shadow-lg hover:shadow-jade-500/20 transition-all duration-300">
-            <FormationSyncPanel
+        <div className="px-4 sm:px-6 lg:px-8 mb-8">
+          <FormationSyncPanel
             plays={formationAudit.plays}
             loading={formationAudit.loading}
             error={formationAudit.error}
@@ -193,66 +192,56 @@ export function DesktopPlaybookView({
             onResolve={handleEditPlay}
             onOpenMapper={() => navigate("/playbook/formation-mapper")}
           />
-          </div>
         </div>
       )}
 
       {/* Main Content - 2 Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 px-4 sm:px-6 lg:px-8 overflow-visible">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 px-4 sm:px-6 lg:px-8 pb-12 overflow-visible">
         {/* Left Sidebar - Controls */}
         <div className="lg:col-span-1 space-y-6 overflow-visible">
           {/* Selection Mode Toggle - NEW! */}
-          <div className="rounded-xl shadow-md shadow-jade-500/10 hover:shadow-lg hover:shadow-jade-500/20 transition-all duration-300 hover:scale-[1.01] hover:-translate-y-0.5">
+          <Card variant="default" interactive>
             <SelectionModeToggle
               isActive={state.enableBulkOperations}
               onToggle={() => dispatch({ type: "TOGGLE_BULK" })}
               selectedCount={state.selectedPlayIds?.size || 0}
               label="Select Plays"
             />
-          </div>
+          </Card>
 
           {/* Filters - Moved to top */}
-          <div className="rounded-xl shadow-md shadow-jade-500/10 hover:shadow-lg hover:shadow-jade-500/20 transition-all duration-300 hover:scale-[1.01] hover:-translate-y-0.5">
-            <Card variant="default">
-              <AdvancedFilters
-                activeFilters={state.advancedFilters}
-                onFiltersChange={handleFiltersChange}
-              />
-            </Card>
-          </div>
+          <Card variant="default">
+            <AdvancedFilters
+              activeFilters={state.advancedFilters}
+              onFiltersChange={handleFiltersChange}
+            />
+          </Card>
 
           {/* Stats Dashboard */}
-          <div className="rounded-xl shadow-md shadow-jade-500/10 hover:shadow-lg hover:shadow-jade-500/20 transition-all duration-300 hover:scale-[1.01] hover:-translate-y-0.5">
-            <Card variant="default">
-              <PlaybookStatsDashboard stats={playbookStats} />
-            </Card>
-          </div>
+          <Card variant="elevated">
+            <PlaybookStatsDashboard stats={playbookStats} />
+          </Card>
 
           {/* Recent Activity */}
-          <div className="rounded-xl shadow-md shadow-jade-500/10 hover:shadow-lg hover:shadow-jade-500/20 transition-all duration-300 hover:scale-[1.01] hover:-translate-y-0.5">
-            <Card variant="default">
-              <RecentActivityFeed activities={playbookStats.recentActivity} />
-            </Card>
-          </div>
+          <Card variant="default">
+            <RecentActivityFeed activities={playbookStats.recentActivity} />
+          </Card>
 
           {/* Bulk Actions - Only show when items are selected */}
           {(state.selectedPlayIds?.size || 0) > 0 && (
-            <div className="rounded-xl shadow-md shadow-emerald-500/10 hover:shadow-lg hover:shadow-emerald-500/20 transition-all duration-300 hover:scale-[1.01] hover:-translate-y-0.5">
-              <Card variant="default">
-                <BulkActionsToolbar
-                  selectedCount={state.selectedPlayIds?.size || 0}
-                  onClearSelection={handleClearSelection}
-                  onBulkAction={handleBulkAction}
-                />
-              </Card>
-            </div>
+            <Card variant="elevated">
+              <BulkActionsToolbar
+                selectedCount={state.selectedPlayIds?.size || 0}
+                onClearSelection={handleClearSelection}
+                onBulkAction={handleBulkAction}
+              />
+            </Card>
           )}
         </div>
 
         {/* Right Side - Main Content Area */}
         <div className="lg:col-span-3 overflow-visible">
-          <div className="rounded-xl shadow-lg shadow-jade-500/15 hover:shadow-2xl hover:shadow-jade-500/30 transition-all duration-300 hover:scale-[1.005] hover:-translate-y-1">
-            <Card variant="default" size="lg">
+          <Card variant="elevated" size="lg">
             {state.currentView === "playbook" && (
               <ErrorBoundary
                 fallback={
@@ -381,7 +370,6 @@ export function DesktopPlaybookView({
               </div>
             )}
           </Card>
-          </div>
         </div>
       </div>
     </div>
