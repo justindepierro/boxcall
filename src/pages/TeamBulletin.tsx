@@ -358,11 +358,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                 >
                   Create Team
                   {isSuperAdmin && (
-                    <Icon
-                      name="unlock"
-                      size="sm"
-                      className="text-primary"
-                    />
+                    <Icon name="unlock" size="sm" className="text-primary" />
                   )}
                 </Button>
                 <Button
@@ -432,7 +428,9 @@ const TeamBulletin: React.FC = React.memo(() => {
                       {activityStats.loading
                         ? "..."
                         : activityStats.newPostsToday}{" "}
-                      <span className="font-normal text-secondary">posts today</span>
+                      <span className="font-normal text-secondary">
+                        posts today
+                      </span>
                     </span>
                   </div>
                   {activityStats.onlineMembers > 0 && (
@@ -440,7 +438,9 @@ const TeamBulletin: React.FC = React.memo(() => {
                       <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-sm shadow-emerald-500/50" />
                       <span className="font-semibold text-primary">
                         {activityStats.onlineMembers}{" "}
-                        <span className="font-normal text-secondary">online</span>
+                        <span className="font-normal text-secondary">
+                          online
+                        </span>
                       </span>
                     </div>
                   )}
@@ -448,18 +448,16 @@ const TeamBulletin: React.FC = React.memo(() => {
                     <Icon name="users" size="sm" className="text-blue-600" />
                     <span className="font-semibold text-primary">
                       {teamData?.memberCount || 0}{" "}
-                      <span className="font-normal text-secondary">members</span>
+                      <span className="font-normal text-secondary">
+                        members
+                      </span>
                     </span>
                   </div>
                   <button
                     onClick={() => setIsSeasonStatsModalOpen(true)}
                     className="ml-auto flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-full shadow-md shadow-purple-500/30 hover:shadow-lg hover:shadow-purple-500/40 hover:scale-105 transition-all duration-200"
                   >
-                    <Icon
-                      name="trending-up"
-                      size="sm"
-                      className="text-white"
-                    />
+                    <Icon name="trending-up" size="sm" className="text-white" />
                     <span className="font-bold text-sm">
                       {teamData.record.wins}-{teamData.record.losses}
                     </span>

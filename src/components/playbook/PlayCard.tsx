@@ -40,7 +40,6 @@ interface PlayCardProps {
   onEdit?: (play: PlayType) => void;
   onSave?: (playId: string, updates: Partial<PlayType>) => Promise<void>;
   onDuplicate?: (play: PlayType) => void;
-  onCreateDiagram?: (play: PlayType) => void;
   onAddToPracticeScript?: (play: PlayType) => void;
   onAddToGamePlan?: (play: PlayType) => void;
   onOpenAssignments?: (play: PlayType) => void;
@@ -117,7 +116,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   onEdit,
   onSave,
   onDuplicate,
-  onCreateDiagram,
   onAddToPracticeScript,
   onAddToGamePlan,
   onOpenAssignments,
@@ -350,12 +348,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     [setFormationFieldVisibility, setPlayDetailsFieldVisibility]
   );
 
-  const handleCreateDiagram = useCallback(() => {
-    if (onCreateDiagram) {
-      onCreateDiagram(play);
-    }
-  }, [onCreateDiagram, play]);
-
   const handleOpenAssignments = useCallback(() => {
     if (onOpenAssignments) {
       onOpenAssignments(play);
@@ -430,7 +422,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               showOneWordCalls={showOneWordCalls}
               isSelected={isSelected}
               onSelectionChange={onSelectionChange}
-              onCreateDiagram={handleCreateDiagram}
               onOpenAssignments={handleOpenAssignments}
               phaseLabel={phaseLabel}
               isFavorite={isFavorite(play.id)}
@@ -443,7 +434,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             {/* Quick Actions - always visible */}
             <PlayCardQuickActions
               play={play}
-              onCreateDiagram={handleCreateDiagram}
               onAddToPracticeScript={onAddToPracticeScript}
               onAddToGamePlan={onAddToGamePlan}
               onOpenAssignments={handleOpenAssignments}
@@ -506,10 +496,9 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             isCompact={isCompact}
             isExpanded={isExpanded}
             onToggleExpand={handleToggleExpand}
-            onEdit={onEdit}
-            onDuplicate={onDuplicate}
-            onCreateDiagram={handleCreateDiagram}
-            onOpenAssignments={handleOpenAssignments}
+              onEdit={onEdit}
+              onDuplicate={onDuplicate}
+              onOpenAssignments={handleOpenAssignments}
             getPlayTypeColor={getPlayTypeColor}
             getConfidenceColor={getConfidenceColor}
             phaseLabel={phaseLabel}
@@ -523,7 +512,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         {!isTile && (
           <PlayCardQuickActions
             play={play}
-            onCreateDiagram={handleCreateDiagram}
             onAddToPracticeScript={onAddToPracticeScript}
             onAddToGamePlan={onAddToGamePlan}
             onOpenAssignments={handleOpenAssignments}

@@ -153,13 +153,6 @@ export default function PlaybookPage() {
     personnel: [] as string[],
   });
 
-  // Handle creating a diagram for a play
-  const handleCreateDiagram = useCallback((play: Play) => {
-    setDiagramPlay(play);
-    // TODO: Open diagram builder modal or navigate to diagram route
-    debug("Creating diagram for play:", play);
-  }, []);
-
   // Handle opening assignments for a play
   const handleOpenAssignments = useCallback((play: Play) => {
     setAssignmentsPlay(play);
@@ -974,13 +967,11 @@ export default function PlaybookPage() {
             handleSavePlay={handleSavePlay}
             handleDuplicatePlay={handleDuplicatePlay}
             handleOpenBuilder={handleOpenBuilder}
-            handleCreateDiagram={handleCreateDiagram}
             handleOpenAssignments={handleOpenAssignments}
             handlePostToTeamBulletin={handlePostToTeamBulletin}
             handleAddToPracticeScript={handleAddToPracticeScript}
             handleAddToGamePlan={handleAddToGamePlan}
             handlePlayCountChange={handlePlayCountChange}
-            handleOpenWhiteboard={handleOpenWhiteboard}
             handleQuickNewPracticeScript={handleQuickNewPracticeScript}
             handleQuickNewGamePlan={handleQuickNewGamePlan}
             handleOpenPracticeScriptBuilder={handleOpenPracticeScriptBuilder}

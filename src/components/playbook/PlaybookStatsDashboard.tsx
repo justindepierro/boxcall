@@ -4,7 +4,7 @@ import { Typography } from "../design-system/Typography";
 
 interface PlaybookStats {
   totalPlays: number;
-  playsWithDiagrams: number;
+  playsWithPhotos?: number;
   formationsCount: number;
   passPlays: number;
   runPlays: number;
@@ -33,9 +33,9 @@ export const PlaybookStatsDashboard: React.FC<PlaybookStatsDashboardProps> = ({
   stats,
   className = "",
 }) => {
-  const diagramCoverage =
+  const photoCoverage =
     stats.totalPlays > 0
-      ? Math.round((stats.playsWithDiagrams / stats.totalPlays) * 100)
+      ? Math.round(((stats.playsWithPhotos || 0) / stats.totalPlays) * 100)
       : 0;
 
   const passPercentage =
@@ -80,22 +80,25 @@ export const PlaybookStatsDashboard: React.FC<PlaybookStatsDashboardProps> = ({
           </div>
         </div>
 
-        {/* Diagram Coverage - Enhanced with emerald theme */}
-        <div className="p-5 bg-gradient-to-br from-emerald-50/80 to-emerald-100/60 rounded-xl border border-emerald-300/50">
+        {/* Photo Coverage - Enhanced with indigo theme */}
+        <div className="p-5 bg-gradient-to-br from-indigo-50/80 to-indigo-100/60 rounded-xl border border-indigo-300/50">
           <div className="flex justify-between items-center mb-4">
-            <span className="text-sm font-semibold text-emerald-700 uppercase tracking-wide">
-              Diagram Coverage
+            <span className="text-sm font-semibold text-indigo-700 uppercase tracking-wide">
+              Plays with Photos
             </span>
-            <span className="text-xl font-bold text-emerald-800">
-              {diagramCoverage}%
+            <span className="text-xl font-bold text-indigo-800">
+              {stats.playsWithPhotos || 0}
             </span>
           </div>
-          <div className="w-full bg-emerald-200/50 rounded-full h-3">
+          <div className="w-full bg-indigo-200/50 rounded-full h-3">
             <div
-              className="bg-gradient-to-r from-emerald-500 to-emerald-600 h-3 rounded-full transition-all duration-500 shadow-sm"
-              style={{ width: `${diagramCoverage}%` }}
+              className="bg-gradient-to-r from-indigo-500 to-indigo-600 h-3 rounded-full transition-all duration-500 shadow-sm"
+              style={{ width: `${photoCoverage}%` }}
             />
           </div>
+          <Typography variant="body-xs" className="text-indigo-600 mt-2 font-medium">
+            {photoCoverage}% coverage
+          </Typography>
         </div>
 
         {/* Play Type Distribution - Color-coded */}

@@ -26,7 +26,6 @@ interface PlayCardListHeaderProps {
   onToggleExpand: ToggleHandler;
   onEdit?: PlayActionHandler;
   onDuplicate?: PlayActionHandler;
-  onCreateDiagram?: () => void;
   onOpenAssignments?: () => void;
   getPlayTypeColor: StyleResolver;
   getConfidenceColor: (confidence: number) => string;
@@ -49,7 +48,6 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
   onToggleExpand,
   onEdit: _onEdit,
   onDuplicate: _onDuplicate,
-  onCreateDiagram: _onCreateDiagram,
   onOpenAssignments,
   getPlayTypeColor,
   getConfidenceColor,
@@ -64,7 +62,7 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
   );
 
   return (
-    <div className="flex items-center gap-3 overflow-visible">
+    <div className="flex items-center gap-4 overflow-visible">
       {/* Selection checkbox on the left (when selection mode is on) */}
       {onSelectionChange && (
         <div className="shrink-0">
@@ -82,33 +80,44 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
         </div>
       )}
 
+      {/* Photo thumbnail (if available) */}
+      {play.diagram_image_url && (
+        <div className="shrink-0 w-20 h-14 rounded-lg overflow-hidden shadow-sm">
+          <img
+            src={play.diagram_image_url}
+            alt={`${displayName} diagram`}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      )}
+
       <div className="flex-1 min-w-0">
-        <div className="flex items-baseline gap-2 min-w-0">
+        <div className="flex items-center gap-3 min-w-0">
           <h3
             className={`truncate font-mono font-bold ${
               isCompact ? "text-base" : "text-lg"
             } ${
               showOneWordCalls && play.one_word_play
-                ? "text-info"
-                : "text-xssssrimary"
-            } text-left`}
+                ? "text-jade-600"
+                : "text-primary"
+            }`}
           >
             {displayName}
           </h3>
           {subtitleText && (
-            <span className="shrink-0 text-xs text-secondary italic">
+            <span className="shrink-0 text-xs text-muted font-medium">
               {subtitleText}
             </span>
           )}
         </div>
         <div
           className={`flex flex-wrap items-center gap-2 ${
-            isCompact ? "mt-1" : "mt-2"
+            isCompact ? "mt-1.5" : "mt-2"
           }`}
         >
           {/* Play type badge */}
           <span
-            className={`px-2 py-0.5 rounded-full text-xs font-medium ${getPlayTypeColor(optimisticPlay.p_type)}`}
+            className={`px-2.5 py-1 rounded-lg text-xs font-semibold shadow-sm ${getPlayTypeColor(optimisticPlay.p_type)}`}
           >
             {optimisticPlay.p_type}
           </span>

@@ -5,7 +5,6 @@ import { ErrorBoundary } from "../../ui/ErrorBoundary";
 import { PlayGrid } from "../PlayGrid";
 import { SelectionModeToggle } from "../SelectionModeToggle";
 import { FormationSyncPanel } from "../../formations/FormationSyncPanel";
-import { AppIconTile } from "../../ui/AppIconTile";
 import { Card } from "../../ui/Card";
 import { AdvancedFilters } from "../AdvancedFilters";
 import { PlaybookStatsDashboard } from "../PlaybookStatsDashboard";
@@ -35,13 +34,11 @@ interface DesktopPlaybookViewProps {
   handleSavePlay: (play: Play) => Promise<void>;
   handleDuplicatePlay: (play: Play) => Promise<void>;
   handleOpenBuilder: () => void;
-  handleCreateDiagram: (play: Play) => void;
   handleOpenAssignments: (play: Play) => void;
   handlePostToTeamBulletin: (play: Play) => void;
   handleAddToPracticeScript: (play: Play) => void;
   handleAddToGamePlan: (play: Play) => void;
   handlePlayCountChange: (change: number) => void;
-  handleOpenWhiteboard: () => void;
   handleQuickNewPracticeScript: () => void;
   handleQuickNewGamePlan: () => void;
   handleOpenPracticeScriptBuilder: () => void;
@@ -73,13 +70,11 @@ export function DesktopPlaybookView({
   handleSavePlay,
   handleDuplicatePlay,
   handleOpenBuilder,
-  handleCreateDiagram,
   handleOpenAssignments,
   handlePostToTeamBulletin,
   handleAddToPracticeScript,
   handleAddToGamePlan,
   handlePlayCountChange,
-  handleOpenWhiteboard,
   handleQuickNewPracticeScript,
   handleQuickNewGamePlan,
   handleOpenPracticeScriptBuilder,
@@ -93,92 +88,60 @@ export function DesktopPlaybookView({
 }: DesktopPlaybookViewProps) {
   return (
     <div className="min-h-screen bg-surface-primary">
-      {/* Aurora Hero Tiles - Football-Specific Actions */}
-      <div className="px-4 sm:px-6 lg:px-8 -mt-4 mb-6 py-4 overflow-visible">
-        <div className="flex items-center justify-center gap-4 md:gap-5 lg:gap-4 xl:gap-5 flex-wrap overflow-visible">
-          <AppIconTile
-            title="New Play"
-            subtitle={`${state.playsCreated} plays`}
-            icon="plus-circle"
-            gradient="from-jade-500 to-emerald-600"
-            onOpen={handleOpenBuilder}
-          />
-
-          <AppIconTile
-            title="Whiteboard"
-            subtitle="Free draw"
-            icon="pen-tool"
-            gradient="from-purple-500 to-violet-600"
-            onOpen={handleOpenWhiteboard}
-          />
-
-          <AppIconTile
-            title="Practice"
-            subtitle="Build script"
-            icon="clipboard-list"
-            gradient="from-blue-500 to-indigo-600"
-            onOpen={handleQuickNewPracticeScript}
-          />
-
-          <AppIconTile
-            title="Game Plan"
-            subtitle="Strategy"
-            icon="target"
-            gradient="from-orange-500 to-red-500"
-            onOpen={handleQuickNewGamePlan}
-          />
-
-          <AppIconTile
-            title="Personnel"
-            subtitle="Configure"
-            icon="users"
-            gradient="from-pink-500 to-rose-600"
-            onOpen={() => {}} // TODO: Pass handler
-          />
-
-          <AppIconTile
-            title="Formation Builder"
-            subtitle="Visual tool"
-            icon="wrench"
-            gradient="from-indigo-500 to-purple-600"
-            onOpen={() => {}} // TODO: Pass handler
-          />
-
-          <AppIconTile
-            title="Bulk Actions"
-            subtitle={state.enableBulkOperations ? "Selection ON" : "Mass edit"}
-            icon={state.enableBulkOperations ? "check-circle" : "list"}
-            gradient={
-              state.enableBulkOperations
-                ? "from-green-500 to-emerald-600"
-                : "from-teal-500 to-cyan-600"
-            }
-            onOpen={() => {
-              dispatch({ type: "TOGGLE_BULK" });
-            }}
-          />
-
-          <AppIconTile
-            title="Diagrams"
-            subtitle={`${Math.floor(state.playsCreated * (state.diagramCoverage / 100))} done`}
-            icon="grid"
-            gradient="from-cyan-500 to-blue-500"
-            badge={state.diagramCoverage}
-            onOpen={() => {}}
-          />
-
-          <AppIconTile
-            title="Formation Mapper"
-            subtitle={
-              formationAuditSummary.needsMapping > 0
-                ? `${formationAuditSummary.needsMapping} need mapping`
-                : "All formations linked"
-            }
-            icon="link"
-            gradient="from-amber-500 to-orange-500"
-            badge={formationAuditSummary.needsMapping || undefined}
-            onOpen={() => navigate("/playbook/formation-mapper")}
-          />
+      {/* Quick Action Buttons */}
+      <div className="px-4 sm:px-6 lg:px-8 py-4 border-b border-divider bg-white">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={handleOpenBuilder}
+              variant="primary"
+              size="md"
+              className="shadow-sm"
+            >
+              <Icon name="plus-circle" className="h-4 w-4 mr-2" />
+              New Play
+            </Button>
+            
+            <Button
+              onClick={handleQuickNewPracticeScript}
+              variant="secondary"
+              size="md"
+              className="shadow-sm"
+            >
+              <Icon name="clipboard-list" className="h-4 w-4 mr-2" />
+              Practice
+            </Button>
+            
+            <Button
+              onClick={handleQuickNewGamePlan}
+              variant="secondary"
+              size="md"
+              className="shadow-sm"
+            >
+              <Icon name="target" className="h-4 w-4 mr-2" />
+              Game Plan
+            </Button>
+            
+            <Button
+              onClick={() => navigate("/playbook/formation-mapper")}
+              variant="ghost"
+              size="md"
+            >
+              <Icon name="link" className="h-4 w-4 mr-2" />
+              Formation Mapper
+              {formationAuditSummary.needsMapping > 0 && (
+                <span className="ml-2 px-2 py-0.5 bg-orange-100 text-orange-700 text-xs font-semibold rounded-full">
+                  {formationAuditSummary.needsMapping}
+                </span>
+              )}
+            </Button>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <Typography variant="body-sm" className="text-muted">
+              {state.playsCreated} plays total
+            </Typography>
+          </div>
         </div>
       </div>
 
@@ -195,10 +158,10 @@ export function DesktopPlaybookView({
         </div>
       )}
 
-      {/* Main Content - 2 Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 px-4 sm:px-6 lg:px-8 pb-12 overflow-visible">
-        {/* Left Sidebar - Controls */}
-        <div className="lg:col-span-1 space-y-6 overflow-visible">
+      {/* Main Content - Optimized Desktop Layout (20%/80% split) */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 px-4 sm:px-6 lg:px-8 py-6 overflow-visible">
+        {/* Left Sidebar - Controls (20% width on desktop) */}
+        <div className="lg:col-span-1 space-y-4 overflow-visible">
           {/* Selection Mode Toggle - NEW! */}
           <Card variant="default" interactive>
             <SelectionModeToggle
@@ -239,17 +202,14 @@ export function DesktopPlaybookView({
           )}
         </div>
 
-        {/* Right Side - Main Content Area */}
-        <div className="lg:col-span-3 overflow-visible">
+        {/* Main Content Area (80% width on desktop) */}
+        <div className="lg:col-span-4 overflow-visible">
           <Card variant="elevated" size="lg">
             {state.currentView === "playbook" && (
               <ErrorBoundary
                 fallback={
                   <div className="p-spacing-lg text-center">
-                    <Typography
-                      variant="body-md"
-                      className="text-secondary"
-                    >
+                    <Typography variant="body-md" className="text-secondary">
                       Failed to load plays. Please refresh the page.
                     </Typography>
                   </div>
@@ -264,10 +224,15 @@ export function DesktopPlaybookView({
                     onAddToPracticeScript: handleAddToPracticeScript,
                     onAddToGamePlan: handleAddToGamePlan,
                     onEdit: handleEditPlay,
-                    onSave: handleSavePlay,
+                    onSave: async (playId: string, updates: Partial<Play>) => {
+                      // Adapter: PlayGrid expects (playId, updates), but handleSavePlay expects full play
+                      const fullPlay = optimisticPlays.find(p => p.id === playId);
+                      if (fullPlay) {
+                        await handleSavePlay({ ...fullPlay, ...updates });
+                      }
+                    },
                     onDuplicate: handleDuplicatePlay,
                     onOpenBuilder: handleOpenBuilder,
-                    onCreateDiagram: handleCreateDiagram,
                     onOpenAssignments: handleOpenAssignments,
                     onPostToTeamBulletin: handlePostToTeamBulletin,
                     refreshTrigger: state.refreshTrigger,
@@ -288,10 +253,7 @@ export function DesktopPlaybookView({
             {state.currentView === "practice-script" && (
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
-                  <Typography
-                    variant="headline-md"
-                    className="text-primary"
-                  >
+                  <Typography variant="headline-md" className="text-primary">
                     Practice Scripts
                   </Typography>
                   <Button
@@ -323,10 +285,7 @@ export function DesktopPlaybookView({
             {state.currentView === "game-plan" && (
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
-                  <Typography
-                    variant="headline-md"
-                    className="text-primary"
-                  >
+                  <Typography variant="headline-md" className="text-primary">
                     Game Plans
                   </Typography>
                   <Button
@@ -351,10 +310,7 @@ export function DesktopPlaybookView({
                   >
                     No Game Plans Yet
                   </Typography>
-                  <Typography
-                    variant="body-sm"
-                    className="text-muted mb-6"
-                  >
+                  <Typography variant="body-sm" className="text-muted mb-6">
                     Create your first game plan to strategize plays for upcoming
                     matches.
                   </Typography>

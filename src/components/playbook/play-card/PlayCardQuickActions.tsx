@@ -3,15 +3,10 @@ import { Typography } from "../../design-system/Typography";
 import Icon from "../../ui/Icon/Icon";
 import { Button } from "../../ui/Button/Button";
 import type { Play as PlayType } from "../../../types/play";
-import {
-  getDiagramButtonIcon,
-  getDiagramButtonText,
-} from "../../../utils/diagramHelpers";
 import { usePlayStatus } from "../../../hooks/usePlayStatus";
 
 interface PlayCardQuickActionsProps {
   play: PlayType;
-  onCreateDiagram?: (play: PlayType) => void;
   onAddToPracticeScript?: (play: PlayType) => void;
   onAddToGamePlan?: (play: PlayType) => void;
   onOpenAssignments?: (play: PlayType) => void;
@@ -20,7 +15,6 @@ interface PlayCardQuickActionsProps {
 
 export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
   play,
-  onCreateDiagram,
   onAddToPracticeScript,
   onAddToGamePlan,
   onOpenAssignments,
@@ -35,30 +29,13 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
         QUICK ACTIONS
       </Typography>
       <div className="flex items-center gap-spacing-xs">
-        {/* Diagram Button with Check */}
-        <Button
-          variant={play.diagram_url ? "primary" : "secondary"}
-          size="xs"
-          onClick={() => onCreateDiagram?.(play)}
-          title={getDiagramButtonText(Boolean(play.diagram_data))}
-          className={
-            play.diagram_url
-              ? ""
-              : "surface-subtle hover:bg-surface-warning text-warning border-surface-primary"
-          }
-        >
-          {play.diagram_url && (
-            <Icon
-              name="check"
-              className="h-3 w-3 mr-1 text-success-500 dark:text-success-400"
-            />
-          )}
-          <Icon
-            name={getDiagramButtonIcon(Boolean(play.diagram_data))}
-            className="h-3 w-3 mr-spacing-xs"
-          />{" "}
-          {getDiagramButtonText(Boolean(play.diagram_data))}
-        </Button>
+        {/* Photo indicator */}
+        {play.diagram_image_url && (
+          <div className="px-2 py-1 bg-indigo-100 text-indigo-700 rounded-md text-xs font-medium flex items-center gap-1">
+            <Icon name="image" size={14} />
+            Photo
+          </div>
+        )}
 
         {/* Practice Button with Count */}
         <Button

@@ -48,7 +48,6 @@ interface MobilePlaybookViewProps {
   handleSavePlay: (play: Play) => Promise<void>;
   handleDuplicatePlay: (play: Play) => Promise<void>;
   handleOpenBuilder: () => void;
-  handleCreateDiagram: (play: Play) => void;
   handleOpenAssignments: (play: Play) => void;
   handlePostToTeamBulletin: (play: Play) => void;
   handleAddToPracticeScript: (play: Play) => void;
@@ -85,7 +84,6 @@ export function MobilePlaybookView({
   handleSavePlay,
   handleDuplicatePlay,
   handleOpenBuilder,
-  handleCreateDiagram,
   handleOpenAssignments,
   handlePostToTeamBulletin,
   handleAddToPracticeScript,
@@ -307,7 +305,6 @@ export function MobilePlaybookView({
                   onSave: handleSavePlay,
                   onDuplicate: handleDuplicatePlay,
                   onOpenBuilder: handleOpenBuilder,
-                  onCreateDiagram: handleCreateDiagram,
                   onOpenAssignments: handleOpenAssignments,
                   onPostToTeamBulletin: handlePostToTeamBulletin,
                   refreshTrigger: state.refreshTrigger,

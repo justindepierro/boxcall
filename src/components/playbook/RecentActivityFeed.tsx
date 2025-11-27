@@ -43,23 +43,6 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
     }
   };
 
-  const getActivityColor = (type: ActivityItem["type"]) => {
-    switch (type) {
-      case "created":
-        return "text-success";
-      case "updated":
-        return "text-info";
-      case "duplicated":
-        return "text-primary";
-      case "added_to_script":
-        return "text-warning";
-      case "added_to_gameplan":
-        return "text-primary";
-      default:
-        return "text-tertiary";
-    }
-  };
-
   const getActivityLabel = (type: ActivityItem["type"]) => {
     switch (type) {
       case "created":
@@ -98,57 +81,69 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
   const displayedActivities = activities.slice(0, maxItems);
 
   return (
-    <div
-      className={`bg-surface-primary rounded-lg border border-border p-4 overflow-visible ${className}`}
-    >
-      <div className="flex items-center mb-4">
-        <Icon name="activity" className="h-5 w-5 text-jade-600 mr-2" />
-        <Typography variant="headline-sm" className="text-primary">
+    <div className={`overflow-visible ${className}`}>
+      <div className="flex items-center mb-6">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-jade-500 to-emerald-600 flex items-center justify-center shadow-md shadow-jade-500/20 mr-3">
+          <Icon name="activity" className="h-5 w-5 text-white" />
+        </div>
+        <Typography variant="headline-sm" className="text-primary font-bold">
           Recent Activity
         </Typography>
       </div>
 
       {displayedActivities.length === 0 ? (
-        <div className="text-center py-6 text-muted">
-          <Icon
-            name="activity"
-            className="h-8 w-8 mx-auto mb-2 text-border-light"
-          />
-          <Typography variant="body-sm" className="text-muted">
+        <div className="text-center py-12 px-4 bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-xl border-2 border-dashed border-divider">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
+            <Icon name="activity" className="h-8 w-8 text-muted" />
+          </div>
+          <Typography variant="body-md" className="text-secondary font-medium mb-1">
             No recent activity
+          </Typography>
+          <Typography variant="body-xs" className="text-muted">
+            Your playbook changes will appear here
           </Typography>
         </div>
       ) : (
-        <div className="space-y-3">
-          {displayedActivities.map((activity) => (
-            <div key={activity.id} className="flex items-start space-x-3">
-              <div
-                className={`flex-shrink-0 w-8 h-8 rounded-full bg-surface-secondary flex items-center justify-center`}
-              >
+        <div className="space-y-2">
+          {displayedActivities.map((activity, index) => (
+            <div
+              key={activity.id}
+              className="group flex items-start space-x-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-jade-50/50 hover:to-emerald-50/30 transition-all duration-200 hover:shadow-sm"
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
+              <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-jade-100 to-emerald-100 flex items-center justify-center shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all duration-200">
                 <Icon
                   name={getActivityIcon(activity.type)}
-                  className={`h-4 w-4 ${getActivityColor(activity.type)}`}
+                  className="h-5 w-5 text-jade-700"
                 />
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between">
-                  <Typography
-                    variant="body-sm"
-                    className="text-primary font-medium truncate"
-                  >
-                    {activity.playName}
-                  </Typography>
+              <div className="flex-1 min-w-0 pt-1">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <Typography
+                      variant="body-sm"
+                      className="text-primary font-semibold truncate mb-1"
+                    >
+                      {activity.playName}
+                    </Typography>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-jade-100 text-jade-700 text-xs font-medium">
+                        {getActivityLabel(activity.type)}
+                      </span>
+                      {activity.details && (
+                        <Typography variant="body-xs" className="text-secondary">
+                          {activity.details}
+                        </Typography>
+                      )}
+                    </div>
+                  </div>
                   <Typography
                     variant="body-xs"
-                    className="text-muted ml-2 flex-shrink-0"
+                    className="text-muted font-medium flex-shrink-0"
                   >
                     {formatTimeAgo(activity.timestamp)}
                   </Typography>
                 </div>
-                <Typography variant="body-xs" className="text-secondary">
-                  {getActivityLabel(activity.type)}
-                  {activity.details && ` • ${activity.details}`}
-                </Typography>
               </div>
             </div>
           ))}
@@ -156,10 +151,12 @@ export const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({
       )}
 
       {activities.length > maxItems && (
-        <div className="mt-4 pt-3 border-t border-light">
-          <Typography variant="body-xs" className="text-muted text-center">
-            +{activities.length - maxItems} more activities
-          </Typography>
+        <div className="mt-4 pt-4 border-t-2 border-divider">
+          <div className="text-center px-4 py-2 rounded-lg bg-gradient-to-r from-jade-50 to-emerald-50">
+            <Typography variant="body-xs" className="text-jade-700 font-semibold">
+              +{activities.length - maxItems} more {activities.length - maxItems === 1 ? 'activity' : 'activities'}
+            </Typography>
+          </div>
         </div>
       )}
     </div>

@@ -139,57 +139,62 @@ export const SelectionModeToggle: React.FC<SelectionModeToggleProps> = ({
   return (
     <motion.button
       onClick={onToggle}
-      className={`relative flex items-center space-x-3 px-4 py-3 rounded-xl transition-all ${
+      className={`relative flex items-center justify-between w-full px-5 py-4 rounded-xl transition-all ${
         isActive
-          ? "bg-gradient-to-br from-green-500 to-green-600 text-white ring-4 ring-green-500/30 shadow-xl shadow-green-500/20"
-          : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 hover:shadow-md border-2 border-slate-200 dark:border-slate-600"
+          ? "bg-gradient-to-br from-jade-500 via-jade-600 to-emerald-600 text-white shadow-lg shadow-jade-500/30 hover:shadow-xl hover:shadow-jade-500/40"
+          : "bg-white text-slate-700 hover:bg-slate-50 shadow-md hover:shadow-lg border border-slate-200 hover:border-jade-300"
       } ${className}`}
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.97 }}
+      whileHover={{ scale: 1.02, y: -2 }}
+      whileTap={{ scale: 0.98 }}
       aria-label={isActive ? "Exit selection mode" : "Enter selection mode"}
       aria-pressed={isActive}
     >
-      {/* Checkbox Icon */}
-      <div
-        className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all ${
-          isActive
-            ? "bg-white/20 text-white backdrop-blur-sm"
-            : "bg-slate-100 dark:bg-slate-700 text-slate-400"
-        }`}
-      >
-        <Icon name={isActive ? "check-circle" : "circle"} className="w-6 h-6" />
-      </div>
-
-      {/* Label & Count */}
-      <div className="flex flex-col items-start">
-        <Typography
-          variant="body-sm"
-          className={`font-bold ${
-            isActive ? "text-white" : "text-slate-700 dark:text-slate-200"
+      <div className="flex items-center space-x-3 flex-1">
+        {/* Checkbox Icon */}
+        <div
+          className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all ${
+            isActive
+              ? "bg-white/25 text-white shadow-lg"
+              : "bg-gradient-to-br from-jade-50 to-jade-100 text-jade-600 border-2 border-jade-200"
           }`}
         >
-          {isActive ? "Selection Mode ON" : label}
+          <Icon name={isActive ? "check-circle" : "circle"} className="w-6 h-6" />
+        </div>
+
+        {/* Label & Count */}
+        <div className="flex flex-col items-start">
+          <Typography
+            variant="body-md"
+            className={`font-bold ${
+              isActive ? "text-white" : "text-slate-800"
+            }`}
+          >
+          {label}
         </Typography>
-        <Typography
-          variant="body-xs"
-          className={`${isActive ? "text-white/90" : "text-slate-500 dark:text-slate-400"}`}
-        >
-          {isActive && selectedCount > 0
-            ? `${selectedCount} ${selectedCount === 1 ? "play" : "plays"} selected`
-            : isActive
-              ? "Tap plays to select them"
-              : "Enable to select plays"}
+        {isActive && selectedCount > 0 && (
+          <Typography variant="body-xs" className="text-white/90 mt-0.5 font-medium">
+            Click to exit selection
+          </Typography>
+        )}
+        {!isActive && (
+          <Typography variant="body-xs" className="text-muted mt-0.5">
+            Select multiple plays
+          </Typography>
+        )}
+      </div>
+    </div>
+
+    {/* Selection Count Badge */}
+    {isActive && selectedCount > 0 && (
+      <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
+        <Typography variant="headline-sm" className="text-white font-bold">
+          {selectedCount}
+        </Typography>
+        <Typography variant="body-xs" className="text-white/80 uppercase tracking-wider">
+          Selected
         </Typography>
       </div>
-
-      {/* Active Indicator Pulse */}
-      {isActive && (
-        <motion.div
-          className="absolute -top-1 -right-1 w-4 h-4 bg-white rounded-full shadow-lg"
-          animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
-        />
-      )}
+    )}
     </motion.button>
   );
 };

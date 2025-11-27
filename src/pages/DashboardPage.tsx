@@ -113,7 +113,10 @@ export default function DashboardPage() {
           >
             <div className="flex items-start justify-between mb-4">
               <div className="p-4 bg-gradient-to-br from-jade-50 to-jade-100 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                <Icon name="user" className="text-jade-600 w-8 h-8 group-hover:scale-110 transition-transform" />
+                <Icon
+                  name="user"
+                  className="text-jade-600 w-8 h-8 group-hover:scale-110 transition-transform"
+                />
               </div>
               <span className="px-3 py-1.5 bg-gradient-to-r from-jade-500 to-jade-600 text-white text-xs font-bold rounded-lg shadow-jade-sm">
                 {userRole.replace("_", " ").toUpperCase()}
@@ -148,7 +151,10 @@ export default function DashboardPage() {
           >
             <div className="flex items-start justify-between mb-4">
               <div className="p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                <Icon name="users" className="text-orange-600 w-8 h-8 group-hover:scale-110 transition-transform" />
+                <Icon
+                  name="users"
+                  className="text-orange-600 w-8 h-8 group-hover:scale-110 transition-transform"
+                />
               </div>
               <span className="px-3 py-1.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-bold rounded-lg shadow-orange-sm">
                 LIVE
@@ -180,13 +186,18 @@ export default function DashboardPage() {
           >
             <div className="flex items-start justify-between mb-4">
               <div className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                <Icon name="book" className="text-purple-600 w-8 h-8 group-hover:scale-110 transition-transform" />
+                <Icon
+                  name="book"
+                  className="text-purple-600 w-8 h-8 group-hover:scale-110 transition-transform"
+                />
               </div>
               <div className="px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl shadow-lg shadow-purple-500/30 group-hover:shadow-xl group-hover:shadow-purple-500/40 transition-all duration-300 flex flex-col items-center">
                 <span className="text-3xl font-black leading-none bg-gradient-to-br from-white to-purple-100 bg-clip-text text-transparent">
                   {dashboardStats.totalPlays || 0}
                 </span>
-                <span className="text-xs font-bold tracking-wider opacity-90">PLAYS</span>
+                <span className="text-xs font-bold tracking-wider opacity-90">
+                  PLAYS
+                </span>
               </div>
             </div>
             <Typography variant="headline-md" className="text-primary mb-2">
@@ -214,10 +225,7 @@ export default function DashboardPage() {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-jade-500/0 via-jade-500/0 to-jade-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="p-2 bg-jade-500 rounded-lg shadow-lg group-hover:scale-110 transition-transform relative z-10">
-              <Icon
-                name="plus-circle"
-                className="w-6 h-6 text-white"
-              />
+              <Icon name="plus-circle" className="w-6 h-6 text-white" />
             </div>
             <span className="text-jade-900 font-bold text-base relative z-10">
               New Play
@@ -230,10 +238,7 @@ export default function DashboardPage() {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-orange-500/0 via-orange-500/0 to-orange-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="p-2 bg-orange-500 rounded-lg shadow-lg group-hover:scale-110 transition-transform relative z-10">
-              <Icon
-                name="clipboard-list"
-                className="w-6 h-6 text-white"
-              />
+              <Icon name="clipboard-list" className="w-6 h-6 text-white" />
             </div>
             <span className="text-orange-900 font-bold text-base relative z-10">
               Practice Plan
@@ -246,10 +251,7 @@ export default function DashboardPage() {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 via-purple-500/0 to-purple-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="p-2 bg-purple-500 rounded-lg shadow-lg group-hover:scale-110 transition-transform relative z-10">
-              <Icon
-                name="target"
-                className="w-6 h-6 text-white"
-              />
+              <Icon name="target" className="w-6 h-6 text-white" />
             </div>
             <span className="text-purple-900 font-bold text-base relative z-10">
               Game Plan
@@ -262,10 +264,7 @@ export default function DashboardPage() {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/0 via-blue-500/0 to-blue-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="p-2 bg-blue-500 rounded-lg shadow-lg group-hover:scale-110 transition-transform relative z-10">
-              <Icon
-                name="users"
-                className="w-6 h-6 text-white"
-              />
+              <Icon name="users" className="w-6 h-6 text-white" />
             </div>
             <span className="text-blue-900 font-bold text-base relative z-10">
               Roster

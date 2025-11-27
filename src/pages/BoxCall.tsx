@@ -119,7 +119,11 @@ const BoxCall: React.FC = () => {
           <Card className="p-6 shadow-md shadow-orange-500/10 hover:shadow-lg hover:shadow-orange-500/20 transition-all duration-300">
             <div className="flex items-start gap-4 mb-4">
               <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-3 rounded-xl border-2 border-orange-200">
-                <Icon name="clipboard-list" size="lg" className="text-orange-600" />
+                <Icon
+                  name="clipboard-list"
+                  size="lg"
+                  className="text-orange-600"
+                />
               </div>
               <div className="flex-1">
                 <Typography variant="headline-md" className="mb-1">

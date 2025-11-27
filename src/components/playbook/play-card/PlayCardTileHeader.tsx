@@ -23,7 +23,6 @@ interface PlayCardTileHeaderProps {
   showOneWordCalls: boolean;
   isSelected: boolean;
   onSelectionChange?: SelectionHandler;
-  onCreateDiagram: () => void;
   onOpenAssignments: () => void;
   phaseLabel: string | null;
   isFavorite: boolean;
@@ -41,7 +40,6 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
   showOneWordCalls,
   isSelected,
   onSelectionChange,
-  onCreateDiagram,
   onOpenAssignments,
   phaseLabel,
   isFavorite,
@@ -73,14 +71,14 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
 
   return (
     <motion.div
-      className="flex flex-col items-center text-center overflow-visible group"
-      whileHover={{ scale: 1.02 }}
+      className="flex flex-col overflow-visible group"
+      whileHover={{ y: -4 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
-      <div className="relative w-full max-w-80 mx-auto overflow-visible">
+      <div className="relative w-full overflow-visible">
         {/* Selection checkbox - top-left (when selection mode is on) */}
         {onSelectionChange && (
-          <div className="absolute -top-3 -left-3 z-20">
+          <div className="absolute -top-2 -left-2 z-20">
             <SelectionCheckbox
               isSelected={Boolean(isSelected)}
               onChange={(selected) => {
@@ -98,16 +96,39 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
           </div>
         )}
 
+        {/* Photo or Gradient Card */}
         <motion.div
-          className={`relative w-full aspect-square rounded-[1.75rem] bg-gradient-to-br ${getTileGradient(optimisticPlay.p_type)} shadow-lg hover:shadow-2xl transition-shadow duration-200 overflow-visible before:absolute before:inset-0 before:rounded-[1.75rem] before:bg-gradient-to-tr before:from-transparent before:via-white/20 before:to-transparent before:opacity-50 before:pointer-events-none ${isExpanded ? "ring-2 ring-brand-primary" : ""}`}
-          whileHover={{ scale: 1.05 }}
+          className={`relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 ${isExpanded ? "ring-2 ring-jade-500" : ""}`}
+          whileHover={{ scale: 1.03 }}
           transition={{ type: "spring", stiffness: 400, damping: 17 }}
         >
-          <Icon
-            name={getTileIcon(optimisticPlay.p_type)}
-            className="absolute inset-0 m-auto w-[65%] h-[65%] text-white drop-shadow-lg"
-            aria-hidden="true"
-          />
+          {play.diagram_image_url ? (
+            /* Photo thumbnail */
+            <>
+              <img
+                src={play.diagram_image_url}
+                alt={`${tileTitle} diagram`}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+              <div className="absolute top-3 left-3">
+                <div className="px-2 py-1 bg-white/20 backdrop-blur-sm rounded-lg border border-white/30">
+                  <Icon name="image" className="w-4 h-4 text-white" />
+                </div>
+              </div>
+            </>
+          ) : (
+            /* Gradient with icon */
+            <>
+              <div className={`absolute inset-0 bg-gradient-to-br ${getTileGradient(optimisticPlay.p_type)}`} />
+              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-50" />
+              <Icon
+                name={getTileIcon(optimisticPlay.p_type)}
+                className="absolute inset-0 m-auto w-[50%] h-[50%] text-white/90 drop-shadow-lg"
+                aria-hidden="true"
+              />
+            </>
+          )}
         </motion.div>
 
         {/* Favorite button - top-left (hidden when selection mode is on) */}
@@ -130,21 +151,6 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
           />
         </div>
 
-        {play.diagram_url && (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onCreateDiagram();
-            }}
-            className="absolute -bottom-3 -right-3 w-11 h-11 rounded-full bg-purple-500 shadow-md flex items-center justify-center border-2 border-white dark:border-slate-800 hover:bg-purple-600 transition-colors cursor-pointer z-10"
-            title="Edit diagram"
-            aria-label="Edit diagram"
-          >
-            <Icon name="image" className="w-5 h-5 text-white" />
-          </button>
-        )}
-
         {/* Assignments Button */}
         <button
           type="button"
@@ -160,12 +166,12 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
         </button>
       </div>
 
-      <div className="mt-3 w-full px-2">
+      <div className="mt-4 w-full px-1">
         <ScrollingText
           as="h3"
-          className={`font-mono font-bold leading-tight text-primary text-center ${
-            isMobile ? "text-base" : "text-sm"
-          } ${showOneWordCalls && play.one_word_play ? "text-info" : ""}`}
+          className={`font-mono font-bold leading-snug text-primary ${
+            isMobile ? "text-lg" : "text-base"
+          } ${showOneWordCalls && play.one_word_play ? "text-jade-600" : ""}`}
           title={tileTitle}
           speed={50}
         >
@@ -173,7 +179,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
         </ScrollingText>
         {tileSubtitle && (
           <p
-            className={`text-secondary text-center mt-1 ${isMobile ? "text-sm" : "text-xs"}`}
+            className={`text-secondary mt-1 font-medium ${isMobile ? "text-sm" : "text-xs"}`}
           >
             {tileSubtitle}
           </p>
@@ -181,7 +187,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
       </div>
 
       {/* Badges - wristband, personnel and installation phase */}
-      <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+      <div className="mt-3 flex flex-wrap items-center gap-2">
         {/* Wristband badge */}
         {optimisticPlay.wristband_number && (
           <WristbandBadge

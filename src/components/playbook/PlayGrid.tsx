@@ -69,7 +69,6 @@ interface PlayGridProps {
   onEdit?: (play: Play) => void;
   onSave?: (playId: string, updates: Partial<Play>) => Promise<void>;
   onDuplicate?: (play: Play) => void;
-  onCreateDiagram?: (play: Play) => void;
   onOpenAssignments?: (play: Play) => void;
   onAddToPracticeScript?: (play: Play) => void;
   onAddToGamePlan?: (play: Play) => void;
@@ -100,7 +99,6 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   onEdit,
   onSave: _onSave, // Not used in V2 (no inline editing)
   onDuplicate,
-  onCreateDiagram,
   onOpenAssignments,
   onAddToPracticeScript: _onAddToPracticeScript, // Not used in V2
   onAddToGamePlan: _onAddToGamePlan, // Not used in V2
@@ -474,7 +472,6 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
         onEdit={onEdit}
         onSave={handlePlaySave}
         onDuplicate={onDuplicate}
-        onCreateDiagram={onCreateDiagram}
         onOpenAssignments={onOpenAssignments}
         onPostToTeamBulletin={onPostToTeamBulletin}
         isSelected={selectedPlayIds.has(play.id)}
@@ -494,7 +491,6 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       onEdit,
       handlePlaySave,
       onDuplicate,
-      onCreateDiagram,
       onOpenAssignments,
       onPostToTeamBulletin,
       selectedPlayIds,
@@ -704,7 +700,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                       play={play}
                       onEdit={() => onEdit?.(play)}
                       onMore={() => console.log("More actions:", play.id)}
-                      onClick={() => onCreateDiagram?.(play)}
+                      onClick={() => onEdit?.(play)}
                       isSelected={selectedPlayIds.has(play.id)}
                       showOneWordCalls={showOneWordCalls}
                     />
@@ -751,7 +747,6 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                               onEdit={onEdit}
                               onSave={handlePlaySave}
                               onDuplicate={onDuplicate}
-                              onCreateDiagram={onCreateDiagram}
                               onOpenAssignments={onOpenAssignments}
                               onPostToTeamBulletin={onPostToTeamBulletin}
                               isSelected={selectedPlayIds.has(play.id)}
@@ -863,7 +858,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                       play={play}
                       onEdit={() => onEdit?.(play)}
                       onMore={() => console.log("More actions:", play.id)}
-                      onClick={() => onCreateDiagram?.(play)}
+                      onClick={() => onEdit?.(play)}
                       isSelected={selectedPlayIds.has(play.id)}
                       showOneWordCalls={showOneWordCalls}
                     />
@@ -906,7 +901,6 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                                 onEdit={onEdit}
                                 onSave={handlePlaySave}
                                 onDuplicate={onDuplicate}
-                                onCreateDiagram={onCreateDiagram}
                                 onOpenAssignments={onOpenAssignments}
                                 onPostToTeamBulletin={onPostToTeamBulletin}
                                 isSelected={selectedPlayIds.has(play.id)}
@@ -1049,7 +1043,7 @@ function arePlayGridPropsEqual(prev: PlayGridProps, next: PlayGridProps) {
   const handlerKeys: (keyof PlayGridProps)[] = [
     "onEdit",
     "onDuplicate",
-    "onCreateDiagram",
+
     "onAddToPracticeScript",
     "onAddToGamePlan",
     "onPlaySelectionChange",
