@@ -89,7 +89,7 @@ export function DesktopPlaybookView({
   return (
     <div className="min-h-screen bg-surface-primary">
       {/* Quick Action Buttons */}
-      <div className="px-4 sm:px-6 lg:px-8 py-4 border-b border-divider bg-white">
+      <div className="px-6 py-4 border-b border-divider bg-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button
@@ -146,7 +146,7 @@ export function DesktopPlaybookView({
       </div>
 
       {formationAudit.plays.length > 0 && (
-        <div className="px-4 sm:px-6 lg:px-8 mb-8">
+        <div className="px-6 mb-6">
           <FormationSyncPanel
             plays={formationAudit.plays}
             loading={formationAudit.loading}
@@ -159,7 +159,8 @@ export function DesktopPlaybookView({
       )}
 
       {/* Main Content - Optimized Desktop Layout (20%/80% split) */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 px-4 sm:px-6 lg:px-8 py-6 overflow-visible">
+      <div className="max-w-screen-2xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 px-6 py-6 overflow-visible">
         {/* Left Sidebar - Controls (20% width on desktop) */}
         <div className="lg:col-span-1 space-y-4 overflow-visible">
           {/* Selection Mode Toggle - NEW! */}
@@ -204,7 +205,7 @@ export function DesktopPlaybookView({
 
         {/* Main Content Area (80% width on desktop) */}
         <div className="lg:col-span-4 overflow-visible">
-          <Card variant="elevated" size="lg">
+          <Card variant="elevated" size="md">
             {state.currentView === "playbook" && (
               <ErrorBoundary
                 fallback={
@@ -327,6 +328,7 @@ export function DesktopPlaybookView({
             )}
           </Card>
         </div>
+      </div>
       </div>
     </div>
   );

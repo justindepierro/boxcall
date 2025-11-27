@@ -26,7 +26,6 @@ import { WorkflowStatusBar } from "../components/playbook/WorkflowStatusBar";
 // import { AnalyticsDashboard } from "../components/analytics/AnalyticsDashboard";
 import { useToast } from "../hooks/useToast";
 import type { Play } from "../types/play";
-import { PageLayout } from "../components/layout/PageLayout";
 
 import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { useTeamsData } from "../hooks/useTeamsData";
@@ -888,7 +887,7 @@ export default function PlaybookPage() {
 
   return (
     <Aurora variant="field" fullHeight>
-      <PageLayout variant="dashboard">
+      <div className="min-h-screen">
         {/* Breadcrumb Navigation */}
         <Breadcrumb
           items={[
@@ -899,7 +898,7 @@ export default function PlaybookPage() {
             },
             { id: "playbook", label: "Playbook", current: true },
           ]}
-          className="mb-4"
+          className="mb-4 px-6 pt-6"
         />
 
         {/* Unified Header with Navigation (includes PlaybookSelector) */}
@@ -1098,7 +1097,7 @@ export default function PlaybookPage() {
             </div>
           </BottomSheet>
         )}
-      </PageLayout>
+      </div>
     </Aurora>
   );
 }

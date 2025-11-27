@@ -715,7 +715,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                   <div
                     ref={provided.innerRef}
                     {...provided.droppableProps}
-                    className="grid gap-10 py-8 px-4 overflow-visible auto-rows-max sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
+                    className="grid gap-6 overflow-visible auto-rows-max sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
                     style={{
                       transition: "grid-template-rows 0.3s ease",
                     }}
@@ -873,7 +873,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                   <div
                     ref={provided.innerRef}
                     {...provided.droppableProps}
-                    className="space-y-6 overflow-visible"
+                    className="space-y-4 overflow-visible"
                     role="list"
                   >
                     {visiblePlays.map((play, index) => (
