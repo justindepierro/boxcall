@@ -87,9 +87,9 @@ export function DesktopPlaybookView({
   mobileButtonSize,
 }: DesktopPlaybookViewProps) {
   return (
-    <div className="min-h-screen bg-jade-50/30">
+    <div className="min-h-screen bg-bg-subtle">
       {/* Quick Action Buttons */}
-      <div className="px-8 py-5 border-b border-jade-200/50 bg-white/80 backdrop-blur-sm">
+      <div className="px-8 py-5 border-b border-muted bg-bg-primary/80 backdrop-blur-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button
@@ -167,7 +167,7 @@ export function DesktopPlaybookView({
             <Card
               variant="default"
               interactive
-              className="border-jade-200/60 hover:border-jade-400"
+              className="border-muted hover:border-accent"
             >
               <SelectionModeToggle
                 isActive={state.enableBulkOperations}
@@ -178,7 +178,7 @@ export function DesktopPlaybookView({
             </Card>
 
             {/* Filters - Moved to top */}
-            <Card variant="default" className="border-jade-200/60">
+            <Card variant="default" className="border-muted">
               <AdvancedFilters
                 activeFilters={state.advancedFilters}
                 onFiltersChange={handleFiltersChange}
@@ -186,18 +186,18 @@ export function DesktopPlaybookView({
             </Card>
 
             {/* Stats Dashboard */}
-            <Card variant="elevated" className="border-jade-200/60">
+            <Card variant="elevated" className="border-muted">
               <PlaybookStatsDashboard stats={playbookStats} />
             </Card>
 
             {/* Recent Activity */}
-            <Card variant="default" className="border-jade-200/60">
+            <Card variant="default" className="border-muted">
               <RecentActivityFeed activities={playbookStats.recentActivity} />
             </Card>
 
             {/* Bulk Actions - Only show when items are selected */}
             {(state.selectedPlayIds?.size || 0) > 0 && (
-              <Card variant="elevated" className="border-jade-500">
+              <Card variant="elevated" className="border-accent">
                 <BulkActionsToolbar
                   selectedCount={state.selectedPlayIds?.size || 0}
                   onClearSelection={handleClearSelection}
@@ -209,7 +209,7 @@ export function DesktopPlaybookView({
 
           {/* Main Content Area (80% width on desktop) */}
           <div className="lg:col-span-4 overflow-visible">
-            <Card variant="elevated" size="md" className="border-jade-200/60">
+            <Card variant="elevated" size="md" className="border-muted">
               {state.currentView === "playbook" && (
                 <ErrorBoundary
                   fallback={

@@ -123,8 +123,8 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               size="sm"
               className={`px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm ${
                 currentView === "playbook"
-                  ? "bg-gradient-to-r from-emerald-600 to-jade-600 hover:from-emerald-700 hover:to-jade-700 text-white shadow-lg shadow-emerald-500/25"
-                  : "bg-white/60 hover:bg-white/90 dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-emerald-700 dark:text-emerald-400"
+                  ? "bg-interactive-primary-base hover:bg-interactive-primary-hover text-white shadow-lg"
+                  : "bg-bg-subtle hover:bg-bg-muted dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-jade-600 dark:text-jade-400"
               }`}
               icon={
                 <Icon
@@ -132,7 +132,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
                   className={
                     currentView === "playbook"
                       ? "text-white"
-                      : "text-emerald-600 dark:text-emerald-400"
+                      : "text-jade-600 dark:text-jade-400"
                   }
                 />
               }
@@ -151,8 +151,8 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               size="sm"
               className={`px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm ${
                 currentView === "practice-script"
-                  ? "bg-gradient-to-r from-emerald-600 to-jade-600 hover:from-emerald-700 hover:to-jade-700 text-white shadow-lg shadow-emerald-500/25"
-                  : "bg-white/60 hover:bg-white/90 dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-emerald-700 dark:text-emerald-400"
+                  ? "bg-interactive-primary-base hover:bg-interactive-primary-hover text-white shadow-lg"
+                  : "bg-bg-subtle hover:bg-bg-muted dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-jade-600 dark:text-jade-400"
               }`}
               icon={
                 <Icon
@@ -160,7 +160,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
                   className={
                     currentView === "practice-script"
                       ? "text-white"
-                      : "text-emerald-600 dark:text-emerald-400"
+                      : "text-jade-600 dark:text-jade-400"
                   }
                 />
               }
@@ -179,8 +179,8 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               size="sm"
               className={`px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm ${
                 currentView === "game-plan"
-                  ? "bg-gradient-to-r from-emerald-600 to-jade-600 hover:from-emerald-700 hover:to-jade-700 text-white shadow-lg shadow-emerald-500/25"
-                  : "bg-white/60 hover:bg-white/90 dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-emerald-700 dark:text-emerald-400"
+                  ? "bg-interactive-primary-base hover:bg-interactive-primary-hover text-white shadow-lg"
+                  : "bg-bg-subtle hover:bg-bg-muted dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-jade-600 dark:text-jade-400"
               }`}
               icon={
                 <Icon
@@ -188,7 +188,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
                   className={
                     currentView === "game-plan"
                       ? "text-white"
-                      : "text-emerald-600 dark:text-emerald-400"
+                      : "text-jade-600 dark:text-jade-400"
                   }
                 />
               }
@@ -207,8 +207,8 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               size="sm"
               className={`px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm ${
                 currentView === "analytics"
-                  ? "bg-gradient-to-r from-emerald-600 to-jade-600 hover:from-emerald-700 hover:to-jade-700 text-white shadow-lg shadow-emerald-500/25"
-                  : "bg-white/60 hover:bg-white/90 dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-emerald-700 dark:text-emerald-400"
+                  ? "bg-interactive-primary-base hover:bg-interactive-primary-hover text-white shadow-lg"
+                  : "bg-bg-subtle hover:bg-bg-muted dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-jade-600 dark:text-jade-400"
               }`}
               icon={
                 <Icon
@@ -216,7 +216,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
                   className={
                     currentView === "analytics"
                       ? "text-white"
-                      : "text-emerald-600 dark:text-emerald-400"
+                      : "text-jade-600 dark:text-jade-400"
                   }
                 />
               }

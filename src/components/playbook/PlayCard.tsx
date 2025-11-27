@@ -385,8 +385,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     <div
       className={`w-full rounded-2xl border bg-white transition-all duration-300 overflow-visible ${
         isSelected
-          ? "ring-2 ring-jade-500 border-jade-500 shadow-lg shadow-jade-500/20"
-          : "border-jade-200/60 shadow-md shadow-jade-500/5 hover:shadow-xl hover:shadow-jade-500/15 hover:border-jade-400 hover:scale-[1.01] hover:-translate-y-0.5"
+          ? "ring-2 ring-brand-accent border-accent shadow-lg shadow-jade-md"
+          : "border-muted shadow-md hover:shadow-xl hover:border-accent hover:scale-[1.01] hover:-translate-y-0.5"
       } ${isCompact ? "text-[13px]" : ""} ${isMobile ? "text-base" : ""} md:min-h-0`}
     >
       <div
@@ -405,7 +405,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             <img
               src={play.diagram_url}
               alt={`${displayName} diagram preview`}
-              className="w-full h-40 object-cover rounded-xl border border-jade-200/60"
+              className="w-full h-40 object-cover rounded-xl border border-muted"
               loading="lazy"
               decoding="async"
             />
@@ -454,7 +454,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                   }}
                   className="overflow-hidden"
                 >
-                  <div className="pt-6 mt-6 border-t border-jade-200/60">
+                  <div className="pt-6 mt-6 border-t border-muted">
                     <PlayCardDetails
                       play={play}
                       optimisticPlay={optimisticPlay}
