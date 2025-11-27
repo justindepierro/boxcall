@@ -118,7 +118,7 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
             title="Share this play on the team bulletin"
             className="bg-jade-50 hover:bg-jade-100 text-jade-700 border-jade-200 transition-all hover:shadow-sm"
           >
-            <Icon name="share-2" className="h-3.5 w-3.5" />
+            <Icon name="send" className="h-3.5 w-3.5" />
             <span className="text-xs font-medium">Share</span>
           </Button>
         )}
