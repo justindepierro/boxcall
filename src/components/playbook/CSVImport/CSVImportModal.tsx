@@ -6,6 +6,7 @@ import { DataSyncService, CSVService, PlaysService } from "@services";
 import type { CSVParseResult } from "@services/csv";
 import { Button } from "../../ui/Button/Button";
 import { CSVValidationRowEditor } from "./CSVValidationRowEditor";
+import { Modal } from "../../ui/Modal/Modal";
 
 interface CSVImportModalProps {
   isOpen: boolean;
@@ -788,35 +789,14 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 overflow-y-auto focus-scroll"
-      role="dialog"
-      aria-modal="true"
-      aria-label="CSV import modal"
-      tabIndex={0}
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="CSV Import"
+      size="lg"
+      closeOnBackdropClick={false}
     >
-      <div className="flex items-center justify-center min-h-screen pt-md px-md pb-20 text-center sm:block sm:p-0">
-        <div
-          className="fixed inset-0 bg-text-primary bg-opacity-50 transition-opacity"
-          onClick={onClose}
-        />
-        <div className="inline-block align-bottom bg-primary elevation-modal rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-          <div className="bg-subtle px-lg py-md divider-b flex items-center justify-between">
-            <Typography variant="headline-sm" as="h2" className="text-primary">
-              CSV Import
-            </Typography>
-            <Button
-              onClick={onClose}
-              variant="neutralLink"
-              size="sm"
-              icon={<Icon name="close" className="h-6 w-6" />}
-              iconPosition="only"
-              aria-label="Close modal"
-            />
-          </div>
-          <div className="bg-primary px-lg py-2xl">{renderStep()}</div>
-        </div>
-      </div>
-    </div>
+      {renderStep()}
+    </Modal>
   );
 };
