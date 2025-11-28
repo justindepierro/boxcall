@@ -49,6 +49,8 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
   enableSuggestions = false,
   normalizeValue,
   isSaving = false,
+  validationType,
+  existingValues,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value);
