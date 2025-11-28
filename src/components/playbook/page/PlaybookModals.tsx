@@ -75,6 +75,7 @@ interface PlaybookModalsProps {
 
   // Other props
   activeTeamId: string | null;
+  activePlaybookId: string;
   selectedPlaysForPractice: string[];
   setSelectedPlaysForPractice: (plays: string[]) => void;
   handleSavePlay: (play: Play) => Promise<void>;
@@ -108,6 +109,7 @@ export function PlaybookModals({
   setEditingScript,
   setPlayToPost,
   activeTeamId,
+  activePlaybookId,
   selectedPlaysForPractice,
   setSelectedPlaysForPractice,
   handleSavePlay,
@@ -167,6 +169,7 @@ export function PlaybookModals({
             <PersonnelConfigurationModal
               isOpen={showPersonnelModal}
               onClose={() => setShowPersonnelModal(false)}
+              playbookId={activePlaybookId}
             />
           </Suspense>
         </Modal>
@@ -184,6 +187,7 @@ export function PlaybookModals({
             <PlaybookHealthModal
               isOpen={showPlaybookHealthModal}
               onClose={() => setShowPlaybookHealthModal(false)}
+              playbookId={activePlaybookId}
             />
           </Suspense>
         </Modal>

@@ -1043,6 +1043,7 @@ export default function PlaybookPage() {
           setEditingScript={setEditingScript}
           setPlayToPost={setPlayToPost}
           activeTeamId={activeTeamId}
+          activePlaybookId={activePlaybookId}
           selectedPlaysForPractice={selectedPlaysForPractice}
           setSelectedPlaysForPractice={setSelectedPlaysForPractice}
           handleSavePlay={handleSavePlay}

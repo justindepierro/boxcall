@@ -7,6 +7,7 @@ import { Modal } from "../ui/Modal";
 import { Input } from "../ui/Input";
 import { triggerHapticFeedback } from "../../lib/hapticFeedback";
 import { useToast } from "../../hooks/useToast";
+import { usePersonnelConfigurations } from "../../hooks/usePersonnel";
 import { BadgeCustomizer } from "./BadgeCustomizer";
 import { PersonnelBadge } from "./PersonnelBadge";
 import type { BadgeCustomization } from "../../types/personnel";
@@ -38,13 +39,19 @@ export interface PersonnelConfiguration {
 interface PersonnelConfigurationModalProps {
   isOpen: boolean;
   onClose: () => void;
+  playbookId?: string;
   configurations?: PersonnelConfiguration[];
   onSave?: (configurations: PersonnelConfiguration[]) => void;
 }
 
 export const PersonnelConfigurationModal: React.FC<
   PersonnelConfigurationModalProps
-> = ({ isOpen, onClose, configurations = [], onSave = () => {} }) => {
+> = ({ isOpen, onClose, playbookId, configurations: configsProp, onSave = () => {} }) => {
+  // Fetch data from Supabase if playbookId provided
+  const { data: fetchedConfigs, isLoading } = usePersonnelConfigurations(playbookId);
+  
+  // Use provided configurations or fetched ones
+  const configurations = configsProp || fetchedConfigs || [];
   const [localConfigurations, setLocalConfigurations] =
     useState<PersonnelConfiguration[]>(configurations);
   const [expandedConfigIds, setExpandedConfigIds] = useState<Set<string>>(
@@ -733,6 +740,17 @@ export const PersonnelConfigurationModal: React.FC<
   );
 
   if (!isOpen) return null;
+
+  // Show loading state while fetching data
+  if (isLoading) {
+    return (
+      <Modal isOpen={isOpen} onClose={onClose} title="Personnel Configuration" size="lg">
+        <div className="flex items-center justify-center p-8">
+          <div className="text-text-secondary">Loading personnel data...</div>
+        </div>
+      </Modal>
+    );
+  }
 
   // Mobile: BottomSheet
   if (isMobile) {
