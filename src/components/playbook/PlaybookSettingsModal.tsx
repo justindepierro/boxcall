@@ -467,7 +467,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                   variant="outline"
                   className="w-full flex items-center justify-center gap-2"
                 >
-                  <ModularIcon name="edit" className="h-4 w-4" />
+                  <Icon name="edit" className="h-4 w-4" />
                   <span>Configure Personnel Builder</span>
                 </Button>
               </div>

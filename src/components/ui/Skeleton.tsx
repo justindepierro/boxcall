@@ -19,9 +19,12 @@ const SkeletonBase: React.FC<SkeletonProps> = ({
   height = "1rem",
 }) => (
   <div
-    className={`animate-pulse bg-gradient-to-r from-border via-bg-muted to-border bg-[length:200%_100%] rounded-lg ${className}`}
+    className={`relative overflow-hidden bg-neutral-200 rounded-lg ${className}`}
     style={{ width, height }}
-  />
+  >
+    {/* Shimmer overlay effect (Facebook-style) */}
+    <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+  </div>
 );
 
 // Export SkeletonBase as Skeleton for generic use

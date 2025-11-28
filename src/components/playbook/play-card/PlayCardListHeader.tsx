@@ -151,7 +151,7 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
 
               {/* Preferred hash - important for run plays */}
               {optimisticPlay.pref_hash && (
-                <span className="px-2 py-1 bg-slate-100 text-slate-700 border border-slate-300 rounded-lg text-xs font-medium">
+                <span className="px-2 py-1 bg-surface-muted text-secondary border border-divider rounded-lg text-xs font-medium">
                   {optimisticPlay.pref_hash}
                 </span>
               )}
@@ -172,7 +172,7 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
 
               {/* Preferred down/distance */}
               {optimisticPlay.pref_down && (
-                <span className="px-2 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-lg text-xs font-semibold">
+                <span className="px-2 py-1 bg-warning-lightest text-warning-dark border border-warning-light rounded-lg text-xs font-semibold">
                   {optimisticPlay.pref_down}
                 </span>
               )}
