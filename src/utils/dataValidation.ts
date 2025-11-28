@@ -397,3 +397,232 @@ export function validatePersonnel(
     shouldConfirm: false,
   };
 }
+
+// ============================================================================
+// ADVANCED FIELD VALIDATIONS (Formation Details, Play Details, etc.)
+// ============================================================================
+
+/**
+ * Generic validator for text fields with existing values
+ * Used for: Formation Type, Backfield, Shift, Motion, Protection, etc.
+ */
+export function validateTextField(
+  input: string,
+  existingValues: string[],
+  fieldName: string
+): ValidationResult {
+  if (!input || input.trim().length === 0) {
+    return {
+      state: 'idle',
+      normalizedValue: '',
+      borderColor: 'border-secondary',
+      shouldConfirm: false,
+    };
+  }
+  
+  const normalized = normalizeText(input);
+  
+  // Check for exact match
+  if (existingValues.some(v => normalizeText(v) === normalized)) {
+    return {
+      state: 'valid',
+      normalizedValue: normalized,
+      message: `✓ ${fieldName} exists`,
+      borderColor: 'border-green-500',
+      shouldConfirm: false,
+    };
+  }
+  
+  // Find similar matches
+  const similar = findSimilarMatches(normalized, existingValues, 2);
+  
+  if (similar.length > 0 && similar[0].confidence > 70) {
+    return {
+      state: 'warning',
+      normalizedValue: normalized,
+      message: `Did you mean "${similar[0].value}"?`,
+      suggestions: similar,
+      borderColor: 'border-yellow-500',
+      shouldConfirm: false,
+    };
+  }
+  
+  return {
+    state: 'valid',
+    normalizedValue: normalized,
+    message: `✓ Will create "${normalized}"`,
+    borderColor: 'border-green-500',
+    shouldConfirm: false,
+  };
+}
+
+/**
+ * Validate Formation Type (f_type)
+ * Examples: "Spread", "Tight", "Balanced", "Compressed"
+ */
+export function validateFormationType(
+  input: string,
+  existingTypes: string[]
+): ValidationResult {
+  return validateTextField(input, existingTypes, 'Formation type');
+}
+
+/**
+ * Validate Backfield Alignment (back_align)
+ * Examples: "I-Formation", "Shotgun", "Pistol", "Under Center"
+ */
+export function validateBackfieldAlignment(
+  input: string,
+  existingAlignments: string[]
+): ValidationResult {
+  return validateTextField(input, existingAlignments, 'Backfield alignment');
+}
+
+/**
+ * Validate Shift (shift)
+ * Examples: "Z-Motion", "Jet", "Orbit", "None"
+ */
+export function validateShift(
+  input: string,
+  existingShifts: string[]
+): ValidationResult {
+  return validateTextField(input, existingShifts, 'Shift');
+}
+
+/**
+ * Validate Motion (motion)
+ * Examples: "Z across", "H orbit", "Fly", "None"
+ */
+export function validateMotion(
+  input: string,
+  existingMotions: string[]
+): ValidationResult {
+  return validateTextField(input, existingMotions, 'Motion');
+}
+
+/**
+ * Validate Run Strength (r_str)
+ * Examples: "Right", "Left", "Strong", "Weak"
+ */
+export function validateRunStrength(
+  input: string,
+  existingStrengths: string[]
+): ValidationResult {
+  return validateTextField(input, existingStrengths, 'Run strength');
+}
+
+/**
+ * Validate Pass Strength (p_str)
+ * Examples: "Right", "Left", "Strong", "Weak"
+ */
+export function validatePassStrength(
+  input: string,
+  existingStrengths: string[]
+): ValidationResult {
+  return validateTextField(input, existingStrengths, 'Pass strength');
+}
+
+/**
+ * Validate Protection (protection)
+ * Examples: "5-man", "6-man", "Slide Right", "BOB", "Max Protect"
+ */
+export function validateProtection(
+  input: string,
+  existingProtections: string[]
+): ValidationResult {
+  return validateTextField(input, existingProtections, 'Protection');
+}
+
+/**
+ * Validate One Word Play (one_word_play)
+ * Examples: "POWER", "SLANT", "READ", "GO"
+ */
+export function validateOneWordPlay(
+  input: string,
+  existingOneWord: string[]
+): ValidationResult {
+  if (!input || input.trim().length === 0) {
+    return {
+      state: 'idle',
+      normalizedValue: '',
+      borderColor: 'border-secondary',
+      shouldConfirm: false,
+    };
+  }
+  
+  // One-word plays are typically uppercase
+  const normalized = input.trim().toUpperCase();
+  
+  // Check for exact match
+  if (existingOneWord.includes(normalized)) {
+    return {
+      state: 'valid',
+      normalizedValue: normalized,
+      message: '✓ One-word call exists',
+      borderColor: 'border-green-500',
+      shouldConfirm: false,
+    };
+  }
+  
+  // Find similar matches
+  const similar = findSimilarMatches(normalized, existingOneWord, 2);
+  
+  if (similar.length > 0 && similar[0].confidence > 70) {
+    return {
+      state: 'warning',
+      normalizedValue: normalized,
+      message: `Did you mean "${similar[0].value}"?`,
+      suggestions: similar,
+      borderColor: 'border-yellow-500',
+      shouldConfirm: false,
+    };
+  }
+  
+  return {
+    state: 'valid',
+    normalizedValue: normalized,
+    message: `✓ Will create "${normalized}"`,
+    borderColor: 'border-green-500',
+    shouldConfirm: false,
+  };
+}
+
+/**
+ * Validate Wristband Number (wristband_number)
+ * Examples: "23", "8A", "Q12", "R5"
+ * No normalization - keep exactly as entered
+ */
+export function validateWristbandNumber(
+  input: string,
+  existingNumbers: string[]
+): ValidationResult {
+  if (!input || input.trim().length === 0) {
+    return {
+      state: 'idle',
+      normalizedValue: '',
+      borderColor: 'border-secondary',
+      shouldConfirm: false,
+    };
+  }
+  
+  const trimmed = input.trim();
+  
+  // Check for exact duplicate
+  if (existingNumbers.includes(trimmed)) {
+    return {
+      state: 'error',
+      normalizedValue: trimmed,
+      message: '⚠ Wristband number already in use',
+      borderColor: 'border-red-500',
+      shouldConfirm: false,
+    };
+  }
+  
+  return {
+    state: 'valid',
+    normalizedValue: trimmed,
+    message: `✓ "${trimmed}"`,
+    borderColor: 'border-green-500',
+    shouldConfirm: false,
+  };
+}

@@ -688,6 +688,8 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             onWristbandNumberChange={(value) =>
               updateField("wristbandNumber", value)
             }
+            // NEW: Validation data
+            existingPlays={existingPlays}
             onDescriptionChange={(value) => updateField("description", value)}
             // Constants
             directionOptions={DIRECTION_OPTIONS}

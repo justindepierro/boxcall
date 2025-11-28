@@ -15,8 +15,31 @@ import {
   validateFormation,
   validatePlayName,
   validatePersonnel,
+  validateFormationType,
+  validateBackfieldAlignment,
+  validateShift,
+  validateMotion,
+  validateRunStrength,
+  validatePassStrength,
+  validateProtection,
+  validateOneWordPlay,
+  validateWristbandNumber,
   type ValidationResult,
 } from '../../utils/dataValidation';
+
+export type ValidatedInputType =
+  | 'formation'
+  | 'playName'
+  | 'personnel'
+  | 'formationType'
+  | 'backfieldAlignment'
+  | 'shift'
+  | 'motion'
+  | 'runStrength'
+  | 'passStrength'
+  | 'protection'
+  | 'oneWordPlay'
+  | 'wristbandNumber';
 
 interface ValidatedInputProps {
   label?: string;
@@ -25,7 +48,7 @@ interface ValidatedInputProps {
   onBlur?: () => void;
   placeholder?: string;
   required?: boolean;
-  type: 'formation' | 'playName' | 'personnel';
+  type: ValidatedInputType;
   existingValues: string[];
   className?: string;
   disabled?: boolean;
@@ -92,6 +115,33 @@ export const ValidatedInput: React.FC<ValidatedInputProps> = ({
         break;
       case 'personnel':
         result = validatePersonnel(value, existingValues);
+        break;
+      case 'formationType':
+        result = validateFormationType(value, existingValues);
+        break;
+      case 'backfieldAlignment':
+        result = validateBackfieldAlignment(value, existingValues);
+        break;
+      case 'shift':
+        result = validateShift(value, existingValues);
+        break;
+      case 'motion':
+        result = validateMotion(value, existingValues);
+        break;
+      case 'runStrength':
+        result = validateRunStrength(value, existingValues);
+        break;
+      case 'passStrength':
+        result = validatePassStrength(value, existingValues);
+        break;
+      case 'protection':
+        result = validateProtection(value, existingValues);
+        break;
+      case 'oneWordPlay':
+        result = validateOneWordPlay(value, existingValues);
+        break;
+      case 'wristbandNumber':
+        result = validateWristbandNumber(value, existingValues);
         break;
       default:
         return;

@@ -7,8 +7,11 @@ import {
   KeyPositionSelector,
   KeyPlayerSelector,
 } from "../components";
+import { ValidatedInput } from "../../../playbook/ValidatedInput";
 import { useRosterData } from "../../../../pages/RosterPage/hooks/useRosterData";
 import { usePersonnelConfigurations } from "../../../../hooks/usePersonnel";
+import { usePlayFieldValues } from "../hooks/usePlayFieldValues";
+import type { Play } from "../../../../types/play";
 
 interface AdvancedOptionsSectionProps {
   isOpen: boolean;
@@ -58,6 +61,8 @@ interface AdvancedOptionsSectionProps {
   onDescriptionChange: (value: string) => void;
   // Constants
   directionOptions: Array<{ value: string; label: string }>;
+  // NEW: Validation data
+  existingPlays?: Play[];
 }
 
 export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
@@ -103,7 +108,11 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
   onWristbandNumberChange,
   onDescriptionChange,
   directionOptions,
+  existingPlays = [],
 }) => {
+  // Extract unique field values for validation
+  const fieldValues = usePlayFieldValues(existingPlays);
+
   // Fetch personnel configurations and roster data
   const { data: configurations } = usePersonnelConfigurations(playbookId);
   const { players: rosterPlayers } = useRosterData();
@@ -162,18 +171,13 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
             </Typography>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-sm">
               <div>
-                <Typography
-                  variant="label-md"
-                  className="block mb-xs text-secondary"
-                >
-                  Formation Type
-                </Typography>
-                <input
-                  type="text"
+                <ValidatedInput
+                  label="Formation Type"
                   value={formationType}
                   onChange={(e) => onFormationTypeChange(e.target.value)}
-                  placeholder="e.g., Spread, Tight"
-                  className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
+                  placeholder="e.g., Spread, Tight, Balanced"
+                  type="formationType"
+                  existingValues={fieldValues.formationTypes}
                 />
               </div>
               <div>
@@ -204,26 +208,26 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                   Backfield & Motion
                 </Typography>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-xs">
-                  <input
-                    type="text"
+                  <ValidatedInput
                     value={backAlign}
                     onChange={(e) => onBackAlignChange(e.target.value)}
-                    placeholder="Backfield alignment"
-                    className="px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
+                    placeholder="e.g., I-Formation, Shotgun"
+                    type="backfieldAlignment"
+                    existingValues={fieldValues.backfieldAlignments}
                   />
-                  <input
-                    type="text"
+                  <ValidatedInput
                     value={shift}
                     onChange={(e) => onShiftChange(e.target.value)}
-                    placeholder="Pre-snap shift"
-                    className="px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
+                    placeholder="e.g., Z-Motion, Jet"
+                    type="shift"
+                    existingValues={fieldValues.shifts}
                   />
-                  <input
-                    type="text"
+                  <ValidatedInput
                     value={motion}
                     onChange={(e) => onMotionChange(e.target.value)}
-                    placeholder="Pre-snap motion"
-                    className="px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
+                    placeholder="e.g., Orbit, Fly"
+                    type="motion"
+                    existingValues={fieldValues.motions}
                   />
                 </div>
               </div>
@@ -300,18 +304,13 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                 </select>
               </div>
               <div>
-                <Typography
-                  variant="label-md"
-                  className="block mb-xs text-secondary"
-                >
-                  Pass Protection
-                </Typography>
-                <input
-                  type="text"
+                <ValidatedInput
+                  label="Pass Protection"
                   value={protection}
                   onChange={(e) => onProtectionChange(e.target.value)}
-                  placeholder="e.g., 5-man, Slide"
-                  className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
+                  placeholder="e.g., 5-man, Slide, BOB"
+                  type="protection"
+                  existingValues={fieldValues.protections}
                 />
               </div>
               <div className="md:col-span-2">
@@ -433,33 +432,25 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
             </Typography>
             <div className="space-y-sm">
               <div>
-                <Typography
-                  variant="label-md"
-                  className="block mb-xs text-secondary"
-                >
-                  One Word Call
-                </Typography>
-                <input
-                  type="text"
+                <ValidatedInput
+                  label="One Word Call"
                   value={oneWordPlay}
                   onChange={(e) => onOneWordPlayChange(e.target.value)}
-                  placeholder="e.g., POWER, SLANT"
-                  className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
+                  placeholder="e.g., POWER, SLANT, GO"
+                  type="oneWordPlay"
+                  existingValues={fieldValues.oneWordPlays}
+                  helperText="Uppercase sideline call name"
                 />
               </div>
               <div>
-                <Typography
-                  variant="label-md"
-                  className="block mb-xs text-secondary"
-                >
-                  Wristband Number
-                </Typography>
-                <input
-                  type="text"
+                <ValidatedInput
+                  label="Wristband Number"
                   value={wristbandNumber}
                   onChange={(e) => onWristbandNumberChange(e.target.value)}
                   placeholder="e.g., 23, 8A, Q12"
-                  className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
+                  type="wristbandNumber"
+                  existingValues={fieldValues.wristbandNumbers}
+                  helperText="Must be unique"
                 />
               </div>
               <div>
