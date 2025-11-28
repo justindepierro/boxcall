@@ -11,16 +11,19 @@ Built a complete **intelligent CSV import system** with inline validation, fuzzy
 **Location**: `public/` folder
 
 **Files**:
+
 - `BoxCall_Play_Import_Template.csv` - Simple 11-column template for quick imports
 - `BoxCall_Play_Import_Template_Detailed.csv` - Comprehensive 23-column template (recommended)
 
 **Key Features**:
+
 - Row 1: Descriptive headers with inline help ("Formation (REQUIRED)", "Personnel (11/12/21)")
 - Row 2: Value examples and acceptable options
 - Row 3: Blank separator for readability
 - Rows 4+: Realistic example plays covering common scenarios
 
 **Opens Perfectly In**:
+
 - Microsoft Excel
 - Google Sheets
 - Apple Numbers
@@ -31,10 +34,12 @@ Built a complete **intelligent CSV import system** with inline validation, fuzzy
 **Location**: `src/components/playbook/CSVTemplateDownload.tsx`
 
 **Exports**:
+
 - `CSVTemplateDownload` - Single button for one template
 - `CSVTemplateDownloadMenu` - Full menu with descriptions (ready for Playbook page)
 
 **Props**:
+
 ```typescript
 interface CSVTemplateDownloadProps {
   variant?: "simple" | "detailed" | "full";
@@ -43,11 +48,12 @@ interface CSVTemplateDownloadProps {
 ```
 
 **Usage Example**:
+
 ```tsx
 import { CSVTemplateDownloadMenu } from "@components/playbook/CSVTemplateDownload";
 
 // In Playbook page header or toolbar
-<CSVTemplateDownloadMenu />
+<CSVTemplateDownloadMenu />;
 ```
 
 ### 3. Inline Validation Editor ✅
@@ -55,6 +61,7 @@ import { CSVTemplateDownloadMenu } from "@components/playbook/CSVTemplateDownloa
 **Location**: `src/components/playbook/CSVImport/CSVValidationRowEditor.tsx`
 
 **Features**:
+
 - Real-time validation with color-coded feedback (green ✓, yellow ⚠️, red ❌)
 - Inline editing with save/cancel buttons
 - Fuzzy matching with confidence scores (85%+ = high confidence)
@@ -62,12 +69,14 @@ import { CSVTemplateDownloadMenu } from "@components/playbook/CSVTemplateDownloa
 - Extensible validation system (easy to add new fields)
 
 **Validates**:
+
 - Formation (checks against existing formations)
 - Play name (duplicate detection with similarity matching)
 - Personnel (format validation: 11, 12, 21, 22, etc.)
 - Play type (auto-corrects common variations)
 
 **Example Corrections**:
+
 ```
 Input: "Twns" → Suggestion: "Twins" (85% match)
 Input: "SHOTGUN" → Auto-correct: "Shotgun"
@@ -80,6 +89,7 @@ Input: "pass" → Auto-correct: "Pass"
 **Location**: `src/components/playbook/CSVImport/CSVImportModal.tsx`
 
 **Enhanced**:
+
 - Replaced basic error display with interactive CSVValidationRowEditor
 - Click row to expand and see validation details
 - Edit values directly in the modal
@@ -87,6 +97,7 @@ Input: "pass" → Auto-correct: "Pass"
 - Validation updates in real-time
 
 **Workflow**:
+
 1. Upload CSV file (drag & drop or browse)
 2. See preview table with validation status icons
 3. Expand rows with warnings/errors
@@ -98,10 +109,12 @@ Input: "pass" → Auto-correct: "Pass"
 **Location**: `docs/`
 
 **Files**:
+
 - `CSV_IMPORT_GUIDE.md` - Technical column reference (33+ fields documented)
 - `CSV_IMPORT_VALIDATION.md` - Coach-friendly guide with examples and scenarios
 
 **Covers**:
+
 - Column definitions and acceptable values
 - Validation types and how they work
 - Common scenarios with step-by-step solutions
@@ -122,17 +135,18 @@ export function findSimilarMatches(
   threshold: number = 0.6
 ): SimilarMatch[] {
   return existingValues
-    .map(value => ({
+    .map((value) => ({
       value,
       distance: calculateLevenshteinDistance(input, value),
-      confidence: calculateConfidence(input, value)
+      confidence: calculateConfidence(input, value),
     }))
-    .filter(match => match.confidence >= threshold)
+    .filter((match) => match.confidence >= threshold)
     .sort((a, b) => b.confidence - a.confidence);
 }
 ```
 
 **Confidence Scoring**:
+
 - **85-100%**: Very similar, high confidence (show first)
 - **60-84%**: Similar, moderate confidence
 - **<60%**: Too different, filtered out
@@ -142,12 +156,14 @@ export function findSimilarMatches(
 Uses existing validation utilities from `src/utils/dataValidation.ts`:
 
 **Key Functions**:
+
 - `validateFormation()` - Formation validation with fuzzy matching
 - `validatePlayName()` - Duplicate detection with similarity scoring
 - `validatePersonnel()` - Format validation (11, 12, 21, etc.)
 - `validatePlayType()` - Auto-corrects common variations
 
 **ValidationResult Interface**:
+
 ```typescript
 interface ValidationResult {
   state: "valid" | "warning" | "error";
@@ -161,18 +177,20 @@ interface ValidationResult {
 ### Integration Points
 
 **CSVValidationRowEditor Props**:
+
 ```typescript
 interface CSVValidationRowEditorProps {
-  preview: CSVPlayPreview;              // Row data with errors/warnings
-  existingFormations: string[];         // For fuzzy matching
-  existingPlayNames: string[];          // For duplicate detection
-  existingPersonnel: string[];          // For format validation
-  onUpdate: (row, field, value) => void;           // Save edited value
+  preview: CSVPlayPreview; // Row data with errors/warnings
+  existingFormations: string[]; // For fuzzy matching
+  existingPlayNames: string[]; // For duplicate detection
+  existingPersonnel: string[]; // For format validation
+  onUpdate: (row, field, value) => void; // Save edited value
   onAcceptSuggestion: (row, field, value) => void; // Apply suggestion
 }
 ```
 
 **CSVImportModal Integration**:
+
 - Expanded rows show CSVValidationRowEditor instead of basic error list
 - Updates parseResult state when values change
 - Re-validates on every edit
@@ -196,6 +214,7 @@ While building CSV import, we also fixed critical database issues:
 **Problem**: 500 errors on game_plan_plays queries due to invalid RLS join path
 
 **Fix**:
+
 ```sql
 -- WRONG (old):
 JOIN game_plan_situations gps ON gps.game_plan_id = tm.team_id
@@ -218,6 +237,7 @@ JOIN game_plan_situations gps ON gps.game_plan_id = gp.id
 ### 3. Fixed confidence_base Rendering Crash ✅
 
 **Files**:
+
 - `src/components/playbook/play-card/PlayCardListHeader.tsx` (lines 218-220)
 - `src/components/playbook/play-card/PlayCardTileHeader.tsx` (line 151)
 
@@ -226,9 +246,9 @@ JOIN game_plan_situations gps ON gps.game_plan_id = gp.id
 **Fix**: Added typeof checks with fallback value (70)
 
 ```typescript
-typeof optimisticPlay.confidence_base === 'number' 
-  ? optimisticPlay.confidence_base 
-  : 70
+typeof optimisticPlay.confidence_base === "number"
+  ? optimisticPlay.confidence_base
+  : 70;
 ```
 
 ## User Experience
@@ -242,6 +262,7 @@ typeof optimisticPlay.confidence_base === 'number'
 5. Repeat until it works
 
 **Problems**:
+
 - Trial and error
 - No guidance on acceptable values
 - Can't fix errors in the app
@@ -258,6 +279,7 @@ typeof optimisticPlay.confidence_base === 'number'
 7. Import clean data
 
 **Benefits**:
+
 - Clear guidance upfront (template)
 - Real-time validation
 - Fix errors without leaving the app
@@ -317,11 +339,13 @@ typeof optimisticPlay.confidence_base === 'number'
 ## Git History
 
 **Commits**:
+
 1. `f7812d9b` - feat(playbook): create Excel-friendly CSV templates with descriptive headers
 2. `92efef26` - feat(playbook): add inline CSV validation editor with fuzzy matching
 3. `f693c4f9` - feat(playbook): integrate CSV validation editor into import modal + coach docs
 
 **Files Changed**:
+
 - `public/BoxCall_Play_Import_Template.csv` (updated)
 - `public/BoxCall_Play_Import_Template_Detailed.csv` (new)
 - `src/components/playbook/CSVTemplateDownload.tsx` (new)
@@ -379,4 +403,4 @@ The system uses **intelligent fuzzy matching** to suggest corrections and **auto
 
 ---
 
-*Built December 1, 2025 - Session focus: Excel templates, inline validation, fuzzy matching*
+_Built December 1, 2025 - Session focus: Excel templates, inline validation, fuzzy matching_

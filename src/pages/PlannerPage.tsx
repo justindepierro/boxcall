@@ -148,11 +148,7 @@ export default function PlannerPage() {
             <div className="flex-1">
               <div className="flex items-center mb-md">
                 <div className="p-xs bg-warning rounded-lg">
-                  <Icon
-                    name="bar-chart"
-                    size="lg"
-                    className="text-warning"
-                  />
+                  <Icon name="bar-chart" size="lg" className="text-warning" />
                 </div>
                 <h3 className="ml-3 text-lg font-medium text-primary">
                   Team Dashboard

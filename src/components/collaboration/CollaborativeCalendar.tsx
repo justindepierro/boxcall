@@ -467,9 +467,7 @@ export const CollaborativeCalendar: React.FC<CollaborativeCalendarProps> = ({
                                     handleToggleAttendance(event.id)
                                   }
                                   className={
-                                    isAttending
-                                      ? "text-success"
-                                      : "text-muted"
+                                    isAttending ? "text-success" : "text-muted"
                                   }
                                 >
                                   <Icon

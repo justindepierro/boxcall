@@ -36,10 +36,7 @@ export const DatabaseDataDisplay: React.FC = () => {
         <div className="flex items-center">
           <Icon name="warning" size="md" color="warning" className="mr-3" />
           <div>
-            <Typography
-              variant="headline-sm"
-              className="text-warning mb-1"
-            >
+            <Typography variant="headline-sm" className="text-warning mb-1">
               Dev Mode Active - {devMode}
             </Typography>
             <Typography variant="body-sm" className="text-warning mb-3">
@@ -97,10 +94,7 @@ export const DatabaseDataDisplay: React.FC = () => {
             color="secondary"
             className="mx-auto mb-4 opacity-50"
           />
-          <Typography
-            variant="headline-sm"
-            className="text-secondary mb-2"
-          >
+          <Typography variant="headline-sm" className="text-secondary mb-2">
             No Data Found
           </Typography>
           <Typography variant="body-sm" className="text-muted">
@@ -117,10 +111,7 @@ export const DatabaseDataDisplay: React.FC = () => {
       <Card className="p-6 bg-primary bg-gradient-to-r from-bg-success/20 to-bg-info/20 border-muted">
         <div className="flex items-center justify-between">
           <div>
-            <Typography
-              variant="headline-md"
-              className="text-success800 mb-1"
-            >
+            <Typography variant="headline-md" className="text-success800 mb-1">
               <Icon
                 name="party-popper"
                 className="inline h-4 w-4 align-middle text-primary"
@@ -235,10 +226,7 @@ export const DatabaseDataDisplay: React.FC = () => {
                   </Typography>
                 </div>
                 <div className="mt-3 pt-2 border-t border-muted">
-                  <Typography
-                    variant="body-xs"
-                    className="text-success700"
-                  >
+                  <Typography variant="body-xs" className="text-success700">
                     <Icon
                       name="lightbulb"
                       className="inline h-4 w-4 align-middle text-primary"
@@ -324,10 +312,7 @@ export const DatabaseDataDisplay: React.FC = () => {
                   {play.formation} • {play.p_type}
                 </Typography>
                 {play.notes && (
-                  <Typography
-                    variant="body-xs"
-                    className="text-secondary mt-1"
-                  >
+                  <Typography variant="body-xs" className="text-secondary mt-1">
                     {play.notes.substring(0, 50)}...
                   </Typography>
                 )}

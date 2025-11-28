@@ -12,7 +12,10 @@ import { IntuitiveFormationBuilder } from "./IntuitiveFormationBuilder";
 import { FormationBuilderCanvas } from "./FormationBuilderCanvas";
 import { Button } from "../../ui/Button/Button";
 import { Icon } from "../../ui/Icon/Icon";
-import type { FormationPlayerPosition, FormationCreationSource } from "../../../types/formation";
+import type {
+  FormationPlayerPosition,
+  FormationCreationSource,
+} from "../../../types/formation";
 
 interface FormationBuilderRouterProps {
   playbookId: string;
@@ -62,7 +65,9 @@ export const FormationBuilderRouter: React.FC<FormationBuilderRouterProps> = ({
 
         <IntuitiveFormationBuilder
           playbookId={playbookId}
-          onSave={(players, personnel) => onSave(players, personnel, creationSource)}
+          onSave={(players, personnel) =>
+            onSave(players, personnel, creationSource)
+          }
           onCancel={onCancel}
         />
       </div>

@@ -104,13 +104,12 @@ const FORMATION_TEMPLATES: FormationTemplate[] = [
   },
 ];
 
-export const IntuitiveFormationBuilder: React.FC<IntuitiveFormationBuilderProps> = ({
-  playbookId: _playbookId,
-  onSave,
-  onCancel,
-}) => {
+export const IntuitiveFormationBuilder: React.FC<
+  IntuitiveFormationBuilderProps
+> = ({ playbookId: _playbookId, onSave, onCancel }) => {
   const [currentStep, setCurrentStep] = useState<FormationStep>("welcome");
-  const [_selectedTemplate, setSelectedTemplate] = useState<FormationTemplate | null>(null);
+  const [_selectedTemplate, setSelectedTemplate] =
+    useState<FormationTemplate | null>(null);
   const [players, setPlayers] = useState<FormationPlayerPosition[]>([]);
   const [personnel, setPersonnel] = useState("11");
   const toast = useToast();
@@ -122,21 +121,27 @@ export const IntuitiveFormationBuilder: React.FC<IntuitiveFormationBuilderProps>
     setCurrentStep("position");
   }, []);
 
-  const handlePlayerMove = useCallback((playerPosition: string, x: number, y: number) => {
-    setPlayers(prev => prev.map(p =>
-      p.position === playerPosition ? { ...p, x, y } : p
-    ));
-  }, []);
+  const handlePlayerMove = useCallback(
+    (playerPosition: string, x: number, y: number) => {
+      setPlayers((prev) =>
+        prev.map((p) => (p.position === playerPosition ? { ...p, x, y } : p))
+      );
+    },
+    []
+  );
 
-  const handleAddPlayer = useCallback((role: string) => {
-    const newPlayer: FormationPlayerPosition = {
-      position: `${role}${players.filter(p => p.role === role).length + 1}`,
-      role,
-      x: 25, // Center of field
-      y: 17.5, // Middle of field
-    };
-    setPlayers(prev => [...prev, newPlayer]);
-  }, [players]);
+  const handleAddPlayer = useCallback(
+    (role: string) => {
+      const newPlayer: FormationPlayerPosition = {
+        position: `${role}${players.filter((p) => p.role === role).length + 1}`,
+        role,
+        x: 25, // Center of field
+        y: 17.5, // Middle of field
+      };
+      setPlayers((prev) => [...prev, newPlayer]);
+    },
+    [players]
+  );
 
   const handleSave = useCallback(() => {
     if (players.length === 0) {
@@ -154,13 +159,10 @@ export const IntuitiveFormationBuilder: React.FC<IntuitiveFormationBuilderProps>
           Let's Draw a Formation!
         </Typography>
         <Typography variant="body-md" className="text-text-muted mb-8">
-          We'll guide you through creating your formation step by step.
-          Start with a template or build from scratch.
+          We'll guide you through creating your formation step by step. Start
+          with a template or build from scratch.
         </Typography>
-        <Button
-          onClick={() => setCurrentStep("template")}
-          className="w-full"
-        >
+        <Button onClick={() => setCurrentStep("template")} className="w-full">
           <Icon name="play" size="sm" className="mr-2" />
           Get Started
         </Button>
@@ -173,7 +175,9 @@ export const IntuitiveFormationBuilder: React.FC<IntuitiveFormationBuilderProps>
       <div className="p-6 border-b border-border">
         <div className="flex items-center justify-between">
           <div>
-            <Typography variant="headline-md">Choose a Starting Point</Typography>
+            <Typography variant="headline-md">
+              Choose a Starting Point
+            </Typography>
             <Typography variant="body-sm" className="text-text-muted">
               Pick a formation template or start fresh
             </Typography>
@@ -252,18 +256,20 @@ export const IntuitiveFormationBuilder: React.FC<IntuitiveFormationBuilderProps>
             Add Players
           </Typography>
           <div className="space-y-2">
-            {["QB", "RB", "FB", "WR", "TE", "LT", "LG", "C", "RG", "RT"].map((role) => (
-              <Button
-                key={role}
-                variant="outline"
-                size="sm"
-                onClick={() => handleAddPlayer(role)}
-                className="w-full justify-start"
-              >
-                <Icon name="plus-circle" size="sm" className="mr-2" />
-                {role}
-              </Button>
-            ))}
+            {["QB", "RB", "FB", "WR", "TE", "LT", "LG", "C", "RG", "RT"].map(
+              (role) => (
+                <Button
+                  key={role}
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleAddPlayer(role)}
+                  className="w-full justify-start"
+                >
+                  <Icon name="plus-circle" size="sm" className="mr-2" />
+                  {role}
+                </Button>
+              )
+            )}
           </div>
         </div>
       </div>
@@ -320,7 +326,7 @@ export const IntuitiveFormationBuilder: React.FC<IntuitiveFormationBuilderProps>
                 </Typography>
               </div>
             )}
-            {!players.some(p => p.role === "QB") && (
+            {!players.some((p) => p.role === "QB") && (
               <div className="p-4 bg-warning-50 border border-warning-200 rounded-lg">
                 <Typography variant="body-sm" className="text-warning-700">
                   💡 Consider adding a QB to your formation
@@ -348,8 +354,8 @@ export const IntuitiveFormationBuilder: React.FC<IntuitiveFormationBuilderProps>
           Ready to Save!
         </Typography>
         <Typography variant="body-md" className="text-text-muted mb-8">
-          Your formation with {players.length} players is ready to save.
-          You can always edit it later.
+          Your formation with {players.length} players is ready to save. You can
+          always edit it later.
         </Typography>
 
         <div className="flex gap-3">
@@ -367,20 +373,22 @@ export const IntuitiveFormationBuilder: React.FC<IntuitiveFormationBuilderProps>
 
   const renderCurrentStep = () => {
     switch (currentStep) {
-      case "welcome": return renderWelcomeStep();
-      case "template": return renderTemplateStep();
-      case "position": return renderPositionStep();
-      case "refine": return renderRefineStep();
-      case "save": return renderSaveStep();
-      default: return renderWelcomeStep();
+      case "welcome":
+        return renderWelcomeStep();
+      case "template":
+        return renderTemplateStep();
+      case "position":
+        return renderPositionStep();
+      case "refine":
+        return renderRefineStep();
+      case "save":
+        return renderSaveStep();
+      default:
+        return renderWelcomeStep();
     }
   };
 
-  return (
-    <div className="h-full bg-surface-primary">
-      {renderCurrentStep()}
-    </div>
-  );
+  return <div className="h-full bg-surface-primary">{renderCurrentStep()}</div>;
 };
 
 // Simple field canvas for drag & drop positioning
@@ -414,7 +422,8 @@ const SimpleFieldCanvas: React.FC<SimpleFieldCanvasProps> = ({
     if (!dragging || readonly) return;
 
     const rect = event.currentTarget.getBoundingClientRect();
-    const x = ((event.clientX - rect.left - dragOffset.x) / rect.width) * 53.333;
+    const x =
+      ((event.clientX - rect.left - dragOffset.x) / rect.width) * 53.333;
     const y = ((event.clientY - rect.top - dragOffset.y) / rect.height) * 35;
 
     // Constrain to field bounds
@@ -457,11 +466,15 @@ const SimpleFieldCanvas: React.FC<SimpleFieldCanvasProps> = ({
           className={`absolute w-8 h-8 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-xs font-bold cursor-move select-none transition-transform ${
             dragging === player.position ? "scale-110 z-10" : "hover:scale-105"
           } ${
-            player.role === "QB" ? "bg-yellow-400 text-black" :
-            ["LT", "LG", "C", "RG", "RT"].includes(player.role || "") ? "bg-orange-400 text-white" :
-            player.role === "TE" ? "bg-red-400 text-white" :
-            player.role === "WR" ? "bg-blue-400 text-white" :
-            "bg-green-400 text-white"
+            player.role === "QB"
+              ? "bg-yellow-400 text-black"
+              : ["LT", "LG", "C", "RG", "RT"].includes(player.role || "")
+                ? "bg-orange-400 text-white"
+                : player.role === "TE"
+                  ? "bg-red-400 text-white"
+                  : player.role === "WR"
+                    ? "bg-blue-400 text-white"
+                    : "bg-green-400 text-white"
           }`}
           style={{
             left: `${(player.x / 53.333) * 100}%`,

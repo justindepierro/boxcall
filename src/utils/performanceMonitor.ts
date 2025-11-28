@@ -70,12 +70,12 @@ class PerformanceMonitor {
   private async loadBaseline(): Promise<void> {
     // Load baseline from localStorage or fetch from server
     try {
-      const stored = localStorage.getItem('performance-baseline');
+      const stored = localStorage.getItem("performance-baseline");
       if (stored) {
         this.baseline = JSON.parse(stored);
       }
     } catch (error) {
-      console.warn('Failed to load performance baseline:', error);
+      console.warn("Failed to load performance baseline:", error);
     }
   }
 

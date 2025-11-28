@@ -92,10 +92,7 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
               >
                 {stats.totalPlays}
               </Typography>
-              <Typography
-                variant="body-xs"
-                className="text-secondary mt-1"
-              >
+              <Typography variant="body-xs" className="text-secondary mt-1">
                 {stats.playsWithDiagrams} with diagrams
               </Typography>
             </div>
@@ -145,10 +142,7 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
                 >
                   {stats.formationsNeedingMapping}
                 </Typography>
-                <Typography
-                  variant="body-xs"
-                  className="text-secondary mt-1"
-                >
+                <Typography variant="body-xs" className="text-secondary mt-1">
                   {stats.formationsNeedingMapping === 0
                     ? "All plays mapped"
                     : "need mapping"}
@@ -167,10 +161,7 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
 
         {/* Play Type Distribution */}
         <div className="space-y-3">
-          <Typography
-            variant="body-sm"
-            className="text-secondary font-medium"
-          >
+          <Typography variant="body-sm" className="text-secondary font-medium">
             Play Types
           </Typography>
 
@@ -273,11 +264,7 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
         <div className="bg-secondary rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Icon
-                name="grid"
-                size="sm"
-                className="h-5 w-5 text-secondary"
-              />
+              <Icon name="grid" size="sm" className="h-5 w-5 text-secondary" />
               <Typography
                 variant="body-sm"
                 className="text-secondary font-medium"

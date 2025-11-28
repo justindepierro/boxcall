@@ -76,12 +76,8 @@ export function BulkDirectionModal({
                 className="text-primary-500"
               />
               <div>
-                <div className="text-sm font-medium text-primary">
-                  ⬅️ Left
-                </div>
-                <div className="text-xs text-muted">
-                  Formation faces left
-                </div>
+                <div className="text-sm font-medium text-primary">⬅️ Left</div>
+                <div className="text-xs text-muted">Formation faces left</div>
               </div>
             </label>
 
@@ -95,12 +91,8 @@ export function BulkDirectionModal({
                 className="text-primary-500"
               />
               <div>
-                <div className="text-sm font-medium text-primary">
-                  ➡️ Right
-                </div>
-                <div className="text-xs text-muted">
-                  Formation faces right
-                </div>
+                <div className="text-sm font-medium text-primary">➡️ Right</div>
+                <div className="text-xs text-muted">Formation faces right</div>
               </div>
             </label>
 
@@ -114,9 +106,7 @@ export function BulkDirectionModal({
                 className="text-primary-500"
               />
               <div>
-                <div className="text-sm font-medium text-primary">
-                  ↔️ Both
-                </div>
+                <div className="text-sm font-medium text-primary">↔️ Both</div>
                 <div className="text-xs text-muted">
                   Has both left and right variants
                 </div>

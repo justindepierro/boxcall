@@ -31,9 +31,7 @@ export const useThemeColors = () => {
     },
     // Interactive colors
     interactive: {
-      hover: isDark
-        ? "hover:bg-dark-interactive-hover"
-        : "hover:bg-tertiary",
+      hover: isDark ? "hover:bg-dark-interactive-hover" : "hover:bg-tertiary",
       active: isDark ? "active:bg-dark-interactive-active" : "active:bg-border",
       focus: "focus:ring-electric-500",
     },

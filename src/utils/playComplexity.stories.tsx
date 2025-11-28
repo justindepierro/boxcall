@@ -143,16 +143,10 @@ const PlayComplexityDemo = () => {
             ).map((badge) => {
               const info = getComplexityBadgeInfo(badge);
               return (
-                <div
-                  key={badge}
-                  className="p-sm border rounded-lg text-center"
-                >
+                <div key={badge} className="p-sm border rounded-lg text-center">
                   <div className="text-2xl mb-xs">{info.icon}</div>
                   <div className="font-medium text-sm">{info.title}</div>
-                  <Badge
-                    variant={info.color as any}
-                    className="mt-xs text-xs"
-                  >
+                  <Badge variant={info.color as any} className="mt-xs text-xs">
                     {badge}
                   </Badge>
                 </div>
@@ -398,9 +392,7 @@ export const BadgeSystem: StoryObj = {
 
     return (
       <Card className="p-lg max-w-2xl">
-        <h3 className="text-lg font-semibold mb-md">
-          Complexity Badge System
-        </h3>
+        <h3 className="text-lg font-semibold mb-md">Complexity Badge System</h3>
         <div className="space-y-md">
           {badges.map((badge) => {
             const info = getComplexityBadgeInfo(badge);
@@ -457,9 +449,7 @@ export const ComplexityBreakdown: StoryObj = {
 
     return (
       <Card className="p-lg max-w-md">
-        <h3 className="text-lg font-semibold mb-md">
-          Complexity Breakdown
-        </h3>
+        <h3 className="text-lg font-semibold mb-md">Complexity Breakdown</h3>
         <div className="space-y-md">
           <div className="text-center">
             <div className="text-3xl mb-xs">{badgeInfo.icon}</div>
@@ -547,9 +537,7 @@ export const MilestoneTracking: StoryObj = {
 
     return (
       <Card className="p-lg max-w-2xl">
-        <h3 className="text-lg font-semibold mb-md">
-          Complexity Milestones
-        </h3>
+        <h3 className="text-lg font-semibold mb-md">Complexity Milestones</h3>
         <div className="space-y-md">
           {plays.map((play, index) => {
             const mockMetrics = {
@@ -584,9 +572,7 @@ export const MilestoneTracking: StoryObj = {
         </div>
 
         <div className="mt-md p-sm bg-status-info-bg rounded-lg">
-          <h5 className="font-medium text-sm mb-xs">
-            Milestone Thresholds
-          </h5>
+          <h5 className="font-medium text-sm mb-xs">Milestone Thresholds</h5>
           <div className="text-sm text-secondary space-y-xs">
             <div>• 26+ points: First Intermediate Play</div>
             <div>• 51+ points: Advanced Play Designer</div>

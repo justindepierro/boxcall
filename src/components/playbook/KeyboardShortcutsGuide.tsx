@@ -86,10 +86,7 @@ export const KeyboardShortcutsGuide: React.FC<KeyboardShortcutsGuideProps> = ({
           <div className="space-y-6">
             {categories.map((category) => (
               <div key={category}>
-                <Typography
-                  variant="headline-sm"
-                  className="text-primary mb-3"
-                >
+                <Typography variant="headline-sm" className="text-primary mb-3">
                   {category}
                 </Typography>
                 <div className="grid gap-2">

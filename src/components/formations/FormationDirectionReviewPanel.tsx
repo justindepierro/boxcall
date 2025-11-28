@@ -177,10 +177,7 @@ export const FormationDirectionReviewPanel: React.FC<
             <Typography variant="headline-md" className="text-success-800">
               All formations are properly configured! 🎉
             </Typography>
-            <Typography
-              variant="body-sm"
-              className="text-success-700 mt-xs"
-            >
+            <Typography variant="body-sm" className="text-success-700 mt-xs">
               Every formation has proper direction setup.
             </Typography>
           </div>
@@ -215,10 +212,7 @@ export const FormationDirectionReviewPanel: React.FC<
               {issues.length} formation{issues.length === 1 ? "" : "s"} need
               attention
             </Typography>
-            <Typography
-              variant="body-sm"
-              className="text-warning-700 mt-xs"
-            >
+            <Typography variant="body-sm" className="text-warning-700 mt-xs">
               These formations should have opposite-side versions for a complete
               playbook.
             </Typography>
@@ -296,10 +290,7 @@ const FormationIssueSection: React.FC<FormationIssueSectionProps> = ({
 }) => {
   return (
     <div>
-      <Typography
-        variant="headline-sm"
-        className="text-primary mb-md"
-      >
+      <Typography variant="headline-sm" className="text-primary mb-md">
         {title}
       </Typography>
       <div className="space-y-sm">
@@ -320,10 +311,7 @@ const FormationIssueSection: React.FC<FormationIssueSectionProps> = ({
                     </span>
                   )}
                 </div>
-                <Typography
-                  variant="body-xs"
-                  className="text-muted mt-xs"
-                >
+                <Typography variant="body-xs" className="text-muted mt-xs">
                   Used in {issue.usage_count} play
                   {issue.usage_count === 1 ? "" : "s"}
                   {issue.issue === "missing_opposite" &&

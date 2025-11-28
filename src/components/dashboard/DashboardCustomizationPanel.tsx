@@ -81,9 +81,7 @@ export const DashboardCustomizationPanel: React.FC<
               <Icon
                 name={widget.visible ? "eye" : "eye-off"}
                 size="sm"
-                className={
-                  widget.visible ? "text-primary" : "text-muted"
-                }
+                className={widget.visible ? "text-primary" : "text-muted"}
               />
             </Button>
 
@@ -405,10 +403,7 @@ export const DashboardCustomizationPanel: React.FC<
 
         {/* Tabs */}
         <div className="border-b border-muted">
-          <nav
-            className="flex space-x-xl px-lg"
-            aria-label="Tabs"
-          >
+          <nav className="flex space-x-xl px-lg" aria-label="Tabs">
             {[
               { id: "widgets", label: "Widgets", icon: "grid" as const },
               { id: "layouts", label: "Layouts", icon: "grid" as const }, // Using grid as layout icon

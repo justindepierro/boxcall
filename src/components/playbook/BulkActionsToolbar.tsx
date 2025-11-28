@@ -117,10 +117,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
                   Export
                 </span>
                 <div className="w-12 h-12 bg-primary rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform">
-                  <Icon
-                    name="download"
-                    className="w-5 h-5 text-secondary"
-                  />
+                  <Icon name="download" className="w-5 h-5 text-secondary" />
                 </div>
               </button>
 

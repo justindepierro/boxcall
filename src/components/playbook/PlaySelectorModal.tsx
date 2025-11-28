@@ -160,14 +160,8 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
             </div>
           ) : filteredPlays.length === 0 ? (
             <div className="text-center py-8">
-              <Icon
-                name="file"
-                className="h-12 w-12 text-muted mx-auto mb-4"
-              />
-              <Typography
-                variant="headline-sm"
-                className="text-secondary mb-2"
-              >
+              <Icon name="file" className="h-12 w-12 text-muted mx-auto mb-4" />
+              <Typography variant="headline-sm" className="text-secondary mb-2">
                 No plays found
               </Typography>
               <Typography variant="body-sm" className="text-muted">

@@ -5,9 +5,9 @@
  * Provides success rates by route, formation, and situational context
  */
 
-import { useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import type { ExecutionResult } from '../../../../types/session';
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import type { ExecutionResult } from "../../../../types/session";
 
 interface ExecutionData {
   id: string;
@@ -53,7 +53,7 @@ export interface FormationAnalytics {
 export interface SituationalAnalytics {
   down: number;
   distance: number;
-  fieldPosition: 'red-zone' | 'midfield' | 'plus-territory' | 'goal-line';
+  fieldPosition: "red-zone" | "midfield" | "plus-territory" | "goal-line";
   totalExecutions: number;
   successRate: number;
   successCount: number; // Add this property
@@ -67,7 +67,7 @@ export const useExecutionAnalytics = (
 ) => {
   // Fetch execution data from Supabase
   const { data: executions, isLoading } = useQuery<ExecutionData[]>({
-    queryKey: ['execution-analytics', diagramId, formationId, timeRange],
+    queryKey: ["execution-analytics", diagramId, formationId, timeRange],
     queryFn: async () => {
       // TODO: Implement actual query when play_executions table is created
       // For now, return mock data
@@ -103,21 +103,21 @@ export const useExecutionAnalytics = (
         existing.totalExecutions++;
 
         switch (routeExec.result) {
-          case 'success':
+          case "success":
             existing.successCount++;
             break;
-          case 'failure':
+          case "failure":
             existing.failureCount++;
             break;
-          case 'neutral':
+          case "neutral":
             existing.neutralCount++;
             break;
-          case 'skipped':
+          case "skipped":
             existing.skippedCount++;
             break;
         }
 
-        if (execution.yards_gained && routeExec.result === 'success') {
+        if (execution.yards_gained && routeExec.result === "success") {
           existing.yardsGained.push(execution.yards_gained);
         }
 
@@ -127,12 +127,15 @@ export const useExecutionAnalytics = (
 
     // Calculate success rates and averages
     analytics.forEach((route) => {
-      route.successRate = route.totalExecutions > 0
-        ? route.successCount / route.totalExecutions
-        : 0;
+      route.successRate =
+        route.totalExecutions > 0
+          ? route.successCount / route.totalExecutions
+          : 0;
 
       if (route.yardsGained.length > 0) {
-        route.averageYardsGained = route.yardsGained.reduce((a, b) => a + b, 0) / route.yardsGained.length;
+        route.averageYardsGained =
+          route.yardsGained.reduce((a, b) => a + b, 0) /
+          route.yardsGained.length;
       }
 
       // Remove the yardsGained array as it's not needed in the final result
@@ -147,11 +150,14 @@ export const useExecutionAnalytics = (
     if (!executions) return null;
 
     const totalExecutions = executions.length;
-    const successfulExecutions = executions.filter(e => e.result === 'success').length;
-    const successRate = totalExecutions > 0 ? successfulExecutions / totalExecutions : 0;
+    const successfulExecutions = executions.filter(
+      (e) => e.result === "success"
+    ).length;
+    const successRate =
+      totalExecutions > 0 ? successfulExecutions / totalExecutions : 0;
 
     return {
-      formationId: formationId || 'unknown',
+      formationId: formationId || "unknown",
       totalExecutions,
       successRate,
       routeAnalytics: Array.from(routeAnalytics.values()),
@@ -165,7 +171,8 @@ export const useExecutionAnalytics = (
     const situational = new Map<string, SituationalAnalytics>();
 
     executions.forEach((execution) => {
-      if (!execution.down || !execution.distance || !execution.yard_line) return;
+      if (!execution.down || !execution.distance || !execution.yard_line)
+        return;
 
       const fieldPosition = getFieldPosition(execution.yard_line);
       const key = `${execution.down}-${execution.distance}-${fieldPosition}`;
@@ -181,7 +188,7 @@ export const useExecutionAnalytics = (
       };
 
       existing.totalExecutions++;
-      if (execution.result === 'success') {
+      if (execution.result === "success") {
         existing.successCount++;
       }
 
@@ -190,7 +197,8 @@ export const useExecutionAnalytics = (
 
     // Calculate success rates
     situational.forEach((sit) => {
-      sit.successRate = sit.totalExecutions > 0 ? sit.successCount / sit.totalExecutions : 0;
+      sit.successRate =
+        sit.totalExecutions > 0 ? sit.successCount / sit.totalExecutions : 0;
       // Add route analytics for this situation (simplified)
       sit.routeAnalytics = Array.from(routeAnalytics.values()).slice(0, 5); // Top 5 routes
     });
@@ -208,9 +216,11 @@ export const useExecutionAnalytics = (
 };
 
 // Helper function to determine field position
-function getFieldPosition(yardLine: number): 'red-zone' | 'midfield' | 'plus-territory' | 'goal-line' {
-  if (yardLine >= 80) return 'red-zone';
-  if (yardLine >= 60) return 'plus-territory';
-  if (yardLine <= 20) return 'goal-line';
-  return 'midfield';
+function getFieldPosition(
+  yardLine: number
+): "red-zone" | "midfield" | "plus-territory" | "goal-line" {
+  if (yardLine >= 80) return "red-zone";
+  if (yardLine >= 60) return "plus-territory";
+  if (yardLine <= 20) return "goal-line";
+  return "midfield";
 }

@@ -12,7 +12,9 @@ export const useModalManager = () => {
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [alertTitle, setAlertTitle] = useState<string>("");
   const [alertMessage, setAlertMessage] = useState<string>("");
-  const [alertType, setAlertType] = useState<"info" | "warning" | "error">("info");
+  const [alertType, setAlertType] = useState<"info" | "warning" | "error">(
+    "info"
+  );
 
   // Confirm modal state
   const [showConfirm, setShowConfirm] = useState(false);
@@ -30,12 +32,19 @@ export const useModalManager = () => {
   const [showUnsavedChanges, setShowUnsavedChanges] = useState(false);
 
   // Helper to show alert modal
-  const showAlertModal = useCallback((title: string, message: string, type: "info" | "warning" | "error" = "info") => {
-    setAlertTitle(title);
-    setAlertMessage(message);
-    setAlertType(type);
-    setShowAlert(true);
-  }, []);
+  const showAlertModal = useCallback(
+    (
+      title: string,
+      message: string,
+      type: "info" | "warning" | "error" = "info"
+    ) => {
+      setAlertTitle(title);
+      setAlertMessage(message);
+      setAlertType(type);
+      setShowAlert(true);
+    },
+    []
+  );
 
   // Helper to show confirm modal
   const showConfirmModal = useCallback(

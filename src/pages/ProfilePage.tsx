@@ -592,16 +592,10 @@ export const ProfilePage: React.FC = () => {
                 </div>
                 <div className="flex-1">
                   {/* Upload Info */}
-                  <Typography
-                    variant="body-md"
-                    className="font-medium mb-xs"
-                  >
+                  <Typography variant="body-md" className="font-medium mb-xs">
                     Your Profile Picture
                   </Typography>
-                  <Typography
-                    variant="body-sm"
-                    className="text-muted mb-md"
-                  >
+                  <Typography variant="body-sm" className="text-muted mb-md">
                     Upload a new picture or edit your existing one
                   </Typography>
 

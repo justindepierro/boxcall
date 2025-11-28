@@ -147,11 +147,7 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
       {/* Filtered Plays List */}
       {sortedPlays.length === 0 ? (
         <div className="text-center py-8 bg-secondary rounded-lg border-2 border-dashed border-border">
-          <Icon
-            name="alert-circle"
-            size="lg"
-            className="mb-3 text-muted"
-          />
+          <Icon name="alert-circle" size="lg" className="mb-3 text-muted" />
           <Typography variant="body-md" className="mb-2">
             No plays match this situation
           </Typography>
@@ -247,10 +243,7 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
                   >
                     <div className="flex items-center justify-between mb-1">
                       <div className="flex items-center gap-1">
-                        <Typography
-                          variant="body-xs"
-                          className="text-muted"
-                        >
+                        <Typography variant="body-xs" className="text-muted">
                           AI Confidence
                         </Typography>
                         <Icon
@@ -289,10 +282,7 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
                       />
                     </div>
                     {!loading && confidence.executionCount > 0 && (
-                      <Typography
-                        variant="body-xs"
-                        className="text-muted mt-1"
-                      >
+                      <Typography variant="body-xs" className="text-muted mt-1">
                         Based on {confidence.executionCount} execution
                         {confidence.executionCount !== 1 ? "s" : ""} • Click for
                         details

@@ -69,9 +69,7 @@ export const ContactPage: React.FC = () => {
                 </div>
               </div>
               <div>
-                <h3 className="font-medium text-primary">
-                  Business Address
-                </h3>
+                <h3 className="font-medium text-primary">Business Address</h3>
                 <p className="text-sm mt-1 text-secondary">
                   BoxCall, Inc.
                   <br />
@@ -87,9 +85,7 @@ export const ContactPage: React.FC = () => {
 
           {/* Business Hours */}
           <div className="mt-8 p-4 bg-subtle dark:bg-muted rounded-lg">
-            <h3 className="font-medium mb-3 text-primary">
-              Support Hours
-            </h3>
+            <h3 className="font-medium mb-3 text-primary">Support Hours</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-secondary">Monday - Friday</span>
@@ -97,9 +93,7 @@ export const ContactPage: React.FC = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-secondary">Saturday</span>
-                <span className="text-primary">
-                  10:00 AM - 2:00 PM EST
-                </span>
+                <span className="text-primary">10:00 AM - 2:00 PM EST</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-secondary">Sunday</span>

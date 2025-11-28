@@ -18,7 +18,10 @@ interface UsePlaybookSelectionOptions {
   activeTeamId: string;
 }
 
-export function usePlaybookSelection({ playbooks, activeTeamId }: UsePlaybookSelectionOptions) {
+export function usePlaybookSelection({
+  playbooks,
+  activeTeamId,
+}: UsePlaybookSelectionOptions) {
   const [selectedPlaybookId, setSelectedPlaybookId] = useState<string>("");
 
   // Initialize selected playbook from preferences or default to first playbook with data
@@ -30,10 +33,7 @@ export function usePlaybookSelection({ playbooks, activeTeamId }: UsePlaybookSel
       `bc_active_playbook_${activeTeamId}`
     );
 
-    if (
-      savedPlaybookId &&
-      playbooks.some((pb) => pb.id === savedPlaybookId)
-    ) {
+    if (savedPlaybookId && playbooks.some((pb) => pb.id === savedPlaybookId)) {
       // Use saved preference if it's valid
       setSelectedPlaybookId(savedPlaybookId);
     } else {

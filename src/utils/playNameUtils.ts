@@ -253,12 +253,12 @@ export function getDisplayName(
  */
 function toTitleCase(text: string): string {
   return text
-    .split(' ')
-    .map(word => {
+    .split(" ")
+    .map((word) => {
       if (!word) return word;
       return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
     })
-    .join(' ');
+    .join(" ");
 }
 
 export function getSubtitleText(play: Play, showOneWord: boolean): string {

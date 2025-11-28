@@ -685,7 +685,10 @@ export class PlayersLayer extends Container {
 
       if (magneticResult.showVisualFeedback && magneticResult.snapPoint) {
         // Show ghost player at snap position during drag
-        this.showGhostPlayer(magneticResult.snapPoint.x, magneticResult.snapPoint.y);
+        this.showGhostPlayer(
+          magneticResult.snapPoint.x,
+          magneticResult.snapPoint.y
+        );
       } else {
         // Hide ghost player if not near magnetic zone
         this.hideGhostPlayer();

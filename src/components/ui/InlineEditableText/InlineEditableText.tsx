@@ -250,9 +250,7 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
     if (!showValidation || validationResult.isValid || !isEditing) return null;
 
     const messageClasses =
-      validationResult.level === "warning"
-        ? "text-warning"
-        : "text-error";
+      validationResult.level === "warning" ? "text-warning" : "text-error";
 
     return (
       <div className={`text-xs mt-1 ${messageClasses}`}>

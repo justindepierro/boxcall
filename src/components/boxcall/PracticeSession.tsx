@@ -346,10 +346,7 @@ const PracticeSession: React.FC = () => {
                   {/* Play Progress */}
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-2">
-                      <Typography
-                        variant="body-sm"
-                        className="text-secondary"
-                      >
+                      <Typography variant="body-sm" className="text-secondary">
                         Play Progress
                       </Typography>
                       <Typography variant="body-sm" className="font-medium">
@@ -366,10 +363,7 @@ const PracticeSession: React.FC = () => {
 
                   {currentPlay.notes && (
                     <div className="bg-secondary rounded-lg p-3">
-                      <Typography
-                        variant="body-sm"
-                        className="text-secondary"
-                      >
+                      <Typography variant="body-sm" className="text-secondary">
                         <strong>Coach Notes:</strong> {currentPlay.notes}
                       </Typography>
                     </div>

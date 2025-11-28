@@ -154,10 +154,7 @@ export function FormationTemplateSelector({
                         ({templates.length})
                       </span>
                     </div>
-                    <Typography
-                      variant="caption"
-                      className="text-muted ml-6"
-                    >
+                    <Typography variant="caption" className="text-muted ml-6">
                       {group.description}
                     </Typography>
                   </div>
@@ -203,10 +200,7 @@ export function FormationTemplateSelector({
 
           {/* Footer */}
           <div className="sticky bottom-0 bg-secondary border-t border-primary p-sm">
-            <Typography
-              variant="caption"
-              className="text-muted text-center"
-            >
+            <Typography variant="caption" className="text-muted text-center">
               {FORMATION_TEMPLATES.length} professional templates available
             </Typography>
           </div>

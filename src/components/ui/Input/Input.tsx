@@ -225,9 +225,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                   )}
                 </IconButton>
               ) : rightIcon ? (
-                <div className="text-muted dark:text-muted">
-                  {rightIcon}
-                </div>
+                <div className="text-muted dark:text-muted">{rightIcon}</div>
               ) : null}
             </div>
           )}

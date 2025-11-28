@@ -177,10 +177,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
               {errors.length > 0 && (
                 <Card className="border-error bg-surface-error">
                   <div className="flex items-start space-x-sm">
-                    <Icon
-                      name="alert"
-                      className="h-5 w-5 text-error mt-0.5"
-                    />
+                    <Icon name="alert" className="h-5 w-5 text-error mt-0.5" />
                     <div>
                       <Typography
                         variant="body-sm"

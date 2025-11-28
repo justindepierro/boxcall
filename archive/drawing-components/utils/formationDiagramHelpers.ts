@@ -145,8 +145,7 @@ export function convertFormationToDiagramPlayers(
   const skillPlayers =
     formation.player_positions?.map((pos: FormationPlayerPosition) => {
       // Use position code as jersey number if not provided
-      const jerseyNumber =
-        pos.jerseyNumber || pos.position || pos.label || "?";
+      const jerseyNumber = pos.jerseyNumber || pos.position || pos.label || "?";
 
       // Calculate professional depth based on role (QB at 7 yards, RB at 8 yards, etc.)
       const depth = calculateDepth(pos);

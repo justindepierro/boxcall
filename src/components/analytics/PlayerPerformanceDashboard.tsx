@@ -169,10 +169,7 @@ export const PlayerPerformanceDashboard: React.FC<
                   <Typography variant="headline-sm">{position}</Typography>
                   <Badge variant="neutral">{data.count} players</Badge>
                 </div>
-                <Typography
-                  variant="body-sm"
-                  className="text-secondary mb-1"
-                >
+                <Typography variant="body-sm" className="text-secondary mb-1">
                   Avg Rating: {data.averageRating.toFixed(1)}/10
                 </Typography>
                 <Typography variant="body-xs" className="text-sm">
@@ -242,10 +239,7 @@ export const PlayerPerformanceDashboard: React.FC<
                     <Typography variant="body-sm" className="font-medium">
                       {player.playerName}
                     </Typography>
-                    <Typography
-                      variant="body-xs"
-                      className="text-secondary"
-                    >
+                    <Typography variant="body-xs" className="text-secondary">
                       {player.position}
                     </Typography>
                   </div>
@@ -367,10 +361,7 @@ export const PlayerPerformanceDashboard: React.FC<
                           : "→"}
                       {Math.abs(trend.change)}
                     </Badge>
-                    <Typography
-                      variant="body-xs"
-                      className="text-secondary"
-                    >
+                    <Typography variant="body-xs" className="text-secondary">
                       {trend.period}
                     </Typography>
                   </div>
@@ -513,10 +504,7 @@ const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                       {performance.date}
                     </Typography>
                     {performance.notes && (
-                      <Typography
-                        variant="body"
-                        className="text-muted italic"
-                      >
+                      <Typography variant="body" className="text-muted italic">
                         {performance.notes}
                       </Typography>
                     )}

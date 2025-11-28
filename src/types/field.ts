@@ -55,30 +55,30 @@ export const FIELD_CENTER_X = FIELD_WIDTH_YARDS / 2;
 
 /** Professional depth standards (yards behind line of scrimmage) */
 export const POSITION_DEPTHS = {
-  QB: 7,           // Shotgun depth (most common)
-  QB_UNDER: 1,     // Under center (traditional)
-  RB: 8,           // I-formation depth
-  FB: 6,           // H-back/fullback depth
-  SLOT: 1,         // 1 yard off LOS (eligible receivers)
-  SPLIT_END: 0,    // On LOS (traditional split ends)
-  TE: 0,           // On LOS (inline tight ends)
-  DEFAULT: 5,      // Default depth for unknown positions
+  QB: 7, // Shotgun depth (most common)
+  QB_UNDER: 1, // Under center (traditional)
+  RB: 8, // I-formation depth
+  FB: 6, // H-back/fullback depth
+  SLOT: 1, // 1 yard off LOS (eligible receivers)
+  SPLIT_END: 0, // On LOS (traditional split ends)
+  TE: 0, // On LOS (inline tight ends)
+  DEFAULT: 5, // Default depth for unknown positions
 } as const;
 
 /** Offensive line positioning (relative to QB) */
 export const OFFENSIVE_LINE_POSITIONS = {
-  LT: -2.5,        // Left tackle (2.5 yards left of center)
-  LG: -1.5,        // Left guard
-  C: 0,            // Center
-  RG: 1.5,         // Right guard
-  RT: 2.5,         // Right tackle
+  LT: -2.5, // Left tackle (2.5 yards left of center)
+  LG: -1.5, // Left guard
+  C: 0, // Center
+  RG: 1.5, // Right guard
+  RT: 2.5, // Right tackle
 } as const;
 
 /** Standard player spacing */
 export const PLAYER_SPACING = {
-  RECEIVER_SPLIT: 8,     // Yards between split receivers
-  SLOT_INSET: 2,         // Yards slot receivers inset from split ends
-  MOTION_DEPTH: 3,       // Yards for motion players
+  RECEIVER_SPLIT: 8, // Yards between split receivers
+  SLOT_INSET: 2, // Yards slot receivers inset from split ends
+  MOTION_DEPTH: 3, // Yards for motion players
 } as const;
 
 // ============================================================================
@@ -119,19 +119,19 @@ export const ROUTE_DISTANCE_MARKERS = [5, 10, 15, 20];
 /** Route types and their visual properties */
 export const ROUTE_STYLES = {
   primary: {
-    color: '#2563eb',    // Blue for primary routes
+    color: "#2563eb", // Blue for primary routes
     width: 2,
-    style: 'solid' as const,
+    style: "solid" as const,
   },
   hot: {
-    color: '#dc2626',    // Red for hot routes
+    color: "#dc2626", // Red for hot routes
     width: 2,
-    style: 'dashed' as const,
+    style: "dashed" as const,
   },
   check: {
-    color: '#16a34a',    // Green for check routes
+    color: "#16a34a", // Green for check routes
     width: 1,
-    style: 'dotted' as const,
+    style: "dotted" as const,
   },
 } as const;
 
@@ -160,14 +160,14 @@ export const GOAL_LINE_WIDTH = 4;
 
 /** Field coordinate system (yards) */
 export interface FieldPosition {
-  x: number;  // 0 to FIELD_WIDTH_YARDS
-  y: number;  // 0 to FIELD_LENGTH_YARDS
+  x: number; // 0 to FIELD_WIDTH_YARDS
+  y: number; // 0 to FIELD_LENGTH_YARDS
 }
 
 /** Canvas coordinate system (pixels) */
 export interface CanvasPosition {
-  x: number;  // 0 to CANVAS_WIDTH
-  y: number;  // 0 to CANVAS_HEIGHT
+  x: number; // 0 to CANVAS_WIDTH
+  y: number; // 0 to CANVAS_HEIGHT
 }
 
 /** Route type classification */
@@ -238,23 +238,29 @@ export function getPositionDepth(position: string): number {
   }
 
   // Pattern matching
-  if (upperPosition.includes('QB')) {
-    return upperPosition.includes('UNDER') ? POSITION_DEPTHS.QB_UNDER : POSITION_DEPTHS.QB;
+  if (upperPosition.includes("QB")) {
+    return upperPosition.includes("UNDER")
+      ? POSITION_DEPTHS.QB_UNDER
+      : POSITION_DEPTHS.QB;
   }
 
-  if (upperPosition.includes('RB') || upperPosition.includes('HB')) {
+  if (upperPosition.includes("RB") || upperPosition.includes("HB")) {
     return POSITION_DEPTHS.RB;
   }
 
-  if (upperPosition.includes('FB')) {
+  if (upperPosition.includes("FB")) {
     return POSITION_DEPTHS.FB;
   }
 
-  if (upperPosition.includes('SLOT') || upperPosition.includes('X') || upperPosition.includes('Z')) {
+  if (
+    upperPosition.includes("SLOT") ||
+    upperPosition.includes("X") ||
+    upperPosition.includes("Z")
+  ) {
     return POSITION_DEPTHS.SLOT;
   }
 
-  if (upperPosition.includes('TE')) {
+  if (upperPosition.includes("TE")) {
     return POSITION_DEPTHS.TE;
   }
 

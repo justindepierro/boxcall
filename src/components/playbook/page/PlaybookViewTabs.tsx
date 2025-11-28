@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Icon } from "../../ui/Icon/Icon";
 import { Button } from "../../ui/Button/Button";
 import { Badge, ProgressBadge } from "../../ui/Badge";
@@ -6,6 +6,8 @@ import { Typography } from "../../design-system/Typography";
 import { TeamTypeToggle, type TeamType } from "../TeamTypeToggle";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 import { PlaybookSelector } from "../PlaybookSelector";
+import { CSVImportModal } from "../CSVImport/CSVImportModal";
+import { CSVTemplateDownloadMenu } from "../CSVTemplateDownload";
 
 export type CoachingView =
   | "playbook"
@@ -44,6 +46,7 @@ export type PlaybookViewTabsProps = {
   onPlaybookChange?: (playbookId: string) => void;
   onPlaybookUpdated?: () => void;
   teamId?: string;
+  onCSVImportComplete?: () => void;
 };
 
 export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
@@ -55,7 +58,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
   onOpenBuilder,
   onOpenHealth,
   onNavigate,
-  title = "Playbook",
+  title,
   playsCreated,
   diagramCoverage,
   streakDays,
@@ -64,7 +67,11 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
   onPlaybookChange,
   onPlaybookUpdated,
   teamId,
+  onCSVImportComplete,
 }) => {
+  // CSV Import state
+  const [showCSVImport, setShowCSVImport] = useState(false);
+  const [showTemplateMenu, setShowTemplateMenu] = useState(false);
   return (
     <div className="divider-b bg-gradient-to-b from-white/95 to-white/80 dark:from-slate-900/95 dark:to-slate-900/80 shadow-sm">
       <div className="container-page px-6">
@@ -320,6 +327,38 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
                 <Icon name="plus" className="h-5 w-5" />
                 <span className="hidden lg:inline">New Play</span>
               </Button>
+            )}
+
+            {/* CSV Import */}
+            {activePlaybookId && (
+              <div className="relative">
+                <Button
+                  onClick={() => {
+                    triggerHapticFeedback("light");
+                    setShowCSVImport(true);
+                  }}
+                  variant="secondary"
+                  size="sm"
+                  className="h-11 px-4 !py-0 flex items-center gap-2 bg-purple-50 hover:bg-purple-100 dark:bg-purple-900/20 dark:hover:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded-xl transition-all duration-200"
+                  title="Import plays from CSV"
+                >
+                  <Icon name="upload" className="h-5 w-5" />
+                  <span className="hidden lg:inline">Import CSV</span>
+                </Button>
+
+                {/* CSV Import Modal */}
+                {showCSVImport && (
+                  <CSVImportModal
+                    isOpen={showCSVImport}
+                    onClose={() => setShowCSVImport(false)}
+                    playbookId={activePlaybookId}
+                    onImportComplete={(result) => {
+                      setShowCSVImport(false);
+                      onCSVImportComplete?.();
+                    }}
+                  />
+                )}
+              </div>
             )}
           </div>
         </div>

@@ -46,10 +46,7 @@ export const FormationDirectionWarningModal: React.FC<
             >
               We noticed direction keywords in your formation name
             </Typography>
-            <Typography
-              variant="body-sm"
-              className="text-warning-700 mt-xs"
-            >
+            <Typography variant="body-sm" className="text-warning-700 mt-xs">
               This can cause issues with play organization and flip workflows.
             </Typography>
           </div>
@@ -61,16 +58,10 @@ export const FormationDirectionWarningModal: React.FC<
             What you typed:
           </Typography>
           <div className="p-md bg-secondary rounded-lg border border-primary">
-            <Typography
-              variant="body-lg"
-              className="font-mono text-primary"
-            >
+            <Typography variant="body-lg" className="font-mono text-primary">
               "{detection.originalInput}"
             </Typography>
-            <Typography
-              variant="caption"
-              className="text-muted mt-xs"
-            >
+            <Typography variant="caption" className="text-muted mt-xs">
               Contains direction keyword: "{detection.directionKeyword}"
             </Typography>
           </div>
@@ -117,10 +108,7 @@ export const FormationDirectionWarningModal: React.FC<
                 </div>
               </div>
             </div>
-            <Typography
-              variant="caption"
-              className="text-success-700 mt-md"
-            >
+            <Typography variant="caption" className="text-success-700 mt-md">
               💡 This keeps your data clean and makes duplicate + flip workflows
               work properly
             </Typography>

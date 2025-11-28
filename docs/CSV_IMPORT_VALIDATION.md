@@ -1,11 +1,13 @@
 # CSV Import Validation Guide
 
 ## Overview
+
 BoxCall's CSV import includes **smart validation** that checks your data and helps you fix issues **before importing**. No more failed imports or duplicate data!
 
 ## How It Works
 
 ### Step 1: Upload CSV
+
 - Drag & drop or browse to select your CSV file
 - BoxCall immediately validates all rows
 - You'll see a preview with validation status
@@ -13,6 +15,7 @@ BoxCall's CSV import includes **smart validation** that checks your data and hel
 ### Step 2: Review Validation Results
 
 The preview shows:
+
 - ✅ **Green checkmark**: Valid, ready to import
 - ⚠️ **Yellow warning**: Has warnings, but can still import
 - ❌ **Red X**: Has errors, needs fixing before import
@@ -20,6 +23,7 @@ The preview shows:
 ### Step 3: Fix Issues Inline
 
 Click the **expand button** (►) next to any row to see:
+
 - Detailed validation for each field
 - Fuzzy match suggestions for similar values
 - Auto-correction options
@@ -30,11 +34,13 @@ Click the **expand button** (►) next to any row to see:
 ### 1. Formation Validation
 
 **Checks:**
+
 - Does formation exist in your playbook?
 - Is the spelling similar to existing formations?
 - Is the name too short or generic?
 
 **Example:**
+
 ```
 ❌ "Twns" → Did you mean: "Twins" (85% match), "Trips" (60% match)
 ⚠️ "SHOTGUN" → Auto-normalize to "Shotgun" (click to apply)
@@ -42,6 +48,7 @@ Click the **expand button** (►) next to any row to see:
 ```
 
 **Actions:**
+
 - Click suggested formation to apply
 - Click edit button to type custom value
 - Click "Apply" on auto-correction
@@ -49,11 +56,13 @@ Click the **expand button** (►) next to any row to see:
 ### 2. Play Name Validation
 
 **Checks:**
+
 - Does play name already exist? (prevents duplicates)
 - Is spelling similar to existing plays?
 - Is the name descriptive enough?
 
 **Example:**
+
 ```
 ⚠️ "Power" → Warning: Play already exists in playbook
 ❌ "Pwr" → Did you mean: "Power" (70% match), "Power Read" (65% match)
@@ -61,6 +70,7 @@ Click the **expand button** (►) next to any row to see:
 ```
 
 **Actions:**
+
 - Review duplicate warnings
 - Choose similar play name if updating existing
 - Edit to make unique if creating new play
@@ -68,10 +78,12 @@ Click the **expand button** (►) next to any row to see:
 ### 3. Personnel Validation
 
 **Checks:**
+
 - Is format valid? (11, 12, 21, 22, 10, etc.)
 - Does it match standard personnel groupings?
 
 **Example:**
+
 ```
 ❌ "111" → Error: Invalid format. Did you mean "11" (1RB, 1TE)?
 ❌ "1 RB 1 TE" → Error: Use format "11" instead
@@ -80,6 +92,7 @@ Click the **expand button** (►) next to any row to see:
 ```
 
 **Personnel Legend:**
+
 - **11** = 1 RB, 1 TE (4 WR)
 - **12** = 1 RB, 2 TE (3 WR)
 - **21** = 2 RB, 1 TE (2 WR)
@@ -90,10 +103,12 @@ Click the **expand button** (►) next to any row to see:
 ### 4. Play Type Validation
 
 **Checks:**
+
 - Is play type one of: Pass, Run, RPO, Screen, Play Action, Option?
 - Auto-corrects common variations
 
 **Example:**
+
 ```
 🔧 "pass" → Auto-correct to "Pass"
 🔧 "rushing" → Auto-correct to "Run"
@@ -112,6 +127,7 @@ BoxCall uses **similarity scoring** to find matches:
 - **<60%**: Not shown (too different)
 
 **Example Suggestions:**
+
 ```
 Input: "Twns"
 Suggestions:
@@ -125,7 +141,7 @@ Suggestions:
 BoxCall suggests normalization for:
 
 - **Case**: "SHOTGUN" → "Shotgun"
-- **Spacing**: "I Formation" → "I-Formation"  
+- **Spacing**: "I Formation" → "I-Formation"
 - **Abbreviations**: "rpo" → "RPO", "pa" → "Play Action"
 - **Plurals**: "Twin" → "Twins"
 
@@ -134,6 +150,7 @@ Click **"Apply"** to accept the suggestion.
 ### Batch Operations
 
 At the bottom of the preview:
+
 - **Import X Valid Plays**: Only imports rows that pass validation
 - **Fix All**: (Coming soon) Auto-apply all suggestions
 - **Skip Errors**: (Coming soon) Import valid rows, skip errors
@@ -143,12 +160,14 @@ At the bottom of the preview:
 ### Scenario 1: Typo in Formation
 
 **Problem:**
+
 ```csv
 formation,play_name,p_type
 Twns,QB Shirt,RPO
 ```
 
 **Validation:**
+
 ```
 ❌ Row 2: Formation "Twns" not recognized
 💡 Did you mean:
@@ -157,6 +176,7 @@ Twns,QB Shirt,RPO
 ```
 
 **Solution:**
+
 1. Click "Twins" suggestion
 2. Value updates to "Twins"
 3. Row becomes valid ✅
@@ -165,12 +185,14 @@ Twns,QB Shirt,RPO
 ### Scenario 2: Duplicate Play Name
 
 **Problem:**
+
 ```csv
 formation,play_name,p_type
 Twins,Power,Run    ← Already exists
 ```
 
 **Validation:**
+
 ```
 ⚠️ Row 2: Play "Power" already exists
 Options:
@@ -180,6 +202,7 @@ Options:
 ```
 
 **Solution:**
+
 1. Click edit button
 2. Change to "Power Iso"
 3. Save
@@ -188,12 +211,14 @@ Options:
 ### Scenario 3: Wrong Personnel Format
 
 **Problem:**
+
 ```csv
 formation,play_name,p_type,personnel
 Twins,QB Shirt,RPO,1 RB 1 TE
 ```
 
 **Validation:**
+
 ```
 ❌ Row 2: Invalid personnel format
 💡 Use format "11" for 1RB 1TE
@@ -201,6 +226,7 @@ Auto-correction available: "11" ← Click to apply
 ```
 
 **Solution:**
+
 1. Click "Apply" on auto-correction
 2. Value updates to "11"
 3. Row becomes valid ✅
@@ -208,21 +234,24 @@ Auto-correction available: "11" ← Click to apply
 ### Scenario 4: Mixed Case
 
 **Problem:**
+
 ```csv
 formation,play_name,p_type
 SHOTGUN,four verts,PASS
 ```
 
 **Validation:**
+
 ```
 🔧 Row 2: Auto-normalization available
 - formation: "SHOTGUN" → "Shotgun"
-- play_name: "four verts" → "Four Verts"  
+- play_name: "four verts" → "Four Verts"
 - p_type: "PASS" → "Pass"
 Click "Apply All" to normalize
 ```
 
 **Solution:**
+
 1. Click "Apply All"
 2. All fields normalized
 3. Row becomes standard format ✅
@@ -232,6 +261,7 @@ Click "Apply All" to normalize
 ### 1. Use the Template
 
 Download the Excel-friendly template:
+
 - Descriptive headers with examples
 - Help text explaining each field
 - Example rows to copy
@@ -239,6 +269,7 @@ Download the Excel-friendly template:
 ### 2. Check Existing Data First
 
 Before importing:
+
 1. Export your current playbook
 2. Review existing formations, play names
 3. Use same naming conventions
@@ -247,6 +278,7 @@ Before importing:
 ### 3. Fix in Excel First
 
 For large imports:
+
 1. Use Excel's spell check
 2. Apply consistent case (Title Case)
 3. Standardize abbreviations
@@ -255,6 +287,7 @@ For large imports:
 ### 4. Import in Batches
 
 For 100+ plays:
+
 1. Split into smaller CSV files (25-50 plays)
 2. Import and validate each batch
 3. Fix errors between batches
@@ -263,6 +296,7 @@ For 100+ plays:
 ### 5. Review Before Import
 
 Always:
+
 - ✅ Check validation summary (X valid, Y warnings, Z errors)
 - ✅ Expand rows with warnings/errors
 - ✅ Fix critical errors (red X)
@@ -309,18 +343,21 @@ A: Not yet - but you can click "Back" and re-upload the original CSV.
 ## Technical Details
 
 **Validation Engine:**
+
 - Uses Levenshtein distance for fuzzy matching
 - Confidence scores based on edit distance
 - Real-time validation as you edit
 - Integrates with existing dataValidation.ts
 
 **Performance:**
+
 - Validates up to 1000 rows
 - <1 second preview generation
 - Instant fuzzy matching
 - No server round-trip for validation
 
 **Data Privacy:**
+
 - Validation happens in browser
 - No data sent to external services
 - Only uploads after you click "Import"

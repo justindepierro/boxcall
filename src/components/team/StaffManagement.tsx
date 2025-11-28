@@ -163,10 +163,7 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ teamId }) => {
                     size="lg"
                   />
                   <div>
-                    <Typography
-                      variant="headline-sm"
-                      className="text-primary"
-                    >
+                    <Typography variant="headline-sm" className="text-primary">
                       {member.name}
                     </Typography>
                     <Typography variant="body-sm" color="muted">

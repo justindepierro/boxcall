@@ -17,7 +17,7 @@ import type { GameSituation, ExecutionResult } from "../../../../types/session";
  */
 export interface UnifiedDiagramData {
   id: string;
-  type: 'play' | 'formation' | 'template';
+  type: "play" | "formation" | "template";
   name: string;
 
   // Core diagram data (Pixi.js format)
@@ -48,7 +48,7 @@ export interface UnifiedDiagramData {
  */
 export interface LiveSessionData {
   sessionId: string;
-  sessionType: 'practice' | 'game';
+  sessionType: "practice" | "game";
   executedAt: Date;
 
   // Game situation (for game sessions)
@@ -139,7 +139,7 @@ export interface PerformanceDataPoint {
  */
 export interface DiagramComponent {
   data: UnifiedDiagramData;
-  mode: 'edit' | 'view' | 'live' | 'analytics';
+  mode: "edit" | "view" | "live" | "analytics";
   onChange?: (data: UnifiedDiagramData) => void;
   interactive?: boolean;
   showAnalytics?: boolean;
@@ -161,7 +161,7 @@ export interface DiagramCanvasProps extends DiagramComponent {
  */
 export interface MiniDiagramProps {
   data: UnifiedDiagramData;
-  size?: 'small' | 'medium' | 'large';
+  size?: "small" | "medium" | "large";
   highlightExecuted?: boolean;
   executedRoutes?: string[];
   showAnalytics?: boolean;
@@ -189,30 +189,25 @@ export interface LegacyDiagramDocument extends DiagramDocument {
  * Diagram creation modes
  */
 export type DiagramMode =
-  | 'play'           // Full play creation/editing
-  | 'formation'      // Formation creation/editing
-  | 'quick-play'     // Simplified play creation
-  | 'template'       // Template creation
-  | 'live-session'   // Live execution mode
-  | 'analytics'      // Analytics overlay mode;
+  | "play" // Full play creation/editing
+  | "formation" // Formation creation/editing
+  | "quick-play" // Simplified play creation
+  | "template" // Template creation
+  | "live-session" // Live execution mode
+  | "analytics"; // Analytics overlay mode;
 
 /**
  * Diagram display contexts
  */
 export type DiagramContext =
-  | 'editor'         // Main diagram editor
-  | 'viewer'         // Read-only viewer
-  | 'thumbnail'      // Small preview
-  | 'live-session'   // Live execution display
-  | 'analytics'      // Analytics dashboard
-  | 'print'          // Print/export format;
+  | "editor" // Main diagram editor
+  | "viewer" // Read-only viewer
+  | "thumbnail" // Small preview
+  | "live-session" // Live execution display
+  | "analytics" // Analytics dashboard
+  | "print"; // Print/export format;
 
 /**
  * Export types for diagrams
  */
-export type DiagramExportFormat =
-  | 'png'
-  | 'svg'
-  | 'pdf'
-  | 'json'
-  | 'gif';
+export type DiagramExportFormat = "png" | "svg" | "pdf" | "json" | "gif";

@@ -23,7 +23,9 @@ export class PlaybookViewPresetsService {
     teamId?: string | null
   ): Promise<ServerPlaybookViewPreset[]> {
     try {
-      info(`[PlaybookViewPresets] Listing presets${teamId ? ` for team ${teamId}` : ""}`);
+      info(
+        `[PlaybookViewPresets] Listing presets${teamId ? ` for team ${teamId}` : ""}`
+      );
 
       let query = supabase
         .from(TABLE)
@@ -119,10 +121,7 @@ export class PlaybookViewPresetsService {
     try {
       info("[PlaybookViewPresets] Deleting preset:", id);
 
-      const { error } = await supabase
-        .from(TABLE)
-        .delete()
-        .eq("id", id);
+      const { error } = await supabase.from(TABLE).delete().eq("id", id);
 
       if (error) {
         logError("[PlaybookViewPresets] Failed to delete preset:", error);

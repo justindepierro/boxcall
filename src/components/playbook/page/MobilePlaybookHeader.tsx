@@ -61,10 +61,7 @@ export const MobilePlaybookHeader: React.FC<MobilePlaybookHeaderProps> = ({
         >
           {title}
         </Typography>
-        <Typography
-          variant="body-xs"
-          className="text-secondary leading-tight"
-        >
+        <Typography variant="body-xs" className="text-secondary leading-tight">
           {playCount} {playCount === 1 ? "play" : "plays"}
         </Typography>
       </div>

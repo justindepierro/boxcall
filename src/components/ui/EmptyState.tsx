@@ -83,10 +83,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       </div>
 
       {/* Content */}
-      <Typography
-        variant={styles.title as any}
-        className="text-primary mb-2"
-      >
+      <Typography variant={styles.title as any} className="text-primary mb-2">
         {title}
       </Typography>
       <Typography

@@ -163,10 +163,7 @@ export const MobileEventCard: React.FC<MobileEventCardProps> = ({
                           name="users"
                           className="w-3 h-3 text-muted flex-shrink-0"
                         />
-                        <Typography
-                          variant="body-xs"
-                          className="text-muted"
-                        >
+                        <Typography variant="body-xs" className="text-muted">
                           {event.attendanceCount}/{event.totalRoster} attending
                         </Typography>
                       </div>
@@ -184,10 +181,7 @@ export const MobileEventCard: React.FC<MobileEventCardProps> = ({
       ) : (
         /* Empty State */
         <div className="text-center py-8">
-          <Icon
-            name="calendar"
-            className="w-12 h-12 text-muted mx-auto mb-2"
-          />
+          <Icon name="calendar" className="w-12 h-12 text-muted mx-auto mb-2" />
           <Typography variant="body-md" className="text-secondary mb-1">
             No upcoming events
           </Typography>
@@ -209,10 +203,7 @@ export const MobileEventCard: React.FC<MobileEventCardProps> = ({
 
       {/* Hidden event count indicator */}
       {events.length > maxEvents && (
-        <Typography
-          variant="body-xs"
-          className="text-muted text-center mt-2"
-        >
+        <Typography variant="body-xs" className="text-muted text-center mt-2">
           + {events.length - maxEvents} more event
           {events.length - maxEvents !== 1 ? "s" : ""}
         </Typography>

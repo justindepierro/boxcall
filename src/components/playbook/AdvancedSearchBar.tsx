@@ -188,16 +188,11 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
                   {isHistory ? (
                     <Icon name="clock" className="h-3 w-3 text-muted" />
                   ) : (
-                    <Icon
-                      name="trending-up"
-                      className="h-3 w-3 text-muted"
-                    />
+                    <Icon name="trending-up" className="h-3 w-3 text-muted" />
                   )}
                   <span className="truncate">{suggestion}</span>
                   {isHistory && (
-                    <span className="text-xs text-muted ml-auto">
-                      Recent
-                    </span>
+                    <span className="text-xs text-muted ml-auto">Recent</span>
                   )}
                 </Button>
               );

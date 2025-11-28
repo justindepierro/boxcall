@@ -259,9 +259,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                 )}
               </div>
               <div className="flex items-center gap-1.5 text-xs leading-tight">
-                <span className="text-secondary truncate">
-                  {roleDisplay}
-                </span>
+                <span className="text-secondary truncate">{roleDisplay}</span>
                 {showDevBadge && (
                   <span className="text-warning-600 dark:text-warning-400 font-medium">
                     DEV

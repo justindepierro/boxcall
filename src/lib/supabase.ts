@@ -74,12 +74,12 @@ if (supabaseUrl && supabaseAnonKey) {
     // 🚀 PERFORMANCE: Add global configuration for better performance
     global: {
       headers: {
-        'x-client-info': 'boxcall-web',
+        "x-client-info": "boxcall-web",
       },
     },
     // 🚀 PERFORMANCE: Enable connection pooling and keep-alive
     db: {
-      schema: 'public',
+      schema: "public",
     },
     // 🚀 PERFORMANCE: Add realtime optimizations
     realtime: {

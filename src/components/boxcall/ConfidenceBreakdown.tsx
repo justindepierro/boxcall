@@ -207,10 +207,7 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
                     </Typography>
                   </div>
 
-                  <Typography
-                    variant="body-xs"
-                    className="text-secondary mb-2"
-                  >
+                  <Typography variant="body-xs" className="text-secondary mb-2">
                     {component.description}
                   </Typography>
 

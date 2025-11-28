@@ -368,10 +368,7 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
                       >
                         {stats.successRate.toFixed(0)}%
                       </Typography>
-                      <Typography
-                        variant="body-xs"
-                        className="text-tertiary"
-                      >
+                      <Typography variant="body-xs" className="text-tertiary">
                         ({stats.executionCount})
                       </Typography>
                     </div>

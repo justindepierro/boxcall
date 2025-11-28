@@ -159,9 +159,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
       <div className="p-6">
         {filteredPlayers.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-muted">
-              No players match your search criteria.
-            </p>
+            <p className="text-muted">No players match your search criteria.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 bc-grid-gap">

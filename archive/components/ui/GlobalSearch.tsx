@@ -70,29 +70,29 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
 
       const searchResults: SearchResult[] = [
         // Add plays
-        ...(plays || []).map(play => ({
+        ...(plays || []).map((play) => ({
           type: "play" as const,
           id: play.id,
           title: play.play_name,
           subtitle: `Formation: ${play.formation || "Unknown"}`,
-          url: `/playbook/play/${play.id}`
+          url: `/playbook/play/${play.id}`,
         })),
         // Add formations
-        ...(formations || []).map(formation => ({
+        ...(formations || []).map((formation) => ({
           type: "formation" as const,
           id: formation.id,
           title: formation.name,
           subtitle: `Direction: ${formation.direction || "Unknown"}`,
-          url: `/formations/${formation.id}`
+          url: `/formations/${formation.id}`,
         })),
         // Add players
-        ...(players || []).map(player => ({
+        ...(players || []).map((player) => ({
           type: "player" as const,
           id: player.id,
           title: `${player.first_name || ""} ${player.last_name || ""}`.trim(),
           subtitle: `Jersey #${player.jersey_number || "N/A"} • ${player.position || "Unknown"}`,
-          url: `/roster/player/${player.id}`
-        }))
+          url: `/roster/player/${player.id}`,
+        })),
       ];
 
       setResults(searchResults);
@@ -125,13 +125,13 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
     switch (e.key) {
       case "ArrowDown":
         e.preventDefault();
-        setSelectedIndex(prev =>
+        setSelectedIndex((prev) =>
           prev < results.length - 1 ? prev + 1 : prev
         );
         break;
       case "ArrowUp":
         e.preventDefault();
-        setSelectedIndex(prev => prev > 0 ? prev - 1 : -1);
+        setSelectedIndex((prev) => (prev > 0 ? prev - 1 : -1));
         break;
       case "Enter":
         e.preventDefault();
@@ -166,19 +166,27 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
 
   const getTypeIcon = (type: SearchResult["type"]) => {
     switch (type) {
-      case "play": return "play";
-      case "formation": return "users";
-      case "player": return "user";
-      default: return "search";
+      case "play":
+        return "play";
+      case "formation":
+        return "users";
+      case "player":
+        return "user";
+      default:
+        return "search";
     }
   };
 
   const getTypeColor = (type: SearchResult["type"]) => {
     switch (type) {
-      case "play": return "text-blue-600";
-      case "formation": return "text-green-600";
-      case "player": return "text-purple-600";
-      default: return "text-gray-600";
+      case "play":
+        return "text-blue-600";
+      case "formation":
+        return "text-green-600";
+      case "player":
+        return "text-purple-600";
+      default:
+        return "text-gray-600";
     }
   };
 
@@ -216,55 +224,66 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
             className="absolute inset-y-0 right-0 pr-3 flex items-center"
             aria-label="Clear search"
           >
-            <Icon name="x" className="h-4 w-4 text-text-secondary hover:text-text-primary" />
+            <Icon
+              name="x"
+              className="h-4 w-4 text-text-secondary hover:text-text-primary"
+            />
           </button>
         )}
       </div>
 
       {/* Search Results Dropdown */}
-      {isOpen && (query.length > 0 || isLoading) && createPortal(
-        <div className="absolute top-full left-0 right-0 mt-1 bg-surface border border-border rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
-          {isLoading ? (
-            <div className="px-4 py-3 text-center">
-              <Typography variant="body-sm" className="text-text-secondary">
-                Searching...
-              </Typography>
-            </div>
-          ) : results.length > 0 ? (
-            <div className="py-2">
-              {results.map((result, index) => (
-                <button
-                  key={`${result.type}-${result.id}`}
-                  onClick={() => handleResultClick(result)}
-                  className={`w-full px-4 py-3 text-left hover:bg-surface-muted flex items-start space-x-3 ${
-                    index === selectedIndex ? "bg-surface-muted" : ""
-                  }`}
-                >
-                  <Icon
-                    name={getTypeIcon(result.type)}
-                    className={`h-4 w-4 mt-0.5 ${getTypeColor(result.type)}`}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <Typography variant="body-sm" className="font-medium text-text-primary truncate">
-                      {result.title}
-                    </Typography>
-                    <Typography variant="body-xs" className="text-text-secondary truncate">
-                      {result.subtitle}
-                    </Typography>
-                  </div>
-                </button>
-              ))}
-            </div>
-          ) : query.length >= 2 ? (
-            <div className="px-4 py-3 text-center">
-              <Typography variant="body-sm" className="text-text-secondary">
-                No results found for "{query}"
-              </Typography>
-            </div>
-          ) : null}
-        </div>,
-        document.body
-      )}
+      {isOpen &&
+        (query.length > 0 || isLoading) &&
+        createPortal(
+          <div className="absolute top-full left-0 right-0 mt-1 bg-surface border border-border rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
+            {isLoading ? (
+              <div className="px-4 py-3 text-center">
+                <Typography variant="body-sm" className="text-text-secondary">
+                  Searching...
+                </Typography>
+              </div>
+            ) : results.length > 0 ? (
+              <div className="py-2">
+                {results.map((result, index) => (
+                  <button
+                    key={`${result.type}-${result.id}`}
+                    onClick={() => handleResultClick(result)}
+                    className={`w-full px-4 py-3 text-left hover:bg-surface-muted flex items-start space-x-3 ${
+                      index === selectedIndex ? "bg-surface-muted" : ""
+                    }`}
+                  >
+                    <Icon
+                      name={getTypeIcon(result.type)}
+                      className={`h-4 w-4 mt-0.5 ${getTypeColor(result.type)}`}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <Typography
+                        variant="body-sm"
+                        className="font-medium text-text-primary truncate"
+                      >
+                        {result.title}
+                      </Typography>
+                      <Typography
+                        variant="body-xs"
+                        className="text-text-secondary truncate"
+                      >
+                        {result.subtitle}
+                      </Typography>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            ) : query.length >= 2 ? (
+              <div className="px-4 py-3 text-center">
+                <Typography variant="body-sm" className="text-text-secondary">
+                  No results found for "{query}"
+                </Typography>
+              </div>
+            ) : null}
+          </div>,
+          document.body
+        )}
     </div>
   );
 };

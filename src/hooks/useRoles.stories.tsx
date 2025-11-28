@@ -122,10 +122,7 @@ const RolesDemo: React.FC = () => {
             {roleContext?.teamMemberships?.length ? (
               <div className="space-y-2">
                 {roleContext.teamMemberships.map((membership, index) => (
-                  <div
-                    key={index}
-                    className="p-3 bg-secondary rounded-lg"
-                  >
+                  <div key={index} className="p-3 bg-secondary rounded-lg">
                     <div>Team: {membership.teamId}</div>
                     <div>Role: {membership.teamRole}</div>
                     <div>Active: {membership.isActive ? "Yes" : "No"}</div>

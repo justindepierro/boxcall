@@ -29,7 +29,7 @@ export interface ProfessionalEngineOptions {
   height: number;
   fieldDimensions: FieldDimensions;
   backgroundColor?: number;
-  powerPreference?: 'default' | 'high-performance' | 'low-power';
+  powerPreference?: "default" | "high-performance" | "low-power";
   antialias?: boolean;
   resolution?: number;
   autoDensity?: boolean;
@@ -95,7 +95,7 @@ export class ProfessionalPixiEngine {
       };
 
       if (!webglCaps.supported) {
-        throw new Error('WebGL is not supported on this device');
+        throw new Error("WebGL is not supported on this device");
       }
 
       // Create the application with advanced options
@@ -121,9 +121,8 @@ export class ProfessionalPixiEngine {
 
       // Start the engine
       this.start();
-
     } catch (error) {
-      console.error('Failed to initialize ProfessionalPixiEngine:', error);
+      console.error("Failed to initialize ProfessionalPixiEngine:", error);
       throw error;
     }
   }
@@ -134,7 +133,10 @@ export class ProfessionalPixiEngine {
 
     // Replace the canvas in the DOM if needed
     if (this.options.canvas.parentElement) {
-      this.options.canvas.parentElement.replaceChild(canvas, this.options.canvas);
+      this.options.canvas.parentElement.replaceChild(
+        canvas,
+        this.options.canvas
+      );
     }
 
     return app;
@@ -168,7 +170,7 @@ export class ProfessionalPixiEngine {
 
     // Check for performance issues
     const health = this.performance.getHealthStatus();
-    if (health.status === 'critical') {
+    if (health.status === "critical") {
       this.handlePerformanceIssue();
     }
   }
@@ -181,7 +183,7 @@ export class ProfessionalPixiEngine {
 
     // Could disable advanced features here if needed
     // For now, just log the issue
-    console.warn('Performance issue detected - reducing FPS cap to 30');
+    console.warn("Performance issue detected - reducing FPS cap to 30");
   }
 
   public resize(width: number, height: number): void {
@@ -235,19 +237,28 @@ export class ProfessionalPixiEngine {
     this.spacingIndicatorLayer = layer;
   }
 
-  public screenToWorld(screenX: number, screenY: number): { x: number; y: number } {
+  public screenToWorld(
+    screenX: number,
+    screenY: number
+  ): { x: number; y: number } {
     // Convert screen coordinates to world coordinates using Pixi's built-in transform
     const worldPoint = this.stage.toLocal({ x: screenX, y: screenY });
     return { x: worldPoint.x, y: worldPoint.y };
   }
 
-  public worldToScreen(worldX: number, worldY: number): { x: number; y: number } {
+  public worldToScreen(
+    worldX: number,
+    worldY: number
+  ): { x: number; y: number } {
     // Convert world coordinates to screen coordinates using Pixi's built-in transform
     const screenPoint = this.stage.toGlobal({ x: worldX, y: worldY });
     return { x: screenPoint.x, y: screenPoint.y };
   }
 
   public isHealthy(): boolean {
-    return this.performance.getHealthStatus().status !== 'critical' && !this.isDestroyed;
+    return (
+      this.performance.getHealthStatus().status !== "critical" &&
+      !this.isDestroyed
+    );
   }
 }

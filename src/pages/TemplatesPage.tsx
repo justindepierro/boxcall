@@ -32,9 +32,7 @@ const TemplatesPage: React.FC = () => {
           <div className="space-y-2 text-sm">
             <div className="flex items-center justify-between text-secondary">
               <span>Highlights</span>
-              <span className="font-semibold text-primary">
-                Install, OTA
-              </span>
+              <span className="font-semibold text-primary">Install, OTA</span>
             </div>
             <div className="flex items-center justify-between text-xs text-secondary">
               <span>Status</span>
@@ -58,9 +56,7 @@ const TemplatesPage: React.FC = () => {
           <div className="space-y-2 text-sm">
             <div className="flex items-center justify-between text-secondary">
               <span>Assets</span>
-              <span className="font-semibold text-primary">
-                Scripts, PDF
-              </span>
+              <span className="font-semibold text-primary">Scripts, PDF</span>
             </div>
             <div className="flex items-center justify-between text-xs text-secondary">
               <span>Availability</span>
@@ -110,10 +106,7 @@ const TemplatesPage: React.FC = () => {
               <Typography variant="headline-sm" className="text-primary">
                 Launch a template workspace
               </Typography>
-              <Typography
-                variant="body-sm"
-                className="text-secondary mt-1"
-              >
+              <Typography variant="body-sm" className="text-secondary mt-1">
                 Choose the toolkit you need and we’ll drop you into the right
                 builder.
               </Typography>

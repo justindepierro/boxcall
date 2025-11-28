@@ -238,10 +238,7 @@ const CollaborationDemo: React.FC = () => {
           {recentUpdates.length ? (
             <div className="space-y-2 max-h-48 overflow-y-auto">
               {recentUpdates.map((update, index) => (
-                <div
-                  key={index}
-                  className="p-3 bg-secondary rounded text-sm"
-                >
+                <div key={index} className="p-3 bg-secondary rounded text-sm">
                   <div className="flex justify-between items-start">
                     <div>
                       <strong>{update.type}</strong>

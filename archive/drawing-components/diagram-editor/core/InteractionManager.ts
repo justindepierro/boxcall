@@ -15,7 +15,7 @@ export interface InteractionOptions {
 }
 
 export interface GestureEvent {
-  type: 'pinch' | 'rotate' | 'pan' | 'tap' | 'doubleTap' | 'longPress';
+  type: "pinch" | "rotate" | "pan" | "tap" | "doubleTap" | "longPress";
   center: { x: number; y: number };
   scale?: number;
   rotation?: number;
@@ -70,16 +70,24 @@ export class InteractionManager {
     if (!this.options.multiTouchEnabled) return;
 
     // Prevent default touch behaviors that interfere with diagram editing
-    canvas.style.touchAction = 'none'; // Prevent scrolling, zooming
-    canvas.style.userSelect = 'none'; // Prevent text selection
-    (canvas.style as any).webkitUserSelect = 'none'; // Safari
-    (canvas.style as any).webkitTouchCallout = 'none'; // iOS callouts
-    (canvas.style as any).webkitTapHighlightColor = 'transparent'; // Remove tap highlights
+    canvas.style.touchAction = "none"; // Prevent scrolling, zooming
+    canvas.style.userSelect = "none"; // Prevent text selection
+    (canvas.style as any).webkitUserSelect = "none"; // Safari
+    (canvas.style as any).webkitTouchCallout = "none"; // iOS callouts
+    (canvas.style as any).webkitTapHighlightColor = "transparent"; // Remove tap highlights
 
-    canvas.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
-    canvas.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
-    canvas.addEventListener('touchend', this.handleTouchEnd.bind(this), { passive: false });
-    canvas.addEventListener('touchcancel', this.handleTouchCancel.bind(this), { passive: false });
+    canvas.addEventListener("touchstart", this.handleTouchStart.bind(this), {
+      passive: false,
+    });
+    canvas.addEventListener("touchmove", this.handleTouchMove.bind(this), {
+      passive: false,
+    });
+    canvas.addEventListener("touchend", this.handleTouchEnd.bind(this), {
+      passive: false,
+    });
+    canvas.addEventListener("touchcancel", this.handleTouchCancel.bind(this), {
+      passive: false,
+    });
 
     // Add mobile-specific gesture prevention
     this.preventMobileGestures(canvas);
@@ -90,37 +98,55 @@ export class InteractionManager {
    */
   private preventMobileGestures(canvas: HTMLCanvasElement): void {
     // Prevent context menu on long press
-    canvas.addEventListener('contextmenu', (e) => e.preventDefault(), { passive: false });
+    canvas.addEventListener("contextmenu", (e) => e.preventDefault(), {
+      passive: false,
+    });
 
     // Prevent double-tap zoom
     let lastTouchEnd = 0;
-    canvas.addEventListener('touchend', (e) => {
-      const now = Date.now();
-      if (now - lastTouchEnd <= 300) {
-        e.preventDefault();
-      }
-      lastTouchEnd = now;
-    }, { passive: false });
+    canvas.addEventListener(
+      "touchend",
+      (e) => {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300) {
+          e.preventDefault();
+        }
+        lastTouchEnd = now;
+      },
+      { passive: false }
+    );
 
     // Prevent pull-to-refresh on iOS
     let startY = 0;
-    canvas.addEventListener('touchstart', (e) => {
-      if (e.touches.length === 1) {
-        startY = e.touches[0].clientY;
-      }
-    }, { passive: true });
-
-    canvas.addEventListener('touchmove', (e) => {
-      if (e.touches.length === 1) {
-        const currentY = e.touches[0].clientY;
-        const diffY = startY - currentY;
-
-        // If scrolling up and at the top, or scrolling down and at the bottom
-        if ((diffY > 0 && window.scrollY <= 0) || (diffY < 0 && window.innerHeight + window.scrollY >= document.body.scrollHeight)) {
-          e.preventDefault();
+    canvas.addEventListener(
+      "touchstart",
+      (e) => {
+        if (e.touches.length === 1) {
+          startY = e.touches[0].clientY;
         }
-      }
-    }, { passive: false });
+      },
+      { passive: true }
+    );
+
+    canvas.addEventListener(
+      "touchmove",
+      (e) => {
+        if (e.touches.length === 1) {
+          const currentY = e.touches[0].clientY;
+          const diffY = startY - currentY;
+
+          // If scrolling up and at the top, or scrolling down and at the bottom
+          if (
+            (diffY > 0 && window.scrollY <= 0) ||
+            (diffY < 0 &&
+              window.innerHeight + window.scrollY >= document.body.scrollHeight)
+          ) {
+            e.preventDefault();
+          }
+        }
+      },
+      { passive: false }
+    );
   }
 
   /**
@@ -129,10 +155,12 @@ export class InteractionManager {
   private setupMouseEvents(): void {
     const canvas = this.app.canvas;
 
-    canvas.addEventListener('mousedown', this.handleMouseDown.bind(this));
-    canvas.addEventListener('mousemove', this.handleMouseMove.bind(this));
-    canvas.addEventListener('mouseup', this.handleMouseUp.bind(this));
-    canvas.addEventListener('wheel', this.handleWheel.bind(this), { passive: false });
+    canvas.addEventListener("mousedown", this.handleMouseDown.bind(this));
+    canvas.addEventListener("mousemove", this.handleMouseMove.bind(this));
+    canvas.addEventListener("mouseup", this.handleMouseUp.bind(this));
+    canvas.addEventListener("wheel", this.handleWheel.bind(this), {
+      passive: false,
+    });
   }
 
   /**
@@ -141,8 +169,8 @@ export class InteractionManager {
   private setupKeyboardEvents(): void {
     const canvas = this.app.canvas;
 
-    canvas.addEventListener('keydown', this.handleKeyDown.bind(this));
-    canvas.addEventListener('keyup', this.handleKeyUp.bind(this));
+    canvas.addEventListener("keydown", this.handleKeyDown.bind(this));
+    canvas.addEventListener("keyup", this.handleKeyUp.bind(this));
   }
 
   /**
@@ -154,13 +182,13 @@ export class InteractionManager {
     const canvas = this.app.view as HTMLCanvasElement;
 
     // Add ARIA labels and roles
-    canvas.setAttribute('role', 'application');
-    canvas.setAttribute('aria-label', 'Football diagram editor');
-    canvas.setAttribute('tabindex', '0');
+    canvas.setAttribute("role", "application");
+    canvas.setAttribute("aria-label", "Football diagram editor");
+    canvas.setAttribute("tabindex", "0");
 
     // Focus management
-    canvas.addEventListener('focus', this.handleFocus.bind(this));
-    canvas.addEventListener('blur', this.handleBlur.bind(this));
+    canvas.addEventListener("focus", this.handleFocus.bind(this));
+    canvas.addEventListener("blur", this.handleBlur.bind(this));
   }
 
   // Touch event handlers
@@ -250,11 +278,11 @@ export class InteractionManager {
 
     // Haptic feedback for pinch gestures
     if (Math.abs(scale - 1) > 0.1) {
-      triggerHapticFeedback('light');
+      triggerHapticFeedback("light");
     }
 
     this.emitGestureEvent({
-      type: 'pinch',
+      type: "pinch",
       center: { x: centerX, y: centerY },
       scale,
       rotation,
@@ -265,11 +293,12 @@ export class InteractionManager {
     const deltaX = touch.clientX - this.panStartPoint.x;
     const deltaY = touch.clientY - this.panStartPoint.y;
 
-    if (Math.abs(deltaX) > this.options.gestureThreshold ||
-        Math.abs(deltaY) > this.options.gestureThreshold) {
-
+    if (
+      Math.abs(deltaX) > this.options.gestureThreshold ||
+      Math.abs(deltaY) > this.options.gestureThreshold
+    ) {
       this.emitGestureEvent({
-        type: 'pan',
+        type: "pan",
         center: { x: touch.clientX, y: touch.clientY },
         delta: { x: deltaX, y: deltaY },
       });
@@ -280,12 +309,13 @@ export class InteractionManager {
     const now = Date.now();
     const timeSinceLastTap = now - this.lastTapTime;
 
-    if (timeSinceLastTap < 300) { // Double tap threshold
+    if (timeSinceLastTap < 300) {
+      // Double tap threshold
       this.tapCount++;
       if (this.tapCount === 2) {
-        triggerHapticFeedback('light');
+        triggerHapticFeedback("light");
         this.emitGestureEvent({
-          type: 'doubleTap',
+          type: "doubleTap",
           center: this.panStartPoint,
         });
         this.tapCount = 0;
@@ -295,9 +325,9 @@ export class InteractionManager {
       // Single tap - delay to check for double tap
       setTimeout(() => {
         if (this.tapCount === 1) {
-          triggerHapticFeedback('light');
+          triggerHapticFeedback("light");
           this.emitGestureEvent({
-            type: 'tap',
+            type: "tap",
             center: this.panStartPoint,
           });
           this.tapCount = 0;
@@ -350,7 +380,7 @@ export class InteractionManager {
   private emitGestureEvent(event: GestureEvent): void {
     // Emit custom event on canvas
     const canvas = this.app.canvas;
-    const customEvent = new CustomEvent('gesture', {
+    const customEvent = new CustomEvent("gesture", {
       detail: event,
       bubbles: true,
     });
@@ -379,21 +409,24 @@ export class InteractionManager {
     const canvas = this.app.canvas;
 
     // Remove all event listeners
-    canvas.removeEventListener('touchstart', this.handleTouchStart.bind(this));
-    canvas.removeEventListener('touchmove', this.handleTouchMove.bind(this));
-    canvas.removeEventListener('touchend', this.handleTouchEnd.bind(this));
-    canvas.removeEventListener('touchcancel', this.handleTouchCancel.bind(this));
+    canvas.removeEventListener("touchstart", this.handleTouchStart.bind(this));
+    canvas.removeEventListener("touchmove", this.handleTouchMove.bind(this));
+    canvas.removeEventListener("touchend", this.handleTouchEnd.bind(this));
+    canvas.removeEventListener(
+      "touchcancel",
+      this.handleTouchCancel.bind(this)
+    );
 
-    canvas.removeEventListener('mousedown', this.handleMouseDown.bind(this));
-    canvas.removeEventListener('mousemove', this.handleMouseMove.bind(this));
-    canvas.removeEventListener('mouseup', this.handleMouseUp.bind(this));
-    canvas.removeEventListener('wheel', this.handleWheel.bind(this));
+    canvas.removeEventListener("mousedown", this.handleMouseDown.bind(this));
+    canvas.removeEventListener("mousemove", this.handleMouseMove.bind(this));
+    canvas.removeEventListener("mouseup", this.handleMouseUp.bind(this));
+    canvas.removeEventListener("wheel", this.handleWheel.bind(this));
 
-    canvas.removeEventListener('keydown', this.handleKeyDown.bind(this));
-    canvas.removeEventListener('keyup', this.handleKeyUp.bind(this));
+    canvas.removeEventListener("keydown", this.handleKeyDown.bind(this));
+    canvas.removeEventListener("keyup", this.handleKeyUp.bind(this));
 
-    canvas.removeEventListener('focus', this.handleFocus.bind(this));
-    canvas.removeEventListener('blur', this.handleBlur.bind(this));
+    canvas.removeEventListener("focus", this.handleFocus.bind(this));
+    canvas.removeEventListener("blur", this.handleBlur.bind(this));
 
     this.touchPoints.clear();
     this.isInitialized = false;

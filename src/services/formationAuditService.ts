@@ -113,11 +113,15 @@ export class FormationAuditService {
 
       // Determine severity based on creation date (newer = higher priority)
       // TODO: Replace with usage_count once added to schema
-      const daysSinceCreation = (Date.now() - new Date(formation.created_at || Date.now()).getTime()) / (1000 * 60 * 60 * 24);
+      const daysSinceCreation =
+        (Date.now() - new Date(formation.created_at || Date.now()).getTime()) /
+        (1000 * 60 * 60 * 24);
       let priority: AuditPriority = "low";
-      if (daysSinceCreation < 7) { // Created within last week
+      if (daysSinceCreation < 7) {
+        // Created within last week
         priority = "high";
-      } else if (daysSinceCreation < 30) { // Created within last month
+      } else if (daysSinceCreation < 30) {
+        // Created within last month
         priority = "medium";
       }
 
@@ -136,7 +140,8 @@ export class FormationAuditService {
     // Sort by priority (high first), then by usage count
     results.sort((a, b) => {
       const priorityOrder = { high: 3, medium: 2, low: 1 };
-      const priorityDiff = priorityOrder[b.priority] - priorityOrder[a.priority];
+      const priorityDiff =
+        priorityOrder[b.priority] - priorityOrder[a.priority];
       if (priorityDiff !== 0) return priorityDiff;
       return b.usageCount - a.usageCount;
     });
@@ -148,16 +153,18 @@ export class FormationAuditService {
   /**
    * Get audit summary for a playbook
    */
-  static async getAuditSummary(playbookId: string): Promise<FormationAuditSummary> {
+  static async getAuditSummary(
+    playbookId: string
+  ): Promise<FormationAuditSummary> {
     const results = await this.auditFormationDirections(playbookId);
 
     const summary: FormationAuditSummary = {
       totalFormations: 0, // We'll need to fetch this separately
       issuesFound: results.length,
-      highPriority: results.filter(r => r.priority === "high").length,
-      mediumPriority: results.filter(r => r.priority === "medium").length,
-      lowPriority: results.filter(r => r.priority === "low").length,
-      needsMapping: results.filter(r => r.issueType === "both").length,
+      highPriority: results.filter((r) => r.priority === "high").length,
+      mediumPriority: results.filter((r) => r.priority === "medium").length,
+      lowPriority: results.filter((r) => r.priority === "low").length,
+      needsMapping: results.filter((r) => r.issueType === "both").length,
     };
 
     // Get total formations count
@@ -174,7 +181,10 @@ export class FormationAuditService {
   /**
    * Generate suggestions for fixing formation issues
    */
-  private static generateSuggestions(issueType: FormationIssueType, formationName: string): string[] {
+  private static generateSuggestions(
+    issueType: FormationIssueType,
+    formationName: string
+  ): string[] {
     const suggestions: string[] = [];
 
     switch (issueType) {
@@ -187,7 +197,9 @@ export class FormationAuditService {
         suggestions.push("Specify which side this formation is for");
         break;
       case "both":
-        suggestions.push(`Complete "${formationName}" with direction and opposite`);
+        suggestions.push(
+          `Complete "${formationName}" with direction and opposite`
+        );
         suggestions.push("Use Formation Builder to create both variants");
         break;
     }

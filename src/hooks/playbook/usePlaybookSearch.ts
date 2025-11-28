@@ -20,7 +20,10 @@ export interface SearchSuggestions {
   personnel: string[];
 }
 
-export function usePlaybookSearch({ plays, searchQuery }: UsePlaybookSearchOptions) {
+export function usePlaybookSearch({
+  plays,
+  searchQuery,
+}: UsePlaybookSearchOptions) {
   const [suggestions, setSuggestions] = useState<SearchSuggestions>({
     formations: [],
     playNames: [],
@@ -51,9 +54,21 @@ export function usePlaybookSearch({ plays, searchQuery }: UsePlaybookSearchOptio
 
   // Load search suggestions
   const loadSuggestions = useMemo(() => {
-    const formations = [...new Set(plays.map(p => p.formation).filter((f): f is string => Boolean(f)))];
-    const playNames = [...new Set(plays.map(p => p.play_name).filter((n): n is string => Boolean(n)))];
-    const personnel = [...new Set(plays.map(p => p.personnel).filter((p): p is string => Boolean(p)))];
+    const formations = [
+      ...new Set(
+        plays.map((p) => p.formation).filter((f): f is string => Boolean(f))
+      ),
+    ];
+    const playNames = [
+      ...new Set(
+        plays.map((p) => p.play_name).filter((n): n is string => Boolean(n))
+      ),
+    ];
+    const personnel = [
+      ...new Set(
+        plays.map((p) => p.personnel).filter((p): p is string => Boolean(p))
+      ),
+    ];
 
     return () => setSuggestions({ formations, playNames, personnel });
   }, [plays]);

@@ -159,10 +159,7 @@ export const UserMenu: React.FC = () => {
               </Button>
             ) : (
               <div className="px-4 py-3 bg-surface-error/5 border-t border-error/20">
-                <Typography
-                  variant="body-xs"
-                  className="text-secondary mb-2"
-                >
+                <Typography variant="body-xs" className="text-secondary mb-2">
                   Are you sure you want to sign out?
                 </Typography>
                 <div className="flex gap-2">

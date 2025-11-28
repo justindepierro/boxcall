@@ -6,11 +6,13 @@
  */
 
 export function importFormationAsTemplate(_data: any) {
-  throw new Error('Formation diagram helpers have been archived. Formation system simplified.');
+  throw new Error(
+    "Formation diagram helpers have been archived. Formation system simplified."
+  );
 }
 
 export function validateFormationData(_data: any) {
-  return { valid: false, errors: ['Formation system simplified'] };
+  return { valid: false, errors: ["Formation system simplified"] };
 }
 
 export function normalizeFormationPositions(_positions: any[]) {

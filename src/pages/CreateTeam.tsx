@@ -336,17 +336,10 @@ export const CreateTeam: React.FC = () => {
                   className="mt-0.5"
                 />
                 <div className="flex-1">
-                  <Typography
-                    variant="body-sm"
-                    className="font-medium mb-xs"
-                  >
+                  <Typography variant="body-sm" className="font-medium mb-xs">
                     Quick Location Setup
                   </Typography>
-                  <Typography
-                    variant="body-sm"
-                    color="muted"
-                    className="mb-sm"
-                  >
+                  <Typography variant="body-sm" color="muted" className="mb-sm">
                     We can help fill in your school's location automatically.
                   </Typography>
                   <Button
@@ -456,10 +449,7 @@ export const CreateTeam: React.FC = () => {
                     className="mt-0.5"
                   />
                   <div className="flex-1">
-                    <Typography
-                      variant="body-sm"
-                      className="font-medium mb-xs"
-                    >
+                    <Typography variant="body-sm" className="font-medium mb-xs">
                       Similar Team Found
                     </Typography>
                     <Typography
@@ -674,9 +664,7 @@ export const CreateTeam: React.FC = () => {
                   {index < steps.length - 1 && (
                     <div
                       className={`flex-1 h-1 mx-md ${
-                        currentStepIndex > index
-                          ? "bg-green-600"
-                          : "bg-muted"
+                        currentStepIndex > index ? "bg-green-600" : "bg-muted"
                       }`}
                     />
                   )}

@@ -38,8 +38,7 @@ const variantStyles: Record<TagVariant, string> = {
     "bg-subtle text-error dark:bg-surface-error dark:text-error dark:border-text-error",
   accent:
     "bg-subtle text-jade-700 dark:bg-jade-900/30 dark:text-jade-300 dark:border-jade-700",
-  outline:
-    "text-secondary dark:border-text-tertiary dark:text-border-light",
+  outline: "text-secondary dark:border-text-tertiary dark:text-border-light",
 };
 
 export const Tag: React.FC<TagProps> = ({

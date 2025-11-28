@@ -143,10 +143,7 @@ export function ImportPracticeScriptsModal({
                     {selectedFile.name}
                   </Typography>
                   {parsedData && (
-                    <Typography
-                      variant="body-xs"
-                      className="text-secondary"
-                    >
+                    <Typography variant="body-xs" className="text-secondary">
                       {parsedData.scripts.length} script
                       {parsedData.scripts.length !== 1 ? "s" : ""} found
                     </Typography>
@@ -176,9 +173,7 @@ export function ImportPracticeScriptsModal({
               </Typography>
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-secondary">
-                    Scripts to import:
-                  </span>
+                  <span className="text-secondary">Scripts to import:</span>
                   <span className="font-medium text-primary">
                     {parsedData.scripts.length}
                   </span>
@@ -217,10 +212,7 @@ export function ImportPracticeScriptsModal({
                   >
                     Import Note
                   </Typography>
-                  <Typography
-                    variant="body-xs"
-                    className="text-secondary mt-1"
-                  >
+                  <Typography variant="body-xs" className="text-secondary mt-1">
                     Scripts will be imported as new items. Existing scripts will
                     not be modified.
                   </Typography>

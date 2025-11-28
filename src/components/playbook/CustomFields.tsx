@@ -248,10 +248,7 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
   if (fieldDefinitions.length === 0) {
     return (
       <div className={`text-center py-6 text-secondary ${className}`}>
-        <Icon
-          name="settings"
-          className="h-8 w-8 mx-auto mb-2 text-secondary"
-        />
+        <Icon name="settings" className="h-8 w-8 mx-auto mb-2 text-secondary" />
         <p className="text-sm">No custom fields defined for this category.</p>
         <p className="text-xs mt-1">Contact your admin to add custom fields.</p>
       </div>

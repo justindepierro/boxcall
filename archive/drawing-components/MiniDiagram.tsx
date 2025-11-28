@@ -114,11 +114,15 @@ export const MiniDiagram: React.FC<{
             cy={toSvgY(player.y)}
             r="6"
             fill={
-              player.role === "QB" ? "#fbbf24" :
-              ["LT", "LG", "C", "RG", "RT"].includes(player.role || "") ? "#fb923c" :
-              player.role === "TE" ? "#f87171" :
-              player.role === "WR" ? "#60a5fa" :
-              "#4ade80"
+              player.role === "QB"
+                ? "#fbbf24"
+                : ["LT", "LG", "C", "RG", "RT"].includes(player.role || "")
+                  ? "#fb923c"
+                  : player.role === "TE"
+                    ? "#f87171"
+                    : player.role === "WR"
+                      ? "#60a5fa"
+                      : "#4ade80"
             }
             stroke="#ffffff"
             strokeWidth="2"
@@ -135,9 +139,7 @@ export const MiniDiagram: React.FC<{
             dominantBaseline="middle"
             fontSize="8"
             fontWeight="bold"
-            fill={
-              player.role === "QB" ? "#000000" : "#ffffff"
-            }
+            fill={player.role === "QB" ? "#000000" : "#ffffff"}
           >
             {player.role || "P"}
           </text>

@@ -90,21 +90,14 @@ export const TeamSettings: React.FC = () => {
                 <Typography variant="headline-lg" className="mb-md">
                   Team Overview
                 </Typography>
-                <Typography
-                  variant="body-lg"
-                  color="muted"
-                  className="mb-lg"
-                >
+                <Typography variant="body-lg" color="muted" className="mb-lg">
                   Get a high-level view of your team's configuration and
                   performance.
                 </Typography>
 
                 <div className="grid-dashboard gap-lg">
                   <div className="text-center p-md bg-secondary rounded-lg">
-                    <Typography
-                      variant="headline-lg"
-                      className="text-info"
-                    >
+                    <Typography variant="headline-lg" className="text-info">
                       0
                     </Typography>
                     <Typography variant="body-sm" color="muted">
@@ -112,10 +105,7 @@ export const TeamSettings: React.FC = () => {
                     </Typography>
                   </div>
                   <div className="text-center p-md bg-secondary rounded-lg">
-                    <Typography
-                      variant="headline-lg"
-                      className="text-info"
-                    >
+                    <Typography variant="headline-lg" className="text-info">
                       0
                     </Typography>
                     <Typography variant="body-sm" color="muted">
@@ -123,10 +113,7 @@ export const TeamSettings: React.FC = () => {
                     </Typography>
                   </div>
                   <div className="text-center p-md bg-secondary rounded-lg">
-                    <Typography
-                      variant="headline-lg"
-                      className="text-info"
-                    >
+                    <Typography variant="headline-lg" className="text-info">
                       0
                     </Typography>
                     <Typography variant="body-sm" color="muted">
@@ -191,11 +178,7 @@ export const TeamSettings: React.FC = () => {
                 <Typography variant="headline-lg" className="mb-md">
                   Team Preferences
                 </Typography>
-                <Typography
-                  variant="body-lg"
-                  color="muted"
-                  className="mb-lg"
-                >
+                <Typography variant="body-lg" color="muted" className="mb-lg">
                   Configure team-wide settings and preferences.
                 </Typography>
 

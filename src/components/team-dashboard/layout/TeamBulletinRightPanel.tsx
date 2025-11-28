@@ -19,10 +19,7 @@ export const TeamBulletinRightPanel: React.FC<RightPanelProps> = ({
       aria-labelledby="calendar-roster-heading"
     >
       <TeamCalendar teamId={teamId || ""} />
-      <Card
-        className="p-6"
-        aria-label="Upcoming events onboarding hint"
-      >
+      <Card className="p-6" aria-label="Upcoming events onboarding hint">
         <div className="flex items-center justify-between mb-4">
           <Typography
             as="h2"

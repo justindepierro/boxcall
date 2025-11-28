@@ -66,13 +66,8 @@ export const TagInput: React.FC<TagInputProps> = ({
 
   return (
     <div className={className}>
-      <Typography
-        variant="label-md"
-        className="block mb-xs text-secondary"
-      >
-        {icon && (
-          <Icon name={icon as any} className="h-4 w-4 mr-xs inline" />
-        )}
+      <Typography variant="label-md" className="block mb-xs text-secondary">
+        {icon && <Icon name={icon as any} className="h-4 w-4 mr-xs inline" />}
         {label}
         {maxTags && (
           <Typography

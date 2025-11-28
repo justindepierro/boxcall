@@ -82,20 +82,14 @@ export function SendInvitationModal({
     >
       <div className="space-y-md">
         <div>
-          <Typography
-            variant="body-md"
-            className="text-secondary mb-sm"
-          >
+          <Typography variant="body-md" className="text-secondary mb-sm">
             Sending invitation to:
           </Typography>
           <Typography variant="headline-sm" className="font-semibold">
             {player.first_name} {player.last_name}
           </Typography>
           {player.nickname && (
-            <Typography
-              variant="body-sm"
-              className="text-secondary italic"
-            >
+            <Typography variant="body-sm" className="text-secondary italic">
               "{player.nickname}"
             </Typography>
           )}

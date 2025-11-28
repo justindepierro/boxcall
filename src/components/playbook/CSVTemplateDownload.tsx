@@ -8,13 +8,13 @@ interface CSVTemplateDownloadProps {
 
 /**
  * CSV Template Download Button
- * 
+ *
  * Provides downloadable CSV templates for bulk play imports.
  * Templates are Excel-friendly with descriptive headers.
  */
-export function CSVTemplateDownload({ 
+export function CSVTemplateDownload({
   variant = "simple",
-  className = "" 
+  className = "",
 }: CSVTemplateDownloadProps) {
   const templates = {
     simple: {
@@ -60,28 +60,36 @@ export function CSVTemplateDownload({
 
 /**
  * CSV Template Download Menu
- * 
+ *
  * Shows all available templates with descriptions
  */
-export function CSVTemplateDownloadMenu({ className = "" }: { className?: string }) {
+export function CSVTemplateDownloadMenu({
+  className = "",
+}: {
+  className?: string;
+}) {
   return (
     <div className={`space-y-2 ${className}`}>
       <div className="text-sm text-secondary mb-3">
         <p className="font-medium text-primary mb-1">
           📥 Download CSV Template
         </p>
-        <p>
-          Open in Excel, fill in your plays, then import back to BoxCall
-        </p>
+        <p>Open in Excel, fill in your plays, then import back to BoxCall</p>
       </div>
 
       <div className="space-y-2">
-        <CSVTemplateDownload variant="simple" className="w-full justify-start" />
+        <CSVTemplateDownload
+          variant="simple"
+          className="w-full justify-start"
+        />
         <p className="text-xs text-muted pl-8">
           Quick start: formation, play_name, p_type, personnel, one_word_play
         </p>
 
-        <CSVTemplateDownload variant="detailed" className="w-full justify-start" />
+        <CSVTemplateDownload
+          variant="detailed"
+          className="w-full justify-start"
+        />
         <p className="text-xs text-muted pl-8">
           Recommended: 23 fields including protection, motion, preferences
         </p>
@@ -93,8 +101,14 @@ export function CSVTemplateDownloadMenu({ className = "" }: { className?: string
       </div>
 
       <div className="mt-4 pt-3 border-t border-divider text-xs text-muted">
-        <p>💡 <strong>Tip:</strong> Download template → Fill in Excel → Save as CSV → Import to BoxCall</p>
-        <p className="mt-1">📖 See <span className="font-mono">docs/CSV_IMPORT_GUIDE.md</span> for full documentation</p>
+        <p>
+          💡 <strong>Tip:</strong> Download template → Fill in Excel → Save as
+          CSV → Import to BoxCall
+        </p>
+        <p className="mt-1">
+          📖 See <span className="font-mono">docs/CSV_IMPORT_GUIDE.md</span> for
+          full documentation
+        </p>
       </div>
     </div>
   );

@@ -123,8 +123,7 @@ registerRoute(
 // Cache external resources (CDNs, etc.) with longer timeout
 registerRoute(
   ({ url }) =>
-    url.hostname !== location.hostname &&
-    !url.hostname.includes("supabase.co"),
+    url.hostname !== location.hostname && !url.hostname.includes("supabase.co"),
   new CacheFirst({
     cacheName: "external-resources",
     networkTimeoutSeconds: 10,

@@ -26,7 +26,7 @@ export interface WebGLCapabilitiesResult {
  * Detect WebGL capabilities and features
  */
 export function detectWebGLCapabilities(): WebGLCapabilitiesResult {
-  const canvas = document.createElement('canvas');
+  const canvas = document.createElement("canvas");
   const result: WebGLCapabilitiesResult = {
     supported: false,
     version: 0,
@@ -49,8 +49,8 @@ export function detectWebGLCapabilities(): WebGLCapabilitiesResult {
 
   // Try WebGL 2 first
   try {
-    gl = canvas.getContext('webgl2', {
-      powerPreference: 'high-performance',
+    gl = canvas.getContext("webgl2", {
+      powerPreference: "high-performance",
       failIfMajorPerformanceCaveat: false,
     }) as WebGL2RenderingContext | null;
 
@@ -65,8 +65,8 @@ export function detectWebGLCapabilities(): WebGLCapabilitiesResult {
   // Fallback to WebGL 1
   if (!gl) {
     try {
-      gl = canvas.getContext('webgl', {
-        powerPreference: 'high-performance',
+      gl = canvas.getContext("webgl", {
+        powerPreference: "high-performance",
         failIfMajorPerformanceCaveat: false,
       }) as WebGLRenderingContext | null;
 
@@ -86,15 +86,25 @@ export function detectWebGLCapabilities(): WebGLCapabilitiesResult {
   result.supported = true;
 
   // Detect features
-  result.features.instancing = !!(gl as any).drawArraysInstanced || !!(gl as any).drawElementsInstanced;
-  result.features.floatTextures = !!gl.getExtension('OES_texture_float');
-  result.features.anisotropy = !!gl.getExtension('EXT_texture_filter_anisotropic');
-  result.features.compressedTextures = !!gl.getExtension('WEBGL_compressed_texture_s3tc');
-  result.features.vertexArrayObjects = !!gl.getExtension('OES_vertex_array_object');
+  result.features.instancing =
+    !!(gl as any).drawArraysInstanced || !!(gl as any).drawElementsInstanced;
+  result.features.floatTextures = !!gl.getExtension("OES_texture_float");
+  result.features.anisotropy = !!gl.getExtension(
+    "EXT_texture_filter_anisotropic"
+  );
+  result.features.compressedTextures = !!gl.getExtension(
+    "WEBGL_compressed_texture_s3tc"
+  );
+  result.features.vertexArrayObjects = !!gl.getExtension(
+    "OES_vertex_array_object"
+  );
 
   // Get limits
   result.limits.maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
-  result.limits.maxViewportDims = gl.getParameter(gl.MAX_VIEWPORT_DIMS) as [number, number];
+  result.limits.maxViewportDims = gl.getParameter(gl.MAX_VIEWPORT_DIMS) as [
+    number,
+    number,
+  ];
   result.limits.maxRenderbufferSize = gl.getParameter(gl.MAX_RENDERBUFFER_SIZE);
 
   return result;
@@ -108,7 +118,11 @@ export function checkMinimumRequirements(): boolean {
 
   if (!caps.supported) return false;
   if (caps.limits.maxTextureSize < 2048) return false; // Minimum texture size
-  if (caps.limits.maxViewportDims[0] < 1024 || caps.limits.maxViewportDims[1] < 768) return false;
+  if (
+    caps.limits.maxViewportDims[0] < 1024 ||
+    caps.limits.maxViewportDims[1] < 768
+  )
+    return false;
 
   return true;
 }
@@ -120,12 +134,12 @@ export function getWebGLErrorMessage(): string {
   const caps = detectWebGLCapabilities();
 
   if (!caps.supported) {
-    return 'WebGL is not supported on this device. Please update your browser or graphics drivers.';
+    return "WebGL is not supported on this device. Please update your browser or graphics drivers.";
   }
 
   if (!checkMinimumRequirements()) {
-    return 'Your device does not meet the minimum requirements for the diagram editor. Please try on a more powerful device.';
+    return "Your device does not meet the minimum requirements for the diagram editor. Please try on a more powerful device.";
   }
 
-  return 'Unknown WebGL error occurred.';
+  return "Unknown WebGL error occurred.";
 }

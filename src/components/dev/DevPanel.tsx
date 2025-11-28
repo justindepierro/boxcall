@@ -115,9 +115,7 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
 
   return (
     <div className="space-y-md">
-      <h3 className="text-lg font-semibold text-primary">
-        🔐 Auth Monitor
-      </h3>
+      <h3 className="text-lg font-semibold text-primary">🔐 Auth Monitor</h3>
 
       {/* Health Status */}
       <div className="space-y-xs">
@@ -603,9 +601,7 @@ const DevPanel: React.FC<DevPanelProps> = ({ isOpen, onClose }) => {
 
         {activeTab === "debug" && (
           <div className="space-y-md">
-            <h3 className="text-lg font-semibold text-primary">
-              Debug Tools
-            </h3>
+            <h3 className="text-lg font-semibold text-primary">Debug Tools</h3>
             <div className="space-y-xs">
               <div className="flex items-center justify-between">
                 <span>Contrast Debug Overlay</span>
@@ -638,9 +634,7 @@ const DevPanel: React.FC<DevPanelProps> = ({ isOpen, onClose }) => {
 
         {activeTab === "settings" && (
           <div className="space-y-md">
-            <h3 className="text-lg font-semibold text-primary">
-              Dev Settings
-            </h3>
+            <h3 className="text-lg font-semibold text-primary">Dev Settings</h3>
             <div className="space-y-xs text-sm">
               <div>
                 <strong>User:</strong> {user?.email}

@@ -555,11 +555,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
       type="default"
       headerContent={
         <div className="flex items-center justify-between w-full">
-          <Typography
-            variant="headline-sm"
-            as="h3"
-            className="text-primary"
-          >
+          <Typography variant="headline-sm" as="h3" className="text-primary">
             {currentScript ? "Edit Practice Script" : "Create Practice Script"}
           </Typography>
           <div className="flex items-center space-x-2">
@@ -656,11 +652,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
         {/* Plays Section */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <Typography
-              variant="headline-sm"
-              as="h4"
-              className="text-primary"
-            >
+            <Typography variant="headline-sm" as="h4" className="text-primary">
               Practice Plays
             </Typography>
             <Button
@@ -685,14 +677,8 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
             </div>
           ) : !currentScript?.plays?.length ? (
             <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
-              <Icon
-                name="file"
-                className="h-16 w-16 text-muted mx-auto mb-4"
-              />
-              <Typography
-                variant="headline-sm"
-                className="text-secondary mb-2"
-              >
+              <Icon name="file" className="h-16 w-16 text-muted mx-auto mb-4" />
+              <Typography variant="headline-sm" className="text-secondary mb-2">
                 No plays added yet
               </Typography>
               <Typography variant="body-sm" className="text-muted mb-6">

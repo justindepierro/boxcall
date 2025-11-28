@@ -122,10 +122,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
 
       {/* Quick Templates */}
       <div className="mb-4">
-        <Typography
-          variant="body-sm"
-          className="mb-2 font-medium text-primary"
-        >
+        <Typography variant="body-sm" className="mb-2 font-medium text-primary">
           Quick Templates:
         </Typography>
         <div className="flex flex-wrap gap-2">

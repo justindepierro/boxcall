@@ -121,11 +121,7 @@ export function Form({
       {(title || description) && (
         <div className="space-y-2">
           {title && (
-            <Typography
-              variant="headline-md"
-              as="h2"
-              className="text-primary"
-            >
+            <Typography variant="headline-md" as="h2" className="text-primary">
               {title}
               {showRequiredIndicator && (
                 <Typography variant="caption" color="muted" className="ml-2">

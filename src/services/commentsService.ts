@@ -153,9 +153,7 @@ export class CommentsService {
   /**
    * Add a comment to an announcement
    */
-  static async addComment(
-    comment: CommentCreate
-  ): Promise<{
+  static async addComment(comment: CommentCreate): Promise<{
     success: boolean;
     comment?: CommentWithAuthor;
     error?: string;

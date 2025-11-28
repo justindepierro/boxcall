@@ -227,9 +227,7 @@ export class AnnouncementsService {
   /**
    * Create a new announcement
    */
-  static async createAnnouncement(
-    announcement: AnnouncementCreate
-  ): Promise<{
+  static async createAnnouncement(announcement: AnnouncementCreate): Promise<{
     success: boolean;
     announcement?: Announcement;
     error?: string;

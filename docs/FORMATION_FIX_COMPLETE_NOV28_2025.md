@@ -167,6 +167,7 @@ Query: SELECT formation FROM plays GROUP BY formation (Get unique names for drop
    - ✅ Direction badges show "← Left" and "→ Right"
 
 6. **Analytics Query (Verify Data Integrity)**
+
    ```sql
    SELECT
      formation,

@@ -97,12 +97,7 @@ export const IncompleteFormationsPanel: React.FC<
     return (
       <div className="p-lg">
         {onBack && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onBack}
-            className="mb-md"
-          >
+          <Button variant="ghost" size="sm" onClick={onBack} className="mb-md">
             <ArrowLeft className="w-4 h-4 mr-xs" />
             Back to Formation Details
           </Button>
@@ -113,10 +108,7 @@ export const IncompleteFormationsPanel: React.FC<
             <CheckCircle className="w-8 h-8 text-success-600" />
           </div>
           <div>
-            <Typography
-              variant="headline-sm"
-              className="text-primary mb-xs"
-            >
+            <Typography variant="headline-sm" className="text-primary mb-xs">
               All formations are complete! 🎉
             </Typography>
             <Typography variant="body-sm" className="text-muted">
@@ -132,12 +124,7 @@ export const IncompleteFormationsPanel: React.FC<
     <div className="p-lg space-y-lg">
       {/* Back button */}
       {onBack && (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onBack}
-          className="mb-md"
-        >
+        <Button variant="ghost" size="sm" onClick={onBack} className="mb-md">
           <ArrowLeft className="w-4 h-4 mr-xs" />
           Back to Formation Details
         </Button>
@@ -149,10 +136,7 @@ export const IncompleteFormationsPanel: React.FC<
           <AlertCircle className="w-6 h-6 text-warning-600" />
         </div>
         <div className="flex-1">
-          <Typography
-            variant="headline-sm"
-            className="text-primary mb-xs"
-          >
+          <Typography variant="headline-sm" className="text-primary mb-xs">
             Incomplete Formations ({formations.length})
           </Typography>
           <Typography variant="body-sm" className="text-muted">
@@ -201,10 +185,7 @@ export const IncompleteFormationsPanel: React.FC<
                       {/* Missing fields */}
                       {missingFields.length > 0 && (
                         <div className="flex items-center gap-xs flex-wrap">
-                          <Typography
-                            variant="body-xs"
-                            className="text-muted"
-                          >
+                          <Typography variant="body-xs" className="text-muted">
                             Missing:
                           </Typography>
                           {missingFields.map((field, idx) => (
@@ -290,10 +271,7 @@ export const IncompleteFormationsPanel: React.FC<
                       {/* Missing fields */}
                       {missingFields.length > 0 && (
                         <div className="flex items-center gap-xs flex-wrap">
-                          <Typography
-                            variant="body-xs"
-                            className="text-muted"
-                          >
+                          <Typography variant="body-xs" className="text-muted">
                             Missing:
                           </Typography>
                           {missingFields.map((field, idx) => (

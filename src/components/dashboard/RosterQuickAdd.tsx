@@ -161,10 +161,7 @@ export const RosterQuickAdd: React.FC = () => {
           {/* Recent Players */}
           {recentPlayers.length > 0 ? (
             <div className="space-y-2 mb-4">
-              <Typography
-                variant="body-sm"
-                className="text-secondary mb-2"
-              >
+              <Typography variant="body-sm" className="text-secondary mb-2">
                 Recent additions:
               </Typography>
               {recentPlayers.map((player) => (
@@ -184,10 +181,7 @@ export const RosterQuickAdd: React.FC = () => {
                     <Typography variant="body-sm" className="text-primary">
                       Player {player.id.slice(0, 8)}
                     </Typography>
-                    <Typography
-                      variant="caption"
-                      className="text-secondary"
-                    >
+                    <Typography variant="caption" className="text-secondary">
                       {player.position || "Position TBD"}
                     </Typography>
                   </div>

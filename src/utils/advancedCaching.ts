@@ -5,7 +5,7 @@
  * and intelligent cache invalidation for maximum performance
  */
 
-import { useMemo, useCallback, useRef } from 'react';
+import { useMemo, useCallback, useRef } from "react";
 
 // Component-level memoization with deep comparison
 export function useDeepMemo<T>(
@@ -15,7 +15,8 @@ export function useDeepMemo<T>(
   const prevDeps = useRef<React.DependencyList | undefined>(undefined);
   const prevResult = useRef<T | undefined>(undefined);
 
-  const depsChanged = !prevDeps.current ||
+  const depsChanged =
+    !prevDeps.current ||
     deps.length !== prevDeps.current.length ||
     deps.some((dep, index) => !Object.is(dep, prevDeps.current![index]));
 
@@ -29,7 +30,10 @@ export function useDeepMemo<T>(
 
 // Query deduplication cache
 class QueryCache {
-  private cache = new Map<string, { data: any; timestamp: number; ttl: number }>();
+  private cache = new Map<
+    string,
+    { data: any; timestamp: number; ttl: number }
+  >();
   private pending = new Map<string, Promise<any>>();
 
   async get<T>(
@@ -41,7 +45,7 @@ class QueryCache {
     const cached = this.cache.get(key);
 
     // Return cached data if still valid
-    if (cached && (now - cached.timestamp) < cached.ttl) {
+    if (cached && now - cached.timestamp < cached.ttl) {
       return cached.data;
     }
 
@@ -52,12 +56,12 @@ class QueryCache {
 
     // Fetch new data
     const promise = fetcher()
-      .then(data => {
+      .then((data) => {
         this.cache.set(key, { data, timestamp: now, ttl });
         this.pending.delete(key);
         return data;
       })
-      .catch(error => {
+      .catch((error) => {
         this.pending.delete(key);
         throw error;
       });
@@ -102,13 +106,13 @@ export class CacheInvalidator {
     if (!this.patterns.has(pattern)) {
       this.patterns.set(pattern, new Set());
     }
-    keys.forEach(key => this.patterns.get(pattern)!.add(key));
+    keys.forEach((key) => this.patterns.get(pattern)!.add(key));
   }
 
   invalidate(pattern: string): void {
     const keys = this.patterns.get(pattern);
     if (keys) {
-      keys.forEach(key => queryCache.invalidate(key));
+      keys.forEach((key) => queryCache.invalidate(key));
     }
   }
 
@@ -137,7 +141,8 @@ export function useOptimizedRender(
   const now = Date.now();
 
   // Throttle renders to prevent excessive updates
-  if (now - lastRender.current < 16) { // 60fps limit
+  if (now - lastRender.current < 16) {
+    // 60fps limit
     return false;
   }
 
@@ -160,26 +165,32 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
 
   callbackRef.current = callback;
 
-  return useCallback((...args: Parameters<T>) => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+  return useCallback(
+    (...args: Parameters<T>) => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
 
-    timeoutRef.current = setTimeout(() => {
-      callbackRef.current(...args);
-    }, delay);
-  }, [delay]) as T;
+      timeoutRef.current = setTimeout(() => {
+        callbackRef.current(...args);
+      }, delay);
+    },
+    [delay]
+  ) as T;
 }
 
 // Preload critical resources
 export function useResourcePreloader(urls: string[]) {
   useMemo(() => {
-    urls.forEach(url => {
-      const link = document.createElement('link');
-      link.rel = 'preload';
+    urls.forEach((url) => {
+      const link = document.createElement("link");
+      link.rel = "preload";
       link.href = url;
-      link.as = url.endsWith('.js') ? 'script' :
-               url.endsWith('.css') ? 'style' : 'fetch';
+      link.as = url.endsWith(".js")
+        ? "script"
+        : url.endsWith(".css")
+          ? "style"
+          : "fetch";
       document.head.appendChild(link);
     });
   }, [urls]);

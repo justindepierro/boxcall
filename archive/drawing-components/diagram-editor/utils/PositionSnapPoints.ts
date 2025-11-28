@@ -1,6 +1,6 @@
 /**
  * Position Snap Points - Intelligent snap-to-grid for player dragging
- * 
+ *
  * Provides visual guides and snapping behavior when coaches drag players.
  * Snaps to common alignment positions (hash marks, numbers, sidelines, QB depths).
  */
@@ -43,54 +43,158 @@ export interface SnapPoint {
 export function getAllSnapPoints(): SnapPoint[] {
   // Hash marks (horizontal snapping) - highest priority
   const hashMarks: SnapPoint[] = [
-    { x: LEFT_HASH_X, y: LOS_Y, label: "Left Hash", type: "hash", priority: 10 },
+    {
+      x: LEFT_HASH_X,
+      y: LOS_Y,
+      label: "Left Hash",
+      type: "hash",
+      priority: 10,
+    },
     { x: CENTER_X, y: LOS_Y, label: "Center", type: "hash", priority: 10 },
-    { x: RIGHT_HASH_X, y: LOS_Y, label: "Right Hash", type: "hash", priority: 10 },
+    {
+      x: RIGHT_HASH_X,
+      y: LOS_Y,
+      label: "Right Hash",
+      type: "hash",
+      priority: 10,
+    },
   ];
 
   // Numbers (WR alignment) - high priority
   const numbers: SnapPoint[] = [
-    { x: LEFT_NUMBERS_X, y: LOS_Y, label: "Left Numbers (X)", type: "number", priority: 9 },
-    { x: RIGHT_NUMBERS_X, y: LOS_Y, label: "Right Numbers (Z)", type: "number", priority: 9 },
+    {
+      x: LEFT_NUMBERS_X,
+      y: LOS_Y,
+      label: "Left Numbers (X)",
+      type: "number",
+      priority: 9,
+    },
+    {
+      x: RIGHT_NUMBERS_X,
+      y: LOS_Y,
+      label: "Right Numbers (Z)",
+      type: "number",
+      priority: 9,
+    },
   ];
 
   // Sidelines - medium priority
   const sidelines: SnapPoint[] = [
-    { x: LEFT_SIDELINE_X, y: LOS_Y, label: "Left Sideline", type: "sideline", priority: 7 },
-    { x: RIGHT_SIDELINE_X, y: LOS_Y, label: "Right Sideline", type: "sideline", priority: 7 },
+    {
+      x: LEFT_SIDELINE_X,
+      y: LOS_Y,
+      label: "Left Sideline",
+      type: "sideline",
+      priority: 7,
+    },
+    {
+      x: RIGHT_SIDELINE_X,
+      y: LOS_Y,
+      label: "Right Sideline",
+      type: "sideline",
+      priority: 7,
+    },
   ];
 
   // Slot positions - high priority
   const slots: SnapPoint[] = [
     { x: SLOT_LEFT_X, y: LOS_Y, label: "Slot Left", type: "slot", priority: 9 },
-    { x: SLOT_LEFT_X, y: LOS_Y + 1, label: "Slot Left (off LOS)", type: "slot", priority: 9 },
-    { x: SLOT_RIGHT_X, y: LOS_Y, label: "Slot Right", type: "slot", priority: 9 },
-    { x: SLOT_RIGHT_X, y: LOS_Y + 1, label: "Slot Right (off LOS)", type: "slot", priority: 9 },
+    {
+      x: SLOT_LEFT_X,
+      y: LOS_Y + 1,
+      label: "Slot Left (off LOS)",
+      type: "slot",
+      priority: 9,
+    },
+    {
+      x: SLOT_RIGHT_X,
+      y: LOS_Y,
+      label: "Slot Right",
+      type: "slot",
+      priority: 9,
+    },
+    {
+      x: SLOT_RIGHT_X,
+      y: LOS_Y + 1,
+      label: "Slot Right (off LOS)",
+      type: "slot",
+      priority: 9,
+    },
   ];
 
   // Offensive line positions - highest priority
-  const olPositions: SnapPoint[] = Object.entries(OL_POSITIONS).map(([pos, x]) => ({
-    x,
-    y: LOS_Y,
-    label: pos,
-    type: "ol" as const,
-    priority: 11,
-  }));
+  const olPositions: SnapPoint[] = Object.entries(OL_POSITIONS).map(
+    ([pos, x]) => ({
+      x,
+      y: LOS_Y,
+      label: pos,
+      type: "ol" as const,
+      priority: 11,
+    })
+  );
 
   // QB depths - medium priority
   const qbDepths: SnapPoint[] = [
-    { x: CENTER_X, y: QB_UNDER_CENTER_Y, label: "Under Center", type: "depth", priority: 8 },
-    { x: CENTER_X, y: QB_PISTOL_Y, label: "Pistol", type: "depth", priority: 8 },
-    { x: CENTER_X, y: QB_SHOTGUN_Y, label: "Shotgun", type: "depth", priority: 8 },
-    { x: CENTER_X, y: QB_DEEP_SHOTGUN_Y, label: "Deep Shotgun", type: "depth", priority: 8 },
+    {
+      x: CENTER_X,
+      y: QB_UNDER_CENTER_Y,
+      label: "Under Center",
+      type: "depth",
+      priority: 8,
+    },
+    {
+      x: CENTER_X,
+      y: QB_PISTOL_Y,
+      label: "Pistol",
+      type: "depth",
+      priority: 8,
+    },
+    {
+      x: CENTER_X,
+      y: QB_SHOTGUN_Y,
+      label: "Shotgun",
+      type: "depth",
+      priority: 8,
+    },
+    {
+      x: CENTER_X,
+      y: QB_DEEP_SHOTGUN_Y,
+      label: "Deep Shotgun",
+      type: "depth",
+      priority: 8,
+    },
   ];
 
   // RB depths - medium priority
   const rbDepths: SnapPoint[] = [
-    { x: CENTER_X, y: RB_PISTOL_Y, label: "RB Pistol", type: "depth", priority: 7 },
-    { x: CENTER_X + 4, y: RB_OFFSET_Y, label: "RB Offset Right", type: "depth", priority: 7 },
-    { x: CENTER_X - 4, y: RB_OFFSET_Y, label: "RB Offset Left", type: "depth", priority: 7 },
-    { x: CENTER_X, y: RB_I_FORM_Y, label: "RB I-Form", type: "depth", priority: 7 },
+    {
+      x: CENTER_X,
+      y: RB_PISTOL_Y,
+      label: "RB Pistol",
+      type: "depth",
+      priority: 7,
+    },
+    {
+      x: CENTER_X + 4,
+      y: RB_OFFSET_Y,
+      label: "RB Offset Right",
+      type: "depth",
+      priority: 7,
+    },
+    {
+      x: CENTER_X - 4,
+      y: RB_OFFSET_Y,
+      label: "RB Offset Left",
+      type: "depth",
+      priority: 7,
+    },
+    {
+      x: CENTER_X,
+      y: RB_I_FORM_Y,
+      label: "RB I-Form",
+      type: "depth",
+      priority: 7,
+    },
   ];
 
   return [
@@ -285,7 +389,13 @@ export function getHorizontalSnapLines(role?: string): number[] {
 
   // Filter based on role
   if (role === "QB") {
-    return [...baselines, QB_UNDER_CENTER_Y, QB_PISTOL_Y, QB_SHOTGUN_Y, QB_DEEP_SHOTGUN_Y];
+    return [
+      ...baselines,
+      QB_UNDER_CENTER_Y,
+      QB_PISTOL_Y,
+      QB_SHOTGUN_Y,
+      QB_DEEP_SHOTGUN_Y,
+    ];
   }
 
   if (["RB", "FB"].includes(role || "")) {

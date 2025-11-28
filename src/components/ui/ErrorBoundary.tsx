@@ -101,15 +101,9 @@ export class ErrorBoundary extends Component<Props, State> {
             {/* Error Icon and Title */}
             <div className="text-center mb-6">
               <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-surface-error mb-4">
-                <Icon
-                  name="alert-triangle"
-                  className="h-6 w-6 text-error"
-                />
+                <Icon name="alert-triangle" className="h-6 w-6 text-error" />
               </div>
-              <Typography
-                variant="headline-lg"
-                className="text-primary mb-2"
-              >
+              <Typography variant="headline-lg" className="text-primary mb-2">
                 Something went wrong
               </Typography>
               <Typography variant="body-md" className="text-secondary">

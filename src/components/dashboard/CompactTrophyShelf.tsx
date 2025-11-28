@@ -312,10 +312,7 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
                         <Typography variant="body-sm" className="font-semibold">
                           {sticker.name}
                         </Typography>
-                        <Typography
-                          variant="caption"
-                          className="text-muted"
-                        >
+                        <Typography variant="caption" className="text-muted">
                           Awarded by {sticker.awardedByName}
                         </Typography>
                       </div>
@@ -344,18 +341,14 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
                     <div
                       key={medal.id}
                       className={`flex items-center gap-3 p-3 rounded-lg ${
-                        medal.earned
-                          ? "bg-secondary"
-                          : "bg-muted opacity-60"
+                        medal.earned ? "bg-secondary" : "bg-muted opacity-60"
                       }`}
                     >
                       <Icon
                         name="award"
                         size="sm"
                         className={
-                          medal.earned
-                            ? "trophy-stat-secondary"
-                            : "text-muted"
+                          medal.earned ? "trophy-stat-secondary" : "text-muted"
                         }
                       />
                       <div className="flex-1">
@@ -365,10 +358,7 @@ export const CompactTrophyShelf: React.FC<CompactTrophyShelfProps> = ({
                         >
                           {medal.name}
                         </Typography>
-                        <Typography
-                          variant="caption"
-                          className="text-muted"
-                        >
+                        <Typography variant="caption" className="text-muted">
                           {medal.description}
                         </Typography>
                         {!medal.earned &&

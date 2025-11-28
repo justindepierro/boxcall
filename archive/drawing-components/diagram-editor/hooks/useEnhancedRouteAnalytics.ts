@@ -86,12 +86,12 @@ export const useEnhancedRouteAnalytics = (
     trendAnalysis: {
       improvingRoutes: [],
       decliningRoutes: [],
-      stableRoutes: []
+      stableRoutes: [],
     },
     comparativeAnalysis: {
       bestRouteBySituation: {},
-      routeComparisonMatrix: []
-    }
+      routeComparisonMatrix: [],
+    },
   };
 
   return {

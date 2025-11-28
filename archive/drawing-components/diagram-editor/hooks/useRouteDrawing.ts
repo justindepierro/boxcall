@@ -85,7 +85,8 @@ export function useRouteDrawing(options: UseRouteDrawingOptions) {
       if (!app || !routesLayer || !playersLayer || !isEnabled) return;
 
       const now = Date.now();
-      const isDoubleClick = now - lastClickTimeRef.current < DOUBLE_CLICK_THRESHOLD;
+      const isDoubleClick =
+        now - lastClickTimeRef.current < DOUBLE_CLICK_THRESHOLD;
       lastClickTimeRef.current = now;
 
       // Get world coordinates
@@ -136,12 +137,7 @@ export function useRouteDrawing(options: UseRouteDrawingOptions) {
           const routeId = generateRouteId();
 
           // Start drawing route from player position
-          routesLayer.startDrawingRoute(
-            player.id,
-            player.x,
-            player.y,
-            routeId
-          );
+          routesLayer.startDrawingRoute(player.id, player.x, player.y, routeId);
 
           drawingStateRef.current = {
             routeId,
@@ -160,14 +156,7 @@ export function useRouteDrawing(options: UseRouteDrawingOptions) {
       routesLayer.addWaypoint(worldCoords.x, worldCoords.y);
       console.log("📍 Added waypoint:", worldCoords);
     },
-    [
-      app,
-      routesLayer,
-      playersLayer,
-      isEnabled,
-      routeType,
-      addRoute,
-    ]
+    [app, routesLayer, playersLayer, isEnabled, routeType, addRoute]
   );
 
   /**
@@ -211,7 +200,14 @@ export function useRouteDrawing(options: UseRouteDrawingOptions) {
         drawingStateRef.current = null;
       }
     };
-  }, [isEnabled, app, handlePointerMove, handleClick, handleKeyDown, routesLayer]);
+  }, [
+    isEnabled,
+    app,
+    handlePointerMove,
+    handleClick,
+    handleKeyDown,
+    routesLayer,
+  ]);
 
   return {
     isDrawing: routesLayer?.getIsDrawing() ?? false,

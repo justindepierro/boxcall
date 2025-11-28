@@ -177,10 +177,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
               <div className="grid grid-cols-[1fr_auto_1fr] gap-md items-start">
                 {/* Left Formation Column */}
                 <div className="flex flex-col gap-sm">
-                  <Typography
-                    variant="headline-md"
-                    className="text-primary"
-                  >
+                  <Typography variant="headline-md" className="text-primary">
                     Left Side Formation
                   </Typography>
 
@@ -278,10 +275,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
 
                 {/* Right Formation Column */}
                 <div className="flex flex-col gap-sm">
-                  <Typography
-                    variant="headline-md"
-                    className="text-primary"
-                  >
+                  <Typography variant="headline-md" className="text-primary">
                     Right Side Formation
                   </Typography>
 

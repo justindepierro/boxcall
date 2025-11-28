@@ -171,9 +171,7 @@ export default function PlayerDetailPage() {
                     <dd className="font-medium">{player.position || "N/A"}</dd>
                   </div>
                   <div>
-                    <dt className="text-secondary text-sm">
-                      Jersey Number
-                    </dt>
+                    <dt className="text-secondary text-sm">Jersey Number</dt>
                     <dd className="font-medium">
                       {player.jersey_number || "N/A"}
                     </dd>

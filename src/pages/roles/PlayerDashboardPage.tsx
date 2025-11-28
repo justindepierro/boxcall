@@ -172,10 +172,7 @@ const PlayerDashboardPage: React.FC = () => {
                   key={metric.label}
                   className="bg-aurora-shell rounded-aurora border border/60 p-3 text-center"
                 >
-                  <Typography
-                    variant="headline-sm"
-                    className="text-primary"
-                  >
+                  <Typography variant="headline-sm" className="text-primary">
                     {metric.value}
                   </Typography>
                   <Typography variant="caption" className="text-secondary">

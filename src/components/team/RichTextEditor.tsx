@@ -406,9 +406,7 @@ export function RichTextEditor({
           onClick={() => editor.chain().focus().toggleBold().run()}
           disabled={disabled}
           className={`p-2 rounded hover:bg-muted transition-colors ${
-            editor.isActive("bold")
-              ? "bg-muted text-accent"
-              : "text-secondary"
+            editor.isActive("bold") ? "bg-muted text-accent" : "text-secondary"
           }`}
           title="Bold"
         >

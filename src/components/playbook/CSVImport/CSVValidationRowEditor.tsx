@@ -27,7 +27,7 @@ interface CSVValidationRowEditorProps {
 
 /**
  * CSVValidationRowEditor
- * 
+ *
  * Inline editor for CSV import rows with:
  * - Real-time validation using dataValidation.ts
  * - Fuzzy matching suggestions for similar existing values
@@ -94,16 +94,15 @@ export function CSVValidationRowEditor({
     const isValid = validation.state === "valid";
 
     // Find similar matches for suggestions
-    const similarMatches: SimilarMatch[] = hasWarnings || hasErrors
-      ? findSimilarMatches(value, existingValues, 3)
-      : [];
+    const similarMatches: SimilarMatch[] =
+      hasWarnings || hasErrors
+        ? findSimilarMatches(value, existingValues, 3)
+        : [];
 
     return (
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <label className="text-xs font-medium text-secondary">
-            {label}
-          </label>
+          <label className="text-xs font-medium text-secondary">{label}</label>
           <div className="flex items-center space-x-2">
             {isValid && !isEditing && (
               <Icon name="check-circle" className="h-4 w-4 text-success" />
@@ -191,55 +190,64 @@ export function CSVValidationRowEditor({
         )}
 
         {/* Fuzzy Match Suggestions */}
-        {!isEditing && similarMatches.length > 0 && (hasWarnings || hasErrors) && (
-          <div className="bg-subtle border border-muted rounded-lg p-2 space-y-1">
-            <p className="text-xs font-medium text-secondary mb-1">
-              💡 Did you mean:
-            </p>
-            {similarMatches.map((match, idx) => (
-              <button
-                key={idx}
-                onClick={() =>
-                  onAcceptSuggestion(preview.rowNumber, field, match.value)
-                }
-                className="w-full text-left px-2 py-1 rounded hover:bg-bg-secondary transition-colors group flex items-center justify-between"
-              >
-                <span className="text-sm font-medium group-hover:text-accent transition-colors">
-                  {match.value}
-                </span>
-                <span className="text-xs text-muted bg-bg-muted px-2 py-0.5 rounded">
-                  {match.confidence}% match
-                </span>
-              </button>
-            ))}
-          </div>
-        )}
+        {!isEditing &&
+          similarMatches.length > 0 &&
+          (hasWarnings || hasErrors) && (
+            <div className="bg-subtle border border-muted rounded-lg p-2 space-y-1">
+              <p className="text-xs font-medium text-secondary mb-1">
+                💡 Did you mean:
+              </p>
+              {similarMatches.map((match, idx) => (
+                <button
+                  key={idx}
+                  onClick={() =>
+                    onAcceptSuggestion(preview.rowNumber, field, match.value)
+                  }
+                  className="w-full text-left px-2 py-1 rounded hover:bg-bg-secondary transition-colors group flex items-center justify-between"
+                >
+                  <span className="text-sm font-medium group-hover:text-accent transition-colors">
+                    {match.value}
+                  </span>
+                  <span className="text-xs text-muted bg-bg-muted px-2 py-0.5 rounded">
+                    {match.confidence}% match
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
 
         {/* Auto-Correction Suggestion */}
-        {validation.normalizedValue && 
-         validation.normalizedValue !== value && 
-         !isEditing && 
-         validation.state !== "error" && (
-          <div className="bg-info/10 border border-info/20 rounded-lg p-2 flex items-start justify-between">
-            <div className="flex-1">
-              <p className="text-xs font-medium text-info mb-1">
-                🔧 Auto-correction available
-              </p>
-              <p className="text-xs text-secondary">
-                Normalize to: <span className="font-mono font-medium">{validation.normalizedValue}</span>
-              </p>
+        {validation.normalizedValue &&
+          validation.normalizedValue !== value &&
+          !isEditing &&
+          validation.state !== "error" && (
+            <div className="bg-info/10 border border-info/20 rounded-lg p-2 flex items-start justify-between">
+              <div className="flex-1">
+                <p className="text-xs font-medium text-info mb-1">
+                  🔧 Auto-correction available
+                </p>
+                <p className="text-xs text-secondary">
+                  Normalize to:{" "}
+                  <span className="font-mono font-medium">
+                    {validation.normalizedValue}
+                  </span>
+                </p>
+              </div>
+              <Button
+                onClick={() =>
+                  onAcceptSuggestion(
+                    preview.rowNumber,
+                    field,
+                    validation.normalizedValue
+                  )
+                }
+                variant="infoLink"
+                size="xs"
+              >
+                Apply
+              </Button>
             </div>
-            <Button
-              onClick={() =>
-                onAcceptSuggestion(preview.rowNumber, field, validation.normalizedValue)
-              }
-              variant="infoLink"
-              size="xs"
-            >
-              Apply
-            </Button>
-          </div>
-        )}
+          )}
       </div>
     );
   };

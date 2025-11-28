@@ -135,10 +135,7 @@ export const PlayQualityIndicator: React.FC<PlayQualityIndicatorProps> = ({
       {/* Score Breakdown */}
       <div className="grid grid-cols-3 gap-sm mb-md">
         <div className="text-center">
-          <Typography
-            variant="body-sm"
-            className="text-secondary mb-xs"
-          >
+          <Typography variant="body-sm" className="text-secondary mb-xs">
             Required
           </Typography>
           <Typography
@@ -150,10 +147,7 @@ export const PlayQualityIndicator: React.FC<PlayQualityIndicatorProps> = ({
           </Typography>
         </div>
         <div className="text-center">
-          <Typography
-            variant="body-sm"
-            className="text-secondary mb-xs"
-          >
+          <Typography variant="body-sm" className="text-secondary mb-xs">
             Metadata
           </Typography>
           <Typography
@@ -165,10 +159,7 @@ export const PlayQualityIndicator: React.FC<PlayQualityIndicatorProps> = ({
           </Typography>
         </div>
         <div className="text-center">
-          <Typography
-            variant="body-sm"
-            className="text-secondary mb-xs"
-          >
+          <Typography variant="body-sm" className="text-secondary mb-xs">
             Advanced
           </Typography>
           <Typography

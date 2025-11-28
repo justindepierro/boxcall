@@ -108,101 +108,109 @@ export const useDiagramStore = create<DiagramState>()(
       dismissedLandscapePrompt: false,
       showFormationPicker: false,
 
-  // Player actions
-  addPlayer: (player: Player) =>
-    set((state) => ({
-      players: [...state.players, player],
-    })),
+      // Player actions
+      addPlayer: (player: Player) =>
+        set((state) => ({
+          players: [...state.players, player],
+        })),
 
-  updatePlayer: (playerId: string, updates: Partial<Player>) =>
-    set((state) => ({
-      players: state.players.map((p) =>
-        p.id === playerId ? { ...p, ...updates } : p
-      ),
-    })),
+      updatePlayer: (playerId: string, updates: Partial<Player>) =>
+        set((state) => ({
+          players: state.players.map((p) =>
+            p.id === playerId ? { ...p, ...updates } : p
+          ),
+        })),
 
-  removePlayer: (playerId: string) =>
-    set((state) => ({
-      players: state.players.filter((p) => p.id !== playerId),
-      selectedPlayerId:
-        state.selectedPlayerId === playerId ? null : state.selectedPlayerId,
-      // Remove all routes for this player
-      routes: state.routes.filter((r) => r.playerId !== playerId),
-    })),
+      removePlayer: (playerId: string) =>
+        set((state) => ({
+          players: state.players.filter((p) => p.id !== playerId),
+          selectedPlayerId:
+            state.selectedPlayerId === playerId ? null : state.selectedPlayerId,
+          // Remove all routes for this player
+          routes: state.routes.filter((r) => r.playerId !== playerId),
+        })),
 
-  selectPlayer: (playerId: string | null) =>
-    set({ selectedPlayerId: playerId }),
+      selectPlayer: (playerId: string | null) =>
+        set({ selectedPlayerId: playerId }),
 
-  clearPlayers: () =>
-    set({
-      players: [],
-      selectedPlayerId: null,
-      routes: [], // Clear routes when clearing players
+      clearPlayers: () =>
+        set({
+          players: [],
+          selectedPlayerId: null,
+          routes: [], // Clear routes when clearing players
+        }),
+
+      // Route actions
+      addRoute: (route: Route) =>
+        set((state) => ({
+          routes: [...state.routes, route],
+        })),
+
+      updateRoute: (routeId: string, updates: Partial<Route>) =>
+        set((state) => ({
+          routes: state.routes.map((r) =>
+            r.id === routeId ? { ...r, ...updates } : r
+          ),
+        })),
+
+      removeRoute: (routeId: string) =>
+        set((state) => ({
+          routes: state.routes.filter((r) => r.id !== routeId),
+          selectedRouteId:
+            state.selectedRouteId === routeId ? null : state.selectedRouteId,
+        })),
+
+      selectRoute: (routeId: string | null) =>
+        set({ selectedRouteId: routeId }),
+
+      clearRoutes: () =>
+        set({
+          routes: [],
+          selectedRouteId: null,
+        }),
+
+      // Tool actions
+      setActiveTool: (tool: ToolType) => set({ activeTool: tool }),
+
+      // Diagram setting actions
+      setColorMode: (mode: FieldColorMode) => set({ colorMode: mode }),
+      setFieldPosition: (position: DiagramFieldPosition) =>
+        set({ fieldPosition: position }),
+      setSelectedAlignment: (alignment: "left" | "middle" | "right") =>
+        set({ selectedAlignment: alignment }),
+      setSelectedRouteType: (type: RouteType) =>
+        set({ selectedRouteType: type }),
+
+      // UI state actions
+      setDismissedLandscapePrompt: (dismissed: boolean) =>
+        set({ dismissedLandscapePrompt: dismissed }),
+      setShowFormationPicker: (show: boolean) =>
+        set({ showFormationPicker: show }),
+
+      // Reset action
+      resetDiagramState: () =>
+        set({
+          players: [],
+          selectedPlayerId: null,
+          routes: [],
+          selectedRouteId: null,
+          activeTool: "select",
+          dismissedLandscapePrompt: false,
+          showFormationPicker: false,
+        }),
+
+      // Utilities
+      getPlayer: (playerId: string) =>
+        get().players.find((p) => p.id === playerId),
+
+      getPlayersByTeam: (team: TeamSide) =>
+        get().players.filter((p) => p.team === team),
+
+      getRoute: (routeId: string) => get().routes.find((r) => r.id === routeId),
+
+      getRoutesByPlayerId: (playerId: string) =>
+        get().routes.filter((r) => r.playerId === playerId),
     }),
-
-  // Route actions
-  addRoute: (route: Route) =>
-    set((state) => ({
-      routes: [...state.routes, route],
-    })),
-
-  updateRoute: (routeId: string, updates: Partial<Route>) =>
-    set((state) => ({
-      routes: state.routes.map((r) =>
-        r.id === routeId ? { ...r, ...updates } : r
-      ),
-    })),
-
-  removeRoute: (routeId: string) =>
-    set((state) => ({
-      routes: state.routes.filter((r) => r.id !== routeId),
-      selectedRouteId:
-        state.selectedRouteId === routeId ? null : state.selectedRouteId,
-    })),
-
-  selectRoute: (routeId: string | null) => set({ selectedRouteId: routeId }),
-
-  clearRoutes: () =>
-    set({
-      routes: [],
-      selectedRouteId: null,
-    }),
-
-  // Tool actions
-  setActiveTool: (tool: ToolType) => set({ activeTool: tool }),
-
-  // Diagram setting actions
-  setColorMode: (mode: FieldColorMode) => set({ colorMode: mode }),
-  setFieldPosition: (position: DiagramFieldPosition) => set({ fieldPosition: position }),
-  setSelectedAlignment: (alignment: "left" | "middle" | "right") => set({ selectedAlignment: alignment }),
-  setSelectedRouteType: (type: RouteType) => set({ selectedRouteType: type }),
-
-  // UI state actions
-  setDismissedLandscapePrompt: (dismissed: boolean) => set({ dismissedLandscapePrompt: dismissed }),
-  setShowFormationPicker: (show: boolean) => set({ showFormationPicker: show }),
-
-  // Reset action
-  resetDiagramState: () => set({
-    players: [],
-    selectedPlayerId: null,
-    routes: [],
-    selectedRouteId: null,
-    activeTool: "select",
-    dismissedLandscapePrompt: false,
-    showFormationPicker: false,
-  }),
-
-  // Utilities
-  getPlayer: (playerId: string) => get().players.find((p) => p.id === playerId),
-
-  getPlayersByTeam: (team: TeamSide) =>
-    get().players.filter((p) => p.team === team),
-
-  getRoute: (routeId: string) => get().routes.find((r) => r.id === routeId),
-
-  getRoutesByPlayerId: (playerId: string) =>
-    get().routes.filter((r) => r.playerId === playerId),
-}),
     {
       name: "diagram-store",
       partialize: (state) => ({

@@ -182,9 +182,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   placeholder="John"
                 />
                 {errors.first_name && (
-                  <p className="text-error text-sm mt-1">
-                    {errors.first_name}
-                  </p>
+                  <p className="text-error text-sm mt-1">{errors.first_name}</p>
                 )}
               </div>
               <div>
@@ -204,9 +202,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   placeholder="Smith"
                 />
                 {errors.last_name && (
-                  <p className="text-error text-sm mt-1">
-                    {errors.last_name}
-                  </p>
+                  <p className="text-error text-sm mt-1">{errors.last_name}</p>
                 )}
               </div>
               <div>
@@ -372,9 +368,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
                   placeholder="185"
                 />
                 {errors.weight && (
-                  <p className="text-error text-sm mt-1">
-                    {errors.weight}
-                  </p>
+                  <p className="text-error text-sm mt-1">{errors.weight}</p>
                 )}
               </div>
               <div>

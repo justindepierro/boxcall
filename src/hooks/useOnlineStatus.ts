@@ -1,22 +1,22 @@
 /**
  * useOnlineStatus Hook
- * 
+ *
  * Detects online/offline status for showing connection indicators
  * and managing offline functionality
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 /**
  * Hook to detect network online/offline status
- * 
+ *
  * @returns Object with online status and transition state
- * 
+ *
  * @example
  * ```tsx
  * const MyComponent = () => {
  *   const { isOnline, isTransitioning } = useOnlineStatus();
- *   
+ *
  *   return (
  *     <div>
  *       {!isOnline && <OfflineBanner />}
@@ -32,7 +32,7 @@ export function useOnlineStatus(): {
 } {
   const [isOnline, setIsOnline] = useState(() => {
     // Initialize based on current status
-    if (typeof navigator === 'undefined') return true;
+    if (typeof navigator === "undefined") return true;
     return navigator.onLine;
   });
 
@@ -52,12 +52,12 @@ export function useOnlineStatus(): {
       setIsOnline(false);
     };
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 

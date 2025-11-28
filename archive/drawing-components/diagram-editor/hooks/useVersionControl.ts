@@ -28,58 +28,70 @@ export function useVersionControl(options: UseVersionControlOptions = {}) {
   }, [playId, autoLoad, versionStore]);
 
   // Create a new version with current diagram state
-  const saveVersion = useCallback(async (description?: string) => {
-    try {
-      const newVersion = await versionStore.createVersion(description);
-      if (newVersion) {
-        triggerHapticFeedback("success");
-        toast.success(`Version ${newVersion.versionNumber} saved`, {
-          description: description || "Diagram version created successfully",
+  const saveVersion = useCallback(
+    async (description?: string) => {
+      try {
+        const newVersion = await versionStore.createVersion(description);
+        if (newVersion) {
+          triggerHapticFeedback("success");
+          toast.success(`Version ${newVersion.versionNumber} saved`, {
+            description: description || "Diagram version created successfully",
+          });
+          return newVersion;
+        }
+      } catch (error) {
+        toast.error("Failed to save version", {
+          description: error instanceof Error ? error.message : "Unknown error",
         });
-        return newVersion;
       }
-    } catch (error) {
-      toast.error("Failed to save version", {
-        description: error instanceof Error ? error.message : "Unknown error",
-      });
-    }
-    return null;
-  }, [versionStore]);
+      return null;
+    },
+    [versionStore]
+  );
 
   // Rollback to a specific version
-  const rollbackToVersion = useCallback(async (versionNumber: number) => {
-    try {
-      const success = await versionStore.rollbackToVersion(versionNumber);
-      if (success) {
-        triggerHapticFeedback("success");
-        toast.success(`Rolled back to version ${versionNumber}`, {
-          description: "Diagram has been restored to the selected version",
-        });
+  const rollbackToVersion = useCallback(
+    async (versionNumber: number) => {
+      try {
+        const success = await versionStore.rollbackToVersion(versionNumber);
+        if (success) {
+          triggerHapticFeedback("success");
+          toast.success(`Rolled back to version ${versionNumber}`, {
+            description: "Diagram has been restored to the selected version",
+          });
 
-        // Reload the diagram data to reflect the rollback
-        // This would need to be implemented based on how diagrams are loaded
-        // For now, we'll assume the diagram store needs to be updated
-        return true;
+          // Reload the diagram data to reflect the rollback
+          // This would need to be implemented based on how diagrams are loaded
+          // For now, we'll assume the diagram store needs to be updated
+          return true;
+        }
+      } catch (error) {
+        toast.error("Failed to rollback version", {
+          description: error instanceof Error ? error.message : "Unknown error",
+        });
       }
-    } catch (error) {
-      toast.error("Failed to rollback version", {
-        description: error instanceof Error ? error.message : "Unknown error",
-      });
-    }
-    return false;
-  }, [versionStore]);
+      return false;
+    },
+    [versionStore]
+  );
 
   // Get version diff information
-  const compareVersions = useCallback((versionId1: string, versionId2: string) => {
-    return versionStore.compareVersions(versionId1, versionId2);
-  }, [versionStore]);
+  const compareVersions = useCallback(
+    (versionId1: string, versionId2: string) => {
+      return versionStore.compareVersions(versionId1, versionId2);
+    },
+    [versionStore]
+  );
 
   // Auto-save functionality (creates version on significant changes)
-  const autoSave = useCallback(async (description: string = "Auto-saved") => {
-    // Only auto-save if there are unsaved changes
-    // This could be enhanced with change detection logic
-    return await saveVersion(description);
-  }, [saveVersion]);
+  const autoSave = useCallback(
+    async (description: string = "Auto-saved") => {
+      // Only auto-save if there are unsaved changes
+      // This could be enhanced with change detection logic
+      return await saveVersion(description);
+    },
+    [saveVersion]
+  );
 
   return {
     // State
@@ -110,9 +122,12 @@ export function useVersionControl(options: UseVersionControlOptions = {}) {
 export function useVersionHistory() {
   const versionStore = useVersionControlStore();
 
-  const selectVersion = useCallback((versionId: string | null) => {
-    versionStore.setSelectedVersionId(versionId);
-  }, [versionStore]);
+  const selectVersion = useCallback(
+    (versionId: string | null) => {
+      versionStore.setSelectedVersionId(versionId);
+    },
+    [versionStore]
+  );
 
   const toggleHistoryPanel = useCallback(() => {
     versionStore.setShowVersionHistory(!versionStore.showVersionHistory);
@@ -137,9 +152,12 @@ export function useVersionHistory() {
 export function useVersionComparison() {
   const versionStore = useVersionControlStore();
 
-  const compareVersions = useCallback((versionId1: string, versionId2: string) => {
-    return versionStore.compareVersions(versionId1, versionId2);
-  }, [versionStore]);
+  const compareVersions = useCallback(
+    (versionId1: string, versionId2: string) => {
+      return versionStore.compareVersions(versionId1, versionId2);
+    },
+    [versionStore]
+  );
 
   return {
     compareVersions,

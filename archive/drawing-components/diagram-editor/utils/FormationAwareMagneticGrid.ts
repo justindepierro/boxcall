@@ -1,5 +1,5 @@
-import type { FormationAnalysis } from '@features/defense/types';
-import type { FieldPosition } from './FieldConstants';
+import type { FormationAnalysis } from "@features/defense/types";
+import type { FieldPosition } from "./FieldConstants";
 
 /**
  * Magnetic zone for intelligent player positioning
@@ -47,25 +47,25 @@ export class FormationAwareMagneticGrid {
 
     // Add formation-specific zones
     switch (formationAnalysis.type) {
-      case '2x2':
+      case "2x2":
         zones.push(...this.generate2x2Zones(formationAnalysis));
         break;
-      case '3x1-left':
+      case "3x1-left":
         zones.push(...this.generate3x1LeftZones(formationAnalysis));
         break;
-      case '3x1-right':
+      case "3x1-right":
         zones.push(...this.generate3x1RightZones(formationAnalysis));
         break;
-      case 'trips':
+      case "trips":
         zones.push(...this.generateTripsZones(formationAnalysis));
         break;
-      case 'empty':
+      case "empty":
         zones.push(...this.generateEmptyZones(formationAnalysis));
         break;
-      case 'doubles':
+      case "doubles":
         zones.push(...this.generateDoublesZones(formationAnalysis));
         break;
-      case 'quads':
+      case "quads":
         zones.push(...this.generateQuadsZones(formationAnalysis));
         break;
       default:
@@ -81,7 +81,9 @@ export class FormationAwareMagneticGrid {
   /**
    * Generate zones for 2x2 formation (balanced)
    */
-  private static generate2x2Zones(_formationAnalysis: FormationAnalysis): MagneticZone[] {
+  private static generate2x2Zones(
+    _formationAnalysis: FormationAnalysis
+  ): MagneticZone[] {
     return [
       // Left side WRs
       {
@@ -89,16 +91,16 @@ export class FormationAwareMagneticGrid {
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 1,
-        validRoles: ['WR', 'X', 'Z'],
-        activeInFormations: ['2x2']
+        validRoles: ["WR", "X", "Z"],
+        activeInFormations: ["2x2"],
       },
       {
         snapPoint: { x: 17.5, y: 12 },
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 1,
-        validRoles: ['WR', 'X', 'Z'],
-        activeInFormations: ['2x2']
+        validRoles: ["WR", "X", "Z"],
+        activeInFormations: ["2x2"],
       },
       // Right side WRs
       {
@@ -106,24 +108,26 @@ export class FormationAwareMagneticGrid {
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 1,
-        validRoles: ['WR', 'X', 'Z'],
-        activeInFormations: ['2x2']
+        validRoles: ["WR", "X", "Z"],
+        activeInFormations: ["2x2"],
       },
       {
         snapPoint: { x: 35.83, y: 12 },
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 1,
-        validRoles: ['WR', 'X', 'Z'],
-        activeInFormations: ['2x2']
-      }
+        validRoles: ["WR", "X", "Z"],
+        activeInFormations: ["2x2"],
+      },
     ];
   }
 
   /**
    * Generate zones for 3x1-left formation
    */
-  private static generate3x1LeftZones(_formationAnalysis: FormationAnalysis): MagneticZone[] {
+  private static generate3x1LeftZones(
+    _formationAnalysis: FormationAnalysis
+  ): MagneticZone[] {
     return [
       // Strong side (left) - 3 WRs
       {
@@ -131,24 +135,24 @@ export class FormationAwareMagneticGrid {
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 2,
-        validRoles: ['WR', 'X', 'Z'],
-        activeInFormations: ['3x1-left']
+        validRoles: ["WR", "X", "Z"],
+        activeInFormations: ["3x1-left"],
       },
       {
         snapPoint: { x: 17.5, y: 12 },
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 2,
-        validRoles: ['WR', 'X', 'Z'],
-        activeInFormations: ['3x1-left']
+        validRoles: ["WR", "X", "Z"],
+        activeInFormations: ["3x1-left"],
       },
       {
         snapPoint: { x: 12, y: 8 },
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 2,
-        validRoles: ['WR', 'X', 'Z'],
-        activeInFormations: ['3x1-left']
+        validRoles: ["WR", "X", "Z"],
+        activeInFormations: ["3x1-left"],
       },
       // Weak side (right) - 1 WR
       {
@@ -156,16 +160,18 @@ export class FormationAwareMagneticGrid {
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 1,
-        validRoles: ['WR', 'X', 'Z'],
-        activeInFormations: ['3x1-left']
-      }
+        validRoles: ["WR", "X", "Z"],
+        activeInFormations: ["3x1-left"],
+      },
     ];
   }
 
   /**
    * Generate zones for 3x1-right formation
    */
-  private static generate3x1RightZones(_formationAnalysis: FormationAnalysis): MagneticZone[] {
+  private static generate3x1RightZones(
+    _formationAnalysis: FormationAnalysis
+  ): MagneticZone[] {
     return [
       // Strong side (right) - 3 WRs
       {
@@ -173,24 +179,24 @@ export class FormationAwareMagneticGrid {
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 2,
-        validRoles: ['WR', 'X', 'Z'],
-        activeInFormations: ['3x1-right']
+        validRoles: ["WR", "X", "Z"],
+        activeInFormations: ["3x1-right"],
       },
       {
         snapPoint: { x: 35.83, y: 12 },
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 2,
-        validRoles: ['WR', 'X', 'Z'],
-        activeInFormations: ['3x1-right']
+        validRoles: ["WR", "X", "Z"],
+        activeInFormations: ["3x1-right"],
       },
       {
         snapPoint: { x: 41, y: 8 },
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 2,
-        validRoles: ['WR', 'X', 'Z'],
-        activeInFormations: ['3x1-right']
+        validRoles: ["WR", "X", "Z"],
+        activeInFormations: ["3x1-right"],
       },
       // Weak side (left) - 1 WR
       {
@@ -198,19 +204,21 @@ export class FormationAwareMagneticGrid {
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 1,
-        validRoles: ['WR', 'X', 'Z'],
-        activeInFormations: ['3x1-right']
-      }
+        validRoles: ["WR", "X", "Z"],
+        activeInFormations: ["3x1-right"],
+      },
     ];
   }
 
   /**
    * Generate zones for trips formation
    */
-  private static generateTripsZones(formationAnalysis: FormationAnalysis): MagneticZone[] {
+  private static generateTripsZones(
+    formationAnalysis: FormationAnalysis
+  ): MagneticZone[] {
     const zones: MagneticZone[] = [];
 
-    if (formationAnalysis.strengthSide === 'left') {
+    if (formationAnalysis.strengthSide === "left") {
       // Trips left - 3 WRs on left, 1 on right
       zones.push(
         {
@@ -218,32 +226,32 @@ export class FormationAwareMagneticGrid {
           magneticRadius: 3.0,
           visualThreshold: 2.0,
           priority: 2,
-          validRoles: ['WR', 'X', 'Z'],
-          activeInFormations: ['trips']
+          validRoles: ["WR", "X", "Z"],
+          activeInFormations: ["trips"],
         },
         {
           snapPoint: { x: 17.5, y: 12 },
           magneticRadius: 3.0,
           visualThreshold: 2.0,
           priority: 2,
-          validRoles: ['WR', 'X', 'Z'],
-          activeInFormations: ['trips']
+          validRoles: ["WR", "X", "Z"],
+          activeInFormations: ["trips"],
         },
         {
           snapPoint: { x: 12, y: 8 },
           magneticRadius: 3.0,
           visualThreshold: 2.0,
           priority: 2,
-          validRoles: ['WR', 'X', 'Z'],
-          activeInFormations: ['trips']
+          validRoles: ["WR", "X", "Z"],
+          activeInFormations: ["trips"],
         },
         {
           snapPoint: { x: 45, y: 15 },
           magneticRadius: 3.0,
           visualThreshold: 2.0,
           priority: 1,
-          validRoles: ['WR', 'X', 'Z'],
-          activeInFormations: ['trips']
+          validRoles: ["WR", "X", "Z"],
+          activeInFormations: ["trips"],
         }
       );
     } else {
@@ -254,32 +262,32 @@ export class FormationAwareMagneticGrid {
           magneticRadius: 3.0,
           visualThreshold: 2.0,
           priority: 2,
-          validRoles: ['WR', 'X', 'Z'],
-          activeInFormations: ['trips']
+          validRoles: ["WR", "X", "Z"],
+          activeInFormations: ["trips"],
         },
         {
           snapPoint: { x: 35.83, y: 12 },
           magneticRadius: 3.0,
           visualThreshold: 2.0,
           priority: 2,
-          validRoles: ['WR', 'X', 'Z'],
-          activeInFormations: ['trips']
+          validRoles: ["WR", "X", "Z"],
+          activeInFormations: ["trips"],
         },
         {
           snapPoint: { x: 41, y: 8 },
           magneticRadius: 3.0,
           visualThreshold: 2.0,
           priority: 2,
-          validRoles: ['WR', 'X', 'Z'],
-          activeInFormations: ['trips']
+          validRoles: ["WR", "X", "Z"],
+          activeInFormations: ["trips"],
         },
         {
           snapPoint: { x: 8, y: 15 },
           magneticRadius: 3.0,
           visualThreshold: 2.0,
           priority: 1,
-          validRoles: ['WR', 'X', 'Z'],
-          activeInFormations: ['trips']
+          validRoles: ["WR", "X", "Z"],
+          activeInFormations: ["trips"],
         }
       );
     }
@@ -290,7 +298,9 @@ export class FormationAwareMagneticGrid {
   /**
    * Generate zones for empty formation (5 WRs)
    */
-  private static generateEmptyZones(_formationAnalysis: FormationAnalysis): MagneticZone[] {
+  private static generateEmptyZones(
+    _formationAnalysis: FormationAnalysis
+  ): MagneticZone[] {
     return [
       // Left side
       {
@@ -298,24 +308,24 @@ export class FormationAwareMagneticGrid {
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 1,
-        validRoles: ['WR', 'X', 'Z'],
-        activeInFormations: ['empty']
+        validRoles: ["WR", "X", "Z"],
+        activeInFormations: ["empty"],
       },
       {
         snapPoint: { x: 17.5, y: 12 },
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 1,
-        validRoles: ['WR', 'X', 'Z'],
-        activeInFormations: ['empty']
+        validRoles: ["WR", "X", "Z"],
+        activeInFormations: ["empty"],
       },
       {
         snapPoint: { x: 12, y: 8 },
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 1,
-        validRoles: ['WR', 'X', 'Z'],
-        activeInFormations: ['empty']
+        validRoles: ["WR", "X", "Z"],
+        activeInFormations: ["empty"],
       },
       // Right side
       {
@@ -323,24 +333,26 @@ export class FormationAwareMagneticGrid {
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 1,
-        validRoles: ['WR', 'X', 'Z'],
-        activeInFormations: ['empty']
+        validRoles: ["WR", "X", "Z"],
+        activeInFormations: ["empty"],
       },
       {
         snapPoint: { x: 35.83, y: 12 },
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 1,
-        validRoles: ['WR', 'X', 'Z'],
-        activeInFormations: ['empty']
-      }
+        validRoles: ["WR", "X", "Z"],
+        activeInFormations: ["empty"],
+      },
     ];
   }
 
   /**
    * Generate zones for doubles formation
    */
-  private static generateDoublesZones(_formationAnalysis: FormationAnalysis): MagneticZone[] {
+  private static generateDoublesZones(
+    _formationAnalysis: FormationAnalysis
+  ): MagneticZone[] {
     return [
       // Two TEs
       {
@@ -348,16 +360,16 @@ export class FormationAwareMagneticGrid {
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 2,
-        validRoles: ['TE', 'Y'],
-        activeInFormations: ['doubles']
+        validRoles: ["TE", "Y"],
+        activeInFormations: ["doubles"],
       },
       {
         snapPoint: { x: 35.83, y: 18 },
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 2,
-        validRoles: ['TE', 'Y'],
-        activeInFormations: ['doubles']
+        validRoles: ["TE", "Y"],
+        activeInFormations: ["doubles"],
       },
       // Two WRs
       {
@@ -365,24 +377,26 @@ export class FormationAwareMagneticGrid {
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 1,
-        validRoles: ['WR', 'X', 'Z'],
-        activeInFormations: ['doubles']
+        validRoles: ["WR", "X", "Z"],
+        activeInFormations: ["doubles"],
       },
       {
         snapPoint: { x: 45, y: 15 },
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 1,
-        validRoles: ['WR', 'X', 'Z'],
-        activeInFormations: ['doubles']
-      }
+        validRoles: ["WR", "X", "Z"],
+        activeInFormations: ["doubles"],
+      },
     ];
   }
 
   /**
    * Generate zones for quads formation
    */
-  private static generateQuadsZones(_formationAnalysis: FormationAnalysis): MagneticZone[] {
+  private static generateQuadsZones(
+    _formationAnalysis: FormationAnalysis
+  ): MagneticZone[] {
     return [
       // Four TEs
       {
@@ -390,40 +404,42 @@ export class FormationAwareMagneticGrid {
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 2,
-        validRoles: ['TE', 'Y'],
-        activeInFormations: ['quads']
+        validRoles: ["TE", "Y"],
+        activeInFormations: ["quads"],
       },
       {
         snapPoint: { x: 35.83, y: 18 },
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 2,
-        validRoles: ['TE', 'Y'],
-        activeInFormations: ['quads']
+        validRoles: ["TE", "Y"],
+        activeInFormations: ["quads"],
       },
       {
         snapPoint: { x: 12, y: 15 },
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 2,
-        validRoles: ['TE', 'Y'],
-        activeInFormations: ['quads']
+        validRoles: ["TE", "Y"],
+        activeInFormations: ["quads"],
       },
       {
         snapPoint: { x: 41, y: 15 },
         magneticRadius: 3.0,
         visualThreshold: 2.0,
         priority: 2,
-        validRoles: ['TE', 'Y'],
-        activeInFormations: ['quads']
-      }
+        validRoles: ["TE", "Y"],
+        activeInFormations: ["quads"],
+      },
     ];
   }
 
   /**
    * Generate universal QB zones
    */
-  private static generateQBZones(formationAnalysis: FormationAnalysis): MagneticZone[] {
+  private static generateQBZones(
+    formationAnalysis: FormationAnalysis
+  ): MagneticZone[] {
     const zones: MagneticZone[] = [];
 
     // Under center
@@ -432,8 +448,16 @@ export class FormationAwareMagneticGrid {
       magneticRadius: 2.0,
       visualThreshold: 1.5,
       priority: 10, // High priority for QB
-      validRoles: ['QB'],
-      activeInFormations: ['2x2', '3x1-left', '3x1-right', 'trips', 'empty', 'doubles', 'quads']
+      validRoles: ["QB"],
+      activeInFormations: [
+        "2x2",
+        "3x1-left",
+        "3x1-right",
+        "trips",
+        "empty",
+        "doubles",
+        "quads",
+      ],
     });
 
     // Shotgun
@@ -442,19 +466,35 @@ export class FormationAwareMagneticGrid {
       magneticRadius: 2.0,
       visualThreshold: 1.5,
       priority: 10,
-      validRoles: ['QB'],
-      activeInFormations: ['2x2', '3x1-left', '3x1-right', 'trips', 'empty', 'doubles', 'quads']
+      validRoles: ["QB"],
+      activeInFormations: [
+        "2x2",
+        "3x1-left",
+        "3x1-right",
+        "trips",
+        "empty",
+        "doubles",
+        "quads",
+      ],
     });
 
     // Pistol (if RB position indicates pistol)
-    if (formationAnalysis.rbPosition === 'pistol') {
+    if (formationAnalysis.rbPosition === "pistol") {
       zones.push({
         snapPoint: { x: 26.67, y: 12 },
         magneticRadius: 2.0,
         visualThreshold: 1.5,
         priority: 10,
-        validRoles: ['QB'],
-        activeInFormations: ['2x2', '3x1-left', '3x1-right', 'trips', 'empty', 'doubles', 'quads']
+        validRoles: ["QB"],
+        activeInFormations: [
+          "2x2",
+          "3x1-left",
+          "3x1-right",
+          "trips",
+          "empty",
+          "doubles",
+          "quads",
+        ],
       });
     }
 
@@ -483,7 +523,7 @@ export class FormationAwareMagneticGrid {
       // Calculate distance to zone
       const distance = Math.sqrt(
         Math.pow(playerX - zone.snapPoint.x, 2) +
-        Math.pow(playerY - zone.snapPoint.y, 2)
+          Math.pow(playerY - zone.snapPoint.y, 2)
       );
 
       // Check if within visual threshold
@@ -501,11 +541,15 @@ export class FormationAwareMagneticGrid {
     return {
       zone: nearestZone,
       showVisualFeedback,
-      snapPosition: nearestZone ? nearestZone.snapPoint : { x: playerX, y: playerY }
+      snapPosition: nearestZone
+        ? nearestZone.snapPoint
+        : { x: playerX, y: playerY },
     };
   }
 }
 
 // Export static methods as standalone functions for backward compatibility
-export const generateMagneticZones = FormationAwareMagneticGrid.generateMagneticZones;
-export const findNearestMagneticZone = FormationAwareMagneticGrid.findNearestMagneticZone;
+export const generateMagneticZones =
+  FormationAwareMagneticGrid.generateMagneticZones;
+export const findNearestMagneticZone =
+  FormationAwareMagneticGrid.findNearestMagneticZone;

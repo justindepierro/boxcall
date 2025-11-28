@@ -343,10 +343,7 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
                     <strong>Usage:</strong> {leftFormation.usage_count} plays
                   </Typography>
                   {leftFormation.description && (
-                    <Typography
-                      variant="caption"
-                      className="text-muted italic"
-                    >
+                    <Typography variant="caption" className="text-muted italic">
                       {leftFormation.description}
                     </Typography>
                   )}
@@ -438,10 +435,7 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
                     <strong>Usage:</strong> {rightFormation.usage_count} plays
                   </Typography>
                   {rightFormation.description && (
-                    <Typography
-                      variant="caption"
-                      className="text-muted italic"
-                    >
+                    <Typography variant="caption" className="text-muted italic">
                       {rightFormation.description}
                     </Typography>
                   )}
@@ -454,16 +448,10 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
         {/* Personnel Packages Selection */}
         {(leftFormation || rightFormation) && availablePersonnel.length > 0 && (
           <div className="mt-lg p-md bg-secondary rounded-lg border border-primary">
-            <Typography
-              variant="headline-sm"
-              className="text-primary mb-sm"
-            >
+            <Typography variant="headline-sm" className="text-primary mb-sm">
               Personnel Packages
             </Typography>
-            <Typography
-              variant="caption"
-              className="text-secondary mb-md"
-            >
+            <Typography variant="caption" className="text-secondary mb-md">
               Select which personnel packages can be run from{" "}
               {isSameFormationName() ? "these formations" : "this formation"}:
             </Typography>

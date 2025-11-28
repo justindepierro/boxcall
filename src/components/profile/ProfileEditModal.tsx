@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Modal } from "../ui/Modal";
-import { useMobileModal } from '../../hooks/useMobileModal';
+import { useMobileModal } from "../../hooks/useMobileModal";
 import { Button } from "../ui";
 import { Typography } from "../design-system/Typography";
 import { ProfileFormSection, type FormValue } from "../forms/ProfileFormFields";
@@ -34,7 +34,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
   const config = getProfileConfigForRole(userRole);
   const navigate = useNavigate();
   const [formValues, setFormValues] = useState<Record<string, FormValue>>({});
-  const modalSize = useMobileModal('lg');
+  const modalSize = useMobileModal("lg");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);

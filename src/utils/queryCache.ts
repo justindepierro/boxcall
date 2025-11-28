@@ -24,7 +24,7 @@ class QueryCache {
   private readonly MAX_CACHE_SIZE = 100; // Maximum cache entries
 
   private generateKey(query: string, params?: any): string {
-    const paramStr = params ? JSON.stringify(params) : '';
+    const paramStr = params ? JSON.stringify(params) : "";
     return `${query}:${paramStr}`;
   }
 
@@ -114,7 +114,7 @@ export async function cachedQuery<T>(
     const cached = queryCache.get<T>(cacheKey);
     if (cached !== null) {
       if (import.meta.env.DEV) {
-        console.log('🚀 Cache hit for:', cacheKey);
+        console.log("🚀 Cache hit for:", cacheKey);
       }
       return cached;
     }
@@ -126,7 +126,7 @@ export async function cachedQuery<T>(
     queryCache.set(cacheKey, data, ttl);
 
     if (import.meta.env.DEV) {
-      console.log('📡 Fresh data for:', cacheKey);
+      console.log("📡 Fresh data for:", cacheKey);
     }
 
     return data;
@@ -134,7 +134,7 @@ export async function cachedQuery<T>(
     // On error, try to return stale data if available
     const stale = queryCache.get<T>(cacheKey);
     if (stale !== null) {
-      console.warn('⚠️ Returning stale data due to error:', error);
+      console.warn("⚠️ Returning stale data due to error:", error);
       return stale;
     }
     throw error;
@@ -147,10 +147,10 @@ export const invalidateCache = (pattern?: string) => {
 };
 
 // Invalidate specific query types
-export const invalidateTeamData = () => invalidateCache('teams');
-export const invalidateUserData = () => invalidateCache('users');
-export const invalidatePlayData = () => invalidateCache('plays');
-export const invalidateGamePlanData = () => invalidateCache('game_plans');
+export const invalidateTeamData = () => invalidateCache("teams");
+export const invalidateUserData = () => invalidateCache("users");
+export const invalidatePlayData = () => invalidateCache("plays");
+export const invalidateGamePlanData = () => invalidateCache("game_plans");
 
 // Cache statistics for monitoring
 export const getCacheStats = () => queryCache.getStats();

@@ -138,10 +138,7 @@ export const MobileLoadingStrategy: React.FC<LoadingStrategyProps> = ({
     if (!networkStatus.isOnline) {
       return (
         <div className="mt-4 p-3 bg-subtle rounded-lg">
-          <Typography
-            variant="body-sm"
-            className="text-warning text-center"
-          >
+          <Typography variant="body-sm" className="text-warning text-center">
             <Icon
               name="wifi-off"
               className="inline h-4 w-4 align-middle text-warning"

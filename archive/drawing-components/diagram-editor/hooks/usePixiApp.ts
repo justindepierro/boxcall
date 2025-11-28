@@ -5,7 +5,10 @@
  */
 
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
-import { ProfessionalPixiEngine, type ProfessionalEngineOptions } from "../core/ProfessionalPixiEngine";
+import {
+  ProfessionalPixiEngine,
+  type ProfessionalEngineOptions,
+} from "../core/ProfessionalPixiEngine";
 import { FieldLayer } from "../layers/FieldLayer";
 import { PlayersLayer } from "../layers/PlayersLayer";
 import { RoutesLayer } from "../layers/RoutesLayer";
@@ -177,7 +180,9 @@ export function usePixiApp(
 
       // Add timeout fallback - if canvas doesn't get dimensions within 5 seconds, use fallback
       const timeoutId = setTimeout(() => {
-        console.warn("⏰ Canvas size detection timeout - using fallback dimensions");
+        console.warn(
+          "⏰ Canvas size detection timeout - using fallback dimensions"
+        );
         clearInterval(pollInterval);
         setCanvasSize({ width: 800, height: 600 }); // Fallback dimensions
       }, 5000);
@@ -636,9 +641,9 @@ export function usePixiApp(
     routesLayer: routesLayerRef.current,
     debugCoordinates: () => {
       if (app?.coordinates) {
-        console.log('Field width:', app.coordinates.fieldWidth);
-        console.log('Field height:', app.coordinates.fieldHeight);
-        console.log('Pixels per yard:', app.coordinates.pixelsPerYard);
+        console.log("Field width:", app.coordinates.fieldWidth);
+        console.log("Field height:", app.coordinates.fieldHeight);
+        console.log("Pixels per yard:", app.coordinates.pixelsPerYard);
       }
     },
   };

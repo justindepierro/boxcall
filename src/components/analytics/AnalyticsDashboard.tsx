@@ -72,9 +72,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
   if (loading) {
     return (
-      <div
-        className={`flex items-center justify-center p-2xl ${className}`}
-      >
+      <div className={`flex items-center justify-center p-2xl ${className}`}>
         <div className="text-center">
           <Icon
             name="refresh-cw"
@@ -93,10 +91,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           name="alert-triangle"
           className="h-12 w-12 text-error mx-auto mb-md"
         />
-        <Typography
-          variant="headline-sm"
-          className="text-error mb-xs"
-        >
+        <Typography variant="headline-sm" className="text-error mb-xs">
           Analytics Error
         </Typography>
         <Typography variant="body-sm" className="text-error mb-md">
@@ -112,14 +107,8 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   if (!analytics || analytics.totalPlays === 0) {
     return (
       <div className={`p-2xl text-center ${className}`}>
-        <Icon
-          name="bar-chart"
-          className="h-12 w-12 text-muted mx-auto mb-md"
-        />
-        <Typography
-          variant="headline-sm"
-          className="text-secondary mb-xs"
-        >
+        <Icon name="bar-chart" className="h-12 w-12 text-muted mx-auto mb-md" />
+        <Typography variant="headline-sm" className="text-secondary mb-xs">
           No Analytics Data
         </Typography>
         <Typography variant="body-sm" className="text-secondary">
@@ -457,9 +446,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         <div className="space-y-xs text-sm">
           <div className="text-secondary">Trend analysis</div>
           <div className="flex items-baseline justify-between gap-md">
-            <span className="font-semibold text-primary">
-              Historical data
-            </span>
+            <span className="font-semibold text-primary">Historical data</span>
             <span className="text-secondary">Coming soon</span>
           </div>
           <div className="flex items-center justify-between text-xs text-secondary">
@@ -755,10 +742,7 @@ const FormationCard: React.FC<{ formation: FormationAnalytics }> = ({
     </div>
 
     <div className="mt-md">
-      <Typography
-        variant="body-xs"
-        className="text-secondary mb-xs"
-      >
+      <Typography variant="body-xs" className="text-secondary mb-xs">
         Personnel Usage
       </Typography>
       <div className="flex flex-wrap gap-xs">
@@ -917,10 +901,7 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
           {analytics.averageSuccessRate < 60 && (
             <div className="p-sm bg-warning/20 border border-text-warning rounded-lg">
               <Typography variant="body-sm" className="text-warning">
-                <Icon
-                  name="alert-triangle"
-                  className="h-4 w-4 inline mr-xs"
-                />
+                <Icon name="alert-triangle" className="h-4 w-4 inline mr-xs" />
                 Consider simplifying play calls - average success rate is below
                 60%.
               </Typography>
@@ -946,10 +927,7 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
             analytics.topPerformingPlays[0].successRate > 80 && (
               <div className="p-sm bg-success/20 border border-text-success rounded-lg">
                 <Typography variant="body-sm" className="text-success">
-                  <Icon
-                    name="check-circle"
-                    className="h-4 w-4 inline mr-xs"
-                  />
+                  <Icon name="check-circle" className="h-4 w-4 inline mr-xs" />
                   Excellent performance! Focus on replicating success patterns.
                 </Typography>
               </div>

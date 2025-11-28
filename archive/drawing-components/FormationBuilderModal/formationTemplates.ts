@@ -1,13 +1,17 @@
 /**
  * Formation Templates - Quick-start formations for coaches
- * 
+ *
  * Uses FieldConstants for consistent positioning.
  * TODO: Convert to use SmartPositioning engine for dynamic intelligence.
  */
 
 import type { Player } from "../diagram-editor/types/Player";
 import { v4 as uuidv4 } from "uuid";
-import { OL_POSITIONS, LOS_Y, CENTER_X } from "../diagram-editor/utils/FieldConstants";
+import {
+  OL_POSITIONS,
+  LOS_Y,
+  CENTER_X,
+} from "../diagram-editor/utils/FieldConstants";
 
 export interface FormationTemplate {
   id: string;
@@ -75,12 +79,54 @@ export const FORMATION_TEMPLATES: FormationTemplate[] = [
     personnel: "11",
     players: [
       ...createOLine(),
-      { x: 10, y: LOS_Y, jerseyNumber: "X", team: "offense", role: "WR", position: "regular" }, // X - far left
-      { x: 18, y: LOS_Y + 1, jerseyNumber: "Y", team: "offense", role: "WR", position: "regular" }, // Y - slot left
-      { x: 35, y: LOS_Y + 1, jerseyNumber: "Z", team: "offense", role: "WR", position: "regular" }, // Z - slot right
-      { x: 43, y: LOS_Y, jerseyNumber: "H", team: "offense", role: "WR", position: "regular" }, // H - far right
-      { x: 31, y: LOS_Y + 6, jerseyNumber: "RB", team: "offense", role: "RB", position: "regular" }, // RB offset
-      { x: CENTER_X, y: LOS_Y + 8, jerseyNumber: "QB", team: "offense", role: "QB", position: "regular" }, // QB shotgun
+      {
+        x: 10,
+        y: LOS_Y,
+        jerseyNumber: "X",
+        team: "offense",
+        role: "WR",
+        position: "regular",
+      }, // X - far left
+      {
+        x: 18,
+        y: LOS_Y + 1,
+        jerseyNumber: "Y",
+        team: "offense",
+        role: "WR",
+        position: "regular",
+      }, // Y - slot left
+      {
+        x: 35,
+        y: LOS_Y + 1,
+        jerseyNumber: "Z",
+        team: "offense",
+        role: "WR",
+        position: "regular",
+      }, // Z - slot right
+      {
+        x: 43,
+        y: LOS_Y,
+        jerseyNumber: "H",
+        team: "offense",
+        role: "WR",
+        position: "regular",
+      }, // H - far right
+      {
+        x: 31,
+        y: LOS_Y + 6,
+        jerseyNumber: "RB",
+        team: "offense",
+        role: "RB",
+        position: "regular",
+      }, // RB offset
+      {
+        x: CENTER_X,
+        y: LOS_Y + 8,
+        jerseyNumber: "QB",
+        team: "offense",
+        role: "QB",
+        position: "regular",
+      }, // QB shotgun
     ],
   },
   {
@@ -90,12 +136,54 @@ export const FORMATION_TEMPLATES: FormationTemplate[] = [
     personnel: "12",
     players: [
       ...createOLine(),
-      { x: 10, y: LOS_Y, jerseyNumber: "X", team: "offense", role: "WR", position: "regular" }, // X - left
-      { x: 43, y: LOS_Y, jerseyNumber: "Z", team: "offense", role: "WR", position: "regular" }, // Z - right
-      { x: 21, y: LOS_Y, jerseyNumber: "TE", team: "offense", role: "TE", position: "regular" }, // TE on line
-      { x: CENTER_X, y: LOS_Y + 4, jerseyNumber: "QB", team: "offense", role: "QB", position: "regular" }, // QB under center
-      { x: CENTER_X, y: LOS_Y + 7, jerseyNumber: "FB", team: "offense", role: "FB", position: "regular" }, // FB
-      { x: CENTER_X, y: LOS_Y + 10, jerseyNumber: "RB", team: "offense", role: "RB", position: "regular" }, // RB deep
+      {
+        x: 10,
+        y: LOS_Y,
+        jerseyNumber: "X",
+        team: "offense",
+        role: "WR",
+        position: "regular",
+      }, // X - left
+      {
+        x: 43,
+        y: LOS_Y,
+        jerseyNumber: "Z",
+        team: "offense",
+        role: "WR",
+        position: "regular",
+      }, // Z - right
+      {
+        x: 21,
+        y: LOS_Y,
+        jerseyNumber: "TE",
+        team: "offense",
+        role: "TE",
+        position: "regular",
+      }, // TE on line
+      {
+        x: CENTER_X,
+        y: LOS_Y + 4,
+        jerseyNumber: "QB",
+        team: "offense",
+        role: "QB",
+        position: "regular",
+      }, // QB under center
+      {
+        x: CENTER_X,
+        y: LOS_Y + 7,
+        jerseyNumber: "FB",
+        team: "offense",
+        role: "FB",
+        position: "regular",
+      }, // FB
+      {
+        x: CENTER_X,
+        y: LOS_Y + 10,
+        jerseyNumber: "RB",
+        team: "offense",
+        role: "RB",
+        position: "regular",
+      }, // RB deep
     ],
   },
   {
@@ -105,12 +193,54 @@ export const FORMATION_TEMPLATES: FormationTemplate[] = [
     personnel: "10",
     players: [
       ...createOLine(),
-      { x: 10, y: LOS_Y, jerseyNumber: "X", team: "offense", role: "WR", position: "regular" },
-      { x: 15, y: LOS_Y + 1, jerseyNumber: "Y", team: "offense", role: "WR", position: "regular" },
-      { x: CENTER_X, y: LOS_Y + 8, jerseyNumber: "QB", team: "offense", role: "QB", position: "regular" },
-      { x: 38, y: LOS_Y + 1, jerseyNumber: "H", team: "offense", role: "WR", position: "regular" },
-      { x: 43, y: LOS_Y, jerseyNumber: "Z", team: "offense", role: "WR", position: "regular" },
-      { x: 35, y: LOS_Y, jerseyNumber: "TE", team: "offense", role: "TE", position: "regular" },
+      {
+        x: 10,
+        y: LOS_Y,
+        jerseyNumber: "X",
+        team: "offense",
+        role: "WR",
+        position: "regular",
+      },
+      {
+        x: 15,
+        y: LOS_Y + 1,
+        jerseyNumber: "Y",
+        team: "offense",
+        role: "WR",
+        position: "regular",
+      },
+      {
+        x: CENTER_X,
+        y: LOS_Y + 8,
+        jerseyNumber: "QB",
+        team: "offense",
+        role: "QB",
+        position: "regular",
+      },
+      {
+        x: 38,
+        y: LOS_Y + 1,
+        jerseyNumber: "H",
+        team: "offense",
+        role: "WR",
+        position: "regular",
+      },
+      {
+        x: 43,
+        y: LOS_Y,
+        jerseyNumber: "Z",
+        team: "offense",
+        role: "WR",
+        position: "regular",
+      },
+      {
+        x: 35,
+        y: LOS_Y,
+        jerseyNumber: "TE",
+        team: "offense",
+        role: "TE",
+        position: "regular",
+      },
     ],
   },
   {
@@ -120,12 +250,54 @@ export const FORMATION_TEMPLATES: FormationTemplate[] = [
     personnel: "11",
     players: [
       ...createOLine(),
-      { x: 10, y: LOS_Y, jerseyNumber: "X", team: "offense", role: "WR", position: "regular" }, // X - left alone
-      { x: 38, y: LOS_Y + 1, jerseyNumber: "Y", team: "offense", role: "WR", position: "regular" }, // Y - slot right
-      { x: 43, y: LOS_Y, jerseyNumber: "Z", team: "offense", role: "WR", position: "regular" }, // Z - right
-      { x: 21, y: LOS_Y, jerseyNumber: "TE", team: "offense", role: "TE", position: "regular" }, // TE left
-      { x: 31, y: LOS_Y + 6, jerseyNumber: "RB", team: "offense", role: "RB", position: "regular" }, // RB offset
-      { x: CENTER_X, y: LOS_Y + 8, jerseyNumber: "QB", team: "offense", role: "QB", position: "regular" }, // QB shotgun
+      {
+        x: 10,
+        y: LOS_Y,
+        jerseyNumber: "X",
+        team: "offense",
+        role: "WR",
+        position: "regular",
+      }, // X - left alone
+      {
+        x: 38,
+        y: LOS_Y + 1,
+        jerseyNumber: "Y",
+        team: "offense",
+        role: "WR",
+        position: "regular",
+      }, // Y - slot right
+      {
+        x: 43,
+        y: LOS_Y,
+        jerseyNumber: "Z",
+        team: "offense",
+        role: "WR",
+        position: "regular",
+      }, // Z - right
+      {
+        x: 21,
+        y: LOS_Y,
+        jerseyNumber: "TE",
+        team: "offense",
+        role: "TE",
+        position: "regular",
+      }, // TE left
+      {
+        x: 31,
+        y: LOS_Y + 6,
+        jerseyNumber: "RB",
+        team: "offense",
+        role: "RB",
+        position: "regular",
+      }, // RB offset
+      {
+        x: CENTER_X,
+        y: LOS_Y + 8,
+        jerseyNumber: "QB",
+        team: "offense",
+        role: "QB",
+        position: "regular",
+      }, // QB shotgun
     ],
   },
   {
@@ -135,12 +307,54 @@ export const FORMATION_TEMPLATES: FormationTemplate[] = [
     personnel: "10",
     players: [
       ...createOLine(),
-      { x: 10, y: LOS_Y, jerseyNumber: "X", team: "offense", role: "WR", position: "regular" }, // X - far left
-      { x: 15, y: LOS_Y + 1, jerseyNumber: "Y", team: "offense", role: "WR", position: "regular" }, // Y - slot
-      { x: 18, y: LOS_Y, jerseyNumber: "H", team: "offense", role: "WR", position: "regular" }, // H - inside
-      { x: 43, y: LOS_Y, jerseyNumber: "Z", team: "offense", role: "WR", position: "regular" }, // Z - right alone
-      { x: 31, y: LOS_Y + 6, jerseyNumber: "RB", team: "offense", role: "RB", position: "regular" }, // RB offset
-      { x: CENTER_X, y: LOS_Y + 8, jerseyNumber: "QB", team: "offense", role: "QB", position: "regular" }, // QB shotgun
+      {
+        x: 10,
+        y: LOS_Y,
+        jerseyNumber: "X",
+        team: "offense",
+        role: "WR",
+        position: "regular",
+      }, // X - far left
+      {
+        x: 15,
+        y: LOS_Y + 1,
+        jerseyNumber: "Y",
+        team: "offense",
+        role: "WR",
+        position: "regular",
+      }, // Y - slot
+      {
+        x: 18,
+        y: LOS_Y,
+        jerseyNumber: "H",
+        team: "offense",
+        role: "WR",
+        position: "regular",
+      }, // H - inside
+      {
+        x: 43,
+        y: LOS_Y,
+        jerseyNumber: "Z",
+        team: "offense",
+        role: "WR",
+        position: "regular",
+      }, // Z - right alone
+      {
+        x: 31,
+        y: LOS_Y + 6,
+        jerseyNumber: "RB",
+        team: "offense",
+        role: "RB",
+        position: "regular",
+      }, // RB offset
+      {
+        x: CENTER_X,
+        y: LOS_Y + 8,
+        jerseyNumber: "QB",
+        team: "offense",
+        role: "QB",
+        position: "regular",
+      }, // QB shotgun
     ],
   },
   {
@@ -150,12 +364,54 @@ export const FORMATION_TEMPLATES: FormationTemplate[] = [
     personnel: "21",
     players: [
       ...createOLine(),
-      { x: 10, y: LOS_Y, jerseyNumber: "X", team: "offense", role: "WR", position: "regular" },
-      { x: 43, y: LOS_Y, jerseyNumber: "Z", team: "offense", role: "WR", position: "regular" },
-      { x: 21, y: LOS_Y, jerseyNumber: "TE", team: "offense", role: "TE", position: "regular" },
-      { x: CENTER_X, y: LOS_Y + 4, jerseyNumber: "QB", team: "offense", role: "QB", position: "regular" },
-      { x: 22, y: LOS_Y + 7, jerseyNumber: "RB1", team: "offense", role: "RB", position: "regular" },
-      { x: 31, y: LOS_Y + 7, jerseyNumber: "RB2", team: "offense", role: "RB", position: "regular" },
+      {
+        x: 10,
+        y: LOS_Y,
+        jerseyNumber: "X",
+        team: "offense",
+        role: "WR",
+        position: "regular",
+      },
+      {
+        x: 43,
+        y: LOS_Y,
+        jerseyNumber: "Z",
+        team: "offense",
+        role: "WR",
+        position: "regular",
+      },
+      {
+        x: 21,
+        y: LOS_Y,
+        jerseyNumber: "TE",
+        team: "offense",
+        role: "TE",
+        position: "regular",
+      },
+      {
+        x: CENTER_X,
+        y: LOS_Y + 4,
+        jerseyNumber: "QB",
+        team: "offense",
+        role: "QB",
+        position: "regular",
+      },
+      {
+        x: 22,
+        y: LOS_Y + 7,
+        jerseyNumber: "RB1",
+        team: "offense",
+        role: "RB",
+        position: "regular",
+      },
+      {
+        x: 31,
+        y: LOS_Y + 7,
+        jerseyNumber: "RB2",
+        team: "offense",
+        role: "RB",
+        position: "regular",
+      },
     ],
   },
 ];

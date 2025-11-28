@@ -78,9 +78,7 @@ export const PlayRemoteSearchBar: React.FC<PlayRemoteSearchBarProps> = ({
               </div>
             )}
             {!error && !loading && results.length === 0 && (
-              <div className="px-3 py-2 text-xsssss text-muted">
-                No matches
-              </div>
+              <div className="px-3 py-2 text-xsssss text-muted">No matches</div>
             )}
             {!error &&
               results.map((r) => (

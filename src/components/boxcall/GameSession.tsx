@@ -463,10 +463,7 @@ const GameSession: React.FC = () => {
                   {/* Opponent Coverage - Phase 13.2 */}
                   <div>
                     <label className="block mb-2">
-                      <Typography
-                        variant="body-sm"
-                        className="text-secondary"
-                      >
+                      <Typography variant="body-sm" className="text-secondary">
                         Opponent Coverage
                       </Typography>
                     </label>
@@ -502,10 +499,7 @@ const GameSession: React.FC = () => {
                   {/* Quick Tags - Phase 12.1 */}
                   <div>
                     <label className="block mb-2">
-                      <Typography
-                        variant="body-sm"
-                        className="text-secondary"
-                      >
+                      <Typography variant="body-sm" className="text-secondary">
                         Quick Tags (Optional)
                       </Typography>
                     </label>
@@ -554,10 +548,7 @@ const GameSession: React.FC = () => {
                   {/* Notes */}
                   <div>
                     <label className="block mb-2">
-                      <Typography
-                        variant="body-sm"
-                        className="text-secondary"
-                      >
+                      <Typography variant="body-sm" className="text-secondary">
                         Notes (Optional)
                       </Typography>
                     </label>

@@ -169,12 +169,9 @@ describe("diagramHelpers", () => {
     });
 
     it("includes play type when provided", () => {
-      const updates = createDiagramUpdates(
-        "Power",
-        "I-Form",
-        mockDiagramDoc,
-        { playType: "Run" }
-      );
+      const updates = createDiagramUpdates("Power", "I-Form", mockDiagramDoc, {
+        playType: "Run",
+      });
 
       expect(updates).toMatchObject({
         play_name: "Power",

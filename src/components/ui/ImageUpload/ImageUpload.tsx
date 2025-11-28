@@ -296,11 +296,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             </div>
           ) : (
             <div className="space-y-sm">
-              <Icon
-                name="camera"
-                size="lg"
-                className="text-tertiary mx-auto"
-              />
+              <Icon name="camera" size="lg" className="text-tertiary mx-auto" />
               <p className="text-sm text-primary font-medium">
                 {uploadButtonText}
               </p>

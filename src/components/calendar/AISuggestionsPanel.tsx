@@ -97,10 +97,7 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({
             size="sm"
             className="text-navy-600"
           />
-          <Typography
-            variant="body-sm"
-            className="font-medium text-primary"
-          >
+          <Typography variant="body-sm" className="font-medium text-primary">
             {suggestion.title}
           </Typography>
         </div>
@@ -135,10 +132,7 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({
 
       {suggestion.conflicts.length > 0 && (
         <div className="mb-3">
-          <Typography
-            variant="caption"
-            className="text-error font-medium mb-1"
-          >
+          <Typography variant="caption" className="text-error font-medium mb-1">
             ⚠️ Potential conflicts:
           </Typography>
           <ul className="ml-2">

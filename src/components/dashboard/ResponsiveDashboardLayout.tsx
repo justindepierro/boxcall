@@ -130,9 +130,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
           <div className="space-y-2 text-sm">
             <div className="flex items-center justify-between text-secondary">
               <span>Upcoming</span>
-              <span className="font-semibold text-primary">
-                Stay sharp
-              </span>
+              <span className="font-semibold text-primary">Stay sharp</span>
             </div>
             <div className="flex items-center justify-between text-xs text-secondary">
               <span>Sync status</span>
@@ -268,10 +266,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
                 Welcome back,{" "}
                 {profile?.display_name || profile?.full_name || "Coach"}
               </Typography>
-              <Typography
-                variant="body-sm"
-                className="text-secondary mt-1"
-              >
+              <Typography variant="body-sm" className="text-secondary mt-1">
                 Launch the workspace you need and keep your day moving.
               </Typography>
             </div>

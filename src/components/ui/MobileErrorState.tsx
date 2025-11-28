@@ -113,10 +113,7 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
             <Icon name={IconName} size="sm" className={config.color} />
           </div>
           <div>
-            <Typography
-              variant="body-sm"
-              className="text-primary font-medium"
-            >
+            <Typography variant="body-sm" className="text-primary font-medium">
               {title || config.defaultTitle}
             </Typography>
             <Typography variant="caption" className="text-muted">
@@ -153,10 +150,7 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
         <Typography variant="headline-md" className="text-primary mb-2">
           {title || config.defaultTitle}
         </Typography>
-        <Typography
-          variant="body-md"
-          className="text-secondary content-narrow"
-        >
+        <Typography variant="body-md" className="text-secondary content-narrow">
           {message || config.defaultMessage}
         </Typography>
       </div>

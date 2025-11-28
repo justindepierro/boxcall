@@ -93,7 +93,7 @@ export interface PracticeSession extends BaseSession {
       // Phase 3: Include diagram data for live session display
       diagramData?: {
         id: string;
-        type: 'play' | 'formation' | 'template';
+        type: "play" | "formation" | "template";
         pixiData: any; // DiagramDocument
         metadata: any;
       };
@@ -170,7 +170,7 @@ export interface PlayExecution {
   // Diagram data reference (Phase 3: Live Session Integration)
   diagramData?: {
     id: string;
-    type: 'play' | 'formation' | 'template';
+    type: "play" | "formation" | "template";
     version: number;
   };
 

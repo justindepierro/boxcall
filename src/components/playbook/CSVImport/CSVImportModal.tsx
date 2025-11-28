@@ -205,10 +205,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           </div>
         ) : (
           <div className="space-y-md">
-            <Icon
-              name="upload"
-              className="h-12 w-12 text-secondary mx-auto"
-            />
+            <Icon name="upload" className="h-12 w-12 text-secondary mx-auto" />
             <div>
               <p className="text-secondary">
                 Drag and drop your CSV file here, or{" "}
@@ -258,10 +255,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       {csvFile && (
         <div className="bg-subtle border border-muted rounded-lg p-md">
           <div className="flex items-center">
-            <Icon
-              name="check-circle"
-              className="h-5 w-5 text-success mr-sm"
-            />
+            <Icon name="check-circle" className="h-5 w-5 text-success mr-sm" />
             <div>
               <Typography
                 variant="body-sm"
@@ -294,10 +288,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
     if (!parseResult) {
       return (
         <div className="text-center py-2xl">
-          <Icon
-            name="error"
-            className="h-12 w-12 text-error mx-auto mb-md"
-          />
+          <Icon name="error" className="h-12 w-12 text-error mx-auto mb-md" />
           <p className="text-secondary">No data to preview</p>
         </div>
       );
@@ -485,10 +476,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                               className="h-4 w-4 text-success"
                             />
                           ) : (
-                            <Icon
-                              name="error"
-                              className="h-4 w-4 text-error"
-                            />
+                            <Icon name="error" className="h-4 w-4 text-error" />
                           )}
                           {preview.warnings.length > 0 && (
                             <Icon
@@ -526,29 +514,62 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                         <td colSpan={7} className="px-sm py-md">
                           <CSVValidationRowEditor
                             preview={preview}
-                            existingFormations={parseResult?.existingPlays.map(p => p.formation).filter((f): f is string => !!f) || []}
-                            existingPlayNames={parseResult?.existingPlays.map(p => p.play_name).filter((n): n is string => !!n) || []}
-                            existingPersonnel={parseResult?.existingPlays.map(p => p.personnel).filter((p): p is string => !!p) || []}
+                            existingFormations={
+                              parseResult?.existingPlays
+                                .map((p) => p.formation)
+                                .filter((f): f is string => !!f) || []
+                            }
+                            existingPlayNames={
+                              parseResult?.existingPlays
+                                .map((p) => p.play_name)
+                                .filter((n): n is string => !!n) || []
+                            }
+                            existingPersonnel={
+                              parseResult?.existingPlays
+                                .map((p) => p.personnel)
+                                .filter((p): p is string => !!p) || []
+                            }
                             onUpdate={(rowNumber, field, value) => {
                               // Update preview data
                               if (parseResult) {
-                                const updatedPreviews = parseResult.previews.map(p =>
-                                  p.rowNumber === rowNumber
-                                    ? { ...p, data: { ...p.data, [field]: value } }
-                                    : p
-                                );
-                                setParseResult({ ...parseResult, previews: updatedPreviews });
+                                const updatedPreviews =
+                                  parseResult.previews.map((p) =>
+                                    p.rowNumber === rowNumber
+                                      ? {
+                                          ...p,
+                                          data: { ...p.data, [field]: value },
+                                        }
+                                      : p
+                                  );
+                                setParseResult({
+                                  ...parseResult,
+                                  previews: updatedPreviews,
+                                });
                               }
                             }}
-                            onAcceptSuggestion={(rowNumber, field, suggestedValue) => {
+                            onAcceptSuggestion={(
+                              rowNumber,
+                              field,
+                              suggestedValue
+                            ) => {
                               // Apply suggested correction
                               if (parseResult) {
-                                const updatedPreviews = parseResult.previews.map(p =>
-                                  p.rowNumber === rowNumber
-                                    ? { ...p, data: { ...p.data, [field]: suggestedValue } }
-                                    : p
-                                );
-                                setParseResult({ ...parseResult, previews: updatedPreviews });
+                                const updatedPreviews =
+                                  parseResult.previews.map((p) =>
+                                    p.rowNumber === rowNumber
+                                      ? {
+                                          ...p,
+                                          data: {
+                                            ...p.data,
+                                            [field]: suggestedValue,
+                                          },
+                                        }
+                                      : p
+                                  );
+                                setParseResult({
+                                  ...parseResult,
+                                  previews: updatedPreviews,
+                                });
                               }
                             }}
                           />
@@ -630,10 +651,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           </>
         ) : (
           <>
-            <Icon
-              name="error"
-              className="h-16 w-16 text-error mx-auto mb-md"
-            />
+            <Icon name="error" className="h-16 w-16 text-error mx-auto mb-md" />
             <Typography
               variant="headline-sm"
               as="h3"
@@ -784,11 +802,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         />
         <div className="inline-block align-bottom bg-primary elevation-modal rounded-lg shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
           <div className="bg-subtle px-lg py-md divider-b flex items-center justify-between">
-            <Typography
-              variant="headline-sm"
-              as="h2"
-              className="text-primary"
-            >
+            <Typography variant="headline-sm" as="h2" className="text-primary">
               CSV Import
             </Typography>
             <Button
@@ -800,9 +814,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
               aria-label="Close modal"
             />
           </div>
-          <div className="bg-primary px-lg py-2xl">
-            {renderStep()}
-          </div>
+          <div className="bg-primary px-lg py-2xl">{renderStep()}</div>
         </div>
       </div>
     </div>

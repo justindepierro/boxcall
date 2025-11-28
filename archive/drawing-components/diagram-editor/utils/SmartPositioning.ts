@@ -1,6 +1,6 @@
 /**
  * Smart Positioning Engine - Intelligent player placement system
- * 
+ *
  * Provides formation-aware positioning logic that considers:
  * - Existing players on field
  * - Formation legality (7 on LOS, eligible receivers)
@@ -373,9 +373,7 @@ export interface FormationLegality {
   warnings: string[];
 }
 
-export function checkFormationLegality(
-  players: Player[]
-): FormationLegality {
+export function checkFormationLegality(players: Player[]): FormationLegality {
   const playersOnLOS = players.filter((p) => isOnLOS(p.y)).length;
   const totalPlayers = players.length;
 
@@ -394,7 +392,9 @@ export function checkFormationLegality(
 
   // Check if exactly 7 on LOS (more is legal but unusual)
   if (playersOnLOS > 7) {
-    warnings.push(`${playersOnLOS} players on LOS (7 is standard, more is legal but unusual)`);
+    warnings.push(
+      `${playersOnLOS} players on LOS (7 is standard, more is legal but unusual)`
+    );
   }
 
   // Check eligible receivers (should have at least 5)
@@ -402,7 +402,9 @@ export function checkFormationLegality(
     (p) => p.role && ["QB", "RB", "FB", "WR", "TE"].includes(p.role)
   );
   if (eligibleReceivers.length < 5) {
-    warnings.push(`Only ${eligibleReceivers.length} eligible receivers (5 is standard)`);
+    warnings.push(
+      `Only ${eligibleReceivers.length} eligible receivers (5 is standard)`
+    );
   }
 
   return {

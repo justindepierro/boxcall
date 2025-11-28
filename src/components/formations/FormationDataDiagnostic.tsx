@@ -321,10 +321,7 @@ export const FormationDataDiagnostic: React.FC<{ playbookId?: string }> = ({
           {/* Priority Breakdown */}
           {stats.needingAttention > 0 && (
             <div>
-              <Typography
-                variant="body-sm"
-                className="font-medium mb-xs"
-              >
+              <Typography variant="body-sm" className="font-medium mb-xs">
                 🚨 Formations Needing Opposites
               </Typography>
               <div className="grid grid-cols-3 gap-xs">

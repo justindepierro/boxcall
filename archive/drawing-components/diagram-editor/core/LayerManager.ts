@@ -20,11 +20,21 @@ export class LayerManager {
 
   // Standard layer ordering (lower z-index renders first)
   private static readonly LAYER_ORDER = {
-    field: { zIndex: 0, visible: true, interactive: false, name: 'field' },
-    alignmentGuides: { zIndex: 1, visible: true, interactive: false, name: 'alignment' },
-    spacingIndicators: { zIndex: 2, visible: true, interactive: false, name: 'spacing' },
-    routes: { zIndex: 3, visible: true, interactive: true, name: 'routes' },
-    players: { zIndex: 4, visible: true, interactive: true, name: 'players' },
+    field: { zIndex: 0, visible: true, interactive: false, name: "field" },
+    alignmentGuides: {
+      zIndex: 1,
+      visible: true,
+      interactive: false,
+      name: "alignment",
+    },
+    spacingIndicators: {
+      zIndex: 2,
+      visible: true,
+      interactive: false,
+      name: "spacing",
+    },
+    routes: { zIndex: 3, visible: true, interactive: true, name: "routes" },
+    players: { zIndex: 4, visible: true, interactive: true, name: "players" },
   };
 
   constructor(stage: Container) {
@@ -63,7 +73,9 @@ export class LayerManager {
    * Add a layer to the stage
    */
   addLayer(key: string, layer: Container, config?: Partial<LayerConfig>): void {
-    const defaultConfig = LayerManager.LAYER_ORDER[key as keyof typeof LayerManager.LAYER_ORDER] || {
+    const defaultConfig = LayerManager.LAYER_ORDER[
+      key as keyof typeof LayerManager.LAYER_ORDER
+    ] || {
       zIndex: 999,
       visible: true,
       interactive: false,
@@ -172,34 +184,34 @@ export class LayerManager {
    * Get the field layer
    */
   get fieldLayer(): Container | undefined {
-    return this.getLayer('field');
+    return this.getLayer("field");
   }
 
   /**
    * Get the players layer
    */
   get playersLayer(): Container | undefined {
-    return this.getLayer('players');
+    return this.getLayer("players");
   }
 
   /**
    * Get the routes layer
    */
   get routesLayer(): Container | undefined {
-    return this.getLayer('routes');
+    return this.getLayer("routes");
   }
 
   /**
    * Get the spacing indicators layer
    */
   get spacingLayer(): Container | undefined {
-    return this.getLayer('spacingIndicators');
+    return this.getLayer("spacingIndicators");
   }
 
   /**
    * Get the alignment guides layer
    */
   get alignmentLayer(): Container | undefined {
-    return this.getLayer('alignmentGuides');
+    return this.getLayer("alignmentGuides");
   }
 }

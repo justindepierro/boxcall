@@ -129,9 +129,7 @@ export const CollaborativePersonalProfile: React.FC<
               Personal Profile
             </Typography>
             {isEditable && (
-              <div className="text-xs text-muted">
-                ✏️ Collaborative editing
-              </div>
+              <div className="text-xs text-muted">✏️ Collaborative editing</div>
             )}
           </div>
 

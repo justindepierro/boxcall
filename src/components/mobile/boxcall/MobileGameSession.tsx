@@ -149,10 +149,7 @@ export const MobileGameSession: React.FC = () => {
         <div className="flex-1 overflow-auto p-4 space-y-4">
           {gamePlan.opponent && (
             <div className="bg-secondary rounded-lg p-4">
-              <Typography
-                variant="body-sm"
-                className="text-secondary mb-1"
-              >
+              <Typography variant="body-sm" className="text-secondary mb-1">
                 Opponent
               </Typography>
               <Typography variant="headline-sm" className="text-primary">
@@ -162,10 +159,7 @@ export const MobileGameSession: React.FC = () => {
           )}
 
           <div className="bg-secondary rounded-lg p-4">
-            <Typography
-              variant="headline-sm"
-              className="mb-3 text-primary"
-            >
+            <Typography variant="headline-sm" className="mb-3 text-primary">
               Game Day Features
             </Typography>
             <ul className="space-y-2">
@@ -303,10 +297,7 @@ export const MobileGameSession: React.FC = () => {
             {/* Manual Adjustment */}
             <div className="grid grid-cols-3 gap-2">
               <div>
-                <Typography
-                  variant="body-xs"
-                  className="text-secondary mb-1"
-                >
+                <Typography variant="body-xs" className="text-secondary mb-1">
                   Down
                 </Typography>
                 <div className="flex gap-1">
@@ -326,10 +317,7 @@ export const MobileGameSession: React.FC = () => {
                 </div>
               </div>
               <div>
-                <Typography
-                  variant="body-xs"
-                  className="text-secondary mb-1"
-                >
+                <Typography variant="body-xs" className="text-secondary mb-1">
                   Distance
                 </Typography>
                 <select
@@ -347,10 +335,7 @@ export const MobileGameSession: React.FC = () => {
                 </select>
               </div>
               <div>
-                <Typography
-                  variant="body-xs"
-                  className="text-secondary mb-1"
-                >
+                <Typography variant="body-xs" className="text-secondary mb-1">
                   Yard Line
                 </Typography>
                 <input
@@ -376,10 +361,7 @@ export const MobileGameSession: React.FC = () => {
         {currentPlay ? (
           <div className="space-y-3">
             <div className="bg-secondary rounded-lg p-4">
-              <Typography
-                variant="headline-md"
-                className="text-primary mb-2"
-              >
+              <Typography variant="headline-md" className="text-primary mb-2">
                 {currentPlay.play?.name || "Select Play"}
               </Typography>
               {currentPlay.play?.formation_name && (
@@ -415,10 +397,7 @@ export const MobileGameSession: React.FC = () => {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <Icon
-              name="target"
-              className="h-12 w-12 text-secondary mb-3"
-            />
+            <Icon name="target" className="h-12 w-12 text-secondary mb-3" />
             <Typography variant="body-md" className="text-secondary">
               Select a play from your game plan
             </Typography>

@@ -136,11 +136,7 @@ export const WeeklyChallengePopover: React.FC<WeeklyChallengePopoverProps> = ({
 
                     {/* Reward */}
                     <div className="mt-2 flex items-center gap-1">
-                      <Icon
-                        name="trophy"
-                        size="xs"
-                        className="text-warning"
-                      />
+                      <Icon name="trophy" size="xs" className="text-warning" />
                       <span className="text-xs text-secondary">
                         Reward: {challenge.reward}
                       </span>

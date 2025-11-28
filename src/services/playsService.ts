@@ -396,7 +396,7 @@ export class PlaysService {
         throw new Error(`Failed to fetch plays: ${error.message}`);
       }
 
-      return ((data || []) as unknown) as Play[];
+      return (data || []) as unknown as Play[];
     } catch (error) {
       console.error("❌ PlaysService.getPlaysByIds failed:", error);
       throw error;

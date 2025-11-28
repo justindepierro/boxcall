@@ -25,35 +25,35 @@ export async function saveDiagram(
     const diagramData = {
       version: 1,
       players,
-      lastModified: new Date().toISOString()
+      lastModified: new Date().toISOString(),
     };
 
     const { data, error } = await supabase
-      .from('plays')
+      .from("plays")
       .update({
         diagram_data: diagramData as any,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
-      .eq('id', play.id)
-      .eq('team_id', teamId)
+      .eq("id", play.id)
+      .eq("team_id", teamId)
       .select()
       .single();
 
     if (error) {
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
 
     return {
       success: true,
-      play: data
+      play: data,
     };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }

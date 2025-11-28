@@ -262,10 +262,7 @@ export const CreateOppositeFormationModal: React.FC<
         {success && (
           <div className="bg-success/20 border border-success rounded-md p-lg text-center">
             <div className="text-4xl mb-2">✅</div>
-            <Typography
-              variant="body"
-              className="text-success font-semibold"
-            >
+            <Typography variant="body" className="text-success font-semibold">
               Success! Formation created
             </Typography>
           </div>
@@ -433,10 +430,7 @@ export const CreateOppositeFormationModal: React.FC<
             </div>
 
             {/* Help text */}
-            <Typography
-              variant="body-xs"
-              className="text-muted text-center"
-            >
+            <Typography variant="body-xs" className="text-muted text-center">
               You can always create or link formations later from the Formation
               Manager.
             </Typography>

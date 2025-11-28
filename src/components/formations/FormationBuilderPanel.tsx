@@ -697,10 +697,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                 <div className="absolute inset-0 bg-primary/70 backdrop-blur-sm z-50 flex items-center justify-center rounded-lg">
                   <div className="bg-primary border border-primary rounded-lg p-lg shadow-lg flex flex-col items-center gap-md">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
-                    <Typography
-                      variant="body-sm"
-                      className="text-secondary"
-                    >
+                    <Typography variant="body-sm" className="text-secondary">
                       Loading formations...
                     </Typography>
                   </div>
@@ -710,10 +707,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
               {/* Header - Conditional based on showHeader prop */}
               {showHeader && (
                 <div className="flex items-center justify-between">
-                  <Typography
-                    variant="headline-md"
-                    className="text-primary"
-                  >
+                  <Typography variant="headline-md" className="text-primary">
                     Formation Manager
                   </Typography>
                   {activeTab === "details" && (
@@ -848,10 +842,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                       </div>
                     ) : visibleFormations.length === 0 ? (
                       <div className="p-md bg-muted rounded border border-secondary text-center">
-                        <Typography
-                          variant="body-sm"
-                          className="text-muted"
-                        >
+                        <Typography variant="body-sm" className="text-muted">
                           No formations found. Create formations by adding plays
                           with formation names first.
                         </Typography>
@@ -969,10 +960,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                           >
                             Create New Formation
                           </Typography>
-                          <Typography
-                            variant="body-sm"
-                            className="text-muted"
-                          >
+                          <Typography variant="body-sm" className="text-muted">
                             Enter formation details to create a new formation.
                             You can add player positions on the "Draw Formation"
                             tab.

@@ -320,10 +320,7 @@ export function SignupForm({
       {/* Error Message */}
       {error && (
         <div className="p-3 bg-subtle dark:bg-surface-error/20 rounded-lg">
-          <Typography
-            variant="body-sm"
-            className="text-error dark:text-error"
-          >
+          <Typography variant="body-sm" className="text-error dark:text-error">
             {error}
           </Typography>
         </div>
@@ -447,26 +444,17 @@ export function SignupForm({
             className="ml-2 block text-sm text-primary dark:text-border-light"
           >
             I agree to the{" "}
-            <a
-              href="/terms"
-              className="text-primary hover:text-secondary"
-            >
+            <a href="/terms" className="text-primary hover:text-secondary">
               Terms of Service
             </a>{" "}
             and{" "}
-            <a
-              href="/privacy"
-              className="text-primary hover:text-secondary"
-            >
+            <a href="/privacy" className="text-primary hover:text-secondary">
               Privacy Policy
             </a>
           </label>
         </div>
         {validationErrors.acceptTerms && (
-          <Typography
-            variant="caption"
-            className="text-error dark:text-error"
-          >
+          <Typography variant="caption" className="text-error dark:text-error">
             {validationErrors.acceptTerms}
           </Typography>
         )}
@@ -566,10 +554,7 @@ export function ResetPasswordForm({
       {/* Error Message */}
       {error && (
         <div className="p-3 bg-subtle dark:bg-surface-error/20 rounded-lg">
-          <Typography
-            variant="body-sm"
-            className="text-error dark:text-error"
-          >
+          <Typography variant="body-sm" className="text-error dark:text-error">
             {error}
           </Typography>
         </div>

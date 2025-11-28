@@ -305,10 +305,7 @@ export const CreateOppositeFormationModal: React.FC<
 
         {/* Side-by-side preview with better labels */}
         <div>
-          <Typography
-            variant="label-md"
-            className="text-secondary mb-sm"
-          >
+          <Typography variant="label-md" className="text-secondary mb-sm">
             Preview: Side-by-Side Comparison
           </Typography>
           <div className="grid grid-cols-2 gap-md">
@@ -427,10 +424,7 @@ export const CreateOppositeFormationModal: React.FC<
               </Typography>
             </div>
           </div>
-          <Typography
-            variant="caption"
-            className="text-success mt-2 block"
-          >
+          <Typography variant="caption" className="text-success mt-2 block">
             ⚡ Player positions will be flipped horizontally
           </Typography>
         </div>
@@ -485,10 +479,7 @@ export const CreateOppositeFormationModal: React.FC<
             </Button>
           </div>
 
-          <Typography
-            variant="caption"
-            className="text-muted text-center mt-2"
-          >
+          <Typography variant="caption" className="text-muted text-center mt-2">
             💡 You can create or link formations later in the Formation Manager
           </Typography>
         </div>

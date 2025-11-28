@@ -120,10 +120,7 @@ const AdaptiveDashboardDemo: React.FC = () => {
             {userActivity?.length ? (
               <div className="space-y-2 max-h-32 overflow-y-auto">
                 {userActivity.slice(-3).map((activity, index) => (
-                  <div
-                    key={index}
-                    className="p-2 bg-secondary rounded text-sm"
-                  >
+                  <div key={index} className="p-2 bg-secondary rounded text-sm">
                     <div>
                       <strong>{activity.widgetId}</strong> - {activity.action}
                     </div>

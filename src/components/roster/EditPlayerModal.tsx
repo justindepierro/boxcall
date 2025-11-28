@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button, Input, Modal } from "../ui";
-import { useMobileModal } from '../../hooks/useMobileModal';
+import { useMobileModal } from "../../hooks/useMobileModal";
 import { Typography } from "../design-system";
 import { rosterService } from "../../services";
 import type { RosterPlayerView } from "../../services/rosterService";
@@ -68,7 +68,7 @@ export default function EditPlayerModal({
 }: EditPlayerModalProps) {
   const toast = useToast();
   const [saving, setSaving] = useState(false);
-  const modalSize = useMobileModal('lg');
+  const modalSize = useMobileModal("lg");
   const [formError, setFormError] = useState<string | null>(null);
   const [formData, setFormData] = useState<PlayerFormData>({
     first_name: "",
@@ -199,7 +199,12 @@ export default function EditPlayerModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Edit Player" size={modalSize}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Edit Player"
+      size={modalSize}
+    >
       <div className="space-y-4 p-md">
         {formError && (
           <div className="p-sm bg-error-100 dark:bg-error-900/30 border border-error-500 rounded-lg">

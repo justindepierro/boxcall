@@ -50,10 +50,7 @@ export const FormationLinkConfirmationModal: React.FC<
                 ? "Creating Left/Right Variants"
                 : "Linking as Left/Right"}
             </Typography>
-            <Typography
-              variant="body-sm"
-              className="text-info-700 mt-xs"
-            >
+            <Typography variant="body-sm" className="text-info-700 mt-xs">
               {isSameFormation ? (
                 <>
                   Since you selected the same formation for both sides, we'll
@@ -84,10 +81,7 @@ export const FormationLinkConfirmationModal: React.FC<
             >
               Left Side
             </Typography>
-            <Typography
-              variant="label-md"
-              className="text-primary mt-xs"
-            >
+            <Typography variant="label-md" className="text-primary mt-xs">
               {leftFormation.name}
             </Typography>
             <Typography variant="caption" className="text-secondary">
@@ -118,10 +112,7 @@ export const FormationLinkConfirmationModal: React.FC<
             >
               Right Side
             </Typography>
-            <Typography
-              variant="label-md"
-              className="text-primary mt-xs"
-            >
+            <Typography variant="label-md" className="text-primary mt-xs">
               {rightFormation.name}
             </Typography>
             <Typography variant="caption" className="text-secondary">

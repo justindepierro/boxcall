@@ -16,7 +16,7 @@ interface UseAnnouncementsRealtimeOptions {
   onCommentChange?: () => void;
   enabled?: boolean;
   announcementDebounceMs?: number; // Default: 300ms for announcements
-  interactionDebounceMs?: number;  // Default: 100ms for reactions/comments (Facebook-fast!)
+  interactionDebounceMs?: number; // Default: 100ms for reactions/comments (Facebook-fast!)
 }
 
 export function useAnnouncementsRealtime({
@@ -30,7 +30,7 @@ export function useAnnouncementsRealtime({
   interactionDebounceMs = 100, // Much faster for social interactions!
 }: UseAnnouncementsRealtimeOptions) {
   const channelRef = useRef<RealtimeChannel | null>(null);
-  
+
   // Debounce timers for each type of update
   const newAnnouncementTimerRef = useRef<NodeJS.Timeout | null>(null);
   const announcementUpdateTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -42,7 +42,7 @@ export function useAnnouncementsRealtime({
     if (newAnnouncementTimerRef.current) {
       clearTimeout(newAnnouncementTimerRef.current);
     }
-    
+
     newAnnouncementTimerRef.current = setTimeout(() => {
       console.info("[Realtime] New announcement received (debounced 300ms)");
       onNewAnnouncement?.();
@@ -54,7 +54,7 @@ export function useAnnouncementsRealtime({
     if (announcementUpdateTimerRef.current) {
       clearTimeout(announcementUpdateTimerRef.current);
     }
-    
+
     announcementUpdateTimerRef.current = setTimeout(() => {
       console.info("[Realtime] Announcement updated (debounced 300ms)");
       onAnnouncementUpdate?.();
@@ -66,7 +66,7 @@ export function useAnnouncementsRealtime({
     if (reactionChangeTimerRef.current) {
       clearTimeout(reactionChangeTimerRef.current);
     }
-    
+
     reactionChangeTimerRef.current = setTimeout(() => {
       console.info("[Realtime] Reaction changed (debounced 100ms - instant!)");
       onReactionChange?.();
@@ -78,7 +78,7 @@ export function useAnnouncementsRealtime({
     if (commentChangeTimerRef.current) {
       clearTimeout(commentChangeTimerRef.current);
     }
-    
+
     commentChangeTimerRef.current = setTimeout(() => {
       console.info("[Realtime] Comment changed (debounced 100ms - instant!)");
       onCommentChange?.();
@@ -155,7 +155,7 @@ export function useAnnouncementsRealtime({
     // Cleanup function
     return () => {
       console.info("[Realtime] Cleaning up subscriptions and timers");
-      
+
       // Clear all pending timers
       if (newAnnouncementTimerRef.current) {
         clearTimeout(newAnnouncementTimerRef.current);
@@ -173,7 +173,7 @@ export function useAnnouncementsRealtime({
         clearTimeout(commentChangeTimerRef.current);
         commentChangeTimerRef.current = null;
       }
-      
+
       // Unsubscribe from channel
       if (channelRef.current) {
         supabase.removeChannel(channelRef.current);

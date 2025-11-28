@@ -368,9 +368,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
           <div className="flex-1">
             <div>{option.label}</div>
             {option.description && (
-              <div className="text-xs text-secondary">
-                {option.description}
-              </div>
+              <div className="text-xs text-secondary">{option.description}</div>
             )}
           </div>
           {isSelected && (

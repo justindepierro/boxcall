@@ -61,10 +61,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
       </div>
       {selectedCategory && (
         <div className="mt-3 p-2 bg-subtle rounded-lg">
-          <Typography
-            variant="body-sm"
-            className="text-info flex items-center"
-          >
+          <Typography variant="body-sm" className="text-info flex items-center">
             <Icon name="target" size="xs" className="mr-1" />
             Selected:{" "}
             {CATEGORIES.find((c) => c.key === selectedCategory)?.label}- Click

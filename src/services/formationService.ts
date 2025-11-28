@@ -8,7 +8,9 @@
 
 export class FormationService {
   static async getFormationById(_id: string) {
-    throw new Error('FormationService has been archived. Formation system simplified.');
+    throw new Error(
+      "FormationService has been archived. Formation system simplified."
+    );
   }
 
   static async getFormationsByPlaybook(_playbookId: string) {
@@ -28,22 +30,32 @@ export class FormationService {
   }
 
   static async linkExistingFormations(_leftId: string, _rightId: string) {
-    throw new Error('FormationService has been archived. Formation system simplified.');
+    throw new Error(
+      "FormationService has been archived. Formation system simplified."
+    );
   }
 
   static async markAsStandalone(_formationId: string) {
-    throw new Error('FormationService has been archived. Formation system simplified.');
+    throw new Error(
+      "FormationService has been archived. Formation system simplified."
+    );
   }
 
   static async updateFormation(_id: string, _data: any) {
-    throw new Error('FormationService has been archived. Formation system simplified.');
+    throw new Error(
+      "FormationService has been archived. Formation system simplified."
+    );
   }
 
   static async createFormation(_data: any) {
-    throw new Error('FormationService has been archived. Formation system simplified.');
+    throw new Error(
+      "FormationService has been archived. Formation system simplified."
+    );
   }
 
   static async deleteFormation(_id: string) {
-    throw new Error('FormationService has been archived. Formation system simplified.');
+    throw new Error(
+      "FormationService has been archived. Formation system simplified."
+    );
   }
 }

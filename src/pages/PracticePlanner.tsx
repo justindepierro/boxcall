@@ -202,10 +202,7 @@ export function PracticePlanner() {
               <Card className="mb-6">
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-6">
-                    <Typography
-                      variant="headline-md"
-                      className="text-primary"
-                    >
+                    <Typography variant="headline-md" className="text-primary">
                       Practice Blocks
                     </Typography>
                     <div

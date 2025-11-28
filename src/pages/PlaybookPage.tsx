@@ -962,6 +962,10 @@ export default function PlaybookPage() {
           onPlaybookChange={handlePlaybookChange}
           onPlaybookUpdated={refreshData}
           teamId={activeTeamId || ""}
+          onCSVImportComplete={() => {
+            refreshData();
+            dispatch({ type: "INCREMENT_REFRESH" });
+          }}
         />
 
         {/* Mobile-First Layout */}

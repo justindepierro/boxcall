@@ -1,6 +1,6 @@
 /**
  * Formation History Hook - Undo/Redo for player movements
- * 
+ *
  * Provides undo/redo functionality for formation editing.
  * Stores last 10 states in memory for coaches to revert mistakes.
  */
@@ -23,27 +23,32 @@ export function useFormationHistory() {
   /**
    * Save current state to history
    */
-  const saveState = useCallback((players: Player[]) => {
-    // Don't save if we're applying history (circular update)
-    if (isApplyingHistory.current) return;
+  const saveState = useCallback(
+    (players: Player[]) => {
+      // Don't save if we're applying history (circular update)
+      if (isApplyingHistory.current) return;
 
-    setHistory((prev) => {
-      // Remove any "future" states if we're in the middle of history
-      const newHistory = prev.slice(0, currentIndex + 1);
+      setHistory((prev) => {
+        // Remove any "future" states if we're in the middle of history
+        const newHistory = prev.slice(0, currentIndex + 1);
 
-      // Add new state
-      const newState: HistoryState = {
-        players: JSON.parse(JSON.stringify(players)), // Deep clone
-        timestamp: Date.now(),
-      };
+        // Add new state
+        const newState: HistoryState = {
+          players: JSON.parse(JSON.stringify(players)), // Deep clone
+          timestamp: Date.now(),
+        };
 
-      // Keep only last N states
-      const updatedHistory = [...newHistory, newState].slice(-MAX_HISTORY_SIZE);
+        // Keep only last N states
+        const updatedHistory = [...newHistory, newState].slice(
+          -MAX_HISTORY_SIZE
+        );
 
-      setCurrentIndex(updatedHistory.length - 1);
-      return updatedHistory;
-    });
-  }, [currentIndex]);
+        setCurrentIndex(updatedHistory.length - 1);
+        return updatedHistory;
+      });
+    },
+    [currentIndex]
+  );
 
   /**
    * Undo to previous state
@@ -56,7 +61,7 @@ export function useFormationHistory() {
     isApplyingHistory.current = true;
 
     const state = history[newIndex];
-    
+
     // Reset flag after a tick
     setTimeout(() => {
       isApplyingHistory.current = false;
@@ -76,7 +81,7 @@ export function useFormationHistory() {
     isApplyingHistory.current = true;
 
     const state = history[newIndex];
-    
+
     // Reset flag after a tick
     setTimeout(() => {
       isApplyingHistory.current = false;

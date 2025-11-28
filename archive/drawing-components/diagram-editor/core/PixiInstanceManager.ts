@@ -74,12 +74,13 @@ export class PixiInstanceManager {
       width: options.width,
       height: options.height,
       backgroundColor: options.backgroundColor || 0xffffff,
-      powerPreference: (options.powerPreference as any) || 'high-performance',
+      powerPreference: (options.powerPreference as any) || "high-performance",
       antialias: options.antialias ?? true,
       resolution: options.resolution || window.devicePixelRatio || 1,
       autoDensity: options.autoDensity ?? true,
       preserveDrawingBuffer: options.preserveDrawingBuffer ?? false,
-      failIfMajorPerformanceCaveat: options.failIfMajorPerformanceCaveat ?? false,
+      failIfMajorPerformanceCaveat:
+        options.failIfMajorPerformanceCaveat ?? false,
     });
 
     // Get the canvas from the app (PixiJS v8 uses app.canvas instead of app.view)
@@ -124,7 +125,7 @@ export class PixiInstanceManager {
    * Generate a unique key for application options
    */
   private generateKey(options: ProfessionalEngineOptions): string {
-    return `${options.width}x${options.height}_${options.backgroundColor || 0}_${options.powerPreference || 'default'}_${options.antialias ? 'antialiased' : 'no-antialias'}`;
+    return `${options.width}x${options.height}_${options.backgroundColor || 0}_${options.powerPreference || "default"}_${options.antialias ? "antialiased" : "no-antialias"}`;
   }
 
   /**
@@ -156,7 +157,7 @@ export class PixiInstanceManager {
     const toRemove: string[] = [];
 
     for (const [key, app] of this.applications) {
-      if (app.refCount === 0 && (now - app.lastUsed) > this.MAX_IDLE_TIME) {
+      if (app.refCount === 0 && now - app.lastUsed > this.MAX_IDLE_TIME) {
         toRemove.push(key);
       }
     }

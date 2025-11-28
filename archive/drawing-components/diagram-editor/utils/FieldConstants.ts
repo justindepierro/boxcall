@@ -1,6 +1,6 @@
 /**
  * Field Constants - Single source of truth for all field dimensions and positioning
- * 
+ *
  * Centralize magic numbers to prevent duplication and conflicts.
  * Based on standard American football field dimensions.
  */
@@ -55,40 +55,40 @@ export const RIGHT_NUMBERS_X = 43; // Where "Z" receiver typically lines up
 // ============================================================================
 export const OL_SPACING = 2.67; // ~3 yards between O-linemen
 export const OL_POSITIONS = {
-  LT: CENTER_X - OL_SPACING * 2,  // 21.33
-  LG: CENTER_X - OL_SPACING,      // 24
-  C: CENTER_X,                     // 26.67
-  RG: CENTER_X + OL_SPACING,      // 29.33
-  RT: CENTER_X + OL_SPACING * 2,  // 32
+  LT: CENTER_X - OL_SPACING * 2, // 21.33
+  LG: CENTER_X - OL_SPACING, // 24
+  C: CENTER_X, // 26.67
+  RG: CENTER_X + OL_SPACING, // 29.33
+  RT: CENTER_X + OL_SPACING * 2, // 32
 } as const;
 
 // ============================================================================
 // QUARTERBACK DEPTHS (behind LOS)
 // ============================================================================
 export const QB_UNDER_CENTER_Y = LOS_Y + 1; // 1 yard behind LOS
-export const QB_PISTOL_Y = LOS_Y + 4;       // 4 yards behind LOS
-export const QB_SHOTGUN_Y = LOS_Y + 5;      // 5 yards behind LOS
+export const QB_PISTOL_Y = LOS_Y + 4; // 4 yards behind LOS
+export const QB_SHOTGUN_Y = LOS_Y + 5; // 5 yards behind LOS
 export const QB_DEEP_SHOTGUN_Y = LOS_Y + 7; // 7 yards behind LOS
 
 // ============================================================================
 // RUNNING BACK DEPTHS
 // ============================================================================
-export const RB_I_FORM_Y = LOS_Y + 7;       // 7 yards behind LOS (I-formation)
-export const RB_OFFSET_Y = LOS_Y + 6;       // 6 yards behind LOS (offset)
-export const RB_PISTOL_Y = LOS_Y + 3;       // 3 yards behind LOS (pistol)
-export const FB_DEPTH_Y = LOS_Y + 4;        // 4 yards behind LOS (fullback)
+export const RB_I_FORM_Y = LOS_Y + 7; // 7 yards behind LOS (I-formation)
+export const RB_OFFSET_Y = LOS_Y + 6; // 6 yards behind LOS (offset)
+export const RB_PISTOL_Y = LOS_Y + 3; // 3 yards behind LOS (pistol)
+export const FB_DEPTH_Y = LOS_Y + 4; // 4 yards behind LOS (fullback)
 
 // ============================================================================
 // RECEIVER SPLITS (WR spacing)
 // ============================================================================
-export const WR_TIGHT_SPLIT = 5;  // 5 yards from OL (trips, bunch)
+export const WR_TIGHT_SPLIT = 5; // 5 yards from OL (trips, bunch)
 export const WR_NORMAL_SPLIT = 10; // 10-12 yards from OL (standard)
-export const WR_WIDE_SPLIT = 15;   // 15+ yards from OL (wide splits)
+export const WR_WIDE_SPLIT = 15; // 15+ yards from OL (wide splits)
 
 // ============================================================================
 // SLOT POSITIONS (off LOS)
 // ============================================================================
-export const SLOT_LEFT_X = 18;  // Inside slot on left
+export const SLOT_LEFT_X = 18; // Inside slot on left
 export const SLOT_RIGHT_X = 35; // Inside slot on right
 export const SLOT_OFF_LOS_Y = LOS_Y + 1; // 1 yard behind LOS
 
@@ -141,7 +141,11 @@ export function isInBackfield(y: number): boolean {
 /**
  * Check if position is eligible receiver (not on interior of line)
  */
-export function isEligibleReceiver(x: number, y: number, role?: string): boolean {
+export function isEligibleReceiver(
+  x: number,
+  y: number,
+  role?: string
+): boolean {
   // QBs, RBs, WRs, TEs are always eligible
   if (["QB", "RB", "FB", "WR", "TE"].includes(role || "")) {
     return true;

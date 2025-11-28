@@ -152,10 +152,7 @@ export const MobilePracticeSession: React.FC = () => {
         {/* Content */}
         <div className="flex-1 overflow-auto p-4 space-y-4">
           <div className="bg-secondary rounded-lg p-4">
-            <Typography
-              variant="headline-sm"
-              className="mb-3 text-primary"
-            >
+            <Typography variant="headline-sm" className="mb-3 text-primary">
               Quick Tips
             </Typography>
             <ul className="space-y-2">
@@ -360,10 +357,7 @@ export const MobilePracticeSession: React.FC = () => {
             disabled={isPaused}
             className="flex flex-col items-center justify-center h-16 bg-primary active:bg-muted disabled:opacity-50 border border-border rounded-lg transition-all active:scale-95"
           >
-            <Icon
-              name="minus-circle"
-              className="h-6 w-6 text-secondary mb-1"
-            />
+            <Icon name="minus-circle" className="h-6 w-6 text-secondary mb-1" />
             <Typography variant="body-xs" className="text-secondary">
               Neutral
             </Typography>
@@ -374,10 +368,7 @@ export const MobilePracticeSession: React.FC = () => {
             disabled={isPaused}
             className="flex flex-col items-center justify-center h-16 bg-primary active:bg-muted disabled:opacity-50 border border-border rounded-lg transition-all active:scale-95"
           >
-            <Icon
-              name="skip-forward"
-              className="h-6 w-6 text-secondary mb-1"
-            />
+            <Icon name="skip-forward" className="h-6 w-6 text-secondary mb-1" />
             <Typography variant="body-xs" className="text-secondary">
               Skip
             </Typography>

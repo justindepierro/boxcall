@@ -33,7 +33,7 @@ export interface CursorPosition {
 
 export interface CollaborativeSelection {
   userId: string;
-  type: 'player' | 'route' | 'none';
+  type: "player" | "route" | "none";
   id: string | null; // playerId or routeId
   timestamp: Date;
 }
@@ -53,10 +53,17 @@ export interface CollaborativeState {
   channel: any | null; // Supabase RealtimeChannel
 
   // Actions
-  initializeSession: (diagramId: string, userId: string, userName: string) => Promise<void>;
+  initializeSession: (
+    diagramId: string,
+    userId: string,
+    userName: string
+  ) => Promise<void>;
   leaveSession: () => Promise<void>;
   updateCursor: (x: number, y: number) => void;
-  updateSelection: (type: 'player' | 'route' | 'none', id: string | null) => void;
+  updateSelection: (
+    type: "player" | "route" | "none",
+    id: string | null
+  ) => void;
 
   // Internal actions (not exposed to components)
   _handleRemoteUpdate: (update: any) => void;
@@ -70,14 +77,14 @@ export interface CollaborativeState {
 // Generate random color for user cursors/selections
 function generateUserColor(): string {
   const colors = [
-    '#ef4444', // red-500
-    '#f97316', // orange-500
-    '#eab308', // yellow-500
-    '#22c55e', // green-500
-    '#3b82f6', // blue-500
-    '#8b5cf6', // violet-500
-    '#ec4899', // pink-500
-    '#06b6d4', // cyan-500
+    "#ef4444", // red-500
+    "#f97316", // orange-500
+    "#eab308", // yellow-500
+    "#22c55e", // green-500
+    "#3b82f6", // blue-500
+    "#8b5cf6", // violet-500
+    "#ec4899", // pink-500
+    "#06b6d4", // cyan-500
   ];
   return colors[Math.floor(Math.random() * colors.length)];
 }
@@ -93,7 +100,11 @@ export const useCollaborativeStore = create<CollaborativeState>()(
     isConnected: false,
     channel: null,
 
-    initializeSession: async (diagramId: string, userId: string, userName: string) => {
+    initializeSession: async (
+      diagramId: string,
+      userId: string,
+      userName: string
+    ) => {
       const sessionId = `diagram-${diagramId}`;
       const userColor = generateUserColor();
 
@@ -108,7 +119,7 @@ export const useCollaborativeStore = create<CollaborativeState>()(
 
       // Handle presence events
       channel
-        .on('presence', { event: 'sync' }, () => {
+        .on("presence", { event: "sync" }, () => {
           const presenceState = channel.presenceState();
           const users: CollaborativeUser[] = [];
 
@@ -117,8 +128,8 @@ export const useCollaborativeStore = create<CollaborativeState>()(
             presences.forEach((presence: any) => {
               users.push({
                 id: presence.user_id,
-                name: presence.user_name || 'Anonymous',
-                color: presence.user_color || '#666',
+                name: presence.user_name || "Anonymous",
+                color: presence.user_color || "#666",
                 lastSeen: new Date(presence.last_seen || Date.now()),
                 isOnline: true,
               });
@@ -127,26 +138,26 @@ export const useCollaborativeStore = create<CollaborativeState>()(
 
           set({ users });
         })
-        .on('presence', { event: 'join' }, ({ key, newPresences }: any) => {
-          console.log('User joined:', key, newPresences);
+        .on("presence", { event: "join" }, ({ key, newPresences }: any) => {
+          console.log("User joined:", key, newPresences);
         })
-        .on('presence', { event: 'leave' }, ({ key, leftPresences }: any) => {
-          console.log('User left:', key, leftPresences);
+        .on("presence", { event: "leave" }, ({ key, leftPresences }: any) => {
+          console.log("User left:", key, leftPresences);
           get()._removeUser(key);
         })
-        .on('broadcast', { event: 'cursor' }, ({ payload }: any) => {
+        .on("broadcast", { event: "cursor" }, ({ payload }: any) => {
           get()._updateCursor(payload);
         })
-        .on('broadcast', { event: 'selection' }, ({ payload }: any) => {
+        .on("broadcast", { event: "selection" }, ({ payload }: any) => {
           get()._updateSelection(payload);
         })
-        .on('broadcast', { event: 'diagram-update' }, ({ payload }) => {
+        .on("broadcast", { event: "diagram-update" }, ({ payload }) => {
           get()._handleRemoteUpdate(payload);
         });
 
       // Subscribe to channel
       await channel.subscribe(async (status: string) => {
-        if (status === 'SUBSCRIBED') {
+        if (status === "SUBSCRIBED") {
           // Track presence
           await channel.track({
             user_id: userId,
@@ -162,7 +173,7 @@ export const useCollaborativeStore = create<CollaborativeState>()(
             channel,
           });
 
-          console.log('✅ Joined collaborative session:', sessionId);
+          console.log("✅ Joined collaborative session:", sessionId);
         }
       });
     },
@@ -198,8 +209,8 @@ export const useCollaborativeStore = create<CollaborativeState>()(
 
       // Broadcast cursor position
       channel.send({
-        type: 'broadcast',
-        event: 'cursor',
+        type: "broadcast",
+        event: "cursor",
         payload: cursorUpdate,
       });
 
@@ -207,7 +218,7 @@ export const useCollaborativeStore = create<CollaborativeState>()(
       get()._updateCursor(cursorUpdate);
     },
 
-    updateSelection: (type: 'player' | 'route' | 'none', id: string | null) => {
+    updateSelection: (type: "player" | "route" | "none", id: string | null) => {
       const { channel, currentUserId } = get();
       if (!channel || !currentUserId) return;
 
@@ -220,8 +231,8 @@ export const useCollaborativeStore = create<CollaborativeState>()(
 
       // Broadcast selection
       channel.send({
-        type: 'broadcast',
-        event: 'selection',
+        type: "broadcast",
+        event: "selection",
         payload: selectionUpdate,
       });
 
@@ -236,22 +247,22 @@ export const useCollaborativeStore = create<CollaborativeState>()(
       const diagramStore = useDiagramStore.getState();
 
       switch (update.type) {
-        case 'add-player':
+        case "add-player":
           diagramStore.addPlayer(update.player);
           break;
-        case 'update-player':
+        case "update-player":
           diagramStore.updatePlayer(update.playerId, update.updates);
           break;
-        case 'remove-player':
+        case "remove-player":
           diagramStore.removePlayer(update.playerId);
           break;
-        case 'add-route':
+        case "add-route":
           diagramStore.addRoute(update.route);
           break;
-        case 'update-route':
+        case "update-route":
           diagramStore.updateRoute(update.routeId, update.updates);
           break;
-        case 'remove-route':
+        case "remove-route":
           diagramStore.removeRoute(update.routeId);
           break;
         // Add more cases as needed
@@ -263,30 +274,30 @@ export const useCollaborativeStore = create<CollaborativeState>()(
       if (!channel) return;
 
       channel.send({
-        type: 'broadcast',
-        event: 'diagram-update',
+        type: "broadcast",
+        event: "diagram-update",
         payload: update,
       });
     },
 
     _addUser: (user: CollaborativeUser) => {
       set((state) => ({
-        users: [...state.users.filter(u => u.id !== user.id), user],
+        users: [...state.users.filter((u) => u.id !== user.id), user],
       }));
     },
 
     _removeUser: (userId: string) => {
       set((state) => ({
-        users: state.users.filter(u => u.id !== userId),
-        cursors: state.cursors.filter(c => c.userId !== userId),
-        selections: state.selections.filter(s => s.userId !== userId),
+        users: state.users.filter((u) => u.id !== userId),
+        cursors: state.cursors.filter((c) => c.userId !== userId),
+        selections: state.selections.filter((s) => s.userId !== userId),
       }));
     },
 
     _updateCursor: (cursor: CursorPosition) => {
       set((state) => ({
         cursors: [
-          ...state.cursors.filter(c => c.userId !== cursor.userId),
+          ...state.cursors.filter((c) => c.userId !== cursor.userId),
           cursor,
         ],
       }));
@@ -295,7 +306,7 @@ export const useCollaborativeStore = create<CollaborativeState>()(
     _updateSelection: (selection: CollaborativeSelection) => {
       set((state) => ({
         selections: [
-          ...state.selections.filter(s => s.userId !== selection.userId),
+          ...state.selections.filter((s) => s.userId !== selection.userId),
           selection,
         ],
       }));
@@ -315,7 +326,7 @@ export const useCollaborativeDiagram = () => {
     addPlayer: (player: Player) => {
       diagramStore.addPlayer(player);
       collaborativeStore._broadcastUpdate({
-        type: 'add-player',
+        type: "add-player",
         player,
       });
     },
@@ -323,7 +334,7 @@ export const useCollaborativeDiagram = () => {
     updatePlayer: (playerId: string, updates: Partial<Player>) => {
       diagramStore.updatePlayer(playerId, updates);
       collaborativeStore._broadcastUpdate({
-        type: 'update-player',
+        type: "update-player",
         playerId,
         updates,
       });
@@ -332,7 +343,7 @@ export const useCollaborativeDiagram = () => {
     removePlayer: (playerId: string) => {
       diagramStore.removePlayer(playerId);
       collaborativeStore._broadcastUpdate({
-        type: 'remove-player',
+        type: "remove-player",
         playerId,
       });
     },
@@ -340,7 +351,7 @@ export const useCollaborativeDiagram = () => {
     addRoute: (route: Route) => {
       diagramStore.addRoute(route);
       collaborativeStore._broadcastUpdate({
-        type: 'add-route',
+        type: "add-route",
         route,
       });
     },
@@ -348,7 +359,7 @@ export const useCollaborativeDiagram = () => {
     updateRoute: (routeId: string, updates: Partial<Route>) => {
       diagramStore.updateRoute(routeId, updates);
       collaborativeStore._broadcastUpdate({
-        type: 'update-route',
+        type: "update-route",
         routeId,
         updates,
       });
@@ -357,7 +368,7 @@ export const useCollaborativeDiagram = () => {
     removeRoute: (routeId: string) => {
       diagramStore.removeRoute(routeId);
       collaborativeStore._broadcastUpdate({
-        type: 'remove-route',
+        type: "remove-route",
         routeId,
       });
     },

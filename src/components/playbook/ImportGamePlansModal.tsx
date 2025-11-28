@@ -141,10 +141,7 @@ export function ImportGamePlansModal({
                     {selectedFile.name}
                   </Typography>
                   {parsedData && (
-                    <Typography
-                      variant="body-xs"
-                      className="text-secondary"
-                    >
+                    <Typography variant="body-xs" className="text-secondary">
                       {parsedData.plans.length} game plan
                       {parsedData.plans.length !== 1 ? "s" : ""} found
                     </Typography>
@@ -174,9 +171,7 @@ export function ImportGamePlansModal({
               </Typography>
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-secondary">
-                    Game plans to import:
-                  </span>
+                  <span className="text-secondary">Game plans to import:</span>
                   <span className="font-medium text-primary">
                     {parsedData.plans.length}
                   </span>
@@ -215,10 +210,7 @@ export function ImportGamePlansModal({
                   >
                     Import Note
                   </Typography>
-                  <Typography
-                    variant="body-xs"
-                    className="text-secondary mt-1"
-                  >
+                  <Typography variant="body-xs" className="text-secondary mt-1">
                     Game plans will be imported as new items. Existing plans
                     will not be modified.
                   </Typography>

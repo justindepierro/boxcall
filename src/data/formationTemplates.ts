@@ -621,7 +621,9 @@ export const FORMATION_TEMPLATES: FormationTemplate[] = [
 /**
  * Get template by ID
  */
-export function getFormationTemplate(id: string): FormationTemplate | undefined {
+export function getFormationTemplate(
+  id: string
+): FormationTemplate | undefined {
   return FORMATION_TEMPLATES.find((template) => template.id === id);
 }
 

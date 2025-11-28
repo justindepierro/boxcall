@@ -28,10 +28,7 @@ export const FormationSyncPanel: React.FC<FormationSyncPanelProps> = ({
     return (
       <Card variant="default" size={isMobile ? "md" : "lg"}>
         <div className="flex items-center gap-3">
-          <Icon
-            name="loader"
-            className="h-5 w-5 animate-spin text-muted"
-          />
+          <Icon name="loader" className="h-5 w-5 animate-spin text-muted" />
           <Typography variant="body-sm" className="text-secondary">
             Checking formation mappings...
           </Typography>

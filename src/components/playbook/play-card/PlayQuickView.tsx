@@ -90,9 +90,7 @@ export const PlayQuickView: React.FC<PlayQuickViewProps> = ({
             <div className="grid grid-cols-2 gap-2 text-sm">
               {/* Type */}
               <div>
-                <span className="text-tertiary text-xs font-medium">
-                  Type
-                </span>
+                <span className="text-tertiary text-xs font-medium">Type</span>
                 <div className="font-semibold text-secondary mt-0.5">
                   {play.p_type}
                 </div>
@@ -138,8 +136,7 @@ export const PlayQuickView: React.FC<PlayQuickViewProps> = ({
             {/* Quick hint */}
             <div className="pt-2 border-t border-muted">
               <p className="text-xs text-tertiary text-center">
-                Click{" "}
-                <span className="font-semibold text-brand">Details</span>{" "}
+                Click <span className="font-semibold text-brand">Details</span>{" "}
                 for full view
               </p>
             </div>

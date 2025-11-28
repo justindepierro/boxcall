@@ -255,9 +255,7 @@ export const RouteLoadingSpinner = () => (
       <div className="mx-auto mb-6 h-14 w-14 rounded-full bg-jade-100 text-jade-700 flex items-center justify-center">
         <span className="text-2xl font-semibold">BC</span>
       </div>
-      <p className="text-lg font-semibold text-primary">
-        Preparing BoxCall
-      </p>
+      <p className="text-lg font-semibold text-primary">Preparing BoxCall</p>
       <p className="text-sm text-muted mt-2">
         Loading secure data and initializing your coaching workspace.
       </p>

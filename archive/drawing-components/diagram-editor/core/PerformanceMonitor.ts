@@ -108,7 +108,8 @@ export class PerformanceMonitor {
     // Calculate averages and extremes
     if (this.fpsHistory.length > 0) {
       this.metrics.averageFPS = Math.round(
-        this.fpsHistory.reduce((sum, sumFps) => sum + sumFps, 0) / this.fpsHistory.length
+        this.fpsHistory.reduce((sum, sumFps) => sum + sumFps, 0) /
+          this.fpsHistory.length
       );
       this.metrics.minFPS = Math.min(...this.fpsHistory);
       this.metrics.maxFPS = Math.max(...this.fpsHistory);
@@ -116,7 +117,9 @@ export class PerformanceMonitor {
 
     // Calculate average frame time
     if (this.frameTimeHistory.length > 0) {
-      this.metrics.frameTime = this.frameTimeHistory.reduce((sum, time) => sum + time, 0) / this.frameTimeHistory.length;
+      this.metrics.frameTime =
+        this.frameTimeHistory.reduce((sum, time) => sum + time, 0) /
+        this.frameTimeHistory.length;
     }
 
     // Update renderer stats if available
@@ -145,7 +148,7 @@ export class PerformanceMonitor {
    */
   private updateMemoryStats(): void {
     // Check if performance.memory is available (Chrome/Edge)
-    if ('memory' in performance) {
+    if ("memory" in performance) {
       const memory = (performance as any).memory;
       this.metrics.memoryUsage = memory.usedJSHeapSize;
     }
@@ -162,7 +165,7 @@ export class PerformanceMonitor {
    * Get performance health status
    */
   getHealthStatus(): {
-    status: 'excellent' | 'good' | 'warning' | 'critical';
+    status: "excellent" | "good" | "warning" | "critical";
     issues: string[];
     recommendations: string[];
   } {
@@ -172,40 +175,46 @@ export class PerformanceMonitor {
     // Check FPS
     if (this.metrics.averageFPS < this.options.alertThreshold) {
       issues.push(`Low average FPS: ${this.metrics.averageFPS}`);
-      recommendations.push('Consider reducing visual complexity');
-      recommendations.push('Enable performance mode if available');
+      recommendations.push("Consider reducing visual complexity");
+      recommendations.push("Enable performance mode if available");
     }
 
     if (this.metrics.minFPS < this.options.minFPS) {
       issues.push(`FPS drops below minimum: ${this.metrics.minFPS}`);
-      recommendations.push('Check for memory leaks');
-      recommendations.push('Reduce texture sizes');
+      recommendations.push("Check for memory leaks");
+      recommendations.push("Reduce texture sizes");
     }
 
     // Check frame time
     if (this.metrics.frameTime > 1000 / this.options.minFPS) {
       issues.push(`High frame time: ${this.metrics.frameTime.toFixed(2)}ms`);
-      recommendations.push('Optimize rendering pipeline');
+      recommendations.push("Optimize rendering pipeline");
     }
 
     // Check memory
-    if (this.metrics.memoryUsage && this.metrics.memoryUsage > 200 * 1024 * 1024) { // 200MB
-      issues.push(`High memory usage: ${(this.metrics.memoryUsage / 1024 / 1024).toFixed(1)}MB`);
-      recommendations.push('Clear unused textures');
-      recommendations.push('Implement texture atlas');
+    if (
+      this.metrics.memoryUsage &&
+      this.metrics.memoryUsage > 200 * 1024 * 1024
+    ) {
+      // 200MB
+      issues.push(
+        `High memory usage: ${(this.metrics.memoryUsage / 1024 / 1024).toFixed(1)}MB`
+      );
+      recommendations.push("Clear unused textures");
+      recommendations.push("Implement texture atlas");
     }
 
     // Determine status
-    let status: 'excellent' | 'good' | 'warning' | 'critical' = 'excellent';
+    let status: "excellent" | "good" | "warning" | "critical" = "excellent";
 
     if (issues.length > 2) {
-      status = 'critical';
+      status = "critical";
     } else if (issues.length > 0) {
-      status = 'warning';
+      status = "warning";
     } else if (this.metrics.averageFPS >= this.options.maxFPS * 0.9) {
-      status = 'excellent';
+      status = "excellent";
     } else {
-      status = 'good';
+      status = "good";
     }
 
     return { status, issues, recommendations };
@@ -218,23 +227,26 @@ export class PerformanceMonitor {
     const metrics = this.getMetrics();
     const health = this.getHealthStatus();
 
-    console.group('📊 Pixi.js Performance Monitor');
-    console.log('Current FPS:', metrics.fps);
-    console.log('Average FPS:', metrics.averageFPS);
-    console.log('FPS Range:', `${metrics.minFPS} - ${metrics.maxFPS}`);
-    console.log('Frame Time:', `${metrics.frameTime.toFixed(2)}ms`);
-    console.log('Draw Calls:', metrics.drawCalls);
-    console.log('Triangles:', metrics.triangles);
-    console.log('Textures:', metrics.textures);
+    console.group("📊 Pixi.js Performance Monitor");
+    console.log("Current FPS:", metrics.fps);
+    console.log("Average FPS:", metrics.averageFPS);
+    console.log("FPS Range:", `${metrics.minFPS} - ${metrics.maxFPS}`);
+    console.log("Frame Time:", `${metrics.frameTime.toFixed(2)}ms`);
+    console.log("Draw Calls:", metrics.drawCalls);
+    console.log("Triangles:", metrics.triangles);
+    console.log("Textures:", metrics.textures);
 
     if (metrics.memoryUsage) {
-      console.log('Memory Usage:', `${(metrics.memoryUsage / 1024 / 1024).toFixed(1)}MB`);
+      console.log(
+        "Memory Usage:",
+        `${(metrics.memoryUsage / 1024 / 1024).toFixed(1)}MB`
+      );
     }
 
-    console.log('Health Status:', health.status.toUpperCase());
+    console.log("Health Status:", health.status.toUpperCase());
     if (health.issues.length > 0) {
-      console.warn('Issues:', health.issues);
-      console.info('Recommendations:', health.recommendations);
+      console.warn("Issues:", health.issues);
+      console.info("Recommendations:", health.recommendations);
     }
 
     console.groupEnd();

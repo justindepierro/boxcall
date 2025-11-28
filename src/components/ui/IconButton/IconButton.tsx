@@ -27,8 +27,7 @@ const variantStyles = {
     "text-secondary hover:text-xsrimary hover:bg-surface-neutral active:bg-surface-neutral-dark",
   subtle:
     "text-muted hover:text-xsrimary hover:bg-surface-neutral/60 active:bg-surface-neutral-dark/60",
-  danger:
-    "text-error hover:text-error hover:bg-subtle active:bg-surface-error",
+  danger: "text-error hover:text-error hover:bg-subtle active:bg-surface-error",
 };
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
