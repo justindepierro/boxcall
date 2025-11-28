@@ -183,7 +183,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
         </ScrollingText>
         {tileSubtitle && (
           <p
-            className={`text-secondary mt-1 font-medium ${isMobile ? "text-sm" : "text-xs"}`}
+            className={`text-secondary mt-1 italic ${isMobile ? "text-sm" : "text-xs"}`}
           >
             {tileSubtitle}
           </p>

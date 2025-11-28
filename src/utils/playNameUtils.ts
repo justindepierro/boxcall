@@ -248,10 +248,23 @@ export function getDisplayName(
 /**
  * Gets the secondary/subtitle text
  */
+/**
+ * Convert text to title case (capitalize first letter of each word)
+ */
+function toTitleCase(text: string): string {
+  return text
+    .split(' ')
+    .map(word => {
+      if (!word) return word;
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join(' ');
+}
+
 export function getSubtitleText(play: Play, showOneWord: boolean): string {
   if (showOneWord && play.one_word_play) {
-    // When showing one-word, show the full concatenated name underneath
-    return generateConcatenatedName(play);
+    // When showing one-word, show the full concatenated name underneath in title case
+    return toTitleCase(generateConcatenatedName(play));
   }
   return "";
 }
