@@ -75,7 +75,6 @@ export function DesktopPlaybookView({
   handleDuplicatePlay,
   handleOpenBuilder,
   handleOpenPersonnel,
-  handleOpenSettings,
   handleOpenHealth,
   handleOpenKeyboardShortcuts,
   handleOpenAssignments,
@@ -158,7 +157,7 @@ export function DesktopPlaybookView({
               variant="ghost"
               size="md"
             >
-              <Icon name="heart-pulse" className="h-4 w-4 mr-2" />
+              <Icon name="heart" className="h-4 w-4 mr-2" />
               Health
             </Button>
           </div>
@@ -170,7 +169,7 @@ export function DesktopPlaybookView({
               size="sm"
               className="text-muted"
             >
-              <Icon name="command" className="h-4 w-4" />
+              <Icon name="keyboard" className="h-4 w-4" />
             </Button>
             <Typography variant="body-sm" className="text-muted">
               {state.playsCreated} plays total

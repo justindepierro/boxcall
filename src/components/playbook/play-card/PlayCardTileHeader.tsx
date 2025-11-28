@@ -201,7 +201,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
             {optimisticPlay.times_called !== undefined &&
               optimisticPlay.times_called > 0 && (
                 <span className="flex items-center gap-1">
-                  <Icon name="repeat" className="h-3 w-3" />
+                  <Icon name="refresh-cw" className="h-3 w-3" />
                   {optimisticPlay.times_called}x
                 </span>
               )}

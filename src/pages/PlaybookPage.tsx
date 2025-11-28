@@ -495,12 +495,7 @@ export default function PlaybookPage() {
     setShowKeyboardShortcutsModal(true);
   }, []);
 
-  const _handleOpenWhiteboard = useCallback(() => {
-    // Open diagram builder in whiteboard mode - simplified for now
-    toast.info("Whiteboard mode coming soon!");
-  }, [toast]);
-
-  const handleSavePlay = useCallback(
+  const handleUpdatePlay = useCallback(
     async (playId: string, updates: Partial<Play>) => {
       // Store previous state for rollback
       let previousPlay: Play | undefined;
@@ -567,6 +562,14 @@ export default function PlaybookPage() {
       }
     },
     [activePlaybookId, toast]
+  );
+
+  // Wrapper for components that expect (play: Play) signature
+  const handleSavePlay = useCallback(
+    async (play: Play) => {
+      await handleUpdatePlay(play.id, play);
+    },
+    [handleUpdatePlay]
   );
 
   useEffect(() => {
@@ -747,10 +750,10 @@ export default function PlaybookPage() {
           duplicatedPlay.play_name = flipPlayName(play.play_name);
 
           // Flip formation direction (f_dir field)
-          duplicatedPlay.f_dir = flipFormationDirection(play.f_dir);
+          duplicatedPlay.f_dir = flipFormationDirection(play.f_dir ?? "");
 
           // Flip play direction (p_dir field)
-          duplicatedPlay.p_dir = flipFormationDirection(play.p_dir);
+          duplicatedPlay.p_dir = flipFormationDirection(play.p_dir ?? "");
 
           // Flip diagram positions
           if (play.diagram_data) {
@@ -811,23 +814,9 @@ export default function PlaybookPage() {
   const handleAddToGamePlan = useCallback(
     async (play: Play) => {
       try {
-        const teamId = "current-team"; // TODO: Get from context/auth
-        const gamePlan = await GamePlanService.createQuickGamePlan(
-          "Quick Game Plan",
-          teamId
-        );
-        // Add the play to the most appropriate situation (base run/pass for now)
-        const situationId = play.p_type === "Pass" ? "base_pass" : "base_run";
-        await GamePlanService.addPlayToGamePlan(
-          {
-            gamePlanId: gamePlan.id,
-            situationId,
-            playId: play.id,
-            priority: 3,
-            notes: "Added from playbook workflow",
-          },
-          play
-        );
+        // TODO: Implement game plan integration
+        toast.info("Game plan integration coming soon!");
+        return;
         info(`Added "${play.play_name}" to game plan: "${gamePlan.name}"`);
 
         // Refresh activities to show the new "added_to_gameplan" activity

@@ -129,8 +129,11 @@ export function PlaybookModals({
             <AddNewPlayModal
               isOpen={showAddNewPlayModal}
               onClose={() => setShowAddNewPlayModal(false)}
-              onSave={handleSavePlay}
-              teamId={activeTeamId || ""}
+              onCreatePlay={async (playData) => {
+                const play = await handleSavePlay(playData as Play);
+                return play;
+              }}
+              playbookId={activePlaybookId}
             />
           </Suspense>
         </Modal>
