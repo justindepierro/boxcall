@@ -36,27 +36,36 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
     if (!triggerRef.current) return;
     const rect = triggerRef.current.getBoundingClientRect();
 
-    // Check if tooltip would go off-screen to the right
-    const tooltipWidth = 384; // max-w-sm = 24rem = 384px
+    // Large preview: 600px wide, 500px tall
+    const tooltipWidth = 600;
+    const tooltipHeight = 500;
     const viewportWidth = window.innerWidth;
-    const spaceOnRight = viewportWidth - rect.right;
+    const viewportHeight = window.innerHeight;
+    const margin = 24;
     
-    let top = rect.top + rect.height / 2;
-    let left = rect.right + 16;
+    // Start with positioning to the right of the card
+    let left = rect.right + margin;
+    let top = rect.top + rect.height / 2 - tooltipHeight / 2;
     
-    // If not enough space on right, show on left
-    if (spaceOnRight < tooltipWidth + 32) {
-      left = rect.left - tooltipWidth - 16;
+    // Check if tooltip goes off right edge
+    if (left + tooltipWidth + margin > viewportWidth) {
+      // Try left side instead
+      left = rect.left - tooltipWidth - margin;
+      
+      // If still doesn't fit, center it on screen
+      if (left < margin) {
+        left = (viewportWidth - tooltipWidth) / 2;
+      }
     }
     
     // Ensure tooltip doesn't go below viewport
-    const tooltipHeight = 300; // approximate
-    if (top + tooltipHeight / 2 > window.innerHeight) {
-      top = window.innerHeight - tooltipHeight / 2 - 16;
+    if (top + tooltipHeight + margin > viewportHeight) {
+      top = viewportHeight - tooltipHeight - margin;
     }
+    
     // Ensure tooltip doesn't go above viewport
-    if (top - tooltipHeight / 2 < 0) {
-      top = tooltipHeight / 2 + 16;
+    if (top < margin) {
+      top = margin;
     }
 
     setPosition({ top, left });
@@ -123,54 +132,60 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
             style={{
               top: `${position.top}px`,
               left: `${position.left}px`,
-              transform: "translateY(-50%)",
             }}
             onMouseEnter={handleMouseLeave} // Close if mouse enters tooltip
           >
-            <div className="bg-surface border-2 border-primary rounded-xl shadow-2xl p-md space-y-sm max-w-sm animate-fade-in">
+            <div 
+              className="bg-surface border-2 border-jade-500 rounded-2xl shadow-2xl overflow-hidden animate-fade-in"
+              style={{ width: '600px' }}
+            >
               {/* Play Info Header */}
-              <div className="flex items-start gap-xs">
-                <Icon name="eye" className="text-jade-600 flex-shrink-0 mt-0.5" size="sm" />
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-sm font-bold text-primary truncate">
-                    {displayName}
-                  </h4>
-                  {play.p_type && (
-                    <p className="text-xs text-secondary">
-                      {play.p_type}
-                    </p>
-                  )}
+              <div className="bg-gradient-to-r from-jade-50 to-jade-100 px-lg py-md border-b border-jade-200">
+                <div className="flex items-start gap-sm">
+                  <Icon name="eye" className="text-jade-600 flex-shrink-0 mt-1" size="md" />
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-lg font-bold text-primary truncate">
+                      {displayName}
+                    </h3>
+                    {play.p_type && (
+                      <p className="text-sm text-secondary mt-xs">
+                        {play.p_type}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              {/* Diagram Preview */}
+              {/* Large Diagram Preview */}
               {play.diagram_image_url && (
-                <div className="relative">
+                <div className="relative bg-neutral-50">
                   <img
                     src={play.diagram_image_url}
                     alt={`${displayName} diagram`}
-                    className="w-full h-48 object-cover rounded-lg border border-muted"
+                    className="w-full h-96 object-contain"
                     loading="lazy"
                   />
                   {/* Overlay hint */}
-                  <div className="absolute bottom-2 right-2 bg-navy-900/80 text-white text-xs px-2 py-1 rounded-md backdrop-blur-sm">
-                    <Icon name="expand" size="sm" className="inline mr-1" />
-                    Click to expand
+                  <div className="absolute bottom-4 right-4 bg-navy-900/90 text-white text-sm px-3 py-2 rounded-lg backdrop-blur-sm shadow-lg flex items-center gap-2">
+                    <Icon name="expand" size="sm" />
+                    Click card to expand full details
                   </div>
                 </div>
               )}
 
-              {/* Quick Stats */}
-              <div className="flex items-center justify-between text-xs text-secondary pt-xs border-t border-muted">
-                <span className="flex items-center gap-1">
-                  <Icon name="eye" size="sm" />
-                  {play.times_called || 0} called
-                </span>
-                {play.install_phase && (
-                  <span className="px-2 py-0.5 bg-jade-100 text-jade-700 rounded-md font-medium">
-                    {play.install_phase}
+              {/* Quick Stats Footer */}
+              <div className="bg-neutral-50 px-lg py-md border-t border-muted">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="flex items-center gap-2 text-secondary">
+                    <Icon name="eye" size="sm" className="text-jade-600" />
+                    <strong className="text-primary">{play.times_called || 0}</strong> times called
                   </span>
-                )}
+                  {play.install_phase && (
+                    <span className="px-3 py-1 bg-jade-100 text-jade-700 rounded-lg font-semibold text-xs uppercase tracking-wide">
+                      {play.install_phase}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           </div>,
