@@ -516,19 +516,19 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                           <CSVValidationRowEditor
                             preview={preview}
                             existingFormations={
-                              parseResult?.existingPlays
+                              (parseResult?.existingPlays || [])
                                 .map((p) => p.formation)
-                                .filter((f): f is string => !!f) || []
+                                .filter((f): f is string => !!f)
                             }
                             existingPlayNames={
-                              parseResult?.existingPlays
+                              (parseResult?.existingPlays || [])
                                 .map((p) => p.play_name)
-                                .filter((n): n is string => !!n) || []
+                                .filter((n): n is string => !!n)
                             }
                             existingPersonnel={
-                              parseResult?.existingPlays
+                              (parseResult?.existingPlays || [])
                                 .map((p) => p.personnel)
-                                .filter((p): p is string => !!p) || []
+                                .filter((p): p is string => !!p)
                             }
                             onUpdate={(rowNumber, field, value) => {
                               // Update preview data
