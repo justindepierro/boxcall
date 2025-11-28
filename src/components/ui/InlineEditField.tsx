@@ -1,5 +1,20 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Icon } from "./Icon/Icon";
+import type { ValidatedInputType } from "../playbook/ValidatedInput";
+import {
+  validateFormation,
+  validatePlayName,
+  validatePersonnel,
+  validateFormationType,
+  validateBackfieldAlignment,
+  validateShift,
+  validateMotion,
+  validateRunStrength,
+  validatePassStrength,
+  validateProtection,
+  validateOneWordPlay,
+  validateWristbandNumber,
+} from "../../utils/dataValidation";
 
 interface InlineEditFieldProps {
   value: string;
@@ -15,6 +30,9 @@ interface InlineEditFieldProps {
   enableSuggestions?: boolean;
   normalizeValue?: (value: string) => string;
   isSaving?: boolean;
+  // NEW: Validation type for automatic suggestions + normalization
+  validationType?: ValidatedInputType;
+  existingValues?: string[];
 }
 
 export const InlineEditField: React.FC<InlineEditFieldProps> = ({

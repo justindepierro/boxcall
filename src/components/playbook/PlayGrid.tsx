@@ -484,6 +484,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
         directionDisplayFormat={directionDisplayFormat}
         expandedPlayId={expandedPlayId}
         onToggleExpand={handleToggleExpand}
+        existingPlays={plays}
       />
     ),
     [
@@ -498,6 +499,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       enableBulkOperations,
       collectedSuggestions,
       personnelConfigurations,
+      plays,
       directionDisplayFormat,
       expandedPlayId,
       handleToggleExpand,
@@ -763,6 +765,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                               directionDisplayFormat={directionDisplayFormat}
                               expandedPlayId={expandedPlayId}
                               onToggleExpand={handleToggleExpand}
+                              existingPlays={plays}
                             />
                           </div>
                         )}

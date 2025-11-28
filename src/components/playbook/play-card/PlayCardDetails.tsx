@@ -15,6 +15,7 @@ import {
 } from "../../../utils/localPlayFlags";
 import type { Play as PlayType } from "../../../types/play";
 import type { FieldDefinitionMap } from "./fieldDefinitions";
+import { usePlayFieldValues } from "../AddNewPlayModal/hooks/usePlayFieldValues";
 
 interface PlayCardDetailsProps {
   play: PlayType;
@@ -40,6 +41,8 @@ interface PlayCardDetailsProps {
   handlePlayDetailsDragEnd: (result: any) => void;
   getPlayTypeColor: (type: string) => string;
   getConfidenceColor: (confidence: number) => string;
+  // NEW: For validation
+  existingPlays?: PlayType[];
 }
 
 export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
@@ -60,7 +63,11 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
   handlePlayDetailsDragEnd,
   getPlayTypeColor: _getPlayTypeColor,
   getConfidenceColor: _getConfidenceColor,
+  existingPlays = [],
 }) => {
+  // Extract unique field values for validation
+  const fieldValues = usePlayFieldValues(existingPlays);
+
   const [flags, setFlags] = useState<PlayFlags>(() => getPlayFlags(play.id));
   const [newFlag, setNewFlag] = useState("");
   const [newPlayer, setNewPlayer] = useState("");

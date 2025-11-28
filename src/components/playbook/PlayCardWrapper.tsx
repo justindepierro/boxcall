@@ -44,6 +44,9 @@ interface PlayCardWrapperProps {
   // Expansion state
   expandedPlayId?: string | null;
   onToggleExpand?: (playId: string) => void;
+
+  // NEW: For validation
+  existingPlays?: Play[];
 }
 
 export const PlayCardWrapper: React.FC<PlayCardWrapperProps> = ({
@@ -68,6 +71,7 @@ export const PlayCardWrapper: React.FC<PlayCardWrapperProps> = ({
   directionDisplayFormat,
   expandedPlayId,
   onToggleExpand,
+  existingPlays,
 }) => {
   const { prefetchPlayDetails, cancelPrefetch } = usePrefetchQueries();
 
@@ -98,6 +102,7 @@ export const PlayCardWrapper: React.FC<PlayCardWrapperProps> = ({
     directionDisplayFormat: directionDisplayFormat || "full",
     isExpanded: expandedPlayId === play.id,
     onToggleExpand,
+    existingPlays,
   };
 
   return (

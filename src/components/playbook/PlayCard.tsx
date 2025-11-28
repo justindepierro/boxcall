@@ -57,6 +57,8 @@ interface PlayCardProps {
   // Controlled expansion state
   isExpanded?: boolean;
   onToggleExpand?: (playId: string) => void;
+  // NEW: For validation
+  existingPlays?: PlayType[];
 }
 
 type FieldVisibility = Record<string, boolean>;
@@ -488,6 +490,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                       handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
                       getPlayTypeColor={getPlayTypeColor}
                       getConfidenceColor={getConfidenceColor}
+                      existingPlays={props.existingPlays}
                     />
                   </div>
                 </motion.div>
@@ -552,6 +555,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
             getPlayTypeColor={getPlayTypeColor}
             getConfidenceColor={getConfidenceColor}
+            existingPlays={props.existingPlays}
           />
         )}
       </div>
