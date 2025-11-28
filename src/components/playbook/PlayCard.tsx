@@ -141,6 +141,23 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   // Extract unique field values for validation
   const fieldValues = usePlayFieldValues(existingPlays);
 
+  // DEBUG: Log play data to check what's in the database
+  useEffect(() => {
+    console.log('[PlayCard] Play data from database:', {
+      play_name: play.play_name,
+      formation: play.formation,
+      f_type: play.f_type,
+      back_align: play.back_align,
+      shift: play.shift,
+      motion: play.motion,
+      r_str: play.r_str,
+      p_str: play.p_str,
+      protection: play.protection,
+      one_word_play: play.one_word_play,
+      wristband_number: play.wristband_number,
+    });
+  }, [play]);
+
   const [optimisticPlay, setOptimisticPlay] = useState<PlayType>(play);
   const [savingFields, setSavingFields] = useState<SaveQueue>(new Set());
   const [formationFieldOrder, setFormationFieldOrder] = useState<string[]>(
