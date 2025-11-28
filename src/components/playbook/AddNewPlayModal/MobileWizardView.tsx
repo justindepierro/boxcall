@@ -391,6 +391,8 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
               formationType={formData.formationType}
               formationDir={formData.formationDir}
               backAlign={formData.backAlign}
+              backLeftOfQb={formData.backLeftOfQb}
+              backRightOfQb={formData.backRightOfQb}
               shift={formData.shift}
               motion={formData.motion}
               formationTags={formData.formationTags}
@@ -403,6 +405,8 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
                 updateField("formationDir", value)
               }
               onBackAlignChange={(value) => updateField("backAlign", value)}
+              onBackLeftOfQbChange={(value) => updateField("backLeftOfQb", value)}
+              onBackRightOfQbChange={(value) => updateField("backRightOfQb", value)}
               onShiftChange={(value) => updateField("shift", value)}
               onMotionChange={(value) => updateField("motion", value)}
               onFormationTagsChange={(value) =>
@@ -415,9 +419,11 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
               // Play details
               playDir={formData.playDir}
               protection={formData.protection}
+              checkInto={formData.checkInto}
               playTags={formData.playTags}
               onPlayDirChange={(value) => updateField("playDir", value)}
               onProtectionChange={(value) => updateField("protection", value)}
+              onCheckIntoChange={(value) => updateField("checkInto", value)}
               onPlayTagsChange={(value) => updateField("playTags", value)}
               // Confidence
               confidence={formData.confidence}

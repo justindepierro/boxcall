@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "../../ui/Button/Button";
 import { Icon } from "../../ui/Icon";
 import { Typography } from "../../design-system/Typography";
@@ -118,7 +118,7 @@ export function CSVValidationRowEditor({
                 onClick={() => startEditing(field, value)}
                 variant="neutralLink"
                 size="xs"
-                icon={<Icon name="edit-2" className="h-3 w-3" />}
+                icon={<Icon name="edit" className="h-3 w-3" />}
                 iconPosition="only"
                 aria-label={`Edit ${label}`}
               />
@@ -151,7 +151,7 @@ export function CSVValidationRowEditor({
               onClick={cancelEditing}
               variant="outline"
               size="xs"
-              icon={<Icon name="x" className="h-3 w-3" />}
+              icon={<Icon name="x-circle" className="h-3 w-3" />}
               iconPosition="only"
               aria-label="Cancel"
             />
