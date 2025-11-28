@@ -36,9 +36,28 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
     if (!triggerRef.current) return;
     const rect = triggerRef.current.getBoundingClientRect();
 
-    // Position tooltip to the right of the card
-    const top = rect.top + rect.height / 2;
-    const left = rect.right + 16;
+    // Check if tooltip would go off-screen to the right
+    const tooltipWidth = 384; // max-w-sm = 24rem = 384px
+    const viewportWidth = window.innerWidth;
+    const spaceOnRight = viewportWidth - rect.right;
+    
+    let top = rect.top + rect.height / 2;
+    let left = rect.right + 16;
+    
+    // If not enough space on right, show on left
+    if (spaceOnRight < tooltipWidth + 32) {
+      left = rect.left - tooltipWidth - 16;
+    }
+    
+    // Ensure tooltip doesn't go below viewport
+    const tooltipHeight = 300; // approximate
+    if (top + tooltipHeight / 2 > window.innerHeight) {
+      top = window.innerHeight - tooltipHeight / 2 - 16;
+    }
+    // Ensure tooltip doesn't go above viewport
+    if (top - tooltipHeight / 2 < 0) {
+      top = tooltipHeight / 2 + 16;
+    }
 
     setPosition({ top, left });
   }, []);

@@ -62,6 +62,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   uploadButtonText = "Upload Diagram",
   disabled = false,
 }) => {
+  // Disable upload if onChange is not ready (prevents uploads during initial load)
+  const isReady = typeof onChange === 'function';
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [dragActive, setDragActive] = useState(false);
@@ -95,6 +97,12 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
    */
   const uploadFile = useCallback(
     async (file: File) => {
+      // Block upload if component not ready
+      if (!isReady) {
+        toast.error("Please wait for the page to finish loading");
+        return;
+      }
+
       try {
         setUploading(true);
         setUploadProgress(0);
@@ -162,7 +170,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         setUploadProgress(0);
       }
     },
-    [bucket, storagePath, validateFile, onChange, toast, value]
+    [bucket, storagePath, validateFile, onChange, toast, value, isReady]
   );
 
   /**
@@ -311,9 +319,9 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           className={`
             border-2 border-dashed rounded-lg p-md text-center transition-colors
             ${dragActive ? "border-jade-500 bg-jade-50" : "border-primary bg-muted"}
-            ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:border-jade-400"}
+            ${(disabled || !isReady) ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:border-jade-400"}
           `}
-          onClick={!disabled ? handleButtonClick : undefined}
+          onClick={(!disabled && isReady) ? handleButtonClick : undefined}
         >
           <input
             ref={fileInputRef}
@@ -321,7 +329,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             accept={acceptedTypes.join(",")}
             onChange={handleFileChange}
             className="hidden"
-            disabled={disabled}
+            disabled={disabled || !isReady}
             capture="environment" // Mobile: prefer back camera
           />
 
