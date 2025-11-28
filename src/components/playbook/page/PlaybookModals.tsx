@@ -119,45 +119,31 @@ export function PlaybookModals({
     <>
       {/* Add New Play Modal */}
       {showAddNewPlayModal && (
-        <Modal
-          isOpen={showAddNewPlayModal}
-          onClose={() => setShowAddNewPlayModal(false)}
-          title="Create New Play"
-          size="lg"
-        >
-          <Suspense fallback={<div>Loading...</div>}>
-            <AddNewPlayModal
-              isOpen={showAddNewPlayModal}
-              onClose={() => setShowAddNewPlayModal(false)}
-              onCreatePlay={async (playData) => {
-                const play = await handleSavePlay(playData as Play);
-                return play;
-              }}
-              playbookId={activePlaybookId}
-            />
-          </Suspense>
-        </Modal>
+        <Suspense fallback={<div>Loading...</div>}>
+          <AddNewPlayModal
+            isOpen={showAddNewPlayModal}
+            onClose={() => setShowAddNewPlayModal(false)}
+            onCreatePlay={async (playData) => {
+              const play = await handleSavePlay(playData as Play);
+              return play;
+            }}
+            playbookId={activePlaybookId}
+          />
+        </Suspense>
       )}
 
       {/* Playbook Settings Modal */}
       {showPlaybookSettingsModal && (
-        <Modal
-          isOpen={showPlaybookSettingsModal}
-          onClose={() => setShowPlaybookSettingsModal(false)}
-          title="Playbook Settings"
-          size="md"
-        >
-          <Suspense fallback={<div>Loading...</div>}>
-            <PlaybookSettingsModal
-              isOpen={showPlaybookSettingsModal}
-              onClose={() => setShowPlaybookSettingsModal(false)}
-              onOpenPersonnel={() => {
-                setShowPlaybookSettingsModal(false);
-                setShowPersonnelModal(true);
-              }}
-            />
-          </Suspense>
-        </Modal>
+        <Suspense fallback={<div>Loading...</div>}>
+          <PlaybookSettingsModal
+            isOpen={showPlaybookSettingsModal}
+            onClose={() => setShowPlaybookSettingsModal(false)}
+            onOpenPersonnel={() => {
+              setShowPlaybookSettingsModal(false);
+              setShowPersonnelModal(true);
+            }}
+          />
+        </Suspense>
       )}
 
       {/* Personnel Configuration Modal */}
@@ -173,20 +159,13 @@ export function PlaybookModals({
 
       {/* Playbook Health Modal */}
       {showPlaybookHealthModal && (
-        <Modal
-          isOpen={showPlaybookHealthModal}
-          onClose={() => setShowPlaybookHealthModal(false)}
-          title="Playbook Health"
-          size="lg"
-        >
-          <Suspense fallback={<div>Loading...</div>}>
-            <PlaybookHealthModal
-              isOpen={showPlaybookHealthModal}
-              onClose={() => setShowPlaybookHealthModal(false)}
-              playbookId={activePlaybookId}
-            />
-          </Suspense>
-        </Modal>
+        <Suspense fallback={<div>Loading...</div>}>
+          <PlaybookHealthModal
+            isOpen={showPlaybookHealthModal}
+            onClose={() => setShowPlaybookHealthModal(false)}
+            playbookId={activePlaybookId}
+          />
+        </Suspense>
       )}
 
       {/* Play Assignments Modal */}
