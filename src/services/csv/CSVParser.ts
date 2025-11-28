@@ -80,32 +80,34 @@ export class CSVParser {
 
     // Common header keywords that indicate a header row
     const headerKeywords = [
-      'formation',
-      'play_name',
-      'play name',
-      'playname',
-      'p_type',
-      'play_type',
-      'play type',
-      'personnel',
-      'protection',
-      'type',
-      'name',
-      'category',
-      'notes',
-      'description',
-      'one_word_play',
-      'audible',
-      'key_player',
-      'down',
-      'distance',
-      'field_position'
+      "formation",
+      "play_name",
+      "play name",
+      "playname",
+      "p_type",
+      "play_type",
+      "play type",
+      "personnel",
+      "protection",
+      "type",
+      "name",
+      "category",
+      "notes",
+      "description",
+      "one_word_play",
+      "audible",
+      "key_player",
+      "down",
+      "distance",
+      "field_position",
     ];
 
     // Check if any of the first few values match common header keywords
-    const firstThreeValues = values.slice(0, 3).map(v => v.toLowerCase().trim());
-    const matchCount = firstThreeValues.filter(val => 
-      headerKeywords.some(keyword => val === keyword || val.includes(keyword))
+    const firstThreeValues = values
+      .slice(0, 3)
+      .map((v) => v.toLowerCase().trim());
+    const matchCount = firstThreeValues.filter((val) =>
+      headerKeywords.some((keyword) => val === keyword || val.includes(keyword))
     ).length;
 
     // If 2 or more of the first 3 values match header keywords, it's likely a header

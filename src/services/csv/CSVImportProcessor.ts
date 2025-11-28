@@ -127,7 +127,7 @@ export class CSVImportProcessor {
 
     // Add message about skipped rows if any
     if (skippedRows > 0) {
-      const skippedMessage = `${skippedRows} row${skippedRows > 1 ? 's were' : ' was'} skipped due to missing required fields (play_name).`;
+      const skippedMessage = `${skippedRows} row${skippedRows > 1 ? "s were" : " was"} skipped due to missing required fields (play_name).`;
       if (confirmationMessage) {
         confirmationMessage += `\n\n${skippedMessage}`;
       } else {
