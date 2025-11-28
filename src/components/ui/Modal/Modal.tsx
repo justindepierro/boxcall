@@ -49,14 +49,14 @@ const getModalSizeStyles = (size: ModalProps["size"]) => {
   }
 };
 const getModalTypeStyles = (type: ModalProps["type"]) => {
-  const baseStyles = "rounded-lg shadow-xl border-2"; // Square corners, stronger shadows
+  const baseStyles = "rounded-lg shadow-xl border-2 bg-white dark:bg-neutral-900"; // Solid background always
   switch (type) {
     case "alert":
-      return `${baseStyles} bg-subtle dark:bg-surface-error/20 border-text-error dark:border-text-error`;
+      return `${baseStyles} border-error-default`;
     case "confirm":
-      return `${baseStyles} bg-subtle dark:bg-warning/20/20 border-text-warning dark:border-text-warning`;
+      return `${baseStyles} border-warning-default`;
     default:
-      return `${baseStyles} surface-card elevation-modal border-muted`;
+      return `${baseStyles} border-divider`;
   }
 };
 const getBackdropStyles = () => {
@@ -164,7 +164,7 @@ export const Modal: React.FC<ModalProps> = ({
         <div
           ref={modalRef}
           className={`
-            ${size === "fullscreen" ? "w-full h-full bg-primary rounded-lg border-2 border-border shadow-xl overflow-hidden flex flex-col" : `w-full ${getModalSizeStyles(size)}`}
+            ${size === "fullscreen" ? "w-full h-full bg-white dark:bg-neutral-900 rounded-lg border-2 border-divider shadow-xl overflow-hidden flex flex-col" : `w-full ${getModalSizeStyles(size)}`}
             ${size === "fullscreen" ? "" : `${getModalTypeStyles(type)} max-h-[90vh] overflow-hidden flex flex-col`}
             transform transition-all duration-300 scale-100 opacity-100
             ${className}
