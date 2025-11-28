@@ -1,6 +1,8 @@
-formation,play_name,p_type,personnel,one_word_play,f_dir,protection,motion,pref_down,pref_hash,notes
-Twins,QB Shirt,RPO,11,TANGO,Right,BOB,Y Orbit,1st & 10,Middle,Quick RPO with orbit motion
-I-Formation,Power,Run,21,POWER,Right,,Z Jet,2nd & Short,Strong,Power play with pulling guard
-Shotgun,Four Verts,Pass,10,VERTS,,,Z Motion,3rd & Long,Middle,4 vertical routes against Cover 2
-Trips,Bench,Pass,11,BENCH,Right,Slide,,1st & 10,Weak,Levels concept to trips side
-Empty,Mesh,Pass,10,MESH,,,H Cross,3rd & Medium,Middle,Mesh concept with crossing routes
+Formation (REQUIRED),Play Name (REQUIRED),Play Type (REQUIRED),Personnel (11/12/21),One Word Call,Formation Direction,Pass Protection,Pre-Snap Motion,Preferred Down,Preferred Hash,Notes & Description
+"Examples: Twins, I-Formation, Shotgun, Pistol, Empty","Examples: QB Shirt, Power, Four Verts","Pass, Run, RPO, Screen, Play Action, Option","11 (1RB 1TE), 12 (1RB 2TE), 21 (2RB 1TE), 10 (0RB 1TE)","Examples: TANGO, POWER, VERTS","Left, Right, Balanced","BOB, Slide, Man, Max, Half Slide","Examples: Y Orbit, Z Jet, Fly Motion","1st & 10, 2nd & Short, 3rd & Long, Goal Line","Left, Right, Middle, Strong, Weak","Any additional details about the play"
+,,,,,,,,,,
+Twins,QB Shirt,RPO,11,TANGO,Right,BOB,Y Orbit,1st & 10,Middle,Quick RPO with orbit motion - read defensive end
+I-Formation,Power,Run,21,POWER,Right,,Z Jet,2nd & Short,Strong,Power play with pulling guard leading through hole
+Shotgun,Four Verts,Pass,10,VERTS,,,Z Motion,3rd & Long,Middle,4 vertical routes against Cover 2 - read safety
+Trips,Bench,Pass,11,BENCH,Right,Slide,,1st & 10,Weak,Levels concept to trips side - high-low read on corner
+Empty,Mesh,Pass,10,MESH,,,H Cross,3rd & Medium,Middle,Mesh concept with crossing routes vs man coverage
