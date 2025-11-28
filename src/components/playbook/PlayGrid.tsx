@@ -918,6 +918,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                                 directionDisplayFormat={directionDisplayFormat}
                                 expandedPlayId={expandedPlayId}
                                 onToggleExpand={handleToggleExpand}
+                                existingPlays={plays}
                               />
                             </div>
                           </div>
