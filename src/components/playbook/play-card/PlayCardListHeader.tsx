@@ -215,9 +215,9 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
 
               {/* Confidence */}
               <span
-                className={`text-xs font-medium ${getConfidenceColor(optimisticPlay.confidence_base)}`}
+                className={`text-xs font-medium ${getConfidenceColor(typeof optimisticPlay.confidence_base === 'number' ? optimisticPlay.confidence_base : 70)}`}
               >
-                {optimisticPlay.confidence_base}%
+                {typeof optimisticPlay.confidence_base === 'number' ? optimisticPlay.confidence_base : 70}%
               </span>
 
               {/* Usage stats badges */}

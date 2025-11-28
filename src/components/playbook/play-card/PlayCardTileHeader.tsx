@@ -148,7 +148,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
         {isExpanded && (
           <div className="absolute -top-3 -right-3">
             <ConfidenceBadge
-              confidence={optimisticPlay.confidence_base}
+              confidence={typeof optimisticPlay.confidence_base === 'number' ? optimisticPlay.confidence_base : 70}
               size="md"
               showLabel
             />
