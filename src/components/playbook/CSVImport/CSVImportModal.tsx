@@ -5,6 +5,7 @@ import { Icon } from "../../ui/Icon/Icon";
 import { DataSyncService, CSVService, PlaysService } from "@services";
 import type { CSVParseResult } from "@services/csv";
 import { Button } from "../../ui/Button/Button";
+import { CSVValidationRowEditor } from "./CSVValidationRowEditor";
 
 interface CSVImportModalProps {
   isOpen: boolean;
@@ -523,63 +524,34 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                     {expandedRows.has(preview.rowNumber) && (
                       <tr className="bg-subtle">
                         <td colSpan={7} className="px-sm py-md">
-                          <div className="space-y-sm">
-                            {/* Additional Play Details */}
-                            <div className="grid grid-cols-3 gap-md text-xs">
-                              <div>
-                                <span className="font-medium text-secondary">
-                                  Audible:
-                                </span>
-                                <span className="ml-1 font-mono">
-                                  {preview.data.one_word_play || "-"}
-                                </span>
-                              </div>
-                              <div>
-                                <span className="font-medium text-secondary">
-                                  Protection:
-                                </span>
-                                <span className="ml-1 font-mono">
-                                  {preview.data.protection || "-"}
-                                </span>
-                              </div>
-                              <div>
-                                <span className="font-medium text-secondary">
-                                  Notes:
-                                </span>
-                                <span className="ml-1">
-                                  {preview.data.notes || "-"}
-                                </span>
-                              </div>
-                            </div>
-
-                            {/* Errors */}
-                            {preview.errors.length > 0 && (
-                              <div className="bg-surface-error border border-muted rounded-lg p-xs">
-                                <p className="text-xs font-medium text-error mb-xs">
-                                  Errors:
-                                </p>
-                                <ul className="text-xs text-error space-y-xs">
-                                  {preview.errors.map((error, idx) => (
-                                    <li key={idx}>• {error}</li>
-                                  ))}
-                                </ul>
-                              </div>
-                            )}
-
-                            {/* Warnings */}
-                            {preview.warnings.length > 0 && (
-                              <div className="bg-warning/20 border border-muted rounded-lg p-xs">
-                                <p className="text-xs font-medium text-warning mb-xs">
-                                  Warnings:
-                                </p>
-                                <ul className="text-xs text-warning space-y-xs">
-                                  {preview.warnings.map((warning, idx) => (
-                                    <li key={idx}>• {warning}</li>
-                                  ))}
-                                </ul>
-                              </div>
-                            )}
-                          </div>
+                          <CSVValidationRowEditor
+                            preview={preview}
+                            existingFormations={parseResult?.existingPlays.map(p => p.formation).filter((f): f is string => !!f) || []}
+                            existingPlayNames={parseResult?.existingPlays.map(p => p.play_name).filter((n): n is string => !!n) || []}
+                            existingPersonnel={parseResult?.existingPlays.map(p => p.personnel).filter((p): p is string => !!p) || []}
+                            onUpdate={(rowNumber, field, value) => {
+                              // Update preview data
+                              if (parseResult) {
+                                const updatedPreviews = parseResult.previews.map(p =>
+                                  p.rowNumber === rowNumber
+                                    ? { ...p, data: { ...p.data, [field]: value } }
+                                    : p
+                                );
+                                setParseResult({ ...parseResult, previews: updatedPreviews });
+                              }
+                            }}
+                            onAcceptSuggestion={(rowNumber, field, suggestedValue) => {
+                              // Apply suggested correction
+                              if (parseResult) {
+                                const updatedPreviews = parseResult.previews.map(p =>
+                                  p.rowNumber === rowNumber
+                                    ? { ...p, data: { ...p.data, [field]: suggestedValue } }
+                                    : p
+                                );
+                                setParseResult({ ...parseResult, previews: updatedPreviews });
+                              }
+                            }}
+                          />
                         </td>
                       </tr>
                     )}
