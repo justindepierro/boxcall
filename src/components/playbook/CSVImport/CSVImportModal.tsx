@@ -119,15 +119,20 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         throw new Error("No valid plays to import");
       }
 
-      // Prepare plays for bulk import (remove generated IDs and timestamps)
+      // Prepare plays for bulk import (remove generated IDs and timestamps, keep playbook_id)
       const playsForImport = conversionResult.plays.map((play) => {
         const {
           id: _id,
           created_at: _createdAt,
           updated_at: _updatedAt,
+          created_by: _createdBy,
           ...playData
         } = play;
-        return playData;
+        // Ensure playbook_id is present
+        return {
+          ...playData,
+          playbook_id: actualPlaybookId,
+        };
       });
 
       // Use DataSync service to bulk import the converted plays
