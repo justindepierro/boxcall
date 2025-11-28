@@ -38,13 +38,13 @@ export interface PersonnelConfiguration {
 interface PersonnelConfigurationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  configurations: PersonnelConfiguration[];
-  onSave: (configurations: PersonnelConfiguration[]) => void;
+  configurations?: PersonnelConfiguration[];
+  onSave?: (configurations: PersonnelConfiguration[]) => void;
 }
 
 export const PersonnelConfigurationModal: React.FC<
   PersonnelConfigurationModalProps
-> = ({ isOpen, onClose, configurations, onSave }) => {
+> = ({ isOpen, onClose, configurations = [], onSave = () => {} }) => {
   const [localConfigurations, setLocalConfigurations] =
     useState<PersonnelConfiguration[]>(configurations);
   const [expandedConfigIds, setExpandedConfigIds] = useState<Set<string>>(

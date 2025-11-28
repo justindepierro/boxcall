@@ -32,7 +32,7 @@ import { info, error as logError } from "../../utils/logger";
 export interface PlaybookHealthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  playbookId: string;
+  playbookId?: string;
 }
 
 /**

@@ -125,6 +125,7 @@ export function PlaybookModals({
         >
           <Suspense fallback={<div>Loading...</div>}>
             <AddNewPlayModal
+              isOpen={showAddNewPlayModal}
               onClose={() => setShowAddNewPlayModal(false)}
               onSave={handleSavePlay}
               teamId={activeTeamId || ""}
@@ -143,6 +144,7 @@ export function PlaybookModals({
         >
           <Suspense fallback={<div>Loading...</div>}>
             <PlaybookSettingsModal
+              isOpen={showPlaybookSettingsModal}
               onClose={() => setShowPlaybookSettingsModal(false)}
               onOpenPersonnel={() => {
                 setShowPlaybookSettingsModal(false);
@@ -163,6 +165,7 @@ export function PlaybookModals({
         >
           <Suspense fallback={<div>Loading...</div>}>
             <PersonnelConfigurationModal
+              isOpen={showPersonnelModal}
               onClose={() => setShowPersonnelModal(false)}
             />
           </Suspense>
@@ -179,6 +182,7 @@ export function PlaybookModals({
         >
           <Suspense fallback={<div>Loading...</div>}>
             <PlaybookHealthModal
+              isOpen={showPlaybookHealthModal}
               onClose={() => setShowPlaybookHealthModal(false)}
             />
           </Suspense>
@@ -218,6 +222,7 @@ export function PlaybookModals({
         >
           <Suspense fallback={<div>Loading...</div>}>
             <KeyboardShortcutsGuide
+              isOpen={showKeyboardShortcutsModal}
               onClose={() => setShowKeyboardShortcutsModal(false)}
             />
           </Suspense>
