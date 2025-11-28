@@ -38,12 +38,20 @@ export class CSVImportProcessor {
     const rawHeaders = CSVParser.extractHeaders(lines);
     const columnMapping = CSVColumnMapper.detectColumnMapping(rawHeaders);
 
+    // Determine starting row - skip first row if it's detected as a header
+    let startRow = 1;
+    const firstDataRow = CSVParser.parseCSVLine(lines[1]);
+    if (CSVParser.isHeaderRow(firstDataRow)) {
+      startRow = 2; // Skip both header rows if detected
+    }
+
     const previews: CSVPlayPreview[] = [];
     let playsNeedingConfirmation = 0;
     let lowQualityPlays = 0;
+    let skippedRows = 0;
 
     // Process each data row
-    for (let i = 1; i < lines.length; i++) {
+    for (let i = startRow; i < lines.length; i++) {
       const values = CSVParser.parseCSVLine(lines[i]);
       const rowData = CSVParser.mapRowToFields(
         values,
@@ -51,12 +59,13 @@ export class CSVImportProcessor {
         columnMapping
       );
 
-      const errors: string[] = [];
-
-      // Check for required fields (only play_name causes error)
+      // Skip rows that don't have required fields (play_name)
       if (!CSVDataValidator.isValidRow(rowData)) {
-        errors.push("Missing required field: play_name");
+        skippedRows++;
+        continue; // Skip this row entirely
       }
+
+      const errors: string[] = [];
 
       // Validate and correct data
       const { warnings, correctedData } =
@@ -82,7 +91,7 @@ export class CSVImportProcessor {
 
       previews.push({
         rowNumber: i + 1,
-        isValid: errors.length === 0, // Only fails if missing play_name
+        isValid: true, // All rows reaching here are valid (have play_name)
         errors,
         warnings,
         data: {
@@ -98,7 +107,7 @@ export class CSVImportProcessor {
       });
     }
 
-    const validPlays = previews.filter((p) => p.isValid).length;
+    const validPlays = previews.length; // All previews are valid (invalid rows were filtered)
     const totalWarnings = previews.reduce(
       (sum, p) => sum + p.warnings.length,
       0
@@ -114,6 +123,16 @@ export class CSVImportProcessor {
     ) {
       needsConfirmation = true;
       confirmationMessage = `I see ${playsNeedingConfirmation} play${playsNeedingConfirmation > 1 ? "s are" : " is"} missing formation and/or play type. Are you sure you wish to continue?`;
+    }
+
+    // Add message about skipped rows if any
+    if (skippedRows > 0) {
+      const skippedMessage = `${skippedRows} row${skippedRows > 1 ? 's were' : ' was'} skipped due to missing required fields (play_name).`;
+      if (confirmationMessage) {
+        confirmationMessage += `\n\n${skippedMessage}`;
+      } else {
+        confirmationMessage = skippedMessage;
+      }
     }
 
     // Generate quality warning if needed
@@ -134,13 +153,14 @@ export class CSVImportProcessor {
       summary: {
         totalRows: previews.length,
         validPlays,
-        invalidPlays: previews.length - validPlays,
+        invalidPlays: 0, // No invalid plays in preview (they were filtered)
         warnings: totalWarnings,
         detectedColumns: rawHeaders,
         suggestedMappings: columnMapping,
         needsConfirmation,
         confirmationMessage,
         qualityWarning,
+        skippedRows, // Add skipped rows count to summary
       },
     };
   }

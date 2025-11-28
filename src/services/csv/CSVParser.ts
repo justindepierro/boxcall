@@ -72,6 +72,47 @@ export class CSVParser {
   }
 
   /**
+   * Detect if a row is likely a header row based on content
+   * Headers typically contain field names, not actual play data
+   */
+  static isHeaderRow(values: string[]): boolean {
+    if (values.length === 0) return false;
+
+    // Common header keywords that indicate a header row
+    const headerKeywords = [
+      'formation',
+      'play_name',
+      'play name',
+      'playname',
+      'p_type',
+      'play_type',
+      'play type',
+      'personnel',
+      'protection',
+      'type',
+      'name',
+      'category',
+      'notes',
+      'description',
+      'one_word_play',
+      'audible',
+      'key_player',
+      'down',
+      'distance',
+      'field_position'
+    ];
+
+    // Check if any of the first few values match common header keywords
+    const firstThreeValues = values.slice(0, 3).map(v => v.toLowerCase().trim());
+    const matchCount = firstThreeValues.filter(val => 
+      headerKeywords.some(keyword => val === keyword || val.includes(keyword))
+    ).length;
+
+    // If 2 or more of the first 3 values match header keywords, it's likely a header
+    return matchCount >= 2;
+  }
+
+  /**
    * Map row values to field names using column mapping
    */
   static mapRowToFields(

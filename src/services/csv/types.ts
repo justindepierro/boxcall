@@ -63,6 +63,7 @@ export interface CSVParseResult {
     needsConfirmation?: boolean;
     confirmationMessage?: string;
     qualityWarning?: string;
+    skippedRows?: number;
   };
 }
 
