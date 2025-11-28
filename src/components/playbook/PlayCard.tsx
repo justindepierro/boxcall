@@ -608,15 +608,15 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             playDetailsFieldVisibility={
               playDetailsFieldVisibility || INITIAL_PLAY_DETAILS_VISIBILITY
             }
-        )}
-      </div>
-      </div>
-    </PlayDiagramTooltip>
-  );
-};        />
+            handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
+            getPlayTypeColor={getPlayTypeColor}
+            getConfidenceColor={getConfidenceColor}
+            existingPlays={existingPlays}
+          />
         )}
       </div>
     </div>
+    </PlayDiagramTooltip>
   );
 };
 
