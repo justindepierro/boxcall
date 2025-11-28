@@ -405,8 +405,12 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
                 updateField("formationDir", value)
               }
               onBackAlignChange={(value) => updateField("backAlign", value)}
-              onBackLeftOfQbChange={(value) => updateField("backLeftOfQb", value)}
-              onBackRightOfQbChange={(value) => updateField("backRightOfQb", value)}
+              onBackLeftOfQbChange={(value) =>
+                updateField("backLeftOfQb", value)
+              }
+              onBackRightOfQbChange={(value) =>
+                updateField("backRightOfQb", value)
+              }
               onShiftChange={(value) => updateField("shift", value)}
               onMotionChange={(value) => updateField("motion", value)}
               onFormationTagsChange={(value) =>

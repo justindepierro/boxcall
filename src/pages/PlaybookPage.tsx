@@ -1066,7 +1066,10 @@ export default function PlaybookPage() {
           activePlaybookId={activePlaybookId}
           selectedPlaysForPractice={selectedPlaysForPractice}
           setSelectedPlaysForPractice={setSelectedPlaysForPractice}
-          existingPlays={allPlaysForStats.map(play => ({ ...play, created_by: play.created_by || "" }))}
+          existingPlays={allPlaysForStats.map((play) => ({
+            ...play,
+            created_by: play.created_by || "",
+          }))}
           handleCreatePlay={handleCreatePlay}
           handleSavePlay={handleSavePlay}
           dispatch={dispatch}
