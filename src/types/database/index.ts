@@ -660,6 +660,7 @@ export type Database = {
             | Database["public"]["Enums"]["play_creation_source"]
             | null;
           diagram_data: Json | null;
+          diagram_image_url: string | null;
           f_dir: string | null;
           f_type: string | null;
           formation: string;
@@ -704,6 +705,7 @@ export type Database = {
             | Database["public"]["Enums"]["play_creation_source"]
             | null;
           diagram_data?: Json | null;
+          diagram_image_url?: string | null;
           f_dir?: string | null;
           f_type?: string | null;
           formation: string;
@@ -748,6 +750,7 @@ export type Database = {
             | Database["public"]["Enums"]["play_creation_source"]
             | null;
           diagram_data?: Json | null;
+          diagram_image_url?: string | null;
           f_dir?: string | null;
           f_type?: string | null;
           formation?: string;
