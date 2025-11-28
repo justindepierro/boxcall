@@ -38,6 +38,8 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
+  const [importProgress, setImportProgress] = useState(0);
+  const [importError, setImportError] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
@@ -96,9 +98,12 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
     setStep("importing");
     setIsProcessing(true);
+    setImportProgress(0);
+    setImportError(null);
 
     try {
       console.info("Starting CSV import...");
+      setImportProgress(10);
 
       // Get or create a real playbook for the current user
       let actualPlaybookId = playbookId;
@@ -108,6 +113,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         actualPlaybookId = await PlaysService.ensureUserHasPlaybook();
         console.info("✅ Using playbook ID:", actualPlaybookId);
       }
+      setImportProgress(25);
 
       // Convert previews to plays and import
       const conversionResult = CSVService.convertPreviewsToPlays(
@@ -118,6 +124,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       if (conversionResult.plays.length === 0) {
         throw new Error("No valid plays to import");
       }
+      setImportProgress(40);
 
       // Prepare plays for bulk import (remove generated IDs and timestamps, keep playbook_id)
       const playsForImport = conversionResult.plays.map((play) => {
@@ -134,12 +141,14 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           playbook_id: actualPlaybookId,
         };
       });
+      setImportProgress(60);
 
       // Use DataSync service to bulk import the converted plays
       const result = await DataSyncService.bulkCreatePlays(
         actualPlaybookId,
         playsForImport
       );
+      setImportProgress(90);
 
       const importResult: ImportResult = {
         success: result.success,
@@ -150,6 +159,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       };
 
       setImportResult(importResult);
+      setImportProgress(100);
       setStep("complete");
 
       if (onImportComplete) {
@@ -157,11 +167,13 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       }
     } catch (error) {
       console.error("❌ Import failed:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      setImportError(errorMessage);
       setImportResult({
         success: false,
-        totalRows: 0,
+        totalRows: parseResult?.previews.length || 0,
         importedPlays: 0,
-        errors: [error instanceof Error ? error.message : "Unknown error"],
+        errors: [errorMessage],
         warnings: [],
       });
       setStep("complete");
@@ -610,10 +622,12 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   const renderImportingStep = () => (
     <div className="text-center space-y-lg">
       <div>
-        <Icon
-          name="refresh-cw"
-          className="h-16 w-16 text-accent mx-auto mb-md animate-spin"
-        />
+        <div className="relative">
+          <Icon
+            name="loader"
+            className="h-16 w-16 text-accent mx-auto mb-md animate-spin"
+          />
+        </div>
         <Typography
           variant="headline-sm"
           as="h3"
@@ -625,7 +639,21 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           Processing your CSV file and adding plays to the database
         </p>
       </div>
+
+      {/* Progress Bar */}
       <div className="bg-subtle rounded-lg p-md">
+        <div className="mb-sm">
+          <div className="flex justify-between items-center mb-xs">
+            <span className="text-sm font-medium text-primary">Progress</span>
+            <span className="text-sm font-medium text-accent">{importProgress}%</span>
+          </div>
+          <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
+            <div
+              className="bg-accent h-full rounded-full transition-all duration-300 ease-out"
+              style={{ width: `${importProgress}%` }}
+            />
+          </div>
+        </div>
         <p className="text-sm text-secondary">
           Please wait while we process your plays. This may take a moment for
           large files.
@@ -657,17 +685,18 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           </>
         ) : (
           <>
-            <Icon name="error" className="h-16 w-16 text-error mx-auto mb-md" />
+            <Icon name="alert-circle" className="h-16 w-16 text-error mx-auto mb-md" />
             <Typography
               variant="headline-sm"
               as="h3"
-              className="text-primary mb-xs"
+              className="text-error mb-xs"
             >
-              Import Had Issues
+              {importResult?.importedPlays ? "Import Partially Failed" : "Import Failed"}
             </Typography>
             <p className="text-sm text-secondary">
-              {importResult?.importedPlays || 0} plays imported, but some errors
-              occurred
+              {importResult?.importedPlays 
+                ? `${importResult.importedPlays} plays imported, but some errors occurred`
+                : "Unable to import plays. Please check the errors below and try again."}
             </p>
           </>
         )}
@@ -772,9 +801,29 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         </div>
       )}
 
-      <Button onClick={onClose} variant="primary" size="sm">
-        View Playbook
-      </Button>
+      <div className="flex gap-sm justify-center">
+        {importResult?.success ? (
+          <Button onClick={onClose} variant="primary" size="sm">
+            View Playbook
+          </Button>
+        ) : (
+          <>
+            <Button
+              onClick={() => {
+                setStep("preview");
+                setImportError(null);
+              }}
+              variant="secondary"
+              size="sm"
+            >
+              Back to Preview
+            </Button>
+            <Button onClick={onClose} variant="primary" size="sm">
+              Close
+            </Button>
+          </>
+        )}
+      </div>
     </div>
   );
 
@@ -793,13 +842,21 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
     }
   };
 
+  const handleClose = () => {
+    // Prevent closing during import
+    if (step === "importing") {
+      return;
+    }
+    onClose();
+  };
+
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       title="CSV Import"
       size="lg"
-      closeOnBackdropClick={false}
+      closeOnBackdropClick={step !== "importing"}
     >
       {renderStep()}
     </Modal>

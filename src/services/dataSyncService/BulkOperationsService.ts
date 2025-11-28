@@ -36,16 +36,15 @@ export class BulkOperationsService {
       // Sequential delegation (can be optimized/batched later)
       for (const p of plays) {
         try {
-          // Domain service does not accept playbook_id in InboundPlay; attach after creation if needed
-          const { play: createdPlay } = await PlaysDomainService.createPlay(
-            p as InboundPlay
-          );
-          if (playbookId && !createdPlay.playbook_id) {
-            // Fallback: if domain layer did not set it (should normally be set upstream), patch via PlaysService
-            await PlaysService.updatePlay(createdPlay.id, {
-              playbook_id: playbookId,
-            } as Partial<Play>);
-          }
+          // Ensure playbook_id is present in the play data
+          const playWithPlaybookId = {
+            ...p,
+            playbook_id: p.playbook_id || playbookId,
+          };
+          
+          // Create play using PlaysService directly (bypasses domain layer validation)
+          const createdPlay = await PlaysService.createPlay(playWithPlaybookId);
+          
           created.push(createdPlay);
           CacheService.addToLocal("play", createdPlay);
         } catch (e: unknown) {
