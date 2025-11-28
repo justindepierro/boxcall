@@ -170,6 +170,8 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         f_type: formData.formationType.trim() || undefined,
         f_dir: formData.formationDir || undefined,
         back_align: formData.backAlign.trim() || undefined,
+        back_left_of_qb: formData.backLeftOfQb || undefined,
+        back_right_of_qb: formData.backRightOfQb || undefined,
         shift: formData.shift.trim() || undefined,
         motion: formData.motion.trim() || undefined,
         ftag1: fTags[0] || undefined,
@@ -180,6 +182,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         // Play details fields
         p_dir: formData.playDir || undefined,
         protection: formData.protection.trim() || undefined,
+        check_into: formData.checkInto.trim() || undefined,
         p_tag1: pTags[0] || undefined,
         p_tag2: pTags[1] || undefined,
 
@@ -640,6 +643,8 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             formationType={formData.formationType}
             formationDir={formData.formationDir}
             backAlign={formData.backAlign}
+            backLeftOfQb={formData.backLeftOfQb}
+            backRightOfQb={formData.backRightOfQb}
             shift={formData.shift}
             motion={formData.motion}
             formationTags={formData.formationTags}
@@ -650,6 +655,8 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             }
             onFormationDirChange={(value) => updateField("formationDir", value)}
             onBackAlignChange={(value) => updateField("backAlign", value)}
+            onBackLeftOfQbChange={(value) => updateField("backLeftOfQb", value)}
+            onBackRightOfQbChange={(value) => updateField("backRightOfQb", value)}
             onShiftChange={(value) => updateField("shift", value)}
             onMotionChange={(value) => updateField("motion", value)}
             onFormationTagsChange={(value) =>
@@ -660,9 +667,11 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             // Play details
             playDir={formData.playDir}
             protection={formData.protection}
+            checkInto={formData.checkInto}
             playTags={formData.playTags}
             onPlayDirChange={(value) => updateField("playDir", value)}
             onProtectionChange={(value) => updateField("protection", value)}
+            onCheckIntoChange={(value) => updateField("checkInto", value)}
             onPlayTagsChange={(value) => updateField("playTags", value)}
             // Confidence
             confidence={formData.confidence}

@@ -20,6 +20,8 @@ interface AdvancedOptionsSectionProps {
   formationType: string;
   formationDir: string;
   backAlign: string;
+  backLeftOfQb: boolean;
+  backRightOfQb: boolean;
   shift: string;
   motion: string;
   formationTags: string;
@@ -28,6 +30,8 @@ interface AdvancedOptionsSectionProps {
   onFormationTypeChange: (value: string) => void;
   onFormationDirChange: (value: string) => void;
   onBackAlignChange: (value: string) => void;
+  onBackLeftOfQbChange: (value: boolean) => void;
+  onBackRightOfQbChange: (value: boolean) => void;
   onShiftChange: (value: string) => void;
   onMotionChange: (value: string) => void;
   onFormationTagsChange: (value: string) => void;
@@ -36,9 +40,11 @@ interface AdvancedOptionsSectionProps {
   // Play details
   playDir: string;
   protection: string;
+  checkInto: string;
   playTags: string;
   onPlayDirChange: (value: string) => void;
   onProtectionChange: (value: string) => void;
+  onCheckIntoChange: (value: string) => void;
   onPlayTagsChange: (value: string) => void;
   // Confidence
   confidence: number;
@@ -71,6 +77,8 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
   formationType,
   formationDir,
   backAlign,
+  backLeftOfQb,
+  backRightOfQb,
   shift,
   motion,
   formationTags,
@@ -79,6 +87,8 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
   onFormationTypeChange,
   onFormationDirChange,
   onBackAlignChange,
+  onBackLeftOfQbChange,
+  onBackRightOfQbChange,
   onShiftChange,
   onMotionChange,
   onFormationTagsChange,
@@ -86,9 +96,11 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
   onPassStrengthChange,
   playDir,
   protection,
+  checkInto,
   playTags,
   onPlayDirChange,
   onProtectionChange,
+  onCheckIntoChange,
   onPlayTagsChange,
   confidence,
   onConfidenceChange,
@@ -230,6 +242,31 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                     existingValues={fieldValues.motions}
                   />
                 </div>
+                {/* Back Position Modifiers */}
+                <div className="flex items-center gap-sm mt-sm">
+                  <label className="flex items-center gap-xs cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={backLeftOfQb}
+                      onChange={(e) => onBackLeftOfQbChange(e.target.checked)}
+                      className="w-4 h-4 text-primary-500 border-border rounded focus:ring-2 focus:ring-primary-500"
+                    />
+                    <span className="text-sm group-hover:text-primary-600">
+                      ← Back Left of QB
+                    </span>
+                  </label>
+                  <label className="flex items-center gap-xs cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={backRightOfQb}
+                      onChange={(e) => onBackRightOfQbChange(e.target.checked)}
+                      className="w-4 h-4 text-primary-500 border-border rounded focus:ring-2 focus:ring-primary-500"
+                    />
+                    <span className="text-sm group-hover:text-primary-600">
+                      Back Right of QB →
+                    </span>
+                  </label>
+                </div>
               </div>
               <div>
                 <Typography
@@ -311,6 +348,21 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                   placeholder="e.g., 5-man, Slide, BOB"
                   type="protection"
                   existingValues={fieldValues.protections}
+                />
+              </div>
+              <div>
+                <Typography
+                  variant="label-md"
+                  className="block mb-xs text-secondary"
+                >
+                  Check Into
+                </Typography>
+                <input
+                  type="text"
+                  value={checkInto}
+                  onChange={(e) => onCheckIntoChange(e.target.value)}
+                  placeholder="e.g., Kill, Audible, Check"
+                  className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
                 />
               </div>
               <div className="md:col-span-2">

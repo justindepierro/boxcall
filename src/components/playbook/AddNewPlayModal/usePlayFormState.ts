@@ -16,6 +16,8 @@ export interface PlayFormData {
   formationType: string;
   formationDir: string;
   backAlign: string;
+  backLeftOfQb: boolean; // NEW: Back position modifier
+  backRightOfQb: boolean; // NEW: Back position modifier
   shift: string;
   motion: string;
   formationTags: string;
@@ -25,6 +27,7 @@ export interface PlayFormData {
   // Play details
   playDir: string;
   protection: string;
+  checkInto: string; // NEW: Audible/check play
   playTags: string;
 
   // Preferences
@@ -84,6 +87,8 @@ export const usePlayFormState = (options: UsePlayFormStateOptions = {}) => {
     formationType: existingPlay?.f_type || "",
     formationDir: existingPlay?.f_dir || "",
     backAlign: existingPlay?.back_align || "",
+    backLeftOfQb: existingPlay?.back_left_of_qb || false,
+    backRightOfQb: existingPlay?.back_right_of_qb || false,
     shift: existingPlay?.shift || "",
     motion: existingPlay?.motion || "",
     formationTags:
@@ -95,6 +100,7 @@ export const usePlayFormState = (options: UsePlayFormStateOptions = {}) => {
     // Play details
     playDir: existingPlay?.p_dir || "",
     protection: existingPlay?.protection || "",
+    checkInto: existingPlay?.check_into || "",
     playTags:
       [existingPlay?.p_tag1, existingPlay?.p_tag2].filter(Boolean).join(", ") ||
       "",
