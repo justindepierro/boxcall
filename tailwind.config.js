@@ -1,5 +1,6 @@
 import forms from "@tailwindcss/forms";
 import typography from "@tailwindcss/typography";
+import defaultColors from "tailwindcss/colors";
 
 // Helper to create color scale from CSS variables
 const createScale = (
@@ -24,9 +25,12 @@ const colors = {
   amber: createScale("accent-amber"),
   red: createScale("accent-red"),
   blue: createScale("accent-blue"),
-  cyan: createScale("cyan"),
-  lime: createScale("lime"),
-  indigo: createScale("indigo"),
+  // Use Tailwind default colors for personnel badges (CSS variables not defined)
+  cyan: defaultColors.cyan,
+  lime: defaultColors.lime,
+  indigo: defaultColors.indigo,
+  teal: defaultColors.teal,
+  emerald: defaultColors.emerald,
 
   // Semantic colors
   success: {
@@ -345,12 +349,30 @@ export default {
     },
   },
   safelist: [
-    // Personnel badge gradients - ensure all color presets are included
-    // These classes are dynamically constructed from BADGE_COLOR_PRESETS
-    { pattern: /^from-(electric|red|emerald|amber|purple|orange|cyan|pink|slate|teal|lime|indigo)-(400|500|600)$/ },
-    { pattern: /^to-(electric|red|emerald|amber|purple|orange|cyan|pink|slate|teal|lime|indigo)-(600|700|800)$/ },
-    // Shadow classes for shiny style
-    { pattern: /^shadow-(electric|red|emerald|amber|purple|orange|cyan|pink|slate|teal|lime|indigo)-(600)\/50$/ },
+    // Personnel badge classes - explicitly list all to ensure CSS generation
+    // Gradients
+    'from-electric-500', 'to-electric-700',
+    'from-red-500', 'to-red-700',
+    'from-emerald-500', 'to-emerald-700',
+    'from-amber-400', 'to-amber-600',
+    'from-purple-500', 'to-purple-700',
+    'from-orange-500', 'to-orange-700',
+    'from-cyan-500', 'to-cyan-700',
+    'from-pink-500', 'to-pink-700',
+    'from-slate-600', 'to-slate-800',
+    'from-teal-500', 'to-teal-700',
+    'from-lime-500', 'to-lime-700',
+    'from-indigo-500', 'to-indigo-700',
+    // Backgrounds
+    'bg-electric-600', 'bg-red-600', 'bg-emerald-600', 'bg-amber-500',
+    'bg-purple-600', 'bg-orange-600', 'bg-cyan-600', 'bg-pink-600',
+    'bg-slate-700', 'bg-teal-600', 'bg-lime-600', 'bg-indigo-600',
+    // Text colors
+    'text-white', 'text-amber-950',
+    // Borders
+    'border-electric-700', 'border-red-700', 'border-emerald-700', 'border-amber-600',
+    'border-purple-700', 'border-orange-700', 'border-cyan-700', 'border-pink-700',
+    'border-slate-800', 'border-teal-700', 'border-lime-700', 'border-indigo-700',
   ],
   plugins: [forms, typography],
 };
