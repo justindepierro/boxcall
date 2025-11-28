@@ -104,6 +104,17 @@ export const PersonnelBadge: React.FC<PersonnelBadgeProps> = ({
       styleClasses = `${preset.background} ${preset.text}`;
   }
 
+  // Debug logging for badge rendering
+  console.log('[PersonnelBadge Render]', {
+    personnel,
+    presetId: badgeCustomization.colorPresetId,
+    presetName: preset.name,
+    style: badgeCustomization.style,
+    gradientFrom: preset.gradientFrom,
+    gradientTo: preset.gradientTo,
+    finalClasses: styleClasses,
+  });
+
   return (
     <span
       className={`inline-flex items-center justify-center rounded-full font-medium ${styleClasses} ${sizeClasses[size]} ${fontOption?.className || ""} ${className}`}
