@@ -159,20 +159,13 @@ export function PlaybookModals({
 
       {/* Personnel Configuration Modal */}
       {showPersonnelModal && (
-        <Modal
-          isOpen={showPersonnelModal}
-          onClose={() => setShowPersonnelModal(false)}
-          title="Personnel Configuration"
-          size="lg"
-        >
-          <Suspense fallback={<div>Loading...</div>}>
-            <PersonnelConfigurationModal
-              isOpen={showPersonnelModal}
-              onClose={() => setShowPersonnelModal(false)}
-              playbookId={activePlaybookId}
-            />
-          </Suspense>
-        </Modal>
+        <Suspense fallback={<div>Loading...</div>}>
+          <PersonnelConfigurationModal
+            isOpen={showPersonnelModal}
+            onClose={() => setShowPersonnelModal(false)}
+            playbookId={activePlaybookId}
+          />
+        </Suspense>
       )}
 
       {/* Playbook Health Modal */}

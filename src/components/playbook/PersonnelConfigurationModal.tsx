@@ -10,31 +10,12 @@ import { useToast } from "../../hooks/useToast";
 import { usePersonnelConfigurations } from "../../hooks/usePersonnel";
 import { BadgeCustomizer } from "./BadgeCustomizer";
 import { PersonnelBadge } from "./PersonnelBadge";
-import type { BadgeCustomization } from "../../types/personnel";
+import type { 
+  BadgeCustomization, 
+  PersonnelConfiguration,
+  PlayerPosition 
+} from "../../types/personnel";
 import { useIsMobile } from "../../hooks/useBreakpoint";
-
-type PlayerPosition = "QB" | "RB" | "TE" | "WR";
-
-interface PersonnelPlayer {
-  id: string;
-  label: string; // e.g., "QB", "RB1", "3"
-  position: PlayerPosition;
-  isWildcatQB?: boolean; // For QB position only - indicates wildcat formation
-}
-
-interface PersonnelLine {
-  id: string;
-  label: string; // e.g., "LT", "LG", "C", "1", "2"
-}
-
-export interface PersonnelConfiguration {
-  id: string;
-  name: string; // e.g., "Spread", "Pro", "Jumbo"
-  players: PersonnelPlayer[];
-  line: PersonnelLine[];
-  isDefault?: boolean; // Mark as default personnel
-  badgeCustomization?: BadgeCustomization; // Badge styling
-}
 
 interface PersonnelConfigurationModalProps {
   isOpen: boolean;
@@ -67,56 +48,12 @@ export const PersonnelConfigurationModal: React.FC<
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    // If no configurations exist, start with a default personnel group
-    if (configurations.length === 0) {
-      const defaultConfig: PersonnelConfiguration = {
-        id: "default-personnel",
-        name: "Base Personnel",
-        isDefault: true,
-        players: [
-          { id: "p1", label: "Q", position: "QB", isWildcatQB: false }, // LOCKED QB
-          { id: "p2", label: "R", position: "RB" },
-          { id: "p3", label: "T", position: "TE" },
-          { id: "p4", label: "X", position: "WR" },
-          { id: "p5", label: "Y", position: "WR" },
-          { id: "p6", label: "Z", position: "WR" }, // 6th skill player
-        ],
-        line: [
-          { id: "l1", label: "LT" },
-          { id: "l2", label: "LG" },
-          { id: "l3", label: "C" },
-          { id: "l4", label: "RG" },
-          { id: "l5", label: "RT" },
-        ],
-      };
-      setLocalConfigurations([defaultConfig]);
-      setExpandedConfigIds(new Set([defaultConfig.id])); // Expand the first one
-    } else {
-      // Migrate existing configurations to ensure they have at least 6 players
-      const migratedConfigs = configurations.map((config) => {
-        // If config has fewer than 6 players, add missing WRs
-        if (config.players.length < 6) {
-          const missingCount = 6 - config.players.length;
-          const labels = ["Z", "H", "S"]; // Common WR labels for 3rd, 4th, 5th WR
-          const newPlayers = Array.from({ length: missingCount }, (_, i) => ({
-            id: `p${Date.now()}-${i}`,
-            label: labels[i] || `W${i + 3}`,
-            position: "WR" as PlayerPosition,
-          }));
-
-          return {
-            ...config,
-            players: [...config.players, ...newPlayers],
-          };
-        }
-        return config;
-      });
-
-      setLocalConfigurations(migratedConfigs);
-      // Expand the first configuration by default
-      if (migratedConfigs.length > 0) {
-        setExpandedConfigIds(new Set([migratedConfigs[0].id]));
-      }
+    // Update local state when configurations change (e.g., when data loads from Supabase)
+    setLocalConfigurations(configurations);
+    
+    // Expand the first configuration by default
+    if (configurations.length > 0) {
+      setExpandedConfigIds(new Set([configurations[0].id]));
     }
   }, [configurations]);
 
@@ -135,24 +72,20 @@ export const PersonnelConfigurationModal: React.FC<
   };
 
   const addPersonnelConfiguration = () => {
+    const timestamp = Date.now().toString();
     const newConfig: PersonnelConfiguration = {
-      id: Date.now().toString(),
+      id: timestamp,
+      playbook_id: playbookId || "",
       name: "New Personnel",
-      isDefault: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
       players: [
-        { id: "p1", label: "Q", position: "QB", isWildcatQB: false }, // LOCKED - QB always first
-        { id: "p2", label: "R", position: "RB" },
-        { id: "p3", label: "T", position: "TE" },
-        { id: "p4", label: "X", position: "WR" },
-        { id: "p5", label: "Y", position: "WR" },
-        { id: "p6", label: "Z", position: "WR" }, // 6th skill player
-      ],
-      line: [
-        { id: "l1", label: "LT" },
-        { id: "l2", label: "LG" },
-        { id: "l3", label: "C" },
-        { id: "l4", label: "RG" },
-        { id: "l5", label: "RT" },
+        { id: "p1", config_id: timestamp, label: "Q", player_position: "QB", sort_order: 0, is_wildcat_qb: false, created_at: new Date().toISOString() },
+        { id: "p2", config_id: timestamp, label: "R", player_position: "RB", sort_order: 1, is_wildcat_qb: false, created_at: new Date().toISOString() },
+        { id: "p3", config_id: timestamp, label: "T", player_position: "TE", sort_order: 2, is_wildcat_qb: false, created_at: new Date().toISOString() },
+        { id: "p4", config_id: timestamp, label: "X", player_position: "WR", sort_order: 3, is_wildcat_qb: false, created_at: new Date().toISOString() },
+        { id: "p5", config_id: timestamp, label: "Y", player_position: "WR", sort_order: 4, is_wildcat_qb: false, created_at: new Date().toISOString() },
+        { id: "p6", config_id: timestamp, label: "Z", player_position: "WR", sort_order: 5, is_wildcat_qb: false, created_at: new Date().toISOString() },
       ],
     };
     setLocalConfigurations((prev) => [...prev, newConfig]);
@@ -185,9 +118,9 @@ export const PersonnelConfigurationModal: React.FC<
   const getPersonnelSummary = (config: PersonnelConfiguration): string => {
     const counts = config.players.reduce(
       (acc, player) => {
-        if (player.position === "RB") acc.rb++;
-        else if (player.position === "TE") acc.te++;
-        else if (player.position === "WR") acc.wr++;
+        if (player.player_position === "RB") acc.rb++;
+        else if (player.player_position === "TE") acc.te++;
+        else if (player.player_position === "WR") acc.wr++;
         return acc;
       },
       { rb: 0, te: 0, wr: 0 }
@@ -223,8 +156,12 @@ export const PersonnelConfigurationModal: React.FC<
                 ...config.players,
                 {
                   id: `p${Date.now()}`,
+                  config_id: configId,
                   label: "",
-                  position: "WR" as PlayerPosition,
+                  player_position: "WR" as PlayerPosition,
+                  sort_order: config.players.length,
+                  is_wildcat_qb: false,
+                  created_at: new Date().toISOString(),
                 },
               ],
             }
@@ -307,7 +244,7 @@ export const PersonnelConfigurationModal: React.FC<
   const updatePlayerPosition = (
     configId: string,
     playerId: string,
-    position: PlayerPosition
+    player_position: PlayerPosition
   ) => {
     setLocalConfigurations((prev) =>
       prev.map((config) =>
@@ -315,7 +252,7 @@ export const PersonnelConfigurationModal: React.FC<
           ? {
               ...config,
               players: config.players.map((player) =>
-                player.id === playerId ? { ...player, position } : player
+                player.id === playerId ? { ...player, player_position } : player
               ),
             }
           : config
@@ -331,7 +268,7 @@ export const PersonnelConfigurationModal: React.FC<
               ...config,
               players: config.players.map((player) =>
                 player.id === playerId
-                  ? { ...player, isWildcatQB: !player.isWildcatQB }
+                  ? { ...player, is_wildcat_qb: !player.is_wildcat_qb }
                   : player
               ),
             }
@@ -340,23 +277,7 @@ export const PersonnelConfigurationModal: React.FC<
     );
   };
 
-  const updateLineLabel = (configId: string, lineId: string, label: string) => {
-    const normalized = normalizeLabel(label);
-    setLocalConfigurations((prev) =>
-      prev.map((config) =>
-        config.id === configId
-          ? {
-              ...config,
-              line: config.line.map((linePos) =>
-                linePos.id === lineId
-                  ? { ...linePos, label: normalized }
-                  : linePos
-              ),
-            }
-          : config
-      )
-    );
-  };
+  // Note: Offensive line configuration removed - not in database schema
 
   const renderContent = () => (
     <div className="space-y-6">
@@ -571,7 +492,7 @@ export const PersonnelConfigurationModal: React.FC<
                           ) : (
                             /* Other Positions - Native select dropdown */
                             <select
-                              value={player.position}
+                              value={player.player_position}
                               onChange={(e) =>
                                 updatePlayerPosition(
                                   config.id,
@@ -588,11 +509,11 @@ export const PersonnelConfigurationModal: React.FC<
                           )}
 
                           {/* Wildcat QB checkbox - only show for QB position (inline) */}
-                          {player.position === "QB" && index === 0 && (
+                          {player.player_position === "QB" && index === 0 && (
                             <label className="flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
                               <input
                                 type="checkbox"
-                                checked={player.isWildcatQB || false}
+                                checked={player.is_wildcat_qb || false}
                                 onChange={() =>
                                   toggleWildcatQB(config.id, player.id)
                                 }
@@ -645,29 +566,9 @@ export const PersonnelConfigurationModal: React.FC<
                         OFFENSIVE LINE
                       </Typography>
 
-                      {config.line.map((linePos, index) => (
-                        <div
-                          key={linePos.id}
-                          className="flex items-center gap-2"
-                        >
-                          <span className="text-xs text-tertiary w-6 text-right">
-                            {index + 1}.
-                          </span>
-                          <Input
-                            value={linePos.label}
-                            onChange={(e) =>
-                              updateLineLabel(
-                                config.id,
-                                linePos.id,
-                                e.target.value
-                              )
-                            }
-                            placeholder={["LT", "LG", "C", "RG", "RT"][index]}
-                            maxLength={3}
-                            className="flex-1 h-9 text-center font-mono font-bold uppercase text-sm"
-                          />
-                        </div>
-                      ))}
+                      <Typography variant="caption" color="muted" className="text-xs">
+                        Offensive line positions are managed separately
+                      </Typography>
 
                       <Typography
                         variant="caption"
@@ -743,7 +644,13 @@ export const PersonnelConfigurationModal: React.FC<
 
   // Show loading state while fetching data
   if (isLoading) {
-    return (
+    return isMobile ? (
+      <BottomSheet snapPoints={[0.6]} initialSnapPoint={0} showHandle={true}>
+        <div className="flex items-center justify-center p-8">
+          <div className="text-text-secondary">Loading personnel data...</div>
+        </div>
+      </BottomSheet>
+    ) : (
       <Modal isOpen={isOpen} onClose={onClose} title="Personnel Configuration" size="lg">
         <div className="flex items-center justify-center p-8">
           <div className="text-text-secondary">Loading personnel data...</div>
