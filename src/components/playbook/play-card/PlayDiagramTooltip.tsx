@@ -124,11 +124,18 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
                     <h3 className="text-lg font-bold text-primary truncate">
                       {displayName}
                     </h3>
-                    {play.p_type && (
-                      <p className="text-sm text-secondary mt-xs">
-                        {play.p_type}
-                      </p>
-                    )}
+                    <div className="flex items-center gap-2 mt-xs flex-wrap">
+                      {play.p_type && (
+                        <span className="text-sm text-secondary">
+                          {play.p_type}
+                        </span>
+                      )}
+                      {play.personnel && (
+                        <span className="px-2 py-0.5 bg-jade-600 text-white rounded-md text-xs font-semibold">
+                          {play.personnel}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
