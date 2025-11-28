@@ -61,6 +61,21 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
     (config) => config.name === optimisticPlay.personnel
   );
 
+  // Debug: Log personnel badge data
+  React.useEffect(() => {
+    if (optimisticPlay.personnel) {
+      console.log('[PersonnelBadge Debug]', {
+        playName: optimisticPlay.play_name,
+        personnel: optimisticPlay.personnel,
+        hasConfig: !!personnelConfig,
+        configName: personnelConfig?.name,
+        badgeCustomization: personnelConfig?.badgeCustomization,
+        totalConfigs: personnelConfigurations.length,
+        allConfigNames: personnelConfigurations.map(c => c.name),
+      });
+    }
+  }, [optimisticPlay.personnel, personnelConfig, personnelConfigurations]);
+
   return (
     <div className="flex items-center gap-4 overflow-visible">
       {/* Selection checkbox on the left (when selection mode is on) */}

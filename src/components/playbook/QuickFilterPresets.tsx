@@ -21,8 +21,8 @@ export const QuickFilterPresets: React.FC<QuickFilterPresetsProps> = ({
         </span>
       </div>
 
-      {/* 🎯 ENHANCED: Larger, more prominent filter buttons with icons */}
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-6">
+      {/* 🎯 ENHANCED: 4x2 grid layout - wider buttons, cleaner responsive behavior */}
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {QUICK_PRESETS.map((preset) => {
           const isActive = activePresetId === preset.id;
 
