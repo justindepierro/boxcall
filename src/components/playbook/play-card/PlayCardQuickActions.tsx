@@ -3,7 +3,7 @@ import { Typography } from "../../design-system/Typography";
 import Icon from "../../ui/Icon/Icon";
 import { Button } from "../../ui/Button/Button";
 import type { Play as PlayType } from "../../../types/play";
-import { usePlayStatus } from "../../../hooks/usePlayStatus";
+import { useBatchedPlayStatus } from "../../../hooks/useBatchedPlayStatus";
 
 interface PlayCardQuickActionsProps {
   play: PlayType;
@@ -20,8 +20,8 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
   onOpenAssignments,
   onPostToTeamBulletin,
 }) => {
-  // Fetch play status indicators
-  const status = usePlayStatus(play.id, play.playbook_id);
+  // Fetch play status indicators (batched for performance)
+  const status = useBatchedPlayStatus(play.id, play.playbook_id);
 
   return (
     <div className="pt-4 mt-4 divider-t">
