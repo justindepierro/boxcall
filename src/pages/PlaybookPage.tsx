@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
 
 import { AdvancedFilters } from "../components/playbook/AdvancedFilters";
+import { BulkActionsToolbar } from "../components/playbook/BulkActionsToolbar";
 
 import { Button } from "../components/ui/Button/Button";
 import { Icon } from "../components/ui/Icon";
@@ -1096,6 +1097,13 @@ export default function PlaybookPage() {
             </div>
           </BottomSheet>
         )}
+
+        {/* Bulk Actions Floating Toolbar */}
+        <BulkActionsToolbar
+          selectedCount={state.selectedPlayIds?.size || 0}
+          onClearSelection={() => dispatch({ type: "CLEAR_SELECTION" })}
+          onBulkAction={handleBulkAction}
+        />
       </div>
     </Aurora>
   );
