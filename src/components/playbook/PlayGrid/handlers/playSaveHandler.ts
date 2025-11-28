@@ -77,6 +77,8 @@ export function createPlaySaveHandler({
       if (updates.check_into !== undefined)
         dbUpdates.check_into = updates.check_into;
       if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
+      if (updates.diagram_image_url !== undefined)
+        dbUpdates.diagram_image_url = updates.diagram_image_url;
 
       console.log("[PlayGrid] 🔷 Mapped updates:", {
         playId,
