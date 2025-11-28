@@ -72,28 +72,9 @@ export function useBatchedPlayStatus(
       if (playIdsToFetch.length === 0) return;
 
       try {
-        // Batch fetch assignments
-        const { data: assignments, error: assignmentsError } = await supabase
-          .from("play_assignments")
-          .select("play_id")
-          .in("play_id", playIdsToFetch)
-          .eq("playbook_id", playbookId);
-
-        if (assignmentsError) {
-          console.error("Error fetching assignments:", assignmentsError);
-        }
-
-        // Batch fetch practice script counts
-        const { data: practiceScripts, error: practiceError } = await supabase
-          .from("practice_script_plays")
-          .select("play_id")
-          .in("play_id", playIdsToFetch);
-
-        if (practiceError) {
-          console.error("Error fetching practice count:", practiceError);
-        }
-
         // Batch fetch game plan counts
+        // NOTE: play_assignments and practice_script_plays tables don't exist yet
+        // Those features are not implemented, so we only query game_plan_plays
         const { data: gamePlanPlays, error: gamePlanError } = await supabase
           .from("game_plan_plays")
           .select("play_id")
@@ -107,17 +88,13 @@ export function useBatchedPlayStatus(
         const statusMap: BatchedPlayStatus = {};
 
         playIdsToFetch.forEach((id) => {
-          const assignmentCount =
-            assignments?.filter((a) => a.play_id === id).length || 0;
-          const practiceCount =
-            practiceScripts?.filter((ps) => ps.play_id === id).length || 0;
           const gamePlanCount =
             gamePlanPlays?.filter((gp) => gp.play_id === id).length || 0;
 
           const playStatus: PlayStatus = {
             hasDiagram: false, // Set from play.diagram_url prop
-            hasAssignments: assignmentCount > 0,
-            practiceCount,
+            hasAssignments: false, // TODO: Implement when play_assignments table added
+            practiceCount: 0, // TODO: Implement when practice_script_plays table added
             gamePlanCount,
           };
 
