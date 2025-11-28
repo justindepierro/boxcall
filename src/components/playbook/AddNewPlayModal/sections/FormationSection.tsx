@@ -34,7 +34,9 @@ export const FormationSection: React.FC<FormationSectionProps> = ({
 }) => {
   // Extract unique formation names from existing plays
   const existingFormations = useMemo(() => {
-    return [...new Set(existingPlays.map(play => play.formation).filter(Boolean))];
+    return [
+      ...new Set(existingPlays.map((play) => play.formation).filter(Boolean)),
+    ];
   }, [existingPlays]);
 
   return (

@@ -542,9 +542,11 @@ export default function PlaybookPage() {
       } catch (error) {
         logError("Failed to create play:", error);
         toast.error("Failed to create play");
-        
+
         // Remove optimistic play on error
-        setOptimisticPlays((prev) => prev.filter((p) => !p.id.startsWith('temp-')));
+        setOptimisticPlays((prev) =>
+          prev.filter((p) => !p.id.startsWith("temp-"))
+        );
         throw error;
       }
     },

@@ -33,7 +33,7 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
   // Extract unique personnel values from existing plays for validation
   const existingPersonnelValues = useMemo(() => {
     const personnelSet = new Set<string>();
-    existingPlays.forEach(play => {
+    existingPlays.forEach((play) => {
       if (play.personnel && play.personnel.trim()) {
         personnelSet.add(play.personnel.trim());
       }

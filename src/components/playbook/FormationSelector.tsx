@@ -48,20 +48,22 @@ export function FormationSelector({
       try {
         // Query plays table for unique formation names
         const { data: plays, error: queryError } = await supabase
-          .from('plays')
-          .select('formation')
-          .eq('playbook_id', playbookId)
-          .order('formation');
+          .from("plays")
+          .select("formation")
+          .eq("playbook_id", playbookId)
+          .order("formation");
 
         if (queryError) throw queryError;
 
         // Extract unique formation names
         const uniqueFormations = [
-          ...new Set((plays || []).map(p => p.formation).filter(Boolean)),
+          ...new Set((plays || []).map((p) => p.formation).filter(Boolean)),
         ] as string[];
 
         setFormations(uniqueFormations);
-        console.log(`[FormationSelector] Loaded ${uniqueFormations.length} unique formations from plays table`);
+        console.log(
+          `[FormationSelector] Loaded ${uniqueFormations.length} unique formations from plays table`
+        );
       } catch (err) {
         console.error("Error loading formations:", err);
         setError("Failed to load formations");
@@ -80,8 +82,8 @@ export function FormationSelector({
   // Detect direction from formation name
   const getDirectionFromName = (formationName: string) => {
     const lowerName = formationName.toLowerCase();
-    if (lowerName.endsWith(' left')) return 'left';
-    if (lowerName.endsWith(' right')) return 'right';
+    if (lowerName.endsWith(" left")) return "left";
+    if (lowerName.endsWith(" right")) return "right";
     return null;
   };
 
@@ -91,11 +93,11 @@ export function FormationSelector({
     if (!direction) return "";
     switch (directionDisplayFormat) {
       case "full":
-        return direction === 'left' ? "← Left" : "→ Right";
+        return direction === "left" ? "← Left" : "→ Right";
       case "abbrev":
-        return direction === 'left' ? "← Lt" : "→ Rt";
+        return direction === "left" ? "← Lt" : "→ Rt";
       case "letter":
-        return direction === 'left' ? "← L" : "→ R";
+        return direction === "left" ? "← L" : "→ R";
       default:
         return "";
     }
@@ -118,14 +120,12 @@ export function FormationSelector({
       ) : (
         <>
           {/* Label */}
-          <label className="block text-sm font-medium mb-2">
-            Formation *
-          </label>
+          <label className="block text-sm font-medium mb-2">Formation *</label>
 
           {/* Text Input with Dropdown */}
           <input
             type="text"
-            value={selectedFormation || ''}
+            value={selectedFormation || ""}
             onChange={(e) => onChange(e.target.value)}
             onFocus={() => !disabled && setIsOpen(true)}
             onBlur={() => setTimeout(() => setIsOpen(false), 200)}

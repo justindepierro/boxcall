@@ -51,6 +51,7 @@ interface PlayDetailsFieldFactoryOptions {
   directionOptions: Array<{ value: string; label: string }>;
   // NEW: For validation
   protectionValues?: string[];
+  wristbandValues?: string[];
 }
 
 export const createFormationFields = ({
@@ -261,6 +262,7 @@ export const createPlayDetailsFields = ({
   playTypeSuggestions,
   directionOptions,
   protectionValues = [],
+  wristbandValues = [],
 }: PlayDetailsFieldFactoryOptions): FieldDefinitionMap => ({
   play_name: {
     label: "Name",
@@ -324,6 +326,17 @@ export const createPlayDetailsFields = ({
       />
     ),
   },
+  check_into: {
+    label: "Check Into",
+    render: (optimisticPlay, handleInlineSave, savingFields) => (
+      <InlineEditField
+        value={optimisticPlay.check_into || ""}
+        onSave={(value) => handleInlineSave("check_into", value)}
+        placeholder="Audible/check play"
+        isSaving={savingFields.has("check_into")}
+      />
+    ),
+  },
   ptags: {
     label: "Tags",
     render: (optimisticPlay, handleInlineSave, savingFields) => (
@@ -358,9 +371,7 @@ export const createPlayDetailsFields = ({
             </span>
           ))
         ) : (
-          <span className="text-sm text-secondary italic">
-            No variations
-          </span>
+          <span className="text-sm text-secondary italic">No variations</span>
         )}
       </div>
     ),
@@ -401,9 +412,7 @@ export const createPlayDetailsFields = ({
             </span>
           ))
         ) : (
-          <span className="text-sm text-secondary italic">
-            No key players
-          </span>
+          <span className="text-sm text-secondary italic">No key players</span>
         )}
       </div>
     ),
@@ -416,6 +425,47 @@ export const createPlayDetailsFields = ({
         onSave={(value) => handleInlineSave("one_word_play", value)}
         placeholder="One-word call"
         isSaving={savingFields.has("one_word_play")}
+      />
+    ),
+  },
+  wristband_number: {
+    label: "Wristband #",
+    render: (optimisticPlay, handleInlineSave, savingFields) => (
+      <InlineEditField
+        value={optimisticPlay.wristband_number || ""}
+        onSave={(value) => handleInlineSave("wristband_number", value)}
+        placeholder="Wristband number"
+        validationType="wristbandNumber"
+        existingValues={wristbandValues}
+        isSaving={savingFields.has("wristband_number")}
+      />
+    ),
+  },
+  confidence_base: {
+    label: "Confidence",
+    render: (optimisticPlay, handleInlineSave, savingFields) => (
+      <InlineEditField
+        value={
+          optimisticPlay.confidence_base
+            ? optimisticPlay.confidence_base.toString()
+            : ""
+        }
+        onSave={(value) => {
+          const numValue = parseInt(value, 10);
+          if (!isNaN(numValue) && numValue >= 0 && numValue <= 100) {
+            handleInlineSave("confidence_base", numValue);
+          }
+        }}
+        placeholder="0-100"
+        validation={(value) => {
+          if (!value.trim()) return null; // Allow empty
+          const num = parseInt(value, 10);
+          if (isNaN(num) || num < 0 || num > 100) {
+            return "Must be 0-100";
+          }
+          return null;
+        }}
+        isSaving={savingFields.has("confidence_base")}
       />
     ),
   },

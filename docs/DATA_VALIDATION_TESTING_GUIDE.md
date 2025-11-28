@@ -133,14 +133,14 @@ Quick reference for testing the new validation system in AddNewPlayModal.
 
 ## Visual Indicators Reference
 
-| State | Border Color | Icon | Message Example |
-|-------|-------------|------|-----------------|
-| Idle | Gray | - | - |
-| Typing | Gray | - | - |
-| Valid | Green | ✓ | "Looks good!" |
-| Saved | Green + Pulse | ✓ | "Saved" (green dot) |
-| Warning | Yellow | ⚠ | "Similar to existing: Twins (90%)" |
-| Error | Red | ✗ | "Formation already exists" |
+| State   | Border Color  | Icon | Message Example                    |
+| ------- | ------------- | ---- | ---------------------------------- |
+| Idle    | Gray          | -    | -                                  |
+| Typing  | Gray          | -    | -                                  |
+| Valid   | Green         | ✓    | "Looks good!"                      |
+| Saved   | Green + Pulse | ✓    | "Saved" (green dot)                |
+| Warning | Yellow        | ⚠   | "Similar to existing: Twins (90%)" |
+| Error   | Red           | ✗    | "Formation already exists"         |
 
 ## Keyboard Hints
 
@@ -167,7 +167,7 @@ Enable debug logging:
 
 ```javascript
 // In browser console
-localStorage.setItem('DEBUG_VALIDATION', 'true');
+localStorage.setItem("DEBUG_VALIDATION", "true");
 // Reload page
 ```
 
@@ -221,6 +221,7 @@ const testPlays = [
 ```
 
 Then test variations:
+
 - "Twin" → Should warn about "Twins"
 - "Shotgn" → Should warn about "Shotgun"
 - "Power O" → Should error (duplicate play name)

@@ -265,10 +265,7 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
                         });
                       }}
                     >
-                      <Icon
-                        name="zap"
-                        className="mr-2 h-4 w-4 text-primary"
-                      />
+                      <Icon name="zap" className="mr-2 h-4 w-4 text-primary" />
                       <span className="truncate max-w-36">
                         {combo.formation}
                         {combo.personnel ? ` • ${combo.personnel}` : ""}

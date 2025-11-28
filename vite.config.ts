@@ -24,7 +24,7 @@ export default defineConfig({
     open: true, // Auto-open browser on server start
     hmr: {
       overlay: true, // Show error overlay for better debugging
-      protocol: 'ws', // Use WebSocket for HMR (more stable)
+      protocol: "ws", // Use WebSocket for HMR (more stable)
       timeout: 30000, // Increase timeout to 30s (default: 5s)
     },
     watch: {
@@ -32,12 +32,12 @@ export default defineConfig({
       usePolling: false, // Use native file system events (faster)
       interval: 100, // Poll interval if usePolling is true
       ignored: [
-        '**/node_modules/**',
-        '**/.git/**',
-        '**/dist/**',
-        '**/reports/**',
-        '**/test-results/**',
-        '**/playwright-report/**',
+        "**/node_modules/**",
+        "**/.git/**",
+        "**/dist/**",
+        "**/reports/**",
+        "**/test-results/**",
+        "**/playwright-report/**",
       ],
     },
     // Increase connection timeout for slower machines

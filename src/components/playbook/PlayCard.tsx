@@ -95,11 +95,14 @@ const INITIAL_PLAY_DETAILS_ORDER = [
   "p_dir",
   "p_type",
   "protection",
+  "check_into",
   "ptags",
   "tags",
   "key_positions",
   "key_players",
   "one_word_play",
+  "wristband_number",
+  "confidence_base",
 ];
 
 const INITIAL_PLAY_DETAILS_VISIBILITY: FieldVisibility = {
@@ -107,11 +110,14 @@ const INITIAL_PLAY_DETAILS_VISIBILITY: FieldVisibility = {
   p_dir: true,
   p_type: true,
   protection: true,
+  check_into: true,
   ptags: true,
   tags: true,
   key_positions: true,
   key_players: true,
   one_word_play: true,
+  wristband_number: true,
+  confidence_base: true,
 };
 
 export const PlayCard: React.FC<PlayCardProps> = ({
@@ -143,7 +149,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
 
   // DEBUG: Log play data to check what's in the database
   useEffect(() => {
-    console.log('[PlayCard] Play data from database:', {
+    console.log("[PlayCard] Play data from database:", {
       play_name: play.play_name,
       formation: play.formation,
       f_type: play.f_type,
@@ -191,8 +197,10 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   // Use controlled expansion if provided, otherwise use internal state with localStorage persistence
   const [internalIsExpanded, setInternalIsExpanded] = useState(() => {
     // Load user's default preference from localStorage
-    const savedPreference = localStorage.getItem('bc_playcard_default_expanded');
-    return savedPreference === 'true';
+    const savedPreference = localStorage.getItem(
+      "bc_playcard_default_expanded"
+    );
+    return savedPreference === "true";
   });
   const isExpanded = controlledIsExpanded ?? internalIsExpanded;
 
@@ -237,7 +245,12 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         shiftValues: fieldValues.shifts,
         motionValues: fieldValues.motions,
       }),
-    [actualFormationSuggestions, personnelSuggestions, directionOptions, fieldValues]
+    [
+      actualFormationSuggestions,
+      personnelSuggestions,
+      directionOptions,
+      fieldValues,
+    ]
   );
 
   const playDetailsFields: FieldDefinitionMap = useMemo(
@@ -248,8 +261,14 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         playTypeSuggestions,
         directionOptions,
         protectionValues: fieldValues.protections,
+        wristbandValues: fieldValues.wristbandNumbers,
       }),
-    [actualPlayNameSuggestions, playTypeSuggestions, directionOptions, fieldValues]
+    [
+      actualPlayNameSuggestions,
+      playTypeSuggestions,
+      directionOptions,
+      fieldValues,
+    ]
   );
 
   const visibleFormationFields = useMemo(
@@ -412,7 +431,10 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         setInternalIsExpanded((prev) => {
           const newState = !prev;
           // Save user's preference for next time
-          localStorage.setItem('bc_playcard_default_expanded', String(newState));
+          localStorage.setItem(
+            "bc_playcard_default_expanded",
+            String(newState)
+          );
           return newState;
         });
       }

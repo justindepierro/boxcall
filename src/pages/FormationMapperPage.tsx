@@ -1,16 +1,16 @@
 /**
  * ⚠️ DEPRECATED PAGE - Formation Mapper
- * 
+ *
  * This page was designed to pair formation variants (Left/Right) using a separate
  * formations table. As of November 28, 2025, BoxCall uses the simplified approach:
- * 
+ *
  * - Formation names stored as TEXT in plays table
  * - Direction detected from name suffix ("Shotgun Trips Left" vs "Shotgun Trips Right")
  * - No separate formations table needed
  * - No formation pairing/matching needed
- * 
+ *
  * This page remains for backwards compatibility but may be removed in future versions.
- * 
+ *
  * See: docs/FORMATION_FIX_COMPLETE_NOV28_2025.md
  */
 
@@ -608,10 +608,7 @@ export default function FormationMapperPage() {
                   Updated {updatedAt}
                 </Typography>
                 {formationsLoading && suggestions.length === 0 ? (
-                  <Typography
-                    variant="caption"
-                    className="text-secondary mt-2"
-                  >
+                  <Typography variant="caption" className="text-secondary mt-2">
                     Loading suggestions…
                   </Typography>
                 ) : suggestions.length > 0 ? (
@@ -637,10 +634,7 @@ export default function FormationMapperPage() {
                     ))}
                   </div>
                 ) : (
-                  <Typography
-                    variant="caption"
-                    className="text-secondary mt-2"
-                  >
+                  <Typography variant="caption" className="text-secondary mt-2">
                     No smart suggestions yet — assign manually to train the
                     mapper.
                   </Typography>
@@ -652,10 +646,7 @@ export default function FormationMapperPage() {
             <Typography variant="caption" className="text-muted uppercase">
               Formation String
             </Typography>
-            <Typography
-              variant="body-sm"
-              className="text-primary break-words"
-            >
+            <Typography variant="body-sm" className="text-primary break-words">
               {play.formation || "—"}
             </Typography>
           </div>
@@ -764,10 +755,7 @@ export default function FormationMapperPage() {
                   ? `Playbook: ${selectedPlaybook.name}`
                   : "Select a playbook to review formation mappings."}
               </Typography>
-              <Typography
-                variant="body-xs"
-                className="text-secondary mt-1"
-              >
+              <Typography variant="body-xs" className="text-secondary mt-1">
                 {unresolved === 0
                   ? "All plays are synced to formations."
                   : `${unresolved} play${unresolved === 1 ? "" : "s"} need formation mapping.`}
@@ -824,10 +812,7 @@ export default function FormationMapperPage() {
         {loading ? (
           <Card variant="glass" size="lg">
             <div className="flex items-center gap-2">
-              <Icon
-                name="loader"
-                className="h-5 w-5 animate-spin text-muted"
-              />
+              <Icon name="loader" className="h-5 w-5 animate-spin text-muted" />
               <Typography variant="body-sm" className="text-secondary">
                 Loading plays needing formation mapping...
               </Typography>
@@ -989,10 +974,7 @@ export default function FormationMapperPage() {
             </Typography>
             <ul className="mt-2 space-y-1">
               {selectedPlays.slice(0, 6).map((play) => (
-                <li
-                  key={play.id}
-                  className="text-sm text-primary truncate"
-                >
+                <li key={play.id} className="text-sm text-primary truncate">
                   {play.play_name || "Untitled Play"}
                 </li>
               ))}
@@ -1002,9 +984,7 @@ export default function FormationMapperPage() {
                 </li>
               )}
               {selectedCount === 0 && (
-                <li className="text-xs text-secondary">
-                  No plays selected
-                </li>
+                <li className="text-xs text-secondary">No plays selected</li>
               )}
             </ul>
           </div>

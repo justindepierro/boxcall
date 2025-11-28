@@ -71,7 +71,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
         {/* Breadcrumb */}
         <div className="pt-4 pb-2">
           <Typography variant="body-sm" className="text-muted">
-            <span 
+            <span
               onClick={() => onNavigate?.("/dashboard")}
               className="hover:text-primary cursor-pointer transition-colors"
             >

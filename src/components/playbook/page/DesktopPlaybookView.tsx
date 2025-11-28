@@ -84,7 +84,6 @@ export function DesktopPlaybookView({
 }: DesktopPlaybookViewProps) {
   return (
     <div className="min-h-screen bg-subtle">
-
       {formationAudit.plays.length > 0 && (
         <div className="px-8 pt-6 mb-6">
           <FormationSyncPanel

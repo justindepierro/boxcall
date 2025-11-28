@@ -49,7 +49,8 @@ const getModalSizeStyles = (size: ModalProps["size"]) => {
   }
 };
 const getModalTypeStyles = (type: ModalProps["type"]) => {
-  const baseStyles = "rounded-lg shadow-xl border-2 bg-white dark:bg-neutral-900"; // Solid background always
+  const baseStyles =
+    "rounded-lg shadow-xl border-2 bg-white dark:bg-neutral-900"; // Solid background always
   switch (type) {
     case "alert":
       return `${baseStyles} border-error-default`;

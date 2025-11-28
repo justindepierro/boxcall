@@ -1,6 +1,6 @@
 /**
  * Data Validation & Normalization Utilities
- * 
+ *
  * Ensures database stays "Clean AF" by:
  * - Normalizing all text input (TWINS → Twins)
  * - Fuzzy matching similar entries (Twin → "Did you mean Twins?")
@@ -20,21 +20,21 @@
  * - "i-formation" → "I-Formation"
  */
 export function normalizeText(text: string): string {
-  if (!text) return '';
-  
+  if (!text) return "";
+
   return text
     .trim()
     .toLowerCase()
-    .split(' ')
-    .map(word => {
+    .split(" ")
+    .map((word) => {
       // Handle special cases
-      if (word === 'i' || word === 'i-formation') {
+      if (word === "i" || word === "i-formation") {
         return word.toUpperCase();
       }
       // Capitalize first letter
       return word.charAt(0).toUpperCase() + word.slice(1);
     })
-    .join(' ');
+    .join(" ");
 }
 
 /**
@@ -43,34 +43,34 @@ export function normalizeText(text: string): string {
  */
 export function normalizeFormation(formation: string): string {
   const normalized = normalizeText(formation);
-  
+
   // Special cases for football formations
   const replacements: Record<string, string> = {
-    'Shotgun': 'Shotgun',
-    'I Formation': 'I-Formation',
-    'I-form': 'I-Formation',
-    'Empty': 'Empty',
-    'Pistol': 'Pistol',
-    'Singleback': 'Singleback',
-    'Single Back': 'Singleback',
-    'Ace': 'Ace',
-    'Doubles': 'Doubles',
-    'Trips': 'Trips',
-    'Bunch': 'Bunch',
-    'Stack': 'Stack',
-    'Trey': 'Trey',
-    'Deuce': 'Deuce',
-    'Twins': 'Twins',
-    'Twin': 'Twins', // Auto-correct
+    Shotgun: "Shotgun",
+    "I Formation": "I-Formation",
+    "I-form": "I-Formation",
+    Empty: "Empty",
+    Pistol: "Pistol",
+    Singleback: "Singleback",
+    "Single Back": "Singleback",
+    Ace: "Ace",
+    Doubles: "Doubles",
+    Trips: "Trips",
+    Bunch: "Bunch",
+    Stack: "Stack",
+    Trey: "Trey",
+    Deuce: "Deuce",
+    Twins: "Twins",
+    Twin: "Twins", // Auto-correct
   };
-  
+
   // Check for exact matches after normalization
   for (const [key, value] of Object.entries(replacements)) {
     if (normalized === key) {
       return value;
     }
   }
-  
+
   return normalized;
 }
 
@@ -86,12 +86,12 @@ export function normalizePlayName(playName: string): string {
  */
 export function normalizePersonnel(personnel: string): string {
   const trimmed = personnel.trim();
-  
+
   // If it's a number grouping (11, 12, etc), keep as-is
   if (/^\d{2}$/.test(trimmed)) {
     return trimmed;
   }
-  
+
   // Otherwise, normalize to title case
   return normalizeText(trimmed);
 }
@@ -107,17 +107,17 @@ export function normalizePersonnel(personnel: string): string {
 export function levenshteinDistance(str1: string, str2: string): number {
   const s1 = str1.toLowerCase();
   const s2 = str2.toLowerCase();
-  
+
   const matrix: number[][] = [];
-  
+
   for (let i = 0; i <= s2.length; i++) {
     matrix[i] = [i];
   }
-  
+
   for (let j = 0; j <= s1.length; j++) {
     matrix[0][j] = j;
   }
-  
+
   for (let i = 1; i <= s2.length; i++) {
     for (let j = 1; j <= s1.length; j++) {
       if (s2.charAt(i - 1) === s1.charAt(j - 1)) {
@@ -125,13 +125,13 @@ export function levenshteinDistance(str1: string, str2: string): number {
       } else {
         matrix[i][j] = Math.min(
           matrix[i - 1][j - 1] + 1, // substitution
-          matrix[i][j - 1] + 1,     // insertion
-          matrix[i - 1][j] + 1      // deletion
+          matrix[i][j - 1] + 1, // insertion
+          matrix[i - 1][j] + 1 // deletion
         );
       }
     }
   }
-  
+
   return matrix[s2.length][s1.length];
 }
 
@@ -154,13 +154,13 @@ export function findPrefixMatches(
   existingValues: string[]
 ): SimilarMatch[] {
   if (!input || input.length < 1) return [];
-  
+
   const normalized = normalizeText(input).toLowerCase();
   const matches: SimilarMatch[] = [];
-  
+
   for (const existing of existingValues) {
     const existingLower = existing.toLowerCase();
-    
+
     // Exact prefix match
     if (existingLower.startsWith(normalized)) {
       matches.push({
@@ -170,7 +170,7 @@ export function findPrefixMatches(
       });
     }
   }
-  
+
   // Sort alphabetically
   return matches.sort((a, b) => a.value.localeCompare(b.value));
 }
@@ -182,24 +182,26 @@ export function findSimilarMatches(
 ): SimilarMatch[] {
   // Show matches from 1 character to encourage database consistency
   if (!input || input.length < 1) return [];
-  
+
   const normalized = normalizeText(input);
   const matches: SimilarMatch[] = [];
-  
+
   // First, add all prefix matches (highest priority)
   const prefixMatches = findPrefixMatches(input, existingValues);
   matches.push(...prefixMatches);
-  
+
   // Then add fuzzy matches that aren't already in prefix matches
   for (const existing of existingValues) {
     // Skip if already in prefix matches
-    if (prefixMatches.some(m => m.value === existing)) continue;
-    
+    if (prefixMatches.some((m) => m.value === existing)) continue;
+
     const distance = levenshteinDistance(normalized, existing);
-    
+
     // Only consider close matches
     if (distance > 0 && distance <= maxDistance) {
-      const confidence = Math.round((1 - distance / Math.max(normalized.length, existing.length)) * 100);
+      const confidence = Math.round(
+        (1 - distance / Math.max(normalized.length, existing.length)) * 100
+      );
       matches.push({
         value: existing,
         distance,
@@ -207,7 +209,7 @@ export function findSimilarMatches(
       });
     }
   }
-  
+
   // Sort: prefix matches first (distance=0), then by distance
   return matches.sort((a, b) => {
     if (a.distance !== b.distance) return a.distance - b.distance;
@@ -220,8 +222,8 @@ export function findSimilarMatches(
  */
 export function isDuplicate(input: string, existingValues: string[]): boolean {
   const normalized = normalizeText(input);
-  return existingValues.some(existing => 
-    normalizeText(existing) === normalized
+  return existingValues.some(
+    (existing) => normalizeText(existing) === normalized
   );
 }
 
@@ -229,13 +231,13 @@ export function isDuplicate(input: string, existingValues: string[]): boolean {
 // VALIDATION STATES
 // ============================================================================
 
-export type ValidationState = 
-  | 'idle'       // No input yet
-  | 'typing'     // User is typing
-  | 'valid'      // Valid, normalized input (green)
-  | 'warning'    // Similar match found (yellow)
-  | 'error'      // Invalid or duplicate (red)
-  | 'saving';    // Currently saving (green pulse)
+export type ValidationState =
+  | "idle" // No input yet
+  | "typing" // User is typing
+  | "valid" // Valid, normalized input (green)
+  | "warning" // Similar match found (yellow)
+  | "error" // Invalid or duplicate (red)
+  | "saving"; // Currently saving (green pulse)
 
 export interface ValidationResult {
   state: ValidationState;
@@ -257,49 +259,49 @@ export function validateFormation(
   // Empty input
   if (!input || input.trim().length === 0) {
     return {
-      state: 'idle',
-      normalizedValue: '',
-      borderColor: 'border-secondary',
+      state: "idle",
+      normalizedValue: "",
+      borderColor: "border-secondary",
       shouldConfirm: false,
     };
   }
-  
+
   // Normalize the input
   const normalized = normalizeFormation(input);
-  
+
   // Check for exact duplicate
   if (isDuplicate(input, existingFormations)) {
     return {
-      state: 'valid',
+      state: "valid",
       normalizedValue: normalized,
-      message: '✓ Formation exists',
-      borderColor: 'border-green-500',
+      message: "✓ Formation exists",
+      borderColor: "border-green-500",
       shouldConfirm: false,
     };
   }
-  
+
   // Find similar matches
   const similar = findSimilarMatches(normalized, existingFormations, 2);
-  
+
   // Similar match found - warn user
   if (similar.length > 0 && similar[0].confidence > 70) {
     return {
-      state: 'warning',
+      state: "warning",
       normalizedValue: normalized,
       message: `Did you mean "${similar[0].value}"?`,
       suggestions: similar,
-      borderColor: 'border-yellow-500',
+      borderColor: "border-yellow-500",
       shouldConfirm: true,
       confirmMessage: `Create "${normalized}" instead of "${similar[0].value}"?`,
     };
   }
-  
+
   // Valid new formation
   return {
-    state: 'valid',
+    state: "valid",
     normalizedValue: normalized,
     message: `✓ Will create "${normalized}"`,
-    borderColor: 'border-green-500',
+    borderColor: "border-green-500",
     shouldConfirm: false,
   };
 }
@@ -313,46 +315,46 @@ export function validatePlayName(
 ): ValidationResult {
   if (!input || input.trim().length === 0) {
     return {
-      state: 'idle',
-      normalizedValue: '',
-      borderColor: 'border-secondary',
+      state: "idle",
+      normalizedValue: "",
+      borderColor: "border-secondary",
       shouldConfirm: false,
     };
   }
-  
+
   const normalized = normalizePlayName(input);
-  
+
   // Check for exact duplicate
   if (isDuplicate(input, existingPlays)) {
     return {
-      state: 'error',
+      state: "error",
       normalizedValue: normalized,
-      message: '⚠ Play name already exists',
-      borderColor: 'border-red-500',
+      message: "⚠ Play name already exists",
+      borderColor: "border-red-500",
       shouldConfirm: false,
     };
   }
-  
+
   // Find similar matches
   const similar = findSimilarMatches(normalized, existingPlays, 2);
-  
+
   if (similar.length > 0 && similar[0].confidence > 75) {
     return {
-      state: 'warning',
+      state: "warning",
       normalizedValue: normalized,
       message: `Similar to "${similar[0].value}"`,
       suggestions: similar,
-      borderColor: 'border-yellow-500',
+      borderColor: "border-yellow-500",
       shouldConfirm: true,
       confirmMessage: `Create "${normalized}" (similar to "${similar[0].value}")?`,
     };
   }
-  
+
   return {
-    state: 'valid',
+    state: "valid",
     normalizedValue: normalized,
     message: `✓ Will create "${normalized}"`,
-    borderColor: 'border-green-500',
+    borderColor: "border-green-500",
     shouldConfirm: false,
   };
 }
@@ -366,34 +368,34 @@ export function validatePersonnel(
 ): ValidationResult {
   if (!input || input.trim().length === 0) {
     return {
-      state: 'idle',
-      normalizedValue: '',
-      borderColor: 'border-secondary',
+      state: "idle",
+      normalizedValue: "",
+      borderColor: "border-secondary",
       shouldConfirm: false,
     };
   }
-  
+
   const normalized = normalizePersonnel(input);
-  
+
   // Check if it's a valid personnel format
   const isNumeric = /^\d{2}$/.test(normalized);
   const isNamed = /^[A-Z][a-z]+$/.test(normalized);
-  
+
   if (!isNumeric && !isNamed) {
     return {
-      state: 'error',
+      state: "error",
       normalizedValue: normalized,
       message: '⚠ Use format like "11", "12", or "Blue"',
-      borderColor: 'border-red-500',
+      borderColor: "border-red-500",
       shouldConfirm: false,
     };
   }
-  
+
   return {
-    state: 'valid',
+    state: "valid",
     normalizedValue: normalized,
     message: `✓ "${normalized}"`,
-    borderColor: 'border-green-500',
+    borderColor: "border-green-500",
     shouldConfirm: false,
   };
 }
@@ -413,45 +415,45 @@ export function validateTextField(
 ): ValidationResult {
   if (!input || input.trim().length === 0) {
     return {
-      state: 'idle',
-      normalizedValue: '',
-      borderColor: 'border-secondary',
+      state: "idle",
+      normalizedValue: "",
+      borderColor: "border-secondary",
       shouldConfirm: false,
     };
   }
-  
+
   const normalized = normalizeText(input);
-  
+
   // Check for exact match
-  if (existingValues.some(v => normalizeText(v) === normalized)) {
+  if (existingValues.some((v) => normalizeText(v) === normalized)) {
     return {
-      state: 'valid',
+      state: "valid",
       normalizedValue: normalized,
       message: `✓ ${fieldName} exists`,
-      borderColor: 'border-green-500',
+      borderColor: "border-green-500",
       shouldConfirm: false,
     };
   }
-  
+
   // Find similar matches
   const similar = findSimilarMatches(normalized, existingValues, 2);
-  
+
   if (similar.length > 0 && similar[0].confidence > 70) {
     return {
-      state: 'warning',
+      state: "warning",
       normalizedValue: normalized,
       message: `Did you mean "${similar[0].value}"?`,
       suggestions: similar,
-      borderColor: 'border-yellow-500',
+      borderColor: "border-yellow-500",
       shouldConfirm: false,
     };
   }
-  
+
   return {
-    state: 'valid',
+    state: "valid",
     normalizedValue: normalized,
     message: `✓ Will create "${normalized}"`,
-    borderColor: 'border-green-500',
+    borderColor: "border-green-500",
     shouldConfirm: false,
   };
 }
@@ -464,7 +466,7 @@ export function validateFormationType(
   input: string,
   existingTypes: string[]
 ): ValidationResult {
-  return validateTextField(input, existingTypes, 'Formation type');
+  return validateTextField(input, existingTypes, "Formation type");
 }
 
 /**
@@ -475,7 +477,7 @@ export function validateBackfieldAlignment(
   input: string,
   existingAlignments: string[]
 ): ValidationResult {
-  return validateTextField(input, existingAlignments, 'Backfield alignment');
+  return validateTextField(input, existingAlignments, "Backfield alignment");
 }
 
 /**
@@ -486,7 +488,7 @@ export function validateShift(
   input: string,
   existingShifts: string[]
 ): ValidationResult {
-  return validateTextField(input, existingShifts, 'Shift');
+  return validateTextField(input, existingShifts, "Shift");
 }
 
 /**
@@ -497,7 +499,7 @@ export function validateMotion(
   input: string,
   existingMotions: string[]
 ): ValidationResult {
-  return validateTextField(input, existingMotions, 'Motion');
+  return validateTextField(input, existingMotions, "Motion");
 }
 
 /**
@@ -508,7 +510,7 @@ export function validateRunStrength(
   input: string,
   existingStrengths: string[]
 ): ValidationResult {
-  return validateTextField(input, existingStrengths, 'Run strength');
+  return validateTextField(input, existingStrengths, "Run strength");
 }
 
 /**
@@ -519,7 +521,7 @@ export function validatePassStrength(
   input: string,
   existingStrengths: string[]
 ): ValidationResult {
-  return validateTextField(input, existingStrengths, 'Pass strength');
+  return validateTextField(input, existingStrengths, "Pass strength");
 }
 
 /**
@@ -530,7 +532,7 @@ export function validateProtection(
   input: string,
   existingProtections: string[]
 ): ValidationResult {
-  return validateTextField(input, existingProtections, 'Protection');
+  return validateTextField(input, existingProtections, "Protection");
 }
 
 /**
@@ -543,46 +545,46 @@ export function validateOneWordPlay(
 ): ValidationResult {
   if (!input || input.trim().length === 0) {
     return {
-      state: 'idle',
-      normalizedValue: '',
-      borderColor: 'border-secondary',
+      state: "idle",
+      normalizedValue: "",
+      borderColor: "border-secondary",
       shouldConfirm: false,
     };
   }
-  
+
   // One-word plays are typically uppercase
   const normalized = input.trim().toUpperCase();
-  
+
   // Check for exact match
   if (existingOneWord.includes(normalized)) {
     return {
-      state: 'valid',
+      state: "valid",
       normalizedValue: normalized,
-      message: '✓ One-word call exists',
-      borderColor: 'border-green-500',
+      message: "✓ One-word call exists",
+      borderColor: "border-green-500",
       shouldConfirm: false,
     };
   }
-  
+
   // Find similar matches
   const similar = findSimilarMatches(normalized, existingOneWord, 2);
-  
+
   if (similar.length > 0 && similar[0].confidence > 70) {
     return {
-      state: 'warning',
+      state: "warning",
       normalizedValue: normalized,
       message: `Did you mean "${similar[0].value}"?`,
       suggestions: similar,
-      borderColor: 'border-yellow-500',
+      borderColor: "border-yellow-500",
       shouldConfirm: false,
     };
   }
-  
+
   return {
-    state: 'valid',
+    state: "valid",
     normalizedValue: normalized,
     message: `✓ Will create "${normalized}"`,
-    borderColor: 'border-green-500',
+    borderColor: "border-green-500",
     shouldConfirm: false,
   };
 }
@@ -598,31 +600,31 @@ export function validateWristbandNumber(
 ): ValidationResult {
   if (!input || input.trim().length === 0) {
     return {
-      state: 'idle',
-      normalizedValue: '',
-      borderColor: 'border-secondary',
+      state: "idle",
+      normalizedValue: "",
+      borderColor: "border-secondary",
       shouldConfirm: false,
     };
   }
-  
+
   const trimmed = input.trim();
-  
+
   // Check for exact duplicate
   if (existingNumbers.includes(trimmed)) {
     return {
-      state: 'error',
+      state: "error",
       normalizedValue: trimmed,
-      message: '⚠ Wristband number already in use',
-      borderColor: 'border-red-500',
+      message: "⚠ Wristband number already in use",
+      borderColor: "border-red-500",
       shouldConfirm: false,
     };
   }
-  
+
   return {
-    state: 'valid',
+    state: "valid",
     normalizedValue: trimmed,
     message: `✓ "${trimmed}"`,
-    borderColor: 'border-green-500',
+    borderColor: "border-green-500",
     shouldConfirm: false,
   };
 }

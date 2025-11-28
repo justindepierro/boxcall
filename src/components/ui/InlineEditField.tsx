@@ -94,47 +94,56 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
       if (validationType && existingValues) {
         let validationResult;
         switch (validationType) {
-          case 'formation':
+          case "formation":
             validationResult = validateFormation(editValue, existingValues);
             break;
-          case 'playName':
+          case "playName":
             validationResult = validatePlayName(editValue, existingValues);
             break;
-          case 'personnel':
+          case "personnel":
             validationResult = validatePersonnel(editValue, existingValues);
             break;
-          case 'formationType':
+          case "formationType":
             validationResult = validateFormationType(editValue, existingValues);
             break;
-          case 'backfieldAlignment':
-            validationResult = validateBackfieldAlignment(editValue, existingValues);
+          case "backfieldAlignment":
+            validationResult = validateBackfieldAlignment(
+              editValue,
+              existingValues
+            );
             break;
-          case 'shift':
+          case "shift":
             validationResult = validateShift(editValue, existingValues);
             break;
-          case 'motion':
+          case "motion":
             validationResult = validateMotion(editValue, existingValues);
             break;
-          case 'runStrength':
+          case "runStrength":
             validationResult = validateRunStrength(editValue, existingValues);
             break;
-          case 'passStrength':
+          case "passStrength":
             validationResult = validatePassStrength(editValue, existingValues);
             break;
-          case 'protection':
+          case "protection":
             validationResult = validateProtection(editValue, existingValues);
             break;
-          case 'oneWordPlay':
+          case "oneWordPlay":
             validationResult = validateOneWordPlay(editValue, existingValues);
             break;
-          case 'wristbandNumber':
-            validationResult = validateWristbandNumber(editValue, existingValues);
+          case "wristbandNumber":
+            validationResult = validateWristbandNumber(
+              editValue,
+              existingValues
+            );
             break;
           default:
             validationResult = { isValid: true, suggestions: [] };
         }
 
-        if (validationResult.suggestions && validationResult.suggestions.length > 0) {
+        if (
+          validationResult.suggestions &&
+          validationResult.suggestions.length > 0
+        ) {
           setFilteredSuggestions(validationResult.suggestions);
           setShowSuggestions(true);
         }
@@ -148,7 +157,14 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
       // Reset the flag when exiting edit mode
       hasSelectedRef.current = false;
     }
-  }, [isEditing, enableSuggestions, suggestions, validationType, existingValues, editValue]);
+  }, [
+    isEditing,
+    enableSuggestions,
+    suggestions,
+    validationType,
+    existingValues,
+    editValue,
+  ]);
 
   // Click outside handler for suggestions
   useEffect(() => {
@@ -306,40 +322,43 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
     if (validationType && existingValues) {
       let validationResult;
       switch (validationType) {
-        case 'formation':
+        case "formation":
           validationResult = validateFormation(newValue, existingValues);
           break;
-        case 'playName':
+        case "playName":
           validationResult = validatePlayName(newValue, existingValues);
           break;
-        case 'personnel':
+        case "personnel":
           validationResult = validatePersonnel(newValue, existingValues);
           break;
-        case 'formationType':
+        case "formationType":
           validationResult = validateFormationType(newValue, existingValues);
           break;
-        case 'backfieldAlignment':
-          validationResult = validateBackfieldAlignment(newValue, existingValues);
+        case "backfieldAlignment":
+          validationResult = validateBackfieldAlignment(
+            newValue,
+            existingValues
+          );
           break;
-        case 'shift':
+        case "shift":
           validationResult = validateShift(newValue, existingValues);
           break;
-        case 'motion':
+        case "motion":
           validationResult = validateMotion(newValue, existingValues);
           break;
-        case 'runStrength':
+        case "runStrength":
           validationResult = validateRunStrength(newValue, existingValues);
           break;
-        case 'passStrength':
+        case "passStrength":
           validationResult = validatePassStrength(newValue, existingValues);
           break;
-        case 'protection':
+        case "protection":
           validationResult = validateProtection(newValue, existingValues);
           break;
-        case 'oneWordPlay':
+        case "oneWordPlay":
           validationResult = validateOneWordPlay(newValue, existingValues);
           break;
-        case 'wristbandNumber':
+        case "wristbandNumber":
           validationResult = validateWristbandNumber(newValue, existingValues);
           break;
         default:
@@ -347,7 +366,10 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
       }
 
       // Show suggestions instantly if available
-      if (validationResult.suggestions && validationResult.suggestions.length > 0) {
+      if (
+        validationResult.suggestions &&
+        validationResult.suggestions.length > 0
+      ) {
         setFilteredSuggestions(validationResult.suggestions);
         setShowSuggestions(true);
       } else {
@@ -368,47 +390,53 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
     if (validationType && existingValues) {
       let validationResult;
       switch (validationType) {
-        case 'formation':
+        case "formation":
           validationResult = validateFormation(editValue, existingValues);
           break;
-        case 'playName':
+        case "playName":
           validationResult = validatePlayName(editValue, existingValues);
           break;
-        case 'personnel':
+        case "personnel":
           validationResult = validatePersonnel(editValue, existingValues);
           break;
-        case 'formationType':
+        case "formationType":
           validationResult = validateFormationType(editValue, existingValues);
           break;
-        case 'backfieldAlignment':
-          validationResult = validateBackfieldAlignment(editValue, existingValues);
+        case "backfieldAlignment":
+          validationResult = validateBackfieldAlignment(
+            editValue,
+            existingValues
+          );
           break;
-        case 'shift':
+        case "shift":
           validationResult = validateShift(editValue, existingValues);
           break;
-        case 'motion':
+        case "motion":
           validationResult = validateMotion(editValue, existingValues);
           break;
-        case 'runStrength':
+        case "runStrength":
           validationResult = validateRunStrength(editValue, existingValues);
           break;
-        case 'passStrength':
+        case "passStrength":
           validationResult = validatePassStrength(editValue, existingValues);
           break;
-        case 'protection':
+        case "protection":
           validationResult = validateProtection(editValue, existingValues);
           break;
-        case 'oneWordPlay':
+        case "oneWordPlay":
           validationResult = validateOneWordPlay(editValue, existingValues);
           break;
-        case 'wristbandNumber':
+        case "wristbandNumber":
           validationResult = validateWristbandNumber(editValue, existingValues);
           break;
         default:
           validationResult = { isValid: true, suggestions: [] };
       }
 
-      if (validationResult.suggestions && validationResult.suggestions.length > 0) {
+      if (
+        validationResult.suggestions &&
+        validationResult.suggestions.length > 0
+      ) {
         setFilteredSuggestions(validationResult.suggestions);
         setShowSuggestions(true);
       }

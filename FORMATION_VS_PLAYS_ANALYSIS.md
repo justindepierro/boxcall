@@ -9,35 +9,36 @@ You're absolutely right to question this! Let me show you what's ACTUALLY in the
 ## Current Database Reality
 
 ### Plays Table (THE MAIN DATA HOUSE)
+
 ```sql
 plays:
   id                UUID
   playbook_id       UUID FK
-  
+
   -- FORMATION DATA (TEXT - not FK!)
   formation         TEXT NOT NULL  ← "Shotgun Trips Right"
   f_type            TEXT           ← "Shotgun"
   f_dir             TEXT           ← "Right"
-  
+
   -- PLAY DATA
   play_name         TEXT NOT NULL
   p_type            TEXT NOT NULL  ← Pass/Run/RPO/Play Action
   personnel         TEXT           ← "11", "12", "21"
-  
+
   -- EXECUTION TRACKING
   times_called      INTEGER DEFAULT 0   ← Analytics!
   times_successful  INTEGER DEFAULT 0   ← Analytics!
   confidence_base   INTEGER DEFAULT 70
-  
+
   -- DIAGRAM
   diagram_data      JSONB          ← Player positions, routes
-  
+
   -- METADATA
   protection, motion, shift, back_align, r_str, p_str
   pref_down, pref_dis, pref_hash, pref_cov, pref_front
   ftag1, ftag2, p_tag1, p_tag2
   key_player1, key_player2, notes
-  
+
   -- TRACKING
   creation_source   TEXT
   creation_context  JSONB
@@ -45,6 +46,7 @@ plays:
 ```
 
 ### Play Calls Table (PRACTICE & GAME TRACKING)
+
 ```sql
 play_calls:
   id             UUID
@@ -60,6 +62,7 @@ play_calls:
 ```
 
 ### Formations Table (SEPARATE - BARELY USED)
+
 ```sql
 formations:
   id                  UUID
@@ -88,7 +91,7 @@ formations:
                      result = "Complete 15 yards"
 
 3. ANALYTICS QUERY
-   SELECT 
+   SELECT
      p.formation,
      p.personnel,
      COUNT(pc.id) as times_run,
@@ -114,6 +117,7 @@ formations table:   name = "Shotgun Trips" (UUID reference)
 ```
 
 **Issues:**
+
 1. **No Foreign Key Link** - plays.formation is TEXT, not UUID FK
 2. **Duplication** - Same formation name in multiple places
 3. **Inconsistency** - "Trips Right" vs "Trips Rt" vs "Trips R"
@@ -131,7 +135,7 @@ formations table:   name = "Shotgun Trips" (UUID reference)
 ```sql
 -- plays table already has:
 formation    TEXT    ← "Shotgun Trips Right"
-f_type       TEXT    ← "Shotgun" 
+f_type       TEXT    ← "Shotgun"
 f_dir        TEXT    ← "Right"
 personnel    TEXT    ← "11"
 diagram_data JSONB   ← Player positions
@@ -144,6 +148,7 @@ GROUP BY formation;
 ```
 
 **Advantages:**
+
 - ✅ Already works
 - ✅ Simple queries
 - ✅ No FK complexity
@@ -151,6 +156,7 @@ GROUP BY formation;
 - ✅ Flexible (free-text formation names)
 
 **What to do with formations table:**
+
 - **Option A:** DELETE IT (not used, adds complexity)
 - **Option B:** Use it ONLY for formation library/templates
 - **Option C:** Make it a FK and migrate plays to use it
@@ -174,7 +180,7 @@ formation_id UUID FK → formations.id  ← Change from TEXT to FK!
 formation    TEXT (denormalized for display)
 
 -- Analytics with join:
-SELECT 
+SELECT
   f.name,
   f.category,
   COUNT(pc.id) as times_run
@@ -185,12 +191,14 @@ GROUP BY f.name, f.category;
 ```
 
 **Advantages:**
+
 - ✅ Single source of truth for formation names
 - ✅ Can update formation metadata globally
 - ✅ Enforced consistency (FK constraint)
 - ✅ Better for formation pairing (left/right variants)
 
 **Disadvantages:**
+
 - ❌ Must create formation before creating play
 - ❌ More complex (requires joins)
 - ❌ FK constraints can cause issues
@@ -203,6 +211,7 @@ GROUP BY f.name, f.category;
 ### Keep Both, But Simplify Their Roles
 
 **plays table** = Source of truth for PLAY DATA + ANALYTICS
+
 ```sql
 plays:
   formation         TEXT NOT NULL     ← Main formation name
@@ -212,6 +221,7 @@ plays:
 ```
 
 **formations table** = OPTIONAL template/library for reuse
+
 ```sql
 formations:
   id                UUID
@@ -246,7 +256,7 @@ await supabase.from('plays').insert({
 });
 
 // 3. ANALYTICS (works with or without formation_id)
-SELECT 
+SELECT
   p.formation,
   COUNT(pc.id) as times_run
 FROM plays p
@@ -254,7 +264,7 @@ LEFT JOIN play_calls pc ON pc.play_id = p.id
 GROUP BY p.formation;
 
 // 4. ANALYTICS WITH FORMATION GROUPING (when formation_id exists)
-SELECT 
+SELECT
   f.name as base_formation,
   f.direction,
   COUNT(pc.id) as times_run
@@ -269,7 +279,9 @@ GROUP BY f.name, f.direction;
 ## Answering Your Specific Questions
 
 ### Q: "Is it easier to just pull from plays table?"
+
 **A: YES!** 100%. The plays table already has everything:
+
 - Formation name (TEXT)
 - Personnel
 - Diagram data
@@ -277,19 +289,24 @@ GROUP BY f.name, f.direction;
 - All metadata
 
 ### Q: "Do we need this formation thing?"
+
 **A: NO for basic functionality.** You can:
+
 - Create plays with just text formation names ✅
 - Track analytics via plays + play_calls ✅
 - Store diagrams in plays.diagram_data ✅
 
 **A: YES for advanced features:**
+
 - Formation library (reusable templates)
 - Left/Right variant pairing
 - Formation-level analytics
 - Global formation updates
 
 ### Q: "They all need to reference each other?"
+
 **A: Current References:**
+
 ```
 play_calls.play_id → plays.id          ✅ EXISTS (analytics works!)
 plays.formation_id → formations.id     ❌ DOESN'T EXIST
@@ -297,6 +314,7 @@ game_plan_plays.play_id → plays.id     ✅ EXISTS
 ```
 
 **Current Flow:**
+
 ```
 PRACTICE/GAME → play_calls → plays
                               ↓
@@ -305,6 +323,7 @@ PRACTICE/GAME → play_calls → plays
 ```
 
 **Future Flow (optional):**
+
 ```
 PRACTICE/GAME → play_calls → plays → formations (optional)
                               ↓           ↓
@@ -322,13 +341,13 @@ PRACTICE/GAME → play_calls → plays → formations (optional)
 ```typescript
 // FormationSelector just shows formations from plays table
 const { data: formations } = await supabase
-  .from('plays')
-  .select('formation')
-  .eq('playbook_id', playbookId)
-  .order('formation');
+  .from("plays")
+  .select("formation")
+  .eq("playbook_id", playbookId)
+  .order("formation");
 
 // Return unique formation names
-const uniqueFormations = [...new Set(formations.map(p => p.formation))];
+const uniqueFormations = [...new Set(formations.map((p) => p.formation))];
 ```
 
 No migrations needed, use existing data!
@@ -349,6 +368,7 @@ CREATE INDEX idx_plays_formation_id ON plays(formation_id);
 ```
 
 **Benefits:**
+
 - Backwards compatible (NULL allowed)
 - Can add FK later when you create formation templates
 - Analytics still works with TEXT formation field
@@ -361,7 +381,7 @@ CREATE INDEX idx_plays_formation_id ON plays(formation_id);
 
 ```typescript
 // AddNewPlayModal - no FormationService needed
-<input 
+<input
   value={formData.formation}
   onChange={(e) => updateField('formation', e.target.value)}
   placeholder="e.g., Shotgun Trips Right"
@@ -378,30 +398,34 @@ CREATE INDEX idx_plays_formation_id ON plays(formation_id);
 **RIGHT NOW: Use Option A (Minimal)**
 
 1. **Fix FormationSelector** to pull from plays table:
+
 ```typescript
 const { data: plays } = await supabase
-  .from('plays')
-  .select('formation, diagram_data')
-  .eq('playbook_id', playbookId);
+  .from("plays")
+  .select("formation, diagram_data")
+  .eq("playbook_id", playbookId);
 
-const formations = [...new Set(plays.map(p => p.formation))];
+const formations = [...new Set(plays.map((p) => p.formation))];
 ```
 
 2. **Keep plays.formation as TEXT** (no FK)
 
 3. **Analytics works immediately:**
+
 ```typescript
 const { data: analytics } = await supabase
-  .from('play_calls')
-  .select(`
+  .from("play_calls")
+  .select(
+    `
     *,
     plays!inner(
       formation,
       personnel,
       p_type
     )
-  `)
-  .eq('plays.playbook_id', playbookId);
+  `
+  )
+  .eq("plays.playbook_id", playbookId);
 ```
 
 4. **Later (if needed):** Add formation templates as optional enhancement
@@ -410,14 +434,14 @@ const { data: analytics } = await supabase
 
 ## Summary Table
 
-| Feature | Plays Table Only | Plays + Formations FK | Current (Broken) |
-|---------|-----------------|----------------------|------------------|
-| Create play | ✅ Easy | ⚠️ Need formation first | ❌ Broken |
-| Analytics | ✅ Simple | ✅ Advanced | ❌ No data |
-| Flexibility | ✅ Free text | ⚠️ Constrained | ❌ Broken |
-| Consistency | ⚠️ Manual | ✅ Enforced | ❌ Broken |
-| Complexity | ✅ Low | ⚠️ Medium | ❌ High |
-| Migration | ✅ None | ⚠️ Add FK | ❌ Full rebuild |
+| Feature     | Plays Table Only | Plays + Formations FK   | Current (Broken) |
+| ----------- | ---------------- | ----------------------- | ---------------- |
+| Create play | ✅ Easy          | ⚠️ Need formation first | ❌ Broken        |
+| Analytics   | ✅ Simple        | ✅ Advanced             | ❌ No data       |
+| Flexibility | ✅ Free text     | ⚠️ Constrained          | ❌ Broken        |
+| Consistency | ⚠️ Manual        | ✅ Enforced             | ❌ Broken        |
+| Complexity  | ✅ Low           | ⚠️ Medium               | ❌ High          |
+| Migration   | ✅ None          | ⚠️ Add FK               | ❌ Full rebuild  |
 
 **Winner:** Plays Table Only (for now)
 

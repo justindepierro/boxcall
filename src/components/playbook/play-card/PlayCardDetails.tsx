@@ -310,8 +310,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
             as="h4"
             className="text-xssssssssrimary flex items-center mb-sm"
           >
-            <Icon name="settings" className="h-4 w-4 mr-xs" />{" "}
-            Preferences
+            <Icon name="settings" className="h-4 w-4 mr-xs" /> Preferences
           </Typography>
           <dl className="space-y-sm text-sm">
             <div className="flex items-center gap-sm">
@@ -394,8 +393,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
             as="h4"
             className="text-xssssssssrimary flex items-center mb-sm"
           >
-            <Icon name="clock" className="h-4 w-4 mr-xs" /> Usage &
-            Stats
+            <Icon name="clock" className="h-4 w-4 mr-xs" /> Usage & Stats
           </Typography>
           <dl className="space-y-xs text-sm">
             <div className="flex items-center gap-sm">
@@ -568,9 +566,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               </div>
             </div>
             <div>
-              <div className="text-xsssssssss text-secondary mb-xs">
-                Flags
-              </div>
+              <div className="text-xsssssssss text-secondary mb-xs">Flags</div>
               <div className="flex flex-wrap gap-xs">
                 {flags.flags.map((fl) => (
                   <Button

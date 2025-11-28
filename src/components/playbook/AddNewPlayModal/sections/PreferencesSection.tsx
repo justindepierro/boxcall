@@ -35,10 +35,7 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
 }) => {
   return (
     <div className="bg-secondary/30 rounded-lg p-md">
-      <Typography
-        variant="label-lg"
-        className="block mb-sm text-primary"
-      >
+      <Typography variant="label-lg" className="block mb-sm text-primary">
         Situational Preferences
       </Typography>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-sm">
@@ -76,10 +73,7 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
           />
         </div>
         <div>
-          <Typography
-            variant="label-md"
-            className="block mb-xs text-secondary"
-          >
+          <Typography variant="label-md" className="block mb-xs text-secondary">
             Coverage
           </Typography>
           <input
@@ -91,10 +85,7 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
           />
         </div>
         <div>
-          <Typography
-            variant="label-md"
-            className="block mb-xs text-secondary"
-          >
+          <Typography variant="label-md" className="block mb-xs text-secondary">
             Defensive Front
           </Typography>
           <input

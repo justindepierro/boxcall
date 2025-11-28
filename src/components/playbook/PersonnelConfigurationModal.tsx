@@ -10,10 +10,10 @@ import { useToast } from "../../hooks/useToast";
 import { usePersonnelConfigurations } from "../../hooks/usePersonnel";
 import { BadgeCustomizer } from "./BadgeCustomizer";
 import { PersonnelBadge } from "./PersonnelBadge";
-import type { 
-  BadgeCustomization, 
+import type {
+  BadgeCustomization,
   PersonnelConfiguration,
-  PlayerPosition 
+  PlayerPosition,
 } from "../../types/personnel";
 import { useIsMobile } from "../../hooks/useBreakpoint";
 
@@ -27,10 +27,17 @@ interface PersonnelConfigurationModalProps {
 
 export const PersonnelConfigurationModal: React.FC<
   PersonnelConfigurationModalProps
-> = ({ isOpen, onClose, playbookId, configurations: configsProp, onSave = () => {} }) => {
+> = ({
+  isOpen,
+  onClose,
+  playbookId,
+  configurations: configsProp,
+  onSave = () => {},
+}) => {
   // Fetch data from Supabase if playbookId provided
-  const { data: fetchedConfigs, isLoading } = usePersonnelConfigurations(playbookId);
-  
+  const { data: fetchedConfigs, isLoading } =
+    usePersonnelConfigurations(playbookId);
+
   // Use provided configurations or fetched ones
   const configurations = configsProp || fetchedConfigs || [];
   const [localConfigurations, setLocalConfigurations] =
@@ -50,7 +57,7 @@ export const PersonnelConfigurationModal: React.FC<
   useEffect(() => {
     // Update local state when configurations change (e.g., when data loads from Supabase)
     setLocalConfigurations(configurations);
-    
+
     // Expand the first configuration by default
     if (configurations.length > 0) {
       setExpandedConfigIds(new Set([configurations[0].id]));
@@ -80,12 +87,60 @@ export const PersonnelConfigurationModal: React.FC<
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
       players: [
-        { id: "p1", config_id: timestamp, label: "Q", player_position: "QB", sort_order: 0, is_wildcat_qb: false, created_at: new Date().toISOString() },
-        { id: "p2", config_id: timestamp, label: "R", player_position: "RB", sort_order: 1, is_wildcat_qb: false, created_at: new Date().toISOString() },
-        { id: "p3", config_id: timestamp, label: "T", player_position: "TE", sort_order: 2, is_wildcat_qb: false, created_at: new Date().toISOString() },
-        { id: "p4", config_id: timestamp, label: "X", player_position: "WR", sort_order: 3, is_wildcat_qb: false, created_at: new Date().toISOString() },
-        { id: "p5", config_id: timestamp, label: "Y", player_position: "WR", sort_order: 4, is_wildcat_qb: false, created_at: new Date().toISOString() },
-        { id: "p6", config_id: timestamp, label: "Z", player_position: "WR", sort_order: 5, is_wildcat_qb: false, created_at: new Date().toISOString() },
+        {
+          id: "p1",
+          config_id: timestamp,
+          label: "Q",
+          player_position: "QB",
+          sort_order: 0,
+          is_wildcat_qb: false,
+          created_at: new Date().toISOString(),
+        },
+        {
+          id: "p2",
+          config_id: timestamp,
+          label: "R",
+          player_position: "RB",
+          sort_order: 1,
+          is_wildcat_qb: false,
+          created_at: new Date().toISOString(),
+        },
+        {
+          id: "p3",
+          config_id: timestamp,
+          label: "T",
+          player_position: "TE",
+          sort_order: 2,
+          is_wildcat_qb: false,
+          created_at: new Date().toISOString(),
+        },
+        {
+          id: "p4",
+          config_id: timestamp,
+          label: "X",
+          player_position: "WR",
+          sort_order: 3,
+          is_wildcat_qb: false,
+          created_at: new Date().toISOString(),
+        },
+        {
+          id: "p5",
+          config_id: timestamp,
+          label: "Y",
+          player_position: "WR",
+          sort_order: 4,
+          is_wildcat_qb: false,
+          created_at: new Date().toISOString(),
+        },
+        {
+          id: "p6",
+          config_id: timestamp,
+          label: "Z",
+          player_position: "WR",
+          sort_order: 5,
+          is_wildcat_qb: false,
+          created_at: new Date().toISOString(),
+        },
       ],
     };
     setLocalConfigurations((prev) => [...prev, newConfig]);
@@ -566,7 +621,11 @@ export const PersonnelConfigurationModal: React.FC<
                         OFFENSIVE LINE
                       </Typography>
 
-                      <Typography variant="caption" color="muted" className="text-xs">
+                      <Typography
+                        variant="caption"
+                        color="muted"
+                        className="text-xs"
+                      >
                         Offensive line positions are managed separately
                       </Typography>
 
@@ -651,7 +710,12 @@ export const PersonnelConfigurationModal: React.FC<
         </div>
       </BottomSheet>
     ) : (
-      <Modal isOpen={isOpen} onClose={onClose} title="Personnel Configuration" size="lg">
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        title="Personnel Configuration"
+        size="lg"
+      >
         <div className="flex items-center justify-center p-8">
           <div className="text-text-secondary">Loading personnel data...</div>
         </div>

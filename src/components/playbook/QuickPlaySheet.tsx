@@ -229,7 +229,7 @@ export const QuickPlaySheet: React.FC<QuickPlaySheetProps> = ({
           {playbookId ? (
             <FormationSelector
               playbookId={playbookId}
-              value={selectedFormationId || ''} // Now uses formation name (TEXT)
+              value={selectedFormationId || ""} // Now uses formation name (TEXT)
               onChange={(formationName) => {
                 // Simple: just update the formation name
                 setSelectedFormationId(formationName);

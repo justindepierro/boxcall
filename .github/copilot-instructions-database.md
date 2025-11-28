@@ -7,6 +7,7 @@
 ---
 
 ## Table of Contents
+
 1. [Core Architecture](#core-architecture)
 2. [Data Flow & Analytics](#data-flow--analytics)
 3. [Table Relationships](#table-relationships)
@@ -64,7 +65,7 @@ ANALYTICS (times_called, times_successful, results)
 -- Step 1: Create Play
 INSERT INTO plays (
   playbook_id,
-  formation,     -- TEXT: "Shotgun Trips Right" 
+  formation,     -- TEXT: "Shotgun Trips Right"
   play_name,     -- TEXT: "Z Spot"
   p_type,        -- TEXT: "Pass"
   personnel,     -- TEXT: "11"
@@ -80,7 +81,7 @@ INSERT INTO play_calls (
 ) VALUES (...);
 
 -- Step 3: Analytics Query
-SELECT 
+SELECT
   p.formation,
   p.personnel,
   p.p_type,
@@ -97,7 +98,7 @@ GROUP BY p.formation, p.personnel, p.p_type;
 
 ```sql
 -- Group by base formation name (ignore directional suffix)
-SELECT 
+SELECT
   REGEXP_REPLACE(formation, ' (Left|Right)$', '') as base_formation,
   COUNT(*) as total_plays,
   SUM(times_called) as total_calls
@@ -144,15 +145,18 @@ game_plans (id)
 ### FK Constraint Summary
 
 **plays table:**
+
 - `playbook_id` → `playbooks.id` (CASCADE)
 - `formation` → TEXT (no FK - intentional!)
 - `personnel` → TEXT (no FK - intentional!)
 
 **play_calls table:**
+
 - `play_id` → `plays.id` (CASCADE) ✅ Analytics flow!
 - `game_id` → `game_results.id` (optional)
 
 **formations table:**
+
 - `playbook_id` → `playbooks.id` (CASCADE)
 - NOT referenced by plays! (unused in main flow)
 
@@ -163,6 +167,7 @@ game_plans (id)
 ### 1. Core Team Tables
 
 #### teams
+
 ```sql
 id UUID PRIMARY KEY
 name TEXT NOT NULL
@@ -179,6 +184,7 @@ RLS: Users can create teams
 ```
 
 #### team_members
+
 ```sql
 id UUID PRIMARY KEY
 team_id UUID FK → teams.id (CASCADE)
@@ -195,6 +201,7 @@ RLS: Users can join teams (if existing member allows)
 ```
 
 #### team_players
+
 ```sql
 id UUID PRIMARY KEY
 team_id UUID FK → teams.id (CASCADE)
@@ -221,6 +228,7 @@ RLS: Team-based access
 ```
 
 #### profiles
+
 ```sql
 id UUID PRIMARY KEY FK → auth.users.id (CASCADE)
 full_name TEXT
@@ -253,6 +261,7 @@ RLS: Users can insert their own profiles
 ### 2. Playbook & Plays (CORE SYSTEM)
 
 #### playbooks
+
 ```sql
 id UUID PRIMARY KEY
 team_id UUID FK → teams.id (CASCADE)
@@ -271,6 +280,7 @@ RLS: Team coaches can manage, members can view
 ```
 
 #### plays ← **MAIN DATA HOUSE**
+
 ```sql
 id UUID PRIMARY KEY
 playbook_id UUID FK → playbooks.id (CASCADE)
@@ -337,6 +347,7 @@ RLS: Team coaches can manage, members can view
 ```
 
 #### play_calls ← **ANALYTICS TRACKING**
+
 ```sql
 id UUID PRIMARY KEY
 play_id UUID FK → plays.id (CASCADE)  ← Links to plays!
@@ -360,6 +371,7 @@ ANALYTICS: Join with plays to get formation/personnel stats
 ### 3. Personnel System
 
 #### personnel_configurations
+
 ```sql
 id UUID PRIMARY KEY
 playbook_id UUID FK → playbooks.id (CASCADE)
@@ -380,6 +392,7 @@ TRIGGER: personnel_configurations_updated_at
 ```
 
 #### personnel_players
+
 ```sql
 id UUID PRIMARY KEY
 config_id UUID FK → personnel_configurations.id (CASCADE)
@@ -405,6 +418,7 @@ RLS: Coaches can manage, users can view
 ### 4. formations ← **OPTIONAL/UNUSED**
 
 #### formations
+
 ```sql
 id UUID PRIMARY KEY
 playbook_id UUID FK → playbooks.id (CASCADE)
@@ -434,6 +448,7 @@ TRIGGER: formations_updated_at
 ### 5. Game Planning
 
 #### game_plans
+
 ```sql
 id UUID PRIMARY KEY
 team_id UUID FK → teams.id (CASCADE)
@@ -451,6 +466,7 @@ RLS: Coaches can manage, members can view
 ```
 
 #### game_plan_situations
+
 ```sql
 id UUID PRIMARY KEY
 game_plan_id UUID FK → game_plans.id (CASCADE)
@@ -464,6 +480,7 @@ RLS: Coaches can manage, members can view
 ```
 
 #### game_plan_plays
+
 ```sql
 id UUID PRIMARY KEY
 situation_id UUID FK → game_plan_situations.id (CASCADE)
@@ -480,6 +497,7 @@ RLS: Coaches can manage, members can view
 ### 6. Practice System
 
 #### practice_scripts
+
 ```sql
 id UUID PRIMARY KEY
 team_id UUID FK → teams.id (CASCADE)
@@ -495,6 +513,7 @@ RLS: Team-based access
 ```
 
 #### practice_templates
+
 ```sql
 id UUID PRIMARY KEY
 team_id UUID FK → teams.id (CASCADE)
@@ -510,6 +529,7 @@ RLS: Team-based access
 ```
 
 #### practice_attendance
+
 ```sql
 id UUID PRIMARY KEY
 practice_schedule_id UUID
@@ -527,6 +547,7 @@ RLS: Team-based access
 ### 7. Social Features
 
 #### team_posts
+
 ```sql
 id UUID PRIMARY KEY
 team_id UUID FK → teams.id (CASCADE)
@@ -548,6 +569,7 @@ RLS: Team-based access
 ```
 
 #### post_likes, post_comments, post_shares
+
 ```sql
 -- Standard social interaction tables
 -- Link to team_posts via post_id FK
@@ -560,6 +582,7 @@ RLS: Team-based access
 ### 8. Analytics & Tracking
 
 #### play_creation_analytics
+
 ```sql
 id UUID PRIMARY KEY
 playbook_id UUID FK → playbooks.id (CASCADE)
@@ -576,6 +599,7 @@ PURPOSE: Track how users interact with play creation tools
 ```
 
 #### play_tab_usage_analytics
+
 ```sql
 id UUID PRIMARY KEY
 playbook_id UUID FK → playbooks.id (CASCADE)
@@ -594,6 +618,7 @@ PURPOSE: Track which tabs users spend time in
 ### 9. Game Results
 
 #### game_results
+
 ```sql
 id UUID PRIMARY KEY
 team_id UUID FK → teams.id (CASCADE)
@@ -619,6 +644,7 @@ RLS: Coaches can manage, members can view
 ### 10. Miscellaneous
 
 #### achievements
+
 ```sql
 id UUID PRIMARY KEY
 player_id UUID FK → team_players.id (CASCADE)
@@ -631,6 +657,7 @@ RLS: Team-based access
 ```
 
 #### helmet_stickers
+
 ```sql
 id UUID PRIMARY KEY
 player_id UUID FK → team_players.id (CASCADE)
@@ -642,6 +669,7 @@ RLS: Team-based access
 ```
 
 #### equipment
+
 ```sql
 id UUID PRIMARY KEY
 team_id UUID FK → teams.id (CASCADE)
@@ -661,6 +689,7 @@ RLS: Team-based access
 ```
 
 #### calendar_events
+
 ```sql
 id UUID PRIMARY KEY
 team_id UUID FK → teams.id (CASCADE)
@@ -682,6 +711,7 @@ RLS: Team-based access
 ```
 
 #### season_stats
+
 ```sql
 id UUID PRIMARY KEY
 player_id UUID FK → team_players.id (CASCADE)
@@ -694,6 +724,7 @@ RLS: Team-based access
 ```
 
 #### team_events
+
 ```sql
 id UUID PRIMARY KEY
 team_id UUID FK → teams.id (CASCADE)
@@ -706,6 +737,7 @@ RLS: Team-based access
 ```
 
 #### invitation_attempts
+
 ```sql
 id UUID PRIMARY KEY
 team_id UUID FK → teams.id (CASCADE)
@@ -728,28 +760,34 @@ RLS: System can insert, coaches can view
 ## Key Insights for Development
 
 ### 1. plays Table is Central Hub
+
 - **Formation:** Stored as TEXT, not FK
 - **Personnel:** Stored as TEXT, not FK
 - **Analytics:** Built-in counters (times_called, times_successful)
 - **Diagram:** JSONB storage for player positions
 
 ### 2. formations Table is Optional
+
 - Not linked to plays via FK
 - Can be used for formation templates
 - Currently unused in main data flow
 
 ### 3. Analytics Flow
+
 ```
 play_calls → plays → aggregation queries
 ```
+
 All analytics can be derived from plays + play_calls join
 
 ### 4. Personnel System
+
 - Separate tables for configuration management
 - Linked to plays via TEXT field (personnel)
 - Not enforced by FK constraints
 
 ### 5. RLS Policies
+
 - All tables have team-based access control
 - Coaches have elevated permissions
 - Some tables need RLS policy fixes (play_calls)
@@ -759,17 +797,20 @@ All analytics can be derived from plays + play_calls join
 ## Migration Recommendations
 
 ### ✅ KEEP AS-IS
+
 - plays.formation as TEXT (flexible, no FK)
 - plays.personnel as TEXT (flexible, no FK)
 - Built-in analytics counters
 - JSONB for diagram_data
 
 ### ⚠️ CONSIDER ADDING
+
 - RLS policies to play_calls table
 - Indexes for common query patterns
 - Triggers for automatic counter updates
 
 ### ❌ DON'T DO
+
 - Add FK from plays.formation to formations.id
 - Require formation creation before play creation
 - Over-normalize the schema
@@ -779,23 +820,24 @@ All analytics can be derived from plays + play_calls join
 ## Usage Examples
 
 ### Create Play (Simple)
+
 ```typescript
-const { data, error } = await supabase
-  .from('plays')
-  .insert({
-    playbook_id: 'xxx',
-    formation: 'Shotgun Trips Right',
-    play_name: 'Z Spot',
-    p_type: 'Pass',
-    personnel: '11'
-  });
+const { data, error } = await supabase.from("plays").insert({
+  playbook_id: "xxx",
+  formation: "Shotgun Trips Right",
+  play_name: "Z Spot",
+  p_type: "Pass",
+  personnel: "11",
+});
 ```
 
 ### Get Formation Analytics
+
 ```typescript
 const { data } = await supabase
-  .from('plays')
-  .select(`
+  .from("plays")
+  .select(
+    `
     formation,
     personnel,
     times_called,
@@ -804,19 +846,19 @@ const { data } = await supabase
       result,
       created_at
     )
-  `)
-  .eq('playbook_id', playbookId);
+  `
+  )
+  .eq("playbook_id", playbookId);
 ```
 
 ### Track Play Call
+
 ```typescript
-const { data } = await supabase
-  .from('play_calls')
-  .insert({
-    play_id: 'xxx',
-    quarter: 2,
-    result: 'Complete 15 yards'
-  });
+const { data } = await supabase.from("play_calls").insert({
+  play_id: "xxx",
+  quarter: 2,
+  result: "Complete 15 yards",
+});
 ```
 
 ---

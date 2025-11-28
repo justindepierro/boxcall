@@ -479,9 +479,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
       {/* Action Buttons - Sticky on Mobile */}
       <div
         className={`flex gap-3 pt-4 border-t border-default ${
-          isMobile
-            ? "sticky bottom-0 bg-primary pb-safe -mx-4 px-4"
-            : ""
+          isMobile ? "sticky bottom-0 bg-primary pb-safe -mx-4 px-4" : ""
         }`}
       >
         <Button

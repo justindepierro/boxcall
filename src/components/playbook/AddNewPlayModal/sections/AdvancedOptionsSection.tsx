@@ -385,10 +385,7 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
 
           {/* Confidence */}
           <div className="bg-secondary/30 rounded-lg p-md">
-            <Typography
-              variant="label-lg"
-              className="block mb-sm text-primary"
-            >
+            <Typography variant="label-lg" className="block mb-sm text-primary">
               Confidence Level
             </Typography>
             <div className="space-y-sm">
@@ -476,10 +473,7 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
 
           {/* Additional Info */}
           <div className="bg-secondary/30 rounded-lg p-md">
-            <Typography
-              variant="label-lg"
-              className="block mb-sm text-primary"
-            >
+            <Typography variant="label-lg" className="block mb-sm text-primary">
               Additional Information
             </Typography>
             <div className="space-y-sm">

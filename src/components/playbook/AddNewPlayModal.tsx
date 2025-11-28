@@ -147,7 +147,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
       // SIMPLIFIED: Formation stored as TEXT in plays table
       // No separate formations table needed!
       // ===================================================================
-      
+
       // Parse formation tags
       const fTags = formData.formationTags
         .split(",")
@@ -656,7 +656,9 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             onFormationDirChange={(value) => updateField("formationDir", value)}
             onBackAlignChange={(value) => updateField("backAlign", value)}
             onBackLeftOfQbChange={(value) => updateField("backLeftOfQb", value)}
-            onBackRightOfQbChange={(value) => updateField("backRightOfQb", value)}
+            onBackRightOfQbChange={(value) =>
+              updateField("backRightOfQb", value)
+            }
             onShiftChange={(value) => updateField("shift", value)}
             onMotionChange={(value) => updateField("motion", value)}
             onFormationTagsChange={(value) =>
@@ -706,10 +708,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
           {/* Play Diagram Upload */}
           <div className="space-y-sm border-t border-primary pt-lg">
-            <Typography
-              variant="label"
-              className="text-primary font-semibold"
-            >
+            <Typography variant="label" className="text-primary font-semibold">
               Play Diagram (Optional)
             </Typography>
             <Typography variant="caption" className="text-tertiary">

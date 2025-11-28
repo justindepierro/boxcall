@@ -123,8 +123,8 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
   const [showAddFilter, setShowAddFilter] = useState(false);
   // Advanced filters collapsed by default, load from localStorage for user preference
   const [showAdvanced, setShowAdvanced] = useState(() => {
-    const saved = localStorage.getItem('bc_advanced_filters_expanded');
-    return saved === 'true';
+    const saved = localStorage.getItem("bc_advanced_filters_expanded");
+    return saved === "true";
   });
   const [activePresetId, setActivePresetId] = useState<string>("all");
   const [newFilter, setNewFilter] = useState<{
@@ -203,9 +203,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
         >
           <div className="flex items-center gap-2">
             <Icon name="filter" className="h-5 w-5 text-accent" />
-            <span className="text-sm font-medium text-primary">
-              Filters
-            </span>
+            <span className="text-sm font-medium text-primary">Filters</span>
             {activeFilters.length > 0 && (
               <span className="px-2 py-0.5 text-xs bg-accent text-inverse rounded-full">
                 {activeFilters.length}
@@ -298,10 +296,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                             onClick={() => removeFilter(filter.id)}
                             className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-error-hover active:scale-95 transition-all ml-2"
                           >
-                            <Icon
-                              name="close"
-                              className="h-4 w-4 text-error"
-                            />
+                            <Icon name="close" className="h-4 w-4 text-error" />
                           </button>
                         </div>
                       ))}
@@ -468,7 +463,10 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                 const newState = !showAdvanced;
                 setShowAdvanced(newState);
                 // Save user preference
-                localStorage.setItem('bc_advanced_filters_expanded', String(newState));
+                localStorage.setItem(
+                  "bc_advanced_filters_expanded",
+                  String(newState)
+                );
               }}
               className="flex items-center gap-2 text-sm font-medium text-accent hover:text-accent-hover transition-colors active:scale-95"
             >
@@ -541,9 +539,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
             <div className="p-3 bg-secondary rounded-lg border border-muted space-y-2">
               <div className="flex gap-2 items-end">
                 <div className="flex-1 min-w-0">
-                  <label className="block text-xs text-muted mb-1">
-                    Field
-                  </label>
+                  <label className="block text-xs text-muted mb-1">Field</label>
                   <select
                     value={newFilter.field}
                     onChange={(e) =>

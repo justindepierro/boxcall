@@ -17,6 +17,7 @@ Automatically converts input to consistent Title Case format:
 - `"shotgun"` → `"Shotgun"`
 
 **Special Cases**:
+
 - Personnel: `"11"`, `"12"`, `"21"` (numeric) remain unchanged
 - Formation keywords: "I-Formation", "T-Formation" maintain proper capitalization
 
@@ -45,6 +46,7 @@ Color-coded borders indicate validation state:
 ### 5. Confirmation Dialogs
 
 When fuzzy match detected (yellow border):
+
 - Shows similar values with confidence percentages
 - User can:
   - Click suggestion to use it (normalizes input)
@@ -59,34 +61,52 @@ When fuzzy match detected (yellow border):
 
 ```typescript
 // Normalization
-export function normalizeText(text: string): string
-export function normalizeFormation(formation: string): string
-export function normalizePlayName(playName: string): string
-export function normalizePersonnel(personnel: string): string
+export function normalizeText(text: string): string;
+export function normalizeFormation(formation: string): string;
+export function normalizePlayName(playName: string): string;
+export function normalizePersonnel(personnel: string): string;
 
 // Fuzzy Matching
-export function levenshteinDistance(str1: string, str2: string): number
-export function findSimilarMatches(input: string, existingValues: string[]): SimilarMatch[]
-export function isDuplicate(input: string, existingValues: string[]): boolean
+export function levenshteinDistance(str1: string, str2: string): number;
+export function findSimilarMatches(
+  input: string,
+  existingValues: string[]
+): SimilarMatch[];
+export function isDuplicate(input: string, existingValues: string[]): boolean;
 
 // Validation
-export type ValidationState = 'idle' | 'typing' | 'valid' | 'warning' | 'error' | 'saving'
+export type ValidationState =
+  | "idle"
+  | "typing"
+  | "valid"
+  | "warning"
+  | "error"
+  | "saving";
 export interface ValidationResult {
   state: ValidationState;
   borderColor: string;
   message?: string;
   suggestions?: SimilarMatch[];
 }
-export function validateFormation(input: string, existingFormations: string[]): ValidationResult
-export function validatePlayName(input: string, existingPlays: string[]): ValidationResult
-export function validatePersonnel(input: string, existingPersonnel: string[]): ValidationResult
+export function validateFormation(
+  input: string,
+  existingFormations: string[]
+): ValidationResult;
+export function validatePlayName(
+  input: string,
+  existingPlays: string[]
+): ValidationResult;
+export function validatePersonnel(
+  input: string,
+  existingPersonnel: string[]
+): ValidationResult;
 ```
 
 **src/components/playbook/ValidatedInput.tsx** (270+ lines)
 
 ```typescript
 interface ValidatedInputProps {
-  type: 'formation' | 'playName' | 'personnel';
+  type: "formation" | "playName" | "personnel";
   existingValues: string[];
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -181,7 +201,7 @@ User action:
 
 - **Debounced validation**: 300ms delay prevents excessive API calls
 - **Memoized values**: `useMemo` for existing values extraction
-- **Levenshtein algorithm**: O(m*n) complexity, fast for short strings (<50 chars)
+- **Levenshtein algorithm**: O(m\*n) complexity, fast for short strings (<50 chars)
 - **Perceived speed**: <10ms validation time for typical inputs
 
 ## Testing Strategy
@@ -217,34 +237,34 @@ User action:
 ### Unit Test Cases (TODO)
 
 ```typescript
-describe('dataValidation', () => {
-  describe('normalizeFormation', () => {
-    it('converts to Title Case', () => {
-      expect(normalizeFormation('TWINS')).toBe('Twins');
+describe("dataValidation", () => {
+  describe("normalizeFormation", () => {
+    it("converts to Title Case", () => {
+      expect(normalizeFormation("TWINS")).toBe("Twins");
     });
-    
-    it('handles I-Formation special case', () => {
-      expect(normalizeFormation('i-formation')).toBe('I-Formation');
-    });
-  });
-  
-  describe('levenshteinDistance', () => {
-    it('calculates edit distance', () => {
-      expect(levenshteinDistance('Twin', 'Twins')).toBe(1);
+
+    it("handles I-Formation special case", () => {
+      expect(normalizeFormation("i-formation")).toBe("I-Formation");
     });
   });
-  
-  describe('validateFormation', () => {
-    it('detects duplicates', () => {
-      const result = validateFormation('Twins', ['Twins', 'Shotgun']);
-      expect(result.state).toBe('error');
+
+  describe("levenshteinDistance", () => {
+    it("calculates edit distance", () => {
+      expect(levenshteinDistance("Twin", "Twins")).toBe(1);
     });
-    
-    it('detects similar matches', () => {
-      const result = validateFormation('Twin', ['Twins', 'Shotgun']);
-      expect(result.state).toBe('warning');
+  });
+
+  describe("validateFormation", () => {
+    it("detects duplicates", () => {
+      const result = validateFormation("Twins", ["Twins", "Shotgun"]);
+      expect(result.state).toBe("error");
+    });
+
+    it("detects similar matches", () => {
+      const result = validateFormation("Twin", ["Twins", "Shotgun"]);
+      expect(result.state).toBe("warning");
       expect(result.suggestions).toHaveLength(1);
-      expect(result.suggestions[0].value).toBe('Twins');
+      expect(result.suggestions[0].value).toBe("Twins");
     });
   });
 });
@@ -279,16 +299,16 @@ All visual feedback uses **semantic tokens**:
 
 ```typescript
 // Green (valid)
-bg-success, text-success-dark, border-success
+(bg - success, text - success - dark, border - success);
 
 // Yellow (warning)
-bg-warning-lightest, text-warning-dark, border-warning-light
+(bg - warning - lightest, text - warning - dark, border - warning - light);
 
 // Red (error)
-bg-error-lightest, text-error-dark, border-error
+(bg - error - lightest, text - error - dark, border - error);
 
 // Gray (idle)
-border-border-primary, bg-bg-surface
+(border - border - primary, bg - bg - surface);
 ```
 
 No raw Tailwind colors (enforced by ESLint rules).
@@ -302,7 +322,7 @@ Target user feedback:
 
 ## Maintenance Notes
 
-- Levenshtein distance threshold (2) can be adjusted in `findSimilarMatches()` 
+- Levenshtein distance threshold (2) can be adjusted in `findSimilarMatches()`
 - Debounce delay (300ms) can be tuned for slower connections
 - Add new special cases to `normalizeFormation()` as needed
 - Border colors defined in `ValidationResult.borderColor` (design tokens)

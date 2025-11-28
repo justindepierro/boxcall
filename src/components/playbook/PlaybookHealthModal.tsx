@@ -313,10 +313,7 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
                         name="lightbulb"
                         className="h-5 w-5 text-accent-500 mt-0.5 flex-shrink-0"
                       />
-                      <Typography
-                        variant="body-sm"
-                        className="text-primary"
-                      >
+                      <Typography variant="body-sm" className="text-primary">
                         {rec}
                       </Typography>
                     </div>

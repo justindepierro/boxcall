@@ -299,8 +299,8 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
           variant="ghost"
           size="sm"
           icon={
-            <Icon 
-              name="chevron-down" 
+            <Icon
+              name="chevron-down"
               className={`h-5 w-5 transition-transform duration-300 ease-in-out ${
                 isExpanded ? "rotate-180" : "rotate-0"
               }`}

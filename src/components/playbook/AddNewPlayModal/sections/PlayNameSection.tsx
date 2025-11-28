@@ -27,7 +27,9 @@ export const PlayNameSection: React.FC<PlayNameSectionProps> = ({
 }) => {
   // Extract unique play names from existing plays
   const existingPlayNames = useMemo(() => {
-    return [...new Set(existingPlays.map(play => play.play_name).filter(Boolean))];
+    return [
+      ...new Set(existingPlays.map((play) => play.play_name).filter(Boolean)),
+    ];
   }, [existingPlays]);
 
   return (
