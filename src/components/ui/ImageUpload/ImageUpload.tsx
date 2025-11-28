@@ -146,6 +146,9 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
         info(`[ImageUpload] Upload successful: ${publicUrl}`);
 
+        // Brief pause at 100% to show completion before closing modal
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
         onChange(publicUrl);
         toast.success("Diagram uploaded successfully!");
         triggerHapticFeedback("success");
@@ -234,9 +237,50 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   }, []);
 
   return (
-    <div className={`space-y-sm ${compact ? "text-sm" : ""}`}>
-      {/* Preview */}
-      {showPreview && previewUrl && (
+    <>
+      {/* Upload Progress Modal - Prevents accidental navigation during upload */}
+      {uploading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-navy-900/80 backdrop-blur-sm">
+          <div className="bg-surface rounded-lg p-xl shadow-2xl max-w-sm w-full mx-md space-y-md animate-fade-in">
+            {/* Header */}
+            <div className="flex items-center gap-sm">
+              <div className="animate-spin text-jade-600 w-6 h-6 border-4 border-jade-600 border-t-transparent rounded-full" />
+              <h3 className="text-lg font-bold text-primary">
+                Uploading Diagram...
+              </h3>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="space-y-xs">
+              <div className="flex justify-between text-sm text-secondary">
+                <span>Progress</span>
+                <span className="font-mono font-bold text-jade-600">
+                  {uploadProgress}%
+                </span>
+              </div>
+              <div className="w-full bg-neutral-200 rounded-full h-3 overflow-hidden">
+                <div
+                  className="bg-gradient-to-r from-jade-500 to-jade-600 h-3 rounded-full transition-all duration-300 ease-out"
+                  style={{ width: `${uploadProgress}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Warning Message */}
+            <div className="flex items-start gap-xs bg-amber-50 border border-amber-200 rounded-md p-sm">
+              <Icon name="info" className="text-amber-600 flex-shrink-0 mt-0.5" size="sm" />
+              <p className="text-xs text-amber-900">
+                Please wait while your diagram uploads. Don't close this card or
+                navigate away.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className={`space-y-sm ${compact ? "text-sm" : ""}`}>
+        {/* Preview */}
+        {showPreview && previewUrl && (
         <div className="relative inline-block">
           <img
             src={previewUrl}
@@ -323,6 +367,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           Replace Diagram
         </Button>
       )}
-    </div>
+      </div>
+    </>
   );
 };
