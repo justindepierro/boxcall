@@ -628,3 +628,6 @@ export function validateWristbandNumber(
     shouldConfirm: false,
   };
 }
+
+// Export alias for backward compatibility
+export { validatePersonnelValue as validatePersonnel };
