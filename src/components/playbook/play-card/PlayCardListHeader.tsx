@@ -105,7 +105,7 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
             {displayName}
           </h3>
           {subtitleText && (
-            <span className="shrink-0 px-2 py-1 bg-blue-100 text-blue-700 border border-blue-300 rounded-lg text-xs font-semibold">
+            <span className="shrink-0 px-2.5 py-1 bg-blue-500 text-white border border-blue-600 rounded-lg text-xs font-bold shadow-sm">
               {subtitleText}
             </span>
           )}
