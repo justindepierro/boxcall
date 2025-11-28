@@ -36,6 +36,12 @@ interface FormationFieldFactoryOptions {
   formationSuggestions: string[];
   personnelSuggestions: string[];
   directionOptions: Array<{ value: string; label: string }>;
+  // NEW: For validation
+  formationTypeValues?: string[];
+  backfieldAlignmentValues?: string[];
+  shiftValues?: string[];
+  motionValues?: string[];
+  protectionValues?: string[];
 }
 
 interface PlayDetailsFieldFactoryOptions {
@@ -43,6 +49,8 @@ interface PlayDetailsFieldFactoryOptions {
   playNameSuggestions: string[];
   playTypeSuggestions: string[];
   directionOptions: Array<{ value: string; label: string }>;
+  // NEW: For validation
+  protectionValues?: string[];
 }
 
 export const createFormationFields = ({
@@ -50,6 +58,11 @@ export const createFormationFields = ({
   formationSuggestions,
   personnelSuggestions,
   directionOptions,
+  formationTypeValues = [],
+  backfieldAlignmentValues = [],
+  shiftValues = [],
+  motionValues = [],
+  protectionValues = [],
 }: FormationFieldFactoryOptions): FieldDefinitionMap => ({
   formation: {
     label: "Base",
@@ -97,9 +110,9 @@ export const createFormationFields = ({
         value={optimisticPlay.f_type || ""}
         onSave={(value) => handleInlineSave("f_type", value)}
         placeholder="Formation type"
-        suggestions={formationSuggestions}
-        enableSuggestions={true}
         normalizeValue={normalizeValue}
+        validationType="formationType"
+        existingValues={formationTypeValues}
         isSaving={savingFields.has("f_type")}
       />
     ),
@@ -125,8 +138,8 @@ export const createFormationFields = ({
         value={optimisticPlay.back_align || ""}
         onSave={(value) => handleInlineSave("back_align", value)}
         placeholder="e.g., Near, Far, Flip, Same, 1, 2"
-        suggestions={BACK_ALIGN_OPTIONS.map((option) => option.label)}
-        enableSuggestions={true}
+        validationType="backfieldAlignment"
+        existingValues={backfieldAlignmentValues}
         isSaving={savingFields.has("back_align")}
       />
     ),
@@ -173,6 +186,8 @@ export const createFormationFields = ({
         value={optimisticPlay.shift || ""}
         onSave={(value) => handleInlineSave("shift", value)}
         placeholder="Pre-snap shift"
+        validationType="shift"
+        existingValues={shiftValues}
         isSaving={savingFields.has("shift")}
       />
     ),
@@ -184,6 +199,8 @@ export const createFormationFields = ({
         value={optimisticPlay.motion || ""}
         onSave={(value) => handleInlineSave("motion", value)}
         placeholder="Pre-snap motion"
+        validationType="motion"
+        existingValues={motionValues}
         isSaving={savingFields.has("motion")}
       />
     ),
@@ -243,6 +260,7 @@ export const createPlayDetailsFields = ({
   playNameSuggestions,
   playTypeSuggestions,
   directionOptions,
+  protectionValues = [],
 }: PlayDetailsFieldFactoryOptions): FieldDefinitionMap => ({
   play_name: {
     label: "Name",
@@ -300,6 +318,8 @@ export const createPlayDetailsFields = ({
         value={optimisticPlay.protection || ""}
         onSave={(value) => handleInlineSave("protection", value)}
         placeholder="Pass protection scheme"
+        validationType="protection"
+        existingValues={protectionValues}
         isSaving={savingFields.has("protection")}
       />
     ),

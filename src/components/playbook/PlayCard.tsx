@@ -34,6 +34,8 @@ import {
   getPlayTypeColor,
   normalizePlayText,
 } from "./play-card/helpers";
+import { usePlayFieldValues } from "./AddNewPlayModal/hooks/usePlayFieldValues";
+
 interface PlayCardProps {
   play: PlayType;
   showOneWordCalls?: boolean;
@@ -134,7 +136,11 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   personnelConfigurations = [],
   isExpanded: controlledIsExpanded,
   onToggleExpand,
+  existingPlays = [],
 }) => {
+  // Extract unique field values for validation
+  const fieldValues = usePlayFieldValues(existingPlays);
+
   const [optimisticPlay, setOptimisticPlay] = useState<PlayType>(play);
   const [savingFields, setSavingFields] = useState<SaveQueue>(new Set());
   const [formationFieldOrder, setFormationFieldOrder] = useState<string[]>(
@@ -209,8 +215,12 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         formationSuggestions: actualFormationSuggestions,
         personnelSuggestions,
         directionOptions,
+        formationTypeValues: fieldValues.formationTypes,
+        backfieldAlignmentValues: fieldValues.backfieldAlignments,
+        shiftValues: fieldValues.shifts,
+        motionValues: fieldValues.motions,
       }),
-    [actualFormationSuggestions, personnelSuggestions, directionOptions]
+    [actualFormationSuggestions, personnelSuggestions, directionOptions, fieldValues]
   );
 
   const playDetailsFields: FieldDefinitionMap = useMemo(
@@ -220,8 +230,9 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         playNameSuggestions: actualPlayNameSuggestions,
         playTypeSuggestions,
         directionOptions,
+        protectionValues: fieldValues.protections,
       }),
-    [actualPlayNameSuggestions, playTypeSuggestions, directionOptions]
+    [actualPlayNameSuggestions, playTypeSuggestions, directionOptions, fieldValues]
   );
 
   const visibleFormationFields = useMemo(
