@@ -1,0 +1,6 @@
+formation,play_name,p_type,personnel,one_word_play,f_type,f_dir,ftag1,ftag2,back_align,shift,motion,p_dir,protection,p_str,r_str,key_player1,key_player2,h_align,z_align,back_route,check_into,pref_down,pref_dis,pref_hash,pref_cov,pref_front,pref_blitz,confidence_base,success_rate,times_called,times_successful,tags,notes
+Twins,QB Shirt,RPO,11,TANGO,,Right,,,Open,,Y Orbit,Right,BOB,Right,Left,QB,Y,Slot,Out,Wheel,,1st & 10,8-12,Middle,Cover 2,Base,No,85,90,25,22,"quick,rpo,read","Quick RPO with orbit motion - read defensive end"
+I-Formation,Power,Run,21,POWER,,Right,Strong,,Pro I,,Z Jet,Right,Man,Strong,Strong,RB,FB,,,Flat,,2nd & Short,1-3,Strong,Any,Base,Any,90,85,40,34,"power,run,physical","Power play with pulling guard and lead blocker"
+Shotgun,Four Verts,Pass,10,VERTS,,,,,,,,Drop,Slide,Middle,Vertical,QB,X,Wide,Wide,Flat,,3rd & Long,10+,Middle,Cover 2,Nickel,No,75,70,15,10,"vertical,pass,air","4 vertical routes - read safety leverage"
+Trips,Bench,Pass,11,BENCH,,Right,,,,,,Slide,Right,Right,Y,Z,Nasty,Out,Curl,,1st & 10,8-12,Weak,Cover 3,Base,No,80,85,30,25,"levels,pass,trips","Levels concept - high-low read on corner"
+Empty,Mesh,Pass,10,MESH,,,,,,,H Cross,,Slide,Middle,Middle,QB,H,Slot,Slot,Shallow,Hot,3rd & Medium,5-9,Middle,Man,Nickel,Yes,70,75,20,15,"mesh,rpo,quick","Mesh concept with crossing routes vs man coverage"
