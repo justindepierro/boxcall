@@ -188,7 +188,10 @@ export const usePlayFormState = (options: UsePlayFormStateOptions = {}) => {
 
   // Validation helpers
   const isValid = useCallback(() => {
-    return formData.formation.trim() !== "" && formData.playName.trim() !== "";
+    // Defensive checks to ensure values are strings before calling trim()
+    const formation = typeof formData.formation === 'string' ? formData.formation : '';
+    const playName = typeof formData.playName === 'string' ? formData.playName : '';
+    return formation.trim() !== "" && playName.trim() !== "";
   }, [formData.formation, formData.playName]);
 
   return {

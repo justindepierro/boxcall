@@ -330,6 +330,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
           setIsAdvancedOpen={setIsAdvancedOpen}
           playbookId={playbookId}
           existingPlay={existingPlay}
+          existingPlays={existingPlays}
           errorMessage={errorMessage}
           rateLimitFeedback={rateLimitFeedback}
           recentCombos={recentCombos}
@@ -481,6 +482,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             formationDir={formData.formation_direction || ""} // Use formation_direction for database
             formationShowInName={formData.formationShowInName}
             playbookId={playbookId}
+            existingPlays={existingPlays}
             onFormationChange={handleFormationChange}
             onFormationIdChange={(id, formation) => {
               // When formation is selected, pull in ALL formation metadata
@@ -572,12 +574,6 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             onFormationShowInNameChange={(value) =>
               updateField("formationShowInName", value)
             }
-            suggestions={suggestions.formations}
-            aiSuggestions={aiSuggestions.aiFormations}
-            showSuggestions={isSuggestionsVisible("formation")}
-            onShowSuggestionsChange={(show) =>
-              show ? showSuggestions("formation") : hideSuggestions("formation")
-            }
           />
 
           {/* Play Name Section */}
@@ -585,17 +581,11 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             playName={formData.playName}
             playDir={formData.playDir}
             playShowInName={formData.playShowInName}
+            existingPlays={existingPlays}
             onPlayNameChange={(value) => updateField("playName", value)}
             onPlayDirChange={(value) => updateField("playDir", value)}
             onPlayShowInNameChange={(value) =>
               updateField("playShowInName", value)
-            }
-            suggestions={suggestions.playNames}
-            aiSuggestions={aiSuggestions.aiPlayNames}
-            generatedSuggestions={aiSuggestions.generatedPlayNames}
-            showSuggestions={isSuggestionsVisible("playName")}
-            onShowSuggestionsChange={(show) =>
-              show ? showSuggestions("playName") : hideSuggestions("playName")
             }
           />
 
@@ -610,11 +600,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
           <PersonnelSection
             personnel={formData.personnel}
             onPersonnelChange={(value) => updateField("personnel", value)}
-            suggestions={suggestions.personnel}
-            showSuggestions={isSuggestionsVisible("personnel")}
-            onShowSuggestionsChange={(show) =>
-              show ? showSuggestions("personnel") : hideSuggestions("personnel")
-            }
+            existingPlays={existingPlays}
             onAddNew={() => setPersonnelPanelOpen(true)}
             playbookId={playbookId}
           />

@@ -79,6 +79,7 @@ interface MobileWizardViewProps {
   // IDs
   playbookId?: string;
   existingPlay?: Play | null;
+  existingPlays?: Play[]; // NEW: For validation
 
   // Error handling
   errorMessage: string | null;
@@ -106,10 +107,10 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
   isValid: _isValid, // Reserved for potential future use
   onSubmit,
   isSubmitting,
-  suggestions,
-  aiSuggestions,
-  isSuggestionsVisible,
-  showSuggestions,
+  suggestions: _suggestions,
+  aiSuggestions: _aiSuggestions,
+  isSuggestionsVisible: _isSuggestionsVisible,
+  showSuggestions: _showSuggestions,
   hideSuggestions,
   onFormationChange,
   onFormationIdChange,
@@ -119,6 +120,7 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
   setIsAdvancedOpen: _setIsAdvancedOpen, // Not used in wizard
   playbookId,
   existingPlay,
+  existingPlays = [],
   errorMessage,
   rateLimitFeedback,
   recentCombos = [],
@@ -294,14 +296,8 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
               onFormationShowInNameChange={(value) =>
                 updateField("formationShowInName", value)
               }
-              suggestions={suggestions.formations}
-              aiSuggestions={aiSuggestions?.aiFormations}
-              showSuggestions={isSuggestionsVisible("formation")}
-              onShowSuggestionsChange={(show) =>
-                show
-                  ? showSuggestions("formation")
-                  : hideSuggestions("formation")
-              }
+              existingPlays={existingPlays}
+              onNextField={() => wizard.goNext()}
             />
 
             <PlayNameSection
@@ -313,13 +309,8 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
               onPlayShowInNameChange={(value) =>
                 updateField("playShowInName", value)
               }
-              suggestions={suggestions.playNames}
-              aiSuggestions={aiSuggestions?.aiPlayNames}
-              generatedSuggestions={aiSuggestions?.generatedPlayNames}
-              showSuggestions={isSuggestionsVisible("playName")}
-              onShowSuggestionsChange={(show) =>
-                show ? showSuggestions("playName") : hideSuggestions("playName")
-              }
+              existingPlays={existingPlays}
+              onNextField={() => wizard.goNext()}
             />
           </WizardStep>
         )}
@@ -344,6 +335,9 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
                   : hideSuggestions("personnel")
               }
               onAddNew={() => setPersonnelPanelOpen(true)}
+              playbookId={playbookId}
+              existingPlays={existingPlays}
+              onNextField={() => wizard.goNext()}
             />
 
             <PlayTypeSection

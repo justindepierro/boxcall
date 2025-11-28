@@ -78,6 +78,8 @@ interface PlaybookModalsProps {
   activePlaybookId: string;
   selectedPlaysForPractice: string[];
   setSelectedPlaysForPractice: (plays: string[]) => void;
+  existingPlays: Play[];
+  handleCreatePlay: (playData: Partial<Play>) => Promise<Play | void>;
   handleSavePlay: (play: Play) => Promise<void>;
   dispatch: any; // TODO: Type properly
 }
@@ -112,6 +114,8 @@ export function PlaybookModals({
   activePlaybookId,
   selectedPlaysForPractice,
   setSelectedPlaysForPractice,
+  existingPlays,
+  handleCreatePlay,
   handleSavePlay,
   dispatch,
 }: PlaybookModalsProps) {
@@ -123,11 +127,9 @@ export function PlaybookModals({
           <AddNewPlayModal
             isOpen={showAddNewPlayModal}
             onClose={() => setShowAddNewPlayModal(false)}
-            onCreatePlay={async (playData) => {
-              const play = await handleSavePlay(playData as Play);
-              return play;
-            }}
+            onCreatePlay={handleCreatePlay}
             playbookId={activePlaybookId}
+            existingPlays={existingPlays}
           />
         </Suspense>
       )}

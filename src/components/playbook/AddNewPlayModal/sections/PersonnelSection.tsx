@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Button } from "../../../ui/Button/Button";
 import { Icon } from "../../../ui/Icon/Icon";
 import { Typography } from "../../../design-system/Typography";
-import Select from "../../../ui/Select/Select";
+import { ValidatedInput } from "../../ValidatedInput";
 import { usePersonnelConfigurations } from "../../../../hooks/usePersonnel";
+import type { Play } from "../../../../types/database";
 
 interface PersonnelSectionProps {
   personnel: string;
@@ -13,6 +14,8 @@ interface PersonnelSectionProps {
   onShowSuggestionsChange: (show: boolean) => void;
   onAddNew?: () => void; // NEW: Callback to open personnel creation panel
   playbookId?: string; // NEW: Playbook ID to load personnel configurations
+  existingPlays?: Play[]; // NEW: For validation against existing plays
+  onNextField?: () => void; // NEW: Keyboard navigation
 }
 
 export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
@@ -20,21 +23,23 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
   onPersonnelChange,
   onAddNew,
   playbookId,
+  existingPlays = [],
+  onNextField,
 }) => {
   // Fetch personnel configurations from database
   const { data: configurations, isLoading } =
     usePersonnelConfigurations(playbookId);
 
-  // Format options for dropdown
-  const personnelOptions = React.useMemo(() => {
-    if (!configurations) return [];
-    return configurations.map((config) => ({
-      value: config.name,
-      label: config.description
-        ? `${config.name} (${config.description})`
-        : config.name,
-    }));
-  }, [configurations]);
+  // Extract unique personnel values from existing plays for validation
+  const existingPersonnelValues = useMemo(() => {
+    const personnelSet = new Set<string>();
+    existingPlays.forEach(play => {
+      if (play.personnel && play.personnel.trim()) {
+        personnelSet.add(play.personnel.trim());
+      }
+    });
+    return Array.from(personnelSet);
+  }, [existingPlays]);
 
   const handleAddNewPersonnel = () => {
     if (onAddNew) {
@@ -47,31 +52,25 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
 
   return (
     <div>
-      <Select
+      <ValidatedInput
+        type="personnel"
         label="Personnel"
         value={personnel}
-        onChange={(value) => onPersonnelChange(String(value))}
-        options={personnelOptions}
+        onChange={(e) => onPersonnelChange(e.target.value)}
+        existingValues={existingPersonnelValues}
         placeholder={
           !playbookId
             ? "Playbook required"
             : isLoading
               ? "Loading personnel..."
-              : "Select personnel grouping"
+              : "e.g., 11, 12, 21, Trips, Empty"
         }
-        className="mb-sm"
         disabled={isLoading || !playbookId}
-        clearable
-        searchable={personnelOptions.length > 5}
+        onEnterPress={onNextField}
         helperText={
           !playbookId
-            ? "A playbook must be selected to load personnel configurations"
-            : undefined
-        }
-        noOptionsMessage={
-          playbookId
-            ? "No personnel configurations found. Add one using the button below."
-            : "Playbook required to load personnel"
+            ? "A playbook must be selected"
+            : "Common: 11 (1 RB, 1 TE), 12 (1 RB, 2 TE), 21 (2 RB, 1 TE)"
         }
       />
 

@@ -1,76 +1,55 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Button } from "../../../ui/Button/Button";
 import { Icon } from "../../../ui/Icon/Icon";
-import { FuzzySearchInput } from "../components/FuzzySearchInput";
-import { FormationSelector } from "../../FormationSelector";
-import type { Formation } from "../../../../types/formation";
+import { ValidatedInput } from "../../ValidatedInput";
+import type { Play } from "../../../../types/play";
 
 interface FormationSectionProps {
   formation: string;
   formationId: string | null;
   formationDir: string;
   formationShowInName: boolean;
-  playbookId?: string; // NEW: Required for FormationSelector
-  onCreateFormation?: () => void; // NEW: Callback to open Formation Builder
+  playbookId?: string;
+  existingPlays?: Play[]; // NEW: For validation
+  onCreateFormation?: () => void;
   onFormationChange: (formation: string) => void;
   onFormationIdChange: (
     formationId: string | null,
-    formation: Formation | null
+    formation: any | null
   ) => void;
   onFormationDirChange: (dir: string) => void;
   onFormationShowInNameChange: (show: boolean) => void;
-  suggestions: string[];
-  aiSuggestions?: string[];
-  showSuggestions: boolean;
-  onShowSuggestionsChange: (show: boolean) => void;
+  onNextField?: () => void; // NEW: Move to next field on Enter
 }
 
 export const FormationSection: React.FC<FormationSectionProps> = ({
   formation,
-  formationId,
   formationDir,
   formationShowInName,
-  playbookId,
-  onCreateFormation: _onCreateFormation,
+  existingPlays = [],
   onFormationChange,
-  onFormationIdChange,
   onFormationDirChange,
   onFormationShowInNameChange,
-  suggestions,
-  aiSuggestions = [],
-  showSuggestions,
-  onShowSuggestionsChange,
+  onNextField,
 }) => {
-  // Use FormationSelector if playbookId is available (new flow)
-  // Otherwise fall back to text input (backwards compatibility)
-  const useFormationSelector = Boolean(playbookId);
+  // Extract unique formation names from existing plays
+  const existingFormations = useMemo(() => {
+    return [...new Set(existingPlays.map(play => play.formation).filter(Boolean))];
+  }, [existingPlays]);
 
   return (
     <div className="flex gap-sm items-end">
-      {useFormationSelector ? (
-        <FormationSelector
-          playbookId={playbookId!}
-          value={formation} // Now uses formation name (TEXT) instead of ID
-          onChange={(formationName) => {
-            // Simple: just update the formation text field
-            onFormationChange(formationName || '');
-          }}
-          className="flex-1"
-        />
-      ) : (
-        <FuzzySearchInput
-          label="Formation"
-          value={formation}
-          onChange={onFormationChange}
-          placeholder="e.g., Shotgun, Empty, Pistol"
-          suggestions={suggestions}
-          aiSuggestions={aiSuggestions}
-          showSuggestions={showSuggestions}
-          onShowSuggestionsChange={onShowSuggestionsChange}
-          required
-          className="flex-1"
-        />
-      )}
+      <ValidatedInput
+        label="Formation"
+        value={formation}
+        onChange={(e) => onFormationChange(e.target.value)}
+        placeholder="e.g., Shotgun, Empty, Pistol"
+        required
+        type="formation"
+        existingValues={existingFormations}
+        onEnterPress={onNextField}
+        className="flex-1"
+      />
 
       <div className="flex gap-xs">
         <Button

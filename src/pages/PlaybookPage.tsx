@@ -494,6 +494,63 @@ export default function PlaybookPage() {
     setShowKeyboardShortcutsModal(true);
   }, []);
 
+  // 🆕 CREATE NEW PLAY (not update existing)
+  const handleCreatePlay = useCallback(
+    async (playData: Partial<Play>): Promise<Play | void> => {
+      if (!activePlaybookId) {
+        toast.error("No active playbook");
+        return;
+      }
+
+      try {
+        // ⚡ OPTIMISTIC: Create temporary play with fake ID for instant feedback
+        const tempId = `temp-${Date.now()}`;
+        const optimisticPlay: Play = {
+          ...playData,
+          id: tempId,
+          playbook_id: activePlaybookId,
+          formation: playData.formation || "",
+          play_name: playData.play_name || "",
+          p_type: playData.p_type || "",
+          confidence_base: playData.confidence_base || 70,
+          times_called: 0,
+          times_successful: 0,
+          created_at: new Date(),
+          updated_at: new Date(),
+        } as Play;
+
+        setOptimisticPlays((prev) => [optimisticPlay, ...prev]);
+
+        // ⚡ INSTANT FEEDBACK: Show success immediately
+        toast.success("Play created!");
+
+        // Background: Create in database
+        const createdPlay = await SecurePlaysService.createPlay({
+          ...playData,
+          playbook_id: activePlaybookId,
+        });
+
+        // Replace temp play with real play from database
+        setOptimisticPlays((prev) =>
+          prev.map((p) => (p.id === tempId ? createdPlay : p))
+        );
+
+        // Trigger refresh to sync with database
+        dispatch({ type: "INCREMENT_REFRESH" });
+
+        return createdPlay;
+      } catch (error) {
+        logError("Failed to create play:", error);
+        toast.error("Failed to create play");
+        
+        // Remove optimistic play on error
+        setOptimisticPlays((prev) => prev.filter((p) => !p.id.startsWith('temp-')));
+        throw error;
+      }
+    },
+    [activePlaybookId, toast, dispatch]
+  );
+
   const handleUpdatePlay = useCallback(
     async (playId: string, updates: Partial<Play>) => {
       // Store previous state for rollback
@@ -1003,6 +1060,8 @@ export default function PlaybookPage() {
           activePlaybookId={activePlaybookId}
           selectedPlaysForPractice={selectedPlaysForPractice}
           setSelectedPlaysForPractice={setSelectedPlaysForPractice}
+          existingPlays={allPlaysForStats}
+          handleCreatePlay={handleCreatePlay}
           handleSavePlay={handleSavePlay}
           dispatch={dispatch}
         />
