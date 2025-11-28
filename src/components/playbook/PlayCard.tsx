@@ -15,6 +15,7 @@ import { PlayCardListHeader } from "./play-card/PlayCardListHeader";
 import { PlayCardTileHeader } from "./play-card/PlayCardTileHeader";
 import { PlayCardDetails } from "./play-card/PlayCardDetails";
 import { PlayCardQuickActions } from "./play-card/PlayCardQuickActions";
+import { PlayDiagramTooltip } from "./play-card/PlayDiagramTooltip";
 import { usePreference } from "../../hooks/usePreferences";
 import { useRecentPlays } from "../../hooks/useRecentPlays";
 import { useFavoritePlays } from "../../hooks/useFavoritePlays";
@@ -443,13 +444,18 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   );
 
   return (
-    <div
-      className={`w-full rounded-2xl border bg-white transition-all duration-300 overflow-visible ${
-        isSelected
-          ? "ring-2 ring-brand-accent border-accent shadow-lg"
-          : "border-secondary/30 shadow-sm hover:shadow-md hover:border-secondary/60 hover:scale-[1.01] hover:-translate-y-0.5"
-      } ${isCompact ? "text-[13px]" : ""} ${isMobile ? "text-base" : ""} md:min-h-0`}
+    <PlayDiagramTooltip
+      play={play}
+      displayName={displayName}
+      disabled={isExpanded || isMobile} // Don't show tooltip when expanded or on mobile
     >
+      <div
+        className={`w-full rounded-2xl border bg-white transition-all duration-300 overflow-visible ${
+          isSelected
+            ? "ring-2 ring-brand-accent border-accent shadow-lg"
+            : "border-secondary/30 shadow-sm hover:shadow-md hover:border-secondary/60 hover:scale-[1.01] hover:-translate-y-0.5"
+        } ${isCompact ? "text-[13px]" : ""} ${isMobile ? "text-base" : ""} md:min-h-0`}
+      >
       <div
         className={`${
           isCompact
@@ -602,11 +608,12 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             playDetailsFieldVisibility={
               playDetailsFieldVisibility || INITIAL_PLAY_DETAILS_VISIBILITY
             }
-            handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
-            getPlayTypeColor={getPlayTypeColor}
-            getConfidenceColor={getConfidenceColor}
-            existingPlays={existingPlays}
-          />
+        )}
+      </div>
+      </div>
+    </PlayDiagramTooltip>
+  );
+};        />
         )}
       </div>
     </div>

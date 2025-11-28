@@ -99,6 +99,29 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
       role="region"
       aria-label={`Details for ${play.play_name}`}
     >
+      {/* Play Diagram - Show at top when expanded */}
+      {optimisticPlay.diagram_image_url && (
+        <div className="bg-subtle rounded-lg p-sm">
+          <div className="flex items-center justify-between mb-sm">
+            <Typography
+              variant="label-lg"
+              as="h4"
+              className="text-primary flex items-center"
+            >
+              <Icon name="camera" className="h-4 w-4 mr-xs" /> Play Diagram
+            </Typography>
+          </div>
+          <div className="relative">
+            <img
+              src={optimisticPlay.diagram_image_url}
+              alt={`${play.play_name} diagram`}
+              className="w-full rounded-lg border-2 border-primary object-cover"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      )}
+
       {/* Only render badge row if there are badges to show */}
       {(phaseLabel || (optimisticPlay.one_word_play && !showOneWordCalls)) && (
         <div className="flex flex-wrap items-center gap-xs">
