@@ -159,8 +159,10 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
               className="text-secondary mb-8 text-center max-w-md"
             >
               {searchQuery
-                ? `No plays match "${searchQuery}"`
-                : "Your filters are hiding all plays. Try adjusting your criteria or start fresh."}
+                ? `No plays match "${searchQuery}". Try different keywords or check your spelling.`
+                : hasActiveFilters
+                  ? "Your filters are hiding all plays. Try adjusting your criteria or clear filters to see your entire playbook."
+                  : "No plays found. Try clearing filters or creating a new play."}
             </Typography>
 
             {/* Quick Win: Search suggestions */}
@@ -193,11 +195,22 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
                   variant="primary"
                   size="lg"
                 >
-                  <Icon name="close" className="w-5 h-5 mr-2" />
+                  <Icon name="close" className="w-5 w-5 mr-2" />
                   Clear All Filters
                 </Button>
               )}
-              {onCreatePlay && (
+              {searchQuery && onCreatePlay && (
+                <Button
+                  onClick={handleCreatePlay}
+                  variant="primary"
+                  size="lg"
+                  className="bg-brand-jade hover:bg-brand-jade-hover"
+                >
+                  <Icon name="plus" className="w-5 h-5 mr-2" />
+                  Create "{searchQuery}"
+                </Button>
+              )}
+              {!searchQuery && onCreatePlay && (
                 <Button
                   onClick={handleCreatePlay}
                   variant="secondary"
