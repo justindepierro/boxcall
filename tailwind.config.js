@@ -1,6 +1,5 @@
 import forms from "@tailwindcss/forms";
 import typography from "@tailwindcss/typography";
-import defaultColors from "tailwindcss/colors";
 
 // Helper to create color scale from CSS variables
 const createScale = (
@@ -18,19 +17,18 @@ const colors = {
   jade: createScale("jade"),
   navy: createScale("navy"),
 
-  // Accent colors (these use accent- prefix in CSS)
+  // Accent colors (all use accent- prefix in CSS variables)
   orange: createScale("accent-orange"),
   purple: createScale("accent-purple"),
   pink: createScale("accent-pink"),
   amber: createScale("accent-amber"),
   red: createScale("accent-red"),
   blue: createScale("accent-blue"),
-  // Use Tailwind default colors for personnel badges (CSS variables not defined)
-  cyan: defaultColors.cyan,
-  lime: defaultColors.lime,
-  indigo: defaultColors.indigo,
-  teal: defaultColors.teal,
-  emerald: defaultColors.emerald,
+  cyan: createScale("accent-cyan"),
+  lime: createScale("accent-lime"),
+  indigo: createScale("accent-indigo"),
+  teal: createScale("accent-teal"),
+  emerald: createScale("accent-emerald"),
 
   // Semantic colors
   success: {

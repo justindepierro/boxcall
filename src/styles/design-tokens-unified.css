@@ -206,6 +206,34 @@
   --color-accent-indigo-950: #1e1b4b;
   --color-accent-indigo: #6366f1;
 
+  /* Teal - Calm/Professional */
+  --color-accent-teal-50: #f0fdfa;
+  --color-accent-teal-100: #ccfbf1;
+  --color-accent-teal-200: #99f6e4;
+  --color-accent-teal-300: #5eead4;
+  --color-accent-teal-400: #2dd4bf;
+  --color-accent-teal-500: #14b8a6;
+  --color-accent-teal-600: #0d9488;
+  --color-accent-teal-700: #0f766e;
+  --color-accent-teal-800: #115e59;
+  --color-accent-teal-900: #134e4a;
+  --color-accent-teal-950: #042f2e;
+  --color-accent-teal: #14b8a6;
+
+  /* Emerald - Success/Growth */
+  --color-accent-emerald-50: #ecfdf5;
+  --color-accent-emerald-100: #d1fae5;
+  --color-accent-emerald-200: #a7f3d0;
+  --color-accent-emerald-300: #6ee7b7;
+  --color-accent-emerald-400: #34d399;
+  --color-accent-emerald-500: #10b981;
+  --color-accent-emerald-600: #059669;
+  --color-accent-emerald-700: #047857;
+  --color-accent-emerald-800: #065f46;
+  --color-accent-emerald-900: #064e3b;
+  --color-accent-emerald-950: #022c22;
+  --color-accent-emerald: #10b981;
+
   /* ============================================
      RGB VARIANTS (FOR ALPHA TRANSPARENCY)
      Used with rgb(var(--color-*-rgb) / 0.5) syntax
