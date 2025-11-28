@@ -121,7 +121,11 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
 }) => {
   const isMobile = useIsMobile();
   const [showAddFilter, setShowAddFilter] = useState(false);
-  const [showAdvanced, setShowAdvanced] = useState(false);
+  // Advanced filters collapsed by default, load from localStorage for user preference
+  const [showAdvanced, setShowAdvanced] = useState(() => {
+    const saved = localStorage.getItem('bc_advanced_filters_expanded');
+    return saved === 'true';
+  });
   const [activePresetId, setActivePresetId] = useState<string>("all");
   const [newFilter, setNewFilter] = useState<{
     field: string;
@@ -460,12 +464,19 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setShowAdvanced(!showAdvanced)}
+              onClick={() => {
+                const newState = !showAdvanced;
+                setShowAdvanced(newState);
+                // Save user preference
+                localStorage.setItem('bc_advanced_filters_expanded', String(newState));
+              }}
               className="flex items-center gap-2 text-sm font-medium text-accent hover:text-accent-hover transition-colors active:scale-95"
             >
               <Icon
-                name={showAdvanced ? "chevron-down" : "chevron-right"}
-                className="h-4 w-4 transition-transform"
+                name="chevron-right"
+                className={`h-4 w-4 transition-transform duration-300 ease-in-out ${
+                  showAdvanced ? "rotate-90" : "rotate-0"
+                }`}
               />
               <Icon name="filter" className="h-4 w-4 text-muted" />
               <span>Advanced Filters</span>
@@ -514,7 +525,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
 
       {/* Collapsible Advanced Filters */}
       {showAdvanced && (
-        <div className="px-4 pb-4 space-y-3 animate-in fade-in-0 slide-in-from-top-2 duration-200">
+        <div className="px-4 pb-4 space-y-3 animate-in fade-in-0 slide-in-from-top-2 duration-300 ease-in-out">
           {!showAddFilter && (
             <button
               onClick={() => setShowAddFilter(true)}
