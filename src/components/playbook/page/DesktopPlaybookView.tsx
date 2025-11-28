@@ -34,6 +34,8 @@ interface DesktopPlaybookViewProps {
   handleSavePlay: (play: Play) => Promise<void>;
   handleDuplicatePlay: (play: Play) => Promise<void>;
   handleOpenBuilder: () => void;
+  handleOpenPersonnel: () => void;
+  handleOpenSettings: () => void;
   handleOpenAssignments: (play: Play) => void;
   handlePostToTeamBulletin: (play: Play) => void;
   handleAddToPracticeScript: (play: Play) => void;
@@ -70,6 +72,8 @@ export function DesktopPlaybookView({
   handleSavePlay,
   handleDuplicatePlay,
   handleOpenBuilder,
+  handleOpenPersonnel,
+  handleOpenSettings,
   handleOpenAssignments,
   handlePostToTeamBulletin,
   handleAddToPracticeScript,
@@ -134,6 +138,15 @@ export function DesktopPlaybookView({
                   {formationAuditSummary.needsMapping}
                 </span>
               )}
+            </Button>
+
+            <Button
+              onClick={handleOpenPersonnel}
+              variant="ghost"
+              size="md"
+            >
+              <Icon name="users" className="h-4 w-4 mr-2" />
+              Personnel
             </Button>
           </div>
 

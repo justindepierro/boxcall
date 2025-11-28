@@ -42,6 +42,8 @@ interface MobilePlaybookViewProps {
   setShowFiltersSheet: (show: boolean) => void;
   setShowStatsSheet: (show: boolean) => void;
   handleOpenQuickCreate: () => void;
+  handleOpenPersonnel: () => void;
+  handleOpenSettings: () => void;
   handlePullRefresh: () => Promise<void>;
   handleEditPlay: (play: Play) => void;
   handleSavePlay: (play: Play) => Promise<void>;
@@ -78,6 +80,8 @@ export function MobilePlaybookView({
   setShowFiltersSheet,
   setShowStatsSheet,
   handleOpenQuickCreate,
+  handleOpenPersonnel,
+  handleOpenSettings,
   handlePullRefresh,
   handleEditPlay,
   handleSavePlay,
@@ -191,12 +195,12 @@ export function MobilePlaybookView({
         {state.playsCreated === 0 && (
           <MobileSection spacing="comfortable">
             <MobileCTACard
-              icon="plus"
-              title="Create Your First Play"
-              description="Build offensive and defensive plays with our diagram editor"
-              action="Get Started"
+              icon="users"
+              title="Setup Your Personnel"
+              description="Configure position names and personnel groupings before creating plays"
+              action="Configure Personnel"
               variant="primary"
-              onTap={handleOpenQuickCreate}
+              onTap={handleOpenPersonnel}
             />
           </MobileSection>
         )}
@@ -206,21 +210,21 @@ export function MobilePlaybookView({
           <MobileQuickActions
             actions={[
               {
-                id: "new-play",
-                icon: "plus",
-                label: "New Play",
-                onTap: handleOpenQuickCreate,
+                id: "personnel",
+                icon: "users",
+                label: "Personnel",
+                onTap: handleOpenPersonnel,
+              },
+              {
+                id: "settings",
+                icon: "settings",
+                label: "Settings",
+                onTap: handleOpenSettings,
               },
               {
                 id: "practice",
                 icon: "clock",
                 label: "Practice",
-                onTap: () => {}, // TODO: Pass handler
-              },
-              {
-                id: "game-plan",
-                icon: "target",
-                label: "Game Plan",
                 onTap: () => {}, // TODO: Pass handler
               },
             ]}

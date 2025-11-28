@@ -467,13 +467,22 @@ export default function PlaybookPage() {
 
   const handleOpenQuickCreate = useCallback(() => {
     triggerHapticFeedback("light");
+    setShowAddNewPlayModal(true);
     setDiagramMode("quick-play");
     setDiagramPlay(null); // Clear any existing play
+    // Record user action for smart preloading
+    smartPreloader.recordAction("open_modal", "quick_create");
   }, []);
 
   const handleOpenSettings = useCallback(() => {
     triggerHapticFeedback("light");
     setShowPlaybookSettingsModal(true);
+  }, []);
+
+  const handleOpenPersonnel = useCallback(() => {
+    triggerHapticFeedback("light");
+    setShowPersonnelModal(true);
+    smartPreloader.recordAction("open_modal", "personnel_builder");
   }, []);
 
   const _handleOpenWhiteboard = useCallback(() => {
@@ -939,6 +948,8 @@ export default function PlaybookPage() {
             setShowFiltersSheet={setShowFiltersSheet}
             setShowStatsSheet={setShowStatsSheet}
             handleOpenQuickCreate={handleOpenQuickCreate}
+            handleOpenPersonnel={handleOpenPersonnel}
+            handleOpenSettings={handleOpenSettings}
             handlePullRefresh={handlePullRefresh}
             handleSavePlay={handleSavePlay}
             handleDuplicatePlay={handleDuplicatePlay}
@@ -966,6 +977,8 @@ export default function PlaybookPage() {
             handleSavePlay={handleSavePlay}
             handleDuplicatePlay={handleDuplicatePlay}
             handleOpenBuilder={handleOpenBuilder}
+            handleOpenPersonnel={handleOpenPersonnel}
+            handleOpenSettings={handleOpenSettings}
             handleOpenAssignments={handleOpenAssignments}
             handlePostToTeamBulletin={handlePostToTeamBulletin}
             handleAddToPracticeScript={handleAddToPracticeScript}
