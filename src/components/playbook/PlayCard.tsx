@@ -163,8 +163,12 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       INITIAL_PLAY_DETAILS_VISIBILITY
     );
 
-  // Use controlled expansion if provided, otherwise use internal state
-  const [internalIsExpanded, setInternalIsExpanded] = useState(false);
+  // Use controlled expansion if provided, otherwise use internal state with localStorage persistence
+  const [internalIsExpanded, setInternalIsExpanded] = useState(() => {
+    // Load user's default preference from localStorage
+    const savedPreference = localStorage.getItem('bc_playcard_default_expanded');
+    return savedPreference === 'true';
+  });
   const isExpanded = controlledIsExpanded ?? internalIsExpanded;
 
   useEffect(() => {
@@ -374,8 +378,13 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         // Controlled mode - notify parent
         onToggleExpand(play.id);
       } else {
-        // Uncontrolled mode - manage internally
-        setInternalIsExpanded((prev) => !prev);
+        // Uncontrolled mode - manage internally and save preference
+        setInternalIsExpanded((prev) => {
+          const newState = !prev;
+          // Save user's preference for next time
+          localStorage.setItem('bc_playcard_default_expanded', String(newState));
+          return newState;
+        });
       }
     },
     [onToggleExpand, play.id, isExpanded, trackPlayView]

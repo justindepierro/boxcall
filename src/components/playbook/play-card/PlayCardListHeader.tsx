@@ -111,7 +111,7 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
           )}
         </div>
         <div
-          className={`flex flex-wrap items-center gap-2 ${
+          className={`flex flex-wrap items-center gap-2 transition-all duration-300 ease-in-out ${
             isCompact ? "mt-1.5" : "mt-2"
           }`}
         >
@@ -299,11 +299,12 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
           variant="ghost"
           size="sm"
           icon={
-            isExpanded ? (
-              <Icon name="chevron-up" className="h-5 w-5" />
-            ) : (
-              <Icon name="chevron-down" className="h-5 w-5" />
-            )
+            <Icon 
+              name="chevron-down" 
+              className={`h-5 w-5 transition-transform duration-300 ease-in-out ${
+                isExpanded ? "rotate-180" : "rotate-0"
+              }`}
+            />
           }
           iconPosition="only"
           aria-label={isExpanded ? "Collapse details" : "Expand details"}
