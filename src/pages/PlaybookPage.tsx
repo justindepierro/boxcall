@@ -305,7 +305,6 @@ export default function PlaybookPage() {
   const [showAssignmentsModal, setShowAssignmentsModal] = useState(false);
   const [showKeyboardShortcutsModal, setShowKeyboardShortcutsModal] =
     useState(false);
-  const [showDiagramBuilder, setShowDiagramBuilder] = useState(false);
 
   // 🚀 PERFORMANCE: Optimistic updates for instant UI feedback
   // Shows plays immediately while database operations happen in background
@@ -483,6 +482,17 @@ export default function PlaybookPage() {
     triggerHapticFeedback("light");
     setShowPersonnelModal(true);
     smartPreloader.recordAction("open_modal", "personnel_builder");
+  }, []);
+
+  const handleOpenHealth = useCallback(() => {
+    triggerHapticFeedback("light");
+    setShowPlaybookHealthModal(true);
+    smartPreloader.recordAction("open_modal", "playbook_health");
+  }, []);
+
+  const handleOpenKeyboardShortcuts = useCallback(() => {
+    triggerHapticFeedback("light");
+    setShowKeyboardShortcutsModal(true);
   }, []);
 
   const _handleOpenWhiteboard = useCallback(() => {
@@ -950,6 +960,9 @@ export default function PlaybookPage() {
             handleOpenQuickCreate={handleOpenQuickCreate}
             handleOpenPersonnel={handleOpenPersonnel}
             handleOpenSettings={handleOpenSettings}
+            handleQuickNewPracticeScript={handleQuickNewPracticeScript}
+            handleQuickNewGamePlan={handleQuickNewGamePlan}
+            handleOpenKeyboardShortcuts={handleOpenKeyboardShortcuts}
             handlePullRefresh={handlePullRefresh}
             handleSavePlay={handleSavePlay}
             handleDuplicatePlay={handleDuplicatePlay}
@@ -979,6 +992,8 @@ export default function PlaybookPage() {
             handleOpenBuilder={handleOpenBuilder}
             handleOpenPersonnel={handleOpenPersonnel}
             handleOpenSettings={handleOpenSettings}
+            handleOpenHealth={handleOpenHealth}
+            handleOpenKeyboardShortcuts={handleOpenKeyboardShortcuts}
             handleOpenAssignments={handleOpenAssignments}
             handlePostToTeamBulletin={handlePostToTeamBulletin}
             handleAddToPracticeScript={handleAddToPracticeScript}
@@ -1008,7 +1023,6 @@ export default function PlaybookPage() {
           showPlaybookHealthModal={showPlaybookHealthModal}
           showAssignmentsModal={showAssignmentsModal}
           showKeyboardShortcutsModal={showKeyboardShortcutsModal}
-          showDiagramBuilder={showDiagramBuilder}
           showPracticeScriptBuilder={showPracticeScriptBuilder}
           showPostToBulletinModal={showPostToBulletinModal}
           diagramPlay={diagramPlay}
@@ -1022,7 +1036,6 @@ export default function PlaybookPage() {
           setShowPlaybookHealthModal={setShowPlaybookHealthModal}
           setShowAssignmentsModal={setShowAssignmentsModal}
           setShowKeyboardShortcutsModal={setShowKeyboardShortcutsModal}
-          setShowDiagramBuilder={setShowDiagramBuilder}
           setShowPracticeScriptBuilder={setShowPracticeScriptBuilder}
           setShowPostToBulletinModal={setShowPostToBulletinModal}
           setDiagramPlay={setDiagramPlay}

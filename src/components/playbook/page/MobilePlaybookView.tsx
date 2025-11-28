@@ -44,6 +44,9 @@ interface MobilePlaybookViewProps {
   handleOpenQuickCreate: () => void;
   handleOpenPersonnel: () => void;
   handleOpenSettings: () => void;
+  handleQuickNewPracticeScript: () => void;
+  handleQuickNewGamePlan: () => void;
+  handleOpenKeyboardShortcuts: () => void;
   handlePullRefresh: () => Promise<void>;
   handleEditPlay: (play: Play) => void;
   handleSavePlay: (play: Play) => Promise<void>;
@@ -82,6 +85,9 @@ export function MobilePlaybookView({
   handleOpenQuickCreate,
   handleOpenPersonnel,
   handleOpenSettings,
+  handleQuickNewPracticeScript,
+  handleQuickNewGamePlan,
+  handleOpenKeyboardShortcuts,
   handlePullRefresh,
   handleEditPlay,
   handleSavePlay,
@@ -222,10 +228,10 @@ export function MobilePlaybookView({
                 onTap: handleOpenSettings,
               },
               {
-                id: "practice",
-                icon: "clock",
-                label: "Practice",
-                onTap: () => {}, // TODO: Pass handler
+                id: "shortcuts",
+                icon: "command",
+                label: "Shortcuts",
+                onTap: handleOpenKeyboardShortcuts,
               },
             ]}
           />
@@ -345,9 +351,9 @@ export function MobilePlaybookView({
         <FloatingActionButton
           actions={FABPresets.playbook({
             onNewPlay: handleOpenQuickCreate,
-            onWhiteboard: () => {}, // TODO: Pass handler
-            onPractice: () => {}, // TODO: Pass handler
-            onGamePlan: () => {}, // TODO: Pass handler
+            onWhiteboard: handleOpenKeyboardShortcuts,
+            onPractice: handleQuickNewPracticeScript,
+            onGamePlan: handleQuickNewGamePlan,
           })}
           icon="plus"
         />

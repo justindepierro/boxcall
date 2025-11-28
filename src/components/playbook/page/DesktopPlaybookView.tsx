@@ -36,6 +36,8 @@ interface DesktopPlaybookViewProps {
   handleOpenBuilder: () => void;
   handleOpenPersonnel: () => void;
   handleOpenSettings: () => void;
+  handleOpenHealth: () => void;
+  handleOpenKeyboardShortcuts: () => void;
   handleOpenAssignments: (play: Play) => void;
   handlePostToTeamBulletin: (play: Play) => void;
   handleAddToPracticeScript: (play: Play) => void;
@@ -74,6 +76,8 @@ export function DesktopPlaybookView({
   handleOpenBuilder,
   handleOpenPersonnel,
   handleOpenSettings,
+  handleOpenHealth,
+  handleOpenKeyboardShortcuts,
   handleOpenAssignments,
   handlePostToTeamBulletin,
   handleAddToPracticeScript,
@@ -148,9 +152,26 @@ export function DesktopPlaybookView({
               <Icon name="users" className="h-4 w-4 mr-2" />
               Personnel
             </Button>
+
+            <Button
+              onClick={handleOpenHealth}
+              variant="ghost"
+              size="md"
+            >
+              <Icon name="heart-pulse" className="h-4 w-4 mr-2" />
+              Health
+            </Button>
           </div>
 
           <div className="flex items-center gap-2">
+            <Button
+              onClick={handleOpenKeyboardShortcuts}
+              variant="ghost"
+              size="sm"
+              className="text-muted"
+            >
+              <Icon name="command" className="h-4 w-4" />
+            </Button>
             <Typography variant="body-sm" className="text-muted">
               {state.playsCreated} plays total
             </Typography>
