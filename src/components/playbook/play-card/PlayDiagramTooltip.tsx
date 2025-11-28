@@ -160,12 +160,14 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
               {/* Quick Stats Footer */}
               <div className="bg-neutral-50 px-lg py-md border-t border-muted">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="flex items-center gap-2 text-secondary">
+                  <div className="flex items-center gap-2">
                     <Icon name="eye" size="sm" className="text-jade-600" />
-                    <strong className="text-primary">{play.times_called || 0}</strong> times called
-                  </span>
+                    <span className="text-secondary">
+                      <strong className="text-primary font-bold">{play.times_called || 0}</strong> times called
+                    </span>
+                  </div>
                   {play.install_phase && (
-                    <span className="px-3 py-1 bg-jade-100 text-jade-700 rounded-lg font-semibold text-xs uppercase tracking-wide">
+                    <span className="px-3 py-1.5 bg-jade-600 text-white rounded-lg font-bold text-xs uppercase tracking-wide shadow-sm">
                       {play.install_phase}
                     </span>
                   )}
