@@ -16,7 +16,6 @@ import {
   PlaysService,
   ActivityService,
   PracticeScriptService,
-  GamePlanService,
 } from "@services";
 
 import { exportPlays } from "../services/exportService";
@@ -812,23 +811,11 @@ export default function PlaybookPage() {
   );
 
   const handleAddToGamePlan = useCallback(
-    async (play: Play) => {
-      try {
-        // TODO: Implement game plan integration
-        toast.info("Game plan integration coming soon!");
-        return;
-        info(`Added "${play.play_name}" to game plan: "${gamePlan.name}"`);
-
-        // Refresh activities to show the new "added_to_gameplan" activity
-        await refreshActivities();
-
-        toast.success(`Added "${play.play_name}" to game plan`, gamePlan.name);
-      } catch (error) {
-        logError("Failed to add play to game plan:", error);
-        toast.error("Failed to add play to game plan", "Please try again");
-      }
+    async (_play: Play) => {
+      // TODO: Implement game plan integration
+      toast.info("Game plan integration coming soon!");
     },
-    [toast, refreshActivities]
+    [toast]
   );
 
   // Practice Script Builder handlers
