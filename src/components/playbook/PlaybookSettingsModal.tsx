@@ -45,17 +45,50 @@ interface PersonnelSettings {
 }
 
 interface PlaybookSettingsModalProps {
-  isOpen: boolean;
+  isOpen?: boolean;
   onClose: () => void;
-  settings: PersonnelSettings;
-  onSave: (settings: PersonnelSettings) => void;
+  settings?: PersonnelSettings;
+  onSave?: (settings: PersonnelSettings) => void;
+  onOpenPersonnel?: () => void;
 }
 
 export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
-  isOpen,
+  isOpen = true,
   onClose,
-  settings,
-  onSave,
+  settings = {
+    personnelGrouping: "11",
+    personnelNaming: "numbers",
+    defaultPersonnel: "11",
+    defaultFormation: "Spread",
+    enableAutoTagging: true,
+    showComplexity: true,
+    theme: "auto",
+    gridDensity: "comfortable",
+    personnelConfigurations: [],
+    positionNames: {
+      QB: "QB",
+      RB1: "RB",
+      RB2: "RB2",
+      WR1: "X",
+      WR2: "Y",
+      WR3: "Z",
+      TE1: "TE",
+      TE2: "TE2",
+      OL1: "LT",
+      OL2: "LG",
+      OL3: "C",
+      OL4: "RG",
+      OL5: "RT",
+    },
+    bulkOperations: {
+      enableBulkFormationAdd: false,
+      enableBulkPlayAdd: false,
+      defaultBulkFormationCount: 5,
+      defaultBulkPlayCount: 10,
+    },
+  },
+  onSave = () => {},
+  onOpenPersonnel,
 }) => {
   const [localSettings, setLocalSettings] =
     useState<PersonnelSettings>(settings);
@@ -422,6 +455,21 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                   placeholder="I-Form, Spread, etc."
                   className={`w-full ${isMobile ? "h-12" : ""}`}
                 />
+              </div>
+
+              {/* Personnel Builder Button */}
+              <div className="pt-3 border-t border-default">
+                <Button
+                  onClick={() => {
+                    triggerHapticFeedback("medium");
+                    onOpenPersonnel?.();
+                  }}
+                  variant="outline"
+                  className="w-full flex items-center justify-center gap-2"
+                >
+                  <ModularIcon name="edit" className="h-4 w-4" />
+                  <span>Configure Personnel Builder</span>
+                </Button>
               </div>
             </div>
           </>

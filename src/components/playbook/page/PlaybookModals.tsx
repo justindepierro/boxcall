@@ -144,6 +144,10 @@ export function PlaybookModals({
           <Suspense fallback={<div>Loading...</div>}>
             <PlaybookSettingsModal
               onClose={() => setShowPlaybookSettingsModal(false)}
+              onOpenPersonnel={() => {
+                setShowPlaybookSettingsModal(false);
+                setShowPersonnelModal(true);
+              }}
             />
           </Suspense>
         </Modal>

@@ -344,5 +344,13 @@ export default {
       },
     },
   },
+  safelist: [
+    // Personnel badge gradients - ensure all color presets are included
+    // These classes are dynamically constructed from BADGE_COLOR_PRESETS
+    { pattern: /^from-(electric|red|emerald|amber|purple|orange|cyan|pink|slate|teal|lime|indigo)-(400|500|600)$/ },
+    { pattern: /^to-(electric|red|emerald|amber|purple|orange|cyan|pink|slate|teal|lime|indigo)-(600|700|800)$/ },
+    // Shadow classes for shiny style
+    { pattern: /^shadow-(electric|red|emerald|amber|purple|orange|cyan|pink|slate|teal|lime|indigo)-(600)\/50$/ },
+  ],
   plugins: [forms, typography],
 };
