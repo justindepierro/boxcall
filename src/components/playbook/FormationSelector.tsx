@@ -158,7 +158,7 @@ export function FormationSelector({
 
       {/* Dropdown Menu */}
       {isOpen && !isLoading && formations.length > 0 && (
-        <div className="absolute z-[100] mt-2 w-full bg-surface-card border-2 border-divider rounded-xl shadow-2xl max-h-96 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute z-[100] mt-2 w-full bg-white dark:bg-gray-900 border-2 border-info/30 rounded-xl shadow-2xl max-h-96 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
           {/* Create New Formation Button */}
           {onCreateNew && (
             <button
@@ -167,7 +167,7 @@ export function FormationSelector({
                 onCreateNew();
                 setIsOpen(false);
               }}
-              className="w-full px-4 py-4 flex items-center gap-3 bg-gradient-to-r from-info/10 to-info/5 hover:from-info/20 hover:to-info/10 transition-all duration-200 border-b-2 border-divider group"
+              className="w-full px-4 py-4 flex items-center gap-3 bg-gradient-to-r from-info/10 to-info/5 hover:from-info/20 hover:to-info/10 transition-all duration-200 border-b-2 border-info/20 group"
             >
               <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-info/20 group-hover:bg-info/30 transition-colors">
                 <Plus className="w-5 h-5 text-info" />
@@ -226,7 +226,7 @@ export function FormationSelector({
 
       {/* No Formations Message */}
       {isOpen && !isLoading && formations.length === 0 && (
-        <div className="absolute z-[100] mt-2 w-full bg-surface-card border-2 border-divider rounded-xl shadow-2xl p-8 text-center animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute z-[100] mt-2 w-full bg-white dark:bg-gray-900 border-2 border-info/30 rounded-xl shadow-2xl p-8 text-center animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="flex items-center justify-center w-16 h-16 rounded-full bg-info/10 mx-auto mb-4">
             <Grid className="w-8 h-8 text-info" />
           </div>
