@@ -97,7 +97,13 @@ export function MobilePlaybookView({
     <>
       {/* Search Bar - FIXED at top (always visible, no scroll needed) */}
       {state.playsCreated > 0 && (
-        <div className="fixed top-0 left-0 right-0 z-50 bg-primary/95 backdrop-blur-md border-b border-muted px-4 py-3 shadow-md">
+        <div 
+          className="fixed top-0 left-0 right-0 z-[60] bg-primary/95 backdrop-blur-md border-b border-muted px-4 shadow-md"
+          style={{
+            paddingTop: 'max(env(safe-area-inset-top, 0px), 0.75rem)',
+            paddingBottom: '0.75rem'
+          }}
+        >
           <div className="relative">
             <Icon
               name="search"
@@ -110,8 +116,26 @@ export function MobilePlaybookView({
               onChange={(e) =>
                 dispatch({ type: "SET_SEARCH", query: e.target.value })
               }
-              className="w-full h-12 pl-10 pr-10 bg-secondary border border-muted rounded-lg text-base text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-jade focus:border-transparent transition-all"
+              className="w-full h-12 pl-10 pr-20 bg-secondary border border-muted rounded-lg text-base text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-jade focus:border-transparent transition-all"
             />
+            {/* Voice Search Button - Mobile convenience */}
+            {!state.searchQuery && (
+              <button
+                onClick={() => {
+                  triggerHapticFeedback("light");
+                  // TODO: Implement voice search with Web Speech API
+                  console.log('Voice search coming soon!');
+                }}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-9 h-9 flex items-center justify-center hover:bg-tertiary rounded-full transition-colors active:scale-95"
+                aria-label="Voice search"
+                title="Voice search (coming soon)"
+              >
+                <Icon
+                  name="mic"
+                  className="h-5 w-5 text-muted"
+                />
+              </button>
+            )}
             {/* 🚀 PERFORMANCE: Instant search feedback - shows while debouncing */}
             {state.isSearchPending && state.searchQuery && (
               <motion.div
@@ -154,9 +178,14 @@ export function MobilePlaybookView({
 
       {/* Content area with padding for fixed search bar */}
       <div
-        className={`px-4 py-6 space-y-6 pb-32 ${state.playsCreated > 0 ? "pt-20" : ""}`}
+        className={`px-4 py-6 space-y-6 pb-32 ${state.playsCreated > 0 ? "pt-24" : ""}`}
+        style={{
+          paddingTop: state.playsCreated > 0 
+            ? `calc(6rem + env(safe-area-inset-top, 0px))` 
+            : '1.5rem'
+        }}
       >
-        {/* pt-20 (~80px) accounts for fixed search bar height. pb-32 prevents FAB overlap */}
+        {/* pt-24 (~96px) accounts for fixed search bar height + safe-area. pb-32 prevents FAB overlap */}
 
         {/* Empty State - Hero CTA */}
         {state.playsCreated === 0 && (
