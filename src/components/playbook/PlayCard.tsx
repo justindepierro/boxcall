@@ -501,7 +501,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                       handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
                       getPlayTypeColor={getPlayTypeColor}
                       getConfidenceColor={getConfidenceColor}
-                      existingPlays={props.existingPlays}
+                      existingPlays={existingPlays}
                     />
                   </div>
                 </motion.div>
@@ -566,7 +566,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
             getPlayTypeColor={getPlayTypeColor}
             getConfidenceColor={getConfidenceColor}
-            existingPlays={props.existingPlays}
+            existingPlays={existingPlays}
           />
         )}
       </div>
