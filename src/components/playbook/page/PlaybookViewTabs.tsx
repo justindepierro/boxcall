@@ -7,7 +7,6 @@ import { TeamTypeToggle, type TeamType } from "../TeamTypeToggle";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 import { PlaybookSelector } from "../PlaybookSelector";
 import { CSVImportModal } from "../CSVImport/CSVImportModal";
-import { CSVTemplateDownloadMenu } from "../CSVTemplateDownload";
 
 export type CoachingView =
   | "playbook"
@@ -71,7 +70,6 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
 }) => {
   // CSV Import state
   const [showCSVImport, setShowCSVImport] = useState(false);
-  const [showTemplateMenu, setShowTemplateMenu] = useState(false);
   return (
     <div className="divider-b bg-gradient-to-b from-white/95 to-white/80 dark:from-slate-900/95 dark:to-slate-900/80 shadow-sm">
       <div className="container-page px-6">
@@ -352,7 +350,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
                     isOpen={showCSVImport}
                     onClose={() => setShowCSVImport(false)}
                     playbookId={activePlaybookId}
-                    onImportComplete={(result) => {
+                    onImportComplete={() => {
                       setShowCSVImport(false);
                       onCSVImportComplete?.();
                     }}
