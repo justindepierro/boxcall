@@ -26,7 +26,6 @@ interface DesktopPlaybookViewProps {
     error: string | null;
   };
   playbookStats: any; // TODO: Type properly
-  formationAuditSummary: any; // TODO: Type properly
   activeTeamId: string | null;
 
   // Handlers
@@ -34,17 +33,12 @@ interface DesktopPlaybookViewProps {
   handleSavePlay: (play: Play) => Promise<void>;
   handleDuplicatePlay: (play: Play) => Promise<void>;
   handleOpenBuilder: () => void;
-  handleOpenPersonnel: () => void;
-  handleOpenSettings: () => void;
-  handleOpenHealth: () => void;
-  handleOpenKeyboardShortcuts: () => void;
+  handleQuickNewGamePlan: () => void;
   handleOpenAssignments: (play: Play) => void;
   handlePostToTeamBulletin: (play: Play) => void;
   handleAddToPracticeScript: (play: Play) => void;
   handleAddToGamePlan: (play: Play) => void;
   handlePlayCountChange: (change: number) => void;
-  handleQuickNewPracticeScript: () => void;
-  handleQuickNewGamePlan: () => void;
   handleOpenPracticeScriptBuilder: () => void;
   handleFiltersChange: (filters: any) => void;
   handleClearSelection: () => void;
@@ -68,22 +62,17 @@ export function DesktopPlaybookView({
   optimisticPlays,
   formationAudit,
   playbookStats,
-  formationAuditSummary,
   activeTeamId,
   handleEditPlay,
   handleSavePlay,
   handleDuplicatePlay,
   handleOpenBuilder,
-  handleOpenPersonnel,
-  handleOpenHealth,
-  handleOpenKeyboardShortcuts,
+  handleQuickNewGamePlan,
   handleOpenAssignments,
   handlePostToTeamBulletin,
   handleAddToPracticeScript,
   handleAddToGamePlan,
   handlePlayCountChange,
-  handleQuickNewPracticeScript,
-  handleQuickNewGamePlan,
   handleOpenPracticeScriptBuilder,
   handleFiltersChange,
   handleClearSelection,
@@ -95,88 +84,6 @@ export function DesktopPlaybookView({
 }: DesktopPlaybookViewProps) {
   return (
     <div className="min-h-screen bg-subtle">
-      {/* Quick Action Buttons */}
-      <div className="px-8 py-5 border-b border-muted bg-primary/80 backdrop-blur-sm">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Button
-              onClick={handleOpenBuilder}
-              variant="primary"
-              size="md"
-              className="shadow-sm"
-            >
-              <Icon name="plus-circle" className="h-4 w-4 mr-2" />
-              New Play
-            </Button>
-
-            <Button
-              onClick={handleQuickNewPracticeScript}
-              variant="secondary"
-              size="md"
-              className="shadow-sm"
-            >
-              <Icon name="clipboard-list" className="h-4 w-4 mr-2" />
-              Practice
-            </Button>
-
-            <Button
-              onClick={handleQuickNewGamePlan}
-              variant="secondary"
-              size="md"
-              className="shadow-sm"
-            >
-              <Icon name="target" className="h-4 w-4 mr-2" />
-              Game Plan
-            </Button>
-
-            <Button
-              onClick={() => navigate("/playbook/formation-mapper")}
-              variant="ghost"
-              size="md"
-            >
-              <Icon name="link" className="h-4 w-4 mr-2" />
-              Formation Mapper
-              {formationAuditSummary.needsMapping > 0 && (
-                <span className="ml-2 px-2 py-0.5 bg-orange-100 text-orange-700 text-xs font-semibold rounded-full">
-                  {formationAuditSummary.needsMapping}
-                </span>
-              )}
-            </Button>
-
-            <Button
-              onClick={handleOpenPersonnel}
-              variant="ghost"
-              size="md"
-            >
-              <Icon name="users" className="h-4 w-4 mr-2" />
-              Personnel
-            </Button>
-
-            <Button
-              onClick={handleOpenHealth}
-              variant="ghost"
-              size="md"
-            >
-              <Icon name="heart" className="h-4 w-4 mr-2" />
-              Health
-            </Button>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={handleOpenKeyboardShortcuts}
-              variant="ghost"
-              size="sm"
-              className="text-muted"
-            >
-              <Icon name="keyboard" className="h-4 w-4" />
-            </Button>
-            <Typography variant="body-sm" className="text-muted">
-              {state.playsCreated} plays total
-            </Typography>
-          </div>
-        </div>
-      </div>
 
       {formationAudit.plays.length > 0 && (
         <div className="px-8 pt-6 mb-6">

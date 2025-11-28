@@ -32,6 +32,7 @@ export type PlaybookViewTabsProps = {
   onOpenSettings?: () => void;
   onOpenBuilder?: () => void;
   onOpenHealth?: () => void;
+  onNavigate?: (path: string) => void; // For breadcrumb navigation
   // Header content props
   title?: string;
   playsCreated: number;
@@ -53,6 +54,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
   onOpenSettings,
   onOpenBuilder,
   onOpenHealth,
+  onNavigate,
   title = "Playbook",
   playsCreated,
   diagramCoverage,
@@ -66,6 +68,20 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
   return (
     <div className="divider-b bg-gradient-to-b from-white/95 to-white/80 dark:from-slate-900/95 dark:to-slate-900/80 shadow-sm">
       <div className="container-page px-6">
+        {/* Breadcrumb */}
+        <div className="pt-4 pb-2">
+          <Typography variant="body-sm" className="text-muted">
+            <span 
+              onClick={() => onNavigate?.("/dashboard")}
+              className="hover:text-primary cursor-pointer transition-colors"
+            >
+              Dashboard
+            </span>
+            <span className="mx-2">/</span>
+            <span className="text-primary font-medium">Playbook</span>
+          </Typography>
+        </div>
+
         {/* Top row: Title, stats, team type selector, and search */}
         <div className="flex items-center justify-between py-3 overflow-visible">
           <div className="flex items-center space-x-4 overflow-visible">

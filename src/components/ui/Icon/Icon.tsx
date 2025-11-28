@@ -134,6 +134,11 @@ export type IconName =
   | "link"
   | "sparkles"
   | "undo"
+  | "repeat"
+  | "loader"
+  | "bar-chart"
+  | "chart"
+  | "x-circle"
   | "sword"
   | "sun"
   | "moon"
@@ -274,6 +279,15 @@ export const Icon: React.FC<IconProps> = ({
       "link",
       "sparkles",
       "undo",
+      "repeat",
+      "loader",
+      "bar-chart",
+      "chart",
+      "x-circle",
+      "alert-circle",
+      "message-circle",
+      "minus-circle",
+      "skip-forward",
       "inbox",
       "flask-conical",
       "sprout",

@@ -1,3 +1,19 @@
+/**
+ * ⚠️ DEPRECATED PAGE - Formation Mapper
+ * 
+ * This page was designed to pair formation variants (Left/Right) using a separate
+ * formations table. As of November 28, 2025, BoxCall uses the simplified approach:
+ * 
+ * - Formation names stored as TEXT in plays table
+ * - Direction detected from name suffix ("Shotgun Trips Left" vs "Shotgun Trips Right")
+ * - No separate formations table needed
+ * - No formation pairing/matching needed
+ * 
+ * This page remains for backwards compatibility but may be removed in future versions.
+ * 
+ * See: docs/FORMATION_FIX_COMPLETE_NOV28_2025.md
+ */
+
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";

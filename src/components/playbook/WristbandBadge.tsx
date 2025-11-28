@@ -19,7 +19,7 @@ export const WristbandBadge: React.FC<WristbandBadgeProps> = ({
 
   return (
     <span
-      className={`inline-flex items-center justify-center rounded-full font-bold bg-purple-100 text-purple-800 border border-purple-300 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-700 ${sizeClasses[size]} ${className}`}
+      className={`inline-flex items-center justify-center rounded-md font-bold bg-purple-100 text-purple-800 border border-purple-300 transition-colors hover:bg-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-700 ${sizeClasses[size]} ${className}`}
       title={`Wristband: ${wristbandNumber}`}
     >
       <span className="font-mono">{wristbandNumber}</span>

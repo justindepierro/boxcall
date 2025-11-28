@@ -1,33 +1,29 @@
 /**
  * FormationSelector
  *
- * Dropdown selector for formations stored in database.
- * Replaces text-based formation input with proper database relationships.
+ * Dropdown selector for formations from plays table.
+ * Queries plays.formation directly - no separate formations table needed!
  *
  * Features:
- * - Loads formations from FormationService
- * - Groups by category or personnel
- * - Shows direction (Base/Left/Right) badges
+ * - Loads unique formation names from plays table
+ * - Simple text-based selection (no complex relationships)
  * - Filters by playbook
- * - Connected to everything!
+ * - Auto-detects directional variants (Left/Right)
  */
 
 import { useState, useEffect } from "react";
-import { ChevronDown, Grid, Link2, Plus } from "lucide-react";
-import { FormationService } from "../../services/formationService";
-import type { Formation } from "../../types/formation";
-import { FormationMatchingModal } from "../formations/FormationMatchingModal";
+import { ChevronDown, Grid, Plus } from "lucide-react";
+import { supabase } from "../../lib/supabase";
 import { FormationSelectorSkeleton } from "./FormationSelectorSkeleton";
 
 interface FormationSelectorProps {
   playbookId: string;
-  value: string | null; // formation_id
-  onChange: (formationId: string | null, formation: Formation | null) => void;
-  onCreateNew?: () => void; // NEW: Callback to open Formation Builder
+  value: string | null; // formation name (TEXT)
+  onChange: (formationName: string | null) => void; // Simplified - just pass formation name
+  onCreateNew?: () => void; // Callback to open Formation Builder
   className?: string;
   disabled?: boolean;
-  onFormationsLoaded?: (formations: Formation[]) => void;
-  directionDisplayFormat?: "full" | "abbrev" | "letter"; // NEW: Direction display format
+  directionDisplayFormat?: "full" | "abbrev" | "letter"; // Direction display format
 }
 
 export function FormationSelector({
@@ -37,19 +33,14 @@ export function FormationSelector({
   onCreateNew,
   className = "",
   disabled = false,
-  onFormationsLoaded,
-  directionDisplayFormat = "full", // NEW: Default to full format
+  directionDisplayFormat = "full",
 }: FormationSelectorProps) {
-  const [formations, setFormations] = useState<Formation[]>([]);
+  const [formations, setFormations] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [showMatchingModal, setShowMatchingModal] = useState(false);
-  const [formationToMatch, setFormationToMatch] = useState<Formation | null>(
-    null
-  );
 
-  // Load formations for this playbook
+  // Load unique formation names from plays table
   useEffect(() => {
     if (!playbookId) return;
 
@@ -57,9 +48,22 @@ export function FormationSelector({
       setIsLoading(true);
       setError(null);
       try {
-        const data = await FormationService.getFormationsByPlaybook(playbookId);
-        setFormations(data);
-        onFormationsLoaded?.(data);
+        // Query plays table for unique formation names
+        const { data: plays, error: queryError } = await supabase
+          .from('plays')
+          .select('formation')
+          .eq('playbook_id', playbookId)
+          .order('formation');
+
+        if (queryError) throw queryError;
+
+        // Extract unique formation names
+        const uniqueFormations = [
+          ...new Set((plays || []).map(p => p.formation).filter(Boolean)),
+        ] as string[];
+
+        setFormations(uniqueFormations);
+        console.log(`[FormationSelector] Loaded ${uniqueFormations.length} unique formations from plays table`);
       } catch (err) {
         console.error("Error loading formations:", err);
         setError("Failed to load formations");
@@ -70,102 +74,43 @@ export function FormationSelector({
     }
 
     loadFormations();
-  }, [playbookId, onFormationsLoaded]);
+  }, [playbookId]);
 
-  // Get selected formation
-  const selectedFormation = value
-    ? formations.find((f) => f.id === value)
-    : null;
+  // Get selected formation name
+  const selectedFormation = value || null;
 
-  // Show all formations - let user see everything
-  const visibleFormations = formations; // Show all formations
-
-  // Group formations by category
-  const groupedFormations = visibleFormations.reduce(
-    (acc, formation) => {
-      const category = formation.category || "other";
-      if (!acc[category]) {
-        acc[category] = [];
-      }
-      acc[category].push(formation);
-      return acc;
-    },
-    {} as Record<string, Formation[]>
-  );
-
-  // Category labels
-  const categoryLabels: Record<string, string> = {
-    spread: "Spread",
-    pro: "Pro",
-    power: "Power",
-    special: "Special",
-    goal_line: "Goal Line",
-    short_yardage: "Short Yardage",
-    other: "Other",
+  // Detect direction from formation name
+  const getDirectionFromName = (formationName: string) => {
+    const lowerName = formationName.toLowerCase();
+    if (lowerName.endsWith(' left')) return 'left';
+    if (lowerName.endsWith(' right')) return 'right';
+    return null;
   };
 
   // Direction labels
-  const getDirectionLabel = (direction: string | null) => {
+  const getDirectionLabel = (formationName: string) => {
+    const direction = getDirectionFromName(formationName);
     if (!direction) return "";
     switch (directionDisplayFormat) {
       case "full":
-        switch (direction) {
-          case "left":
-            return "← Left";
-          case "right":
-            return "→ Right";
-          case "base":
-          default:
-            return ""; // Don't show "Base" label (base formations without variants show as-is)
-        }
+        return direction === 'left' ? "← Left" : "→ Right";
       case "abbrev":
-        switch (direction) {
-          case "left":
-            return "← Lt";
-          case "right":
-            return "→ Rt";
-          case "base":
-          default:
-            return ""; // Don't show "Base" label
-        }
+        return direction === 'left' ? "← Lt" : "→ Rt";
       case "letter":
-        switch (direction) {
-          case "left":
-            return "← L";
-          case "right":
-            return "→ R";
-          case "base":
-          default:
-            return ""; // Don't show "Base" label
-        }
+        return direction === 'left' ? "← L" : "→ R";
       default:
         return "";
     }
   };
 
   // Handle selection
-  const handleSelect = (formation: Formation) => {
-    onChange(formation.id, formation);
+  const handleSelect = (formationName: string) => {
+    onChange(formationName);
     setIsOpen(false);
   };
 
-  // Handle manage variants
-  const handleManageVariants = (
-    formation: Formation,
-    event: React.MouseEvent
-  ) => {
-    event.stopPropagation(); // Prevent dropdown from selecting
-    setFormationToMatch(formation);
-    setShowMatchingModal(true);
-    setIsOpen(false);
-  };
-
-  // Reload formations after matching
-  const handleMatchingSuccess = () => {
-    if (playbookId) {
-      FormationService.getFormationsByPlaybook(playbookId).then(setFormations);
-    }
-  };
+  // Note: Formation variants (Left/Right) are automatically detected from formation names
+  // No separate matching modal needed with the simplified text-based approach
 
   return (
     <div className={`relative ${className}`}>
@@ -184,28 +129,25 @@ export function FormationSelector({
             type="button"
             onClick={() => !disabled && setIsOpen(!isOpen)}
             disabled={disabled}
-            className="w-full flex items-center justify-between px-md py-sm bg-secondary border border-primary rounded-lg text-primary hover:border-accent focus:outline-none focus:ring-2 focus:ring-accent-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full flex items-center justify-between px-4 py-3 bg-surface-card border-2 border-divider rounded-lg text-primary hover:border-info hover:shadow-md focus:outline-none focus:ring-2 focus:ring-info focus:border-info disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
           >
-            <div className="flex items-center gap-sm">
-              <Grid className="w-4 h-4 text-muted" />
+            <div className="flex items-center gap-3">
+              <Grid className="w-5 h-5 text-info" />
               {selectedFormation ? (
-                <div className="flex items-center gap-xs">
-                  <span className="font-medium">{selectedFormation.name}</span>
-                  <span className="text-xs text-muted">
-                    {getDirectionLabel(selectedFormation.direction)}
-                  </span>
-                  {selectedFormation.personnel_name && (
-                    <span className="px-2 py-0.5 bg-accent-500/20 text-accent-400 rounded text-xs">
-                      {selectedFormation.personnel_name}
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-base">{selectedFormation}</span>
+                  {getDirectionLabel(selectedFormation) && (
+                    <span className="text-xs font-medium text-info bg-info/10 px-2 py-0.5 rounded">
+                      {getDirectionLabel(selectedFormation)}
                     </span>
                   )}
                 </div>
               ) : (
-                <span className="text-muted">Select formation...</span>
+                <span className="text-muted font-medium">Select formation...</span>
               )}
             </div>
             <ChevronDown
-              className={`w-4 h-4 text-muted transition-transform ${isOpen ? "rotate-180" : ""}`}
+              className={`w-5 h-5 text-muted transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
             />
           </button>
         </>
@@ -215,8 +157,8 @@ export function FormationSelector({
       {error && <p className="mt-1 text-xs text-error-500">{error}</p>}
 
       {/* Dropdown Menu */}
-      {isOpen && !isLoading && (
-        <div className="absolute z-50 mt-1 w-full bg-secondary border border-primary rounded-lg shadow-lg max-h-96 overflow-y-auto">
+      {isOpen && !isLoading && formations.length > 0 && (
+        <div className="absolute z-[100] mt-2 w-full bg-surface-card border-2 border-divider rounded-xl shadow-2xl max-h-96 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
           {/* Create New Formation Button */}
           {onCreateNew && (
             <button
@@ -225,125 +167,94 @@ export function FormationSelector({
                 onCreateNew();
                 setIsOpen(false);
               }}
-              className="w-full px-md py-md flex items-center gap-sm bg-accent-500/10 hover:bg-accent-500/20 transition-colors border-b border-primary"
+              className="w-full px-4 py-4 flex items-center gap-3 bg-gradient-to-r from-info/10 to-info/5 hover:from-info/20 hover:to-info/10 transition-all duration-200 border-b-2 border-divider group"
             >
-              <Plus className="w-5 h-5 text-accent-500" />
+              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-info/20 group-hover:bg-info/30 transition-colors">
+                <Plus className="w-5 h-5 text-info" />
+              </div>
               <div className="flex flex-col items-start">
-                <span className="font-semibold text-accent-500">
+                <span className="font-bold text-info text-sm">
                   Create New Formation
                 </span>
-                <span className="text-xs text-muted">
+                <span className="text-xs text-muted mt-0.5">
                   Open Formation Builder to design a new formation
                 </span>
               </div>
             </button>
           )}
 
-          {/* Existing Formations */}
-          {visibleFormations.length > 0 &&
-            Object.keys(groupedFormations).map((category) => (
-              <div key={category}>
-                {/* Category Header */}
-                <div className="px-md py-xs bg-tertiary border-b border-primary">
-                  <span className="text-xs font-medium text-muted uppercase tracking-wide">
-                    {categoryLabels[category] || category}
+          {/* Formations List */}
+          <div className="max-h-80 overflow-y-auto">
+            {formations.map((formationName, index) => (
+              <button
+                key={formationName}
+                type="button"
+                onClick={() => handleSelect(formationName)}
+                className={`w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-info/5 hover:shadow-sm transition-all duration-150 group ${
+                  value === formationName 
+                    ? "bg-info/10 border-l-4 border-info shadow-inner" 
+                    : index > 0 ? "border-t border-divider/50" : ""
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`w-2 h-2 rounded-full ${
+                    value === formationName ? "bg-info" : "bg-muted/30 group-hover:bg-info/50"
+                  } transition-colors`} />
+                  <span className={`font-semibold text-sm ${
+                    value === formationName ? "text-info" : "text-primary group-hover:text-info"
+                  } transition-colors`}>
+                    {formationName}
                   </span>
+                  {getDirectionLabel(formationName) && (
+                    <span className="text-xs font-medium text-info bg-info/10 px-2 py-0.5 rounded group-hover:bg-info/20 transition-colors">
+                      {getDirectionLabel(formationName)}
+                    </span>
+                  )}
                 </div>
-
-                {/* Formations in Category */}
-                {groupedFormations[category].map((formation: Formation) => (
-                  <div
-                    key={formation.id}
-                    className={`w-full flex items-center justify-between hover:bg-tertiary transition-colors ${
-                      value === formation.id ? "bg-accent-500/10" : ""
-                    }`}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => handleSelect(formation)}
-                      className="flex-1 px-md py-sm flex items-center justify-between text-left"
-                    >
-                      <div className="flex flex-col gap-1">
-                        <div className="flex items-center gap-sm">
-                          <span className="font-medium text-primary">
-                            {formation.name}
-                          </span>
-                          <span className="text-xs text-muted">
-                            {getDirectionLabel(formation.direction)}
-                          </span>
-                        </div>
-                        {formation.description && (
-                          <span className="text-xs text-muted line-clamp-1">
-                            {formation.description}
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="flex items-center gap-xs">
-                        {formation.personnel_name && (
-                          <span className="px-2 py-0.5 bg-accent-500/20 text-accent-400 rounded text-xs">
-                            {formation.personnel_name}
-                          </span>
-                        )}
-                        {formation.usage_count > 0 && (
-                          <span className="text-xs text-muted">
-                            {formation.usage_count}x
-                          </span>
-                        )}
-                      </div>
-                    </button>
-
-                    {/* Manage Variants Button */}
-                    <button
-                      type="button"
-                      onClick={(e) => handleManageVariants(formation, e)}
-                      className="px-sm py-sm hover:bg-primary transition-colors group"
-                      title="Manage formation variants"
-                    >
-                      <Link2 className="w-4 h-4 text-muted group-hover:text-accent-500" />
-                    </button>
+                {value === formationName && (
+                  <div className="flex items-center text-info">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
                   </div>
-                ))}
-              </div>
+                )}
+              </button>
             ))}
+          </div>
         </div>
       )}
 
       {/* No Formations Message */}
-      {isOpen && !isLoading && visibleFormations.length === 0 && (
-        <div className="absolute z-50 mt-1 w-full bg-secondary border border-primary rounded-lg shadow-lg p-lg text-center">
-          <Grid className="w-8 h-8 text-muted mx-auto mb-sm" />
-          <p className="text-sm text-muted mb-xs">
-            {formations.length > 0
-              ? "All base formations have been linked to variants"
-              : "No formations yet"}
+      {isOpen && !isLoading && formations.length === 0 && (
+        <div className="absolute z-[100] mt-2 w-full bg-surface-card border-2 border-divider rounded-xl shadow-2xl p-8 text-center animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="flex items-center justify-center w-16 h-16 rounded-full bg-info/10 mx-auto mb-4">
+            <Grid className="w-8 h-8 text-info" />
+          </div>
+          <p className="text-base font-semibold text-primary mb-2">
+            No formations yet
           </p>
-          <p className="text-xs text-muted">
-            {formations.length > 0
-              ? "Use the Link button to manage formation variants"
-              : "Create formations using the Formation Builder"}
+          <p className="text-sm text-muted mb-6">
+            Create your first play to add a formation to your playbook
           </p>
+          {onCreateNew && (
+            <button
+              type="button"
+              onClick={() => {
+                onCreateNew();
+                setIsOpen(false);
+              }}
+              className="w-full px-4 py-3 bg-gradient-to-r from-info to-info/90 text-white rounded-lg hover:shadow-lg hover:scale-105 transition-all duration-200 font-semibold text-sm flex items-center justify-center gap-2"
+            >
+              <Plus className="w-5 h-5" />
+              Create First Formation
+            </button>
+          )}
         </div>
       )}
 
       {/* Close dropdown on outside click */}
       {isOpen && (
         <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-      )}
-
-      {/* Formation Linking Modal (Redesigned) */}
-      {showMatchingModal && (
-        <FormationMatchingModal
-          isOpen={showMatchingModal}
-          onClose={() => {
-            setShowMatchingModal(false);
-            setFormationToMatch(null);
-          }}
-          playbookId={playbookId}
-          initialLeftFormation={formationToMatch}
-          initialRightFormation={null}
-          onSuccess={handleMatchingSuccess}
-        />
       )}
     </div>
   );

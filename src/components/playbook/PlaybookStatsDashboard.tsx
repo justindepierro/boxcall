@@ -57,48 +57,48 @@ export const PlaybookStatsDashboard: React.FC<PlaybookStatsDashboardProps> = ({
         </Typography>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-5">
         {/* Main Stats - Enhanced with gradients */}
-        <div className="grid grid-cols-2 gap-5">
+        <div className="grid grid-cols-2 gap-4">
           {/* Total Plays - Jade gradient (primary brand) */}
-          <div className="text-center p-5 bg-gradient-to-br from-jade-50 to-jade-100 rounded-xl border-l-4 border-jade-600 transition-all duration-300 hover:shadow-lg hover:shadow-jade-500/20">
-            <div className="text-4xl font-bold text-jade-800">
+          <div className="text-center p-6 bg-gradient-to-br from-jade-50 to-jade-100 rounded-xl border-l-4 border-jade-600 transition-all duration-300 hover:shadow-md hover:shadow-jade-500/20 hover:scale-[1.02]">
+            <div className="text-5xl font-bold text-jade-700">
               {stats.totalPlays}
             </div>
-            <div className="text-xs font-semibold text-jade-600 mt-2 uppercase tracking-wide">
+            <div className="text-xs font-semibold text-jade-600 mt-2.5 uppercase tracking-wider">
               Total Plays
             </div>
           </div>
           {/* Formations - Purple gradient (advanced/special) */}
-          <div className="text-center p-5 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl border-l-4 border-purple-600 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
-            <div className="text-4xl font-bold text-purple-800">
+          <div className="text-center p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl border-l-4 border-purple-600 transition-all duration-300 hover:shadow-md hover:shadow-purple-500/20 hover:scale-[1.02]">
+            <div className="text-5xl font-bold text-purple-700">
               {stats.formationsCount}
             </div>
-            <div className="text-xs font-semibold text-purple-600 mt-2 uppercase tracking-wide">
+            <div className="text-xs font-semibold text-purple-600 mt-2.5 uppercase tracking-wider">
               Formations
             </div>
           </div>
         </div>
 
-        {/* Photo Coverage - Enhanced with indigo theme */}
-        <div className="p-5 bg-gradient-to-br from-indigo-50/80 to-indigo-100/60 rounded-xl border border-indigo-300/50">
-          <div className="flex justify-between items-center mb-4">
-            <span className="text-sm font-semibold text-indigo-700 uppercase tracking-wide">
+        {/* Photo Coverage - Enhanced with rose theme */}
+        <div className="p-5 bg-gradient-to-br from-rose-50 to-rose-100 rounded-xl border-l-4 border-rose-500 transition-all duration-300 hover:shadow-md hover:shadow-rose-500/20">
+          <div className="flex justify-between items-center mb-3">
+            <span className="text-sm font-semibold text-rose-700 uppercase tracking-wider">
               Plays with Photos
             </span>
-            <span className="text-xl font-bold text-indigo-800">
+            <span className="text-2xl font-bold text-rose-700">
               {stats.playsWithPhotos || 0}
             </span>
           </div>
-          <div className="w-full bg-indigo-200/50 rounded-full h-3">
+          <div className="w-full bg-rose-200/60 rounded-full h-3">
             <div
-              className="bg-gradient-to-r from-indigo-500 to-indigo-600 h-3 rounded-full transition-all duration-500 shadow-sm"
+              className="bg-gradient-to-r from-rose-500 to-rose-600 h-3 rounded-full transition-all duration-500 shadow-sm"
               style={{ width: `${photoCoverage}%` }}
             />
           </div>
           <Typography
             variant="body-xs"
-            className="text-indigo-600 mt-2 font-medium"
+            className="text-rose-600 mt-2.5 font-semibold"
           >
             {photoCoverage}% coverage
           </Typography>
@@ -108,61 +108,61 @@ export const PlaybookStatsDashboard: React.FC<PlaybookStatsDashboardProps> = ({
         <div>
           <Typography
             variant="body-sm"
-            className="text-primary mb-4 font-semibold uppercase tracking-wide"
+            className="text-primary mb-4 font-semibold uppercase tracking-wider"
           >
             Play Distribution
           </Typography>
-          <div className="space-y-3">
-            {/* Pass Plays - Blue gradient */}
-            <div className="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-blue-100/50 rounded-xl border-l-4 border-blue-600">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                <span className="text-sm font-semibold text-blue-800">
+          <div className="space-y-2.5">
+            {/* Pass Plays - Cyan gradient */}
+            <div className="flex justify-between items-center p-4 bg-gradient-to-r from-cyan-50 to-cyan-100 rounded-xl border-l-4 border-cyan-600 transition-all duration-200 hover:shadow-md hover:shadow-cyan-500/20">
+              <div className="flex items-center gap-2.5">
+                <div className="w-2.5 h-2.5 bg-cyan-600 rounded-full shadow-sm"></div>
+                <span className="text-sm font-semibold text-cyan-800">
                   Pass Plays
                 </span>
               </div>
-              <span className="text-sm font-bold text-blue-800">
+              <span className="text-sm font-bold text-cyan-700">
                 {stats.passPlays}{" "}
-                <span className="text-blue-600">({passPercentage}%)</span>
+                <span className="text-cyan-600">({passPercentage}%)</span>
               </span>
             </div>
             {/* Run Plays - Emerald gradient */}
-            <div className="flex justify-between items-center p-4 bg-gradient-to-r from-emerald-50 to-emerald-100/50 rounded-xl border-l-4 border-emerald-600">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-emerald-600 rounded-full"></div>
+            <div className="flex justify-between items-center p-4 bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-xl border-l-4 border-emerald-600 transition-all duration-200 hover:shadow-md hover:shadow-emerald-500/20">
+              <div className="flex items-center gap-2.5">
+                <div className="w-2.5 h-2.5 bg-emerald-600 rounded-full shadow-sm"></div>
                 <span className="text-sm font-semibold text-emerald-800">
                   Run Plays
                 </span>
               </div>
-              <span className="text-sm font-bold text-emerald-800">
+              <span className="text-sm font-bold text-emerald-700">
                 {stats.runPlays}{" "}
                 <span className="text-emerald-600">({runPercentage}%)</span>
               </span>
             </div>
-            {/* RPO Plays - Navy gradient */}
+            {/* RPO Plays - Amber gradient */}
             {stats.rpoPlays > 0 && (
-              <div className="flex justify-between items-center p-4 bg-gradient-to-r from-navy-50 to-navy-100/50 rounded-xl border-l-4 border-navy-600">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-navy-600 rounded-full"></div>
-                  <span className="text-sm font-semibold text-navy-800">
+              <div className="flex justify-between items-center p-4 bg-gradient-to-r from-warning-bg to-warning-bg/80 rounded-xl border-l-4 border-warning-600 transition-all duration-200 hover:shadow-md hover:shadow-warning-500/20">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-2.5 h-2.5 bg-warning-600 rounded-full shadow-sm"></div>
+                  <span className="text-sm font-semibold text-warning-700">
                     RPO Plays
                   </span>
                 </div>
-                <span className="text-sm font-bold text-navy-800">
+                <span className="text-sm font-bold text-warning-600">
                   {stats.rpoPlays}
                 </span>
               </div>
             )}
             {/* Play Action - Orange gradient */}
             {stats.playActionPlays > 0 && (
-              <div className="flex justify-between items-center p-4 bg-gradient-to-r from-orange-50 to-orange-100/50 rounded-xl border-l-4 border-orange-600">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-orange-600 rounded-full"></div>
+              <div className="flex justify-between items-center p-4 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl border-l-4 border-orange-600 transition-all duration-200 hover:shadow-md hover:shadow-orange-500/20">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-2.5 h-2.5 bg-orange-600 rounded-full shadow-sm"></div>
                   <span className="text-sm font-semibold text-orange-800">
                     Play Action
                   </span>
                 </div>
-                <span className="text-sm font-bold text-orange-800">
+                <span className="text-sm font-bold text-orange-700">
                   {stats.playActionPlays}
                 </span>
               </div>

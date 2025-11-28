@@ -13,7 +13,7 @@ export const QUICK_PRESETS: FilterPreset[] = [
   {
     id: "all",
     label: "All Plays",
-    icon: "grid-3x3",
+    icon: "grid",
     filters: [],
   },
   {
@@ -25,13 +25,13 @@ export const QUICK_PRESETS: FilterPreset[] = [
   {
     id: "most-used",
     label: "Most Used",
-    icon: "flame",
+    icon: "trending-up",
     filters: [], // Handled specially in PlayGrid with sorting
   },
   {
     id: "run",
     label: "Run Plays",
-    icon: "move-right",
+    icon: "arrow-right",
     filters: [{ field: "playType", operator: "equals", value: "run" }],
   },
   {
@@ -43,7 +43,7 @@ export const QUICK_PRESETS: FilterPreset[] = [
   {
     id: "rpo",
     label: "RPO Plays",
-    icon: "shuffle",
+    icon: "repeat",
     filters: [{ field: "playType", operator: "equals", value: "rpo" }],
   },
   {

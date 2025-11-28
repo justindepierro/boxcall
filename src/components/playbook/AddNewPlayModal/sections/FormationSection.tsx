@@ -50,13 +50,10 @@ export const FormationSection: React.FC<FormationSectionProps> = ({
       {useFormationSelector ? (
         <FormationSelector
           playbookId={playbookId!}
-          value={formationId}
-          onChange={(id, formationObj) => {
-            onFormationIdChange(id, formationObj);
-            // Also update text field for backwards compatibility
-            if (formationObj) {
-              onFormationChange(formationObj.name);
-            }
+          value={formation} // Now uses formation name (TEXT) instead of ID
+          onChange={(formationName) => {
+            // Simple: just update the formation text field
+            onFormationChange(formationName || '');
           }}
           className="flex-1"
         />

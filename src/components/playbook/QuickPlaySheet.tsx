@@ -229,20 +229,16 @@ export const QuickPlaySheet: React.FC<QuickPlaySheetProps> = ({
           {playbookId ? (
             <FormationSelector
               playbookId={playbookId}
-              value={selectedFormationId}
-              onChange={(formationId, formation) => {
-                setSelectedFormationId(formationId);
-                setSelectedFormation(formation);
-                if (formation?.personnel_name) {
-                  setPersonnel(formation.personnel_name);
-                }
+              value={selectedFormationId || ''} // Now uses formation name (TEXT)
+              onChange={(formationName) => {
+                // Simple: just update the formation name
+                setSelectedFormationId(formationName);
                 setError(null);
               }}
               onCreateNew={() => {
                 onClose();
                 onOpenFullEditor();
               }}
-              onFormationsLoaded={setAvailableFormations}
             />
           ) : (
             <div className="rounded-lg border border-border bg-secondary/80 p-4 text-sm text-secondary">

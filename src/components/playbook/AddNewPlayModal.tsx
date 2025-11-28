@@ -35,7 +35,6 @@ import { MobileWizardView } from "./AddNewPlayModal/MobileWizardView";
 import { useDuplicatePlayDetection } from "./AddNewPlayModal/useDuplicatePlayDetection";
 import { importFormationAsTemplate } from "../../utils/formationDiagramHelpers";
 import { FormationDirectionWarningModal } from "./FormationDirectionWarningModal";
-import { FormationService } from "../../services/formationService";
 import {
   detectDirectionInFormationName,
   type DirectionDetectionResult,
@@ -145,33 +144,10 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
     try {
       // ===================================================================
-      // PHASE 1: AUTO-CREATE FORMATION IF NEEDED
+      // SIMPLIFIED: Formation stored as TEXT in plays table
+      // No separate formations table needed!
       // ===================================================================
-      let finalFormationId = formData.formation_id;
-
-      // If no formation_id but we have a formation name, auto-create it
-      if (!finalFormationId && formData.formation.trim() && playbookId) {
-        try {
-          const formation = await FormationService.getOrCreateFormation(
-            formData.formation.trim(),
-            playbookId,
-            undefined, // personnel_id (optional)
-            undefined // opposite formation (optional for now)
-          );
-          finalFormationId = formation.id;
-
-          console.log(
-            `[AddNewPlayModal] Auto-created/found formation: ${formation.name} (${formation.id})`
-          );
-        } catch (formationError) {
-          console.warn(
-            "[AddNewPlayModal] Failed to auto-create formation:",
-            formationError
-          );
-          // Continue with play creation even if formation auto-create fails
-        }
-      }
-
+      
       // Parse formation tags
       const fTags = formData.formationTags
         .split(",")
@@ -185,9 +161,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         .filter(Boolean);
 
       const playData = {
-        formation: formData.formation.trim(),
-        formation_id: finalFormationId || undefined, // Use auto-created formation_id if available
-        formation_direction: formData.formation_direction || undefined, // NEW: Formation variant direction
+        formation: formData.formation.trim(), // Just TEXT - simple!
         play_name: formData.playName.trim(),
         p_type: formData.playType || undefined,
         personnel: formData.personnel.trim() || undefined,

@@ -144,7 +144,7 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
 
               {/* Formation info - helps identify play quickly */}
               {optimisticPlay.formation && (
-                <span className="px-2 py-1 bg-purple-50 text-purple-700 border border-purple-200 rounded-lg text-xs font-medium">
+                <span className="px-2 py-1 bg-purple-100 text-purple-800 border border-purple-300 rounded-lg text-xs font-semibold">
                   {optimisticPlay.formation}
                 </span>
               )}
@@ -158,14 +158,14 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
 
               {/* Protection scheme - important for pass plays */}
               {optimisticPlay.protection && (
-                <span className="px-2 py-1 bg-orange-50 text-orange-700 border border-orange-200 rounded-lg text-xs font-medium">
+                <span className="px-2 py-1 bg-orange-100 text-orange-800 border border-orange-300 rounded-lg text-xs font-semibold">
                   {optimisticPlay.protection}
                 </span>
               )}
 
               {/* Motion - visual identifier */}
               {optimisticPlay.motion && (
-                <span className="px-2 py-1 bg-cyan-50 text-cyan-700 border border-cyan-200 rounded-lg text-xs font-medium">
+                <span className="px-2 py-1 bg-cyan-100 text-cyan-800 border border-cyan-300 rounded-lg text-xs font-semibold">
                   ↗️ {optimisticPlay.motion}
                 </span>
               )}

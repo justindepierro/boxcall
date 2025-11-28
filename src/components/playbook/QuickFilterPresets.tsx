@@ -1,6 +1,5 @@
 import React from "react";
 import { Icon } from "../ui/Icon/Icon";
-import { Button } from "../ui/Button/Button";
 import { QUICK_PRESETS, type FilterPreset } from "./filterPresets";
 
 interface QuickFilterPresetsProps {
@@ -39,7 +38,7 @@ export const QuickFilterPresets: React.FC<QuickFilterPresetsProps> = ({
               case "most-used":
                 return "bg-error-50 hover:bg-error-100 text-error-700 border-error-200";
               case "run":
-                return "bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200";
+                return "bg-cyan-50 hover:bg-cyan-100 text-cyan-700 border-cyan-200";
               case "pass":
                 return "bg-purple-50 hover:bg-purple-100 text-purple-700 border-purple-200";
               case "rpo":

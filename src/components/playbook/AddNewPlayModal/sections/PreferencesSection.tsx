@@ -1,5 +1,6 @@
 import React from "react";
 import { Typography } from "../../../design-system/Typography";
+import Select from "../../../ui/Select/Select";
 
 interface PreferencesSectionProps {
   prefDown: string;
@@ -42,64 +43,37 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
       </Typography>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-sm">
         <div>
-          <Typography
-            variant="label-md"
-            className="block mb-xs text-secondary"
-          >
-            Down
-          </Typography>
-          <select
+          <Select
+            label="Down"
             value={prefDown}
-            onChange={(e) => onPrefDownChange(e.target.value)}
-            className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
-          >
-            <option value="">Any</option>
-            {downOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => onPrefDownChange(String(value))}
+            options={downOptions}
+            placeholder="Any"
+            clearable
+            size="sm"
+          />
         </div>
         <div>
-          <Typography
-            variant="label-md"
-            className="block mb-xs text-secondary"
-          >
-            Distance
-          </Typography>
-          <select
+          <Select
+            label="Distance"
             value={prefDistance}
-            onChange={(e) => onPrefDistanceChange(e.target.value)}
-            className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
-          >
-            <option value="">Any</option>
-            {distanceOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => onPrefDistanceChange(String(value))}
+            options={distanceOptions}
+            placeholder="Any"
+            clearable
+            size="sm"
+          />
         </div>
         <div>
-          <Typography
-            variant="label-md"
-            className="block mb-xs text-secondary"
-          >
-            Hash
-          </Typography>
-          <select
+          <Select
+            label="Hash"
             value={prefHash}
-            onChange={(e) => onPrefHashChange(e.target.value)}
-            className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
-          >
-            <option value="">Any</option>
-            {hashOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => onPrefHashChange(String(value))}
+            options={hashOptions}
+            placeholder="Any"
+            clearable
+            size="sm"
+          />
         </div>
         <div>
           <Typography

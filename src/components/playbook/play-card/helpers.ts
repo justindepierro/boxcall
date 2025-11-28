@@ -16,7 +16,7 @@ export const getPlayTypeColor = (type: string): string => {
     case "Play Action":
       return "bg-status-warning text-gray-900";
     default:
-      return "bg-gray-600 text-inverse";
+      return "bg-slate-100 text-slate-800 border-slate-300 font-semibold";
   }
 };
 

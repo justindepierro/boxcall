@@ -141,6 +141,15 @@ export type ModularIconName =
   | "graduation-cap"
   | "shirt"
   | "undo"
+  | "repeat"
+  | "loader"
+  | "bar-chart"
+  | "chart"
+  | "x-circle"
+  | "alert-circle"
+  | "message-circle"
+  | "minus-circle"
+  | "skip-forward"
   | "sword"
   | "sun"
   | "moon"
@@ -259,6 +268,15 @@ const iconLoaders: Record<ModularIconName, Loader> = {
   "graduation-cap": dynamicIconImports["graduation-cap"],
   shirt: dynamicIconImports.shirt,
   undo: dynamicIconImports.undo,
+  repeat: dynamicIconImports.repeat,
+  loader: dynamicIconImports.loader,
+  "bar-chart": dynamicIconImports["bar-chart"],
+  chart: dynamicIconImports["pie-chart"],
+  "x-circle": dynamicIconImports["x-circle"],
+  "alert-circle": dynamicIconImports["alert-circle"],
+  "message-circle": dynamicIconImports["message-circle"],
+  "minus-circle": dynamicIconImports["minus-circle"],
+  "skip-forward": dynamicIconImports["skip-forward"],
   sword: dynamicIconImports.sword,
   sun: dynamicIconImports.sun,
   moon: dynamicIconImports.moon,

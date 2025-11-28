@@ -8,7 +8,6 @@ import { BulkActionsToolbar } from "../components/playbook/BulkActionsToolbar";
 import { Button } from "../components/ui/Button/Button";
 import { Icon } from "../components/ui/Icon";
 import { Typography } from "../components/design-system/Typography";
-import { Breadcrumb } from "../components/ui/Breadcrumb";
 
 import { usePlaybook } from "../contexts/PlaybookContext";
 import type { CoachingView, PlaybookState } from "../contexts/PlaybookContext";
@@ -483,10 +482,11 @@ export default function PlaybookPage() {
     smartPreloader.recordAction("open_modal", "personnel_builder");
   }, []);
 
-  const handleOpenHealth = useCallback(() => {
+  const handleEditPlay = useCallback((play: Play) => {
     triggerHapticFeedback("light");
-    setShowPlaybookHealthModal(true);
-    smartPreloader.recordAction("open_modal", "playbook_health");
+    setDiagramPlay(play);
+    setDiagramMode("edit");
+    setShowAddNewPlayModal(true);
   }, []);
 
   const handleOpenKeyboardShortcuts = useCallback(() => {
@@ -884,20 +884,7 @@ export default function PlaybookPage() {
   return (
     <Aurora variant="field" fullHeight>
       <div className="min-h-screen">
-        {/* Breadcrumb Navigation */}
-        <Breadcrumb
-          items={[
-            {
-              id: "dashboard",
-              label: "Dashboard",
-              onClick: () => navigate("/dashboard"),
-            },
-            { id: "playbook", label: "Playbook", current: true },
-          ]}
-          className="mb-4 px-6 pt-6"
-        />
-
-        {/* Unified Header with Navigation (includes PlaybookSelector) */}
+        {/* Unified Header with Navigation (includes Breadcrumb + PlaybookSelector) */}
         <PlaybookViewTabs
           currentView={state.currentView}
           onViewChange={handleViewChange}
@@ -906,6 +893,7 @@ export default function PlaybookPage() {
           onOpenSettings={handleOpenSettings}
           onOpenBuilder={handleOpenBuilder}
           onOpenHealth={() => setShowPlaybookHealthModal(true)}
+          onNavigate={navigate}
           title="Playbook"
           playsCreated={state.playsCreated}
           diagramCoverage={state.diagramCoverage}
@@ -927,15 +915,14 @@ export default function PlaybookPage() {
             debouncedSearchQuery={debouncedSearchQuery}
             optimisticPlays={optimisticPlays}
             formationAudit={formationAudit}
-            playbookStats={playbookStats}
             formationAuditSummary={formationAuditSummary}
-            activeTeamId={activeTeamId}
             setMobileListExpanded={setMobileListExpanded}
             setShowFiltersSheet={setShowFiltersSheet}
             setShowStatsSheet={setShowStatsSheet}
             handleOpenQuickCreate={handleOpenQuickCreate}
             handleOpenPersonnel={handleOpenPersonnel}
             handleOpenSettings={handleOpenSettings}
+            handleEditPlay={handleEditPlay}
             handleQuickNewPracticeScript={handleQuickNewPracticeScript}
             handleQuickNewGamePlan={handleQuickNewGamePlan}
             handleOpenKeyboardShortcuts={handleOpenKeyboardShortcuts}
@@ -960,23 +947,17 @@ export default function PlaybookPage() {
             optimisticPlays={optimisticPlays}
             formationAudit={formationAudit}
             playbookStats={playbookStats}
-            formationAuditSummary={formationAuditSummary}
             activeTeamId={activeTeamId}
-            handleOpenQuickCreate={handleOpenQuickCreate}
+            handleEditPlay={handleEditPlay}
             handleSavePlay={handleSavePlay}
-            handleDuplicatePlay={handleDuplicatePlay}
             handleOpenBuilder={handleOpenBuilder}
-            handleOpenPersonnel={handleOpenPersonnel}
-            handleOpenSettings={handleOpenSettings}
-            handleOpenHealth={handleOpenHealth}
-            handleOpenKeyboardShortcuts={handleOpenKeyboardShortcuts}
+            handleQuickNewGamePlan={handleQuickNewGamePlan}
+            handleDuplicatePlay={handleDuplicatePlay}
             handleOpenAssignments={handleOpenAssignments}
             handlePostToTeamBulletin={handlePostToTeamBulletin}
             handleAddToPracticeScript={handleAddToPracticeScript}
             handleAddToGamePlan={handleAddToGamePlan}
             handlePlayCountChange={handlePlayCountChange}
-            handleQuickNewPracticeScript={handleQuickNewPracticeScript}
-            handleQuickNewGamePlan={handleQuickNewGamePlan}
             handleOpenPracticeScriptBuilder={handleOpenPracticeScriptBuilder}
             handleFiltersChange={handleFiltersChange}
             handleClearSelection={handleClearSelection}
@@ -1023,8 +1004,6 @@ export default function PlaybookPage() {
           selectedPlaysForPractice={selectedPlaysForPractice}
           setSelectedPlaysForPractice={setSelectedPlaysForPractice}
           handleSavePlay={handleSavePlay}
-          handleDuplicatePlay={handleDuplicatePlay}
-          handlePostToTeamBulletin={handlePostToTeamBulletin}
           dispatch={dispatch}
         />
 

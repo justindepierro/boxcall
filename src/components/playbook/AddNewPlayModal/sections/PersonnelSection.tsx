@@ -53,10 +53,26 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
         onChange={(value) => onPersonnelChange(String(value))}
         options={personnelOptions}
         placeholder={
-          isLoading ? "Loading personnel..." : "Select personnel grouping"
+          !playbookId
+            ? "Playbook required"
+            : isLoading
+              ? "Loading personnel..."
+              : "Select personnel grouping"
         }
         className="mb-sm"
         disabled={isLoading || !playbookId}
+        clearable
+        searchable={personnelOptions.length > 5}
+        helperText={
+          !playbookId
+            ? "A playbook must be selected to load personnel configurations"
+            : undefined
+        }
+        noOptionsMessage={
+          playbookId
+            ? "No personnel configurations found. Add one using the button below."
+            : "Playbook required to load personnel"
+        }
       />
 
       {/* Quick-select buttons for common personnel */}

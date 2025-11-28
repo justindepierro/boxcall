@@ -46,7 +46,7 @@ export const PersonnelBadge: React.FC<PersonnelBadgeProps> = ({
 
     return (
       <span
-        className={`inline-flex items-center justify-center bg-electric-50 text-electric-700 dark:bg-electric-900/20 dark:text-electric-300 border border-electric-200 dark:border-electric-800 rounded-full font-medium ${sizeClasses[size]} ${className}`}
+        className={`inline-flex items-center justify-center bg-electric-100 text-electric-800 dark:bg-electric-900/20 dark:text-electric-300 border border-electric-300 dark:border-electric-800 rounded-full font-semibold ${sizeClasses[size]} ${className}`}
         title={`Personnel: ${personnel}`}
       >
         {personnel}
@@ -66,7 +66,7 @@ export const PersonnelBadge: React.FC<PersonnelBadgeProps> = ({
     // Fallback to default if preset not found
     return (
       <span
-        className={`inline-flex items-center justify-center bg-electric-50 text-electric-700 dark:bg-electric-900/20 dark:text-electric-300 border border-electric-200 dark:border-electric-800 rounded-full font-medium ${className}`}
+        className={`inline-flex items-center justify-center bg-electric-100 text-electric-800 dark:bg-electric-900/20 dark:text-electric-300 border border-electric-300 dark:border-electric-800 rounded-full font-semibold ${className}`}
         title={`Personnel: ${personnel}`}
       >
         {personnel}
