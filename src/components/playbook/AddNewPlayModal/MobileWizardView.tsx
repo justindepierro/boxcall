@@ -107,10 +107,10 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
   isValid: _isValid, // Reserved for potential future use
   onSubmit,
   isSubmitting,
-  suggestions: _suggestions,
+  suggestions,
   aiSuggestions: _aiSuggestions,
-  isSuggestionsVisible: _isSuggestionsVisible,
-  showSuggestions: _showSuggestions,
+  isSuggestionsVisible,
+  showSuggestions,
   hideSuggestions,
   onFormationChange,
   onFormationIdChange,

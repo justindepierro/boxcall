@@ -6,7 +6,6 @@ import {
   DIRECTION_RL_OPTIONS,
   FORMATION_OPTIONS,
   PLAY_TYPE_OPTIONS,
-  BACK_ALIGN_OPTIONS,
 } from "./constants";
 import {
   validateFormationName,
@@ -63,7 +62,7 @@ export const createFormationFields = ({
   backfieldAlignmentValues = [],
   shiftValues = [],
   motionValues = [],
-  protectionValues = [],
+  _protectionValues = [],
 }: FormationFieldFactoryOptions): FieldDefinitionMap => ({
   formation: {
     label: "Base",

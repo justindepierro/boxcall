@@ -51,7 +51,7 @@ export const QuickPlaySheet: React.FC<QuickPlaySheetProps> = ({
   const [selectedFormation, setSelectedFormation] = useState<Formation | null>(
     null
   );
-  const [availableFormations, setAvailableFormations] = useState<Formation[]>(
+  const [availableFormations, _setAvailableFormations] = useState<Formation[]>(
     []
   );
   const [personnel, setPersonnel] = useState("");

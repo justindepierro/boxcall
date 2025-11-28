@@ -116,7 +116,7 @@ export function PlaybookModals({
   setSelectedPlaysForPractice,
   existingPlays,
   handleCreatePlay,
-  handleSavePlay,
+  handleSavePlay: _handleSavePlay,
   dispatch,
 }: PlaybookModalsProps) {
   return (

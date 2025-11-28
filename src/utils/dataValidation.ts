@@ -362,9 +362,9 @@ export function validatePlayName(
 /**
  * Validate personnel grouping
  */
-export function validatePersonnel(
+export function validatePersonnelValue(
   input: string,
-  existingPersonnel: string[]
+  _existingPersonnel: string[]
 ): ValidationResult {
   if (!input || input.trim().length === 0) {
     return {

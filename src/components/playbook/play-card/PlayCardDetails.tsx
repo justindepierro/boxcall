@@ -66,7 +66,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
   existingPlays = [],
 }) => {
   // Extract unique field values for validation
-  const fieldValues = usePlayFieldValues(existingPlays);
+  const _fieldValues = usePlayFieldValues(existingPlays);
 
   const [flags, setFlags] = useState<PlayFlags>(() => getPlayFlags(play.id));
   const [newFlag, setNewFlag] = useState("");
