@@ -41,10 +41,10 @@ export class BulkOperationsService {
             ...p,
             playbook_id: p.playbook_id || playbookId,
           };
-          
+
           // Create play using PlaysService directly (bypasses domain layer validation)
           const createdPlay = await PlaysService.createPlay(playWithPlaybookId);
-          
+
           created.push(createdPlay);
           CacheService.addToLocal("play", createdPlay);
         } catch (e: unknown) {

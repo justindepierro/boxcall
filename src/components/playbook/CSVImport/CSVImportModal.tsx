@@ -167,7 +167,8 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       }
     } catch (error) {
       console.error("❌ Import failed:", error);
-      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred";
       setImportError(errorMessage);
       setImportResult({
         success: false,
@@ -645,7 +646,9 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         <div className="mb-sm">
           <div className="flex justify-between items-center mb-xs">
             <span className="text-sm font-medium text-primary">Progress</span>
-            <span className="text-sm font-medium text-accent">{importProgress}%</span>
+            <span className="text-sm font-medium text-accent">
+              {importProgress}%
+            </span>
           </div>
           <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
             <div
@@ -685,16 +688,21 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           </>
         ) : (
           <>
-            <Icon name="alert-circle" className="h-16 w-16 text-error mx-auto mb-md" />
+            <Icon
+              name="alert-circle"
+              className="h-16 w-16 text-error mx-auto mb-md"
+            />
             <Typography
               variant="headline-sm"
               as="h3"
               className="text-error mb-xs"
             >
-              {importResult?.importedPlays ? "Import Partially Failed" : "Import Failed"}
+              {importResult?.importedPlays
+                ? "Import Partially Failed"
+                : "Import Failed"}
             </Typography>
             <p className="text-sm text-secondary">
-              {importResult?.importedPlays 
+              {importResult?.importedPlays
                 ? `${importResult.importedPlays} plays imported, but some errors occurred`
                 : "Unable to import plays. Please check the errors below and try again."}
             </p>
