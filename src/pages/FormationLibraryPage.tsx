@@ -33,6 +33,15 @@ export const FormationLibraryPage: React.FC = () => {
 
   const playbookId = activePlaybook?.id || "";
 
+  // Debug: Log all available playbooks
+  useEffect(() => {
+    console.log("🔍 [FormationLibrary] All playbooks:", playbooks);
+    console.log("🔍 [FormationLibrary] Active team ID:", activeTeamId);
+    console.log("🔍 [FormationLibrary] Saved playbook ID:", savedPlaybookId);
+    console.log("🔍 [FormationLibrary] Active playbook:", activePlaybook);
+    console.log("🔍 [FormationLibrary] Selected playbook ID:", playbookId);
+  }, [playbooks, activeTeamId, savedPlaybookId, activePlaybook, playbookId]);
+
   if (!playbookId) {
     return (
       <div className="min-h-screen bg-surface flex items-center justify-center">

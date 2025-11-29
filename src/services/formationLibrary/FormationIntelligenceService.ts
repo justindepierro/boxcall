@@ -35,6 +35,20 @@ export class FormationIntelligenceService {
     console.log("🔍 [Intelligence] Playbook ID:", playbookId);
     console.log("🔍 [Intelligence] Querying plays table...");
     
+    // Debug: Find all playbooks with plays
+    const { data: allPlaybooks, error: playbooksError } = await supabase
+      .from("plays")
+      .select("playbook_id")
+      .eq("is_archived", false);
+    
+    if (allPlaybooks) {
+      const playbookCounts = allPlaybooks.reduce((acc: Record<string, number>, play: any) => {
+        acc[play.playbook_id] = (acc[play.playbook_id] || 0) + 1;
+        return acc;
+      }, {});
+      console.log("🔍 [Intelligence] Playbooks with plays:", playbookCounts);
+    }
+    
     const { data: plays, error } = await supabase
       .from("plays")
       .select("id, formation, formation_id, f_type, r_str, p_str, personnel")
