@@ -38,6 +38,10 @@ export class FormationIntelligenceService {
       .eq("playbook_id", playbookId)
       .eq("is_archived", false);
 
+    console.log("🔍 [Intelligence] Playbook ID:", playbookId);
+    console.log("🔍 [Intelligence] Fetched plays count:", plays?.length || 0);
+    console.log("🔍 [Intelligence] Sample play:", plays?.[0]);
+
     if (error) {
       console.error(
         "[FormationIntelligenceService] Error fetching plays:",
@@ -49,7 +53,10 @@ export class FormationIntelligenceService {
     // Group plays by formation name
     const formationGroups = new Map<string, PlayData[]>();
     for (const play of plays || []) {
-      if (!play.formation) continue;
+      if (!play.formation) {
+        console.log("⚠️ [Intelligence] Play has no formation:", play);
+        continue;
+      }
 
       const formationName = play.formation.trim().toLowerCase();
       if (!formationGroups.has(formationName)) {
@@ -58,6 +65,9 @@ export class FormationIntelligenceService {
       formationGroups.get(formationName)!.push(play as PlayData);
     }
 
+    console.log("📊 [Intelligence] Formation groups count:", formationGroups.size);
+    console.log("📊 [Intelligence] Formation names:", Array.from(formationGroups.keys()));
+
     // Analyze each formation
     const results = new Map<string, IntelligenceAnalysis>();
     for (const [formationName, formationPlays] of formationGroups.entries()) {
@@ -65,6 +75,7 @@ export class FormationIntelligenceService {
       results.set(formationName, analysis);
     }
 
+    console.log("✅ [Intelligence] Analysis complete, results:", results.size);
     return results;
   }
 

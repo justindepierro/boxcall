@@ -92,6 +92,9 @@ const FormationLibraryPageContent: React.FC<
   const handleAnalyze = async () => {
     try {
       setAnalyzing(true);
+      console.log("🔍 [FormationLibrary] Starting analysis...");
+      console.log("📋 [FormationLibrary] Playbook ID:", playbookId);
+      
       toast.loading("Analyzing plays to derive formation metadata...", {
         id: "analyze",
       });
@@ -100,10 +103,13 @@ const FormationLibraryPageContent: React.FC<
         await FormationIntelligenceService.analyzePlaybookFormations(
           playbookId
         );
+      console.log("📊 [FormationLibrary] Analysis results:", results);
+      console.log("📊 [FormationLibrary] Results size:", results.size);
       setAnalyses(results);
 
       const updatedCount =
         await FormationIntelligenceService.populateLibraryFromPlays(playbookId);
+      console.log("✅ [FormationLibrary] Updated count:", updatedCount);
 
       toast.success(
         `Analyzed ${results.size} formations, updated ${updatedCount}`,
