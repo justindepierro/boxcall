@@ -11,7 +11,7 @@ import { FormationIntelligenceService } from "../services/formationLibrary/Forma
 import type { Formation } from "../types/formation";
 import type { IntelligenceAnalysis } from "../types/library";
 import { Icon } from "../components/ui/Icon/Icon";
-import { toast } from "../hooks/useToast";
+import { toast } from "sonner";
 import { usePlaybookStore } from "../app/store";
 
 export const FormationLibraryPage: React.FC = () => {

@@ -10,7 +10,7 @@ import { PersonnelLibraryService } from "../services/personnelLibrary/PersonnelL
 import { PersonnelSyncService } from "../services/personnelLibrary/PersonnelSyncService";
 import type { PersonnelConfiguration } from "../types/personnel";
 import { Icon } from "../components/ui/Icon/Icon";
-import { toast } from "../hooks/useToast";
+import { toast } from "sonner";
 import { usePlaybookStore } from "../app/store";
 
 export const PersonnelLibraryPage: React.FC = () => {
