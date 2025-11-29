@@ -131,7 +131,7 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
             onMouseLeave={handleMouseLeave}
           >
             <div 
-              className="bg-surface border-2 border-jade-500 rounded-2xl shadow-2xl overflow-hidden animate-fade-in max-w-[90vw] md:w-[600px] w-[90vw]"
+              className="bg-surface border-2 border-jade-500 rounded-2xl shadow-2xl overflow-hidden animate-fade-in max-w-[90vw] md:max-w-2xl w-[90vw]"
               style={{ maxHeight: '70vh' }}
             >
               {/* Play Info Header */}
@@ -187,7 +187,7 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
                     </span>
                   </div>
                   {play.install_phase && (
-                    <span className="px-2 md:px-3 py-1 md:py-1.5 bg-jade-600 text-white rounded-lg font-bold text-[10px] md:text-xs uppercase tracking-wide shadow-sm flex-shrink-0">
+                    <span className="px-2 md:px-3 py-1 md:py-1.5 bg-jade-600 text-white rounded-lg font-bold text-xs uppercase tracking-wide shadow-sm flex-shrink-0">
                       {play.install_phase}
                     </span>
                   )}

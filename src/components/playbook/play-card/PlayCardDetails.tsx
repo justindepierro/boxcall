@@ -115,7 +115,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
             <img
               src={optimisticPlay.diagram_image_url}
               alt={`${play.play_name} diagram`}
-              className="w-full max-h-[300px] md:max-h-[400px] rounded-lg border-2 border-primary object-contain"
+              className="w-full max-h-72 md:max-h-96 rounded-lg border-2 border-primary object-contain"
               loading="lazy"
             />
           </div>

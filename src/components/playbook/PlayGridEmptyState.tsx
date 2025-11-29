@@ -195,7 +195,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
                   variant="primary"
                   size="lg"
                 >
-                  <Icon name="close" className="w-5 w-5 mr-2" />
+                  <Icon name="close" className="w-5 h-5 mr-2" />
                   Clear All Filters
                 </Button>
               )}

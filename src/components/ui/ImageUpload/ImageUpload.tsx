@@ -275,9 +275,9 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             </div>
 
             {/* Warning Message */}
-            <div className="flex items-start gap-xs bg-amber-50 border border-amber-200 rounded-md p-sm">
-              <Icon name="info" className="text-amber-600 flex-shrink-0 mt-0.5" size="sm" />
-              <p className="text-xs text-amber-900">
+            <div className="flex items-start gap-xs bg-warning-bg border border-warning-border rounded-md p-sm">
+              <Icon name="info" className="text-warning-600 flex-shrink-0 mt-0.5" size="sm" />
+              <p className="text-xs text-warning-fg">
                 Please wait while your diagram uploads. Don't close this card or
                 navigate away.
               </p>
