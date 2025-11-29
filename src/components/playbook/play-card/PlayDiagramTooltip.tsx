@@ -38,15 +38,19 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
     const isMobile = viewportWidth < 768; // md breakpoint
-    
+
     // Responsive dimensions:
     // Mobile: 90vw max (with 16px padding on each side)
     // Desktop: 600px fixed
-    const tooltipWidth = isMobile ? Math.min(viewportWidth - 32, viewportWidth * 0.9) : 600;
+    const tooltipWidth = isMobile
+      ? Math.min(viewportWidth - 32, viewportWidth * 0.9)
+      : 600;
     // Mobile: 70vh max to prevent overflow
     // Desktop: 500px fixed
-    const tooltipHeight = isMobile ? Math.min(viewportHeight * 0.7, viewportHeight - 100) : 500;
-    
+    const tooltipHeight = isMobile
+      ? Math.min(viewportHeight * 0.7, viewportHeight - 100)
+      : 500;
+
     // Center the tooltip on the viewport
     const left = (viewportWidth - tooltipWidth) / 2;
     const top = (viewportHeight - tooltipHeight) / 2;
@@ -79,7 +83,7 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
     let resizeTimeout: number | null = null;
 
     const handleUpdate = () => updatePosition();
-    
+
     // Debounced resize handler (150ms) - prevents excessive recalculations
     const handleResize = () => {
       if (resizeTimeout) window.clearTimeout(resizeTimeout);
@@ -130,14 +134,18 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
             }}
             onMouseLeave={handleMouseLeave}
           >
-            <div 
+            <div
               className="bg-surface border-2 border-jade-500 rounded-2xl shadow-2xl overflow-hidden animate-fade-in max-w-[90vw] md:max-w-2xl w-[90vw]"
-              style={{ maxHeight: '70vh' }}
+              style={{ maxHeight: "70vh" }}
             >
               {/* Play Info Header */}
               <div className="bg-gradient-to-r from-jade-50 to-jade-100 px-3 md:px-lg py-2 md:py-md border-b border-jade-200">
                 <div className="flex items-start gap-2 md:gap-sm">
-                  <Icon name="eye" className="text-jade-600 flex-shrink-0 mt-1" size="sm" />
+                  <Icon
+                    name="eye"
+                    className="text-jade-600 flex-shrink-0 mt-1"
+                    size="sm"
+                  />
                   <div className="flex-1 min-w-0">
                     <h3 className="text-base md:text-lg font-bold text-primary truncate">
                       {displayName}
@@ -165,13 +173,19 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
                     src={play.diagram_image_url}
                     alt={`${displayName} diagram`}
                     className="w-full h-64 md:h-96 object-contain"
-                    style={{ maxHeight: 'calc(70vh - 140px)' }}
+                    style={{ maxHeight: "calc(70vh - 140px)" }}
                     loading="lazy"
                   />
                   {/* Overlay hint */}
                   <div className="absolute bottom-2 md:bottom-4 right-2 md:right-4 bg-jade-600 text-white text-xs md:text-sm font-semibold px-2 md:px-3 py-1.5 md:py-2 rounded-lg shadow-lg flex items-center gap-1.5 md:gap-2">
-                    <Icon name="expand" size="sm" className="hidden md:inline" />
-                    <span className="hidden sm:inline">Click card to expand full details</span>
+                    <Icon
+                      name="arrow-right"
+                      size="sm"
+                      className="hidden md:inline"
+                    />
+                    <span className="hidden sm:inline">
+                      Click card to expand full details
+                    </span>
                     <span className="sm:hidden">Tap to expand</span>
                   </div>
                 </div>
@@ -181,9 +195,17 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
               <div className="bg-neutral-50 px-3 md:px-lg py-2 md:py-md border-t border-muted">
                 <div className="flex items-center justify-between text-xs md:text-sm gap-2">
                   <div className="flex items-center gap-1.5 md:gap-2 flex-1 min-w-0">
-                    <Icon name="eye" size="sm" className="text-jade-600 flex-shrink-0" />
+                    <Icon
+                      name="eye"
+                      size="sm"
+                      className="text-jade-600 flex-shrink-0"
+                    />
                     <span className="text-secondary truncate">
-                      <strong className="text-primary font-bold">{play.times_called || 0}</strong> <span className="hidden sm:inline">times called</span><span className="sm:hidden">called</span>
+                      <strong className="text-primary font-bold">
+                        {play.times_called || 0}
+                      </strong>{" "}
+                      <span className="hidden sm:inline">times called</span>
+                      <span className="sm:hidden">called</span>
                     </span>
                   </div>
                   {play.install_phase && (

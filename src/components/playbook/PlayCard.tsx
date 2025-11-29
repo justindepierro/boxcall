@@ -456,32 +456,106 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             : "border-secondary/30 shadow-sm hover:shadow-md hover:border-secondary/60 hover:scale-[1.01] hover:-translate-y-0.5"
         } ${isCompact ? "text-[13px]" : ""} ${isMobile ? "text-base" : ""} md:min-h-0`}
       >
-      <div
-        className={`${
-          isCompact
-            ? isMobile
-              ? "p-5"
-              : "p-3 sm:p-4"
-            : isMobile
-              ? "p-6"
-              : "p-4 sm:p-6"
-        } overflow-visible`}
-      >
-        {!isTile && play.diagram_url && (
-          <div className="mb-3 -mt-1">
-            <img
-              src={play.diagram_url}
-              alt={`${displayName} diagram preview`}
-              className="w-full h-40 object-cover rounded-xl border border-muted"
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-        )}
+        <div
+          className={`${
+            isCompact
+              ? isMobile
+                ? "p-5"
+                : "p-3 sm:p-4"
+              : isMobile
+                ? "p-6"
+                : "p-4 sm:p-6"
+          } overflow-visible`}
+        >
+          {!isTile && play.diagram_url && (
+            <div className="mb-3 -mt-1">
+              <img
+                src={play.diagram_url}
+                alt={`${displayName} diagram preview`}
+                className="w-full h-40 object-cover rounded-xl border border-muted"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          )}
 
-        {isTile ? (
-          <>
-            <PlayCardTileHeader
+          {isTile ? (
+            <>
+              <PlayCardTileHeader
+                play={play}
+                optimisticPlay={optimisticPlay}
+                displayName={displayName}
+                subtitleText={subtitleText}
+                showOneWordCalls={showOneWordCalls}
+                isSelected={isSelected}
+                onSelectionChange={onSelectionChange}
+                onOpenAssignments={handleOpenAssignments}
+                phaseLabel={phaseLabel}
+                isFavorite={isFavorite(play.id)}
+                onToggleFavorite={() => toggleFavorite(play.id)}
+                isExpanded={isExpanded}
+                onToggleExpand={handleToggleExpand}
+                personnelConfigurations={personnelConfigurations}
+              />
+
+              {/* Quick Actions - always visible */}
+              <PlayCardQuickActions
+                play={play}
+                onAddToPracticeScript={onAddToPracticeScript}
+                onAddToGamePlan={onAddToGamePlan}
+                onOpenAssignments={handleOpenAssignments}
+                onPostToTeamBulletin={onPostToTeamBulletin}
+              />
+
+              {/* Animated expansion for tile details */}
+              {/* 3-TIER DESIGN: Fast expand/collapse animation (Facebook-fast: 200ms) */}
+              <AnimatePresence>
+                {isExpanded && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{
+                      duration: 0.2,
+                      ease: [0.4, 0, 0.2, 1],
+                      opacity: { duration: 0.15 },
+                    }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pt-6 mt-6 border-t border-muted">
+                      <PlayCardDetails
+                        play={play}
+                        optimisticPlay={optimisticPlay}
+                        showOneWordCalls={showOneWordCalls}
+                        phaseLabel={phaseLabel}
+                        handleInlineSave={handleInlineSave}
+                        savingFields={savingFields}
+                        formationFieldOrder={formationFieldOrder}
+                        formationFields={formationFields}
+                        formationFieldVisibility={
+                          formationFieldVisibility ||
+                          INITIAL_FORMATION_VISIBILITY
+                        }
+                        toggleFieldVisibility={toggleFieldVisibility}
+                        handleFormationDragEnd={handleFormationDragEnd}
+                        playDetailsFieldOrder={playDetailsFieldOrder}
+                        playDetailsFields={playDetailsFields}
+                        playDetailsFieldVisibility={
+                          playDetailsFieldVisibility ||
+                          INITIAL_PLAY_DETAILS_VISIBILITY
+                        }
+                        handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
+                        getPlayTypeColor={getPlayTypeColor}
+                        getConfidenceColor={getConfidenceColor}
+                        existingPlays={existingPlays}
+                      />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </>
+          ) : (
+            <PlayCardListHeader
               play={play}
               optimisticPlay={optimisticPlay}
               displayName={displayName}
@@ -489,16 +563,23 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               showOneWordCalls={showOneWordCalls}
               isSelected={isSelected}
               onSelectionChange={onSelectionChange}
+              isCompact={isCompact}
+              isExpanded={isExpanded}
+              onToggleExpand={handleToggleExpand}
+              onEdit={onEdit}
+              onDuplicate={onDuplicate}
               onOpenAssignments={handleOpenAssignments}
+              getPlayTypeColor={getPlayTypeColor}
+              getConfidenceColor={getConfidenceColor}
               phaseLabel={phaseLabel}
               isFavorite={isFavorite(play.id)}
               onToggleFavorite={() => toggleFavorite(play.id)}
-              isExpanded={isExpanded}
-              onToggleExpand={handleToggleExpand}
               personnelConfigurations={personnelConfigurations}
             />
+          )}
 
-            {/* Quick Actions - always visible */}
+          {/* Quick Actions - always visible in list view too */}
+          {!isTile && (
             <PlayCardQuickActions
               play={play}
               onAddToPracticeScript={onAddToPracticeScript}
@@ -506,116 +587,36 @@ export const PlayCard: React.FC<PlayCardProps> = ({
               onOpenAssignments={handleOpenAssignments}
               onPostToTeamBulletin={onPostToTeamBulletin}
             />
+          )}
 
-            {/* Animated expansion for tile details */}
-            {/* 3-TIER DESIGN: Fast expand/collapse animation (Facebook-fast: 200ms) */}
-            <AnimatePresence>
-              {isExpanded && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{
-                    duration: 0.2,
-                    ease: [0.4, 0, 0.2, 1],
-                    opacity: { duration: 0.15 },
-                  }}
-                  className="overflow-hidden"
-                >
-                  <div className="pt-6 mt-6 border-t border-muted">
-                    <PlayCardDetails
-                      play={play}
-                      optimisticPlay={optimisticPlay}
-                      showOneWordCalls={showOneWordCalls}
-                      phaseLabel={phaseLabel}
-                      handleInlineSave={handleInlineSave}
-                      savingFields={savingFields}
-                      formationFieldOrder={formationFieldOrder}
-                      formationFields={formationFields}
-                      formationFieldVisibility={
-                        formationFieldVisibility || INITIAL_FORMATION_VISIBILITY
-                      }
-                      toggleFieldVisibility={toggleFieldVisibility}
-                      handleFormationDragEnd={handleFormationDragEnd}
-                      playDetailsFieldOrder={playDetailsFieldOrder}
-                      playDetailsFields={playDetailsFields}
-                      playDetailsFieldVisibility={
-                        playDetailsFieldVisibility ||
-                        INITIAL_PLAY_DETAILS_VISIBILITY
-                      }
-                      handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
-                      getPlayTypeColor={getPlayTypeColor}
-                      getConfidenceColor={getConfidenceColor}
-                      existingPlays={existingPlays}
-                    />
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </>
-        ) : (
-          <PlayCardListHeader
-            play={play}
-            optimisticPlay={optimisticPlay}
-            displayName={displayName}
-            subtitleText={subtitleText}
-            showOneWordCalls={showOneWordCalls}
-            isSelected={isSelected}
-            onSelectionChange={onSelectionChange}
-            isCompact={isCompact}
-            isExpanded={isExpanded}
-            onToggleExpand={handleToggleExpand}
-            onEdit={onEdit}
-            onDuplicate={onDuplicate}
-            onOpenAssignments={handleOpenAssignments}
-            getPlayTypeColor={getPlayTypeColor}
-            getConfidenceColor={getConfidenceColor}
-            phaseLabel={phaseLabel}
-            isFavorite={isFavorite(play.id)}
-            onToggleFavorite={() => toggleFavorite(play.id)}
-            personnelConfigurations={personnelConfigurations}
-          />
-        )}
-
-        {/* Quick Actions - always visible in list view too */}
-        {!isTile && (
-          <PlayCardQuickActions
-            play={play}
-            onAddToPracticeScript={onAddToPracticeScript}
-            onAddToGamePlan={onAddToGamePlan}
-            onOpenAssignments={handleOpenAssignments}
-            onPostToTeamBulletin={onPostToTeamBulletin}
-          />
-        )}
-
-        {!isTile && isExpanded && (
-          <PlayCardDetails
-            play={play}
-            optimisticPlay={optimisticPlay}
-            showOneWordCalls={showOneWordCalls}
-            phaseLabel={phaseLabel}
-            handleInlineSave={handleInlineSave}
-            savingFields={savingFields}
-            formationFieldOrder={formationFieldOrder}
-            formationFields={formationFields}
-            formationFieldVisibility={
-              formationFieldVisibility || INITIAL_FORMATION_VISIBILITY
-            }
-            toggleFieldVisibility={toggleFieldVisibility}
-            handleFormationDragEnd={handleFormationDragEnd}
-            playDetailsFieldOrder={playDetailsFieldOrder}
-            playDetailsFields={playDetailsFields}
-            playDetailsFieldVisibility={
-              playDetailsFieldVisibility || INITIAL_PLAY_DETAILS_VISIBILITY
-            }
-            handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
-            getPlayTypeColor={getPlayTypeColor}
-            getConfidenceColor={getConfidenceColor}
-            existingPlays={existingPlays}
-          />
-        )}
+          {!isTile && isExpanded && (
+            <PlayCardDetails
+              play={play}
+              optimisticPlay={optimisticPlay}
+              showOneWordCalls={showOneWordCalls}
+              phaseLabel={phaseLabel}
+              handleInlineSave={handleInlineSave}
+              savingFields={savingFields}
+              formationFieldOrder={formationFieldOrder}
+              formationFields={formationFields}
+              formationFieldVisibility={
+                formationFieldVisibility || INITIAL_FORMATION_VISIBILITY
+              }
+              toggleFieldVisibility={toggleFieldVisibility}
+              handleFormationDragEnd={handleFormationDragEnd}
+              playDetailsFieldOrder={playDetailsFieldOrder}
+              playDetailsFields={playDetailsFields}
+              playDetailsFieldVisibility={
+                playDetailsFieldVisibility || INITIAL_PLAY_DETAILS_VISIBILITY
+              }
+              handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
+              getPlayTypeColor={getPlayTypeColor}
+              getConfidenceColor={getConfidenceColor}
+              existingPlays={existingPlays}
+            />
+          )}
+        </div>
       </div>
-    </div>
     </PlayDiagramTooltip>
   );
 };

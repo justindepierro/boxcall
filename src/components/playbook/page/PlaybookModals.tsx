@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { Modal } from "../../ui/Modal";
 import type { Play } from "../../../types/play";
+import type { ModalType } from "../../../hooks/useModalManager";
 
 // Lazy load modal components for code splitting (~120KB savings)
 const AddNewPlayModal = lazy(() =>
@@ -41,8 +42,8 @@ const PracticeScriptBuilder = lazy(() =>
 
 interface PlaybookModalsProps {
   // 🚀 PERFORMANCE: Centralized modal management (replaces 8 boolean props + 8 setters)
-  isModalOpen: (modalType: string) => boolean;
-  closeModal: (modalType: string) => void;
+  isModalOpen: (modalType: Exclude<ModalType, null>) => boolean;
+  closeModal: () => void;
 
   // Modal data
   diagramPlay: Play | null;
@@ -92,11 +93,11 @@ export function PlaybookModals({
   return (
     <>
       {/* Add New Play Modal */}
-      {isModalOpen('addNewPlay') && (
+      {isModalOpen("addNewPlay") && (
         <Suspense fallback={<div>Loading...</div>}>
           <AddNewPlayModal
-            isOpen={isModalOpen('addNewPlay')}
-            onClose={() => closeModal('addNewPlay')}
+            isOpen={isModalOpen("addNewPlay")}
+            onClose={() => closeModal("addNewPlay")}
             onCreatePlay={handleCreatePlay}
             playbookId={activePlaybookId}
             existingPlays={existingPlays}
@@ -105,13 +106,13 @@ export function PlaybookModals({
       )}
 
       {/* Playbook Settings Modal */}
-      {isModalOpen('playbookSettings') && (
+      {isModalOpen("playbookSettings") && (
         <Suspense fallback={<div>Loading...</div>}>
           <PlaybookSettingsModal
-            isOpen={isModalOpen('playbookSettings')}
-            onClose={() => closeModal('playbookSettings')}
+            isOpen={isModalOpen("playbookSettings")}
+            onClose={() => closeModal("playbookSettings")}
             onOpenPersonnel={() => {
-              closeModal('playbookSettings');
+              closeModal("playbookSettings");
               // Note: This requires openModal to be passed or personnel modal to open separately
             }}
           />
@@ -119,33 +120,33 @@ export function PlaybookModals({
       )}
 
       {/* Personnel Configuration Modal */}
-      {isModalOpen('personnel') && (
+      {isModalOpen("personnel") && (
         <Suspense fallback={<div>Loading...</div>}>
           <PersonnelConfigurationModal
-            isOpen={isModalOpen('personnel')}
-            onClose={() => closeModal('personnel')}
+            isOpen={isModalOpen("personnel")}
+            onClose={() => closeModal("personnel")}
             playbookId={activePlaybookId}
           />
         </Suspense>
       )}
 
       {/* Playbook Health Modal */}
-      {isModalOpen('playbookHealth') && (
+      {isModalOpen("playbookHealth") && (
         <Suspense fallback={<div>Loading...</div>}>
           <PlaybookHealthModal
-            isOpen={isModalOpen('playbookHealth')}
-            onClose={() => closeModal('playbookHealth')}
+            isOpen={isModalOpen("playbookHealth")}
+            onClose={() => closeModal("playbookHealth")}
             playbookId={activePlaybookId}
           />
         </Suspense>
       )}
 
       {/* Play Assignments Modal */}
-      {isModalOpen('assignments') && assignmentsPlay && (
+      {isModalOpen("assignments") && assignmentsPlay && (
         <Modal
-          isOpen={isModalOpen('assignments')}
+          isOpen={isModalOpen("assignments")}
           onClose={() => {
-            closeModal('assignments');
+            closeModal("assignments");
             setAssignmentsPlay(null);
           }}
           title={`Assignments - ${assignmentsPlay.name}`}
@@ -155,7 +156,7 @@ export function PlaybookModals({
             <PlayAssignmentsModal
               play={assignmentsPlay}
               onClose={() => {
-                closeModal('assignments');
+                closeModal("assignments");
                 setAssignmentsPlay(null);
               }}
             />
@@ -164,28 +165,28 @@ export function PlaybookModals({
       )}
 
       {/* Keyboard Shortcuts Guide */}
-      {isModalOpen('keyboardShortcuts') && (
+      {isModalOpen("keyboardShortcuts") && (
         <Modal
-          isOpen={isModalOpen('keyboardShortcuts')}
-          onClose={() => closeModal('keyboardShortcuts')}
+          isOpen={isModalOpen("keyboardShortcuts")}
+          onClose={() => closeModal("keyboardShortcuts")}
           title="Keyboard Shortcuts"
           size="md"
         >
           <Suspense fallback={<div>Loading...</div>}>
             <KeyboardShortcutsGuide
-              isOpen={isModalOpen('keyboardShortcuts')}
-              onClose={() => closeModal('keyboardShortcuts')}
+              isOpen={isModalOpen("keyboardShortcuts")}
+              onClose={() => closeModal("keyboardShortcuts")}
             />
           </Suspense>
         </Modal>
       )}
 
       {/* Practice Script Builder Modal */}
-      {isModalOpen('practiceScriptBuilder') && (
+      {isModalOpen("practiceScriptBuilder") && (
         <Modal
-          isOpen={isModalOpen('practiceScriptBuilder')}
+          isOpen={isModalOpen("practiceScriptBuilder")}
           onClose={() => {
-            closeModal('practiceScriptBuilder');
+            closeModal("practiceScriptBuilder");
             setEditingScript(null);
           }}
           title={
@@ -200,12 +201,12 @@ export function PlaybookModals({
               editingScript={editingScript}
               selectedPlays={selectedPlaysForPractice}
               onClose={() => {
-                closeModal('practiceScriptBuilder');
+                closeModal("practiceScriptBuilder");
                 setEditingScript(null);
                 setSelectedPlaysForPractice([]);
               }}
               onSave={() => {
-                closeModal('practiceScriptBuilder');
+                closeModal("practiceScriptBuilder");
                 setEditingScript(null);
                 setSelectedPlaysForPractice([]);
                 dispatch({ type: "REFRESH" });
@@ -216,11 +217,11 @@ export function PlaybookModals({
       )}
 
       {/* Post to Team Bulletin Modal */}
-      {isModalOpen('postToBulletin') && playToPost && (
+      {isModalOpen("postToBulletin") && playToPost && (
         <Modal
-          isOpen={isModalOpen('postToBulletin')}
+          isOpen={isModalOpen("postToBulletin")}
           onClose={() => {
-            closeModal('postToBulletin');
+            closeModal("postToBulletin");
             setPlayToPost(null);
           }}
           title="Post to Team Bulletin"

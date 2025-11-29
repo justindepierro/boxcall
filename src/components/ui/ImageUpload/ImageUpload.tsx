@@ -63,7 +63,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   disabled = false,
 }) => {
   // Disable upload if onChange is not ready (prevents uploads during initial load)
-  const isReady = typeof onChange === 'function';
+  const isReady = typeof onChange === "function";
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [dragActive, setDragActive] = useState(false);
@@ -276,7 +276,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
             {/* Warning Message */}
             <div className="flex items-start gap-xs bg-warning-bg border border-warning-border rounded-md p-sm">
-              <Icon name="info" className="text-warning-600 flex-shrink-0 mt-0.5" size="sm" />
+              <Icon
+                name="info"
+                className="text-warning-600 flex-shrink-0 mt-0.5"
+                size="sm"
+              />
               <p className="text-xs text-warning-fg">
                 Please wait while your diagram uploads. Don't close this card or
                 navigate away.
@@ -289,92 +293,96 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       <div className={`space-y-sm ${compact ? "text-sm" : ""}`}>
         {/* Preview */}
         {showPreview && previewUrl && (
-        <div className="relative inline-block">
-          <img
-            src={previewUrl}
-            alt="Play Diagram Preview"
-            className={`rounded-lg border-2 border-primary object-cover ${
-              compact ? "h-32 w-32" : "h-48 w-full"
-            }`}
-          />
-          {!disabled && (
-            <button
-              onClick={handleRemove}
-              className="absolute -top-2 -right-2 btn-primary rounded-full p-2 shadow-lg hover:scale-110 transition-transform"
-              aria-label="Remove diagram"
-            >
-              <Icon name="close" size="sm" />
-            </button>
-          )}
-        </div>
-      )}
+          <div className="relative inline-block">
+            <img
+              src={previewUrl}
+              alt="Play Diagram Preview"
+              className={`rounded-lg border-2 border-primary object-cover ${
+                compact ? "h-32 w-32" : "h-48 w-full"
+              }`}
+            />
+            {!disabled && (
+              <button
+                onClick={handleRemove}
+                className="absolute -top-2 -right-2 btn-primary rounded-full p-2 shadow-lg hover:scale-110 transition-transform"
+                aria-label="Remove diagram"
+              >
+                <Icon name="close" size="sm" />
+              </button>
+            )}
+          </div>
+        )}
 
-      {/* Upload Area */}
-      {!previewUrl && (
-        <div
-          onDragEnter={handleDrag}
-          onDragLeave={handleDrag}
-          onDragOver={handleDrag}
-          onDrop={handleDrop}
-          className={`
+        {/* Upload Area */}
+        {!previewUrl && (
+          <div
+            onDragEnter={handleDrag}
+            onDragLeave={handleDrag}
+            onDragOver={handleDrag}
+            onDrop={handleDrop}
+            className={`
             border-2 border-dashed rounded-lg p-md text-center transition-colors
             ${dragActive ? "border-jade-500 bg-jade-50" : "border-primary bg-muted"}
-            ${(disabled || !isReady) ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:border-jade-400"}
+            ${disabled || !isReady ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:border-jade-400"}
           `}
-          onClick={(!disabled && isReady) ? handleButtonClick : undefined}
-        >
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept={acceptedTypes.join(",")}
-            onChange={handleFileChange}
-            className="hidden"
-            disabled={disabled || !isReady}
-            capture="environment" // Mobile: prefer back camera
-          />
+            onClick={!disabled && isReady ? handleButtonClick : undefined}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept={acceptedTypes.join(",")}
+              onChange={handleFileChange}
+              className="hidden"
+              disabled={disabled || !isReady}
+              capture="environment" // Mobile: prefer back camera
+            />
 
-          {uploading ? (
-            <div className="space-y-sm">
-              <div className="animate-spin text-jade-600 mx-auto w-8 h-8 border-4 border-jade-600 border-t-transparent rounded-full" />
-              <p className="text-sm text-secondary">
-                Uploading... {uploadProgress}%
-              </p>
-              <div className="w-full bg-neutral-200 rounded-full h-2">
-                <div
-                  className="bg-jade-600 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${uploadProgress}%` }}
-                />
+            {uploading ? (
+              <div className="space-y-sm">
+                <div className="animate-spin text-jade-600 mx-auto w-8 h-8 border-4 border-jade-600 border-t-transparent rounded-full" />
+                <p className="text-sm text-secondary">
+                  Uploading... {uploadProgress}%
+                </p>
+                <div className="w-full bg-neutral-200 rounded-full h-2">
+                  <div
+                    className="bg-jade-600 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className="space-y-sm">
-              <Icon name="camera" size="lg" className="text-tertiary mx-auto" />
-              <p className="text-sm text-primary font-medium">
-                {uploadButtonText}
-              </p>
-              <p className="text-xs text-tertiary">
-                Drag & drop or click to browse
-                <br />
-                Max {maxSizeMB}MB • JPG, PNG, WebP
-              </p>
-            </div>
-          )}
-        </div>
-      )}
+            ) : (
+              <div className="space-y-sm">
+                <Icon
+                  name="camera"
+                  size="lg"
+                  className="text-tertiary mx-auto"
+                />
+                <p className="text-sm text-primary font-medium">
+                  {uploadButtonText}
+                </p>
+                <p className="text-xs text-tertiary">
+                  Drag & drop or click to browse
+                  <br />
+                  Max {maxSizeMB}MB • JPG, PNG, WebP
+                </p>
+              </div>
+            )}
+          </div>
+        )}
 
-      {/* Replace Button (if preview exists) */}
-      {showPreview && previewUrl && !disabled && (
-        <Button
-          variant="secondary"
-          size={compact ? "sm" : "md"}
-          onClick={handleButtonClick}
-          disabled={uploading}
-          className="w-full"
-        >
-          <Icon name="camera" size="sm" />
-          Replace Diagram
-        </Button>
-      )}
+        {/* Replace Button (if preview exists) */}
+        {showPreview && previewUrl && !disabled && (
+          <Button
+            variant="secondary"
+            size={compact ? "sm" : "md"}
+            onClick={handleButtonClick}
+            disabled={uploading}
+            className="w-full"
+          >
+            <Icon name="camera" size="sm" />
+            Replace Diagram
+          </Button>
+        )}
       </div>
     </>
   );

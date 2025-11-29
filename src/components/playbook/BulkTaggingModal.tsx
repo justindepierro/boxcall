@@ -80,10 +80,7 @@ export const BulkTaggingModal: React.FC<BulkTaggingModalProps> = ({
       aria-label="Bulk Tagging"
       className="fixed inset-0 z-modal flex items-center justify-center"
     >
-      <div
-        className="absolute inset-0 bg-backdrop-blur"
-        onClick={onClose}
-      />
+      <div className="absolute inset-0 bg-backdrop-blur" onClick={onClose} />
       <div className="relative bg-primary elevation-modal rounded-lg shadow-lg w-full max-w-lg mx-4 p-6 animate-fade-in">
         <div className="flex items-start justify-between mb-4">
           <div>

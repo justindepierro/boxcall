@@ -80,10 +80,10 @@ export const Modal: React.FC<ModalProps> = ({
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
-  
+
   // 🚀 PERFORMANCE: Prevent body scroll with iOS Safari support
   useScrollLock(isOpen);
-  
+
   // Focus management
   useEffect(() => {
     if (isOpen) {

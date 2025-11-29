@@ -153,7 +153,7 @@ export default function PlaybookPage() {
 
   // Modal-specific data (kept separate since not all modals need data)
   const [playToPost, setPlayToPost] = useState<Play | null>(null);
-  
+
   // Sheet states (not managed by useModalManager since they use BottomSheet component)
   const [showFiltersSheet, setShowFiltersSheet] = useState(false);
   const [showStatsSheet, setShowStatsSheet] = useState(false);
@@ -165,11 +165,14 @@ export default function PlaybookPage() {
   }, []);
 
   // Handle posting play to team bulletin
-  const handlePostToTeamBulletin = useCallback((play: Play) => {
-    setPlayToPost(play);
-    openModal('postToBulletin');
-    debug("Posting play to team bulletin:", play);
-  }, [openModal]);
+  const handlePostToTeamBulletin = useCallback(
+    (play: Play) => {
+      setPlayToPost(play);
+      openModal("postToBulletin");
+      debug("Posting play to team bulletin:", play);
+    },
+    [openModal]
+  );
 
   const [recentActivities, setRecentActivities] = useState<PlayActivityItem[]>(
     []
@@ -361,7 +364,7 @@ export default function PlaybookPage() {
                 selectedPlayIds
               );
               setSelectedPlaysForPractice(selectedPlayIds);
-              openModal('practiceScriptBuilder');
+              openModal("practiceScriptBuilder");
             }
           }
           break;
@@ -451,14 +454,14 @@ export default function PlaybookPage() {
   // Modal handlers
   const handleOpenBuilder = useCallback(() => {
     triggerHapticFeedback("light");
-    openModal('addNewPlay');
+    openModal("addNewPlay");
     // Record user action for smart preloading
     smartPreloader.recordAction("open_modal", "formation_builder");
   }, [openModal]);
 
   const handleOpenQuickCreate = useCallback(() => {
     triggerHapticFeedback("light");
-    openModal('addNewPlay');
+    openModal("addNewPlay");
     setDiagramMode("quick-play");
     setDiagramPlay(null); // Clear any existing play
     // Record user action for smart preloading
@@ -467,25 +470,28 @@ export default function PlaybookPage() {
 
   const handleOpenSettings = useCallback(() => {
     triggerHapticFeedback("light");
-    openModal('playbookSettings');
+    openModal("playbookSettings");
   }, [openModal]);
 
   const handleOpenPersonnel = useCallback(() => {
     triggerHapticFeedback("light");
-    openModal('personnel');
+    openModal("personnel");
     smartPreloader.recordAction("open_modal", "personnel_builder");
   }, [openModal]);
 
-  const handleEditPlay = useCallback((play: Play) => {
-    triggerHapticFeedback("light");
-    setDiagramPlay(play);
-    setDiagramMode("edit");
-    openModal('addNewPlay');
-  }, [openModal]);
+  const handleEditPlay = useCallback(
+    (play: Play) => {
+      triggerHapticFeedback("light");
+      setDiagramPlay(play);
+      setDiagramMode("edit");
+      openModal("addNewPlay");
+    },
+    [openModal]
+  );
 
   const handleOpenKeyboardShortcuts = useCallback(() => {
     triggerHapticFeedback("light");
-    openModal('keyboardShortcuts');
+    openModal("keyboardShortcuts");
   }, [openModal]);
 
   // 🆕 CREATE NEW PLAY (not update existing)
@@ -828,7 +834,7 @@ export default function PlaybookPage() {
         }
       }
 
-      openModal('addNewPlay');
+      openModal("addNewPlay");
     },
     [toast, openModal]
   );
@@ -874,7 +880,7 @@ export default function PlaybookPage() {
   // Practice Script Builder handlers
   const handleOpenPracticeScriptBuilder = useCallback(() => {
     setEditingScript(null);
-    openModal('practiceScriptBuilder');
+    openModal("practiceScriptBuilder");
   }, [openModal]);
 
   const handleQuickNewPracticeScript = useCallback(() => {
@@ -945,7 +951,7 @@ export default function PlaybookPage() {
           onTeamTypeChange={handleTeamTypeChange}
           onOpenSettings={handleOpenSettings}
           onOpenBuilder={handleOpenBuilder}
-          onOpenHealth={() => openModal('playbookHealth')}
+          onOpenHealth={() => openModal("playbookHealth")}
           onNavigate={navigate}
           title="Playbook"
           playsCreated={state.playsCreated}
@@ -1045,7 +1051,8 @@ export default function PlaybookPage() {
           setSelectedPlaysForPractice={setSelectedPlaysForPractice}
           existingPlays={allPlaysForStats.map((play) => ({
             ...play,
-            created_by: play.created_by || "",
+            confidence_base: play.confidence_base ?? 3,
+            game_plan_plays_count: play.game_plan_plays_count ?? 0,
           }))}
           handleCreatePlay={handleCreatePlay}
           handleSavePlay={handleSavePlay}

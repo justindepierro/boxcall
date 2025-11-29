@@ -173,7 +173,10 @@ export function FormationSelector({
 
       {/* Close dropdown on outside click */}
       {isOpen && (
-        <div className="fixed inset-0 z-modal-backdrop" onClick={() => setIsOpen(false)} />
+        <div
+          className="fixed inset-0 z-modal-backdrop"
+          onClick={() => setIsOpen(false)}
+        />
       )}
     </div>
   );

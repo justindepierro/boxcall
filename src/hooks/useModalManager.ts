@@ -1,41 +1,41 @@
 /**
  * useModalManager Hook
- * 
+ *
  * Centralized modal state management to replace 10+ boolean useState flags.
  * Prevents modal conflicts, simplifies state tracking, and ensures proper stacking.
- * 
+ *
  * @example
  * ```tsx
  * const { openModal, closeModal, closeAllModals, activeModal, isModalOpen } = useModalManager();
- * 
+ *
  * // Open a modal
  * openModal('addNewPlay');
- * 
+ *
  * // Check if specific modal is open
  * if (isModalOpen('addNewPlay')) { ... }
- * 
+ *
  * // Close current modal
  * closeModal();
- * 
+ *
  * // Close all modals (escape key, backdrop click)
  * closeAllModals();
  * ```
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
 export type ModalType =
-  | 'addNewPlay'
-  | 'playbookSettings'
-  | 'personnel'
-  | 'playbookHealth'
-  | 'stats'
-  | 'postToBulletin'
-  | 'assignments'
-  | 'keyboardShortcuts'
-  | 'practiceScriptBuilder'
-  | 'filters'
-  | 'diagram'
+  | "addNewPlay"
+  | "playbookSettings"
+  | "personnel"
+  | "playbookHealth"
+  | "stats"
+  | "postToBulletin"
+  | "assignments"
+  | "keyboardShortcuts"
+  | "practiceScriptBuilder"
+  | "filters"
+  | "diagram"
   | null;
 
 export interface ModalOptions {
@@ -68,9 +68,12 @@ export function useModalManager() {
    * Open a modal and add it to the stack
    * Supports modal stacking (e.g., open settings, then open personnel from settings)
    */
-  const openModal = useCallback((type: Exclude<ModalType, null>, options?: ModalOptions) => {
-    setModalStack((prev) => [...prev, { type, options }]);
-  }, []);
+  const openModal = useCallback(
+    (type: Exclude<ModalType, null>, options?: ModalOptions) => {
+      setModalStack((prev) => [...prev, { type, options }]);
+    },
+    []
+  );
 
   /**
    * Close the currently active modal
@@ -79,12 +82,12 @@ export function useModalManager() {
   const closeModal = useCallback(() => {
     setModalStack((prev) => {
       if (prev.length === 0) return prev;
-      
+
       const closing = prev[prev.length - 1];
       if (closing.options?.onClose) {
         closing.options.onClose();
       }
-      
+
       return prev.slice(0, -1);
     });
   }, []);
@@ -119,20 +122,23 @@ export function useModalManager() {
    * Replace the current modal with a different one
    * Useful for modal flows (e.g., "Add Play" → "Configure Personnel")
    */
-  const replaceModal = useCallback((type: Exclude<ModalType, null>, options?: ModalOptions) => {
-    setModalStack((prev) => {
-      if (prev.length === 0) {
-        return [{ type, options }];
-      }
-      
-      const closing = prev[prev.length - 1];
-      if (closing.options?.onClose) {
-        closing.options.onClose();
-      }
-      
-      return [...prev.slice(0, -1), { type, options }];
-    });
-  }, []);
+  const replaceModal = useCallback(
+    (type: Exclude<ModalType, null>, options?: ModalOptions) => {
+      setModalStack((prev) => {
+        if (prev.length === 0) {
+          return [{ type, options }];
+        }
+
+        const closing = prev[prev.length - 1];
+        if (closing.options?.onClose) {
+          closing.options.onClose();
+        }
+
+        return [...prev.slice(0, -1), { type, options }];
+      });
+    },
+    []
+  );
 
   return {
     /** Currently active modal (top of stack) */

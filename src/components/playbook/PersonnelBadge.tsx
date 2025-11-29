@@ -118,7 +118,9 @@ export const PersonnelBadge: React.FC<PersonnelBadgeProps> = ({
         />
       )}
       <span
-        className={badgeCustomization.style === "shiny" ? "relative z-dropdown" : ""}
+        className={
+          badgeCustomization.style === "shiny" ? "relative z-dropdown" : ""
+        }
       >
         {personnel}
       </span>

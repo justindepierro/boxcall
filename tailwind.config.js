@@ -84,7 +84,7 @@ const colors = {
     muted: "var(--color-bg-muted)",
     subtle: "var(--color-bg-subtle)",
   },
-  
+
   // Backdrop/Overlay colors (for modals, sheets, overlays)
   backdrop: {
     DEFAULT: "var(--color-backdrop)",
