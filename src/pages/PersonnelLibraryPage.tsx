@@ -10,23 +10,27 @@ import { PersonnelLibraryService } from "../services/personnelLibrary/PersonnelL
 import { PersonnelSyncService } from "../services/personnelLibrary/PersonnelSyncService";
 import type { PersonnelConfiguration } from "../types/personnel";
 import { Icon } from "../components/ui/Icon/Icon";
-import { toast } from "react-hot-toast";
-import { usePlaybookStore } from "../stores/playbookStore";
+import { toast } from "../hooks/useToast";
+import { usePlaybookStore } from "../app/store";
 
 export const PersonnelLibraryPage: React.FC = () => {
-  const playbookId = usePlaybookStore((state) => state.activePlaybookId);
-  
+  const playbookId = usePlaybookStore((state: any) => state.activePlaybookId);
+
   if (!playbookId) {
     return (
       <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <Icon name="alert-circle" size="xl" className="text-secondary mb-4 mx-auto" />
+          <Icon
+            name="alert-circle"
+            size="xl"
+            className="text-secondary mb-4 mx-auto"
+          />
           <p className="text-secondary text-lg">No playbook selected</p>
         </div>
       </div>
     );
   }
-  
+
   return <PersonnelLibraryPageContent playbookId={playbookId} />;
 };
 
@@ -34,24 +38,30 @@ interface PersonnelLibraryPageContentProps {
   playbookId: string;
 }
 
-const PersonnelLibraryPageContent: React.FC<PersonnelLibraryPageContentProps> = ({ playbookId }) => {
+const PersonnelLibraryPageContent: React.FC<
+  PersonnelLibraryPageContentProps
+> = ({ playbookId }) => {
   const [personnel, setPersonnel] = useState<PersonnelConfiguration[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     loadPersonnel();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playbookId]);
 
   const loadPersonnel = async () => {
     try {
       setLoading(true);
-      const response = await PersonnelLibraryService.getPersonnelConfigs(playbookId, {
-        search: searchQuery || undefined,
-        sort_by: "usage_count",
-        sort_order: "desc",
-        limit: 100,
-      });
+      const response = await PersonnelLibraryService.getPersonnelConfigs(
+        playbookId,
+        {
+          search: searchQuery || undefined,
+          sort_by: "usage_count",
+          sort_order: "desc",
+          limit: 100,
+        }
+      );
       setPersonnel(response.items);
     } catch (error) {
       console.error("Error loading personnel:", error);
@@ -64,15 +74,21 @@ const PersonnelLibraryPageContent: React.FC<PersonnelLibraryPageContentProps> = 
   const handleUpdateUsage = async () => {
     try {
       toast.loading("Updating usage counts...", { id: "usage" });
-      const result = await PersonnelSyncService.updateAllUsageCounts(playbookId);
-      
+      const result =
+        await PersonnelSyncService.updateAllUsageCounts(playbookId);
+
       if (result.success) {
-        toast.success(`Updated ${result.updated_count} personnel packages`, { id: "usage" });
-        await loadPersonnel();
-      } else {
-        toast.error(`Failed to update some personnel: ${result.errors.join(", ")}`, {
+        toast.success(`Updated ${result.updated_count} personnel packages`, {
           id: "usage",
         });
+        await loadPersonnel();
+      } else {
+        toast.error(
+          `Failed to update some personnel: ${result.errors.join(", ")}`,
+          {
+            id: "usage",
+          }
+        );
       }
     } catch (error) {
       console.error("Error updating usage:", error);
@@ -91,12 +107,17 @@ const PersonnelLibraryPageContent: React.FC<PersonnelLibraryPageContentProps> = 
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-primary">Personnel Library</h1>
+              <h1 className="text-2xl font-bold text-primary">
+                Personnel Library
+              </h1>
               <p className="text-sm text-secondary mt-1">
                 Manage personnel packages and badge customization
               </p>
             </div>
-            <button onClick={handleUpdateUsage} className="btn-secondary flex items-center gap-2">
+            <button
+              onClick={handleUpdateUsage}
+              className="btn-secondary flex items-center gap-2"
+            >
               <Icon name="refresh-cw" size="sm" />
               Update Usage
             </button>
@@ -124,12 +145,22 @@ const PersonnelLibraryPageContent: React.FC<PersonnelLibraryPageContentProps> = 
       <div className="max-w-7xl mx-auto px-4 py-6">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Icon name="loader" size="lg" className="animate-spin text-primary" />
+            <Icon
+              name="loader"
+              size="lg"
+              className="animate-spin text-primary"
+            />
           </div>
         ) : filteredPersonnel.length === 0 ? (
           <div className="text-center py-12">
-            <Icon name="users" size="xl" className="text-secondary mb-4 mx-auto" />
-            <p className="text-secondary text-lg">No personnel packages found</p>
+            <Icon
+              name="users"
+              size="xl"
+              className="text-secondary mb-4 mx-auto"
+            />
+            <p className="text-secondary text-lg">
+              No personnel packages found
+            </p>
             <p className="text-sm text-muted mt-2">
               {searchQuery
                 ? "Try a different search term"
@@ -150,7 +181,9 @@ const PersonnelLibraryPageContent: React.FC<PersonnelLibraryPageContentProps> = 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <div>
                 <p className="text-sm text-secondary">Total Packages</p>
-                <p className="text-2xl font-bold text-primary">{personnel.length}</p>
+                <p className="text-2xl font-bold text-primary">
+                  {personnel.length}
+                </p>
               </div>
               <div>
                 <p className="text-sm text-secondary">With Customization</p>
@@ -180,10 +213,13 @@ const PersonnelCard: React.FC<PersonnelCardProps> = ({ config }) => {
   const getPlayerBreakdown = () => {
     if (!config.players || config.players.length === 0) return null;
 
-    const counts = config.players.reduce((acc, p) => {
-      acc[p.player_position] = (acc[p.player_position] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const counts = config.players.reduce(
+      (acc, p) => {
+        acc[p.player_position] = (acc[p.player_position] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     return Object.entries(counts)
       .map(([pos, count]) => `${count} ${pos}`)
@@ -210,12 +246,14 @@ const PersonnelCard: React.FC<PersonnelCardProps> = ({ config }) => {
       {config.players && config.players.length > 0 && (
         <div className="mb-3 pb-3 border-b border-divider">
           <p className="text-xs text-secondary mb-2">Players:</p>
-          <p className="text-sm text-primary font-medium">{getPlayerBreakdown()}</p>
+          <p className="text-sm text-primary font-medium">
+            {getPlayerBreakdown()}
+          </p>
           <div className="flex flex-wrap gap-1 mt-2">
             {config.players.map((player) => (
               <span
                 key={player.id}
-                className="text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded"
+                className="text-xs bg-surface-muted text-secondary px-2 py-1 rounded"
               >
                 {player.label} ({player.player_position})
               </span>
@@ -228,7 +266,9 @@ const PersonnelCard: React.FC<PersonnelCardProps> = ({ config }) => {
       {config.confidence_score > 0 && (
         <div className="flex items-center justify-between pb-2 mb-2 border-b border-divider">
           <span className="text-sm text-secondary">Confidence</span>
-          <span className="text-sm font-bold text-primary">{config.confidence_score}%</span>
+          <span className="text-sm font-bold text-primary">
+            {config.confidence_score}%
+          </span>
         </div>
       )}
 

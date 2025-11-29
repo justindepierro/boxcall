@@ -11,23 +11,27 @@ import { FormationIntelligenceService } from "../services/formationLibrary/Forma
 import type { Formation } from "../types/formation";
 import type { IntelligenceAnalysis } from "../types/library";
 import { Icon } from "../components/ui/Icon/Icon";
-import { toast } from "react-hot-toast";
-import { usePlaybookStore } from "../stores/playbookStore";
+import { toast } from "../hooks/useToast";
+import { usePlaybookStore } from "../app/store";
 
 export const FormationLibraryPage: React.FC = () => {
-  const playbookId = usePlaybookStore((state) => state.activePlaybookId);
-  
+  const playbookId = usePlaybookStore((state: any) => state.activePlaybookId);
+
   if (!playbookId) {
     return (
       <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <Icon name="alert-circle" size="xl" className="text-secondary mb-4 mx-auto" />
+          <Icon
+            name="alert-circle"
+            size="xl"
+            className="text-secondary mb-4 mx-auto"
+          />
           <p className="text-secondary text-lg">No playbook selected</p>
         </div>
       </div>
     );
   }
-  
+
   return <FormationLibraryPageContent playbookId={playbookId} />;
 };
 
@@ -35,16 +39,20 @@ interface FormationLibraryPageContentProps {
   playbookId: string;
 }
 
-const FormationLibraryPageContent: React.FC<FormationLibraryPageContentProps> = ({ playbookId }) => {
+const FormationLibraryPageContent: React.FC<
+  FormationLibraryPageContentProps
+> = ({ playbookId }) => {
   const [formations, setFormations] = useState<Formation[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showIntelligence, setShowIntelligence] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
-  const [analyses, setAnalyses] = useState<Map<string, IntelligenceAnalysis>>(new Map());
+  const [analyses, setAnalyses] = useState<Map<string, IntelligenceAnalysis>>(
+    new Map()
+  );
 
   useEffect(() => {
     loadFormations();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playbookId]);
 
   const loadFormations = async () => {
@@ -52,7 +60,7 @@ const FormationLibraryPageContent: React.FC<FormationLibraryPageContentProps> = 
       setLoading(true);
       const response = await FormationLibraryService.getFormations(playbookId, {
         search: searchQuery || undefined,
-        sort_by: "usage_count",
+        sortBy: "usage" as any,
         sort_order: "desc",
         limit: 100,
       });
@@ -68,18 +76,26 @@ const FormationLibraryPageContent: React.FC<FormationLibraryPageContentProps> = 
   const handleAnalyze = async () => {
     try {
       setAnalyzing(true);
-      toast.loading("Analyzing plays to derive formation metadata...", { id: "analyze" });
-      
-      const results = await FormationIntelligenceService.analyzePlaybookFormations(playbookId);
-      setAnalyses(results);
-      
-      const updatedCount = await FormationIntelligenceService.populateLibraryFromPlays(playbookId);
-      
-      toast.success(`Analyzed ${results.size} formations, updated ${updatedCount}`, {
+      toast.loading("Analyzing plays to derive formation metadata...", {
         id: "analyze",
       });
-      
-      setShowIntelligence(true);
+
+      const results =
+        await FormationIntelligenceService.analyzePlaybookFormations(
+          playbookId
+        );
+      setAnalyses(results);
+
+      const updatedCount =
+        await FormationIntelligenceService.populateLibraryFromPlays(playbookId);
+
+      toast.success(
+        `Analyzed ${results.size} formations, updated ${updatedCount}`,
+        {
+          id: "analyze",
+        }
+      );
+
       await loadFormations(); // Refresh to show updated confidence scores
     } catch (error) {
       console.error("Error analyzing formations:", error);
@@ -100,7 +116,9 @@ const FormationLibraryPageContent: React.FC<FormationLibraryPageContentProps> = 
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-primary">Formation Library</h1>
+              <h1 className="text-2xl font-bold text-primary">
+                Formation Library
+              </h1>
               <p className="text-sm text-secondary mt-1">
                 Manage formations with intelligent metadata
               </p>
@@ -146,11 +164,19 @@ const FormationLibraryPageContent: React.FC<FormationLibraryPageContentProps> = 
       <div className="max-w-7xl mx-auto px-4 py-6">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Icon name="loader" size="lg" className="animate-spin text-primary" />
+            <Icon
+              name="loader"
+              size="lg"
+              className="animate-spin text-primary"
+            />
           </div>
         ) : filteredFormations.length === 0 ? (
           <div className="text-center py-12">
-            <Icon name="folder" size="xl" className="text-secondary mb-4 mx-auto" />
+            <Icon
+              name="folder"
+              size="xl"
+              className="text-secondary mb-4 mx-auto"
+            />
             <p className="text-secondary text-lg">No formations found</p>
             <p className="text-sm text-muted mt-2">
               {searchQuery
@@ -176,7 +202,9 @@ const FormationLibraryPageContent: React.FC<FormationLibraryPageContentProps> = 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
                 <p className="text-sm text-secondary">Total Formations</p>
-                <p className="text-2xl font-bold text-primary">{formations.length}</p>
+                <p className="text-2xl font-bold text-primary">
+                  {formations.length}
+                </p>
               </div>
               <div>
                 <p className="text-sm text-secondary">With Metadata</p>
@@ -209,7 +237,10 @@ interface FormationCardProps {
   analysis?: IntelligenceAnalysis;
 }
 
-const FormationCard: React.FC<FormationCardProps> = ({ formation, analysis }) => {
+const FormationCard: React.FC<FormationCardProps> = ({
+  formation,
+  analysis,
+}) => {
   const getConfidenceColor = (score: number) => {
     if (score >= 90) return "text-success";
     if (score >= 70) return "text-warning";
@@ -220,9 +251,13 @@ const FormationCard: React.FC<FormationCardProps> = ({ formation, analysis }) =>
     <div className="bg-white rounded-lg border border-divider p-4 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
-          <h3 className="font-semibold text-primary text-lg">{formation.name}</h3>
+          <h3 className="font-semibold text-primary text-lg">
+            {formation.name}
+          </h3>
           {formation.description && (
-            <p className="text-sm text-secondary mt-1">{formation.description}</p>
+            <p className="text-sm text-secondary mt-1">
+              {formation.description}
+            </p>
           )}
         </div>
         {formation.opposite_formation_id && (
@@ -238,21 +273,27 @@ const FormationCard: React.FC<FormationCardProps> = ({ formation, analysis }) =>
           <div className="flex items-center gap-2 text-sm">
             <Icon name="grid" size="xs" className="text-secondary" />
             <span className="text-secondary">Type:</span>
-            <span className="font-medium text-primary">{formation.formation_type}</span>
+            <span className="font-medium text-primary">
+              {formation.formation_type}
+            </span>
           </div>
         )}
         {formation.run_strength && (
           <div className="flex items-center gap-2 text-sm">
             <Icon name="arrow-right" size="xs" className="text-secondary" />
             <span className="text-secondary">Run:</span>
-            <span className="font-medium text-primary capitalize">{formation.run_strength}</span>
+            <span className="font-medium text-primary capitalize">
+              {formation.run_strength}
+            </span>
           </div>
         )}
         {formation.pass_strength && (
           <div className="flex items-center gap-2 text-sm">
             <Icon name="target" size="xs" className="text-secondary" />
             <span className="text-secondary">Pass:</span>
-            <span className="font-medium text-primary capitalize">{formation.pass_strength}</span>
+            <span className="font-medium text-primary capitalize">
+              {formation.pass_strength}
+            </span>
           </div>
         )}
       </div>
@@ -261,7 +302,9 @@ const FormationCard: React.FC<FormationCardProps> = ({ formation, analysis }) =>
       {formation.confidence_score > 0 && (
         <div className="flex items-center justify-between pt-3 border-t border-divider">
           <span className="text-sm text-secondary">Confidence</span>
-          <span className={`text-sm font-bold ${getConfidenceColor(formation.confidence_score)}`}>
+          <span
+            className={`text-sm font-bold ${getConfidenceColor(formation.confidence_score)}`}
+          >
             {formation.confidence_score}%
           </span>
         </div>
@@ -271,7 +314,8 @@ const FormationCard: React.FC<FormationCardProps> = ({ formation, analysis }) =>
       <div className="flex items-center justify-between pt-2">
         <span className="text-sm text-secondary">Usage</span>
         <span className="text-sm font-medium text-primary">
-          {formation.usage_count} {formation.usage_count === 1 ? "play" : "plays"}
+          {formation.usage_count}{" "}
+          {formation.usage_count === 1 ? "play" : "plays"}
         </span>
       </div>
 
@@ -284,13 +328,18 @@ const FormationCard: React.FC<FormationCardProps> = ({ formation, analysis }) =>
               <div className="flex justify-between">
                 <span className="text-secondary">Type:</span>
                 <span className="text-primary font-medium">
-                  {analysis.formation_type.value} ({analysis.formation_type.percentage}%)
+                  {analysis.formation_type.value} (
+                  {analysis.formation_type.percentage}%)
                 </span>
               </div>
             )}
             {analysis.warnings.length > 0 && (
               <div className="flex items-start gap-1 text-warning mt-2">
-                <Icon name="alert-triangle" size="xs" className="mt-0.5 flex-shrink-0" />
+                <Icon
+                  name="alert-triangle"
+                  size="xs"
+                  className="mt-0.5 flex-shrink-0"
+                />
                 <span className="text-xs">{analysis.warnings[0]}</span>
               </div>
             )}
