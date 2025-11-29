@@ -14,6 +14,7 @@ import { Icon } from "../components/ui/Icon/Icon";
 import { toast } from "sonner";
 import { useTeamsData } from "../hooks/useTeamsData";
 import { useActiveTeamStore } from "../stores/activeTeamStore";
+import { supabase } from "../lib/supabase";
 
 export const FormationLibraryPage: React.FC = () => {
   const { playbooks } = useTeamsData();
@@ -106,6 +107,70 @@ const FormationLibraryPageContent: React.FC<
     }
   };
 
+  const handleImportFromPlays = async () => {
+    try {
+      setAnalyzing(true);
+      toast.loading("Importing formations from plays...", { id: "import" });
+
+      // Get all unique formation names from plays
+      const { data: plays } = await supabase
+        .from("plays")
+        .select("formation")
+        .eq("playbook_id", playbookId)
+        .eq("is_archived", false);
+
+      if (!plays || plays.length === 0) {
+        toast.error("No plays found in playbook", { id: "import" });
+        return;
+      }
+
+      // Get unique formation names (case-insensitive)
+      const uniqueFormations = Array.from(
+        new Set(
+          plays
+            .map((p) => p.formation?.trim())
+            .filter((f): f is string => !!f)
+            .map((f) => f.toLowerCase())
+        )
+      );
+
+      console.log("🔍 [FormationLibrary] Unique formations:", uniqueFormations);
+
+      // Create formations that don't exist
+      let createdCount = 0;
+      for (const formationName of uniqueFormations) {
+        // Check if already exists
+        const { data: existing } = await supabase
+          .from("formations")
+          .select("id")
+          .eq("playbook_id", playbookId)
+          .ilike("name", formationName)
+          .limit(1);
+
+        if (!existing || existing.length === 0) {
+          // Create new formation
+          const { error } = await supabase
+            .from("formations")
+            .insert({
+              playbook_id: playbookId,
+              name: formationName.charAt(0).toUpperCase() + formationName.slice(1),
+              is_standalone: true,
+            });
+
+          if (!error) createdCount++;
+        }
+      }
+
+      toast.success(`Imported ${createdCount} new formations`, { id: "import" });
+      await loadFormations();
+    } catch (error) {
+      console.error("Error importing formations:", error);
+      toast.error("Failed to import formations", { id: "import" });
+    } finally {
+      setAnalyzing(false);
+    }
+  };
+
   const handleAnalyze = async () => {
     try {
       setAnalyzing(true);
@@ -162,23 +227,42 @@ const FormationLibraryPageContent: React.FC<
                 Manage formations with intelligent metadata
               </p>
             </div>
-            <button
-              onClick={handleAnalyze}
-              disabled={analyzing}
-              className="btn-primary flex items-center gap-2"
-            >
-              {analyzing ? (
-                <>
-                  <Icon name="loader" size="sm" className="animate-spin" />
-                  Analyzing...
-                </>
-              ) : (
-                <>
-                  <Icon name="sparkles" size="sm" />
-                  Analyze Plays
-                </>
-              )}
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleImportFromPlays}
+                disabled={analyzing}
+                className="btn-secondary flex items-center gap-2"
+              >
+                {analyzing ? (
+                  <>
+                    <Icon name="loader" size="sm" className="animate-spin" />
+                    Importing...
+                  </>
+                ) : (
+                  <>
+                    <Icon name="download" size="sm" />
+                    Import from Plays
+                  </>
+                )}
+              </button>
+              <button
+                onClick={handleAnalyze}
+                disabled={analyzing}
+                className="btn-primary flex items-center gap-2"
+              >
+                {analyzing ? (
+                  <>
+                    <Icon name="loader" size="sm" className="animate-spin" />
+                    Analyzing...
+                  </>
+                ) : (
+                  <>
+                    <Icon name="sparkles" size="sm" />
+                    Analyze Plays
+                  </>
+                )}
+              </button>
+            </div>
           </div>
 
           {/* Search */}
