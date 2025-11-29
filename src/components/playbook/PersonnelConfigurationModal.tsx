@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Icon } from "../ui/Icon";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
@@ -38,8 +38,11 @@ export const PersonnelConfigurationModal: React.FC<
   const { data: fetchedConfigs, isLoading } =
     usePersonnelConfigurations(playbookId);
 
-  // Use provided configurations or fetched ones
-  const configurations = configsProp || fetchedConfigs || [];
+  // Use provided configurations or fetched ones (memoized to prevent effect re-runs)
+  const configurations = useMemo(
+    () => configsProp || fetchedConfigs || [],
+    [configsProp, fetchedConfigs]
+  );
   const [localConfigurations, setLocalConfigurations] =
     useState<PersonnelConfiguration[]>(configurations);
   const [expandedConfigIds, setExpandedConfigIds] = useState<Set<string>>(

@@ -156,6 +156,7 @@ export const ValidatedInput: React.FC<ValidatedInputProps> = ({
       setShowSuggestions(false);
     }
 
+    // Cleanup function
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);

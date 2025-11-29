@@ -39,7 +39,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   const [isProcessing, setIsProcessing] = useState(false);
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
   const [importProgress, setImportProgress] = useState(0);
-  const [importError, setImportError] = useState<string | null>(null);
+  const [_importError, setImportError] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
