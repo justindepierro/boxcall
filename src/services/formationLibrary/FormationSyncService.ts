@@ -23,7 +23,7 @@ export class FormationSyncService {
    * Called when formation is updated in library
    */
   static async syncFormationToPlays(formationId: string): Promise<SyncResult> {
-    // Get formation details
+    // Get formation details including name for matching plays
     const { data: formation, error: formationError } = await supabase
       .from("formations")
       .select("*")
@@ -39,11 +39,11 @@ export class FormationSyncService {
       };
     }
 
-    // Get all plays using this formation
+    // Get all plays using this formation (match by name)
     const { data: plays, error: playsError } = await supabase
       .from("plays")
-      .select("id, formation, f_type, r_str, p_str")
-      .eq("formation_id", formationId)
+      .select("id, f_type, r_str, p_str")
+      .eq("formation", formation.name)
       .eq("is_archived", false);
 
     if (playsError) {
@@ -109,18 +109,27 @@ export class FormationSyncService {
     // Get play details
     const { data: play, error: playError } = await supabase
       .from("plays")
-      .select("formation_id, f_type, r_str, p_str")
+      .select("formation, f_type, r_str, p_str")
       .eq("id", playId)
       .single();
 
-    if (playError || !play || !play.formation_id) {
+    if (playError || !play || !play.formation) {
       return; // Nothing to sync
     }
 
-    // This could trigger re-analysis, but for now just log
-    console.log(
-      `[FormationSyncService] Play ${playId} updated, may affect formation ${play.formation_id} intelligence`
-    );
+    // Find formation by name
+    const { data: formation } = await supabase
+      .from("formations")
+      .select("id")
+      .eq("name", play.formation)
+      .maybeSingle();
+
+    if (formation) {
+      // This could trigger re-analysis, but for now just log
+      console.log(
+        `[FormationSyncService] Play ${playId} updated, may affect formation ${formation.id} intelligence`
+      );
+    }
   }
 
   /**
@@ -134,10 +143,22 @@ export class FormationSyncService {
       personnel: string | null;
     }>
   > {
+    // Get formation name first
+    const { data: formation, error: formationError } = await supabase
+      .from("formations")
+      .select("name")
+      .eq("id", formationId)
+      .single();
+
+    if (formationError || !formation) {
+      return [];
+    }
+
+    // Match plays by formation name
     const { data, error } = await supabase
       .from("plays")
       .select("id, play_name, formation, personnel")
-      .eq("formation_id", formationId)
+      .eq("formation", formation.name)
       .eq("is_archived", false)
       .order("play_name");
 

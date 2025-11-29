@@ -9,7 +9,6 @@ import React, { useState, useEffect } from "react";
 import { FormationLibraryService } from "../../../services/formationLibrary/FormationLibraryService";
 import { FormationIntelligenceService } from "../../../services/formationLibrary/FormationIntelligenceService";
 import type { Formation } from "../../../types/formation";
-import type { IntelligenceAnalysis } from "../../../types/library";
 import { Icon } from "../../ui/Icon/Icon";
 import { toast } from "sonner";
 import { supabase } from "../../../lib/supabase";
@@ -188,7 +187,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                <Icon name="layout-grid" size="lg" className="text-white" />
+                <Icon name="grid" size="lg" className="text-white" />
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-white">Formation Library</h2>
@@ -270,7 +269,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
             </div>
           ) : filteredFormations.length === 0 ? (
             <div className="text-center py-12">
-              <Icon name="layout-grid" size="xl" className="text-secondary mb-4 mx-auto" />
+              <Icon name="grid" size="xl" className="text-secondary mb-4 mx-auto" />
               <p className="text-secondary text-lg">No formations found</p>
               <p className="text-tertiary text-sm mt-2">
                 Click "Import from Plays" to get started

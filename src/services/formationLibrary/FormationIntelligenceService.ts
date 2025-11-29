@@ -120,7 +120,7 @@ export class FormationIntelligenceService {
   /**
    * Analyze a single field using majority vote
    */
-  private static analyzeField<T>(
+  private static analyzeField(
     plays: PlayData[],
     extractor: (play: PlayData) => string | null,
     total: number
@@ -229,38 +229,57 @@ export class FormationIntelligenceService {
 
   /**
    * Detect opposite formations using pattern matching
+   * NOTE: RPC function not yet added to database types, using manual detection
    */
   static async detectOppositeFormations(
     playbookId: string
   ): Promise<OppositeDetection[]> {
-    const { data, error } = await supabase.rpc("detect_opposite_formations");
+    // Get all formations in playbook
+    const { data: formations, error } = await supabase
+      .from("formations")
+      .select("id, name, opposite_formation_id")
+      .eq("playbook_id", playbookId);
 
-    if (error) {
+    if (error || !formations) {
       console.error(
         "[FormationIntelligenceService] Error detecting opposites:",
         error
       );
-      throw new Error(`Failed to detect opposites: ${error.message}`);
+      return [];
     }
 
-    // Filter for this playbook
-    const { data: formations } = await supabase
-      .from("formations")
-      .select("id, playbook_id, name")
-      .eq("playbook_id", playbookId);
+    // Find opposite pairs by name patterns
+    const results: OppositeDetection[] = [];
+    const processed = new Set<string>();
 
-    const formationIds = new Set((formations || []).map((f) => f.id));
+    for (const formation of formations) {
+      if (processed.has(formation.id)) continue;
 
-    return (data || [])
-      .filter((d: any) => formationIds.has(d.formation_id))
-      .map((d: any) => ({
-        formation_id: d.formation_id,
-        formation_name: d.formation_name,
-        opposite_id: d.opposite_id,
-        opposite_name: d.opposite_name,
-        match_confidence: d.match_confidence,
-        match_reason: this.getMatchReason(d.formation_name, d.opposite_name),
-      }));
+      // Look for Left/Right pairs
+      const name = formation.name.toLowerCase();
+      if (name.includes("left") || name.includes("lt")) {
+        const oppositeName = formation.name
+          .replace(/left/i, "right")
+          .replace(/\blt\b/i, "rt");
+        const opposite = formations.find(
+          (f) => f.name.toLowerCase() === oppositeName.toLowerCase()
+        );
+        if (opposite) {
+          results.push({
+            formation_id: formation.id,
+            formation_name: formation.name,
+            opposite_id: opposite.id,
+            opposite_name: opposite.name,
+            match_confidence: "high",
+            match_reason: this.getMatchReason(formation.name, opposite.name),
+          });
+          processed.add(formation.id);
+          processed.add(opposite.id);
+        }
+      }
+    }
+
+    return results;
   }
 
   /**

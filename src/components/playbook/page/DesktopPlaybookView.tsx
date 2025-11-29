@@ -8,7 +8,6 @@ import { FormationSyncPanel } from "../../formations/FormationSyncPanel";
 import { Card } from "../../ui/Card";
 import { AdvancedFilters } from "../AdvancedFilters";
 import { PlaybookStatsDashboard } from "../PlaybookStatsDashboard";
-import { RecentActivityFeed } from "../RecentActivityFeed";
 import { BulkActionsToolbar } from "../BulkActionsToolbar";
 import type { Play } from "../../../types/play";
 import type { PlaybookState } from "../../../contexts/PlaybookContext";
