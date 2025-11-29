@@ -160,7 +160,7 @@ export default function PlaybookPage() {
   // Sheet states (not managed by useModalManager since they use BottomSheet component)
   const [showFiltersSheet, setShowFiltersSheet] = useState(false);
   const [showStatsSheet, setShowStatsSheet] = useState(false);
-  
+
   // Library modal states
   const [showFormationLibrary, setShowFormationLibrary] = useState(false);
   const [showPersonnelLibrary, setShowPersonnelLibrary] = useState(false);

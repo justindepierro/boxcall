@@ -57,8 +57,14 @@ export class FormationIntelligenceService {
       formationGroups.get(formationName)!.push(play as PlayData);
     }
 
-    console.log("📊 [Intelligence] Formation groups count:", formationGroups.size);
-    console.log("📊 [Intelligence] Formation names:", Array.from(formationGroups.keys()));
+    console.log(
+      "📊 [Intelligence] Formation groups count:",
+      formationGroups.size
+    );
+    console.log(
+      "📊 [Intelligence] Formation names:",
+      Array.from(formationGroups.keys())
+    );
 
     // Analyze each formation
     const results = new Map<string, IntelligenceAnalysis>();

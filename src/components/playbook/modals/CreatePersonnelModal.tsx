@@ -1,6 +1,6 @@
 /**
  * Create Personnel Modal
- * 
+ *
  * Simple modal for creating new personnel packages manually
  */
 
@@ -103,7 +103,9 @@ export const CreatePersonnelModal: React.FC<CreatePersonnelModalProps> = ({
             <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
               <Icon name="plus" size="sm" className="text-white" />
             </div>
-            <h3 className="text-lg font-bold text-white">Create Personnel Package</h3>
+            <h3 className="text-lg font-bold text-white">
+              Create Personnel Package
+            </h3>
           </div>
           <button
             onClick={onClose}

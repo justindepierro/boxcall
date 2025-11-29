@@ -33,11 +33,16 @@ export const FormationLibraryPage: React.FC = () => {
 
   // Use same logic as PlaybookPage: prefer saved, then playbook with plays, then first
   const activePlaybook = React.useMemo(() => {
-    if (savedPlaybookId && teamPlaybooks.some((pb) => pb.id === savedPlaybookId)) {
+    if (
+      savedPlaybookId &&
+      teamPlaybooks.some((pb) => pb.id === savedPlaybookId)
+    ) {
       return teamPlaybooks.find((pb) => pb.id === savedPlaybookId);
     }
     // Default to first playbook with plays
-    const playbookWithPlays = teamPlaybooks.find((pb) => (pb.play_count || 0) > 0);
+    const playbookWithPlays = teamPlaybooks.find(
+      (pb) => (pb.play_count || 0) > 0
+    );
     return playbookWithPlays || teamPlaybooks[0];
   }, [teamPlaybooks, savedPlaybookId]);
 
@@ -140,22 +145,23 @@ const FormationLibraryPageContent: React.FC<
 
         if (!existing || existing.length === 0) {
           // Preserve original casing from plays (don't force capitalize)
-          const originalName = plays.find(
-            (p) => p.formation?.trim().toLowerCase() === formationName
-          )?.formation?.trim();
+          const originalName = plays
+            .find((p) => p.formation?.trim().toLowerCase() === formationName)
+            ?.formation?.trim();
 
           // Create new formation
-          const { error } = await supabase
-            .from("formations")
-            .insert({
-              playbook_id: playbookId,
-              name: originalName || formationName,
-              is_standalone: true,
-              direction: null, // Required by validate_formation_data() trigger
-            });
+          const { error } = await supabase.from("formations").insert({
+            playbook_id: playbookId,
+            name: originalName || formationName,
+            is_standalone: true,
+            direction: null, // Required by validate_formation_data() trigger
+          });
 
           if (error) {
-            console.error(`Failed to create formation "${originalName || formationName}":`, error);
+            console.error(
+              `Failed to create formation "${originalName || formationName}":`,
+              error
+            );
             errorCount++;
           } else {
             createdCount++;
@@ -164,9 +170,14 @@ const FormationLibraryPageContent: React.FC<
       }
 
       if (errorCount > 0) {
-        toast.error(`Imported ${createdCount} formations, ${errorCount} failed`, { id: "import" });
+        toast.error(
+          `Imported ${createdCount} formations, ${errorCount} failed`,
+          { id: "import" }
+        );
       } else {
-        toast.success(`Imported ${createdCount} new formations`, { id: "import" });
+        toast.success(`Imported ${createdCount} new formations`, {
+          id: "import",
+        });
       }
       await loadFormations();
     } catch (error) {

@@ -31,11 +31,16 @@ export const PersonnelLibraryPage: React.FC = () => {
 
   // Use same logic as PlaybookPage: prefer saved, then playbook with plays, then first
   const activePlaybook = React.useMemo(() => {
-    if (savedPlaybookId && teamPlaybooks.some((pb) => pb.id === savedPlaybookId)) {
+    if (
+      savedPlaybookId &&
+      teamPlaybooks.some((pb) => pb.id === savedPlaybookId)
+    ) {
       return teamPlaybooks.find((pb) => pb.id === savedPlaybookId);
     }
     // Default to first playbook with plays
-    const playbookWithPlays = teamPlaybooks.find((pb) => (pb.play_count || 0) > 0);
+    const playbookWithPlays = teamPlaybooks.find(
+      (pb) => (pb.play_count || 0) > 0
+    );
     return playbookWithPlays || teamPlaybooks[0];
   }, [teamPlaybooks, savedPlaybookId]);
 

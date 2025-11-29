@@ -44,7 +44,7 @@ export class PersonnelLibraryService {
     }
 
     // Sorting (map "usage" to actual column name "usage_count")
-    let sortBy = filters?.sort_by || "name";
+    let sortBy: string = filters?.sort_by || "name";
     if (sortBy === "usage") {
       sortBy = "usage_count";
     } else if (sortBy === "confidence") {
@@ -260,5 +260,116 @@ export class PersonnelLibraryService {
     }
 
     return data || [];
+  }
+
+  /**
+   * Import personnel from existing plays
+   * Scans plays table for unique personnel values and creates missing configs
+   */
+  static async importFromPlays(playbookId: string) {
+    try {
+      // Get all unique personnel values from plays
+      const { data: plays, error: playsError } = await supabase
+        .from("plays")
+        .select("personnel")
+        .eq("playbook_id", playbookId)
+        .eq("is_archived", false)
+        .not("personnel", "is", null);
+
+      if (playsError) throw playsError;
+
+      // Get unique personnel values (filter out nulls)
+      const uniquePersonnel = [
+        ...new Set(
+          plays
+            ?.map((p) => p.personnel)
+            .filter((p): p is string => p !== null && p !== "") || []
+        ),
+      ];
+
+      // Get existing personnel configs
+      const { data: existingConfigs, error: configError } = await supabase
+        .from("personnel_configurations")
+        .select("name")
+        .eq("playbook_id", playbookId);
+
+      if (configError) throw configError;
+
+      const existingNames = new Set(
+        existingConfigs?.map((c) => c.name) || []
+      );
+
+      // Find personnel that don't have configs yet
+      const missingPersonnel = uniquePersonnel.filter(
+        (name) => !existingNames.has(name)
+      );
+
+      if (missingPersonnel.length === 0) {
+        return {
+          success: true,
+          imported_count: 0,
+          message: "All personnel from plays already exist",
+        };
+      }
+
+      // Create missing configs with orange badges (matching user's expectation)
+      const newConfigs = missingPersonnel.map((name) => ({
+        playbook_id: playbookId,
+        name: name as string, // Type assertion - already filtered nulls above
+        description: `Imported from plays`,
+        badge_customization: {
+          backgroundColor: "#f97316", // Orange for imported
+          textColor: "#ffffff",
+        },
+      }));
+
+      const { error: insertError } = await supabase
+        .from("personnel_configurations")
+        .insert(newConfigs);
+
+      if (insertError) throw insertError;
+
+      return {
+        success: true,
+        imported_count: missingPersonnel.length,
+        imported_names: missingPersonnel,
+      };
+    } catch (error: any) {
+      console.error(
+        "[PersonnelLibraryService] Error importing from plays:",
+        error
+      );
+      return {
+        success: false,
+        imported_count: 0,
+        error: error.message,
+      };
+    }
+  }
+
+  /**
+   * Update badge customization for a personnel config
+   */
+  static async updateBadgeCustomization(
+    personnelId: string,
+    badgeCustomization: {
+      backgroundColor: string;
+      textColor: string;
+    }
+  ) {
+    const { error } = await supabase
+      .from("personnel_configurations")
+      .update({ badge_customization: badgeCustomization })
+      .eq("id", personnelId);
+
+    if (error) {
+      console.error(
+        "[PersonnelLibraryService] Error updating badge customization:",
+        error
+      );
+      throw new Error(
+        `Failed to update badge customization: ${error.message}`
+      );
+    }
   }
 }

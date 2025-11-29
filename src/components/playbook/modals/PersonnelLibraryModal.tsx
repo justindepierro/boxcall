@@ -12,6 +12,7 @@ import type { PersonnelConfiguration } from "../../../types/personnel";
 import { Icon } from "../../ui/Icon/Icon";
 import { toast } from "sonner";
 import { CreatePersonnelModal } from "./CreatePersonnelModal";
+import { EditPersonnelBadgeModal } from "./EditPersonnelBadgeModal";
 
 interface PersonnelLibraryModalProps {
   isOpen: boolean;
@@ -28,6 +29,8 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [editingPersonnel, setEditingPersonnel] =
+    useState<PersonnelConfiguration | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -54,6 +57,38 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
       toast.error("Failed to load personnel");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleImportFromPlays = async () => {
+    try {
+      toast.loading("Scanning plays for personnel...", {
+        id: "import-personnel",
+      });
+      const result = await PersonnelLibraryService.importFromPlays(playbookId);
+
+      if (result.success) {
+        if (result.imported_count > 0) {
+          toast.success(
+            `Imported ${result.imported_count} personnel: ${result.imported_names?.join(", ")}`,
+            { id: "import-personnel" }
+          );
+          await loadPersonnel();
+        } else {
+          toast.info(result.message || "No new personnel to import", {
+            id: "import-personnel",
+          });
+        }
+      } else {
+        toast.error(`Import failed: ${result.error}`, {
+          id: "import-personnel",
+        });
+      }
+    } catch (error) {
+      console.error("Error importing personnel:", error);
+      toast.error("Failed to import personnel from plays", {
+        id: "import-personnel",
+      });
     }
   };
 
@@ -92,8 +127,13 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
 
   const stats = {
     total: personnel.length,
-    withConfidence: personnel.filter((p) => p.confidence_score && p.confidence_score > 0).length,
-    totalUsage: filteredPersonnel.reduce((sum, p) => sum + (p.usage_count || 0), 0),
+    withConfidence: personnel.filter(
+      (p) => p.confidence_score && p.confidence_score > 0
+    ).length,
+    totalUsage: filteredPersonnel.reduce(
+      (sum, p) => sum + (p.usage_count || 0),
+      0
+    ),
   };
 
   return (
@@ -114,7 +154,9 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
                 <Icon name="users" size="lg" className="text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-white">Personnel Library</h2>
+                <h2 className="text-2xl font-bold text-white">
+                  Personnel Library
+                </h2>
                 <p className="text-sm text-white/80 mt-1">
                   Manage personnel packages and badge customization
                 </p>
@@ -128,14 +170,21 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
             </button>
           </div>
 
-          {/* Action Button */}
+          {/* Action Buttons */}
           <div className="flex gap-2">
             <button
               onClick={() => setShowCreateModal(true)}
-              className="btn-primary flex items-center gap-2 bg-white text-purple-600 hover:bg-white/90"
+              className="btn-primary flex items-center gap-2 bg-white text-purple-600 hover:bg-white/90 shadow-md"
             >
               <Icon name="plus" size="sm" />
               Create New
+            </button>
+            <button
+              onClick={handleImportFromPlays}
+              className="btn-secondary flex items-center gap-2 bg-orange-500 text-white border-orange-600 hover:bg-orange-600 shadow-md"
+            >
+              <Icon name="download" size="sm" />
+              Import from Plays
             </button>
             <button
               onClick={handleUpdateUsage}
@@ -169,12 +218,22 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
         <div className="flex-1 overflow-y-auto p-6 bg-white dark:bg-gray-900">
           {loading ? (
             <div className="flex items-center justify-center h-64">
-              <Icon name="loader" size="xl" className="animate-spin text-secondary" />
+              <Icon
+                name="loader"
+                size="xl"
+                className="animate-spin text-secondary"
+              />
             </div>
           ) : filteredPersonnel.length === 0 ? (
             <div className="text-center py-12">
-              <Icon name="users" size="xl" className="text-secondary mb-4 mx-auto" />
-              <p className="text-secondary text-lg">No personnel packages found</p>
+              <Icon
+                name="users"
+                size="xl"
+                className="text-secondary mb-4 mx-auto"
+              />
+              <p className="text-secondary text-lg">
+                No personnel packages found
+              </p>
               <p className="text-tertiary text-sm mt-2">
                 Create personnel packages in the Playbook Builder
               </p>
@@ -204,6 +263,13 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
                           {config.name}
                         </div>
                       </div>
+                      <button
+                        onClick={() => setEditingPersonnel(config)}
+                        className="p-2 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 text-purple-600 dark:text-purple-400 transition-colors"
+                        title="Customize Badge"
+                      >
+                        <Icon name="settings" size="sm" />
+                      </button>
                     </div>
 
                     {config.description && (
@@ -212,22 +278,23 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
                       </p>
                     )}
 
-                    {config.confidence_score !== null && config.confidence_score > 0 && (
-                      <div className="mb-3">
-                        <div className="flex items-center justify-between text-xs mb-1">
-                          <span className="text-secondary">Confidence</span>
-                          <span className="text-primary font-medium">
-                            {config.confidence_score}%
-                          </span>
+                    {config.confidence_score !== null &&
+                      config.confidence_score > 0 && (
+                        <div className="mb-3">
+                          <div className="flex items-center justify-between text-xs mb-1">
+                            <span className="text-secondary">Confidence</span>
+                            <span className="text-primary font-medium">
+                              {config.confidence_score}%
+                            </span>
+                          </div>
+                          <div className="w-full bg-surface-muted rounded-full h-2">
+                            <div
+                              className="h-2 rounded-full bg-gradient-to-r from-purple-500 to-purple-600"
+                              style={{ width: `${config.confidence_score}%` }}
+                            />
+                          </div>
                         </div>
-                        <div className="w-full bg-surface-muted rounded-full h-2">
-                          <div
-                            className="h-2 rounded-full bg-gradient-to-r from-purple-500 to-purple-600"
-                            style={{ width: `${config.confidence_score}%` }}
-                          />
-                        </div>
-                      </div>
-                    )}
+                      )}
 
                     <div className="flex items-center justify-between pt-3 border-t border-divider">
                       <span className="text-xs text-secondary">Usage</span>
@@ -238,7 +305,8 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
 
                     {config.last_analyzed_at && (
                       <div className="text-xs text-tertiary mt-2">
-                        Analyzed: {new Date(config.last_analyzed_at).toLocaleDateString()}
+                        Analyzed:{" "}
+                        {new Date(config.last_analyzed_at).toLocaleDateString()}
                       </div>
                     )}
                   </div>
@@ -252,15 +320,21 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
         <div className="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 p-4 shadow-inner">
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
-              <div className="text-2xl font-bold text-primary">{stats.total}</div>
+              <div className="text-2xl font-bold text-primary">
+                {stats.total}
+              </div>
               <div className="text-xs text-secondary">Total Packages</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-primary">{stats.withConfidence}</div>
+              <div className="text-2xl font-bold text-primary">
+                {stats.withConfidence}
+              </div>
               <div className="text-xs text-secondary">With Confidence</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-primary">{stats.totalUsage}</div>
+              <div className="text-2xl font-bold text-primary">
+                {stats.totalUsage}
+              </div>
               <div className="text-xs text-secondary">Total Usage</div>
             </div>
           </div>
@@ -274,6 +348,16 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
         playbookId={playbookId}
         onSuccess={loadPersonnel}
       />
+
+      {/* Edit Personnel Badge Modal */}
+      {editingPersonnel && (
+        <EditPersonnelBadgeModal
+          isOpen={!!editingPersonnel}
+          onClose={() => setEditingPersonnel(null)}
+          personnel={editingPersonnel}
+          onSuccess={loadPersonnel}
+        />
+      )}
     </>
   );
 };

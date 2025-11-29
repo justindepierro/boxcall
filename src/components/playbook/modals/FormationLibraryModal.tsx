@@ -92,21 +92,22 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
           .limit(1);
 
         if (!existing || existing.length === 0) {
-          const originalName = plays.find(
-            (p) => p.formation?.trim().toLowerCase() === formationName
-          )?.formation?.trim();
+          const originalName = plays
+            .find((p) => p.formation?.trim().toLowerCase() === formationName)
+            ?.formation?.trim();
 
-          const { error } = await supabase
-            .from("formations")
-            .insert({
-              playbook_id: playbookId,
-              name: originalName || formationName,
-              is_standalone: true,
-              direction: null,
-            });
+          const { error } = await supabase.from("formations").insert({
+            playbook_id: playbookId,
+            name: originalName || formationName,
+            is_standalone: true,
+            direction: null,
+          });
 
           if (error) {
-            console.error(`Failed to create formation "${originalName || formationName}":`, error);
+            console.error(
+              `Failed to create formation "${originalName || formationName}":`,
+              error
+            );
             errorCount++;
           } else {
             createdCount++;
@@ -115,9 +116,14 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
       }
 
       if (errorCount > 0) {
-        toast.error(`Imported ${createdCount} formations, ${errorCount} failed`, { id: "import" });
+        toast.error(
+          `Imported ${createdCount} formations, ${errorCount} failed`,
+          { id: "import" }
+        );
       } else {
-        toast.success(`Imported ${createdCount} new formations`, { id: "import" });
+        toast.success(`Imported ${createdCount} new formations`, {
+          id: "import",
+        });
       }
       await loadFormations();
     } catch (error) {
@@ -169,9 +175,14 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
 
   const stats = {
     total: formations.length,
-    withMetadata: formations.filter((f) => f.confidence_score && f.confidence_score > 0).length,
+    withMetadata: formations.filter(
+      (f) => f.confidence_score && f.confidence_score > 0
+    ).length,
     linkedPairs: formations.filter((f) => f.opposite_formation_id).length,
-    totalUsage: filteredFormations.reduce((sum, f) => sum + (f.usage_count || 0), 0),
+    totalUsage: filteredFormations.reduce(
+      (sum, f) => sum + (f.usage_count || 0),
+      0
+    ),
   };
 
   return (
@@ -192,7 +203,9 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
                 <Icon name="grid" size="lg" className="text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-white">Formation Library</h2>
+                <h2 className="text-2xl font-bold text-white">
+                  Formation Library
+                </h2>
                 <p className="text-sm text-white/80 mt-1">
                   Manage formations with intelligent metadata
                 </p>
@@ -207,11 +220,18 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="btn-primary flex items-center gap-2 bg-white text-jade-600 hover:bg-white/90 shadow-md"
+            >
+              <Icon name="plus" size="sm" />
+              Create New
+            </button>
             <button
               onClick={handleImportFromPlays}
               disabled={analyzing}
-              className="btn-secondary flex items-center gap-2"
+              className="btn-secondary flex items-center gap-2 bg-orange-500 text-white border-orange-600 hover:bg-orange-600 disabled:bg-gray-400 disabled:border-gray-500 shadow-md"
             >
               {analyzing ? (
                 <>
@@ -226,16 +246,9 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
               )}
             </button>
             <button
-              onClick={() => setShowCreateModal(true)}
-              className="btn-primary flex items-center gap-2 bg-white text-jade-600 hover:bg-white/90"
-            >
-              <Icon name="plus" size="sm" />
-              Create New
-            </button>
-            <button
               onClick={handleAnalyze}
               disabled={analyzing}
-              className="btn-secondary flex items-center gap-2 text-white border-white/30 hover:bg-white/10"
+              className="btn-secondary flex items-center gap-2 text-white border-white/30 hover:bg-white/10 disabled:opacity-50"
             >
               {analyzing ? (
                 <>
@@ -274,11 +287,19 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
         <div className="flex-1 overflow-y-auto p-6 bg-white dark:bg-gray-900">
           {loading ? (
             <div className="flex items-center justify-center h-64">
-              <Icon name="loader" size="xl" className="animate-spin text-secondary" />
+              <Icon
+                name="loader"
+                size="xl"
+                className="animate-spin text-secondary"
+              />
             </div>
           ) : filteredFormations.length === 0 ? (
             <div className="text-center py-12">
-              <Icon name="grid" size="xl" className="text-secondary mb-4 mx-auto" />
+              <Icon
+                name="grid"
+                size="xl"
+                className="text-secondary mb-4 mx-auto"
+              />
               <p className="text-secondary text-lg">No formations found</p>
               <p className="text-tertiary text-sm mt-2">
                 Click "Import from Plays" to get started
@@ -321,22 +342,23 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
                     </div>
                   ) : null}
 
-                  {formation.confidence_score !== null && formation.confidence_score > 0 && (
-                    <div className="mb-3">
-                      <div className="flex items-center justify-between text-xs mb-1">
-                        <span className="text-secondary">Confidence</span>
-                        <span className="text-primary font-medium">
-                          {formation.confidence_score}%
-                        </span>
+                  {formation.confidence_score !== null &&
+                    formation.confidence_score > 0 && (
+                      <div className="mb-3">
+                        <div className="flex items-center justify-between text-xs mb-1">
+                          <span className="text-secondary">Confidence</span>
+                          <span className="text-primary font-medium">
+                            {formation.confidence_score}%
+                          </span>
+                        </div>
+                        <div className="w-full bg-surface-muted rounded-full h-2">
+                          <div
+                            className="h-2 rounded-full bg-gradient-to-r from-jade-500 to-jade-600"
+                            style={{ width: `${formation.confidence_score}%` }}
+                          />
+                        </div>
                       </div>
-                      <div className="w-full bg-surface-muted rounded-full h-2">
-                        <div
-                          className="h-2 rounded-full bg-gradient-to-r from-jade-500 to-jade-600"
-                          style={{ width: `${formation.confidence_score}%` }}
-                        />
-                      </div>
-                    </div>
-                  )}
+                    )}
 
                   <div className="flex items-center justify-between pt-3 border-t border-divider">
                     <span className="text-xs text-secondary">Usage</span>
@@ -354,19 +376,27 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
         <div className="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 p-4 shadow-inner">
           <div className="grid grid-cols-4 gap-4 text-center">
             <div>
-              <div className="text-2xl font-bold text-primary">{stats.total}</div>
+              <div className="text-2xl font-bold text-primary">
+                {stats.total}
+              </div>
               <div className="text-xs text-secondary">Total Formations</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-primary">{stats.withMetadata}</div>
+              <div className="text-2xl font-bold text-primary">
+                {stats.withMetadata}
+              </div>
               <div className="text-xs text-secondary">With Metadata</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-primary">{stats.linkedPairs}</div>
+              <div className="text-2xl font-bold text-primary">
+                {stats.linkedPairs}
+              </div>
               <div className="text-xs text-secondary">Linked Pairs</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-primary">{stats.totalUsage}</div>
+              <div className="text-2xl font-bold text-primary">
+                {stats.totalUsage}
+              </div>
               <div className="text-xs text-secondary">Total Usage</div>
             </div>
           </div>

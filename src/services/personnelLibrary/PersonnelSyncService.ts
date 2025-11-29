@@ -65,7 +65,10 @@ export class PersonnelSyncService {
       .eq("id", personnelId);
 
     if (updateError) {
-      console.warn(`[PersonnelSyncService] Could not update usage_count:`, updateError);
+      console.warn(
+        `[PersonnelSyncService] Could not update usage_count:`,
+        updateError
+      );
       // Continue anyway - this is not critical
     }
 
@@ -161,7 +164,10 @@ export class PersonnelSyncService {
         .eq("id", config.id);
 
       if (updateError) {
-        console.warn(`[PersonnelSyncService] Could not update ${config.name}:`, updateError);
+        console.warn(
+          `[PersonnelSyncService] Could not update ${config.name}:`,
+          updateError
+        );
         errors.push(`${config.name}: ${updateError.message}`);
         continue;
       }

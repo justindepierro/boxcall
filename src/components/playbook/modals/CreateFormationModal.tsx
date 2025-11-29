@@ -1,6 +1,6 @@
 /**
  * Create Formation Modal
- * 
+ *
  * Simple modal for creating new formations manually
  */
 
@@ -136,7 +136,9 @@ export const CreateFormationModal: React.FC<CreateFormationModalProps> = ({
           <div className="text-xs text-secondary space-y-1">
             <p>• Formation will be available for use in plays</p>
             <p>• Use "Import from Plays" to auto-create from existing plays</p>
-            <p>• Use "Analyze Plays" to derive metadata like run/pass strength</p>
+            <p>
+              • Use "Analyze Plays" to derive metadata like run/pass strength
+            </p>
           </div>
         </div>
 
