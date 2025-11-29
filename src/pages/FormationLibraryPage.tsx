@@ -161,6 +161,7 @@ const FormationLibraryPageContent: React.FC<
               playbook_id: playbookId,
               name: originalName || formationName,
               is_standalone: true,
+              direction: null, // Required by validate_formation_data() trigger
             });
 
           if (error) {
