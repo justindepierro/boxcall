@@ -12,10 +12,14 @@ import type { Formation } from "../types/formation";
 import type { IntelligenceAnalysis } from "../types/library";
 import { Icon } from "../components/ui/Icon/Icon";
 import { toast } from "sonner";
-import { usePlaybookStore } from "../app/store";
+import { usePlaybook } from "../contexts/PlaybookContext";
+import { useTeamsData } from "../hooks/useTeamsData";
 
 export const FormationLibraryPage: React.FC = () => {
-  const playbookId = usePlaybookStore((state: any) => state.activePlaybookId);
+  const { state } = usePlaybook();
+  const { playbooks } = useTeamsData();
+  // Get active playbook ID from context or first playbook
+  const playbookId = state.activePlaybookId || playbooks[0]?.id || "";
 
   if (!playbookId) {
     return (
