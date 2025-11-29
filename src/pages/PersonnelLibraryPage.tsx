@@ -18,17 +18,26 @@ export const PersonnelLibraryPage: React.FC = () => {
   const { playbooks } = useTeamsData();
   const { activeTeamId } = useActiveTeamStore();
 
-  // Get playbook ID from localStorage preference or first active playbook
+  // Filter playbooks for active team (match PlaybookPage logic)
+  const teamPlaybooks = React.useMemo(
+    () => playbooks.filter((pb) => pb.team_id === activeTeamId && pb.is_active),
+    [playbooks, activeTeamId]
+  );
+
+  // Get playbook ID from localStorage preference or first playbook with plays
   const savedPlaybookId = localStorage.getItem(
     `bc_active_playbook_${activeTeamId}`
   );
-  const activePlaybook =
-    playbooks.find(
-      (pb) =>
-        pb.team_id === activeTeamId &&
-        pb.is_active &&
-        (savedPlaybookId ? pb.id === savedPlaybookId : true)
-    ) || playbooks.find((pb) => pb.team_id === activeTeamId && pb.is_active);
+
+  // Use same logic as PlaybookPage: prefer saved, then playbook with plays, then first
+  const activePlaybook = React.useMemo(() => {
+    if (savedPlaybookId && teamPlaybooks.some((pb) => pb.id === savedPlaybookId)) {
+      return teamPlaybooks.find((pb) => pb.id === savedPlaybookId);
+    }
+    // Default to first playbook with plays
+    const playbookWithPlays = teamPlaybooks.find((pb) => (pb.play_count || 0) > 0);
+    return playbookWithPlays || teamPlaybooks[0];
+  }, [teamPlaybooks, savedPlaybookId]);
 
   const playbookId = activePlaybook?.id || "";
 
