@@ -149,6 +149,16 @@ export default function PlaybookPage() {
     personnel: [] as string[],
   });
 
+  // 🚀 PERFORMANCE: Centralized modal state management (must be before callbacks that use it)
+  const { openModal, closeModal, isModalOpen } = useModalManager();
+
+  // Modal-specific data (kept separate since not all modals need data)
+  const [playToPost, setPlayToPost] = useState<Play | null>(null);
+  
+  // Sheet states (not managed by useModalManager since they use BottomSheet component)
+  const [showFiltersSheet, setShowFiltersSheet] = useState(false);
+  const [showStatsSheet, setShowStatsSheet] = useState(false);
+
   // Handle opening assignments for a play
   const handleOpenAssignments = useCallback((play: Play) => {
     setAssignmentsPlay(play);
@@ -289,12 +299,6 @@ export default function PlaybookPage() {
   const [_selectedPlayForWorkflow, _setSelectedPlayForWorkflow] =
     useState<Play | null>(null);
 
-  // 🚀 PERFORMANCE: Centralized modal state management (replaces 8 scattered useState flags)
-  const { openModal, closeModal, isModalOpen } = useModalManager();
-
-  // Modal-specific data (kept separate since not all modals need data)
-  const [playToPost, setPlayToPost] = useState<Play | null>(null);
-
   // 🚀 PERFORMANCE: Optimistic updates for instant UI feedback
   // Shows plays immediately while database operations happen in background
   const [optimisticPlays, setOptimisticPlays] = useState<Play[]>([]);
@@ -434,7 +438,7 @@ export default function PlaybookPage() {
           break;
       }
     },
-    [state.selectedPlayIds, toast, dispatch, refreshActivities]
+    [state.selectedPlayIds, toast, dispatch, refreshActivities, openModal]
   );
 
   // Play count handler - updates state when PlayGrid reports actual play count
@@ -825,9 +829,9 @@ export default function PlaybookPage() {
         }
       }
 
-      setShowAddNewPlayModal(true);
+      openModal('addNewPlay');
     },
-    [toast]
+    [toast, openModal]
   );
 
   // Workflow handlers
@@ -942,7 +946,7 @@ export default function PlaybookPage() {
           onTeamTypeChange={handleTeamTypeChange}
           onOpenSettings={handleOpenSettings}
           onOpenBuilder={handleOpenBuilder}
-          onOpenHealth={() => setShowPlaybookHealthModal(true)}
+          onOpenHealth={() => openModal('playbookHealth')}
           onNavigate={navigate}
           title="Playbook"
           playsCreated={state.playsCreated}
