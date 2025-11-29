@@ -72,17 +72,29 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
     setIsOpen(false);
   }, []);
 
-  // Update position on scroll/resize
+  // Update position on scroll/resize (debounced for performance)
   useEffect(() => {
     if (!isOpen) return;
 
+    let resizeTimeout: number | null = null;
+
     const handleUpdate = () => updatePosition();
+    
+    // Debounced resize handler (150ms) - prevents excessive recalculations
+    const handleResize = () => {
+      if (resizeTimeout) window.clearTimeout(resizeTimeout);
+      resizeTimeout = window.setTimeout(() => {
+        updatePosition();
+      }, 150);
+    };
+
     window.addEventListener("scroll", handleUpdate, true);
-    window.addEventListener("resize", handleUpdate);
+    window.addEventListener("resize", handleResize);
 
     return () => {
       window.removeEventListener("scroll", handleUpdate, true);
-      window.removeEventListener("resize", handleUpdate);
+      window.removeEventListener("resize", handleResize);
+      if (resizeTimeout) window.clearTimeout(resizeTimeout);
     };
   }, [isOpen, updatePosition]);
 

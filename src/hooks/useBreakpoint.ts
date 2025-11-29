@@ -31,11 +31,11 @@ export function useBreakpoint(): Breakpoint {
   useEffect(() => {
     updateBreakpoint();
 
-    // Throttle resize events to improve performance
+    // Debounce resize events to improve performance (250ms for better UX)
     let timeoutId: ReturnType<typeof setTimeout>;
     const handleResize = () => {
       if (timeoutId) clearTimeout(timeoutId);
-      timeoutId = setTimeout(updateBreakpoint, 100);
+      timeoutId = setTimeout(updateBreakpoint, 250);
     };
 
     window.addEventListener("resize", handleResize);
