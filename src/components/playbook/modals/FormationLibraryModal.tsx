@@ -224,9 +224,18 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
               )}
             </button>
             <button
+              onClick={() => {
+                toast.info("Create Formation: Click 'Import from Plays' or add manually in Formation Builder");
+              }}
+              className="btn-primary flex items-center gap-2 bg-white text-jade-600 hover:bg-white/90"
+            >
+              <Icon name="plus" size="sm" />
+              Create New
+            </button>
+            <button
               onClick={handleAnalyze}
               disabled={analyzing}
-              className="btn-primary flex items-center gap-2 bg-white text-jade-600 hover:bg-white/90"
+              className="btn-secondary flex items-center gap-2 text-white border-white/30 hover:bg-white/10"
             >
               {analyzing ? (
                 <>

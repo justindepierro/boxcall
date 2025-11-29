@@ -127,13 +127,25 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
           </div>
 
           {/* Action Button */}
-          <button
-            onClick={handleUpdateUsage}
-            className="btn-primary flex items-center gap-2 bg-white text-purple-600 hover:bg-white/90"
-          >
-            <Icon name="refresh-cw" size="sm" />
-            Update Usage
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                // TODO: Open personnel builder modal
+                toast.info("Personnel Builder integration coming soon");
+              }}
+              className="btn-primary flex items-center gap-2 bg-white text-purple-600 hover:bg-white/90"
+            >
+              <Icon name="plus" size="sm" />
+              Create New
+            </button>
+            <button
+              onClick={handleUpdateUsage}
+              className="btn-secondary flex items-center gap-2 text-white border-white/30 hover:bg-white/10"
+            >
+              <Icon name="refresh-cw" size="sm" />
+              Update Usage
+            </button>
+          </div>
         </div>
 
         {/* Search */}

@@ -58,11 +58,16 @@ export class PersonnelSyncService {
       };
     }
 
-    // Update usage count
-    await supabase
+    // Update usage count (if column exists)
+    const { error: updateError } = await supabase
       .from("personnel_configurations")
       .update({ usage_count: plays.length })
       .eq("id", personnelId);
+
+    if (updateError) {
+      console.warn(`[PersonnelSyncService] Could not update usage_count:`, updateError);
+      // Continue anyway - this is not critical
+    }
 
     return {
       success: true,
@@ -149,11 +154,17 @@ export class PersonnelSyncService {
         continue;
       }
 
-      // Update usage count
-      await supabase
+      // Update usage count (skip if column doesn't exist or causes error)
+      const { error: updateError } = await supabase
         .from("personnel_configurations")
         .update({ usage_count: count || 0 })
         .eq("id", config.id);
+
+      if (updateError) {
+        console.warn(`[PersonnelSyncService] Could not update ${config.name}:`, updateError);
+        errors.push(`${config.name}: ${updateError.message}`);
+        continue;
+      }
 
       updatedCount++;
     }
