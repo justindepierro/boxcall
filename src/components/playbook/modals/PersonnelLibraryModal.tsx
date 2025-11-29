@@ -103,9 +103,9 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
       />
 
       {/* Modal Panel */}
-      <div className="fixed inset-y-0 right-0 w-full lg:w-4/5 xl:w-3/4 bg-surface z-50 shadow-2xl animate-slide-in-right overflow-hidden flex flex-col">
+      <div className="fixed inset-y-0 right-0 w-full md:w-3/4 lg:w-2/3 xl:w-1/2 bg-surface z-50 shadow-2xl animate-slide-in-right overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-purple-700 p-6 border-b border-divider">
+        <div className="bg-gradient-to-r from-purple-600 to-purple-700 p-4 sm:p-6 border-b border-divider shadow-lg">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
@@ -137,19 +137,19 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
         </div>
 
         {/* Search */}
-        <div className="p-6 border-b border-divider bg-surface-muted">
+        <div className="p-4 sm:p-6 border-b border-divider bg-surface-muted/50">
           <div className="relative">
             <Icon
               name="search"
               size="sm"
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-purple-500"
             />
             <input
               type="text"
               placeholder="Search personnel packages..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="input-field pl-10"
+              className="input-field pl-10 focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500"
             />
           </div>
         </div>
@@ -178,15 +178,16 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
                 return (
                   <div
                     key={config.id}
-                    className="card p-4 hover:shadow-lg transition-shadow"
+                    className="card p-5 hover:shadow-xl hover:border-purple-500/30 hover:-translate-y-0.5 transition-all duration-200"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-2">
                         <div
-                          className="px-3 py-1 rounded-md text-sm font-bold"
+                          className="px-4 py-2 rounded-lg text-sm font-bold shadow-md"
                           style={{
                             backgroundColor: bgColor,
                             color: textColor,
+                            boxShadow: `0 4px 6px -1px ${bgColor}33, 0 2px 4px -1px ${bgColor}22`,
                           }}
                         >
                           {config.name}
