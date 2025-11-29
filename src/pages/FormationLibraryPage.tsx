@@ -138,6 +138,7 @@ const FormationLibraryPageContent: React.FC<
 
       // Create formations that don't exist
       let createdCount = 0;
+      let errorCount = 0;
       for (const formationName of uniqueFormations) {
         // Check if already exists
         const { data: existing } = await supabase
@@ -148,20 +149,35 @@ const FormationLibraryPageContent: React.FC<
           .limit(1);
 
         if (!existing || existing.length === 0) {
+          // Preserve original casing from plays (don't force capitalize)
+          const originalName = plays.find(
+            (p) => p.formation?.trim().toLowerCase() === formationName
+          )?.formation?.trim();
+
           // Create new formation
           const { error } = await supabase
             .from("formations")
             .insert({
               playbook_id: playbookId,
-              name: formationName.charAt(0).toUpperCase() + formationName.slice(1),
+              name: originalName || formationName,
               is_standalone: true,
             });
 
-          if (!error) createdCount++;
+          if (error) {
+            console.error(`❌ Failed to create formation "${originalName || formationName}":`, error);
+            errorCount++;
+          } else {
+            console.log(`✅ Created formation: ${originalName || formationName}`);
+            createdCount++;
+          }
         }
       }
 
-      toast.success(`Imported ${createdCount} new formations`, { id: "import" });
+      if (errorCount > 0) {
+        toast.error(`Imported ${createdCount} formations, ${errorCount} failed`, { id: "import" });
+      } else {
+        toast.success(`Imported ${createdCount} new formations`, { id: "import" });
+      }
       await loadFormations();
     } catch (error) {
       console.error("Error importing formations:", error);
