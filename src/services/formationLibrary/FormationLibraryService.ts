@@ -53,7 +53,7 @@ export class FormationLibraryService {
     }
 
     // Sorting (map "usage" to actual column name "usage_count")
-    let sortBy = filters?.sort_by || "name";
+    let sortBy: string = filters?.sort_by || "name";
     if (sortBy === "usage") {
       sortBy = "usage_count";
     } else if (sortBy === "confidence") {
