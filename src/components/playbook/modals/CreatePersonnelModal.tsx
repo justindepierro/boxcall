@@ -27,15 +27,10 @@ export const CreatePersonnelModal: React.FC<CreatePersonnelModalProps> = ({
   const [creating, setCreating] = useState(false);
 
   const handleCreate = async () => {
-    if (!personnelName.trim()) {
-      toast.error("Personnel name is required");
-      return;
-    }
-
-    // Validate format (should be like "11", "12", "21", etc.)
     const name = personnelName.trim();
-    if (!/^\d{2}$/.test(name)) {
-      toast.error("Personnel name should be 2 digits (e.g., 11, 12, 21, 22)");
+    
+    if (!name) {
+      toast.error("Personnel name is required");
       return;
     }
 
@@ -125,13 +120,12 @@ export const CreatePersonnelModal: React.FC<CreatePersonnelModalProps> = ({
               type="text"
               value={personnelName}
               onChange={(e) => setPersonnelName(e.target.value)}
-              placeholder="e.g., 11, 12, 21, 22"
-              maxLength={2}
+              placeholder="e.g., Blue, Red, Eagles, 11, 12"
               className="input-field w-full"
               autoFocus
             />
             <p className="text-xs text-secondary mt-1">
-              Format: 2 digits (e.g., 11 = 1 RB + 1 TE, 12 = 1 RB + 2 TE)
+              Any format works: colors, animals, numbers, words - whatever your team uses!
             </p>
           </div>
 
@@ -142,7 +136,7 @@ export const CreatePersonnelModal: React.FC<CreatePersonnelModalProps> = ({
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="e.g., 1 RB, 1 TE, 3 WR"
+              placeholder="e.g., 3-4 defensive package, Wing-T offense, Spread formation"
               rows={2}
               className="input-field w-full resize-none"
             />
