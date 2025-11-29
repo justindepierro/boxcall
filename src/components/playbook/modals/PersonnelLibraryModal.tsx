@@ -239,7 +239,7 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredPersonnel.map((config) => {
                 const badge = config.badgeCustomization as any;
                 const bgColor = badge?.backgroundColor || "#10b981";
@@ -248,16 +248,16 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
                 return (
                   <div
                     key={config.id}
-                    className="card p-5 hover:shadow-xl hover:border-purple-500/30 hover:-translate-y-0.5 transition-all duration-200"
+                    className="card p-6 hover:shadow-xl hover:border-purple-500/40 hover:scale-[1.02] transition-all duration-200"
                   >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center gap-2">
+                    <div className="flex items-start justify-between gap-3 mb-4">
+                      <div className="flex-1">
                         <div
-                          className="px-4 py-2 rounded-lg text-sm font-bold shadow-md"
+                          className="inline-flex px-6 py-3 rounded-xl text-lg font-bold shadow-lg"
                           style={{
                             backgroundColor: bgColor,
                             color: textColor,
-                            boxShadow: `0 4px 6px -1px ${bgColor}33, 0 2px 4px -1px ${bgColor}22`,
+                            boxShadow: `0 8px 16px -4px ${bgColor}40, 0 4px 8px -2px ${bgColor}30`,
                           }}
                         >
                           {config.name}
@@ -265,10 +265,10 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
                       </div>
                       <button
                         onClick={() => setEditingPersonnel(config)}
-                        className="p-2 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 text-purple-600 dark:text-purple-400 transition-colors"
-                        title="Customize Badge"
+                        className="flex-shrink-0 p-2.5 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 text-purple-600 dark:text-purple-400 transition-colors border border-transparent hover:border-purple-300 dark:hover:border-purple-700"
+                        title="Customize Badge Colors"
                       >
-                        <Icon name="settings" size="sm" />
+                        <Icon name="settings" size="md" />
                       </button>
                     </div>
 
