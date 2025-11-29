@@ -51,6 +51,8 @@ import { DesktopPlaybookView } from "../components/playbook/page/DesktopPlaybook
 import { PlaybookModals } from "../components/playbook/page/PlaybookModals";
 import { useModalManager } from "../hooks/useModalManager";
 import { FullscreenDiagramViewer } from "../components/playbook/play-card/FullscreenDiagramViewer";
+import { FormationLibraryModal } from "../components/playbook/modals/FormationLibraryModal";
+import { PersonnelLibraryModal } from "../components/playbook/modals/PersonnelLibraryModal";
 
 // Lazy load modal components for code splitting (~120KB savings)
 
@@ -158,6 +160,10 @@ export default function PlaybookPage() {
   // Sheet states (not managed by useModalManager since they use BottomSheet component)
   const [showFiltersSheet, setShowFiltersSheet] = useState(false);
   const [showStatsSheet, setShowStatsSheet] = useState(false);
+  
+  // Library modal states
+  const [showFormationLibrary, setShowFormationLibrary] = useState(false);
+  const [showPersonnelLibrary, setShowPersonnelLibrary] = useState(false);
 
   // Handle opening assignments for a play
   const handleOpenAssignments = useCallback((play: Play) => {
@@ -980,7 +986,15 @@ export default function PlaybookPage() {
           onOpenBuilder={handleOpenBuilder}
           onOpenPersonnel={handleOpenPersonnel}
           onOpenHealth={() => openModal("playbookHealth")}
-          onNavigate={navigate}
+          onNavigate={(path) => {
+            if (path === "/playbook/formations") {
+              setShowFormationLibrary(true);
+            } else if (path === "/playbook/personnel") {
+              setShowPersonnelLibrary(true);
+            } else {
+              navigate(path);
+            }
+          }}
           title="Playbook"
           playsCreated={state.playsCreated}
           diagramCoverage={state.diagramCoverage}
@@ -1184,6 +1198,20 @@ export default function PlaybookPage() {
             onClose={handleExitFullscreen}
           />
         )}
+
+        {/* Formation Library Modal */}
+        <FormationLibraryModal
+          isOpen={showFormationLibrary}
+          onClose={() => setShowFormationLibrary(false)}
+          playbookId={activePlaybookId}
+        />
+
+        {/* Personnel Library Modal */}
+        <PersonnelLibraryModal
+          isOpen={showPersonnelLibrary}
+          onClose={() => setShowPersonnelLibrary(false)}
+          playbookId={activePlaybookId}
+        />
       </div>
     </Aurora>
   );
