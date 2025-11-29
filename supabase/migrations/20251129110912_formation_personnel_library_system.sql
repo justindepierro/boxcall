@@ -10,19 +10,50 @@
 -- 1. EXPAND FORMATIONS TABLE WITH METADATA
 -- ===========================================
 
+-- Drop existing CHECK constraint on formation_type if it exists
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'formations_formation_type_check'
+  ) THEN
+    ALTER TABLE formations DROP CONSTRAINT formations_formation_type_check;
+    RAISE NOTICE 'Dropped existing formations_formation_type_check constraint';
+  END IF;
+END $$;
+
 -- Add formation_type column (e.g., "3x1", "2x2", "Empty", "I Formation")
+-- No CHECK constraint - accepts any TEXT value for flexibility
 ALTER TABLE formations
 ADD COLUMN IF NOT EXISTS formation_type TEXT;
 
--- Add run_strength column (left, right, balanced)
-ALTER TABLE formations
-ADD COLUMN IF NOT EXISTS run_strength TEXT
-CHECK (run_strength IN ('left', 'right', 'balanced'));
+-- Drop existing CHECK constraints on strength columns if they exist
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'formations_run_strength_check'
+  ) THEN
+    ALTER TABLE formations DROP CONSTRAINT formations_run_strength_check;
+    RAISE NOTICE 'Dropped existing formations_run_strength_check constraint';
+  END IF;
+  
+  IF EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'formations_pass_strength_check'
+  ) THEN
+    ALTER TABLE formations DROP CONSTRAINT formations_pass_strength_check;
+    RAISE NOTICE 'Dropped existing formations_pass_strength_check constraint';
+  END IF;
+END $$;
 
--- Add pass_strength column (left, right, balanced)
+-- Add run_strength column (left, right, balanced, or NULL)
 ALTER TABLE formations
-ADD COLUMN IF NOT EXISTS pass_strength TEXT
-CHECK (pass_strength IN ('left', 'right', 'balanced'));
+ADD COLUMN IF NOT EXISTS run_strength TEXT;
+
+-- Add pass_strength column (left, right, balanced, or NULL)
+ALTER TABLE formations
+ADD COLUMN IF NOT EXISTS pass_strength TEXT;
 
 -- Add strength_player_position for tracking which player sets strength
 ALTER TABLE formations
