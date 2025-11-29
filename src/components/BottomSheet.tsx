@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import { useDrag } from "@use-gesture/react";
+import { useScrollLock } from "../hooks/useScrollLock";
 
 interface BottomSheetProps {
   /** Content to display in the bottom sheet */
@@ -43,6 +44,10 @@ export function BottomSheet({
   );
   const [currentSnapIndex, setCurrentSnapIndex] = useState(initialSnapPoint);
   const sheetRef = useRef<HTMLDivElement>(null);
+
+  // 🚀 PERFORMANCE: Lock body scroll when sheet is significantly open (>10%)
+  const isSheetOpen = snapPoints[currentSnapIndex] > 0.1;
+  useScrollLock(isSheetOpen);
 
   // Motion value for Y position (pixels from bottom)
   const y = useMotionValue(viewportHeight * (1 - snapPoints[initialSnapPoint]));

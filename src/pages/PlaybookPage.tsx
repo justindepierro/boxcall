@@ -50,6 +50,7 @@ import { useFormationAudit } from "../hooks/useFormationAudit";
 import { MobilePlaybookView } from "../components/playbook/page/MobilePlaybookView";
 import { DesktopPlaybookView } from "../components/playbook/page/DesktopPlaybookView";
 import { PlaybookModals } from "../components/playbook/page/PlaybookModals";
+import { useModalManager } from "../hooks/useModalManager";
 
 // Lazy load modal components for code splitting (~120KB savings)
 
@@ -138,13 +139,10 @@ export default function PlaybookPage() {
   const [diagramPlay, setDiagramPlay] = useState<Play | null>(null);
   const [diagramMode, setDiagramMode] = useState<"edit" | "quick-play">("edit");
   const [assignmentsPlay, setAssignmentsPlay] = useState<Play | null>(null);
-  const [showPracticeScriptBuilder, setShowPracticeScriptBuilder] =
-    useState(false);
   const [editingScript, setEditingScript] = useState<any>(null); // TODO: Use proper PracticeScript type
   const [selectedPlaysForPractice, setSelectedPlaysForPractice] = useState<
     string[]
   >([]);
-  const [showFiltersSheet, setShowFiltersSheet] = useState(false);
   const [suggestions, setSuggestions] = useState({
     formations: [] as string[],
     playNames: [] as string[],
@@ -160,9 +158,9 @@ export default function PlaybookPage() {
   // Handle posting play to team bulletin
   const handlePostToTeamBulletin = useCallback((play: Play) => {
     setPlayToPost(play);
-    setShowPostToBulletinModal(true);
+    openModal('postToBulletin');
     debug("Posting play to team bulletin:", play);
-  }, []);
+  }, [openModal]);
 
   const [recentActivities, setRecentActivities] = useState<PlayActivityItem[]>(
     []
@@ -291,18 +289,11 @@ export default function PlaybookPage() {
   const [_selectedPlayForWorkflow, _setSelectedPlayForWorkflow] =
     useState<Play | null>(null);
 
-  // New modals
-  const [showAddNewPlayModal, setShowAddNewPlayModal] = useState(false);
-  const [showPlaybookSettingsModal, setShowPlaybookSettingsModal] =
-    useState(false);
-  const [showPersonnelModal, setShowPersonnelModal] = useState(false);
-  const [showPlaybookHealthModal, setShowPlaybookHealthModal] = useState(false);
-  const [showStatsSheet, setShowStatsSheet] = useState(false);
-  const [showPostToBulletinModal, setShowPostToBulletinModal] = useState(false);
+  // 🚀 PERFORMANCE: Centralized modal state management (replaces 8 scattered useState flags)
+  const { openModal, closeModal, isModalOpen } = useModalManager();
+
+  // Modal-specific data (kept separate since not all modals need data)
   const [playToPost, setPlayToPost] = useState<Play | null>(null);
-  const [showAssignmentsModal, setShowAssignmentsModal] = useState(false);
-  const [showKeyboardShortcutsModal, setShowKeyboardShortcutsModal] =
-    useState(false);
 
   // 🚀 PERFORMANCE: Optimistic updates for instant UI feedback
   // Shows plays immediately while database operations happen in background
@@ -367,7 +358,7 @@ export default function PlaybookPage() {
                 selectedPlayIds
               );
               setSelectedPlaysForPractice(selectedPlayIds);
-              setShowPracticeScriptBuilder(true);
+              openModal('practiceScriptBuilder');
             }
           }
           break;
@@ -457,42 +448,42 @@ export default function PlaybookPage() {
   // Modal handlers
   const handleOpenBuilder = useCallback(() => {
     triggerHapticFeedback("light");
-    setShowAddNewPlayModal(true);
+    openModal('addNewPlay');
     // Record user action for smart preloading
     smartPreloader.recordAction("open_modal", "formation_builder");
-  }, []);
+  }, [openModal]);
 
   const handleOpenQuickCreate = useCallback(() => {
     triggerHapticFeedback("light");
-    setShowAddNewPlayModal(true);
+    openModal('addNewPlay');
     setDiagramMode("quick-play");
     setDiagramPlay(null); // Clear any existing play
     // Record user action for smart preloading
     smartPreloader.recordAction("open_modal", "quick_create");
-  }, []);
+  }, [openModal]);
 
   const handleOpenSettings = useCallback(() => {
     triggerHapticFeedback("light");
-    setShowPlaybookSettingsModal(true);
-  }, []);
+    openModal('playbookSettings');
+  }, [openModal]);
 
   const handleOpenPersonnel = useCallback(() => {
     triggerHapticFeedback("light");
-    setShowPersonnelModal(true);
+    openModal('personnel');
     smartPreloader.recordAction("open_modal", "personnel_builder");
-  }, []);
+  }, [openModal]);
 
   const handleEditPlay = useCallback((play: Play) => {
     triggerHapticFeedback("light");
     setDiagramPlay(play);
     setDiagramMode("edit");
-    setShowAddNewPlayModal(true);
-  }, []);
+    openModal('addNewPlay');
+  }, [openModal]);
 
   const handleOpenKeyboardShortcuts = useCallback(() => {
     triggerHapticFeedback("light");
-    setShowKeyboardShortcutsModal(true);
-  }, []);
+    openModal('keyboardShortcuts');
+  }, [openModal]);
 
   // 🆕 CREATE NEW PLAY (not update existing)
   const handleCreatePlay = useCallback(
@@ -880,8 +871,8 @@ export default function PlaybookPage() {
   // Practice Script Builder handlers
   const handleOpenPracticeScriptBuilder = useCallback(() => {
     setEditingScript(null);
-    setShowPracticeScriptBuilder(true);
-  }, []);
+    openModal('practiceScriptBuilder');
+  }, [openModal]);
 
   const handleQuickNewPracticeScript = useCallback(() => {
     triggerHapticFeedback("light");
@@ -1037,27 +1028,13 @@ export default function PlaybookPage() {
 
         {/* Modals */}
         <PlaybookModals
-          showAddNewPlayModal={showAddNewPlayModal}
-          showPlaybookSettingsModal={showPlaybookSettingsModal}
-          showPersonnelModal={showPersonnelModal}
-          showPlaybookHealthModal={showPlaybookHealthModal}
-          showAssignmentsModal={showAssignmentsModal}
-          showKeyboardShortcutsModal={showKeyboardShortcutsModal}
-          showPracticeScriptBuilder={showPracticeScriptBuilder}
-          showPostToBulletinModal={showPostToBulletinModal}
+          isModalOpen={isModalOpen}
+          closeModal={closeModal}
           diagramPlay={diagramPlay}
           diagramMode={diagramMode}
           assignmentsPlay={assignmentsPlay}
           editingScript={editingScript}
           playToPost={playToPost}
-          setShowAddNewPlayModal={setShowAddNewPlayModal}
-          setShowPlaybookSettingsModal={setShowPlaybookSettingsModal}
-          setShowPersonnelModal={setShowPersonnelModal}
-          setShowPlaybookHealthModal={setShowPlaybookHealthModal}
-          setShowAssignmentsModal={setShowAssignmentsModal}
-          setShowKeyboardShortcutsModal={setShowKeyboardShortcutsModal}
-          setShowPracticeScriptBuilder={setShowPracticeScriptBuilder}
-          setShowPostToBulletinModal={setShowPostToBulletinModal}
           setDiagramPlay={setDiagramPlay}
           setAssignmentsPlay={setAssignmentsPlay}
           setEditingScript={setEditingScript}

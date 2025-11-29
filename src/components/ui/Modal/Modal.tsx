@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 
 import { Typography } from "../../design-system/Typography";
 import { IconButton } from "../IconButton/IconButton";
+import { useScrollLock } from "../../../hooks/useScrollLock";
 
 import type { ReactNode } from "react";
 
@@ -79,6 +80,10 @@ export const Modal: React.FC<ModalProps> = ({
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
+  
+  // 🚀 PERFORMANCE: Prevent body scroll with iOS Safari support
+  useScrollLock(isOpen);
+  
   // Focus management
   useEffect(() => {
     if (isOpen) {
@@ -88,15 +93,11 @@ export const Modal: React.FC<ModalProps> = ({
       if (modalRef.current) {
         modalRef.current.focus();
       }
-      // Prevent body scroll
-      document.body.style.overflow = "hidden";
     } else {
       // Restore focus to the previously focused element
       if (previousActiveElement.current) {
         previousActiveElement.current.focus();
       }
-      // Restore body scroll
-      document.body.style.overflow = "";
     }
     return () => {
       // Cleanup on unmount

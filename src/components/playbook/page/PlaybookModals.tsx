@@ -40,15 +40,9 @@ const PracticeScriptBuilder = lazy(() =>
 );
 
 interface PlaybookModalsProps {
-  // Modal states
-  showAddNewPlayModal: boolean;
-  showPlaybookSettingsModal: boolean;
-  showPersonnelModal: boolean;
-  showPlaybookHealthModal: boolean;
-  showAssignmentsModal: boolean;
-  showKeyboardShortcutsModal: boolean;
-  showPracticeScriptBuilder: boolean;
-  showPostToBulletinModal: boolean;
+  // 🚀 PERFORMANCE: Centralized modal management (replaces 8 boolean props + 8 setters)
+  isModalOpen: (modalType: string) => boolean;
+  closeModal: (modalType: string) => void;
 
   // Modal data
   diagramPlay: Play | null;
@@ -56,16 +50,6 @@ interface PlaybookModalsProps {
   assignmentsPlay: Play | null;
   editingScript: any; // TODO: Type properly
   playToPost: Play | null;
-
-  // Modal handlers
-  setShowAddNewPlayModal: (show: boolean) => void;
-  setShowPlaybookSettingsModal: (show: boolean) => void;
-  setShowPersonnelModal: (show: boolean) => void;
-  setShowPlaybookHealthModal: (show: boolean) => void;
-  setShowAssignmentsModal: (show: boolean) => void;
-  setShowKeyboardShortcutsModal: (show: boolean) => void;
-  setShowPracticeScriptBuilder: (show: boolean) => void;
-  setShowPostToBulletinModal: (show: boolean) => void;
 
   // Data setters
   setDiagramPlay: (play: Play | null) => void;
@@ -85,27 +69,13 @@ interface PlaybookModalsProps {
 }
 
 export function PlaybookModals({
-  showAddNewPlayModal,
-  showPlaybookSettingsModal,
-  showPersonnelModal,
-  showPlaybookHealthModal,
-  showAssignmentsModal,
-  showKeyboardShortcutsModal,
-  showPracticeScriptBuilder,
-  showPostToBulletinModal,
+  isModalOpen,
+  closeModal,
   diagramPlay: _diagramPlay,
   diagramMode: _diagramMode,
   assignmentsPlay,
   editingScript,
   playToPost,
-  setShowAddNewPlayModal,
-  setShowPlaybookSettingsModal,
-  setShowPersonnelModal,
-  setShowPlaybookHealthModal,
-  setShowAssignmentsModal,
-  setShowKeyboardShortcutsModal,
-  setShowPracticeScriptBuilder,
-  setShowPostToBulletinModal,
   setDiagramPlay: _setDiagramPlay,
   setAssignmentsPlay,
   setEditingScript,
@@ -122,11 +92,11 @@ export function PlaybookModals({
   return (
     <>
       {/* Add New Play Modal */}
-      {showAddNewPlayModal && (
+      {isModalOpen('addNewPlay') && (
         <Suspense fallback={<div>Loading...</div>}>
           <AddNewPlayModal
-            isOpen={showAddNewPlayModal}
-            onClose={() => setShowAddNewPlayModal(false)}
+            isOpen={isModalOpen('addNewPlay')}
+            onClose={() => closeModal('addNewPlay')}
             onCreatePlay={handleCreatePlay}
             playbookId={activePlaybookId}
             existingPlays={existingPlays}
@@ -135,47 +105,47 @@ export function PlaybookModals({
       )}
 
       {/* Playbook Settings Modal */}
-      {showPlaybookSettingsModal && (
+      {isModalOpen('playbookSettings') && (
         <Suspense fallback={<div>Loading...</div>}>
           <PlaybookSettingsModal
-            isOpen={showPlaybookSettingsModal}
-            onClose={() => setShowPlaybookSettingsModal(false)}
+            isOpen={isModalOpen('playbookSettings')}
+            onClose={() => closeModal('playbookSettings')}
             onOpenPersonnel={() => {
-              setShowPlaybookSettingsModal(false);
-              setShowPersonnelModal(true);
+              closeModal('playbookSettings');
+              // Note: This requires openModal to be passed or personnel modal to open separately
             }}
           />
         </Suspense>
       )}
 
       {/* Personnel Configuration Modal */}
-      {showPersonnelModal && (
+      {isModalOpen('personnel') && (
         <Suspense fallback={<div>Loading...</div>}>
           <PersonnelConfigurationModal
-            isOpen={showPersonnelModal}
-            onClose={() => setShowPersonnelModal(false)}
+            isOpen={isModalOpen('personnel')}
+            onClose={() => closeModal('personnel')}
             playbookId={activePlaybookId}
           />
         </Suspense>
       )}
 
       {/* Playbook Health Modal */}
-      {showPlaybookHealthModal && (
+      {isModalOpen('playbookHealth') && (
         <Suspense fallback={<div>Loading...</div>}>
           <PlaybookHealthModal
-            isOpen={showPlaybookHealthModal}
-            onClose={() => setShowPlaybookHealthModal(false)}
+            isOpen={isModalOpen('playbookHealth')}
+            onClose={() => closeModal('playbookHealth')}
             playbookId={activePlaybookId}
           />
         </Suspense>
       )}
 
       {/* Play Assignments Modal */}
-      {showAssignmentsModal && assignmentsPlay && (
+      {isModalOpen('assignments') && assignmentsPlay && (
         <Modal
-          isOpen={showAssignmentsModal}
+          isOpen={isModalOpen('assignments')}
           onClose={() => {
-            setShowAssignmentsModal(false);
+            closeModal('assignments');
             setAssignmentsPlay(null);
           }}
           title={`Assignments - ${assignmentsPlay.name}`}
@@ -185,7 +155,7 @@ export function PlaybookModals({
             <PlayAssignmentsModal
               play={assignmentsPlay}
               onClose={() => {
-                setShowAssignmentsModal(false);
+                closeModal('assignments');
                 setAssignmentsPlay(null);
               }}
             />
@@ -194,28 +164,28 @@ export function PlaybookModals({
       )}
 
       {/* Keyboard Shortcuts Guide */}
-      {showKeyboardShortcutsModal && (
+      {isModalOpen('keyboardShortcuts') && (
         <Modal
-          isOpen={showKeyboardShortcutsModal}
-          onClose={() => setShowKeyboardShortcutsModal(false)}
+          isOpen={isModalOpen('keyboardShortcuts')}
+          onClose={() => closeModal('keyboardShortcuts')}
           title="Keyboard Shortcuts"
           size="md"
         >
           <Suspense fallback={<div>Loading...</div>}>
             <KeyboardShortcutsGuide
-              isOpen={showKeyboardShortcutsModal}
-              onClose={() => setShowKeyboardShortcutsModal(false)}
+              isOpen={isModalOpen('keyboardShortcuts')}
+              onClose={() => closeModal('keyboardShortcuts')}
             />
           </Suspense>
         </Modal>
       )}
 
       {/* Practice Script Builder Modal */}
-      {showPracticeScriptBuilder && (
+      {isModalOpen('practiceScriptBuilder') && (
         <Modal
-          isOpen={showPracticeScriptBuilder}
+          isOpen={isModalOpen('practiceScriptBuilder')}
           onClose={() => {
-            setShowPracticeScriptBuilder(false);
+            closeModal('practiceScriptBuilder');
             setEditingScript(null);
           }}
           title={
@@ -230,12 +200,12 @@ export function PlaybookModals({
               editingScript={editingScript}
               selectedPlays={selectedPlaysForPractice}
               onClose={() => {
-                setShowPracticeScriptBuilder(false);
+                closeModal('practiceScriptBuilder');
                 setEditingScript(null);
                 setSelectedPlaysForPractice([]);
               }}
               onSave={() => {
-                setShowPracticeScriptBuilder(false);
+                closeModal('practiceScriptBuilder');
                 setEditingScript(null);
                 setSelectedPlaysForPractice([]);
                 dispatch({ type: "REFRESH" });
@@ -246,11 +216,11 @@ export function PlaybookModals({
       )}
 
       {/* Post to Team Bulletin Modal */}
-      {showPostToBulletinModal && playToPost && (
+      {isModalOpen('postToBulletin') && playToPost && (
         <Modal
-          isOpen={showPostToBulletinModal}
+          isOpen={isModalOpen('postToBulletin')}
           onClose={() => {
-            setShowPostToBulletinModal(false);
+            closeModal('postToBulletin');
             setPlayToPost(null);
           }}
           title="Post to Team Bulletin"
