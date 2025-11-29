@@ -111,11 +111,11 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               <Icon name="camera" className="h-4 w-4 mr-xs" /> Play Diagram
             </Typography>
           </div>
-          <div className="relative">
+          <div className="relative max-w-full overflow-hidden">
             <img
               src={optimisticPlay.diagram_image_url}
               alt={`${play.play_name} diagram`}
-              className="w-full rounded-lg border-2 border-primary object-cover"
+              className="w-full max-h-[300px] md:max-h-[400px] rounded-lg border-2 border-primary object-contain"
               loading="lazy"
             />
           </div>
@@ -138,8 +138,8 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-md">
-        <div className="bg-subtle rounded-lg p-sm">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-md">
+        <div className="bg-subtle rounded-lg p-3 md:p-sm">
           <Typography
             variant="label-lg"
             as="h4"
@@ -337,7 +337,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           </Typography>
           <dl className="space-y-sm text-sm">
             <div className="flex items-center gap-sm">
-              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
+              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-16 sm:w-20 text-xs">
                 Down
               </dt>
               <dd className="flex-1">
@@ -352,7 +352,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               </dd>
             </div>
             <div className="flex items-center gap-sm">
-              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
+              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-16 sm:w-20 text-xs">
                 Distance
               </dt>
               <dd className="flex-1">
@@ -367,7 +367,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               </dd>
             </div>
             <div className="flex items-center gap-sm">
-              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
+              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-16 sm:w-20 text-xs">
                 Hash
               </dt>
               <dd className="flex-1">
@@ -382,7 +382,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               </dd>
             </div>
             <div className="flex items-center gap-sm">
-              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
+              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-16 sm:w-20 text-xs">
                 Coverage
               </dt>
               <dd className="flex-1">
@@ -395,7 +395,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               </dd>
             </div>
             <div className="flex items-center gap-sm">
-              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-20 text-xs">
+              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-16 sm:w-20 text-xs">
                 Front
               </dt>
               <dd className="flex-1">
@@ -420,7 +420,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           </Typography>
           <dl className="space-y-xs text-sm">
             <div className="flex items-center gap-sm">
-              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-28 text-xs">
+              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-20 sm:w-28 text-xs">
                 Times Called
               </dt>
               <dd className="text-xssssssssrimary font-mono text-xs">
@@ -428,7 +428,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               </dd>
             </div>
             <div className="flex items-center gap-sm">
-              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-28 text-xs">
+              <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-20 sm:w-28 text-xs">
                 Times Successful
               </dt>
               <dd className="text-xssssssssrimary font-mono text-xs">
@@ -437,7 +437,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
             </div>
             {play.last_used_at && (
               <div className="flex items-center gap-sm">
-                <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-28 text-xs">
+                <dt className="text-xssssssssrimary font-medium flex-shrink-0 w-20 sm:w-28 text-xs">
                   Last Used
                 </dt>
                 <dd className="text-xssssssssrimary font-mono text-xs">

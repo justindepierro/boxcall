@@ -279,6 +279,7 @@ export function useTeamsData() {
               times_called,
               times_successful,
               wristband_number,
+              diagram_image_url,
               created_at,
               updated_at
             `
@@ -350,6 +351,7 @@ export function useTeamsData() {
           times_called,
           times_successful,
           wristband_number,
+          diagram_image_url,
           created_at,
           updated_at
         `

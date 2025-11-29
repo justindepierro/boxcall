@@ -143,6 +143,7 @@ async function fetchPlaysPage(page: number): Promise<DatabasePlay[]> {
       times_called,
       times_successful,
       wristband_number,
+      diagram_image_url,
       created_at,
       updated_at
     `
