@@ -11,6 +11,7 @@ import { PersonnelSyncService } from "../../../services/personnelLibrary/Personn
 import type { PersonnelConfiguration } from "../../../types/personnel";
 import { Icon } from "../../ui/Icon/Icon";
 import { toast } from "sonner";
+import { CreatePersonnelModal } from "./CreatePersonnelModal";
 
 interface PersonnelLibraryModalProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
   const [personnel, setPersonnel] = useState<PersonnelConfiguration[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -129,10 +131,7 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
           {/* Action Button */}
           <div className="flex gap-2">
             <button
-              onClick={() => {
-                // TODO: Open personnel builder modal
-                toast.info("Personnel Builder integration coming soon");
-              }}
+              onClick={() => setShowCreateModal(true)}
               className="btn-primary flex items-center gap-2 bg-white text-purple-600 hover:bg-white/90"
             >
               <Icon name="plus" size="sm" />
@@ -267,6 +266,14 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Create Personnel Modal */}
+      <CreatePersonnelModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        playbookId={playbookId}
+        onSuccess={loadPersonnel}
+      />
     </>
   );
 };

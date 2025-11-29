@@ -12,6 +12,7 @@ import type { Formation } from "../../../types/formation";
 import { Icon } from "../../ui/Icon/Icon";
 import { toast } from "sonner";
 import { supabase } from "../../../lib/supabase";
+import { CreateFormationModal } from "./CreateFormationModal";
 
 interface FormationLibraryModalProps {
   isOpen: boolean;
@@ -28,6 +29,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [analyzing, setAnalyzing] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -224,9 +226,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
               )}
             </button>
             <button
-              onClick={() => {
-                toast.info("Create Formation: Click 'Import from Plays' or add manually in Formation Builder");
-              }}
+              onClick={() => setShowCreateModal(true)}
               className="btn-primary flex items-center gap-2 bg-white text-jade-600 hover:bg-white/90"
             >
               <Icon name="plus" size="sm" />
@@ -372,6 +372,14 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Create Formation Modal */}
+      <CreateFormationModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        playbookId={playbookId}
+        onSuccess={loadFormations}
+      />
     </>
   );
 };
