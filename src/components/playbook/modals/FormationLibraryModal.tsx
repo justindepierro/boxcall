@@ -176,12 +176,12 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/50 z-40 animate-fade-in"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 animate-fade-in"
         onClick={onClose}
       />
 
       {/* Modal Panel */}
-      <div className="fixed inset-y-0 right-0 w-full md:w-3/4 lg:w-2/3 xl:w-1/2 bg-surface z-50 shadow-2xl animate-slide-in-right overflow-hidden flex flex-col">
+      <div className="fixed inset-y-0 right-0 w-full md:w-3/4 lg:w-2/3 xl:w-1/2 bg-white dark:bg-gray-900 z-50 shadow-2xl animate-slide-in-right overflow-hidden flex flex-col">
         {/* Header */}
         <div className="bg-gradient-to-r from-jade-600 to-jade-700 p-4 sm:p-6 border-b border-divider shadow-lg">
           <div className="flex items-center justify-between mb-4">
@@ -244,7 +244,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
         </div>
 
         {/* Search */}
-        <div className="p-4 sm:p-6 border-b border-divider bg-surface-muted/50">
+        <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
           <div className="relative">
             <Icon
               name="search"
@@ -262,7 +262,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-6 bg-white dark:bg-gray-900">
           {loading ? (
             <div className="flex items-center justify-center h-64">
               <Icon name="loader" size="xl" className="animate-spin text-secondary" />
@@ -342,7 +342,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
         </div>
 
         {/* Footer Stats */}
-        <div className="border-t border-divider bg-surface-muted p-4">
+        <div className="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 p-4 shadow-inner">
           <div className="grid grid-cols-4 gap-4 text-center">
             <div>
               <div className="text-2xl font-bold text-primary">{stats.total}</div>
