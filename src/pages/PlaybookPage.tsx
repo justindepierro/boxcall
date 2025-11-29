@@ -20,7 +20,6 @@ import {
 import { exportPlays } from "../services/exportService";
 import type { PlayActivityItem } from "@services";
 import { SecurePlaysService } from "../services/securePlaysService";
-import { WorkflowStatusBar } from "../components/playbook/WorkflowStatusBar";
 
 // import { AnalyticsDashboard } from "../components/analytics/AnalyticsDashboard";
 import { useToast } from "../hooks/useToast";
@@ -1026,9 +1025,6 @@ export default function PlaybookPage() {
             mobileButtonSize={mobileButtonSize}
           />
         )}
-
-        {/* Sticky Workflow Status Bar */}
-        <WorkflowStatusBar />
 
         {/* Modals */}
         <PlaybookModals
