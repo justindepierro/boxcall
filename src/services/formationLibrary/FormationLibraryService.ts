@@ -52,8 +52,13 @@ export class FormationLibraryService {
       query = query.gte("confidence_score", filters.confidence_min);
     }
 
-    // Sorting
-    const sortBy = filters?.sort_by || "name";
+    // Sorting (map "usage" to actual column name "usage_count")
+    let sortBy = filters?.sort_by || "name";
+    if (sortBy === "usage") {
+      sortBy = "usage_count";
+    } else if (sortBy === "confidence") {
+      sortBy = "confidence_score";
+    }
     const sortOrder = filters?.sort_order || "asc";
     query = query.order(sortBy, { ascending: sortOrder === "asc" });
 
