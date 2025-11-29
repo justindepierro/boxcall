@@ -41,7 +41,7 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
         playbookId,
         {
           search: searchQuery || undefined,
-          sort_by: "usage_count",
+          sort_by: "usage",
           sort_order: "desc",
           limit: 100,
         }
@@ -122,7 +122,7 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
               onClick={onClose}
               className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
             >
-              <Icon name="x" size="lg" className="text-white" />
+              <Icon name="close" size="lg" className="text-white" />
             </button>
           </div>
 
@@ -171,7 +171,7 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {filteredPersonnel.map((config) => {
-                const badge = config.badge_customization as any;
+                const badge = config.badgeCustomization as any;
                 const bgColor = badge?.backgroundColor || "#10b981";
                 const textColor = badge?.textColor || "#ffffff";
 

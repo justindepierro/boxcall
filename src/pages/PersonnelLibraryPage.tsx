@@ -82,7 +82,7 @@ const PersonnelLibraryPageContent: React.FC<
         playbookId,
         {
           search: searchQuery || undefined,
-          sort_by: "usage_count",
+          sort_by: "usage",
           sort_order: "desc",
           limit: 100,
         }

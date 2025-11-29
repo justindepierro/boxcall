@@ -29,9 +29,6 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [analyzing, setAnalyzing] = useState(false);
-  const [analyses, setAnalyses] = useState<Map<string, IntelligenceAnalysis>>(
-    new Map()
-  );
 
   useEffect(() => {
     if (isOpen) {
@@ -45,7 +42,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
       setLoading(true);
       const response = await FormationLibraryService.getFormations(playbookId, {
         search: searchQuery || undefined,
-        sortBy: "usage" as any,
+        sort_by: "usage",
         sort_order: "desc",
         limit: 100,
       });
@@ -141,7 +138,6 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
         await FormationIntelligenceService.analyzePlaybookFormations(
           playbookId
         );
-      setAnalyses(results);
 
       const updatedCount =
         await FormationIntelligenceService.populateLibraryFromPlays(playbookId);
@@ -192,7 +188,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                <Icon name="layers" size="lg" className="text-white" />
+                <Icon name="layout-grid" size="lg" className="text-white" />
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-white">Formation Library</h2>
@@ -205,7 +201,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
               onClick={onClose}
               className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
             >
-              <Icon name="x" size="lg" className="text-white" />
+              <Icon name="close" size="lg" className="text-white" />
             </button>
           </div>
 
@@ -274,7 +270,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
             </div>
           ) : filteredFormations.length === 0 ? (
             <div className="text-center py-12">
-              <Icon name="layers" size="xl" className="text-secondary mb-4 mx-auto" />
+              <Icon name="layout-grid" size="xl" className="text-secondary mb-4 mx-auto" />
               <p className="text-secondary text-lg">No formations found</p>
               <p className="text-tertiary text-sm mt-2">
                 Click "Import from Plays" to get started

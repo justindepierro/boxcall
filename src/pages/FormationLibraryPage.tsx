@@ -86,7 +86,7 @@ const FormationLibraryPageContent: React.FC<
       setLoading(true);
       const response = await FormationLibraryService.getFormations(playbookId, {
         search: searchQuery || undefined,
-        sortBy: "usage" as any,
+        sort_by: "usage",
         sort_order: "desc",
         limit: 100,
       });

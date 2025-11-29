@@ -186,6 +186,17 @@ export type Database = {
           personnel_packages: string[] | null;
           playbook_id: string;
           updated_at: string | null;
+          formation_type: string | null;
+          run_strength: string | null;
+          pass_strength: string | null;
+          strength_player_position: string | null;
+          is_standalone: boolean | null;
+          confidence_score: number | null;
+          last_analyzed_at: string | null;
+          analysis_play_count: number | null;
+          metadata_quality: string | null;
+          opposite_formation_id: string | null;
+          usage_count: number | null;
         };
         Insert: {
           created_at?: string | null;
@@ -196,6 +207,17 @@ export type Database = {
           personnel_packages?: string[] | null;
           playbook_id: string;
           updated_at?: string | null;
+          formation_type?: string | null;
+          run_strength?: string | null;
+          pass_strength?: string | null;
+          strength_player_position?: string | null;
+          is_standalone?: boolean | null;
+          confidence_score?: number | null;
+          last_analyzed_at?: string | null;
+          analysis_play_count?: number | null;
+          metadata_quality?: string | null;
+          opposite_formation_id?: string | null;
+          usage_count?: number | null;
         };
         Update: {
           created_at?: string | null;
@@ -206,6 +228,17 @@ export type Database = {
           personnel_packages?: string[] | null;
           playbook_id?: string;
           updated_at?: string | null;
+          formation_type?: string | null;
+          run_strength?: string | null;
+          pass_strength?: string | null;
+          strength_player_position?: string | null;
+          is_standalone?: boolean | null;
+          confidence_score?: number | null;
+          last_analyzed_at?: string | null;
+          analysis_play_count?: number | null;
+          metadata_quality?: string | null;
+          opposite_formation_id?: string | null;
+          usage_count?: number | null;
         };
         Relationships: [
           {
@@ -491,6 +524,10 @@ export type Database = {
           name: string;
           playbook_id: string;
           updated_at: string | null;
+          confidence_score: number | null;
+          last_analyzed_at: string | null;
+          analysis_play_count: number | null;
+          usage_count: number | null;
         };
         Insert: {
           badge_customization?: Json | null;
@@ -500,6 +537,10 @@ export type Database = {
           name: string;
           playbook_id: string;
           updated_at?: string | null;
+          confidence_score?: number | null;
+          last_analyzed_at?: string | null;
+          analysis_play_count?: number | null;
+          usage_count?: number | null;
         };
         Update: {
           badge_customization?: Json | null;
@@ -509,6 +550,10 @@ export type Database = {
           name?: string;
           playbook_id?: string;
           updated_at?: string | null;
+          confidence_score?: number | null;
+          last_analyzed_at?: string | null;
+          analysis_play_count?: number | null;
+          usage_count?: number | null;
         };
         Relationships: [
           {

@@ -17,7 +17,6 @@ import type {
 interface PlayData {
   id: string;
   formation: string;
-  formation_id: string | null;
   f_type: string | null;
   r_str: string | null;
   p_str: string | null;
@@ -34,7 +33,7 @@ export class FormationIntelligenceService {
     // Fetch all non-archived plays
     const { data: plays, error } = await supabase
       .from("plays")
-      .select("id, formation, formation_id, f_type, r_str, p_str, personnel")
+      .select("id, formation, f_type, r_str, p_str, personnel")
       .eq("playbook_id", playbookId)
       .eq("is_archived", false);
 
