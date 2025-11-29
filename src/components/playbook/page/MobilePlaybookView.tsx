@@ -209,51 +209,51 @@ export function MobilePlaybookView({
             }}
             spacing="tight"
           >
-          <PullToRefresh onRefresh={handlePullRefresh}>
-            <ErrorBoundary
-              fallback={
-                <div className="p-lg text-center">
-                  <Typography variant="body-md" className="text-secondary">
-                    Failed to load plays. Please refresh the page.
-                  </Typography>
-                </div>
-              }
-            >
-              {/* Define common PlayGrid props once - single source of truth */}
-              {(() => {
-                const commonPlayGridProps = {
-                  searchQuery: debouncedSearchQuery,
-                  filters: state.selectedFilters,
-                  optimisticPlays: optimisticPlays,
-                  onAddToPracticeScript: handleAddToPracticeScript,
-                  onAddToGamePlan: handleAddToGamePlan,
-                  onEdit: handleEditPlay,
-                  onSave: handleSavePlay,
-                  onDuplicate: handleDuplicatePlay,
-                  onOpenBuilder: handleOpenBuilder,
-                  onOpenAssignments: handleOpenAssignments,
-                  onPostToTeamBulletin: handlePostToTeamBulletin,
-                  refreshTrigger: state.refreshTrigger,
-                  onPlayCountChange: handlePlayCountChange,
-                  formationSuggestions: suggestions.formations,
-                  playNameSuggestions: suggestions.playNames,
-                  enableBulkOperations: state.enableBulkOperations,
-                  selectedPlayIds: state.selectedPlayIds,
-                  onPlaySelectionChange: (selection: Set<string>) =>
-                    dispatch({ type: "SET_SELECTION", selection }),
-                };
+            <PullToRefresh onRefresh={handlePullRefresh}>
+              <ErrorBoundary
+                fallback={
+                  <div className="p-lg text-center">
+                    <Typography variant="body-md" className="text-secondary">
+                      Failed to load plays. Please refresh the page.
+                    </Typography>
+                  </div>
+                }
+              >
+                {/* Define common PlayGrid props once - single source of truth */}
+                {(() => {
+                  const commonPlayGridProps = {
+                    searchQuery: debouncedSearchQuery,
+                    filters: state.selectedFilters,
+                    optimisticPlays: optimisticPlays,
+                    onAddToPracticeScript: handleAddToPracticeScript,
+                    onAddToGamePlan: handleAddToGamePlan,
+                    onEdit: handleEditPlay,
+                    onSave: handleSavePlay,
+                    onDuplicate: handleDuplicatePlay,
+                    onOpenBuilder: handleOpenBuilder,
+                    onOpenAssignments: handleOpenAssignments,
+                    onPostToTeamBulletin: handlePostToTeamBulletin,
+                    refreshTrigger: state.refreshTrigger,
+                    onPlayCountChange: handlePlayCountChange,
+                    formationSuggestions: suggestions.formations,
+                    playNameSuggestions: suggestions.playNames,
+                    enableBulkOperations: state.enableBulkOperations,
+                    selectedPlayIds: state.selectedPlayIds,
+                    onPlaySelectionChange: (selection: Set<string>) =>
+                      dispatch({ type: "SET_SELECTION", selection }),
+                  };
 
-                return (
-                  <PlayGrid
-                    {...commonPlayGridProps}
-                    mobileListExpanded={mobileListExpanded}
-                    onMobileListExpand={() => setMobileListExpanded(true)}
-                  />
-                );
-              })()}
-            </ErrorBoundary>
-          </PullToRefresh>
-        </MobileSection>
+                  return (
+                    <PlayGrid
+                      {...commonPlayGridProps}
+                      mobileListExpanded={mobileListExpanded}
+                      onMobileListExpand={() => setMobileListExpanded(true)}
+                    />
+                  );
+                })()}
+              </ErrorBoundary>
+            </PullToRefresh>
+          </MobileSection>
         )}
 
         {/* Selection Mode Toggle - Mobile */}

@@ -247,7 +247,20 @@ SET usage_count = (
     AND p.is_archived = false
 );
 
+-- Temporarily disable personnel validation trigger for migration
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM pg_trigger
+    WHERE tgname = 'personnel_validation_trigger'
+  ) THEN
+    ALTER TABLE personnel_configurations DISABLE TRIGGER personnel_validation_trigger;
+    RAISE NOTICE 'Disabled personnel validation trigger for migration';
+  END IF;
+END $$;
+
 -- Update personnel usage_count based on plays
+-- Only updating usage_count column, not touching name which has validation
 UPDATE personnel_configurations pc
 SET usage_count = (
   SELECT COUNT(*)
@@ -256,6 +269,18 @@ SET usage_count = (
     AND p.playbook_id = pc.playbook_id
     AND p.is_archived = false
 );
+
+-- Re-enable personnel validation trigger after migration
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM pg_trigger
+    WHERE tgname = 'personnel_validation_trigger'
+  ) THEN
+    ALTER TABLE personnel_configurations ENABLE TRIGGER personnel_validation_trigger;
+    RAISE NOTICE 'Re-enabled personnel validation trigger';
+  END IF;
+END $$;
 
 -- ===========================================
 -- 7. CREATE HELPER FUNCTIONS FOR INTELLIGENCE

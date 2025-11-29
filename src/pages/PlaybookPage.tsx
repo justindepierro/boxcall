@@ -180,19 +180,27 @@ export default function PlaybookPage() {
   );
 
   // Fullscreen diagram viewer state
-  const [fullscreenPlayIndex, setFullscreenPlayIndex] = useState<number | null>(null);
+  const [fullscreenPlayIndex, setFullscreenPlayIndex] = useState<number | null>(
+    null
+  );
   const [fullscreenPlays, setFullscreenPlays] = useState<Play[]>([]);
 
   // Handle entering fullscreen presentation mode
-  const handleEnterFullscreen = useCallback((plays: Play[], playIndex: number) => {
-    console.log('[PlaybookPage] Entering fullscreen mode', { playCount: plays.length, startIndex: playIndex });
-    setFullscreenPlays(plays);
-    setFullscreenPlayIndex(playIndex);
-  }, []);
+  const handleEnterFullscreen = useCallback(
+    (plays: Play[], playIndex: number) => {
+      console.log("[PlaybookPage] Entering fullscreen mode", {
+        playCount: plays.length,
+        startIndex: playIndex,
+      });
+      setFullscreenPlays(plays);
+      setFullscreenPlayIndex(playIndex);
+    },
+    []
+  );
 
   // Handle exiting fullscreen
   const handleExitFullscreen = useCallback(() => {
-    console.log('[PlaybookPage] Exiting fullscreen mode');
+    console.log("[PlaybookPage] Exiting fullscreen mode");
     setFullscreenPlayIndex(null);
     setFullscreenPlays([]);
   }, []);
@@ -1075,12 +1083,13 @@ export default function PlaybookPage() {
             confidence_base: play.confidence_base ?? 3,
             times_called: play.times_called ?? 0,
             times_successful: play.times_successful ?? 0,
-            created_by: '',
+            created_by: "",
             created_at: new Date(play.created_at),
             updated_at: new Date(play.updated_at),
-            diagram_data: typeof play.diagram_data === 'string' 
-              ? JSON.parse(play.diagram_data) 
-              : play.diagram_data,
+            diagram_data:
+              typeof play.diagram_data === "string"
+                ? JSON.parse(play.diagram_data)
+                : play.diagram_data,
           }))}
           handleCreatePlay={handleCreatePlay}
           handleSavePlay={handleSavePlay}

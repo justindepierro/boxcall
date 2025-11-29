@@ -142,7 +142,10 @@ export class FormationSyncService {
       .order("play_name");
 
     if (error) {
-      console.error("[FormationSyncService] Error fetching affected plays:", error);
+      console.error(
+        "[FormationSyncService] Error fetching affected plays:",
+        error
+      );
       return [];
     }
 
@@ -278,7 +281,9 @@ export class FormationSyncService {
         syncedCount++;
         totalPlaysUpdated += result.affected_plays;
       } else {
-        errors.push(`${formation.name}: ${result.errors[0]?.error || "Unknown error"}`);
+        errors.push(
+          `${formation.name}: ${result.errors[0]?.error || "Unknown error"}`
+        );
       }
     }
 

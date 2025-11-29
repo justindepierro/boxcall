@@ -6,8 +6,15 @@
  */
 
 import { supabase } from "../../lib/supabase";
-import type { Formation, FormationCreate, FormationUpdate } from "../../types/formation";
-import type { LibraryFilterOptions, PaginatedLibraryResponse } from "../../types/library";
+import type {
+  Formation,
+  FormationCreate,
+  FormationUpdate,
+} from "../../types/formation";
+import type {
+  LibraryFilterOptions,
+  PaginatedLibraryResponse,
+} from "../../types/library";
 
 export class FormationLibraryService {
   /**
@@ -24,7 +31,9 @@ export class FormationLibraryService {
 
     // Apply filters
     if (filters?.search) {
-      query = query.or(`name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
+      query = query.or(
+        `name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`
+      );
     }
 
     if (filters?.min_usage) {
@@ -56,7 +65,10 @@ export class FormationLibraryService {
     const { data, count, error } = await query;
 
     if (error) {
-      console.error("[FormationLibraryService] Error fetching formations:", error);
+      console.error(
+        "[FormationLibraryService] Error fetching formations:",
+        error
+      );
       throw new Error(`Failed to fetch formations: ${error.message}`);
     }
 
@@ -82,7 +94,10 @@ export class FormationLibraryService {
       .single();
 
     if (error) {
-      console.error("[FormationLibraryService] Error fetching formation:", error);
+      console.error(
+        "[FormationLibraryService] Error fetching formation:",
+        error
+      );
       throw new Error(`Failed to fetch formation: ${error.message}`);
     }
 
@@ -115,7 +130,10 @@ export class FormationLibraryService {
       .single();
 
     if (error) {
-      console.error("[FormationLibraryService] Error creating formation:", error);
+      console.error(
+        "[FormationLibraryService] Error creating formation:",
+        error
+      );
       throw new Error(`Failed to create formation: ${error.message}`);
     }
 
@@ -125,7 +143,10 @@ export class FormationLibraryService {
   /**
    * Update existing formation
    */
-  static async updateFormation(id: string, updates: FormationUpdate): Promise<Formation> {
+  static async updateFormation(
+    id: string,
+    updates: FormationUpdate
+  ): Promise<Formation> {
     const updateData: any = {
       ...updates,
       updated_at: new Date().toISOString(),
@@ -144,7 +165,10 @@ export class FormationLibraryService {
       .single();
 
     if (error) {
-      console.error("[FormationLibraryService] Error updating formation:", error);
+      console.error(
+        "[FormationLibraryService] Error updating formation:",
+        error
+      );
       throw new Error(`Failed to update formation: ${error.message}`);
     }
 
@@ -158,7 +182,10 @@ export class FormationLibraryService {
     const { error } = await supabase.from("formations").delete().eq("id", id);
 
     if (error) {
-      console.error("[FormationLibraryService] Error deleting formation:", error);
+      console.error(
+        "[FormationLibraryService] Error deleting formation:",
+        error
+      );
       throw new Error(`Failed to delete formation: ${error.message}`);
     }
   }
@@ -166,7 +193,10 @@ export class FormationLibraryService {
   /**
    * Link two formations as opposites
    */
-  static async linkOpposites(formationId: string, oppositeId: string): Promise<void> {
+  static async linkOpposites(
+    formationId: string,
+    oppositeId: string
+  ): Promise<void> {
     // Update both formations to point to each other
     const { error: error1 } = await supabase
       .from("formations")
@@ -174,7 +204,10 @@ export class FormationLibraryService {
       .eq("id", formationId);
 
     if (error1) {
-      console.error("[FormationLibraryService] Error linking formation:", error1);
+      console.error(
+        "[FormationLibraryService] Error linking formation:",
+        error1
+      );
       throw new Error(`Failed to link formation: ${error1.message}`);
     }
 
@@ -184,7 +217,10 @@ export class FormationLibraryService {
       .eq("id", oppositeId);
 
     if (error2) {
-      console.error("[FormationLibraryService] Error linking opposite:", error2);
+      console.error(
+        "[FormationLibraryService] Error linking opposite:",
+        error2
+      );
       throw new Error(`Failed to link opposite formation: ${error2.message}`);
     }
   }
@@ -203,8 +239,14 @@ export class FormationLibraryService {
 
     // Clear both links
     await Promise.all([
-      supabase.from("formations").update({ opposite_formation_id: null }).eq("id", formationId),
-      supabase.from("formations").update({ opposite_formation_id: null }).eq("id", oppositeId),
+      supabase
+        .from("formations")
+        .update({ opposite_formation_id: null })
+        .eq("id", formationId),
+      supabase
+        .from("formations")
+        .update({ opposite_formation_id: null })
+        .eq("id", oppositeId),
     ]);
   }
 
@@ -221,7 +263,10 @@ export class FormationLibraryService {
       .limit(limit);
 
     if (error) {
-      console.error("[FormationLibraryService] Error fetching formation plays:", error);
+      console.error(
+        "[FormationLibraryService] Error fetching formation plays:",
+        error
+      );
       throw new Error(`Failed to fetch formation plays: ${error.message}`);
     }
 

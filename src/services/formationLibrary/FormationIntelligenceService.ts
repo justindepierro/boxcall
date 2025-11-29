@@ -7,7 +7,6 @@
  */
 
 import { supabase } from "../../lib/supabase";
-import type { Formation } from "../../types/formation";
 import type {
   IntelligenceAnalysis,
   FieldAnalysis,
@@ -29,7 +28,9 @@ export class FormationIntelligenceService {
   /**
    * Analyze all formations in a playbook from existing plays
    */
-  static async analyzePlaybookFormations(playbookId: string): Promise<Map<string, IntelligenceAnalysis>> {
+  static async analyzePlaybookFormations(
+    playbookId: string
+  ): Promise<Map<string, IntelligenceAnalysis>> {
     // Fetch all non-archived plays
     const { data: plays, error } = await supabase
       .from("plays")
@@ -38,7 +39,10 @@ export class FormationIntelligenceService {
       .eq("is_archived", false);
 
     if (error) {
-      console.error("[FormationIntelligenceService] Error fetching plays:", error);
+      console.error(
+        "[FormationIntelligenceService] Error fetching plays:",
+        error
+      );
       throw new Error(`Failed to fetch plays: ${error.message}`);
     }
 
@@ -46,7 +50,7 @@ export class FormationIntelligenceService {
     const formationGroups = new Map<string, PlayData[]>();
     for (const play of plays || []) {
       if (!play.formation) continue;
-      
+
       const formationName = play.formation.trim().toLowerCase();
       if (!formationGroups.has(formationName)) {
         formationGroups.set(formationName, []);
@@ -72,32 +76,16 @@ export class FormationIntelligenceService {
     const analyzed_at = new Date().toISOString();
 
     // Analyze f_type (formation type)
-    const formation_type = this.analyzeField(
-      plays,
-      (p) => p.f_type,
-      total
-    );
+    const formation_type = this.analyzeField(plays, (p) => p.f_type, total);
 
     // Analyze r_str (run strength)
-    const run_strength = this.analyzeField(
-      plays,
-      (p) => p.r_str,
-      total
-    );
+    const run_strength = this.analyzeField(plays, (p) => p.r_str, total);
 
     // Analyze p_str (pass strength)
-    const pass_strength = this.analyzeField(
-      plays,
-      (p) => p.p_str,
-      total
-    );
+    const pass_strength = this.analyzeField(plays, (p) => p.p_str, total);
 
     // Analyze personnel
-    const personnel = this.analyzeField(
-      plays,
-      (p) => p.personnel,
-      total
-    );
+    const personnel = this.analyzeField(plays, (p) => p.personnel, total);
 
     // Calculate overall confidence
     const confidence_score = this.calculateOverallConfidence([
@@ -177,11 +165,14 @@ export class FormationIntelligenceService {
   private static calculateOverallConfidence(
     analyses: Array<FieldAnalysis<string> | undefined>
   ): number {
-    const validAnalyses = analyses.filter((a) => a !== undefined) as FieldAnalysis<string>[];
+    const validAnalyses = analyses.filter(
+      (a) => a !== undefined
+    ) as FieldAnalysis<string>[];
     if (validAnalyses.length === 0) return 0;
 
     const avgPercentage =
-      validAnalyses.reduce((sum, a) => sum + a.percentage, 0) / validAnalyses.length;
+      validAnalyses.reduce((sum, a) => sum + a.percentage, 0) /
+      validAnalyses.length;
 
     return Math.round(avgPercentage);
   }
@@ -237,11 +228,16 @@ export class FormationIntelligenceService {
   /**
    * Detect opposite formations using pattern matching
    */
-  static async detectOppositeFormations(playbookId: string): Promise<OppositeDetection[]> {
+  static async detectOppositeFormations(
+    playbookId: string
+  ): Promise<OppositeDetection[]> {
     const { data, error } = await supabase.rpc("detect_opposite_formations");
 
     if (error) {
-      console.error("[FormationIntelligenceService] Error detecting opposites:", error);
+      console.error(
+        "[FormationIntelligenceService] Error detecting opposites:",
+        error
+      );
       throw new Error(`Failed to detect opposites: ${error.message}`);
     }
 
@@ -274,10 +270,14 @@ export class FormationIntelligenceService {
 
     if (n1.includes("rip") && n2.includes("liz")) return "Rip↔Liz pattern";
     if (n1.includes("liz") && n2.includes("rip")) return "Liz↔Rip pattern";
-    if (n1.includes("larry") && n2.includes("ringo")) return "Larry↔Ringo pattern";
-    if (n1.includes("ringo") && n2.includes("larry")) return "Ringo↔Larry pattern";
-    if (n1.includes("left") && n2.includes("right")) return "Left↔Right keywords";
-    if (n1.includes("right") && n2.includes("left")) return "Right↔Left keywords";
+    if (n1.includes("larry") && n2.includes("ringo"))
+      return "Larry↔Ringo pattern";
+    if (n1.includes("ringo") && n2.includes("larry"))
+      return "Ringo↔Larry pattern";
+    if (n1.includes("left") && n2.includes("right"))
+      return "Left↔Right keywords";
+    if (n1.includes("right") && n2.includes("left"))
+      return "Right↔Left keywords";
     return "Name pattern match";
   }
 

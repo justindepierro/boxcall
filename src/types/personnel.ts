@@ -189,13 +189,13 @@ export interface PersonnelConfiguration {
   description?: string | null;
   /** Badge customization settings (stored as JSONB in database) */
   badgeCustomization?: BadgeCustomization | null;
-  
+
   // Intelligence System (NEW)
   confidence_score: number; // 0-100 confidence from play analysis
   last_analyzed_at: string | null; // Timestamp of last intelligence run
   analysis_play_count: number; // Number of plays analyzed
   usage_count: number; // Number of plays using this personnel
-  
+
   created_at: string;
   updated_at: string;
   /** Associated players ordered by sort_order */

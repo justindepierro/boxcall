@@ -18,14 +18,19 @@ import { useActiveTeamStore } from "../stores/activeTeamStore";
 export const FormationLibraryPage: React.FC = () => {
   const { playbooks } = useTeamsData();
   const { activeTeamId } = useActiveTeamStore();
-  
+
   // Get playbook ID from localStorage preference or first active playbook
-  const savedPlaybookId = localStorage.getItem(`bc_active_playbook_${activeTeamId}`);
-  const activePlaybook = playbooks.find(pb => 
-    pb.team_id === activeTeamId && pb.is_active && 
-    (savedPlaybookId ? pb.id === savedPlaybookId : true)
-  ) || playbooks.find(pb => pb.team_id === activeTeamId && pb.is_active);
-  
+  const savedPlaybookId = localStorage.getItem(
+    `bc_active_playbook_${activeTeamId}`
+  );
+  const activePlaybook =
+    playbooks.find(
+      (pb) =>
+        pb.team_id === activeTeamId &&
+        pb.is_active &&
+        (savedPlaybookId ? pb.id === savedPlaybookId : true)
+    ) || playbooks.find((pb) => pb.team_id === activeTeamId && pb.is_active);
+
   const playbookId = activePlaybook?.id || "";
 
   if (!playbookId) {

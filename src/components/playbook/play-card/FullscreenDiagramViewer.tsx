@@ -20,14 +20,10 @@ interface FullscreenDiagramViewerProps {
 
 export const FullscreenDiagramViewer: React.FC<
   FullscreenDiagramViewerProps
-> = ({ 
-  plays, 
-  initialPlayIndex, 
-  onClose
-}) => {
+> = ({ plays, initialPlayIndex, onClose }) => {
   // Filter to only plays with diagram_image_url
   const playsWithDiagrams = useMemo(
-    () => plays.filter(play => play.diagram_image_url),
+    () => plays.filter((play) => play.diagram_image_url),
     [plays]
   );
 
@@ -35,23 +31,27 @@ export const FullscreenDiagramViewer: React.FC<
   const initialFilteredIndex = useMemo(() => {
     const initialPlay = plays[initialPlayIndex];
     if (!initialPlay) return 0;
-    const index = playsWithDiagrams.findIndex(p => p.id === initialPlay.id);
+    const index = playsWithDiagrams.findIndex((p) => p.id === initialPlay.id);
     return index >= 0 ? index : 0;
   }, [plays, initialPlayIndex, playsWithDiagrams]);
 
   const [currentIndex, setCurrentIndex] = useState(initialFilteredIndex);
   const currentPlay = playsWithDiagrams[currentIndex];
-  
+
   // Use the full play_name as displayed in the playbook list
   const displayName = currentPlay?.play_name || "Untitled";
 
   // Navigation handlers
   const goToPrevious = useCallback(() => {
-    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : playsWithDiagrams.length - 1));
+    setCurrentIndex((prev) =>
+      prev > 0 ? prev - 1 : playsWithDiagrams.length - 1
+    );
   }, [playsWithDiagrams.length]);
 
   const goToNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev < playsWithDiagrams.length - 1 ? prev + 1 : 0));
+    setCurrentIndex((prev) =>
+      prev < playsWithDiagrams.length - 1 ? prev + 1 : 0
+    );
   }, [playsWithDiagrams.length]);
 
   // Keyboard navigation

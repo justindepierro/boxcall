@@ -25,7 +25,9 @@ export class PersonnelSyncService {
       return {
         success: false,
         affected_plays: 0,
-        errors: [{ play_id: "N/A", error: "Personnel configuration not found" }],
+        errors: [
+          { play_id: "N/A", error: "Personnel configuration not found" },
+        ],
         warnings: [],
       };
     }
@@ -99,7 +101,10 @@ export class PersonnelSyncService {
       .order("play_name");
 
     if (error) {
-      console.error("[PersonnelSyncService] Error fetching affected plays:", error);
+      console.error(
+        "[PersonnelSyncService] Error fetching affected plays:",
+        error
+      );
       return [];
     }
 

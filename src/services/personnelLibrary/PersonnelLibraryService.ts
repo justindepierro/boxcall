@@ -8,10 +8,12 @@
 import { supabase } from "../../lib/supabase";
 import type {
   PersonnelConfiguration,
-  PersonnelPlayer,
   CreatePersonnelConfiguration,
 } from "../../types/personnel";
-import type { LibraryFilterOptions, PaginatedLibraryResponse } from "../../types/library";
+import type {
+  LibraryFilterOptions,
+  PaginatedLibraryResponse,
+} from "../../types/library";
 
 export class PersonnelLibraryService {
   /**
@@ -28,7 +30,9 @@ export class PersonnelLibraryService {
 
     // Apply filters
     if (filters?.search) {
-      query = query.or(`name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
+      query = query.or(
+        `name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`
+      );
     }
 
     if (filters?.min_usage) {
@@ -52,7 +56,10 @@ export class PersonnelLibraryService {
     const { data, count, error } = await query;
 
     if (error) {
-      console.error("[PersonnelLibraryService] Error fetching personnel:", error);
+      console.error(
+        "[PersonnelLibraryService] Error fetching personnel:",
+        error
+      );
       throw new Error(`Failed to fetch personnel: ${error.message}`);
     }
 
@@ -70,7 +77,9 @@ export class PersonnelLibraryService {
   /**
    * Get single personnel configuration by ID
    */
-  static async getPersonnelById(id: string): Promise<PersonnelConfiguration | null> {
+  static async getPersonnelById(
+    id: string
+  ): Promise<PersonnelConfiguration | null> {
     const { data, error } = await supabase
       .from("personnel_configurations")
       .select("*, players:personnel_players(*)")
@@ -78,7 +87,10 @@ export class PersonnelLibraryService {
       .single();
 
     if (error) {
-      console.error("[PersonnelLibraryService] Error fetching personnel:", error);
+      console.error(
+        "[PersonnelLibraryService] Error fetching personnel:",
+        error
+      );
       throw new Error(`Failed to fetch personnel: ${error.message}`);
     }
 
@@ -107,7 +119,10 @@ export class PersonnelLibraryService {
       .single();
 
     if (configError) {
-      console.error("[PersonnelLibraryService] Error creating personnel:", configError);
+      console.error(
+        "[PersonnelLibraryService] Error creating personnel:",
+        configError
+      );
       throw new Error(`Failed to create personnel: ${configError.message}`);
     }
 
@@ -126,15 +141,23 @@ export class PersonnelLibraryService {
         .insert(playersToInsert);
 
       if (playersError) {
-        console.error("[PersonnelLibraryService] Error creating players:", playersError);
+        console.error(
+          "[PersonnelLibraryService] Error creating players:",
+          playersError
+        );
         // Rollback config creation
-        await supabase.from("personnel_configurations").delete().eq("id", configData.id);
+        await supabase
+          .from("personnel_configurations")
+          .delete()
+          .eq("id", configData.id);
         throw new Error(`Failed to create players: ${playersError.message}`);
       }
     }
 
     // Fetch complete config with players
-    return this.getPersonnelById(configData.id) as Promise<PersonnelConfiguration>;
+    return this.getPersonnelById(
+      configData.id
+    ) as Promise<PersonnelConfiguration>;
   }
 
   /**
@@ -151,7 +174,7 @@ export class PersonnelLibraryService {
       updated_at: new Date().toISOString(),
     };
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("personnel_configurations")
       .update(updateData)
       .eq("id", id)
@@ -159,7 +182,10 @@ export class PersonnelLibraryService {
       .single();
 
     if (error) {
-      console.error("[PersonnelLibraryService] Error updating personnel:", error);
+      console.error(
+        "[PersonnelLibraryService] Error updating personnel:",
+        error
+      );
       throw new Error(`Failed to update personnel: ${error.message}`);
     }
 
@@ -195,7 +221,10 @@ export class PersonnelLibraryService {
       .eq("id", id);
 
     if (error) {
-      console.error("[PersonnelLibraryService] Error deleting personnel:", error);
+      console.error(
+        "[PersonnelLibraryService] Error deleting personnel:",
+        error
+      );
       throw new Error(`Failed to delete personnel: ${error.message}`);
     }
   }
@@ -203,7 +232,11 @@ export class PersonnelLibraryService {
   /**
    * Get plays using a personnel package
    */
-  static async getPersonnelPlays(personnelName: string, playbookId: string, limit = 10) {
+  static async getPersonnelPlays(
+    personnelName: string,
+    playbookId: string,
+    limit = 10
+  ) {
     const { data, error } = await supabase
       .from("plays")
       .select("id, play_name, p_type, formation, personnel")
@@ -214,7 +247,10 @@ export class PersonnelLibraryService {
       .limit(limit);
 
     if (error) {
-      console.error("[PersonnelLibraryService] Error fetching personnel plays:", error);
+      console.error(
+        "[PersonnelLibraryService] Error fetching personnel plays:",
+        error
+      );
       throw new Error(`Failed to fetch personnel plays: ${error.message}`);
     }
 

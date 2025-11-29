@@ -48,10 +48,10 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
       window.clearTimeout(openTimeoutRef.current);
       openTimeoutRef.current = null;
     }
-    
+
     // Start fade-out animation
     setIsClosing(true);
-    
+
     // Remove from DOM after animation completes (300ms)
     closeTimeoutRef.current = window.setTimeout(() => {
       setIsOpen(false);
@@ -73,8 +73,8 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
 
   const handleEnterFullscreen = useCallback(() => {
     if (!onEnterFullscreen || allPlays.length === 0) return;
-    
-    const playIndex = allPlays.findIndex(p => p.id === play.id);
+
+    const playIndex = allPlays.findIndex((p) => p.id === play.id);
     if (playIndex !== -1) {
       closeTooltip();
       onEnterFullscreen(allPlays, playIndex);
@@ -146,7 +146,7 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
             {/* Backdrop - click to close */}
             <div
               className={`fixed inset-0 bg-black/50 z-[9998] transition-opacity duration-300 ${
-                isClosing ? 'opacity-0' : 'opacity-100'
+                isClosing ? "opacity-0" : "opacity-100"
               }`}
               onClick={closeTooltip}
               aria-hidden="true"
@@ -155,8 +155,8 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
             {/* Popover Content */}
             <div
               ref={tooltipRef}
-              className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] pointer-events-auto max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)] w-full md:w-[600px] transition-all duration-300 ${
-                isClosing ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+              className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] pointer-events-auto max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)] w-full md:max-w-2xl transition-all duration-300 ${
+                isClosing ? "opacity-0 scale-95" : "opacity-100 scale-100"
               }`}
               onMouseLeave={handlePopoverMouseLeave}
             >
@@ -174,7 +174,7 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
                       <Icon name="maximize" size="sm" className="text-white" />
                     </button>
                   )}
-                  
+
                   {/* Close Button */}
                   <button
                     onClick={closeTooltip}
