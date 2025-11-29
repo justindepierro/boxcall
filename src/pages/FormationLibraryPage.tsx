@@ -43,14 +43,6 @@ export const FormationLibraryPage: React.FC = () => {
 
   const playbookId = activePlaybook?.id || "";
 
-  // Debug: Log playbook selection
-  useEffect(() => {
-    console.log("🔍 [FormationLibrary] Team playbooks:", teamPlaybooks);
-    console.log("🔍 [FormationLibrary] Saved playbook ID:", savedPlaybookId);
-    console.log("🔍 [FormationLibrary] Active playbook:", activePlaybook);
-    console.log("🔍 [FormationLibrary] Selected playbook ID:", playbookId);
-  }, [teamPlaybooks, savedPlaybookId, activePlaybook, playbookId]);
-
   if (!playbookId) {
     return (
       <div className="min-h-screen bg-surface flex items-center justify-center">
@@ -134,8 +126,6 @@ const FormationLibraryPageContent: React.FC<
         )
       );
 
-      console.log("🔍 [FormationLibrary] Unique formations:", uniqueFormations);
-
       // Create formations that don't exist
       let createdCount = 0;
       let errorCount = 0;
@@ -165,10 +155,9 @@ const FormationLibraryPageContent: React.FC<
             });
 
           if (error) {
-            console.error(`❌ Failed to create formation "${originalName || formationName}":`, error);
+            console.error(`Failed to create formation "${originalName || formationName}":`, error);
             errorCount++;
           } else {
-            console.log(`✅ Created formation: ${originalName || formationName}`);
             createdCount++;
           }
         }
@@ -191,9 +180,6 @@ const FormationLibraryPageContent: React.FC<
   const handleAnalyze = async () => {
     try {
       setAnalyzing(true);
-      console.log("🔍 [FormationLibrary] Starting analysis...");
-      console.log("📋 [FormationLibrary] Playbook ID:", playbookId);
-      
       toast.loading("Analyzing plays to derive formation metadata...", {
         id: "analyze",
       });
@@ -202,13 +188,10 @@ const FormationLibraryPageContent: React.FC<
         await FormationIntelligenceService.analyzePlaybookFormations(
           playbookId
         );
-      console.log("📊 [FormationLibrary] Analysis results:", results);
-      console.log("📊 [FormationLibrary] Results size:", results.size);
       setAnalyses(results);
 
       const updatedCount =
         await FormationIntelligenceService.populateLibraryFromPlays(playbookId);
-      console.log("✅ [FormationLibrary] Updated count:", updatedCount);
 
       toast.success(
         `Analyzed ${results.size} formations, updated ${updatedCount}`,

@@ -32,32 +32,11 @@ export class FormationIntelligenceService {
     playbookId: string
   ): Promise<Map<string, IntelligenceAnalysis>> {
     // Fetch all non-archived plays
-    console.log("🔍 [Intelligence] Playbook ID:", playbookId);
-    console.log("🔍 [Intelligence] Querying plays table...");
-    
-    // Debug: Find all playbooks with plays
-    const { data: allPlaybooks, error: playbooksError } = await supabase
-      .from("plays")
-      .select("playbook_id")
-      .eq("is_archived", false);
-    
-    if (allPlaybooks) {
-      const playbookCounts = allPlaybooks.reduce((acc: Record<string, number>, play: any) => {
-        acc[play.playbook_id] = (acc[play.playbook_id] || 0) + 1;
-        return acc;
-      }, {});
-      console.log("🔍 [Intelligence] Playbooks with plays:", playbookCounts);
-    }
-    
     const { data: plays, error } = await supabase
       .from("plays")
       .select("id, formation, formation_id, f_type, r_str, p_str, personnel")
       .eq("playbook_id", playbookId)
       .eq("is_archived", false);
-
-    console.log("🔍 [Intelligence] Fetched plays count:", plays?.length || 0);
-    console.log("🔍 [Intelligence] Sample play:", plays?.[0]);
-    console.log("🔍 [Intelligence] Query error:", error);
 
     if (error) {
       console.error(
@@ -67,25 +46,10 @@ export class FormationIntelligenceService {
       throw new Error(`Failed to fetch plays: ${error.message}`);
     }
 
-    // Check if playbook has any plays at all (without is_archived filter)
-    if (plays?.length === 0) {
-      console.log("🔍 [Intelligence] No plays found. Checking if playbook exists and has plays...");
-      const { data: allPlays, error: allPlaysError } = await supabase
-        .from("plays")
-        .select("id, is_archived")
-        .eq("playbook_id", playbookId);
-      
-      console.log("🔍 [Intelligence] Total plays in playbook (including archived):", allPlays?.length || 0);
-      console.log("🔍 [Intelligence] All plays error:", allPlaysError);
-    }
-
     // Group plays by formation name
     const formationGroups = new Map<string, PlayData[]>();
     for (const play of plays || []) {
-      if (!play.formation) {
-        console.log("⚠️ [Intelligence] Play has no formation:", play);
-        continue;
-      }
+      if (!play.formation) continue;
 
       const formationName = play.formation.trim().toLowerCase();
       if (!formationGroups.has(formationName)) {
@@ -104,7 +68,6 @@ export class FormationIntelligenceService {
       results.set(formationName, analysis);
     }
 
-    console.log("✅ [Intelligence] Analysis complete, results:", results.size);
     return results;
   }
 
