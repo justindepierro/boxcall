@@ -32,7 +32,7 @@ export const WeeklyChallengePopover: React.FC<WeeklyChallengePopoverProps> = ({
   const totalCount = challenges.length;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-overlay-modal">
+    <div className="fixed inset-0 z-modal flex items-center justify-center p-4 bg-overlay-modal">
       <div className="bg-primary rounded-xl shadow-2xl max-w-md w-full max-h-[80vh] overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-primary p-6 text-inverse">

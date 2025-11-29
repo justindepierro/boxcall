@@ -141,7 +141,7 @@ export function FormationSelector({
 
       {/* Dropdown Menu - matches Play field style */}
       {isOpen && !isLoading && formations.length > 0 && (
-        <div className="absolute top-full left-0 right-0 bg-primary/95 dark:bg-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-10 max-h-60 overflow-y-auto mt-1">
+        <div className="absolute top-full left-0 right-0 bg-primary/95 dark:bg-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-popover max-h-60 overflow-y-auto mt-1">
           {formations.map((formationName) => (
             <button
               key={formationName}
@@ -164,7 +164,7 @@ export function FormationSelector({
 
       {/* No Formations Message */}
       {isOpen && !isLoading && formations.length === 0 && (
-        <div className="absolute top-full left-0 right-0 bg-primary/95 dark:bg-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-10 p-4 mt-1 text-center">
+        <div className="absolute top-full left-0 right-0 bg-primary/95 dark:bg-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-popover p-4 mt-1 text-center">
           <p className="text-sm text-muted">
             No formations yet - just start typing
           </p>
@@ -173,7 +173,7 @@ export function FormationSelector({
 
       {/* Close dropdown on outside click */}
       {isOpen && (
-        <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
+        <div className="fixed inset-0 z-modal-backdrop" onClick={() => setIsOpen(false)} />
       )}
     </div>
   );

@@ -78,7 +78,7 @@ const getSidebarPosition = (
 const getSidebarStyles = (headerVisible: boolean) => {
   const topPosition = headerVisible ? "top-16" : "top-0";
   return `
-    fixed ${topPosition} bottom-0 z-[50] flex flex-col
+    fixed ${topPosition} bottom-0 z-modal flex flex-col
     bg-primary/95 dark:bg-secondary/95
     shadow-2xl backdrop-blur-md
     transform transition-all duration-300 ease-out
@@ -345,7 +345,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Overlay */}
       {showOverlay && (
         <div
-          className="fixed inset-0 top-16 z-[40] bg-text-primary/50 dark:bg-text-primary/70 transition-opacity duration-300 ease-out motion-reduce:transition-none"
+          className="fixed inset-0 top-16 z-modal-backdrop bg-text-primary/50 dark:bg-text-primary/70 transition-opacity duration-300 ease-out motion-reduce:transition-none"
           onClick={onClose}
           aria-hidden="true"
         />

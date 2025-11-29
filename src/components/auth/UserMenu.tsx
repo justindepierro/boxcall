@@ -104,7 +104,7 @@ export const UserMenu: React.FC = () => {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 bg-primary/98 backdrop-blur-xl rounded-lg shadow-2xl border border-secondary/40 z-[70] overflow-hidden max-h-[calc(100vh-5rem)]">
+        <div className="absolute right-0 mt-2 w-56 bg-primary/98 backdrop-blur-xl rounded-lg shadow-2xl border border-secondary/40 z-tooltip overflow-hidden max-h-[calc(100vh-5rem)]">
           <div className="py-1">
             {/* User Info */}
             <div className="px-4 py-3 border-b border-secondary/40 bg-subtle/20">

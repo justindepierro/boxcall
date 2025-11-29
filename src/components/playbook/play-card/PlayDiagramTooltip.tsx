@@ -123,7 +123,7 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
         shouldShow &&
         createPortal(
           <div
-            className="fixed z-[100] pointer-events-auto"
+            className="fixed z-tooltip pointer-events-auto"
             style={{
               top: `${position.top}px`,
               left: `${position.left}px`,

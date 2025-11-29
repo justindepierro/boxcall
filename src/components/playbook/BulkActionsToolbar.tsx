@@ -50,13 +50,13 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
         {/* Backdrop */}
         {isExpanded && (
           <div
-            className="fixed inset-0 bg-black/20 z-40 animate-in fade-in-0 duration-200"
+            className="fixed inset-0 bg-backdrop-light z-modal-backdrop animate-in fade-in-0 duration-200"
             onClick={toggleExpanded}
           />
         )}
 
         {/* FAB Container */}
-        <div className="fixed bottom-20 right-4 z-50 flex flex-col items-end gap-3">
+        <div className="fixed bottom-20 right-4 z-fixed flex flex-col items-end gap-3">
           {/* Expanded Action Menu */}
           {isExpanded && (
             <div className="flex flex-col gap-2 animate-in slide-in-from-bottom-2 fade-in-0 duration-200">
@@ -172,7 +172,7 @@ export const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
 
   // Desktop: Horizontal Toolbar
   return (
-    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-primary rounded-lg shadow-lg border border-secondary p-3 z-50">
+    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-primary rounded-lg shadow-lg border border-secondary p-3 z-fixed">
       <div className="flex items-center space-x-4">
         {/* Selection Count */}
         <div className="flex items-center space-x-2">

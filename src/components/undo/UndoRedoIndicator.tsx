@@ -16,7 +16,7 @@ export function UndoRedoIndicator() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-40 flex gap-2">
+    <div className="fixed bottom-4 right-4 z-fixed flex gap-2">
       {/* Undo Button */}
       <button
         onClick={undo}

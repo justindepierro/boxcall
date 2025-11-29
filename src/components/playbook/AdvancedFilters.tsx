@@ -244,7 +244,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
           >
             <div className="flex flex-col h-full bg-primary">
               {/* Header */}
-              <div className="sticky top-0 z-10 px-4 py-4 bg-primary border-b border-muted">
+              <div className="sticky top-0 z-sticky px-4 py-4 bg-primary border-b border-muted">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <Icon name="filter" className="h-5 w-5 text-accent" />
@@ -427,7 +427,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
               </div>
 
               {/* Footer with Apply Button */}
-              <div className="sticky bottom-0 z-10 p-4 bg-primary border-t border-muted pb-safe">
+              <div className="sticky bottom-0 z-sticky p-4 bg-primary border-t border-muted pb-safe">
                 <button
                   onClick={() => setShowAdvanced(false)}
                   className="w-full h-12 bg-accent text-inverse text-sm font-semibold rounded-lg hover:bg-accent-hover active:scale-98 transition-all shadow-sm"

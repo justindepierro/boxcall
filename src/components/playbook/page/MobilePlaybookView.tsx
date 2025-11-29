@@ -108,7 +108,7 @@ export function MobilePlaybookView({
       {/* Search Bar - FIXED at top (always visible, no scroll needed) */}
       {state.playsCreated > 0 && (
         <div
-          className="fixed top-0 left-0 right-0 z-[60] bg-primary/95 backdrop-blur-md border-b border-muted px-4 shadow-md"
+          className="fixed top-0 left-0 right-0 z-sticky bg-primary/95 backdrop-blur-md border-b border-muted px-4 shadow-md"
           style={{
             paddingTop: "max(env(safe-area-inset-top, 0px), 0.75rem)",
             paddingBottom: "0.75rem",
@@ -128,21 +128,6 @@ export function MobilePlaybookView({
               }
               className="w-full h-12 pl-10 pr-20 bg-secondary border border-muted rounded-lg text-base text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-jade focus:border-transparent transition-all"
             />
-            {/* Voice Search Button - Mobile convenience */}
-            {!state.searchQuery && (
-              <button
-                onClick={() => {
-                  triggerHapticFeedback("light");
-                  // TODO: Implement voice search with Web Speech API
-                  console.log("Voice search coming soon!");
-                }}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-9 h-9 flex items-center justify-center hover:bg-tertiary rounded-full transition-colors active:scale-95"
-                aria-label="Voice search"
-                title="Voice search (coming soon)"
-              >
-                <Icon name="mic" className="h-5 w-5 text-muted" />
-              </button>
-            )}
             {/* 🚀 PERFORMANCE: Instant search feedback - shows while debouncing */}
             {state.isSearchPending && state.searchQuery && (
               <motion.div
@@ -170,12 +155,12 @@ export function MobilePlaybookView({
                   triggerHapticFeedback("light");
                   dispatch({ type: "SET_SEARCH", query: "" });
                 }}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 flex items-center justify-center hover:bg-tertiary rounded-full transition-colors"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-11 h-11 flex items-center justify-center hover:bg-tertiary rounded-full transition-colors"
                 aria-label="Clear search"
               >
                 <Icon
                   name="close"
-                  className="h-4 w-4 text-secondary hover:text-primary"
+                  className="h-5 w-5 text-secondary hover:text-primary"
                 />
               </motion.button>
             )}

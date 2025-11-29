@@ -47,7 +47,7 @@ export const PendingSavesNotification: React.FC = () => {
 
   return (
     <div
-      className="fixed top-20 right-4 z-50 max-w-md 
+      className="fixed top-20 right-4 z-fixed max-w-md 
         bg-warning-50 dark:bg-warning-900/20 
         border border-warning-200 dark:border-warning-800 
         rounded-lg shadow-lg p-4"

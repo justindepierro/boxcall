@@ -137,7 +137,7 @@ export function PullToRefresh({
     >
       {/* Pull-to-refresh indicator */}
       <motion.div
-        className="absolute top-0 left-0 right-0 flex items-center justify-center pointer-events-none z-50"
+        className="absolute top-0 left-0 right-0 flex items-center justify-center pointer-events-none z-fixed"
         style={{
           height: pullDistance,
           opacity: useTransform(pullDistance, [0, threshold], [0, 1]),

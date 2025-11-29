@@ -95,7 +95,7 @@ export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-text-primary bg-opacity-50 flex items-center justify-center p-4 z-50"
+      className="fixed inset-0 bg-backdrop flex items-center justify-center p-4 z-modal"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onClose();

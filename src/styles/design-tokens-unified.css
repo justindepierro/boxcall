@@ -420,6 +420,12 @@
   --color-bg-surface: #ffffff;
   --color-bg-muted: #f8fafc;
   --color-bg-subtle: #f1f5f9;
+  
+  /* Backdrop/Overlay Colors (for modals, sheets, overlays) */
+  --color-backdrop: rgba(0, 0, 0, 0.5);
+  --color-backdrop-light: rgba(0, 0, 0, 0.2);
+  --color-backdrop-dark: rgba(0, 0, 0, 0.7);
+  --color-backdrop-blur: rgba(0, 0, 0, 0.3); /* For use with backdrop-blur */
 
   /* Border Colors */
   --color-border-primary: #e2e8f0;

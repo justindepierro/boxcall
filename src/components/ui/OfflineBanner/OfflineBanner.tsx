@@ -21,7 +21,7 @@ export const OfflineBanner: React.FC = () => {
   return (
     <div
       className={`
-        fixed top-16 left-0 right-0 z-[70]
+        fixed top-16 left-0 right-0 z-tooltip
         ${
           isTransitioning
             ? "bg-status-success text-white"

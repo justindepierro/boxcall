@@ -86,7 +86,7 @@ export const PersonnelCreationPanel: React.FC<PersonnelCreationPanelProps> = ({
       {/* Backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/20 z-40 transition-opacity"
+          className="fixed inset-0 bg-backdrop-light z-modal-backdrop transition-opacity"
           onClick={handleClose}
         />
       )}
@@ -97,7 +97,7 @@ export const PersonnelCreationPanel: React.FC<PersonnelCreationPanelProps> = ({
           fixed inset-y-0 right-0 w-96 max-w-full
           bg-primary shadow-2xl
           transform transition-transform duration-300 ease-in-out
-          z-50 overflow-y-auto
+          z-modal overflow-y-auto
           ${isOpen ? "translate-x-0" : "translate-x-full"}
         `}
       >

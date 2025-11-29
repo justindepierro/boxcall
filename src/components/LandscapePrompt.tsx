@@ -23,7 +23,7 @@ export function LandscapePrompt({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-surface p-6"
+      className="fixed inset-0 z-modal flex flex-col items-center justify-center bg-surface p-6"
       role="dialog"
       aria-modal="true"
       aria-labelledby="landscape-prompt-title"

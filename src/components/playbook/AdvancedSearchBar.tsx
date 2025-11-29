@@ -163,7 +163,7 @@ export const AdvancedSearchBar: React.FC<AdvancedSearchBarProps> = ({
       {isOpen && suggestions.length > 0 && (
         <div
           ref={dropdownRef}
-          className="absolute z-50 w-full mt-1 bg-primary rounded-lg elevation-dropdown 
+          className="absolute z-dropdown w-full mt-1 bg-primary rounded-lg elevation-dropdown 
        border-muted max-h-64 overflow-y-auto"
         >
           <div className="py-1">

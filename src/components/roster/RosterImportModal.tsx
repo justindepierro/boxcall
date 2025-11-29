@@ -81,7 +81,7 @@ export const RosterImportModal: React.FC<RosterImportModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-overlay-modal flex items-center justify-center z-50 p-md">
+    <div className="fixed inset-0 bg-overlay-modal flex items-center justify-center z-modal p-md">
       <div className="bg-primary rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
         <div className="p-lg">

@@ -70,7 +70,7 @@ export const PlayRemoteSearchBar: React.FC<PlayRemoteSearchBarProps> = ({
         )}
       </div>
       {query.trim().length >= 2 && (results.length > 0 || loading || error) && (
-        <div className="absolute z-50 mt-1 w-full max-h-72 overflow-auto rounded-lg border-muted bg-primary elevation-dropdown shadow-sm">
+        <div className="absolute z-dropdown mt-1 w-full max-h-72 overflow-auto rounded-lg border-muted bg-primary elevation-dropdown shadow-sm">
           <div className="py-1">
             {error && (
               <div className="px-3 py-2 text-xsssss text-error flex items-center gap-2">

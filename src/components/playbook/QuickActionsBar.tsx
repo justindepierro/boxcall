@@ -42,7 +42,7 @@ export const QuickActionsBar: React.FC<QuickActionsBarProps> = ({
 
   return (
     <div
-      className={`fixed ${isMobile ? "bottom-20 right-4" : "bottom-6 right-6"} z-40 ${className}`}
+      className={`fixed ${isMobile ? "bottom-20 right-4" : "bottom-6 right-6"} z-fixed ${className}`}
     >
       {/* Backdrop - Only on mobile when expanded */}
       {isMobile && isExpanded && (

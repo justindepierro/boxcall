@@ -188,7 +188,7 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
           <>
             {/* Backdrop */}
             <div
-              className="fixed inset-0 z-[100]"
+              className="fixed inset-0 z-modal-backdrop"
               onClick={(e) => {
                 e.stopPropagation();
                 setIsOpen(false);
@@ -197,7 +197,7 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
 
             {/* Menu - Positioned at button location */}
             <div
-              className="fixed bg-primary rounded-lg shadow-2xl z-[110] max-h-96 overflow-y-auto"
+              className="fixed bg-primary rounded-lg shadow-2xl z-modal max-h-96 overflow-y-auto"
               style={{
                 top: `${dropdownPosition.top}px`,
                 left: `${dropdownPosition.left}px`,

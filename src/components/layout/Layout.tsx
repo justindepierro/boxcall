@@ -133,7 +133,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       />
 
       {/* Main content area with overlay sidebar and top padding for fixed nav */}
-      <div className="relative z-[1] pt-16">
+      <div className="relative z-dropdown pt-16">
         {/* Sidebar - Now overlays instead of pushing content */}
         <Sidebar
           items={sidebarItems}

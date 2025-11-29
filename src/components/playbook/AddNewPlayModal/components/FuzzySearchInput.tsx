@@ -143,7 +143,7 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
           required={required}
         />
         {showSuggestions && allSuggestions.length > 0 && (
-          <div className="absolute top-full left-0 right-0 bg-primary/95 dark:bg-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-10 max-h-40 overflow-y-auto mt-xs">
+          <div className="absolute top-full left-0 right-0 bg-primary/95 dark:bg-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-popover max-h-40 overflow-y-auto mt-xs">
             {allSuggestions.map((suggestion, index) => (
               <button
                 key={index}

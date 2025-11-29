@@ -125,7 +125,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
       {/* Main Header - Auto-hides on scroll */}
       <header
         className={`
-          fixed top-0 left-0 right-0 z-[60] 
+          fixed top-0 left-0 right-0 z-sticky 
           bg-surface-card/90 dark:bg-surface-card/90 
           backdrop-blur-md
           shadow-[inset_0_-1px_0_rgba(0,0,0,0.05)]
@@ -185,7 +185,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
       {/* Fixed Left Section - Part of Header, Sidebar Width */}
       <div
         className={`
-          fixed top-0 left-0 z-[60] w-80
+          fixed top-0 left-0 z-modal w-80
           bg-surface-card/90 dark:bg-surface-card/90 
           backdrop-blur-md
           border-r border-border/10
@@ -280,7 +280,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           onMenuToggle();
         }}
         className={`
-          fixed top-4 left-4 z-[55]
+          fixed top-4 left-4 z-fixed
           w-11 h-11 !p-0 flex items-center justify-center
           rounded-radius-md
           shadow-elevation-md

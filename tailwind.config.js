@@ -84,6 +84,14 @@ const colors = {
     muted: "var(--color-bg-muted)",
     subtle: "var(--color-bg-subtle)",
   },
+  
+  // Backdrop/Overlay colors (for modals, sheets, overlays)
+  backdrop: {
+    DEFAULT: "var(--color-backdrop)",
+    light: "var(--color-backdrop-light)",
+    dark: "var(--color-backdrop-dark)",
+    blur: "var(--color-backdrop-blur)",
+  },
 
   // Border colors
   border: {
@@ -333,16 +341,15 @@ export default {
         "7xl": "var(--container-7xl)",
       },
 
-      // Z-index
+      // Z-index (mapped to --z-index-* CSS variables)
       zIndex: {
-        dropdown: "var(--z-dropdown)",
-        sticky: "var(--z-sticky)",
-        fixed: "var(--z-fixed)",
-        overlay: "var(--z-overlay)",
-        modal: "var(--z-modal)",
-        popover: "var(--z-popover)",
-        toast: "var(--z-toast)",
-        tooltip: "var(--z-tooltip)",
+        dropdown: "var(--z-index-dropdown)",
+        sticky: "var(--z-index-sticky)",
+        fixed: "var(--z-index-fixed)",
+        "modal-backdrop": "var(--z-index-modal-backdrop)",
+        modal: "var(--z-index-modal)",
+        popover: "var(--z-index-popover)",
+        tooltip: "var(--z-index-tooltip)",
       },
     },
   },

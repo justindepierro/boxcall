@@ -88,7 +88,7 @@ export function ImportPracticeScriptsModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div className="fixed inset-0 z-modal flex items-center justify-center bg-backdrop backdrop-blur-sm">
       <div className="w-full max-w-lg rounded-lg border border-border bg-primary p-6 shadow-xl">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
