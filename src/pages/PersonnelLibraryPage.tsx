@@ -11,14 +11,21 @@ import { PersonnelSyncService } from "../services/personnelLibrary/PersonnelSync
 import type { PersonnelConfiguration } from "../types/personnel";
 import { Icon } from "../components/ui/Icon/Icon";
 import { toast } from "sonner";
-import { usePlaybook } from "../contexts/PlaybookContext";
 import { useTeamsData } from "../hooks/useTeamsData";
+import { useActiveTeamStore } from "../stores/activeTeamStore";
 
 export const PersonnelLibraryPage: React.FC = () => {
-  const { state } = usePlaybook();
   const { playbooks } = useTeamsData();
-  // Get active playbook ID from context or first playbook
-  const playbookId = state.activePlaybookId || playbooks[0]?.id || "";
+  const { activeTeamId } = useActiveTeamStore();
+  
+  // Get playbook ID from localStorage preference or first active playbook
+  const savedPlaybookId = localStorage.getItem(`bc_active_playbook_${activeTeamId}`);
+  const activePlaybook = playbooks.find(pb => 
+    pb.team_id === activeTeamId && pb.is_active && 
+    (savedPlaybookId ? pb.id === savedPlaybookId : true)
+  ) || playbooks.find(pb => pb.team_id === activeTeamId && pb.is_active);
+  
+  const playbookId = activePlaybook?.id || "";
 
   if (!playbookId) {
     return (
