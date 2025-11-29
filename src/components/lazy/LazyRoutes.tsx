@@ -135,6 +135,22 @@ export const LazyFormationMapperPage = lazyRoute(
   "Formation Mapper"
 );
 
+export const LazyFormationLibraryPage = lazyRoute(
+  () =>
+    import("../../pages/FormationLibraryPage").then((module) => ({
+      default: module.FormationLibraryPage,
+    })),
+  "Formation Library"
+);
+
+export const LazyPersonnelLibraryPage = lazyRoute(
+  () =>
+    import("../../pages/PersonnelLibraryPage").then((module) => ({
+      default: module.PersonnelLibraryPage,
+    })),
+  "Personnel Library"
+);
+
 export const LazyAwardsPage = lazyRoute(
   () => import("../../pages/AwardsPage"),
   "Awards"

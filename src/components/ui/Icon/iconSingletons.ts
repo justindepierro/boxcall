@@ -102,4 +102,5 @@ export const iconLoaders: Record<IconName, Loader> = {
   "wifi-off": () => import("lucide-react/dist/esm/icons/wifi-off.js"),
   wrench: () => import("lucide-react/dist/esm/icons/wrench.js"),
   zap: () => import("lucide-react/dist/esm/icons/zap.js"),
+  maximize: () => import("lucide-react/dist/esm/icons/maximize.js"),
 };

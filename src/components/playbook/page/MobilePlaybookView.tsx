@@ -170,15 +170,15 @@ export function MobilePlaybookView({
 
       {/* Content area with padding for fixed search bar */}
       <div
-        className={`px-4 py-6 space-y-6 pb-32 ${state.playsCreated > 0 ? "pt-24" : ""}`}
+        className={`px-4 py-3 space-y-3 pb-32 ${state.playsCreated > 0 ? "pt-20" : ""}`}
         style={{
           paddingTop:
             state.playsCreated > 0
-              ? `calc(6rem + env(safe-area-inset-top, 0px))`
-              : "1.5rem",
+              ? `calc(5rem + env(safe-area-inset-top, 0px))`
+              : "1rem",
         }}
       >
-        {/* pt-24 (~96px) accounts for fixed search bar height + safe-area. pb-32 prevents FAB overlap */}
+        {/* Reduced spacing: py-3, space-y-3, pt-20 for tighter layout */}
 
         {/* Empty State - Hero CTA */}
         {state.playsCreated === 0 && (
@@ -194,96 +194,21 @@ export function MobilePlaybookView({
           </MobileSection>
         )}
 
-        {/* Quick Actions - 3 Max for Mobile */}
-        <MobileSection title="Quick Actions" spacing="tight">
-          <MobileQuickActions
-            actions={[
-              {
-                id: "personnel",
-                icon: "users",
-                label: "Personnel",
-                onTap: handleOpenPersonnel,
-              },
-              {
-                id: "settings",
-                icon: "settings",
-                label: "Settings",
-                onTap: handleOpenSettings,
-              },
-              {
-                id: "shortcuts",
-                icon: "command",
-                label: "Shortcuts",
-                onTap: handleOpenKeyboardShortcuts,
-              },
-            ]}
-          />
-        </MobileSection>
-
-        {formationAudit.plays.length > 0 && (
-          <MobileSection title="Formation Cleanup" spacing="comfortable">
-            <FormationSyncPanel
-              plays={formationAudit.plays}
-              loading={formationAudit.loading}
-              error={formationAudit.error}
-              onRefresh={() => {}} // TODO: Pass handler
-              onResolve={handleEditPlay}
-              onOpenMapper={() => {}} // TODO: Pass handler
-              isMobile
-            />
-          </MobileSection>
-        )}
-
-        {/* Selection Mode Toggle - Mobile */}
-        <MobileSection spacing="tight">
-          <SelectionModeToggle
-            isActive={state.enableBulkOperations}
-            onToggle={() => {
-              triggerHapticFeedback("light");
-              dispatch({ type: "TOGGLE_BULK" });
-            }}
-            selectedCount={state.selectedPlayIds?.size || 0}
-            variant="compact"
-            className="w-full"
-          />
-        </MobileSection>
-
-        {/* Advanced Filters Button - Renamed for clarity */}
+        {/* Main Content - Plays Grid (MOVED TO TOP) */}
         {state.playsCreated > 0 && (
-          <MobileSection spacing="tight">
-            <Button
-              onClick={() => {
-                triggerHapticFeedback("light");
-                setShowFiltersSheet(true);
-              }}
-              variant="secondary"
-              className="w-full h-12"
-            >
-              <Icon name="filter" className="h-4 w-4 mr-2" />
-              Advanced Filters
-              {Object.keys(state.advancedFilters).length > 0 && (
-                <span className="ml-2 bg-brand-jade text-white text-xs rounded-full px-2 py-0.5">
-                  {Object.keys(state.advancedFilters).length}
-                </span>
-              )}
-            </Button>
-          </MobileSection>
-        )}
-
-        {/* Main Content - Plays Grid */}
-        <MobileSection
-          title="Your Plays"
-          action={
-            !mobileListExpanded && state.playsCreated > 3
-              ? "See All"
-              : undefined
-          }
-          onAction={() => {
-            triggerHapticFeedback("light");
-            setMobileListExpanded(true);
-          }}
-          spacing="comfortable"
-        >
+          <MobileSection
+            title="Your Plays"
+            action={
+              !mobileListExpanded && state.playsCreated > 3
+                ? "See All"
+                : undefined
+            }
+            onAction={() => {
+              triggerHapticFeedback("light");
+              setMobileListExpanded(true);
+            }}
+            spacing="tight"
+          >
           <PullToRefresh onRefresh={handlePullRefresh}>
             <ErrorBoundary
               fallback={
@@ -329,6 +254,88 @@ export function MobilePlaybookView({
             </ErrorBoundary>
           </PullToRefresh>
         </MobileSection>
+        )}
+
+        {/* Selection Mode Toggle - Mobile */}
+        {state.playsCreated > 0 && (
+          <MobileSection spacing="tight">
+            <SelectionModeToggle
+              isActive={state.enableBulkOperations}
+              onToggle={() => {
+                triggerHapticFeedback("light");
+                dispatch({ type: "TOGGLE_BULK" });
+              }}
+              selectedCount={state.selectedPlayIds?.size || 0}
+              variant="compact"
+              className="w-full"
+            />
+          </MobileSection>
+        )}
+
+        {/* Advanced Filters Button */}
+        {state.playsCreated > 0 && (
+          <MobileSection spacing="tight">
+            <Button
+              onClick={() => {
+                triggerHapticFeedback("light");
+                setShowFiltersSheet(true);
+              }}
+              variant="secondary"
+              className="w-full h-10 text-sm"
+            >
+              <Icon name="filter" className="h-4 w-4 mr-2" />
+              Filters
+              {Object.keys(state.advancedFilters).length > 0 && (
+                <span className="ml-2 bg-brand-jade text-white text-xs rounded-full px-2 py-0.5">
+                  {Object.keys(state.advancedFilters).length}
+                </span>
+              )}
+            </Button>
+          </MobileSection>
+        )}
+
+        {/* Quick Actions - Compact (MOVED BELOW GRID) */}
+        {state.playsCreated > 0 && (
+          <MobileSection title="Quick Actions" spacing="tight">
+            <MobileQuickActions
+              actions={[
+                {
+                  id: "personnel",
+                  icon: "users",
+                  label: "Personnel",
+                  onTap: handleOpenPersonnel,
+                },
+                {
+                  id: "settings",
+                  icon: "settings",
+                  label: "Settings",
+                  onTap: handleOpenSettings,
+                },
+                {
+                  id: "shortcuts",
+                  icon: "command",
+                  label: "Shortcuts",
+                  onTap: handleOpenKeyboardShortcuts,
+                },
+              ]}
+            />
+          </MobileSection>
+        )}
+
+        {/* Formation Cleanup (MOVED TO BOTTOM) */}
+        {formationAudit.plays.length > 0 && (
+          <MobileSection title="Formation Cleanup" spacing="tight">
+            <FormationSyncPanel
+              plays={formationAudit.plays}
+              loading={formationAudit.loading}
+              error={formationAudit.error}
+              onRefresh={() => {}} // TODO: Pass handler
+              onResolve={handleEditPlay}
+              onOpenMapper={() => {}} // TODO: Pass handler
+              isMobile
+            />
+          </MobileSection>
+        )}
 
         {/* Floating Action Button for Quick Actions */}
         <FloatingActionButton

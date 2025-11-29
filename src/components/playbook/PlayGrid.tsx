@@ -73,6 +73,7 @@ interface PlayGridProps {
   onAddToPracticeScript?: (play: Play) => void;
   onAddToGamePlan?: (play: Play) => void;
   onPostToTeamBulletin?: (play: Play) => void;
+  onEnterFullscreen?: (plays: Play[], playIndex: number) => void;
   onPlayCreated?: () => void; // Add callback for when data should refresh
   onPlayCountChange?: (count: number) => void; // Callback to report actual play count
   refreshTrigger?: number; // Trigger to refresh data from parent
@@ -103,6 +104,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   onAddToPracticeScript: _onAddToPracticeScript, // Not used in V2
   onAddToGamePlan: _onAddToGamePlan, // Not used in V2
   onPostToTeamBulletin,
+  onEnterFullscreen,
   onPlayCreated: _onPlayCreated, // Prefixed with _ to indicate intentionally unused
   onPlayCountChange,
   refreshTrigger = 0,
@@ -474,6 +476,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
         onDuplicate={onDuplicate}
         onOpenAssignments={onOpenAssignments}
         onPostToTeamBulletin={onPostToTeamBulletin}
+        onEnterFullscreen={onEnterFullscreen}
+        allPlays={plays}
         isSelected={selectedPlayIds.has(play.id)}
         onSelectionChange={enableBulkOperations ? handlePlaySelect : undefined}
         formationSuggestions={collectedSuggestions.formations}

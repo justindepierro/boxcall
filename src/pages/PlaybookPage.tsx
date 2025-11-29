@@ -37,7 +37,7 @@ import {
 } from "../utils/formationFlipHelpers";
 import { supabase } from "../lib/supabase";
 import { info, error as logError, debug } from "../utils/logger";
-import { useIsMobile } from "../hooks/useBreakpoint";
+import { useIsMobileOrTablet } from "../hooks/useBreakpoint";
 import { useMobileButtonProps } from "../hooks/useMobileButtonProps";
 
 import { BottomSheet } from "../components/BottomSheet";
@@ -50,6 +50,7 @@ import { MobilePlaybookView } from "../components/playbook/page/MobilePlaybookVi
 import { DesktopPlaybookView } from "../components/playbook/page/DesktopPlaybookView";
 import { PlaybookModals } from "../components/playbook/page/PlaybookModals";
 import { useModalManager } from "../hooks/useModalManager";
+import { FullscreenDiagramViewer } from "../components/playbook/play-card/FullscreenDiagramViewer";
 
 // Lazy load modal components for code splitting (~120KB savings)
 
@@ -58,7 +59,7 @@ export default function PlaybookPage() {
   const toast = useToast();
   const navigate = useNavigate();
   const { activeTeamId } = useActiveTeamStore();
-  const isMobile = useIsMobile();
+  const isMobileOrTablet = useIsMobileOrTablet(); // Tablets (< 1024px) get mobile view
   const [mobileListExpanded, setMobileListExpanded] = useState(false);
 
   // Mobile-optimized button sizes (44px+ touch targets)
@@ -131,9 +132,9 @@ export default function PlaybookPage() {
   );
 
   useEffect(() => {
-    if (!isMobile) return;
+    if (!isMobileOrTablet) return;
     setMobileListExpanded(false);
-  }, [isMobile, debouncedSearchQuery, selectedFiltersKey]);
+  }, [isMobileOrTablet, debouncedSearchQuery, selectedFiltersKey]);
 
   const [diagramPlay, setDiagramPlay] = useState<Play | null>(null);
   const [diagramMode, setDiagramMode] = useState<"edit" | "quick-play">("edit");
@@ -177,6 +178,24 @@ export default function PlaybookPage() {
   const [recentActivities, setRecentActivities] = useState<PlayActivityItem[]>(
     []
   );
+
+  // Fullscreen diagram viewer state
+  const [fullscreenPlayIndex, setFullscreenPlayIndex] = useState<number | null>(null);
+  const [fullscreenPlays, setFullscreenPlays] = useState<Play[]>([]);
+
+  // Handle entering fullscreen presentation mode
+  const handleEnterFullscreen = useCallback((plays: Play[], playIndex: number) => {
+    console.log('[PlaybookPage] Entering fullscreen mode', { playCount: plays.length, startIndex: playIndex });
+    setFullscreenPlays(plays);
+    setFullscreenPlayIndex(playIndex);
+  }, []);
+
+  // Handle exiting fullscreen
+  const handleExitFullscreen = useCallback(() => {
+    console.log('[PlaybookPage] Exiting fullscreen mode');
+    setFullscreenPlayIndex(null);
+    setFullscreenPlays([]);
+  }, []);
 
   // Helper to refresh recent activities
   const refreshActivities = useCallback(async () => {
@@ -951,6 +970,7 @@ export default function PlaybookPage() {
           onTeamTypeChange={handleTeamTypeChange}
           onOpenSettings={handleOpenSettings}
           onOpenBuilder={handleOpenBuilder}
+          onOpenPersonnel={handleOpenPersonnel}
           onOpenHealth={() => openModal("playbookHealth")}
           onNavigate={navigate}
           title="Playbook"
@@ -968,8 +988,8 @@ export default function PlaybookPage() {
           }}
         />
 
-        {/* Mobile-First Layout */}
-        {isMobile ? (
+        {/* Mobile/Tablet-First Layout (< 1024px) */}
+        {isMobileOrTablet ? (
           <MobilePlaybookView
             state={state}
             mobileListExpanded={mobileListExpanded}
@@ -1025,6 +1045,7 @@ export default function PlaybookPage() {
             handleFiltersChange={handleFiltersChange}
             handleClearSelection={handleClearSelection}
             handleBulkAction={handleBulkAction}
+            handleEnterFullscreen={handleEnterFullscreen}
             dispatch={dispatch}
             navigate={navigate}
             suggestions={suggestions}
@@ -1052,15 +1073,22 @@ export default function PlaybookPage() {
           existingPlays={allPlaysForStats.map((play) => ({
             ...play,
             confidence_base: play.confidence_base ?? 3,
-            game_plan_plays_count: play.game_plan_plays_count ?? 0,
+            times_called: play.times_called ?? 0,
+            times_successful: play.times_successful ?? 0,
+            created_by: '',
+            created_at: new Date(play.created_at),
+            updated_at: new Date(play.updated_at),
+            diagram_data: typeof play.diagram_data === 'string' 
+              ? JSON.parse(play.diagram_data) 
+              : play.diagram_data,
           }))}
           handleCreatePlay={handleCreatePlay}
           handleSavePlay={handleSavePlay}
           dispatch={dispatch}
         />
 
-        {/* Mobile Filters Bottom Sheet */}
-        {isMobile && showFiltersSheet && (
+        {/* Mobile/Tablet Filters Bottom Sheet */}
+        {isMobileOrTablet && showFiltersSheet && (
           <BottomSheet
             snapPoints={[0.1, 0.6, 0.9]}
             initialSnapPoint={1}
@@ -1138,6 +1166,15 @@ export default function PlaybookPage() {
           onClearSelection={() => dispatch({ type: "CLEAR_SELECTION" })}
           onBulkAction={handleBulkAction}
         />
+
+        {/* Fullscreen Diagram Viewer */}
+        {fullscreenPlayIndex !== null && fullscreenPlays.length > 0 && (
+          <FullscreenDiagramViewer
+            plays={fullscreenPlays}
+            initialPlayIndex={fullscreenPlayIndex}
+            onClose={handleExitFullscreen}
+          />
+        )}
       </div>
     </Aurora>
   );

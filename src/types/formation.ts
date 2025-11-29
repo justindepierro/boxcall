@@ -95,6 +95,7 @@ export interface FormationCreationContext {
 
 /**
  * Complete Formation entity (database row)
+ * Matches database schema from 20251129110912_formation_personnel_library_system.sql
  */
 export interface Formation {
   id: string;
@@ -103,47 +104,37 @@ export interface Formation {
   // Basic Info
   name: string;
   description: string | null;
-  category: FormationCategory | null;
 
-  // Personnel Integration
-  personnel_id: string | null; // References personnel_configurations.id
-  personnel_name: string | null; // Denormalized: "11", "12", "21"
-  personnel_packages: string[]; // Array of personnel_configuration IDs that can run this formation
+  // Formation Metadata (Library System - NEW)
+  formation_type: string | null; // "3x1", "2x2", "Empty", "I Formation", "Shotgun", etc.
+  run_strength: StrengthType | null; // Default run strength: left, right, balanced
+  pass_strength: StrengthType | null; // Default pass strength: left, right, balanced
+  strength_player_position: string | null; // Position that sets strength: "TE", "H", "RB"
 
-  // Left/Right Variant System (Simplified)
+  // Left/Right Variant System
   opposite_formation_id: string | null; // Direct link to opposite-side formation (left ↔ right)
   direction: FormationDirection; // "left", "right", or null (standalone)
+  is_standalone: boolean; // TRUE if no opposite exists (Doubles, Empty, Trips)
 
-  // Strength Player
-  strength_player_position: string | null; // "X", "Y", "Z", "H", "F"
-  strength_player_label: string | null; // "Blue", "Black", "Green"
+  // Intelligence System (NEW)
+  confidence_score: number; // 0-100 confidence from play analysis
+  last_analyzed_at: string | null; // Timestamp of last intelligence run
+  analysis_play_count: number; // Number of plays analyzed for metadata
 
-  // Formation Metadata
-  formation_type: FormationType | null; // Base formation type: I Formation, Shotgun, etc.
-  run_strength: StrengthType; // Default run strength: left, right, balanced
-  pass_strength: StrengthType; // Default pass strength: left, right, balanced
+  // Player Positions (JSONB in database)
+  player_positions: FormationPlayerPosition[] | null; // Array of positions with x/y coords
+  diagram_data: any | null; // Full diagram data (Pixi.js format)
 
-  // Player Positions
-  player_positions: FormationPlayerPosition[];
+  // Personnel Integration
+  personnel_packages: string[]; // Array of personnel_configuration UUIDs
 
-  // Metadata
-  tags: string[];
-  is_custom: boolean;
-  usage_count: number;
-
-  // Creation Tracking (for AI/predictive features)
-  creation_source: FormationCreationSource; // Where was this created from
-  creation_context: FormationCreationContext; // Additional creation details
-  metadata_completeness: number; // 0-100 score of metadata quality
-  metadata_quality: FormationMetadataQuality; // Quality classification
+  // Usage Tracking
+  usage_count: number; // Number of plays using this formation
+  metadata_quality: FormationMetadataQuality | null; // complete, needs_work, incomplete
 
   // Timestamps
   created_at: string;
   updated_at: string;
-  created_by: string | null;
-
-  // Optimistic locking (conflict resolution)
-  version: number; // Incremented on each update to detect concurrent modifications
 }
 
 /**

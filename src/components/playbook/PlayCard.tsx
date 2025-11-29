@@ -47,6 +47,8 @@ interface PlayCardProps {
   onAddToGamePlan?: (play: PlayType) => void;
   onOpenAssignments?: (play: PlayType) => void;
   onPostToTeamBulletin?: (play: PlayType) => void;
+  onEnterFullscreen?: (plays: PlayType[], playIndex: number) => void;
+  allPlays?: PlayType[];
   isSelected?: boolean;
   onSelectionChange?: (playId: string, selected: boolean) => void;
   density?: "comfortable" | "compact";
@@ -131,6 +133,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   onAddToGamePlan,
   onOpenAssignments,
   onPostToTeamBulletin,
+  onEnterFullscreen,
+  allPlays = [],
   isSelected = false,
   onSelectionChange,
   density = "compact",
@@ -447,7 +451,10 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     <PlayDiagramTooltip
       play={play}
       displayName={displayName}
-      disabled={isExpanded || isMobile} // Don't show tooltip when expanded or on mobile
+      disabled={isExpanded || isMobile}
+      hoverDelay={2000} // 2 second delay for general card hover
+      allPlays={allPlays}
+      onEnterFullscreen={onEnterFullscreen}
     >
       <div
         className={`w-full rounded-2xl border bg-white transition-all duration-300 overflow-visible ${
@@ -468,15 +475,24 @@ export const PlayCard: React.FC<PlayCardProps> = ({
           } overflow-visible`}
         >
           {!isTile && play.diagram_url && (
-            <div className="mb-3 -mt-1">
-              <img
-                src={play.diagram_url}
-                alt={`${displayName} diagram preview`}
-                className="w-full h-40 object-cover rounded-xl border border-muted"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
+            <PlayDiagramTooltip
+              play={play}
+              displayName={displayName}
+              disabled={isExpanded || isMobile}
+              hoverDelay={0} // Instant for image hover
+              allPlays={allPlays}
+              onEnterFullscreen={onEnterFullscreen}
+            >
+              <div className="mb-3 -mt-1">
+                <img
+                  src={play.diagram_url}
+                  alt={`${displayName} diagram preview`}
+                  className="w-full h-40 object-cover rounded-xl border border-muted cursor-pointer"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </PlayDiagramTooltip>
           )}
 
           {isTile ? (

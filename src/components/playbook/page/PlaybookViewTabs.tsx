@@ -32,6 +32,7 @@ export type PlaybookViewTabsProps = {
   onTeamTypeChange?: (type: TeamType) => void;
   onOpenSettings?: () => void;
   onOpenBuilder?: () => void;
+  onOpenPersonnel?: () => void;
   onOpenHealth?: () => void;
   onNavigate?: (path: string) => void; // For breadcrumb navigation
   // Header content props
@@ -55,6 +56,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
   onTeamTypeChange,
   onOpenSettings,
   onOpenBuilder,
+  onOpenPersonnel,
   onOpenHealth,
   onNavigate,
   title,
@@ -249,6 +251,24 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
 
           {/* Action Buttons - Right side */}
           <div className="flex items-center gap-2 overflow-visible">
+            {/* Formation Library Button */}
+            <Button
+              onClick={() => {
+                triggerHapticFeedback("medium");
+                onNavigate?.('/playbook/formations');
+              }}
+              variant="primary"
+              size="sm"
+              className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-md hover:shadow-lg transition-all duration-200"
+              icon={<Icon name="grid" className="h-4 w-4" />}
+              iconPosition="left"
+            >
+              <span className="hidden lg:inline">Formation Library</span>
+              <span className="lg:hidden">Formations</span>
+            </Button>
+
+            {/* Personnel Builder Button */}\n            <Button\n              onClick={() => {\n                triggerHapticFeedback(\"medium\");\n                // This will need to be wired to open personnel modal\n                if (onOpenBuilder) {\n                  // For now, navigate to personnel page or open personnel modal\n                  console.log('Personnel Builder clicked - needs personnel modal handler');\n                }\n              }}\n              variant=\"primary\"\n              size=\"sm\"\n              className=\"bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-md hover:shadow-lg transition-all duration-200\"\n              icon={<Icon name=\"users\" className=\"h-4 w-4\" />}\n              iconPosition=\"left\"\n            >\n              <span className=\"hidden lg:inline\">Personnel Builder</span>\n              <span className=\"lg:hidden\">Personnel</span>\n            </Button>
+
             {/* Playbook Selector - Compact inline version */}
             {playbooks &&
               playbooks.length > 0 &&

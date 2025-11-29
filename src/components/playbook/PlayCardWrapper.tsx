@@ -26,6 +26,8 @@ interface PlayCardWrapperProps {
   onAddToPracticeScript?: (play: Play) => void;
   onAddToGamePlan?: (play: Play) => void;
   onPostToTeamBulletin?: (play: Play) => void;
+  onEnterFullscreen?: (plays: Play[], playIndex: number) => void;
+  allPlays?: Play[];
 
   // Selection state
   isSelected?: boolean;
@@ -61,6 +63,8 @@ export const PlayCardWrapper: React.FC<PlayCardWrapperProps> = ({
   onAddToPracticeScript,
   onAddToGamePlan,
   onPostToTeamBulletin,
+  onEnterFullscreen,
+  allPlays,
   isSelected,
   onSelectionChange,
   formationSuggestions,
@@ -92,6 +96,8 @@ export const PlayCardWrapper: React.FC<PlayCardWrapperProps> = ({
     onAddToPracticeScript,
     onAddToGamePlan,
     onPostToTeamBulletin,
+    onEnterFullscreen,
+    allPlays,
     isSelected,
     onSelectionChange,
     formationSuggestions,

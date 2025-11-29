@@ -178,20 +178,28 @@ export interface PersonnelPlayer {
 /**
  * Personnel configuration metadata
  * Maps to personnel_configurations table
+ * Updated for Library System (20251129110912 migration)
  */
 export interface PersonnelConfiguration {
   id: string;
   playbook_id: string;
-  /** Configuration name (e.g., "11 Personnel", "12 Personnel") */
+  /** Configuration name (e.g., "11", "12", "21") */
   name: string;
   /** Optional description */
-  description?: string;
+  description?: string | null;
   /** Badge customization settings (stored as JSONB in database) */
-  badgeCustomization?: BadgeCustomization;
+  badgeCustomization?: BadgeCustomization | null;
+  
+  // Intelligence System (NEW)
+  confidence_score: number; // 0-100 confidence from play analysis
+  last_analyzed_at: string | null; // Timestamp of last intelligence run
+  analysis_play_count: number; // Number of plays analyzed
+  usage_count: number; // Number of plays using this personnel
+  
   created_at: string;
   updated_at: string;
   /** Associated players ordered by sort_order */
-  players: PersonnelPlayer[];
+  players?: PersonnelPlayer[];
 }
 
 /**

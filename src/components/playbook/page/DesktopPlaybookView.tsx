@@ -43,6 +43,7 @@ interface DesktopPlaybookViewProps {
   handleFiltersChange: (filters: any) => void;
   handleClearSelection: () => void;
   handleBulkAction: (action: string) => void;
+  handleEnterFullscreen: (plays: Play[], playIndex: number) => void;
   dispatch: any; // TODO: Type properly
   navigate: (path: string) => void;
 
@@ -77,6 +78,7 @@ export function DesktopPlaybookView({
   handleFiltersChange,
   handleClearSelection,
   handleBulkAction,
+  handleEnterFullscreen,
   dispatch,
   navigate,
   suggestions,
@@ -129,10 +131,10 @@ export function DesktopPlaybookView({
               <PlaybookStatsDashboard stats={playbookStats} />
             </Card>
 
-            {/* Recent Activity */}
-            <Card variant="default" className="border-muted">
+            {/* Recent Activity - Disabled: activities table not yet created in DB */}
+            {/* <Card variant="default" className="border-muted">
               <RecentActivityFeed activities={playbookStats.recentActivity} />
-            </Card>
+            </Card> */}
 
             {/* Bulk Actions - Only show when items are selected */}
             {(state.selectedPlayIds?.size || 0) > 0 && (
@@ -184,6 +186,7 @@ export function DesktopPlaybookView({
                       onOpenBuilder: handleOpenBuilder,
                       onOpenAssignments: handleOpenAssignments,
                       onPostToTeamBulletin: handlePostToTeamBulletin,
+                      onEnterFullscreen: handleEnterFullscreen,
                       refreshTrigger: state.refreshTrigger,
                       onPlayCountChange: handlePlayCountChange,
                       formationSuggestions: suggestions.formations,

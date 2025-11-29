@@ -150,7 +150,8 @@ export type IconName =
   | "minus-circle"
   | "message-circle"
   | "loader"
-  | "skip-forward";
+  | "skip-forward"
+  | "maximize";
 
 type AccessibleSvgProps = Pick<
   React.SVGProps<SVGSVGElement>,
@@ -304,6 +305,7 @@ export const Icon: React.FC<IconProps> = ({
       "moon",
       "monitor",
       "grip-vertical",
+      "maximize",
     ]);
     return supported.has(n as ModularIconName)
       ? (n as ModularIconName)

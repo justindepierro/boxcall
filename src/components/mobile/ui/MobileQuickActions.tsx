@@ -137,9 +137,9 @@ function QuickActionButton({
       }}
       className={`
         relative
-        flex flex-col items-center justify-center gap-2.5
-        p-5 rounded-2xl
-        min-h-28
+        flex flex-col items-center justify-center gap-1.5
+        p-3 rounded-xl
+        min-h-20
         transition-all duration-200
         overflow-visible
         ${variantStyles[variant]}
@@ -152,19 +152,19 @@ function QuickActionButton({
         }
         transition={{ duration: 0.5 }}
         className={`
-          w-16 h-16 rounded-full
+          w-12 h-12 rounded-full
           flex items-center justify-center
           ${iconContainerStyles[variant]}
         `}
       >
         <Icon
           name={icon}
-          className={`w-7 h-7 ${variant === "primary" ? "text-white" : iconColorStyles[variant]}`}
+          className={`w-5 h-5 ${variant === "primary" ? "text-white" : iconColorStyles[variant]}`}
         />
       </motion.div>
 
       {/* Label */}
-      <span className="text-sm font-semibold text-primary text-center line-clamp-1">
+      <span className="text-xs font-semibold text-primary text-center line-clamp-1">
         {label}
       </span>
 

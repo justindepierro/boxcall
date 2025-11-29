@@ -1,8 +1,11 @@
 /**
  * PlayDiagramTooltip Component
  *
- * Hover tooltip that shows play diagram preview with basic play info
- * Similar to user avatar hover cards - appears on play card hover
+ * Hover/click popover that shows play diagram preview
+ * - Desktop: Appears on hover (200ms delay)
+ * - Mobile: Disabled (use card click instead)
+ * - Click anywhere or press Escape to close
+ * - Centers on viewport with proper z-index
  */
 
 import React, { useState, useRef, useCallback, useEffect } from "react";
@@ -15,6 +18,9 @@ interface PlayDiagramTooltipProps {
   play: PlayType;
   displayName: string;
   disabled?: boolean;
+  hoverDelay?: number; // Delay in ms before showing tooltip (default: 2000ms)
+  allPlays?: PlayType[]; // All filtered plays for fullscreen navigation
+  onEnterFullscreen?: (plays: PlayType[], playIndex: number) => void; // Callback to enter fullscreen mode
 }
 
 export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
@@ -22,201 +28,229 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
   play,
   displayName,
   disabled = false,
+  hoverDelay = 2000, // Default 2 second delay
+  allPlays = [],
+  onEnterFullscreen,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [isClosing, setIsClosing] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
-  const timeoutRef = useRef<number | null>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const openTimeoutRef = useRef<number | null>(null);
+  const closeTimeoutRef = useRef<number | null>(null);
 
   // Only show tooltip if play has a diagram
   const hasDiagram = Boolean(play.diagram_image_url);
   const shouldShow = hasDiagram && !disabled;
 
-  const updatePosition = useCallback(() => {
-    if (!triggerRef.current) return;
-
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-    const isMobile = viewportWidth < 768; // md breakpoint
-
-    // Responsive dimensions:
-    // Mobile: 90vw max (with 16px padding on each side)
-    // Desktop: 600px fixed
-    const tooltipWidth = isMobile
-      ? Math.min(viewportWidth - 32, viewportWidth * 0.9)
-      : 600;
-    // Mobile: 70vh max to prevent overflow
-    // Desktop: 500px fixed
-    const tooltipHeight = isMobile
-      ? Math.min(viewportHeight * 0.7, viewportHeight - 100)
-      : 500;
-
-    // Center the tooltip on the viewport
-    const left = (viewportWidth - tooltipWidth) / 2;
-    const top = (viewportHeight - tooltipHeight) / 2;
-
-    setPosition({ top, left });
+  const closeTooltip = useCallback(() => {
+    if (openTimeoutRef.current) {
+      window.clearTimeout(openTimeoutRef.current);
+      openTimeoutRef.current = null;
+    }
+    
+    // Start fade-out animation
+    setIsClosing(true);
+    
+    // Remove from DOM after animation completes (300ms)
+    closeTimeoutRef.current = window.setTimeout(() => {
+      setIsOpen(false);
+      setIsClosing(false);
+    }, 300);
   }, []);
 
   const handleMouseEnter = useCallback(() => {
     if (!shouldShow) return;
 
-    // Delay tooltip appearance (500ms)
-    timeoutRef.current = window.setTimeout(() => {
-      updatePosition();
+    openTimeoutRef.current = window.setTimeout(() => {
       setIsOpen(true);
-    }, 500);
-  }, [shouldShow, updatePosition]);
+    }, hoverDelay);
+  }, [shouldShow, hoverDelay]);
 
-  const handleMouseLeave = useCallback(() => {
-    if (timeoutRef.current) {
-      window.clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
+  const handlePopoverMouseLeave = useCallback(() => {
+    closeTooltip();
+  }, [closeTooltip]);
+
+  const handleEnterFullscreen = useCallback(() => {
+    if (!onEnterFullscreen || allPlays.length === 0) return;
+    
+    const playIndex = allPlays.findIndex(p => p.id === play.id);
+    if (playIndex !== -1) {
+      closeTooltip();
+      onEnterFullscreen(allPlays, playIndex);
     }
-    setIsOpen(false);
-  }, []);
+  }, [onEnterFullscreen, allPlays, play.id, closeTooltip]);
 
-  // Update position on scroll/resize (debounced for performance)
+  // Close on Escape key
   useEffect(() => {
     if (!isOpen) return;
 
-    let resizeTimeout: number | null = null;
-
-    const handleUpdate = () => updatePosition();
-
-    // Debounced resize handler (150ms) - prevents excessive recalculations
-    const handleResize = () => {
-      if (resizeTimeout) window.clearTimeout(resizeTimeout);
-      resizeTimeout = window.setTimeout(() => {
-        updatePosition();
-      }, 150);
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        closeTooltip();
+      }
     };
 
-    window.addEventListener("scroll", handleUpdate, true);
-    window.addEventListener("resize", handleResize);
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isOpen, closeTooltip]);
 
-    return () => {
-      window.removeEventListener("scroll", handleUpdate, true);
-      window.removeEventListener("resize", handleResize);
-      if (resizeTimeout) window.clearTimeout(resizeTimeout);
+  // Close on scroll (prevents tooltip from staying open when content moves)
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleScroll = () => {
+      closeTooltip();
     };
-  }, [isOpen, updatePosition]);
 
-  // Cleanup timeout on unmount
+    // Capture phase to catch all scrolls
+    window.addEventListener("scroll", handleScroll, true);
+    return () => window.removeEventListener("scroll", handleScroll, true);
+  }, [isOpen, closeTooltip]);
+
+  // Cleanup timeouts on unmount
   useEffect(() => {
     return () => {
-      if (timeoutRef.current) {
-        window.clearTimeout(timeoutRef.current);
+      if (openTimeoutRef.current) {
+        window.clearTimeout(openTimeoutRef.current);
+      }
+      if (closeTimeoutRef.current) {
+        window.clearTimeout(closeTimeoutRef.current);
       }
     };
   }, []);
 
   return (
     <>
+      {/* Trigger */}
       <div
         ref={triggerRef}
         onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        className="contents"
+        onMouseLeave={() => {
+          // Cancel pending open if mouse leaves before delay completes
+          if (openTimeoutRef.current) {
+            window.clearTimeout(openTimeoutRef.current);
+            openTimeoutRef.current = null;
+          }
+        }}
+        className="block"
       >
         {children}
       </div>
 
-      {/* Tooltip Portal */}
+      {/* Popover Portal */}
       {isOpen &&
         shouldShow &&
         createPortal(
-          <div
-            className="fixed z-tooltip pointer-events-auto"
-            style={{
-              top: `${position.top}px`,
-              left: `${position.left}px`,
-            }}
-            onMouseLeave={handleMouseLeave}
-          >
+          <>
+            {/* Backdrop - click to close */}
             <div
-              className="bg-surface border-2 border-jade-500 rounded-2xl shadow-2xl overflow-hidden animate-fade-in max-w-[90vw] md:max-w-2xl w-[90vw]"
-              style={{ maxHeight: "70vh" }}
+              className={`fixed inset-0 bg-black/50 z-[9998] transition-opacity duration-300 ${
+                isClosing ? 'opacity-0' : 'opacity-100'
+              }`}
+              onClick={closeTooltip}
+              aria-hidden="true"
+            />
+
+            {/* Popover Content */}
+            <div
+              ref={tooltipRef}
+              className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] pointer-events-auto max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)] w-full md:w-[600px] transition-all duration-300 ${
+                isClosing ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+              }`}
+              onMouseLeave={handlePopoverMouseLeave}
             >
-              {/* Play Info Header */}
-              <div className="bg-gradient-to-r from-jade-50 to-jade-100 px-3 md:px-lg py-2 md:py-md border-b border-jade-200">
-                <div className="flex items-start gap-2 md:gap-sm">
-                  <Icon
-                    name="eye"
-                    className="text-jade-600 flex-shrink-0 mt-1"
-                    size="sm"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-base md:text-lg font-bold text-primary truncate">
-                      {displayName}
-                    </h3>
-                    <div className="flex items-center gap-1.5 md:gap-2 mt-1 md:mt-xs flex-wrap">
-                      {play.p_type && (
-                        <span className="text-xs md:text-sm text-secondary">
-                          {play.p_type}
-                        </span>
-                      )}
-                      {play.personnel && (
-                        <span className="px-1.5 md:px-2 py-0.5 bg-jade-600 text-white rounded-md text-xs font-semibold">
-                          {play.personnel}
-                        </span>
-                      )}
+              <div className="bg-surface border-2 border-jade-500 rounded-2xl shadow-2xl overflow-hidden">
+                {/* Action Buttons */}
+                <div className="absolute top-3 right-3 z-10 flex gap-2">
+                  {/* Fullscreen Button */}
+                  {onEnterFullscreen && allPlays.length > 0 && (
+                    <button
+                      onClick={handleEnterFullscreen}
+                      className="flex items-center justify-center p-2 bg-jade-600 hover:bg-jade-700 rounded-full shadow-md transition-all hover:scale-110"
+                      aria-label="Enter fullscreen presentation mode"
+                      title="Fullscreen (for projector)"
+                    >
+                      <Icon name="maximize" size="sm" className="text-white" />
+                    </button>
+                  )}
+                  
+                  {/* Close Button */}
+                  <button
+                    onClick={closeTooltip}
+                    className="flex items-center justify-center p-2 bg-surface/90 hover:bg-surface rounded-full border border-divider shadow-md transition-all hover:scale-110"
+                    aria-label="Close preview"
+                  >
+                    <Icon name="close" size="sm" className="text-secondary" />
+                  </button>
+                </div>
+
+                {/* Play Info Header */}
+                <div className="bg-gradient-to-r from-jade-50 to-jade-100 px-4 md:px-6 py-3 border-b border-jade-200">
+                  <div className="flex items-start gap-2 pr-8">
+                    <Icon
+                      name="eye"
+                      className="text-jade-600 flex-shrink-0 mt-1"
+                      size="sm"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-base md:text-lg font-bold text-primary truncate">
+                        {displayName}
+                      </h3>
+                      <div className="flex items-center gap-2 mt-1 flex-wrap">
+                        {play.p_type && (
+                          <span className="text-xs md:text-sm text-secondary">
+                            {play.p_type}
+                          </span>
+                        )}
+                        {play.personnel && (
+                          <span className="px-2 py-0.5 bg-jade-600 text-white rounded-md text-xs font-semibold">
+                            {play.personnel}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Large Diagram Preview */}
-              {play.diagram_image_url && (
-                <div className="relative bg-neutral-50 overflow-hidden">
-                  <img
-                    src={play.diagram_image_url}
-                    alt={`${displayName} diagram`}
-                    className="w-full h-64 md:h-96 object-contain"
-                    style={{ maxHeight: "calc(70vh - 140px)" }}
-                    loading="lazy"
-                  />
-                  {/* Overlay hint */}
-                  <div className="absolute bottom-2 md:bottom-4 right-2 md:right-4 bg-jade-600 text-white text-xs md:text-sm font-semibold px-2 md:px-3 py-1.5 md:py-2 rounded-lg shadow-lg flex items-center gap-1.5 md:gap-2">
-                    <Icon
-                      name="arrow-right"
-                      size="sm"
-                      className="hidden md:inline"
+                {/* Diagram Preview */}
+                {play.diagram_image_url && (
+                  <div className="relative bg-neutral-50 max-h-[60vh] overflow-y-auto">
+                    <img
+                      src={play.diagram_image_url}
+                      alt={`${displayName} diagram`}
+                      className="w-full object-contain"
+                      style={{ maxHeight: "50vh" }}
                     />
-                    <span className="hidden sm:inline">
-                      Click card to expand full details
-                    </span>
-                    <span className="sm:hidden">Tap to expand</span>
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Quick Stats Footer */}
-              <div className="bg-neutral-50 px-3 md:px-lg py-2 md:py-md border-t border-muted">
-                <div className="flex items-center justify-between text-xs md:text-sm gap-2">
-                  <div className="flex items-center gap-1.5 md:gap-2 flex-1 min-w-0">
-                    <Icon
-                      name="eye"
-                      size="sm"
-                      className="text-jade-600 flex-shrink-0"
-                    />
-                    <span className="text-secondary truncate">
-                      <strong className="text-primary font-bold">
-                        {play.times_called || 0}
-                      </strong>{" "}
-                      <span className="hidden sm:inline">times called</span>
-                      <span className="sm:hidden">called</span>
-                    </span>
+                {/* Quick Stats Footer */}
+                <div className="bg-neutral-50 px-4 md:px-6 py-3 border-t border-muted">
+                  <div className="flex items-center justify-between text-xs md:text-sm gap-2">
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                      <Icon
+                        name="eye"
+                        size="sm"
+                        className="text-jade-600 flex-shrink-0"
+                      />
+                      <span className="text-secondary truncate">
+                        <strong className="text-primary font-bold">
+                          {play.times_called || 0}
+                        </strong>{" "}
+                        times called
+                      </span>
+                    </div>
+                    {play.install_phase && (
+                      <span className="px-3 py-1.5 bg-jade-600 text-white rounded-lg font-bold text-xs uppercase tracking-wide shadow-sm flex-shrink-0">
+                        {play.install_phase}
+                      </span>
+                    )}
                   </div>
-                  {play.install_phase && (
-                    <span className="px-2 md:px-3 py-1 md:py-1.5 bg-jade-600 text-white rounded-lg font-bold text-xs uppercase tracking-wide shadow-sm flex-shrink-0">
-                      {play.install_phase}
-                    </span>
-                  )}
                 </div>
               </div>
             </div>
-          </div>,
+          </>,
           document.body
         )}
     </>
