@@ -87,52 +87,50 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
           .from("plays")
           .select("*")
           .in("id", selectedPlayIds)
-          .then(
-            ({ data, error }) => {
-              if (error) {
-                console.error("Failed to fetch plays:", error);
-                toast.error("Failed to load selected plays");
-                setIsLoadingPlays(false);
-                return;
-              }
-
-              if (data && data.length > 0) {
-                // Create initial script structure with selected plays
-                const plays = data as unknown as Play[];
-                const initialScript: Partial<PracticeScript> = {
-                  id: "", // Will be set on save
-                  name: "",
-                  description: "",
-                  teamId,
-                  plays: plays.map((play, index) => ({
-                    id: `temp-${play.id}-${index}`, // Temporary ID
-                    playId: play.id,
-                    play: play,
-                    order: index,
-                    repetitions: 5, // Default reps
-                    // Default game scenario
-                    hash: "middle" as const,
-                    downDistance: "1st & 10",
-                    fieldPosition: "plus_territory" as const,
-                    defensiveFront: "base" as const,
-                    coverage: "cover_2" as const,
-                    blitz: "none" as const,
-                    addedAt: new Date(),
-                  })),
-                  duration: data.length * 5, // Total reps
-                  createdAt: new Date(),
-                  updatedAt: new Date(),
-                };
-
-                console.log(
-                  "[PracticeScriptBuilder] Initialized script with plays:",
-                  initialScript
-                );
-                setCurrentScript(initialScript as PracticeScript);
-              }
+          .then(({ data, error }) => {
+            if (error) {
+              console.error("Failed to fetch plays:", error);
+              toast.error("Failed to load selected plays");
               setIsLoadingPlays(false);
+              return;
             }
-          );
+
+            if (data && data.length > 0) {
+              // Create initial script structure with selected plays
+              const plays = data as unknown as Play[];
+              const initialScript: Partial<PracticeScript> = {
+                id: "", // Will be set on save
+                name: "",
+                description: "",
+                teamId,
+                plays: plays.map((play, index) => ({
+                  id: `temp-${play.id}-${index}`, // Temporary ID
+                  playId: play.id,
+                  play: play,
+                  order: index,
+                  repetitions: 5, // Default reps
+                  // Default game scenario
+                  hash: "middle" as const,
+                  downDistance: "1st & 10",
+                  fieldPosition: "plus_territory" as const,
+                  defensiveFront: "base" as const,
+                  coverage: "cover_2" as const,
+                  blitz: "none" as const,
+                  addedAt: new Date(),
+                })),
+                duration: data.length * 5, // Total reps
+                createdAt: new Date(),
+                updatedAt: new Date(),
+              };
+
+              console.log(
+                "[PracticeScriptBuilder] Initialized script with plays:",
+                initialScript
+              );
+              setCurrentScript(initialScript as PracticeScript);
+            }
+            setIsLoadingPlays(false);
+          });
       }
     } else if (script) {
       // Loading an existing script for editing
@@ -819,9 +817,9 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
                   </Typography>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <Button 
-                    variant="secondary" 
-                    size="sm" 
+                  <Button
+                    variant="secondary"
+                    size="sm"
                     onClick={handleExportPDF}
                     className="btn-action"
                   >

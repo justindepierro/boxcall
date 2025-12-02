@@ -152,7 +152,8 @@ export default function PlaybookPage() {
   });
 
   // 🚀 PERFORMANCE: Centralized modal state management (must be before callbacks that use it)
-  const { openModal, closeModal, closeAllModals, isModalOpen } = useModalManager();
+  const { openModal, closeModal, closeAllModals, isModalOpen } =
+    useModalManager();
 
   // Modal-specific data (kept separate since not all modals need data)
   const [playToPost, setPlayToPost] = useState<Play | null>(null);
@@ -302,24 +303,27 @@ export default function PlaybookPage() {
   }, [allPlaysForStats, allFormations]); // ✅ Only depends on plays
 
   // Activity stats calculated separately
-  const activityStats = useMemo(() => ({
-    recentActivity: recentActivities
-      .filter(
-        (activity) => activity.activityType !== "deleted" // Filter out deleted activities for dashboard
-      )
-      .map((activity) => ({
-        id: activity.id,
-        type: activity.activityType as Exclude<
-          typeof activity.activityType,
-          "deleted"
-        >,
-        playName: activity.playName || "Unknown Play",
-        timestamp: new Date(activity.createdAt),
-        details: activity.details
-          ? JSON.stringify(activity.details)
-          : undefined,
-      })),
-  }), [recentActivities]);
+  const activityStats = useMemo(
+    () => ({
+      recentActivity: recentActivities
+        .filter(
+          (activity) => activity.activityType !== "deleted" // Filter out deleted activities for dashboard
+        )
+        .map((activity) => ({
+          id: activity.id,
+          type: activity.activityType as Exclude<
+            typeof activity.activityType,
+            "deleted"
+          >,
+          playName: activity.playName || "Unknown Play",
+          timestamp: new Date(activity.createdAt),
+          details: activity.details
+            ? JSON.stringify(activity.details)
+            : undefined,
+        })),
+    }),
+    [recentActivities]
+  );
 
   // Combine stats
   const playbookStats = { ...playStats, ...activityStats };
@@ -750,36 +754,38 @@ export default function PlaybookPage() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Cmd/Ctrl + K: Quick search (focus search input)
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
-        const searchInput = document.querySelector('[data-search-input]') as HTMLInputElement;
+        const searchInput = document.querySelector(
+          "[data-search-input]"
+        ) as HTMLInputElement;
         searchInput?.focus();
         return;
       }
 
       // Cmd/Ctrl + N: New play
-      if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
+      if ((e.metaKey || e.ctrlKey) && e.key === "n") {
         e.preventDefault();
         handleOpenBuilder();
         return;
       }
 
       // Cmd/Ctrl + F: Advanced filters
-      if ((e.metaKey || e.ctrlKey) && e.key === 'f') {
+      if ((e.metaKey || e.ctrlKey) && e.key === "f") {
         e.preventDefault();
-        dispatch({ type: 'TOGGLE_SHOW_ADVANCED_FILTERS' });
+        dispatch({ type: "TOGGLE_SHOW_ADVANCED_FILTERS" });
         return;
       }
 
       // Escape: Close all modals
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         closeAllModals();
         return;
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleOpenBuilder, dispatch, closeAllModals]);
 
   // Handle pull-to-refresh on mobile

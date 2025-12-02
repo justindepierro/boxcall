@@ -151,7 +151,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   // 🚀 INFINITE SCROLL: Intersection Observer for automatic loading
   const { ref: loadMoreRef, inView } = useInView({
     threshold: 0.5,
-    rootMargin: '200px', // Start loading 200px before reaching bottom
+    rootMargin: "200px", // Start loading 200px before reaching bottom
   });
 
   // Auto-load more when scroll trigger is visible
@@ -169,7 +169,13 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
         setIsLoadingMore(false);
       }, 300);
     }
-  }, [inView, hasMorePlays, isLoadingMore, displayPlays.length, onMobileListExpand]);
+  }, [
+    inView,
+    hasMorePlays,
+    isLoadingMore,
+    displayPlays.length,
+    onMobileListExpand,
+  ]);
 
   // Get real data from database with refresh capability and pagination
   const {
@@ -831,7 +837,9 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                   variant="secondary"
                   className="w-full sm:w-auto"
                 >
-                  Show More ({Math.max(displayPlays.length - mobileVisibleCount, 0)} remaining)
+                  Show More (
+                  {Math.max(displayPlays.length - mobileVisibleCount, 0)}{" "}
+                  remaining)
                 </Button>
               )}
             </div>
