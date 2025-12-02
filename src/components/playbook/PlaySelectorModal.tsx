@@ -171,11 +171,6 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
                 </option>
               ))}
             </select>
-          </div><option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
           </div>
         </div>
 
