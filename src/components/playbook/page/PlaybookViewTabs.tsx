@@ -56,7 +56,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
   onTeamTypeChange,
   onOpenSettings,
   onOpenBuilder,
-  onOpenPersonnel,
+  onOpenPersonnel: _onOpenPersonnel,
   onOpenHealth,
   onNavigate,
   title,

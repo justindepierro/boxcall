@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Modal } from "../ui/Modal";
 import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon";
@@ -32,13 +32,7 @@ export const TemplateManagementModal: React.FC<
   const toast = useToast();
 
   // Load templates when modal opens in load mode
-  useEffect(() => {
-    if (isOpen && mode === "load") {
-      loadTemplates();
-    }
-  }, [isOpen, mode]);
-
-  const loadTemplates = async () => {
+  const loadTemplates = useCallback(async () => {
     setLoading(true);
     try {
       const loadedTemplates = await PracticeService.getTemplates(teamId);
@@ -49,7 +43,13 @@ export const TemplateManagementModal: React.FC<
     } finally {
       setLoading(false);
     }
-  };
+  }, [teamId, toast]);
+
+  useEffect(() => {
+    if (isOpen && mode === "load") {
+      loadTemplates();
+    }
+  }, [isOpen, mode, loadTemplates]);
 
   const handleSave = () => {
     if (!templateName.trim()) {

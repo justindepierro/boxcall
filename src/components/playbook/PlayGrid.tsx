@@ -540,6 +540,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       directionDisplayFormat,
       expandedPlayId,
       handleToggleExpand,
+      onEnterFullscreen,
     ]
   );
 

@@ -129,10 +129,7 @@ export default function PlaybookPage() {
   // 🚀 INSTANT SEARCH: No debounce! Array filtering is fast enough (<10ms for 200 plays)
   // With memoization, this feels Facebook-instant on every keystroke
   const debouncedSearchQuery = state.searchQuery; // Direct use, no debouncing (keeping var name for compatibility)
-  const selectedFiltersKey = useMemo(
-    () => JSON.stringify(state.selectedFilters ?? {}),
-    [state.selectedFilters]
-  );
+  const selectedFiltersKey = JSON.stringify(state.selectedFilters ?? {});
 
   useEffect(() => {
     if (!isMobileOrTablet) return;
@@ -284,11 +281,8 @@ export default function PlaybookPage() {
     [dispatch]
   );
 
-  const handleTeamTypeChange = useCallback(
-    (teamType: "offense" | "defense" | "special-teams") =>
-      dispatch({ type: "SET_TEAM_TYPE", teamType }),
-    [dispatch]
-  );
+  const handleTeamTypeChange = (teamType: "offense" | "defense" | "special-teams") =>
+    dispatch({ type: "SET_TEAM_TYPE", teamType });
 
   const handleFiltersChange = useCallback(
     (filters: PlaybookState["advancedFilters"]) => {
@@ -298,10 +292,7 @@ export default function PlaybookPage() {
     [dispatch]
   );
 
-  const handleClearSelection = useCallback(
-    () => dispatch({ type: "CLEAR_SELECTION" }),
-    [dispatch]
-  );
+  const handleClearSelection = () => dispatch({ type: "CLEAR_SELECTION" });
 
   const handleBulkAction = useCallback(
     (action: string) => {

@@ -196,6 +196,33 @@ Found **20+ references** to archived components:
 
 ---
 
+## ✅ Phase 5 Completion - Style Cleanup (Dec 2, 2025)
+
+### What Was Done
+
+**Fixed All Design Token ESLint Warnings**
+
+Replaced raw Tailwind colors with semantic design tokens across 4 modal components:
+
+1. **CreateFormationModal** - `text-red-500` → `text-error`, footer styling
+2. **CreatePersonnelModal** - `text-red-500` → `text-error`, footer styling
+3. **FormationLibraryModal** - 3 locations fixed (preview, search, footer)
+4. **PersonnelLibraryModal** - 2 locations fixed (search, footer)
+
+### Results
+
+**ESLint Warnings:** 22 → 6 (-73% reduction)
+
+All design token violations fixed. Remaining 6 warnings are unrelated (react-hooks, unused vars).
+
+**Benefits:**
+- ✅ Consistent design token usage
+- ✅ Better dark mode support
+- ✅ Complies with BoxCall design system
+- ✅ Type-checks passing (0 errors)
+
+---
+
 ## 📦 Bundle Analysis
 
 ### Current Bundle Size

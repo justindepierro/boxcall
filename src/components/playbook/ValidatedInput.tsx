@@ -158,8 +158,9 @@ export const ValidatedInput: React.FC<ValidatedInputProps> = ({
 
     // Cleanup function
     return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+      const timeout = timeoutRef.current;
+      if (timeout) {
+        clearTimeout(timeout);
       }
     };
   }, [value, existingValues, type]);
