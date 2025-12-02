@@ -140,7 +140,9 @@ export default function PlaybookPage() {
   const [diagramPlay, setDiagramPlay] = useState<Play | null>(null);
   const [diagramMode, setDiagramMode] = useState<"edit" | "quick-play">("edit");
   const [assignmentsPlay, setAssignmentsPlay] = useState<Play | null>(null);
-  const [editingScript, setEditingScript] = useState<PracticeScript | null>(null);
+  const [editingScript, setEditingScript] = useState<PracticeScript | null>(
+    null
+  );
   const [selectedPlaysForPractice, setSelectedPlaysForPractice] = useState<
     string[]
   >([]);
@@ -1072,8 +1074,12 @@ export default function PlaybookPage() {
             formationAudit={formationAudit}
             formationAuditSummary={formationAuditSummary}
             setMobileListExpanded={setMobileListExpanded}
-            setShowFiltersSheet={(show) => show ? openModal("filtersSheet") : closeModal()}
-            setShowStatsSheet={(show) => show ? openModal("statsSheet") : closeModal()}
+            setShowFiltersSheet={(show) =>
+              show ? openModal("filtersSheet") : closeModal()
+            }
+            setShowStatsSheet={(show) =>
+              show ? openModal("statsSheet") : closeModal()
+            }
             handleOpenQuickCreate={handleOpenQuickCreate}
             handleOpenPersonnel={handleOpenPersonnel}
             handleOpenSettings={handleOpenSettings}
@@ -1178,11 +1184,7 @@ export default function PlaybookPage() {
                 <Typography variant="headline-md" className="text-primary">
                   Filters & Search
                 </Typography>
-                <Button
-                  onClick={closeModal}
-                  variant="ghost"
-                  size="sm"
-                >
+                <Button onClick={closeModal} variant="ghost" size="sm">
                   <Icon name="close" className="h-5 w-5" />
                 </Button>
               </div>
