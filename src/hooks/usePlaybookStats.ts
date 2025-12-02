@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { Play } from "../types/database";
+import type { Play } from "../types/play";
 import type { Formation } from "../types/formation";
 import type { PlayActivityItem } from "../services/activityService";
 

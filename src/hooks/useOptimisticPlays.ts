@@ -1,8 +1,8 @@
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
-import type { Play } from "../types/database";
-import { logError } from "../lib/logger";
-import { SecurePlaysService } from "../services/PlaysService/secure";
+import type { Play } from "../types/play";
+import { error as logError } from "../utils/logger";
+import { SecurePlaysService } from "../services/securePlaysService";
 
 /**
  * Custom hook for optimistic play updates (Facebook-fast pattern)
