@@ -13,6 +13,7 @@ import { PlayGridSkeleton } from "./PlayGridSkeleton";
 import { PlayGridErrorState } from "./PlayGridErrorState";
 import { PlayGridEmptyState } from "./PlayGridEmptyState";
 import { Virtuoso } from "react-virtuoso";
+import { useInView } from "react-intersection-observer";
 import { telemetry } from "../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../telemetry/events";
 import { useTeamsData } from "../../hooks/useTeamsData";
@@ -146,6 +147,29 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   const [mobileVisibleCount, setMobileVisibleCount] =
     useState(MOBILE_INITIAL_PLAYS);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+
+  // 🚀 INFINITE SCROLL: Intersection Observer for automatic loading
+  const { ref: loadMoreRef, inView } = useInView({
+    threshold: 0.5,
+    rootMargin: '200px', // Start loading 200px before reaching bottom
+  });
+
+  // Auto-load more when scroll trigger is visible
+  useEffect(() => {
+    if (inView && hasMorePlays && !isLoadingMore) {
+      setIsLoadingMore(true);
+      setTimeout(() => {
+        setMobileVisibleCount((prev) => {
+          const next = Math.min(prev + 20, displayPlays.length);
+          if (next === displayPlays.length) {
+            onMobileListExpand?.();
+          }
+          return next;
+        });
+        setIsLoadingMore(false);
+      }, 300);
+    }
+  }, [inView, hasMorePlays, isLoadingMore, displayPlays.length, onMobileListExpand]);
 
   // Get real data from database with refresh capability and pagination
   const {
@@ -781,49 +805,35 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
               </Droppable>
             </DragDropContext>
           )}
-          {/* Mobile Progressive Loading */}
+          {/* Mobile Progressive Loading - Infinite Scroll */}
           {hasMorePlays && (
-            <div className="flex justify-center py-8">
-              <Button
-                onClick={() => {
-                  setIsLoadingMore(true);
-                  // Simulate loading delay for smooth UX
-                  setTimeout(() => {
-                    setMobileVisibleCount((prev) => {
-                      const next = Math.min(prev + 20, displayPlays.length);
-                      if (next === displayPlays.length) {
-                        onMobileListExpand?.();
-                      }
-                      return next;
-                    });
-                    setIsLoadingMore(false);
-
-                    // Scroll to first new card
+            <div ref={loadMoreRef} className="flex justify-center py-8">
+              {isLoadingMore ? (
+                <div className="flex items-center gap-2 text-secondary">
+                  <Icon name="clock" className="h-4 w-4 animate-spin" />
+                  <span>Loading more plays...</span>
+                </div>
+              ) : (
+                <Button
+                  onClick={() => {
+                    setIsLoadingMore(true);
                     setTimeout(() => {
-                      const firstNewCard = document.querySelector(
-                        `[data-card-index="${mobileVisibleCount}"]`
-                      );
-                      firstNewCard?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                        inline: "nearest",
+                      setMobileVisibleCount((prev) => {
+                        const next = Math.min(prev + 20, displayPlays.length);
+                        if (next === displayPlays.length) {
+                          onMobileListExpand?.();
+                        }
+                        return next;
                       });
-                    }, 100);
-                  }, 300);
-                }}
-                variant="secondary"
-                className="w-full sm:w-auto"
-                disabled={isLoadingMore}
-              >
-                {isLoadingMore ? (
-                  <>
-                    <Icon name="clock" className="h-4 w-4 mr-2" />
-                    Loading...
-                  </>
-                ) : (
-                  `Show More (${Math.max(displayPlays.length - mobileVisibleCount, 0)} remaining)`
-                )}
-              </Button>
+                      setIsLoadingMore(false);
+                    }, 300);
+                  }}
+                  variant="secondary"
+                  className="w-full sm:w-auto"
+                >
+                  Show More ({Math.max(displayPlays.length - mobileVisibleCount, 0)} remaining)
+                </Button>
+              )}
             </div>
           )}
 
@@ -936,17 +946,24 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
             </DragDropContext>
           )}
           {hasMorePlays && (
-            <div className="flex justify-center pt-4">
-              <Button
-                onClick={() => {
-                  setMobileVisibleCount(displayPlays.length);
-                  onMobileListExpand?.();
-                }}
-                variant="secondary"
-                className="w-full sm:w-auto"
-              >
-                See All {displayPlays.length} Plays
-              </Button>
+            <div ref={loadMoreRef} className="flex justify-center pt-4">
+              {isLoadingMore ? (
+                <div className="flex items-center gap-2 text-secondary">
+                  <Icon name="clock" className="h-4 w-4 animate-spin" />
+                  <span>Loading plays...</span>
+                </div>
+              ) : (
+                <Button
+                  onClick={() => {
+                    setMobileVisibleCount(displayPlays.length);
+                    onMobileListExpand?.();
+                  }}
+                  variant="secondary"
+                  className="w-full sm:w-auto"
+                >
+                  See All {displayPlays.length} Plays
+                </Button>
+              )}
             </div>
           )}
         </>

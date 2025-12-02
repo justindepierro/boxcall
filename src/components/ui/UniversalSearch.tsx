@@ -55,6 +55,7 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           aria-label={placeholder}
+          data-search-input
           className={`block w-full pl-10 pr-10 py-2 text-sm rounded-lg
                      focus:ring-2 focus:ring-text-info focus:border-text-info
                      placeholder-text-secondary transition-all duration-200

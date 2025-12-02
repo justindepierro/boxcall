@@ -68,21 +68,26 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
 
     const plays = situation.plays;
     const totalPlays = plays.length;
-    
+
     // Count play types
-    const runPlays = plays.filter((p) => 
-      p.playName?.toLowerCase().includes("run") || 
-      p.formation?.toLowerCase().includes("i-form") ||
-      p.formation?.toLowerCase().includes("power")
+    const runPlays = plays.filter(
+      (p) =>
+        p.playName?.toLowerCase().includes("run") ||
+        p.formation?.toLowerCase().includes("i-form") ||
+        p.formation?.toLowerCase().includes("power")
     ).length;
-    const passPlays = plays.filter((p) => 
-      p.playName?.toLowerCase().includes("pass") || 
-      p.formation?.toLowerCase().includes("trips") ||
-      p.formation?.toLowerCase().includes("spread")
+    const passPlays = plays.filter(
+      (p) =>
+        p.playName?.toLowerCase().includes("pass") ||
+        p.formation?.toLowerCase().includes("trips") ||
+        p.formation?.toLowerCase().includes("spread")
     ).length;
 
     // Recommended play counts by situation
-    const recommendations: Record<BillickSituationType, { min: number; max: number; runPassBalance?: boolean }> = {
+    const recommendations: Record<
+      BillickSituationType,
+      { min: number; max: number; runPassBalance?: boolean }
+    > = {
       first_and_10: { min: 10, max: 15, runPassBalance: true },
       second_and_short: { min: 8, max: 10 },
       second_and_medium: { min: 8, max: 10 },
@@ -102,14 +107,16 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
 
     // Check total play count
     if (totalPlays < rec.min) {
-      warnings.push(`Only ${totalPlays} plays (recommend ${rec.min}-${rec.max})`);
+      warnings.push(
+        `Only ${totalPlays} plays (recommend ${rec.min}-${rec.max})`
+      );
     }
 
     // Check run/pass balance for situations that need it
     if (rec.runPassBalance && totalPlays >= 6) {
       const runPercentage = (runPlays / totalPlays) * 100;
       const passPercentage = (passPlays / totalPlays) * 100;
-      
+
       if (runPercentage < 30) {
         warnings.push(`Low run plays (${runPlays}/${totalPlays})`);
       }
@@ -415,15 +422,24 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
               {getPlayBalanceWarnings(activeSituation) && (
                 <div className="mb-4 p-3 bg-status-warning/10 border border-status-warning rounded-lg">
                   <div className="flex items-start gap-2">
-                    <Typography variant="body-sm" className="font-medium text-status-warning">
+                    <Typography
+                      variant="body-sm"
+                      className="font-medium text-status-warning"
+                    >
                       ⚠️ Balance Warning:
                     </Typography>
                     <div className="flex-1">
-                      {getPlayBalanceWarnings(activeSituation)?.map((warning, idx) => (
-                        <Typography key={idx} variant="body-sm" className="text-secondary">
-                          • {warning}
-                        </Typography>
-                      ))}
+                      {getPlayBalanceWarnings(activeSituation)?.map(
+                        (warning, idx) => (
+                          <Typography
+                            key={idx}
+                            variant="body-sm"
+                            className="text-secondary"
+                          >
+                            • {warning}
+                          </Typography>
+                        )
+                      )}
                     </div>
                   </div>
                 </div>

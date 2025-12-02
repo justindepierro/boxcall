@@ -1,676 +1,749 @@
 /**
- * Design System Showcase
- * Comprehensive demonstration of all BoxCall design system features
+ * BoxCall Design System Showcase
+ * Modern, comprehensive demonstration of our design system
  */
 
 import { useState } from "react";
 import { Button } from "../ui/Button/Button";
+import { Badge } from "../ui/Badge";
+import { Icon } from "../ui/Icon/Icon";
 import Card from "../ui/Card/Card";
-import { Skeleton } from "../ui/Skeleton";
-import { EmptyState } from "../ui/EmptyState";
-import { Tooltip } from "../ui/Tooltip/Tooltip";
-import { ProgressiveImage } from "../ui/ProgressiveImage";
-import { LazyLoad } from "../ui/LazyLoad";
+import { Typography } from "./Typography";
 import { DarkModeToggle } from "../ui/DarkModeToggle";
-import { useApp } from "../core/useApp";
-import { ColorGenerationService } from "../../lib/colorGeneration";
-import type { TeamColors } from "../../lib/colorGeneration";
 
 export function DesignSystemShowcase() {
-  const theme = useApp(); // Get full app context for theme functionality
-  const [selectedTeam, setSelectedTeam] = useState<TeamColors | null>(null);
-  const [selectedEmotion, setSelectedEmotion] = useState<
-    "trust" | "energy" | "calm" | "achievement" | null
-  >(null);
-  const [selectedContext, setSelectedContext] = useState<
-    "calm" | "energetic" | "professional" | null
-  >(null);
+  const [activeSection, setActiveSection] = useState<string>("overview");
 
-  // Sample team colors for demonstration
-  const sampleTeams: Record<string, TeamColors> = {
-    "New England Patriots": { primary: "#002244", secondary: "#C8102E" },
-    "Kansas City Chiefs": { primary: "#E31837", secondary: "#FFB612" },
-    "San Francisco 49ers": { primary: "#AA0000", secondary: "#B3995D" },
-    "Green Bay Packers": { primary: "#203731", secondary: "#FFB612" },
-    "Dallas Cowboys": { primary: "#003594", secondary: "#869397" },
-  };
+  // Navigation sections
+  const sections = [
+    { id: "overview", label: "Overview", icon: "home" },
+    { id: "colors", label: "Colors", icon: "palette" },
+    { id: "typography", label: "Typography", icon: "type" },
+    { id: "components", label: "Components", icon: "grid" },
+    { id: "buttons", label: "Buttons", icon: "pointer" },
+    { id: "badges", label: "Badges", icon: "tag" },
+    { id: "icons", label: "Icons", icon: "sparkles" },
+  ];
 
-  const handleTeamSelect = (_teamName: string, colors: TeamColors) => {
-    setSelectedTeam(colors);
-    theme.applyTeamTheme(colors);
-    setSelectedEmotion(null);
-    setSelectedContext(null);
-  };
+  // Color scales from our design system
+  const brandScales = [
+    {
+      name: "Jade",
+      base: "jade",
+      shades: [
+        "50",
+        "100",
+        "200",
+        "300",
+        "400",
+        "500",
+        "600",
+        "700",
+        "800",
+        "900",
+      ],
+    },
+    {
+      name: "Navy",
+      base: "navy",
+      shades: [
+        "50",
+        "100",
+        "200",
+        "300",
+        "400",
+        "500",
+        "600",
+        "700",
+        "800",
+        "900",
+      ],
+    },
+  ];
 
-  const handleEmotionSelect = (
-    emotion: "trust" | "energy" | "calm" | "achievement"
-  ) => {
-    setSelectedEmotion(emotion);
-    theme.applyEmotionTheme(emotion);
-    setSelectedTeam(null);
-    setSelectedContext(null);
-  };
+  const semanticColors = [
+    {
+      name: "Success",
+      colors: [
+        "success-subtle",
+        "success-muted",
+        "success-emphasis",
+        "success-500",
+      ],
+    },
+    {
+      name: "Error",
+      colors: ["error-subtle", "error-muted", "error-emphasis", "error-500"],
+    },
+    {
+      name: "Warning",
+      colors: [
+        "warning-subtle",
+        "warning-muted",
+        "warning-emphasis",
+        "warning-500",
+      ],
+    },
+    {
+      name: "Info",
+      colors: ["info-subtle", "info-muted", "info-emphasis", "info-500"],
+    },
+  ];
 
-  const handleContextSelect = (
-    context: "calm" | "energetic" | "professional"
-  ) => {
-    setSelectedContext(context);
-    theme.applyContextTheme(context);
-    setSelectedTeam(null);
-    setSelectedEmotion(null);
+  const neutralColors = [
+    "neutral-50",
+    "neutral-100",
+    "neutral-200",
+    "neutral-300",
+    "neutral-400",
+    "neutral-500",
+    "neutral-600",
+    "neutral-700",
+    "neutral-800",
+    "neutral-900",
+  ];
+
+  // Button variants
+  const buttonVariants = [
+    "primary",
+    "secondary",
+    "outline",
+    "ghost",
+    "danger",
+    "success",
+    "warning",
+    "glass",
+    "gradient",
+    "subtle",
+  ];
+
+  // Badge variants
+  const badgeVariants = [
+    "neutral",
+    "info",
+    "success",
+    "warning",
+    "danger",
+    "accent",
+    "premium",
+  ];
+
+  // Icon samples
+  const iconSamples = [
+    "home",
+    "user",
+    "users",
+    "target",
+    "calendar",
+    "clock",
+    "edit",
+    "delete",
+    "save",
+    "download",
+    "upload",
+    "search",
+    "filter",
+    "check",
+    "alert",
+    "info",
+    "star",
+    "trophy",
+    "bell",
+    "settings",
+    "book",
+    "flag",
+    "zap",
+    "award",
+  ];
+
+  const renderOverview = () => (
+    <div className="space-y-8">
+      <div className="text-center space-y-4 py-12">
+        <Typography variant="display-xl" className="text-primary">
+          BoxCall Design System
+        </Typography>
+        <Typography
+          variant="body-lg"
+          className="text-secondary max-w-2xl mx-auto"
+        >
+          A comprehensive, token-based design system for professional football
+          coaching. Built with React, TypeScript, and Tailwind CSS.
+        </Typography>
+        <div className="flex justify-center items-center gap-4 pt-4">
+          <DarkModeToggle />
+          <Badge variant="success">v2.0</Badge>
+          <Badge variant="info">TypeScript</Badge>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card variant="elevated" className="p-6">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 bg-jade-100 rounded-lg">
+              <Icon name="grid" className="text-jade-600" />
+            </div>
+            <Typography variant="headline-sm">Design Tokens</Typography>
+          </div>
+          <Typography variant="body-sm" className="text-secondary">
+            Semantic color tokens, spacing scales, and typography presets for
+            consistent theming
+          </Typography>
+        </Card>
+
+        <Card variant="elevated" className="p-6">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 bg-electric-100 rounded-lg">
+              <Icon name="grid" className="text-electric-600" />
+            </div>
+            <Typography variant="headline-sm">Components</Typography>
+          </div>
+          <Typography variant="body-sm" className="text-secondary">
+            Reusable UI components with variants, sizes, and accessibility
+            built-in
+          </Typography>
+        </Card>
+
+        <Card variant="elevated" className="p-6">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 bg-navy-100 rounded-lg">
+              <Icon name="zap" className="text-navy-600" />
+            </div>
+            <Typography variant="headline-sm">Performance</Typography>
+          </div>
+          <Typography variant="body-sm" className="text-secondary">
+            Tree-shakeable, optimized for production, minimal bundle impact
+          </Typography>
+        </Card>
+      </div>
+    </div>
+  );
+
+  const renderColors = () => (
+    <div className="space-y-8">
+      <div>
+        <Typography variant="display-lg" className="mb-2">
+          Color System
+        </Typography>
+        <Typography variant="body-md" className="text-secondary">
+          Our color system uses semantic tokens for consistent theming across
+          the application
+        </Typography>
+      </div>
+
+      {/* Brand Colors */}
+      <div>
+        <Typography variant="headline-md" className="mb-4">
+          Brand Colors
+        </Typography>
+        {brandScales.map((scale) => (
+          <div key={scale.name} className="mb-6">
+            <Typography
+              variant="body-sm"
+              className="mb-2 font-semibold text-secondary"
+            >
+              {scale.name}
+            </Typography>
+            <div className="grid grid-cols-10 gap-2">
+              {scale.shades.map((shade) => (
+                <div key={shade} className="space-y-1">
+                  <div
+                    className="h-16 rounded-lg border border-border"
+                    style={{
+                      backgroundColor: `var(--color-${scale.base}-${shade})`,
+                    }}
+                  />
+                  <Typography
+                    variant="caption"
+                    className="text-center text-muted"
+                  >
+                    {shade}
+                  </Typography>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Semantic Colors */}
+      <div>
+        <Typography variant="headline-md" className="mb-4">
+          Semantic Colors
+        </Typography>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {semanticColors.map((semantic) => (
+            <Card key={semantic.name} variant="elevated" className="p-4">
+              <Typography variant="body-sm" className="mb-3 font-semibold">
+                {semantic.name}
+              </Typography>
+              <div className="flex gap-2">
+                {semantic.colors.map((color) => (
+                  <div key={color} className="flex-1 space-y-1">
+                    <div
+                      className="h-12 rounded border border-border"
+                      style={{ backgroundColor: `var(--color-${color})` }}
+                    />
+                    <Typography
+                      variant="caption"
+                      className="text-muted text-xs"
+                    >
+                      {color.split("-")[1]}
+                    </Typography>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Neutral Scale */}
+      <div>
+        <Typography variant="headline-md" className="mb-4">
+          Neutral Scale
+        </Typography>
+        <div className="grid grid-cols-10 gap-2">
+          {neutralColors.map((color) => (
+            <div key={color} className="space-y-1">
+              <div
+                className="h-16 rounded-lg border border-border"
+                style={{ backgroundColor: `var(--color-${color})` }}
+              />
+              <Typography variant="caption" className="text-center text-muted">
+                {color.split("-")[1]}
+              </Typography>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderTypography = () => (
+    <div className="space-y-8">
+      <div>
+        <Typography variant="display-lg" className="mb-2">
+          Typography
+        </Typography>
+        <Typography variant="body-md" className="text-secondary">
+          Our typography system uses a modular scale for consistent hierarchy
+        </Typography>
+      </div>
+
+      <Card variant="elevated" className="p-6 space-y-6">
+        <div>
+          <Typography variant="display-xl">Display XL</Typography>
+          <Typography variant="caption" className="text-muted">
+            Font size: 60px / 3.75rem
+          </Typography>
+        </div>
+        <div>
+          <Typography variant="display-lg">Display LG</Typography>
+          <Typography variant="caption" className="text-muted">
+            Font size: 48px / 3rem
+          </Typography>
+        </div>
+        <div>
+          <Typography variant="display-md">Display MD</Typography>
+          <Typography variant="caption" className="text-muted">
+            Font size: 36px / 2.25rem
+          </Typography>
+        </div>
+        <div>
+          <Typography variant="headline-lg">Headline LG</Typography>
+          <Typography variant="caption" className="text-muted">
+            Font size: 36px / 2.25rem
+          </Typography>
+        </div>
+        <div>
+          <Typography variant="headline-md">Headline MD</Typography>
+          <Typography variant="caption" className="text-muted">
+            Font size: 30px / 1.875rem
+          </Typography>
+        </div>
+        <div>
+          <Typography variant="headline-sm">Headline SM</Typography>
+          <Typography variant="caption" className="text-muted">
+            Font size: 24px / 1.5rem
+          </Typography>
+        </div>
+        <div>
+          <Typography variant="body-lg">
+            Body LG - The quick brown fox jumps over the lazy dog
+          </Typography>
+          <Typography variant="caption" className="text-muted">
+            Font size: 18px / 1.125rem
+          </Typography>
+        </div>
+        <div>
+          <Typography variant="body-md">
+            Body MD - The quick brown fox jumps over the lazy dog
+          </Typography>
+          <Typography variant="caption" className="text-muted">
+            Font size: 16px / 1rem
+          </Typography>
+        </div>
+        <div>
+          <Typography variant="body-sm">
+            Body SM - The quick brown fox jumps over the lazy dog
+          </Typography>
+          <Typography variant="caption" className="text-muted">
+            Font size: 14px / 0.875rem
+          </Typography>
+        </div>
+        <div>
+          <Typography variant="caption">
+            Caption - The quick brown fox jumps over the lazy dog
+          </Typography>
+          <Typography variant="caption" className="text-muted">
+            Font size: 12px / 0.75rem
+          </Typography>
+        </div>
+      </Card>
+    </div>
+  );
+
+  const renderButtons = () => (
+    <div className="space-y-8">
+      <div>
+        <Typography variant="display-lg" className="mb-2">
+          Buttons
+        </Typography>
+        <Typography variant="body-md" className="text-secondary">
+          Button components with multiple variants, sizes, and states
+        </Typography>
+      </div>
+
+      <Card variant="elevated" className="p-6">
+        <Typography variant="headline-sm" className="mb-4">
+          Variants
+        </Typography>
+        <div className="flex flex-wrap gap-3">
+          {buttonVariants.map((variant) => (
+            <Button key={variant} variant={variant as any}>
+              {variant.charAt(0).toUpperCase() + variant.slice(1)}
+            </Button>
+          ))}
+        </div>
+      </Card>
+
+      <Card variant="elevated" className="p-6">
+        <Typography variant="headline-sm" className="mb-4">
+          Sizes
+        </Typography>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button size="sm">Small</Button>
+          <Button size="md">Medium</Button>
+          <Button size="lg">Large</Button>
+        </div>
+      </Card>
+
+      <Card variant="elevated" className="p-6">
+        <Typography variant="headline-sm" className="mb-4">
+          With Icons
+        </Typography>
+        <div className="flex flex-wrap gap-3">
+          <Button variant="primary">
+            <Icon name="plus" className="mr-2" />
+            Add Play
+          </Button>
+          <Button variant="secondary">
+            <Icon name="download" className="mr-2" />
+            Export
+          </Button>
+          <Button variant="outline">
+            <Icon name="save" className="mr-2" />
+            Save
+          </Button>
+        </div>
+      </Card>
+
+      <Card variant="elevated" className="p-6">
+        <Typography variant="headline-sm" className="mb-4">
+          States
+        </Typography>
+        <div className="flex flex-wrap gap-3">
+          <Button variant="primary">Normal</Button>
+          <Button variant="primary" disabled>
+            Disabled
+          </Button>
+        </div>
+      </Card>
+    </div>
+  );
+
+  const renderBadges = () => (
+    <div className="space-y-8">
+      <div>
+        <Typography variant="display-lg" className="mb-2">
+          Badges
+        </Typography>
+        <Typography variant="body-md" className="text-secondary">
+          Badge components for status indicators and labels
+        </Typography>
+      </div>
+
+      <Card variant="elevated" className="p-6">
+        <Typography variant="headline-sm" className="mb-4">
+          Variants
+        </Typography>
+        <div className="flex flex-wrap gap-3">
+          {badgeVariants.map((variant) => (
+            <Badge key={variant} variant={variant as any}>
+              {variant.charAt(0).toUpperCase() + variant.slice(1)}
+            </Badge>
+          ))}
+        </div>
+      </Card>
+
+      <Card variant="elevated" className="p-6">
+        <Typography variant="headline-sm" className="mb-4">
+          Sizes
+        </Typography>
+        <div className="flex flex-wrap items-center gap-3">
+          <Badge size="sm">Small</Badge>
+          <Badge size="md">Medium</Badge>
+          <Badge size="lg">Large</Badge>
+        </div>
+      </Card>
+
+      <Card variant="elevated" className="p-6">
+        <Typography variant="headline-sm" className="mb-4">
+          Real Examples
+        </Typography>
+        <div className="flex flex-wrap gap-3">
+          <Badge variant="success">Active</Badge>
+          <Badge variant="warning">Pending</Badge>
+          <Badge variant="danger">Inactive</Badge>
+          <Badge variant="info">11 Personnel</Badge>
+          <Badge variant="neutral">Trips</Badge>
+          <Badge variant="accent">Red Zone</Badge>
+        </div>
+      </Card>
+    </div>
+  );
+
+  const renderIcons = () => (
+    <div className="space-y-8">
+      <div>
+        <Typography variant="display-lg" className="mb-2">
+          Icons
+        </Typography>
+        <Typography variant="body-md" className="text-secondary">
+          Lucide icon library with consistent sizing and colors
+        </Typography>
+      </div>
+
+      <Card variant="elevated" className="p-6">
+        <Typography variant="headline-sm" className="mb-4">
+          Icon Library
+        </Typography>
+        <div className="grid grid-cols-4 md:grid-cols-8 gap-4">
+          {iconSamples.map((iconName) => (
+            <div
+              key={iconName}
+              className="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-surface-elevated transition-colors"
+            >
+              <Icon name={iconName as any} size="lg" />
+              <Typography
+                variant="caption"
+                className="text-muted text-center text-xs"
+              >
+                {iconName}
+              </Typography>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      <Card variant="elevated" className="p-6">
+        <Typography variant="headline-sm" className="mb-4">
+          Sizes
+        </Typography>
+        <div className="flex flex-wrap items-center gap-6">
+          <div className="flex flex-col items-center gap-2">
+            <Icon name="star" size="sm" />
+            <Typography variant="caption" className="text-muted">
+              Small
+            </Typography>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <Icon name="star" size="md" />
+            <Typography variant="caption" className="text-muted">
+              Medium
+            </Typography>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <Icon name="star" size="lg" />
+            <Typography variant="caption" className="text-muted">
+              Large
+            </Typography>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <Icon name="star" size="xl" />
+            <Typography variant="caption" className="text-muted">
+              XL
+            </Typography>
+          </div>
+        </div>
+      </Card>
+
+      <Card variant="elevated" className="p-6">
+        <Typography variant="headline-sm" className="mb-4">
+          Colors
+        </Typography>
+        <div className="flex flex-wrap items-center gap-6">
+          <div className="flex flex-col items-center gap-2">
+            <Icon name="user" size="lg" color="primary" />
+            <Typography variant="caption" className="text-muted">
+              Primary
+            </Typography>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <Icon name="user" size="lg" color="success" />
+            <Typography variant="caption" className="text-muted">
+              Success
+            </Typography>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <Icon name="user" size="lg" color="error" />
+            <Typography variant="caption" className="text-muted">
+              Error
+            </Typography>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <Icon name="user" size="lg" color="warning" />
+            <Typography variant="caption" className="text-muted">
+              Warning
+            </Typography>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <Icon name="user" size="lg" color="info" />
+            <Typography variant="caption" className="text-muted">
+              Info
+            </Typography>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+
+  const renderComponents = () => (
+    <div className="space-y-8">
+      <div>
+        <Typography variant="display-lg" className="mb-2">
+          Components
+        </Typography>
+        <Typography variant="body-md" className="text-secondary">
+          Core UI components used throughout BoxCall
+        </Typography>
+      </div>
+
+      <div>
+        <Typography variant="headline-md" className="mb-4">
+          Cards
+        </Typography>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card variant="default" className="p-4">
+            <Typography variant="body-md" className="font-semibold mb-2">
+              Default Card
+            </Typography>
+            <Typography variant="body-sm" className="text-secondary">
+              Standard card with subtle styling
+            </Typography>
+          </Card>
+          <Card variant="elevated" className="p-4">
+            <Typography variant="body-md" className="font-semibold mb-2">
+              Elevated Card
+            </Typography>
+            <Typography variant="body-sm" className="text-secondary">
+              Card with enhanced shadow
+            </Typography>
+          </Card>
+          <Card variant="glass" className="p-4">
+            <Typography variant="body-md" className="font-semibold mb-2">
+              Glass Card
+            </Typography>
+            <Typography variant="body-sm" className="text-secondary">
+              Glassmorphism effect
+            </Typography>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderSection = () => {
+    switch (activeSection) {
+      case "colors":
+        return renderColors();
+      case "typography":
+        return renderTypography();
+      case "buttons":
+        return renderButtons();
+      case "badges":
+        return renderBadges();
+      case "icons":
+        return renderIcons();
+      case "components":
+        return renderComponents();
+      default:
+        return renderOverview();
+    }
   };
 
   return (
-    <div className="min-h-screen bg-primary p-8">
-      <div className="container-page space-y-12">
-        {/* Header */}
-        <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-primary">
-            🎨 BoxCall Design System Showcase
-          </h1>
-          <p className="text-lg text-secondary container-content">
-            Experience our industry-leading design system with AI-powered
-            theming, advanced animations, and comprehensive accessibility
-            support.
-          </p>
-          <div className="flex justify-center gap-4">
-            <DarkModeToggle />
-            <Button
-              variant="outline"
-              onClick={() => theme.setShowcaseMode(!theme.showcaseMode)}
+    <div className="min-h-screen bg-surface-base">
+      {/* Sidebar Navigation */}
+      <div className="fixed left-0 top-0 h-full w-64 bg-surface-elevated border-r border-border p-6 overflow-y-auto hidden lg:block">
+        <Typography variant="headline-sm" className="mb-6">
+          Design System
+        </Typography>
+        <nav className="space-y-1">
+          {sections.map((section) => (
+            <button
+              key={section.id}
+              onClick={() => setActiveSection(section.id)}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+                activeSection === section.id
+                  ? "bg-jade-100 text-jade-900"
+                  : "hover:bg-surface-overlay text-secondary"
+              }`}
             >
-              {theme.showcaseMode ? "Exit" : "Enter"} Showcase Mode
-            </Button>
+              <Icon name={section.icon as any} size="sm" />
+              <Typography variant="body-sm">{section.label}</Typography>
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      {/* Main Content */}
+      <div className="lg:ml-64 p-4 md:p-8">
+        <div className="max-w-6xl mx-auto">
+          {/* Mobile Navigation */}
+          <div className="lg:hidden mb-6">
+            <Card variant="elevated" className="p-2">
+              <div className="flex gap-2 overflow-x-auto">
+                {sections.map((section) => (
+                  <button
+                    key={section.id}
+                    onClick={() => setActiveSection(section.id)}
+                    className={`flex-shrink-0 px-3 py-2 rounded-lg transition-colors ${
+                      activeSection === section.id
+                        ? "bg-jade-100 text-jade-900"
+                        : "text-secondary"
+                    }`}
+                  >
+                    <Typography variant="body-sm">{section.label}</Typography>
+                  </button>
+                ))}
+              </div>
+            </Card>
           </div>
+
+          {/* Section Content */}
+          {renderSection()}
         </div>
-
-        {/* Theme Controls */}
-        <Card variant="elevated" className="p-6">
-          <h2 className="text-2xl font-semibold mb-6 text-primary">
-            🎯 Dynamic Theming
-          </h2>
-
-          {/* Team Colors */}
-          <div className="mb-8">
-            <h3 className="text-lg font-medium mb-4 text-primary">
-              Team Colors (AI-Generated)
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-              {Object.entries(sampleTeams).map(([teamName, colors]) => {
-                const generatedPalette =
-                  ColorGenerationService.generateTeamPalette(colors);
-                return (
-                  <Tooltip
-                    key={teamName}
-                    content={`${teamName} - AI Generated Palette`}
-                  >
-                    <button
-                      onClick={() => handleTeamSelect(teamName, colors)}
-                      className={`p-4 rounded-lg border-2 transition-all duration-300 ${
-                        selectedTeam?.primary === colors.primary
-                          ? "border-electric-500 shadow-lg scale-105"
-                          : "border-border hover:border-electric-300"
-                      }`}
-                    >
-                      <div className="text-center space-y-2">
-                        <div className="flex justify-center space-x-1">
-                          <div
-                            className="w-4 h-4 rounded-full border"
-                            style={{
-                              backgroundColor: generatedPalette.primary,
-                            }}
-                          />
-                          <div
-                            className="w-4 h-4 rounded-full border"
-                            style={{
-                              backgroundColor: generatedPalette.secondary,
-                            }}
-                          />
-                          <div
-                            className="w-4 h-4 rounded-full border"
-                            style={{ backgroundColor: generatedPalette.accent }}
-                          />
-                        </div>
-                        <span className="text-sm font-medium text-primary">
-                          {teamName.split(" ")[1]}
-                        </span>
-                      </div>
-                    </button>
-                  </Tooltip>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Emotion Themes */}
-          <div className="mb-8">
-            <h3 className="text-lg font-medium mb-4 text-primary">
-              Emotion Themes
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                {
-                  key: "trust",
-                  label: "Trust",
-                  icon: "🛡️",
-                  desc: "Reliability & Confidence",
-                },
-                {
-                  key: "energy",
-                  label: "Energy",
-                  icon: "⚡",
-                  desc: "Excitement & Action",
-                },
-                {
-                  key: "calm",
-                  label: "Calm",
-                  icon: "🌊",
-                  desc: "Focus & Tranquility",
-                },
-                {
-                  key: "achievement",
-                  label: "Achievement",
-                  icon: "🏆",
-                  desc: "Success & Progress",
-                },
-              ].map(({ key, label, icon, desc }) => (
-                <Tooltip key={key} content={desc}>
-                  <button
-                    onClick={() => handleEmotionSelect(key as any)}
-                    className={`p-4 rounded-lg border-2 transition-all duration-300 ${
-                      selectedEmotion === key
-                        ? "border-electric-500 shadow-lg scale-105 bg-electric-50"
-                        : "border-border hover:border-electric-300"
-                    }`}
-                  >
-                    <div className="text-center space-y-2">
-                      <span className="text-2xl">{icon}</span>
-                      <span className="text-sm font-medium text-primary">
-                        {label}
-                      </span>
-                    </div>
-                  </button>
-                </Tooltip>
-              ))}
-            </div>
-          </div>
-
-          {/* Context Themes */}
-          <div>
-            <h3 className="text-lg font-medium mb-4 text-primary">
-              Context Themes
-            </h3>
-            <div className="grid grid-cols-3 gap-4">
-              {[
-                { key: "calm", label: "Calm", desc: "Admin & Dashboard" },
-                { key: "energetic", label: "Energetic", desc: "Game Planning" },
-                {
-                  key: "professional",
-                  label: "Professional",
-                  desc: "Team Management",
-                },
-              ].map(({ key, label, desc }) => (
-                <Tooltip key={key} content={desc}>
-                  <button
-                    onClick={() => handleContextSelect(key as any)}
-                    className={`p-4 rounded-lg border-2 transition-all duration-300 ${
-                      selectedContext === key
-                        ? "border-electric-500 shadow-lg scale-105"
-                        : "border-border hover:border-electric-300"
-                    }`}
-                  >
-                    <div className="text-center space-y-2">
-                      <span className="text-sm font-medium text-primary">
-                        {label}
-                      </span>
-                      <span className="text-xs text-secondary">{desc}</span>
-                    </div>
-                  </button>
-                </Tooltip>
-              ))}
-            </div>
-          </div>
-        </Card>
-
-        {/* Button Showcase */}
-        <Card variant="glass" className="p-6">
-          <h2 className="text-2xl font-semibold mb-6 text-primary">
-            🔘 Advanced Button System
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <Button variant="primary">Primary</Button>
-            <Button variant="secondary">Secondary</Button>
-            <Button variant="outline">Outline</Button>
-            <Button variant="ghost">Ghost</Button>
-            <Button variant="glass">Glass</Button>
-            <Button variant="gradient">Gradient</Button>
-            <Button variant="subtle">Subtle</Button>
-            <Button variant="link">Link</Button>
-            <Button variant="link">Link</Button>
-            <Button variant="brandLink">Brand Link</Button>
-            <Button variant="neutralLink">Neutral Link</Button>
-            <Button variant="infoLink">Info Link</Button>
-            <Button variant="dangerLink">Danger Link</Button>
-            <Button variant="danger">Danger</Button>
-            <Button variant="success">Success</Button>
-            <Button variant="warning">Warning</Button>
-          </div>
-
-          <div className="mt-6 space-y-4">
-            <h3 className="text-lg font-medium text-primary">
-              Interactive Features
-            </h3>
-            <div className="flex flex-wrap gap-4">
-              <Button variant="primary" hapticType="success">
-                Haptic Success
-              </Button>
-              <Button variant="warning" hapticType="warning">
-                Haptic Warning
-              </Button>
-              <Button variant="danger" hapticType="error">
-                Haptic Error
-              </Button>
-              <Tooltip content="This button has a tooltip!">
-                <Button variant="primary">With Tooltip</Button>
-              </Tooltip>
-            </div>
-          </div>
-        </Card>
-
-        {/* Card Showcase */}
-        <Card variant="elevated" className="p-6">
-          <h2 className="text-2xl font-semibold mb-6 text-primary">
-            📋 Advanced Card System
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card variant="default" className="p-4">
-              <h3 className="font-semibold mb-2">Default Card</h3>
-              <p className="text-sm text-secondary">
-                Standard card with subtle elevation.
-              </p>
-            </Card>
-
-            <Card variant="glass" className="p-4">
-              <h3 className="font-semibold mb-2">Glass Card</h3>
-              <p className="text-sm text-secondary">
-                Glassmorphism effect with backdrop blur.
-              </p>
-            </Card>
-
-            <Card variant="elevated" className="p-4">
-              <h3 className="font-semibold mb-2">Elevated Card</h3>
-              <p className="text-sm text-secondary">
-                Enhanced shadows and micro-animations.
-              </p>
-            </Card>
-
-            <Card variant="outlined" className="p-4">
-              <h3 className="font-semibold mb-2">Outlined Card</h3>
-              <p className="text-sm text-secondary">
-                Clean border with jade accent.
-              </p>
-            </Card>
-
-            <Card variant="filled" className="p-4">
-              <h3 className="font-semibold mb-2">Filled Card</h3>
-              <p className="text-sm text-secondary">
-                Background fill for emphasis.
-              </p>
-            </Card>
-
-            <Card variant="accent" interactive className="p-4">
-              <h3 className="font-semibold mb-2">Interactive Card</h3>
-              <p className="text-sm text-secondary">
-                Hover effects and animations.
-              </p>
-            </Card>
-          </div>
-        </Card>
-
-        {/* Loading States */}
-        <Card variant="glass" className="p-6">
-          <h2 className="text-2xl font-semibold mb-6 text-primary">
-            ⏳ Advanced Loading States
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Skeletons */}
-            <div>
-              <h3 className="text-lg font-medium mb-4 text-primary">
-                Skeleton Loading
-              </h3>
-              <div className="space-y-4">
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-4 w-1/2" />
-                <Skeleton className="h-32 w-full rounded-lg" />
-                <div className="flex space-x-4">
-                  <Skeleton className="h-10 w-20" />
-                  <Skeleton className="h-10 w-20" />
-                </div>
-              </div>
-            </div>
-
-            {/* Empty States */}
-            <div>
-              <h3 className="text-lg font-medium mb-4 text-primary">
-                Contextual Empty States
-              </h3>
-              <div className="grid grid-cols-2 gap-4">
-                <EmptyState
-                  icon="target"
-                  title="No plays yet"
-                  description="Create your first play"
-                  primaryAction={{
-                    label: "Create Play",
-                    onClick: () => {},
-                  }}
-                />
-                <EmptyState
-                  icon="users"
-                  title="No team members"
-                  description="Invite players to your team"
-                  primaryAction={{
-                    label: "Invite",
-                    onClick: () => {},
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Progressive Loading */}
-          <div className="mt-8">
-            <h3 className="text-lg font-medium mb-4 text-primary">
-              Progressive Image Loading
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <LazyLoad
-                fallback={<Skeleton className="h-32 w-full rounded-lg" />}
-              >
-                <ProgressiveImage
-                  src="https://picsum.photos/300/200?random=1"
-                  alt="Sample image"
-                  className="h-32 w-full object-cover rounded-lg"
-                />
-              </LazyLoad>
-              <LazyLoad
-                fallback={<Skeleton className="h-32 w-full rounded-lg" />}
-              >
-                <ProgressiveImage
-                  src="https://picsum.photos/300/200?random=2"
-                  alt="Sample image"
-                  className="h-32 w-full object-cover rounded-lg"
-                />
-              </LazyLoad>
-              <LazyLoad
-                fallback={<Skeleton className="h-32 w-full rounded-lg" />}
-              >
-                <ProgressiveImage
-                  src="https://picsum.photos/300/200?random=3"
-                  alt="Sample image"
-                  className="h-32 w-full object-cover rounded-lg"
-                />
-              </LazyLoad>
-              <LazyLoad
-                fallback={<Skeleton className="h-32 w-full rounded-lg" />}
-              >
-                <ProgressiveImage
-                  src="https://picsum.photos/300/200?random=4"
-                  alt="Sample image"
-                  className="h-32 w-full object-cover rounded-lg"
-                />
-              </LazyLoad>
-            </div>
-          </div>
-        </Card>
-
-        {/* Color Palette Display */}
-        <Card variant="elevated" className="p-6">
-          <h2 className="text-2xl font-semibold mb-6 text-primary">
-            🎨 Current Color Palette
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {theme.colorTheme.palette &&
-              Object.entries(theme.colorTheme.palette).map(([key, value]) => (
-                <div key={key} className="text-center space-y-2">
-                  <div
-                    className="h-16 w-full rounded-lg border-2 border-border"
-                    style={{ backgroundColor: value as string }}
-                  />
-                  <span className="text-xs font-medium text-primary capitalize">
-                    {key}
-                  </span>
-                  <span className="text-xs text-secondary font-mono">
-                    {value as string}
-                  </span>
-                </div>
-              ))}
-          </div>
-        </Card>
-
-        {/* Real App Components Demo */}
-        <Card variant="elevated" className="p-6">
-          <h2 className="text-2xl font-semibold mb-6 text-primary">
-            🚀 Real App Components
-          </h2>
-          <div className="space-y-6">
-            {/* Playbook Card Example */}
-            <div>
-              <h3 className="text-lg font-medium mb-4 text-primary">
-                Playbook Cards
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Card
-                  variant="accent"
-                  className="p-4 cursor-pointer hover:shadow-lg transition-shadow"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h4 className="font-semibold text-primary">
-                        Triple Option
-                      </h4>
-                      <p className="text-sm text-secondary">
-                        Classic QB read with multiple options
-                      </p>
-                    </div>
-                    <div className="flex gap-2">
-                      <span className="px-2 py-1 bg-success/20 text-success text-xs rounded-lg">
-                        Run
-                      </span>
-                      <span className="px-2 py-1 bg-info/20 text-info text-xs rounded-lg">
-                        Popular
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 text-sm text-muted">
-                    <span>📈 89% Success</span>
-                    <span>🏈 23 Uses</span>
-                    <span>⭐ 4.8 Rating</span>
-                  </div>
-                </Card>
-
-                <Card variant="glass" className="p-4">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h4 className="font-semibold text-primary">
-                        Slant Routes
-                      </h4>
-                      <p className="text-sm text-secondary">
-                        Timing-based passing concept
-                      </p>
-                    </div>
-                    <div className="flex gap-2">
-                      <span className="px-2 py-1 bg-warning/20 text-warning text-xs rounded-lg">
-                        Pass
-                      </span>
-                      <span className="px-2 py-1 bg-surface-error text-error text-xs rounded-lg">
-                        Complex
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 text-sm text-muted">
-                    <span>📈 76% Success</span>
-                    <span>🏈 12 Uses</span>
-                    <span>⭐ 4.2 Rating</span>
-                  </div>
-                </Card>
-              </div>
-            </div>
-
-            {/* Team Stats Example */}
-            <div>
-              <h3 className="text-lg font-medium mb-4 text-primary">
-                Analytics Dashboard
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <Card variant="filled" className="p-4 text-center">
-                  <div className="text-2xl font-bold text-success mb-1">
-                    89%
-                  </div>
-                  <div className="text-sm text-secondary">Completion Rate</div>
-                  <div className="text-xs text-muted mt-1">
-                    +12% from last week
-                  </div>
-                </Card>
-
-                <Card variant="filled" className="p-4 text-center">
-                  <div className="text-2xl font-bold text-info mb-1">1,247</div>
-                  <div className="text-sm text-secondary">Total Yards</div>
-                  <div className="text-xs text-muted mt-1">
-                    +89 from last game
-                  </div>
-                </Card>
-
-                <Card variant="filled" className="p-4 text-center">
-                  <div className="text-2xl font-bold text-warning mb-1">23</div>
-                  <div className="text-sm text-secondary">First Downs</div>
-                  <div className="text-xs text-muted mt-1">
-                    +5 from last game
-                  </div>
-                </Card>
-
-                <Card variant="filled" className="p-4 text-center">
-                  <div className="text-2xl font-bold text-error mb-1">2</div>
-                  <div className="text-sm text-secondary">Turnovers</div>
-                  <div className="text-xs text-muted mt-1">
-                    -1 from last game
-                  </div>
-                </Card>
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        {/* Animation Showcase */}
-        <Card variant="glass" className="p-6">
-          <h2 className="text-2xl font-semibold mb-6 text-primary">
-            ✨ Animation System
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Micro-interactions */}
-            <div>
-              <h3 className="text-lg font-medium mb-4 text-primary">
-                Micro-interactions
-              </h3>
-              <div className="space-y-4">
-                <div className="flex gap-4">
-                  <Button
-                    variant="primary"
-                    className="animate-pulse"
-                    onClick={() => {}}
-                  >
-                    Pulsing Button
-                  </Button>
-                  <Button
-                    variant="success"
-                    className="hover:scale-105 transition-transform"
-                  >
-                    Scale on Hover
-                  </Button>
-                </div>
-                <Card
-                  variant="elevated"
-                  interactive={true}
-                  className="p-4 cursor-pointer hover:shadow-lg transition-shadow"
-                >
-                  <p className="text-sm text-secondary">
-                    Hover me for elevation effect
-                  </p>
-                </Card>
-              </div>
-            </div>
-
-            {/* Page Transitions */}
-            <div>
-              <h3 className="text-lg font-medium mb-4 text-primary">
-                Page Transitions
-              </h3>
-              <div className="space-y-4">
-                <div className="p-4 bg-muted rounded-lg">
-                  <p className="text-sm text-secondary mb-2">
-                    Smooth fade transitions between pages
-                  </p>
-                  <div className="flex gap-2">
-                    <div className="w-3 h-3 bg-electric-500 rounded-full animate-bounce"></div>
-                    <div
-                      className="w-3 h-3 bg-electric-500 rounded-full animate-bounce"
-                      style={{ animationDelay: "0.1s" }}
-                    ></div>
-                    <div
-                      className="w-3 h-3 bg-electric-500 rounded-full animate-bounce"
-                      style={{ animationDelay: "0.2s" }}
-                    ></div>
-                  </div>
-                </div>
-                <div className="p-4 bg-gradient-to-r from-electric-500/10 to-jade-500/10 rounded-lg">
-                  <p className="text-sm text-secondary">
-                    Gradient animations and color transitions
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        {/* Performance Metrics */}
-        <Card variant="elevated" className="p-6">
-          <h2 className="text-2xl font-semibold mb-6 text-primary">
-            📊 Performance Achievements
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-success mb-2">1.8MB</div>
-              <div className="text-sm text-secondary mb-1">Bundle Size</div>
-              <div className="text-xs text-muted">Down from 2.1MB (-14%)</div>
-            </div>
-
-            <div className="text-center">
-              <div className="text-3xl font-bold text-info mb-2">0.8s</div>
-              <div className="text-sm text-secondary mb-1">
-                First Contentful Paint
-              </div>
-              <div className="text-xs text-muted">Target: &lt;0.5s (Soon!)</div>
-            </div>
-
-            <div className="text-center">
-              <div className="text-3xl font-bold text-warning mb-2">98+</div>
-              <div className="text-sm text-secondary mb-1">
-                Lighthouse Accessibility
-              </div>
-              <div className="text-xs text-muted">WCAG AA Compliant</div>
-            </div>
-          </div>
-
-          <div className="mt-6 p-4 bg-success/20/10 border border-success/20 rounded-lg">
-            <h4 className="font-semibold text-success mb-2">
-              ✅ Zero Design Violations
-            </h4>
-            <p className="text-sm text-secondary">
-              Eliminated 1,397 hardcoded Tailwind colors, replaced with semantic
-              tokens for runtime theme switching
-            </p>
-          </div>
-        </Card>
       </div>
     </div>
   );

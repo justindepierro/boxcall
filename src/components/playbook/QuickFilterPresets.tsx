@@ -34,21 +34,21 @@ export const QuickFilterPresets: React.FC<QuickFilterPresetsProps> = ({
             // Custom colors for different preset types
             switch (preset.id) {
               case "favorites":
-                return "bg-warning-50 hover:bg-warning-100 text-warning-700 border-warning-200";
+                return "bg-amber-100 hover:bg-amber-200 text-amber-900 border-amber-300";
               case "most-used":
-                return "bg-error-50 hover:bg-error-100 text-error-700 border-error-200";
+                return "bg-rose-100 hover:bg-rose-200 text-rose-900 border-rose-300";
               case "run":
-                return "bg-cyan-50 hover:bg-cyan-100 text-cyan-700 border-cyan-200";
+                return "bg-sky-100 hover:bg-sky-200 text-sky-900 border-sky-300";
               case "pass":
-                return "bg-purple-50 hover:bg-purple-100 text-purple-700 border-purple-200";
+                return "bg-purple-100 hover:bg-purple-200 text-purple-900 border-purple-300";
               case "rpo":
-                return "bg-orange-50 hover:bg-orange-100 text-orange-700 border-orange-200";
+                return "bg-orange-100 hover:bg-orange-200 text-orange-900 border-orange-300";
               case "redzone":
-                return "bg-success-50 hover:bg-success-100 text-success-700 border-success-200";
+                return "bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border-emerald-300";
               case "thirddown":
-                return "bg-info-50 hover:bg-info-100 text-info-700 border-info-200";
+                return "bg-navy-100 hover:bg-navy-200 text-navy-900 border-navy-300";
               default:
-                return "bg-subtle hover:bg-secondary text-primary border-muted";
+                return "bg-surface-elevated hover:bg-surface-overlay text-primary border-border";
             }
           };
 

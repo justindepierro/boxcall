@@ -28,7 +28,7 @@ export const CreatePersonnelModal: React.FC<CreatePersonnelModalProps> = ({
 
   const handleCreate = async () => {
     const name = personnelName.trim();
-    
+
     if (!name) {
       toast.error("Personnel name is required");
       return;
@@ -125,7 +125,8 @@ export const CreatePersonnelModal: React.FC<CreatePersonnelModalProps> = ({
               autoFocus
             />
             <p className="text-xs text-secondary mt-1">
-              Any format works: colors, animals, numbers, words - whatever your team uses!
+              Any format works: colors, animals, numbers, words - whatever your
+              team uses!
             </p>
           </div>
 

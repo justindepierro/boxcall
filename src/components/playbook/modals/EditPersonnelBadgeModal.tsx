@@ -135,9 +135,7 @@ export const EditPersonnelBadgeModal: React.FC<
                   style={{
                     backgroundColor: preset.bg,
                     borderColor:
-                      preset.bg === backgroundColor
-                        ? "#9333ea"
-                        : "transparent",
+                      preset.bg === backgroundColor ? "#9333ea" : "transparent",
                   }}
                   title={preset.name}
                 />

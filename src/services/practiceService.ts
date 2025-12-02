@@ -1529,7 +1529,8 @@ export class PracticeService {
       // Create new script with template data
       const newScript = await this.createPracticeScript({
         name: scriptName,
-        description: template.description || `Created from ${template.name} template`,
+        description:
+          template.description || `Created from ${template.name} template`,
         teamId: template.team_id,
         tags: ["from-template", template.name],
       });
@@ -1576,8 +1577,10 @@ export class PracticeService {
       if (updates.name !== undefined) updateData.name = updates.name;
       if (updates.description !== undefined)
         updateData.description = updates.description;
-      if (updates.duration !== undefined) updateData.duration = updates.duration;
-      if (updates.isPublic !== undefined) updateData.is_public = updates.isPublic;
+      if (updates.duration !== undefined)
+        updateData.duration = updates.duration;
+      if (updates.isPublic !== undefined)
+        updateData.is_public = updates.isPublic;
 
       const { data: template, error } = await supabase
         .from("practice_templates")

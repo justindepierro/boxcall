@@ -1,4 +1,5 @@
 # 🏈 Practice Script & Game Plan System - Comprehensive Audit
+
 **Date:** November 30, 2025  
 **Scope:** Database architecture, service layer, UI components, and Playbook integration
 
@@ -7,12 +8,14 @@
 ## 📊 Executive Summary
 
 ### System Status
+
 - **Practice Scripts**: ✅ **PRODUCTION READY** - Fully functional with time-based planning
 - **Game Plans**: ✅ **PRODUCTION READY** - Billick methodology implemented with situational organization
 - **Database Integration**: ✅ **SOLID** - Proper RLS, indexing, and relationships
 - **UI/UX**: ✅ **MODERN** - Drag-drop, real-time updates, PDF export
 
 ### Key Strengths
+
 1. **Brian Billick methodology** properly implemented (12 situational categories)
 2. **Playbook integration** - Direct play selection and references
 3. **Real-time collaboration** - Multiple coaches can work simultaneously
@@ -20,6 +23,7 @@
 5. **Performance optimized** - Proper indexing and caching strategies
 
 ### Areas for Improvement
+
 1. **Personnel integration** - Not yet reading personnel from plays automatically
 2. **Formation intelligence** - Missing auto-filtering by formation
 3. **Analytics layer** - No success rate tracking yet
@@ -57,6 +61,7 @@ CREATE TABLE practice_script_plays (
 ```
 
 **Key Features:**
+
 - ✅ Team-based isolation with RLS policies
 - ✅ Proper foreign key relationships to `plays` table
 - ✅ Order preservation with `order_index`
@@ -64,6 +69,7 @@ CREATE TABLE practice_script_plays (
 - ✅ Soft delete support (not archived, just unpublished)
 
 **Indexes:**
+
 ```sql
 idx_practice_scripts_team_id     -- Fast team queries
 idx_practice_script_plays_script -- Fast script play lookups
@@ -113,6 +119,7 @@ CREATE TABLE game_plan_plays (
 ```
 
 **Key Features:**
+
 - ✅ **Billick's 12 situations** automatically created on game plan creation
 - ✅ Play priority ordering (1 = highest priority call)
 - ✅ Cascade deletes maintain referential integrity
@@ -120,6 +127,7 @@ CREATE TABLE game_plan_plays (
 - ✅ Archive system for historical game plans
 
 **Indexes:**
+
 ```sql
 idx_game_plans_team_date              -- Fast team + date queries
 idx_game_plan_situations_plan         -- Fast situation lookups
@@ -149,6 +157,7 @@ idx_game_plan_plays_play_id           -- Reverse lookup (which plans use this pl
 ```
 
 **Data References:**
+
 ```typescript
 // Play Card → Script Item
 {
@@ -167,12 +176,14 @@ idx_game_plan_plays_play_id           -- Reverse lookup (which plans use this pl
 ```
 
 **Strengths:**
+
 - ✅ Direct FK relationship to `plays` table
 - ✅ Play data fetched via join (no duplication)
 - ✅ Changes to plays auto-reflect in scripts
 - ✅ Supports play archiving (won't break scripts)
 
 **Missing Features:**
+
 - ❌ No automatic personnel badge reading from plays
 - ❌ No formation filtering in script builder
 - ❌ No play complexity scoring for practice planning
@@ -198,25 +209,27 @@ idx_game_plan_plays_play_id           -- Reverse lookup (which plans use this pl
 ```
 
 **Billick's 12 Situations:**
+
 ```typescript
 // Automatically created on game plan initialization
 const BILLICK_SITUATIONS = {
-  FIRST_AND_10: "first_and_10",           // 10-15 plays
-  SECOND_AND_SHORT: "second_and_short",   // 8-10 plays
+  FIRST_AND_10: "first_and_10", // 10-15 plays
+  SECOND_AND_SHORT: "second_and_short", // 8-10 plays
   SECOND_AND_MEDIUM: "second_and_medium", // 8-10 plays
-  SECOND_AND_LONG: "second_and_long",     // 6-8 plays
-  THIRD_AND_SHORT: "third_and_short",     // 10-12 plays (CRITICAL)
-  THIRD_AND_MEDIUM: "third_and_medium",   // 10-12 plays
-  THIRD_AND_LONG: "third_and_long",       // 6-8 plays
-  RED_ZONE: "red_zone",                   // 12-15 plays
-  GOAL_LINE: "goal_line",                 // 8-10 plays
-  TWO_MINUTE_DRILL: "two_minute_drill",   // 10-12 plays
-  SHORT_YARDAGE: "short_yardage",         // 6-8 plays
-  SITUATIONAL: "situational",             // 10-15 plays (trick plays)
+  SECOND_AND_LONG: "second_and_long", // 6-8 plays
+  THIRD_AND_SHORT: "third_and_short", // 10-12 plays (CRITICAL)
+  THIRD_AND_MEDIUM: "third_and_medium", // 10-12 plays
+  THIRD_AND_LONG: "third_and_long", // 6-8 plays
+  RED_ZONE: "red_zone", // 12-15 plays
+  GOAL_LINE: "goal_line", // 8-10 plays
+  TWO_MINUTE_DRILL: "two_minute_drill", // 10-12 plays
+  SHORT_YARDAGE: "short_yardage", // 6-8 plays
+  SITUATIONAL: "situational", // 10-15 plays (trick plays)
 };
 ```
 
 **Strengths:**
+
 - ✅ Industry-standard methodology (Brian Billick proven system)
 - ✅ Situational intelligence for live game decisions
 - ✅ Priority-based play calling (no guesswork)
@@ -224,6 +237,7 @@ const BILLICK_SITUATIONS = {
 - ✅ PDF export for sideline reference
 
 **Missing Features:**
+
 - ❌ No AI/ML play recommendations based on situation
 - ❌ No success rate tracking from past games
 - ❌ No opponent-specific filtering
@@ -260,11 +274,14 @@ export class PracticeService {
   }
 
   // Update play repetitions/time
-  static async updateScriptPlay(playId: string, updates: {
-    repetitions?: number;
-    estimated_time?: number;
-    notes?: string;
-  }) {
+  static async updateScriptPlay(
+    playId: string,
+    updates: {
+      repetitions?: number;
+      estimated_time?: number;
+      notes?: string;
+    }
+  ) {
     // Updates individual play config
     // Recalculates script total duration
   }
@@ -278,6 +295,7 @@ export class PracticeService {
 ```
 
 **Strengths:**
+
 - ✅ Clean CRUD operations
 - ✅ Atomic transactions for ordering
 - ✅ Efficient bulk operations
@@ -285,6 +303,7 @@ export class PracticeService {
 - ✅ Loading states for better UX
 
 **Performance:**
+
 - Uses `.select()` with explicit columns (no `*`)
 - Proper indexing on foreign keys
 - Batched operations where possible
@@ -339,6 +358,7 @@ export class GamePlanService {
 ```
 
 **Strengths:**
+
 - ✅ Automatic situation creation (removes manual work)
 - ✅ Deep copy for duplication (preserves structure)
 - ✅ Soft delete system (historical preservation)
@@ -346,6 +366,7 @@ export class GamePlanService {
 - ✅ Optimistic UI updates for speed
 
 **Performance:**
+
 - Uses `.select()` with nested relationships (efficient joins)
 - Proper indexing on situation_id and play_id
 - Minimal round trips (bulk operations)
@@ -360,6 +381,7 @@ export class GamePlanService {
 **File:** `src/components/playbook/PracticeScriptBuilder.tsx`
 
 **Features:**
+
 ```typescript
 // User Experience
 - Drag-and-drop play reordering (react-beautiful-dnd)
@@ -372,6 +394,7 @@ export class GamePlanService {
 ```
 
 **Component Structure:**
+
 ```
 PracticeScriptBuilder
 ├── PracticeScriptPlayList (drag-drop container)
@@ -385,6 +408,7 @@ PracticeScriptBuilder
 ```
 
 **State Management:**
+
 ```typescript
 const [script, setScript] = useState<PracticeScript>({
   plays: [],
@@ -392,10 +416,13 @@ const [script, setScript] = useState<PracticeScript>({
 });
 
 // Update on rep/time change
-const handleUpdatePlay = (playId: string, updates: {
-  repetitions?: number;
-  estimated_time?: number;
-}) => {
+const handleUpdatePlay = (
+  playId: string,
+  updates: {
+    repetitions?: number;
+    estimated_time?: number;
+  }
+) => {
   // Update local state (optimistic)
   // Background save to database
   // Recalculate total duration
@@ -403,6 +430,7 @@ const handleUpdatePlay = (playId: string, updates: {
 ```
 
 **Strengths:**
+
 - ✅ Intuitive drag-drop interface
 - ✅ Real-time feedback (duration updates instantly)
 - ✅ Visual consistency with playbook
@@ -410,6 +438,7 @@ const handleUpdatePlay = (playId: string, updates: {
 - ✅ Keyboard accessible
 
 **Weaknesses:**
+
 - ❌ No scenario/situation metadata (only time-based)
 - ❌ Can't assign plays to specific drills within script
 - ❌ No practice phase organization (install/review/compete)
@@ -422,6 +451,7 @@ const handleUpdatePlay = (playId: string, updates: {
 **File:** `src/components/playbook/GamePlanModal/`
 
 **Features:**
+
 ```typescript
 // Tabbed Interface (12 Billick Situations)
 - First & 10 tab
@@ -443,6 +473,7 @@ const handleUpdatePlay = (playId: string, updates: {
 ```
 
 **Component Structure:**
+
 ```
 GamePlanModal
 ├── GamePlanHeader (opponent, date, location)
@@ -459,6 +490,7 @@ GamePlanModal
 ```
 
 **State Management:**
+
 ```typescript
 const [gamePlan, setGamePlan] = useState<GamePlan>({
   id: "uuid",
@@ -484,6 +516,7 @@ const handleAddPlay = (situationType: string, playId: string) => {
 ```
 
 **Strengths:**
+
 - ✅ Industry-standard organization (Billick)
 - ✅ Drag-drop within situations
 - ✅ Priority-based ordering (clear hierarchy)
@@ -492,6 +525,7 @@ const handleAddPlay = (situationType: string, playId: string) => {
 - ✅ Duplicate for similar opponents
 
 **Weaknesses:**
+
 - ❌ No filtering by formation/personnel within situation
 - ❌ No AI recommendations based on analytics
 - ❌ No success rate from past games
@@ -504,6 +538,7 @@ const handleAddPlay = (situationType: string, playId: string) => {
 **File:** `src/components/practice/PracticePlannerModal/`
 
 **Features:**
+
 ```typescript
 // Visual 8-Block Grid Layout
 - Each block = time period (e.g., 3:00-3:15 PM)
@@ -514,7 +549,7 @@ const handleAddPlay = (situationType: string, playId: string) => {
 
 // Block Categories
 - Offense (11-man, inside, perimeter)
-- Defense (11-man, inside, perimeter)  
+- Defense (11-man, inside, perimeter)
 - Special Teams (kicking, return)
 - Meeting (film, install, review)
 - Weight Room (strength, conditioning)
@@ -523,6 +558,7 @@ const handleAddPlay = (situationType: string, playId: string) => {
 ```
 
 **Integration with Practice Scripts:**
+
 ```typescript
 // User flow
 1. Create practice blocks (8-box layout)
@@ -535,6 +571,7 @@ const handleAddPlay = (situationType: string, playId: string) => {
 ```
 
 **Strengths:**
+
 - ✅ Visual time management (coaches think in blocks)
 - ✅ Direct script assignment
 - ✅ Duration tracking with warnings
@@ -542,6 +579,7 @@ const handleAddPlay = (situationType: string, playId: string) => {
 - ✅ PDF export for practice schedule
 
 **Weaknesses:**
+
 - ❌ No auto-scheduling based on optimal practice structure
 - ❌ Can't reuse block templates (e.g., "Tuesday Install Practice")
 - ❌ Missing rep count tracking across all blocks
@@ -554,6 +592,7 @@ const handleAddPlay = (situationType: string, playId: string) => {
 ### Current State: ❌ **NOT IMPLEMENTED**
 
 **What's Missing:**
+
 ```typescript
 // Practice Script Analytics
 - Total reps per player/position
@@ -571,6 +610,7 @@ const handleAddPlay = (situationType: string, playId: string) => {
 ```
 
 **Database Schema Ready For:**
+
 ```sql
 -- game_plan_execution table (not yet created)
 CREATE TABLE game_plan_execution (
@@ -588,6 +628,7 @@ CREATE TABLE game_plan_execution (
 ```
 
 **Future Features:**
+
 - Track play execution in live games
 - Calculate success rate per situation
 - Identify "money plays" automatically
@@ -797,11 +838,12 @@ CREATE TABLE game_plan_execution (
 ### Current Optimizations
 
 1. **Database Indexing**
+
    ```sql
    -- Game Plans
    idx_game_plans_team_date              -- Covers 90% of queries
    idx_game_plan_plays_play_id           -- Fast reverse lookups
-   
+
    -- Practice Scripts
    idx_practice_scripts_team_id          -- Team isolation
    idx_practice_script_plays_order       -- Sorted retrieval
@@ -826,20 +868,22 @@ CREATE TABLE game_plan_execution (
 ### Recommended Upgrades
 
 1. **React Query Integration**
+
    ```typescript
    // Replace manual useState with React Query
    const { data: gamePlans, isLoading } = useQuery({
-     queryKey: ['game-plans', teamId],
+     queryKey: ["game-plans", teamId],
      queryFn: () => GamePlanService.getGamePlans(teamId),
      staleTime: 5 * 60 * 1000, // 5 minutes
    });
    ```
 
 2. **Virtualized Lists**
+
    ```typescript
    // Use react-window for large play lists
    import { FixedSizeList } from 'react-window';
-   
+
    <FixedSizeList
      height={600}
      itemCount={plays.length}
@@ -853,12 +897,16 @@ CREATE TABLE game_plan_execution (
    ```typescript
    // Live collaboration for multiple coaches
    supabase
-     .channel('game-plan-changes')
-     .on('postgres_changes', {
-       event: '*',
-       schema: 'public',
-       table: 'game_plan_plays',
-     }, handlePlayUpdate)
+     .channel("game-plan-changes")
+     .on(
+       "postgres_changes",
+       {
+         event: "*",
+         schema: "public",
+         table: "game_plan_plays",
+       },
+       handlePlayUpdate
+     )
      .subscribe();
    ```
 
@@ -872,12 +920,10 @@ CREATE TABLE game_plan_execution (
    - Auto-read personnel badges from plays in scripts/game plans
    - Filter plays by available personnel in practice
    - Show personnel mismatches in game plan situations
-   
 2. **Formation Intelligence** ⏱️ 6 hours
    - Auto-filter plays by formation in game plan builder
    - Suggest formations for specific situations
    - Flag formation imbalance warnings
-   
 3. **Mobile Responsiveness** ⏱️ 8 hours
    - Optimize drag-drop for touch screens
    - Collapsible sections for small screens
@@ -890,7 +936,6 @@ CREATE TABLE game_plan_execution (
    - Calculate success rates per situation
    - Identify "money plays" automatically
    - Weekly practice load charts
-   
 5. **AI Play Recommendations** ⏱️ 16 hours
    - ML model for situation-based suggestions
    - Opponent tendency analysis
@@ -909,7 +954,6 @@ CREATE TABLE game_plan_execution (
    - Embed play film in scripts/game plans
    - Sync with Hudl/MaxPreps accounts
    - Auto-tag plays in game film
-   
 8. **Wristband Generator** ⏱️ 8 hours
    - Auto-assign wristband numbers
    - Generate printable wristband cards
@@ -945,6 +989,7 @@ Both Practice Scripts and Game Plans are **production-ready** with solid databas
 4. Mobile drag-drop optimization
 
 **Expected Impact:**
+
 - 30% faster game plan creation (less manual work)
 - Fewer formation conflicts in practice
 - Better situational balance (flag weak areas)
@@ -956,6 +1001,7 @@ Both Practice Scripts and Game Plans are **production-ready** with solid databas
 BoxCall's Practice Script and Game Plan systems are **well-architected** and **ready for prime time**. The database schema is sound, the service layer is clean, and the UI is modern. The Brian Billick methodology gives BoxCall a unique competitive advantage.
 
 **Key Strengths:**
+
 - Proven coaching methodology (Billick)
 - Clean database design with proper relationships
 - Intuitive drag-drop UIs
@@ -963,6 +1009,7 @@ BoxCall's Practice Script and Game Plan systems are **well-architected** and **r
 - Real-time duration tracking
 
 **Key Gaps:**
+
 - Personnel/formation integration needs work
 - Analytics layer missing (huge opportunity)
 - Mobile UX could be smoother
@@ -971,5 +1018,5 @@ BoxCall's Practice Script and Game Plan systems are **well-architected** and **r
 
 ---
 
-*Audit completed: November 30, 2025*  
-*Next review: December 30, 2025*
+_Audit completed: November 30, 2025_  
+_Next review: December 30, 2025_

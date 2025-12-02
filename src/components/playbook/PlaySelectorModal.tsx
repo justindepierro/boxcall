@@ -65,7 +65,9 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
       const matchesPersonnel =
         !selectedPersonnel || play.personnel === selectedPersonnel;
 
-      return matchesSearch && matchesFormation && matchesPlayType && matchesPersonnel;
+      return (
+        matchesSearch && matchesFormation && matchesPlayType && matchesPersonnel
+      );
     });
   }, [
     plays,

@@ -20,14 +20,9 @@ interface TemplateManagementModalProps {
   onLoadTemplate?: (templateId: string, scriptName: string) => void;
 }
 
-export const TemplateManagementModal: React.FC<TemplateManagementModalProps> = ({
-  isOpen,
-  onClose,
-  mode,
-  teamId,
-  onSaveTemplate,
-  onLoadTemplate,
-}) => {
+export const TemplateManagementModal: React.FC<
+  TemplateManagementModalProps
+> = ({ isOpen, onClose, mode, teamId, onSaveTemplate, onLoadTemplate }) => {
   const [templates, setTemplates] = useState<PracticeTemplate[]>([]);
   const [loading, setLoading] = useState(false);
   const [templateName, setTemplateName] = useState("");
@@ -112,7 +107,9 @@ export const TemplateManagementModal: React.FC<TemplateManagementModalProps> = (
           <>
             <div>
               <Typography variant="body-sm" className="text-secondary mb-4">
-                Create a reusable template from this practice script. Templates help you quickly set up similar practices (e.g., "Tuesday Install", "Friday Walkthrough").
+                Create a reusable template from this practice script. Templates
+                help you quickly set up similar practices (e.g., "Tuesday
+                Install", "Friday Walkthrough").
               </Typography>
             </div>
 
@@ -177,8 +174,14 @@ export const TemplateManagementModal: React.FC<TemplateManagementModalProps> = (
               </div>
             ) : templates.length === 0 ? (
               <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
-                <Icon name="file" className="h-16 w-16 text-muted mx-auto mb-4" />
-                <Typography variant="headline-sm" className="text-secondary mb-2">
+                <Icon
+                  name="file"
+                  className="h-16 w-16 text-muted mx-auto mb-4"
+                />
+                <Typography
+                  variant="headline-sm"
+                  className="text-secondary mb-2"
+                >
                   No templates yet
                 </Typography>
                 <Typography variant="body-sm" className="text-muted">
@@ -200,7 +203,10 @@ export const TemplateManagementModal: React.FC<TemplateManagementModalProps> = (
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
-                            <Typography variant="body-md" className="font-medium">
+                            <Typography
+                              variant="body-md"
+                              className="font-medium"
+                            >
                               {template.name}
                             </Typography>
                             {template.isPublic && (
@@ -210,12 +216,18 @@ export const TemplateManagementModal: React.FC<TemplateManagementModalProps> = (
                             )}
                           </div>
                           {template.description && (
-                            <Typography variant="body-sm" className="text-secondary">
+                            <Typography
+                              variant="body-sm"
+                              className="text-secondary"
+                            >
                               {template.description}
                             </Typography>
                           )}
                           {template.duration && (
-                            <Typography variant="caption" className="text-muted mt-1">
+                            <Typography
+                              variant="caption"
+                              className="text-muted mt-1"
+                            >
                               Duration: {template.duration} minutes
                             </Typography>
                           )}

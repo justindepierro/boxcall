@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 import { Icon } from "../ui/Icon/Icon";
 import { FORMATION_OPTIONS, PLAY_TYPE_OPTIONS } from "../../types/play";
 import { QuickFilterPresets } from "./QuickFilterPresets";
@@ -137,6 +138,14 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
     value: "",
   });
 
+  // 🚀 PERFORMANCE: Debounce filter changes to prevent lag during typing (150ms)
+  const debouncedFilterChange = useDebouncedCallback(
+    (filters: ActiveFilter[]) => {
+      onFiltersChange(filters);
+    },
+    150
+  );
+
   const handlePresetSelect = (preset: FilterPreset) => {
     setActivePresetId(preset.id);
 
@@ -177,16 +186,19 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
       label: `${field.label} ${OPERATORS.find((o) => o.id === newFilter.operator)?.label} "${newFilter.value}"`,
     };
 
-    onFiltersChange([...activeFilters, filter]);
+    // Use debounced version for smooth typing experience
+    debouncedFilterChange([...activeFilters, filter]);
     setNewFilter({ field: "", operator: "equals", value: "" });
     setShowAddFilter(false);
   };
 
   const removeFilter = (filterId: string) => {
+    // Instant removal (no need to debounce deletions)
     onFiltersChange(activeFilters.filter((f) => f.id !== filterId));
   };
 
   const clearAllFilters = () => {
+    // Instant clear (no need to debounce)
     onFiltersChange([]);
   };
 

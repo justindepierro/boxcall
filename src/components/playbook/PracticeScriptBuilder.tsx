@@ -88,7 +88,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
           .select("*")
           .in("id", selectedPlayIds)
           .then(
-            ({ data, error }: { data: Play[] | null; error: Error | null }) => {
+            ({ data, error }) => {
               if (error) {
                 console.error("Failed to fetch plays:", error);
                 toast.error("Failed to load selected plays");
@@ -98,12 +98,13 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
 
               if (data && data.length > 0) {
                 // Create initial script structure with selected plays
+                const plays = data as unknown as Play[];
                 const initialScript: Partial<PracticeScript> = {
                   id: "", // Will be set on save
                   name: "",
                   description: "",
                   teamId,
-                  plays: data.map((play: Play, index: number) => ({
+                  plays: plays.map((play, index) => ({
                     id: `temp-${play.id}-${index}`, // Temporary ID
                     playId: play.id,
                     play: play,
@@ -539,42 +540,51 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
     }
   }, [currentScript, toast]);
 
-  const handleSaveAsTemplate = useCallback(async (templateName: string, description?: string) => {
-    if (!currentScript?.id) {
-      toast.error("Please save the script first before creating a template");
-      return;
-    }
+  const handleSaveAsTemplate = useCallback(
+    async (templateName: string, description?: string) => {
+      if (!currentScript?.id) {
+        toast.error("Please save the script first before creating a template");
+        return;
+      }
 
-    try {
-      await PracticeScriptService.createTemplateFromScript(currentScript.id, {
-        name: templateName,
-        description: description,
-        teamId,
-        duration: currentScript.duration,
-        isPublic: false,
-      });
-      toast.success(`Template "${templateName}" created successfully`);
-      setShowTemplateModal(false);
-    } catch (error) {
-      console.error("Failed to create template:", error);
-      toast.error("Failed to create template", "Please try again");
-    }
-  }, [currentScript, teamId, toast]);
+      try {
+        await PracticeScriptService.createTemplateFromScript(currentScript.id, {
+          name: templateName,
+          description: description,
+          teamId,
+          duration: currentScript.duration,
+          isPublic: false,
+        });
+        toast.success(`Template "${templateName}" created successfully`);
+        setShowTemplateModal(false);
+      } catch (error) {
+        console.error("Failed to create template:", error);
+        toast.error("Failed to create template", "Please try again");
+      }
+    },
+    [currentScript, teamId, toast]
+  );
 
-  const handleLoadFromTemplate = useCallback(async (templateId: string, scriptName: string) => {
-    try {
-      const newScript = await PracticeScriptService.createScriptFromTemplate(templateId, scriptName);
-      setCurrentScript(newScript);
-      setScriptName(newScript.title || newScript.name || "");
-      setScriptDescription(newScript.description || "");
-      setIsEditing(true);
-      toast.success(`Script created from template`);
-      setShowTemplateModal(false);
-    } catch (error) {
-      console.error("Failed to load template:", error);
-      toast.error("Failed to load template", "Please try again");
-    }
-  }, [toast]);
+  const handleLoadFromTemplate = useCallback(
+    async (templateId: string, scriptName: string) => {
+      try {
+        const newScript = await PracticeScriptService.createScriptFromTemplate(
+          templateId,
+          scriptName
+        );
+        setCurrentScript(newScript);
+        setScriptName(newScript.title || newScript.name || "");
+        setScriptDescription(newScript.description || "");
+        setIsEditing(true);
+        toast.success(`Script created from template`);
+        setShowTemplateModal(false);
+      } catch (error) {
+        console.error("Failed to load template:", error);
+        toast.error("Failed to load template", "Please try again");
+      }
+    },
+    [toast]
+  );
 
   const totalPlays = currentScript?.plays?.length || 0;
 
@@ -809,12 +819,17 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
                   </Typography>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <Button variant="outline" size="sm" onClick={handleExportPDF}>
+                  <Button 
+                    variant="secondary" 
+                    size="sm" 
+                    onClick={handleExportPDF}
+                    className="btn-action"
+                  >
                     <Icon name="download" className="h-4 w-4 mr-2" />
                     Export PDF
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="secondary"
                     size="sm"
                     onClick={() => {
                       if (isMobile) triggerHapticFeedback("light");
@@ -822,19 +837,25 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
                       setShowTemplateModal(true);
                     }}
                     disabled={!currentScript?.id}
-                    title={!currentScript?.id ? "Save script first" : "Save as reusable template"}
+                    title={
+                      !currentScript?.id
+                        ? "Save script first"
+                        : "Save as reusable template"
+                    }
+                    className="btn-action"
                   >
                     <Icon name="save" className="h-4 w-4 mr-2" />
                     Save as Template
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="secondary"
                     size="sm"
                     onClick={() => {
                       if (isMobile) triggerHapticFeedback("light");
                       setTemplateAction("load");
                       setShowTemplateModal(true);
                     }}
+                    className="btn-action"
                   >
                     <Icon name="folder" className="h-4 w-4 mr-2" />
                     Load from Template

@@ -295,9 +295,7 @@ export class PersonnelLibraryService {
 
       if (configError) throw configError;
 
-      const existingNames = new Set(
-        existingConfigs?.map((c) => c.name) || []
-      );
+      const existingNames = new Set(existingConfigs?.map((c) => c.name) || []);
 
       // Find personnel that don't have configs yet
       const missingPersonnel = uniquePersonnel.filter(
@@ -367,9 +365,7 @@ export class PersonnelLibraryService {
         "[PersonnelLibraryService] Error updating badge customization:",
         error
       );
-      throw new Error(
-        `Failed to update badge customization: ${error.message}`
-      );
+      throw new Error(`Failed to update badge customization: ${error.message}`);
     }
   }
 }
