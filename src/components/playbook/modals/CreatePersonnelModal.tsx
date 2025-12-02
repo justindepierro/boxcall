@@ -114,7 +114,7 @@ export const CreatePersonnelModal: React.FC<CreatePersonnelModalProps> = ({
         <div className="p-6 space-y-4">
           <div>
             <label className="block text-sm font-semibold text-primary mb-2">
-              Personnel Name <span className="text-red-500">*</span>
+              Personnel Package <span className="text-error">*</span>
             </label>
             <input
               type="text"
@@ -151,7 +151,7 @@ export const CreatePersonnelModal: React.FC<CreatePersonnelModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-gray-200 dark:border-gray-800 flex gap-3 justify-end bg-gray-50 dark:bg-gray-800/50">
+        <div className="p-4 border-t border-divider flex gap-3 justify-end bg-surface-secondary">
           <button onClick={onClose} className="btn-secondary">
             Cancel
           </button>

@@ -231,7 +231,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
             <button
               onClick={handleImportFromPlays}
               disabled={analyzing}
-              className="btn-secondary flex items-center gap-2 bg-orange-500 text-white border-orange-600 hover:bg-orange-600 disabled:bg-gray-400 disabled:border-gray-500 shadow-md"
+              className="btn-secondary flex items-center gap-2 bg-orange-500 text-white border-orange-600 hover:bg-orange-600 disabled:bg-neutral-400 disabled:border-neutral-500 shadow-md"
             >
               {analyzing ? (
                 <>
@@ -266,7 +266,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
         </div>
 
         {/* Search */}
-        <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+        <div className="p-4 sm:p-6 border-b border-divider bg-surface-secondary">
           <div className="relative">
             <Icon
               name="search"
@@ -373,7 +373,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
         </div>
 
         {/* Footer Stats */}
-        <div className="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 p-4 shadow-inner">
+        <div className="border-t border-divider bg-surface-secondary p-4 shadow-inner">
           <div className="grid grid-cols-4 gap-4 text-center">
             <div>
               <div className="text-2xl font-bold text-primary">
