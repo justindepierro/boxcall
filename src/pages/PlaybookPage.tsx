@@ -259,10 +259,10 @@ export default function PlaybookPage() {
   // 🚀 PERFORMANCE: Consolidated stats hook with intelligent memoization
   const formationAudit = useFormationAudit(activePlaybookId || null);
   const playbookStats = usePlaybookStats(
-    allPlaysForStats,
+    allPlaysForStats as Play[],
     allFormations,
     recentActivities,
-    formationAudit.plays || []
+    (formationAudit.plays || []) as Play[]
   );
 
   // Extract individual stats for backward compatibility
@@ -539,13 +539,6 @@ export default function PlaybookPage() {
       if ((e.metaKey || e.ctrlKey) && e.key === "n") {
         e.preventDefault();
         handleOpenBuilder();
-        return;
-      }
-
-      // Cmd/Ctrl + F: Advanced filters
-      if ((e.metaKey || e.ctrlKey) && e.key === "f") {
-        e.preventDefault();
-        dispatch({ type: "TOGGLE_SHOW_ADVANCED_FILTERS" });
         return;
       }
 
