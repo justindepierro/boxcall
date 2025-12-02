@@ -79,20 +79,7 @@ export interface CreatePracticeScriptData {
   tags?: string[];
 }
 
-// Practice Template types
-export interface PracticeTemplate {
-  id: string;
-  name: string;
-  description?: string;
-  teamId: string;
-  duration?: number; // minutes
-  isPublic: boolean;
-  createdBy: string;
-  createdAt: Date;
-  updatedAt: Date;
-  plays: PracticeScriptPlay[]; // Template includes play configuration
-}
-
+// Practice Template create data interface (PracticeTemplate imported from types/practice)
 export interface CreatePracticeTemplateData {
   name: string;
   description?: string;
