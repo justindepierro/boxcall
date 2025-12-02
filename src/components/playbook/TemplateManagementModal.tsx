@@ -6,7 +6,8 @@ import { Typography } from "../design-system/Typography";
 import Input from "../ui/Input/Input";
 import Textarea from "../ui/TextArea/TextArea";
 import { Badge } from "../ui/Badge";
-import { PracticeService, type PracticeTemplate } from "@services";
+import { PracticeService } from "@services";
+import type { PracticeTemplate } from "../../types/practice";
 import { useToast } from "../../hooks/useToast";
 import { triggerHapticFeedback } from "../../lib/hapticFeedback";
 
@@ -153,7 +154,7 @@ export const TemplateManagementModal: React.FC<TemplateManagementModalProps> = (
                 onClick={handleSave}
                 disabled={!templateName.trim()}
               >
-                <Icon name="bookmark" className="h-4 w-4 mr-2" />
+                <Icon name="save" className="h-4 w-4 mr-2" />
                 Create Template
               </Button>
             </div>

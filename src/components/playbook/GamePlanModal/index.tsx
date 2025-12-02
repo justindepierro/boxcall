@@ -499,7 +499,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
                                           </Badge>
                                         )}
                                         {play.personnel && (
-                                          <Badge variant="primary" size="sm">
+                                          <Badge variant="info" size="sm">
                                             {play.personnel}
                                           </Badge>
                                         )}

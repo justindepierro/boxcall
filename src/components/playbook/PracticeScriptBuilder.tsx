@@ -824,7 +824,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
                     disabled={!currentScript?.id}
                     title={!currentScript?.id ? "Save script first" : "Save as reusable template"}
                   >
-                    <Icon name="bookmark" className="h-4 w-4 mr-2" />
+                    <Icon name="save" className="h-4 w-4 mr-2" />
                     Save as Template
                   </Button>
                   <Button 
