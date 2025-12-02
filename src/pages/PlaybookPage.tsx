@@ -20,10 +20,9 @@ import {
 import { exportPlays } from "../services/exportService";
 import type { PlayActivityItem } from "@services";
 import { SecurePlaysService } from "../services/securePlaysService";
-
-// import { AnalyticsDashboard } from "../components/analytics/AnalyticsDashboard";
 import { useToast } from "../hooks/useToast";
 import type { Play } from "../types/play";
+import type { PracticeScript } from "../types/practice";
 
 import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { useTeamsData } from "../hooks/useTeamsData";
@@ -141,7 +140,7 @@ export default function PlaybookPage() {
   const [diagramPlay, setDiagramPlay] = useState<Play | null>(null);
   const [diagramMode, setDiagramMode] = useState<"edit" | "quick-play">("edit");
   const [assignmentsPlay, setAssignmentsPlay] = useState<Play | null>(null);
-  const [editingScript, setEditingScript] = useState<any>(null); // TODO: Use proper PracticeScript type
+  const [editingScript, setEditingScript] = useState<PracticeScript | null>(null);
   const [selectedPlaysForPractice, setSelectedPlaysForPractice] = useState<
     string[]
   >([]);
@@ -157,14 +156,6 @@ export default function PlaybookPage() {
 
   // Modal-specific data (kept separate since not all modals need data)
   const [playToPost, setPlayToPost] = useState<Play | null>(null);
-
-  // Sheet states (not managed by useModalManager since they use BottomSheet component)
-  const [showFiltersSheet, setShowFiltersSheet] = useState(false);
-  const [showStatsSheet, setShowStatsSheet] = useState(false);
-
-  // Library modal states
-  const [showFormationLibrary, setShowFormationLibrary] = useState(false);
-  const [showPersonnelLibrary, setShowPersonnelLibrary] = useState(false);
 
   // Handle opening assignments for a play
   const handleOpenAssignments = useCallback((play: Play) => {
@@ -390,12 +381,10 @@ export default function PlaybookPage() {
 
       switch (action) {
         case "add-tags":
-          // TODO: Open bulk tagging modal
           toast.info(`Bulk tagging ${selectedCount} plays (coming soon)`);
           break;
 
         case "duplicate":
-          // TODO: Implement bulk duplicate
           toast.info(`Duplicating ${selectedCount} plays (coming soon)`);
           break;
 
@@ -415,7 +404,6 @@ export default function PlaybookPage() {
           break;
 
         case "batch-edit":
-          // TODO: Open batch edit modal
           toast.info(`Batch editing ${selectedCount} plays (coming soon)`);
           break;
 
@@ -937,10 +925,13 @@ export default function PlaybookPage() {
     async (play: Play) => {
       triggerHapticFeedback("success");
       try {
-        const teamId = "current-team"; // TODO: Get from context/auth
+        if (!activeTeamId) {
+          toast.error("No active team selected");
+          return;
+        }
         const script = await PracticeScriptService.createQuickScript(
           play,
-          teamId
+          activeTeamId
         );
         info(`Added "${play.play_name}" to practice script: "${script.name}"`);
 
@@ -959,12 +950,11 @@ export default function PlaybookPage() {
         );
       }
     },
-    [toast, refreshActivities]
+    [activeTeamId, toast, refreshActivities]
   );
 
   const handleAddToGamePlan = useCallback(
     async (_play: Play) => {
-      // TODO: Implement game plan integration
       toast.info("Game plan integration coming soon!");
     },
     [toast]
@@ -1048,9 +1038,9 @@ export default function PlaybookPage() {
           onOpenHealth={() => openModal("playbookHealth")}
           onNavigate={(path) => {
             if (path === "/playbook/formations") {
-              setShowFormationLibrary(true);
+              openModal("formationLibrary");
             } else if (path === "/playbook/personnel") {
-              setShowPersonnelLibrary(true);
+              openModal("personnelLibrary");
             } else {
               navigate(path);
             }
@@ -1075,15 +1065,15 @@ export default function PlaybookPage() {
           <MobilePlaybookView
             state={state}
             mobileListExpanded={mobileListExpanded}
-            showFiltersSheet={showFiltersSheet}
-            showStatsSheet={showStatsSheet}
+            showFiltersSheet={isModalOpen("filtersSheet")}
+            showStatsSheet={isModalOpen("statsSheet")}
             debouncedSearchQuery={debouncedSearchQuery}
             optimisticPlays={optimisticPlays}
             formationAudit={formationAudit}
             formationAuditSummary={formationAuditSummary}
             setMobileListExpanded={setMobileListExpanded}
-            setShowFiltersSheet={setShowFiltersSheet}
-            setShowStatsSheet={setShowStatsSheet}
+            setShowFiltersSheet={(show) => show ? openModal("filtersSheet") : closeModal()}
+            setShowStatsSheet={(show) => show ? openModal("statsSheet") : closeModal()}
             handleOpenQuickCreate={handleOpenQuickCreate}
             handleOpenPersonnel={handleOpenPersonnel}
             handleOpenSettings={handleOpenSettings}
@@ -1171,14 +1161,14 @@ export default function PlaybookPage() {
         />
 
         {/* Mobile/Tablet Filters Bottom Sheet */}
-        {isMobileOrTablet && showFiltersSheet && (
+        {isMobileOrTablet && isModalOpen("filtersSheet") && (
           <BottomSheet
             snapPoints={[0.1, 0.6, 0.9]}
             initialSnapPoint={1}
             onSnapPointChange={(snapPoint) => {
               // Close when fully minimized
               if (snapPoint < 0.15) {
-                setShowFiltersSheet(false);
+                closeModal();
               }
             }}
           >
@@ -1189,7 +1179,7 @@ export default function PlaybookPage() {
                   Filters & Search
                 </Typography>
                 <Button
-                  onClick={() => setShowFiltersSheet(false)}
+                  onClick={closeModal}
                   variant="ghost"
                   size="sm"
                 >
@@ -1211,7 +1201,7 @@ export default function PlaybookPage() {
                   <Button
                     onClick={() => {
                       dispatch({ type: "SET_ADVANCED_FILTERS", filters: [] });
-                      setShowFiltersSheet(false);
+                      closeModal();
                     }}
                     variant="secondary"
                     size={mobileSecondaryButtonSize}
@@ -1220,7 +1210,7 @@ export default function PlaybookPage() {
                     Clear All
                   </Button>
                   <Button
-                    onClick={() => setShowFiltersSheet(false)}
+                    onClick={closeModal}
                     variant="primary"
                     size={mobileButtonSize}
                     className="flex-1"
@@ -1261,15 +1251,15 @@ export default function PlaybookPage() {
 
         {/* Formation Library Modal */}
         <FormationLibraryModal
-          isOpen={showFormationLibrary}
-          onClose={() => setShowFormationLibrary(false)}
+          isOpen={isModalOpen("formationLibrary")}
+          onClose={closeModal}
           playbookId={activePlaybookId}
         />
 
         {/* Personnel Library Modal */}
         <PersonnelLibraryModal
-          isOpen={showPersonnelLibrary}
-          onClose={() => setShowPersonnelLibrary(false)}
+          isOpen={isModalOpen("personnelLibrary")}
+          onClose={closeModal}
           playbookId={activePlaybookId}
         />
       </div>

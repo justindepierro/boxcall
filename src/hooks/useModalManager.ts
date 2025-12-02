@@ -36,6 +36,10 @@ export type ModalType =
   | "practiceScriptBuilder"
   | "filters"
   | "diagram"
+  | "formationLibrary"
+  | "personnelLibrary"
+  | "filtersSheet"
+  | "statsSheet"
   | null;
 
 export interface ModalOptions {
