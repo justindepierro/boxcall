@@ -259,10 +259,10 @@ export default function PlaybookPage() {
   // 🚀 PERFORMANCE: Consolidated stats hook with intelligent memoization
   const formationAudit = useFormationAudit(activePlaybookId || null);
   const playbookStats = usePlaybookStats(
-    allPlaysForStats as Play[],
+    allPlaysForStats as unknown as Play[],
     allFormations,
     recentActivities,
-    (formationAudit.plays || []) as Play[]
+    (formationAudit.plays || []) as unknown as Play[]
   );
 
   // Extract individual stats for backward compatibility
