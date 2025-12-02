@@ -127,6 +127,11 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setSearchQuery(e.target.value)
               }
+              placeholder="Search plays by name, formation, or notes..."
+              className="w-full"
+            />
+          </div>
+
           <div className="flex flex-wrap gap-2">
             <select
               value={selectedFormation}
