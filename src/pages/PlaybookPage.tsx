@@ -739,12 +739,7 @@ export default function PlaybookPage() {
         // Silent fail
       });
 
-      // Preload DiagramEditor (already exists in codebase)
-      import("../components/playbook/DiagramEditor").catch(() => {
-        // Silent fail
-      });
-
-      debug("[PlaybookPage] Modal preload complete! (4 heavy components)");
+      debug("[PlaybookPage] Modal preload complete! (3 heavy components)");
     }, 2000); // 2s delay = page is loaded, user settling in
 
     return () => clearTimeout(preloadTimer);

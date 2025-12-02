@@ -154,28 +154,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     rootMargin: "200px", // Start loading 200px before reaching bottom
   });
 
-  // Auto-load more when scroll trigger is visible
-  useEffect(() => {
-    if (inView && hasMorePlays && !isLoadingMore) {
-      setIsLoadingMore(true);
-      setTimeout(() => {
-        setMobileVisibleCount((prev) => {
-          const next = Math.min(prev + 20, displayPlays.length);
-          if (next === displayPlays.length) {
-            onMobileListExpand?.();
-          }
-          return next;
-        });
-        setIsLoadingMore(false);
-      }, 300);
-    }
-  }, [
-    inView,
-    hasMorePlays,
-    isLoadingMore,
-    displayPlays.length,
-    onMobileListExpand,
-  ]);
+  // NOTE: hasMorePlays is calculated later after displayPlays is defined
+  // The infinite scroll useEffect is defined after hasMorePlays calculation
 
   // Get real data from database with refresh capability and pagination
   const {
@@ -433,6 +413,29 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
   const hasMorePlays =
     isMobile && mobileVisibleCount < displayPlays.length && !mobileListExpanded;
+
+  // 🚀 INFINITE SCROLL: Auto-load more when scroll trigger is visible
+  useEffect(() => {
+    if (inView && hasMorePlays && !isLoadingMore) {
+      setIsLoadingMore(true);
+      setTimeout(() => {
+        setMobileVisibleCount((prev) => {
+          const next = Math.min(prev + 20, displayPlays.length);
+          if (next === displayPlays.length) {
+            onMobileListExpand?.();
+          }
+          return next;
+        });
+        setIsLoadingMore(false);
+      }, 300);
+    }
+  }, [
+    inView,
+    hasMorePlays,
+    isLoadingMore,
+    displayPlays.length,
+    onMobileListExpand,
+  ]);
 
   // Load personnel configurations to provide as suggestions
   const playbookId = plays.length > 0 ? plays[0].playbook_id : undefined;
