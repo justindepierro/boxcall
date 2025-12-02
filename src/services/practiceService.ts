@@ -79,6 +79,29 @@ export interface CreatePracticeScriptData {
   tags?: string[];
 }
 
+// Practice Template types
+export interface PracticeTemplate {
+  id: string;
+  name: string;
+  description?: string;
+  teamId: string;
+  duration?: number; // minutes
+  isPublic: boolean;
+  createdBy: string;
+  createdAt: Date;
+  updatedAt: Date;
+  plays: PracticeScriptPlay[]; // Template includes play configuration
+}
+
+export interface CreatePracticeTemplateData {
+  name: string;
+  description?: string;
+  teamId: string;
+  duration?: number;
+  isPublic?: boolean;
+  scriptId?: string; // If creating from existing script
+}
+
 export interface AddPlayToPracticeScriptData {
   scriptId: string;
   playId: string;
@@ -1409,6 +1432,192 @@ export class PracticeService {
       duration: scriptData.duration_minutes || scriptData.duration || 120,
       tags: scriptData.focus_areas || scriptData.tags || [],
     } as any; // Type cast for compatibility with extended interface
+  }
+
+  // ============================================================================
+  // PRACTICE TEMPLATE OPERATIONS
+  // ============================================================================
+
+  /**
+   * Get all practice templates for a team
+   */
+  static async getTemplates(teamId: string): Promise<PracticeTemplate[]> {
+    try {
+      const { data, error } = await supabase
+        .from("practice_templates")
+        .select("*")
+        .eq("team_id", teamId)
+        .order("name", { ascending: true });
+
+      if (error) throw error;
+      if (!data) return [];
+
+      return data.map((template) => ({
+        id: template.id,
+        name: template.name,
+        description: template.description,
+        teamId: template.team_id,
+        duration: template.duration,
+        isPublic: template.is_public || false,
+        createdBy: template.created_by,
+        createdAt: new Date(template.created_at),
+        updatedAt: new Date(template.updated_at),
+        plays: [], // Templates don't store plays directly
+      }));
+    } catch (error) {
+      console.error("Error fetching practice templates:", error);
+      return [];
+    }
+  }
+
+  /**
+   * Create a practice template from an existing script
+   */
+  static async createTemplateFromScript(
+    scriptId: string,
+    templateData: CreatePracticeTemplateData
+  ): Promise<PracticeTemplate> {
+    try {
+      // Get the source script with plays
+      const sourceScript = await this.getPracticeScript(scriptId);
+      if (!sourceScript) {
+        throw new Error("Source script not found");
+      }
+
+      // Create the template
+      const { data: template, error } = await supabase
+        .from("practice_templates")
+        .insert({
+          team_id: templateData.teamId,
+          name: templateData.name,
+          description: templateData.description,
+          duration: templateData.duration || sourceScript.duration,
+          is_public: templateData.isPublic || false,
+          created_by: (await supabase.auth.getUser()).data.user?.id,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Store template play configuration in JSONB metadata (future enhancement)
+      // For now, templates are lightweight - just name and duration
+
+      return {
+        id: template.id,
+        name: template.name,
+        description: template.description,
+        teamId: template.team_id,
+        duration: template.duration,
+        isPublic: template.is_public,
+        createdBy: template.created_by,
+        createdAt: new Date(template.created_at),
+        updatedAt: new Date(template.updated_at),
+        plays: sourceScript.plays, // Include plays for immediate use
+      };
+    } catch (error) {
+      console.error("Error creating template from script:", error);
+      throw new Error("Failed to create practice template");
+    }
+  }
+
+  /**
+   * Create a new script from a template
+   */
+  static async createScriptFromTemplate(
+    templateId: string,
+    scriptName: string
+  ): Promise<PracticeScript> {
+    try {
+      // Get the template
+      const { data: template, error: templateError } = await supabase
+        .from("practice_templates")
+        .select("*")
+        .eq("id", templateId)
+        .single();
+
+      if (templateError) throw templateError;
+      if (!template) throw new Error("Template not found");
+
+      // Create new script with template data
+      const newScript = await this.createPracticeScript({
+        name: scriptName,
+        description: template.description || `Created from ${template.name} template`,
+        teamId: template.team_id,
+        tags: ["from-template", template.name],
+      });
+
+      // Note: Template play configuration would be copied here if stored
+      // For now, templates are just starting points with metadata
+
+      return newScript;
+    } catch (error) {
+      console.error("Error creating script from template:", error);
+      throw new Error("Failed to create script from template");
+    }
+  }
+
+  /**
+   * Delete a practice template
+   */
+  static async deleteTemplate(templateId: string): Promise<void> {
+    try {
+      const { error } = await supabase
+        .from("practice_templates")
+        .delete()
+        .eq("id", templateId);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error("Error deleting practice template:", error);
+      throw new Error("Failed to delete practice template");
+    }
+  }
+
+  /**
+   * Update a practice template
+   */
+  static async updateTemplate(
+    templateId: string,
+    updates: Partial<CreatePracticeTemplateData>
+  ): Promise<PracticeTemplate> {
+    try {
+      const updateData: any = {
+        updated_at: new Date().toISOString(),
+      };
+
+      if (updates.name !== undefined) updateData.name = updates.name;
+      if (updates.description !== undefined)
+        updateData.description = updates.description;
+      if (updates.duration !== undefined) updateData.duration = updates.duration;
+      if (updates.isPublic !== undefined) updateData.is_public = updates.isPublic;
+
+      const { data: template, error } = await supabase
+        .from("practice_templates")
+        .update(updateData)
+        .eq("id", templateId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      if (!template) throw new Error("Template not found");
+
+      return {
+        id: template.id,
+        name: template.name,
+        description: template.description,
+        teamId: template.team_id,
+        duration: template.duration,
+        isPublic: template.is_public,
+        createdBy: template.created_by,
+        createdAt: new Date(template.created_at),
+        updatedAt: new Date(template.updated_at),
+        plays: [],
+      };
+    } catch (error) {
+      console.error("Error updating practice template:", error);
+      throw new Error("Failed to update practice template");
+    }
   }
 }
 
