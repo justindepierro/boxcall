@@ -45,6 +45,8 @@ import { triggerHapticFeedback } from "../lib/hapticFeedback";
 import { smartPreloader } from "../services/smartPreloader";
 
 import { useFormationAudit } from "../hooks/useFormationAudit";
+import { useOptimisticPlays } from "../hooks/useOptimisticPlays";
+import { usePlaybookStats } from "../hooks/usePlaybookStats";
 import { MobilePlaybookView } from "../components/playbook/page/MobilePlaybookView";
 import { DesktopPlaybookView } from "../components/playbook/page/DesktopPlaybookView";
 import { PlaybookModals } from "../components/playbook/page/PlaybookModals";
@@ -159,6 +161,12 @@ export default function PlaybookPage() {
   // Modal-specific data (kept separate since not all modals need data)
   const [playToPost, setPlayToPost] = useState<Play | null>(null);
 
+  // 🚀 PERFORMANCE: Optimistic play updates (Facebook-fast pattern)
+  const { optimisticPlays, handleCreatePlay, handleSavePlay } =
+    useOptimisticPlays(activePlaybookId, () =>
+      dispatch({ type: "INCREMENT_REFRESH" })
+    );
+
   // Handle opening assignments for a play
   const handleOpenAssignments = useCallback((play: Play) => {
     setAssignmentsPlay(play);
@@ -251,97 +259,20 @@ export default function PlaybookPage() {
     void loadActivities();
   }, [activeTeamId]);
 
-  // Get real play data for stats calculation
-  // 🚀 PERFORMANCE: Split stats memoization - plays stats separate from activities
-  // This prevents recalculating play stats when activities update (50-70% fewer recalcs)
-  const playStats = useMemo(() => {
-    // Calculate real stats from actual data
-    const totalPlays = allPlaysForStats.length;
-    const playsWithDiagrams = allPlaysForStats.filter(
-      (play) => play.diagram_url || play.diagram_data
-    ).length;
-
-    // Count unique formations
-    const uniqueFormations = new Set(
-      allPlaysForStats.map((play) => play.formation).filter(Boolean)
-    );
-    const formationsCount = Math.max(
-      allFormations.length,
-      uniqueFormations.size
-    );
-
-    // Count play types from actual data
-    const passPlays = allPlaysForStats.filter(
-      (play) => play.p_type?.toLowerCase() === "pass"
-    ).length;
-    const runPlays = allPlaysForStats.filter(
-      (play) => play.p_type?.toLowerCase() === "run"
-    ).length;
-    const rpoPlays = allPlaysForStats.filter(
-      (play) => play.p_type?.toLowerCase() === "rpo"
-    ).length;
-    const playActionPlays = allPlaysForStats.filter((play) =>
-      play.p_type?.toLowerCase()?.includes("play action")
-    ).length;
-
-    return {
-      totalPlays,
-      playsWithDiagrams,
-      formationsCount,
-      passPlays,
-      runPlays,
-      rpoPlays,
-      playActionPlays,
-    };
-  }, [allPlaysForStats, allFormations]); // ✅ Only depends on plays
-
-  // Activity stats calculated separately
-  const activityStats = useMemo(
-    () => ({
-      recentActivity: recentActivities
-        .filter(
-          (activity) => activity.activityType !== "deleted" // Filter out deleted activities for dashboard
-        )
-        .map((activity) => ({
-          id: activity.id,
-          type: activity.activityType as Exclude<
-            typeof activity.activityType,
-            "deleted"
-          >,
-          playName: activity.playName || "Unknown Play",
-          timestamp: new Date(activity.createdAt),
-          details: activity.details
-            ? JSON.stringify(activity.details)
-            : undefined,
-        })),
-    }),
-    [recentActivities]
+  // 🚀 PERFORMANCE: Consolidated stats hook with intelligent memoization
+  const formationAudit = useFormationAudit(activePlaybookId || null);
+  const playbookStats = usePlaybookStats(
+    allPlaysForStats,
+    allFormations,
+    recentActivities,
+    formationAudit.plays || []
   );
 
-  // Combine stats
-  const playbookStats = { ...playStats, ...activityStats };
-
-  const formationAudit = useFormationAudit(activePlaybookId || null);
-
-  const formationAuditSummary = useMemo(() => {
-    if (!formationAudit.plays || formationAudit.plays.length === 0) {
-      return { needsMapping: 0, resolved: 0, total: 0 };
-    }
-    const needsMapping = formationAudit.plays.length;
-
-    return {
-      needsMapping,
-      resolved: 0,
-      total: needsMapping,
-    };
-  }, [formationAudit.plays]);
+  // Extract individual stats for backward compatibility
+  const formationAuditSummary = playbookStats.formationAudit;
 
   const [_selectedPlayForWorkflow, _setSelectedPlayForWorkflow] =
     useState<Play | null>(null);
-
-  // 🚀 PERFORMANCE: Optimistic updates for instant UI feedback
-  // Shows plays immediately while database operations happen in background
-  const [optimisticPlays, setOptimisticPlays] = useState<Play[]>([]);
 
   // 🚀 PERFORMANCE: Memoize handlers to prevent unnecessary re-renders of child components
   const handleViewChange = useCallback(
@@ -528,142 +459,6 @@ export default function PlaybookPage() {
     triggerHapticFeedback("light");
     openModal("keyboardShortcuts");
   }, [openModal]);
-
-  // 🆕 CREATE NEW PLAY (not update existing)
-  const handleCreatePlay = useCallback(
-    async (playData: Partial<Play>): Promise<Play | void> => {
-      if (!activePlaybookId) {
-        toast.error("No active playbook");
-        return;
-      }
-
-      try {
-        // ⚡ OPTIMISTIC: Create temporary play with fake ID for instant feedback
-        const tempId = `temp-${Date.now()}`;
-        const optimisticPlay: Play = {
-          ...playData,
-          id: tempId,
-          playbook_id: activePlaybookId,
-          formation: playData.formation || "",
-          play_name: playData.play_name || "",
-          p_type: playData.p_type || "",
-          confidence_base: playData.confidence_base || 70,
-          times_called: 0,
-          times_successful: 0,
-          created_at: new Date(),
-          updated_at: new Date(),
-        } as Play;
-
-        setOptimisticPlays((prev) => [optimisticPlay, ...prev]);
-
-        // ⚡ INSTANT FEEDBACK: Show success immediately
-        toast.success("Play created!");
-
-        // Background: Create in database
-        const createdPlay = await SecurePlaysService.createPlay({
-          ...playData,
-          playbook_id: activePlaybookId,
-        });
-
-        // Replace temp play with real play from database
-        setOptimisticPlays((prev) =>
-          prev.map((p) => (p.id === tempId ? createdPlay : p))
-        );
-
-        // Trigger refresh to sync with database
-        dispatch({ type: "INCREMENT_REFRESH" });
-
-        return createdPlay;
-      } catch (error) {
-        logError("Failed to create play:", error);
-        toast.error("Failed to create play");
-
-        // Remove optimistic play on error
-        setOptimisticPlays((prev) =>
-          prev.filter((p) => !p.id.startsWith("temp-"))
-        );
-        throw error;
-      }
-    },
-    [activePlaybookId, toast, dispatch]
-  );
-
-  const handleUpdatePlay = useCallback(
-    async (playId: string, updates: Partial<Play>) => {
-      // Store previous state for rollback
-      let previousPlay: Play | undefined;
-
-      try {
-        // 🚀 OPTIMISTIC UPDATE: Show changes immediately (Facebook-style!)
-        setOptimisticPlays((prev) => {
-          const existingPlay = prev.find((p) => p.id === playId);
-          if (existingPlay) {
-            previousPlay = existingPlay; // Save for rollback
-            return prev.map((p) =>
-              p.id === playId ? { ...p, ...updates } : p
-            );
-          }
-          // If not in optimistic state, create an optimistic entry
-          // (This handles edits from plays that came from database)
-          return [
-            {
-              ...updates,
-              id: playId,
-              playbook_id: activePlaybookId,
-              formation: updates.formation || "",
-              play_name: updates.play_name || "",
-              p_type: updates.p_type || "",
-              confidence_base: updates.confidence_base || 70,
-              times_called: updates.times_called || 0,
-              times_successful: updates.times_successful || 0,
-              created_by: updates.created_by || "",
-              created_at: updates.created_at || new Date(),
-              updated_at: new Date(),
-            } as Play,
-            ...prev,
-          ];
-        });
-
-        // ⚡ INSTANT FEEDBACK: Show success immediately (user never waits!)
-        toast.success("Play updated!");
-
-        // Background: Update in database
-        await SecurePlaysService.updatePlay(playId, updates);
-
-        // Remove from optimistic state after database confirms
-        setTimeout(() => {
-          setOptimisticPlays((prev) => prev.filter((p) => p.id !== playId));
-        }, 100);
-
-        // ✅ NO MORE FULL REFRESH - optimistic updates handle UI
-        // Old: dispatch({ type: "INCREMENT_REFRESH" }); // 500ms full reload
-
-        return Promise.resolve();
-      } catch (error) {
-        // 🔄 REVERT: Restore previous state on error
-        if (previousPlay) {
-          setOptimisticPlays((prev) =>
-            prev.map((p) => (p.id === playId ? previousPlay! : p))
-          );
-        } else {
-          setOptimisticPlays((prev) => prev.filter((p) => p.id !== playId));
-        }
-
-        logError("Failed to save play:", error);
-        toast.error("Failed to save play. Changes reverted.");
-        throw error; // Re-throw so the UI can show the error
-      }
-    },
-    [activePlaybookId, toast]
-  );
-
-  // Wrapper for components that expect (play: Play) signature
-  const handleSavePlay = useCallback(
-    async (play: Play) => {
-      await handleUpdatePlay(play.id, play);
-    },
-    [handleUpdatePlay]
-  );
 
   useEffect(() => {
     if (!allPlaysForStats || allPlaysForStats.length === 0) return;
