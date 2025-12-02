@@ -281,8 +281,9 @@ export default function PlaybookPage() {
     [dispatch]
   );
 
-  const handleTeamTypeChange = (teamType: "offense" | "defense" | "special-teams") =>
-    dispatch({ type: "SET_TEAM_TYPE", teamType });
+  const handleTeamTypeChange = (
+    teamType: "offense" | "defense" | "special-teams"
+  ) => dispatch({ type: "SET_TEAM_TYPE", teamType });
 
   const handleFiltersChange = useCallback(
     (filters: PlaybookState["advancedFilters"]) => {
