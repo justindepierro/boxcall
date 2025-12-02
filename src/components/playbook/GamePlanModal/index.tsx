@@ -7,8 +7,10 @@ import {
 } from "@hello-pangea/dnd";
 import { Button } from "../../ui/Button/Button";
 import { Typography } from "../../design-system/Typography";
+import { Badge } from "../../ui/Badge";
 import { PlaySelectorModal } from "../PlaySelectorModal";
 import { GamePlanPDFService } from "../../../services/gamePlanPdfService";
+import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 import {
   getAllBillickSituations,
   getBillickSituationColorClasses,
@@ -58,6 +60,66 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
 
   const [showPlaySelector, setShowPlaySelector] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+
+  // Helper function to analyze play balance and return warnings
+  const getPlayBalanceWarnings = (situationType: BillickSituationType) => {
+    const situation = situations.find((s) => s.situationType === situationType);
+    if (!situation || situation.plays.length === 0) return null;
+
+    const plays = situation.plays;
+    const totalPlays = plays.length;
+    
+    // Count play types
+    const runPlays = plays.filter((p) => 
+      p.playName?.toLowerCase().includes("run") || 
+      p.formation?.toLowerCase().includes("i-form") ||
+      p.formation?.toLowerCase().includes("power")
+    ).length;
+    const passPlays = plays.filter((p) => 
+      p.playName?.toLowerCase().includes("pass") || 
+      p.formation?.toLowerCase().includes("trips") ||
+      p.formation?.toLowerCase().includes("spread")
+    ).length;
+
+    // Recommended play counts by situation
+    const recommendations: Record<BillickSituationType, { min: number; max: number; runPassBalance?: boolean }> = {
+      first_and_10: { min: 10, max: 15, runPassBalance: true },
+      second_and_short: { min: 8, max: 10 },
+      second_and_medium: { min: 8, max: 10 },
+      second_and_long: { min: 6, max: 8, runPassBalance: false },
+      third_and_short: { min: 10, max: 12 },
+      third_and_medium: { min: 10, max: 12 },
+      third_and_long: { min: 6, max: 8, runPassBalance: false },
+      red_zone: { min: 12, max: 15, runPassBalance: true },
+      goal_line: { min: 8, max: 10 },
+      two_minute_drill: { min: 10, max: 12, runPassBalance: false },
+      short_yardage: { min: 6, max: 8 },
+      situational: { min: 10, max: 15 },
+    };
+
+    const rec = recommendations[situationType];
+    const warnings: string[] = [];
+
+    // Check total play count
+    if (totalPlays < rec.min) {
+      warnings.push(`Only ${totalPlays} plays (recommend ${rec.min}-${rec.max})`);
+    }
+
+    // Check run/pass balance for situations that need it
+    if (rec.runPassBalance && totalPlays >= 6) {
+      const runPercentage = (runPlays / totalPlays) * 100;
+      const passPercentage = (passPlays / totalPlays) * 100;
+      
+      if (runPercentage < 30) {
+        warnings.push(`Low run plays (${runPlays}/${totalPlays})`);
+      }
+      if (passPercentage < 30) {
+        warnings.push(`Low pass plays (${passPlays}/${totalPlays})`);
+      }
+    }
+
+    return warnings.length > 0 ? warnings : null;
+  };
 
   const handleAddPlayToSituation = (play: Play) => {
     const situation = situations.find(
@@ -114,6 +176,9 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
     const destinationIndex = result.destination.index;
 
     if (sourceIndex === destinationIndex) return;
+
+    // Haptic feedback on successful reorder
+    triggerHapticFeedback("medium");
 
     _setSituations((prev) =>
       prev.map((s) => {
@@ -310,21 +375,31 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
                   situations.find((s) => s.situationType === situation.type)
                     ?.plays || [];
                 const playCount = situationPlays.length;
+                const warnings = getPlayBalanceWarnings(situation.type);
+                const hasWarnings = warnings && warnings.length > 0;
 
                 return (
                   <button
                     key={situation.type}
                     onClick={() => setActiveSituation(situation.type)}
                     className={`
-                      px-3 py-2 rounded-lg text-sm font-medium transition-all
+                      relative px-3 py-2 rounded-lg text-sm font-medium transition-all
                       ${isActive ? colorClasses.bg + " " + colorClasses.text : "bg-surface-elevated text-secondary hover:bg-surface-overlay"}
                       ${playCount > 0 ? "border-2 border-primary-light" : "border border-muted"}
+                      ${hasWarnings ? "border-status-warning" : ""}
                     `}
+                    title={warnings ? warnings.join(", ") : undefined}
                   >
                     {situation.label}
                     {playCount > 0 && (
                       <span className="ml-2 inline-flex items-center justify-center w-5 h-5 text-xs rounded-full bg-primary-base text-inverse">
                         {playCount}
+                      </span>
+                    )}
+                    {hasWarnings && (
+                      <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-warning opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-status-warning"></span>
                       </span>
                     )}
                   </button>
@@ -336,6 +411,24 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
           {/* Active Situation Content */}
           {currentSituationConfig && currentSituation && (
             <div className="border border-muted rounded-lg p-6 mb-6">
+              {/* Balance Warnings */}
+              {getPlayBalanceWarnings(activeSituation) && (
+                <div className="mb-4 p-3 bg-status-warning/10 border border-status-warning rounded-lg">
+                  <div className="flex items-start gap-2">
+                    <Typography variant="body-sm" className="font-medium text-status-warning">
+                      ⚠️ Balance Warning:
+                    </Typography>
+                    <div className="flex-1">
+                      {getPlayBalanceWarnings(activeSituation)?.map((warning, idx) => (
+                        <Typography key={idx} variant="body-sm" className="text-secondary">
+                          • {warning}
+                        </Typography>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <Typography variant="display-md" className="mb-1">
@@ -399,27 +492,21 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
                                       >
                                         {play.playName}
                                       </Typography>
-                                      <div className="flex gap-3 mt-1">
+                                      <div className="flex gap-2 mt-1 flex-wrap items-center">
                                         {play.formation && (
-                                          <Typography
-                                            variant="body-sm"
-                                            className="text-secondary"
-                                          >
+                                          <Badge variant="neutral" size="sm">
                                             {play.formation}
-                                          </Typography>
+                                          </Badge>
                                         )}
                                         {play.personnel && (
-                                          <Typography
-                                            variant="body-sm"
-                                            className="text-secondary"
-                                          >
+                                          <Badge variant="primary" size="sm">
                                             {play.personnel}
-                                          </Typography>
+                                          </Badge>
                                         )}
                                         {play.wristbandNumber && (
-                                          <span className="px-2 py-0.5 bg-primary-light text-primary-base text-xs font-bold rounded">
+                                          <Badge variant="info" size="sm">
                                             #{play.wristbandNumber}
-                                          </span>
+                                          </Badge>
                                         )}
                                       </div>
                                     </div>

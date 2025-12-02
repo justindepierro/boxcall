@@ -173,6 +173,11 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
                 <Badge variant="neutral" size="sm">
                   {play.p_type}
                 </Badge>
+                {play.personnel && (
+                  <Badge variant="primary" size="sm">
+                    {play.personnel}
+                  </Badge>
+                )}
                 <Typography variant="caption" className="text-secondary">
                   {play.formation}
                 </Typography>

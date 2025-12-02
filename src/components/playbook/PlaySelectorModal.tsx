@@ -35,6 +35,7 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormation, setSelectedFormation] = useState<string>("");
   const [selectedPlayType, setSelectedPlayType] = useState<string>("");
+  const [selectedPersonnel, setSelectedPersonnel] = useState<string>("");
 
   // Filter plays based on search and filters
   const filteredPlays = useMemo(() => {
@@ -60,13 +61,18 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
       const matchesPlayType =
         !selectedPlayType || play.p_type === selectedPlayType;
 
-      return matchesSearch && matchesFormation && matchesPlayType;
+      // Personnel filter
+      const matchesPersonnel =
+        !selectedPersonnel || play.personnel === selectedPersonnel;
+
+      return matchesSearch && matchesFormation && matchesPlayType && matchesPersonnel;
     });
   }, [
     plays,
     searchQuery,
     selectedFormation,
     selectedPlayType,
+    selectedPersonnel,
     selectedPlayIds,
   ]);
 
@@ -78,6 +84,11 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
 
   const playTypes = useMemo(() => {
     const unique = [...new Set(plays.map((p) => p.p_type))];
+    return unique.sort();
+  }, [plays]);
+
+  const personnelGroups = useMemo(() => {
+    const unique = [...new Set(plays.map((p) => p.personnel).filter(Boolean))];
     return unique.sort();
   }, [plays]);
 
@@ -116,11 +127,6 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setSearchQuery(e.target.value)
               }
-              placeholder="Search plays by name, formation, or notes..."
-              className="w-full"
-            />
-          </div>
-
           <div className="flex flex-wrap gap-2">
             <select
               value={selectedFormation}
@@ -143,6 +149,24 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
               <option value="">All Play Types</option>
               {playTypes.map((type) => (
                 <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={selectedPersonnel}
+              onChange={(e) => setSelectedPersonnel(e.target.value)}
+              className="px-3 py-2 border border-border rounded-lg text-sm bg-primary text-primary"
+            >
+              <option value="">All Personnel</option>
+              {personnelGroups.map((personnel) => (
+                <option key={personnel} value={personnel}>
+                  {personnel}
+                </option>
+              ))}
+            </select>
+          </div><option key={type} value={type}>
                   {type}
                 </option>
               ))}
