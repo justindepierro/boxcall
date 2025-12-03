@@ -12,12 +12,12 @@ interface PlayTypeSectionProps {
 const DEFAULT_PLAY_TYPES = [
   "Run",
   "Pass",
-  "Option",
   "RPO",
-  "Screen",
-  "Boot",
   "Play Action",
+  "Screen",
   "Draw",
+  "Bootleg",
+  "Rollout",
 ];
 
 export const PlayTypeSection: React.FC<PlayTypeSectionProps> = ({
