@@ -16,10 +16,12 @@ import { z } from "zod";
 const PlayTypeEnum = z.enum([
   "Run",
   "Pass",
+  "Option",
   "RPO",
   "Play Action",
   "Screen",
   "Draw",
+  "Boot",
   "Bootleg",
   "Rollout",
   "QB Sneak",
