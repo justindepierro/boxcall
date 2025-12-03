@@ -163,7 +163,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
       const playData = {
         formation: formData.formation.trim(), // Just TEXT - simple!
         play_name: formData.playName.trim(),
-        p_type: formData.playType || undefined,
+        p_type: formData.playType?.trim() || undefined,
         personnel: formData.personnel.trim() || undefined,
 
         // Formation fields
