@@ -66,14 +66,24 @@ export class PlayValidationService {
       }
     }
 
-    // Play type validation
-    const validTypes = ["Pass", "Run", "RPO", "Play Action"];
-    if (!data.p_type || !validTypes.includes(data.p_type)) {
+    // Play type validation - allow custom types
+    if (
+      !data.p_type ||
+      typeof data.p_type !== "string" ||
+      data.p_type.trim() === ""
+    ) {
       errors.push({
         field: "p_type",
-        code: "INVALID_VALUE",
-        message: "Play type must be one of: Pass, Run, RPO, Play Action",
+        code: "REQUIRED",
+        message: "Play type is required",
         value: data.p_type,
+      });
+    } else if (data.p_type.length > 50) {
+      errors.push({
+        field: "p_type",
+        code: "TOO_LONG",
+        message: "Play type cannot exceed 50 characters",
+        value: data.p_type.length,
       });
     }
 

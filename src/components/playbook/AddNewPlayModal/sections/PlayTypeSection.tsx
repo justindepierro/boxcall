@@ -9,13 +9,14 @@ interface PlayTypeSectionProps {
   suggestions?: string[]; // Dynamic suggestions from database
 }
 
+// Common play types as defaults (coaches can add custom types)
 const DEFAULT_PLAY_TYPES = [
-  "Run",
   "Pass",
-  "Option",
+  "Run",
   "RPO",
   "Play Action",
   "Screen",
+  "Option",
   "Draw",
   "Boot",
 ];
@@ -30,7 +31,6 @@ export const PlayTypeSection: React.FC<PlayTypeSectionProps> = ({
   const [newTypeName, setNewTypeName] = useState("");
 
   // Combine default types, database suggestions, and custom types
-  // Remove duplicates and sort
   const allTypes = [
     ...new Set([...DEFAULT_PLAY_TYPES, ...suggestions, ...customTypes]),
   ].sort();

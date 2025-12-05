@@ -6,6 +6,7 @@ import type { PlayActivityItem } from "../services/activityService";
 export interface PlayStats {
   totalPlays: number;
   playsWithDiagrams: number;
+  playsWithPhotos: number; // Alias for playsWithDiagrams (UI compatibility)
   formationsCount: number;
   passPlays: number;
   runPlays: number;
@@ -55,8 +56,9 @@ export function usePlaybookStats(
   // This prevents recalculating play stats when activities update (50-70% fewer recalcs)
   const playStats: PlayStats = useMemo(() => {
     const totalPlays = allPlays.length;
+    // Check for diagram_image_url field (the actual field name in database)
     const playsWithDiagrams = allPlays.filter(
-      (play) => play.diagram_url || play.diagram_data
+      (play) => play.diagram_image_url
     ).length;
 
     // Count unique formations
@@ -85,6 +87,7 @@ export function usePlaybookStats(
     return {
       totalPlays,
       playsWithDiagrams,
+      playsWithPhotos: playsWithDiagrams, // Alias for UI compatibility
       formationsCount,
       passPlays,
       runPlays,
