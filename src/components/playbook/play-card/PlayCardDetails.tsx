@@ -100,7 +100,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
       aria-label={`Details for ${play.play_name}`}
     >
       {/* Play Diagram - Show at top when expanded */}
-      {optimisticPlay.diagram_image_url && (
+      {(optimisticPlay.diagram_url || (optimisticPlay as any).diagram_image_url) && (
         <div className="bg-subtle rounded-lg p-sm">
           <div className="flex items-center justify-between mb-sm">
             <Typography
@@ -113,7 +113,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           </div>
           <div className="relative max-w-full overflow-hidden">
             <img
-              src={optimisticPlay.diagram_image_url}
+              src={optimisticPlay.diagram_url || (optimisticPlay as any).diagram_image_url}
               alt={`${play.play_name} diagram`}
               className="w-full max-h-72 md:max-h-96 rounded-lg border-2 border-primary object-contain"
               loading="lazy"
@@ -640,7 +640,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
         </Typography>
         <div className="bg-subtle rounded-lg p-sm">
           <ImageUpload
-            value={optimisticPlay.diagram_image_url || undefined}
+            value={optimisticPlay.diagram_url || (optimisticPlay as any).diagram_image_url || undefined}
             onChange={async (url) => {
               await handleInlineSave("diagram_image_url", url || null);
             }}
