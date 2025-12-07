@@ -104,6 +104,13 @@ const PlaybookPage = () => {
   // State for selected playbook (with preference persistence)
   const [selectedPlaybookId, setSelectedPlaybookId] = useState<string>("");
 
+  // Initialize play count from data
+  useEffect(() => {
+    if (allPlaysForStats && allPlaysForStats.length > 0) {
+      dispatch({ type: "SET_PLAYS_CREATED", count: allPlaysForStats.length });
+    }
+  }, [allPlaysForStats, dispatch]);
+
   // 🐛 MOBILE DEBUG: Log data state for troubleshooting plays not loading
   useEffect(() => {
     if (isMobileOrTablet) {

@@ -74,12 +74,16 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
     <nav
       className={`
         fixed bottom-0 left-0 right-0 z-50
-        bg-primary border-t border-muted
+        bg-white dark:bg-neutral-900
+        border-t border-muted
         shadow-lg
         pb-safe-area-inset-bottom
         md:hidden
         ${className}
       `}
+      style={{
+        backgroundColor: "var(--color-surface-primary, #ffffff)",
+      }}
       role="navigation"
       aria-label="Mobile bottom navigation"
     >
