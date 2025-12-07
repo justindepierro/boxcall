@@ -96,9 +96,9 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
     >
       {/* Play Thumbnail */}
       <div className="w-18 h-18 flex-shrink-0 rounded-xl overflow-hidden bg-muted shadow-inner">
-        {play.diagram_url ? (
+        {(play.diagram_url || (play as any).diagram_image_url) ? (
           <img
-            src={play.diagram_url}
+            src={play.diagram_url || (play as any).diagram_image_url}
             alt={displayName}
             className="w-full h-full object-cover"
           />

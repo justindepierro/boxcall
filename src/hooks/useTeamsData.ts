@@ -326,6 +326,8 @@ export function useTeamsData() {
                   id: p.id,
                   name: p.play_name,
                   formation: p.formation,
+                  diagram_url: p.diagram_url,
+                  has_diagram_data: !!p.diagram_data,
                 })),
               });
             }
@@ -392,7 +394,8 @@ export function useTeamsData() {
           times_called,
           times_successful,
           wristband_number,
-          diagram_image_url,
+          diagram_url,
+          diagram_data,
           created_at,
           updated_at
         `
