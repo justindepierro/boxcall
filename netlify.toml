@@ -87,16 +87,19 @@
   to = "/index.html"
   status = 200
 
+# CDN Processing Configuration
 [build.processing]
   skip_processing = false
 
 [build.processing.css]
   bundle = true
   minify = true
+  source_map = false
 
 [build.processing.js]
   bundle = true
   minify = true
+  source_map = false
 
 [build.processing.html]
   pretty_urls = true
@@ -104,28 +107,3 @@
 # Advanced CDN Edge Configuration
 [edge_functions]
   directory = "netlify/edge-functions"
-
-# CDN Optimization Settings
-[build.processing]
-  skip_processing = false
-
-[build.processing.css]
-  bundle = true
-  minify = true
-  source_map = false
-
-[build.processing.js]
-  bundle = true
-  minify = true
-  source_map = false
-
-# Performance optimizations
-[build]
-  publish = "dist"
-  command = "npm run build"
-  functions = "netlify/functions"
-
-[build.environment]
-  NODE_VERSION = "20"
-  NODE_OPTIONS = "--max-old-space-size=4096"
-  VITE_ENVIRONMENT = "production"
