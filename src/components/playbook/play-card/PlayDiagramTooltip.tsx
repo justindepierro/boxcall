@@ -40,7 +40,7 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
   const closeTimeoutRef = useRef<number | null>(null);
 
   // Only show tooltip if play has a diagram
-  const hasDiagram = Boolean(play.diagram_url);
+  const hasDiagram = Boolean(play.diagram_image_url);
   const shouldShow = hasDiagram && !disabled;
 
   const closeTooltip = useCallback(() => {

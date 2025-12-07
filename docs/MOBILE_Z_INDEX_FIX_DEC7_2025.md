@@ -37,16 +37,17 @@ Fixed critical z-index conflicts in mobile components that caused UI layering is
 From `src/styles/design-tokens-unified.css`:
 
 ```css
---z-index-dropdown: 1000;   /* Dropdowns */
---z-index-sticky: 1020;     /* Sticky headers */
---z-index-fixed: 1030;      /* Fixed UI elements (bottom nav) */
+--z-index-dropdown: 1000; /* Dropdowns */
+--z-index-sticky: 1020; /* Sticky headers */
+--z-index-fixed: 1030; /* Fixed UI elements (bottom nav) */
 --z-index-modal-backdrop: 1040; /* Modal backdrops */
---z-index-modal: 1050;      /* Modal content */
---z-index-popover: 1060;    /* Popovers */
---z-index-tooltip: 1070;    /* Tooltips (highest) */
+--z-index-modal: 1050; /* Modal content */
+--z-index-popover: 1060; /* Popovers */
+--z-index-tooltip: 1070; /* Tooltips (highest) */
 ```
 
 **Correct Stacking Order**:
+
 1. Page content (z-index: auto/0)
 2. Dropdowns (1000)
 3. Sticky headers (1020)
@@ -65,6 +66,7 @@ From `src/styles/design-tokens-unified.css`:
 **File**: `src/components/mobile/core/MobileDrawer.tsx`
 
 **Change**:
+
 ```diff
   return (
     <div
@@ -83,6 +85,7 @@ From `src/styles/design-tokens-unified.css`:
 **File**: `src/components/mobile/core/MobileBottomNavigation.tsx`
 
 **Change**:
+
 ```diff
   return (
     <nav
@@ -124,14 +127,17 @@ These components still use hardcoded `z-50` instead of semantic tokens:
 ## Verification Steps
 
 ### 1. TypeScript Compilation
+
 ```bash
 npm run type-check
 ```
+
 ✅ **Result**: No errors
 
 ### 2. Visual Testing Checklist
 
 **On Mobile Device**:
+
 - [ ] Open playbook page
 - [ ] Tap menu icon to open MobileDrawer
 - [ ] Verify drawer slides in from side
@@ -147,6 +153,7 @@ npm run type-check
 ### 3. Z-Index Hierarchy Test
 
 **Expected Behavior**:
+
 1. **Normal state**: Content + Bottom Nav (z-fixed: 1030)
 2. **Modal open**: Content → Bottom Nav → Backdrop (1040) → Modal (1050)
 3. **Drawer open**: Content → Bottom Nav → Drawer Backdrop → Drawer (1050)
@@ -156,11 +163,13 @@ npm run type-check
 ## Impact Assessment
 
 ### Before Fix
+
 - **MobileDrawer**: Could appear under modals → Unusable
 - **MobileBottomNavigation**: Could appear under modals → Navigation broken
 - **User Experience**: Modal interactions broken on mobile
 
 ### After Fix
+
 - **MobileDrawer**: Always appears above backdrops ✅
 - **MobileBottomNavigation**: Properly dims behind modals ✅
 - **User Experience**: Expected modal behavior ✅
@@ -170,10 +179,12 @@ npm run type-check
 ## Related Files
 
 **Modified**:
+
 - `src/components/mobile/core/MobileDrawer.tsx`
 - `src/components/mobile/core/MobileBottomNavigation.tsx`
 
 **Reference**:
+
 - `src/styles/design-tokens-unified.css` (z-index definitions)
 - `tailwind.config.js` (z-index token mappings)
 - `docs/DESIGN_SYSTEM_REFERENCE.md` (design system docs)
@@ -183,11 +194,13 @@ npm run type-check
 ## Future Work
 
 ### Short Term
+
 1. Audit remaining `z-50` hardcoded values
 2. Refactor to use semantic tokens everywhere
 3. Add ESLint rule to prevent hardcoded z-index values
 
 ### Long Term
+
 1. Create z-index visual debugger tool
 2. Document stacking contexts in design system
 3. Add automated tests for z-index hierarchy
@@ -198,7 +211,8 @@ npm run type-check
 
 **Desktop**: No visual changes (mobile components hidden via `md:hidden`)
 
-**Mobile**: 
+**Mobile**:
+
 - Test on iOS Safari 16+
 - Test on Android Chrome 110+
 - Test on tablets (< 1024px width)
@@ -209,6 +223,7 @@ npm run type-check
 ## Commit Info
 
 **Commit Message**:
+
 ```
 fix(mobile): fix z-index hierarchy for drawer and bottom nav
 

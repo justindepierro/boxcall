@@ -59,7 +59,7 @@ interface DatabasePlay {
   confidence_base?: number;
   times_called?: number;
   times_successful?: number;
-  diagram_url?: string | null;
+  diagram_image_url?: string | null;
   diagram_data?: any | null; // JSONB field for Pixi.js diagram data
   wristband_number?: string | null;
   created_at: string;
@@ -292,7 +292,7 @@ export function useTeamsData() {
               times_called,
               times_successful,
               wristband_number,
-              diagram_url,
+              diagram_image_url,
               diagram_data,
               created_at,
               updated_at
