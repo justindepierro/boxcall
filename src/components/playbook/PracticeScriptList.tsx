@@ -163,121 +163,116 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
   }
 
   return (
-    <div className="space-y-4">
-      <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
-        {scripts.map((script) => (
-          <div
-            key={script.id}
-            className="bg-primary rounded-lg border border-muted p-6 hover:border-light transition-all hover:shadow-md flex flex-col min-h-72"
-          >
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex-1 min-w-0">
+    <div className="space-y-2">
+      {scripts.map((script) => (
+        <div
+          key={script.id}
+          className="bg-primary rounded-lg border border-muted p-4 hover:border-light transition-all hover:shadow-sm"
+        >
+          <div className="flex items-center justify-between gap-4">
+            {/* Left: Script Info */}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
                 <Typography
                   variant="headline-sm"
-                  className="text-primary truncate mb-1"
+                  className="text-primary truncate"
                   title={script.title || script.name}
                 >
                   {script.title || script.name}
                 </Typography>
-                {script.description && (
-                  <Typography
-                    variant="body-sm"
-                    className="text-secondary line-clamp-2"
-                    title={script.description}
-                  >
-                    {script.description}
-                  </Typography>
-                )}
-              </div>
-              {script.isTemplate && (
-                <Badge variant="neutral" size="sm" className="ml-2 shrink-0">
-                  Template
-                </Badge>
-              )}
-            </div>
-
-            <div className="flex items-center gap-4 mb-4 text-sm text-secondary">
-              <div className="flex items-center gap-1">
-                <Icon name="clock" className="h-4 w-4" />
-                <span>{formatDuration(script.duration)}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Icon name="list" className="h-4 w-4" />
-                <span>{script.plays?.length || 0} plays</span>
-              </div>
-            </div>
-
-            {script.tags && script.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1 mb-4">
-                {script.tags.slice(0, 3).map((tag) => (
-                  <Badge key={tag} variant="neutral" size="sm">
-                    {tag}
-                  </Badge>
-                ))}
-                {script.tags.length > 3 && (
+                {script.isTemplate && (
                   <Badge variant="neutral" size="sm">
-                    +{script.tags.length - 3} more
+                    Template
                   </Badge>
                 )}
               </div>
-            )}
 
-            <div className="mt-auto pt-4 border-t border-muted">
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-4 text-sm text-secondary">
+                <div className="flex items-center gap-1">
+                  <Icon name="clock" className="h-4 w-4" />
+                  <span>{formatDuration(script.duration)}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Icon name="list" className="h-4 w-4" />
+                  <span>{script.plays?.length || 0} plays</span>
+                </div>
                 <Typography variant="caption" className="text-muted">
                   Updated {formatDate(script.updatedAt)}
                 </Typography>
               </div>
 
-              <div className="grid grid-cols-4 gap-2">
-                <Button
-                  onClick={() => handleExportPDF(script)}
-                  variant="primary"
-                  size="sm"
-                  className="w-full"
-                  title="Export to PDF"
+              {script.description && (
+                <Typography
+                  variant="body-sm"
+                  className="text-secondary mt-2 line-clamp-1"
+                  title={script.description}
                 >
-                  <Icon name="download" className="h-4 w-4 mr-1" />
-                  PDF
-                </Button>
-                <Button
-                  onClick={() => onEditScript?.(script)}
-                  variant="secondary"
-                  size="sm"
-                  className="w-full"
-                  title="Edit script"
-                >
-                  <Icon name="edit" className="h-4 w-4 mr-1" />
-                  Edit
-                </Button>
-                <Button
-                  onClick={() => handleDuplicateScript(script)}
-                  variant="outline"
-                  size="sm"
-                  className="w-full"
-                  title="Duplicate script"
-                >
-                  <Icon name="copy" className="h-4 w-4" />
-                </Button>
-                <Button
-                  onClick={() =>
-                    handleDeleteScript(
-                      script.id,
-                      script.title || script.name || "Untitled"
-                    )
-                  }
-                  variant="outline"
-                  size="sm"
-                  className="text-error-600 hover:text-error-700"
-                  aria-label="Delete script"
-                >
-                  <Icon name="delete" size="sm" />
-                </Button>
-              </div>
+                  {script.description}
+                </Typography>
+              )}
+
+              {script.tags && script.tags.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-2">
+                  {script.tags.slice(0, 5).map((tag) => (
+                    <Badge key={tag} variant="neutral" size="sm">
+                      {tag}
+                    </Badge>
+                  ))}
+                  {script.tags.length > 5 && (
+                    <Badge variant="neutral" size="sm">
+                      +{script.tags.length - 5} more
+                    </Badge>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Right: Actions */}
+            <div className="flex items-center gap-2 shrink-0">
+              <Button
+                onClick={() => handleExportPDF(script)}
+                variant="primary"
+                size="sm"
+                title="Export to PDF"
+              >
+                <Icon name="download" className="h-4 w-4 mr-1" />
+                PDF
+              </Button>
+              <Button
+                onClick={() => onEditScript?.(script)}
+                variant="secondary"
+                size="sm"
+                title="Edit script"
+              >
+                <Icon name="edit" className="h-4 w-4 mr-1" />
+                Edit
+              </Button>
+              <Button
+                onClick={() => handleDuplicateScript(script)}
+                variant="outline"
+                size="sm"
+                title="Duplicate script"
+              >
+                <Icon name="copy" className="h-4 w-4" />
+              </Button>
+              <Button
+                onClick={() =>
+                  handleDeleteScript(
+                    script.id,
+                    script.title || script.name || "Untitled"
+                  )
+                }
+                variant="outline"
+                size="sm"
+                className="text-error-600 hover:text-error-700"
+                aria-label="Delete script"
+              >
+                <Icon name="trash-2" className="h-4 w-4" />
+              </Button>
             </div>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 };

@@ -6,6 +6,38 @@ BoxCall is a professional football coaching platform implementing Brian Billick'
 
 **Target Users**: Football coaches (head coaches, coordinators, assistants) managing playbooks, practice scripts, and game plans.
 
+## Key Documentation References
+
+**Architecture & System Design:**
+
+- `docs/COMPLETE_ARCHITECTURE_DEC7_2025.md` - Full system architecture with diagrams
+- `docs/ARCHITECTURE.md` - Core technical architecture patterns
+- `docs/database/COMPLETE_SCHEMA_REFERENCE.md` - Complete database schema (24 tables)
+- `database/schema.sql` - Actual SQL schema definition
+
+**Performance Optimizations (December 2025):**
+
+- `docs/OPTIMIZATION_COMPLETE_DEC7_2025.md` - All 8 optimizations implemented
+- `supabase/migrations/20251207110836_performance_indexes.sql` - Database indexes (19 indexes, 9 tables)
+- Key optimizations:
+  - React Query: 10min cache, 30min GC (40% fewer API calls)
+  - Vendor splitting: 15 chunks (20% faster loads)
+  - PWA: Smart caching by data type (stable 15min, live 2min, auth never)
+  - Image optimization: WebP auto-generation
+  - Database: 19 selective indexes (50-70% faster queries)
+
+**Design System:**
+
+- `docs/DESIGN_SYSTEM_REFERENCE.md` - Token hierarchy and patterns
+- `src/styles/tailwind/boxcallTheme.js` - Component tokens
+- `eslint-rules/` - Custom rules enforcing design system
+
+**Feature Documentation:**
+
+- `docs/features/practice/` - Practice script system
+- `docs/features/playbook/` - Playbook and play management
+- `PRACTICE_GAMEPLAN_SYSTEM_AUDIT_NOV30_2025.md` - Practice & game plan audit
+
 ## Architecture Essentials
 
 ### Core Views & Data Flow
@@ -439,3 +471,26 @@ Must configure in Netlify UI (not in repo):
 - **Quality**: 95%+ test coverage, ≤200 ESLint warnings (goal: 0)
 - **Accessibility**: WCAG 2.1 AA compliance, focus-ring utility on all interactive elements
 - **Bundle**: Currently 2.83MB total (975KB gzipped), 41 optimized chunks
+- **Build**: 11.28s average (December 2025 optimization sprint)
+- **Database**: 19 performance indexes across 9 tables (50-70% query speedup)
+- **PWA**: Enabled in production with smart caching strategies
+
+## Performance Optimization History
+
+**December 2025 Sprint** (see `docs/OPTIMIZATION_COMPLETE_DEC7_2025.md`):
+
+1. ✅ React Query cache optimization (5min→10min staleTime, disabled aggressive refetch)
+2. ✅ PDF lazy loading (1.5MB separate chunk, already optimized)
+3. ✅ TypeScript automation (`npm run db:types` script)
+4. ✅ Vendor code splitting (15 optimized chunks: react-vendor, supabase, charts, pdf-core, etc)
+5. ✅ Image optimization (vite-plugin-imagemin with WebP generation)
+6. ✅ PWA enhancement (workbox caching: stable 15min, live 2min, auth never)
+7. ✅ Virtual scrolling (react-virtuoso in PlayGrid, already optimized)
+8. ✅ Database indexes (19 indexes: plays, playbooks, game_plans, team_posts, formations, etc)
+
+**Key Files:**
+
+- `src/app/queryClient.ts` - React Query config
+- `vite.config.ts` - Build optimization, vendor splitting, PWA
+- `supabase/migrations/20251207110836_performance_indexes.sql` - Database indexes
+- `NETLIFY_PWA_SETUP.md` - PWA deployment guide

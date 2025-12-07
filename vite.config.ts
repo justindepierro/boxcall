@@ -3,10 +3,17 @@ import path from "path";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 import { visualizer } from "rollup-plugin-visualizer";
+import viteImagemin from "@vheemstra/vite-plugin-imagemin";
+import imageminMozjpeg from "imagemin-mozjpeg";
+import imageminPngquant from "imagemin-pngquant";
+import imageminGifsicle from "imagemin-gifsicle";
+import imageminSvgo from "imagemin-svgo";
+import imageminWebp from "imagemin-webp";
 
 const enablePWA = process.env.VITE_ENABLE_PWA === "true";
 const useLightningCss = process.env.MINIFY_CSS === "lightningcss";
 const analyzeBundle = process.env.ANALYZE === "true";
+const optimizeImages = process.env.NODE_ENV === "production";
 
 export default defineConfig({
   worker: {
@@ -82,28 +89,66 @@ export default defineConfig({
               globIgnores: ["**/*.ts", "**/*.tsx"],
               maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3MB (up from 2MB default)
               runtimeCaching: [
-                // Supabase API calls
+                // OPTIMIZED: Supabase REST API calls (longer cache for stable data)
                 {
-                  urlPattern: /^https:\/\/.*\.supabase\.co\/rest\/v1\//i,
+                  urlPattern:
+                    /^https:\/\/.*\.supabase\.co\/rest\/v1\/(teams|playbooks|plays|formations)/i,
                   handler: "NetworkFirst",
                   options: {
-                    cacheName: "supabase-api-cache",
+                    cacheName: "supabase-stable-data",
                     networkTimeoutSeconds: 3,
                     expiration: {
-                      maxEntries: 50,
-                      maxAgeSeconds: 60 * 5, // 5 minutes
+                      maxEntries: 100,
+                      maxAgeSeconds: 60 * 15, // 15 minutes (stable data)
                     },
                   },
                 },
-                // Static assets (fonts, images)
+                // OPTIMIZED: Supabase live data (shorter cache)
+                {
+                  urlPattern:
+                    /^https:\/\/.*\.supabase\.co\/rest\/v1\/(announcements|sessions|notifications)/i,
+                  handler: "NetworkFirst",
+                  options: {
+                    cacheName: "supabase-live-data",
+                    networkTimeoutSeconds: 2,
+                    expiration: {
+                      maxEntries: 50,
+                      maxAgeSeconds: 60 * 2, // 2 minutes (live data)
+                    },
+                  },
+                },
+                // OPTIMIZED: Supabase auth calls (always fresh)
+                {
+                  urlPattern: /^https:\/\/.*\.supabase\.co\/auth\//i,
+                  handler: "NetworkOnly", // Never cache auth
+                  options: {
+                    cacheName: "supabase-auth",
+                  },
+                },
+                // OPTIMIZED: Supabase storage (images/assets)
+                {
+                  urlPattern: /^https:\/\/.*\.supabase\.co\/storage\//i,
+                  handler: "CacheFirst",
+                  options: {
+                    cacheName: "supabase-storage",
+                    expiration: {
+                      maxEntries: 100,
+                      maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
+                    },
+                  },
+                },
+                // Static assets (fonts, images) - WebP supported
                 {
                   urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|avif)$/i,
                   handler: "CacheFirst",
                   options: {
                     cacheName: "static-images-cache",
                     expiration: {
-                      maxEntries: 100,
+                      maxEntries: 200, // Increased for more images
                       maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+                    },
+                    cacheableResponse: {
+                      statuses: [0, 200],
                     },
                   },
                 },
@@ -118,9 +163,10 @@ export default defineConfig({
                     },
                   },
                 },
-                // App shell
+                // App shell (production domains)
                 {
-                  urlPattern: /^https:\/\/localhost:5173\//i,
+                  urlPattern:
+                    /^https?:\/\/(localhost:5173|.*\.netlify\.app)\//i,
                   handler: "NetworkFirst",
                   options: {
                     cacheName: "app-shell-cache",
@@ -132,6 +178,11 @@ export default defineConfig({
                   },
                 },
               ],
+              // OPTIMIZED: Clean old caches on activation
+              cleanupOutdatedCaches: true,
+              // OPTIMIZED: Skip waiting for new service worker
+              skipWaiting: true,
+              clientsClaim: true,
             },
             manifest: {
               name: "BoxCall - Team Management",
@@ -190,6 +241,38 @@ export default defineConfig({
           }),
         ]
       : []),
+    ...(optimizeImages
+      ? [
+          viteImagemin({
+            plugins: {
+              jpg: imageminMozjpeg({ quality: 80 }),
+              png: imageminPngquant({
+                quality: [0.7, 0.9],
+                speed: 4,
+              }),
+              gif: imageminGifsicle({ optimizationLevel: 3 }),
+              svg: imageminSvgo({
+                plugins: [
+                  {
+                    name: "removeViewBox",
+                    active: false,
+                  },
+                  {
+                    name: "removeEmptyAttrs",
+                    active: true,
+                  },
+                ],
+              }),
+            },
+            makeWebp: {
+              plugins: {
+                jpg: imageminWebp({ quality: 80 }),
+                png: imageminWebp({ quality: 80, lossless: true }),
+              },
+            },
+          }),
+        ]
+      : []),
   ],
   build: {
     manifest: true,
@@ -207,7 +290,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          // Core React (smaller chunk)
+          // OPTIMIZED: Core React (stable, rarely changes - best caching)
           "react-vendor": ["react", "react-dom"],
 
           // Router separate for better caching
@@ -226,7 +309,7 @@ export default defineConfig({
             "@fullcalendar/interaction",
             "@fullcalendar/react",
           ],
-          "pdf-core": ["@react-pdf/renderer"],
+          "pdf-core": ["@react-pdf/renderer"], // Lazy loaded
           "pdf-utils": ["jszip"],
           charts: ["recharts"],
 
@@ -241,10 +324,24 @@ export default defineConfig({
           // Forms & Validation
           forms: ["react-hook-form", "@hookform/resolvers", "zod"],
 
+          // Editor libraries (heavy, rarely used)
+          "editor-core": ["@tiptap/react"],
+          "editor-extensions": [
+            "@tiptap/extension-link",
+            "@tiptap/extension-mention",
+            "@tiptap/starter-kit",
+            "@tiptap/extension-color",
+            "@tiptap/extension-highlight",
+            "@tiptap/extension-image",
+          ],
+
           // Utilities - Split heavy utilities
           "date-utils": ["date-fns"],
           "search-utils": ["fuse.js"],
           "style-utils": ["clsx"],
+
+          // Error tracking
+          monitoring: ["@sentry/react"],
 
           // Large third-party libraries
           workbox: [
@@ -252,6 +349,9 @@ export default defineConfig({
             "workbox-routing",
             "workbox-strategies",
           ],
+
+          // Worker libs
+          worker: ["comlink"],
         },
         // Optimize asset filenames for caching
         assetFileNames: (assetInfo) => {
