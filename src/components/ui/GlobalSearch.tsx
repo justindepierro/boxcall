@@ -505,7 +505,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
       {/* Mobile/Tablet: Search Button */}
       <button
         onClick={handleMobileSearchOpen}
-        className={`md:hidden flex items-center justify-center gap-2 px-4 py-2.5 min-w-[110px]
+        className={`md:hidden flex items-center justify-center gap-2 px-4 py-2.5 min-w-28
           bg-gradient-to-r from-jade-500 to-jade-600
           hover:from-jade-600 hover:to-jade-700
           active:scale-95
@@ -515,7 +515,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
           ${className}`}
       >
         <Icon name="search" className="h-5 w-5 text-white" />
-        <span className="text-[15px] font-semibold text-white">Search</span>
+        <span className="text-base font-semibold text-white">Search</span>
       </button>
 
       {/* Desktop: Full Search Field */}
@@ -609,7 +609,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
             shadow-2xl 
             backdrop-blur-xl
             z-[100]
-            max-h-[32rem] 
+            max-h-96 
             overflow-hidden
             animate-in fade-in slide-in-from-top-2 duration-300"
           >
@@ -627,7 +627,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
                 </Typography>
               </div>
             ) : results.length > 0 ? (
-              <div className="py-2 overflow-y-auto max-h-[30rem] custom-scrollbar">
+              <div className="py-2 overflow-y-auto max-h-96 custom-scrollbar">
                 {results.map((result, index) => (
                   <SearchResultItem
                     key={`${result.type}-${result.id}`}

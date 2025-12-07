@@ -11,7 +11,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../app/auth-store";
 import { useDevMode } from "../app/dev-mode-hooks";
 import { Typography } from "../components/design-system";
-import { TeamBulletinHeader } from "../components/team-dashboard/layout/TeamBulletinHeader";
 import { TeamQuickActions } from "../components/team-dashboard/TeamQuickActions";
 import { TeamCalendar } from "../components/team-dashboard/TeamCalendar";
 import { AnnouncementsList } from "../components/team/AnnouncementsList";
@@ -232,7 +231,7 @@ const TeamBulletin: React.FC = React.memo(() => {
   const isCoach = userRole === "coach" || userRole === "head_coach";
 
   // Memoized props to prevent child re-renders
-  const teamHeaderProps = useMemo(
+  const _teamHeaderProps = useMemo(
     () => ({
       headingId: "team-dashboard-heading",
       teamId,

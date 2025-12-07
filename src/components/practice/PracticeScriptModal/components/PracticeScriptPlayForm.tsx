@@ -212,9 +212,7 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
                       value={play}
                       className={({ active }) =>
                         `flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors ${
-                          active
-                            ? "bg-accent"
-                            : "bg-surface hover:bg-accent"
+                          active ? "bg-accent" : "bg-surface hover:bg-accent"
                         }`
                       }
                     >

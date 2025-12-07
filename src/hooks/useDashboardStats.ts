@@ -89,7 +89,6 @@ export function useDashboardStats(userId: string | undefined): DashboardStats {
       mounted = false;
       clearTimeout(timeoutId);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   return stats;

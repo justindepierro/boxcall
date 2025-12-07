@@ -2,7 +2,6 @@ import { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import React from "react";
-import { Card } from "../components/ui/Card";
 import { Typography } from "../components/design-system";
 import { AuroraTile } from "../components/ui/AuroraTile";
 

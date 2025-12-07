@@ -4,7 +4,6 @@ import { Typography } from "../design-system/Typography";
 import { SaveIndicatorLogo } from "../ui/Logo";
 import { UserMenu } from "../auth/UserMenu";
 import { Icon } from "../ui/Icon/Icon";
-import { TeamSwitcher } from "./TeamSwitcher";
 import { useActiveTeamStore } from "../../stores/activeTeamStore";
 import { useRoles } from "../../hooks/useRoles";
 import { useAuthProfile } from "../../app/auth-store";
@@ -189,10 +188,10 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             <div className="flex items-center gap-3">
               <Suspense
                 fallback={
-                  <div className="w-[480px] h-10 animate-pulse bg-muted rounded-lg" />
+                  <div className="w-full max-w-lg h-10 animate-pulse bg-muted rounded-lg" />
                 }
               >
-                <GlobalSearch className="w-[480px]" />
+                <GlobalSearch className="w-full max-w-lg" />
               </Suspense>
               {canInstallPWA && (
                 <Button

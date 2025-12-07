@@ -183,10 +183,7 @@ export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
                   name="alert-circle"
                   className="h-5 w-5 text-error mt-0.5"
                 />
-                <Typography
-                  variant="body-sm"
-                  className="text-error"
-                >
+                <Typography variant="body-sm" className="text-error">
                   {validationError}
                 </Typography>
               </div>

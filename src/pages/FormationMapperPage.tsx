@@ -697,22 +697,23 @@ const FormationMapperPage = () => {
             Formation Mapper
           </Typography>
           <Typography variant="body" className="text-secondary">
-            Review plays without linked formations and assign the proper versions.
+            Review plays without linked formations and assign the proper
+            versions.
           </Typography>
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-4">
-          {teamPlaybooks.length > 0 && (
-            <select
-              value={selectedPlaybookId}
-              onChange={(event) => handlePlaybookChange(event.target.value)}
-              className="rounded-lg border border-border bg-secondary px-3 py-2 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-brand-jade"
-            >
-              {teamPlaybooks.map((playbook) => (
-                <option key={playbook.id} value={playbook.id}>
-                  {playbook.name || "Unnamed Playbook"}
-                </option>
-              ))}
-            </select>
-          )}
+            {teamPlaybooks.length > 0 && (
+              <select
+                value={selectedPlaybookId}
+                onChange={(event) => handlePlaybookChange(event.target.value)}
+                className="rounded-lg border border-border bg-secondary px-3 py-2 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-brand-jade"
+              >
+                {teamPlaybooks.map((playbook) => (
+                  <option key={playbook.id} value={playbook.id}>
+                    {playbook.name || "Unnamed Playbook"}
+                  </option>
+                ))}
+              </select>
+            )}
             <div className="flex gap-2 justify-end">
               {plays.length > 0 && (
                 <Button
@@ -746,153 +747,161 @@ const FormationMapperPage = () => {
           </div>
         </header>
         <div className="space-y-6">
-        <Card variant="glass" size="lg">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <Typography variant="headline-sm" className="text-primary">
-                Mapping Overview
-              </Typography>
-              <Typography variant="body-sm" className="text-secondary">
-                {selectedPlaybook
-                  ? `Playbook: ${selectedPlaybook.name}`
-                  : "Select a playbook to review formation mappings."}
-              </Typography>
-              <Typography variant="body-xs" className="text-secondary mt-1">
-                {unresolved === 0
-                  ? "All plays are synced to formations."
-                  : `${unresolved} play${unresolved === 1 ? "" : "s"} need formation mapping.`}
-              </Typography>
-            </div>
-            <div className="flex gap-4 text-sm text-muted">
-              <div>
-                <Typography variant="caption" className="uppercase">
-                  Total plays
-                </Typography>
-                <Typography
-                  variant="body-md"
-                  className="font-semibold text-primary"
-                >
-                  {total}
-                </Typography>
-              </div>
-              <div>
-                <Typography variant="caption" className="uppercase">
-                  Last updated
-                </Typography>
-                <Typography
-                  variant="body-md"
-                  className="font-semibold text-primary"
-                >
-                  {lastUpdated || "—"}
-                </Typography>
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        {error && (
-          <Card variant="glass" size="md" className="border-error-300">
-            <div className="flex items-center gap-3 text-error-600">
-              <Icon name="alert-circle" className="h-5 w-5" />
-              <Typography variant="body-sm">{error}</Typography>
-            </div>
-          </Card>
-        )}
-
-        {formationsError && (
-          <Card variant="glass" size="md" className="border-warning-300">
-            <div className="flex items-center gap-3 text-warning-600">
-              <Icon name="alert-triangle" className="h-5 w-5" />
-              <Typography variant="body-sm">
-                {formationsError}. Suggestions may be limited until this
-                reloads.
-              </Typography>
-            </div>
-          </Card>
-        )}
-
-        {loading ? (
           <Card variant="glass" size="lg">
-            <div className="flex items-center gap-2">
-              <Icon name="loader" className="h-5 w-5 animate-spin text-muted" />
-              <Typography variant="body-sm" className="text-secondary">
-                Loading plays needing formation mapping...
-              </Typography>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <Typography variant="headline-sm" className="text-primary">
+                  Mapping Overview
+                </Typography>
+                <Typography variant="body-sm" className="text-secondary">
+                  {selectedPlaybook
+                    ? `Playbook: ${selectedPlaybook.name}`
+                    : "Select a playbook to review formation mappings."}
+                </Typography>
+                <Typography variant="body-xs" className="text-secondary mt-1">
+                  {unresolved === 0
+                    ? "All plays are synced to formations."
+                    : `${unresolved} play${unresolved === 1 ? "" : "s"} need formation mapping.`}
+                </Typography>
+              </div>
+              <div className="flex gap-4 text-sm text-muted">
+                <div>
+                  <Typography variant="caption" className="uppercase">
+                    Total plays
+                  </Typography>
+                  <Typography
+                    variant="body-md"
+                    className="font-semibold text-primary"
+                  >
+                    {total}
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="caption" className="uppercase">
+                    Last updated
+                  </Typography>
+                  <Typography
+                    variant="body-md"
+                    className="font-semibold text-primary"
+                  >
+                    {lastUpdated || "—"}
+                  </Typography>
+                </div>
+              </div>
             </div>
           </Card>
-        ) : plays.length === 0 ? (
-          <Card variant="glass" size="lg" className="text-center space-y-3">
-            <Icon
-              name="check-circle"
-              className="mx-auto h-10 w-10 text-success-500"
-            />
-            <Typography variant="headline-sm" className="text-primary">
-              All synced!
-            </Typography>
-            <Typography variant="body-sm" className="text-secondary">
-              Every play in this playbook is linked to a formation.
-            </Typography>
-            <Button variant="secondary" onClick={() => navigate("/playbook")}>
-              Back to Playbook
-            </Button>
-          </Card>
-        ) : (
-          <div className="space-y-3">
-            <div className="grid gap-3">{plays.map(renderPlayRow)}</div>
+
+          {error && (
+            <Card variant="glass" size="md" className="border-error-300">
+              <div className="flex items-center gap-3 text-error-600">
+                <Icon name="alert-circle" className="h-5 w-5" />
+                <Typography variant="body-sm">{error}</Typography>
+              </div>
+            </Card>
+          )}
+
+          {formationsError && (
+            <Card variant="glass" size="md" className="border-warning-300">
+              <div className="flex items-center gap-3 text-warning-600">
+                <Icon name="alert-triangle" className="h-5 w-5" />
+                <Typography variant="body-sm">
+                  {formationsError}. Suggestions may be limited until this
+                  reloads.
+                </Typography>
+              </div>
+            </Card>
+          )}
+
+          {loading ? (
+            <Card variant="glass" size="lg">
+              <div className="flex items-center gap-2">
+                <Icon
+                  name="loader"
+                  className="h-5 w-5 animate-spin text-muted"
+                />
+                <Typography variant="body-sm" className="text-secondary">
+                  Loading plays needing formation mapping...
+                </Typography>
+              </div>
+            </Card>
+          ) : plays.length === 0 ? (
+            <Card variant="glass" size="lg" className="text-center space-y-3">
+              <Icon
+                name="check-circle"
+                className="mx-auto h-10 w-10 text-success-500"
+              />
+              <Typography variant="headline-sm" className="text-primary">
+                All synced!
+              </Typography>
+              <Typography variant="body-sm" className="text-secondary">
+                Every play in this playbook is linked to a formation.
+              </Typography>
+              <Button variant="secondary" onClick={() => navigate("/playbook")}>
+                Back to Playbook
+              </Button>
+            </Card>
+          ) : (
+            <div className="space-y-3">
+              <div className="grid gap-3">{plays.map(renderPlayRow)}</div>
+            </div>
+          )}
+        </div>
+
+        {selectedCount > 0 && (
+          <div className="fixed bottom-4 left-1/2 z-40 w-full max-w-4xl -translate-x-1/2 px-4">
+            <div className="rounded-xl border border-border bg-primary shadow-xl flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-3">
+                <Icon
+                  name="check-circle"
+                  className="h-5 w-5 text-success-500"
+                />
+                <div>
+                  <Typography
+                    variant="body-md"
+                    className="font-semibold text-primary"
+                  >
+                    {selectedCount} play{selectedCount === 1 ? "" : "s"}{" "}
+                    selected
+                  </Typography>
+                  <Typography variant="caption" className="text-secondary">
+                    {selectedSuggestionsCount > 0
+                      ? `${selectedSuggestionsCount} selection${selectedSuggestionsCount === 1 ? "" : "s"} have suggestions ready`
+                      : "No suggestions available yet"}
+                  </Typography>
+                </div>
+              </div>
+              <div className="flex flex-wrap justify-end gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleClearSelection}
+                  disabled={assigning}
+                >
+                  Clear
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setBulkAssignOpen(true)}
+                  disabled={!canBulkAssign}
+                >
+                  <Icon name="grid" className="h-4 w-4 mr-2" />
+                  Assign formation
+                </Button>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={handleBulkApplySuggestions}
+                  disabled={!canApplySuggestions}
+                >
+                  <Icon name="sparkles" className="h-4 w-4 mr-2" />
+                  Apply suggestions
+                </Button>
+              </div>
+            </div>
           </div>
         )}
       </div>
-
-      {selectedCount > 0 && (
-        <div className="fixed bottom-4 left-1/2 z-40 w-full max-w-4xl -translate-x-1/2 px-4">
-          <div className="rounded-xl border border-border bg-primary shadow-xl flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-3">
-              <Icon name="check-circle" className="h-5 w-5 text-success-500" />
-              <div>
-                <Typography
-                  variant="body-md"
-                  className="font-semibold text-primary"
-                >
-                  {selectedCount} play{selectedCount === 1 ? "" : "s"} selected
-                </Typography>
-                <Typography variant="caption" className="text-secondary">
-                  {selectedSuggestionsCount > 0
-                    ? `${selectedSuggestionsCount} selection${selectedSuggestionsCount === 1 ? "" : "s"} have suggestions ready`
-                    : "No suggestions available yet"}
-                </Typography>
-              </div>
-            </div>
-            <div className="flex flex-wrap justify-end gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleClearSelection}
-                disabled={assigning}
-              >
-                Clear
-              </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => setBulkAssignOpen(true)}
-                disabled={!canBulkAssign}
-              >
-                <Icon name="grid" className="h-4 w-4 mr-2" />
-                Assign formation
-              </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={handleBulkApplySuggestions}
-                disabled={!canApplySuggestions}
-              >
-                <Icon name="sparkles" className="h-4 w-4 mr-2" />
-                Apply suggestions
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
 
       <Modal
         isOpen={Boolean(editingPlay) && !showBuilder}
@@ -1030,8 +1039,6 @@ const FormationMapperPage = () => {
           </div>
         </div>
       </Modal>
-        </div>
-      </div>
     </div>
   );
 };
