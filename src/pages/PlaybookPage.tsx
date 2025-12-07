@@ -95,6 +95,7 @@ const PlaybookPage = () => {
   const sanitizedFormationIdsRef = useRef(new Set<string>());
 
   // 🚀 PERFORMANCE: Memoize filtered playbooks to avoid recalculating on every render
+  // IMPORTANT: Must be defined BEFORE debug useEffect that uses it
   const teamPlaybooks = useMemo(
     () => playbooks.filter((pb) => pb.team_id === activeTeamId && pb.is_active),
     [playbooks, activeTeamId]
@@ -102,6 +103,38 @@ const PlaybookPage = () => {
 
   // State for selected playbook (with preference persistence)
   const [selectedPlaybookId, setSelectedPlaybookId] = useState<string>("");
+
+  // 🐛 MOBILE DEBUG: Log data state for troubleshooting plays not loading
+  useEffect(() => {
+    if (isMobileOrTablet) {
+      console.log("📱 [Mobile Debug - PlaybookPage]", {
+        timestamp: new Date().toISOString(),
+        activeTeamId,
+        teamPlaybooksCount: teamPlaybooks.length,
+        teamPlaybookIds: teamPlaybooks.map((pb) => pb.id),
+        selectedPlaybookId,
+        allPlaysCount: allPlaysForStats.length,
+        playSample: allPlaysForStats.slice(0, 3).map((p) => ({
+          id: p.id,
+          name: p.play_name,
+          formation: p.formation,
+          playbook_id: p.playbook_id,
+        })),
+        userAgent: navigator.userAgent,
+        viewport: {
+          width: window.innerWidth,
+          height: window.innerHeight,
+          orientation: window.screen.orientation?.type,
+        },
+      });
+    }
+  }, [
+    isMobileOrTablet,
+    activeTeamId,
+    teamPlaybooks,
+    selectedPlaybookId,
+    allPlaysForStats,
+  ]);
 
   // Initialize selected playbook from preferences or default to first playbook with data
   useEffect(() => {

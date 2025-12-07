@@ -161,6 +161,18 @@ export function useTeamsData() {
         setLoading(true);
         setError(null);
 
+        // 🐛 MOBILE DEBUG: Log fetch start
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (isMobile) {
+          const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+          const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+          console.log("📱 [Mobile Debug - useTeamsData] Starting data fetch", {
+            timestamp: new Date().toISOString(),
+            hasSupabaseUrl: !!supabaseUrl,
+            hasAnonKey: !!supabaseAnonKey,
+          });
+        }
+
         // Fetch teams
         const { data: teamsData, error: teamsError } = await supabase
           .from("teams")
@@ -290,13 +302,34 @@ export function useTeamsData() {
           if (playsError) {
             console.warn("Plays table not available:", playsError.message);
             // Continue without plays data
+            if (isMobile) {
+              console.log("📱 [Mobile Debug - useTeamsData] Plays fetch error:", {
+                error: playsError.message,
+                code: playsError.code,
+                hint: playsError.hint,
+              });
+            }
           } else {
             playsData = data || [];
             // Check if there are more plays to load
             setHasMorePlays(playsData.length === PAGE_SIZE);
+            if (isMobile) {
+              console.log("📱 [Mobile Debug - useTeamsData] Plays fetched:", {
+                count: playsData.length,
+                hasMore: playsData.length === PAGE_SIZE,
+                sample: playsData.slice(0, 3).map((p) => ({
+                  id: p.id,
+                  name: p.play_name,
+                  formation: p.formation,
+                })),
+              });
+            }
           }
         } catch (err) {
           console.warn("Error fetching plays:", err);
+          if (isMobile) {
+            console.log("📱 [Mobile Debug - useTeamsData] Plays fetch exception:", err);
+          }
           // Continue without plays data
         }
 

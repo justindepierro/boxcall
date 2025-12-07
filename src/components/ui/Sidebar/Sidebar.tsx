@@ -334,8 +334,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   // The sidebar itself is scrollable via overflow-y-auto
 
   const handleItemClick = () => {
-    // Close sidebar when item is clicked (for mobile)
-    if (isMobile) {
+    // Close sidebar when item is clicked (for mobile AND tablet)
+    // Always close on touch devices for better UX
+    if (isMobile || window.innerWidth < 1024) {
       onClose?.();
     }
   };

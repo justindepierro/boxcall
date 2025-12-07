@@ -62,7 +62,7 @@ const getModalTypeStyles = (type: ModalProps["type"]) => {
   }
 };
 const getBackdropStyles = () => {
-  return "bg-black/80 dark:bg-black/85"; // Much more opaque backdrop for better contrast
+  return "bg-black/90 dark:bg-black/90"; // Opaque backdrop for mobile visibility
 };
 export const Modal: React.FC<ModalProps> = ({
   isOpen,
@@ -76,7 +76,7 @@ export const Modal: React.FC<ModalProps> = ({
   closeOnEscape = true,
   footer,
   className = "",
-  zIndex = 9999,
+  zIndex = 1050, // Use z-modal design token value instead of arbitrary 9999
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
