@@ -39,7 +39,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 md:hidden"
+      className="fixed inset-0 z-modal md:hidden"
       role="dialog"
       aria-modal="true"
       aria-label={title}

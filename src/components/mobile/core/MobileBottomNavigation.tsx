@@ -73,7 +73,7 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
   return (
     <nav
       className={`
-        fixed bottom-0 left-0 right-0 z-50
+        fixed bottom-0 left-0 right-0 z-fixed
         bg-white dark:bg-neutral-900
         border-t border-muted
         shadow-lg
