@@ -60,7 +60,9 @@ interface DatabasePlay {
   times_called?: number;
   times_successful?: number;
   diagram_url?: string | null;
+  diagram_image_url?: string | null;
   diagram_data?: string | null;
+  wristband_number?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -303,11 +305,14 @@ export function useTeamsData() {
             console.warn("Plays table not available:", playsError.message);
             // Continue without plays data
             if (isMobile) {
-              console.log("📱 [Mobile Debug - useTeamsData] Plays fetch error:", {
-                error: playsError.message,
-                code: playsError.code,
-                hint: playsError.hint,
-              });
+              console.log(
+                "📱 [Mobile Debug - useTeamsData] Plays fetch error:",
+                {
+                  error: playsError.message,
+                  code: playsError.code,
+                  hint: playsError.hint,
+                }
+              );
             }
           } else {
             playsData = data || [];
@@ -328,7 +333,10 @@ export function useTeamsData() {
         } catch (err) {
           console.warn("Error fetching plays:", err);
           if (isMobile) {
-            console.log("📱 [Mobile Debug - useTeamsData] Plays fetch exception:", err);
+            console.log(
+              "📱 [Mobile Debug - useTeamsData] Plays fetch exception:",
+              err
+            );
           }
           // Continue without plays data
         }
