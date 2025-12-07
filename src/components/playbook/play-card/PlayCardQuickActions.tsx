@@ -35,7 +35,7 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
           QUICK ACTIONS
         </Typography>
         {/* Photo indicator */}
-        {play.diagram_image_url && (
+        {play.diagram_url && (
           <div className="px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-medium flex items-center gap-1.5 border border-indigo-200">
             <Icon name="image" size={14} />
             <span>Diagram</span>
