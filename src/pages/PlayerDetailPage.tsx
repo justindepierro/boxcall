@@ -1,10 +1,8 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { PageLayout } from "../components/layout/PageLayout";
 import { Button, Card } from "../components/ui";
 import { Icon } from "../components/ui/Icon/Icon";
 import { Typography } from "../components/design-system";
-import { Aurora } from "../components/ui/Aurora";
 import { Breadcrumb } from "../components/ui/Breadcrumb";
 import { EmptyState } from "../components/ui/EmptyState";
 import { rosterService } from "../services";
@@ -22,7 +20,7 @@ import EditPlayerModal from "../components/roster/EditPlayerModal";
  * - Breadcrumb navigation back to roster
  * - Stats placeholder for Phase 4
  */
-export default function PlayerDetailPage() {
+const PlayerDetailPage = () => {
   const { playerId } = useParams<{ playerId: string }>();
   const navigate = useNavigate();
   const toast = useToast();
@@ -68,8 +66,16 @@ export default function PlayerDetailPage() {
 
   if (loading) {
     return (
-      <Aurora variant="shell" fullHeight>
-        <PageLayout title="Loading Player..." subtitle="Please wait...">
+      <div className="min-h-screen bg-secondary p-4 md:p-6">
+        <div className="max-w-7xl mx-auto space-y-6">
+          <header className="mb-6">
+            <Typography variant="headline-lg" className="text-primary mb-1">
+              Loading Player...
+            </Typography>
+            <Typography variant="body" className="text-secondary">
+              Please wait...
+            </Typography>
+          </header>
           <div className="space-y-lg">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-lg">
               {[...Array(3)].map((_, i) => (
@@ -79,24 +85,29 @@ export default function PlayerDetailPage() {
               ))}
             </div>
           </div>
-        </PageLayout>
-      </Aurora>
+        </div>
+      </div>
     );
   }
 
   if (!player) {
     return (
-      <Aurora variant="shell" fullHeight>
-        <PageLayout
-          title="Player Not Found"
-          subtitle="The requested player could not be found"
-        >
+      <div className="min-h-screen bg-secondary p-4 md:p-6">
+        <div className="max-w-7xl mx-auto space-y-6">
+          <header className="mb-6">
+            <Typography variant="headline-lg" className="text-primary mb-1">
+              Player Not Found
+            </Typography>
+            <Typography variant="body" className="text-secondary">
+              The requested player could not be found
+            </Typography>
+          </header>
           <Button onClick={() => navigate("/roster")}>
             <Icon name="chevron-left" className="w-4 h-4 mr-xs" />
             Back to Roster
           </Button>
-        </PageLayout>
-      </Aurora>
+        </div>
+      </div>
     );
   }
 
@@ -107,11 +118,17 @@ export default function PlayerDetailPage() {
   const weight = player.weight_lbs ? `${player.weight_lbs} lbs` : "N/A";
 
   return (
-    <Aurora variant="shell" fullHeight>
-      <PageLayout
-        title={`${player.first_name} ${player.last_name}`}
-        subtitle={`#${player.jersey_number || "N/A"} • ${player.position || "No Position"}`}
-      >
+    <div className="min-h-screen bg-secondary p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <header className="mb-6">
+          <Typography variant="headline-lg" className="text-primary mb-1">
+            {`${player.first_name} ${player.last_name}`}
+          </Typography>
+          <Typography variant="body" className="text-secondary">
+            {`#${player.jersey_number || "N/A"} • ${player.position || "No Position"}`}
+          </Typography>
+        </header>
+
         {/* Breadcrumb Navigation */}
         <Breadcrumb
           items={[
@@ -261,7 +278,11 @@ export default function PlayerDetailPage() {
             }}
           />
         )}
-      </PageLayout>
-    </Aurora>
+      </div>
+    </div>
   );
-}
+};
+
+PlayerDetailPage.displayName = "PlayerDetailPage";
+
+export default React.memo(PlayerDetailPage);

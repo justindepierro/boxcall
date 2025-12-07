@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { Combobox } from "@headlessui/react";
 import { Button } from "../../../ui/Button/Button";
-import { Input } from "../../../ui";
-import { TextArea } from "../../../ui";
+import { Input, TextArea } from "../../../ui";
 import { Typography } from "../../../design-system/Typography";
+import { Icon } from "../../../ui/Icon";
+import { supabase } from "../../../../lib/supabase";
+import { getActiveTeamId } from "../../../../utils/activeTeam";
+import { getDisplayName } from "../../../../utils/playNameUtils";
+import { PersonnelBadge } from "../../../playbook/PersonnelBadge";
 
 import type { PracticeScriptPlay } from "../types";
+import type { Play } from "../../../../types/play";
 
 interface PracticeScriptPlayFormProps {
   initialData?: PracticeScriptPlay;
@@ -30,6 +36,104 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
     situation: initialData?.situation || "",
   });
 
+  const [searchQuery, setSearchQuery] = useState(initialData?.playName || "");
+  const [selectedPlay, setSelectedPlay] = useState<Play | null>(null);
+  const [playbookPlays, setPlaybookPlays] = useState<Play[]>([]);
+  const [isLoadingPlays, setIsLoadingPlays] = useState(false);
+
+  // Load playbook plays
+  useEffect(() => {
+    const loadPlays = async () => {
+      const teamId = getActiveTeamId();
+      if (!teamId) return;
+
+      setIsLoadingPlays(true);
+      try {
+        const { data: playbooks } = await supabase
+          .from("playbooks")
+          .select("id")
+          .eq("team_id", teamId)
+          .eq("is_active", true)
+          .limit(1);
+
+        if (playbooks && playbooks.length > 0) {
+          const { data: plays, error } = await supabase
+            .from("plays")
+            .select(
+              "id,play_name,formation,personnel,p_type,diagram_image_url,diagram_url,f_dir,f_type,back_align,shift,motion,ftag1,ftag2,p_dir,protection,p_tag1,p_tag2,one_word_play,r_str,p_str"
+            )
+            .eq("playbook_id", playbooks[0].id)
+            .order("play_name");
+
+          if (error) {
+            console.error("❌ Error loading plays:", error);
+          } else {
+            console.log("✅ Loaded plays:", plays?.length || 0);
+            if (plays && plays.length > 0) {
+              console.log("📋 Sample play:", plays[0]);
+            }
+            setPlaybookPlays(plays || []);
+          }
+        } else {
+          console.log("⚠️ No active playbook found for team");
+        }
+      } catch (error) {
+        console.error("Failed to load playbook plays:", error);
+      } finally {
+        setIsLoadingPlays(false);
+      }
+    };
+
+    loadPlays();
+  }, []);
+
+  const filteredPlays = useMemo(() => {
+    console.log("🔍 Filtering plays:", {
+      totalPlays: playbookPlays.length,
+      searchQuery,
+    });
+
+    if (searchQuery === "") {
+      return playbookPlays;
+    }
+
+    const filtered = playbookPlays.filter((play) => {
+      // Search by the display name (formatted name) instead of raw play_name
+      const displayName = getDisplayName(play, false);
+      const matches = displayName
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+
+      if (matches) {
+        console.log("✅ Match found:", displayName);
+      }
+
+      return matches;
+    });
+
+    console.log("📊 Filtered results:", filtered.length);
+    return filtered;
+  }, [playbookPlays, searchQuery]);
+
+  const handleSelectPlay = useCallback((play: Play | null) => {
+    console.log("🎯 Play selected:", play?.play_name);
+
+    if (play) {
+      // Use the same display name logic as the list view
+      const displayName = getDisplayName(play, false);
+      console.log("📝 Formatted display name:", displayName);
+
+      setSelectedPlay(play);
+      setFormData((prev) => ({
+        ...prev,
+        playId: play.id,
+        playName: displayName, // Store the formatted display name
+        personnel: play.personnel || prev.personnel,
+      }));
+      setSearchQuery(displayName);
+    }
+  }, []);
+
   const updateField = (field: keyof typeof formData, value: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -53,17 +157,112 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
         <Typography variant="label-md" className="block mb-1">
           Play Name *
         </Typography>
-        <div className="relative">
-          <Input
-            value={formData.playName}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              updateField("playName", e.target.value)
-            }
-            placeholder="Search playbook or enter custom play name"
-            required
-          />
-          {/* TODO: Add playbook search dropdown with AdvancedSearchBar */}
-        </div>
+        <Combobox value={selectedPlay} onChange={handleSelectPlay}>
+          <div className="relative">
+            <Combobox.Input
+              className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-primary placeholder-muted focus:border-jade-500 focus:outline-none focus:ring-1 focus:ring-jade-500"
+              displayValue={(play: Play | null) => {
+                if (play) {
+                  const displayName = getDisplayName(play, false);
+                  console.log(
+                    "📺 Display value for selected play:",
+                    displayName
+                  );
+                  return displayName;
+                }
+                return searchQuery;
+              }}
+              onChange={(event) => {
+                const value = event.target.value;
+                console.log("⌨️ Input changed:", value);
+                setSearchQuery(value);
+                updateField("playName", value);
+              }}
+              placeholder="Search playbook or enter custom play name"
+              required
+            />
+            <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+              <Icon
+                name="chevron-down"
+                className="h-5 w-5 text-muted"
+                aria-hidden="true"
+              />
+            </Combobox.Button>
+          </div>
+
+          <Combobox.Options className="absolute z-[100] mt-1 max-h-96 w-full overflow-auto rounded-md bg-surface border border-border shadow-2xl">
+            {isLoadingPlays ? (
+              <div className="px-4 py-3 text-sm text-muted flex items-center gap-2">
+                <Icon name="loader-2" className="animate-spin" size={16} />
+                Loading plays...
+              </div>
+            ) : filteredPlays.length === 0 ? (
+              <div className="px-4 py-3 text-sm text-muted">
+                No plays found. Enter a custom play name.
+              </div>
+            ) : (
+              <div className="divide-y divide-border">
+                {filteredPlays.map((play) => {
+                  // Use the same display logic as the playbook list view
+                  const displayName = getDisplayName(play, false);
+
+                  return (
+                    <Combobox.Option
+                      key={play.id}
+                      value={play}
+                      className={({ active }) =>
+                        `flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors ${
+                          active
+                            ? "bg-accent"
+                            : "bg-surface hover:bg-accent"
+                        }`
+                      }
+                    >
+                      {/* Thumbnail (if available) */}
+                      {play.diagram_image_url && (
+                        <div className="shrink-0 w-16 h-12 rounded-lg overflow-hidden shadow-sm">
+                          <img
+                            src={play.diagram_image_url}
+                            alt={`${displayName} diagram`}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+
+                      {/* Play info */}
+                      <div className="flex-1 min-w-0">
+                        <div className="font-mono font-semibold text-sm text-primary truncate">
+                          {displayName}
+                        </div>
+                        <div className="flex items-center gap-2 mt-1">
+                          {/* Personnel badge */}
+                          {play.personnel && (
+                            <PersonnelBadge
+                              personnel={play.personnel}
+                              size="sm"
+                            />
+                          )}
+                          {/* Play type badge */}
+                          {play.p_type && (
+                            <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded text-xs font-medium">
+                              {play.p_type}
+                            </span>
+                          )}
+                          {/* Formation */}
+                          {play.formation && (
+                            <span className="text-xs text-secondary truncate">
+                              {play.formation}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </Combobox.Option>
+                  );
+                })}
+              </div>
+            )}
+          </Combobox.Options>
+        </Combobox>
         <Typography variant="caption" color="muted" className="mt-1">
           Start typing to search existing plays, or enter a custom play name
         </Typography>

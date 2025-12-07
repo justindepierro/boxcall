@@ -2,8 +2,6 @@ import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import { ProgressiveAuthFlow } from "../components/ui/Auth/ProgressiveAuthFlow";
-import { PageLayout } from "../components/layout/PageLayout";
-import { Aurora } from "../components/ui/Aurora";
 import { ROUTES } from "../routes/paths";
 import { useAuth } from "../app/auth-store";
 import { getLoginDestination } from "../utils/navigationUtils";
@@ -49,11 +47,9 @@ const LoginPage: React.FC = () => {
   }
 
   return (
-    <Aurora variant="minimal" fullHeight>
-      <PageLayout>
-        <ProgressiveAuthFlow onSuccess={handleLoginSuccess} />
-      </PageLayout>
-    </Aurora>
+    <div className="min-h-screen bg-secondary flex items-center justify-center p-4">
+      <ProgressiveAuthFlow onSuccess={handleLoginSuccess} />
+    </div>
   );
 };
 

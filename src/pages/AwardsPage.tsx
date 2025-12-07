@@ -1,16 +1,19 @@
-import { PageLayout } from "../components/layout/PageLayout";
+import React from "react";
 import { Card } from "../components/ui/Card";
 import { Typography } from "../components/design-system";
-import { Aurora } from "../components/ui/Aurora";
 
-const AwardsPage: React.FC = () => {
+const AwardsPage: React.FC = React.memo(function AwardsPage() {
   return (
-    <Aurora variant="shell" fullHeight>
-      <PageLayout
-        title="Awards & Recognition"
-        subtitle="Celebrate your team's achievements."
-        variant="detail"
-      >
+    <div className="min-h-screen bg-secondary p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <header className="mb-6">
+          <Typography variant="headline-lg" className="text-primary mb-1">
+            Awards & Recognition
+          </Typography>
+          <Typography variant="body" className="text-secondary">
+            Celebrate your team's achievements.
+          </Typography>
+        </header>
         <Card className="p-6">
           <Typography variant="body-lg">
             Award management tools are coming soon. In the meantime, coaches can
@@ -18,9 +21,11 @@ const AwardsPage: React.FC = () => {
             Bulletin.
           </Typography>
         </Card>
-      </PageLayout>
-    </Aurora>
+      </div>
+    </div>
   );
-};
+});
+
+AwardsPage.displayName = "AwardsPage";
 
 export default AwardsPage;

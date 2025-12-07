@@ -133,33 +133,81 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           ${isVisible ? "translate-y-0" : "-translate-y-full"}
         `}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ml-80">
-          <div className="flex items-center h-16">
-            {/* Global Search + Install CTA */}
-            <div className="flex-1 flex items-center justify-center gap-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Mobile/Tablet Layout (< md) */}
+          <div className="md:hidden flex items-center justify-between h-16 gap-3">
+            {/* Left: Hamburger Menu */}
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() => {
+                triggerHapticFeedback("light");
+                onMenuToggle();
+              }}
+              className="w-10 h-10 !p-0 flex items-center justify-center rounded-radius-md flex-shrink-0"
+              aria-label="Toggle menu"
+            >
+              <Icon name="menu" size="md" />
+            </Button>
+
+            {/* Center: Search Button */}
+            <div className="flex-1 flex justify-center">
               <Suspense
                 fallback={
-                  <div className="w-64 h-10 animate-pulse bg-muted rounded-lg" />
+                  <div className="h-10 w-28 animate-pulse bg-muted rounded-lg" />
                 }
               >
-                <GlobalSearch className="w-64" />
+                <GlobalSearch />
+              </Suspense>
+            </div>
+
+            {/* Right: Notifications, User Menu */}
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  triggerHapticFeedback("light");
+                  console.log("Notifications clicked");
+                }}
+                className="w-10 h-10 !p-0 flex items-center justify-center hover:bg-surface-hover rounded-lg transition-colors"
+                aria-label="Notifications"
+              >
+                <Icon
+                  name="bell"
+                  size="sm"
+                  className="text-secondary hover:text-primary transition-colors"
+                />
+              </Button>
+              <UserMenu teams={teams} />
+            </div>
+          </div>
+
+          {/* Desktop Layout (≥ md) */}
+          <div className="hidden md:flex items-center justify-center h-16">
+            {/* Global Search + Install CTA */}
+            <div className="flex items-center gap-3">
+              <Suspense
+                fallback={
+                  <div className="w-[480px] h-10 animate-pulse bg-muted rounded-lg" />
+                }
+              >
+                <GlobalSearch className="w-[480px]" />
               </Suspense>
               {canInstallPWA && (
                 <Button
                   variant="gradient"
                   size="sm"
                   onClick={handleInstallClick}
-                  className="hidden sm:flex items-center gap-2 px-3"
+                  className="flex items-center gap-2 px-3"
                 >
                   <Icon name="download" size="sm" /> Install BoxCall
                 </Button>
               )}
             </div>
 
-            {/* Right side - TeamSwitcher and User Actions */}
-            <div className="flex-1 flex items-center justify-end gap-3">
-              <TeamSwitcher teams={teams} />
-              {/* TODO: Add notification system - see NotificationsBell in components/social */}
+            {/* Right side - User Actions */}
+            <div className="absolute right-4 lg:right-8 flex items-center gap-3">
               <Button
                 variant="ghost"
                 size="sm"
@@ -176,15 +224,16 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                   className="text-secondary hover:text-primary transition-colors"
                 />
               </Button>
-              <UserMenu />
+              <UserMenu teams={teams} />
             </div>
           </div>
         </div>
       </header>
 
-      {/* Fixed Left Section - Part of Header, Sidebar Width */}
+      {/* Fixed Left Section - Part of Header, Sidebar Width (Desktop Only) */}
       <div
         className={`
+          hidden md:block
           fixed top-0 left-0 z-modal w-80
           bg-surface-card/90 dark:bg-surface-card/90 
           backdrop-blur-md

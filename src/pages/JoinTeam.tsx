@@ -6,8 +6,6 @@ import { Typography } from "../components/design-system";
 import { Icon } from "../components/ui/Icon/Icon";
 import { Tag } from "../components/ui/Tag";
 import { Button } from "../components/ui/Button/Button";
-import { PageLayout } from "../components/layout/PageLayout";
-import { Aurora } from "../components/ui/Aurora";
 
 /**
  * Join Team Page
@@ -54,7 +52,7 @@ type JoinStep =
   | "request"
   | "complete";
 
-export const JoinTeam: React.FC = () => {
+const JoinTeam: React.FC = () => {
   const navigate = useNavigate();
   const { user: _user } = useAuth();
 
@@ -551,8 +549,16 @@ export const JoinTeam: React.FC = () => {
   };
 
   return (
-    <Aurora variant="shell" fullHeight>
-      <PageLayout title="Join Team" variant="form">
+    <div className="min-h-screen bg-secondary p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <header className="mb-6">
+          <Typography variant="headline-lg" className="text-primary mb-1">
+            Join Team
+          </Typography>
+          <Typography variant="body" className="text-secondary">
+            Find and join your team
+          </Typography>
+        </header>
         <div className="content-medium">
           {/* Back Navigation */}
           {currentStep !== "method" && currentStep !== "complete" && (
@@ -603,7 +609,11 @@ export const JoinTeam: React.FC = () => {
             </div>
           )}
         </div>
-      </PageLayout>
-    </Aurora>
+      </div>
+    </div>
   );
 };
+
+JoinTeam.displayName = "JoinTeam";
+
+export default React.memo(JoinTeam);

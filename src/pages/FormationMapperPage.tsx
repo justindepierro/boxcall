@@ -14,10 +14,9 @@
  * See: docs/FORMATION_FIX_COMPLETE_NOV28_2025.md
  */
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
-import { PageLayout } from "../components/layout/PageLayout";
 import { Button } from "../components/ui/Button/Button";
 import { Typography } from "../components/design-system/Typography";
 import { Icon } from "../components/ui/Icon";
@@ -47,7 +46,7 @@ interface FormationSuggestion {
   reasons: string[];
 }
 
-export default function FormationMapperPage() {
+const FormationMapperPage = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const { activeTeamId } = useActiveTeamStore();
@@ -691,12 +690,16 @@ export default function FormationMapperPage() {
   };
 
   return (
-    <PageLayout
-      title="Formation Mapper"
-      subtitle="Review plays without linked formations and assign the proper versions."
-      variant="list"
-      actions={
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+    <div className="min-h-screen bg-secondary p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <header className="mb-6">
+          <Typography variant="headline-lg" className="text-primary mb-1">
+            Formation Mapper
+          </Typography>
+          <Typography variant="body" className="text-secondary">
+            Review plays without linked formations and assign the proper versions.
+          </Typography>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-4">
           {teamPlaybooks.length > 0 && (
             <select
               value={selectedPlaybookId}
@@ -710,40 +713,39 @@ export default function FormationMapperPage() {
               ))}
             </select>
           )}
-          <div className="flex gap-2 justify-end">
-            {plays.length > 0 && (
+            <div className="flex gap-2 justify-end">
+              {plays.length > 0 && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleToggleSelectAll}
+                  disabled={assigning}
+                >
+                  {allSelected ? "Clear selection" : "Select all"}
+                </Button>
+              )}
               <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleToggleSelectAll}
+                variant="secondary"
+                onClick={() => navigate(-1)}
                 disabled={assigning}
               >
-                {allSelected ? "Clear selection" : "Select all"}
+                <Icon name="arrow-left" className="h-4 w-4 mr-2" /> Back
               </Button>
-            )}
-            <Button
-              variant="secondary"
-              onClick={() => navigate(-1)}
-              disabled={assigning}
-            >
-              <Icon name="arrow-left" className="h-4 w-4 mr-2" /> Back
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={refresh}
-              disabled={loading || assigning}
-            >
-              <Icon
-                name="refresh-cw"
-                className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`}
-              />
-              Refresh
-            </Button>
+              <Button
+                variant="secondary"
+                onClick={refresh}
+                disabled={loading || assigning}
+              >
+                <Icon
+                  name="refresh-cw"
+                  className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`}
+                />
+                Refresh
+              </Button>
+            </div>
           </div>
-        </div>
-      }
-    >
-      <div className="space-y-6">
+        </header>
+        <div className="space-y-6">
         <Card variant="glass" size="lg">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -1028,6 +1030,12 @@ export default function FormationMapperPage() {
           </div>
         </div>
       </Modal>
-    </PageLayout>
+        </div>
+      </div>
+    </div>
   );
-}
+};
+
+FormationMapperPage.displayName = "FormationMapperPage";
+
+export default React.memo(FormationMapperPage);

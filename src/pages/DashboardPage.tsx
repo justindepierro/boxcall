@@ -9,6 +9,7 @@
  * Design: Vibrant brand colors, elevated cards, responsive grid
  */
 
+import React from "react";
 import { useAuth } from "../app/auth-store";
 import { useDashboardStats } from "../hooks/useDashboardStats";
 import { Card } from "../components/ui/Card";
@@ -27,7 +28,7 @@ import { shimmerSkeleton, statusIndicator } from "../utils/animations";
  * - Roster quick add
  * - Mobile-first responsive design
  */
-export default function DashboardPage() {
+const DashboardPage = React.memo(function DashboardPage() {
   const { user, profile, loading, profileLoading } = useAuth();
   const navigate = useNavigate();
   const dashboardStats = useDashboardStats(user?.id);
@@ -322,4 +323,6 @@ export default function DashboardPage() {
       </div>
     </div>
   );
-}
+});
+
+export default DashboardPage;

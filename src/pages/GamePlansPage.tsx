@@ -1,4 +1,4 @@
-import {
+import React, {
   useCallback,
   useEffect,
   useMemo,
@@ -12,9 +12,7 @@ import { Icon, type IconName } from "../components/ui/Icon";
 import { Typography } from "../components/design-system/Typography";
 import { SearchBar } from "../components/ui/SearchBar";
 import { SortDropdown, type SortOption } from "../components/ui/SortDropdown";
-import { PageLayout } from "../components/layout/PageLayout";
 import { AuroraTile } from "../components/ui/AuroraTile";
-import { Aurora } from "../components/ui/Aurora";
 const GamePlanModal = lazy(() =>
   import("../components/playbook/GamePlanModal").then((module) => ({
     default: module.GamePlanModal,
@@ -40,7 +38,7 @@ import {
   type ExportedGamePlan,
 } from "../utils/gamePlanExport";
 
-export default function GamePlansPage() {
+const GamePlansPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const toast = useToast();
@@ -626,13 +624,16 @@ export default function GamePlansPage() {
   );
 
   return (
-    <Aurora variant="field" fullHeight>
-      <PageLayout
-        title="Game Plans"
-        subtitle="Create and manage strategic game plans for upcoming matches"
-        variant="list"
-        actions={
-          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
+    <div className="min-h-screen bg-secondary p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <header className="mb-6">
+          <Typography variant="headline-lg" className="text-primary mb-1">
+            Game Plans
+          </Typography>
+          <Typography variant="body" className="text-secondary">
+            Create and manage strategic game plans for upcoming matches
+          </Typography>
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center mt-4">
             <Button
               onClick={() => navigate("/playbook")}
               variant="secondary"
@@ -652,8 +653,7 @@ export default function GamePlansPage() {
               New Plan
             </Button>
           </div>
-        }
-      >
+        </header>
         <div className="mb-8">
           <div className="rounded-xl bg-primary p-5 shadow-lg backdrop-blur-sm sm:p-6 xl:p-7">
             <div className="mb-6">
@@ -977,7 +977,11 @@ export default function GamePlansPage() {
             />
           </Suspense>
         )}
-      </PageLayout>
-    </Aurora>
+      </div>
+    </div>
   );
-}
+};
+
+GamePlansPage.displayName = "GamePlansPage";
+
+export default React.memo(GamePlansPage);

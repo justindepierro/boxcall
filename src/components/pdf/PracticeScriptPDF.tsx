@@ -333,81 +333,93 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
                         </View>
                       )}
 
-                      {/* Full Play Name */}
+                      {/* Play Name - Use display name from playbook */}
                       {scriptPlay.play && (
-                        <Text
-                          style={{
-                            fontSize: 10,
-                            fontWeight: "bold",
-                            color: colorTokens.gray[900],
-                            marginRight: 4,
-                          }}
-                        >
-                          {(() => {
-                            const play = scriptPlay.play;
-                            // Generate full concatenated name
-                            const formationParts: string[] = [];
-                            const playParts: string[] = [];
-
-                            // Formation parts
-                            if (play.formation)
-                              formationParts.push(play.formation);
-                            if (play.backfield)
-                              formationParts.push(play.backfield);
-                            if (play.motion) formationParts.push(play.motion);
-                            if (play.shift) formationParts.push(play.shift);
-
-                            // Play parts
-                            if (play.play_name) playParts.push(play.play_name);
-                            if (play.p_dir)
-                              playParts.push(
-                                play.p_dir === "R"
-                                  ? "Right"
-                                  : play.p_dir === "L"
-                                    ? "Left"
-                                    : play.p_dir
-                              );
-                            if (play.p_type) playParts.push(play.p_type);
-                            if (play.protection)
-                              playParts.push(play.protection);
-
-                            return [...formationParts, ...playParts].join(" ");
-                          })()}
-                        </Text>
-                      )}
-
-                      {/* One-word code in royal blue parentheses */}
-                      {scriptPlay.play?.one_word_play && (
-                        <Text
-                          style={{
-                            fontSize: 10,
-                            fontWeight: "bold",
-                            color: "#4169E1", // Royal blue
-                            marginRight: 4,
-                          }}
-                        >
-                          ({scriptPlay.play.one_word_play})
-                        </Text>
+                        <>
+                          {scriptPlay.play.one_word_play ? (
+                            <>
+                              {/* Show one-word play prominently */}
+                              <Text
+                                style={{
+                                  fontSize: 10,
+                                  fontWeight: "bold",
+                                  color: colorTokens.navy[900],
+                                  marginRight: 4,
+                                }}
+                              >
+                                {scriptPlay.play.one_word_play.toUpperCase()}
+                              </Text>
+                              {/* Full concatenated name in italics/parentheses */}
+                              <Text
+                                style={{
+                                  fontSize: 8,
+                                  fontStyle: "italic",
+                                  color: colorTokens.gray[600],
+                                  marginRight: 4,
+                                }}
+                              >
+                                (
+                                {(() => {
+                                  // Build full name from formation parts
+                                  const parts: string[] = [];
+                                  if (scriptPlay.play.formation)
+                                    parts.push(scriptPlay.play.formation);
+                                  if (scriptPlay.play.f_dir)
+                                    parts.push(scriptPlay.play.f_dir);
+                                  if (scriptPlay.play.shift)
+                                    parts.push(scriptPlay.play.shift);
+                                  if (scriptPlay.play.motion)
+                                    parts.push(scriptPlay.play.motion);
+                                  if (scriptPlay.play.play_name)
+                                    parts.push(scriptPlay.play.play_name);
+                                  if (scriptPlay.play.p_dir)
+                                    parts.push(scriptPlay.play.p_dir);
+                                  if (scriptPlay.play.p_type)
+                                    parts.push(scriptPlay.play.p_type);
+                                  return parts.length > 0
+                                    ? parts.join(" ")
+                                    : scriptPlay.play.play_name || "";
+                                })()}
+                                )
+                              </Text>
+                            </>
+                          ) : (
+                            <Text
+                              style={{
+                                fontSize: 10,
+                                fontWeight: "bold",
+                                color: colorTokens.navy[900],
+                                marginRight: 4,
+                              }}
+                            >
+                              {getDisplayName(scriptPlay.play, false)}
+                            </Text>
+                          )}
+                        </>
                       )}
 
                       {/* Play Type Badge */}
-                      {scriptPlay.play?.play_type && (
+                      {scriptPlay.play?.p_type && (
                         <View
                           style={{
-                            backgroundColor: colorTokens.purple[100],
+                            backgroundColor: colorTokens.blue[100],
                             paddingHorizontal: 4,
                             paddingVertical: 2,
                             borderRadius: 2,
                             marginRight: 4,
+                            borderWidth: 1,
+                            borderStyle: "solid",
+                            borderColor: colorTokens.blue[300],
                           }}
                         >
                           <Text
                             style={{
                               fontSize: 7,
-                              color: colorTokens.purple[800],
+                              fontWeight: "bold",
+                              color: colorTokens.blue[800],
                             }}
                           >
-                            {scriptPlay.play.play_type}
+                            {scriptPlay.play.p_type}
                           </Text>
                         </View>
                       )}
@@ -452,7 +464,8 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
                           <Text
                             style={{
                               fontSize: 7,
-                              color: colorTokens.amber[700],
+                              color: "#F59E0B", // Energetic amber/orange
+                              fontWeight: "bold",
                               marginRight: 4,
                             }}
                           >
@@ -476,7 +489,7 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
                           <Text
                             style={{
                               fontSize: 7,
-                              color: colorTokens.amber[800],
+                              color: "#10B981", // Energetic jade/green
                               fontWeight: "bold",
                               marginRight: 4,
                             }}
@@ -501,7 +514,8 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
                           <Text
                             style={{
                               fontSize: 7,
-                              color: colorTokens.amber[600],
+                              color: "#14B8A6", // Energetic teal
+                              fontWeight: "bold",
                               marginRight: 4,
                             }}
                           >
@@ -525,7 +539,7 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
                           <Text
                             style={{
                               fontSize: 7,
-                              color: colorTokens.red[700],
+                              color: "#EF4444", // Energetic red
                               fontWeight: "bold",
                               marginRight: 4,
                             }}
@@ -550,7 +564,8 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
                           <Text
                             style={{
                               fontSize: 7,
-                              color: colorTokens.red[600],
+                              color: "#DC2626", // Energetic red-600
+                              fontWeight: "bold",
                               marginRight: 4,
                             }}
                           >
@@ -1018,19 +1033,6 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
                 )}
               </View>
             ))}
-        </View>
-
-        {/* Summary */}
-        <View style={styles.summary}>
-          <Text style={styles.summaryTitle}>Practice Summary</Text>
-          <Text style={styles.summaryText}>Total Plays: {totalPlays}</Text>
-          <Text style={styles.summaryText}>
-            Total Repetitions: {totalRepetitions}
-          </Text>
-          <Text style={styles.summaryText}>
-            Average Reps per Play:{" "}
-            {totalPlays > 0 ? Math.round(totalRepetitions / totalPlays) : 0}
-          </Text>
         </View>
       </Page>
     </Document>

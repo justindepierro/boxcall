@@ -1,11 +1,11 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button/Button";
+import { Typography } from "../components/design-system";
 import Card from "../components/ui/Card/Card";
 import Icon from "../components/ui/Icon/Icon";
-import { PageLayout } from "../components/layout/PageLayout";
-import { Aurora } from "../components/ui/Aurora";
 
-export default function PlannerPage() {
+const PlannerPage: React.FC = React.memo(function PlannerPage() {
   const navigate = useNavigate();
 
   // Mock progress data - in real app this would come from state/API
@@ -22,12 +22,16 @@ export default function PlannerPage() {
   const progressPercentage = (completedTasks / totalTasks) * 100;
 
   return (
-    <Aurora variant="minimal" fullHeight>
-      <PageLayout
-        title="Weekly Planning Dashboard"
-        subtitle="Systematic planning tools for coaches to organize their week"
-        variant="dashboard"
-      >
+    <div className="min-h-screen bg-secondary p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <header className="mb-6">
+          <Typography variant="headline-lg" className="text-primary mb-1">
+            Weekly Planning Dashboard
+          </Typography>
+          <Typography variant="body" className="text-secondary">
+            Systematic planning tools for coaches to organize their week
+          </Typography>
+        </header>
         {/* Progress Bar */}
         <div className="bg-primary rounded-lg p-lg shadow-sm mb-lg">
           <div className="flex items-center justify-between mb-md">
@@ -247,7 +251,11 @@ export default function PlannerPage() {
             </div>
           </Card>
         </div>
-      </PageLayout>
-    </Aurora>
+      </div>
+    </div>
   );
-}
+});
+
+PlannerPage.displayName = "PlannerPage";
+
+export default PlannerPage;

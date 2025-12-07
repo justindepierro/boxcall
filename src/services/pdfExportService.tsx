@@ -24,7 +24,7 @@ export class PDFExportService {
    */
   static async exportPracticeScript(
     script: PracticeScript,
-    format: PDFFormat = "detailed"
+    format: PDFFormat = "ultra-compact"
   ): Promise<void> {
     try {
       const { pdf, PracticeScriptPDF } = await this.loadPDFDependencies();
@@ -44,10 +44,18 @@ export class PDFExportService {
             : "";
       link.download = `${(script.name ?? "practice_script").replace(/[^a-z0-9]/gi, "_").toLowerCase()}${formatSuffix}_practice_script.pdf`;
 
+      // Prevent browser prompt - force direct download
+      link.style.display = "none";
+      link.target = "_self";
+
       // Trigger download
       document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link);
+
+      // Clean up immediately
+      setTimeout(() => {
+        document.body.removeChild(link);
+      }, 100);
 
       // Clean up
       URL.revokeObjectURL(url);
@@ -62,7 +70,7 @@ export class PDFExportService {
    */
   static async generatePracticeScriptPDF(
     script: PracticeScript,
-    format: PDFFormat = "detailed"
+    format: PDFFormat = "ultra-compact"
   ): Promise<Blob> {
     try {
       const { pdf, PracticeScriptPDF } = await this.loadPDFDependencies();

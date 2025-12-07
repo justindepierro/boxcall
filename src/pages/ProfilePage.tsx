@@ -5,10 +5,8 @@ import { Card } from "../components/ui/Card";
 import { Input } from "../components/ui/Input";
 import { Typography } from "../components/design-system/Typography";
 import { supabase } from "../lib/supabase";
-import { PageLayout } from "../components/layout/PageLayout";
 import { LoadingScreen } from "../components/ui/LoadingScreen";
 import { MultiBadgeDisplay } from "../components/ui/MultiBadgeDisplay";
-import { Aurora } from "../components/ui/Aurora";
 import { AvatarEditor } from "../components/profile/AvatarEditor";
 import {
   Camera,
@@ -37,7 +35,7 @@ const ValidationError: React.FC<{ error?: string }> = ({ error }) => {
  * User profile management and settings page.
  * Allows users to update their personal information and preferences.
  */
-export const ProfilePage: React.FC = () => {
+const ProfilePage: React.FC = () => {
   const profile = useAuthProfile();
   const loading = useAuthLoading();
   const fetchUserProfile = useAuth((s) => s.fetchUserProfile);
@@ -507,29 +505,35 @@ export const ProfilePage: React.FC = () => {
   }
   if (!profile) {
     return (
-      <PageLayout>
-        <div className="text-center py-2xl">
-          <Typography
-            variant="headline-md"
-            as="h1"
-            className="text-error mb-md"
-          >
-            Profile Not Found
-          </Typography>
-          <p className="text-secondary">
-            Unable to load your profile information.
-          </p>
+      <div className="min-h-screen bg-secondary p-4 md:p-6">
+        <div className="max-w-7xl mx-auto space-y-6">
+          <div className="text-center py-2xl">
+            <Typography
+              variant="headline-md"
+              as="h1"
+              className="text-error mb-md"
+            >
+              Profile Not Found
+            </Typography>
+            <p className="text-secondary">
+              Unable to load your profile information.
+            </p>
+          </div>
         </div>
-      </PageLayout>
+      </div>
     );
   }
   return (
-    <Aurora variant="shell" fullHeight>
-      <PageLayout
-        title="My Profile"
-        subtitle="Manage your account information and preferences"
-        variant="form"
-      >
+    <div className="min-h-screen bg-secondary p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <header className="mb-6">
+          <Typography variant="headline-lg" className="text-primary mb-1">
+            My Profile
+          </Typography>
+          <Typography variant="body" className="text-secondary">
+            Manage your account information and preferences
+          </Typography>
+        </header>
         {/* Message Display */}
         {message && (
           <div
@@ -1562,7 +1566,11 @@ export const ProfilePage: React.FC = () => {
             />
           </>
         )}
-      </PageLayout>
-    </Aurora>
+      </div>
+    </div>
   );
 };
+
+ProfilePage.displayName = "ProfilePage";
+
+export default React.memo(ProfilePage);

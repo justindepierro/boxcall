@@ -6,7 +6,6 @@ import React, {
   lazy,
   Suspense,
 } from "react";
-import { PageLayout } from "../components/layout/PageLayout";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../app/auth-store";
@@ -26,8 +25,6 @@ import { useTeamActivity } from "../hooks/useTeamActivity";
 import { supabase } from "../lib/supabase";
 import { ROUTES } from "../routes/paths";
 import { useRoles } from "../hooks/useRoles";
-import { Aurora } from "../components/ui/Aurora";
-
 import { LoadingScreen } from "../components/ui/LoadingScreen";
 
 // Collaboration components and provider
@@ -283,11 +280,8 @@ const TeamBulletin: React.FC = React.memo(() => {
   if (!teamId) {
     if (!hasAnyTeam) {
       return (
-        <Aurora variant="shell" fullHeight>
-          <PageLayout
-            title="Team Bulletin"
-            subtitle="Create or join a team to unlock your bulletin."
-          >
+        <div className="min-h-screen bg-secondary p-4 md:p-6">
+          <div className="max-w-7xl mx-auto space-y-6">
             <div className="flex items-center justify-center min-h-96">
               <div className="text-center max-w-md px-4">
                 <Typography variant="headline-lg" className="mb-3">
@@ -308,17 +302,14 @@ const TeamBulletin: React.FC = React.memo(() => {
                 </div>
               </div>
             </div>
-          </PageLayout>
-        </Aurora>
+          </div>
+        </div>
       );
     }
 
     return (
-      <Aurora variant="shell" fullHeight>
-        <PageLayout
-          title="Team Bulletin"
-          subtitle="Choose a team from the switcher to view its bulletin."
-        >
+      <div className="min-h-screen bg-secondary p-4 md:p-6">
+        <div className="max-w-7xl mx-auto space-y-6">
           <div className="flex items-center justify-center min-h-96">
             <div className="text-center max-w-md px-4">
               <Typography variant="headline-lg" className="mb-4">
@@ -330,15 +321,15 @@ const TeamBulletin: React.FC = React.memo(() => {
               </Typography>
             </div>
           </div>
-        </PageLayout>
-      </Aurora>
+        </div>
+      </div>
     );
   }
 
   if (!teamData) {
     return (
-      <Aurora variant="shell" fullHeight>
-        <div className="py-6">
+      <div className="min-h-screen bg-secondary p-4 md:p-6">
+        <div className="max-w-7xl mx-auto space-y-6">
           <div className="container-content text-center">
             <div className="bg-primary elevation-card border-muted rounded-lg p-8">
               <LogoIcon size="xl" color="brand" className="mx-auto mb-4" />
@@ -377,17 +368,13 @@ const TeamBulletin: React.FC = React.memo(() => {
             </div>
           </div>
         </div>
-      </Aurora>
+      </div>
     );
   }
 
   return (
-    <Aurora variant="shell" fullHeight>
-      <PageLayout
-        title={`${teamData.name} Bulletin`}
-        subtitle={`Season ${teamData.season} • ${teamData.memberCount} members`}
-        variant="dashboard"
-      >
+    <div className="min-h-screen bg-secondary p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* Skip link for keyboard users */}
         <a
           href="#main-content"
@@ -395,6 +382,56 @@ const TeamBulletin: React.FC = React.memo(() => {
         >
           Skip to main content
         </a>
+        {/* Clean Header Section */}
+        <header className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <Typography variant="headline-lg" className="text-primary mb-1">
+                {teamData.name} Bulletin
+              </Typography>
+              <Typography variant="body" className="text-secondary">
+                Season {teamData.season} • {teamData.memberCount} members
+              </Typography>
+            </div>
+          </div>
+
+          {/* Compact Stats Bar */}
+          <div className="flex items-center gap-4 text-sm flex-wrap">
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-card rounded-full shadow-sm">
+              <Icon name="message" size="sm" className="text-jade-600" />
+              <span className="font-semibold text-primary">
+                {activityStats.loading ? "..." : activityStats.newPostsToday}{" "}
+                <span className="font-normal text-secondary">posts today</span>
+              </span>
+            </div>
+            {activityStats.onlineMembers > 0 && (
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-card rounded-full shadow-sm">
+                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-sm shadow-emerald-500/50" />
+                <span className="font-semibold text-primary">
+                  {activityStats.onlineMembers}{" "}
+                  <span className="font-normal text-secondary">online</span>
+                </span>
+              </div>
+            )}
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-card rounded-full shadow-sm">
+              <Icon name="users" size="sm" className="text-blue-600" />
+              <span className="font-semibold text-primary">
+                {teamData?.memberCount || 0}{" "}
+                <span className="font-normal text-secondary">members</span>
+              </span>
+            </div>
+            <button
+              onClick={() => setIsSeasonStatsModalOpen(true)}
+              className="ml-auto flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-full shadow-md shadow-purple-500/30 hover:shadow-lg hover:shadow-purple-500/40 hover:scale-105 transition-all duration-200"
+            >
+              <Icon name="trending-up" size="sm" className="text-white" />
+              <span className="font-bold text-sm">
+                {teamData.record.wins}-{teamData.record.losses}
+              </span>
+            </button>
+          </div>
+        </header>
+
         <CollaborationProvider
           teamId={teamId}
           dashboardId="team-bulletin"
@@ -413,269 +450,205 @@ const TeamBulletin: React.FC = React.memo(() => {
             id="main-content"
             role="main"
             aria-labelledby="team-dashboard-heading"
-            className="pb-8"
           >
-            {/* Modern Clean Header - No Heavy Hero Section */}
-            <div className="bg-gradient-to-r from-jade-50 to-blue-50 dark:from-slate-800 dark:to-slate-900 border-b border-muted">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                <TeamBulletinHeader {...teamHeaderProps} />
+            {/* Main Social Feed Layout - Three Column */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              {/* Left Sidebar - Compact Widgets (Hidden on Mobile) */}
+              <aside className="hidden lg:block lg:col-span-3 space-y-4">
+                <Card className="p-4 shadow-md hover:shadow-lg transition-all duration-300">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Icon name="zap" size="sm" className="text-jade-600" />
+                    <Typography variant="headline-sm" className="font-semibold">
+                      Quick Actions
+                    </Typography>
+                  </div>
+                  <TeamQuickActions teamId={teamId || ""} userRole={userRole} />
+                </Card>
 
-                {/* Compact Stats Bar - Instagram/Twitter Style */}
-                <div className="mt-4 flex items-center gap-4 text-sm flex-wrap">
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full shadow-sm">
-                    <Icon name="message" size="sm" className="text-jade-600" />
-                    <span className="font-semibold text-primary">
-                      {activityStats.loading
-                        ? "..."
-                        : activityStats.newPostsToday}{" "}
-                      <span className="font-normal text-secondary">
-                        posts today
-                      </span>
-                    </span>
-                  </div>
-                  {activityStats.onlineMembers > 0 && (
-                    <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full shadow-sm">
-                      <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-sm shadow-emerald-500/50" />
-                      <span className="font-semibold text-primary">
-                        {activityStats.onlineMembers}{" "}
-                        <span className="font-normal text-secondary">
-                          online
-                        </span>
-                      </span>
+                <Card className="p-4 shadow-md hover:shadow-lg transition-all duration-300">
+                  <button
+                    onClick={() => setIsTrophyCaseModalOpen(true)}
+                    className="group w-full text-left hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-100 rounded-lg p-3 transition-all duration-200 hover:scale-[1.02]"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon
+                        name="award"
+                        size="md"
+                        className="text-warning-600 group-hover:scale-110 transition-transform"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <Typography
+                          variant="body-sm"
+                          className="font-semibold truncate"
+                        >
+                          Trophy Case
+                        </Typography>
+                        <Typography
+                          variant="body-xs"
+                          color="muted"
+                          className="truncate"
+                        >
+                          View achievements
+                        </Typography>
+                      </div>
                     </div>
-                  )}
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full shadow-sm">
-                    <Icon name="users" size="sm" className="text-blue-600" />
-                    <span className="font-semibold text-primary">
-                      {teamData?.memberCount || 0}{" "}
-                      <span className="font-normal text-secondary">
-                        members
-                      </span>
+                  </button>
+
+                  <button
+                    onClick={() => setIsTeamGoalsModalOpen(true)}
+                    className="group w-full text-left hover:bg-gradient-to-r hover:from-emerald-50 hover:to-emerald-100 rounded-lg p-3 transition-all duration-200 hover:scale-[1.02] mt-2"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon
+                        name="target"
+                        size="md"
+                        className="text-emerald-600 group-hover:scale-110 transition-transform"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <Typography
+                          variant="body-sm"
+                          className="font-semibold truncate"
+                        >
+                          Team Goals
+                        </Typography>
+                        <Typography
+                          variant="body-xs"
+                          color="muted"
+                          className="truncate"
+                        >
+                          Track progress
+                        </Typography>
+                      </div>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => setIsTeamVotesModalOpen(true)}
+                    className="group w-full text-left hover:bg-gradient-to-r hover:from-indigo-50 hover:to-indigo-100 rounded-lg p-3 transition-all duration-200 hover:scale-[1.02] mt-2"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon
+                        name="message"
+                        size="md"
+                        className="text-indigo-600 group-hover:scale-110 transition-transform"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <Typography
+                          variant="body-sm"
+                          className="font-semibold truncate"
+                        >
+                          Team Votes
+                        </Typography>
+                        <Typography
+                          variant="body-xs"
+                          color="muted"
+                          className="truncate"
+                        >
+                          Voice your opinion
+                        </Typography>
+                      </div>
+                    </div>
+                  </button>
+                </Card>
+              </aside>
+
+              {/* Center Feed - PROMINENT POSITION */}
+              <section className="lg:col-span-6 space-y-4">
+                {/* Mobile Quick Actions Bar - Swipeable Icons */}
+                <div className="lg:hidden flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                  <button
+                    onClick={() => setIsTrophyCaseModalOpen(true)}
+                    className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-primary rounded-xl shadow-md shadow-orange-500/10 hover:shadow-lg hover:shadow-orange-500/20 hover:scale-105 transition-all duration-200"
+                  >
+                    <Icon name="award" size="sm" className="text-warning-600" />
+                    <span className="text-xs font-medium text-secondary">
+                      Trophies
                     </span>
-                  </div>
+                  </button>
+                  <button
+                    onClick={() => setIsTeamGoalsModalOpen(true)}
+                    className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-primary rounded-xl shadow-md shadow-emerald-500/10 hover:shadow-lg hover:shadow-emerald-500/20 hover:scale-105 transition-all duration-200"
+                  >
+                    <Icon
+                      name="target"
+                      size="sm"
+                      className="text-emerald-600"
+                    />
+                    <span className="text-xs font-medium text-secondary">
+                      Goals
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => setIsTeamVotesModalOpen(true)}
+                    className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-primary rounded-xl shadow-md hover:shadow-lg transition-all"
+                  >
+                    <Icon
+                      name="message"
+                      size="sm"
+                      className="text-indigo-600"
+                    />
+                    <span className="text-xs font-medium text-secondary">
+                      Votes
+                    </span>
+                  </button>
                   <button
                     onClick={() => setIsSeasonStatsModalOpen(true)}
-                    className="ml-auto flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-full shadow-md shadow-purple-500/30 hover:shadow-lg hover:shadow-purple-500/40 hover:scale-105 transition-all duration-200"
+                    className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-primary rounded-xl shadow-md hover:shadow-lg transition-all"
                   >
-                    <Icon name="trending-up" size="sm" className="text-white" />
-                    <span className="font-bold text-sm">
-                      {teamData.record.wins}-{teamData.record.losses}
+                    <Icon
+                      name="trending-up"
+                      size="sm"
+                      className="text-purple-600"
+                    />
+                    <span className="text-xs font-medium text-secondary">
+                      Stats
                     </span>
                   </button>
                 </div>
-              </div>
-            </div>
 
-            {/* Main Social Feed Layout - Three Column */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                {/* Left Sidebar - Compact Widgets (Hidden on Mobile) */}
-                <aside className="hidden lg:block lg:col-span-3 space-y-4">
-                  <Card className="p-4 shadow-md hover:shadow-lg transition-all duration-300">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Icon name="zap" size="sm" className="text-jade-600" />
-                      <Typography
-                        variant="headline-sm"
-                        className="font-semibold"
-                      >
-                        Quick Actions
-                      </Typography>
+                {/* Feed takes center stage - No distractions */}
+                <AnnouncementsList teamId={teamId || ""} />
+              </section>
+
+              {/* Right Sidebar - Calendar & Roster */}
+              <aside className="lg:col-span-3 space-y-4">
+                <div className="sticky top-6 space-y-4">
+                  <TeamCalendar teamId={teamId || ""} />
+
+                  <Card className="p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <Icon
+                          name="users"
+                          size="sm"
+                          className="text-blue-600"
+                        />
+                        <Typography
+                          variant="headline-sm"
+                          className="font-semibold"
+                        >
+                          Roster
+                        </Typography>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Typography variant="body-xs" color="muted">
+                          {teamData?.memberCount || 0}
+                        </Typography>
+                        <Button
+                          variant="ghost"
+                          size="xs"
+                          onClick={() => navigate(`/team/${teamId}/edit`)}
+                          className="gap-1"
+                        >
+                          <Icon name="edit" size="xs" />
+                          Edit
+                        </Button>
+                      </div>
                     </div>
-                    <TeamQuickActions
-                      teamId={teamId || ""}
-                      userRole={userRole}
-                    />
+                    <PlayerRosterContainer teamId={teamId || ""} compact />
                   </Card>
-
-                  <Card className="p-4 shadow-md hover:shadow-lg transition-all duration-300">
-                    <button
-                      onClick={() => setIsTrophyCaseModalOpen(true)}
-                      className="group w-full text-left hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-100 rounded-lg p-3 transition-all duration-200 hover:scale-[1.02]"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Icon
-                          name="award"
-                          size="md"
-                          className="text-warning-600 group-hover:scale-110 transition-transform"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <Typography
-                            variant="body-sm"
-                            className="font-semibold truncate"
-                          >
-                            Trophy Case
-                          </Typography>
-                          <Typography
-                            variant="body-xs"
-                            color="muted"
-                            className="truncate"
-                          >
-                            View achievements
-                          </Typography>
-                        </div>
-                      </div>
-                    </button>
-
-                    <button
-                      onClick={() => setIsTeamGoalsModalOpen(true)}
-                      className="group w-full text-left hover:bg-gradient-to-r hover:from-emerald-50 hover:to-emerald-100 rounded-lg p-3 transition-all duration-200 hover:scale-[1.02] mt-2"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Icon
-                          name="target"
-                          size="md"
-                          className="text-emerald-600 group-hover:scale-110 transition-transform"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <Typography
-                            variant="body-sm"
-                            className="font-semibold truncate"
-                          >
-                            Team Goals
-                          </Typography>
-                          <Typography
-                            variant="body-xs"
-                            color="muted"
-                            className="truncate"
-                          >
-                            Track progress
-                          </Typography>
-                        </div>
-                      </div>
-                    </button>
-
-                    <button
-                      onClick={() => setIsTeamVotesModalOpen(true)}
-                      className="group w-full text-left hover:bg-gradient-to-r hover:from-indigo-50 hover:to-indigo-100 rounded-lg p-3 transition-all duration-200 hover:scale-[1.02] mt-2"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Icon
-                          name="message"
-                          size="md"
-                          className="text-indigo-600 group-hover:scale-110 transition-transform"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <Typography
-                            variant="body-sm"
-                            className="font-semibold truncate"
-                          >
-                            Team Votes
-                          </Typography>
-                          <Typography
-                            variant="body-xs"
-                            color="muted"
-                            className="truncate"
-                          >
-                            Voice your opinion
-                          </Typography>
-                        </div>
-                      </div>
-                    </button>
-                  </Card>
-                </aside>
-
-                {/* Center Feed - PROMINENT POSITION */}
-                <main className="lg:col-span-6 space-y-4">
-                  {/* Mobile Quick Actions Bar - Swipeable Icons */}
-                  <div className="lg:hidden flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                    <button
-                      onClick={() => setIsTrophyCaseModalOpen(true)}
-                      className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-primary rounded-xl shadow-md shadow-orange-500/10 hover:shadow-lg hover:shadow-orange-500/20 hover:scale-105 transition-all duration-200"
-                    >
-                      <Icon
-                        name="award"
-                        size="sm"
-                        className="text-warning-600"
-                      />
-                      <span className="text-xs font-medium text-secondary">
-                        Trophies
-                      </span>
-                    </button>
-                    <button
-                      onClick={() => setIsTeamGoalsModalOpen(true)}
-                      className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-primary rounded-xl shadow-md shadow-emerald-500/10 hover:shadow-lg hover:shadow-emerald-500/20 hover:scale-105 transition-all duration-200"
-                    >
-                      <Icon
-                        name="target"
-                        size="sm"
-                        className="text-emerald-600"
-                      />
-                      <span className="text-xs font-medium text-secondary">
-                        Goals
-                      </span>
-                    </button>
-                    <button
-                      onClick={() => setIsTeamVotesModalOpen(true)}
-                      className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-primary rounded-xl shadow-md hover:shadow-lg transition-all"
-                    >
-                      <Icon
-                        name="message"
-                        size="sm"
-                        className="text-indigo-600"
-                      />
-                      <span className="text-xs font-medium text-secondary">
-                        Votes
-                      </span>
-                    </button>
-                    <button
-                      onClick={() => setIsSeasonStatsModalOpen(true)}
-                      className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-primary rounded-xl shadow-md hover:shadow-lg transition-all"
-                    >
-                      <Icon
-                        name="trending-up"
-                        size="sm"
-                        className="text-purple-600"
-                      />
-                      <span className="text-xs font-medium text-secondary">
-                        Stats
-                      </span>
-                    </button>
-                  </div>
-
-                  {/* Feed takes center stage - No distractions */}
-                  <AnnouncementsList teamId={teamId || ""} />
-                </main>
-
-                {/* Right Sidebar - Calendar & Roster */}
-                <aside className="lg:col-span-3 space-y-4">
-                  <div className="sticky top-6 space-y-4">
-                    <TeamCalendar teamId={teamId || ""} />
-
-                    <Card className="p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2">
-                          <Icon
-                            name="users"
-                            size="sm"
-                            className="text-blue-600"
-                          />
-                          <Typography
-                            variant="headline-sm"
-                            className="font-semibold"
-                          >
-                            Roster
-                          </Typography>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Typography variant="body-xs" color="muted">
-                            {teamData?.memberCount || 0}
-                          </Typography>
-                          <Button
-                            variant="ghost"
-                            size="xs"
-                            onClick={() => navigate(`/team/${teamId}/edit`)}
-                            className="gap-1"
-                          >
-                            <Icon name="edit" size="xs" />
-                            Edit
-                          </Button>
-                        </div>
-                      </div>
-                      <PlayerRosterContainer teamId={teamId || ""} compact />
-                    </Card>
-                  </div>
-                </aside>
-              </div>
+                </div>
+              </aside>
             </div>
           </main>
         </CollaborationProvider>
@@ -725,8 +698,8 @@ const TeamBulletin: React.FC = React.memo(() => {
             }
           />
         </Suspense>
-      </PageLayout>
-    </Aurora>
+      </div>
+    </div>
   );
 });
 

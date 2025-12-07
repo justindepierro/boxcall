@@ -1,13 +1,12 @@
 import { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { PageLayout } from "../components/layout/PageLayout";
+import React from "react";
 import { Card } from "../components/ui/Card";
 import { Typography } from "../components/design-system";
 import { AuroraTile } from "../components/ui/AuroraTile";
-import { Aurora } from "../components/ui/Aurora";
 
-const TemplatesPage: React.FC = () => {
+const TemplatesPage: React.FC = React.memo(function TemplatesPage() {
   const navigate = useNavigate();
 
   const scrollToOverview = useCallback(() => {
@@ -94,12 +93,16 @@ const TemplatesPage: React.FC = () => {
   );
 
   return (
-    <Aurora variant="shell" fullHeight>
-      <PageLayout
-        title="Templates"
-        subtitle="Reusable practice, planning, and communication templates."
-        variant="detail"
-      >
+    <div className="min-h-screen bg-secondary p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <header className="mb-6">
+          <Typography variant="headline-lg" className="text-primary mb-1">
+            Templates
+          </Typography>
+          <Typography variant="body" className="text-secondary">
+            Reusable practice, planning, and communication templates.
+          </Typography>
+        </header>
         <div className="mb-8">
           <div className="rounded-xl bg-primary p-5 shadow-lg backdrop-blur-sm sm:p-6 xl:p-7">
             <div className="mb-6">
@@ -131,17 +134,11 @@ const TemplatesPage: React.FC = () => {
             </div>
           </div>
         </div>
-
-        <Card className="p-6" id="templates-overview">
-          <Typography variant="body-lg">
-            We're building a library of ready-made templates for playbooks,
-            practices, and team communication. Stay tuned for updates, and let
-            us know which templates would help your staff most.
-          </Typography>
-        </Card>
-      </PageLayout>
-    </Aurora>
+      </div>
+    </div>
   );
-};
+});
+
+TemplatesPage.displayName = "TemplatesPage";
 
 export default TemplatesPage;

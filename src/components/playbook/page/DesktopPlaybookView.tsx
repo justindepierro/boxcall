@@ -9,8 +9,10 @@ import { Card } from "../../ui/Card";
 import { AdvancedFilters } from "../AdvancedFilters";
 import { PlaybookStatsDashboard } from "../PlaybookStatsDashboard";
 import { BulkActionsToolbar } from "../BulkActionsToolbar";
+import { PracticeScriptList } from "../PracticeScriptList";
 import type { Play } from "../../../types/play";
 import type { PlaybookState } from "../../../contexts/PlaybookContext";
+import type { PracticeScript } from "../../../services/practiceService";
 
 interface DesktopPlaybookViewProps {
   // State
@@ -38,7 +40,7 @@ interface DesktopPlaybookViewProps {
   handleAddToPracticeScript: (play: Play) => void;
   handleAddToGamePlan: (play: Play) => void;
   handlePlayCountChange: (change: number) => void;
-  handleOpenPracticeScriptBuilder: () => void;
+  handleOpenPracticeScriptBuilder: (script?: PracticeScript) => void;
   handleFiltersChange: (filters: any) => void;
   handleClearSelection: () => void;
   handleBulkAction: (action: string) => void;
@@ -219,7 +221,11 @@ export function DesktopPlaybookView({
 
                   {/* Practice Scripts List */}
                   {activeTeamId ? (
-                    <div>Practice Scripts List Component Here</div> // TODO: Import and use PracticeScriptList
+                    <PracticeScriptList
+                      teamId={activeTeamId}
+                      onEditScript={handleOpenPracticeScriptBuilder}
+                      onCreateNew={handleOpenPracticeScriptBuilder}
+                    />
                   ) : (
                     <div className="text-center py-8">
                       <Typography

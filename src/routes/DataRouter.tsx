@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   useNavigate,
   Navigate,
@@ -101,6 +101,15 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
   return <>{children}</>;
 };
 
+// Cleaner protected route helper without excessive nesting
+const ProtectedPage: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => (
+  <ProtectedRoute>
+    <AuthenticatedLayout>{children}</AuthenticatedLayout>
+  </ProtectedRoute>
+);
+
 // Authenticated layout with sidebar and global search
 const AuthenticatedLayout: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -136,106 +145,29 @@ export const DataRouterApp: React.FC = () => {
         />
 
         {/* Public routes */}
-        <Route
-          path="/login"
-          element={
-            <Suspense fallback={<RouteLoadingSpinner />}>
-              <LazyLoginPage />
-            </Suspense>
-          }
-        />
+        <Route path="/login" element={<LazyLoginPage />} />
 
         {/* Health check API routes - must be public for monitoring */}
-        <Route
-          path="/health"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <LazyHealthCheckPage />
-            </Suspense>
-          }
-        />
+        <Route path="/health" element={<LazyHealthCheckPage />} />
 
-        <Route
-          path="/ready"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <LazyReadinessCheckPage />
-            </Suspense>
-          }
-        />
+        <Route path="/ready" element={<LazyReadinessCheckPage />} />
 
-        <Route
-          path="/live"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <LazyLivenessCheckPage />
-            </Suspense>
-          }
-        />
+        <Route path="/live" element={<LazyLivenessCheckPage />} />
 
-        <Route
-          path="/register"
-          element={
-            <Suspense fallback={<RouteLoadingSpinner />}>
-              <LazyCreateCoachAccount />
-            </Suspense>
-          }
-        />
+        <Route path="/register" element={<LazyCreateCoachAccount />} />
 
         {/* Invitation acceptance page - public route */}
-        <Route
-          path="/invite/accept"
-          element={
-            <Suspense fallback={<RouteLoadingSpinner />}>
-              <InvitationAcceptPage />
-            </Suspense>
-          }
-        />
+        <Route path="/invite/accept" element={<InvitationAcceptPage />} />
 
-        <Route
-          path="/about"
-          element={
-            <Suspense fallback={<RouteLoadingSpinner />}>
-              <LazyAboutPage />
-            </Suspense>
-          }
-        />
+        <Route path="/about" element={<LazyAboutPage />} />
 
-        <Route
-          path="/privacy"
-          element={
-            <Suspense fallback={<RouteLoadingSpinner />}>
-              <LazyPrivacyPolicyPage />
-            </Suspense>
-          }
-        />
+        <Route path="/privacy" element={<LazyPrivacyPolicyPage />} />
 
-        <Route
-          path="/terms"
-          element={
-            <Suspense fallback={<RouteLoadingSpinner />}>
-              <LazyTermsOfServicePage />
-            </Suspense>
-          }
-        />
+        <Route path="/terms" element={<LazyTermsOfServicePage />} />
 
-        <Route
-          path="/contact"
-          element={
-            <Suspense fallback={<RouteLoadingSpinner />}>
-              <LazyContactPage />
-            </Suspense>
-          }
-        />
+        <Route path="/contact" element={<LazyContactPage />} />
 
-        <Route
-          path="/design-system"
-          element={
-            <Suspense fallback={<RouteLoadingSpinner />}>
-              <LazyDesignSystemShowcase />
-            </Suspense>
-          }
-        />
+        <Route path="/design-system" element={<LazyDesignSystemShowcase />} />
 
         {/* Legacy redirects */}
         <Route path="/teams" element={<LegacyTeamBulletinRedirect />} />
@@ -245,333 +177,233 @@ export const DataRouterApp: React.FC = () => {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyDashboardPage />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyDashboardPage />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/profile"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyProfilePage />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyProfilePage />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/create-team"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyCreateTeam />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyCreateTeam />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/join-team"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyJoinTeam />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyJoinTeam />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/playbook"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <PlaybookProvider>
-                    <LazyPlaybookPage />
-                  </PlaybookProvider>
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <PlaybookProvider>
+                <LazyPlaybookPage />
+              </PlaybookProvider>
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/playbook/formation-mapper"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <PlaybookProvider>
-                    <LazyFormationMapperPage />
-                  </PlaybookProvider>
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <PlaybookProvider>
+                <LazyFormationMapperPage />
+              </PlaybookProvider>
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/playbook/formations"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <PlaybookProvider>
-                    <LazyFormationLibraryPage />
-                  </PlaybookProvider>
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <PlaybookProvider>
+                <LazyFormationLibraryPage />
+              </PlaybookProvider>
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/playbook/personnel"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <PlaybookProvider>
-                    <LazyPersonnelLibraryPage />
-                  </PlaybookProvider>
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <PlaybookProvider>
+                <LazyPersonnelLibraryPage />
+              </PlaybookProvider>
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/roster"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyRosterPage />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyRosterPage />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/roster/:playerId"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyPlayerDetailPage />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyPlayerDetailPage />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/practice-plans"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyPracticePlansPage />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyPracticePlansPage />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/game-plans"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyGamePlansPage />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyGamePlansPage />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/coach-management"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyCoachManagementPage />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyCoachManagementPage />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/player-dashboard"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyPlayerDashboardPage />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyPlayerDashboardPage />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/achievement-admin"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyAchievementAdminPage />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyAchievementAdminPage />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/superadmin/analytics-test"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazySuperAdminAnalyticsTestPage />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazySuperAdminAnalyticsTestPage />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/analytics"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyAnalyticsPage />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyAnalyticsPage />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/social"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazySocialFeaturesDemo />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazySocialFeaturesDemo />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/calendar"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyCalendarShellPage />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyCalendarShellPage />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/planner"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyPlannerPage />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyPlannerPage />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/boxcall"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyBoxCall />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyBoxCall />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/boxcall/practice/:scriptId"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyPracticeSession />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyPracticeSession />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/boxcall/game/:planId"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyGameSession />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyGameSession />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/awards"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyAwardsPage />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyAwardsPage />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/templates"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyTemplatesPage />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyTemplatesPage />
+            </ProtectedPage>
           }
         />
 
@@ -579,132 +411,92 @@ export const DataRouterApp: React.FC = () => {
         <Route
           path="/team/:teamId/bulletin"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyTeamBulletin />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyTeamBulletin />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/team/:teamId/settings"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyTeamSettings />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyTeamSettings />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/team/:teamId/announcements"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyTeamAnnouncements />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyTeamAnnouncements />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/team/:teamId/playbook"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <PlaybookProvider>
-                    <LazyPlaybookPage />
-                  </PlaybookProvider>
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <PlaybookProvider>
+                <LazyPlaybookPage />
+              </PlaybookProvider>
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/team/:teamId/practice-plans"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyPracticePlansPage />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyPracticePlansPage />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/team/:teamId/game-plans"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyGamePlansPage />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyGamePlansPage />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/team/:teamId/analytics"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyAnalyticsPage />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyAnalyticsPage />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/team/:teamId/social"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazySocialFeaturesDemo />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazySocialFeaturesDemo />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/team/:teamId/calendar"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyCalendarShellPage />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyCalendarShellPage />
+            </ProtectedPage>
           }
         />
 
         <Route
           path="/team/:teamId/planner"
           element={
-            <ProtectedRoute>
-              <AuthenticatedLayout>
-                <Suspense fallback={<RouteLoadingSpinner />}>
-                  <LazyPlannerPage />
-                </Suspense>
-              </AuthenticatedLayout>
-            </ProtectedRoute>
+            <ProtectedPage>
+              <LazyPlannerPage />
+            </ProtectedPage>
           }
         />
 

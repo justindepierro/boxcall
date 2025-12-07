@@ -9,8 +9,6 @@ import { StaffManagement } from "../components/team/StaffManagement";
 import { FamilyPermissionsSettings } from "../components/team/FamilyPermissionsSettings";
 import type { FamilyPermissions } from "../components/team/FamilyPermissionsSettings";
 import { getActiveTeamId } from "../utils/activeTeam";
-import { PageLayout } from "../components/layout/PageLayout";
-import { Aurora } from "../components/ui/Aurora";
 
 /**
  * TeamSettings - Team configuration and management
@@ -22,7 +20,7 @@ import { Aurora } from "../components/ui/Aurora";
  * - Team preferences and settings
  * - Integration configurations
  */
-export const TeamSettings: React.FC = () => {
+const TeamSettings: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"overview" | "staff" | "settings">(
     "overview"
@@ -38,11 +36,17 @@ export const TeamSettings: React.FC = () => {
   ];
 
   return (
-    <Aurora variant="shell" fullHeight>
-      <PageLayout
-        title="Team Settings"
-        subtitle="Manage your team configuration and staff"
-      >
+    <div className="min-h-screen bg-secondary p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <header className="mb-6">
+          <Typography variant="headline-lg" className="text-primary mb-1">
+            Team Settings
+          </Typography>
+          <Typography variant="body" className="text-secondary">
+            Manage your team configuration and staff
+          </Typography>
+        </header>
+
         {/* Breadcrumb Navigation */}
         <Breadcrumb
           items={[
@@ -211,9 +215,11 @@ export const TeamSettings: React.FC = () => {
             </div>
           )}
         </div>
-      </PageLayout>
-    </Aurora>
+      </div>
+    </div>
   );
 };
 
-export default TeamSettings;
+TeamSettings.displayName = "TeamSettings";
+
+export default React.memo(TeamSettings);

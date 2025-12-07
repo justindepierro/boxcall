@@ -1,4 +1,4 @@
-import {
+import React, {
   useCallback,
   useEffect,
   useMemo,
@@ -25,9 +25,7 @@ const ImportPracticeScriptsModal = lazy(() =>
     })
   )
 );
-import { PageLayout } from "../components/layout/PageLayout";
 import { AuroraTile } from "../components/ui/AuroraTile";
-import { Aurora } from "../components/ui/Aurora";
 import { PracticeService } from "../services/practiceService";
 import { useAuth } from "../app/auth-store";
 import { useToast } from "../hooks/useToast";
@@ -39,7 +37,7 @@ import {
 
 import type { PracticeScript } from "../services/practiceService";
 
-export default function PracticePlansPage() {
+const PracticePlansPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const toast = useToast();
@@ -85,6 +83,7 @@ export default function PracticePlansPage() {
   }, [loadPracticeScripts]);
 
   const handleCreateScript = useCallback(() => {
+    console.log("Create script clicked - opening modal");
     setEditingScript(undefined);
     setShowModal(true);
   }, []);
@@ -421,13 +420,16 @@ export default function PracticePlansPage() {
   );
 
   return (
-    <Aurora variant="field" fullHeight>
-      <PageLayout
-        title="Practice Plans"
-        subtitle="Create and manage practice scripts for your team's training sessions"
-        variant="list"
-        actions={
-          <div className="flex items-center gap-3">
+    <div className="min-h-screen bg-secondary p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <header className="mb-6">
+          <Typography variant="headline-lg" className="text-primary mb-1">
+            Practice Plans
+          </Typography>
+          <Typography variant="body" className="text-secondary">
+            Create and manage practice scripts for your team's training sessions
+          </Typography>
+          <div className="flex items-center gap-3 mt-4">
             <Button
               onClick={() => navigate("/playbook")}
               variant="secondary"
@@ -441,8 +443,7 @@ export default function PracticePlansPage() {
               New Script
             </Button>
           </div>
-        }
-      >
+        </header>
         {/* Aurora Dashboard Tiles */}
         <div className="mb-8">
           <div className="rounded-xl bg-primary p-5 shadow-lg backdrop-blur-sm sm:p-6 xl:p-7">
@@ -734,10 +735,17 @@ export default function PracticePlansPage() {
 
         {/* Practice Script Modal */}
         {showModal && (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense
+            fallback={
+              <div className="fixed inset-0 bg-backdrop flex items-center justify-center z-modal">
+                <div className="text-white">Loading modal...</div>
+              </div>
+            }
+          >
             <PracticeScriptModal
               editingScript={editingScript}
               onClose={() => {
+                console.log("Modal close clicked");
                 setShowModal(false);
                 setEditingScript(undefined);
               }}
@@ -756,7 +764,11 @@ export default function PracticePlansPage() {
             />
           </Suspense>
         )}
-      </PageLayout>
-    </Aurora>
+      </div>
+    </div>
   );
-}
+};
+
+PracticePlansPage.displayName = "PracticePlansPage";
+
+export default React.memo(PracticePlansPage);

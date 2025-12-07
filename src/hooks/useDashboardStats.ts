@@ -82,11 +82,14 @@ export function useDashboardStats(userId: string | undefined): DashboardStats {
       }
     }
 
-    fetchStats();
+    // Only fetch once when userId changes
+    const timeoutId = setTimeout(fetchStats, 0);
 
     return () => {
       mounted = false;
+      clearTimeout(timeoutId);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   return stats;

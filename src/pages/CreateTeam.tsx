@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../app/auth-store";
 import { useRoles } from "../hooks/useRoles";
-import { PageLayout } from "../components/layout/PageLayout";
 import { Button } from "../components/ui/Button/Button";
 import { Typography } from "../components/design-system/Typography";
 import { Icon } from "../components/ui/Icon/Icon";
-import { Aurora } from "../components/ui/Aurora";
 import {
   EnhancedInput,
   EnhancedSelect,
@@ -37,7 +35,7 @@ import type { AddressSuggestion } from "../services/locationFinderService";
 
 type StepId = "team-info" | "school-info" | "review" | "complete";
 
-export const CreateTeam: React.FC = () => {
+const CreateTeam: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { refreshRoles } = useRoles();
@@ -615,15 +613,23 @@ export const CreateTeam: React.FC = () => {
 
   if (!user) {
     return (
-      <Aurora variant="shell" fullHeight>
-        <PageLayout title="Create Team">
+      <div className="min-h-screen bg-secondary p-4 md:p-6">
+        <div className="max-w-7xl mx-auto space-y-6">
+          <header className="mb-6">
+            <Typography variant="headline-lg" className="text-primary mb-1">
+              Create Team
+            </Typography>
+            <Typography variant="body" className="text-secondary">
+              Set up your team
+            </Typography>
+          </header>
           <div className="text-center">
             <Typography variant="body-lg">
               Please log in to create a team.
             </Typography>
           </div>
-        </PageLayout>
-      </Aurora>
+        </div>
+      </div>
     );
   }
 
@@ -637,8 +643,16 @@ export const CreateTeam: React.FC = () => {
   const currentStepIndex = steps.findIndex((step) => step.id === currentStep);
 
   return (
-    <Aurora variant="shell" fullHeight>
-      <PageLayout title="Create Team">
+    <div className="min-h-screen bg-secondary p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <header className="mb-6">
+          <Typography variant="headline-lg" className="text-primary mb-1">
+            Create Team
+          </Typography>
+          <Typography variant="body" className="text-secondary">
+            Set up your team in a few simple steps
+          </Typography>
+        </header>
         <div className="container-content">
           {/* Progress Steps */}
           <div className="mb-xl">
@@ -733,7 +747,11 @@ export const CreateTeam: React.FC = () => {
             />
           )}
         </div>
-      </PageLayout>
-    </Aurora>
+      </div>
+    </div>
   );
 };
+
+CreateTeam.displayName = "CreateTeam";
+
+export default React.memo(CreateTeam);

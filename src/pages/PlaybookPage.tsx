@@ -1,4 +1,10 @@
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
 
@@ -27,7 +33,6 @@ import type { PracticeScript } from "../types/practice";
 import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { useTeamsData } from "../hooks/useTeamsData";
 
-import { Aurora } from "../components/ui/Aurora";
 import {
   getOppositeFormationVariant,
   flipDiagramPositions,
@@ -49,6 +54,16 @@ import { useOptimisticPlays } from "../hooks/useOptimisticPlays";
 import { usePlaybookStats } from "../hooks/usePlaybookStats";
 import { MobilePlaybookView } from "../components/playbook/page/MobilePlaybookView";
 import { DesktopPlaybookView } from "../components/playbook/page/DesktopPlaybookView";
+import {
+  modalPlayToServicePlay,
+  validateModalPlay,
+} from "../components/practice/PracticeScriptModal/adapters";
+
+const PracticeScriptModal = React.lazy(() =>
+  import("../components/practice/PracticeScriptModal").then((module) => ({
+    default: module.PracticeScriptModal,
+  }))
+);
 import { PlaybookModals } from "../components/playbook/page/PlaybookModals";
 import { useModalManager } from "../hooks/useModalManager";
 import { FullscreenDiagramViewer } from "../components/playbook/play-card/FullscreenDiagramViewer";
@@ -57,7 +72,7 @@ import { PersonnelLibraryModal } from "../components/playbook/modals/PersonnelLi
 
 // Lazy load modal components for code splitting (~120KB savings)
 
-export default function PlaybookPage() {
+const PlaybookPage = () => {
   const { state, dispatch } = usePlaybook();
   const toast = useToast();
   const navigate = useNavigate();
@@ -142,6 +157,7 @@ export default function PlaybookPage() {
   const [editingScript, setEditingScript] = useState<PracticeScript | null>(
     null
   );
+  const [showPracticeScriptModal, setShowPracticeScriptModal] = useState(false);
   const [selectedPlaysForPractice, setSelectedPlaysForPractice] = useState<
     string[]
   >([]);
@@ -742,16 +758,132 @@ export default function PlaybookPage() {
     [toast]
   );
 
-  // Practice Script Builder handlers
-  const handleOpenPracticeScriptBuilder = useCallback(() => {
-    setEditingScript(null);
-    openModal("practiceScriptBuilder");
-  }, [openModal]);
+  // Practice Script Modal handlers
+  const handleOpenPracticeScriptBuilder = useCallback(
+    (script?: PracticeScript) => {
+      triggerHapticFeedback("light");
+      setEditingScript(script || null);
+      setShowPracticeScriptModal(true);
+    },
+    []
+  );
 
   const handleQuickNewPracticeScript = useCallback(() => {
     triggerHapticFeedback("light");
-    navigate("/practice-plans");
-  }, [navigate]);
+    setEditingScript(null);
+    setShowPracticeScriptModal(true);
+  }, []);
+
+  const handleSavePracticeScript = useCallback(
+    async (script: Partial<PracticeScript>) => {
+      try {
+        console.log("💾 Saving practice script:", {
+          script,
+          playCount: script.plays?.length || 0,
+        });
+
+        let savedScriptId: string;
+
+        if (script.id) {
+          // Update existing script metadata
+          await PracticeScriptService.updatePracticeScript(script.id, {
+            name: script.title || script.name || "Untitled Script",
+            description: script.description,
+            tags: script.tags,
+          });
+          savedScriptId = script.id;
+          console.log("✅ Updated script metadata:", savedScriptId);
+        } else {
+          // Create new script
+          const newScript = await PracticeScriptService.createPracticeScript({
+            name: script.title || script.name || "Untitled Script",
+            description: script.description,
+            teamId: activeTeamId!,
+            tags: script.tags,
+          });
+          savedScriptId = newScript.id;
+          console.log("✅ Created new script:", savedScriptId);
+        }
+
+        // Now save the plays if any were provided
+        if (script.plays && script.plays.length > 0) {
+          console.log("📝 Saving", script.plays.length, "plays to script");
+
+          // First, clear existing plays if updating (to avoid duplicates)
+          if (script.id) {
+            const { error: deleteError } = await supabase
+              .from("practice_script_plays")
+              .delete()
+              .eq("practice_script_id", savedScriptId);
+
+            if (deleteError) {
+              console.error("Error clearing existing plays:", deleteError);
+            }
+          }
+
+          // Add each play to the script
+          for (let i = 0; i < script.plays.length; i++) {
+            const play = script.plays[i];
+
+            if (!play.playId) {
+              console.warn("Skipping play without playId:", play);
+              continue;
+            }
+
+            // Validate play data before saving
+            const validationErrors = validateModalPlay(play);
+            if (validationErrors.length > 0) {
+              console.error(
+                "Invalid play data:",
+                play.playName,
+                validationErrors
+              );
+              toast.error(
+                `Skipped play "${play.playName}": ${validationErrors.join(", ")}`
+              );
+              continue;
+            }
+
+            try {
+              // Use type adapter to convert modal play to service format
+              const servicePlay = modalPlayToServicePlay(play, i + 1);
+              servicePlay.scriptId = savedScriptId;
+
+              // Create minimal play object for activity logging
+              const playForActivity = {
+                id: play.playId,
+                play_name: play.playName,
+                team_id: activeTeamId,
+              } as any;
+
+              await PracticeScriptService.addPlayToScript(
+                servicePlay,
+                playForActivity
+              );
+              console.log("✅ Added play", i + 1, ":", play.playName);
+            } catch (playError) {
+              console.error("Failed to add play:", play.playName, playError);
+              toast.error(`Failed to add play "${play.playName}"`);
+              // Continue with other plays even if one fails
+            }
+          }
+
+          toast.success(
+            `Practice script ${script.id ? "updated" : "created"} with ${script.plays.length} play${script.plays.length !== 1 ? "s" : ""}`
+          );
+        } else {
+          toast.success(`Practice script ${script.id ? "updated" : "created"}`);
+        }
+
+        setShowPracticeScriptModal(false);
+        setEditingScript(null);
+      } catch (error) {
+        logError("Failed to save practice script:", error);
+        toast.error("Failed to save practice script");
+      }
+    },
+    [activeTeamId, toast]
+  );
 
   const handleQuickNewGamePlan = useCallback(() => {
     triggerHapticFeedback("light");
@@ -806,245 +938,267 @@ export default function PlaybookPage() {
   }, []);
 
   return (
-    <Aurora variant="field" fullHeight>
-      <div className="min-h-screen">
-        {/* Unified Header with Navigation (includes Breadcrumb + PlaybookSelector) */}
-        <PlaybookViewTabs
-          currentView={state.currentView}
-          onViewChange={handleViewChange}
-          currentTeamType={state.currentTeamType}
-          onTeamTypeChange={handleTeamTypeChange}
-          onOpenSettings={handleOpenSettings}
-          onOpenBuilder={handleOpenBuilder}
-          onOpenPersonnel={handleOpenPersonnel}
-          onOpenHealth={() => openModal("playbookHealth")}
-          onNavigate={(path) => {
-            if (path === "/playbook/formations") {
-              openModal("formationLibrary");
-            } else if (path === "/playbook/personnel") {
-              openModal("personnelLibrary");
-            } else {
-              navigate(path);
-            }
-          }}
-          title="Playbook"
-          playsCreated={state.playsCreated}
-          diagramCoverage={state.diagramCoverage}
-          streakDays={state.streakDays}
-          playbooks={teamPlaybooks}
-          activePlaybookId={activePlaybookId}
-          onPlaybookChange={handlePlaybookChange}
-          onPlaybookUpdated={refreshData}
-          teamId={activeTeamId || ""}
-          onCSVImportComplete={() => {
-            refreshData();
-            dispatch({ type: "INCREMENT_REFRESH" });
-          }}
-        />
+    <div className="min-h-screen">
+      {/* Unified Header with Navigation (includes Breadcrumb + PlaybookSelector) */}
+      <PlaybookViewTabs
+        currentView={state.currentView}
+        onViewChange={handleViewChange}
+        currentTeamType={state.currentTeamType}
+        onTeamTypeChange={handleTeamTypeChange}
+        onOpenSettings={handleOpenSettings}
+        onOpenBuilder={handleOpenBuilder}
+        onOpenPersonnel={handleOpenPersonnel}
+        onOpenHealth={() => openModal("playbookHealth")}
+        onNavigate={(path) => {
+          if (path === "/playbook/formations") {
+            openModal("formationLibrary");
+          } else if (path === "/playbook/personnel") {
+            openModal("personnelLibrary");
+          } else {
+            navigate(path);
+          }
+        }}
+        title="Playbook"
+        playsCreated={state.playsCreated}
+        diagramCoverage={state.diagramCoverage}
+        streakDays={state.streakDays}
+        playbooks={teamPlaybooks}
+        activePlaybookId={activePlaybookId}
+        onPlaybookChange={handlePlaybookChange}
+        onPlaybookUpdated={refreshData}
+        teamId={activeTeamId || ""}
+        onCSVImportComplete={() => {
+          refreshData();
+          dispatch({ type: "INCREMENT_REFRESH" });
+        }}
+      />
 
-        {/* Mobile/Tablet-First Layout (< 1024px) */}
-        {isMobileOrTablet ? (
-          <MobilePlaybookView
-            state={state}
-            mobileListExpanded={mobileListExpanded}
-            showFiltersSheet={isModalOpen("filtersSheet")}
-            showStatsSheet={isModalOpen("statsSheet")}
-            debouncedSearchQuery={debouncedSearchQuery}
-            optimisticPlays={optimisticPlays}
-            formationAudit={formationAudit}
-            formationAuditSummary={formationAuditSummary}
-            setMobileListExpanded={setMobileListExpanded}
-            setShowFiltersSheet={(show) =>
-              show ? openModal("filtersSheet") : closeModal()
-            }
-            setShowStatsSheet={(show) =>
-              show ? openModal("statsSheet") : closeModal()
-            }
-            handleOpenQuickCreate={handleOpenQuickCreate}
-            handleOpenPersonnel={handleOpenPersonnel}
-            handleOpenSettings={handleOpenSettings}
-            handleEditPlay={handleEditPlay}
-            handleQuickNewPracticeScript={handleQuickNewPracticeScript}
-            handleQuickNewGamePlan={handleQuickNewGamePlan}
-            handleOpenKeyboardShortcuts={handleOpenKeyboardShortcuts}
-            handlePullRefresh={handlePullRefresh}
-            handleSavePlay={handleSavePlay}
-            handleDuplicatePlay={handleDuplicatePlay}
-            handleOpenBuilder={handleOpenBuilder}
-            handleOpenAssignments={handleOpenAssignments}
-            handlePostToTeamBulletin={handlePostToTeamBulletin}
-            handleAddToPracticeScript={handleAddToPracticeScript}
-            handleAddToGamePlan={handleAddToGamePlan}
-            handlePlayCountChange={handlePlayCountChange}
-            dispatch={dispatch}
-            mobileButtonSize={mobileButtonSize}
-            mobileSecondaryButtonSize={mobileSecondaryButtonSize}
-            suggestions={suggestions}
-          />
-        ) : (
-          <DesktopPlaybookView
-            state={state}
-            debouncedSearchQuery={debouncedSearchQuery}
-            optimisticPlays={optimisticPlays}
-            formationAudit={formationAudit}
-            playbookStats={playbookStats}
-            activeTeamId={activeTeamId}
-            handleEditPlay={handleEditPlay}
-            handleSavePlay={handleSavePlay}
-            handleOpenBuilder={handleOpenBuilder}
-            handleQuickNewGamePlan={handleQuickNewGamePlan}
-            handleDuplicatePlay={handleDuplicatePlay}
-            handleOpenAssignments={handleOpenAssignments}
-            handlePostToTeamBulletin={handlePostToTeamBulletin}
-            handleAddToPracticeScript={handleAddToPracticeScript}
-            handleAddToGamePlan={handleAddToGamePlan}
-            handlePlayCountChange={handlePlayCountChange}
-            handleOpenPracticeScriptBuilder={handleOpenPracticeScriptBuilder}
-            handleFiltersChange={handleFiltersChange}
-            handleClearSelection={handleClearSelection}
-            handleBulkAction={handleBulkAction}
-            handleEnterFullscreen={handleEnterFullscreen}
-            dispatch={dispatch}
-            navigate={navigate}
-            suggestions={suggestions}
-            mobileButtonSize={mobileButtonSize}
-          />
-        )}
-
-        {/* Modals */}
-        <PlaybookModals
-          isModalOpen={isModalOpen}
-          closeModal={closeModal}
-          diagramPlay={diagramPlay}
-          diagramMode={diagramMode}
-          assignmentsPlay={assignmentsPlay}
-          editingScript={editingScript}
-          playToPost={playToPost}
-          setDiagramPlay={setDiagramPlay}
-          setAssignmentsPlay={setAssignmentsPlay}
-          setEditingScript={setEditingScript}
-          setPlayToPost={setPlayToPost}
-          activeTeamId={activeTeamId}
-          activePlaybookId={activePlaybookId}
-          selectedPlaysForPractice={selectedPlaysForPractice}
-          setSelectedPlaysForPractice={setSelectedPlaysForPractice}
-          existingPlays={allPlaysForStats.map((play) => ({
-            ...play,
-            confidence_base: play.confidence_base ?? 3,
-            times_called: play.times_called ?? 0,
-            times_successful: play.times_successful ?? 0,
-            created_by: "",
-            created_at: new Date(play.created_at),
-            updated_at: new Date(play.updated_at),
-            diagram_data:
-              typeof play.diagram_data === "string"
-                ? JSON.parse(play.diagram_data)
-                : play.diagram_data,
-          }))}
-          handleCreatePlay={handleCreatePlay}
+      {/* Mobile/Tablet-First Layout (< 1024px) */}
+      {isMobileOrTablet ? (
+        <MobilePlaybookView
+          state={state}
+          mobileListExpanded={mobileListExpanded}
+          showFiltersSheet={isModalOpen("filtersSheet")}
+          showStatsSheet={isModalOpen("statsSheet")}
+          debouncedSearchQuery={debouncedSearchQuery}
+          optimisticPlays={optimisticPlays}
+          formationAudit={formationAudit}
+          formationAuditSummary={formationAuditSummary}
+          setMobileListExpanded={setMobileListExpanded}
+          setShowFiltersSheet={(show) =>
+            show ? openModal("filtersSheet") : closeModal()
+          }
+          setShowStatsSheet={(show) =>
+            show ? openModal("statsSheet") : closeModal()
+          }
+          handleOpenQuickCreate={handleOpenQuickCreate}
+          handleOpenPersonnel={handleOpenPersonnel}
+          handleOpenSettings={handleOpenSettings}
+          handleEditPlay={handleEditPlay}
+          handleQuickNewPracticeScript={handleQuickNewPracticeScript}
+          handleQuickNewGamePlan={handleQuickNewGamePlan}
+          handleOpenKeyboardShortcuts={handleOpenKeyboardShortcuts}
+          handlePullRefresh={handlePullRefresh}
           handleSavePlay={handleSavePlay}
+          handleDuplicatePlay={handleDuplicatePlay}
+          handleOpenBuilder={handleOpenBuilder}
+          handleOpenAssignments={handleOpenAssignments}
+          handlePostToTeamBulletin={handlePostToTeamBulletin}
+          handleAddToPracticeScript={handleAddToPracticeScript}
+          handleAddToGamePlan={handleAddToGamePlan}
+          handlePlayCountChange={handlePlayCountChange}
           dispatch={dispatch}
+          mobileButtonSize={mobileButtonSize}
+          mobileSecondaryButtonSize={mobileSecondaryButtonSize}
+          suggestions={suggestions}
         />
+      ) : (
+        <DesktopPlaybookView
+          state={state}
+          debouncedSearchQuery={debouncedSearchQuery}
+          optimisticPlays={optimisticPlays}
+          formationAudit={formationAudit}
+          playbookStats={playbookStats}
+          activeTeamId={activeTeamId}
+          handleEditPlay={handleEditPlay}
+          handleSavePlay={handleSavePlay}
+          handleOpenBuilder={handleOpenBuilder}
+          handleQuickNewGamePlan={handleQuickNewGamePlan}
+          handleDuplicatePlay={handleDuplicatePlay}
+          handleOpenAssignments={handleOpenAssignments}
+          handlePostToTeamBulletin={handlePostToTeamBulletin}
+          handleAddToPracticeScript={handleAddToPracticeScript}
+          handleAddToGamePlan={handleAddToGamePlan}
+          handlePlayCountChange={handlePlayCountChange}
+          handleOpenPracticeScriptBuilder={handleOpenPracticeScriptBuilder}
+          handleFiltersChange={handleFiltersChange}
+          handleClearSelection={handleClearSelection}
+          handleBulkAction={handleBulkAction}
+          handleEnterFullscreen={handleEnterFullscreen}
+          dispatch={dispatch}
+          navigate={navigate}
+          suggestions={suggestions}
+          mobileButtonSize={mobileButtonSize}
+        />
+      )}
 
-        {/* Mobile/Tablet Filters Bottom Sheet */}
-        {isMobileOrTablet && isModalOpen("filtersSheet") && (
-          <BottomSheet
-            snapPoints={[0.1, 0.6, 0.9]}
-            initialSnapPoint={1}
-            onSnapPointChange={(snapPoint) => {
-              // Close when fully minimized
-              if (snapPoint < 0.15) {
-                closeModal();
-              }
-            }}
-          >
-            <div className="flex flex-col h-full">
-              {/* Header */}
-              <div className="flex items-center justify-between p-6 pb-4 border-b border-muted">
-                <Typography variant="headline-md" className="text-primary">
-                  Filters & Search
-                </Typography>
-                <Button onClick={closeModal} variant="ghost" size="sm">
-                  <Icon name="close" className="h-5 w-5" />
+      {/* Modals */}
+      <PlaybookModals
+        isModalOpen={isModalOpen}
+        closeModal={closeModal}
+        diagramPlay={diagramPlay}
+        diagramMode={diagramMode}
+        assignmentsPlay={assignmentsPlay}
+        editingScript={editingScript}
+        playToPost={playToPost}
+        setDiagramPlay={setDiagramPlay}
+        setAssignmentsPlay={setAssignmentsPlay}
+        setEditingScript={setEditingScript}
+        setPlayToPost={setPlayToPost}
+        activeTeamId={activeTeamId}
+        activePlaybookId={activePlaybookId}
+        selectedPlaysForPractice={selectedPlaysForPractice}
+        setSelectedPlaysForPractice={setSelectedPlaysForPractice}
+        existingPlays={allPlaysForStats.map((play) => ({
+          ...play,
+          confidence_base: play.confidence_base ?? 3,
+          times_called: play.times_called ?? 0,
+          times_successful: play.times_successful ?? 0,
+          created_by: "",
+          created_at: new Date(play.created_at),
+          updated_at: new Date(play.updated_at),
+          diagram_data:
+            typeof play.diagram_data === "string"
+              ? JSON.parse(play.diagram_data)
+              : play.diagram_data,
+        }))}
+        handleCreatePlay={handleCreatePlay}
+        handleSavePlay={handleSavePlay}
+        dispatch={dispatch}
+      />
+
+      {/* Mobile/Tablet Filters Bottom Sheet */}
+      {isMobileOrTablet && isModalOpen("filtersSheet") && (
+        <BottomSheet
+          snapPoints={[0.1, 0.6, 0.9]}
+          initialSnapPoint={1}
+          onSnapPointChange={(snapPoint) => {
+            // Close when fully minimized
+            if (snapPoint < 0.15) {
+              closeModal();
+            }
+          }}
+        >
+          <div className="flex flex-col h-full">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 pb-4 border-b border-muted">
+              <Typography variant="headline-md" className="text-primary">
+                Filters & Search
+              </Typography>
+              <Button onClick={closeModal} variant="ghost" size="sm">
+                <Icon name="close" className="h-5 w-5" />
+              </Button>
+            </div>
+
+            {/* Scrollable Filters Content */}
+            <div className="flex-1 overflow-y-auto p-6 pb-20">
+              <AdvancedFilters
+                activeFilters={state.advancedFilters}
+                onFiltersChange={handleFiltersChange}
+              />
+            </div>
+
+            {/* Action Footer - Fixed at Bottom */}
+            <div className="absolute bottom-0 left-0 right-0 p-4 bg-primary border-t border-muted shadow-lg">
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => {
+                    dispatch({ type: "SET_ADVANCED_FILTERS", filters: [] });
+                    closeModal();
+                  }}
+                  variant="secondary"
+                  size={mobileSecondaryButtonSize}
+                  className="flex-1"
+                >
+                  Clear All
+                </Button>
+                <Button
+                  onClick={closeModal}
+                  variant="primary"
+                  size={mobileButtonSize}
+                  className="flex-1"
+                >
+                  <Icon name="check" className="h-4 w-4 mr-2" />
+                  Apply Filters
                 </Button>
               </div>
-
-              {/* Scrollable Filters Content */}
-              <div className="flex-1 overflow-y-auto p-6 pb-20">
-                <AdvancedFilters
-                  activeFilters={state.advancedFilters}
-                  onFiltersChange={handleFiltersChange}
-                />
-              </div>
-
-              {/* Action Footer - Fixed at Bottom */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 bg-primary border-t border-muted shadow-lg">
-                <div className="flex gap-3">
-                  <Button
-                    onClick={() => {
-                      dispatch({ type: "SET_ADVANCED_FILTERS", filters: [] });
-                      closeModal();
-                    }}
-                    variant="secondary"
-                    size={mobileSecondaryButtonSize}
-                    className="flex-1"
-                  >
-                    Clear All
-                  </Button>
-                  <Button
-                    onClick={closeModal}
-                    variant="primary"
-                    size={mobileButtonSize}
-                    className="flex-1"
-                  >
-                    <Icon name="check" className="h-4 w-4 mr-2" />
-                    Apply Filters
-                  </Button>
-                </div>
-                {Object.keys(state.advancedFilters).length > 0 && (
-                  <p className="text-center text-xs text-secondary mt-2">
-                    {Object.keys(state.advancedFilters).length} filter
-                    {Object.keys(state.advancedFilters).length === 1
-                      ? ""
-                      : "s"}{" "}
-                    active
-                  </p>
-                )}
-              </div>
+              {Object.keys(state.advancedFilters).length > 0 && (
+                <p className="text-center text-xs text-secondary mt-2">
+                  {Object.keys(state.advancedFilters).length} filter
+                  {Object.keys(state.advancedFilters).length === 1
+                    ? ""
+                    : "s"}{" "}
+                  active
+                </p>
+              )}
             </div>
-          </BottomSheet>
-        )}
+          </div>
+        </BottomSheet>
+      )}
 
-        {/* Bulk Actions Floating Toolbar */}
-        <BulkActionsToolbar
-          selectedCount={state.selectedPlayIds?.size || 0}
-          onClearSelection={() => dispatch({ type: "CLEAR_SELECTION" })}
-          onBulkAction={handleBulkAction}
+      {/* Bulk Actions Floating Toolbar */}
+      <BulkActionsToolbar
+        selectedCount={state.selectedPlayIds?.size || 0}
+        onClearSelection={() => dispatch({ type: "CLEAR_SELECTION" })}
+        onBulkAction={handleBulkAction}
+      />
+
+      {/* Fullscreen Diagram Viewer */}
+      {fullscreenPlayIndex !== null && fullscreenPlays.length > 0 && (
+        <FullscreenDiagramViewer
+          plays={fullscreenPlays}
+          initialPlayIndex={fullscreenPlayIndex}
+          onClose={handleExitFullscreen}
         />
+      )}
 
-        {/* Fullscreen Diagram Viewer */}
-        {fullscreenPlayIndex !== null && fullscreenPlays.length > 0 && (
-          <FullscreenDiagramViewer
-            plays={fullscreenPlays}
-            initialPlayIndex={fullscreenPlayIndex}
-            onClose={handleExitFullscreen}
+      {/* Formation Library Modal */}
+      <FormationLibraryModal
+        isOpen={isModalOpen("formationLibrary")}
+        onClose={closeModal}
+        playbookId={activePlaybookId}
+      />
+
+      {/* Personnel Library Modal */}
+      <PersonnelLibraryModal
+        isOpen={isModalOpen("personnelLibrary")}
+        onClose={closeModal}
+        playbookId={activePlaybookId}
+      />
+
+      {/* Practice Script Modal */}
+      {showPracticeScriptModal && (
+        <React.Suspense
+          fallback={
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-modal">
+              <div className="text-white">Loading...</div>
+            </div>
+          }
+        >
+          <PracticeScriptModal
+            editingScript={editingScript}
+            onClose={() => {
+              setShowPracticeScriptModal(false);
+              setEditingScript(null);
+            }}
+            onSave={handleSavePracticeScript}
           />
-        )}
-
-        {/* Formation Library Modal */}
-        <FormationLibraryModal
-          isOpen={isModalOpen("formationLibrary")}
-          onClose={closeModal}
-          playbookId={activePlaybookId}
-        />
-
-        {/* Personnel Library Modal */}
-        <PersonnelLibraryModal
-          isOpen={isModalOpen("personnelLibrary")}
-          onClose={closeModal}
-          playbookId={activePlaybookId}
-        />
-      </div>
-    </Aurora>
+        </React.Suspense>
+      )}
+    </div>
   );
-}
+};
+
+PlaybookPage.displayName = "PlaybookPage";
+
+export default React.memo(PlaybookPage);

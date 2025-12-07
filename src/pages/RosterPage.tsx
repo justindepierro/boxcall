@@ -1,13 +1,11 @@
-import { useState, lazy, Suspense } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
-import { PageLayout } from "../components/layout/PageLayout";
 import { Card, Button, Input, Modal } from "../components/ui";
 import { EmptyState } from "../components/ui/EmptyState";
 import { Skeleton } from "../components/ui/Skeleton";
 import { Breadcrumb } from "../components/ui/Breadcrumb";
 import { Icon } from "../components/ui/Icon/Icon";
 import { Typography } from "../components/design-system";
-import { Aurora } from "../components/ui/Aurora";
 import { DeleteConfirmationDialog } from "../components/common/DeleteConfirmationDialog";
 import { Pagination } from "../components/Pagination";
 import { MultiSelect } from "../components/ui/MultiSelect";
@@ -67,7 +65,7 @@ import { PlayerCard, RosterStats } from "./RosterPage/components";
  * - Position: blue-100/800
  * - Grade Level: purple-100/800
  */
-export default function RosterPage() {
+const RosterPage = () => {
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -775,8 +773,16 @@ export default function RosterPage() {
 
   if (loading) {
     return (
-      <Aurora variant="shell" fullHeight>
-        <PageLayout title="Roster" subtitle="Loading team roster...">
+      <div className="min-h-screen bg-secondary p-4 md:p-6">
+        <div className="max-w-7xl mx-auto space-y-6">
+          <header className="mb-6">
+            <Typography variant="headline-lg" className="text-primary mb-1">
+              Roster
+            </Typography>
+            <Typography variant="body" className="text-secondary">
+              Loading team roster...
+            </Typography>
+          </header>
           <div className="space-y-lg">
             {/* Loading skeleton for stats */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md">
@@ -824,17 +830,22 @@ export default function RosterPage() {
               ))}
             </div>
           </div>
-        </PageLayout>
-      </Aurora>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Aurora variant="shell" fullHeight>
-      <PageLayout
-        title="Team Roster"
-        subtitle={`${players.length} players • Manage your team's roster and player information`}
-      >
+    <div className="min-h-screen bg-secondary p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <header className="mb-6">
+          <Typography variant="headline-lg" className="text-primary mb-1">
+            Team Roster
+          </Typography>
+          <Typography variant="body" className="text-secondary">
+            {`${players.length} players • Manage your team's roster and player information`}
+          </Typography>
+        </header>
         {/* Breadcrumb Navigation */}
         <Breadcrumb
           items={[
@@ -1824,7 +1835,11 @@ export default function RosterPage() {
             onSend={sendInvitation}
           />
         </div>
-      </PageLayout>
-    </Aurora>
+      </div>
+    </div>
   );
-}
+};
+
+RosterPage.displayName = "RosterPage";
+
+export default React.memo(RosterPage);
