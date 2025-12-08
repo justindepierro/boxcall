@@ -126,7 +126,18 @@ const PlaybookPage = () => {
           name: p.play_name,
           formation: p.formation,
           playbook_id: p.playbook_id,
+          diagram_url: p.diagram_url,
+          has_diagram: !!p.diagram_url,
         })),
+        imageCheck: {
+          playsWithImages: allPlaysForStats.filter((p) => p.diagram_url).length,
+          playsWithoutImages: allPlaysForStats.filter((p) => !p.diagram_url)
+            .length,
+          sampleUrls: allPlaysForStats
+            .filter((p) => p.diagram_url)
+            .map((p) => p.diagram_url)
+            .slice(0, 3),
+        },
         userAgent: navigator.userAgent,
         viewport: {
           width: window.innerWidth,

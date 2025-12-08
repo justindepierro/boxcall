@@ -106,7 +106,7 @@ export function MobilePlaybookView({
   return (
     <>
       {/* Search Bar - FIXED at top (always visible, no scroll needed) */}
-      {state.playsCreated > 0 && (
+      {optimisticPlays.length > 0 && (
         <div
           className="fixed top-0 left-0 right-0 z-sticky bg-primary/95 backdrop-blur-md border-b border-muted px-4 shadow-md"
           style={{
@@ -170,10 +170,10 @@ export function MobilePlaybookView({
 
       {/* Content area with padding for fixed search bar */}
       <div
-        className={`px-4 py-3 space-y-3 pb-32 ${state.playsCreated > 0 ? "pt-20" : ""}`}
+        className={`px-4 py-3 space-y-3 pb-32 overflow-x-hidden max-w-full ${optimisticPlays.length > 0 ? "pt-20" : ""}`}
         style={{
           paddingTop:
-            state.playsCreated > 0
+            optimisticPlays.length > 0
               ? `calc(5rem + env(safe-area-inset-top, 0px))`
               : "1rem",
         }}
@@ -181,7 +181,7 @@ export function MobilePlaybookView({
         {/* Reduced spacing: py-3, space-y-3, pt-20 for tighter layout */}
 
         {/* Empty State - Hero CTA */}
-        {state.playsCreated === 0 && (
+        {optimisticPlays.length === 0 && (
           <MobileSection spacing="comfortable">
             <MobileCTACard
               icon="users"
@@ -195,7 +195,7 @@ export function MobilePlaybookView({
         )}
 
         {/* Main Content - Plays Grid (MOVED TO TOP) */}
-        {state.playsCreated > 0 && (
+        {optimisticPlays.length > 0 && (
           <MobileSection
             title="Your Plays"
             action={

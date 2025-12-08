@@ -300,8 +300,16 @@ export function useTeamsData() {
                   name: p.play_name,
                   formation: p.formation,
                   diagram_url: p.diagram_url,
+                  diagram_url_type: typeof p.diagram_url,
+                  diagram_url_null: p.diagram_url === null,
+                  diagram_url_undefined: p.diagram_url === undefined,
+                  diagram_url_empty: p.diagram_url === "",
                   has_diagram_data: !!p.diagram_data,
                 })),
+                allDiagramUrls: playsData
+                  .filter((p) => p.diagram_url)
+                  .map((p) => p.diagram_url)
+                  .slice(0, 5),
               });
             }
           }

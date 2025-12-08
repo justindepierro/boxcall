@@ -101,6 +101,18 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
             src={play.diagram_url || (play as any).diagram_image_url}
             alt={displayName}
             className="w-full h-full object-cover"
+            onError={(e) => {
+              console.error("[MobilePlayCard] Image load error:", {
+                playId: play.id,
+                playName: play.play_name,
+                diagramUrl: play.diagram_url,
+                fallbackUrl: (play as any).diagram_image_url,
+                error: e.currentTarget.src,
+              });
+            }}
+            onLoad={() => {
+              console.log("[MobilePlayCard] Image loaded:", play.play_name, play.diagram_url);
+            }}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
