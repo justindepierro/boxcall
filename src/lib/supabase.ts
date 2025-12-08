@@ -5,17 +5,18 @@ import type { Database } from "../types/database";
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Debug logging
-console.log("🔧 Supabase module loading...");
-console.log(
-  "🔧 VITE_SUPABASE_URL:",
-  supabaseUrl ? `${supabaseUrl.substring(0, 30)}...` : "MISSING"
-);
-console.log(
-  "🔧 VITE_SUPABASE_ANON_KEY:",
-  supabaseAnonKey ? "PRESENT" : "MISSING"
-);
-console.log("🔧 import.meta.env.DEV:", import.meta.env.DEV);
+// Only log in dev mode to avoid production overhead
+if (import.meta.env.DEV) {
+  console.log("🔧 Supabase module loading...");
+  console.log(
+    "🔧 VITE_SUPABASE_URL:",
+    supabaseUrl ? `${supabaseUrl.substring(0, 30)}...` : "MISSING"
+  );
+  console.log(
+    "🔧 VITE_SUPABASE_ANON_KEY:",
+    supabaseAnonKey ? "PRESENT" : "MISSING"
+  );
+}
 
 function createDevStub(): SupabaseClient<Database> {
   // Minimal stub to allow app startup without Supabase env in development.
@@ -64,12 +65,17 @@ let supabaseClient: SupabaseClient<Database>;
 
 if (supabaseUrl && supabaseAnonKey) {
   // Use only anon key for client-side operations - NEVER expose service role key
-  console.log("✅ Creating real Supabase client");
+  if (import.meta.env.DEV) console.log("✅ Creating real Supabase client");
   supabaseClient = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     auth: {
       persistSession: true,
       autoRefreshToken: true,
       detectSessionInUrl: true,
+      // 🚀 PERFORMANCE: Use localStorage (faster) instead of cookies
+      storage: typeof window !== "undefined" ? window.localStorage : undefined,
+      // 🚀 PERFORMANCE: Faster session check on init
+      storageKey: "boxcall-auth",
+      flowType: "pkce", // More secure, similar speed
     },
     // 🚀 PERFORMANCE: Add global configuration for better performance
     global: {
@@ -93,7 +99,7 @@ if (supabaseUrl && supabaseAnonKey) {
   supabaseClient = createDevStub();
 } else {
   // In non-dev environments, fail fast if env is missing
-  console.log("❌ Missing Supabase environment variables in production");
+  if (import.meta.env.DEV) console.log("❌ Missing Supabase environment variables in production");
   throw new Error("Missing Supabase environment variables");
 }
 

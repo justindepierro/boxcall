@@ -324,6 +324,15 @@ export const useAuth = create<AuthState>()(
               session: data.session,
               loading: false,
             });
+            // 🚀 PERFORMANCE: Cache session for instant auth on next page load
+            try {
+              localStorage.setItem("boxcall-auth", JSON.stringify({
+                user: data.user,
+                session: data.session,
+              }));
+            } catch {
+              // localStorage might be full or unavailable
+            }
             // Fetch user profile asynchronously (don't block login on this)
             get().fetchUserProfile(data.user.id);
             AuthMonitoring.recordSignInSuccess();
@@ -626,6 +635,8 @@ export const useAuth = create<AuthState>()(
             profile: null,
             loading: false,
           });
+          // 🚀 PERFORMANCE: Clear session cache on sign out
+          localStorage.removeItem("boxcall-auth");
           // Clear profile cache on sign out
           profileCache.clear();
           emitTelemetry("auth.signout", { userId });
@@ -653,6 +664,8 @@ export const useAuth = create<AuthState>()(
             error: errorMessage,
             loading: false,
           });
+          // 🚀 PERFORMANCE: Clear session cache even on error
+          localStorage.removeItem("boxcall-auth");
           profileCache.clear();
         }
       },
@@ -1016,6 +1029,46 @@ const stopSessionRefresh = () => {
   }
 };
 
+/**
+ * 🚀 PERFORMANCE: Background session verification
+ * Called after optimistic auth from cache to verify session is still valid
+ */
+const verifyAndRefreshSession = async (cachedSession: Session) => {
+  try {
+    const { data: { session }, error } = await supabase.auth.getSession();
+    
+    if (error || !session) {
+      // Session invalid - clear state and redirect to login
+      warn("Cached session invalid, clearing auth state");
+      useAuth.setState({ user: null, session: null, profile: null, loading: false });
+      localStorage.removeItem("boxcall-auth");
+      return;
+    }
+
+    // Update with fresh session data
+    useAuth.setState({
+      user: session.user,
+      session: session,
+    });
+
+    // Update localStorage cache
+    localStorage.setItem("boxcall-auth", JSON.stringify({
+      user: session.user,
+      session: session,
+    }));
+
+    // Start session refresh monitoring
+    startSessionRefresh();
+
+    // Load profile in background
+    useAuth.getState().fetchUserProfile(session.user.id).catch(() => {});
+    
+    debug("Background session verification complete");
+  } catch (err) {
+    warn("Background session verification failed:", err);
+  }
+};
+
 let isInitializing = false;
 
 // Initialize auth state on app start with improved error handling
@@ -1027,11 +1080,45 @@ const initializeAuth = async () => {
   }
 
   isInitializing = true;
+  const startTime = performance.now();
 
   try {
     logAuth("Initializing auth state...");
 
-    // Set loading to true at the start of initialization
+    // 🚀 FAST PATH: Check localStorage for cached session FIRST (instant)
+    // This shows the user as logged in immediately while we verify with Supabase
+    const cachedAuthStr = localStorage.getItem("boxcall-auth");
+    if (cachedAuthStr) {
+      try {
+        const cachedAuth = JSON.parse(cachedAuthStr);
+        if (cachedAuth?.user && cachedAuth?.session) {
+          // Check if session hasn't expired (with 1 minute buffer)
+          const expiresAt = cachedAuth.session.expires_at;
+          const now = Math.floor(Date.now() / 1000);
+          if (expiresAt && expiresAt > now + 60) {
+            debug("Using cached session for instant auth (will verify in background)");
+            // Optimistically set auth state from cache
+            useAuth.setState({
+              user: cachedAuth.user,
+              session: cachedAuth.session,
+              loading: false,
+              error: null,
+            });
+            // Start background verification (don't await)
+            verifyAndRefreshSession(cachedAuth.session);
+            isInitializing = false;
+            const elapsed = performance.now() - startTime;
+            success(`Auth init from cache: ${elapsed.toFixed(0)}ms`);
+            return;
+          }
+        }
+      } catch {
+        // Invalid cache, continue with normal flow
+        debug("Cached auth invalid, using normal flow");
+      }
+    }
+
+    // Normal flow: Set loading to true at the start of initialization
     useAuth.setState({ loading: true, error: null });
 
     const {
