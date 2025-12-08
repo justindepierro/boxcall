@@ -96,7 +96,7 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
     >
       {/* Play Thumbnail */}
       <div className="w-18 h-18 flex-shrink-0 rounded-xl overflow-hidden bg-muted shadow-inner">
-        {(play.diagram_url || (play as any).diagram_image_url) ? (
+        {play.diagram_url || (play as any).diagram_image_url ? (
           <img
             src={play.diagram_url || (play as any).diagram_image_url}
             alt={displayName}
@@ -111,7 +111,11 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
               });
             }}
             onLoad={() => {
-              console.log("[MobilePlayCard] Image loaded:", play.play_name, play.diagram_url);
+              console.log(
+                "[MobilePlayCard] Image loaded:",
+                play.play_name,
+                play.diagram_url
+              );
             }}
           />
         ) : (

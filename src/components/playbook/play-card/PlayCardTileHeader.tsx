@@ -102,7 +102,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
           whileHover={{ scale: 1.03 }}
           transition={{ type: "spring", stiffness: 400, damping: 17 }}
         >
-          {(play.diagram_url || (play as any).diagram_image_url) ? (
+          {play.diagram_url || (play as any).diagram_image_url ? (
             /* Photo thumbnail */
             <>
               <img

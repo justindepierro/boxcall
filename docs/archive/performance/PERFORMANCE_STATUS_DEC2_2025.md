@@ -15,6 +15,7 @@ All three major pages (Playbook, Game Plans, Practice Scripts) are now **Faceboo
 **Status**: 🟢 **FULLY OPTIMIZED** (6-10x faster)
 
 **Patterns Implemented**:
+
 - ✅ Optimistic saves: Instant feedback with background sync
 - ✅ Instant search: No debouncing (<10ms filter for 200 plays)
 - ✅ Preloaded modals: 800ms → <100ms open time (4 modals)
@@ -25,6 +26,7 @@ All three major pages (Playbook, Game Plans, Practice Scripts) are now **Faceboo
 - ✅ Activity stream optimization: Separate memo from play stats
 
 **Performance Metrics** (All Targets Met):
+
 - ✅ Save play: <50ms perceived response (was 3.3s - 66x faster!)
 - ✅ Search: Instant (<10ms filter time)
 - ✅ Modal open: <100ms (preloaded)
@@ -43,6 +45,7 @@ All three major pages (Playbook, Game Plans, Practice Scripts) are now **Faceboo
 **Status**: 🟢 **FULLY OPTIMIZED** (10-16x faster)
 
 **Patterns Implemented**:
+
 - ✅ Optimistic creates: Instant feedback with temp IDs, background sync, rollback on error
 - ✅ Optimistic updates: Immediate UI changes, silent server sync
 - ✅ Optimistic duplicates: Instant copy with temp ID replacement
@@ -53,6 +56,7 @@ All three major pages (Playbook, Game Plans, Practice Scripts) are now **Faceboo
 - ✅ Automatic rollback: Restores original state from rawGamePlans on error
 
 **Performance Metrics** (All Targets Met):
+
 - ✅ Create game plan: <50ms perceived (was 800ms - 16x faster!)
 - ✅ Update game plan: <50ms perceived (was 800ms - 16x faster!)
 - ✅ Duplicate game plan: <50ms perceived (was 800ms - 16x faster!)
@@ -61,6 +65,7 @@ All three major pages (Playbook, Game Plans, Practice Scripts) are now **Faceboo
 - ✅ Modal open: <100ms (preloaded)
 
 **Key Features Verified**:
+
 - ✅ Create new game plan: Works with temp ID → real ID replacement
 - ✅ Edit existing game plan: Works with optimistic update + background sync
 - ✅ Duplicate game plan: Works with temp ID, name "(Copy)" suffix
@@ -81,13 +86,15 @@ All three major pages (Playbook, Game Plans, Practice Scripts) are now **Faceboo
 
 ### **3. Practice Scripts Page** (COMPLETE - List View)
 
-**Files**: 
+**Files**:
+
 - `src/components/practice/PracticeScriptList.tsx`
 - `src/pages/PlaybookPage.tsx` (hosts practice scripts in Playbook view)
 
 **Status**: 🟢 **LIST VIEW COMPLETE** (UI optimized)
 
 **Recent Changes** (December 2, 2025):
+
 - ✅ Converted from grid/tile view to horizontal list view
 - ✅ Compact spacing: p-4 vs p-6, space-y-2 vs gap-6
 - ✅ Horizontal layout: Left (info) | Right (actions)
@@ -95,6 +102,7 @@ All three major pages (Playbook, Game Plans, Practice Scripts) are now **Faceboo
 - ✅ Single-line description for faster scanning
 
 **Current State**:
+
 - ✅ List view layout optimized for scanning
 - ✅ CRUD operations working: Create, read, update, delete, duplicate
 - ✅ PDF export working: Uses PDFExportService with ultra-compact format
@@ -102,12 +110,14 @@ All three major pages (Playbook, Game Plans, Practice Scripts) are now **Faceboo
 - ⏳ **Optimistic UI patterns not yet implemented**
 
 **Recommended Next Steps** (30-45 min):
+
 1. Add optimistic creates/updates (20 min)
 2. Add optimistic deletes (10 min)
 3. Add optimistic duplicates (10 min)
 4. Preload PracticeScriptBuilder modal (5 min)
 
 **Expected Impact**:
+
 - Would achieve 10-16x faster perceived response (800ms → <50ms)
 - Would match Game Plans page performance
 - Would eliminate loading spinners
@@ -120,22 +130,22 @@ All three major pages (Playbook, Game Plans, Practice Scripts) are now **Faceboo
 
 ### **Before vs After**
 
-| Page | Before | After | Improvement |
-|------|--------|-------|-------------|
-| **Playbook** | 3.3s save, 800ms modals | <50ms save, <100ms modals | 66x faster saves, 8x faster modals |
-| **Game Plans** | 800ms creates, 600ms deletes | <50ms perceived | 16x faster creates, 12x faster deletes |
-| **Practice Scripts** | N/A (grid view) | List view optimized | Better scanning UX |
+| Page                 | Before                       | After                     | Improvement                            |
+| -------------------- | ---------------------------- | ------------------------- | -------------------------------------- |
+| **Playbook**         | 3.3s save, 800ms modals      | <50ms save, <100ms modals | 66x faster saves, 8x faster modals     |
+| **Game Plans**       | 800ms creates, 600ms deletes | <50ms perceived           | 16x faster creates, 12x faster deletes |
+| **Practice Scripts** | N/A (grid view)              | List view optimized       | Better scanning UX                     |
 
 ### **Performance Targets Achieved**
 
-| Metric | Target | Playbook | Game Plans | Practice Scripts |
-|--------|--------|----------|------------|------------------|
-| Save/Create | <50ms | ✅ <10ms | ✅ <50ms | ⏳ Not yet |
-| Update | <50ms | ✅ <50ms | ✅ <50ms | ⏳ Not yet |
-| Delete | <50ms | ✅ <50ms | ✅ <50ms | ⏳ Not yet |
-| Duplicate | <50ms | N/A | ✅ <50ms | ⏳ Not yet |
-| Modal open | <100ms | ✅ <100ms | ✅ <100ms | ✅ <100ms |
-| Search | <10ms | ✅ <10ms | ✅ Instant | ✅ Instant |
+| Metric      | Target | Playbook  | Game Plans | Practice Scripts |
+| ----------- | ------ | --------- | ---------- | ---------------- |
+| Save/Create | <50ms  | ✅ <10ms  | ✅ <50ms   | ⏳ Not yet       |
+| Update      | <50ms  | ✅ <50ms  | ✅ <50ms   | ⏳ Not yet       |
+| Delete      | <50ms  | ✅ <50ms  | ✅ <50ms   | ⏳ Not yet       |
+| Duplicate   | <50ms  | N/A       | ✅ <50ms   | ⏳ Not yet       |
+| Modal open  | <100ms | ✅ <100ms | ✅ <100ms  | ✅ <100ms        |
+| Search      | <10ms  | ✅ <10ms  | ✅ Instant | ✅ Instant       |
 
 ---
 
@@ -143,55 +153,57 @@ All three major pages (Playbook, Game Plans, Practice Scripts) are now **Faceboo
 
 ### **Optimistic UI** (Instant feedback + background sync)
 
-| Page | Creates | Updates | Deletes | Duplicates |
-|------|---------|---------|---------|------------|
-| **Playbook** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes |
-| **Game Plans** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes |
-| **Practice Scripts** | ⏳ No | ⏳ No | ⏳ No | ⏳ No |
+| Page                 | Creates | Updates | Deletes | Duplicates |
+| -------------------- | ------- | ------- | ------- | ---------- |
+| **Playbook**         | ✅ Yes  | ✅ Yes  | ✅ Yes  | ✅ Yes     |
+| **Game Plans**       | ✅ Yes  | ✅ Yes  | ✅ Yes  | ✅ Yes     |
+| **Practice Scripts** | ⏳ No   | ⏳ No   | ⏳ No   | ⏳ No      |
 
 ### **Modal Preloading** (2s idle time)
 
-| Page | Modals Preloaded | Status |
-|------|------------------|--------|
-| **Playbook** | 4 modals (AddNewPlay, PracticeScript, Settings, Diagram) | ✅ Complete |
-| **Game Plans** | 2 modals (GamePlan, ImportGamePlans) | ✅ Complete |
-| **Practice Scripts** | 1 modal (PracticeScriptModal) | ✅ Complete |
+| Page                 | Modals Preloaded                                         | Status      |
+| -------------------- | -------------------------------------------------------- | ----------- |
+| **Playbook**         | 4 modals (AddNewPlay, PracticeScript, Settings, Diagram) | ✅ Complete |
+| **Game Plans**       | 2 modals (GamePlan, ImportGamePlans)                     | ✅ Complete |
+| **Practice Scripts** | 1 modal (PracticeScriptModal)                            | ✅ Complete |
 
 ### **Instant Search** (No debouncing for <500 items)
 
-| Page | Status | Filter Time |
-|------|--------|-------------|
-| **Playbook** | ✅ Complete | <10ms (200 plays) |
-| **Game Plans** | ✅ Complete | <10ms (50 plans) |
+| Page                 | Status      | Filter Time        |
+| -------------------- | ----------- | ------------------ |
+| **Playbook**         | ✅ Complete | <10ms (200 plays)  |
+| **Game Plans**       | ✅ Complete | <10ms (50 plans)   |
 | **Practice Scripts** | ✅ Complete | <10ms (30 scripts) |
 
 ### **Split Memoization** (50-70% fewer recalcs)
 
-| Page | Status | Memos Split |
-|------|--------|-------------|
-| **Playbook** | ✅ Complete | Play stats + Activity stats |
-| **Game Plans** | ⏳ Not needed | Simple filtering logic |
-| **Practice Scripts** | ⏳ Not needed | Simple list rendering |
+| Page                 | Status        | Memos Split                 |
+| -------------------- | ------------- | --------------------------- |
+| **Playbook**         | ✅ Complete   | Play stats + Activity stats |
+| **Game Plans**       | ⏳ Not needed | Simple filtering logic      |
+| **Practice Scripts** | ⏳ Not needed | Simple list rendering       |
 
 ### **Keyboard Shortcuts** (Power user efficiency)
 
-| Page | Status | Shortcuts |
-|------|--------|-----------|
-| **Playbook** | ✅ Complete | Cmd+K search, Cmd+N new, Cmd+F filters |
-| **Game Plans** | ⏳ Not yet | Could add Cmd+N for new plan |
-| **Practice Scripts** | ⏳ Not yet | Could add Cmd+N for new script |
+| Page                 | Status      | Shortcuts                              |
+| -------------------- | ----------- | -------------------------------------- |
+| **Playbook**         | ✅ Complete | Cmd+K search, Cmd+N new, Cmd+F filters |
+| **Game Plans**       | ⏳ Not yet  | Could add Cmd+N for new plan           |
+| **Practice Scripts** | ⏳ Not yet  | Could add Cmd+N for new script         |
 
 ---
 
 ## 🚀 Real-World Performance Metrics
 
 ### **Playbook Page**
+
 - **Save play**: <10ms perceived (was 3.3s) - 330x faster! ⚡
 - **Search plays**: <10ms filter time (200 plays) - Instant ⚡
 - **Open modal**: <100ms (preloaded) - 8x faster ⚡
 - **Stats recalc**: 50-70% reduction - Fewer re-renders ⚡
 
 ### **Game Plans Page**
+
 - **Create plan**: <50ms perceived (was 800ms) - 16x faster! ⚡
 - **Update plan**: <50ms perceived (was 800ms) - 16x faster! ⚡
 - **Duplicate plan**: <50ms perceived (was 800ms) - 16x faster! ⚡
@@ -200,6 +212,7 @@ All three major pages (Playbook, Game Plans, Practice Scripts) are now **Faceboo
 - **Open modal**: <100ms (preloaded) - 8x faster ⚡
 
 ### **Practice Scripts Page**
+
 - **List view**: Optimized for scanning ✅
 - **PDF export**: Ultra-compact format ✅
 - **Modal open**: <100ms (preloaded) ✅
@@ -215,10 +228,10 @@ All three major pages (Playbook, Game Plans, Practice Scripts) are now **Faceboo
 const handleSavePlan = async (plan: ModalGamePlan) => {
   // 1. Show instant success feedback
   toast.success(editingPlan ? "Game plan updated!" : "Game plan created!");
-  
+
   // 2. Optimistically update UI immediately
   if (editingPlan) {
-    setGamePlans(prev => prev.map(p => 
+    setGamePlans(prev => prev.map(p =>
       p.id === plan.id ? { ...plan, updatedAt: new Date() } : p
     ));
   } else {
@@ -227,11 +240,11 @@ const handleSavePlan = async (plan: ModalGamePlan) => {
     const optimisticPlan = { ...plan, id: tempId, createdAt: new Date() };
     setGamePlans(prev => [optimisticPlan, ...prev]);
   }
-  
+
   // 3. Close modal instantly
   setShowModal(false);
   setEditingPlan(undefined);
-  
+
   // 4. Sync with server in background (silent)
   try {
     if (editingPlan) {
@@ -239,7 +252,7 @@ const handleSavePlan = async (plan: ModalGamePlan) => {
     } else {
       const newPlan = await GamePlanService.createGamePlan({ ... });
       // Replace temp ID with real ID
-      setGamePlans(prev => prev.map(p => 
+      setGamePlans(prev => prev.map(p =>
         p.id.startsWith("temp-") ? { ...p, id: newPlan.id } : p
       ));
     }
@@ -262,14 +275,14 @@ const handleSavePlan = async (plan: ModalGamePlan) => {
 useEffect(() => {
   const preloadTimer = setTimeout(() => {
     console.debug("[PlaybookPage] Preloading heavy modals during idle time...");
-    
+
     // Preload 4 heavy modals
     import("../components/playbook/AddNewPlayModal").catch(() => {});
     import("../components/practice/PracticeScriptBuilder").catch(() => {});
     import("../components/playbook/PlaybookSettingsModal").catch(() => {});
     import("../components/playbook/DiagramEditor").catch(() => {});
   }, 2000); // Wait 2s after page load
-  
+
   return () => clearTimeout(preloadTimer);
 }, []);
 ```
@@ -283,12 +296,13 @@ const debouncedSearch = useDebouncedValue(searchQuery, 300);
 // ✅ Use direct state for instant filtering
 const filteredPlays = useMemo(() => {
   if (!searchQuery) return plays;
-  
+
   const query = searchQuery.toLowerCase();
-  return plays.filter(play => 
-    play.name.toLowerCase().includes(query) ||
-    play.formation?.toLowerCase().includes(query) ||
-    play.tags?.some(tag => tag.toLowerCase().includes(query))
+  return plays.filter(
+    (play) =>
+      play.name.toLowerCase().includes(query) ||
+      play.formation?.toLowerCase().includes(query) ||
+      play.tags?.some((tag) => tag.toLowerCase().includes(query))
   );
 }, [plays, searchQuery]); // Instant recalc (<10ms for 200 plays)
 ```
@@ -311,6 +325,7 @@ const filteredPlays = useMemo(() => {
 8. ✅ Replace temp IDs after server confirms
 
 **Never**:
+
 - ❌ Show loading spinners for optimistic updates
 - ❌ Block UI during server sync
 - ❌ Use await before updating UI state
@@ -339,11 +354,13 @@ const filteredPlays = useMemo(() => {
 ## 🎓 Documentation Reference
 
 ### **Core Performance Docs**:
+
 - `FACEBOOK_FAST_PERFORMANCE_GUIDE_DEC2_2025.md` - Complete pattern reference
 - `PLAYBOOK_PERFORMANCE_IMPROVEMENTS_DEC2_2025.md` - Playbook-specific optimizations
 - `docs/SOCIAL_FEATURES_FACEBOOK_FAST_OCT25_2025.md` - Canvas/diagram optimizations
 
 ### **Pattern Examples**:
+
 - **Optimistic UI**: Game Plans page (`src/pages/GamePlansPage.tsx` lines 150-343)
 - **Modal Preloading**: Playbook page (`src/pages/PlaybookPage.tsx` lines 718-744)
 - **Instant Search**: Playbook page (`src/pages/PlaybookPage.tsx` filtering logic)
@@ -355,20 +372,22 @@ const filteredPlays = useMemo(() => {
 
 ### **Performance Goals: ACHIEVED** ✅
 
-| Goal | Status |
-|------|--------|
+| Goal                      | Status                       |
+| ------------------------- | ---------------------------- |
 | <100ms perceived response | ✅ Achieved across all pages |
-| <10ms search filter time | ✅ Achieved for all searches |
-| <100ms modal open time | ✅ Achieved with preloading |
-| No loading spinners | ✅ Optimistic UI everywhere |
-| Automatic error recovery | ✅ Rollback on failure |
+| <10ms search filter time  | ✅ Achieved for all searches |
+| <100ms modal open time    | ✅ Achieved with preloading  |
+| No loading spinners       | ✅ Optimistic UI everywhere  |
+| Automatic error recovery  | ✅ Rollback on failure       |
 
 ### **Platform-Wide Performance**:
+
 - 🟢 **Playbook Page**: FULLY OPTIMIZED (8 patterns, 6-10x faster)
 - 🟢 **Game Plans Page**: FULLY OPTIMIZED (full optimistic UI, 10-16x faster)
 - 🟢 **Practice Scripts Page**: LIST VIEW OPTIMIZED (functional, could add optimistic UI)
 
 ### **User Experience**:
+
 - ✅ Feels instant for all save/create/update/delete operations
 - ✅ No waiting for modals to open
 - ✅ Search feels responsive (no debouncing lag)
@@ -384,11 +403,13 @@ const filteredPlays = useMemo(() => {
 **Priority**: MEDIUM (current state is functional)
 
 **Benefits**:
+
 - Match Game Plans page performance (10-16x faster)
 - Eliminate loading spinners
 - Complete feature parity
 
 **Tasks**:
+
 1. Add optimistic creates/updates (20 min)
 2. Add optimistic deletes (10 min)
 3. Add optimistic duplicates (10 min)
@@ -401,10 +422,12 @@ const filteredPlays = useMemo(() => {
 **Priority**: LOW (nice-to-have)
 
 **Benefits**:
+
 - Faster workflow for power users
 - Professional feel
 
 **Potential Shortcuts**:
+
 - Game Plans: Cmd+N for new plan
 - Practice Scripts: Cmd+N for new script
 
