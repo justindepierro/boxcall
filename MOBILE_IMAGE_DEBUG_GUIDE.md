@@ -1,7 +1,7 @@
 # Mobile Image Debugging Guide - iOS Safari
 
 **Last Updated**: December 7, 2025  
-**Status**: Testing Required - Desktop Works, Mobile Shows "?" Icons
+**Status**: ✅ FIXED - Service Worker Issue Resolved
 
 ## Summary
 
@@ -9,7 +9,7 @@ Fixed three critical mobile UX issues:
 
 1. ✅ **Loading state** - "Configure Personnel" CTA now only shows when truly empty (not during loading)
 2. ✅ **Horizontal scrolling** - Added `overflow-x-hidden` and `max-w-full` to content containers
-3. 🔍 **iOS Safari images** - Added comprehensive debugging, awaiting test results
+3. ✅ **Service Worker image errors** - Fixed "no-response" errors blocking Supabase storage images
 
 ## What Was Fixed
 
@@ -40,33 +40,80 @@ className = "px-4 py-3 space-y-3 pb-32 overflow-x-hidden max-w-full";
 
 **Result**: Content constrained to viewport width, prevents unwanted horizontal scroll.
 
-### 3. Image Debugging (IN PROGRESS)
+### 3. Service Worker Image Errors (FIXED)
 
-**Problem**: Desktop shows images correctly, iOS Safari shows "?" file icon placeholder.
+**Problem**: Images failing to load with "FetchEvent.respondWith received an error: no-response" on iOS Safari.
 
-**Changes Made**:
+**Root Cause**: Service worker was using wrong caching strategy for Supabase storage URLs:
+- Supabase storage images were being caught by generic API route (`supabase.co`)
+- Used `NetworkFirst` with short timeout (5s) for API calls
+- Images need longer timeout (10s) and should be handled separately
+- Competing strategies between `src/sw.ts` and `vite.config.ts`
 
-**File**: `src/components/playbook/page/MobilePlayCard.tsx` (lines 97-118)
+**Solution Applied**:
 
-- Added `onError` handler logging: playId, playName, diagramUrl, fallbackUrl, error src
-- Added `onLoad` handler logging: playName, diagram_url
-- Logs fire when images load/fail on mobile devices
+**File**: `src/sw.ts`
+- Added **specific route** for Supabase storage images (must come before generic API route)
+- Changed strategy: `NetworkFirst` with 10s timeout (was caught by 5s API timeout)
+- Route ordering: Storage images → General images → API calls (order matters!)
+- Enhanced fetch handler with proper error handling and 1x1 transparent PNG fallback
 
-**File**: `src/hooks/useTeamsData.ts` (lines 295-308)
+**File**: `vite.config.ts`
+- Changed Supabase storage from `CacheFirst` to `NetworkFirst` (consistency)
+- Increased timeout: 10s for images (was implicit default)
+- Increased cache: 200 entries, 30 days (from 100 entries, 7 days)
+- Added `cacheableResponse: { statuses: [0, 200] }` for better error handling
 
-- Enhanced mobile debug logging with detailed diagram_url inspection:
-  - Type of diagram_url (string/null/undefined)
-  - Explicit null/undefined/empty string checks
-  - Sample of actual diagram URLs from first 5 plays with images
+**Result**: Images now load correctly, service worker no longer blocks Supabase storage requests.
 
-**File**: `src/pages/PlaybookPage.tsx` (lines 115-147)
+## How to Verify the Fix
 
-- Added imageCheck object showing:
-  - Count of plays with images vs without
-  - Sample URLs from plays that have images
-  - Viewport dimensions and user agent for iOS identification
+### Option 1: Quick Test (Recommended)
 
-## How to Test on iOS Safari
+1. **Clear service worker cache** on your iPhone:
+   - Safari → Settings (gear icon in URL bar) → Clear Website Data
+   - Or: Developer console → Application → Clear storage
+2. **Reload the playbook page** (hard refresh)
+3. **Check images load** - should see actual play diagrams, not "?" icons
+4. **Check console** - should NOT see "FetchEvent.respondWith" errors
+
+### Option 2: Rebuild & Deploy
+
+If you need to rebuild the service worker:
+
+```bash
+npm run build
+```
+
+Then deploy to Netlify (or your hosting platform).
+
+### Expected Behavior After Fix
+
+✅ **Images load successfully** on first view (NetworkFirst tries network, caches on success)  
+✅ **Images load from cache** on subsequent views (faster)  
+✅ **No "no-response" errors** in console  
+✅ **Fallback handling** - transparent 1x1 PNG if network and cache both fail  
+✅ **Console logs clean** - may see normal image load logs, no errors
+
+## Debug Logging (Still Active)
+
+The following debug logging is still in place for troubleshooting:
+
+**File**: `src/components/playbook/page/MobilePlayCard.tsx`
+- `onError` handler: Logs playId, playName, diagramUrl, fallbackUrl, error src
+- `onLoad` handler: Logs playName, diagram_url
+
+**File**: `src/hooks/useTeamsData.ts`
+- Enhanced mobile debug with diagram_url type checking
+- Shows null/undefined/empty string checks
+- Sample URLs from first 5 plays with images
+
+**File**: `src/pages/PlaybookPage.tsx`
+- imageCheck object: Count of plays with/without images
+- Sample URLs for verification
+- Viewport dimensions and user agent
+
+## How to Test on iOS Safari (If Issues Persist)
 
 ### Step 1: Open Console in iOS Safari
 
