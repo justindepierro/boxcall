@@ -74,22 +74,27 @@ registerRoute(
 );
 
 // =====================================================
-// STRATEGY 2: Supabase Storage Images (OPTIMIZED - MUST BE FIRST)
+// STRATEGY 2: Supabase Storage Images (iOS Safari Compatible)
 // =====================================================
 
-// Cache Supabase storage images with network-first fallback to avoid service worker errors
+// Custom fetch handler for Supabase storage that's iOS Safari friendly
 registerRoute(
   ({ url }) =>
     url.hostname.includes("supabase.co") && url.pathname.includes("/storage/"),
   new NetworkFirst({
     cacheName: CACHE_NAMES.images,
-    networkTimeoutSeconds: 10, // Longer timeout for images
+    networkTimeoutSeconds: 15, // Increased timeout for slow connections
+    fetchOptions: {
+      // iOS Safari requires these for CORS
+      mode: "cors",
+      credentials: "omit", // Don't send cookies - Supabase storage is public
+    },
     plugins: [
       new CacheableResponsePlugin({
-        statuses: [0, 200],
+        statuses: [0, 200], // Cache opaque responses (status 0) for CORS
       }),
       new ExpirationPlugin({
-        maxEntries: 200,
+        maxEntries: 300, // Increased for more images
         maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
       }),
     ],
@@ -221,6 +226,13 @@ self.addEventListener("activate", (event) => {
 
 // Enhanced fetch handler with better error handling
 self.addEventListener("fetch", (event) => {
+  const url = new URL(event.request.url);
+  
+  // Skip Supabase storage URLs - let Workbox handle them (Strategy 2)
+  if (url.hostname.includes("supabase.co") && url.pathname.includes("/storage/")) {
+    return; // Let Workbox's registerRoute handle this
+  }
+  
   // Navigation requests - serve offline page on failure
   if (event.request.mode === "navigate") {
     event.respondWith(
@@ -233,10 +245,14 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Image requests - ensure proper error handling
+  // Image requests (non-Supabase) - ensure proper error handling
   if (event.request.destination === "image") {
     event.respondWith(
-      fetch(event.request)
+      fetch(event.request, {
+        // Important for iOS Safari CORS
+        mode: "cors",
+        credentials: "omit",
+      })
         .then((response) => {
           // Clone and cache successful responses
           if (response.ok) {

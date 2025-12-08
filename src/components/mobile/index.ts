@@ -82,12 +82,20 @@ export type {
   QuickAction as QuickActionGridItem,
 } from "./ui/MobileQuickActionGrid";
 
+export { MobileQuickActionTile } from "./ui/MobileQuickActionTile";
+
 export { MobileListItem, MobileListGroup } from "./ui/MobileListItem";
 export type {
   MobileListItemProps,
   MobileListGroupProps,
   SwipeAction,
 } from "./ui/MobileListItem";
+
+// Practice Components
+export { MobilePracticeCard } from "./practice/MobilePracticeCard";
+
+// Game Plan Components
+export { MobileGamePlanCard } from "./gameplans/MobileGamePlanCard";
 
 // ============================================================================
 // USAGE GUIDELINES

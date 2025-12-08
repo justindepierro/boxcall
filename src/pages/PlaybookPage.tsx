@@ -1031,6 +1031,7 @@ const PlaybookPage = () => {
           mobileListExpanded={mobileListExpanded}
           showFiltersSheet={isModalOpen("filtersSheet")}
           showStatsSheet={isModalOpen("statsSheet")}
+          activeTeamId={activeTeamId}
           debouncedSearchQuery={debouncedSearchQuery}
           optimisticPlays={optimisticPlays}
           formationAudit={formationAudit}
@@ -1058,6 +1059,8 @@ const PlaybookPage = () => {
           handleAddToPracticeScript={handleAddToPracticeScript}
           handleAddToGamePlan={handleAddToGamePlan}
           handlePlayCountChange={handlePlayCountChange}
+          handleViewChange={handleViewChange}
+          handleOpenPracticeScriptBuilder={handleOpenPracticeScriptBuilder}
           dispatch={dispatch}
           mobileButtonSize={mobileButtonSize}
           mobileSecondaryButtonSize={mobileSecondaryButtonSize}

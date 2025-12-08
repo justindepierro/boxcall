@@ -87,6 +87,10 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
             src={play.diagram_url || (play as any).diagram_image_url}
             alt={`${displayName} diagram`}
             className="w-full h-full object-cover"
+            // iOS Safari compatibility
+            crossOrigin="anonymous"
+            decoding="async"
+            referrerPolicy="no-referrer-when-downgrade"
           />
         </div>
       )}

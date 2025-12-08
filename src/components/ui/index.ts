@@ -51,3 +51,6 @@ export { SelectionCheckbox } from "./SelectionCheckbox";
 export type { SelectionCheckboxProps } from "./SelectionCheckbox";
 export { PhaseLabel } from "./PhaseLabel";
 export type { PhaseLabelProps } from "./PhaseLabel";
+
+// iOS Safari compatible image components
+export { SafariImage, PlayDiagramImage } from "./SafariImage";

@@ -719,7 +719,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       {!showEmpty && !loading && !error && viewMode === "grid" ? (
         <>
           {isMobile ? (
-            <div className="grid grid-cols-1 gap-4 px-4 py-6">
+            <div className="space-y-3">
               {visiblePlays.slice(0, mobileVisibleCount).map((play, index) => (
                 <div key={play.id} data-card-index={index}>
                   <SwipeActions
@@ -817,11 +817,11 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           )}
           {/* Mobile Progressive Loading - Infinite Scroll */}
           {hasMorePlays && (
-            <div ref={loadMoreRef} className="flex justify-center py-8">
+            <div ref={loadMoreRef} className="flex justify-center py-6">
               {isLoadingMore ? (
                 <div className="flex items-center gap-2 text-secondary">
-                  <Icon name="clock" className="h-4 w-4 animate-spin" />
-                  <span>Loading more plays...</span>
+                  <div className="w-5 h-5 border-2 border-brand-jade border-t-transparent rounded-full animate-spin" />
+                  <span className="text-sm">Loading more...</span>
                 </div>
               ) : (
                 <Button
@@ -839,11 +839,9 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                     }, 300);
                   }}
                   variant="secondary"
-                  className="w-full sm:w-auto"
+                  className="w-full max-w-xs"
                 >
-                  Show More (
-                  {Math.max(displayPlays.length - mobileVisibleCount, 0)}{" "}
-                  remaining)
+                  Load More ({Math.max(displayPlays.length - mobileVisibleCount, 0)} remaining)
                 </Button>
               )}
             </div>
@@ -866,7 +864,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
         (disableVirtual || displayPlays.length < VIRTUALIZE_THRESHOLD) ? (
         <>
           {isMobile ? (
-            <div className="space-y-4 overflow-visible px-4" role="list">
+            <div className="space-y-3" role="list">
               {visiblePlays.map((play, index) => (
                 <div key={play.id} role="listitem" data-card-index={index}>
                   <SwipeActions
@@ -958,11 +956,11 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
             </DragDropContext>
           )}
           {hasMorePlays && (
-            <div ref={loadMoreRef} className="flex justify-center pt-4">
+            <div ref={loadMoreRef} className="flex justify-center py-6">
               {isLoadingMore ? (
                 <div className="flex items-center gap-2 text-secondary">
-                  <Icon name="clock" className="h-4 w-4 animate-spin" />
-                  <span>Loading plays...</span>
+                  <div className="w-5 h-5 border-2 border-brand-jade border-t-transparent rounded-full animate-spin" />
+                  <span className="text-sm">Loading...</span>
                 </div>
               ) : (
                 <Button
@@ -971,7 +969,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                     onMobileListExpand?.();
                   }}
                   variant="secondary"
-                  className="w-full sm:w-auto"
+                  className="w-full max-w-xs"
                 >
                   See All {displayPlays.length} Plays
                 </Button>

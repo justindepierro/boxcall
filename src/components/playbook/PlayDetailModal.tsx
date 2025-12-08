@@ -201,6 +201,10 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                         src={play.diagram_url}
                         alt={`${play.formation} ${play.play_name} diagram`}
                         className="w-full h-auto"
+                        // iOS Safari compatibility
+                        crossOrigin="anonymous"
+                        decoding="async"
+                        referrerPolicy="no-referrer-when-downgrade"
                       />
                     </div>
                   )}

@@ -109,6 +109,10 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
                 src={play.diagram_url || (play as any).diagram_image_url}
                 alt={`${tileTitle} diagram`}
                 className="w-full h-full object-cover"
+                // iOS Safari compatibility
+                crossOrigin="anonymous"
+                decoding="async"
+                referrerPolicy="no-referrer-when-downgrade"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
               <div className="absolute top-3 left-3">

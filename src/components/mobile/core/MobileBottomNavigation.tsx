@@ -74,21 +74,21 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
     <nav
       className={`
         fixed bottom-0 left-0 right-0 z-fixed
-        bg-white dark:bg-neutral-900
-        border-t border-muted
-        shadow-lg
-        pb-safe-area-inset-bottom
+        bg-white/95 dark:bg-neutral-900/95
+        backdrop-blur-lg
+        border-t border-neutral-200 dark:border-neutral-800
+        shadow-[0_-4px_20px_rgba(0,0,0,0.08)]
         md:hidden
         ${className}
       `}
       style={{
-        backgroundColor: "var(--color-surface-primary, #ffffff)",
+        paddingBottom: "env(safe-area-inset-bottom, 0px)",
       }}
       role="navigation"
       aria-label="Mobile bottom navigation"
     >
-      <div className="px-2 py-1">
-        <div className="flex justify-between items-center content-narrow">
+      <div className="px-3 py-2">
+        <div className="flex justify-around items-center max-w-md mx-auto">
           {items.map((item) => (
             <div
               key={item.id}
@@ -100,22 +100,26 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
             >
               <Button
                 onClick={() => handleItemClick(item)}
-                variant={item.isActive ? "primary" : "ghost"}
+                variant="ghost"
                 size="sm"
                 className={`
                   relative flex flex-col items-center justify-center 
-                  min-w-16 px-2 py-2 h-auto 
+                  min-w-16 px-3 py-1.5 h-auto 
+                  rounded-xl
                   active:scale-95 
-                  focus-visible:ring-2 focus-visible:ring-jade-500 
-                  transition-all duration-200
-                  ${item.isActive ? "text-brand-jade dark:text-brand-jade-light bg-primary-50/10 dark:bg-primary-50/5" : "text-muted hover:text-primary dark:hover:text-secondary"} 
-                  text-secondary
+                  focus-visible:ring-2 focus-visible:ring-brand-jade 
+                  transition-all duration-150
+                  ${item.isActive 
+                    ? "text-brand-jade bg-brand-jade/10" 
+                    : "text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100"
+                  }
                 `}
-                style={{ minHeight: "60px" }}
+                style={{ minHeight: "52px" }}
                 aria-label={`Navigate to ${item.label}`}
+                aria-current={item.isActive ? "page" : undefined}
               >
                 {/* Icon Container */}
-                <div className="relative mb-1 overflow-visible">
+                <div className="relative mb-0.5">
                   <Icon
                     name={
                       item.icon as
@@ -127,28 +131,24 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
                     }
                     size="sm"
                     className={`
-                    transition-all duration-200
-                    ${item.isActive ? "text-brand-jade dark:text-brand-jade-light scale-110" : ""}
-                  `}
+                      transition-all duration-150
+                      ${item.isActive ? "scale-110" : ""}
+                    `}
                   />
 
                   {/* Notification Badge */}
                   {item.badge && item.badge > 0 && (
-                    <div className="absolute -top-2 -right-2">
+                    <div className="absolute -top-1.5 -right-1.5">
                       <NotificationBadge count={item.badge} size="sm" />
-                    </div>
-                  )}
-
-                  {/* Active Indicator - Thicker horizontal line */}
-                  {item.isActive && (
-                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
-                      <div className="w-8 h-1 bg-brand-jade dark:bg-brand-jade-light rounded-full" />
                     </div>
                   )}
                 </div>
 
                 {/* Label */}
-                <span className="text-xs font-medium leading-tight">
+                <span className={`
+                  text-xs font-medium leading-tight
+                  ${item.isActive ? "font-semibold" : ""}
+                `}>
                   {item.label}
                 </span>
               </Button>

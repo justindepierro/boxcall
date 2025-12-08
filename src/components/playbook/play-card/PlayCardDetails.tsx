@@ -120,7 +120,10 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
               }
               alt={`${play.play_name} diagram`}
               className="w-full max-h-72 md:max-h-96 rounded-lg border-2 border-primary object-contain"
-              loading="lazy"
+              // iOS Safari compatibility - avoid loading="lazy" (breaks on iOS 12-14)
+              crossOrigin="anonymous"
+              decoding="async"
+              referrerPolicy="no-referrer-when-downgrade"
             />
           </div>
         </div>

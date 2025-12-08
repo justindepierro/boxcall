@@ -3,6 +3,7 @@ import { Typography } from "../../design-system/Typography";
 import { Icon } from "../../ui/Icon";
 import type { Play as PlayType } from "../../../types/play";
 import { getDisplayName } from "../../../utils/playNameUtils";
+import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 
 interface MobilePlayCardProps {
   play: PlayType;
@@ -14,19 +15,22 @@ interface MobilePlayCardProps {
 }
 
 /**
- * Mobile-optimized play card component
+ * Mobile-optimized play card component - Redesigned for better UX
  *
- * Design specs:
- * - Height: 88px (2.35x desktop cards)
- * - Touch target: Full width × 88px
- * - Thumbnail: 64x64px
- * - Typography: body-lg (18px) for play name
- * - Actions: Always visible, 44px touch targets
+ * Design specs (improved):
+ * - Height: Auto with comfortable padding (min 100px)
+ * - Touch target: Full width, easy to tap
+ * - Thumbnail: 72x72px (larger for better visibility)
+ * - Typography: Clear hierarchy with play name prominent
+ * - Actions: Quick-tap icon buttons with 48px targets
+ * - Visual: Card-based design with subtle shadows
  *
- * Usage:
- * - Wrap in SwipeActions for swipe gestures
- * - Use in single-column grid on mobile
- * - Larger spacing for comfortable thumb access
+ * UX improvements:
+ * - Better visual hierarchy (play name first)
+ * - Larger, clearer badges for formation/personnel
+ * - Play type shown as colored accent bar
+ * - One-word call displayed prominently when enabled
+ * - Improved touch feedback with haptics
  */
 export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
   play,
@@ -38,15 +42,18 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
 }) => {
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
+    triggerHapticFeedback("light");
     onEdit?.(play);
   };
 
   const handleMore = (e: React.MouseEvent) => {
     e.stopPropagation();
+    triggerHapticFeedback("light");
     onMore?.(play);
   };
 
   const handleClick = () => {
+    triggerHapticFeedback("light");
     onClick?.(play);
   };
 
@@ -55,34 +62,36 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
 
   // Format formation and personnel
   const formation = play.formation || "No Formation";
-  const personnel = play.personnel || "11 Personnel";
-  // Play type badge color with improved contrast
-  const playTypeColor =
-    {
-      Pass: "text-primary-700 bg-primary-100 border border-primary-200",
-      Run: "text-success-700 bg-success-100 border border-success-200",
-      RPO: "text-warning-700 bg-warning-100 border border-warning-200",
-      "Play Action": "text-info-700 bg-info-100 border border-info-200",
-    }[play.p_type] || "text-secondary bg-muted border border-border";
+  const personnel = play.personnel || "11";
+
+  // Play type accent color (left border indicator)
+  const playTypeAccent: Record<string, string> = {
+    Pass: "border-l-brand-jade",
+    Run: "border-l-success-500",
+    RPO: "border-l-warning-500",
+    "Play Action": "border-l-info-500",
+  };
+
+  const accentClass = playTypeAccent[play.p_type] || "border-l-neutral-300";
 
   return (
     <div
       className={`
         relative
-        flex items-start gap-4
+        flex items-stretch
         w-full
-        px-4 py-4
-        bg-primary
-        border border-transparent
+        bg-surface-card
+        border border-border
+        border-l-4
+        ${accentClass}
         rounded-xl
+        shadow-sm
         cursor-pointer
-        transition-all duration-200
-        hover:border-primary-200
-        hover:bg-secondary/60
-        hover:shadow-md
+        transition-all duration-150
         active:scale-[0.98]
-        min-h-28
-        ${isSelected ? "border-primary-500 bg-primary-50/40 shadow-lg" : ""}
+        active:shadow-md
+        overflow-hidden
+        ${isSelected ? "ring-2 ring-brand-jade ring-offset-2 shadow-md" : ""}
       `}
       onClick={handleClick}
       role="button"
@@ -94,102 +103,96 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
         }
       }}
     >
-      {/* Play Thumbnail */}
-      <div className="w-18 h-18 flex-shrink-0 rounded-xl overflow-hidden bg-muted shadow-inner">
+      {/* Play Thumbnail - Larger and more prominent */}
+      <div className="w-20 h-20 flex-shrink-0 bg-muted flex items-center justify-center overflow-hidden">
         {play.diagram_url || (play as any).diagram_image_url ? (
           <img
             src={play.diagram_url || (play as any).diagram_image_url}
             alt={displayName}
             className="w-full h-full object-cover"
+            // iOS Safari compatibility - DO NOT use loading="lazy" (breaks on iOS 12-14)
+            // crossOrigin needed for CORS with Supabase storage
+            crossOrigin="anonymous"
+            decoding="async"
+            referrerPolicy="no-referrer-when-downgrade"
+            onLoad={() => {
+              console.log("[MobilePlayCard] Image loaded:", play.play_name);
+            }}
             onError={(e) => {
               console.error("[MobilePlayCard] Image load error:", {
                 playId: play.id,
                 playName: play.play_name,
-                diagramUrl: play.diagram_url,
-                fallbackUrl: (play as any).diagram_image_url,
-                error: e.currentTarget.src,
+                url: play.diagram_url || (play as any).diagram_image_url,
               });
-            }}
-            onLoad={() => {
-              console.log(
-                "[MobilePlayCard] Image loaded:",
-                play.play_name,
-                play.diagram_url
-              );
+              // Hide broken image and show fallback
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.parentElement?.classList.add('image-error');
             }}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <Icon name="file" className="text-muted" size="lg" />
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-neutral-100 to-neutral-200">
+            <Icon name="file" className="text-neutral-400" size="lg" />
           </div>
         )}
       </div>
 
-      {/* Play Info */}
-      <div className="flex-1 min-w-0 space-y-2">
-        {/* Play Name */}
+      {/* Play Content */}
+      <div className="flex-1 min-w-0 py-3 pr-2">
+        {/* Play Name - Most prominent */}
         <Typography
           variant="body-lg"
-          className="text-primary font-semibold leading-tight line-clamp-2"
+          className="text-primary font-semibold leading-tight line-clamp-1 mb-1.5"
         >
           {displayName}
         </Typography>
 
-        {/* Formation & Personnel badges */}
-        <div className="flex flex-wrap gap-2">
-          {formation && (
-            <span className="inline-flex items-center rounded-full bg-secondary px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-secondary">
-              {formation}
-            </span>
-          )}
-          {personnel && (
-            <span className="inline-flex items-center rounded-full bg-secondary px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-secondary">
-              {personnel}
-            </span>
-          )}
-          {showOneWordCalls && play.one_word_play && (
-            <span className="inline-flex items-center rounded-full bg-brand-jade/10 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-brand-jade">
+        {/* One-word call - Show prominently when enabled */}
+        {showOneWordCalls && play.one_word_play && (
+          <div className="mb-2">
+            <span className="inline-flex items-center gap-1 rounded-md bg-brand-jade/10 px-2 py-0.5 text-sm font-bold text-brand-jade">
+              <Icon name="zap" size="xs" />
               {play.one_word_play}
-            </span>
-          )}
-        </div>
-
-        {/* Play Type Badge */}
-        {play.p_type && (
-          <div className="flex items-center gap-2">
-            <span
-              className={`
-                inline-flex items-center
-                px-2.5 py-1.5
-                text-xs font-semibold uppercase tracking-wide
-                rounded-full
-                ${playTypeColor}
-              `}
-            >
-              {play.p_type}
             </span>
           </div>
         )}
+
+        {/* Formation & Personnel inline */}
+        <div className="flex items-center gap-2 mb-2">
+          <span className="inline-flex items-center rounded-md bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-700">
+            {formation}
+          </span>
+          <span className="inline-flex items-center rounded-md bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-600">
+            {personnel}
+          </span>
+        </div>
+
+        {/* Play Type - Subtle label */}
+        {play.p_type && (
+          <span className="text-xs text-secondary uppercase tracking-wide">
+            {play.p_type}
+          </span>
+        )}
       </div>
 
-      {/* Quick Actions - Always visible */}
-      <div className="flex items-center gap-3 flex-shrink-0">
+      {/* Quick Actions - Stacked vertically for easy thumb access */}
+      <div className="flex flex-col items-center justify-center gap-1 px-2 py-2 border-l border-border">
         {/* Edit Button */}
         <button
           type="button"
           onClick={handleEdit}
           className="
             flex items-center justify-center
-            w-12 h-12
-            rounded-xl
-            bg-secondary/90
-            hover:bg-muted
+            w-11 h-11
+            rounded-lg
+            bg-transparent
+            hover:bg-neutral-100
+            active:bg-neutral-200
             active:scale-95
-            transition-all duration-150
-            "
+            transition-all duration-100
+          "
           aria-label="Edit play"
         >
-          <Icon name="edit" className="text-primary" size="md" />
+          <Icon name="edit" className="text-neutral-600" size="sm" />
         </button>
 
         {/* More Actions Button */}
@@ -198,23 +201,19 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
           onClick={handleMore}
           className="
             flex items-center justify-center
-            w-12 h-12
-            rounded-xl
-            bg-secondary/90
-            hover:bg-muted
+            w-11 h-11
+            rounded-lg
+            bg-transparent
+            hover:bg-neutral-100
+            active:bg-neutral-200
             active:scale-95
-            transition-all duration-150
+            transition-all duration-100
           "
           aria-label="More actions"
         >
-          <Icon name="settings" className="text-primary" size="md" />
+          <Icon name="dots-vertical" className="text-neutral-600" size="sm" />
         </button>
       </div>
-
-      {/* Selection indicator */}
-      {isSelected && (
-        <div className="absolute inset-0 border-2 border-primary-500 rounded-xl pointer-events-none" />
-      )}
     </div>
   );
 };
