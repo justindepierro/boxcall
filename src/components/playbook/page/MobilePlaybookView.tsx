@@ -180,8 +180,19 @@ export function MobilePlaybookView({
       >
         {/* Reduced spacing: py-3, space-y-3, pt-20 for tighter layout */}
 
-        {/* Empty State - Hero CTA */}
-        {optimisticPlays.length === 0 && (
+        {/* Loading State - Show skeleton while data loads */}
+        {state.playsCreated === 0 && optimisticPlays.length === 0 && (
+          <MobileSection spacing="comfortable">
+            <div className="space-y-4">
+              <div className="h-32 bg-muted rounded-xl animate-pulse" />
+              <div className="h-32 bg-muted rounded-xl animate-pulse" />
+              <div className="h-32 bg-muted rounded-xl animate-pulse" />
+            </div>
+          </MobileSection>
+        )}
+
+        {/* Empty State - Hero CTA (only show after loading completes) */}
+        {state.playsCreated > 0 && optimisticPlays.length === 0 && (
           <MobileSection spacing="comfortable">
             <MobileCTACard
               icon="users"
