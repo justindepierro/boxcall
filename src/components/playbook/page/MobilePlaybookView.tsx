@@ -227,7 +227,9 @@ export function MobilePlaybookView({
                     onEdit: handleEditPlay,
                     // Adapter: PlayGrid expects (playId, updates) but handleSavePlay receives full Play object
                     onSave: async (playId: string, updates: Partial<Play>) => {
-                      const existingPlay = optimisticPlays.find(p => p.id === playId);
+                      const existingPlay = optimisticPlays.find(
+                        (p) => p.id === playId
+                      );
                       if (existingPlay) {
                         await handleSavePlay({ ...existingPlay, ...updates });
                       }
