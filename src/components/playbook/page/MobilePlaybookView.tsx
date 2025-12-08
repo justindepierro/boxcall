@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 import { Icon } from "../../ui/Icon/Icon";
 import { Button } from "../../ui/Button/Button";
@@ -18,7 +17,6 @@ import { BottomSheet } from "../../BottomSheet";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 import type { Play } from "../../../types/play";
 import type { PlaybookState } from "../../../contexts/PlaybookContext";
-import type { FormationAuditResult } from "../../../hooks/useFormationAudit";
 
 interface MobilePlaybookViewProps {
   // State
@@ -31,7 +29,7 @@ interface MobilePlaybookViewProps {
   debouncedSearchQuery: string;
   optimisticPlays: Play[];
   formationAudit: {
-    plays: FormationAuditResult[];
+    plays: Play[];
     loading: boolean;
     error: string | null;
   };
@@ -128,18 +126,6 @@ export function MobilePlaybookView({
               }
               className="w-full h-12 pl-10 pr-20 bg-secondary border border-muted rounded-lg text-base text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-brand-jade focus:border-transparent transition-all"
             />
-            {/* 🚀 PERFORMANCE: Instant search feedback - shows while debouncing */}
-            {state.isSearchPending && state.searchQuery && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                className="absolute right-12 top-1/2 transform -translate-y-1/2 flex items-center gap-2 bg-brand-jade/10 text-brand-jade px-3 py-1 rounded-full text-xs font-medium"
-              >
-                <Icon name="refresh-cw" className="h-3 w-3 animate-spin" />
-                Searching...
-              </motion.div>
-            )}
             {state.searchQuery && (
               <motion.button
                 initial={{ scale: 0, opacity: 0 }}
@@ -239,7 +225,13 @@ export function MobilePlaybookView({
                     onAddToPracticeScript: handleAddToPracticeScript,
                     onAddToGamePlan: handleAddToGamePlan,
                     onEdit: handleEditPlay,
-                    onSave: handleSavePlay,
+                    // Adapter: PlayGrid expects (playId, updates) but handleSavePlay receives full Play object
+                    onSave: async (playId: string, updates: Partial<Play>) => {
+                      const existingPlay = optimisticPlays.find(p => p.id === playId);
+                      if (existingPlay) {
+                        await handleSavePlay({ ...existingPlay, ...updates });
+                      }
+                    },
                     onDuplicate: handleDuplicatePlay,
                     onOpenBuilder: handleOpenBuilder,
                     onOpenAssignments: handleOpenAssignments,
@@ -324,7 +316,7 @@ export function MobilePlaybookView({
                 },
                 {
                   id: "shortcuts",
-                  icon: "command",
+                  icon: "zap",
                   label: "Shortcuts",
                   onTap: handleOpenKeyboardShortcuts,
                 },
