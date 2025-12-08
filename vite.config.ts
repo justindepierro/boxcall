@@ -125,15 +125,19 @@ export default defineConfig({
                     cacheName: "supabase-auth",
                   },
                 },
-                // OPTIMIZED: Supabase storage (images/assets)
+                // OPTIMIZED: Supabase storage (images/assets) - NetworkFirst to avoid service worker errors
                 {
                   urlPattern: /^https:\/\/.*\.supabase\.co\/storage\//i,
-                  handler: "CacheFirst",
+                  handler: "NetworkFirst",
                   options: {
                     cacheName: "supabase-storage",
+                    networkTimeoutSeconds: 10, // Longer timeout for images
                     expiration: {
-                      maxEntries: 100,
-                      maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
+                      maxEntries: 200, // Increased for more images
+                      maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+                    },
+                    cacheableResponse: {
+                      statuses: [0, 200],
                     },
                   },
                 },

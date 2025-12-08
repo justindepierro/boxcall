@@ -74,10 +74,33 @@ registerRoute(
 );
 
 // =====================================================
-// STRATEGY 2: Stale-While-Revalidate for Images (OPTIMIZED)
+// STRATEGY 2: Supabase Storage Images (OPTIMIZED - MUST BE FIRST)
 // =====================================================
 
-// Cache images with stale-while-revalidate - INCREASED CACHE SIZE
+// Cache Supabase storage images with network-first fallback to avoid service worker errors
+registerRoute(
+  ({ url }) =>
+    url.hostname.includes("supabase.co") && url.pathname.includes("/storage/"),
+  new NetworkFirst({
+    cacheName: CACHE_NAMES.images,
+    networkTimeoutSeconds: 10, // Longer timeout for images
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+      new ExpirationPlugin({
+        maxEntries: 200,
+        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+      }),
+    ],
+  })
+);
+
+// =====================================================
+// STRATEGY 3: General Images (OPTIMIZED)
+// =====================================================
+
+// Cache other images with stale-while-revalidate
 registerRoute(
   ({ request }) => request.destination === "image",
   new StaleWhileRevalidate({
@@ -87,37 +110,38 @@ registerRoute(
         statuses: [0, 200],
       }),
       new ExpirationPlugin({
-        maxEntries: 200, // Increased from 100
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days (from 7)
+        maxEntries: 200,
+        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
       }),
     ],
   })
 );
 
 // =====================================================
-// STRATEGY 3: Network-First for API Calls (OPTIMIZED)
+// STRATEGY 4: Network-First for API Calls (OPTIMIZED)
 // =====================================================
 
-// Supabase API calls - network-first with optimized timeout and cache
+// Supabase API calls (non-storage) - network-first with optimized timeout and cache
 registerRoute(
-  ({ url }) => url.hostname.includes("supabase.co"),
+  ({ url }) =>
+    url.hostname.includes("supabase.co") && !url.pathname.includes("/storage/"),
   new NetworkFirst({
     cacheName: CACHE_NAMES.api,
-    networkTimeoutSeconds: 5, // Increased from 3s for better reliability
+    networkTimeoutSeconds: 5,
     plugins: [
       new CacheableResponsePlugin({
         statuses: [0, 200],
       }),
       new ExpirationPlugin({
-        maxEntries: 100, // Increased from 50
-        maxAgeSeconds: 15 * 60, // 15 minutes (from 5)
+        maxEntries: 100,
+        maxAgeSeconds: 15 * 60, // 15 minutes
       }),
     ],
   })
 );
 
 // =====================================================
-// STRATEGY 4: Cache-First for External Resources
+// STRATEGY 5: Cache-First for External Resources
 // =====================================================
 
 // Cache external resources (CDNs, etc.) with longer timeout
@@ -140,7 +164,7 @@ registerRoute(
 );
 
 // =====================================================
-// STRATEGY 4: Stale-While-Revalidate for Navigation
+// STRATEGY 6: Network-First for Navigation
 // =====================================================
 
 // HTML documents (app shell)
@@ -195,8 +219,9 @@ self.addEventListener("activate", (event) => {
   return self.clients.claim();
 });
 
-// Serve offline page when network fails
+// Enhanced fetch handler with better error handling
 self.addEventListener("fetch", (event) => {
+  // Navigation requests - serve offline page on failure
   if (event.request.mode === "navigate") {
     event.respondWith(
       fetch(event.request).catch(() => {
@@ -205,6 +230,54 @@ self.addEventListener("fetch", (event) => {
         });
       })
     );
+    return;
+  }
+
+  // Image requests - ensure proper error handling
+  if (event.request.destination === "image") {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          // Clone and cache successful responses
+          if (response.ok) {
+            const responseClone = response.clone();
+            caches.open(CACHE_NAMES.images).then((cache) => {
+              cache.put(event.request, responseClone);
+            });
+          }
+          return response;
+        })
+        .catch((error) => {
+          // Try to serve from cache on network failure
+          return caches.match(event.request).then((cachedResponse) => {
+            if (cachedResponse) {
+              return cachedResponse;
+            }
+            // Log error for debugging
+            console.warn(
+              "Failed to fetch image, no cache available:",
+              event.request.url,
+              error
+            );
+            // Return a transparent 1x1 pixel as fallback
+            return new Response(
+              new Blob([
+                new Uint8Array([
+                  0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00,
+                  0x00, 0x0d, 0x49, 0x48, 0x44, 0x52, 0x00, 0x00, 0x00, 0x01,
+                  0x00, 0x00, 0x00, 0x01, 0x08, 0x06, 0x00, 0x00, 0x00, 0x1f,
+                  0x15, 0xc4, 0x89, 0x00, 0x00, 0x00, 0x0a, 0x49, 0x44, 0x41,
+                  0x54, 0x78, 0x9c, 0x63, 0x00, 0x01, 0x00, 0x00, 0x05, 0x00,
+                  0x01, 0x0d, 0x0a, 0x2d, 0xb4, 0x00, 0x00, 0x00, 0x00, 0x49,
+                  0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82,
+                ]),
+              ]),
+              { headers: { "Content-Type": "image/png" } }
+            );
+          });
+        })
+    );
+    return;
   }
 });
 
