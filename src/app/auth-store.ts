@@ -1064,39 +1064,43 @@ const initializeAuth = async () => {
         error: null,
       });
 
-      // Fetch user profile with error handling
-      try {
-        debug("Starting user profile fetch...");
-        await useAuth.getState().fetchUserProfile(session.user.id);
-        success("User profile loaded successfully");
-      } catch (profileError) {
-        logError("Error loading user profile:", profileError);
-        AuthMonitoring.recordError(
-          "auth_init",
-          profileError instanceof Error
-            ? profileError.message
-            : "Profile fetch failed",
-          session.user.id,
-          {
-            phase: "fetch_profile",
-          }
-        );
-        // Don't fail auth init completely if profile fetch fails
-      }
+      // Run profile fetch and DB test in PARALLEL (non-blocking)
+      // This reduces auth init time significantly
+      const backgroundTasks = async () => {
+        const profilePromise = useAuth
+          .getState()
+          .fetchUserProfile(session.user.id)
+          .then(() => success("User profile loaded successfully"))
+          .catch((profileError) => {
+            logError("Error loading user profile:", profileError);
+            AuthMonitoring.recordError(
+              "auth_init",
+              profileError instanceof Error
+                ? profileError.message
+                : "Profile fetch failed",
+              session.user.id,
+              { phase: "fetch_profile" }
+            );
+          });
 
-      // Test authenticated database connection
-      try {
-        debug("Starting database connection test...");
-        const dbConnectionOk = await testDatabaseConnection();
-        if (dbConnectionOk) {
-          success("Authenticated database connection verified");
-        } else {
-          warn("Authenticated database connection test failed");
-        }
-      } catch (dbError) {
-        logError("Error testing authenticated database connection:", dbError);
-        // Don't fail auth init if DB test fails
-      }
+        const dbTestPromise = testDatabaseConnection()
+          .then((dbConnectionOk) => {
+            if (dbConnectionOk) {
+              success("Authenticated database connection verified");
+            } else {
+              warn("Authenticated database connection test failed");
+            }
+          })
+          .catch((dbError) => {
+            logError("Error testing authenticated database connection:", dbError);
+          });
+
+        // Wait for both to complete in parallel
+        await Promise.allSettled([profilePromise, dbTestPromise]);
+      };
+
+      // Fire and forget - don't block auth init
+      backgroundTasks();
 
       debug("Starting session refresh monitoring...");
       // Start session refresh monitoring
