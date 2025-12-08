@@ -267,37 +267,10 @@ export function useTeamsData() {
           const from = 0;
           const to = PAGE_SIZE - 1;
 
-          // 🚀 PERFORMANCE: Only select fields needed by PlayGrid (60% payload reduction)
+          // Query all fields to avoid column mismatch issues
           const { data, error: playsError } = await supabase
             .from("plays")
-            .select(
-              `
-              id,
-              playbook_id,
-              formation,
-              play_name,
-              one_word_play,
-              p_type,
-              personnel,
-              f_type,
-              f_dir,
-              p_dir,
-              protection,
-              r_str,
-              p_str,
-              pref_down,
-              pref_dis,
-              pref_hash,
-              confidence_base,
-              times_called,
-              times_successful,
-              wristband_number,
-              diagram_url,
-              diagram_data,
-              created_at,
-              updated_at
-            `
-            )
+            .select("*")
             .order("created_at", { ascending: false })
             .range(from, to);
 
@@ -369,37 +342,10 @@ export function useTeamsData() {
       const from = nextPage * PAGE_SIZE;
       const to = from + PAGE_SIZE - 1;
 
-      // 🚀 PERFORMANCE: Only select fields needed by PlayGrid (60% payload reduction)
+      // Query all fields to avoid column mismatch issues
       const { data, error } = await supabase
         .from("plays")
-        .select(
-          `
-          id,
-          playbook_id,
-          formation,
-          play_name,
-          one_word_play,
-          p_type,
-          personnel,
-          f_type,
-          f_dir,
-          p_dir,
-          protection,
-          r_str,
-          p_str,
-          pref_down,
-          pref_dis,
-          pref_hash,
-          confidence_base,
-          times_called,
-          times_successful,
-          wristband_number,
-          diagram_url,
-          diagram_data,
-          created_at,
-          updated_at
-        `
-        )
+        .select("*")
         .order("created_at", { ascending: false })
         .range(from, to);
 
