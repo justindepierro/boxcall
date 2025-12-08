@@ -15,7 +15,7 @@ interface MobileQuickActionTileProps {
 
 /**
  * Mobile-optimized Quick Action Tile
- * 
+ *
  * A compact, touch-friendly tile for primary actions on mobile.
  * Replaces the complex AuroraTile for mobile contexts.
  */
@@ -74,7 +74,9 @@ export const MobileQuickActionTile: React.FC<MobileQuickActionTileProps> = ({
       `}
     >
       {/* Icon */}
-      <div className={`w-12 h-12 rounded-xl ${colors.bg} flex items-center justify-center flex-shrink-0`}>
+      <div
+        className={`w-12 h-12 rounded-xl ${colors.bg} flex items-center justify-center flex-shrink-0`}
+      >
         <Icon name={icon} className="w-6 h-6 text-white" />
       </div>
 
@@ -100,7 +102,10 @@ export const MobileQuickActionTile: React.FC<MobileQuickActionTileProps> = ({
       )}
 
       {/* Chevron */}
-      <Icon name="chevron-right" className="w-5 h-5 text-neutral-400 flex-shrink-0" />
+      <Icon
+        name="chevron-right"
+        className="w-5 h-5 text-neutral-400 flex-shrink-0"
+      />
     </button>
   );
 };

@@ -125,8 +125,8 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
                 url: play.diagram_url || (play as any).diagram_image_url,
               });
               // Hide broken image and show fallback
-              e.currentTarget.style.display = 'none';
-              e.currentTarget.parentElement?.classList.add('image-error');
+              e.currentTarget.style.display = "none";
+              e.currentTarget.parentElement?.classList.add("image-error");
             }}
           />
         ) : (

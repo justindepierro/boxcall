@@ -23,7 +23,7 @@ export interface PlaybookBottomNavProps {
  *
  * @example
  * ```tsx
- * <PlaybookBottomNav 
+ * <PlaybookBottomNav
  *   currentView={state.currentView}
  *   onViewChange={handleViewChange}
  * />
@@ -47,7 +47,7 @@ export const PlaybookBottomNav: React.FC<PlaybookBottomNavProps> = ({
       }
       return;
     }
-    
+
     // Handle external navigation
     if (onNavigate) {
       onNavigate(href);

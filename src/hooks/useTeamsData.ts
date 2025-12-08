@@ -205,21 +205,23 @@ export function useTeamsData() {
             .order("created_at", { ascending: false }),
 
           // Fetch total play count (fast, head-only query)
-          supabase
-            .from("plays")
-            .select("*", { count: "exact", head: true }),
+          supabase.from("plays").select("*", { count: "exact", head: true }),
 
           // Fetch first page of plays - only essential fields for faster load
           supabase
             .from("plays")
-            .select("id, playbook_id, formation, play_name, one_word_play, p_type, personnel, f_type, f_dir, p_dir, diagram_url, diagram_image_url, wristband_number, confidence_base, times_called, times_successful, created_at, updated_at")
+            .select(
+              "id, playbook_id, formation, play_name, one_word_play, p_type, personnel, f_type, f_dir, p_dir, diagram_url, diagram_image_url, wristband_number, confidence_base, times_called, times_successful, created_at, updated_at"
+            )
             .order("created_at", { ascending: false })
             .range(0, PAGE_SIZE - 1),
         ]);
 
         const fetchTime = performance.now() - startTime;
         if (isMobile) {
-          console.log(`📱 [Mobile Debug] Parallel fetch completed in ${fetchTime.toFixed(0)}ms`);
+          console.log(
+            `📱 [Mobile Debug] Parallel fetch completed in ${fetchTime.toFixed(0)}ms`
+          );
         }
 
         // Process teams
@@ -232,7 +234,10 @@ export function useTeamsData() {
 
         // Process playbooks
         if (playbooksResult.error) {
-          console.warn("Playbooks table not available:", playbooksResult.error.message);
+          console.warn(
+            "Playbooks table not available:",
+            playbooksResult.error.message
+          );
         } else {
           const playbooksData = (playbooksResult.data || []).map((pb: any) => ({
             ...pb,
@@ -244,14 +249,20 @@ export function useTeamsData() {
 
         // Process formations
         if (formationsResult.error) {
-          console.warn("Formations table not available:", formationsResult.error.message);
+          console.warn(
+            "Formations table not available:",
+            formationsResult.error.message
+          );
         } else {
           setFormations((formationsResult.data || []) as Formation[]);
         }
 
         // Process play count
         if (playsCountResult.error) {
-          console.warn("Error fetching play count:", playsCountResult.error.message);
+          console.warn(
+            "Error fetching play count:",
+            playsCountResult.error.message
+          );
         } else {
           setTotalPlaysCount(playsCountResult.count ?? 0);
         }
@@ -270,7 +281,7 @@ export function useTeamsData() {
           const playsData = playsResult.data || [];
           setHasMorePlays(playsData.length === PAGE_SIZE);
           setPlays(playsData as DatabasePlay[]);
-          
+
           if (isMobile) {
             console.log("📱 [Mobile Debug - useTeamsData] Plays fetched:", {
               count: playsData.length,
@@ -306,7 +317,9 @@ export function useTeamsData() {
       // Query only essential fields for faster loading
       const { data, error } = await supabase
         .from("plays")
-        .select("id, playbook_id, formation, play_name, one_word_play, p_type, personnel, f_type, f_dir, p_dir, diagram_url, diagram_image_url, wristband_number, confidence_base, times_called, times_successful, created_at, updated_at")
+        .select(
+          "id, playbook_id, formation, play_name, one_word_play, p_type, personnel, f_type, f_dir, p_dir, diagram_url, diagram_image_url, wristband_number, confidence_base, times_called, times_successful, created_at, updated_at"
+        )
         .order("created_at", { ascending: false })
         .range(from, to);
 

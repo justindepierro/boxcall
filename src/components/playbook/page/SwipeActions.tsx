@@ -72,7 +72,7 @@ export const SwipeActions: React.FC<SwipeActionsProps> = ({
   const handleTouchMove = useCallback(
     (e: React.TouchEvent) => {
       if (!isDragging) return;
-      
+
       currentX.current = e.touches[0].clientX;
       const diff = startX.current - currentX.current;
 

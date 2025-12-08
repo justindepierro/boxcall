@@ -99,7 +99,8 @@ if (supabaseUrl && supabaseAnonKey) {
   supabaseClient = createDevStub();
 } else {
   // In non-dev environments, fail fast if env is missing
-  if (import.meta.env.DEV) console.log("❌ Missing Supabase environment variables in production");
+  if (import.meta.env.DEV)
+    console.log("❌ Missing Supabase environment variables in production");
   throw new Error("Missing Supabase environment variables");
 }
 

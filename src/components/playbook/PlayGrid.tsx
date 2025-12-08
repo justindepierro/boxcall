@@ -841,7 +841,9 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                   variant="secondary"
                   className="w-full max-w-xs"
                 >
-                  Load More ({Math.max(displayPlays.length - mobileVisibleCount, 0)} remaining)
+                  Load More (
+                  {Math.max(displayPlays.length - mobileVisibleCount, 0)}{" "}
+                  remaining)
                 </Button>
               )}
             </div>

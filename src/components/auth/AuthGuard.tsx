@@ -11,7 +11,7 @@ interface AuthGuardProps {
  * This fixes the issue where components try to load data before the user
  * authentication state is properly established, causing RLS policies to
  * block queries because they appear to come from an unauthenticated user.
- * 
+ *
  * Optimized: Auth init now runs profile fetch and DB test in parallel,
  * making this loading state much shorter (~200-500ms vs 1-2s before).
  */

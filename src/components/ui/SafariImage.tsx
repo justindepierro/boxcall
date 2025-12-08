@@ -11,7 +11,7 @@ interface SafariImageProps {
 
 /**
  * iOS Safari-compatible image component
- * 
+ *
  * Handles common iOS Safari image issues:
  * - CORS with crossOrigin="anonymous"
  * - Removes loading="lazy" which can break on older iOS
@@ -75,7 +75,7 @@ export const SafariImage: React.FC<SafariImageProps> = ({
 
 /**
  * iOS Safari-compatible play diagram image
- * 
+ *
  * Specialized for play diagram thumbnails with:
  * - Proper sizing for thumbnails
  * - Icon fallback on error
@@ -100,7 +100,7 @@ export const PlayDiagramImage: React.FC<PlayDiagramImageProps> = ({
 }) => {
   const [hasError, setHasError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-  
+
   // Use diagram_url first, fall back to diagram_image_url
   const imageSrc = diagramUrl || diagramImageUrl;
 

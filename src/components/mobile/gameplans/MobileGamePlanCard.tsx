@@ -28,7 +28,7 @@ interface MobileGamePlanCardProps {
 
 /**
  * Mobile-optimized Game Plan card
- * 
+ *
  * Features:
  * - Large touch targets (min 44px)
  * - Clear visual hierarchy with opponent/date prominent
@@ -77,11 +77,15 @@ export const MobileGamePlanCard: React.FC<MobileGamePlanCardProps> = ({
       <div className="bg-neutral-100 dark:bg-neutral-800 rounded-xl p-4 opacity-70">
         <div className="flex items-center justify-between gap-3">
           <div className="flex-1 min-w-0">
-            <Typography variant="body-md" className="text-secondary font-medium truncate">
+            <Typography
+              variant="body-md"
+              className="text-secondary font-medium truncate"
+            >
               {name}
             </Typography>
             <Typography variant="body-sm" className="text-muted mt-1">
-              {totalPlays} plays • {opponent ? `vs ${opponent}` : "No opponent"} • Archived
+              {totalPlays} plays • {opponent ? `vs ${opponent}` : "No opponent"}{" "}
+              • Archived
             </Typography>
           </div>
           <button
@@ -97,7 +101,7 @@ export const MobileGamePlanCard: React.FC<MobileGamePlanCardProps> = ({
   }
 
   return (
-    <div 
+    <div
       className="bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden active:shadow-md transition-shadow"
       onClick={() => handleAction(onEdit)}
     >
@@ -109,10 +113,13 @@ export const MobileGamePlanCard: React.FC<MobileGamePlanCardProps> = ({
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center flex-shrink-0">
             <Icon name="target" className="w-6 h-6 text-white" />
           </div>
-          
+
           {/* Title & Opponent */}
           <div className="flex-1 min-w-0">
-            <Typography variant="body-lg" className="text-primary font-semibold line-clamp-1">
+            <Typography
+              variant="body-lg"
+              className="text-primary font-semibold line-clamp-1"
+            >
               {name}
             </Typography>
             <div className="flex flex-wrap items-center gap-2 mt-1">
@@ -122,7 +129,9 @@ export const MobileGamePlanCard: React.FC<MobileGamePlanCardProps> = ({
                 </span>
               )}
               {gameLocation && (
-                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getLocationColor()}`}>
+                <span
+                  className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getLocationColor()}`}
+                >
                   {gameLocation}
                 </span>
               )}
@@ -158,7 +167,7 @@ export const MobileGamePlanCard: React.FC<MobileGamePlanCardProps> = ({
           <Icon name="download" className="w-4 h-4" />
           Call Sheet
         </button>
-        
+
         {/* Secondary Actions */}
         <div className="flex items-center gap-0.5">
           <button

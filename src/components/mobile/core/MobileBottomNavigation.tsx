@@ -109,9 +109,10 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
                   active:scale-95 
                   focus-visible:ring-2 focus-visible:ring-brand-jade 
                   transition-all duration-150
-                  ${item.isActive 
-                    ? "text-brand-jade bg-brand-jade/10" 
-                    : "text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100"
+                  ${
+                    item.isActive
+                      ? "text-brand-jade bg-brand-jade/10"
+                      : "text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100"
                   }
                 `}
                 style={{ minHeight: "52px" }}
@@ -145,10 +146,12 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
                 </div>
 
                 {/* Label */}
-                <span className={`
+                <span
+                  className={`
                   text-xs font-medium leading-tight
                   ${item.isActive ? "font-semibold" : ""}
-                `}>
+                `}
+                >
                   {item.label}
                 </span>
               </Button>

@@ -227,12 +227,15 @@ self.addEventListener("activate", (event) => {
 // Enhanced fetch handler with better error handling
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
-  
+
   // Skip Supabase storage URLs - let Workbox handle them (Strategy 2)
-  if (url.hostname.includes("supabase.co") && url.pathname.includes("/storage/")) {
+  if (
+    url.hostname.includes("supabase.co") &&
+    url.pathname.includes("/storage/")
+  ) {
     return; // Let Workbox's registerRoute handle this
   }
-  
+
   // Navigation requests - serve offline page on failure
   if (event.request.mode === "navigate") {
     event.respondWith(

@@ -21,7 +21,7 @@ interface MobilePracticeCardProps {
 
 /**
  * Mobile-optimized Practice Script card
- * 
+ *
  * Features:
  * - Large touch targets (min 44px)
  * - Clear visual hierarchy
@@ -52,7 +52,10 @@ export const MobilePracticeCard: React.FC<MobilePracticeCardProps> = ({
       <div className="bg-neutral-100 dark:bg-neutral-800 rounded-xl p-4 opacity-70">
         <div className="flex items-center justify-between gap-3">
           <div className="flex-1 min-w-0">
-            <Typography variant="body-md" className="text-secondary font-medium truncate">
+            <Typography
+              variant="body-md"
+              className="text-secondary font-medium truncate"
+            >
               {name}
             </Typography>
             <Typography variant="body-sm" className="text-muted mt-1">
@@ -72,7 +75,7 @@ export const MobilePracticeCard: React.FC<MobilePracticeCardProps> = ({
   }
 
   return (
-    <div 
+    <div
       className="bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-700 shadow-sm active:shadow-md transition-shadow"
       onClick={() => handleAction(onEdit)}
     >
@@ -84,14 +87,20 @@ export const MobilePracticeCard: React.FC<MobilePracticeCardProps> = ({
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center flex-shrink-0">
             <Icon name="file" className="w-6 h-6 text-white" />
           </div>
-          
+
           {/* Title & Description */}
           <div className="flex-1 min-w-0">
-            <Typography variant="body-lg" className="text-primary font-semibold line-clamp-1">
+            <Typography
+              variant="body-lg"
+              className="text-primary font-semibold line-clamp-1"
+            >
               {name}
             </Typography>
             {description && (
-              <Typography variant="body-sm" className="text-secondary line-clamp-2 mt-0.5">
+              <Typography
+                variant="body-sm"
+                className="text-secondary line-clamp-2 mt-0.5"
+              >
                 {description}
               </Typography>
             )}
@@ -135,31 +144,43 @@ export const MobilePracticeCard: React.FC<MobilePracticeCardProps> = ({
         <Typography variant="body-sm" className="text-muted">
           {new Date(updatedAt).toLocaleDateString()}
         </Typography>
-        
+
         <div className="flex items-center gap-1">
           <button
-            onClick={(e) => { e.stopPropagation(); handleAction(onEdit); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAction(onEdit);
+            }}
             className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 active:scale-95 transition-all"
             aria-label="Edit"
           >
             <Icon name="edit" className="w-5 h-5 text-neutral-500" />
           </button>
           <button
-            onClick={(e) => { e.stopPropagation(); handleAction(onDuplicate); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAction(onDuplicate);
+            }}
             className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 active:scale-95 transition-all"
             aria-label="Duplicate"
           >
             <Icon name="copy" className="w-5 h-5 text-neutral-500" />
           </button>
           <button
-            onClick={(e) => { e.stopPropagation(); handleAction(onArchive); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAction(onArchive);
+            }}
             className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 active:scale-95 transition-all"
             aria-label="Archive"
           >
             <Icon name="folder" className="w-5 h-5 text-neutral-500" />
           </button>
           <button
-            onClick={(e) => { e.stopPropagation(); handleAction(onDelete); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAction(onDelete);
+            }}
             className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-error-50 dark:hover:bg-error-900/30 active:scale-95 transition-all"
             aria-label="Delete"
           >

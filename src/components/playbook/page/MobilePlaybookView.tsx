@@ -17,7 +17,10 @@ import { BottomSheet } from "../../BottomSheet";
 import { PracticeScriptList } from "../PracticeScriptList";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 import type { Play } from "../../../types/play";
-import type { PlaybookState, CoachingView } from "../../../contexts/PlaybookContext";
+import type {
+  PlaybookState,
+  CoachingView,
+} from "../../../contexts/PlaybookContext";
 import type { PracticeScript } from "../../../services/practiceService";
 
 interface MobilePlaybookViewProps {
@@ -115,15 +118,15 @@ export function MobilePlaybookView({
 
   // View titles for header
   const viewTitles: Record<CoachingView, string> = {
-    "playbook": `${state.playsCreated} ${state.playsCreated === 1 ? "Play" : "Plays"}`,
+    playbook: `${state.playsCreated} ${state.playsCreated === 1 ? "Play" : "Plays"}`,
     "practice-script": "Practice Scripts",
     "game-plan": "Game Plans",
-    "analytics": "Analytics",
+    analytics: "Analytics",
   };
 
   // Determine if we should show the search/filter header
   const showSearchHeader = state.currentView === "playbook" && hasPlays;
-  
+
   return (
     <>
       {/* Fixed Header - Shows for playbook view with plays, or view title for other views */}
@@ -223,10 +226,7 @@ export function MobilePlaybookView({
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 w-9 h-9 flex items-center justify-center hover:bg-neutral-200 rounded-full transition-colors"
                 aria-label="Clear search"
               >
-                <Icon
-                  name="close"
-                  className="h-4 w-4 text-neutral-500"
-                />
+                <Icon name="close" className="h-4 w-4 text-neutral-500" />
               </motion.button>
             )}
           </div>
@@ -253,7 +253,10 @@ export function MobilePlaybookView({
               <div className="px-4 py-6">
                 <div className="space-y-3">
                   {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="h-24 bg-neutral-200 rounded-xl animate-pulse" />
+                    <div
+                      key={i}
+                      className="h-24 bg-neutral-200 rounded-xl animate-pulse"
+                    />
                   ))}
                 </div>
               </div>
@@ -266,7 +269,10 @@ export function MobilePlaybookView({
                   <ErrorBoundary
                     fallback={
                       <div className="p-6 text-center">
-                        <Typography variant="body-md" className="text-secondary">
+                        <Typography
+                          variant="body-md"
+                          className="text-secondary"
+                        >
                           Failed to load plays. Please refresh the page.
                         </Typography>
                       </div>
@@ -282,12 +288,18 @@ export function MobilePlaybookView({
                         onAddToGamePlan: handleAddToGamePlan,
                         onEdit: handleEditPlay,
                         // Adapter: PlayGrid expects (playId, updates) but handleSavePlay receives full Play object
-                        onSave: async (playId: string, updates: Partial<Play>) => {
+                        onSave: async (
+                          playId: string,
+                          updates: Partial<Play>
+                        ) => {
                           const existingPlay = optimisticPlays.find(
                             (p) => p.id === playId
                           );
                           if (existingPlay) {
-                            await handleSavePlay({ ...existingPlay, ...updates });
+                            await handleSavePlay({
+                              ...existingPlay,
+                              ...updates,
+                            });
                           }
                         },
                         onDuplicate: handleDuplicatePlay,
@@ -336,7 +348,10 @@ export function MobilePlaybookView({
             {/* Quick Actions - Simplified grid */}
             {hasPlays && (
               <div className="px-4 py-4">
-                <Typography variant="label-md" className="text-secondary uppercase tracking-wide mb-3">
+                <Typography
+                  variant="label-md"
+                  className="text-secondary uppercase tracking-wide mb-3"
+                >
                   Quick Actions
                 </Typography>
                 <MobileQuickActions
@@ -367,7 +382,10 @@ export function MobilePlaybookView({
             {/* Formation Cleanup (show only if needed) */}
             {formationAudit.plays.length > 0 && (
               <div className="px-4 py-4 border-t border-border">
-                <Typography variant="label-md" className="text-secondary uppercase tracking-wide mb-3">
+                <Typography
+                  variant="label-md"
+                  className="text-secondary uppercase tracking-wide mb-3"
+                >
                   Formation Cleanup
                 </Typography>
                 <FormationSyncPanel
@@ -425,14 +443,12 @@ export function MobilePlaybookView({
                 name="target"
                 className="h-16 w-16 text-neutral-300 mx-auto mb-4"
               />
-              <Typography
-                variant="headline-sm"
-                className="text-secondary mb-2"
-              >
+              <Typography variant="headline-sm" className="text-secondary mb-2">
                 No Game Plans Yet
               </Typography>
               <Typography variant="body-sm" className="text-neutral-500 mb-6">
-                Create your first game plan to strategize plays for upcoming matches.
+                Create your first game plan to strategize plays for upcoming
+                matches.
               </Typography>
               <Button
                 onClick={() => {
@@ -462,7 +478,7 @@ export function MobilePlaybookView({
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <PlaybookBottomNav 
+      <PlaybookBottomNav
         currentView={state.currentView}
         onViewChange={handleViewChange}
       />
