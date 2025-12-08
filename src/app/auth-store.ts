@@ -1033,7 +1033,7 @@ const stopSessionRefresh = () => {
  * 🚀 PERFORMANCE: Background session verification
  * Called after optimistic auth from cache to verify session is still valid
  */
-const verifyAndRefreshSession = async (cachedSession: Session) => {
+const verifyAndRefreshSession = async (_cachedSession: Session) => {
   try {
     const { data: { session }, error } = await supabase.auth.getSession();
     
