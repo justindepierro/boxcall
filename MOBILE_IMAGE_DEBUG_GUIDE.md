@@ -6,6 +6,7 @@
 ## Summary
 
 Fixed three critical mobile UX issues:
+
 1. ✅ **Loading state** - "Configure Personnel" CTA now only shows when truly empty (not during loading)
 2. ✅ **Horizontal scrolling** - Added `overflow-x-hidden` and `max-w-full` to content containers
 3. 🔍 **iOS Safari images** - Added comprehensive debugging, awaiting test results
@@ -19,8 +20,9 @@ Fixed three critical mobile UX issues:
 **Root Cause**: Component checked `state.playsCreated === 0` which stayed 0 during initial load.
 
 **Solution**: Changed all checks from `state.playsCreated` to `optimisticPlays.length`:
+
 - `MobilePlaybookView.tsx` line 184: Empty state conditional
-- `MobilePlaybookView.tsx` line 197: Plays grid conditional  
+- `MobilePlaybookView.tsx` line 197: Plays grid conditional
 - `MobilePlaybookView.tsx` line 109: Search bar visibility
 - `MobilePlaybookView.tsx` line 171: Padding calculation
 
@@ -31,8 +33,9 @@ Fixed three critical mobile UX issues:
 **Problem**: Mobile view had nested horizontal/vertical scrolling from multiple overflow containers.
 
 **Solution**: Added layout constraints to content container:
+
 ```tsx
-className="px-4 py-3 space-y-3 pb-32 overflow-x-hidden max-w-full"
+className = "px-4 py-3 space-y-3 pb-32 overflow-x-hidden max-w-full";
 ```
 
 **Result**: Content constrained to viewport width, prevents unwanted horizontal scroll.
@@ -44,17 +47,20 @@ className="px-4 py-3 space-y-3 pb-32 overflow-x-hidden max-w-full"
 **Changes Made**:
 
 **File**: `src/components/playbook/page/MobilePlayCard.tsx` (lines 97-118)
+
 - Added `onError` handler logging: playId, playName, diagramUrl, fallbackUrl, error src
 - Added `onLoad` handler logging: playName, diagram_url
 - Logs fire when images load/fail on mobile devices
 
 **File**: `src/hooks/useTeamsData.ts` (lines 295-308)
+
 - Enhanced mobile debug logging with detailed diagram_url inspection:
   - Type of diagram_url (string/null/undefined)
   - Explicit null/undefined/empty string checks
   - Sample of actual diagram URLs from first 5 plays with images
 
 **File**: `src/pages/PlaybookPage.tsx` (lines 115-147)
+
 - Added imageCheck object showing:
   - Count of plays with images vs without
   - Sample URLs from plays that have images
@@ -78,6 +84,7 @@ className="px-4 py-3 space-y-3 pb-32 overflow-x-hidden max-w-full"
 Look for these log entries in order:
 
 #### A. Initial Data Fetch (useTeamsData.ts)
+
 ```
 📱 [Mobile Debug - useTeamsData] Plays fetched: {
   count: 26,
@@ -99,11 +106,13 @@ Look for these log entries in order:
 ```
 
 **What to Check**:
+
 - Are `diagram_url` values strings or null?
 - Does `allDiagramUrls` array have valid URLs?
 - Are URLs accessible (copy/paste into Safari address bar)?
 
 #### B. Page Mount (PlaybookPage.tsx)
+
 ```
 📱 [Mobile Debug - PlaybookPage] {
   activeTeamId: "...",
@@ -124,6 +133,7 @@ Look for these log entries in order:
 ```
 
 **What to Check**:
+
 - Does `playsWithImages` count match expected?
 - Are `sampleUrls` valid Supabase storage URLs?
 - Is viewport size reasonable?
@@ -131,11 +141,13 @@ Look for these log entries in order:
 #### C. Image Load Attempts (MobilePlayCard.tsx)
 
 **On Success**:
+
 ```
 [MobilePlayCard] Image loaded: "Play Name" "https://..."
 ```
 
 **On Error**:
+
 ```
 [MobilePlayCard] Image load error: {
   playId: "...",
@@ -147,6 +159,7 @@ Look for these log entries in order:
 ```
 
 **What to Check**:
+
 - Do you see ANY successful loads?
 - Do ALL images trigger errors?
 - What URLs are in the error logs?
@@ -159,6 +172,7 @@ Look for these log entries in order:
 
 **Expected**: Image should display in browser  
 **If fails**: Check:
+
 - Is URL a Supabase storage URL?
 - Does it require authentication?
 - Is it a CORS issue?
@@ -172,6 +186,7 @@ Look for these log entries in order:
 4. Look for image requests
 
 **Check**:
+
 - HTTP status codes (200 = success, 403 = forbidden, 404 = not found)
 - Response headers (CORS, Content-Type)
 - Request headers (cookies, auth tokens)
@@ -184,14 +199,17 @@ Look for these log entries in order:
 
 **Cause**: Database field is empty, data never populated
 
-**Solution**: 
+**Solution**:
+
 1. Check database directly:
+
 ```sql
-SELECT id, play_name, diagram_url 
-FROM plays 
-WHERE diagram_url IS NOT NULL 
+SELECT id, play_name, diagram_url
+FROM plays
+WHERE diagram_url IS NOT NULL
 LIMIT 10;
 ```
+
 2. If empty, need to populate diagram_url field OR add diagram_image_url column
 
 ### Issue 2: CORS blocking image loads
@@ -200,7 +218,8 @@ LIMIT 10;
 
 **Cause**: Supabase storage bucket not configured for public access
 
-**Solution**: 
+**Solution**:
+
 1. Go to Supabase dashboard → Storage → Bucket settings
 2. Enable public access OR configure CORS headers
 3. Verify bucket policy allows reads
@@ -212,6 +231,7 @@ LIMIT 10;
 **Cause**: Supabase storage using authenticated URLs, mobile session expired
 
 **Solution**:
+
 1. Check if URLs are signed (have query params like `?token=...`)
 2. If signed, check token expiration time
 3. Consider using public bucket for diagram images
