@@ -45,6 +45,7 @@ className = "px-4 py-3 space-y-3 pb-32 overflow-x-hidden max-w-full";
 **Problem**: Images failing to load with "FetchEvent.respondWith received an error: no-response" on iOS Safari.
 
 **Root Cause**: Service worker was using wrong caching strategy for Supabase storage URLs:
+
 - Supabase storage images were being caught by generic API route (`supabase.co`)
 - Used `NetworkFirst` with short timeout (5s) for API calls
 - Images need longer timeout (10s) and should be handled separately
@@ -53,12 +54,14 @@ className = "px-4 py-3 space-y-3 pb-32 overflow-x-hidden max-w-full";
 **Solution Applied**:
 
 **File**: `src/sw.ts`
+
 - Added **specific route** for Supabase storage images (must come before generic API route)
 - Changed strategy: `NetworkFirst` with 10s timeout (was caught by 5s API timeout)
 - Route ordering: Storage images → General images → API calls (order matters!)
 - Enhanced fetch handler with proper error handling and 1x1 transparent PNG fallback
 
 **File**: `vite.config.ts`
+
 - Changed Supabase storage from `CacheFirst` to `NetworkFirst` (consistency)
 - Increased timeout: 10s for images (was implicit default)
 - Increased cache: 200 entries, 30 days (from 100 entries, 7 days)
@@ -100,15 +103,18 @@ Then deploy to Netlify (or your hosting platform).
 The following debug logging is still in place for troubleshooting:
 
 **File**: `src/components/playbook/page/MobilePlayCard.tsx`
+
 - `onError` handler: Logs playId, playName, diagramUrl, fallbackUrl, error src
 - `onLoad` handler: Logs playName, diagram_url
 
 **File**: `src/hooks/useTeamsData.ts`
+
 - Enhanced mobile debug with diagram_url type checking
 - Shows null/undefined/empty string checks
 - Sample URLs from first 5 plays with images
 
 **File**: `src/pages/PlaybookPage.tsx`
+
 - imageCheck object: Count of plays with/without images
 - Sample URLs for verification
 - Viewport dimensions and user agent
