@@ -373,7 +373,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                               }
                               placeholder="Select value..."
                               options={selectedField.options?.map(
-                                (option: FilterOption, index: number) => ({
+                                (option: FilterOption) => ({
                                   value: option.value,
                                   label: option.label,
                                 })
