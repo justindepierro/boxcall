@@ -319,69 +319,110 @@ export default defineConfig({
     assetsInlineLimit: 4096, // Inline small assets as base64
     rollupOptions: {
       output: {
-        manualChunks: {
-          // OPTIMIZED: Core React (stable, rarely changes - best caching)
-          "react-vendor": ["react", "react-dom"],
-
-          // Router separate for better caching
-          router: ["react-router-dom"],
-
-          // Data & State Management - Split for better granularity
-          supabase: ["@supabase/supabase-js"],
-          "query-client": ["@tanstack/react-query"],
-          zustand: ["zustand"],
-
-          // Heavy UI Libraries (lazy load these) - Split further for better caching
-          "calendar-core": ["@fullcalendar/core"],
-          "calendar-plugins": [
-            "@fullcalendar/daygrid",
-            "@fullcalendar/timegrid",
-            "@fullcalendar/interaction",
-            "@fullcalendar/react",
-          ],
-          "pdf-core": ["@react-pdf/renderer"], // Lazy loaded
-          "pdf-utils": ["jszip"],
-          charts: ["recharts"],
-
-          // UI Components - Split for better granularity
-          "ui-core": ["@headlessui/react", "@radix-ui/react-popover"],
-          "ui-icons": ["@heroicons/react", "lucide-react"],
-          "ui-dnd": ["@hello-pangea/dnd"],
-
-          // Animations & Interactions
-          animations: ["framer-motion", "@use-gesture/react"],
-
-          // Forms & Validation
-          forms: ["react-hook-form", "@hookform/resolvers", "zod"],
-
-          // Editor libraries (heavy, rarely used)
-          "editor-core": ["@tiptap/react"],
-          "editor-extensions": [
-            "@tiptap/extension-link",
-            "@tiptap/extension-mention",
-            "@tiptap/starter-kit",
-            "@tiptap/extension-color",
-            "@tiptap/extension-highlight",
-            "@tiptap/extension-image",
-          ],
-
-          // Utilities - Split heavy utilities
-          "date-utils": ["date-fns"],
-          "search-utils": ["fuse.js"],
-          "style-utils": ["clsx"],
-
-          // Error tracking
-          monitoring: ["@sentry/react"],
-
-          // Large third-party libraries
-          workbox: [
-            "workbox-precaching",
-            "workbox-routing",
-            "workbox-strategies",
-          ],
-
-          // Worker libs
-          worker: ["comlink"],
+        manualChunks: (id) => {
+          // Node modules chunking strategy
+          if (id.includes("node_modules")) {
+            // Core React - rarely changes, cache forever
+            if (id.includes("react-dom") || id.includes("/react/")) {
+              return "react-vendor";
+            }
+            // Router
+            if (id.includes("react-router")) {
+              return "router";
+            }
+            // State & Data fetching
+            if (id.includes("@supabase")) {
+              return "supabase";
+            }
+            if (id.includes("@tanstack/react-query")) {
+              return "query-client";
+            }
+            if (id.includes("zustand")) {
+              return "zustand";
+            }
+            // Calendar - large, only used on calendar page
+            if (id.includes("@fullcalendar/core")) {
+              return "calendar-core";
+            }
+            if (id.includes("@fullcalendar")) {
+              return "calendar-plugins";
+            }
+            // PDF - very large, lazy loaded
+            if (id.includes("@react-pdf")) {
+              return "pdf-core";
+            }
+            if (id.includes("jszip")) {
+              return "pdf-utils";
+            }
+            // Charts - only on analytics pages
+            if (id.includes("recharts") || id.includes("d3-")) {
+              return "charts";
+            }
+            // UI Libraries
+            if (id.includes("@headlessui") || id.includes("@radix-ui")) {
+              return "ui-core";
+            }
+            if (id.includes("lucide-react") || id.includes("@heroicons")) {
+              return "ui-icons";
+            }
+            if (id.includes("@hello-pangea/dnd")) {
+              return "ui-dnd";
+            }
+            // Animations
+            if (id.includes("framer-motion") || id.includes("@use-gesture")) {
+              return "animations";
+            }
+            // Forms
+            if (id.includes("react-hook-form") || id.includes("@hookform") || id.includes("/zod/")) {
+              return "forms";
+            }
+            // Editor - heavy, lazy load
+            if (id.includes("@tiptap/react") || id.includes("@tiptap/core")) {
+              return "editor-core";
+            }
+            if (id.includes("@tiptap/extension") || id.includes("@tiptap/starter-kit")) {
+              return "editor-extensions";
+            }
+            if (id.includes("prosemirror")) {
+              return "editor-core";
+            }
+            // Date utilities
+            if (id.includes("date-fns")) {
+              return "date-utils";
+            }
+            // Search
+            if (id.includes("fuse.js")) {
+              return "search-utils";
+            }
+            // Monitoring
+            if (id.includes("@sentry")) {
+              return "monitoring";
+            }
+            // Toast notifications
+            if (id.includes("sonner")) {
+              return "ui-toast";
+            }
+            // Virtual list
+            if (id.includes("react-virtuoso") || id.includes("react-window")) {
+              return "ui-virtual";
+            }
+            // Intersection observer
+            if (id.includes("react-intersection-observer")) {
+              return "ui-observers";
+            }
+          }
+          
+          // App code chunking - split large feature areas
+          if (id.includes("/src/")) {
+            // Analytics is a heavy feature used occasionally
+            if (id.includes("/analytics/") || id.includes("/components/analytics/")) {
+              return "feature-analytics";
+            }
+            // PDF components
+            if (id.includes("/pdf/") || id.includes("PDF")) {
+              return "feature-pdf";
+            }
+          }
         },
         // Optimize asset filenames for caching
         assetFileNames: (assetInfo) => {
