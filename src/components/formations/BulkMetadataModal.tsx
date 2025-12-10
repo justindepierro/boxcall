@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import { useBulkUpdateMetadata } from "../../hooks/useFormations";
 import { Modal } from "../ui/Modal";
 import { Button } from "../ui/Button";
+import { FormSelect } from "../ui";
 import { useToast } from "../../hooks/useToast";
 import { error as logError } from "../../utils/logger";
 
@@ -101,16 +102,16 @@ export function BulkMetadataModal({
           <label className="block text-sm font-medium text-primary mb-xs">
             Category
           </label>
-          <select
+          <FormSelect
             value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full px-sm py-xs border border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-          >
-            <option value="">-- Keep existing --</option>
-            <option value="run">Run</option>
-            <option value="pass">Pass</option>
-            <option value="special">Special</option>
-          </select>
+            onChange={(value) => setCategory(value)}
+            placeholder="-- Keep existing --"
+            options={[
+              { value: "run", label: "Run" },
+              { value: "pass", label: "Pass" },
+              { value: "special", label: "Special" },
+            ]}
+          />
         </div>
 
         {/* Personnel */}
@@ -151,15 +152,15 @@ export function BulkMetadataModal({
           <label className="block text-sm font-medium text-primary mb-xs">
             Formation Type
           </label>
-          <select
+          <FormSelect
             value={formationType}
-            onChange={(e) => setFormationType(e.target.value)}
-            className="w-full px-sm py-xs border border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-          >
-            <option value="">-- Keep existing --</option>
-            <option value="standard">Standard</option>
-            <option value="custom">Custom</option>
-          </select>
+            onChange={(value) => setFormationType(value)}
+            placeholder="-- Keep existing --"
+            options={[
+              { value: "standard", label: "Standard" },
+              { value: "custom", label: "Custom" },
+            ]}
+          />
         </div>
 
         {/* Actions */}

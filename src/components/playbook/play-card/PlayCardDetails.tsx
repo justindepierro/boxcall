@@ -5,6 +5,7 @@ import Icon from "../../ui/Icon/Icon";
 import { InlineEditField } from "../../ui/InlineEditField";
 import { Button } from "../../ui/Button/Button";
 import { ImageUpload } from "../../ui/ImageUpload";
+import { FormSelect } from "../../ui";
 import { DISTANCE_OPTIONS, DOWN_OPTIONS, HASH_OPTIONS } from "./constants";
 import {
   addFlag,
@@ -530,18 +531,16 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
                 ))}
               </div>
               <div className="mt-xs flex items-center gap-xs">
-                <select
+                <FormSelect
                   value={newPosition}
-                  onChange={(e) => setNewPosition(e.target.value)}
-                  className="border-muted rounded-lg px-2 py-1 text-xsssssssss"
-                >
-                  <option value="">Select…</option>
-                  {POSITION_OPTIONS.map((opt: string) => (
-                    <option key={opt} value={opt}>
-                      {opt}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(value) => setNewPosition(value)}
+                  placeholder="Select…"
+                  options={POSITION_OPTIONS.map((opt: string) => ({
+                    value: opt,
+                    label: opt,
+                  }))}
+                  className="flex-1"
+                />
                 <Button
                   size="xs"
                   variant="secondary"

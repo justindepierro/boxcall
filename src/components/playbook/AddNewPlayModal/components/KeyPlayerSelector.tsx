@@ -1,6 +1,7 @@
 import React from "react";
 import { Icon } from "../../../ui/Icon/Icon";
 import { Typography } from "../../../design-system/Typography";
+import { FormSelect } from "../../../ui";
 
 // Import team player type (you may need to adjust this path)
 interface TeamPlayer {
@@ -131,25 +132,24 @@ export const KeyPlayerSelector: React.FC<KeyPlayerSelectorProps> = ({
       ) : (
         <>
           {/* Player dropdown */}
-          <select
-            onChange={handleSelectChange}
+          <FormSelect
+            value=""
+            onChange={(value) => {
+              if (value) {
+                onAdd(value);
+              }
+            }}
             disabled={disabled || availablePlayers.length === 0}
-            className="w-full px-3 py-2 border border-muted rounded-md
-                       focus:ring-2 focus:ring-primary-default focus:border-transparent
-                       disabled:bg-muted disabled:cursor-not-allowed text-sm"
-            aria-label="Select key player"
-          >
-            <option value="">
-              {availablePlayers.length === 0
+            placeholder={
+              availablePlayers.length === 0
                 ? "All players selected"
-                : "Select player..."}
-            </option>
-            {availablePlayers.map((player) => (
-              <option key={player.id} value={player.id}>
-                {formatPlayerName(player)}
-              </option>
-            ))}
-          </select>
+                : "Select player..."
+            }
+            options={availablePlayers.map((player) => ({
+              value: player.id,
+              label: formatPlayerName(player),
+            }))}
+          />
 
           {/* Selected players (profile cards) */}
           {selectedPlayers.length > 0 && (

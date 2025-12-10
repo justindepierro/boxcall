@@ -25,6 +25,7 @@ import { TextArea } from "../ui/TextArea";
 import { Badge } from "../ui/Badge";
 import { Icon } from "../ui/Icon";
 import { Input } from "../ui/Input";
+import { FormSelect } from "../ui/FormSelect/FormSelect";
 import { supabase } from "../../lib/supabase";
 import { useAuth } from "../../app/auth-store";
 import type { Play } from "../../types/play";
@@ -385,18 +386,16 @@ export function PlayAssignmentsModal({
               >
                 Preview as Position
               </Typography>
-              <select
+              <FormSelect
                 value={previewPosition || ""}
-                onChange={(e) => setPreviewPosition(e.target.value || null)}
-                className="w-full px-3 py-2 text-sm rounded-lg border border-blue-300 dark:border-blue-700 bg-white dark:bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Select a position...</option>
-                {positions.map((position) => (
-                  <option key={position} value={position}>
-                    {position}
-                  </option>
-                ))}
-              </select>
+                onChange={(value) => setPreviewPosition(value || null)}
+                placeholder="Select a position..."
+                options={positions.map((position) => ({
+                  value: position,
+                  label: position,
+                }))}
+                className="w-full"
+              />
             </div>
             <Typography
               variant="caption"
@@ -415,27 +414,20 @@ export function PlayAssignmentsModal({
               <Typography variant="label-md" className="mb-1">
                 Personnel Configuration
               </Typography>
-              <select
+              <FormSelect
                 value={selectedPersonnelId || ""}
-                onChange={(e) => {
-                  setSelectedPersonnelId(e.target.value || null);
+                onChange={(value) => {
+                  setSelectedPersonnelId(value || null);
                   setHasChanges(true);
                 }}
                 disabled={!canEdit}
-                className="w-full px-3 py-2 text-sm rounded-lg border border-primary bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-accent-500 disabled:opacity-50"
-              >
-                <option value="">
-                  {play.personnel
-                    ? `Default (${play.personnel})`
-                    : "Default (11 Personnel)"}
-                </option>
-                {personnelConfigurations.map((config) => (
-                  <option key={config.id} value={config.id}>
-                    {config.name}
-                    {config.description ? ` - ${config.description}` : ""}
-                  </option>
-                ))}
-              </select>
+                placeholder={play.personnel ? `Default (${play.personnel})` : "Default (11 Personnel)"}
+                options={personnelConfigurations.map((config) => ({
+                  value: config.id,
+                  label: `${config.name}${config.description ? ` - ${config.description}` : ""}`,
+                }))}
+                className="w-full"
+              />
             </div>
             {selectedPersonnel && (
               <div className="flex items-center gap-1">

@@ -21,6 +21,7 @@ import React, {
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
 import { FormationBadge } from "../playbook/FormationBadge";
+import { FormSelect } from "../ui/FormSelect/FormSelect";
 import { FormationService } from "../../services/formationService";
 import { PersonnelService } from "../../services/personnelService";
 import { CreateOppositeFormationModal } from "./CreateOppositeFormationModal";
@@ -988,20 +989,18 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                           <label className="block text-sm font-medium text-primary mb-xs">
                             Personnel Package *
                           </label>
-                          <select
+                          <FormSelect
                             value={newFormationPersonnelId}
-                            onChange={(e) =>
-                              setNewFormationPersonnelId(e.target.value)
+                            onChange={(value) =>
+                              setNewFormationPersonnelId(value)
                             }
-                            className="w-full px-md py-sm border border-primary rounded-md bg-primary text-primary"
-                          >
-                            <option value="">Select personnel...</option>
-                            {availablePersonnel.map((personnel) => (
-                              <option key={personnel.id} value={personnel.id}>
-                                {personnel.name} - {personnel.description}
-                              </option>
-                            ))}
-                          </select>
+                            placeholder="Select personnel..."
+                            options={availablePersonnel.map((personnel) => ({
+                              value: personnel.id,
+                              label: `${personnel.name} - ${personnel.description}`,
+                            }))}
+                            className="w-full"
+                          />
                         </div>
 
                         {/* Category */}
@@ -1009,20 +1008,18 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                           <label className="block text-sm font-medium text-primary mb-xs">
                             Category
                           </label>
-                          <select
+                          <FormSelect
                             value={category}
-                            onChange={(e) =>
-                              setCategory(e.target.value as FormationCategory)
+                            onChange={(value) =>
+                              setCategory(value as FormationCategory)
                             }
-                            className="w-full px-md py-sm border border-primary rounded-md bg-primary text-primary"
-                          >
-                            <option value="">Select category...</option>
-                            {FORMATION_CATEGORIES.map((cat) => (
-                              <option key={cat.value} value={cat.value}>
-                                {cat.label}
-                              </option>
-                            ))}
-                          </select>
+                            placeholder="Select category..."
+                            options={FORMATION_CATEGORIES.map((cat) => ({
+                              value: cat.value,
+                              label: cat.label,
+                            }))}
+                            className="w-full"
+                          />
                         </div>
 
                         {/* Save Button */}
@@ -1234,25 +1231,20 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                           Formation Category
                         </Typography>
 
-                        <div className="relative">
-                          <select
-                            value={category}
-                            onChange={(e) =>
-                              setCategory(
-                                e.target.value as FormationCategory | ""
-                              )
-                            }
-                            className="w-full px-sm py-xs border border-primary rounded bg-primary text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 appearance-none pr-lg"
-                          >
-                            <option value="">No category</option>
-                            {FORMATION_CATEGORIES.map((cat) => (
-                              <option key={cat.value} value={cat.value}>
-                                {cat.label}
-                              </option>
-                            ))}
-                          </select>
-                          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
-                        </div>
+                        <FormSelect
+                          value={category}
+                          onChange={(value) =>
+                            setCategory(
+                              value as FormationCategory | ""
+                            )
+                          }
+                          placeholder="No category"
+                          options={FORMATION_CATEGORIES.map((cat) => ({
+                            value: cat.value,
+                            label: cat.label,
+                          }))}
+                          className="w-full"
+                        />
                       </div>
 
                       {/* Formation Type */}
@@ -1264,27 +1256,22 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                           Formation Type
                         </Typography>
 
-                        <div className="relative">
-                          <select
-                            value={formationType || ""}
-                            onChange={(e) =>
-                              setFormationType(
-                                e.target.value
-                                  ? (e.target.value as FormationType)
-                                  : null
-                              )
-                            }
-                            className="w-full px-sm py-xs border border-primary rounded bg-primary text-primary text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 appearance-none pr-lg"
-                          >
-                            <option value="">No type specified</option>
-                            {FORMATION_TYPES.map((type) => (
-                              <option key={type.value} value={type.value}>
-                                {type.label}
-                              </option>
-                            ))}
-                          </select>
-                          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
-                        </div>
+                        <FormSelect
+                          value={formationType || ""}
+                          onChange={(value) =>
+                            setFormationType(
+                              value
+                                ? (value as FormationType)
+                                : null
+                            )
+                          }
+                          placeholder="No type specified"
+                          options={FORMATION_TYPES.map((type) => ({
+                            value: type.value,
+                            label: type.label,
+                          }))}
+                          className="w-full"
+                        />
                       </div>
 
                       {/* Run Strength */}

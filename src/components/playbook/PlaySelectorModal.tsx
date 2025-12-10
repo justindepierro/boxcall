@@ -5,6 +5,7 @@ import { Icon } from "../ui/Icon";
 import { Typography } from "../design-system/Typography";
 import Input from "../ui/Input/Input";
 import { Badge } from "../ui/Badge";
+import { FormSelect } from "../ui";
 import type { Play } from "../../types/play";
 import { useTeamsData } from "../../hooks/useTeamsData";
 
@@ -135,44 +136,38 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <select
+            <FormSelect
               value={selectedFormation}
-              onChange={(e) => setSelectedFormation(e.target.value)}
-              className="px-3 py-2 border border-border rounded-lg text-sm bg-primary text-primary"
-            >
-              <option value="">All Formations</option>
-              {formations.map((formation) => (
-                <option key={formation} value={formation}>
-                  {formation}
-                </option>
-              ))}
-            </select>
+              onChange={(value) => setSelectedFormation(value)}
+              placeholder="All Formations"
+              options={formations.map((formation) => ({
+                value: formation,
+                label: formation,
+              }))}
+              className="min-w-32"
+            />
 
-            <select
+            <FormSelect
               value={selectedPlayType}
-              onChange={(e) => setSelectedPlayType(e.target.value)}
-              className="px-3 py-2 border border-border rounded-lg text-sm bg-primary text-primary"
-            >
-              <option value="">All Play Types</option>
-              {playTypes.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
+              onChange={(value) => setSelectedPlayType(value)}
+              placeholder="All Play Types"
+              options={playTypes.map((type) => ({
+                value: type,
+                label: type,
+              }))}
+              className="min-w-32"
+            />
 
-            <select
+            <FormSelect
               value={selectedPersonnel}
-              onChange={(e) => setSelectedPersonnel(e.target.value)}
-              className="px-3 py-2 border border-border rounded-lg text-sm bg-primary text-primary"
-            >
-              <option value="">All Personnel</option>
-              {personnelGroups.map((personnel) => (
-                <option key={personnel} value={personnel}>
-                  {personnel}
-                </option>
-              ))}
-            </select>
+              onChange={(value) => setSelectedPersonnel(value)}
+              placeholder="All Personnel"
+              options={personnelGroups.map((personnel) => ({
+                value: personnel,
+                label: personnel,
+              }))}
+              className="min-w-32"
+            />
           </div>
         </div>
 

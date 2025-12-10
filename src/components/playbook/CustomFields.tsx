@@ -1,4 +1,5 @@
 import { Typography } from "../design-system/Typography";
+import { FormSelect } from "../ui";
 // (Removed unused lucide-react icon imports after emoji cleanup)
 /**
  * Custom Fields Component
@@ -178,20 +179,17 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
 
       case "select":
         return (
-          <select
+          <FormSelect
             value={(value as string) || ""}
-            onChange={(e) =>
-              updateFieldValue(definition.field_name, e.target.value)
+            onChange={(val) =>
+              updateFieldValue(definition.field_name, val)
             }
-            className={commonClasses}
-          >
-            <option value="">Select...</option>
-            {definition.field_options?.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
+            placeholder="Select..."
+            options={definition.field_options?.map((option) => ({
+              value: option,
+              label: option,
+            })) || []}
+          />
         );
 
       case "multi_select": {

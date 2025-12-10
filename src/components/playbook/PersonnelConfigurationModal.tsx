@@ -5,6 +5,7 @@ import { Typography } from "../design-system/Typography";
 import { BottomSheet } from "../BottomSheet";
 import { Modal } from "../ui/Modal";
 import { Input } from "../ui/Input";
+import { FormSelect } from "../ui/FormSelect/FormSelect";
 import { triggerHapticFeedback } from "../../lib/hapticFeedback";
 import { useToast } from "../../hooks/useToast";
 import { usePersonnelConfigurations } from "../../hooks/usePersonnel";
@@ -548,22 +549,23 @@ export const PersonnelConfigurationModal: React.FC<
                               />
                             </div>
                           ) : (
-                            /* Other Positions - Native select dropdown */
-                            <select
+                            /* Other Positions - FormSelect dropdown */
+                            <FormSelect
                               value={player.player_position}
-                              onChange={(e) =>
+                              onChange={(value) =>
                                 updatePlayerPosition(
                                   config.id,
                                   player.id,
-                                  e.target.value as PlayerPosition
+                                  value as PlayerPosition
                                 )
                               }
-                              className="flex-1 h-9 px-3 rounded-lg border border-default bg-primary text-primary text-sm font-medium cursor-pointer hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-brand-jade transition-colors"
-                            >
-                              <option value="RB">RB (Running Back)</option>
-                              <option value="TE">TE (Tight End)</option>
-                              <option value="WR">WR (Wide Receiver)</option>
-                            </select>
+                              options={[
+                                { value: "RB", label: "RB (Running Back)" },
+                                { value: "TE", label: "TE (Tight End)" },
+                                { value: "WR", label: "WR (Wide Receiver)" },
+                              ]}
+                              className="flex-1"
+                            />
                           )}
 
                           {/* Wildcat QB checkbox - only show for QB position (inline) */}

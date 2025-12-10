@@ -1,6 +1,7 @@
 import React from "react";
 import { Icon } from "../../../ui/Icon/Icon";
 import { Typography } from "../../../design-system/Typography";
+import { FormSelect } from "../../../ui";
 
 interface KeyPositionSelectorProps {
   positions: string[];
@@ -94,25 +95,24 @@ export const KeyPositionSelector: React.FC<KeyPositionSelectorProps> = ({
       ) : (
         <>
           {/* Position dropdown */}
-          <select
-            onChange={handleSelectChange}
+          <FormSelect
+            value=""
+            onChange={(value) => {
+              if (value && !positions.includes(value)) {
+                onAdd(value);
+              }
+            }}
             disabled={disabled || availableToSelect.length === 0}
-            className="w-full px-3 py-2 border border-muted rounded-md
-                       focus:ring-2 focus:ring-primary-default focus:border-transparent
-                       disabled:bg-muted disabled:cursor-not-allowed text-sm"
-            aria-label="Select key position"
-          >
-            <option value="">
-              {availableToSelect.length === 0
+            placeholder={
+              availableToSelect.length === 0
                 ? "All positions selected"
-                : "Select position..."}
-            </option>
-            {availableToSelect.map((position) => (
-              <option key={position} value={position}>
-                {position}
-              </option>
-            ))}
-          </select>
+                : "Select position..."
+            }
+            options={availableToSelect.map((position) => ({
+              value: position,
+              label: position,
+            }))}
+          />
 
           {/* Available positions hint */}
           {availableToSelect.length > 0 && (

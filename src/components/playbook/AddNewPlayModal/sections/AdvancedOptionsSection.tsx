@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "../../../ui/Button/Button";
 import { Icon } from "../../../ui/Icon/Icon";
 import { Typography } from "../../../design-system/Typography";
+import { FormSelect } from "../../../ui";
 import {
   TagInput,
   KeyPositionSelector,
@@ -199,18 +200,15 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                 >
                   Direction
                 </Typography>
-                <select
+                <FormSelect
                   value={formationDir}
-                  onChange={(e) => onFormationDirChange(e.target.value)}
-                  className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
-                >
-                  <option value="">None</option>
-                  {directionOptions.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(value) => onFormationDirChange(value)}
+                  placeholder="None"
+                  options={directionOptions.map((opt) => ({
+                    value: opt.value,
+                    label: opt.label,
+                  }))}
+                />
               </div>
               <div className="md:col-span-2">
                 <Typography
@@ -327,18 +325,15 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
                 >
                   Direction
                 </Typography>
-                <select
+                <FormSelect
                   value={playDir}
-                  onChange={(e) => onPlayDirChange(e.target.value)}
-                  className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
-                >
-                  <option value="">None</option>
-                  {directionOptions.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(value) => onPlayDirChange(value)}
+                  placeholder="None"
+                  options={directionOptions.map((opt) => ({
+                    value: opt.value,
+                    label: opt.label,
+                  }))}
+                />
               </div>
               <div>
                 <ValidatedInput

@@ -8,6 +8,7 @@ import {
 import { Button } from "../../ui/Button/Button";
 import { Typography } from "../../design-system/Typography";
 import { Badge } from "../../ui/Badge";
+import { FormSelect } from "../../ui";
 import { PlaySelectorModal } from "../PlaySelectorModal";
 import { GamePlanPDFService } from "../../../services/gamePlanPdfService";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
@@ -346,25 +347,25 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
               <label className="block text-secondary text-sm font-medium mb-2">
                 Location
               </label>
-              <select
+              <FormSelect
                 value={formData.gameLocation || ""}
-                onChange={(e) =>
+                onChange={(value) =>
                   setFormData({
                     ...formData,
-                    gameLocation: e.target.value as
+                    gameLocation: value as
                       | "Home"
                       | "Away"
                       | "Neutral"
                       | undefined,
                   })
                 }
-                className="w-full px-4 py-2 border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-base bg-surface-base text-primary"
-              >
-                <option value="">Select...</option>
-                <option value="Home">Home</option>
-                <option value="Away">Away</option>
-                <option value="Neutral">Neutral</option>
-              </select>
+                placeholder="Select..."
+                options={[
+                  { value: "Home", label: "Home" },
+                  { value: "Away", label: "Away" },
+                  { value: "Neutral", label: "Neutral" },
+                ]}
+              />
             </div>
           </div>
 
