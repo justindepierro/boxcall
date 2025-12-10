@@ -166,10 +166,12 @@ export function BulkEditModal({
                 onChange={(value) => setPosition(value)}
                 disabled={!applyPosition}
                 placeholder="Select position..."
-                options={positionOptions.filter(opt => opt.value !== "").map((opt) => ({
-                  value: opt.value,
-                  label: opt.label,
-                }))}
+                options={positionOptions
+                  .filter((opt) => opt.value !== "")
+                  .map((opt) => ({
+                    value: opt.value,
+                    label: opt.label,
+                  }))}
               />
             </div>
           </div>
@@ -195,10 +197,12 @@ export function BulkEditModal({
                 onChange={(value) => setGradeLevel(value)}
                 disabled={!applyGradeLevel}
                 placeholder="Select grade level..."
-                options={gradeLevelOptions.filter(opt => opt.value !== "").map((opt) => ({
-                  value: opt.value,
-                  label: opt.label,
-                }))}
+                options={gradeLevelOptions
+                  .filter((opt) => opt.value !== "")
+                  .map((opt) => ({
+                    value: opt.value,
+                    label: opt.label,
+                  }))}
               />
             </div>
           </div>

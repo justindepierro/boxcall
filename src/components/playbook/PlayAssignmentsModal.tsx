@@ -421,7 +421,11 @@ export function PlayAssignmentsModal({
                   setHasChanges(true);
                 }}
                 disabled={!canEdit}
-                placeholder={play.personnel ? `Default (${play.personnel})` : "Default (11 Personnel)"}
+                placeholder={
+                  play.personnel
+                    ? `Default (${play.personnel})`
+                    : "Default (11 Personnel)"
+                }
                 options={personnelConfigurations.map((config) => ({
                   value: config.id,
                   label: `${config.name}${config.description ? ` - ${config.description}` : ""}`,

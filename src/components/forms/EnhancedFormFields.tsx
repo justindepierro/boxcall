@@ -293,7 +293,11 @@ export const EnhancedSelect: React.FC<EnhancedSelectProps> = ({
               {selectedOption?.label || "Select..."}
             </span>
             <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-              <Icon name="chevron-down" size="sm" className="text-muted ui-open:rotate-180 transition-transform" />
+              <Icon
+                name="chevron-down"
+                size="sm"
+                className="text-muted ui-open:rotate-180 transition-transform"
+              />
             </span>
           </Listbox.Button>
 
@@ -317,11 +321,16 @@ export const EnhancedSelect: React.FC<EnhancedSelectProps> = ({
                 >
                   {({ selected }) => (
                     <div className="flex items-center justify-between">
-                      <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>
+                      <span
+                        className={`block truncate ${selected ? "font-medium" : "font-normal"}`}
+                      >
                         {option.label}
                       </span>
                       {selected && (
-                        <Icon name="check" className="h-5 w-5 text-jade-600 dark:text-jade-400" />
+                        <Icon
+                          name="check"
+                          className="h-5 w-5 text-jade-600 dark:text-jade-400"
+                        />
                       )}
                     </div>
                   )}

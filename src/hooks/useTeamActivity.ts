@@ -32,7 +32,7 @@ export function useTeamActivity(teamId: string): TeamActivityStats {
 
   useEffect(() => {
     mountedRef.current = true;
-    
+
     if (!teamId) {
       setStats({ ...INITIAL_STATS, loading: false });
       return;
@@ -46,13 +46,18 @@ export function useTeamActivity(teamId: string): TeamActivityStats {
         ).toISOString();
 
         // Fetch team members - fast query with minimal data
-        const { data: teamMembers, error: membersError } = await api("team_members")
+        const { data: teamMembers, error: membersError } = await api(
+          "team_members"
+        )
           .select("user_id")
           .eq("team_id", teamId)
           .limit(100); // Cap at 100 to prevent slow queries
 
         if (membersError) {
-          console.warn("[useTeamActivity] Failed to fetch team members:", membersError);
+          console.warn(
+            "[useTeamActivity] Failed to fetch team members:",
+            membersError
+          );
           if (mountedRef.current) {
             setStats({ ...INITIAL_STATS, loading: false });
           }
@@ -95,7 +100,7 @@ export function useTeamActivity(teamId: string): TeamActivityStats {
 
     // Refresh stats every 60 seconds (increased from 30s for better performance)
     const interval = setInterval(loadStats, 60000);
-    
+
     return () => {
       mountedRef.current = false;
       clearInterval(interval);

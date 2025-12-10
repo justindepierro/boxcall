@@ -33,7 +33,7 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
       >
         <span className="sr-only sm:not-sr-only">{label}:</span>
       </label>
-      
+
       <Listbox value={value} onChange={onChange}>
         <div className="relative inline-block">
           <Listbox.Button
@@ -52,9 +52,14 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
               min-w-32
             "
           >
-            <span className="block truncate">{selectedOption?.label || "Select..."}</span>
+            <span className="block truncate">
+              {selectedOption?.label || "Select..."}
+            </span>
             <span className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <Icon name="chevron-down" className="h-4 w-4 text-muted ui-open:rotate-180 transition-transform" />
+              <Icon
+                name="chevron-down"
+                className="h-4 w-4 text-muted ui-open:rotate-180 transition-transform"
+              />
             </span>
           </Listbox.Button>
 
@@ -80,7 +85,10 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
                     <div className="flex items-center justify-between">
                       <span className="block truncate">{option.label}</span>
                       {selected && (
-                        <Icon name="check" className="h-4 w-4 text-jade-600 dark:text-jade-400" />
+                        <Icon
+                          name="check"
+                          className="h-4 w-4 text-jade-600 dark:text-jade-400"
+                        />
                       )}
                     </div>
                   )}

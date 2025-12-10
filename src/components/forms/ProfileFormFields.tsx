@@ -61,10 +61,12 @@ export const FormField = memo<FormFieldProps>(
               value={String(value || "")}
               onChange={(val) => onChange(val)}
               placeholder={`Select ${field.label}`}
-              options={field.options?.map((option) => ({
-                value: option.value,
-                label: option.label,
-              })) || []}
+              options={
+                field.options?.map((option) => ({
+                  value: option.value,
+                  label: option.label,
+                })) || []
+              }
             />
           );
 

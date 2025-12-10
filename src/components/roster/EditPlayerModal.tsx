@@ -319,9 +319,7 @@ export default function EditPlayerModal({
               </label>
               <FormSelect
                 value={formData.grade_level}
-                onChange={(value) =>
-                  handleFieldChange("grade_level", value)
-                }
+                onChange={(value) => handleFieldChange("grade_level", value)}
                 disabled={saving}
                 placeholder="Select Grade"
                 options={gradeOptions.map((grade) => ({

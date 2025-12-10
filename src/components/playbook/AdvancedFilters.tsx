@@ -372,12 +372,14 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                                 }))
                               }
                               placeholder="Select value..."
-                              options={selectedField.options?.map(
-                                (option: FilterOption) => ({
-                                  value: option.value,
-                                  label: option.label,
-                                })
-                              ) || []}
+                              options={
+                                selectedField.options?.map(
+                                  (option: FilterOption) => ({
+                                    value: option.value,
+                                    label: option.label,
+                                  })
+                                ) || []
+                              }
                             />
                           ) : (
                             <input
@@ -577,12 +579,14 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                           }))
                         }
                         placeholder="Select value..."
-                            options={selectedField.options?.map(
-                          (option: FilterOption) => ({
-                            value: option.value,
-                            label: option.label,
-                          })
-                        ) || []}
+                        options={
+                          selectedField.options?.map(
+                            (option: FilterOption) => ({
+                              value: option.value,
+                              label: option.label,
+                            })
+                          ) || []
+                        }
                       />
                     ) : (
                       <input

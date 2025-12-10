@@ -65,7 +65,9 @@ export const FormSelect: React.FC<FormSelectProps> = ({
               text-sm
             `}
           >
-            <span className={`block truncate ${!selectedOption ? "text-muted" : ""}`}>
+            <span
+              className={`block truncate ${!selectedOption ? "text-muted" : ""}`}
+            >
               {selectedOption?.label || placeholder}
             </span>
             <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
@@ -95,7 +97,9 @@ export const FormSelect: React.FC<FormSelectProps> = ({
                 >
                   {({ selected }) => (
                     <div className="flex items-center justify-between">
-                      <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>
+                      <span
+                        className={`block truncate ${selected ? "font-medium" : "font-normal"}`}
+                      >
                         {option.label}
                       </span>
                       {selected && (

@@ -244,7 +244,8 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredPersonnel.map((config) => {
                 const badge = config.badgeCustomization as any;
-                const bgColor = badge?.backgroundColor || DEFAULT_BADGE_COLORS.bg;
+                const bgColor =
+                  badge?.backgroundColor || DEFAULT_BADGE_COLORS.bg;
                 const textColor = badge?.textColor || DEFAULT_BADGE_COLORS.text;
 
                 return (

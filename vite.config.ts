@@ -370,14 +370,21 @@ export default defineConfig({
               return "animations";
             }
             // Forms
-            if (id.includes("react-hook-form") || id.includes("@hookform") || id.includes("/zod/")) {
+            if (
+              id.includes("react-hook-form") ||
+              id.includes("@hookform") ||
+              id.includes("/zod/")
+            ) {
               return "forms";
             }
             // Editor - heavy, lazy load
             if (id.includes("@tiptap/react") || id.includes("@tiptap/core")) {
               return "editor-core";
             }
-            if (id.includes("@tiptap/extension") || id.includes("@tiptap/starter-kit")) {
+            if (
+              id.includes("@tiptap/extension") ||
+              id.includes("@tiptap/starter-kit")
+            ) {
               return "editor-extensions";
             }
             if (id.includes("prosemirror")) {
@@ -408,11 +415,14 @@ export default defineConfig({
               return "ui-observers";
             }
           }
-          
+
           // App code chunking - split large feature areas
           if (id.includes("/src/")) {
             // Analytics is a heavy feature used occasionally
-            if (id.includes("/analytics/") || id.includes("/components/analytics/")) {
+            if (
+              id.includes("/analytics/") ||
+              id.includes("/components/analytics/")
+            ) {
               return "feature-analytics";
             }
             // PDF components

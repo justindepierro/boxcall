@@ -1234,9 +1234,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                         <FormSelect
                           value={category}
                           onChange={(value) =>
-                            setCategory(
-                              value as FormationCategory | ""
-                            )
+                            setCategory(value as FormationCategory | "")
                           }
                           placeholder="No category"
                           options={FORMATION_CATEGORIES.map((cat) => ({
@@ -1260,9 +1258,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
                           value={formationType || ""}
                           onChange={(value) =>
                             setFormationType(
-                              value
-                                ? (value as FormationType)
-                                : null
+                              value ? (value as FormationType) : null
                             )
                           }
                           placeholder="No type specified"

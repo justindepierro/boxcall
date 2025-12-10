@@ -181,14 +181,14 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
         return (
           <FormSelect
             value={(value as string) || ""}
-            onChange={(val) =>
-              updateFieldValue(definition.field_name, val)
-            }
+            onChange={(val) => updateFieldValue(definition.field_name, val)}
             placeholder="Select..."
-            options={definition.field_options?.map((option) => ({
-              value: option,
-              label: option,
-            })) || []}
+            options={
+              definition.field_options?.map((option) => ({
+                value: option,
+                label: option,
+              })) || []
+            }
           />
         );
 

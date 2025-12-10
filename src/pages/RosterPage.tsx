@@ -1252,10 +1252,7 @@ const RosterPage = () => {
                         if (!currentPositions.includes(value)) {
                           setPlayerForm((prev) => ({
                             ...prev,
-                            position: [
-                              ...currentPositions,
-                              value,
-                            ].join(","),
+                            position: [...currentPositions, value].join(","),
                           }));
                         }
                       }

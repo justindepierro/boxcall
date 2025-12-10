@@ -478,10 +478,19 @@ const GameSession: React.FC = () => {
                         { value: "Unknown", label: "Unknown" },
                         { value: "Cover 0", label: "Cover 0 (Man, 0 deep)" },
                         { value: "Cover 1", label: "Cover 1 (Man, 1 deep)" },
-                        { value: "Cover 2", label: "Cover 2 (2 deep, 5 under)" },
-                        { value: "Cover 3", label: "Cover 3 (3 deep, 4 under)" },
+                        {
+                          value: "Cover 2",
+                          label: "Cover 2 (2 deep, 5 under)",
+                        },
+                        {
+                          value: "Cover 3",
+                          label: "Cover 3 (3 deep, 4 under)",
+                        },
                         { value: "Cover 4", label: "Cover 4 (Quarters)" },
-                        { value: "Cover 6", label: "Cover 6 (Quarter-Quarter-Half)" },
+                        {
+                          value: "Cover 6",
+                          label: "Cover 6 (Quarter-Quarter-Half)",
+                        },
                         { value: "Man", label: "Man Coverage" },
                         { value: "Zone", label: "Zone Coverage" },
                         { value: "Blitz", label: "Blitz" },

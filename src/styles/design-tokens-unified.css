@@ -698,8 +698,17 @@
      ============================================ */
 
   /* Orange Card - Energy/Action (Practice, BoxCall Live) */
-  --card-orange-bg: linear-gradient(to bottom right, var(--color-accent-orange-100), var(--color-accent-orange-50), white);
-  --card-orange-bg-light: linear-gradient(to bottom right, var(--color-accent-orange-50), var(--color-accent-orange-100));
+  --card-orange-bg: linear-gradient(
+    to bottom right,
+    var(--color-accent-orange-100),
+    var(--color-accent-orange-50),
+    white
+  );
+  --card-orange-bg-light: linear-gradient(
+    to bottom right,
+    var(--color-accent-orange-50),
+    var(--color-accent-orange-100)
+  );
   --card-orange-border: var(--color-accent-orange-200);
   --card-orange-border-hover: var(--color-accent-orange-300);
   --card-orange-icon: var(--color-accent-orange-600);
@@ -708,8 +717,17 @@
   --card-orange-shadow-hover: rgba(249, 115, 22, 0.4);
 
   /* Purple Card - Premium/Templates/Achievements */
-  --card-purple-bg: linear-gradient(to bottom right, var(--color-accent-purple-100), var(--color-accent-purple-50), white);
-  --card-purple-bg-light: linear-gradient(to bottom right, var(--color-accent-purple-50), var(--color-accent-purple-100));
+  --card-purple-bg: linear-gradient(
+    to bottom right,
+    var(--color-accent-purple-100),
+    var(--color-accent-purple-50),
+    white
+  );
+  --card-purple-bg-light: linear-gradient(
+    to bottom right,
+    var(--color-accent-purple-50),
+    var(--color-accent-purple-100)
+  );
   --card-purple-border: var(--color-accent-purple-200);
   --card-purple-border-hover: var(--color-accent-purple-300);
   --card-purple-icon: var(--color-accent-purple-600);
@@ -718,8 +736,17 @@
   --card-purple-shadow-hover: rgba(147, 51, 234, 0.4);
 
   /* Blue Card - Info/Stats/Team */
-  --card-blue-bg: linear-gradient(to bottom right, var(--color-accent-blue-100), var(--color-accent-blue-50), white);
-  --card-blue-bg-light: linear-gradient(to bottom right, var(--color-accent-blue-50), var(--color-accent-blue-100));
+  --card-blue-bg: linear-gradient(
+    to bottom right,
+    var(--color-accent-blue-100),
+    var(--color-accent-blue-50),
+    white
+  );
+  --card-blue-bg-light: linear-gradient(
+    to bottom right,
+    var(--color-accent-blue-50),
+    var(--color-accent-blue-100)
+  );
   --card-blue-border: var(--color-accent-blue-200);
   --card-blue-border-hover: var(--color-accent-blue-300);
   --card-blue-icon: var(--color-accent-blue-600);
@@ -728,8 +755,17 @@
   --card-blue-shadow-hover: rgba(59, 130, 246, 0.4);
 
   /* Emerald Card - Success/Active/Growth */
-  --card-emerald-bg: linear-gradient(to bottom right, var(--color-accent-emerald-100), var(--color-accent-emerald-50), white);
-  --card-emerald-bg-light: linear-gradient(to bottom right, var(--color-accent-emerald-50), var(--color-accent-emerald-100));
+  --card-emerald-bg: linear-gradient(
+    to bottom right,
+    var(--color-accent-emerald-100),
+    var(--color-accent-emerald-50),
+    white
+  );
+  --card-emerald-bg-light: linear-gradient(
+    to bottom right,
+    var(--color-accent-emerald-50),
+    var(--color-accent-emerald-100)
+  );
   --card-emerald-border: var(--color-accent-emerald-200);
   --card-emerald-border-hover: var(--color-accent-emerald-300);
   --card-emerald-icon: var(--color-accent-emerald-600);
@@ -738,8 +774,17 @@
   --card-emerald-shadow-hover: rgba(16, 185, 129, 0.4);
 
   /* Indigo Card - Focus/Deep/Links */
-  --card-indigo-bg: linear-gradient(to bottom right, var(--color-accent-indigo-100), var(--color-accent-indigo-50), white);
-  --card-indigo-bg-light: linear-gradient(to bottom right, var(--color-accent-indigo-50), var(--color-accent-indigo-100));
+  --card-indigo-bg: linear-gradient(
+    to bottom right,
+    var(--color-accent-indigo-100),
+    var(--color-accent-indigo-50),
+    white
+  );
+  --card-indigo-bg-light: linear-gradient(
+    to bottom right,
+    var(--color-accent-indigo-50),
+    var(--color-accent-indigo-100)
+  );
   --card-indigo-border: var(--color-accent-indigo-200);
   --card-indigo-border-hover: var(--color-accent-indigo-300);
   --card-indigo-icon: var(--color-accent-indigo-600);
@@ -748,8 +793,17 @@
   --card-indigo-shadow-hover: rgba(99, 102, 241, 0.4);
 
   /* Cyan Card - Tech/Modern/Selection */
-  --card-cyan-bg: linear-gradient(to bottom right, var(--color-accent-cyan-100), var(--color-accent-cyan-50), white);
-  --card-cyan-bg-light: linear-gradient(to bottom right, var(--color-accent-cyan-50), var(--color-accent-cyan-100));
+  --card-cyan-bg: linear-gradient(
+    to bottom right,
+    var(--color-accent-cyan-100),
+    var(--color-accent-cyan-50),
+    white
+  );
+  --card-cyan-bg-light: linear-gradient(
+    to bottom right,
+    var(--color-accent-cyan-50),
+    var(--color-accent-cyan-100)
+  );
   --card-cyan-border: var(--color-accent-cyan-200);
   --card-cyan-border-hover: var(--color-accent-cyan-300);
   --card-cyan-icon: var(--color-accent-cyan-600);

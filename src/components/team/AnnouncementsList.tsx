@@ -243,8 +243,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
             onChange={(value) =>
               setFilters({
                 ...filters,
-                visibility:
-                  (value as AnnouncementVisibility) || undefined,
+                visibility: (value as AnnouncementVisibility) || undefined,
               })
             }
             options={[

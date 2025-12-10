@@ -7,7 +7,7 @@ interface DropdownMenuProps {
 
 /**
  * DropdownMenu - Action menu using Headless UI Menu
- * 
+ *
  * For value selection (form inputs), use `Select` or `Dropdown` instead.
  * This is for action menus (edit, delete, share, etc.)
  */
@@ -53,7 +53,7 @@ export const DropdownMenuContent: React.FC<DropdownMenuContentProps> = ({
   ...props
 }) => {
   const alignment = align === "end" ? "right-0" : "left-0";
-  
+
   return (
     <Transition
       as={Fragment}
@@ -68,9 +68,7 @@ export const DropdownMenuContent: React.FC<DropdownMenuContentProps> = ({
         className={`absolute z-50 mt-2 w-56 origin-top ${alignment} rounded-lg bg-white dark:bg-navy-800 border border-neutral-200 dark:border-navy-600 shadow-lg focus:outline-none ${className}`}
         {...props}
       >
-        <div className="py-1">
-          {children}
-        </div>
+        <div className="py-1">{children}</div>
       </Menu.Items>
     </Transition>
   );
@@ -85,29 +83,34 @@ interface DropdownMenuItemProps
 export const DropdownMenuItem = React.forwardRef<
   HTMLButtonElement,
   DropdownMenuItemProps
->(({ children, className = "", isActive, onSelect, onClick, ...props }, ref) => {
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    onSelect?.();
-    onClick?.(e);
-  };
+>(
+  (
+    { children, className = "", isActive, onSelect, onClick, ...props },
+    ref
+  ) => {
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      onSelect?.();
+      onClick?.(e);
+    };
 
-  return (
-    <Menu.Item>
-      {({ active }) => (
-        <button
-          ref={ref}
-          className={`w-full px-3 py-2 text-sm text-left transition-colors ${
-            active || isActive
-              ? "bg-jade-50 dark:bg-jade-900/20 text-jade-700 dark:text-jade-200"
-              : "text-primary hover:bg-surface-hover dark:hover:bg-surface-hover"
-          } ${className}`}
-          onClick={handleClick}
-          {...props}
-        >
-          {children}
-        </button>
-      )}
-    </Menu.Item>
-  );
-});
+    return (
+      <Menu.Item>
+        {({ active }) => (
+          <button
+            ref={ref}
+            className={`w-full px-3 py-2 text-sm text-left transition-colors ${
+              active || isActive
+                ? "bg-jade-50 dark:bg-jade-900/20 text-jade-700 dark:text-jade-200"
+                : "text-primary hover:bg-surface-hover dark:hover:bg-surface-hover"
+            } ${className}`}
+            onClick={handleClick}
+            {...props}
+          >
+            {children}
+          </button>
+        )}
+      </Menu.Item>
+    );
+  }
+);
 DropdownMenuItem.displayName = "DropdownMenuItem";
