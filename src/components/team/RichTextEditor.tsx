@@ -24,6 +24,10 @@ import { MentionsService } from "../../services/mentionsService";
 import { MentionList } from "../ui/MentionList";
 import type { MentionItem, MentionListRef } from "../ui/MentionList";
 import { Type, Palette, Highlighter, ChevronDown } from "lucide-react";
+import {
+  EDITOR_TEXT_COLORS,
+  EDITOR_HIGHLIGHT_COLORS,
+} from "../../design-system/chartColors";
 
 // Custom FontFamily extension with specific fonts
 const FontFamily = Extension.create({
@@ -190,29 +194,9 @@ export function RichTextEditor({
     { name: "Comic Sans", value: "'Comic Sans MS', cursive" },
   ];
 
-  const colors = [
-    "#000000", // Black
-    "#FF0000", // Red
-    "#00FF00", // Green
-    "#0000FF", // Blue
-    "#FFFF00", // Yellow
-    "#FF00FF", // Magenta
-    "#00FFFF", // Cyan
-    "#FFA500", // Orange
-    "#800080", // Purple
-    "#008000", // Dark Green
-    "#000080", // Navy
-    "#808080", // Gray
-  ];
-
-  const highlightColors = [
-    { name: "None", value: "" },
-    { name: "Yellow", value: "#FFFF00" },
-    { name: "Green", value: "#90EE90" },
-    { name: "Blue", value: "#ADD8E6" },
-    { name: "Pink", value: "#FFB6C1" },
-    { name: "Orange", value: "#FFD700" },
-  ];
+  // Use centralized color constants - these must be raw hex for HTML content
+  const colors = EDITOR_TEXT_COLORS;
+  const highlightColors = EDITOR_HIGHLIGHT_COLORS;
 
   // Mention suggestion configuration
   const mentionSuggestion: Partial<SuggestionOptions> = {

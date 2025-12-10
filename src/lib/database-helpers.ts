@@ -23,10 +23,10 @@ interface DatabaseOperationConfig {
 
 // Default configuration for database operations
 const DEFAULT_DB_CONFIG: Required<DatabaseOperationConfig> = {
-  maxRetries: 3,
-  baseDelay: 1000, // 1 second
-  maxDelay: 10000, // 10 seconds
-  timeout: 30000, // 30 seconds
+  maxRetries: 2, // Reduced from 3 - faster failure detection
+  baseDelay: 500, // Reduced from 1000ms - faster retries
+  maxDelay: 5000, // Reduced from 10000ms
+  timeout: 10000, // Reduced from 30000ms - 10 seconds is plenty for simple queries
 };
 
 /**
@@ -154,91 +154,33 @@ export async function testBasicDatabaseConnectivity(): Promise<boolean> {
 }
 
 /**
- * Enhanced database connection test with retry logic
- * Tests authenticated user's database access
+ * Lightweight database connection test
+ * Tests authenticated user's database access with a single simple query
+ * Designed to be fast and non-blocking
  */
 export async function testDatabaseConnection(): Promise<boolean> {
   try {
-    console.log("🔗 Testing authenticated database connection...");
+    console.log("🔗 Testing database connection...");
 
-    // Test basic connection - check current user's profile (respects RLS)
-    const connectionTest = await withDatabaseRetry(async () => {
-      const userId = getCurrentUserId();
-      if (!userId) {
-        throw new Error("No authenticated user found for database test");
-      }
-
-      // Use maybeSingle() to avoid 406 when profile doesn't exist yet
-      const { error } = await supabase
-        .from("profiles")
-        .select("id, full_name, email, is_active")
-        .eq("id", userId)
-        .maybeSingle();
-
-      if (error && error.code !== "PGRST116") {
-        throw error;
-      }
-
-      return true;
-    });
-
-    if (!connectionTest) {
+    const userId = getCurrentUserId();
+    if (!userId) {
+      console.warn("⚠️ No authenticated user - skipping database test");
       return false;
     }
 
-    // Test only accessible tables (skip protected ones to avoid 500 errors)
-    const testTables = [
-      "teams",
-      "plays",
-      "team_members",
-      "playbooks",
-      "play_calls",
-      "team_posts",
-      "practice_schedules",
-    ] as const;
+    // Single fast query to verify connection - profiles table with user's own data
+    const { error } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("id", userId)
+      .maybeSingle();
 
-    const accessibleTables: string[] = [];
-    const protectedCount: string[] = [];
-
-    // Test tables with individual retry logic
-    const tableTests = testTables.map(async (tableName) => {
-      try {
-        await withDatabaseRetry(
-          async () => {
-            const { error } = await supabase
-              .from(tableName)
-              .select("id")
-              .limit(1);
-            if (!error) {
-              accessibleTables.push(tableName);
-            } else if (
-              error.code === "PGRST116" ||
-              error.message.includes("permission denied")
-            ) {
-              protectedCount.push(tableName);
-            }
-          },
-          { maxRetries: 1 }
-        ); // Only retry once for table tests
-      } catch {
-        // Table doesn't exist or access denied
-        protectedCount.push(tableName);
-      }
-    });
-
-    await Promise.allSettled(tableTests);
-
-    // Only log in development mode to reduce console noise
-    if (import.meta.env.DEV) {
-      console.info(
-        `🔗 Database: ${accessibleTables.length} accessible tables, ${protectedCount.length} protected`
-      );
-      if (protectedCount.length > 0) {
-        console.info(`🔒 Protected tables:`, protectedCount);
-      }
+    if (error && error.code !== "PGRST116") {
+      console.error("❌ Database connection test failed:", error.message);
+      return false;
     }
 
-    console.log("✅ Database connection test completed successfully");
+    console.log("✅ Database connection verified");
     return true;
   } catch (error) {
     console.error("❌ Database connection failed:", error);

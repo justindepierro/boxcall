@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import { Typography } from "../../design-system/Typography";
 import { Card } from "../../ui/Card";
+import { CHART_COLORS } from "../../../design-system/chartColors";
 
 interface FormationTrendDataPoint {
   weekLabel: string;
@@ -172,22 +173,22 @@ export const FormationTrendChart: React.FC<FormationTrendChartProps> = ({
             data={data}
             margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+            <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
             <XAxis
               dataKey="weekLabel"
               tick={{ fontSize: 12 }}
-              stroke="#6b7280"
+              stroke={CHART_COLORS.axis}
             />
             <YAxis
               yAxisId="success"
               domain={[successMin, successMax]}
               tick={{ fontSize: 12 }}
-              stroke="#6b7280"
+              stroke={CHART_COLORS.axis}
               label={{
                 value: "Success Rate %",
                 angle: -90,
                 position: "insideLeft",
-                style: { fontSize: 12, fill: "#6b7280" },
+                style: { fontSize: 12, fill: CHART_COLORS.axisText },
               }}
             />
             {showAvgYards && (
@@ -196,12 +197,12 @@ export const FormationTrendChart: React.FC<FormationTrendChartProps> = ({
                 orientation="right"
                 domain={[yardsMin, yardsMax]}
                 tick={{ fontSize: 12 }}
-                stroke="#6b7280"
+                stroke={CHART_COLORS.axis}
                 label={{
                   value: "Avg Yards",
                   angle: 90,
                   position: "insideRight",
-                  style: { fontSize: 12, fill: "#6b7280" },
+                  style: { fontSize: 12, fill: CHART_COLORS.axisText },
                 }}
               />
             )}
@@ -217,12 +218,12 @@ export const FormationTrendChart: React.FC<FormationTrendChartProps> = ({
               <ReferenceLine
                 yAxisId="success"
                 y={targetSuccessRate}
-                stroke="#9ca3af"
+                stroke={CHART_COLORS.axis}
                 strokeDasharray="5 5"
                 label={{
                   value: `Target: ${targetSuccessRate}%`,
                   position: "right",
-                  style: { fontSize: 11, fill: "#6b7280" },
+                  style: { fontSize: 11, fill: CHART_COLORS.axisText },
                 }}
               />
             )}
@@ -233,9 +234,9 @@ export const FormationTrendChart: React.FC<FormationTrendChartProps> = ({
               type="monotone"
               dataKey="successRate"
               name="Success Rate"
-              stroke="#10b981"
+              stroke={CHART_COLORS.emerald}
               strokeWidth={3}
-              dot={{ fill: "#10b981", r: 4 }}
+              dot={{ fill: CHART_COLORS.emerald, r: 4 }}
               activeDot={{ r: 6 }}
             />
 
@@ -246,10 +247,10 @@ export const FormationTrendChart: React.FC<FormationTrendChartProps> = ({
                 type="monotone"
                 dataKey="avgYards"
                 name="Avg Yards"
-                stroke="#3b82f6"
+                stroke={CHART_COLORS.blue}
                 strokeWidth={2}
                 strokeDasharray="5 5"
-                dot={{ fill: "#3b82f6", r: 3 }}
+                dot={{ fill: CHART_COLORS.blue, r: 3 }}
                 activeDot={{ r: 5 }}
               />
             )}

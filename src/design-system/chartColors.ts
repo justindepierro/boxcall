@@ -101,3 +101,74 @@ export const DEFAULT_PIE_COLORS = [
   { name: "Special Teams", color: CHART_COLORS.emerald },
   { name: "Screen", color: CHART_COLORS.amber },
 ] as const;
+
+/**
+ * Rich Text Editor Colors
+ *
+ * These MUST be raw hex values because they're used for:
+ * 1. ContentEditable/HTML content styling (not Tailwind classes)
+ * 2. User-selectable color pickers
+ * 3. Direct DOM style manipulation
+ *
+ * DO NOT use CSS variables here - they won't work in HTML content.
+ */
+export const EDITOR_TEXT_COLORS = [
+  "#000000", // Black
+  "#FF0000", // Red
+  "#00FF00", // Green
+  "#0000FF", // Blue
+  "#FFFF00", // Yellow
+  "#FF00FF", // Magenta
+  "#00FFFF", // Cyan
+  "#FFA500", // Orange
+  "#800080", // Purple
+  "#008000", // Dark Green
+  "#000080", // Navy
+  "#808080", // Gray
+] as const;
+
+export const EDITOR_HIGHLIGHT_COLORS = [
+  { name: "None", value: "" },
+  { name: "Yellow", value: "#FFFF00" },
+  { name: "Green", value: "#90EE90" },
+  { name: "Blue", value: "#ADD8E6" },
+  { name: "Pink", value: "#FFB6C1" },
+  { name: "Orange", value: "#FFD700" },
+] as const;
+
+/**
+ * Personnel Badge Color Presets
+ *
+ * These MUST be raw hex values because they're stored in the database
+ * and rendered dynamically on elements.
+ */
+export const PERSONNEL_BADGE_PRESETS = [
+  { name: "Green", bg: "#10b981", text: "#ffffff" },
+  { name: "Orange", bg: "#f97316", text: "#ffffff" },
+  { name: "Purple", bg: "#9333ea", text: "#ffffff" },
+  { name: "Blue", bg: "#3b82f6", text: "#ffffff" },
+  { name: "Red", bg: "#ef4444", text: "#ffffff" },
+  { name: "Yellow", bg: "#eab308", text: "#000000" },
+  { name: "Pink", bg: "#ec4899", text: "#ffffff" },
+  { name: "Indigo", bg: "#6366f1", text: "#ffffff" },
+  { name: "Teal", bg: "#14b8a6", text: "#ffffff" },
+  { name: "Gray", bg: "#6b7280", text: "#ffffff" },
+  { name: "Black", bg: "#000000", text: "#ffffff" },
+  { name: "White", bg: "#ffffff", text: "#000000" },
+] as const;
+
+export const DEFAULT_BADGE_COLORS = {
+  bg: "#10b981",
+  text: "#ffffff",
+} as const;
+
+/**
+ * Mini Diagram Colors
+ *
+ * These are for SVG/Canvas rendering where CSS classes don't apply.
+ */
+export const DIAGRAM_COLORS = {
+  offense: { fill: "#22c55e", stroke: "#16a34a" },
+  defense: { fill: "#3b82f6", stroke: "#1e40af" },
+  neutral: { fill: "#1f2937", stroke: "#1f2937" },
+} as const;

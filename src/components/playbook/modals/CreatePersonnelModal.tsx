@@ -9,6 +9,7 @@ import { Icon } from "../../ui/Icon/Icon";
 import { toast } from "sonner";
 import { supabase } from "../../../lib/supabase";
 import { logError } from "../../../utils/logger";
+import { DEFAULT_BADGE_COLORS } from "../../../design-system/chartColors";
 
 interface CreatePersonnelModalProps {
   isOpen: boolean;
@@ -57,8 +58,8 @@ export const CreatePersonnelModal: React.FC<CreatePersonnelModalProps> = ({
         name: name,
         description: description.trim() || null,
         badge_customization: {
-          color: "#10b981", // Default green
-          textColor: "#ffffff",
+          color: DEFAULT_BADGE_COLORS.bg,
+          textColor: DEFAULT_BADGE_COLORS.text,
         },
       });
 

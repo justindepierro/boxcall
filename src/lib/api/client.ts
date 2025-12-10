@@ -103,9 +103,9 @@ export class ApiClient {
 
   constructor(config: ApiClientConfig) {
     this.config = {
-      timeout: 30000,
-      maxRetries: 3,
-      retryDelay: 1000,
+      timeout: 15000, // Reduced from 30s - 15 seconds is plenty for API calls
+      maxRetries: 2, // Reduced from 3 - faster failure detection
+      retryDelay: 500, // Reduced from 1000ms - faster retries
       ...config,
     };
   }

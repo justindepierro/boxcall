@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { CreatePersonnelModal } from "./CreatePersonnelModal";
 import { EditPersonnelBadgeModal } from "./EditPersonnelBadgeModal";
 import { logError } from "../../../utils/logger";
+import { DEFAULT_BADGE_COLORS } from "../../../design-system/chartColors";
 
 interface PersonnelLibraryModalProps {
   isOpen: boolean;
@@ -243,8 +244,8 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredPersonnel.map((config) => {
                 const badge = config.badgeCustomization as any;
-                const bgColor = badge?.backgroundColor || "#10b981";
-                const textColor = badge?.textColor || "#ffffff";
+                const bgColor = badge?.backgroundColor || DEFAULT_BADGE_COLORS.bg;
+                const textColor = badge?.textColor || DEFAULT_BADGE_COLORS.text;
 
                 return (
                   <div

@@ -1,5 +1,6 @@
 import React from "react";
 import type { FormationPlayerPosition } from "../../types/formation";
+import { DIAGRAM_COLORS } from "../../design-system/chartColors";
 
 /**
  * Simple SVG-based diagram for displaying formations
@@ -41,8 +42,8 @@ export const MiniDiagram: React.FC<MiniDiagramProps> = ({
         <rect
           width={fieldWidth}
           height={fieldHeight}
-          fill="#22c55e"
-          stroke="#16a34a"
+          fill={DIAGRAM_COLORS.offense.fill}
+          stroke={DIAGRAM_COLORS.offense.stroke}
           strokeWidth="0.5"
         />
 
@@ -56,8 +57,8 @@ export const MiniDiagram: React.FC<MiniDiagramProps> = ({
                 cx={pos.x}
                 cy={pos.y}
                 r="3"
-                fill="#3b82f6"
-                stroke="#1e40af"
+                fill={DIAGRAM_COLORS.defense.fill}
+                stroke={DIAGRAM_COLORS.defense.stroke}
                 strokeWidth="0.5"
               />
               {/* Player label */}
@@ -66,7 +67,7 @@ export const MiniDiagram: React.FC<MiniDiagramProps> = ({
                 y={pos.y - 4}
                 textAnchor="middle"
                 fontSize="2"
-                fill="#1f2937"
+                fill={DIAGRAM_COLORS.neutral.fill}
                 fontWeight="bold"
               >
                 {player.position}

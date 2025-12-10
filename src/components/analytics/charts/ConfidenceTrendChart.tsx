@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import { Typography } from "../../design-system/Typography";
 import { Card } from "../../ui/Card";
+import { CHART_COLORS } from "../../../design-system/chartColors";
 
 interface TrendDataPoint {
   weekLabel: string;
@@ -188,22 +189,22 @@ export const ConfidenceTrendChart: React.FC<ConfidenceTrendChartProps> = ({
             data={data}
             margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+            <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
             <XAxis
               dataKey="weekLabel"
               tick={{ fontSize: 12 }}
-              stroke="#6b7280"
+              stroke={CHART_COLORS.axis}
             />
             <YAxis
               yAxisId="confidence"
               domain={[yAxisMin, yAxisMax]}
               tick={{ fontSize: 12 }}
-              stroke="#6b7280"
+              stroke={CHART_COLORS.axis}
               label={{
                 value: "Confidence %",
                 angle: -90,
                 position: "insideLeft",
-                style: { fontSize: 12, fill: "#6b7280" },
+                style: { fontSize: 12, fill: CHART_COLORS.axisText },
               }}
             />
             {showSuccessRate && (
@@ -215,12 +216,12 @@ export const ConfidenceTrendChart: React.FC<ConfidenceTrendChartProps> = ({
                   Math.min(100, Math.ceil((maxSuccess + 10) / 10) * 10),
                 ]}
                 tick={{ fontSize: 12 }}
-                stroke="#6b7280"
+                stroke={CHART_COLORS.axis}
                 label={{
                   value: "Success %",
                   angle: 90,
                   position: "insideRight",
-                  style: { fontSize: 12, fill: "#6b7280" },
+                  style: { fontSize: 12, fill: CHART_COLORS.axisText },
                 }}
               />
             )}
@@ -236,12 +237,12 @@ export const ConfidenceTrendChart: React.FC<ConfidenceTrendChartProps> = ({
               <ReferenceLine
                 yAxisId="confidence"
                 y={targetConfidence}
-                stroke="#9ca3af"
+                stroke={CHART_COLORS.axis}
                 strokeDasharray="5 5"
                 label={{
                   value: `Target: ${targetConfidence}%`,
                   position: "right",
-                  style: { fontSize: 11, fill: "#6b7280" },
+                  style: { fontSize: 11, fill: CHART_COLORS.axisText },
                 }}
               />
             )}
@@ -252,9 +253,9 @@ export const ConfidenceTrendChart: React.FC<ConfidenceTrendChartProps> = ({
               type="monotone"
               dataKey="confidence"
               name="Confidence"
-              stroke="#7c3aed"
+              stroke={CHART_COLORS.purple}
               strokeWidth={3}
-              dot={{ fill: "#7c3aed", r: 4 }}
+              dot={{ fill: CHART_COLORS.purple, r: 4 }}
               activeDot={{ r: 6 }}
             />
 
@@ -265,10 +266,10 @@ export const ConfidenceTrendChart: React.FC<ConfidenceTrendChartProps> = ({
                 type="monotone"
                 dataKey="successRate"
                 name="Success Rate"
-                stroke="#10b981"
+                stroke={CHART_COLORS.emerald}
                 strokeWidth={2}
                 strokeDasharray="5 5"
-                dot={{ fill: "#10b981", r: 3 }}
+                dot={{ fill: CHART_COLORS.emerald, r: 3 }}
                 activeDot={{ r: 5 }}
               />
             )}

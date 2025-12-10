@@ -11,6 +11,11 @@ import { toast } from "sonner";
 import { PersonnelLibraryService } from "../../../services/personnelLibrary/PersonnelLibraryService";
 import type { PersonnelConfiguration } from "../../../types/personnel";
 import { logError } from "../../../utils/logger";
+import {
+  PERSONNEL_BADGE_PRESETS,
+  DEFAULT_BADGE_COLORS,
+  CHART_COLORS,
+} from "../../../design-system/chartColors";
 
 interface EditPersonnelBadgeModalProps {
   isOpen: boolean;
@@ -19,30 +24,18 @@ interface EditPersonnelBadgeModalProps {
   onSuccess: () => void;
 }
 
-const COLOR_PRESETS = [
-  { name: "Green", bg: "#10b981", text: "#ffffff" },
-  { name: "Orange", bg: "#f97316", text: "#ffffff" },
-  { name: "Purple", bg: "#9333ea", text: "#ffffff" },
-  { name: "Blue", bg: "#3b82f6", text: "#ffffff" },
-  { name: "Red", bg: "#ef4444", text: "#ffffff" },
-  { name: "Yellow", bg: "#eab308", text: "#000000" },
-  { name: "Pink", bg: "#ec4899", text: "#ffffff" },
-  { name: "Indigo", bg: "#6366f1", text: "#ffffff" },
-  { name: "Teal", bg: "#14b8a6", text: "#ffffff" },
-  { name: "Gray", bg: "#6b7280", text: "#ffffff" },
-  { name: "Black", bg: "#000000", text: "#ffffff" },
-  { name: "White", bg: "#ffffff", text: "#000000" },
-];
+// Use centralized badge color presets
+const COLOR_PRESETS = PERSONNEL_BADGE_PRESETS;
 
 export const EditPersonnelBadgeModal: React.FC<
   EditPersonnelBadgeModalProps
 > = ({ isOpen, onClose, personnel, onSuccess }) => {
   const existingBadge = personnel.badgeCustomization as any;
   const [backgroundColor, setBackgroundColor] = useState(
-    existingBadge?.backgroundColor || "#10b981"
+    existingBadge?.backgroundColor || DEFAULT_BADGE_COLORS.bg
   );
   const [textColor, setTextColor] = useState(
-    existingBadge?.textColor || "#ffffff"
+    existingBadge?.textColor || DEFAULT_BADGE_COLORS.text
   );
   const [saving, setSaving] = useState(false);
 
@@ -136,7 +129,7 @@ export const EditPersonnelBadgeModal: React.FC<
                   style={{
                     backgroundColor: preset.bg,
                     borderColor:
-                      preset.bg === backgroundColor ? "#9333ea" : "transparent",
+                      preset.bg === backgroundColor ? CHART_COLORS.purple : "transparent",
                   }}
                   title={preset.name}
                 />
@@ -161,7 +154,7 @@ export const EditPersonnelBadgeModal: React.FC<
                 value={backgroundColor}
                 onChange={(e) => setBackgroundColor(e.target.value)}
                 className="input-field flex-1"
-                placeholder="#10b981"
+                placeholder={DEFAULT_BADGE_COLORS.bg}
               />
             </div>
           </div>
@@ -183,7 +176,7 @@ export const EditPersonnelBadgeModal: React.FC<
                 value={textColor}
                 onChange={(e) => setTextColor(e.target.value)}
                 className="input-field flex-1"
-                placeholder="#ffffff"
+                placeholder={DEFAULT_BADGE_COLORS.text}
               />
             </div>
           </div>
