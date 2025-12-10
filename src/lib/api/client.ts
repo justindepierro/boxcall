@@ -141,13 +141,16 @@ export class ApiClient {
     try {
       // First try Supabase's storage (most reliable source)
       const supabaseAuth = localStorage.getItem("boxcall-auth");
-      console.log("🔌 [ApiClient] Checking boxcall-auth:", supabaseAuth ? "exists" : "missing");
+      console.log(
+        "🔌 [ApiClient] Checking boxcall-auth:",
+        supabaseAuth ? "exists" : "missing"
+      );
       if (supabaseAuth) {
         const parsed = JSON.parse(supabaseAuth);
-        console.log("🔌 [ApiClient] boxcall-auth parsed:", { 
+        console.log("🔌 [ApiClient] boxcall-auth parsed:", {
           hasAccessToken: !!parsed?.access_token,
           expiresAt: parsed?.expires_at,
-          now: Math.floor(Date.now() / 1000)
+          now: Math.floor(Date.now() / 1000),
         });
         const expiresAt = parsed?.expires_at;
         const now = Math.floor(Date.now() / 1000);
@@ -161,10 +164,16 @@ export class ApiClient {
 
       // Fallback: try Zustand's persisted auth store
       const zustandAuth = localStorage.getItem("boxcall-auth-storage");
-      console.log("🔌 [ApiClient] Checking boxcall-auth-storage:", zustandAuth ? "exists" : "missing");
+      console.log(
+        "🔌 [ApiClient] Checking boxcall-auth-storage:",
+        zustandAuth ? "exists" : "missing"
+      );
       if (zustandAuth) {
         const parsed = JSON.parse(zustandAuth);
-        console.log("🔌 [ApiClient] boxcall-auth-storage full state:", parsed?.state);
+        console.log(
+          "🔌 [ApiClient] boxcall-auth-storage full state:",
+          parsed?.state
+        );
         const session = parsed?.state?.session;
         console.log("🔌 [ApiClient] boxcall-auth-storage parsed:", {
           hasSession: !!session,
@@ -172,12 +181,12 @@ export class ApiClient {
           expiresAt: session?.expires_at,
           hasUser: !!parsed?.state?.user,
           hasProfile: !!parsed?.state?.profile,
-          now: Math.floor(Date.now() / 1000)
+          now: Math.floor(Date.now() / 1000),
         });
         if (session?.access_token) {
           const expiresAt = session.expires_at;
           const now = Math.floor(Date.now() / 1000);
-          
+
           // Check if token is not expired (with 60s buffer)
           if (!expiresAt || expiresAt >= now + 60) {
             console.log("🔌 [ApiClient] Using token from Zustand storage");
@@ -533,11 +542,13 @@ export class ApiClient {
       }
 
       const responseData = await response.json();
-      
+
       // Handle maybeSingle - return first element or null from array response
       let data: T;
       if (options.maybeSingle) {
-        data = (Array.isArray(responseData) ? responseData[0] ?? null : responseData) as T;
+        data = (
+          Array.isArray(responseData) ? (responseData[0] ?? null) : responseData
+        ) as T;
       } else if (options.single) {
         // For strict single(), response is already an object
         data = responseData as T;

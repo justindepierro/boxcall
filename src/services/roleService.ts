@@ -93,7 +93,9 @@ export class RoleService {
           .eq("status", "active"),
       ]);
 
-      console.log(`🔍 RoleService: Queries completed in ${Date.now() - profileStart}ms`);
+      console.log(
+        `🔍 RoleService: Queries completed in ${Date.now() - profileStart}ms`
+      );
       console.log("🔍 RoleService: profileResult:", profileResult);
       console.log("🔍 RoleService: membershipsResult:", membershipsResult);
 
@@ -121,7 +123,12 @@ export class RoleService {
         console.log("🔍 RoleService: Got memberships:", memberships);
       }
 
-      console.log("🔍 RoleService: Found", memberships?.length ?? 0, "team memberships for user:", userId);
+      console.log(
+        "🔍 RoleService: Found",
+        memberships?.length ?? 0,
+        "team memberships for user:",
+        userId
+      );
 
       // If no profile and no memberships, use fallback
       if (!profile && (!memberships || memberships.length === 0)) {

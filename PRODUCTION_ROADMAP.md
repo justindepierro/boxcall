@@ -42,8 +42,9 @@ The getSession() calls are for legitimate session management:
 ### 1.2 RLS Policy Audit ✅ COMPLETE
 
 **Audited 48 tables - ALL SECURE:**
+
 - All 24 core tables have RLS enabled
-- All 24 additional service tables have RLS enabled  
+- All 24 additional service tables have RLS enabled
 - No anonymous access to any data
 - Team isolation verified via `team_members` join table
 
@@ -73,6 +74,7 @@ Audit scripts: `scripts/audit-rls.mjs`, `scripts/audit-rls-extended.mjs`
 **All 11 @ts-nocheck files fixed - 0 TypeScript errors!**
 
 Files cleaned:
+
 - ✅ `practiceService.ts` (1634 lines)
 - ✅ `useSession.ts` (501 lines)
 - ✅ `usePracticeSession.ts` (308 lines)
@@ -91,15 +93,15 @@ The Supabase types were actually fine - these were legacy disables that were no 
 
 **Files exceeding 500 lines (work in progress):**
 
-| File                 | Lines | Status                                    |
-| -------------------- | ----- | ----------------------------------------- |
-| `RosterPage.tsx`     | 1845  | Uses hooks - JSX heavy, lower priority    |
-| `practiceService.ts` | 1631  | Complex service - split when refactoring  |
-| `ProfilePage.tsx`    | 1577  | Uses hooks - JSX heavy, lower priority    |
-| `auth-store.ts`      | 1463  | Core auth - defer splitting               |
-| `playsService.ts`    | 1330  | Complex service - split when refactoring  |
-| `PlaybookPage.tsx`   | 1256  | Uses page/ subfolder pattern              |
-| `PlayGrid.tsx`       | 1127  | Handlers could be extracted               |
+| File                 | Lines | Status                                   |
+| -------------------- | ----- | ---------------------------------------- |
+| `RosterPage.tsx`     | 1845  | Uses hooks - JSX heavy, lower priority   |
+| `practiceService.ts` | 1631  | Complex service - split when refactoring |
+| `ProfilePage.tsx`    | 1577  | Uses hooks - JSX heavy, lower priority   |
+| `auth-store.ts`      | 1463  | Core auth - defer splitting              |
+| `playsService.ts`    | 1330  | Complex service - split when refactoring |
+| `PlaybookPage.tsx`   | 1256  | Uses page/ subfolder pattern             |
+| `PlayGrid.tsx`       | 1127  | Handlers could be extracted              |
 
 **Note:** Many large files already use extracted hooks. Priority is TypeScript safety over file size.
 
@@ -108,15 +110,18 @@ The Supabase types were actually fine - these were legacy disables that were no 
 **127 remaining (was 131) - categorized:**
 
 **✅ Fixed (4):**
+
 - `dashboardStore.ts` - Now gets userId/role from auth store
 
 **Remaining by category:**
+
 - **Future features (~80):** ML recommendations, WebSocket collaboration, Stage 3 session tracking
 - **Schema additions (~20):** logo_url, usage_count, streak tracking
 - **Integration stubs (~15):** Sentry, analytics, email service
 - **Type improvements (~12):** Proper typing for lazy-loaded components
 
 Most TODOs are intentional placeholders for future features, not bugs.
+
 - **Feature stubs (20+):** collaboration, ML recommendations
 - **Low priority (50+):** Minor improvements, future features
 

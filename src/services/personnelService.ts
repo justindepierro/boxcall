@@ -156,10 +156,7 @@ export class PersonnelService {
         players: typedPlayers,
       };
     } catch (error) {
-      logError(
-        `Failed to fetch personnel configuration "${name}":`,
-        error
-      );
+      logError(`Failed to fetch personnel configuration "${name}":`, error);
       throw error;
     }
   }

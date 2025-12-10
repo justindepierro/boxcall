@@ -112,7 +112,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           debug("[Layout] Setting active team to:", memberships[0].team_id);
           setActiveTeamId(memberships[0].team_id);
         } else {
-          debug("[Layout] No team memberships found for user (expected in dev)");
+          debug(
+            "[Layout] No team memberships found for user (expected in dev)"
+          );
         }
       } catch (err) {
         logError("[Layout] Exception fetching user teams:", err);

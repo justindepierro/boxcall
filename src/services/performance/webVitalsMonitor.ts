@@ -144,9 +144,7 @@ class WebVitalsMonitor {
    */
   trackRender(componentName: string, duration: number): void {
     if (duration > 50 && import.meta.env.DEV) {
-      debug(
-        `🐌 Slow render: ${componentName} took ${duration.toFixed(2)}ms`
-      );
+      debug(`🐌 Slow render: ${componentName} took ${duration.toFixed(2)}ms`);
     }
   }
 

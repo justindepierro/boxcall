@@ -1,4 +1,3 @@
-
 /**
  * Playbook Health Score System
  *

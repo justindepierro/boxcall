@@ -110,10 +110,7 @@ export class PersonnelSyncService {
       .order("play_name");
 
     if (error) {
-      logError(
-        "[PersonnelSyncService] Error fetching affected plays:",
-        error
-      );
+      logError("[PersonnelSyncService] Error fetching affected plays:", error);
       return [];
     }
 

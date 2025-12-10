@@ -23,7 +23,11 @@ export const validatePasswordStrength = (
   }
 
   if (password.length >= 8) {
-    return { isValid: true, message: "Medium strength password", strength: "medium" };
+    return {
+      isValid: true,
+      message: "Medium strength password",
+      strength: "medium",
+    };
   }
 
   return { isValid: true, message: "Password accepted", strength: "weak" };

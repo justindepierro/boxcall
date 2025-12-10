@@ -344,10 +344,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
           await onSave(play.id, { [field]: value });
         }
       } catch (error) {
-        logError(
-          `[PlayCard] Failed to save ${fieldName}, reverting:`,
-          error
-        );
+        logError(`[PlayCard] Failed to save ${fieldName}, reverting:`, error);
         setOptimisticPlay((prev) => ({ ...prev, [field]: play[field] }));
       } finally {
         setSavingFields((prev) => {

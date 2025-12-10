@@ -426,7 +426,11 @@ export class DatabaseHealthMonitor {
     try {
       const client = await dbConnectivity.getClient();
       // Use maybeSingle() to avoid 406 error when no profiles exist
-      const { error } = await client.from("profiles").select("id").limit(1).maybeSingle();
+      const { error } = await client
+        .from("profiles")
+        .select("id")
+        .limit(1)
+        .maybeSingle();
       if (error) throw error;
     } catch (error) {
       errors.push(`Connectivity test failed: ${error}`);

@@ -828,7 +828,9 @@ export const useAuth = create<AuthState>()(
 
           // Handle 406 (no profile found) gracefully
           if (response.status === 406) {
-            debug("👤 [fetchUserProfile] No profile found (406), user may need to complete profile setup");
+            debug(
+              "👤 [fetchUserProfile] No profile found (406), user may need to complete profile setup"
+            );
             set({ profile: null, profileLoading: false });
             return;
           }
@@ -839,14 +841,18 @@ export const useAuth = create<AuthState>()(
 
           const responseData = await response.json();
           // Since we removed the object header, we get an array
-          const data = Array.isArray(responseData) ? responseData[0] : responseData;
-          
+          const data = Array.isArray(responseData)
+            ? responseData[0]
+            : responseData;
+
           if (!data) {
-            debug("👤 [fetchUserProfile] No profile found, user may need to complete profile setup");
+            debug(
+              "👤 [fetchUserProfile] No profile found, user may need to complete profile setup"
+            );
             set({ profile: null, profileLoading: false });
             return;
           }
-          
+
           debug("👤 [fetchUserProfile] Got profile:", {
             id: data?.id,
             role: data?.role,
@@ -1266,22 +1272,22 @@ const initializeAuth = async () => {
       });
     } else {
       logAuth("No session found on app start");
-      
+
       // Clear any stale user/profile data from persisted state
       // This prevents showing UI as if logged in when session is actually expired
       const currentState = useAuth.getState();
       if (currentState.user || currentState.profile) {
         warn("Clearing stale user/profile data - no valid session exists");
-        useAuth.setState({ 
-          user: null, 
-          profile: null, 
+        useAuth.setState({
+          user: null,
+          profile: null,
           session: null,
-          loading: false 
+          loading: false,
         });
       } else {
         useAuth.setState({ loading: false });
       }
-      
+
       AuthMonitoring.recordEvent("auth_init_success", undefined, {
         hasSession: false,
       });

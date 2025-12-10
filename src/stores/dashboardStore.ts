@@ -406,8 +406,12 @@ export const useDashboardStore = create<DashboardState>()(
         try {
           const state = get();
           const authState = useAuthStore.getState();
-          const userId = baseLayout?.userId || authState.user?.id || "current-user";
-          const userRole = baseLayout?.userRole || (authState.profile?.role as UserRole) || "player";
+          const userId =
+            baseLayout?.userId || authState.user?.id || "current-user";
+          const userRole =
+            baseLayout?.userRole ||
+            (authState.profile?.role as UserRole) ||
+            "player";
 
           const newLayout: DashboardLayout = baseLayout
             ? {
@@ -614,7 +618,7 @@ export const useDashboardStore = create<DashboardState>()(
           const state = get();
           const authState = useAuthStore.getState();
           const userRole = (authState.profile?.role as UserRole) || "player";
-          
+
           if (state.availableLayouts.length === 0) {
             const defaultLayout = createDefaultLayout(userId, userRole);
             set({

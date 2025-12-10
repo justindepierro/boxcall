@@ -407,10 +407,7 @@ class AchievementTracker {
         .maybeSingle();
 
       if (playerError) {
-        debug(
-          "[Achievement] Error fetching player:",
-          playerError.message
-        );
+        debug("[Achievement] Error fetching player:", playerError.message);
         return { earned: [], progress: [], definitions: [] };
       }
 

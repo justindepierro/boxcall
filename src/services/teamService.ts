@@ -535,10 +535,7 @@ export class TeamService {
           });
         }
       } catch (duplicateError) {
-        debug(
-          "⚠️ Duplicate check failed, proceeding anyway:",
-          duplicateError
-        );
+        debug("⚠️ Duplicate check failed, proceeding anyway:", duplicateError);
       }
 
       // Create team name
