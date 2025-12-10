@@ -512,7 +512,7 @@ const DevPanel: React.FC<DevPanelProps> = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className="fixed z-[9999] bg-primary/95 backdrop-blur-md border border-muted rounded-lg shadow-2xl overflow-hidden"
+      className="fixed z-[9999] bg-white dark:bg-navy-800 border border-neutral-200 dark:border-navy-600 rounded-lg shadow-2xl overflow-hidden"
       style={{
         left: position.x,
         top: position.y,

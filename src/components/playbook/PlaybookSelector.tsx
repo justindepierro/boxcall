@@ -198,7 +198,7 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
 
             {/* Menu - Positioned at button location */}
             <div
-              className="fixed bg-primary rounded-lg shadow-2xl z-modal max-h-96 overflow-y-auto"
+              className="fixed bg-white dark:bg-navy-800 rounded-lg shadow-2xl z-modal max-h-96 overflow-y-auto border border-neutral-200 dark:border-navy-600"
               style={{
                 top: `${dropdownPosition.top}px`,
                 left: `${dropdownPosition.left}px`,

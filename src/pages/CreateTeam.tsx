@@ -374,11 +374,11 @@ const CreateTeam: React.FC = () => {
 
               {/* Address Suggestions */}
               {addressSuggestions.length > 0 && (
-                <div className="absolute z-10 w-full mt-xs bg-primary rounded-lg shadow-xl max-h-48 overflow-y-auto">
+                <div className="absolute z-10 w-full mt-xs bg-white dark:bg-navy-800 rounded-lg shadow-xl max-h-48 overflow-y-auto border border-neutral-200 dark:border-navy-600">
                   {addressSuggestions.map((suggestion) => (
                     <button
                       key={suggestion.id}
-                      className="w-full px-md py-xs text-left hover:bg-secondary border-b border-muted last:border-b-0"
+                      className="w-full px-md py-xs text-left hover:bg-neutral-50 dark:hover:bg-navy-700 border-b border-neutral-100 dark:border-navy-700 last:border-b-0"
                       onClick={() => handleSelectAddress(suggestion)}
                     >
                       <div className="font-medium">

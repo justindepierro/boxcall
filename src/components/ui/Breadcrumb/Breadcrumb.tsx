@@ -94,7 +94,7 @@ const CollapsedIndicator: React.FC<{
         ...
       </Button>
       {isExpanded && (
-        <div className="absolute top-full left-0 mt-1 py-1 z-10 min-w-48 bg-primary elevation-dropdown border-muted rounded-lg">
+        <div className="absolute top-full left-0 mt-1 py-1 z-10 min-w-48 bg-white dark:bg-navy-800 shadow-lg border border-neutral-200 dark:border-navy-600 rounded-lg">
           {hiddenItems.map((item) => (
             <Button
               key={item.id}

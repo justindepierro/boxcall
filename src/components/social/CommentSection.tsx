@@ -178,7 +178,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 </button>
 
                 {showMenu && (
-                  <div className="absolute right-0 top-full mt-1 bg-primary/95 dark:bg-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl py-1 z-popover">
+                  <div className="absolute right-0 top-full mt-1 bg-white dark:bg-navy-800 border border-neutral-200 dark:border-navy-600 rounded-lg shadow-2xl py-1 z-popover">
                     {canEdit && (
                       <button
                         onClick={() => {

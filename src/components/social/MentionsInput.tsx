@@ -107,7 +107,7 @@ export const MentionsInput: React.FC<MentionsInputProps> = ({
 
       {/* Suggestions dropdown */}
       {showSuggestions && suggestions.length > 0 && (
-        <div className="absolute z-popover w-full mt-1 bg-primary border border-secondary rounded-lg shadow-lg max-h-48 overflow-y-auto">
+        <div className="absolute z-popover w-full mt-1 bg-white dark:bg-navy-800 border border-neutral-200 dark:border-navy-600 rounded-lg shadow-lg max-h-48 overflow-y-auto">
           {suggestions.map((suggestion) => (
             <button
               key={suggestion.id}

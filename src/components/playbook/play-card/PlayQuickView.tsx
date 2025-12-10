@@ -67,7 +67,7 @@ export const PlayQuickView: React.FC<PlayQuickViewProps> = ({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 10, scale: 0.95 }}
           transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-          className="fixed z-50 bg-primary rounded-lg shadow-xl p-4 min-w-72 max-w-80"
+          className="fixed z-50 bg-white dark:bg-navy-800 rounded-lg shadow-xl p-4 min-w-72 max-w-80 border border-neutral-200 dark:border-navy-600"
           style={{
             top: `${top}px`,
             left: `${left}px`,

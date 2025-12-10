@@ -40,13 +40,13 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
             id={selectId}
             className="
               w-full sm:w-auto
-              bg-primary
-              border border-border
+              bg-white dark:bg-navy-800
+              border border-neutral-200 dark:border-navy-600
               rounded-lg
               px-4 py-2 pr-10
               text-sm text-primary text-left
               cursor-pointer
-              hover:border-primary
+              hover:border-jade-500
               focus:outline-none focus:ring-2 focus:ring-jade-500/50 focus:border-jade-500
               transition-colors
               min-w-32
@@ -64,7 +64,7 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Listbox.Options className="absolute z-50 mt-1 w-full min-w-32 max-h-60 overflow-auto rounded-lg bg-surface border border-border shadow-lg focus:outline-none">
+            <Listbox.Options className="absolute z-50 mt-1 w-full min-w-32 max-h-60 overflow-auto rounded-lg bg-white dark:bg-navy-800 border border-neutral-200 dark:border-navy-600 shadow-lg focus:outline-none">
               {options.map((option) => (
                 <Listbox.Option
                   key={option.id}

@@ -142,13 +142,13 @@ export function FormationSelector({
 
       {/* Dropdown Menu - matches Play field style */}
       {isOpen && !isLoading && formations.length > 0 && (
-        <div className="absolute top-full left-0 right-0 bg-primary/95 dark:bg-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-popover max-h-60 overflow-y-auto mt-1">
+        <div className="absolute top-full left-0 right-0 bg-white dark:bg-navy-800 border border-neutral-200 dark:border-navy-600 rounded-lg shadow-2xl z-popover max-h-60 overflow-y-auto mt-1">
           {formations.map((formationName) => (
             <button
               key={formationName}
               type="button"
               onClick={() => handleSelect(formationName)}
-              className="w-full text-left px-sm py-xs hover:bg-secondary/50 first:rounded-t-lg last:rounded-b-lg transition-colors"
+              className="w-full text-left px-sm py-xs hover:bg-neutral-50 dark:hover:bg-navy-700 first:rounded-t-lg last:rounded-b-lg transition-colors"
             >
               <div className="flex items-center justify-between">
                 <span className="text-sm">{formationName}</span>
@@ -165,7 +165,7 @@ export function FormationSelector({
 
       {/* No Formations Message */}
       {isOpen && !isLoading && formations.length === 0 && (
-        <div className="absolute top-full left-0 right-0 bg-primary/95 dark:bg-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-popover p-4 mt-1 text-center">
+        <div className="absolute top-full left-0 right-0 bg-white dark:bg-navy-800 border border-neutral-200 dark:border-navy-600 rounded-lg shadow-2xl z-popover p-4 mt-1 text-center">
           <p className="text-sm text-muted">
             No formations yet - just start typing
           </p>

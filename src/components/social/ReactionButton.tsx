@@ -224,7 +224,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
       )}
 
       {showPicker && (
-        <div className="absolute top-full mt-2 left-0 bg-primary/95 dark:bg-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl p-2 flex gap-1 z-popover">
+        <div className="absolute top-full mt-2 left-0 bg-white dark:bg-navy-800 border border-neutral-200 dark:border-navy-600 rounded-lg shadow-2xl p-2 flex gap-1 z-popover">
           {(Object.keys(reactionIcons) as ReactionType[]).map(
             (reactionType) => {
               const Icon = reactionIcons[reactionType];

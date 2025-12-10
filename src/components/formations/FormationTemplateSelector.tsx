@@ -114,7 +114,7 @@ export function FormationTemplateSelector({
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute z-50 mt-sm w-full max-w-md bg-primary border border-primary rounded-lg shadow-lg max-h-96 overflow-y-auto">
+        <div className="absolute z-50 mt-sm w-full max-w-md bg-white dark:bg-navy-800 border border-neutral-200 dark:border-navy-600 rounded-lg shadow-lg max-h-96 overflow-y-auto">
           {/* Header */}
           <div className="sticky top-0 bg-secondary border-b border-primary p-md">
             <div className="flex items-start gap-sm">
