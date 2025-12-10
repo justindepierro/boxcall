@@ -3,6 +3,8 @@
  * Provides consistent error logging, reporting, and user feedback
  */
 
+import { logError } from "./logger";
+
 export interface ErrorReport {
   message: string;
   stack?: string;
@@ -145,7 +147,7 @@ class ErrorHandler {
 
     // Log to console in development
     if (process.env.NODE_ENV === "development") {
-      console.error("Error caught by ErrorHandler:", error, context);
+      logError("Error caught by ErrorHandler:", error, context);
     }
 
     // Queue for reporting

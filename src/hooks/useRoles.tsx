@@ -27,6 +27,7 @@ import type {
 } from "../types/roles";
 import { RoleService } from "@services";
 import { useAuth } from "../app/auth-store";
+import { debug, error as logError } from "../utils/logger";
 
 // ============================================================================
 // CONTEXT DEFINITION
@@ -62,30 +63,30 @@ export function RoleProvider({ children }: RoleProviderProps) {
   const [error, setError] = useState<string | null>(null);
 
   const refreshRoles = useCallback(async () => {
-    console.log("🔄 useRoles: refreshRoles called, user:", user?.id);
+    debug("🔄 useRoles: refreshRoles called, user:", user?.id);
     if (!user?.id) {
-      console.log("🔄 useRoles: No user ID, setting roleContext to null");
+      debug("🔄 useRoles: No user ID, setting roleContext to null");
       setRoleContext(null);
       return;
     }
 
-    console.log("🔄 useRoles: Starting role refresh for user:", user.id);
+    debug("🔄 useRoles: Starting role refresh for user:", user.id);
     // Clear cache to force fresh data
     RoleService.clearRoleCache(user.id);
     setLoading(true);
     setError(null);
 
     try {
-      console.log("🔄 useRoles: Calling RoleService.getUserRoleContext");
+      debug("🔄 useRoles: Calling RoleService.getUserRoleContext");
       const context = await RoleService.getUserRoleContext(user.id);
-      console.log("🔄 useRoles: Got role context:", context);
-      console.log(
+      debug("🔄 useRoles: Got role context:", context);
+      debug(
         "🔄 useRoles: Team memberships count:",
         context?.teamMemberships?.length
       );
       setRoleContext(context);
     } catch (err) {
-      console.error("Error refreshing roles:", err);
+      logError("Error refreshing roles:", err);
       setError(err instanceof Error ? err.message : "Failed to load roles");
       setRoleContext(null);
     } finally {

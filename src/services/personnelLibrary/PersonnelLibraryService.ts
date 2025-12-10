@@ -6,6 +6,7 @@
  */
 
 import { supabase } from "../../lib/supabase";
+import { logError } from "../../utils/logger";
 import type {
   PersonnelConfiguration,
   CreatePersonnelConfiguration,
@@ -61,10 +62,7 @@ export class PersonnelLibraryService {
     const { data, count, error } = await query;
 
     if (error) {
-      console.error(
-        "[PersonnelLibraryService] Error fetching personnel:",
-        error
-      );
+      logError("[PersonnelLibraryService] Error fetching personnel:", error);
       throw new Error(`Failed to fetch personnel: ${error.message}`);
     }
 
@@ -92,10 +90,7 @@ export class PersonnelLibraryService {
       .single();
 
     if (error) {
-      console.error(
-        "[PersonnelLibraryService] Error fetching personnel:",
-        error
-      );
+      logError("[PersonnelLibraryService] Error fetching personnel:", error);
       throw new Error(`Failed to fetch personnel: ${error.message}`);
     }
 
@@ -124,7 +119,7 @@ export class PersonnelLibraryService {
       .single();
 
     if (configError) {
-      console.error(
+      logError(
         "[PersonnelLibraryService] Error creating personnel:",
         configError
       );
@@ -146,7 +141,7 @@ export class PersonnelLibraryService {
         .insert(playersToInsert);
 
       if (playersError) {
-        console.error(
+        logError(
           "[PersonnelLibraryService] Error creating players:",
           playersError
         );
@@ -187,10 +182,7 @@ export class PersonnelLibraryService {
       .single();
 
     if (error) {
-      console.error(
-        "[PersonnelLibraryService] Error updating personnel:",
-        error
-      );
+      logError("[PersonnelLibraryService] Error updating personnel:", error);
       throw new Error(`Failed to update personnel: ${error.message}`);
     }
 
@@ -226,10 +218,7 @@ export class PersonnelLibraryService {
       .eq("id", id);
 
     if (error) {
-      console.error(
-        "[PersonnelLibraryService] Error deleting personnel:",
-        error
-      );
+      logError("[PersonnelLibraryService] Error deleting personnel:", error);
       throw new Error(`Failed to delete personnel: ${error.message}`);
     }
   }
@@ -252,7 +241,7 @@ export class PersonnelLibraryService {
       .limit(limit);
 
     if (error) {
-      console.error(
+      logError(
         "[PersonnelLibraryService] Error fetching personnel plays:",
         error
       );
@@ -333,10 +322,7 @@ export class PersonnelLibraryService {
         imported_names: missingPersonnel,
       };
     } catch (error: any) {
-      console.error(
-        "[PersonnelLibraryService] Error importing from plays:",
-        error
-      );
+      logError("[PersonnelLibraryService] Error importing from plays:", error);
       return {
         success: false,
         imported_count: 0,
@@ -361,7 +347,7 @@ export class PersonnelLibraryService {
       .eq("id", personnelId);
 
     if (error) {
-      console.error(
+      logError(
         "[PersonnelLibraryService] Error updating badge customization:",
         error
       );

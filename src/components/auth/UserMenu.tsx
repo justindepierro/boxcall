@@ -109,10 +109,10 @@ export const UserMenu: React.FC<UserMenuProps> = ({ teams = [] }) => {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 bg-primary/98 backdrop-blur-xl rounded-lg shadow-2xl border border-secondary/40 z-tooltip overflow-hidden max-h-[calc(100vh-5rem)]">
+        <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-navy-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-700 z-tooltip overflow-hidden max-h-[calc(100vh-5rem)]">
           <div className="py-1">
             {/* User Info */}
-            <div className="px-4 py-3 border-b border-secondary/40 bg-subtle/20">
+            <div className="px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-navy-800">
               <Typography
                 variant="body-sm"
                 as="p"
@@ -126,11 +126,15 @@ export const UserMenu: React.FC<UserMenuProps> = ({ teams = [] }) => {
             </div>
 
             {/* Team Switcher */}
-            {teams.length > 0 && (
-              <div className="px-2 py-2 border-b border-secondary/40">
+            <div className="px-2 py-2 border-b border-neutral-200 dark:border-neutral-700">
+              {teams.length > 0 ? (
                 <TeamSwitcher teams={teams} />
-              </div>
-            )}
+              ) : (
+                <p className="text-sm text-neutral-500 px-2 py-1">
+                  No teams yet
+                </p>
+              )}
+            </div>
 
             <Button
               onClick={() => {
@@ -156,7 +160,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ teams = [] }) => {
               Team Settings
             </Button>
 
-            <div className="border-t border-secondary/50 my-1" />
+            <div className="border-t border-neutral-200 dark:border-neutral-700 my-1" />
 
             {/* Logout with confirmation */}
             {!showLogoutConfirm ? (

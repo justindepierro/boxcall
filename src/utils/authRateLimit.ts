@@ -1,4 +1,5 @@
 // Client-side rate limiting and security utilities
+import { logError } from "./logger";
 
 // CSRF Protection
 class CSRFProtection {
@@ -411,7 +412,7 @@ export class NetworkResilience {
       try {
         await operation();
       } catch (error) {
-        console.error("Failed to process queued operation:", error);
+        logError("Failed to process queued operation:", error);
       }
     }
   }

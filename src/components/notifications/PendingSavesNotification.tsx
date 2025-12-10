@@ -14,6 +14,7 @@ import { loadOperations } from "../../utils/saveQueueDB";
 import { Button } from "../ui/Button";
 import { Icon } from "../ui/Icon/Icon";
 import { Typography } from "../design-system/Typography";
+import { logError } from "../../utils/logger";
 
 export const PendingSavesNotification: React.FC = () => {
   const { hasPendingFromLastSession, clearQueue } = useSaveState();
@@ -29,7 +30,7 @@ export const PendingSavesNotification: React.FC = () => {
           setPendingCount(operations.length);
           setIsVisible(true);
         } catch (error) {
-          console.error("Failed to load pending operations:", error);
+          logError("Failed to load pending operations:", error);
         }
       };
       loadCount();

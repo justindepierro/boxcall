@@ -14,6 +14,7 @@ import { SituationFilter } from "./SituationFilter";
 import { useGameSession } from "../../hooks/useGameSession";
 import { useActiveTeamStore } from "../../stores/activeTeamStore";
 import type { ExecutionResult, OpponentCoverage } from "../../types/session";
+import { logError } from "../../utils/logger";
 
 /**
  * GameSession - Live/retroactive game tracking
@@ -85,7 +86,7 @@ const GameSession: React.FC = () => {
     try {
       await startSession();
     } catch (err) {
-      console.error("Error starting session:", err);
+      logError("Error starting session:", err);
       alert("Failed to start session");
     }
   };
@@ -100,7 +101,7 @@ const GameSession: React.FC = () => {
       await endSession();
       navigate("/boxcall");
     } catch (err) {
-      console.error("Error ending session:", err);
+      logError("Error ending session:", err);
       alert("Failed to end session");
     }
   };
@@ -136,7 +137,7 @@ const GameSession: React.FC = () => {
       setQuickTags([]); // Phase 12.1
       setOpponentCoverage("Unknown"); // Phase 13.2
     } catch (err) {
-      console.error("Error logging play:", err);
+      logError("Error logging play:", err);
       alert("Failed to log play");
     }
   };

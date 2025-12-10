@@ -3,6 +3,8 @@
  * Part of Phase 3D: Final Mobile Polish & Performance Optimization
  */
 
+import { logError } from "./logger";
+
 // Route preloading utilities
 export const preloadRoute = (routeName: string) => {
   switch (routeName) {
@@ -78,7 +80,7 @@ export const useRouteAnalytics = () => {
       });
     }
 
-    console.error(`❌ Route ${routeName} failed to load:`, error);
+    logError(`❌ Route ${routeName} failed to load:`, error);
   };
 
   return { trackRouteChange, trackRouteError };

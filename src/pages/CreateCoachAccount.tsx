@@ -5,6 +5,7 @@ import { useAuth } from "../app/auth-store";
 import { Typography } from "../components/design-system";
 import { Button } from "../components/ui/Button/Button";
 import { Icon } from "../components/ui/Icon/Icon";
+import { Dropdown } from "../components/ui/Dropdown";
 import { usePermissions } from "../hooks/usePermissions";
 import { ROUTES } from "../routes/paths";
 
@@ -429,83 +430,71 @@ export const CreateCoachAccount: React.FC = () => {
             </Typography>
             <div className="grid-form">
               <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium mb-2"
-                >
-                  Primary Sport *
-                </Typography>
-                <select
+                <Dropdown
+                  label="Primary Sport *"
+                  options={[
+                    { value: "Football", label: "Football" },
+                    { value: "Basketball", label: "Basketball" },
+                    { value: "Baseball", label: "Baseball" },
+                    { value: "Soccer", label: "Soccer" },
+                    { value: "Track & Field", label: "Track & Field" },
+                    { value: "Wrestling", label: "Wrestling" },
+                    { value: "Volleyball", label: "Volleyball" },
+                    { value: "Cross Country", label: "Cross Country" },
+                    { value: "Swimming", label: "Swimming" },
+                    { value: "Tennis", label: "Tennis" },
+                    { value: "Golf", label: "Golf" },
+                    { value: "Lacrosse", label: "Lacrosse" },
+                    { value: "Field Hockey", label: "Field Hockey" },
+                    { value: "Softball", label: "Softball" },
+                    { value: "Other", label: "Other" },
+                  ]}
                   value={formData.primarySport}
-                  onChange={(e) =>
-                    setFormData({ ...formData, primarySport: e.target.value })
+                  onChange={(value) =>
+                    setFormData({ ...formData, primarySport: value })
                   }
-                  className="w-full px-3 py-2 border border-secondary rounded-lg focus-ring"
-                >
-                  <option value="Football">Football</option>
-                  <option value="Basketball">Basketball</option>
-                  <option value="Baseball">Baseball</option>
-                  <option value="Soccer">Soccer</option>
-                  <option value="Track & Field">Track & Field</option>
-                  <option value="Wrestling">Wrestling</option>
-                  <option value="Volleyball">Volleyball</option>
-                  <option value="Cross Country">Cross Country</option>
-                  <option value="Swimming">Swimming</option>
-                  <option value="Tennis">Tennis</option>
-                  <option value="Golf">Golf</option>
-                  <option value="Lacrosse">Lacrosse</option>
-                  <option value="Field Hockey">Field Hockey</option>
-                  <option value="Softball">Softball</option>
-                  <option value="Other">Other</option>
-                </select>
+                  fullWidth
+                  size="md"
+                />
               </div>
               <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium mb-2"
-                >
-                  Years of Experience *
-                </Typography>
-                <select
+                <Dropdown
+                  label="Years of Experience *"
+                  options={[
+                    { value: "New Coach", label: "New Coach (0 years)" },
+                    { value: "1-3 years", label: "1-3 years" },
+                    { value: "4-7 years", label: "4-7 years" },
+                    { value: "8-15 years", label: "8-15 years" },
+                    { value: "15+ years", label: "15+ years" },
+                  ]}
                   value={formData.yearsExperience}
-                  onChange={(e) =>
+                  onChange={(value) =>
                     setFormData({
                       ...formData,
-                      yearsExperience: e.target.value,
+                      yearsExperience: value,
                     })
                   }
-                  className="w-full px-3 py-2 border border-secondary rounded-lg focus-ring"
-                >
-                  <option value="New Coach">New Coach (0 years)</option>
-                  <option value="1-3 years">1-3 years</option>
-                  <option value="4-7 years">4-7 years</option>
-                  <option value="8-15 years">8-15 years</option>
-                  <option value="15+ years">15+ years</option>
-                </select>
+                  fullWidth
+                  size="md"
+                />
               </div>
               <div className="md:col-span-2">
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium mb-2"
-                >
-                  Coaching Level *
-                </Typography>
-                <select
+                <Dropdown
+                  label="Coaching Level *"
+                  options={[
+                    { value: "Youth", label: "Youth (Under 14)" },
+                    { value: "High School", label: "High School" },
+                    { value: "College", label: "College" },
+                    { value: "Professional", label: "Professional" },
+                    { value: "Multiple Levels", label: "Multiple Levels" },
+                  ]}
                   value={formData.coachingLevel}
-                  onChange={(e) =>
-                    setFormData({ ...formData, coachingLevel: e.target.value })
+                  onChange={(value) =>
+                    setFormData({ ...formData, coachingLevel: value })
                   }
-                  className="w-full px-3 py-2 border border-secondary rounded-lg focus-ring"
-                >
-                  <option value="Youth">Youth (Under 14)</option>
-                  <option value="High School">High School</option>
-                  <option value="College">College</option>
-                  <option value="Professional">Professional</option>
-                  <option value="Multiple Levels">Multiple Levels</option>
-                </select>
+                  fullWidth
+                  size="md"
+                />
               </div>
             </div>
           </div>

@@ -9,6 +9,7 @@
  * This service handles the complete team lifecycle from validation through creation.
  */
 
+import { debug, error as logError } from "../utils/logger";
 import { supabase } from "../lib/supabase";
 import {
   createTeamDirectly,
@@ -186,7 +187,7 @@ export class TeamService {
     _schoolState?: string
   ): Promise<DuplicateCheckResult> {
     try {
-      console.log("🔍 Starting duplicate team check...");
+      debug("🔍 Starting duplicate team check...");
 
       // Fetch all existing teams for comparison
       const { data: existingTeams, error } = await supabase
@@ -195,7 +196,7 @@ export class TeamService {
         .limit(100); // Limit for performance
 
       if (error) {
-        console.warn("Could not fetch teams for duplicate check:", error);
+        debug("Could not fetch teams for duplicate check:", error);
         return {
           isDuplicate: false,
           similarTeams: [],
@@ -253,7 +254,7 @@ export class TeamService {
         is_duplicate: isDuplicate,
       });
 
-      console.log(
+      debug(
         `🔍 Duplicate check completed: ${similarTeams.length} similar teams found`
       );
 
@@ -264,7 +265,7 @@ export class TeamService {
         warningMessage,
       };
     } catch (error) {
-      console.error("Error in duplicate check:", error);
+      logError("Error in duplicate check:", error);
 
       emitTelemetry("team.duplicate_check.error", {
         error_message: error instanceof Error ? error.message : String(error),
@@ -447,7 +448,7 @@ export class TeamService {
     userEmail?: string
   ): Promise<void> {
     try {
-      console.log("📧 Sending duplicate team report to support...");
+      debug("📧 Sending duplicate team report to support...");
 
       const reportData = {
         type: "duplicate_team_attempt",
@@ -464,19 +465,19 @@ export class TeamService {
       //   .insert(reportData);
 
       // if (error) {
-      //   console.warn("Could not store support ticket:", error);
+      //   debug("Could not store support ticket:", error);
       // }
 
-      console.log("📧 Duplicate team report logged:", reportData);
+      debug("📧 Duplicate team report logged:", reportData);
 
       emitTelemetry("team.duplicate_report_sent", {
         similar_teams_count: similarTeams.length,
         has_user_email: !!userEmail,
       });
 
-      console.log("📧 Duplicate team report sent successfully");
+      debug("📧 Duplicate team report sent successfully");
     } catch (error) {
-      console.error("Error sending duplicate report:", error);
+      logError("Error sending duplicate report:", error);
     }
   }
 
@@ -515,7 +516,7 @@ export class TeamService {
         );
 
         if (duplicateCheck.isDuplicate) {
-          console.error(
+          logError(
             "🚨 Duplicate team detected:",
             duplicateCheck.warningMessage
           );
@@ -526,7 +527,7 @@ export class TeamService {
         }
 
         if (duplicateCheck.requiresApproval) {
-          console.warn("⚠️ Similar team found:", duplicateCheck.warningMessage);
+          debug("⚠️ Similar team found:", duplicateCheck.warningMessage);
           emitTelemetry("team.create.similar_team_warning", {
             similar_teams_count: duplicateCheck.similarTeams.length,
             highest_similarity:
@@ -534,7 +535,7 @@ export class TeamService {
           });
         }
       } catch (duplicateError) {
-        console.warn(
+        debug(
           "⚠️ Duplicate check failed, proceeding anyway:",
           duplicateError
         );
@@ -573,13 +574,13 @@ export class TeamService {
       const teamErr = insertResult.error;
 
       if (teamErr || !teamInsert) {
-        console.error("❌ Team insert failed:", teamErr);
+        logError("❌ Team insert failed:", teamErr);
 
         if (
           teamErr?.code === "42501" ||
           teamErr?.message?.includes("row-level security")
         ) {
-          console.error("🔒 RLS Policy Error - Run the SQL fix in Supabase!");
+          logError("🔒 RLS Policy Error - Run the SQL fix in Supabase!");
           throw new Error(
             "Database permission error: Your account doesn't have permission to create teams. This might be an RLS policy issue. Please contact support."
           );
@@ -617,7 +618,7 @@ export class TeamService {
       const memberErr = memberResult.error;
 
       if (memberErr) {
-        console.warn("⚠️ team_members insert warning:", memberErr);
+        debug("⚠️ team_members insert warning:", memberErr);
       }
 
       // Persist active team selection
@@ -640,7 +641,7 @@ export class TeamService {
         teamId: newTeamId,
       };
     } catch (error) {
-      console.error("❌ Team creation failed:", error);
+      logError("❌ Team creation failed:", error);
 
       emitTelemetry("team.create.error", {
         error_message: error instanceof Error ? error.message : String(error),
@@ -676,7 +677,7 @@ export class TeamService {
         .single();
 
       if (error) {
-        console.error("Error fetching family permissions:", error);
+        logError("Error fetching family permissions:", error);
         // Return default permissions if error
         return {
           canViewRoster: false,
@@ -701,7 +702,7 @@ export class TeamService {
         }
       );
     } catch (error) {
-      console.error("Error in getFamilyPermissions:", error);
+      logError("Error in getFamilyPermissions:", error);
       // Return safe defaults
       return {
         canViewRoster: false,
@@ -736,7 +737,7 @@ export class TeamService {
         .eq("id", teamId);
 
       if (error) {
-        console.error("Error updating family permissions:", error);
+        logError("Error updating family permissions:", error);
         return {
           success: false,
           error: error.message,
@@ -750,7 +751,7 @@ export class TeamService {
 
       return { success: true };
     } catch (error) {
-      console.error("Error in updateFamilyPermissions:", error);
+      logError("Error in updateFamilyPermissions:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error),

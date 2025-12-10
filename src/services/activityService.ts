@@ -4,6 +4,7 @@
  */
 
 import { supabase } from "../lib/supabase";
+import { getCurrentUserId } from "../lib/auth-helpers";
 import { info, error as logError } from "../utils/logger";
 
 export type ActivityType =
@@ -46,16 +47,14 @@ export class ActivityService {
   ): Promise<PlayActivityItem | null> {
     try {
       // Get current user
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
+      const userId = getCurrentUserId();
+      if (!userId) {
         logError("Cannot record activity: User not authenticated");
         return null;
       }
 
       const activityData = {
-        user_id: user.id,
+        user_id: userId,
         team_id: params.teamId,
         play_id: params.playId,
         activity_type: params.type,
@@ -83,7 +82,7 @@ export class ActivityService {
         playName: params.playName,
         createdAt: data.created_at,
         details: params.details,
-        userId: user.id,
+        userId: userId,
         teamId: params.teamId,
         playId: params.playId,
       };
@@ -102,10 +101,8 @@ export class ActivityService {
   ): Promise<PlayActivityItem[]> {
     try {
       // Get current user
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
+      const userId = getCurrentUserId();
+      if (!userId) {
         logError("Cannot fetch activities: User not authenticated");
         return [];
       }
@@ -113,7 +110,7 @@ export class ActivityService {
       let query = supabase
         .from("activities")
         .select("*")
-        .eq("user_id", user.id)
+        .eq("user_id", userId)
         .order("created_at", { ascending: false })
         .limit(limit);
 
@@ -222,15 +219,13 @@ export class ActivityService {
     teamId?: string
   ): Promise<Record<ActivityType, number>> {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return {} as Record<ActivityType, number>;
+      const userId = getCurrentUserId();
+      if (!userId) return {} as Record<ActivityType, number>;
 
       let query = supabase
         .from("activities")
         .select("activity_type")
-        .eq("user_id", user.id);
+        .eq("user_id", userId);
 
       if (teamId) {
         query = query.eq("team_id", teamId);

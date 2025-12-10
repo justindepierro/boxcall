@@ -5,7 +5,7 @@ import { Typography } from "../design-system/Typography";
 import { BottomSheet } from "../BottomSheet";
 import { Modal } from "../ui/Modal";
 import { Input } from "../ui/Input";
-import { Select } from "../ui/Select";
+import { Dropdown } from "../ui/Dropdown";
 import { triggerHapticFeedback } from "../../lib/hapticFeedback";
 import { useIsMobile } from "../../hooks/useBreakpoint";
 
@@ -430,10 +430,10 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
             <div className="space-y-3">
               <div className="space-y-1">
                 <Typography variant="label-md">Personnel Grouping</Typography>
-                <Select
+                <Dropdown
                   value={localSettings.personnelGrouping}
                   onChange={(value) =>
-                    updateSetting("personnelGrouping", value as string)
+                    updateSetting("personnelGrouping", value)
                   }
                   options={[
                     { value: "11", label: "11 Personnel (1 RB, 1 TE, 3 WR)" },
@@ -441,7 +441,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                     { value: "21", label: "21 Personnel (2 RB, 1 TE, 2 WR)" },
                     { value: "22", label: "22 Personnel (2 RB, 2 TE, 1 WR)" },
                   ]}
-                  className={`w-full ${isMobile ? "h-12" : ""}`}
+                  className={`${isMobile ? "h-12" : ""}`}
                 />
               </div>
 

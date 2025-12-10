@@ -1,4 +1,6 @@
 import { supabase } from "../lib/supabase";
+import { getCurrentUserId } from "../lib/auth-helpers";
+import { debug, error as logError } from "../utils/logger";
 
 /**
  * Service for managing user preferences stored in profiles.settings JSONB column
@@ -37,23 +39,21 @@ export class PreferenceService {
    */
   static async loadPreferences(): Promise<UserPreferences | null> {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const userId = getCurrentUserId();
 
-      if (!user) {
-        console.log("[PreferenceService] No user authenticated");
+      if (!userId) {
+        debug("[PreferenceService] No user authenticated");
         return null;
       }
 
       const { data, error } = await supabase
         .from("profiles")
         .select("settings")
-        .eq("id", user.id)
+        .eq("id", userId)
         .single();
 
       if (error) {
-        console.error("[PreferenceService] Failed to load preferences:", error);
+        logError("[PreferenceService] Failed to load preferences:", error);
         return null;
       }
 
@@ -61,10 +61,7 @@ export class PreferenceService {
       // Type cast needed because Supabase query builder types don't include settings
       const settings = (data as { settings?: unknown })?.settings;
 
-      console.log(
-        "[PreferenceService] Loaded preferences from server:",
-        settings
-      );
+      debug("[PreferenceService] Loaded preferences from server");
 
       if (
         !settings ||
@@ -75,11 +72,8 @@ export class PreferenceService {
       }
 
       return settings as UserPreferences;
-    } catch (error) {
-      console.error(
-        "[PreferenceService] Exception loading preferences:",
-        error
-      );
+    } catch (err) {
+      logError("[PreferenceService] Exception loading preferences:", err);
       return null;
     }
   }
@@ -107,20 +101,13 @@ export class PreferenceService {
           const prefsToSave = { ...this.pendingPreferences };
           this.pendingPreferences = {}; // Clear pending
 
-          console.log(
-            "[PreferenceService] Saving batched preferences:",
-            prefsToSave
-          );
+          debug("[PreferenceService] Saving batched preferences:", prefsToSave);
 
           try {
-            const {
-              data: { user },
-            } = await supabase.auth.getUser();
+            const userId = getCurrentUserId();
 
-            if (!user) {
-              console.log(
-                "[PreferenceService] No user authenticated, skipping save"
-              );
+            if (!userId) {
+              debug("[PreferenceService] No user authenticated, skipping save");
               resolve(false);
               return false;
             }
@@ -133,10 +120,10 @@ export class PreferenceService {
             const { error } = await supabase
               .from("profiles")
               .update({ settings: merged } as never)
-              .eq("id", user.id);
+              .eq("id", userId);
 
             if (error) {
-              console.error(
+              logError(
                 "[PreferenceService] Failed to save preferences:",
                 error
               );
@@ -144,14 +131,11 @@ export class PreferenceService {
               return false;
             }
 
-            console.log(
-              "[PreferenceService] Saved preferences to server:",
-              merged
-            );
+            debug("[PreferenceService] Saved preferences to server:", merged);
             resolve(true);
             return true;
           } catch (error) {
-            console.error(
+            logError(
               "[PreferenceService] Exception saving preferences:",
               error
             );
@@ -188,7 +172,7 @@ export class PreferenceService {
    * Call this once on login to sync existing local preferences
    */
   static async migrateFromLocalStorage(): Promise<void> {
-    console.log("[PreferenceService] Migrating localStorage to server...");
+    debug("[PreferenceService] Migrating localStorage to server...");
 
     const localPrefs: Partial<UserPreferences> = {};
 
@@ -229,10 +213,7 @@ export class PreferenceService {
         localPrefs.bc_formation_field_visibility = JSON.parse(formationVis);
       }
     } catch (error) {
-      console.warn(
-        "[PreferenceService] Failed to parse formation visibility:",
-        error
-      );
+      debug("[PreferenceService] Failed to parse formation visibility:", error);
     }
 
     try {
@@ -244,7 +225,7 @@ export class PreferenceService {
           JSON.parse(playDetailsVis);
       }
     } catch (error) {
-      console.warn(
+      debug(
         "[PreferenceService] Failed to parse play details visibility:",
         error
       );
@@ -254,7 +235,7 @@ export class PreferenceService {
     if (Object.keys(localPrefs).length > 0) {
       const success = await this.savePreferences(localPrefs);
       if (success) {
-        console.log(
+        debug(
           "[PreferenceService] Successfully migrated preferences:",
           localPrefs
         );
@@ -270,7 +251,7 @@ export class PreferenceService {
         */
       }
     } else {
-      console.log("[PreferenceService] No localStorage preferences to migrate");
+      debug("[PreferenceService] No localStorage preferences to migrate");
     }
   }
 }

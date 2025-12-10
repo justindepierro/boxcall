@@ -1,4 +1,31 @@
 // Auth Monitoring and Observability
+import { logError } from "./logger";
+
+const AUTH_PHASES = [
+  "bootstrap",
+  "sessionFetch",
+  "profileFetch",
+  "dbHandshake",
+] as const;
+type AuthPhase = (typeof AUTH_PHASES)[number];
+type PhaseStatus = "success" | "error" | "skipped";
+
+interface AuthPhaseTiming {
+  lastDurationMs: number | null;
+  averageDurationMs: number | null;
+  samples: number;
+  status: "idle" | PhaseStatus;
+  metadata?: Record<string, any>;
+  completedAt?: Date;
+}
+
+const createPhaseTiming = (): AuthPhaseTiming => ({
+  lastDurationMs: null,
+  averageDurationMs: null,
+  samples: 0,
+  status: "idle",
+});
+
 export class AuthMonitoring {
   private static metrics = {
     signInAttempts: 0,
@@ -29,6 +56,71 @@ export class AuthMonitoring {
     userId?: string;
     metadata?: Record<string, any>;
   }> = [];
+  private static phaseTimings: Record<AuthPhase, AuthPhaseTiming> =
+    AUTH_PHASES.reduce(
+      (acc, phase) => {
+        acc[phase] = createPhaseTiming();
+        return acc;
+      },
+      {} as Record<AuthPhase, AuthPhaseTiming>
+    );
+  private static phaseStarts: Partial<Record<AuthPhase, number>> = {};
+
+  private static now(): number {
+    if (typeof performance !== "undefined" && performance.now) {
+      return performance.now();
+    }
+    return Date.now();
+  }
+
+  static startPhase(phase: AuthPhase, metadata?: Record<string, any>) {
+    this.phaseStarts[phase] = this.now();
+    const current = this.phaseTimings[phase] ?? createPhaseTiming();
+    this.phaseTimings[phase] = {
+      ...current,
+      status: "idle",
+      metadata: metadata
+        ? { ...current.metadata, ...metadata }
+        : current.metadata,
+    };
+  }
+
+  static endPhase(
+    phase: AuthPhase,
+    status: PhaseStatus = "success",
+    metadata?: Record<string, any>
+  ) {
+    const start = this.phaseStarts[phase];
+    const duration = start != null ? this.now() - start : 0;
+    const current = this.phaseTimings[phase] ?? createPhaseTiming();
+    const samples = current.samples + 1;
+    const averageDurationMs =
+      current.averageDurationMs != null
+        ? (current.averageDurationMs * current.samples + duration) / samples
+        : duration;
+
+    this.phaseTimings[phase] = {
+      lastDurationMs: duration,
+      averageDurationMs,
+      samples,
+      status,
+      metadata: metadata
+        ? { ...current.metadata, ...metadata }
+        : current.metadata,
+      completedAt: new Date(),
+    };
+    delete this.phaseStarts[phase];
+  }
+
+  static getPhaseTimings(): Record<AuthPhase, AuthPhaseTiming> {
+    return AUTH_PHASES.reduce(
+      (acc, phase) => {
+        acc[phase] = { ...this.phaseTimings[phase] };
+        return acc;
+      },
+      {} as Record<AuthPhase, AuthPhaseTiming>
+    );
+  }
 
   // Metrics tracking
   static recordSignInAttempt() {
@@ -101,7 +193,7 @@ export class AuthMonitoring {
 
     // Only log errors in development
     if (import.meta.env.DEV) {
-      console.error(`🚨 Auth Error [${operation}]:`, error, metadata);
+      logError(`🚨 Auth Error [${operation}]:`, error, metadata);
     }
   }
 
@@ -202,5 +294,13 @@ export class AuthMonitoring {
     };
     this.errors = [];
     this.events = [];
+    this.phaseTimings = AUTH_PHASES.reduce(
+      (acc, phase) => {
+        acc[phase] = createPhaseTiming();
+        return acc;
+      },
+      {} as Record<AuthPhase, AuthPhaseTiming>
+    );
+    this.phaseStarts = {};
   }
 }

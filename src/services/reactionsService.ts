@@ -6,7 +6,9 @@
  */
 
 import { supabase } from "../lib/supabase";
+import { getCurrentUserId } from "../lib/auth-helpers";
 import { emitTelemetry } from "../lib/telemetry";
+import { logError } from "../utils/logger";
 
 // ============================================
 // TYPE DEFINITIONS
@@ -73,9 +75,7 @@ export class ReactionsService {
     summary: ReactionSummary[];
   }> {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const userId = getCurrentUserId();
 
       const { data, error } = await supabase
         .from("announcement_reactions" as any)
@@ -84,18 +84,18 @@ export class ReactionsService {
         .order("created_at", { ascending: false });
 
       if (error) {
-        console.error("Error fetching reactions:", error);
+        logError("Error fetching reactions:", error);
         return { reactions: [], summary: [] };
       }
 
       const reactions = (data || []) as unknown as Reaction[];
 
       // Calculate summary
-      const summary = this.calculateSummary(reactions, user?.id);
+      const summary = this.calculateSummary(reactions, userId ?? undefined);
 
       return { reactions, summary };
     } catch (error) {
-      console.error("Error in getReactions:", error);
+      logError("Error in getReactions:", error);
       return { reactions: [], summary: [] };
     }
   }
@@ -108,11 +108,9 @@ export class ReactionsService {
     reactionType: ReactionType
   ): Promise<{ success: boolean; reaction?: Reaction; error?: string }> {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const userId = getCurrentUserId();
 
-      if (!user) {
+      if (!userId) {
         return {
           success: false,
           error: "User not authenticated",
@@ -121,7 +119,7 @@ export class ReactionsService {
 
       const newReaction = {
         announcement_id: announcementId,
-        user_id: user.id,
+        user_id: userId,
         reaction_type: reactionType,
       };
 
@@ -139,7 +137,7 @@ export class ReactionsService {
             error: "You've already added this reaction",
           };
         }
-        console.error("Error adding reaction:", error);
+        logError("Error adding reaction:", error);
         return {
           success: false,
           error: error.message,
@@ -156,7 +154,7 @@ export class ReactionsService {
         reaction: data as unknown as Reaction,
       };
     } catch (error) {
-      console.error("Error in addReaction:", error);
+      logError("Error in addReaction:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error),
@@ -172,11 +170,9 @@ export class ReactionsService {
     reactionType: ReactionType
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const userId = getCurrentUserId();
 
-      if (!user) {
+      if (!userId) {
         return {
           success: false,
           error: "User not authenticated",
@@ -187,11 +183,11 @@ export class ReactionsService {
         .from("announcement_reactions" as any)
         .delete()
         .eq("announcement_id", announcementId)
-        .eq("user_id", user.id)
+        .eq("user_id", userId)
         .eq("reaction_type", reactionType);
 
       if (error) {
-        console.error("Error removing reaction:", error);
+        logError("Error removing reaction:", error);
         return {
           success: false,
           error: error.message,
@@ -205,7 +201,7 @@ export class ReactionsService {
 
       return { success: true };
     } catch (error) {
-      console.error("Error in removeReaction:", error);
+      logError("Error in removeReaction:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error),
@@ -225,11 +221,9 @@ export class ReactionsService {
     error?: string;
   }> {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const userId = getCurrentUserId();
 
-      if (!user) {
+      if (!userId) {
         return {
           success: false,
           action: "added",
@@ -242,7 +236,7 @@ export class ReactionsService {
         .from("announcement_reactions" as any)
         .select("id")
         .eq("announcement_id", announcementId)
-        .eq("user_id", user.id)
+        .eq("user_id", userId)
         .eq("reaction_type", reactionType)
         .single();
 
@@ -264,7 +258,7 @@ export class ReactionsService {
         };
       }
     } catch (error) {
-      console.error("Error in toggleReaction:", error);
+      logError("Error in toggleReaction:", error);
       return {
         success: false,
         action: "added",
@@ -280,9 +274,7 @@ export class ReactionsService {
     announcementIds: string[]
   ): Promise<Map<string, ReactionSummary[]>> {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const userId = getCurrentUserId();
 
       const { data, error } = await supabase
         .from("announcement_reactions" as any)
@@ -290,7 +282,7 @@ export class ReactionsService {
         .in("announcement_id", announcementIds);
 
       if (error) {
-        console.error("Error fetching reactions batch:", error);
+        logError("Error fetching reactions batch:", error);
         return new Map();
       }
 
@@ -309,13 +301,13 @@ export class ReactionsService {
         const announcementReactions = grouped.get(id) || [];
         summaries.set(
           id,
-          this.calculateSummary(announcementReactions, user?.id)
+          this.calculateSummary(announcementReactions, userId ?? undefined)
         );
       });
 
       return summaries;
     } catch (error) {
-      console.error("Error in getReactionsSummaryBatch:", error);
+      logError("Error in getReactionsSummaryBatch:", error);
       return new Map();
     }
   }
@@ -335,7 +327,7 @@ export class ReactionsService {
         .eq("reaction_type", reactionType);
 
       if (error || !data) {
-        console.error("Error fetching reaction users:", error);
+        logError("Error fetching reaction users:", error);
         return [];
       }
 
@@ -349,7 +341,7 @@ export class ReactionsService {
         .in("id", userIds);
 
       if (profilesError || !profiles) {
-        console.error("Error fetching user profiles:", profilesError);
+        logError("Error fetching user profiles:", profilesError);
         return [];
       }
 
@@ -359,7 +351,7 @@ export class ReactionsService {
         avatar_url: p.avatar_url,
       }));
     } catch (error) {
-      console.error("Error in getReactionUsers:", error);
+      logError("Error in getReactionUsers:", error);
       return [];
     }
   }

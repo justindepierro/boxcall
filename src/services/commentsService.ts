@@ -6,7 +6,9 @@
  */
 
 import { supabase } from "../lib/supabase";
+import { getCurrentUserId } from "../lib/auth-helpers";
 import { emitTelemetry } from "../lib/telemetry";
+import { logError } from "../utils/logger";
 
 // ============================================
 // TYPE DEFINITIONS
@@ -67,7 +69,7 @@ export class CommentsService {
         .order("created_at", { ascending: true });
 
       if (error) {
-        console.error("Error fetching comments:", error);
+        logError("Error fetching comments:", error);
         return [];
       }
 
@@ -98,7 +100,7 @@ export class CommentsService {
         author_name: profileMap.get(comment.user_id) || "Unknown User",
       })) as CommentWithAuthor[];
     } catch (error) {
-      console.error("Error in getComments:", error);
+      logError("Error in getComments:", error);
       return [];
     }
   }
@@ -159,11 +161,9 @@ export class CommentsService {
     error?: string;
   }> {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const userId = getCurrentUserId();
 
-      if (!user) {
+      if (!userId) {
         return {
           success: false,
           error: "User not authenticated",
@@ -172,7 +172,7 @@ export class CommentsService {
 
       const newComment = {
         announcement_id: comment.announcement_id,
-        user_id: user.id,
+        user_id: userId,
         content: comment.content?.trim() || "",
         content_json: comment.content_json,
         parent_id: comment.parent_id || null,
@@ -185,7 +185,7 @@ export class CommentsService {
         .single();
 
       if (error) {
-        console.error("Error adding comment:", error);
+        logError("Error adding comment:", error);
         return {
           success: false,
           error: error.message,
@@ -196,7 +196,7 @@ export class CommentsService {
       const { data: profile } = await supabase
         .from("profiles")
         .select("full_name, display_name")
-        .eq("id", user.id)
+        .eq("id", userId)
         .single();
 
       const commentWithAuthor: CommentWithAuthor = {
@@ -218,7 +218,7 @@ export class CommentsService {
         comment: commentWithAuthor,
       };
     } catch (error) {
-      console.error("Error in addComment:", error);
+      logError("Error in addComment:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error),
@@ -254,7 +254,7 @@ export class CommentsService {
         .single();
 
       if (error) {
-        console.error("Error updating comment:", error);
+        logError("Error updating comment:", error);
         return {
           success: false,
           error: error.message,
@@ -287,7 +287,7 @@ export class CommentsService {
         comment: commentWithAuthor,
       };
     } catch (error) {
-      console.error("Error in updateComment:", error);
+      logError("Error in updateComment:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error),
@@ -308,7 +308,7 @@ export class CommentsService {
         .eq("id", commentId);
 
       if (error) {
-        console.error("Error deleting comment:", error);
+        logError("Error deleting comment:", error);
         return {
           success: false,
           error: error.message,
@@ -321,7 +321,7 @@ export class CommentsService {
 
       return { success: true };
     } catch (error) {
-      console.error("Error in deleteComment:", error);
+      logError("Error in deleteComment:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error),
@@ -341,13 +341,13 @@ export class CommentsService {
         .is("deleted_at", null);
 
       if (error) {
-        console.error("Error getting comment count:", error);
+        logError("Error getting comment count:", error);
         return 0;
       }
 
       return count || 0;
     } catch (error) {
-      console.error("Error in getCommentCount:", error);
+      logError("Error in getCommentCount:", error);
       return 0;
     }
   }
@@ -366,7 +366,7 @@ export class CommentsService {
         .is("deleted_at", null);
 
       if (error) {
-        console.error("Error getting comment counts:", error);
+        logError("Error getting comment counts:", error);
         return new Map();
       }
 
@@ -381,7 +381,7 @@ export class CommentsService {
 
       return counts;
     } catch (error) {
-      console.error("Error in getCommentCounts:", error);
+      logError("Error in getCommentCounts:", error);
       return new Map();
     }
   }

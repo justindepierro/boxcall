@@ -11,6 +11,7 @@ import { Badge } from "../../ui/Badge";
 import { PlaySelectorModal } from "../PlaySelectorModal";
 import { GamePlanPDFService } from "../../../services/gamePlanPdfService";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
+import { logError } from "../../../utils/logger";
 import {
   getAllBillickSituations,
   getBillickSituationColorClasses,
@@ -229,7 +230,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
 
       await GamePlanPDFService.exportGamePlan(gamePlan, "call-sheet");
     } catch (error) {
-      console.error("Error exporting PDF:", error);
+      logError("Error exporting PDF:", error);
       alert("Failed to export PDF. Please try again.");
     } finally {
       setIsExporting(false);

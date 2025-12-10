@@ -12,6 +12,7 @@ import { Typography } from "../design-system/Typography";
 import { usePracticeScriptPDF } from "@services/pdf/usePracticeScriptPDF";
 import { markFirstScriptExport } from "../onboarding/activationHelpers";
 import type { PracticeBlock } from "./types";
+import { logError } from "../../utils/logger";
 interface PDFExportOptions {
   includeEverything: boolean;
   includeOffense: boolean;
@@ -172,7 +173,7 @@ export const PracticePDFExportDialog: React.FC<
       markFirstScriptExport(filename);
       onClose();
     } catch (error) {
-      console.error("PDF export failed:", error);
+      logError("PDF export failed:", error);
       // You could add error handling/notification here
     } finally {
       setIsExporting(false);

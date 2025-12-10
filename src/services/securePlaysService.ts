@@ -18,9 +18,10 @@ import {
   getUserRateLimitKey,
   isRateLimitError,
 } from "../utils/rateLimiter";
-import { supabase } from "../lib/supabase";
+import { getCurrentUserId } from "../lib/auth-helpers";
 import type { Play } from "../types/play";
 import { ensureValidFormation } from "../utils/formationGuard";
+import { logError } from "../utils/logger";
 
 // ========================================
 // Security Events Tracking
@@ -61,7 +62,7 @@ function trackSecurityEvent(event: Omit<SecurityEvent, "timestamp">) {
 
   switch (event.severity) {
     case "high":
-      console.error(prefix, message, event.details);
+      logError(prefix, message, event.details);
       break;
     case "medium":
       console.warn(prefix, message, event.details);
@@ -83,11 +84,9 @@ export class SecurePlaysService {
   static async createPlay(playData: unknown): Promise<Play> {
     try {
       // Get current user for rate limiting
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const userId = getCurrentUserId();
 
-      if (!user) {
+      if (!userId) {
         trackSecurityEvent({
           type: "auth_failure",
           severity: "high",
@@ -98,7 +97,7 @@ export class SecurePlaysService {
       }
 
       // Rate limit check
-      const rateLimitKey = getUserRateLimitKey(user.id, "play-create");
+      const rateLimitKey = getUserRateLimitKey(userId, "play-create");
       try {
         rateLimiter.checkOrThrow(rateLimitKey, RateLimitPresets.PLAY_CREATE);
       } catch (error) {
@@ -107,7 +106,7 @@ export class SecurePlaysService {
             type: "rate_limit",
             severity: "medium",
             action: "create_play",
-            userId: user.id,
+            userId: userId,
             details: {
               limit: RateLimitPresets.PLAY_CREATE.maxRequests,
               window: RateLimitPresets.PLAY_CREATE.windowMs,
@@ -145,7 +144,7 @@ export class SecurePlaysService {
           type: "validation_error",
           severity: "low",
           action: "create_play",
-          userId: user.id,
+          userId: userId,
           details: {
             error: error.message,
             issues: error.issues || [],
@@ -182,14 +181,12 @@ export class SecurePlaysService {
         (error.message.includes("policy") ||
           error.message.includes("permission"))
       ) {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
+        const catchUserId = getCurrentUserId();
         trackSecurityEvent({
           type: "rls_violation",
           severity: "high",
           action: "create_play",
-          userId: user?.id,
+          userId: catchUserId ?? undefined,
           details: {
             error: error.message,
           },
@@ -205,11 +202,9 @@ export class SecurePlaysService {
   static async updatePlay(id: string, updates: unknown): Promise<Play> {
     try {
       // Get current user for rate limiting
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const userId = getCurrentUserId();
 
-      if (!user) {
+      if (!userId) {
         trackSecurityEvent({
           type: "auth_failure",
           severity: "high",
@@ -220,7 +215,7 @@ export class SecurePlaysService {
       }
 
       // Rate limit check
-      const rateLimitKey = getUserRateLimitKey(user.id, "play-update");
+      const rateLimitKey = getUserRateLimitKey(userId, "play-update");
       try {
         rateLimiter.checkOrThrow(rateLimitKey, RateLimitPresets.PLAY_UPDATE);
       } catch (error) {
@@ -229,7 +224,7 @@ export class SecurePlaysService {
             type: "rate_limit",
             severity: "medium",
             action: "update_play",
-            userId: user.id,
+            userId: userId,
             details: {
               playId: id,
               limit: RateLimitPresets.PLAY_UPDATE.maxRequests,
@@ -261,7 +256,7 @@ export class SecurePlaysService {
           type: "validation_error",
           severity: "low",
           action: "update_play",
-          userId: user.id,
+          userId: userId,
           details: {
             playId: id,
             error: error.message,
@@ -305,14 +300,12 @@ export class SecurePlaysService {
         (error.message.includes("policy") ||
           error.message.includes("permission"))
       ) {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
+        const catchUserId = getCurrentUserId();
         trackSecurityEvent({
           type: "rls_violation",
           severity: "high",
           action: "update_play",
-          userId: user?.id,
+          userId: catchUserId ?? undefined,
           details: {
             playId: id,
             error: error.message,
@@ -329,11 +322,9 @@ export class SecurePlaysService {
   static async deletePlay(id: string): Promise<void> {
     try {
       // Get current user for rate limiting
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const userId = getCurrentUserId();
 
-      if (!user) {
+      if (!userId) {
         trackSecurityEvent({
           type: "auth_failure",
           severity: "high",
@@ -344,7 +335,7 @@ export class SecurePlaysService {
       }
 
       // Rate limit check
-      const rateLimitKey = getUserRateLimitKey(user.id, "play-delete");
+      const rateLimitKey = getUserRateLimitKey(userId, "play-delete");
       try {
         rateLimiter.checkOrThrow(rateLimitKey, RateLimitPresets.PLAY_DELETE);
       } catch (error) {
@@ -353,7 +344,7 @@ export class SecurePlaysService {
             type: "rate_limit",
             severity: "medium",
             action: "delete_play",
-            userId: user.id,
+            userId: userId,
             details: {
               playId: id,
               limit: RateLimitPresets.PLAY_DELETE.maxRequests,
@@ -373,14 +364,12 @@ export class SecurePlaysService {
         (error.message.includes("policy") ||
           error.message.includes("permission"))
       ) {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
+        const catchUserId = getCurrentUserId();
         trackSecurityEvent({
           type: "rls_violation",
           severity: "high",
           action: "delete_play",
-          userId: user?.id,
+          userId: catchUserId ?? undefined,
           details: {
             playId: id,
             error: error.message,

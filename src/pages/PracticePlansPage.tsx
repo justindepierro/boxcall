@@ -36,6 +36,7 @@ import {
 } from "../utils/practiceScriptExport";
 
 import type { PracticeScript } from "../services/practiceService";
+import { logError } from "../utils/logger";
 
 const PracticePlansPage = () => {
   const navigate = useNavigate();
@@ -71,7 +72,7 @@ const PracticePlansPage = () => {
       const scripts = await PracticeService.getPracticeScripts(activeTeamId);
       setPracticeScripts(scripts);
     } catch (error) {
-      console.error("Failed to load practice scripts:", error);
+      logError("Failed to load practice scripts:", error);
       toast.error("Failed to load practice scripts");
     } finally {
       setLoading(false);
@@ -125,7 +126,7 @@ const PracticePlansPage = () => {
         setShowModal(false);
         setEditingScript(undefined);
       } catch (error) {
-        console.error("Failed to save practice script:", error);
+        logError("Failed to save practice script:", error);
         toast.error("Failed to save practice script");
       }
     })();
@@ -138,7 +139,7 @@ const PracticePlansPage = () => {
       await loadPracticeScripts();
       toast.success("Practice script duplicated successfully");
     } catch (error) {
-      console.error("Failed to duplicate script:", error);
+      logError("Failed to duplicate script:", error);
       toast.error("Failed to duplicate script");
     }
   };
@@ -154,7 +155,7 @@ const PracticePlansPage = () => {
       }
       await loadPracticeScripts();
     } catch (error) {
-      console.error("Failed to archive/unarchive script:", error);
+      logError("Failed to archive/unarchive script:", error);
       toast.error("Failed to update script");
     }
   };
@@ -173,7 +174,7 @@ const PracticePlansPage = () => {
       await loadPracticeScripts();
       toast.success("Practice script deleted successfully");
     } catch (error) {
-      console.error("Failed to delete script:", error);
+      logError("Failed to delete script:", error);
       toast.error("Failed to delete script");
     }
   };
@@ -192,7 +193,7 @@ const PracticePlansPage = () => {
         `Exported ${practiceScripts.length} practice script${practiceScripts.length !== 1 ? "s" : ""}`
       );
     } catch (error) {
-      console.error("Failed to export practice scripts:", error);
+      logError("Failed to export practice scripts:", error);
       toast.error("Failed to export practice scripts");
     }
   };
@@ -217,7 +218,7 @@ const PracticePlansPage = () => {
           });
           imported++;
         } catch (error) {
-          console.error(`Failed to import script "${script.name}":`, error);
+          logError(`Failed to import script "${script.name}":`, error);
           failed++;
         }
       }
@@ -234,7 +235,7 @@ const PracticePlansPage = () => {
         );
       }
     } catch (error) {
-      console.error("Failed to import practice scripts:", error);
+      logError("Failed to import practice scripts:", error);
       throw error;
     }
   };

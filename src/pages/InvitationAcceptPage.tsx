@@ -20,6 +20,7 @@ import { SignInForm } from "../components/auth/SignInForm";
 import { Button } from "../components/ui/Button";
 import { Alert } from "../components/ui/Alert";
 import { Loader2 } from "lucide-react";
+import { logError } from "../utils/logger";
 
 type PageState =
   | "loading"
@@ -125,7 +126,7 @@ export function InvitationAcceptPage() {
           setPageState("auth-required");
         }
       } catch (error) {
-        console.error("Error loading invitation:", error);
+        logError("Error loading invitation:", error);
         setErrorMessage("Failed to load invitation details");
         setPageState("error");
       }
@@ -162,7 +163,7 @@ export function InvitationAcceptPage() {
         navigate(`/teams/${result.teamId}`);
       }, 2000);
     } catch (error) {
-      console.error("Error accepting invitation:", error);
+      logError("Error accepting invitation:", error);
       setErrorMessage("An unexpected error occurred");
       setPageState("error");
     }

@@ -7,6 +7,8 @@
 import { supabase } from "../lib/supabase";
 import { emitTelemetry } from "../lib/telemetry";
 import { MentionsService } from "./mentionsService";
+import { getCurrentUserId } from "../lib/auth-helpers";
+import { logError } from "../utils/logger";
 
 // ============================================
 // TYPE DEFINITIONS
@@ -74,7 +76,7 @@ export class NotificationsService {
       });
 
       if (error) {
-        console.error("Error creating mention notification:", error);
+        logError("Error creating mention notification:", error);
         return { success: false, error: error.message };
       }
 
@@ -85,7 +87,7 @@ export class NotificationsService {
 
       return { success: true };
     } catch (error) {
-      console.error("Error in createMentionNotification:", error);
+      logError("Error in createMentionNotification:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error),
@@ -131,7 +133,7 @@ export class NotificationsService {
         )
       );
     } catch (error) {
-      console.error("Error processing mentions:", error);
+      logError("Error processing mentions:", error);
     }
   }
 
@@ -143,15 +145,14 @@ export class NotificationsService {
     limit?: number;
   }): Promise<NotificationWithUser[]> {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return [];
+      // Use cached user ID for bulletproof performance
+      const userId = getCurrentUserId();
+      if (!userId) return [];
 
       let query = supabase
         .from("notifications")
         .select("*")
-        .eq("user_id", user.id)
+        .eq("user_id", userId)
         .order("created_at", { ascending: false });
 
       if (params?.unreadOnly) {
@@ -165,7 +166,7 @@ export class NotificationsService {
       const { data, error } = await query;
 
       if (error) {
-        console.error("Error fetching notifications:", error);
+        logError("Error fetching notifications:", error);
         return [];
       }
 
@@ -194,7 +195,7 @@ export class NotificationsService {
           : undefined,
       }));
     } catch (error) {
-      console.error("Error in getNotifications:", error);
+      logError("Error in getNotifications:", error);
       return [];
     }
   }
@@ -212,7 +213,7 @@ export class NotificationsService {
         .eq("id", notificationId);
 
       if (error) {
-        console.error("Error marking notification as read:", error);
+        logError("Error marking notification as read:", error);
         return { success: false, error: error.message };
       }
 
@@ -222,7 +223,7 @@ export class NotificationsService {
 
       return { success: true };
     } catch (error) {
-      console.error("Error in markAsRead:", error);
+      logError("Error in markAsRead:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error),
@@ -235,21 +236,20 @@ export class NotificationsService {
    */
   static async markAllAsRead(): Promise<{ success: boolean; error?: string }> {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
+      // Use cached user ID for bulletproof performance
+      const userId = getCurrentUserId();
+      if (!userId) {
         return { success: false, error: "Not authenticated" };
       }
 
       const { error } = await supabase
         .from("notifications")
         .update({ read: true })
-        .eq("user_id", user.id)
+        .eq("user_id", userId)
         .eq("read", false);
 
       if (error) {
-        console.error("Error marking all notifications as read:", error);
+        logError("Error marking all notifications as read:", error);
         return { success: false, error: error.message };
       }
 
@@ -257,7 +257,7 @@ export class NotificationsService {
 
       return { success: true };
     } catch (error) {
-      console.error("Error in markAllAsRead:", error);
+      logError("Error in markAllAsRead:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error),
@@ -278,7 +278,7 @@ export class NotificationsService {
         .eq("id", notificationId);
 
       if (error) {
-        console.error("Error deleting notification:", error);
+        logError("Error deleting notification:", error);
         return { success: false, error: error.message };
       }
 
@@ -288,7 +288,7 @@ export class NotificationsService {
 
       return { success: true };
     } catch (error) {
-      console.error("Error in deleteNotification:", error);
+      logError("Error in deleteNotification:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error),
@@ -301,25 +301,24 @@ export class NotificationsService {
    */
   static async getUnreadCount(): Promise<number> {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return 0;
+      // Use cached user ID for bulletproof performance
+      const userId = getCurrentUserId();
+      if (!userId) return 0;
 
       const { count, error } = await supabase
         .from("notifications")
         .select("*", { count: "exact", head: true })
-        .eq("user_id", user.id)
+        .eq("user_id", userId)
         .eq("read", false);
 
       if (error) {
-        console.error("Error getting unread count:", error);
+        logError("Error getting unread count:", error);
         return 0;
       }
 
       return count || 0;
     } catch (error) {
-      console.error("Error in getUnreadCount:", error);
+      logError("Error in getUnreadCount:", error);
       return 0;
     }
   }

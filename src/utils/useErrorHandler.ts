@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 
 import { useUI } from "../app/store";
+import { logError } from "./logger";
 /**
  * Error handler hook for consistent error handling across the application
  */
@@ -11,7 +12,7 @@ export function useErrorHandler() {
       const errorMessage = typeof error === "string" ? error : error.message;
       const title = context ? `Error in ${context}` : "Application Error";
       // Log error to console for debugging
-      console.error("Error handled:", { error, context });
+      logError("Error handled:", { error, context });
       // Add error notification to the UI
       addNotification({
         type: "error",

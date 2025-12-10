@@ -23,6 +23,7 @@ import type {
   DuplicateCheckResult,
 } from "../services/teamService";
 import type { AddressSuggestion } from "../services/locationFinderService";
+import { logError } from "../utils/logger";
 
 /**
  * Create Team Page - Simplified Working Version
@@ -125,7 +126,7 @@ const CreateTeam: React.FC = () => {
 
       return true;
     } catch (error) {
-      console.error("Duplicate check failed:", error);
+      logError("Duplicate check failed:", error);
       // Allow creation if check fails
       return true;
     } finally {
@@ -240,7 +241,7 @@ const CreateTeam: React.FC = () => {
         setCreateError(result.error || "Failed to create team");
       }
     } catch (error) {
-      console.error("Team creation failed:", error);
+      logError("Team creation failed:", error);
       setCreateError(error instanceof Error ? error.message : "Unknown error");
     } finally {
       setIsLoading(false);

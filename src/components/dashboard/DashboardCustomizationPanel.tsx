@@ -5,6 +5,7 @@ import { Icon } from "../ui/Icon";
 import { Tooltip } from "../ui/Tooltip/Tooltip";
 import { useDashboardStore } from "../../stores/dashboardStore";
 import type { LayoutSize } from "../../stores/dashboardStore";
+import { logError } from "../../utils/logger";
 
 /**
  * Dashboard Customization Panel
@@ -51,7 +52,7 @@ export const DashboardCustomizationPanel: React.FC<
       setNewLayoutName("");
       setShowCreateLayout(false);
     } catch (error) {
-      console.error("Failed to create layout:", error);
+      logError("Failed to create layout:", error);
     }
   };
 

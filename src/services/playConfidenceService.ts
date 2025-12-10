@@ -15,6 +15,7 @@
 
 import { supabase } from "../lib/supabase";
 import type { GameSituation, ExecutionResult } from "../types/session";
+import { logError } from "../utils/logger";
 
 // ==============================================
 // TYPES
@@ -496,7 +497,7 @@ export class PlayConfidenceService {
       .limit(100); // Last 100 executions
 
     if (error) {
-      console.error("Error fetching play executions:", error);
+      logError("Error fetching play executions:", error);
       return [];
     }
 

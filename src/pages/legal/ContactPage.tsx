@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Typography } from "../../components/design-system/Typography";
 import { Button } from "../../components/ui";
 import { Icon } from "../../components/ui/Icon/Icon";
+import { Dropdown } from "../../components/ui/Dropdown";
 import { PageLayout } from "../../components/layout/PageLayout";
 
 export const ContactPage: React.FC = () => {
+  const [subject, setSubject] = useState("");
+
   return (
     <PageLayout
       title="Contact Us"
@@ -149,25 +152,23 @@ export const ContactPage: React.FC = () => {
             </div>
 
             <div>
-              <Typography
-                variant="body-sm"
-                as="label"
-                className="block font-medium text-primary dark:text-border-light mb-2"
-              >
-                Subject
-              </Typography>
-              <select
+              <Dropdown
+                label="Subject"
+                options={[
+                  { value: "support", label: "Technical Support" },
+                  { value: "billing", label: "Billing Question" },
+                  { value: "feature", label: "Feature Request" },
+                  { value: "bug", label: "Bug Report" },
+                  { value: "general", label: "General Inquiry" },
+                ]}
+                value={subject}
+                onChange={setSubject}
+                placeholder="Select a topic"
+                fullWidth
+                size="md"
                 id="subject"
                 name="subject"
-                className="w-full px-3 py-2 border border-secondary dark:border-text-tertiary rounded-lg shadow-sm focus:outline-none focus:ring-brand-jade focus:border-brand-jade dark:bg-muted dark:text-inverse"
-              >
-                <option value="">Select a topic</option>
-                <option value="support">Technical Support</option>
-                <option value="billing">Billing Question</option>
-                <option value="feature">Feature Request</option>
-                <option value="bug">Bug Report</option>
-                <option value="general">General Inquiry</option>
-              </select>
+              />
             </div>
 
             <div>

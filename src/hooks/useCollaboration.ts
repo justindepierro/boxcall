@@ -14,6 +14,7 @@ import {
   type CursorUpdate,
 } from "@services/realTimeCollaboration";
 import { colorTokens } from "../design-system/tokens";
+import { logError } from "../utils/logger";
 
 export interface UseCollaborationOptions {
   teamId: string;
@@ -130,7 +131,7 @@ export function useCollaboration(
       const errorMessage =
         err instanceof Error ? err.message : "Failed to start collaboration";
       setError(errorMessage);
-      console.error("Collaboration session error:", err);
+      logError("Collaboration session error:", err);
     } finally {
       setIsConnecting(false);
     }
@@ -332,7 +333,7 @@ export function useCollaboration(
         try {
           callback(update);
         } catch (error) {
-          console.error("Error in update subscriber:", error);
+          logError("Error in update subscriber:", error);
         }
       });
 

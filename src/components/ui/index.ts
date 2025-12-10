@@ -11,6 +11,8 @@ export { Card } from "./Card";
 export type { CardProps } from "./Card";
 export { Select } from "./Select";
 export type { SelectOption, SelectProps } from "./Select";
+export { Dropdown } from "./Dropdown";
+export type { DropdownOption, DropdownProps } from "./Dropdown";
 export { Modal } from "./Modal";
 export type { ModalProps } from "./Modal";
 export { LoadingScreen } from "./LoadingScreen";

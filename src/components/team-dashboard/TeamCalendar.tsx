@@ -14,7 +14,7 @@ import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon/Icon";
 import { Input } from "../ui/Input";
 import { Modal } from "../ui/Modal/Modal";
-import { Select } from "../ui/Select";
+import { Dropdown } from "../ui/Dropdown";
 
 interface TeamCalendarProps {
   teamId: string;
@@ -158,11 +158,11 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
                 >
                   Type
                 </Typography>
-                <Select
+                <Dropdown
                   id="ev-type"
                   value={form.eventType}
                   onChange={(value) =>
-                    setForm((f) => ({ ...f, eventType: String(value) }))
+                    setForm((f) => ({ ...f, eventType: value }))
                   }
                   options={[
                     { value: "practice", label: "Practice" },

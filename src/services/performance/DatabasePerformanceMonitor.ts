@@ -10,6 +10,7 @@
  */
 
 import type { ServiceMetrics } from "../base/BaseService";
+import { logError } from "../../utils/logger";
 
 export interface DatabaseMetrics {
   avgQueryTime: number;
@@ -89,7 +90,7 @@ export class DatabasePerformanceMonitor {
 
     // Log errors immediately
     if (!success && error) {
-      console.error(`❌ Query Error: ${query} failed with: ${error}`);
+      logError(`❌ Query Error: ${query} failed with: ${error}`);
     }
   }
 

@@ -2,6 +2,8 @@
  * Progress tracking utilities for team creation wizard
  */
 
+import { debug } from "../utils/logger";
+
 const PROGRESS_STORAGE_KEY = "team_creation_progress";
 
 export interface TeamCreationProgress {
@@ -32,12 +34,12 @@ export class ProgressTrackingService {
       };
 
       localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progress));
-      console.log("💾 Progress saved:", {
+      debug("💾 Progress saved:", {
         currentStep,
         completedSteps: completedSteps.length,
       });
     } catch (error) {
-      console.warn("⚠️ Failed to save progress:", error);
+      debug("⚠️ Failed to save progress:", error);
     }
   }
 
@@ -54,15 +56,15 @@ export class ProgressTrackingService {
       // Check if progress is not too old (24 hours)
       const maxAge = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
       if (Date.now() - progress.timestamp > maxAge) {
-        console.log("⏰ Saved progress is too old, clearing...");
+        debug("⏰ Saved progress is too old, clearing...");
         this.clearProgress();
         return null;
       }
 
-      console.log("📋 Found saved team creation progress!");
+      debug("📋 Found saved team creation progress!");
       return progress;
     } catch (error) {
-      console.warn("⚠️ Failed to load progress:", error);
+      debug("⚠️ Failed to load progress:", error);
       return null;
     }
   }
@@ -73,9 +75,9 @@ export class ProgressTrackingService {
   static clearProgress(): void {
     try {
       localStorage.removeItem(PROGRESS_STORAGE_KEY);
-      console.log("🗑️ Progress cleared");
+      debug("🗑️ Progress cleared");
     } catch (error) {
-      console.warn("⚠️ Failed to clear progress:", error);
+      debug("⚠️ Failed to clear progress:", error);
     }
   }
 

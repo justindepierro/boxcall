@@ -8,6 +8,7 @@
 
 import { supabase } from "../../lib/supabase";
 import type { SyncResult } from "../../types/library";
+import { logError } from "../../utils/logger";
 
 export class PersonnelSyncService {
   /**
@@ -109,7 +110,7 @@ export class PersonnelSyncService {
       .order("play_name");
 
     if (error) {
-      console.error(
+      logError(
         "[PersonnelSyncService] Error fetching affected plays:",
         error
       );

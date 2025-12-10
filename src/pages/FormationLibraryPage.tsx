@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { useTeamsData } from "../hooks/useTeamsData";
 import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { supabase } from "../lib/supabase";
+import { logError } from "../utils/logger";
 
 export const FormationLibraryPage: React.FC = () => {
   const { playbooks } = useTeamsData();
@@ -97,7 +98,7 @@ const FormationLibraryPageContent: React.FC<
       });
       setFormations(response.items);
     } catch (error) {
-      console.error("Error loading formations:", error);
+      logError("Error loading formations:", error);
       toast.error("Failed to load formations");
     } finally {
       setLoading(false);
@@ -158,7 +159,7 @@ const FormationLibraryPageContent: React.FC<
           });
 
           if (error) {
-            console.error(
+            logError(
               `Failed to create formation "${originalName || formationName}":`,
               error
             );
@@ -181,7 +182,7 @@ const FormationLibraryPageContent: React.FC<
       }
       await loadFormations();
     } catch (error) {
-      console.error("Error importing formations:", error);
+      logError("Error importing formations:", error);
       toast.error("Failed to import formations", { id: "import" });
     } finally {
       setAnalyzing(false);
@@ -213,7 +214,7 @@ const FormationLibraryPageContent: React.FC<
 
       await loadFormations(); // Refresh to show updated confidence scores
     } catch (error) {
-      console.error("Error analyzing formations:", error);
+      logError("Error analyzing formations:", error);
       toast.error("Failed to analyze formations", { id: "analyze" });
     } finally {
       setAnalyzing(false);

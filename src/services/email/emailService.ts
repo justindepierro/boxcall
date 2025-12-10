@@ -10,6 +10,8 @@
  * Note: Calls serverless function to avoid CORS issues with Resend API
  */
 
+import { debug, error as logError } from "../../utils/logger";
+
 export interface SendEmailParams {
   to: string;
   subject: string;
@@ -33,7 +35,7 @@ export async function sendEmail(
   try {
     const { to, subject, html, text } = params;
 
-    console.log("[EmailService] Sending email via serverless function:", {
+    debug("[EmailService] Sending email via serverless function:", {
       to,
       subject,
     });
@@ -55,21 +57,21 @@ export async function sendEmail(
     const result = await response.json();
 
     if (!response.ok || !result.success) {
-      console.error("[EmailService] Error sending email:", result.error);
+      logError("[EmailService] Error sending email:", result.error);
       return {
         success: false,
         error: result.error || "Failed to send email",
       };
     }
 
-    console.log("[EmailService] Email sent successfully:", result.messageId);
+    debug("[EmailService] Email sent successfully:", result.messageId);
 
     return {
       success: true,
       messageId: result.messageId,
     };
   } catch (error) {
-    console.error("[EmailService] Exception sending email:", error);
+    logError("[EmailService] Exception sending email:", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error",

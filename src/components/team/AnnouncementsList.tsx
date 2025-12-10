@@ -19,6 +19,7 @@ import { useAnnouncementsRealtime } from "../../hooks/useAnnouncementsRealtime";
 import { AnnouncementItem } from "./AnnouncementItem";
 import { AnnouncementListSkeleton } from "../ui/Skeleton/AnnouncementSkeleton";
 import { Hash, X, RefreshCw } from "lucide-react";
+import { logError } from "../../utils/logger";
 
 interface AnnouncementsListProps {
   teamId: string;
@@ -112,7 +113,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
       const data = await AnnouncementsService.getAnnouncements(teamId, filters);
       setAnnouncements(data);
     } catch (err) {
-      console.error("Error loading announcements:", err);
+      logError("Error loading announcements:", err);
       setError("Failed to load announcements");
     } finally {
       setLoading(false);
@@ -129,7 +130,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
       if (onTogglePin) onTogglePin(id);
       await loadAnnouncements();
     } catch (err) {
-      console.error("Error toggling pin:", err);
+      logError("Error toggling pin:", err);
       alert("Failed to pin/unpin announcement");
     }
   };
@@ -151,7 +152,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
       if (onDelete) onDelete(id);
       await loadAnnouncements();
     } catch (err) {
-      console.error("Error deleting announcement:", err);
+      logError("Error deleting announcement:", err);
       alert("Failed to delete announcement. Please try again.");
     }
   };

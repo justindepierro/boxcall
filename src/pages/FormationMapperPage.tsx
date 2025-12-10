@@ -39,6 +39,7 @@ import {
 import type { Formation } from "../types/formation";
 import { FormationService } from "../services/formationService";
 import { cn } from "../lib/utils/cn";
+import { logError } from "../utils/logger";
 
 interface FormationSuggestion {
   formation: Formation;
@@ -119,7 +120,7 @@ const FormationMapperPage = () => {
         const data = await FormationService.getFormationsByPlaybook(playbookId);
         setFormationCatalog(data);
       } catch (err) {
-        console.error("Failed to load formation catalog", err);
+        logError("Failed to load formation catalog", err);
         setFormationCatalog([]);
         setFormationsError(
           err instanceof Error
@@ -434,7 +435,7 @@ const FormationMapperPage = () => {
         await refresh();
         didSucceed = true;
       } catch (err) {
-        console.error("Formation assignment failed", err);
+        logError("Formation assignment failed", err);
         toast.error(
           err instanceof Error ? err.message : "Failed to assign formation",
           "Link Failed"

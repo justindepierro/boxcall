@@ -44,6 +44,7 @@ import {
   validatePersonnelValue,
 } from "../../utils/playFieldValidation";
 import type { PlayCombo } from "../../hooks/useRecentPlayCombos";
+import { logError } from "../../utils/logger";
 
 interface AddNewPlayModalProps {
   isOpen: boolean;
@@ -229,7 +230,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
       setIsAdvancedOpen(false);
       onClose();
     } catch (error) {
-      console.error("Failed to create play:", error);
+      logError("Failed to create play:", error);
 
       // Check if it's a validation error
       if (error && typeof error === "object" && "issues" in error) {

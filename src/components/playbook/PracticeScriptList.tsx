@@ -6,6 +6,7 @@ import { Badge } from "../ui/Badge";
 import { PracticeScriptService, type PracticeScript } from "@services";
 import { useToast } from "../../hooks/useToast";
 import { PDFExportService } from "../../services/pdfExportService";
+import { logError } from "../../utils/logger";
 
 interface PracticeScriptListProps {
   teamId: string;
@@ -31,7 +32,7 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
         await PracticeScriptService.getPracticeScripts(teamId);
       setScripts(fetchedScripts);
     } catch (err) {
-      console.error("Failed to load practice scripts:", err);
+      logError("Failed to load practice scripts:", err);
       setFetchError("Failed to load practice scripts");
       toastError("Failed to load practice scripts", "Please try again");
     } finally {
@@ -57,7 +58,7 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
       success(`Deleted "${scriptName}"`);
       await loadScripts(); // Refresh the list
     } catch (err) {
-      console.error("Failed to delete practice script:", err);
+      logError("Failed to delete practice script:", err);
       toastError("Failed to delete practice script", "Please try again");
     }
   };
@@ -73,7 +74,7 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
       success(`Duplicated as "${duplicatedScript.name}"`);
       await loadScripts(); // Refresh the list
     } catch (err) {
-      console.error("Failed to duplicate practice script:", err);
+      logError("Failed to duplicate practice script:", err);
       toastError("Failed to duplicate practice script", "Please try again");
     }
   };
@@ -85,7 +86,7 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
         await PDFExportService.exportPracticeScript(script, "ultra-compact");
         success(`PDF downloaded: "${script.name}"`);
       } catch (err) {
-        console.error("Failed to export PDF:", err);
+        logError("Failed to export PDF:", err);
         toastError("Failed to export PDF", "Please try again");
       }
     },

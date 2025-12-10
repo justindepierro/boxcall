@@ -3,6 +3,7 @@
  * Part of Phase 3D: Final Mobile Polish & Performance Optimization
  */
 import type { ErrorInfo } from "react";
+import { logError } from "./logger";
 
 // Hook for using error boundary programmatically
 export const useErrorHandler = () => {
@@ -37,7 +38,7 @@ export const reportError = (
 
   // Log to console in development
   if (process.env.NODE_ENV === "development") {
-    console.error("Manual Error Report:", errorData);
+    logError("Manual Error Report:", errorData);
   }
 
   // Send to error tracking services

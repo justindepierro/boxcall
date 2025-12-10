@@ -8,6 +8,7 @@ import React, { useState } from "react";
 import { Icon } from "../../ui/Icon/Icon";
 import { toast } from "sonner";
 import { supabase } from "../../../lib/supabase";
+import { logError } from "../../../utils/logger";
 
 interface CreateFormationModalProps {
   isOpen: boolean;
@@ -58,7 +59,7 @@ export const CreateFormationModal: React.FC<CreateFormationModalProps> = ({
       });
 
       if (error) {
-        console.error("Error creating formation:", error);
+        logError("Error creating formation:", error);
         toast.error(`Failed to create formation: ${error.message}`);
         return;
       }
@@ -69,7 +70,7 @@ export const CreateFormationModal: React.FC<CreateFormationModalProps> = ({
       onSuccess?.();
       onClose();
     } catch (error) {
-      console.error("Error creating formation:", error);
+      logError("Error creating formation:", error);
       toast.error("Failed to create formation");
     } finally {
       setCreating(false);

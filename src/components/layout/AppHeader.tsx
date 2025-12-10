@@ -14,6 +14,7 @@ import {
   requestPWAInstallPrompt,
 } from "../pwa/PWAIntegration";
 import { triggerHapticFeedback } from "../../lib/hapticFeedback";
+import { debug } from "../../utils/logger";
 
 // Lazy load GlobalSearch to defer search functionality until user interacts
 const GlobalSearch = lazy(() =>
@@ -66,6 +67,10 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
       id: tm.teamId,
       name: tm.teamName,
     })) ?? [];
+
+  // 🔍 DEBUG: Log teams for header
+  debug("🎯 AppHeader - roleContext:", roleContext);
+  debug("🎯 AppHeader - teams for switcher:", teams);
 
   useEffect(() => {
     let ticking = false;
@@ -167,7 +172,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                 size="sm"
                 onClick={() => {
                   triggerHapticFeedback("light");
-                  console.log("Notifications clicked");
+                  debug("Notifications clicked");
                 }}
                 className="w-10 h-10 !p-0 flex items-center justify-center hover:bg-surface-hover rounded-lg transition-colors"
                 aria-label="Notifications"
@@ -212,7 +217,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                 size="sm"
                 onClick={() => {
                   triggerHapticFeedback("light");
-                  console.log("Notifications clicked");
+                  debug("Notifications clicked");
                 }}
                 className="w-11 h-11 !p-0 flex items-center justify-center hover:bg-surface-hover rounded-lg transition-colors relative"
                 aria-label="Notifications"

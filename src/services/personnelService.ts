@@ -13,6 +13,7 @@
 
 import { supabase } from "../lib/supabase";
 import { PersonnelValidationService } from "./validationService";
+import { logError } from "../utils/logger";
 import type {
   PersonnelConfiguration,
   PersonnelPlayer,
@@ -89,7 +90,7 @@ export class PersonnelService {
         players: playersByConfig[config.id] || [],
       }));
     } catch (error) {
-      console.error("Failed to fetch personnel configurations:", error);
+      logError("Failed to fetch personnel configurations:", error);
       throw error;
     }
   }
@@ -155,7 +156,7 @@ export class PersonnelService {
         players: typedPlayers,
       };
     } catch (error) {
-      console.error(
+      logError(
         `Failed to fetch personnel configuration "${name}":`,
         error
       );
@@ -248,7 +249,7 @@ export class PersonnelService {
         players: typedPlayers,
       };
     } catch (error) {
-      console.error("Failed to create personnel configuration:", error);
+      logError("Failed to create personnel configuration:", error);
       throw error;
     }
   }
@@ -365,7 +366,7 @@ export class PersonnelService {
         players: typedPlayers,
       };
     } catch (error) {
-      console.error("Failed to update personnel configuration:", error);
+      logError("Failed to update personnel configuration:", error);
       throw error;
     }
   }
@@ -401,7 +402,7 @@ export class PersonnelService {
         formationsCount: formationsCount || 0,
       };
     } catch (error) {
-      console.error("Failed to check personnel usage:", error);
+      logError("Failed to check personnel usage:", error);
       throw error;
     }
   }
@@ -420,7 +421,7 @@ export class PersonnelService {
 
       if (error) throw error;
     } catch (error) {
-      console.error("Failed to delete personnel configuration:", error);
+      logError("Failed to delete personnel configuration:", error);
       throw error;
     }
   }
@@ -448,7 +449,7 @@ export class PersonnelService {
         created_at: player.created_at || new Date().toISOString(), // Handle null created_at
       }));
     } catch (error) {
-      console.error("Failed to fetch personnel players:", error);
+      logError("Failed to fetch personnel players:", error);
       throw error;
     }
   }

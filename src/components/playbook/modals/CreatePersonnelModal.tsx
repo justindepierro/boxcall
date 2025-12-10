@@ -8,6 +8,7 @@ import React, { useState } from "react";
 import { Icon } from "../../ui/Icon/Icon";
 import { toast } from "sonner";
 import { supabase } from "../../../lib/supabase";
+import { logError } from "../../../utils/logger";
 
 interface CreatePersonnelModalProps {
   isOpen: boolean;
@@ -62,7 +63,7 @@ export const CreatePersonnelModal: React.FC<CreatePersonnelModalProps> = ({
       });
 
       if (error) {
-        console.error("Error creating personnel:", error);
+        logError("Error creating personnel:", error);
         toast.error(`Failed to create personnel: ${error.message}`);
         return;
       }
@@ -73,7 +74,7 @@ export const CreatePersonnelModal: React.FC<CreatePersonnelModalProps> = ({
       onSuccess?.();
       onClose();
     } catch (error) {
-      console.error("Error creating personnel:", error);
+      logError("Error creating personnel:", error);
       toast.error("Failed to create personnel");
     } finally {
       setCreating(false);

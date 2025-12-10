@@ -5,6 +5,8 @@
  * Phase 2B Sprint 4: Live Dashboard Sharing
  */
 
+import { logError } from "../utils/logger";
+
 export interface ConflictResolution {
   widgetId: string;
   conflictId: string;
@@ -163,7 +165,7 @@ class ConflictResolutionService {
       try {
         listener(conflict);
       } catch (error) {
-        console.error("Error in conflict listener:", error);
+        logError("Error in conflict listener:", error);
       }
     });
 
@@ -200,7 +202,7 @@ class ConflictResolutionService {
     try {
       return strategy.apply(local, remote, base);
     } catch (error) {
-      console.error(`Error applying merge strategy ${strategyName}:`, error);
+      logError(`Error applying merge strategy ${strategyName}:`, error);
       return null;
     }
   }

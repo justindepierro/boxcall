@@ -31,6 +31,7 @@ import type { Play } from "../../types/play";
 import type { PersonnelConfiguration } from "../../types/personnel";
 import { useIsMobile } from "@hooks/useBreakpoint";
 import { triggerHapticFeedback } from "../../lib/hapticFeedback";
+import { logError } from "../../utils/logger";
 
 interface PlayAssignmentsModalProps {
   play: Play;
@@ -171,7 +172,7 @@ export function PlayAssignmentsModal({
         .eq("play_id", play.id);
 
       if (error) {
-        console.error("Error loading assignments:", error);
+        logError("Error loading assignments:", error);
         return;
       }
 
@@ -304,7 +305,7 @@ export function PlayAssignmentsModal({
         });
 
       if (error) {
-        console.error("Error saving assignments:", error);
+        logError("Error saving assignments:", error);
         alert("Failed to save assignments. Please try again.");
         return;
       }

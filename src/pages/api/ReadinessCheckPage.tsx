@@ -5,6 +5,7 @@
 
 import React, { useEffect, useState } from "react";
 import { readinessCheck, type ReadinessCheck } from "../../api/health";
+import { logError } from "../../utils/logger";
 
 export const ReadinessCheckPage: React.FC = () => {
   const [readiness, setReadiness] = useState<ReadinessCheck | null>(null);
@@ -17,7 +18,7 @@ export const ReadinessCheckPage: React.FC = () => {
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Readiness check failed:", error);
+        logError("Readiness check failed:", error);
         setReadiness({
           ready: false,
           timestamp: new Date().toISOString(),

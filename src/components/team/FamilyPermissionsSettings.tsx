@@ -4,6 +4,7 @@ import { Typography } from "../design-system";
 import { Icon } from "../ui/Icon/Icon";
 import { useToast } from "../../hooks/useToast";
 import { TeamService } from "../../services/teamService";
+import { logError } from "../../utils/logger";
 
 export interface FamilyPermissions {
   canViewRoster: boolean;
@@ -101,7 +102,7 @@ export const FamilyPermissionsSettings: React.FC<
         setPermissions(fetchedPermissions);
         setOriginalPermissions(fetchedPermissions);
       } catch (error) {
-        console.error("Error fetching family permissions:", error);
+        logError("Error fetching family permissions:", error);
         toast.error("Failed to load permissions");
       } finally {
         setIsLoading(false);
@@ -142,7 +143,7 @@ export const FamilyPermissionsSettings: React.FC<
       setOriginalPermissions(permissions);
       toast.success("Family permissions updated successfully");
     } catch (error) {
-      console.error("Failed to save family permissions:", error);
+      logError("Failed to save family permissions:", error);
       toast.error(
         error instanceof Error
           ? error.message

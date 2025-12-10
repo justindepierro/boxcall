@@ -1,6 +1,7 @@
 import { useRef, useState, useCallback, type ReactNode } from "react";
 import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import { Icon } from "./ui/Icon/Icon";
+import { logError } from "../utils/logger";
 
 interface PullToRefreshProps {
   /** Content to wrap with pull-to-refresh */
@@ -106,7 +107,7 @@ export function PullToRefresh({
       try {
         await onRefresh();
       } catch (error) {
-        console.error("Refresh failed:", error);
+        logError("Refresh failed:", error);
       } finally {
         // Animate back to 0
         await animate(pullDistance, 0, {

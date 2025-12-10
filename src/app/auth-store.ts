@@ -35,7 +35,6 @@ import {
   NETWORK_MAX_RETRIES,
   NETWORK_BASE_DELAY,
   NETWORK_MAX_DELAY,
-  POSTGRES_NO_ROWS_CODE,
 } from "../utils/authConstants";
 
 // Profile cache to prevent redundant database calls
@@ -778,104 +777,70 @@ export const useAuth = create<AuthState>()(
           return { success: false, error: errorMessage };
         }
       },
-      // Profile fetching method with caching
+      // Profile fetching method with caching - uses direct fetch to avoid Supabase client hangs
       fetchUserProfile: async (userId: string) => {
+        debug("👤 [fetchUserProfile] Starting for user:", userId);
+
         // Check cache first
         const cached = profileCache.get(userId);
         const now = Date.now();
         if (cached && now - cached.timestamp < cached.ttl) {
+          debug("👤 [fetchUserProfile] Cache hit, using cached profile");
           set({ profile: cached.data, profileLoading: false });
           return;
         }
 
         set({ profileLoading: true });
-        try {
-          const { data, error } = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", userId)
-            .single();
 
-          if (error) {
-            logError("Error fetching user profile:", error);
-            // Create a basic profile if it doesn't exist
-            if (error.code === POSTGRES_NO_ROWS_CODE) {
-              info("Profile not found, creating basic profile");
-              const basicProfile: UserProfile = {
-                id: userId,
-                full_name: "User",
-                avatar_url: null,
-                role: "player",
-                app_role: "player",
-                is_admin: false,
-                subscription_tier: "free",
-                subscription_expires_at: null,
-                bio: null,
-                phone: null,
-                email: null,
-                display_name: null,
-                address: null,
-                settings: {},
-                position: null,
-                jersey_number: null,
-                emergency_contact: null,
-                emergency_phone: null,
-                grade_level: null,
-                height_inches: null,
-                weight_lbs: null,
-                // Coaching fields
-                coaching_experience: null,
-                education: null,
-                certifications: null,
-                coaching_philosophy: null,
-                specializations: null,
-                current_school: null,
-                previous_schools: null,
-                mentors: null,
-                coaching_system: null,
-                years_coaching: null,
-                // Social media fields
-                social_twitter: null,
-                social_instagram: null,
-                social_linkedin: null,
-                social_tiktok: null,
-                social_youtube: null,
-                personal_website: null,
-                is_active: true,
-                notification_preferences: {
-                  push: true,
-                  email: true,
-                  social: true,
-                },
-                last_login: null,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-              };
-              // Cache the basic profile
-              profileCache.set(userId, {
-                data: basicProfile,
-                timestamp: now,
-                ttl: PROFILE_CACHE_TTL,
-              });
-              set({ profile: basicProfile });
-              return;
+        try {
+          debug("👤 [fetchUserProfile] Fetching via direct REST API...");
+
+          // Get auth token from localStorage
+          const authData = localStorage.getItem("boxcall-auth");
+          const token = authData ? JSON.parse(authData)?.access_token : null;
+
+          const baseUrl = import.meta.env.VITE_SUPABASE_URL;
+          const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+          // Create abort controller for timeout
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+          const response = await fetch(
+            `${baseUrl}/rest/v1/profiles?id=eq.${userId}&select=*`,
+            {
+              headers: {
+                apikey: anonKey,
+                Authorization: `Bearer ${token || anonKey}`,
+                Accept: "application/vnd.pgrst.object+json",
+              },
+              signal: controller.signal,
             }
-            // For other errors, don't set profile to null, just log the error
-            return;
+          );
+
+          clearTimeout(timeoutId);
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
 
-          // Cache the fetched profile
+          const data = await response.json();
+          debug("👤 [fetchUserProfile] Got profile:", {
+            id: data?.id,
+            role: data?.role,
+          });
+
+          // Cache and set the profile
           profileCache.set(userId, {
             data,
             timestamp: now,
             ttl: PROFILE_CACHE_TTL,
           });
-          set({ profile: data });
+          set({ profile: data, profileLoading: false });
         } catch (error) {
-          logError("Error fetching user profile:", error);
-          // Don't fail completely, just log the error
-        } finally {
+          logError("👤 [fetchUserProfile] Error:", error);
           set({ profileLoading: false });
+          // Don't fail completely - user can still use the app
         }
       },
       // Cache management methods
@@ -1035,13 +1000,18 @@ const stopSessionRefresh = () => {
 /**
  * 🚀 PERFORMANCE: Background session verification
  * Called after optimistic auth from cache to verify session is still valid
+ * NOTE: Currently unused but kept for future performance optimization
  */
-const verifyAndRefreshSession = async (_cachedSession: Session) => {
+const _verifyAndRefreshSession = async (_cachedSession: Session) => {
   try {
+    AuthMonitoring.startPhase("sessionFetch");
     const {
       data: { session },
       error,
     } = await supabase.auth.getSession();
+    AuthMonitoring.endPhase("sessionFetch", error ? "error" : "success", {
+      hasSession: Boolean(session),
+    });
 
     if (error || !session) {
       // Session invalid - clear state and redirect to login
@@ -1106,6 +1076,9 @@ const initializeAuth = async () => {
     // This shows the user as logged in immediately while we verify with Supabase
     // NOTE: Use different key than Supabase's 'boxcall-auth' to avoid conflicts
     const cachedAuthStr = localStorage.getItem("boxcall-auth-cache");
+    AuthMonitoring.startPhase("bootstrap", {
+      strategy: cachedAuthStr ? "cache-first" : "network",
+    });
     if (cachedAuthStr) {
       try {
         const cachedAuth = JSON.parse(cachedAuthStr);
@@ -1124,11 +1097,35 @@ const initializeAuth = async () => {
               loading: false,
               error: null,
             });
-            // Start background verification (don't await)
-            verifyAndRefreshSession(cachedAuth.session);
+
+            // 🔧 FIX: Manually set the session on the Supabase client
+            // This ensures all queries have the auth token attached
+            // Using setSession instead of getSession to avoid blocking
+            debug("🔧 [AUTH] Setting session on Supabase client...");
+            supabase.auth
+              .setSession({
+                access_token: cachedAuth.session.access_token,
+                refresh_token: cachedAuth.session.refresh_token,
+              })
+              .then(({ error }) => {
+                if (error) {
+                  logError("🔧 [AUTH] Failed to set session:", error.message);
+                } else {
+                  debug(
+                    "🔧 [AUTH] Session set successfully on Supabase client"
+                  );
+                }
+              });
+
+            // 🔧 FIX: Also fetch profile in cache path (fire-and-forget, AuthGuard will wait)
+            useAuth.getState().fetchUserProfile(cachedAuth.user.id);
+
             isInitializing = false;
             const elapsed = performance.now() - startTime;
             success(`Auth init from cache: ${elapsed.toFixed(0)}ms`);
+            AuthMonitoring.endPhase("bootstrap", "success", {
+              strategy: "cache",
+            });
             return;
           }
         }
@@ -1141,19 +1138,31 @@ const initializeAuth = async () => {
     // Normal flow: Set loading to true at the start of initialization
     useAuth.setState({ loading: true, error: null });
 
+    // Add timeout to prevent infinite loading if getSession hangs
+    const sessionPromise = supabase.auth.getSession();
+    const timeoutPromise = new Promise<{
+      data: { session: null };
+      error: null;
+    }>((resolve) => {
+      setTimeout(() => {
+        debug(
+          "⚠️ [Auth] getSession timed out after 5s, continuing without session"
+        );
+        resolve({ data: { session: null }, error: null });
+      }, 5000);
+    });
+
     const {
       data: { session },
       error,
-    } = await supabase.auth.getSession();
+    } = await Promise.race([sessionPromise, timeoutPromise]);
 
+    // On timeout or error, just continue without a session (user can log in)
     if (error) {
       logError("Error getting initial session:", error);
-      AuthMonitoring.recordError("auth_init", error.message, undefined, {
-        phase: "get_session",
-      });
-      useAuth.setState({
-        loading: false,
-        error: "Failed to initialize authentication. Please refresh the page.",
+      useAuth.setState({ loading: false, error: null }); // No error shown to user
+      AuthMonitoring.endPhase("bootstrap", "error", {
+        reason: "session_fetch_failed",
       });
       return;
     }
@@ -1190,20 +1199,30 @@ const initializeAuth = async () => {
             );
           });
 
-        const dbTestPromise = testDatabaseConnection()
-          .then((dbConnectionOk) => {
+        const dbTestPromise = (async () => {
+          AuthMonitoring.startPhase("dbHandshake", { context: "init" });
+          try {
+            const dbConnectionOk = await testDatabaseConnection();
             if (dbConnectionOk) {
               success("Authenticated database connection verified");
             } else {
               warn("Authenticated database connection test failed");
             }
-          })
-          .catch((dbError) => {
+            AuthMonitoring.endPhase(
+              "dbHandshake",
+              dbConnectionOk ? "success" : "error",
+              { context: "init" }
+            );
+          } catch (dbError) {
+            AuthMonitoring.endPhase("dbHandshake", "error", {
+              context: "init",
+            });
             logError(
               "Error testing authenticated database connection:",
               dbError
             );
-          });
+          }
+        })();
 
         // Wait for both to complete in parallel
         await Promise.allSettled([profilePromise, dbTestPromise]);
@@ -1220,12 +1239,18 @@ const initializeAuth = async () => {
 
       // Ensure loading is definitely false at the end
       useAuth.setState({ loading: false });
+      AuthMonitoring.endPhase("bootstrap", "success", {
+        hasSession: true,
+      });
     } else {
       logAuth("No session found on app start");
       AuthMonitoring.recordEvent("auth_init_success", undefined, {
         hasSession: false,
       });
       useAuth.setState({ loading: false });
+      AuthMonitoring.endPhase("bootstrap", "success", {
+        hasSession: false,
+      });
     }
   } catch (unexpectedError) {
     logError("Unexpected error during auth initialization:", unexpectedError);
@@ -1242,6 +1267,9 @@ const initializeAuth = async () => {
     useAuth.setState({
       loading: false,
       error: "Authentication initialization failed. Please refresh the page.",
+    });
+    AuthMonitoring.endPhase("bootstrap", "error", {
+      reason: "unexpected",
     });
   } finally {
     isInitializing = false;
@@ -1293,11 +1321,24 @@ supabase.auth.onAuthStateChange(async (event, session) => {
 
           // Test database connection after successful sign-in
           try {
+            AuthMonitoring.startPhase("dbHandshake", {
+              context: "post-signin",
+            });
             const dbConnectionOk = await testDatabaseConnection();
             if (dbConnectionOk) {
               success("Database connection verified after sign-in");
             }
+            AuthMonitoring.endPhase(
+              "dbHandshake",
+              dbConnectionOk ? "success" : "error",
+              {
+                context: "post-signin",
+              }
+            );
           } catch (dbError) {
+            AuthMonitoring.endPhase("dbHandshake", "error", {
+              context: "post-signin",
+            });
             warn("Database connection test failed after sign-in:", dbError);
           }
 

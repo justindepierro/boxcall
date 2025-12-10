@@ -40,6 +40,7 @@ import {
   flipFormationDirection,
 } from "../utils/formationFlipHelpers";
 import { supabase } from "../lib/supabase";
+import { getCurrentUserId } from "../lib/auth-helpers";
 import { info, error as logError, debug } from "../utils/logger";
 import { useIsMobileOrTablet } from "../hooks/useBreakpoint";
 import { useMobileButtonProps } from "../hooks/useMobileButtonProps";
@@ -52,6 +53,10 @@ import { smartPreloader } from "../services/smartPreloader";
 import { useFormationAudit } from "../hooks/useFormationAudit";
 import { useOptimisticPlays } from "../hooks/useOptimisticPlays";
 import { usePlaybookStats } from "../hooks/usePlaybookStats";
+import {
+  useTeamAssetPrefetch,
+  type PrefetchablePlayMedia,
+} from "../hooks/useTeamAssetPrefetch";
 import { MobilePlaybookView } from "../components/playbook/page/MobilePlaybookView";
 import { DesktopPlaybookView } from "../components/playbook/page/DesktopPlaybookView";
 import {
@@ -80,6 +85,9 @@ const PlaybookPage = () => {
   const isMobileOrTablet = useIsMobileOrTablet(); // Tablets (< 1024px) get mobile view
   const [mobileListExpanded, setMobileListExpanded] = useState(false);
 
+  // 🔍 DEBUG: Log activeTeamId
+  debug("📚 PlaybookPage - activeTeamId:", activeTeamId);
+
   // Mobile-optimized button sizes (44px+ touch targets)
   const mobileButtonSize = useMobileButtonProps("md", true).size;
   const mobileSecondaryButtonSize = useMobileButtonProps("md", false).size;
@@ -90,7 +98,18 @@ const PlaybookPage = () => {
     refreshData,
     plays: allPlaysForStats = [],
     formations: allFormations = [],
+    loading: teamsDataLoading,
+    error: teamsDataError,
   } = useTeamsData();
+
+  // 🔍 DEBUG: Log data from useTeamsData
+  debug("📚 PlaybookPage - useTeamsData result:", {
+    playbooksCount: playbooks.length,
+    playsCount: allPlaysForStats.length,
+    formationsCount: allFormations.length,
+    loading: teamsDataLoading,
+    error: teamsDataError,
+  });
 
   const sanitizedFormationIdsRef = useRef(new Set<string>());
 
@@ -100,59 +119,41 @@ const PlaybookPage = () => {
     () => playbooks.filter((pb) => pb.team_id === activeTeamId && pb.is_active),
     [playbooks, activeTeamId]
   );
+  const teamPlaybookIds = useMemo(
+    () => new Set(teamPlaybooks.map((pb) => pb.id)),
+    [teamPlaybooks]
+  );
+  const playsForActiveTeam = useMemo(() => {
+    if (!activeTeamId) {
+      return [];
+    }
+    if (teamPlaybookIds.size === 0) {
+      return [];
+    }
+    return allPlaysForStats.filter((play) =>
+      teamPlaybookIds.has(play.playbook_id)
+    );
+  }, [activeTeamId, allPlaysForStats, teamPlaybookIds]);
+  const teamPlayCount = playsForActiveTeam.length;
+
+  useTeamAssetPrefetch({
+    teamId: activeTeamId,
+    formations: allFormations,
+    playbooks: teamPlaybooks,
+    plays: playsForActiveTeam as PrefetchablePlayMedia[],
+  });
 
   // State for selected playbook (with preference persistence)
   const [selectedPlaybookId, setSelectedPlaybookId] = useState<string>("");
 
   // Initialize play count from data
   useEffect(() => {
-    if (allPlaysForStats && allPlaysForStats.length > 0) {
-      dispatch({ type: "SET_PLAYS_CREATED", count: allPlaysForStats.length });
+    if (!activeTeamId) {
+      dispatch({ type: "SET_PLAYS_CREATED", count: 0 });
+      return;
     }
-  }, [allPlaysForStats, dispatch]);
-
-  // 🐛 MOBILE DEBUG: Log data state for troubleshooting plays not loading
-  useEffect(() => {
-    if (isMobileOrTablet) {
-      console.log("📱 [Mobile Debug - PlaybookPage]", {
-        timestamp: new Date().toISOString(),
-        activeTeamId,
-        teamPlaybooksCount: teamPlaybooks.length,
-        teamPlaybookIds: teamPlaybooks.map((pb) => pb.id),
-        selectedPlaybookId,
-        allPlaysCount: allPlaysForStats.length,
-        playSample: allPlaysForStats.slice(0, 3).map((p) => ({
-          id: p.id,
-          name: p.play_name,
-          formation: p.formation,
-          playbook_id: p.playbook_id,
-          diagram_url: p.diagram_url,
-          has_diagram: !!p.diagram_url,
-        })),
-        imageCheck: {
-          playsWithImages: allPlaysForStats.filter((p) => p.diagram_url).length,
-          playsWithoutImages: allPlaysForStats.filter((p) => !p.diagram_url)
-            .length,
-          sampleUrls: allPlaysForStats
-            .filter((p) => p.diagram_url)
-            .map((p) => p.diagram_url)
-            .slice(0, 3),
-        },
-        userAgent: navigator.userAgent,
-        viewport: {
-          width: window.innerWidth,
-          height: window.innerHeight,
-          orientation: window.screen.orientation?.type,
-        },
-      });
-    }
-  }, [
-    isMobileOrTablet,
-    activeTeamId,
-    teamPlaybooks,
-    selectedPlaybookId,
-    allPlaysForStats,
-  ]);
+    dispatch({ type: "SET_PLAYS_CREATED", count: teamPlayCount });
+  }, [activeTeamId, dispatch, teamPlayCount]);
 
   // Initialize selected playbook from preferences or default to first playbook with data
   useEffect(() => {
@@ -260,7 +261,7 @@ const PlaybookPage = () => {
   // Handle entering fullscreen presentation mode
   const handleEnterFullscreen = useCallback(
     (plays: Play[], playIndex: number) => {
-      console.log("[PlaybookPage] Entering fullscreen mode", {
+      debug("[PlaybookPage] Entering fullscreen mode", {
         playCount: plays.length,
         startIndex: playIndex,
       });
@@ -272,7 +273,7 @@ const PlaybookPage = () => {
 
   // Handle exiting fullscreen
   const handleExitFullscreen = useCallback(() => {
-    console.log("[PlaybookPage] Exiting fullscreen mode");
+    debug("[PlaybookPage] Exiting fullscreen mode");
     setFullscreenPlayIndex(null);
     setFullscreenPlays([]);
   }, []);
@@ -280,10 +281,8 @@ const PlaybookPage = () => {
   // Helper to refresh recent activities
   const refreshActivities = useCallback(async () => {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return;
+      const userId = getCurrentUserId();
+      if (!userId) return;
 
       const activities = await ActivityService.getRecentActivities(
         activeTeamId || undefined,
@@ -301,10 +300,8 @@ const PlaybookPage = () => {
     const loadActivities = async () => {
       try {
         // Only load activities if user is authenticated
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (!user) {
+        const userId = getCurrentUserId();
+        if (!userId) {
           debug("Skipping activities load - user not authenticated yet");
           return;
         }
@@ -385,7 +382,7 @@ const PlaybookPage = () => {
           {
             const selectedPlayIds = Array.from(state.selectedPlayIds || []);
             if (selectedPlayIds.length > 0) {
-              console.log(
+              debug(
                 "[PlaybookPage] Opening Practice Script Builder with plays:",
                 selectedPlayIds
               );
@@ -828,7 +825,7 @@ const PlaybookPage = () => {
   const handleSavePracticeScript = useCallback(
     async (script: Partial<PracticeScript>) => {
       try {
-        console.log("💾 Saving practice script:", {
+        debug("💾 Saving practice script:", {
           script,
           playCount: script.plays?.length || 0,
         });
@@ -843,7 +840,7 @@ const PlaybookPage = () => {
             tags: script.tags,
           });
           savedScriptId = script.id;
-          console.log("✅ Updated script metadata:", savedScriptId);
+          debug("✅ Updated script metadata:", savedScriptId);
         } else {
           // Create new script
           const newScript = await PracticeScriptService.createPracticeScript({
@@ -853,12 +850,12 @@ const PlaybookPage = () => {
             tags: script.tags,
           });
           savedScriptId = newScript.id;
-          console.log("✅ Created new script:", savedScriptId);
+          debug("✅ Created new script:", savedScriptId);
         }
 
         // Now save the plays if any were provided
         if (script.plays && script.plays.length > 0) {
-          console.log("📝 Saving", script.plays.length, "plays to script");
+          debug("📝 Saving", script.plays.length, "plays to script");
 
           // First, clear existing plays if updating (to avoid duplicates)
           if (script.id) {
@@ -868,7 +865,7 @@ const PlaybookPage = () => {
               .eq("practice_script_id", savedScriptId);
 
             if (deleteError) {
-              console.error("Error clearing existing plays:", deleteError);
+              logError("Error clearing existing plays:", deleteError);
             }
           }
 
@@ -877,18 +874,14 @@ const PlaybookPage = () => {
             const play = script.plays[i];
 
             if (!play.playId) {
-              console.warn("Skipping play without playId:", play);
+              debug("Skipping play without playId:", play);
               continue;
             }
 
             // Validate play data before saving
             const validationErrors = validateModalPlay(play);
             if (validationErrors.length > 0) {
-              console.error(
-                "Invalid play data:",
-                play.playName,
-                validationErrors
-              );
+              logError("Invalid play data:", play.playName, validationErrors);
               toast.error(
                 `Skipped play "${play.playName}": ${validationErrors.join(", ")}`
               );
@@ -911,9 +904,9 @@ const PlaybookPage = () => {
                 servicePlay,
                 playForActivity
               );
-              console.log("✅ Added play", i + 1, ":", play.playName);
+              debug("✅ Added play", i + 1, ":", play.playName);
             } catch (playError) {
-              console.error("Failed to add play:", play.playName, playError);
+              logError("Failed to add play:", play.playName, playError);
               toast.error(`Failed to add play "${play.playName}"`);
               // Continue with other plays even if one fails
             }
@@ -1032,6 +1025,7 @@ const PlaybookPage = () => {
           showFiltersSheet={isModalOpen("filtersSheet")}
           showStatsSheet={isModalOpen("statsSheet")}
           activeTeamId={activeTeamId}
+          isLoadingPlays={teamsDataLoading}
           debouncedSearchQuery={debouncedSearchQuery}
           optimisticPlays={optimisticPlays}
           formationAudit={formationAudit}

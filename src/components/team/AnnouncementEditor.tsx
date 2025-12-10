@@ -15,8 +15,10 @@ import type {
 import { AnnouncementsService } from "../../services/announcementsService";
 import { NotificationsService } from "../../services/notificationsService";
 import { supabase } from "../../lib/supabase";
+import { getCurrentUserId } from "../../lib/auth-helpers";
 import { X } from "lucide-react";
 import { RichTextEditor } from "./RichTextEditor";
+import { logError } from "../../utils/logger";
 
 interface AnnouncementEditorProps {
   teamId: string;
@@ -100,14 +102,12 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
       const plainTextContent = getPlainText(content);
 
       // Get current user info for notifications
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      const { data: profile } = user
+      const userId = getCurrentUserId();
+      const { data: profile } = userId
         ? await supabase
             .from("profiles")
             .select("display_name, full_name")
-            .eq("id", user.id)
+            .eq("id", userId)
             .single()
         : { data: null };
 
@@ -127,12 +127,12 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
         await AnnouncementsService.updateAnnouncement(announcement.id, updates);
 
         // Process mentions for notifications
-        if (user) {
+        if (userId) {
           await NotificationsService.processMentions({
             contentJson: content,
             announcementId: announcement.id,
             announcementTitle: title.trim(),
-            authorId: user.id,
+            authorId: userId,
             authorName,
             type: "announcement",
           });
@@ -152,12 +152,12 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
           await AnnouncementsService.createAnnouncement(newAnnouncement);
 
         // Process mentions for notifications
-        if (result.success && result.announcement && user) {
+        if (result.success && result.announcement && userId) {
           await NotificationsService.processMentions({
             contentJson: content,
             announcementId: result.announcement.id,
             announcementTitle: title.trim(),
-            authorId: user.id,
+            authorId: userId,
             authorName,
             type: "announcement",
           });
@@ -167,7 +167,7 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
       onSave();
       onClose();
     } catch (err) {
-      console.error("Error saving announcement:", err);
+      logError("Error saving announcement:", err);
       setError("Failed to save announcement. Please try again.");
     } finally {
       setSaving(false);

@@ -12,6 +12,7 @@ import type { BackupData } from "./types";
 import { IndexedDBService } from "./IndexedDBService";
 import { CacheService } from "./CacheService";
 import { PlaysQueryService } from "./PlaysQueryService";
+import { logError } from "../../utils/logger";
 
 // Minimal CSV escape helper for inline CSV generation
 function csvEscape(v: unknown): string {
@@ -49,7 +50,7 @@ export class BackupService {
           await this.createAutomaticBackup();
           console.info("✅ Automatic backup completed");
         } catch (error) {
-          console.error("❌ Automatic backup failed:", error);
+          logError("❌ Automatic backup failed:", error);
         }
       },
       5 * 60 * 1000
@@ -130,7 +131,7 @@ export class BackupService {
 
       CacheService.incrementBackupFrequency();
     } catch (error) {
-      console.error("Backup creation failed:", error);
+      logError("Backup creation failed:", error);
       throw error;
     }
   }
@@ -199,7 +200,7 @@ export class BackupService {
 
       console.info("✅ Comprehensive backup exported successfully");
     } catch (error) {
-      console.error("Export backup failed:", error);
+      logError("Export backup failed:", error);
       throw error;
     }
   }

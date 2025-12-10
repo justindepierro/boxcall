@@ -8,6 +8,7 @@
 
 import type { CreatePlayExecutionData } from "../types/session";
 import { ExecutionTrackingService } from "../services/executionTrackingService";
+import { logError } from "./logger";
 
 const QUEUE_STORAGE_KEY = "boxcall_offline_executions";
 const MAX_QUEUE_SIZE = 100;
@@ -80,7 +81,7 @@ export class OfflineExecutionQueue {
       const parsed = JSON.parse(stored);
       return Array.isArray(parsed) ? parsed : [];
     } catch (err) {
-      console.error("Failed to parse offline queue:", err);
+      logError("Failed to parse offline queue:", err);
       return [];
     }
   }
@@ -94,7 +95,7 @@ export class OfflineExecutionQueue {
     try {
       localStorage.setItem(QUEUE_STORAGE_KEY, JSON.stringify(queue));
     } catch (err) {
-      console.error("Failed to save queue to localStorage:", err);
+      logError("Failed to save queue to localStorage:", err);
     }
   }
 
@@ -148,7 +149,7 @@ export class OfflineExecutionQueue {
     try {
       localStorage.removeItem(QUEUE_STORAGE_KEY);
     } catch (err) {
-      console.error("Failed to clear queue from localStorage:", err);
+      logError("Failed to clear queue from localStorage:", err);
     }
   }
 
@@ -196,7 +197,7 @@ export class OfflineExecutionQueue {
         this.markSynced(item.id);
         syncedCount++;
       } catch (err) {
-        console.error(`Failed to sync execution ${item.id}:`, err);
+        logError(`Failed to sync execution ${item.id}:`, err);
         this.markFailed(
           item.id,
           err instanceof Error ? err.message : "Unknown error"

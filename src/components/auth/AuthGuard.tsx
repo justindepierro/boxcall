@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useAuth } from "../../app/auth-store";
 
 interface AuthGuardProps {
@@ -8,19 +8,39 @@ interface AuthGuardProps {
 /**
  * AuthGuard - Prevents rendering children until auth initialization is complete
  *
- * This fixes the issue where components try to load data before the user
- * authentication state is properly established, causing RLS policies to
- * block queries because they appear to come from an unauthenticated user.
- *
- * Optimized: Auth init now runs profile fetch and DB test in parallel,
- * making this loading state much shorter (~200-500ms vs 1-2s before).
+ * This ensures:
+ * 1. Auth session is loaded
+ * 2. User profile is fetched (if user is logged in)
+ * 3. All auth state is stable before rendering the app
  */
 export function AuthGuard({ children }: AuthGuardProps) {
-  const { loading } = useAuth();
+  const {
+    loading,
+    profileLoading,
+    user,
+    profile,
+    session: _session,
+  } = useAuth();
+  const fetchUserProfile = useAuth((state) => state.fetchUserProfile);
+  const fetchingRef = useRef(false);
 
-  // Show loading state while auth is initializing
-  // This should be very brief now that auth init is optimized
-  if (loading) {
+  // If we have a user but no profile, fetch it (once)
+  useEffect(() => {
+    if (user?.id && !profile && !profileLoading && !fetchingRef.current) {
+      fetchingRef.current = true;
+      console.log("🛡️ [AuthGuard] User exists but no profile, fetching...");
+      fetchUserProfile(user.id).finally(() => {
+        fetchingRef.current = false;
+      });
+    }
+  }, [user?.id, profile, profileLoading, fetchUserProfile]);
+
+  // Show loading while:
+  // 1. Initial auth is loading
+  // 2. We have a user but profile is still loading
+  const isLoading = loading || (user && !profile && profileLoading);
+
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-surface">
         <div className="text-center">
@@ -29,11 +49,21 @@ export function AuthGuard({ children }: AuthGuardProps) {
             <div className="animate-spin rounded-full h-10 w-10 border-2 border-jade-200 border-t-jade-600 mx-auto" />
           </div>
           <p className="mt-3 text-sm text-secondary font-medium">
-            Loading BoxCall...
+            {profileLoading ? "Loading profile..." : "Loading BoxCall..."}
           </p>
         </div>
       </div>
     );
+  }
+
+  // Debug log (only once when ready)
+  if (import.meta.env.DEV && profile) {
+    console.log("🛡️ [AuthGuard] Ready:", {
+      hasUser: !!user,
+      hasProfile: !!profile,
+      profileRole: profile?.role,
+      profileId: profile?.id,
+    });
   }
 
   // Auth is complete - render children whether user is logged in or not

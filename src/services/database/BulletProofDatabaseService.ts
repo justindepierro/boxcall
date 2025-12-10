@@ -11,6 +11,7 @@ import type { DatabaseError } from "./DatabaseErrorHandler";
 import { databaseHealthMonitor } from "./DatabaseHealthMonitor";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "../../types/database";
+import { debug, error as logError, warn } from "../../utils/logger";
 
 interface DatabaseOperation<T = any> {
   id: string;
@@ -130,9 +131,7 @@ export class BulletProofDatabaseService {
           break;
         }
 
-        console.warn(
-          `🔄 Retrying ${description} (attempt ${retries}/${maxRetries})`
-        );
+        warn(`🔄 Retrying ${description} (attempt ${retries}/${maxRetries})`);
       }
     }
 
@@ -141,7 +140,7 @@ export class BulletProofDatabaseService {
 
     // If critical and service is unhealthy, queue for later
     if (critical && !dbConnectivity.isHealthy() && queueIfUnavailable) {
-      console.warn(`📋 Queuing critical operation: ${description}`);
+      warn(`📋 Queuing critical operation: ${description}`);
       return this.queueOperation<T>({
         id: operationId,
         operation,
@@ -176,7 +175,7 @@ export class BulletProofDatabaseService {
       };
 
       this.operationQueue.push(queuedOperation as any);
-      console.log(
+      debug(
         `📋 Operation queued: ${dbOperation.description} (${this.operationQueue.length} in queue)`
       );
     });
@@ -202,7 +201,7 @@ export class BulletProofDatabaseService {
         const operation = this.operationQueue.shift();
         if (!operation) return;
 
-        console.log(`🔄 Processing queued operation: ${operation.description}`);
+        debug(`🔄 Processing queued operation: ${operation.description}`);
 
         const result = await this.execute(operation.operation, {
           description: operation.description,
@@ -213,7 +212,7 @@ export class BulletProofDatabaseService {
 
         (operation as any).resolve(result);
       } catch (error) {
-        console.error("Queue processing error:", error);
+        logError("Queue processing error:", error);
       } finally {
         this.isProcessing = false;
       }
@@ -308,13 +307,13 @@ export class BulletProofDatabaseService {
    * Graceful shutdown
    */
   async shutdown(): Promise<void> {
-    console.log("🛑 Shutting down bullet-proof database service...");
+    debug("🛑 Shutting down bullet-proof database service...");
 
     databaseHealthMonitor.stopMonitoring();
 
     // Process remaining queue items
     if (this.operationQueue.length > 0) {
-      console.log(
+      debug(
         `📋 Processing ${this.operationQueue.length} remaining queued operations...`
       );
 
@@ -328,7 +327,7 @@ export class BulletProofDatabaseService {
           });
           (operation as any).resolve(result);
         } catch (error) {
-          console.error(
+          logError(
             `Failed to process queued operation ${operation.description}:`,
             error
           );
@@ -337,7 +336,7 @@ export class BulletProofDatabaseService {
     }
 
     await dbConnectivity.shutdown();
-    console.log("✅ Bullet-proof database service shut down");
+    debug("✅ Bullet-proof database service shut down");
   }
 }
 

@@ -7,11 +7,13 @@
  */
 
 import { supabase } from "../lib/supabase";
+import { getCurrentUserId } from "../lib/auth-helpers";
 import { DatabaseDebug } from "../utils/databaseDebug";
 import { normalizePlayName, normalizeText } from "../utils/textNormalization";
 import Fuse from "fuse.js";
 import { ActivityService } from "./activityService";
 import { PlayValidationService } from "../validation-services/playValidation";
+import { error as logError, warn } from "../utils/logger";
 
 import type { Play } from "../types/play";
 import type { FuseResultMatch, IFuseOptions } from "fuse.js";
@@ -24,23 +26,21 @@ export class PlaysService {
   private static async ensureUserHasTeam(): Promise<string> {
     try {
       // Get current user
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
+      const userId = getCurrentUserId();
+      if (!userId) throw new Error("User not authenticated");
 
       // Get user profile to check role
       const { data: profile } = await supabase
         .from("profiles")
         .select("role")
-        .eq("id", user.id)
+        .eq("id", userId)
         .single();
 
       // Check if user already has a team they own/created
       const { data: existingTeams } = await supabase
         .from("teams")
         .select("id")
-        .eq("created_by", user.id)
+        .eq("created_by", userId)
         .limit(1);
 
       if (existingTeams && existingTeams.length > 0) {
@@ -57,7 +57,7 @@ export class PlaysService {
         .insert({
           name: teamName,
           school_name: schoolName,
-          created_by: user.id,
+          created_by: userId,
         })
         .select("id")
         .single();
@@ -69,21 +69,18 @@ export class PlaysService {
         .from("team_members")
         .insert({
           team_id: newTeam.id,
-          user_id: user.id,
+          user_id: userId,
           team_role: "coach",
         });
 
       if (membershipError) {
-        console.error(
-          "Warning: Failed to create team membership:",
-          membershipError
-        );
+        logError("Warning: Failed to create team membership:", membershipError);
         // Don't throw here - team was created successfully
       }
 
       return newTeam.id;
     } catch (error) {
-      console.error("Failed to ensure user has team:", error);
+      logError("Failed to ensure user has team:", error);
       throw error;
     }
   }
@@ -94,23 +91,21 @@ export class PlaysService {
   static async ensureUserHasPlaybook(): Promise<string> {
     try {
       // Get current user
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
+      const userId = getCurrentUserId();
+      if (!userId) throw new Error("User not authenticated");
 
       // Get user profile to check role
       const { data: profile } = await supabase
         .from("profiles")
         .select("role")
-        .eq("id", user.id)
+        .eq("id", userId)
         .single();
 
       // Check if user already has a playbook
       const { data: existingPlaybooks } = await supabase
         .from("playbooks")
         .select("id")
-        .eq("created_by", user.id)
+        .eq("created_by", userId)
         .limit(1);
 
       if (existingPlaybooks && existingPlaybooks.length > 0) {
@@ -133,7 +128,7 @@ export class PlaysService {
           name: playbookName,
           description: playbookDescription,
           team_id: teamId,
-          created_by: user.id,
+          created_by: userId,
         })
         .select("id")
         .single();
@@ -141,7 +136,7 @@ export class PlaysService {
       if (playbookError) throw playbookError;
       return newPlaybook.id;
     } catch (error) {
-      console.error("Failed to ensure user has playbook:", error);
+      logError("Failed to ensure user has playbook:", error);
       throw error;
     }
   }
@@ -162,10 +157,8 @@ export class PlaysService {
       }
 
       // Get current user for created_by field
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
+      const userId = getCurrentUserId();
+      if (!userId) throw new Error("User not authenticated");
 
       // Generate a unique ID for the play
       const playId = crypto.randomUUID();
@@ -231,7 +224,7 @@ export class PlaysService {
 
         // Metadata
         is_archived: playData.is_archived || false,
-        created_by: user.id, // Use actual authenticated user ID
+        created_by: userId, // Use actual authenticated user ID
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         // Duplicate key supplied by domain layer when enforcing canonical uniqueness (optional)
@@ -288,7 +281,7 @@ export class PlaysService {
           (dupErr as { code?: string }).code = "23505";
           throw dupErr;
         }
-        console.error("❌ Error creating play:", error);
+        logError("❌ Error creating play:", error);
         throw new Error(`Failed to create play: ${error.message}`);
       }
 
@@ -308,7 +301,7 @@ export class PlaysService {
 
       return data as Play;
     } catch (error) {
-      console.error("❌ PlaysService.createPlay failed:", error);
+      logError("❌ PlaysService.createPlay failed:", error);
       throw error;
     }
   }
@@ -341,13 +334,13 @@ export class PlaysService {
       const { data, error } = await query;
 
       if (error) {
-        console.error("❌ Error fetching plays:", error);
+        logError("❌ Error fetching plays:", error);
         throw new Error(`Failed to fetch plays: ${error.message}`);
       }
 
       return (data as Play[]) || [];
     } catch (error) {
-      console.error("❌ PlaysService.getPlaysByPlaybook failed:", error);
+      logError("❌ PlaysService.getPlaysByPlaybook failed:", error);
       throw error;
     }
   }
@@ -368,13 +361,13 @@ export class PlaysService {
           // No rows found
           return null;
         }
-        console.error("❌ Error fetching play:", error);
+        logError("❌ Error fetching play:", error);
         throw new Error(`Failed to fetch play: ${error.message}`);
       }
 
       return data as Play;
     } catch (error) {
-      console.error("❌ PlaysService.getPlay failed:", error);
+      logError("❌ PlaysService.getPlay failed:", error);
       throw error;
     }
   }
@@ -392,13 +385,13 @@ export class PlaysService {
         .in("id", ids);
 
       if (error) {
-        console.error("❌ Error fetching plays by IDs:", error);
+        logError("❌ Error fetching plays by IDs:", error);
         throw new Error(`Failed to fetch plays: ${error.message}`);
       }
 
       return (data || []) as unknown as Play[];
     } catch (error) {
-      console.error("❌ PlaysService.getPlaysByIds failed:", error);
+      logError("❌ PlaysService.getPlaysByIds failed:", error);
       throw error;
     }
   }
@@ -485,7 +478,7 @@ export class PlaysService {
         .single();
 
       if (error) {
-        console.error("❌ Error updating play:", error);
+        logError("❌ Error updating play:", error);
         throw new Error(`Failed to update play: ${error.message}`);
       }
 
@@ -503,7 +496,7 @@ export class PlaysService {
 
       return data as Play;
     } catch (error) {
-      console.error("❌ PlaysService.updatePlay failed:", error);
+      logError("❌ PlaysService.updatePlay failed:", error);
       throw error;
     }
   }
@@ -529,7 +522,7 @@ export class PlaysService {
         .eq("id", id);
 
       if (error) {
-        console.error("❌ Error archiving play:", error);
+        logError("❌ Error archiving play:", error);
         throw new Error(`Failed to archive play: ${error.message}`);
       }
 
@@ -543,7 +536,7 @@ export class PlaysService {
         });
       }
     } catch (error) {
-      console.error("❌ PlaysService.deletePlay failed:", error);
+      logError("❌ PlaysService.deletePlay failed:", error);
       throw error;
     }
   }
@@ -560,11 +553,11 @@ export class PlaysService {
         .in("id", ids);
 
       if (error) {
-        console.error("❌ Error batch archiving plays:", error);
+        logError("❌ Error batch archiving plays:", error);
         throw new Error(`Failed to archive plays: ${error.message}`);
       }
     } catch (error) {
-      console.error("❌ PlaysService.deletePlays failed:", error);
+      logError("❌ PlaysService.deletePlays failed:", error);
       throw error;
     }
   }
@@ -578,11 +571,11 @@ export class PlaysService {
         .update({ is_archived: false, updated_at: new Date().toISOString() })
         .in("id", ids);
       if (error) {
-        console.error("❌ Error restoring plays:", error);
+        logError("❌ Error restoring plays:", error);
         throw new Error(`Failed to restore plays: ${error.message}`);
       }
     } catch (error) {
-      console.error("❌ PlaysService.restorePlays failed:", error);
+      logError("❌ PlaysService.restorePlays failed:", error);
       throw error;
     }
   }
@@ -600,7 +593,7 @@ export class PlaysService {
         .order("formation");
 
       if (error) {
-        console.error("❌ Error getting unique formations:", error);
+        logError("❌ Error getting unique formations:", error);
         return [];
       }
 
@@ -608,7 +601,7 @@ export class PlaysService {
       const uniqueFormations = [...new Set(data.map((item) => item.formation))];
       return uniqueFormations.filter(Boolean);
     } catch (error) {
-      console.error("❌ PlaysService.getUniqueFormations failed:", error);
+      logError("❌ PlaysService.getUniqueFormations failed:", error);
       return [];
     }
   }
@@ -626,7 +619,7 @@ export class PlaysService {
         .order("play_name");
 
       if (error) {
-        console.error("❌ Error getting unique play names:", error);
+        logError("❌ Error getting unique play names:", error);
         return [];
       }
 
@@ -634,7 +627,7 @@ export class PlaysService {
       const uniqueNames = [...new Set(data.map((item) => item.play_name))];
       return uniqueNames.filter(Boolean);
     } catch (error) {
-      console.error("❌ PlaysService.getUniquePlayNames failed:", error);
+      logError("❌ PlaysService.getUniquePlayNames failed:", error);
       return [];
     }
   }
@@ -652,7 +645,7 @@ export class PlaysService {
         .order("personnel");
 
       if (error) {
-        console.error("❌ Error getting unique personnel:", error);
+        logError("❌ Error getting unique personnel:", error);
         return [];
       }
 
@@ -660,7 +653,7 @@ export class PlaysService {
       const uniquePersonnel = [...new Set(data.map((item) => item.personnel))];
       return uniquePersonnel.filter((p): p is string => p !== null);
     } catch (error) {
-      console.error("❌ PlaysService.getUniquePersonnel failed:", error);
+      logError("❌ PlaysService.getUniquePersonnel failed:", error);
       return [];
     }
   }
@@ -678,7 +671,7 @@ export class PlaysService {
         .order("p_type");
 
       if (error) {
-        console.error("❌ Error getting unique play types:", error);
+        logError("❌ Error getting unique play types:", error);
         return [];
       }
 
@@ -686,7 +679,7 @@ export class PlaysService {
       const uniqueTypes = [...new Set(data.map((item) => item.p_type))];
       return uniqueTypes.filter(Boolean);
     } catch (error) {
-      console.error("❌ PlaysService.getUniquePlayTypes failed:", error);
+      logError("❌ PlaysService.getUniquePlayTypes failed:", error);
       return [];
     }
   }
@@ -715,7 +708,7 @@ export class PlaysService {
       const { data, error } = await query.limit(1000);
 
       if (error || !data) {
-        console.error("❌ Error getting formation data:", error);
+        logError("❌ Error getting formation data:", error);
         return [];
       }
 
@@ -760,7 +753,7 @@ export class PlaysService {
 
       return sortedFormations.slice(0, limit);
     } catch (error) {
-      console.error("❌ PlaysService.getAISuggestedFormations failed:", error);
+      logError("❌ PlaysService.getAISuggestedFormations failed:", error);
       return [];
     }
   }
@@ -800,7 +793,7 @@ export class PlaysService {
       const { data, error } = await query.limit(500);
 
       if (error || !data) {
-        console.error("❌ Error getting play name data:", error);
+        logError("❌ Error getting play name data:", error);
         return [];
       }
 
@@ -817,7 +810,7 @@ export class PlaysService {
         .map(([name]) => name)
         .slice(0, limit);
     } catch (error) {
-      console.error("❌ PlaysService.getAISuggestedPlayNames failed:", error);
+      logError("❌ PlaysService.getAISuggestedPlayNames failed:", error);
       return [];
     }
   }
@@ -851,7 +844,7 @@ export class PlaysService {
       const { data, error } = await query.limit(500);
 
       if (error || !data) {
-        console.error("❌ Error getting personnel data:", error);
+        logError("❌ Error getting personnel data:", error);
         return [];
       }
 
@@ -868,7 +861,7 @@ export class PlaysService {
         .map(([personnel]) => personnel)
         .slice(0, limit);
     } catch (error) {
-      console.error("❌ PlaysService.getAISuggestedPersonnel failed:", error);
+      logError("❌ PlaysService.getAISuggestedPersonnel failed:", error);
       return [];
     }
   }
@@ -1298,7 +1291,7 @@ export class PlaybookSearchService {
         this.searchHistory = JSON.parse(saved);
       }
     } catch (error) {
-      console.warn("Failed to load search history:", error);
+      warn("Failed to load search history:", error);
       this.searchHistory = [];
     }
   }
@@ -1313,7 +1306,7 @@ export class PlaybookSearchService {
         JSON.stringify(this.searchHistory)
       );
     } catch (error) {
-      console.warn("Failed to save search history:", error);
+      warn("Failed to save search history:", error);
     }
   }
 

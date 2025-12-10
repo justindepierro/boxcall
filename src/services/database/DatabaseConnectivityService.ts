@@ -12,6 +12,7 @@
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "../types/database";
+import { debug, error as logError } from "../../utils/logger";
 
 interface ConnectionConfig {
   url: string;
@@ -144,7 +145,7 @@ export class DatabaseConnectivityService {
     }
 
     this.isInitialized = true;
-    console.log("🔗 Database connection pool initialized");
+    debug("🔗 Database connection pool initialized");
   }
 
   /**
@@ -207,7 +208,7 @@ export class DatabaseConnectivityService {
         const duration = performance.now() - startTime;
 
         this.updateResponseTime(duration);
-        console.log(
+        debug(
           `✅ ${operationName} succeeded on attempt ${attempt} (${duration.toFixed(2)}ms)`
         );
 
@@ -234,7 +235,7 @@ export class DatabaseConnectivityService {
           this.retryConfig.maxDelay
         );
 
-        console.log(`⏳ Retrying ${operationName} in ${delay}ms...`);
+        debug(`⏳ Retrying ${operationName} in ${delay}ms...`);
         await this.delay(delay);
       }
     }
@@ -267,7 +268,7 @@ export class DatabaseConnectivityService {
 
       return results;
     } catch (error) {
-      console.error(`❌ Transaction ${operationName} failed:`, error);
+      logError(`❌ Transaction ${operationName} failed:`, error);
 
       // Attempt rollback (limited capabilities with Supabase)
       // In a full RDBMS, we'd rollback the transaction here
@@ -335,12 +336,12 @@ export class DatabaseConnectivityService {
           console.warn("⚠️ Database health check failed:", healthResult.error);
           this.recordFailure(new Error(healthResult.error));
         } else {
-          console.log(
+          debug(
             `✅ Database healthy (${healthResult.responseTime.toFixed(2)}ms)`
           );
         }
       } catch (error) {
-        console.error("❌ Health check error:", error);
+        logError("❌ Health check error:", error);
         this.recordFailure(error);
       }
     }, healthCheckInterval);
@@ -369,7 +370,7 @@ export class DatabaseConnectivityService {
     if (this.circuitBreaker.state === "HALF_OPEN") {
       this.circuitBreaker.state = "CLOSED";
       this.circuitBreaker.failureCount = 0;
-      console.log("✅ Circuit breaker CLOSED - service recovered");
+      debug("✅ Circuit breaker CLOSED - service recovered");
     }
   }
 
@@ -389,8 +390,8 @@ export class DatabaseConnectivityService {
       this.circuitBreaker.lastFailureTime = Date.now();
       this.circuitBreaker.nextAttemptTime = Date.now() + timeoutPeriod;
 
-      console.error("🚫 Circuit breaker OPEN - service unavailable");
-      console.error("Error details:", error);
+      logError("🚫 Circuit breaker OPEN - service unavailable");
+      logError("Error details:", error);
     }
   }
 
@@ -443,7 +444,7 @@ export class DatabaseConnectivityService {
     this.connectionPool.length = 0;
     this.isInitialized = false;
 
-    console.log("🔌 Database connectivity service shut down");
+    debug("🔌 Database connectivity service shut down");
   }
 }
 

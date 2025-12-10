@@ -41,11 +41,6 @@ export const SelectionCheckbox: React.FC<SelectionCheckboxProps> = ({
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("[SelectionCheckbox] handleChange:", {
-      checked: e.target.checked,
-      disabled,
-      hasOnChange: !!onChange,
-    });
     if (!disabled) {
       onChange(e.target.checked);
     }

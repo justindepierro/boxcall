@@ -109,5 +109,3 @@ export const MobileQuickActionTile: React.FC<MobileQuickActionTileProps> = ({
     </button>
   );
 };
-
-export default MobileQuickActionTile;

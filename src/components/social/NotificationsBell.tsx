@@ -5,6 +5,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { supabase } from "../../lib/supabase";
 import { socialService } from "../../services/socialService";
 import type { Notification } from "../../types/social";
+import { logError } from "../../utils/logger";
 
 interface NotificationsBellProps {
   userId: string;
@@ -28,7 +29,7 @@ export const NotificationsBell: React.FC<NotificationsBellProps> = ({
       setNotifications(result.notifications);
       setUnreadCount(result.unread_count);
     } catch (error) {
-      console.error("Failed to load notifications:", error);
+      logError("Failed to load notifications:", error);
     } finally {
       setLoading(false);
     }
@@ -71,7 +72,7 @@ export const NotificationsBell: React.FC<NotificationsBellProps> = ({
       );
       setUnreadCount((prev) => Math.max(0, prev - 1));
     } catch (error) {
-      console.error("Failed to mark notification as read:", error);
+      logError("Failed to mark notification as read:", error);
     }
   };
 

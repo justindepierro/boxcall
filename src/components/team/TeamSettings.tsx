@@ -5,6 +5,7 @@ import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import { Typography } from "../design-system/Typography";
 import { useSaveState } from "../../hooks/useSaveState";
+import { logError } from "../../utils/logger";
 
 interface TeamSettingsProps {
   teamSettings: TeamSettingsType;
@@ -68,7 +69,7 @@ export const TeamSettings: React.FC<TeamSettingsProps> = ({
         onUpdate(updatedSettings);
         finishSaving("success");
       } catch (error) {
-        console.error("Error auto-saving team settings:", error);
+        logError("Error auto-saving team settings:", error);
         finishSaving("error");
       } finally {
         setSaving(false);

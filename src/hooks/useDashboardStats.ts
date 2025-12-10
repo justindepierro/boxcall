@@ -5,11 +5,14 @@
  * - Total plays across all user teams
  * - This week's activity count
  * - Achievement/badge count
+ *
+ * Uses the unified ApiClient (api()) for all database queries.
  */
 
 import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabase";
+import { api } from "../lib/api/client";
 import { AchievementService } from "../services/achievementService";
+import { debug, error as logError } from "../utils/logger";
 
 export interface DashboardStats {
   totalPlays: number;
@@ -47,8 +50,8 @@ export function useDashboardStats(userId: string | undefined): DashboardStats {
 
     async function fetchStats() {
       try {
-        // userId is guaranteed to be defined here due to early return above
         const userIdStr = userId as string;
+        debug("[useDashboardStats] Fetching stats for user:", userIdStr);
 
         // Parallel fetch all stats
         const [playsResult, activityResult, achievementsResult] =
@@ -57,6 +60,12 @@ export function useDashboardStats(userId: string | undefined): DashboardStats {
             fetchThisWeekActivity(userIdStr),
             fetchAchievementCount(userIdStr),
           ]);
+
+        debug("[useDashboardStats] Results:", {
+          plays: playsResult,
+          activity: activityResult,
+          achievements: achievementsResult,
+        });
 
         if (mounted) {
           setStats({
@@ -68,7 +77,7 @@ export function useDashboardStats(userId: string | undefined): DashboardStats {
           });
         }
       } catch (error) {
-        console.error("[useDashboardStats] Error fetching stats:", error);
+        logError("[useDashboardStats] Error fetching stats:", error);
         if (mounted) {
           setStats({
             totalPlays: 0,
@@ -82,12 +91,10 @@ export function useDashboardStats(userId: string | undefined): DashboardStats {
       }
     }
 
-    // Only fetch once when userId changes
-    const timeoutId = setTimeout(fetchStats, 0);
+    fetchStats();
 
     return () => {
       mounted = false;
-      clearTimeout(timeoutId);
     };
   }, [userId]);
 
@@ -96,52 +103,55 @@ export function useDashboardStats(userId: string | undefined): DashboardStats {
 
 /**
  * Count total plays across all user's teams
+ * Uses unified api() client
  */
 async function fetchTotalPlays(userId: string): Promise<number> {
   try {
-    // Get user's team memberships
-    const { data: memberships, error: memberError } = await supabase
-      .from("team_members")
+    // Step 1: Get user's team memberships
+    const { data: memberships, error: memberError } = await api("team_members")
       .select("team_id")
       .eq("user_id", userId)
       .eq("status", "active");
 
     if (memberError || !memberships || memberships.length === 0) {
+      debug("[fetchTotalPlays] No memberships found");
       return 0;
     }
 
-    const teamIds = memberships.map((m) => (m as { team_id: string }).team_id);
+    const teamIds = memberships.map((m) => m.team_id);
+    debug("[fetchTotalPlays] Team IDs:", teamIds);
 
-    // Get playbook IDs for these teams
-    const { data: playbooks, error: playbooksError } = await supabase
-      .from("playbooks")
+    // Step 2: Get playbook IDs for these teams
+    const { data: playbooks, error: playbooksError } = await api("playbooks")
       .select("id")
       .in("team_id", teamIds);
 
     if (playbooksError || !playbooks || playbooks.length === 0) {
+      debug("[fetchTotalPlays] No playbooks found");
+      return 0;
+    }
+
+    const playbookIds = playbooks.map((pb) => pb.id);
+    debug("[fetchTotalPlays] Playbook IDs:", playbookIds);
+
+    // Step 3: Count plays across all playbooks
+    const { data: plays, error: playsError } = await api("plays")
+      .select("id")
+      .in("playbook_id", playbookIds);
+
+    if (playsError) {
       console.warn(
-        "[fetchTotalPlays] Error fetching playbooks:",
-        playbooksError?.message
+        "[fetchTotalPlays] Error counting plays:",
+        playsError.message
       );
       return 0;
     }
 
-    const playbookIds = playbooks.map((pb) => (pb as { id: string }).id);
-
-    // Count plays across all playbooks
-    const { count, error: playsError } = await supabase
-      .from("plays")
-      .select("*", { count: "exact", head: true })
-      .in("playbook_id", playbookIds);
-
-    if (playsError) {
-      console.warn("[fetchTotalPlays] Error:", playsError.message);
-      return 0;
-    }
-
-    return count ?? 0;
+    const totalPlays = plays?.length ?? 0;
+    debug("[fetchTotalPlays] Total plays:", totalPlays);
+    return totalPlays;
   } catch (error) {
-    console.error("[fetchTotalPlays] Unexpected error:", error);
+    logError("[fetchTotalPlays] Unexpected error:", error);
     return 0;
   }
 }
@@ -155,13 +165,12 @@ async function fetchThisWeekActivity(userId: string): Promise<number> {
     // Calculate start of this week (Sunday)
     const now = new Date();
     const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - now.getDay()); // Go back to Sunday
+    startOfWeek.setDate(now.getDate() - now.getDay());
     startOfWeek.setHours(0, 0, 0, 0);
     const startOfWeekISO = startOfWeek.toISOString();
 
-    // Get user's team IDs first
-    const { data: memberships, error: memberError } = await supabase
-      .from("team_members")
+    // Step 1: Get user's team memberships
+    const { data: memberships, error: memberError } = await api("team_members")
       .select("team_id")
       .eq("user_id", userId)
       .eq("status", "active");
@@ -170,30 +179,29 @@ async function fetchThisWeekActivity(userId: string): Promise<number> {
       return 0;
     }
 
-    const teamIds = memberships.map((m) => (m as { team_id: string }).team_id);
+    const teamIds = memberships.map((m) => m.team_id);
 
-    // Count posts from this week (using correct table name: team_posts)
-    const { count: postsCount, error: postsError } = await supabase
-      .from("team_posts")
-      .select("*", { count: "exact", head: true })
+    // Step 2: Count posts from this week
+    const { data: posts, error: postsError } = await api("team_posts")
+      .select("id")
       .in("team_id", teamIds)
       .gte("created_at", startOfWeekISO);
 
-    // Count calendar events from this week (practices + games)
-    const { count: eventsCount, error: eventsError } = await supabase
-      .from("calendar_events")
-      .select("*", { count: "exact", head: true })
+    // Step 3: Count calendar events from this week
+    const { data: events, error: eventsError } = await api("calendar_events")
+      .select("id")
       .in("team_id", teamIds)
       .gte("created_at", startOfWeekISO);
 
     if (postsError || eventsError) {
-      console.warn("[fetchThisWeekActivity] Error fetching activity counts");
-      return (postsCount ?? 0) + (eventsCount ?? 0); // Return partial data
+      console.warn(
+        "[fetchThisWeekActivity] Partial error - returning available data"
+      );
     }
 
-    return (postsCount ?? 0) + (eventsCount ?? 0);
+    return (posts?.length ?? 0) + (events?.length ?? 0);
   } catch (error) {
-    console.error("[fetchThisWeekActivity] Unexpected error:", error);
+    logError("[fetchThisWeekActivity] Unexpected error:", error);
     return 0;
   }
 }
@@ -211,7 +219,7 @@ async function fetchAchievementCount(userId: string): Promise<number> {
 
     return stickerCount + medalCount;
   } catch (error) {
-    console.error("[fetchAchievementCount] Error:", error);
+    logError("[fetchAchievementCount] Error:", error);
     return 0;
   }
 }

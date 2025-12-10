@@ -11,6 +11,7 @@ import { PersonnelBadge } from "../../../playbook/PersonnelBadge";
 
 import type { PracticeScriptPlay } from "../types";
 import type { Play } from "../../../../types/play";
+import { logError } from "../../../../utils/logger";
 
 interface PracticeScriptPlayFormProps {
   initialData?: PracticeScriptPlay;
@@ -66,7 +67,7 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
             .order("play_name");
 
           if (error) {
-            console.error("❌ Error loading plays:", error);
+            logError("❌ Error loading plays:", error);
           } else {
             console.log("✅ Loaded plays:", plays?.length || 0);
             if (plays && plays.length > 0) {
@@ -78,7 +79,7 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
           console.log("⚠️ No active playbook found for team");
         }
       } catch (error) {
-        console.error("Failed to load playbook plays:", error);
+        logError("Failed to load playbook plays:", error);
       } finally {
         setIsLoadingPlays(false);
       }

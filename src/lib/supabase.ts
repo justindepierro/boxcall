@@ -1,6 +1,7 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 import type { Database } from "../types/database";
+import { ApiClient } from "./api/client";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -69,6 +70,8 @@ if (supabaseUrl && supabaseAnonKey) {
   supabaseClient = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     auth: {
       persistSession: true,
+      // ✅ RE-ENABLED: autoRefreshToken is safe now that we use ApiClient for data queries
+      // The Supabase client is only used for auth operations
       autoRefreshToken: true,
       detectSessionInUrl: true,
       // 🚀 PERFORMANCE: Use localStorage (faster) instead of cookies
@@ -87,12 +90,27 @@ if (supabaseUrl && supabaseAnonKey) {
     db: {
       schema: "public",
     },
-    // 🚀 PERFORMANCE: Add realtime optimizations
+    // Realtime configuration for Team Bulletin social features
     realtime: {
       params: {
-        eventsPerSecond: 10, // Limit realtime events for performance
+        eventsPerSecond: 10,
       },
     },
+  });
+
+  // 🔌 Sync auth state changes to ApiClient
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (session?.access_token) {
+      ApiClient.setAccessToken(session.access_token);
+      if (import.meta.env.DEV) {
+        console.log("🔌 [Auth] Token synced to ApiClient:", event);
+      }
+    } else {
+      ApiClient.setAccessToken(null);
+      if (import.meta.env.DEV) {
+        console.log("🔌 [Auth] Token cleared from ApiClient:", event);
+      }
+    }
   });
 } else if (import.meta.env.DEV) {
   console.log("⚠️ Using Supabase dev stub - environment variables missing");

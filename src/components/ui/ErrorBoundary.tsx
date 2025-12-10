@@ -6,6 +6,7 @@ import React, { Component } from "react";
 // Use ModularIcon for lightweight, per-icon dynamic imports
 import { Button } from "./Button";
 import { Typography } from "../design-system";
+import { logError } from "../../utils/logger";
 
 interface Props {
   children: ReactNode;
@@ -38,7 +39,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error("ErrorBoundary caught an error:", error, errorInfo);
+    logError("ErrorBoundary caught an error:", error, errorInfo);
 
     this.setState({
       error,

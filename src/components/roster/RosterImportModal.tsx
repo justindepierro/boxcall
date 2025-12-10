@@ -3,6 +3,7 @@ import { Icon } from "../ui/Icon/Icon";
 import { Typography } from "../design-system";
 import { Button } from "../ui/Button/Button";
 import { Card } from "../ui";
+import { logError } from "../../utils/logger";
 
 interface RosterCSVData {
   firstName: string;
@@ -422,7 +423,7 @@ function parseMaxPrepsCSV(csvText: string): {
       warnings.push(`${missingPosition} players missing positions`);
     }
   } catch (error) {
-    console.error("CSV parsing error:", error);
+    logError("CSV parsing error:", error);
     errors.push(
       "Failed to parse CSV file. Please check the format and try again."
     );

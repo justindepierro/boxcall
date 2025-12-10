@@ -6,6 +6,7 @@
  */
 
 import { supabase } from "../lib/supabase";
+import { logError } from "../utils/logger";
 
 export interface PlayerPerformanceMetrics {
   playerId: string;
@@ -116,7 +117,7 @@ export class PlayerPerformanceAnalyticsService {
         recentPerformances: mockPerformances.slice(0, 5),
       };
     } catch (error) {
-      console.error("Error fetching player performance metrics:", error);
+      logError("Error fetching player performance metrics:", error);
       return null;
     }
   }
@@ -206,7 +207,7 @@ export class PlayerPerformanceAnalyticsService {
         recentActivities: [], // Mock empty for now
       };
     } catch (error) {
-      console.error("Error fetching team performance overview:", error);
+      logError("Error fetching team performance overview:", error);
       return {
         totalPlayers: 0,
         averageTeamRating: 0,
@@ -281,7 +282,7 @@ export class PlayerPerformanceAnalyticsService {
         alerts,
       };
     } catch (error) {
-      console.error("Error fetching performance insights:", error);
+      logError("Error fetching performance insights:", error);
       return {
         recommendations: [],
         trends: [],

@@ -7,6 +7,7 @@
  */
 
 import { supabase } from "../../lib/supabase";
+import { debug, error as logError } from "../../utils/logger";
 import type { SyncResult } from "../../types/library";
 
 interface PlayUpdate {
@@ -126,7 +127,7 @@ export class FormationSyncService {
 
     if (formation) {
       // This could trigger re-analysis, but for now just log
-      console.log(
+      debug(
         `[FormationSyncService] Play ${playId} updated, may affect formation ${formation.id} intelligence`
       );
     }
@@ -163,10 +164,7 @@ export class FormationSyncService {
       .order("play_name");
 
     if (error) {
-      console.error(
-        "[FormationSyncService] Error fetching affected plays:",
-        error
-      );
+      logError("[FormationSyncService] Error fetching affected plays:", error);
       return [];
     }
 

@@ -6,6 +6,7 @@
  */
 
 import { supabase } from "../../lib/supabase";
+import { logError } from "../../utils/logger";
 import type {
   Formation,
   FormationCreate,
@@ -70,10 +71,7 @@ export class FormationLibraryService {
     const { data, count, error } = await query;
 
     if (error) {
-      console.error(
-        "[FormationLibraryService] Error fetching formations:",
-        error
-      );
+      logError("[FormationLibraryService] Error fetching formations:", error);
       throw new Error(`Failed to fetch formations: ${error.message}`);
     }
 
@@ -99,10 +97,7 @@ export class FormationLibraryService {
       .single();
 
     if (error) {
-      console.error(
-        "[FormationLibraryService] Error fetching formation:",
-        error
-      );
+      logError("[FormationLibraryService] Error fetching formation:", error);
       throw new Error(`Failed to fetch formation: ${error.message}`);
     }
 
@@ -135,10 +130,7 @@ export class FormationLibraryService {
       .single();
 
     if (error) {
-      console.error(
-        "[FormationLibraryService] Error creating formation:",
-        error
-      );
+      logError("[FormationLibraryService] Error creating formation:", error);
       throw new Error(`Failed to create formation: ${error.message}`);
     }
 
@@ -170,10 +162,7 @@ export class FormationLibraryService {
       .single();
 
     if (error) {
-      console.error(
-        "[FormationLibraryService] Error updating formation:",
-        error
-      );
+      logError("[FormationLibraryService] Error updating formation:", error);
       throw new Error(`Failed to update formation: ${error.message}`);
     }
 
@@ -187,10 +176,7 @@ export class FormationLibraryService {
     const { error } = await supabase.from("formations").delete().eq("id", id);
 
     if (error) {
-      console.error(
-        "[FormationLibraryService] Error deleting formation:",
-        error
-      );
+      logError("[FormationLibraryService] Error deleting formation:", error);
       throw new Error(`Failed to delete formation: ${error.message}`);
     }
   }
@@ -209,10 +195,7 @@ export class FormationLibraryService {
       .eq("id", formationId);
 
     if (error1) {
-      console.error(
-        "[FormationLibraryService] Error linking formation:",
-        error1
-      );
+      logError("[FormationLibraryService] Error linking formation:", error1);
       throw new Error(`Failed to link formation: ${error1.message}`);
     }
 
@@ -222,10 +205,7 @@ export class FormationLibraryService {
       .eq("id", oppositeId);
 
     if (error2) {
-      console.error(
-        "[FormationLibraryService] Error linking opposite:",
-        error2
-      );
+      logError("[FormationLibraryService] Error linking opposite:", error2);
       throw new Error(`Failed to link opposite formation: ${error2.message}`);
     }
   }
@@ -268,7 +248,7 @@ export class FormationLibraryService {
       .limit(limit);
 
     if (error) {
-      console.error(
+      logError(
         "[FormationLibraryService] Error fetching formation plays:",
         error
       );

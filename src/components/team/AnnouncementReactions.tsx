@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useEffect } from "react";
+import { logError } from "../../utils/logger";
 import {
   ReactionsService,
   type ReactionType,
@@ -82,12 +83,12 @@ export const AnnouncementReactions: React.FC<AnnouncementReactionsProps> = ({
       } else {
         // Revert optimistic update on error
         await loadReactions();
-        console.error("Failed to toggle reaction:", result.error);
+        logError("Failed to toggle reaction:", result.error);
       }
     } catch (error) {
       // Revert optimistic update on error
       await loadReactions();
-      console.error("Error toggling reaction:", error);
+      logError("Error toggling reaction:", error);
     } finally {
       setLoading(false);
       // Keep animation class for a bit longer

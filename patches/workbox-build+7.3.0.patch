@@ -1,0 +1,22 @@
+diff --git a/node_modules/workbox-build/tsconfig.json b/node_modules/workbox-build/tsconfig.json
+index 067ab27..a5ff2c3 100644
+--- a/node_modules/workbox-build/tsconfig.json
++++ b/node_modules/workbox-build/tsconfig.json
+@@ -9,14 +9,7 @@
+     "target": "ES2018",
+     "tsBuildInfoFile": "./tsconfig.tsbuildinfo"
+   },
+-  "files": ["src/cdn-details.json"],
+-  "include": ["src/**/*.ts", "src/schema/*.json"],
+-  "references": [
+-    {"path": "../workbox-background-sync/"},
+-    {"path": "../workbox-broadcast-update/"},
+-    {"path": "../workbox-cacheable-response/"},
+-    {"path": "../workbox-core/"},
+-    {"path": "../workbox-expiration/"},
+-    {"path": "../workbox-google-analytics/"}
+-  ]
++  "files": [],
++  "include": [],
++  "references": []
+ }

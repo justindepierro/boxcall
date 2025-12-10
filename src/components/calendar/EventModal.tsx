@@ -21,6 +21,7 @@ import type {
   CalendarEventCreate,
 } from "../../domain/calendar/types";
 import type { Database } from "../../types/database";
+import { logError } from "../../utils/logger";
 
 type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
 
@@ -140,7 +141,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                     setIsCreating(false);
                     onClose();
                   } catch (err) {
-                    console.error("Failed to create event:", err);
+                    logError("Failed to create event:", err);
                   }
                 }}
               />
@@ -166,7 +167,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                     });
                     setIsEditing(false);
                   } catch (err) {
-                    console.error("Failed to update event:", err);
+                    logError("Failed to update event:", err);
                   }
                 }}
               />
@@ -184,7 +185,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                       setEvent(null);
                     }
                   } catch (err) {
-                    console.error("Failed to delete event:", err);
+                    logError("Failed to delete event:", err);
                   }
                 }}
                 deletePending={deleteEventMutation.status === "pending"}

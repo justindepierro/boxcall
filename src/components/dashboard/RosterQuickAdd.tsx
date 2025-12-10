@@ -7,6 +7,7 @@ import { Typography } from "../design-system";
 import { rosterService } from "../../services";
 import type { RosterPlayerView } from "../../services/rosterService";
 import { getActiveTeamId } from "../../utils/activeTeam";
+import { logError } from "../../utils/logger";
 
 /**
  * RosterQuickAdd - Dashboard widget for quick roster management
@@ -44,7 +45,7 @@ export const RosterQuickAdd: React.FC = () => {
       // Get 3 most recent players
       setRecentPlayers(roster.slice(-3).reverse());
     } catch (error) {
-      console.error("Failed to load roster data:", error);
+      logError("Failed to load roster data:", error);
     } finally {
       setLoading(false);
     }
@@ -113,7 +114,7 @@ export const RosterQuickAdd: React.FC = () => {
       // Refresh data
       await loadRosterData();
     } catch (error) {
-      console.error("Failed to add player:", error);
+      logError("Failed to add player:", error);
       setError(
         error instanceof Error
           ? error.message

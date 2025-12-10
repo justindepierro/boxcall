@@ -10,6 +10,7 @@ import { PlaysService } from "../playsService";
 import type { Play } from "../../types/play";
 import type { InboundPlay as _InboundPlay } from "../../utils/playDataStandardization";
 import { CacheService } from "./CacheService";
+import { logError } from "../../utils/logger";
 
 export class BulkOperationsService {
   /**
@@ -70,7 +71,7 @@ export class BulkOperationsService {
         totalProcessed: plays.length,
       };
     } catch (error) {
-      console.error("❌ Bulk import failed:", error);
+      logError("❌ Bulk import failed:", error);
       return {
         success: false,
         created,

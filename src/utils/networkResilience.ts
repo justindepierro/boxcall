@@ -2,6 +2,8 @@
  * Network resilience utilities for handling offline scenarios and network failures
  */
 
+import { logError } from "./logger";
+
 export class NetworkResilience {
   private static online =
     typeof navigator !== "undefined" ? navigator.onLine : true;
@@ -54,7 +56,7 @@ export class NetworkResilience {
       try {
         callback(online);
       } catch (error) {
-        console.error("Error in network status listener:", error);
+        logError("Error in network status listener:", error);
       }
     });
   }
@@ -86,7 +88,7 @@ export class NetworkResilience {
         try {
           await operation();
         } catch (error) {
-          console.error("Error processing queued operation:", error);
+          logError("Error processing queued operation:", error);
           // Re-queue failed operations with exponential backoff
           setTimeout(() => {
             this.queuedOperations.unshift(operation);
@@ -150,6 +152,9 @@ export class NetworkResilience {
    * Check if an error should not be retried
    */
   private static isNonRetryableError(error: Error): boolean {
+    if ((error as any)?.name === "AbortError") {
+      return true;
+    }
     const message = error.message.toLowerCase();
 
     // Authentication errors

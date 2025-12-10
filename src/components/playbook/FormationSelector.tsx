@@ -14,6 +14,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
 import { FormationSelectorSkeleton } from "./FormationSelectorSkeleton";
+import { logError } from "../../utils/logger";
 
 interface FormationSelectorProps {
   playbookId: string;
@@ -65,7 +66,7 @@ export function FormationSelector({
           `[FormationSelector] Loaded ${uniqueFormations.length} unique formations from plays table`
         );
       } catch (err) {
-        console.error("Error loading formations:", err);
+        logError("Error loading formations:", err);
         setError("Failed to load formations");
         setFormations([]);
       } finally {

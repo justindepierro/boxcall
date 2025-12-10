@@ -1,0 +1,12 @@
+diff --git a/node_modules/workbox-core/tsconfig.json b/node_modules/workbox-core/tsconfig.json
+index 921c642..2a5af27 100644
+--- a/node_modules/workbox-core/tsconfig.json
++++ b/node_modules/workbox-core/tsconfig.json
+@@ -1,6 +1,7 @@
+ {
+   "extends": "../../tsconfig",
+   "compilerOptions": {
++    "composite": true,
+     "outDir": "./",
+     "rootDir": "./src",
+     "tsBuildInfoFile": "./tsconfig.tsbuildinfo"

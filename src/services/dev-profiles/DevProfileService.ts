@@ -10,6 +10,7 @@
  */
 
 import { DevProfileRepository } from "./DevProfileRepository";
+import { logError } from "../../utils/logger";
 
 import type {
   DevMode,
@@ -313,7 +314,7 @@ export class DevProfileService implements IDevProfileService {
       try {
         listener.onProfileEvent(event);
       } catch (error) {
-        console.error("Error in event listener:", error);
+        logError("Error in event listener:", error);
       }
     });
   }

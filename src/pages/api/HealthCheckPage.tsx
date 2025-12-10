@@ -5,6 +5,7 @@
 
 import React, { useEffect, useState } from "react";
 import { healthCheck, type HealthStatus } from "../../api/health";
+import { logError } from "../../utils/logger";
 
 export const HealthCheckPage: React.FC = () => {
   const [health, setHealth] = useState<HealthStatus | null>(null);
@@ -17,7 +18,7 @@ export const HealthCheckPage: React.FC = () => {
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Health check failed:", error);
+        logError("Health check failed:", error);
         const timestamp = new Date().toISOString();
         setHealth({
           status: "unhealthy",

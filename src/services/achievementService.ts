@@ -13,6 +13,7 @@
  * NOTE: achievement_definitions and achievement_progress tables don't exist in current schema.
  * Service gracefully degrades to empty achievements until tables are created.
  */
+import { debug, error as logError } from "../utils/logger";
 import { supabase } from "../lib/supabase";
 import type { Player } from "../app/store";
 
@@ -145,7 +146,7 @@ class AchievementTracker {
           .eq("trigger_target", action);
 
       if (definitionsError) {
-        console.warn(
+        debug(
           "[Achievement] achievement_definitions table not available:",
           definitionsError.message
         );
@@ -177,7 +178,7 @@ class AchievementTracker {
 
       return earnedAchievements;
     } catch (error) {
-      console.error("[Achievement] Error tracking action:", error);
+      logError("[Achievement] Error tracking action:", error);
       return [];
     }
   }
@@ -267,7 +268,7 @@ class AchievementTracker {
 
         if (error) throw error;
 
-        console.log(
+        debug(
           `[Achievement] 🎉 Awarded: ${achievement.name} to player ${playerId}`
         );
 
@@ -279,7 +280,7 @@ class AchievementTracker {
 
       return null;
     } catch (error) {
-      console.error("[Achievement] Error checking achievement:", error);
+      logError("[Achievement] Error checking achievement:", error);
       return null;
     }
   }
@@ -336,7 +337,7 @@ class AchievementTracker {
         }
       }
     } catch (error) {
-      console.error("[Achievement] Error checking milestones:", error);
+      logError("[Achievement] Error checking milestones:", error);
     }
 
     return earned;
@@ -379,7 +380,7 @@ class AchievementTracker {
 
       return earned;
     } catch (error) {
-      console.error("[Achievement] Error awarding milestone:", error);
+      logError("[Achievement] Error awarding milestone:", error);
       return null;
     }
   }
@@ -406,7 +407,7 @@ class AchievementTracker {
         .maybeSingle();
 
       if (playerError) {
-        console.warn(
+        debug(
           "[Achievement] Error fetching player:",
           playerError.message
         );
@@ -424,7 +425,7 @@ class AchievementTracker {
         .eq("player_id", player.id);
 
       if (earnedError) {
-        console.warn(
+        debug(
           "[Achievement] achievement_definitions or achievement_progress tables may not exist:",
           earnedError.message
         );
@@ -443,7 +444,7 @@ class AchievementTracker {
         definitions: [], // Table doesn't exist yet
       };
     } catch (error) {
-      console.error("[Achievement] Error getting user achievements:", error);
+      logError("[Achievement] Error getting user achievements:", error);
       return { earned: [], progress: [], definitions: [] };
     }
   }
@@ -464,7 +465,7 @@ class AchievementTracker {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error("[Achievement] Error creating definition:", error);
+      logError("[Achievement] Error creating definition:", error);
       return null;
     }
   }
@@ -482,7 +483,7 @@ class AchievementTracker {
 
       return data || [];
     } catch (error) {
-      console.error("[Achievement] Error getting definitions:", error);
+      logError("[Achievement] Error getting definitions:", error);
       return [];
     }
   }
@@ -569,7 +570,7 @@ export class AchievementService {
         recentAchievements: allMedals.slice(0, 5),
       };
     } catch (error) {
-      console.error("Error fetching user achievements:", error);
+      logError("Error fetching user achievements:", error);
       return this.getEmptyAchievements();
     }
   }

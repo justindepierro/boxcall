@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
+import { logError } from "../utils/logger";
 
 export interface PlayStatus {
   hasDiagram: boolean;
@@ -81,7 +82,7 @@ export function useBatchedPlayStatus(
           .in("play_id", playIdsToFetch);
 
         if (gamePlanError) {
-          console.error("Error fetching game plan count:", gamePlanError);
+          logError("Error fetching game plan count:", gamePlanError);
         }
 
         // Aggregate counts per play
@@ -112,7 +113,7 @@ export function useBatchedPlayStatus(
           setStatus(statusMap[playId]);
         }
       } catch (error) {
-        console.error("Error fetching batched play status:", error);
+        logError("Error fetching batched play status:", error);
       }
     }, BATCH_DELAY);
 

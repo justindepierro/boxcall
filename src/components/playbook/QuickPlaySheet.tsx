@@ -12,6 +12,7 @@ import {
 } from "../../utils/playFieldValidation";
 import { FormationSelector } from "./FormationSelector";
 import type { Formation } from "../../types/formation";
+import { logError } from "../../utils/logger";
 
 interface QuickPlaySheetProps {
   isOpen: boolean;
@@ -123,7 +124,7 @@ export const QuickPlaySheet: React.FC<QuickPlaySheetProps> = ({
       setPlayName("");
       onClose();
     } catch (createError) {
-      console.error("[QuickPlaySheet] Failed to create play:", createError);
+      logError("[QuickPlaySheet] Failed to create play:", createError);
       setError(
         createError instanceof Error
           ? createError.message

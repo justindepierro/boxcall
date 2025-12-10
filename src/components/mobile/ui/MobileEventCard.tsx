@@ -211,5 +211,3 @@ export const MobileEventCard: React.FC<MobileEventCardProps> = ({
     </div>
   );
 };
-
-export default MobileEventCard;

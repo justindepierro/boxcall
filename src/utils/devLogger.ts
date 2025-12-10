@@ -8,6 +8,8 @@
  * - Can be easily disabled in production
  */
 
+import { logError } from "./logger";
+
 const isDev = import.meta.env.DEV;
 const isDebugMode = import.meta.env.VITE_DEBUG === "true";
 
@@ -17,7 +19,7 @@ export const devLogger = {
    */
   error: (...args: any[]) => {
     if (isDev) {
-      console.error("🔴 [ERROR]", ...args);
+      logError("🔴 [ERROR]", ...args);
     }
   },
 
@@ -113,7 +115,7 @@ export const devLogger = {
 export const trackError = (error: Error, context?: Record<string, any>) => {
   if (!isDev) {
     // TODO: Send to Sentry, LogRocket, or similar
-    console.error("Production error:", error, context);
+    logError("Production error:", error, context);
   } else {
     devLogger.error(error, context);
   }

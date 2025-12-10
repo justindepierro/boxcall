@@ -3,6 +3,8 @@
  * Part of Phase 3D: Final Mobile Polish & Performance Optimization
  */
 
+import { logError } from "./logger";
+
 interface PerformanceMemory {
   usedJSHeapSize: number;
   totalJSHeapSize: number;
@@ -407,7 +409,7 @@ class WebVitalsMonitor {
   /** Alert monitoring system of performance issues */
   private alertPerformanceIssue(name: string, value: number, target: number) {
     // Send alert to monitoring service (Sentry, DataDog, etc.)
-    console.error("Performance threshold exceeded:", {
+    logError("Performance threshold exceeded:", {
       metric: name,
       value,
       target,

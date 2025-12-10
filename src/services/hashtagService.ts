@@ -3,6 +3,8 @@
  * Extracts and manages hashtags from announcements
  */
 
+import { logError } from "../utils/logger";
+
 export interface HashtagCount {
   tag: string;
   count: number;
@@ -43,7 +45,7 @@ export class HashtagService {
       findHashtags(parsed);
       return hashtags;
     } catch (error) {
-      console.error("Error extracting hashtags:", error);
+      logError("Error extracting hashtags:", error);
       return [];
     }
   }

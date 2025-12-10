@@ -5,6 +5,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { UserPlus, UserCheck, Users } from "lucide-react";
 import { socialService } from "../../services/socialService";
 import type { FollowButtonProps, FollowSummary } from "../../types/social";
+import { logError } from "../../utils/logger";
 
 export const FollowButton: React.FC<FollowButtonProps> = ({
   followingType,
@@ -25,7 +26,7 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
       );
       setFollowSummary(summary);
     } catch (error) {
-      console.error("Failed to load follow status:", error);
+      logError("Failed to load follow status:", error);
     }
   }, [followingType, followingId]);
 
@@ -48,7 +49,7 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
       }
       await loadFollowStatus();
     } catch (error) {
-      console.error("Failed to toggle follow:", error);
+      logError("Failed to toggle follow:", error);
     } finally {
       setIsLoading(false);
     }

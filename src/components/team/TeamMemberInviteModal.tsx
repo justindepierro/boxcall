@@ -4,6 +4,7 @@ import { Typography } from "../../components/design-system";
 import { Button } from "../../components/ui/Button/Button";
 import { Card } from "../../components/ui";
 import type { TeamRole } from "../../types/roles";
+import { logError } from "../../utils/logger";
 
 interface TeamMemberInviteModalProps {
   isOpen: boolean;
@@ -51,7 +52,7 @@ export const TeamMemberInviteModal: React.FC<TeamMemberInviteModalProps> = ({
       });
       onClose();
     } catch (error) {
-      console.error("Failed to send invitation:", error);
+      logError("Failed to send invitation:", error);
     } finally {
       setIsSubmitting(false);
     }

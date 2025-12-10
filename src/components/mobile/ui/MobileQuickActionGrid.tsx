@@ -147,5 +147,3 @@ export const MobileQuickActionGrid: React.FC<MobileQuickActionGridProps> = ({
     </div>
   );
 };
-
-export default MobileQuickActionGrid;

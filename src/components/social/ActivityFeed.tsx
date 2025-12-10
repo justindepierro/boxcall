@@ -5,6 +5,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { supabase } from "../../lib/supabase";
 import { Heart, UserPlus, MessageCircle, Play, FileText } from "lucide-react";
 import type { ActivityType } from "../../types/social";
+import { logError } from "../../utils/logger";
 
 interface ActivityItem {
   id: string;
@@ -92,7 +93,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
 
       setActivities(transformedActivities);
     } catch (error) {
-      console.error("Failed to load activities:", error);
+      logError("Failed to load activities:", error);
     } finally {
       setLoading(false);
     }

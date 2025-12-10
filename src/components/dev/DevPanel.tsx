@@ -24,7 +24,20 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
     health: AuthMonitoring.getHealthStatus(),
     recentErrors: AuthMonitoring.getRecentErrors(5),
     recentEvents: AuthMonitoring.getRecentEvents(10),
+    phaseTimings: AuthMonitoring.getPhaseTimings(),
   });
+  const phaseLabels: Record<string, string> = {
+    bootstrap: "Bootstrap",
+    sessionFetch: "Session Fetch",
+    profileFetch: "Profile Fetch",
+    dbHandshake: "DB Handshake",
+  };
+  const phaseOrder = [
+    "bootstrap",
+    "sessionFetch",
+    "profileFetch",
+    "dbHandshake",
+  ] as const;
 
   // Update monitoring data periodically
   useEffect(() => {
@@ -34,6 +47,7 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
         health: AuthMonitoring.getHealthStatus(),
         recentErrors: AuthMonitoring.getRecentErrors(5),
         recentEvents: AuthMonitoring.getRecentEvents(10),
+        phaseTimings: AuthMonitoring.getPhaseTimings(),
       });
     };
 
@@ -301,6 +315,37 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
             <strong>Offline Queued:</strong>{" "}
             {monitoringData.metrics.offlineQueuedOperations}
           </div>
+        </div>
+      </div>
+
+      {/* Auth Timings */}
+      <div className="space-y-xs">
+        <h4 className="font-medium text-secondary">Auth Timings</h4>
+        <div className="grid grid-cols-2 gap-xs">
+          {phaseOrder.map((phase) => {
+            const timing = monitoringData.phaseTimings[phase];
+            const lastDuration = timing?.lastDurationMs;
+            const avgDuration = timing?.averageDurationMs;
+            const statusLabel = timing?.status ?? "idle";
+            return (
+              <div key={phase} className="rounded-lg bg-secondary px-sm py-xs">
+                <div className="text-xs uppercase tracking-wide text-muted">
+                  {phaseLabels[phase]}
+                </div>
+                <div className="text-lg font-semibold text-primary">
+                  {lastDuration != null ? `${Math.round(lastDuration)}ms` : "—"}
+                </div>
+                <div className="text-xs text-secondary">
+                  {statusLabel === "idle" ? "waiting" : statusLabel}
+                  {avgDuration != null && (
+                    <span className="ml-1 text-muted">
+                      · avg {Math.round(avgDuration)}ms
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 

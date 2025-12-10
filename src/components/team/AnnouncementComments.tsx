@@ -42,15 +42,12 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
     new Map()
   );
 
-  // Get current user
+  // Get current user - use synchronous auth helper
   useEffect(() => {
-    async function getCurrentUser() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setCurrentUserId(user?.id || null);
-    }
-    getCurrentUser();
+    // Import dynamically to avoid circular dependencies
+    import("../../lib/auth-helpers").then(({ getCurrentUserId }) => {
+      setCurrentUserId(getCurrentUserId());
+    });
   }, []);
 
   // Helper to extract plain text from TipTap JSON

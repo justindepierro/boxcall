@@ -1,4 +1,5 @@
 // Direct HTTP API approach to bypass Supabase client issues
+import { logError } from "./logger";
 export async function createTeamDirectly(teamData: {
   name: string;
   school_name: string;
@@ -30,7 +31,7 @@ export async function createTeamDirectly(teamData: {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("❌ Direct HTTP error response:", errorText);
+      logError("❌ Direct HTTP error response:", errorText);
       throw new Error(`HTTP ${response.status}: ${errorText}`);
     }
 
@@ -38,7 +39,7 @@ export async function createTeamDirectly(teamData: {
     console.log("✅ Direct HTTP success:", result);
     return { data: result[0], error: null };
   } catch (error) {
-    console.error("❌ Direct HTTP failed:", error);
+    logError("❌ Direct HTTP failed:", error);
     return { data: null, error };
   }
 }
@@ -74,7 +75,7 @@ export async function createTeamMembershipDirectly(membershipData: {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("❌ Membership HTTP error response:", errorText);
+      logError("❌ Membership HTTP error response:", errorText);
       throw new Error(`HTTP ${response.status}: ${errorText}`);
     }
 
@@ -82,7 +83,7 @@ export async function createTeamMembershipDirectly(membershipData: {
     console.log("✅ Membership HTTP success:", result);
     return { data: result[0], error: null };
   } catch (error) {
-    console.error("❌ Membership HTTP failed:", error);
+    logError("❌ Membership HTTP failed:", error);
     return { data: null, error };
   }
 }

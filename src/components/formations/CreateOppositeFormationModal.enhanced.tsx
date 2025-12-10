@@ -16,6 +16,7 @@ import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
 import { FormationService } from "../../services/formationService";
 import type { Formation, FormationPlayerPosition } from "../../types/formation";
+import { logError } from "../../utils/logger";
 
 export interface CreateOppositeFormationModalProps {
   /** Whether modal is open */
@@ -210,7 +211,7 @@ export const CreateOppositeFormationModal: React.FC<
         onClose();
       }, 1000);
     } catch (err) {
-      console.error("Failed to create opposite formation:", err);
+      logError("Failed to create opposite formation:", err);
       setError(
         err instanceof Error
           ? err.message
@@ -235,7 +236,7 @@ export const CreateOppositeFormationModal: React.FC<
         onClose();
       }, 800);
     } catch (err) {
-      console.error("Failed to mark as standalone:", err);
+      logError("Failed to mark as standalone:", err);
       setError(
         err instanceof Error ? err.message : "Failed to mark as standalone"
       );

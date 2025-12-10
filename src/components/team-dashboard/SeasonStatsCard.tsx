@@ -16,7 +16,7 @@ import { Typography } from "../design-system/Typography";
 import { Button } from "../ui/Button/Button";
 import { Input } from "../ui/Input";
 import { Modal } from "../ui/Modal/Modal";
-import { Select } from "../ui/Select";
+import { Dropdown } from "../ui/Dropdown";
 import { Icon } from "../ui/Icon/Icon";
 
 interface SeasonStatsCardProps {
@@ -299,10 +299,10 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                 >
                   Site
                 </Typography>
-                <Select
+                <Dropdown
                   id="gr-site"
                   value={form.site}
-                  onChange={(v) => setForm((f) => ({ ...f, site: String(v) }))}
+                  onChange={(v) => setForm((f) => ({ ...f, site: v }))}
                   options={[
                     { value: "home", label: "Home" },
                     { value: "away", label: "Away" },

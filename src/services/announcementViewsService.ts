@@ -6,6 +6,8 @@
  */
 
 import { supabase } from "../lib/supabase";
+import { getCurrentUserId } from "../lib/auth-helpers";
+import { logError } from "../utils/logger";
 
 // ============================================
 // TYPE DEFINITIONS
@@ -53,11 +55,10 @@ export class AnnouncementViewsService {
     teamId: string
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      // Use cached user ID for bulletproof performance
+      const userId = getCurrentUserId();
 
-      if (!user) {
+      if (!userId) {
         return {
           success: false,
           error: "User not authenticated",
@@ -68,7 +69,7 @@ export class AnnouncementViewsService {
       const { error } = await supabase.from("announcement_views" as any).upsert(
         {
           announcement_id: announcementId,
-          user_id: user.id,
+          user_id: userId,
           team_id: teamId,
           viewed_at: new Date().toISOString(),
         },
@@ -79,7 +80,7 @@ export class AnnouncementViewsService {
       );
 
       if (error) {
-        console.error("Error recording view:", error);
+        logError("Error recording view:", error);
         return {
           success: false,
           error: error.message,
@@ -88,7 +89,7 @@ export class AnnouncementViewsService {
 
       return { success: true };
     } catch (error) {
-      console.error("Unexpected error recording view:", error);
+      logError("Unexpected error recording view:", error);
       return {
         success: false,
         error: "An unexpected error occurred",
@@ -123,7 +124,7 @@ export class AnnouncementViewsService {
         .eq("status", "active");
 
       if (membersError) {
-        console.error("Error fetching team members:", membersError);
+        logError("Error fetching team members:", membersError);
         return null;
       }
 
@@ -134,7 +135,7 @@ export class AnnouncementViewsService {
         .eq("announcement_id", announcementId);
 
       if (viewsError) {
-        console.error("Error fetching views:", viewsError);
+        logError("Error fetching views:", viewsError);
         return null;
       }
 
@@ -196,7 +197,7 @@ export class AnnouncementViewsService {
         non_viewers: nonViewers,
       };
     } catch (error) {
-      console.error("Unexpected error getting read receipts:", error);
+      logError("Unexpected error getting read receipts:", error);
       return null;
     }
   }
@@ -206,27 +207,26 @@ export class AnnouncementViewsService {
    */
   static async hasViewed(announcementId: string): Promise<boolean> {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      // Use cached user ID for bulletproof performance
+      const userId = getCurrentUserId();
 
-      if (!user) return false;
+      if (!userId) return false;
 
       const { data, error } = await supabase
         .from("announcement_views" as any)
         .select("id")
         .eq("announcement_id", announcementId)
-        .eq("user_id", user.id)
+        .eq("user_id", userId)
         .single();
 
       if (error && error.code !== "PGRST116") {
         // PGRST116 = not found, which is expected
-        console.error("Error checking view status:", error);
+        logError("Error checking view status:", error);
       }
 
       return !!data;
     } catch (error) {
-      console.error("Unexpected error checking view status:", error);
+      logError("Unexpected error checking view status:", error);
       return false;
     }
   }
@@ -242,13 +242,13 @@ export class AnnouncementViewsService {
         .eq("announcement_id", announcementId);
 
       if (error) {
-        console.error("Error getting view count:", error);
+        logError("Error getting view count:", error);
         return 0;
       }
 
       return count || 0;
     } catch (error) {
-      console.error("Unexpected error getting view count:", error);
+      logError("Unexpected error getting view count:", error);
       return 0;
     }
   }

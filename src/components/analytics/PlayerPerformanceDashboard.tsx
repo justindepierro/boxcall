@@ -4,6 +4,7 @@ import { Icon } from "../ui/Icon";
 import { Card } from "../ui/Card";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
+import { logError } from "../../utils/logger";
 import {
   PlayerPerformanceAnalyticsService,
   type PlayerPerformanceMetrics,
@@ -45,7 +46,7 @@ export const PlayerPerformanceDashboard: React.FC<
       setOverview(overviewData);
       setInsights(insightsData);
     } catch (err) {
-      console.error("Error loading performance data:", err);
+      logError("Error loading performance data:", err);
       setError("Failed to load performance data");
     } finally {
       setLoading(false);

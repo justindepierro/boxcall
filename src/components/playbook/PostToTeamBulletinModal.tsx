@@ -8,6 +8,7 @@ import type { Play as PlayType } from "../../types/play";
 import { getDisplayName } from "../../utils/playNameUtils";
 import { AnnouncementsService } from "../../services/announcementsService";
 import { toast } from "sonner";
+import { logError } from "../../utils/logger";
 
 interface PostToTeamBulletinModalProps {
   isOpen: boolean;
@@ -99,12 +100,12 @@ export const PostToTeamBulletinModal: React.FC<
         onClose();
         setMessage("");
       } else {
-        console.error("Failed to create announcement:", result.error);
+        logError("Failed to create announcement:", result.error);
         toast.error(result.error || "Failed to post announcement");
         setError(result.error || "Failed to post announcement");
       }
     } catch (err) {
-      console.error("Error posting to team bulletin:", err);
+      logError("Error posting to team bulletin:", err);
       const errorMessage =
         err instanceof Error ? err.message : "Failed to post announcement";
       toast.error(errorMessage);

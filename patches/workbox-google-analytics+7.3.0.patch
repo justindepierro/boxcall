@@ -1,0 +1,12 @@
+diff --git a/node_modules/workbox-google-analytics/tsconfig.json b/node_modules/workbox-google-analytics/tsconfig.json
+index 7b7f337..255f4fa 100644
+--- a/node_modules/workbox-google-analytics/tsconfig.json
++++ b/node_modules/workbox-google-analytics/tsconfig.json
+@@ -1,6 +1,7 @@
+ {
+   "extends": "../../tsconfig",
+   "compilerOptions": {
++    "composite": true,
+     "outDir": "./",
+     "rootDir": "./src",
+     "tsBuildInfoFile": "./tsconfig.tsbuildinfo"

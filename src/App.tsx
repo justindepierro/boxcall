@@ -6,7 +6,6 @@ import { DevHealthCheck } from "./components/ui/DevHealthCheck";
 import { ErrorBoundary } from "./components/ui/ErrorBoundary";
 import { AuthGuard } from "./components/auth/AuthGuard";
 import { useTheme } from "./hooks/useTheme";
-import { useSessionMonitor } from "./hooks/useSessionMonitor";
 import { testBasicDatabaseConnectivity } from "./lib/database-helpers";
 import { initRoutePrefetch } from "./routes/prefetch";
 import { DataRouterApp } from "./routes";
@@ -28,6 +27,7 @@ import { SaveHistoryPanel } from "./components/dev/SaveHistoryPanel";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import DevPanel from "./components/dev/DevPanel";
 import { OfflineIndicator } from "./components/ui/OfflineIndicator";
+import { logError } from "./utils/logger";
 
 /**
  * ConflictOverlay - Shows conflict dialog when there's an active conflict
@@ -53,9 +53,6 @@ function App() {
   // Initialize theme system
   useTheme();
 
-  // Monitor session and auto-refresh
-  useSessionMonitor();
-
   // Test database connection on app start
   useEffect(() => {
     const initBoxCall = async () => {
@@ -63,7 +60,7 @@ function App() {
       if (connectionOk) {
         // Connection successful
       } else {
-        console.error(
+        logError(
           "BoxCall: Database connection failed - check your .env.local configuration"
         );
       }

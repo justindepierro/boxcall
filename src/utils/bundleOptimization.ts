@@ -3,6 +3,7 @@
  * Part of Phase 3D: Final Mobile Polish & Performance Optimization
  */
 import React from "react";
+import { logError } from "./logger";
 
 // Code splitting utilities
 export const loadAsync = <T>(importFn: () => Promise<{ default: T }>) => {
@@ -18,7 +19,7 @@ export const createLazyComponent = <
 ) => {
   return React.lazy(() =>
     importFn().catch((error) => {
-      console.error("Failed to load component:", error);
+      logError("Failed to load component:", error);
       // Return fallback component wrapped in default export
       const FallbackComponent =
         fallback ||
@@ -124,7 +125,7 @@ export const registerServiceWorker = async () => {
       console.info("Service Worker registered successfully:", registration);
       return registration;
     } catch (error) {
-      console.error("Service Worker registration failed:", error);
+      logError("Service Worker registration failed:", error);
       throw error;
     }
   } else {

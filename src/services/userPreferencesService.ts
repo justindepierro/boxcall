@@ -4,6 +4,8 @@
  * Manages user preferences like confirmation dialogs, UI settings, etc.
  */
 
+import { logError } from "../utils/logger";
+
 export interface UserPreferences {
   csvImport: {
     skipMissingFieldsConfirmation: boolean;
@@ -73,7 +75,7 @@ export class UserPreferencesService {
     try {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(preferences));
     } catch (error) {
-      console.error("Failed to save user preferences:", error);
+      logError("Failed to save user preferences:", error);
     }
   }
 

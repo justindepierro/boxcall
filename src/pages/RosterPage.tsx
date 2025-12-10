@@ -586,7 +586,7 @@ const RosterPage = () => {
       await loadRoster();
     } catch (error) {
       logError("[RosterPage] Failed to send invitation:", error);
-      console.error("[RosterPage] Invitation error details:", error);
+      logError("[RosterPage] Invitation error details:", error);
       toast.error(
         `Failed to send invitation: ${error instanceof Error ? error.message : "Unknown error"}`
       );

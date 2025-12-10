@@ -16,6 +16,7 @@ import { RepTracker } from "./RepTracker";
 import { MiniDiagram } from "./MiniDiagram";
 import { usePracticeSession } from "../../hooks/usePracticeSession";
 import type { ExecutionResult } from "../../types/session";
+import { logError } from "../../utils/logger";
 
 /**
  * PracticeSession - Live/retroactive practice tracking
@@ -73,7 +74,7 @@ const PracticeSession: React.FC = () => {
     try {
       await startSession();
     } catch (err) {
-      console.error("Error starting session:", err);
+      logError("Error starting session:", err);
       alert("Failed to start session");
     }
   };
@@ -88,7 +89,7 @@ const PracticeSession: React.FC = () => {
       await endSession();
       navigate("/boxcall");
     } catch (err) {
-      console.error("Error ending session:", err);
+      logError("Error ending session:", err);
       alert("Failed to end session");
     }
   };
@@ -102,7 +103,7 @@ const PracticeSession: React.FC = () => {
     try {
       await logRep(result, notes, tags);
     } catch (err) {
-      console.error("Error logging rep:", err);
+      logError("Error logging rep:", err);
       alert("Failed to log rep");
     }
   };
@@ -113,7 +114,7 @@ const PracticeSession: React.FC = () => {
       await skipRep(showNotes ? notes : undefined);
       setNotes(""); // Clear notes after logging
     } catch (err) {
-      console.error("Error skipping rep:", err);
+      logError("Error skipping rep:", err);
       alert("Failed to skip rep");
     }
   };

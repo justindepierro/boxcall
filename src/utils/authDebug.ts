@@ -4,6 +4,7 @@
  */
 
 import { supabase } from "../lib/supabase";
+import { logError } from "./logger";
 
 export class AuthDebug {
   /**
@@ -18,7 +19,7 @@ export class AuthDebug {
         .select("id, full_name, email, role, created_at");
 
       if (error) {
-        console.error("❌ Error fetching profiles:", error);
+        logError("❌ Error fetching profiles:", error);
         return;
       }
 
@@ -36,7 +37,7 @@ export class AuthDebug {
         console.info("💡 You need to register a user account first");
       }
     } catch (error) {
-      console.error("❌ AuthDebug.checkProfiles failed:", error);
+      logError("❌ AuthDebug.checkProfiles failed:", error);
     }
   }
 
@@ -53,7 +54,7 @@ export class AuthDebug {
       } = await supabase.auth.getSession();
 
       if (error) {
-        console.error("❌ Error getting session:", error);
+        logError("❌ Error getting session:", error);
         return;
       }
 
@@ -66,7 +67,7 @@ export class AuthDebug {
         console.info("⚠️ No active session - user not logged in");
       }
     } catch (error) {
-      console.error("❌ AuthDebug.checkAuthSession failed:", error);
+      logError("❌ AuthDebug.checkAuthSession failed:", error);
     }
   }
 
@@ -92,7 +93,7 @@ export class AuthDebug {
       });
 
       if (error) {
-        console.error("❌ Error creating test user:", error.message);
+        logError("❌ Error creating test user:", error.message);
         return;
       }
 
@@ -103,7 +104,7 @@ export class AuthDebug {
         console.info("💡 You can now login with:", testEmail);
       }
     } catch (error) {
-      console.error("❌ AuthDebug.createTestUser failed:", error);
+      logError("❌ AuthDebug.createTestUser failed:", error);
     }
   }
 

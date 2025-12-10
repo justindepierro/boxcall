@@ -2,6 +2,7 @@
 // Comprehensive service for all social interactions
 
 import { supabase } from "../lib/supabase";
+import { getCurrentUserId } from "../lib/auth-helpers";
 import type {
   Reaction,
   ReactionSummary,
@@ -29,6 +30,8 @@ export class SocialServiceImpl implements SocialService {
     contentType: ContentType,
     contentId: string
   ): Promise<ReactionSummary> {
+    const userId = getCurrentUserId();
+
     // Get all reactions for this content
     const { data: reactions, error } = await supabase
       .from("reactions")
@@ -38,17 +41,18 @@ export class SocialServiceImpl implements SocialService {
 
     if (error) throw error;
 
-    // Get current user's reaction
-    const { data: userReaction } = await supabase
-      .from("reactions")
-      .select("reaction_type")
-      .eq("content_type", contentType)
-      .eq("content_id", contentId)
-      .eq(
-        "user_id",
-        supabase.auth.getUser()?.then(({ data }) => data.user?.id)
-      )
-      .single();
+    // Get current user's reaction (only if logged in)
+    let userReaction = null;
+    if (userId) {
+      const { data } = await supabase
+        .from("reactions")
+        .select("reaction_type")
+        .eq("content_type", contentType)
+        .eq("content_id", contentId)
+        .eq("user_id", userId)
+        .single();
+      userReaction = data;
+    }
 
     // Aggregate reactions
     const reactionCounts: { [key in ReactionType]?: number } = {};
@@ -67,10 +71,13 @@ export class SocialServiceImpl implements SocialService {
   }
 
   async addReaction(request: CreateReactionRequest): Promise<Reaction> {
+    const userId = getCurrentUserId();
+    if (!userId) throw new Error("User not authenticated");
+
     const { data, error } = await supabase
       .from("reactions")
       .insert({
-        user_id: supabase.auth.getUser()?.then(({ data }) => data.user?.id),
+        user_id: userId,
         ...request,
       })
       .select()
@@ -84,15 +91,15 @@ export class SocialServiceImpl implements SocialService {
     contentType: ContentType,
     contentId: string
   ): Promise<void> {
+    const userId = getCurrentUserId();
+    if (!userId) throw new Error("User not authenticated");
+
     const { error } = await supabase
       .from("reactions")
       .delete()
       .eq("content_type", contentType)
       .eq("content_id", contentId)
-      .eq(
-        "user_id",
-        supabase.auth.getUser()?.then(({ data }) => data.user?.id)
-      );
+      .eq("user_id", userId);
 
     if (error) throw error;
   }
@@ -100,7 +107,7 @@ export class SocialServiceImpl implements SocialService {
   async toggleReaction(
     request: CreateReactionRequest
   ): Promise<Reaction | null> {
-    const userId = (await supabase.auth.getUser()).data.user?.id;
+    const userId = getCurrentUserId();
     if (!userId) throw new Error("User not authenticated");
 
     // Check if reaction already exists
@@ -146,7 +153,7 @@ export class SocialServiceImpl implements SocialService {
     followingType: FollowingType,
     followingId: string
   ): Promise<FollowSummary> {
-    const userId = (await supabase.auth.getUser()).data.user?.id;
+    const userId = getCurrentUserId();
 
     // Get follower count
     const { count: followerCount } = await supabase
@@ -178,7 +185,7 @@ export class SocialServiceImpl implements SocialService {
   }
 
   async follow(request: CreateFollowRequest): Promise<Follow> {
-    const userId = (await supabase.auth.getUser()).data.user?.id;
+    const userId = getCurrentUserId();
     if (!userId) throw new Error("User not authenticated");
 
     const { data, error } = await supabase
@@ -198,7 +205,7 @@ export class SocialServiceImpl implements SocialService {
     followingType: FollowingType,
     followingId: string
   ): Promise<void> {
-    const userId = (await supabase.auth.getUser()).data.user?.id;
+    const userId = getCurrentUserId();
     if (!userId) throw new Error("User not authenticated");
 
     const { error } = await supabase
@@ -295,7 +302,7 @@ export class SocialServiceImpl implements SocialService {
   }
 
   async addComment(request: CreateCommentRequest): Promise<Comment> {
-    const userId = (await supabase.auth.getUser()).data.user?.id;
+    const userId = getCurrentUserId();
     if (!userId) throw new Error("User not authenticated");
 
     const { data, error } = await supabase
@@ -320,6 +327,9 @@ export class SocialServiceImpl implements SocialService {
     commentId: string,
     request: UpdateCommentRequest
   ): Promise<Comment> {
+    const userId = getCurrentUserId();
+    if (!userId) throw new Error("User not authenticated");
+
     const { data, error } = await supabase
       .from("comments")
       .update({
@@ -329,7 +339,7 @@ export class SocialServiceImpl implements SocialService {
         updated_at: new Date().toISOString(),
       })
       .eq("id", commentId)
-      .eq("user_id", (await supabase.auth.getUser()).data.user?.id)
+      .eq("user_id", userId)
       .select(
         `
         *,
@@ -343,11 +353,14 @@ export class SocialServiceImpl implements SocialService {
   }
 
   async deleteComment(commentId: string): Promise<void> {
+    const userId = getCurrentUserId();
+    if (!userId) throw new Error("User not authenticated");
+
     const { error } = await supabase
       .from("comments")
       .delete()
       .eq("id", commentId)
-      .eq("user_id", (await supabase.auth.getUser()).data.user?.id);
+      .eq("user_id", userId);
 
     if (error) throw error;
   }
@@ -357,7 +370,7 @@ export class SocialServiceImpl implements SocialService {
   // =============================================================================
 
   async getNotifications(limit = 20, offset = 0): Promise<NotificationSummary> {
-    const userId = (await supabase.auth.getUser()).data.user?.id;
+    const userId = getCurrentUserId();
     if (!userId) throw new Error("User not authenticated");
 
     const { data, error, count } = await supabase
@@ -383,6 +396,9 @@ export class SocialServiceImpl implements SocialService {
   }
 
   async markNotificationRead(notificationId: string): Promise<void> {
+    const userId = getCurrentUserId();
+    if (!userId) throw new Error("User not authenticated");
+
     const { error } = await supabase
       .from("notifications")
       .update({
@@ -390,13 +406,13 @@ export class SocialServiceImpl implements SocialService {
         read_at: new Date().toISOString(),
       })
       .eq("id", notificationId)
-      .eq("user_id", (await supabase.auth.getUser()).data.user?.id);
+      .eq("user_id", userId);
 
     if (error) throw error;
   }
 
   async markAllNotificationsRead(): Promise<void> {
-    const userId = (await supabase.auth.getUser()).data.user?.id;
+    const userId = getCurrentUserId();
     if (!userId) throw new Error("User not authenticated");
 
     const { error } = await supabase
@@ -416,7 +432,7 @@ export class SocialServiceImpl implements SocialService {
   // =============================================================================
 
   async getActivityFeed(limit = 20, offset = 0): Promise<ActivityItem[]> {
-    const userId = (await supabase.auth.getUser()).data.user?.id;
+    const userId = getCurrentUserId();
     if (!userId) throw new Error("User not authenticated");
 
     const { data, error } = await supabase

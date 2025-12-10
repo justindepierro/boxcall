@@ -10,6 +10,7 @@ import { PracticeService } from "@services";
 import type { PracticeTemplate } from "../../types/practice";
 import { useToast } from "../../hooks/useToast";
 import { triggerHapticFeedback } from "../../lib/hapticFeedback";
+import { logError } from "../../utils/logger";
 
 interface TemplateManagementModalProps {
   isOpen: boolean;
@@ -38,7 +39,7 @@ export const TemplateManagementModal: React.FC<
       const loadedTemplates = await PracticeService.getTemplates(teamId);
       setTemplates(loadedTemplates);
     } catch (error) {
-      console.error("Failed to load templates:", error);
+      logError("Failed to load templates:", error);
       toast.error("Failed to load templates");
     } finally {
       setLoading(false);
@@ -85,7 +86,7 @@ export const TemplateManagementModal: React.FC<
       toast.success("Template deleted");
       loadTemplates(); // Refresh list
     } catch (error) {
-      console.error("Failed to delete template:", error);
+      logError("Failed to delete template:", error);
       toast.error("Failed to delete template");
     }
   };

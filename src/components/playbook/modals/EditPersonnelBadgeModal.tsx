@@ -10,6 +10,7 @@ import { Icon } from "../../ui/Icon/Icon";
 import { toast } from "sonner";
 import { PersonnelLibraryService } from "../../../services/personnelLibrary/PersonnelLibraryService";
 import type { PersonnelConfiguration } from "../../../types/personnel";
+import { logError } from "../../../utils/logger";
 
 interface EditPersonnelBadgeModalProps {
   isOpen: boolean;
@@ -59,7 +60,7 @@ export const EditPersonnelBadgeModal: React.FC<
       onSuccess();
       onClose();
     } catch (error) {
-      console.error("Error updating badge:", error);
+      logError("Error updating badge:", error);
       toast.error("Failed to update badge colors");
     } finally {
       setSaving(false);

@@ -17,11 +17,9 @@ export const SimpleTooltip = ({
     <span
       className="relative inline-block"
       onMouseEnter={() => {
-        console.log("ENTER");
         setShow(true);
       }}
       onMouseLeave={() => {
-        console.log("LEAVE");
         setShow(false);
       }}
     >

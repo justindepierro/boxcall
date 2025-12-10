@@ -13,6 +13,7 @@
 
 import { supabase } from "../lib/supabase";
 import { info, error as logError } from "../utils/logger";
+import { getCurrentUserId } from "../lib/auth-helpers";
 import {
   sendPlayerInvitationEmail,
   sendInvitationReminderEmail,
@@ -104,15 +105,14 @@ async function logInvitationAttempt(
   success: boolean
 ): Promise<void> {
   try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    // Use cached user ID for bulletproof performance
+    const userId = getCurrentUserId();
 
     await supabase.from("invitation_attempts").insert({
       team_id: teamId,
       player_id: playerId,
       email: email.toLowerCase(),
-      attempted_by: user?.id || null,
+      attempted_by: userId,
       success,
       attempted_at: new Date().toISOString(),
     });
@@ -164,9 +164,8 @@ export async function sendPlayerInvitation(
     }
 
     // Get current user for tracking
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    // Use cached user ID for bulletproof performance
+    const userId = getCurrentUserId();
 
     // Update player record with invitation status
     // Using .from() with explicit any cast for fields not yet in types
@@ -175,7 +174,7 @@ export async function sendPlayerInvitation(
       invitation_status: "pending",
       invitation_sent_at: new Date().toISOString(),
       invitation_expires_at: expirationDate.toISOString(),
-      invited_by: user?.id || null,
+      invited_by: userId,
     };
 
     const { data, error } = await (supabase.from("team_players") as any)
@@ -273,16 +272,15 @@ export async function resendPlayerInvitation(
     const newToken = crypto.randomUUID();
     const expirationDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    // Use cached user ID for bulletproof performance
+    const userId = getCurrentUserId();
 
     const updateData: Record<string, any> = {
       invitation_token: newToken,
       invitation_status: "pending",
       invitation_sent_at: new Date().toISOString(),
       invitation_expires_at: expirationDate.toISOString(),
-      invited_by: user?.id || null,
+      invited_by: userId,
     };
 
     const { error } = await (supabase.from("team_players") as any)

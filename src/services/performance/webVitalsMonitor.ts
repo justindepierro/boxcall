@@ -14,6 +14,7 @@
  * - Database query performance
  */
 
+import { debug, error as logError } from "../utils/logger";
 import { onCLS, onLCP, onFCP, onTTFB, onINP, type Metric } from "web-vitals";
 import React from "react";
 
@@ -74,7 +75,7 @@ class WebVitalsMonitor {
     if (import.meta.env.DEV) {
       const icon =
         rating === "good" ? "✅" : rating === "needs-improvement" ? "⚠️" : "❌";
-      console.log(
+      debug(
         `${icon} ${name}: ${metric.value.toFixed(2)}${name === "CLS" ? "" : "ms"} (${rating})`
       );
     }
@@ -110,7 +111,7 @@ class WebVitalsMonitor {
 
     // Log slow API calls (>2s)
     if (duration > 2000 && import.meta.env.DEV) {
-      console.warn(`🐌 Slow API call: ${endpoint} took ${duration}ms`);
+      debug(`🐌 Slow API call: ${endpoint} took ${duration}ms`);
     }
   }
 
@@ -132,7 +133,7 @@ class WebVitalsMonitor {
     this.customMarks.delete(name);
 
     if (import.meta.env.DEV) {
-      console.log(`⏱️  ${name}: ${duration.toFixed(2)}ms`);
+      debug(`⏱️  ${name}: ${duration.toFixed(2)}ms`);
     }
 
     return duration;
@@ -143,7 +144,7 @@ class WebVitalsMonitor {
    */
   trackRender(componentName: string, duration: number): void {
     if (duration > 50 && import.meta.env.DEV) {
-      console.warn(
+      debug(
         `🐌 Slow render: ${componentName} took ${duration.toFixed(2)}ms`
       );
     }
@@ -232,7 +233,7 @@ class WebVitalsMonitor {
       }).catch((err) => {
         // Silently fail - don't disrupt user experience
         if (import.meta.env.DEV) {
-          console.error("Failed to send analytics:", err);
+          logError("Failed to send analytics:", err);
         }
       });
     }

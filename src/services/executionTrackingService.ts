@@ -8,6 +8,7 @@
 // TODO: Regenerate Supabase types for new tables (practice_sessions, game_sessions, play_executions)
 
 import { supabase } from "../lib/supabase";
+import { getCurrentUserId } from "../lib/auth-helpers";
 import type {
   PlayExecution,
   CreatePlayExecutionData,
@@ -39,7 +40,7 @@ export class ExecutionTrackingService {
         notes: data.notes,
         weather: data.weather,
         field_conditions: data.fieldConditions,
-        recorded_by: (await supabase.auth.getUser()).data.user?.id,
+        recorded_by: getCurrentUserId(),
       })
       .select()
       .single();
@@ -155,7 +156,7 @@ export class ExecutionTrackingService {
         notes: data.notes,
         weather: data.weather,
         field_conditions: data.fieldConditions,
-        recorded_by: (await supabase.auth.getUser()).data.user?.id,
+        recorded_by: getCurrentUserId(),
       })
       .select()
       .single();
@@ -285,7 +286,7 @@ export class ExecutionTrackingService {
         quick_tags: data.quickTags,
         executed_at: data.executedAt?.toISOString() || new Date().toISOString(),
         team_id: data.teamId,
-        recorded_by: (await supabase.auth.getUser()).data.user?.id,
+        recorded_by: getCurrentUserId(),
         recorded_mode: data.recordedMode,
       })
       .select()
@@ -299,7 +300,7 @@ export class ExecutionTrackingService {
   static async bulkLogExecutions(
     executions: CreatePlayExecutionData[]
   ): Promise<PlayExecution[]> {
-    const userId = (await supabase.auth.getUser()).data.user?.id;
+    const userId = getCurrentUserId();
 
     const { data, error } = await supabase
       .from("play_executions")
@@ -609,6 +610,71 @@ export class ExecutionTrackingService {
       avgYardsGained,
       executionCount,
     };
+  }
+
+  // ================================================
+  // RECENT SESSIONS (Combined Practice + Game)
+  // ================================================
+
+  /**
+   * Get recent sessions (both practice and game) for the team
+   * Returns combined list sorted by most recent first
+   *
+   * NOTE: Uses supabase directly because practice_sessions/game_sessions tables
+   * are not yet in the TypeScript database types. Will migrate when types are updated.
+   */
+  static async getRecentSessions(
+    teamId: string,
+    limit: number = 5
+  ): Promise<Array<PracticeSession | GameSession>> {
+    // Use supabase directly - these tables aren't in our typed schema yet
+    const [practiceResult, gameResult] = await Promise.allSettled([
+      supabase
+        .from("practice_sessions")
+        .select(
+          `
+          *,
+          practice_scripts (id, title)
+        `
+        )
+        .eq("team_id", teamId)
+        .eq("is_archived", false)
+        .order("session_date", { ascending: false })
+        .limit(limit),
+      supabase
+        .from("game_sessions")
+        .select(
+          `
+          *,
+          game_plans (id, name, opponent)
+        `
+        )
+        .eq("team_id", teamId)
+        .eq("is_archived", false)
+        .order("game_date", { ascending: false })
+        .limit(limit),
+    ]);
+
+    const sessions: Array<PracticeSession | GameSession> = [];
+
+    // Process practice sessions
+    if (practiceResult.status === "fulfilled" && practiceResult.value.data) {
+      sessions.push(...practiceResult.value.data.map(this.mapPracticeSession));
+    }
+
+    // Process game sessions
+    if (gameResult.status === "fulfilled" && gameResult.value.data) {
+      sessions.push(...gameResult.value.data.map(this.mapGameSession));
+    }
+
+    // Sort by most recent date and limit
+    return sessions
+      .sort((a, b) => {
+        const dateA = a.type === "practice" ? a.sessionDate : a.gameDate;
+        const dateB = b.type === "practice" ? b.sessionDate : b.gameDate;
+        return new Date(dateB).getTime() - new Date(dateA).getTime();
+      })
+      .slice(0, limit);
   }
 
   // ================================================

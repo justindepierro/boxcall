@@ -14,6 +14,7 @@ import { Typography } from "../../../design-system/Typography";
 import { useToast } from "../../../../hooks/useToast";
 import { PersonnelService } from "../../../../services/personnelService";
 import type { PersonnelConfiguration } from "../../../../types/personnel";
+import { logError } from "../../../../utils/logger";
 
 interface PersonnelCreationPanelProps {
   isOpen: boolean;
@@ -59,7 +60,7 @@ export const PersonnelCreationPanel: React.FC<PersonnelCreationPanelProps> = ({
       onCreated(newPersonnel);
       handleClose();
     } catch (error) {
-      console.error("Failed to create personnel:", error);
+      logError("Failed to create personnel:", error);
       toast.error("Failed to create personnel. Please try again.");
     } finally {
       setIsCreating(false);

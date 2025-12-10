@@ -72,5 +72,3 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
     </div>
   );
 };
-
-export default MobileDrawer;

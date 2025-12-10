@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
-import { supabase } from "../lib/supabase";
+import { getCurrentUserId } from "../lib/auth-helpers";
+import { logError } from "../utils/logger";
 import {
   PreferenceService,
   type UserPreferences,
@@ -49,11 +50,9 @@ export function usePreference<K extends keyof UserPreferences>(
     async function syncWithServer() {
       try {
         // Check if user is authenticated
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
+        const userId = getCurrentUserId();
 
-        if (user && !cancelled) {
+        if (userId && !cancelled) {
           // User is authenticated - load from server and update if different
           const serverValue = await PreferenceService.getPreference(key);
 
@@ -85,7 +84,7 @@ export function usePreference<K extends keyof UserPreferences>(
           }
         }
       } catch (error) {
-        console.error(`[usePreference] Error syncing ${String(key)}:`, error);
+        logError(`[usePreference] Error syncing ${String(key)}:`, error);
         // Keep using localStorage value on error
       } finally {
         if (!cancelled) {
@@ -142,11 +141,9 @@ export function usePreference<K extends keyof UserPreferences>(
 
       saveTimeoutRef.current = setTimeout(async () => {
         try {
-          const {
-            data: { user },
-          } = await supabase.auth.getUser();
+          const userId = getCurrentUserId();
 
-          if (user && isMountedRef.current) {
+          if (userId && isMountedRef.current) {
             console.log(
               `[usePreference] Saving ${String(key)} to server:`,
               newValue
@@ -162,7 +159,7 @@ export function usePreference<K extends keyof UserPreferences>(
             }
           }
         } catch (error) {
-          console.error(
+          logError(
             `[usePreference] Error saving ${String(key)} to server:`,
             error
           );
@@ -208,7 +205,7 @@ function getFromLocalStorage<K extends keyof UserPreferences>(
     // For string values like direction format and view mode
     return stored as UserPreferences[K];
   } catch (error) {
-    console.error(`[usePreference] Error reading ${String(key)}:`, error);
+    logError(`[usePreference] Error reading ${String(key)}:`, error);
     return defaultValue;
   }
 }
@@ -242,7 +239,7 @@ function saveToLocalStorage<K extends keyof UserPreferences>(
     // For string values
     localStorage.setItem(localStorageKey, String(value));
   } catch (error) {
-    console.error(`[usePreference] Error saving ${String(key)}:`, error);
+    logError(`[usePreference] Error saving ${String(key)}:`, error);
   }
 }
 

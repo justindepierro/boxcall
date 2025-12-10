@@ -15,6 +15,7 @@ import {
 } from "../../services/playConfidenceService";
 import { ConfidenceBreakdown } from "./ConfidenceBreakdown";
 import { StreakIndicator } from "./StreakIndicator";
+import { logError } from "../../utils/logger";
 
 interface SituationFilterProps {
   situation: GameSituation;
@@ -69,7 +70,7 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
         );
         setConfidenceScores(scores);
       } catch (error) {
-        console.error("Error fetching confidence scores:", error);
+        logError("Error fetching confidence scores:", error);
       } finally {
         setLoading(false);
       }

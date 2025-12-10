@@ -1,17 +1,8 @@
 import type { PracticeBlock } from "./types";
-/**
- * Format duration in minutes to hours:minutes format
- */
-export const formatDuration = (minutes: number): string => {
-  const hours = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
-  if (hours === 0) {
-    return `${remainingMinutes}m`;
-  }
-  return remainingMinutes === 0
-    ? `${hours}h`
-    : `${hours}h ${remainingMinutes}m`;
-};
+
+// Re-export centralized formatDuration for backwards compatibility
+export { formatDuration } from "../../utils/dateFormatting";
+
 /**
  * Get category color classes for styling
  */

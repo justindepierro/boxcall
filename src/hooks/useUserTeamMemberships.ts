@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
 import type { Database } from "../types/database";
+import { logError } from "../utils/logger";
 
 type TeamMember = Database["public"]["Tables"]["team_members"]["Row"] & {
   teams: Database["public"]["Tables"]["teams"]["Row"];
@@ -21,7 +22,7 @@ async function fetchUserTeamMemberships(userId: string): Promise<TeamMember[]> {
     .eq("status", "active");
 
   if (error) {
-    console.error("Error fetching user team memberships:", error);
+    logError("Error fetching user team memberships:", error);
     return [];
   }
 

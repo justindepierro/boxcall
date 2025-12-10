@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Icon } from "../ui/Icon/Icon";
 import type { Formation } from "../../types/formation";
 import { FormationService } from "../../services/formationService";
+import { logError } from "../../utils/logger";
 
 interface FormationBadgeProps {
   formationId?: string | null;
@@ -63,7 +64,7 @@ export const FormationBadge: React.FC<FormationBadgeProps> = ({
           setFormation(data);
         }
       } catch (error) {
-        console.error("Failed to load formation:", error);
+        logError("Failed to load formation:", error);
         if (mounted) {
           setFormation(null);
         }

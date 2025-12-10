@@ -6,6 +6,7 @@
  */
 // DISABLED: Service worker temporarily disabled
 // import { Workbox } from "workbox-window";
+import { debug, warn } from "../utils/logger";
 
 interface OfflineData {
   id: string;
@@ -203,8 +204,8 @@ class OfflineDataManager {
         await this.syncAction(action);
         await this.removeSyncAction(action.id);
         this.syncQueue = this.syncQueue.filter((a) => a.id !== action.id);
-      } catch {
-        // TODO: Handle sync failure (was: console.error)
+      } catch (err) {
+        warn("Sync action failed, will retry:", err);
         action.retryCount++;
 
         // Remove actions that have failed too many times
@@ -218,8 +219,8 @@ class OfflineDataManager {
 
   private async syncAction(_action: SyncAction): Promise<void> {
     // This would integrate with your actual API
-    // For now, simulate API call
-    // TODO: Remove debug log (was: console.log)
+    // Simulate API call for offline sync
+    debug("Simulating sync action - implement actual API integration");
 
     // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 100));

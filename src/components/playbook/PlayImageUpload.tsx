@@ -15,6 +15,7 @@ import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon";
 import { Typography } from "../design-system/Typography";
 import { useToast } from "../../hooks/useToast";
+import { logError } from "../../utils/logger";
 
 interface PlayImageUploadProps {
   onImageSelected: (file: File, preview: string) => void;
@@ -73,7 +74,7 @@ export const PlayImageUpload: React.FC<PlayImageUploadProps> = ({
           `Image compressed: ${(file.size / 1024 / 1024).toFixed(2)}MB → ${(compressedFile.size / 1024 / 1024).toFixed(2)}MB`
         );
       } catch (error) {
-        console.error("Image compression error:", error);
+        logError("Image compression error:", error);
         toast.error("Failed to process image. Please try again.");
       } finally {
         setIsCompressing(false);

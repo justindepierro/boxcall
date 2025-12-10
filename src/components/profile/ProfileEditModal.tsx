@@ -8,6 +8,7 @@ import { ProfileFormSection, type FormValue } from "../forms/ProfileFormFields";
 import { getProfileConfigForRole } from "../../types/profileFields";
 import { DashboardService } from "@services/dashboardService";
 import { supabase } from "../../lib/supabase";
+import { logError } from "../../utils/logger";
 
 interface ProfileData {
   id: string;
@@ -159,7 +160,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
 
       return urlData?.publicUrl || null;
     } catch (error) {
-      console.error("Avatar upload failed:", error);
+      logError("Avatar upload failed:", error);
       return null;
     } finally {
       setAvatarUploading(false);
@@ -194,7 +195,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
         onClose();
       }
     } catch (error) {
-      console.error("Profile update failed:", error);
+      logError("Profile update failed:", error);
       // TODO: Show error message to user
     } finally {
       setIsSubmitting(false);

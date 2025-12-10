@@ -5,6 +5,7 @@
  * including query optimization, enhanced caching, and performance monitoring
  */
 
+import { debug } from "../../utils/logger";
 import { BaseService as OriginalBaseService } from "./BaseService";
 import {
   dbOptimization,
@@ -587,7 +588,7 @@ export class OptimizedBaseService<
       .filter((entry) => entry.key.startsWith(tablePrefix))
       .forEach((entry) => {
         // Note: This would need to be implemented in the optimization service
-        console.log(`Would clear cache key: ${entry.key}`);
+        debug(`Would clear cache key: ${entry.key}`);
       });
 
     // Clear base service cache

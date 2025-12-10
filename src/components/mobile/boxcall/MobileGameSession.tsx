@@ -13,10 +13,12 @@
 import React, { useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { Typography } from "../../design-system";
-import { Button } from "../../ui";
+import { Button, Dropdown } from "../../ui";
 import { Icon } from "../../ui/Icon/Icon";
 import { useGameSession } from "../../../hooks/useGameSession";
+import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 import type { ExecutionResult } from "../../../types/session";
+import { logError } from "../../../utils/logger";
 
 export const MobileGameSession: React.FC = () => {
   const { planId } = useParams<{ planId: string }>();
@@ -57,10 +59,8 @@ export const MobileGameSession: React.FC = () => {
 
   // Quick play logging with haptic feedback
   const handleQuickLog = async (result: ExecutionResult, yards?: number) => {
-    // Haptic feedback
-    if ("vibrate" in navigator) {
-      navigator.vibrate(10);
-    }
+    // Haptic feedback using standardized utility
+    triggerHapticFeedback("light");
 
     if (!currentPlay) return;
 
@@ -76,7 +76,7 @@ export const MobileGameSession: React.FC = () => {
         handleQuickDownUpdate();
       }
     } catch (err) {
-      console.error("Error logging play:", err);
+      logError("Error logging play:", err);
     }
   };
 
@@ -320,19 +320,17 @@ export const MobileGameSession: React.FC = () => {
                 <Typography variant="body-xs" className="text-secondary mb-1">
                   Distance
                 </Typography>
-                <select
-                  value={situation?.distance || 10}
-                  onChange={(e) =>
-                    updateSituation({ distance: parseInt(e.target.value) })
+                <Dropdown
+                  value={String(situation?.distance || 10)}
+                  onChange={(value) =>
+                    updateSituation({ distance: parseInt(value) })
                   }
-                  className="w-full p-2 bg-secondary border border-border rounded text-primary"
-                >
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20].map((d) => (
-                    <option key={d} value={d}>
-                      {d}
-                    </option>
-                  ))}
-                </select>
+                  options={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20].map((d) => ({
+                    value: String(d),
+                    label: String(d),
+                  }))}
+                  size="md"
+                />
               </div>
               <div>
                 <Typography variant="body-xs" className="text-secondary mb-1">
@@ -490,7 +488,10 @@ export const MobileGameSession: React.FC = () => {
         </div>
 
         {/* Safe area padding for iOS */}
-        <div className="h-safe-area-inset-bottom bg-secondary" />
+        <div
+          className="bg-secondary"
+          style={{ height: "env(safe-area-inset-bottom, 0px)" }}
+        />
       </div>
     </div>
   );

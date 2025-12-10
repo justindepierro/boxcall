@@ -13,6 +13,7 @@ import { Icon } from "../../ui/Icon/Icon";
 import { toast } from "sonner";
 import { CreatePersonnelModal } from "./CreatePersonnelModal";
 import { EditPersonnelBadgeModal } from "./EditPersonnelBadgeModal";
+import { logError } from "../../../utils/logger";
 
 interface PersonnelLibraryModalProps {
   isOpen: boolean;
@@ -53,7 +54,7 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
       );
       setPersonnel(response.items);
     } catch (error) {
-      console.error("Error loading personnel:", error);
+      logError("Error loading personnel:", error);
       toast.error("Failed to load personnel");
     } finally {
       setLoading(false);
@@ -85,7 +86,7 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
         });
       }
     } catch (error) {
-      console.error("Error importing personnel:", error);
+      logError("Error importing personnel:", error);
       toast.error("Failed to import personnel from plays", {
         id: "import-personnel",
       });
@@ -112,7 +113,7 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
         );
       }
     } catch (error) {
-      console.error("Error updating usage:", error);
+      logError("Error updating usage:", error);
       toast.error("Failed to update usage counts", { id: "usage" });
     }
   };

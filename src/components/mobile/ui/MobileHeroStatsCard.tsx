@@ -132,5 +132,3 @@ export const MobileHeroStatsCard: React.FC<HeroStatsCardProps> = ({
     </div>
   );
 };
-
-export default MobileHeroStatsCard;

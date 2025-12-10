@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
+import { logError } from "../utils/logger";
 
 export interface PlayStatus {
   hasDiagram: boolean;
@@ -37,7 +38,7 @@ export function usePlayStatus(playId: string, playbookId: string): PlayStatus {
             .eq("playbook_id", playbookId);
 
         if (assignmentsError) {
-          console.error("Error fetching assignments:", assignmentsError);
+          logError("Error fetching assignments:", assignmentsError);
         }
 
         // Query 2: Count practice script usage
@@ -47,7 +48,7 @@ export function usePlayStatus(playId: string, playbookId: string): PlayStatus {
           .eq("play_id", playId);
 
         if (practiceError) {
-          console.error("Error fetching practice count:", practiceError);
+          logError("Error fetching practice count:", practiceError);
         }
 
         // Query 3: Count game plan usage
@@ -59,7 +60,7 @@ export function usePlayStatus(playId: string, playbookId: string): PlayStatus {
           .eq("play_id", playId);
 
         if (gamePlanError) {
-          console.error("Error fetching game plan count:", gamePlanError);
+          logError("Error fetching game plan count:", gamePlanError);
         }
 
         if (isMounted) {
@@ -71,7 +72,7 @@ export function usePlayStatus(playId: string, playbookId: string): PlayStatus {
           });
         }
       } catch (error) {
-        console.error("Error fetching play status:", error);
+        logError("Error fetching play status:", error);
       }
     }
 

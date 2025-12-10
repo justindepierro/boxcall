@@ -20,6 +20,7 @@ import type {
 import { useAuth } from "../app/auth-store";
 import { ExecutionTrackingService } from "../services/executionTrackingService";
 import { OfflineExecutionQueue } from "../utils/offlineExecutionQueue";
+import { debug, error as logError } from "../utils/logger";
 
 const AUTO_SAVE_INTERVAL = 30000; // 30 seconds
 const SESSION_STORAGE_KEY = "boxcall_active_session";
@@ -105,7 +106,7 @@ export function useSession({
         const parsed = JSON.parse(savedSession);
         setState((prev) => ({ ...prev, ...parsed, isActive: false }));
       } catch (err) {
-        console.error("Failed to restore session:", err);
+        logError("Failed to restore session:", err);
       }
     }
   }, []);
@@ -209,11 +210,11 @@ export function useSession({
       // Start auto-save
       autoSaveIntervalRef.current = setInterval(() => {
         // Auto-save logic here
-        console.log("Auto-saving session...");
+        debug("Auto-saving session...");
       }, AUTO_SAVE_INTERVAL);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to start session");
-      console.error("Start session error:", err);
+      logError("Start session error:", err);
     } finally {
       setIsLoading(false);
     }
@@ -247,7 +248,7 @@ export function useSession({
       localStorage.removeItem(SESSION_STORAGE_KEY);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to end session");
-      console.error("End session error:", err);
+      logError("End session error:", err);
     } finally {
       setIsLoading(false);
     }
@@ -268,7 +269,7 @@ export function useSession({
 
     // Resume auto-save
     autoSaveIntervalRef.current = setInterval(() => {
-      console.log("Auto-saving session...");
+      debug("Auto-saving session...");
     }, AUTO_SAVE_INTERVAL);
   }, []);
 
@@ -346,7 +347,7 @@ export function useSession({
           setHasPendingSync(true);
         }
       } catch (err) {
-        console.error("Log execution error:", err);
+        logError("Log execution error:", err);
         // On error, add to offline queue as fallback
         await offlineQueue.current.addExecution(fullExecution);
         setHasPendingSync(true);
@@ -381,7 +382,7 @@ export function useSession({
           };
         });
       } catch (err) {
-        console.error("Update execution error:", err);
+        logError("Update execution error:", err);
         setError("Failed to update execution");
       }
     },
@@ -404,7 +405,7 @@ export function useSession({
           };
         });
       } catch (err) {
-        console.error("Delete execution error:", err);
+        logError("Delete execution error:", err);
         setError("Failed to delete execution");
       }
     },
@@ -454,11 +455,11 @@ export function useSession({
     try {
       const synced = await offlineQueue.current.syncQueue();
       if (synced > 0) {
-        console.log(`Synced ${synced} offline executions`);
+        debug(`Synced ${synced} offline executions`);
         setHasPendingSync(false);
       }
     } catch (err) {
-      console.error("Sync error:", err);
+      logError("Sync error:", err);
       setError("Failed to sync offline data");
     }
   }, []);

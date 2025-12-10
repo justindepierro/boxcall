@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography } from "../../../design-system/Typography";
-import Select from "../../../ui/Select/Select";
+import { Dropdown } from "../../../ui/Dropdown";
 
 interface PreferencesSectionProps {
   prefDown: string;
@@ -40,10 +40,10 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
       </Typography>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-sm">
         <div>
-          <Select
+          <Dropdown
             label="Down"
             value={prefDown}
-            onChange={(value) => onPrefDownChange(String(value))}
+            onChange={onPrefDownChange}
             options={downOptions}
             placeholder="Any"
             clearable
@@ -51,10 +51,10 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
           />
         </div>
         <div>
-          <Select
+          <Dropdown
             label="Distance"
             value={prefDistance}
-            onChange={(value) => onPrefDistanceChange(String(value))}
+            onChange={onPrefDistanceChange}
             options={distanceOptions}
             placeholder="Any"
             clearable
@@ -62,10 +62,10 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
           />
         </div>
         <div>
-          <Select
+          <Dropdown
             label="Hash"
             value={prefHash}
-            onChange={(value) => onPrefHashChange(String(value))}
+            onChange={onPrefHashChange}
             options={hashOptions}
             placeholder="Any"
             clearable

@@ -14,6 +14,7 @@ import {
   conflictResolutionService,
   type ConflictResolution,
 } from "@services/conflictResolution";
+import { logError } from "../../utils/logger";
 import {
   CollaborationContext,
   type CollaborationContextValue,
@@ -93,7 +94,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
         prev.filter((c) => c.conflictId !== conflictId)
       );
     } else {
-      console.error("Failed to resolve conflict with strategy:", strategy);
+      logError("Failed to resolve conflict with strategy:", strategy);
     }
   };
 

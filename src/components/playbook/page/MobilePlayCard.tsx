@@ -115,15 +115,7 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
             crossOrigin="anonymous"
             decoding="async"
             referrerPolicy="no-referrer-when-downgrade"
-            onLoad={() => {
-              console.log("[MobilePlayCard] Image loaded:", play.play_name);
-            }}
             onError={(e) => {
-              console.error("[MobilePlayCard] Image load error:", {
-                playId: play.id,
-                playName: play.play_name,
-                url: play.diagram_url || (play as any).diagram_image_url,
-              });
               // Hide broken image and show fallback
               e.currentTarget.style.display = "none";
               e.currentTarget.parentElement?.classList.add("image-error");
@@ -157,18 +149,18 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
         )}
 
         {/* Formation & Personnel inline */}
-        <div className="flex items-center gap-2 mb-2">
-          <span className="inline-flex items-center rounded-md bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-700">
-            {formation}
+        <div className="mb-2 flex flex-wrap items-center gap-2">
+          <span className="inline-flex min-w-0 max-w-[60%] items-center rounded-md bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-700">
+            <span className="truncate">{formation}</span>
           </span>
-          <span className="inline-flex items-center rounded-md bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-600">
-            {personnel}
+          <span className="inline-flex min-w-0 max-w-[30%] items-center rounded-md bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-600">
+            <span className="truncate">{personnel}</span>
           </span>
         </div>
 
         {/* Play Type - Subtle label */}
         {play.p_type && (
-          <span className="text-xs text-secondary uppercase tracking-wide">
+          <span className="text-xs text-secondary uppercase tracking-wide line-clamp-1">
             {play.p_type}
           </span>
         )}

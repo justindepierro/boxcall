@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useRef, useEffect } from "react";
+import { logError } from "../../utils/logger";
 import {
   type ReactionType,
   type ReactionSummary,
@@ -101,10 +102,10 @@ export const ReactionPicker: React.FC<ReactionPickerProps> = ({
       if (result.success) {
         onReactionChange?.();
       } else {
-        console.error("Failed to toggle reaction:", result.error);
+        logError("Failed to toggle reaction:", result.error);
       }
     } catch (error) {
-      console.error("Error toggling reaction:", error);
+      logError("Error toggling reaction:", error);
     } finally {
       setLoading(false);
       setTimeout(() => setAnimatingReaction(null), 300);

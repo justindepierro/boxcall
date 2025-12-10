@@ -1,6 +1,7 @@
 import { supabase } from "../lib/supabase";
 
 import type { PostgrestError } from "@supabase/supabase-js";
+import { logError } from "../utils/logger";
 
 export interface SeasonStats {
   team_id: string;
@@ -90,7 +91,7 @@ export async function getSeasonStats(
       win_pct,
     };
   } catch (unexpectedError) {
-    console.error("❌ Unexpected error in getSeasonStats:", unexpectedError);
+    logError("❌ Unexpected error in getSeasonStats:", unexpectedError);
     return null;
   }
 }

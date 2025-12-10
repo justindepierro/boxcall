@@ -15,6 +15,7 @@ import { AchievementService } from "@services/achievementService";
 import { useAuth, useAuthProfile } from "../../app/auth-store";
 import { supabase } from "../../lib/supabase";
 import { Edit2, Save, X, Camera, User } from "lucide-react";
+import { logError } from "../../utils/logger";
 
 interface ProfileCardProps {
   profile?: Profile | null;
@@ -113,7 +114,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         .eq("id", profile.id);
 
       if (error) {
-        console.error("Error updating bio:", error);
+        logError("Error updating bio:", error);
         return;
       }
 
@@ -122,7 +123,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
 
       setIsEditingBio(false);
     } catch (error) {
-      console.error("Error saving bio:", error);
+      logError("Error saving bio:", error);
     } finally {
       setIsSavingBio(false);
     }

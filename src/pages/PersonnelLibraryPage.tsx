@@ -13,6 +13,7 @@ import { Icon } from "../components/ui/Icon/Icon";
 import { toast } from "sonner";
 import { useTeamsData } from "../hooks/useTeamsData";
 import { useActiveTeamStore } from "../stores/activeTeamStore";
+import { logError } from "../utils/logger";
 
 export const PersonnelLibraryPage: React.FC = () => {
   const { playbooks } = useTeamsData();
@@ -94,7 +95,7 @@ const PersonnelLibraryPageContent: React.FC<
       );
       setPersonnel(response.items);
     } catch (error) {
-      console.error("Error loading personnel:", error);
+      logError("Error loading personnel:", error);
       toast.error("Failed to load personnel");
     } finally {
       setLoading(false);
@@ -121,7 +122,7 @@ const PersonnelLibraryPageContent: React.FC<
         );
       }
     } catch (error) {
-      console.error("Error updating usage:", error);
+      logError("Error updating usage:", error);
       toast.error("Failed to update usage counts", { id: "usage" });
     }
   };

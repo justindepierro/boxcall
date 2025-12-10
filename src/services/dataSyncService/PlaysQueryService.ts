@@ -14,6 +14,7 @@ import type { Play } from "../../types/play";
 import type { InboundPlay } from "../../utils/playDataStandardization";
 import { CacheService } from "./CacheService";
 import { IndexedDBService } from "./IndexedDBService";
+import { logError } from "../../utils/logger";
 
 export class PlaysQueryService {
   /**
@@ -69,7 +70,7 @@ export class PlaysQueryService {
       CacheService.updateMetrics("database_hit", performance.now() - startTime);
       return plays;
     } catch (error) {
-      console.error("Database query failed, using cached data:", error);
+      logError("Database query failed, using cached data:", error);
 
       // Fallback to any cached data available
       const fallbackData = await IndexedDBService.get(cacheKey);

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Typography } from "../design-system/Typography";
 import { Icon } from "../ui/Icon/Icon";
+import { logError } from "../../utils/logger";
 import {
   GlassmorphicDropdown,
   GlassmorphicDropdownItem,
@@ -351,7 +352,7 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
         return searchMockAddresses(query);
       }
     } catch (error) {
-      console.error("Google Places API error:", error);
+      logError("Google Places API error:", error);
       return searchMockAddresses(query);
     }
   };
@@ -379,7 +380,7 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
         place_id: feature.id,
       }));
     } catch (error) {
-      console.error("MapBox API error:", error);
+      logError("MapBox API error:", error);
       return searchMockAddresses(query);
     }
   };

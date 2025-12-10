@@ -8,6 +8,7 @@ import { supabase } from "../lib/supabase";
 import { LoadingScreen } from "../components/ui/LoadingScreen";
 import { MultiBadgeDisplay } from "../components/ui/MultiBadgeDisplay";
 import { AvatarEditor } from "../components/profile/AvatarEditor";
+import { debug, error as logError } from "../utils/logger";
 import {
   Camera,
   Pencil,
@@ -292,7 +293,7 @@ const ProfilePage: React.FC = () => {
         error.message?.includes("column") &&
         error.message?.includes("does not exist")
       ) {
-        console.log(
+        debug(
           "New columns not available yet, saving with existing fields only"
         );
         const { error: fallbackError } = await supabase
@@ -353,7 +354,7 @@ const ProfilePage: React.FC = () => {
   };
   // Handle cropped avatar from editor
   const handleCroppedAvatar = async (croppedBlob: Blob) => {
-    console.log("📸 Cropped avatar received, uploading...");
+    debug("📸 Cropped avatar received, uploading...");
     // Convert blob to file
     const croppedFile = new File([croppedBlob], `avatar-${Date.now()}.jpg`, {
       type: "image/jpeg",
@@ -364,7 +365,7 @@ const ProfilePage: React.FC = () => {
 
     // Immediately upload it
     if (!profile?.id) {
-      console.error("No profile ID");
+      logError("No profile ID");
       return;
     }
 
@@ -375,7 +376,7 @@ const ProfilePage: React.FC = () => {
       const fileName = `${Date.now()}.${fileExt}`;
       const filePath = `${profile.id}/${fileName}`;
 
-      console.log("📤 Uploading to:", filePath);
+      debug("📤 Uploading to:", filePath);
 
       // Upload to Supabase Storage
       const { data: uploadData, error: uploadError } = await supabase.storage
@@ -386,11 +387,11 @@ const ProfilePage: React.FC = () => {
         });
 
       if (uploadError) {
-        console.error("Upload error:", uploadError);
+        logError("Upload error:", uploadError);
         throw uploadError;
       }
 
-      console.log("✅ Upload successful:", uploadData);
+      debug("✅ Upload successful:", uploadData);
 
       // Get public URL
       const { data: urlData } = supabase.storage
@@ -398,7 +399,7 @@ const ProfilePage: React.FC = () => {
         .getPublicUrl(filePath);
 
       const avatarUrl = urlData.publicUrl;
-      console.log("🔗 Public URL:", avatarUrl);
+      debug("🔗 Public URL:", avatarUrl);
 
       // Update profile with new avatar URL
       const { error: updateError } = await supabase
@@ -407,11 +408,11 @@ const ProfilePage: React.FC = () => {
         .eq("id", profile.id);
 
       if (updateError) {
-        console.error("Profile update error:", updateError);
+        logError("Profile update error:", updateError);
         throw updateError;
       }
 
-      console.log("✅ Profile updated with new avatar");
+      debug("✅ Profile updated with new avatar");
 
       // Refresh profile data
       await fetchUserProfile();
@@ -424,7 +425,7 @@ const ProfilePage: React.FC = () => {
       // Clear the file after successful upload
       setAvatarFile(null);
     } catch (error) {
-      console.error("❌ Avatar upload failed:", error);
+      logError("❌ Avatar upload failed:", error);
       setMessage({
         type: "error",
         text:
@@ -463,7 +464,7 @@ const ProfilePage: React.FC = () => {
 
       return urlData?.publicUrl || null;
     } catch (error) {
-      console.error("Avatar upload failed:", error);
+      logError("Avatar upload failed:", error);
       return null;
     } finally {
       setAvatarUploading(false);
@@ -609,7 +610,7 @@ const ProfilePage: React.FC = () => {
                       variant="primary"
                       size="sm"
                       onClick={() => {
-                        console.log("Upload Picture clicked");
+                        debug("Upload Picture clicked");
                         fileInputRef.current?.click();
                       }}
                     >
@@ -622,7 +623,7 @@ const ProfilePage: React.FC = () => {
                         variant="outline"
                         size="sm"
                         onClick={async () => {
-                          console.log("Edit Current Picture clicked");
+                          debug("Edit Current Picture clicked");
                           // Fetch current avatar as blob
                           try {
                             const response = await fetch(profile.avatar_url!);
@@ -632,14 +633,11 @@ const ProfilePage: React.FC = () => {
                               "current-avatar.jpg",
                               { type: blob.type }
                             );
-                            console.log("Loaded current avatar:", file);
+                            debug("Loaded current avatar:", file);
                             setAvatarFile(file);
                             setShowAvatarEditor(true);
                           } catch (error) {
-                            console.error(
-                              "Failed to load current avatar:",
-                              error
-                            );
+                            logError("Failed to load current avatar:", error);
                           }
                         }}
                       >
@@ -656,9 +654,9 @@ const ProfilePage: React.FC = () => {
                     accept="image/*"
                     onChange={(e) => {
                       const file = e.target.files?.[0];
-                      console.log("📸 File input onChange - file:", file?.name);
+                      debug("📸 File input onChange - file:", file?.name);
                       if (file) {
-                        console.log("📸 Opening editor with file:", file.name);
+                        debug("📸 Opening editor with file:", file.name);
                         setAvatarFile(file);
                         setShowAvatarEditor(true);
                       }
@@ -1548,7 +1546,7 @@ const ProfilePage: React.FC = () => {
         {/* Avatar Editor Modal */}
         {avatarFile && showAvatarEditor && (
           <>
-            {console.log(
+            {debug(
               "Rendering AvatarEditor - isOpen:",
               showAvatarEditor,
               "file:",
@@ -1557,7 +1555,7 @@ const ProfilePage: React.FC = () => {
             <AvatarEditor
               isOpen={showAvatarEditor}
               onClose={() => {
-                console.log("AvatarEditor onClose called");
+                debug("AvatarEditor onClose called");
                 setShowAvatarEditor(false);
                 setAvatarFile(null);
               }}

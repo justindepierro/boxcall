@@ -32,6 +32,7 @@ import type { GamePlan as ModalGamePlan } from "../components/playbook/GamePlanM
 import { useAuth } from "../app/auth-store";
 import { useToast } from "../hooks/useToast";
 import { useIsMobile } from "../hooks/useBreakpoint";
+import { logError } from "../utils/logger";
 import {
   exportGamePlans,
   downloadJSON,
@@ -103,7 +104,7 @@ const GamePlansPage = () => {
 
       setGamePlans(mappedPlans);
     } catch (error) {
-      console.error("Failed to load game plans:", error);
+      logError("Failed to load game plans:", error);
       toast.error("Failed to load game plans");
     } finally {
       setLoading(false);
@@ -218,7 +219,7 @@ const GamePlansPage = () => {
         setRawGamePlans((prev) => [newPlan, ...prev]);
       }
     } catch (error) {
-      console.error("Failed to save game plan:", error);
+      logError("Failed to save game plan:", error);
 
       // 5. Rollback on error
       if (editingPlan) {
@@ -282,7 +283,7 @@ const GamePlansPage = () => {
       );
       setRawGamePlans((prev) => [newPlan, ...prev]);
     } catch (error) {
-      console.error("Failed to duplicate game plan:", error);
+      logError("Failed to duplicate game plan:", error);
 
       // Rollback
       setGamePlans((prev) => prev.filter((p) => !p.id.startsWith("temp-")));
@@ -318,7 +319,7 @@ const GamePlansPage = () => {
         )
       );
     } catch (error) {
-      console.error("Failed to archive/unarchive game plan:", error);
+      logError("Failed to archive/unarchive game plan:", error);
 
       // Rollback
       setGamePlans((prev) =>
@@ -335,7 +336,7 @@ const GamePlansPage = () => {
       await GamePlanPDFService.exportGamePlan(plan, "call-sheet");
       toast.success("PDF exported successfully");
     } catch (error) {
-      console.error("Failed to export PDF:", error);
+      logError("Failed to export PDF:", error);
       toast.error("Failed to export PDF");
     }
   };
@@ -355,7 +356,7 @@ const GamePlansPage = () => {
       // 2. Background sync
       await GamePlanService.deleteGamePlan(planId);
     } catch (error) {
-      console.error("Failed to delete game plan:", error);
+      logError("Failed to delete game plan:", error);
 
       // Rollback
       if (deletedPlan) {
@@ -382,7 +383,7 @@ const GamePlansPage = () => {
         `Exported ${rawGamePlans.length} game plan${rawGamePlans.length !== 1 ? "s" : ""}`
       );
     } catch (error) {
-      console.error("Failed to export game plans:", error);
+      logError("Failed to export game plans:", error);
       toast.error("Failed to export game plans");
     }
   };
@@ -452,7 +453,7 @@ const GamePlansPage = () => {
 
           imported++;
         } catch (error) {
-          console.error(`Failed to import game plan "${plan.name}":`, error);
+          logError(`Failed to import game plan "${plan.name}":`, error);
           failed++;
         }
       }
@@ -469,7 +470,7 @@ const GamePlansPage = () => {
         );
       }
     } catch (error) {
-      console.error("Failed to import game plans:", error);
+      logError("Failed to import game plans:", error);
       throw error;
     }
   };

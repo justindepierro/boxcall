@@ -13,6 +13,7 @@ import { Icon } from "../../ui/Icon/Icon";
 import { toast } from "sonner";
 import { supabase } from "../../../lib/supabase";
 import { CreateFormationModal } from "./CreateFormationModal";
+import { logError } from "../../../utils/logger";
 
 interface FormationLibraryModalProps {
   isOpen: boolean;
@@ -49,7 +50,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
       });
       setFormations(response.items);
     } catch (error) {
-      console.error("Error loading formations:", error);
+      logError("Error loading formations:", error);
       toast.error("Failed to load formations");
     } finally {
       setLoading(false);
@@ -104,7 +105,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
           });
 
           if (error) {
-            console.error(
+            logError(
               `Failed to create formation "${originalName || formationName}":`,
               error
             );
@@ -127,7 +128,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
       }
       await loadFormations();
     } catch (error) {
-      console.error("Error importing formations:", error);
+      logError("Error importing formations:", error);
       toast.error("Failed to import formations", { id: "import" });
     } finally {
       setAnalyzing(false);
@@ -158,7 +159,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
 
       await loadFormations();
     } catch (error) {
-      console.error("Error analyzing formations:", error);
+      logError("Error analyzing formations:", error);
       toast.error("Failed to analyze formations", { id: "analyze" });
     } finally {
       setAnalyzing(false);

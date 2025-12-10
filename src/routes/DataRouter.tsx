@@ -16,6 +16,7 @@ import {
   LazyTeamBulletin,
   LazyAnalyticsPage,
   LazyBoxCall,
+  LazySessionHistory,
   LazyPracticeSession,
   LazyGameSession,
   LazyPlaybookPage,
@@ -367,6 +368,15 @@ export const DataRouterApp: React.FC = () => {
           element={
             <ProtectedPage>
               <LazyBoxCall />
+            </ProtectedPage>
+          }
+        />
+
+        <Route
+          path="/boxcall/history"
+          element={
+            <ProtectedPage>
+              <LazySessionHistory />
             </ProtectedPage>
           }
         />

@@ -22,6 +22,7 @@ import { useToast } from "../../hooks/useToast";
 import { PDFExportService } from "../../services/pdfExportService";
 import { useIsMobile } from "@hooks/useBreakpoint";
 import { triggerHapticFeedback } from "../../lib/hapticFeedback";
+import { debug, error as logError } from "../../utils/logger";
 
 interface PracticeScriptBuilderProps {
   script?: PracticeScript;
@@ -58,7 +59,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
 
   // Initialize script if creating new or load selected plays
   useEffect(() => {
-    console.log("🔄 [PracticeScriptBuilder] useEffect triggered:", {
+    debug("🔄 [PracticeScriptBuilder] useEffect triggered:", {
       hasScript: !!script,
       isOpen,
       scriptId: script?.id,
@@ -68,7 +69,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
     });
 
     if (!script && isOpen) {
-      console.log("📝 [PracticeScriptBuilder] Creating new script");
+      debug("📝 [PracticeScriptBuilder] Creating new script");
       setCurrentScript(null);
       setIsEditing(true);
       setScriptName("");
@@ -76,7 +77,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
 
       // If we have selectedPlayIds, fetch and initialize with those plays
       if (selectedPlayIds.length > 0) {
-        console.log(
+        debug(
           "[PracticeScriptBuilder] Initializing with selected plays:",
           selectedPlayIds
         );
@@ -89,7 +90,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
           .in("id", selectedPlayIds)
           .then(({ data, error }) => {
             if (error) {
-              console.error("Failed to fetch plays:", error);
+              logError("Failed to fetch plays:", error);
               toast.error("Failed to load selected plays");
               setIsLoadingPlays(false);
               return;
@@ -123,7 +124,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
                 updatedAt: new Date(),
               };
 
-              console.log(
+              debug(
                 "[PracticeScriptBuilder] Initialized script with plays:",
                 initialScript
               );
@@ -134,7 +135,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
       }
     } else if (script) {
       // Loading an existing script for editing
-      console.log("✏️ [PracticeScriptBuilder] Loading existing script:", {
+      debug("✏️ [PracticeScriptBuilder] Loading existing script:", {
         id: script.id,
         name: script.name,
         title: script.title,
@@ -146,33 +147,30 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
 
       // Try both 'name' and 'title' properties (API inconsistency)
       const displayName = script.name || script.title || "";
-      console.log(
-        "✏️ [PracticeScriptBuilder] Setting script name to:",
-        displayName
-      );
+      debug("✏️ [PracticeScriptBuilder] Setting script name to:", displayName);
       setScriptName(displayName);
       setScriptDescription(script.description || "");
     }
   }, [script, isOpen, selectedPlayIds, teamId, toast]);
 
   const handleSave = useCallback(async () => {
-    console.log("🚨 [PracticeScriptBuilder] SAVE BUTTON CLICKED!");
-    console.log("🚨 [PracticeScriptBuilder] scriptName:", scriptName);
-    console.log("🚨 [PracticeScriptBuilder] currentScript:", currentScript);
+    debug("🚨 [PracticeScriptBuilder] SAVE BUTTON CLICKED!");
+    debug("🚨 [PracticeScriptBuilder] scriptName:", scriptName);
+    debug("🚨 [PracticeScriptBuilder] currentScript:", currentScript);
 
     if (!scriptName.trim()) {
-      console.log("🚨 [PracticeScriptBuilder] ERROR: Script name is empty");
+      debug("🚨 [PracticeScriptBuilder] ERROR: Script name is empty");
       toast.error("Script name is required");
       return;
     }
 
     if (!currentScript?.plays || currentScript.plays.length === 0) {
-      console.log("🚨 [PracticeScriptBuilder] ERROR: No plays in script");
+      debug("🚨 [PracticeScriptBuilder] ERROR: No plays in script");
       toast.error("Please add at least one play to the script");
       return;
     }
 
-    console.log("🚨 [PracticeScriptBuilder] Starting save process...");
+    debug("🚨 [PracticeScriptBuilder] Starting save process...");
 
     // OPTIMISTIC UPDATE: Show success immediately for better UX
     toast.success("Saving practice script...");
@@ -183,21 +181,18 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
 
       if (currentScript.id && currentScript.id !== "") {
         // Update existing script
-        console.log(
+        debug(
           "[PracticeScriptBuilder] Updating existing script:",
           currentScript.id
         );
 
         // Step 1: Update script metadata
-        console.log(
-          "[PracticeScriptBuilder] Calling updatePracticeScript with:",
-          {
-            scriptId: currentScript.id,
-            name: scriptName.trim(),
-            description: scriptDescription.trim(),
-            tags: currentScript.tags,
-          }
-        );
+        debug("[PracticeScriptBuilder] Calling updatePracticeScript with:", {
+          scriptId: currentScript.id,
+          name: scriptName.trim(),
+          description: scriptDescription.trim(),
+          tags: currentScript.tags,
+        });
 
         try {
           savedScript = await PracticeScriptService.updatePracticeScript(
@@ -208,12 +203,12 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
               tags: currentScript.tags,
             }
           );
-          console.log(
+          debug(
             "[PracticeScriptBuilder] Script metadata updated successfully:",
             savedScript
           );
         } catch (error) {
-          console.error(
+          logError(
             "[PracticeScriptBuilder] ERROR updating script metadata:",
             error
           );
@@ -222,11 +217,8 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
 
         // Step 2: Update all play configurations (defensive settings, reps, etc.)
         // OPTIMIZED: Use batch update instead of sequential updates
-        console.log("[PracticeScriptBuilder] Preparing batch play updates...");
-        console.log(
-          "[PracticeScriptBuilder] Current plays:",
-          currentScript.plays
-        );
+        debug("[PracticeScriptBuilder] Preparing batch play updates...");
+        debug("[PracticeScriptBuilder] Current plays:", currentScript.plays);
 
         const batchUpdates = (currentScript.plays || [])
           .filter(
@@ -247,11 +239,11 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
           }));
 
         if (batchUpdates.length > 0) {
-          console.log(
+          debug(
             `[PracticeScriptBuilder] Batch updating ${batchUpdates.length} plays...`
           );
           await PracticeScriptService.batchUpdateScriptPlays(batchUpdates);
-          console.log("[PracticeScriptBuilder] Batch update completed");
+          debug("[PracticeScriptBuilder] Batch update completed");
         }
 
         // Step 3: Get fresh data from cache (should be fast)
@@ -262,13 +254,11 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
           savedScript = reloadedScript;
         }
 
-        console.log(
-          "[PracticeScriptBuilder] Script and plays updated successfully"
-        );
+        debug("[PracticeScriptBuilder] Script and plays updated successfully");
         setCurrentScript(savedScript);
       } else {
         // Create new script with plays
-        console.log(
+        debug(
           "[PracticeScriptBuilder] Creating new script with plays:",
           currentScript.plays
         );
@@ -280,11 +270,11 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
           teamId,
         });
 
-        console.log("[PracticeScriptBuilder] Script created:", savedScript.id);
+        debug("[PracticeScriptBuilder] Script created:", savedScript.id);
 
         // Step 2: Add all plays to the script
         for (const scriptPlay of currentScript.plays) {
-          console.log("[PracticeScriptBuilder] Adding play to script:", {
+          debug("[PracticeScriptBuilder] Adding play to script:", {
             playId: scriptPlay.playId,
             repetitions: scriptPlay.repetitions,
             order: scriptPlay.order,
@@ -317,7 +307,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
           );
         }
 
-        console.log("[PracticeScriptBuilder] All plays added successfully");
+        debug("[PracticeScriptBuilder] All plays added successfully");
         setCurrentScript(savedScript);
       }
 
@@ -334,7 +324,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
         `Practice script "${savedScript.name || savedScript.title}" saved successfully`
       );
     } catch (error) {
-      console.error("Failed to save practice script:", error);
+      logError("Failed to save practice script:", error);
       toast.error("Failed to save practice script", "Please try again");
     } finally {
       setIsSaving(false);
@@ -374,7 +364,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
         setShowPlaySelector(false);
         toast.success(`Added "${play.play_name}" to script`);
       } catch (error) {
-        console.error("Failed to add play to script:", error);
+        logError("Failed to add play to script:", error);
         toast.error("Failed to add play", "Please try again");
       }
     },
@@ -397,7 +387,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
         setCurrentScript(updatedScript);
         toast.success("Play removed from script");
       } catch (error) {
-        console.error("Failed to remove play from script:", error);
+        logError("Failed to remove play from script:", error);
         toast.error("Failed to remove play", "Please try again");
       }
     },
@@ -533,7 +523,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
       await PDFExportService.exportPracticeScript(currentScript);
       toast.success("PDF exported successfully");
     } catch (error) {
-      console.error("Failed to export PDF:", error);
+      logError("Failed to export PDF:", error);
       toast.error("Failed to export PDF", "Please try again");
     }
   }, [currentScript, toast]);
@@ -556,7 +546,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
         toast.success(`Template "${templateName}" created successfully`);
         setShowTemplateModal(false);
       } catch (error) {
-        console.error("Failed to create template:", error);
+        logError("Failed to create template:", error);
         toast.error("Failed to create template", "Please try again");
       }
     },
@@ -577,7 +567,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
         toast.success(`Script created from template`);
         setShowTemplateModal(false);
       } catch (error) {
-        console.error("Failed to load template:", error);
+        logError("Failed to load template:", error);
         toast.error("Failed to load template", "Please try again");
       }
     },
@@ -587,7 +577,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
   const totalPlays = currentScript?.plays?.length || 0;
 
   // DEBUG: Log the state values
-  console.log("🔍 [PracticeScriptBuilder] Render state:", {
+  debug("🔍 [PracticeScriptBuilder] Render state:", {
     isEditing,
     hasCurrentScript: !!currentScript,
     currentScriptId: currentScript?.id,

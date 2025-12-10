@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import { getCurrentUserId } from "./auth-helpers";
 
 import type {
   Game,
@@ -162,17 +163,15 @@ export async function testDatabaseConnection(): Promise<boolean> {
 
     // Test basic connection - check current user's profile (respects RLS)
     const connectionTest = await withDatabaseRetry(async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
+      const userId = getCurrentUserId();
+      if (!userId) {
         throw new Error("No authenticated user found for database test");
       }
 
       const { error } = await supabase
         .from("profiles")
         .select("id, full_name, email, is_active")
-        .eq("id", user.id)
+        .eq("id", userId)
         .single();
 
       if (error && error.code !== "PGRST116") {
@@ -246,13 +245,9 @@ export async function testDatabaseConnection(): Promise<boolean> {
   }
 }
 // Helper functions for common operations with enhanced error handling
-export async function getCurrentUser() {
-  return await withDatabaseRetry(async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    return user;
-  });
+export function getCurrentUser(): { id: string } | null {
+  const userId = getCurrentUserId();
+  return userId ? { id: userId } : null;
 }
 
 export async function getUserProfile(userId: string): Promise<Profile | null> {

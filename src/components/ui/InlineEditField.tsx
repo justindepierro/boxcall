@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Icon } from "./Icon/Icon";
 import type { ValidatedInputType } from "../playbook/ValidatedInput";
+import { logError } from "../../utils/logger";
 import {
   validateFormation,
   validatePlayName,
@@ -15,6 +16,12 @@ import {
   validateOneWordPlay,
   validateWristbandNumber,
 } from "../../utils/dataValidation";
+
+// Debug logging - set to false in production
+const DEBUG_INLINE_EDIT = false;
+const debugLog = DEBUG_INLINE_EDIT
+  ? (...args: unknown[]) => debugLog(...args)
+  : () => {};
 
 interface InlineEditFieldProps {
   value: string;
@@ -66,14 +73,11 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
   const hasSelectedRef = useRef(false);
 
   useEffect(() => {
-    console.log(
-      "[InlineEditField] 🔄 Value prop changed, updating editValue:",
-      {
-        oldEditValue: editValue,
-        newValue: value,
-        isEditing,
-      }
-    );
+    debugLog("[InlineEditField] 🔄 Value prop changed, updating editValue:", {
+      oldEditValue: editValue,
+      newValue: value,
+      isEditing,
+    });
     setEditValue(value);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
@@ -84,7 +88,7 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
 
       // Only select text when FIRST entering edit mode, not on every render
       if (!hasSelectedRef.current) {
-        console.log("[InlineEditField] 🎯 Selecting all text (first time)");
+        debugLog("[InlineEditField] 🎯 Selecting all text (first time)");
         inputRef.current.select();
         hasSelectedRef.current = true;
       }
@@ -185,7 +189,7 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
 
   const handleStartEdit = () => {
     if (disabled) return;
-    console.log("[InlineEditField] 🖱️ Starting edit mode:", {
+    debugLog("[InlineEditField] 🖱️ Starting edit mode:", {
       currentValue: value,
       willSetEditValue: value,
     });
@@ -195,22 +199,19 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
   };
 
   const handleSave = async () => {
-    console.log(
-      "[InlineEditField] 💾 handleSave called, editValue:",
-      editValue
-    );
+    debugLog("[InlineEditField] 💾 handleSave called, editValue:", editValue);
     const trimmedValue = editValue.trim();
     const normalizedValue = normalizeValue
       ? normalizeValue(trimmedValue)
       : trimmedValue;
 
-    console.log("[InlineEditField] 💾 Normalized value:", normalizedValue);
+    debugLog("[InlineEditField] 💾 Normalized value:", normalizedValue);
 
     // Validation
     if (validation) {
       const validationError = validation(normalizedValue);
       if (validationError) {
-        console.log("[InlineEditField] ❌ Validation failed:", validationError);
+        debugLog("[InlineEditField] ❌ Validation failed:", validationError);
         setError(validationError);
         setSaveStatus("error");
         // Shake animation
@@ -225,22 +226,22 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
       }
     }
 
-    console.log("[InlineEditField] ✅ Validation passed, saving...");
+    debugLog("[InlineEditField] ✅ Validation passed, saving...");
     setError(null);
     setSaveStatus("saving");
-    console.log("[InlineEditField] 🚪 Exiting edit mode (setIsEditing false)");
+    debugLog("[InlineEditField] 🚪 Exiting edit mode (setIsEditing false)");
     setIsEditing(false);
     setShowSuggestions(false);
 
     try {
-      console.log("[InlineEditField] 📡 Calling onSave with:", normalizedValue);
+      debugLog("[InlineEditField] 📡 Calling onSave with:", normalizedValue);
       await onSave(normalizedValue);
-      console.log("[InlineEditField] ✅ onSave completed successfully");
+      debugLog("[InlineEditField] ✅ onSave completed successfully");
       setSaveStatus("success");
       // Show success feedback briefly
       setTimeout(() => setSaveStatus("idle"), 2000);
     } catch (err) {
-      console.error("[InlineEditField] ❌ Save failed:", err);
+      logError("[InlineEditField] ❌ Save failed:", err);
       setSaveStatus("error");
       setError(err instanceof Error ? err.message : "Failed to save");
       // Shake animation
@@ -310,7 +311,7 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
   };
 
   const handleInputChange = (newValue: string) => {
-    console.log("[InlineEditField] ⌨️ Input changed:", {
+    debugLog("[InlineEditField] ⌨️ Input changed:", {
       oldValue: editValue,
       newValue,
       valueLength: newValue.length,
@@ -452,14 +453,11 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
   };
 
   const handleSuggestionSelect = (suggestion: string) => {
-    console.log("[InlineEditField] 🎯 Suggestion selected:", suggestion);
+    debugLog("[InlineEditField] 🎯 Suggestion selected:", suggestion);
     setEditValue(suggestion);
     setShowSuggestions(false);
     // Auto-save on suggestion select - save immediately with the suggestion value
-    console.log(
-      "[InlineEditField] 🎯 Saving immediately with value:",
-      suggestion
-    );
+    debugLog("[InlineEditField] 🎯 Saving immediately with value:", suggestion);
 
     // Call handleSave directly but pass the value explicitly
     // We need to do this inline to avoid closure issues with setTimeout
@@ -468,20 +466,20 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
       ? normalizeValue(trimmedValue)
       : trimmedValue;
 
-    console.log("[InlineEditField] 💾 Normalized value:", normalizedValue);
+    debugLog("[InlineEditField] 💾 Normalized value:", normalizedValue);
 
     // Validation
     if (validation) {
       const validationError = validation(normalizedValue);
       if (validationError) {
-        console.log("[InlineEditField] ❌ Validation failed:", validationError);
+        debugLog("[InlineEditField] ❌ Validation failed:", validationError);
         setError(validationError);
         setSaveStatus("error");
         return;
       }
     }
 
-    console.log("[InlineEditField] ✅ Validation passed, saving...");
+    debugLog("[InlineEditField] ✅ Validation passed, saving...");
     setError(null);
     setSaveStatus("saving");
     setIsEditing(false);
@@ -490,16 +488,13 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
     // Save asynchronously
     (async () => {
       try {
-        console.log(
-          "[InlineEditField] 📡 Calling onSave with:",
-          normalizedValue
-        );
+        debugLog("[InlineEditField] 📡 Calling onSave with:", normalizedValue);
         await onSave(normalizedValue);
-        console.log("[InlineEditField] ✅ onSave completed successfully");
+        debugLog("[InlineEditField] ✅ onSave completed successfully");
         setSaveStatus("success");
         setTimeout(() => setSaveStatus("idle"), 2000);
       } catch (err) {
-        console.error("[InlineEditField] ❌ Save failed:", err);
+        logError("[InlineEditField] ❌ Save failed:", err);
         setSaveStatus("error");
         setError(err instanceof Error ? err.message : "Failed to save");
         setIsEditing(true);
@@ -525,7 +520,7 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
   };
 
   const handleBlur = (e: React.FocusEvent) => {
-    console.log("[InlineEditField] 👁️ handleBlur triggered:", {
+    debugLog("[InlineEditField] 👁️ handleBlur triggered:", {
       currentValue: editValue,
       relatedTarget: e.relatedTarget,
       isEditing,
@@ -538,19 +533,19 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
       (relatedTarget.closest("[data-inline-action]") ||
         relatedTarget.tagName === "BUTTON")
     ) {
-      console.log("[InlineEditField] ⏭️ Blur ignored - moving to button");
+      debugLog("[InlineEditField] ⏭️ Blur ignored - moving to button");
       return;
     }
 
-    console.log("[InlineEditField] ⏰ Blur will trigger save in 200ms...");
+    debugLog("[InlineEditField] ⏰ Blur will trigger save in 200ms...");
     // Small delay to allow other interactions to complete
     setTimeout(() => {
-      console.log(
+      debugLog(
         "[InlineEditField] ⏰ Blur timeout fired, isEditing:",
         isEditing
       );
       if (isEditing) {
-        console.log("[InlineEditField] 💾 Blur timeout calling handleSave");
+        debugLog("[InlineEditField] 💾 Blur timeout calling handleSave");
         handleSave();
       }
     }, 200);

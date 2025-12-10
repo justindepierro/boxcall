@@ -1,10 +1,13 @@
 /**
  * useTeamActivity Hook
  * Fetches and calculates team activity statistics for the hero section
+ *
+ * Uses the unified api() client for database queries.
  */
 
 import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabase";
+import { api } from "../lib/api/client";
+import { logError } from "../utils/logger";
 
 export interface TeamActivityStats {
   newPostsToday: number;
@@ -39,18 +42,11 @@ export function useTeamActivity(teamId: string): TeamActivityStats {
         // 1. Count announcements created today
         // TODO: Implement team_announcements table and re-enable this query
         const postsCount = 0;
-        // const { count: postsCount } = await supabase
-        //   .from("team_announcements")
-        //   .select("id", { count: "exact", head: true })
-        //   .eq("team_id", teamId)
-        //   .eq("status", "published")
-        //   .gte("created_at", todayStartISO);
 
-        // 2. Count recent achievements (placeholder - you can wire this up to your achievements system)
-        // For now, just show a static number or 0
+        // 2. Count recent achievements (placeholder)
         const recentAchievements = 0;
 
-        // 3. Count upcoming events (placeholder - wire up to calendar/events)
+        // 3. Count upcoming events (placeholder)
         const upcomingEvents = 0;
 
         // 4. Count online members (users active in last 5 minutes)
@@ -59,22 +55,20 @@ export function useTeamActivity(teamId: string): TeamActivityStats {
         ).toISOString();
 
         // First get team member user IDs
-        const { data: teamMembers } = await supabase
-          .from("team_members")
+        const { data: teamMembers } = await api("team_members")
           .select("user_id")
           .eq("team_id", teamId);
 
         const userIds = (teamMembers || []).map((m) => m.user_id);
 
-        // Then count online members
+        // Then count online members (using last_login as activity indicator)
         let onlineCount = 0;
         if (userIds.length > 0) {
-          const { count } = await supabase
-            .from("profiles")
-            .select("id", { count: "exact", head: true })
-            .gte("last_active", fiveMinutesAgo)
+          const { data: onlineProfiles } = await api("profiles")
+            .select("id")
+            .gte("last_login", fiveMinutesAgo)
             .in("id", userIds);
-          onlineCount = count || 0;
+          onlineCount = onlineProfiles?.length || 0;
         }
 
         setStats({
@@ -85,7 +79,7 @@ export function useTeamActivity(teamId: string): TeamActivityStats {
           loading: false,
         });
       } catch (error) {
-        console.error("Error loading team activity stats:", error);
+        logError("Error loading team activity stats:", error);
         setStats((prev) => ({ ...prev, loading: false }));
       }
     }

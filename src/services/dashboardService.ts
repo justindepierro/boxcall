@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase";
+import { error as logError, debug } from "../utils/logger";
 
 import type { Database } from "../types/database";
 
@@ -52,7 +53,7 @@ export class DashboardService {
       .select()
       .single();
     if (error) {
-      // TODO: Handle error (was: console.error)
+      logError("Error updating user profile:", error);
       return null;
     }
     return data as UserProfile;
@@ -70,7 +71,7 @@ export class DashboardService {
         .eq("status", "active");
 
       if (error) {
-        // TODO: Handle error fetching user teams (was: console.error)
+        logError("Error fetching user teams:", error);
         return [];
       }
 
@@ -92,7 +93,7 @@ export class DashboardService {
         .in("id", teamIds);
 
       if (teamsError) {
-        // TODO: Handle error fetching teams (was: console.error)
+        logError("Error fetching teams:", teamsError);
         return [];
       }
 
@@ -134,8 +135,8 @@ export class DashboardService {
       }
 
       return userTeams;
-    } catch {
-      // TODO: Handle error in getUserTeams (was: console.error)
+    } catch (err) {
+      logError("Error in getUserTeams:", err);
       return [];
     }
   }
@@ -165,8 +166,8 @@ export class DashboardService {
         activeTeams,
         recentActivity,
       };
-    } catch {
-      // TODO: Handle error fetching dashboard data (was: console.error)
+    } catch (err) {
+      logError("Error fetching dashboard data:", err);
       return {
         userTeams: [],
         totalTeams: 0,
@@ -186,7 +187,7 @@ export class DashboardService {
   ): Promise<ActivityItem[]> {
     // For blank slate mode, return empty activity
     if (devMode === "blank_slate") {
-      // TODO: Remove dashboard debug log (was: console.log)
+      debug("Dashboard: Blank slate mode, returning empty activity");
       return [];
     }
 

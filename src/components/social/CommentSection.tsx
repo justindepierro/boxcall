@@ -14,6 +14,7 @@ import { socialService } from "../../services/socialService";
 import { MentionsService } from "../../services/mentionsService";
 import { ReactionButton } from "./ReactionButton";
 import { MentionsInput } from "./MentionsInput";
+import { logError } from "../../utils/logger";
 import type {
   CommentSectionProps,
   Comment,
@@ -56,7 +57,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
       // The parent component should reload comments
       window.location.reload(); // Temporary - should use proper state management
     } catch (error) {
-      console.error("Failed to edit comment:", error);
+      logError("Failed to edit comment:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -69,7 +70,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
       await socialService.deleteComment(comment.id);
       window.location.reload(); // Temporary - should use proper state management
     } catch (error) {
-      console.error("Failed to delete comment:", error);
+      logError("Failed to delete comment:", error);
     }
   };
 
@@ -249,7 +250,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
       );
       setComments(loadedComments);
     } catch (error) {
-      console.error("Failed to load comments:", error);
+      logError("Failed to load comments:", error);
     } finally {
       setIsLoading(false);
     }
@@ -284,7 +285,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
       setReplyTo(null);
       await loadComments();
     } catch (error) {
-      console.error("Failed to submit comment:", error);
+      logError("Failed to submit comment:", error);
     } finally {
       setIsSubmitting(false);
     }

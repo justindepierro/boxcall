@@ -15,6 +15,7 @@ import type {
   OpponentCoverage,
 } from "../types/session";
 import type { GamePlan, GamePlanPlay } from "../types";
+import { logError } from "../utils/logger";
 
 interface GameSituation {
   quarter: number;
@@ -164,7 +165,7 @@ export function useGameSession({
       const plays = await GamePlanService.getGamePlanPlays(gamePlanId);
       setGamePlanPlays(plays);
     } catch (err) {
-      console.error("Error loading game plan:", err);
+      logError("Error loading game plan:", err);
       setError(
         err instanceof Error ? err : new Error("Failed to load game plan")
       );

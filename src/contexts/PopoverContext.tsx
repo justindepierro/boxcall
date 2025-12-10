@@ -4,6 +4,7 @@
  * Ensures only one popover is open at a time globally
  */
 
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useCallback } from "react";
 
 interface PopoverContextValue {

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Card } from "../../../../../components/ui";
+import { Button, Card, Dropdown } from "../../../../../components/ui";
 import { Icon, type IconName } from "../../../../../components/ui/Icon/Icon";
 import { Typography } from "../../../../design-system";
 
@@ -190,30 +190,19 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
 
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
-          <Typography
-            variant="body-sm"
-            as="label"
-            className="block font-medium text-primary mb-1"
-          >
-            Category
-          </Typography>
-          <select
+          <Dropdown
+            label="Category"
             value={newBlock.category || ""}
-            onChange={(e) =>
+            onChange={(value) =>
               onBlockChange({
                 ...newBlock,
-                category: e.target.value as PracticeBlock["category"],
+                category: value as PracticeBlock["category"],
               })
             }
-            className="w-full border border-secondary rounded-lg px-3 py-2 focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
-          >
-            <option value="">Select category</option>
-            {CATEGORY_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+            options={CATEGORY_OPTIONS}
+            placeholder="Select category"
+            size="md"
+          />
         </div>
         <div>
           <Typography

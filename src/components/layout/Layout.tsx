@@ -5,7 +5,6 @@ import { useDevMode } from "../../app/dev-mode-hooks";
 import { useUI } from "../../app/store";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useActiveTeamStore } from "../../stores/activeTeamStore";
-import { supabase } from "../../lib/supabase";
 import type { Database } from "../../types/database";
 import { getNavigationItems, toSidebarItems } from "../../utils/navigation";
 import { Sidebar } from "../ui/Sidebar";
@@ -17,6 +16,7 @@ import { Footer } from "./Footer";
 import type { DevMode } from "../../types/dev";
 import { emitTelemetry } from "../../lib/telemetry";
 import { isSuperAdminEmail } from "../../config/superAdmin";
+import { debug, warn, error as logError } from "../../utils/logger";
 
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 type ExtendedUserRole = UserRole | "super_admin";
@@ -50,7 +50,6 @@ interface LayoutProps {
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const profile = useAuthProfile();
   const profileLoading = useAuthProfileLoading();
-  console.log("👤 Profile:", profile);
   const { devMode } = useDevMode();
   const { sidebarOpen, toggleSidebar, uiDensity } = useUI();
   const [headerVisible, setHeaderVisible] = React.useState(true);
@@ -60,27 +59,67 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   // Set active team to user's first team if not already set
   useEffect(() => {
-    if (profile?.id && !activeTeamId) {
-      // Fetch user's teams and set the first one as active
-      const fetchUserTeams = async () => {
-        try {
-          const { data: memberships } = await supabase
-            .from("team_members")
-            .select("team_id")
-            .eq("user_id", profile.id)
-            .eq("status", "active")
-            .limit(1);
+    if (!profile?.id) return;
+    if (activeTeamId) return;
 
-          if (memberships && memberships.length > 0) {
-            setActiveTeamId(memberships[0].team_id);
+    // Fetch user's teams and set the first one as active
+    const fetchUserTeams = async () => {
+      debug("[Layout] Fetching teams for user:", profile.id);
+
+      // WORKAROUND: Supabase client queries hang in browser
+      // Use direct fetch with stored auth token instead
+      try {
+        const startTime = Date.now();
+
+        // Get the stored session token
+        const storedAuth = localStorage.getItem("boxcall-auth");
+        let accessToken = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+        if (storedAuth) {
+          try {
+            const parsed = JSON.parse(storedAuth);
+            if (parsed?.access_token) {
+              accessToken = parsed.access_token;
+            }
+          } catch {
+            // Use anon key
           }
-        } catch (error) {
-          console.error("Error fetching user teams:", error);
         }
-      };
 
-      fetchUserTeams();
-    }
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/team_members?user_id=eq.${profile.id}&status=eq.active&select=team_id&limit=1`,
+          {
+            headers: {
+              apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const elapsed = Date.now() - startTime;
+        debug(`[Layout] Fetch took ${elapsed}ms, status: ${response.status}`);
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          logError("[Layout] Fetch failed:", response.status, errorText);
+          return;
+        }
+
+        const memberships = await response.json();
+
+        if (memberships && memberships.length > 0) {
+          debug("[Layout] Setting active team to:", memberships[0].team_id);
+          setActiveTeamId(memberships[0].team_id);
+        } else {
+          warn("[Layout] No team memberships found for user");
+        }
+      } catch (err) {
+        logError("[Layout] Exception fetching user teams:", err);
+      }
+    };
+
+    fetchUserTeams();
   }, [profile?.id, activeTeamId, setActiveTeamId]);
 
   // Determine effective app role with dev-mode + super admin override

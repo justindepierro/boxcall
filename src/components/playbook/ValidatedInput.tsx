@@ -156,9 +156,11 @@ export const ValidatedInput: React.FC<ValidatedInputProps> = ({
       setShowSuggestions(false);
     }
 
+    // Copy ref value to local variable for cleanup
+    const timeout = timeoutRef.current;
+
     // Cleanup function
     return () => {
-      const timeout = timeoutRef.current;
       if (timeout) {
         clearTimeout(timeout);
       }

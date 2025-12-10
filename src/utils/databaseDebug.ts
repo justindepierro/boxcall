@@ -4,6 +4,7 @@
  */
 
 import { supabase } from "../lib/supabase";
+import { logError } from "./logger";
 
 export class DatabaseDebug {
   static async checkPlaybooks(): Promise<void> {
@@ -15,7 +16,7 @@ export class DatabaseDebug {
         .select("*");
 
       if (error) {
-        console.error("❌ Error fetching playbooks:", error);
+        logError("❌ Error fetching playbooks:", error);
         return;
       }
 
@@ -31,7 +32,7 @@ export class DatabaseDebug {
         console.info("💡 You may need to run database seeds");
       }
     } catch (error) {
-      console.error("❌ DatabaseDebug.checkPlaybooks failed:", error);
+      logError("❌ DatabaseDebug.checkPlaybooks failed:", error);
     }
   }
 
@@ -42,13 +43,13 @@ export class DatabaseDebug {
       const { data: teams, error } = await supabase.from("teams").select("*");
 
       if (error) {
-        console.error("❌ Error fetching teams:", error);
+        logError("❌ Error fetching teams:", error);
         return;
       }
 
       console.info("🏈 Found teams:", teams);
     } catch (error) {
-      console.error("❌ DatabaseDebug.checkTeams failed:", error);
+      logError("❌ DatabaseDebug.checkTeams failed:", error);
     }
   }
 
@@ -78,7 +79,7 @@ export class DatabaseDebug {
         ]);
 
         if (userError) {
-          console.error("❌ Error creating demo user:", userError);
+          logError("❌ Error creating demo user:", userError);
           // If we can't create user, let's try without created_by constraint
           console.info("⚠️ Continuing without demo user...");
         } else {
@@ -110,7 +111,7 @@ export class DatabaseDebug {
         ]);
 
         if (teamError) {
-          console.error("❌ Error creating demo team:", teamError);
+          logError("❌ Error creating demo team:", teamError);
 
           // Try without created_by if user constraint is the issue
           const { error: teamErrorFallback } = await supabase
@@ -127,7 +128,7 @@ export class DatabaseDebug {
             ]);
 
           if (teamErrorFallback) {
-            console.error(
+            logError(
               "❌ Error creating demo team (fallback):",
               teamErrorFallback
             );
@@ -151,14 +152,14 @@ export class DatabaseDebug {
         .single();
 
       if (error) {
-        console.error("❌ Error creating demo playbook:", error);
+        logError("❌ Error creating demo playbook:", error);
         return null;
       }
 
       console.info("✅ Demo playbook created:", data);
       return playbookId;
     } catch (error) {
-      console.error("❌ DatabaseDebug.createDemoPlaybook failed:", error);
+      logError("❌ DatabaseDebug.createDemoPlaybook failed:", error);
       return null;
     }
   }

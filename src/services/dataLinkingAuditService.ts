@@ -6,6 +6,7 @@
  */
 
 import { supabase } from "../lib/supabase";
+import { logError } from "../utils/logger";
 
 export interface PlayMissingFormationLink {
   id: string;
@@ -77,7 +78,7 @@ export class DataLinkingAuditService {
     const { data, error } = await query;
 
     if (error) {
-      console.error(
+      logError(
         "[DataLinkingAudit] Failed to fetch plays missing formation link:",
         error
       );
@@ -102,7 +103,7 @@ export class DataLinkingAuditService {
     const { data, error } = await query;
 
     if (error) {
-      console.error(
+      logError(
         "[DataLinkingAudit] Failed to fetch plays missing personnel link:",
         error
       );
@@ -127,7 +128,7 @@ export class DataLinkingAuditService {
     const { data, error } = await query;
 
     if (error) {
-      console.error(
+      logError(
         "[DataLinkingAudit] Failed to fetch formations missing personnel:",
         error
       );
@@ -152,7 +153,7 @@ export class DataLinkingAuditService {
     const { data, error } = await query;
 
     if (error) {
-      console.error(
+      logError(
         "[DataLinkingAudit] Failed to fetch orphaned personnel configs:",
         error
       );
@@ -173,7 +174,7 @@ export class DataLinkingAuditService {
     );
 
     if (error) {
-      console.error(
+      logError(
         "[DataLinkingAudit] Failed to check formation variant consistency:",
         error
       );
@@ -196,7 +197,7 @@ export class DataLinkingAuditService {
     const { data, error } = await supabase.rpc("fix_formation_variant_links");
 
     if (error) {
-      console.error(
+      logError(
         "[DataLinkingAudit] Failed to fix formation variant links:",
         error
       );
@@ -227,7 +228,7 @@ export class DataLinkingAuditService {
     );
 
     if (error) {
-      console.error(
+      logError(
         "[DataLinkingAudit] Failed to batch link plays to formations:",
         error
       );
@@ -254,7 +255,7 @@ export class DataLinkingAuditService {
     );
 
     if (error) {
-      console.error(
+      logError(
         "[DataLinkingAudit] Failed to batch link plays to personnel:",
         error
       );

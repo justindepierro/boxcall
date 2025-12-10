@@ -5,6 +5,8 @@
  * Integrates with browser geolocation API and address suggestion services.
  */
 
+import { debug, error as logError } from "../utils/logger";
+
 export interface AddressSuggestion {
   id: string;
   fullAddress: string;
@@ -44,7 +46,7 @@ export class LocationFinderService {
     }
 
     try {
-      console.log("📍 Getting current location...");
+      debug("📍 Getting current location...");
 
       const position = await new Promise<GeolocationPosition>(
         (resolve, reject) => {
@@ -57,13 +59,13 @@ export class LocationFinderService {
       );
 
       const { latitude, longitude } = position.coords;
-      console.log(`📍 Got coordinates: ${latitude}, ${longitude}`);
+      debug(`📍 Got coordinates: ${latitude}, ${longitude}`);
 
       // Reverse geocode to get address
       const address = await this.reverseGeocode(latitude, longitude);
 
       if (address) {
-        console.log("📍 Reverse geocoding successful");
+        debug("📍 Reverse geocoding successful");
         return {
           success: true,
           address,
@@ -75,7 +77,7 @@ export class LocationFinderService {
         };
       }
     } catch (error) {
-      console.warn("Geolocation error:", error);
+      debug("Geolocation error:", error);
 
       let errorMessage = "Could not get your location";
 
@@ -113,20 +115,20 @@ export class LocationFinderService {
     }
 
     try {
-      console.log(`🔍 Searching addresses for: "${query}"`);
+      debug(`🔍 Searching addresses for: "${query}"`);
 
       // For demo purposes, we'll use a mock geocoding service
       // In production, you'd integrate with Google Maps, Mapbox, or similar
       const suggestions = await this.mockAddressSearch(query);
 
-      console.log(`🔍 Found ${suggestions.length} address suggestions`);
+      debug(`🔍 Found ${suggestions.length} address suggestions`);
 
       return {
         success: true,
         suggestions,
       };
     } catch (error) {
-      console.error("Address search error:", error);
+      logError("Address search error:", error);
 
       return {
         success: false,
@@ -193,7 +195,7 @@ export class LocationFinderService {
     address: AddressSuggestion
   ): Promise<string | null> {
     try {
-      console.log("🏫 Looking up school district for address...");
+      debug("🏫 Looking up school district for address...");
 
       // In production, this would query a school district database
       // For demo, we'll return a mock district based on city/state
@@ -202,11 +204,11 @@ export class LocationFinderService {
         address.state
       );
 
-      console.log(`🏫 Found school district: ${district}`);
+      debug(`🏫 Found school district: ${district}`);
 
       return district;
     } catch (error) {
-      console.warn("Could not determine school district:", error);
+      debug("Could not determine school district:", error);
       return null;
     }
   }
@@ -226,7 +228,7 @@ export class LocationFinderService {
       const mockAddress = this.mockReverseGeocode(lat, lng);
       return mockAddress;
     } catch (error) {
-      console.error("Reverse geocoding failed:", error);
+      logError("Reverse geocoding failed:", error);
       return null;
     }
   }

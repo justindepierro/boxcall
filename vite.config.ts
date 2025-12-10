@@ -50,6 +50,32 @@ export default defineConfig({
     // Increase connection timeout for slower machines
     cors: true,
   },
+  // 🚀 FIX: Optimize dependency pre-bundling to prevent ERR_INSUFFICIENT_RESOURCES
+  // lucide-react exports 1500+ icons individually, causing browser connection exhaustion
+  optimizeDeps: {
+    include: [
+      // Pre-bundle icon libraries as single chunks
+      "lucide-react",
+      "@heroicons/react/24/outline",
+      "@heroicons/react/24/solid",
+      "@heroicons/react/20/solid",
+      // Pre-bundle heavy dependencies
+      "react",
+      "react-dom",
+      "react-router-dom",
+      "@supabase/supabase-js",
+      "@tanstack/react-query",
+      "zustand",
+      "@headlessui/react",
+      "framer-motion",
+      "clsx",
+      "date-fns",
+    ],
+    // Force these to be bundled together
+    esbuildOptions: {
+      target: "es2020",
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),

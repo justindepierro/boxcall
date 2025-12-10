@@ -15,7 +15,9 @@ import { Typography } from "../../design-system";
 import { Button } from "../../ui";
 import { Icon } from "../../ui/Icon/Icon";
 import { usePracticeSession } from "../../../hooks/usePracticeSession";
+import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 import type { ExecutionResult } from "../../../types/session";
+import { logError } from "../../../utils/logger";
 
 export const MobilePracticeSession: React.FC = () => {
   const { scriptId } = useParams<{ scriptId: string }>();
@@ -76,17 +78,15 @@ export const MobilePracticeSession: React.FC = () => {
 
   // Quick rep logging with haptic feedback
   const handleQuickLog = async (result: ExecutionResult) => {
-    // Haptic feedback on iOS
-    if ("vibrate" in navigator) {
-      navigator.vibrate(10);
-    }
+    // Haptic feedback using standardized utility
+    triggerHapticFeedback("light");
 
     try {
       await logRep(result, notes || undefined, []);
       setNotes(""); // Clear notes
       setShowNotes(false);
     } catch (err) {
-      console.error("Error logging rep:", err);
+      logError("Error logging rep:", err);
     }
   };
 
@@ -387,7 +387,10 @@ export const MobilePracticeSession: React.FC = () => {
         </div>
 
         {/* Safe area padding for iOS */}
-        <div className="h-safe-area-inset-bottom bg-secondary" />
+        <div
+          className="bg-secondary"
+          style={{ height: "env(safe-area-inset-bottom, 0px)" }}
+        />
       </div>
     </div>
   );

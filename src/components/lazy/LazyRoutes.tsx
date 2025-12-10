@@ -96,6 +96,11 @@ export const LazyBoxCall = lazyRoute(
   "BoxCall"
 );
 
+export const LazySessionHistory = lazyRoute(
+  () => import("../../pages/SessionHistoryPage"),
+  "Session History"
+);
+
 export const LazyPracticeSession = lazyRoute(
   () => import("../../components/boxcall/ResponsivePracticeSession"),
   "Practice Session"

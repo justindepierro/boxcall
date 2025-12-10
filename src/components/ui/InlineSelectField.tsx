@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Icon } from "./Icon/Icon";
+import { logError } from "../../utils/logger";
 
 interface SelectOption {
   value: string;
@@ -55,7 +56,7 @@ export const InlineSelectField: React.FC<InlineSelectFieldProps> = ({
     try {
       await onSave(editValue);
     } catch (error) {
-      console.error("Failed to save select field:", error);
+      logError("Failed to save select field:", error);
       // Could add error handling here if needed
     }
   };

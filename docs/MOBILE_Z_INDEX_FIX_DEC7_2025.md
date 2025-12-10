@@ -67,14 +67,7 @@ From `src/styles/design-tokens-unified.css`:
 
 **Change**:
 
-```diff
-  return (
-    <div
--     className="fixed inset-0 z-50 md:hidden"
-+     className="fixed inset-0 z-modal md:hidden"
-      role="dialog"
-      aria-modal="true"
-```
+**Change**: MobileDrawer wrapper now uses the semantic `z-modal` token instead of the hardcoded `z-50` value while keeping the same `fixed inset-0 md:hidden` layout classes.
 
 **Rationale**: Drawer is modal-like UI that should appear above backdrops
 
@@ -86,14 +79,7 @@ From `src/styles/design-tokens-unified.css`:
 
 **Change**:
 
-```diff
-  return (
-    <nav
-      className={`
--       fixed bottom-0 left-0 right-0 z-50
-+       fixed bottom-0 left-0 right-0 z-fixed
-        bg-white dark:bg-neutral-900
-```
+**Change**: MobileBottomNavigation root uses the `z-fixed` semantic token instead of `z-50`, keeping the same `fixed bottom-0 left-0 right-0` positioning bundle.
 
 **Rationale**: Bottom nav is fixed UI, should stay visible but not block modals
 

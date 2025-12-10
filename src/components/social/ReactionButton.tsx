@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Heart, ThumbsUp, Laugh, Frown, Meh, Angry } from "lucide-react";
 import { socialService } from "../../services/socialService";
+import { logError } from "../../utils/logger";
 import type {
   ReactionButtonProps,
   ReactionSummary,
@@ -45,7 +46,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
       const summary = await socialService.getReactions(contentType, contentId);
       setReactionSummary(summary);
     } catch (error) {
-      console.error("Failed to load reactions:", error);
+      logError("Failed to load reactions:", error);
     }
   }, [contentType, contentId]);
 
@@ -99,7 +100,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
       // Verify with server (but don't block UI)
       await loadReactions();
     } catch (error) {
-      console.error("Failed to toggle reaction:", error);
+      logError("Failed to toggle reaction:", error);
       // REVERT on error
       setReactionSummary(previousSummary);
     } finally {

@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Icon } from "../../ui/Icon/Icon";
 import { Button } from "../../ui/Button/Button";
@@ -10,18 +11,22 @@ import { PlaybookBottomNav } from "../page/PlaybookBottomNav";
 import { MobileStatsBottomSheet } from "../page/MobileStatsBottomSheet";
 import { FormationSyncPanel } from "../../formations/FormationSyncPanel";
 import { MobileQuickActions } from "../../mobile";
+import { MobilePlayCardSkeletonList } from "../../mobile/ui/MobilePlayCardSkeleton";
 import { PlayGrid } from "../PlayGrid";
 import { SelectionModeToggle } from "../SelectionModeToggle";
 import { AdvancedFilters } from "../AdvancedFilters";
 import { BottomSheet } from "../../BottomSheet";
 import { PracticeScriptList } from "../PracticeScriptList";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
+import { debug } from "../../../utils/logger";
 import type { Play } from "../../../types/play";
 import type {
   PlaybookState,
   CoachingView,
 } from "../../../contexts/PlaybookContext";
 import type { PracticeScript } from "../../../services/practiceService";
+
+const MOBILE_RENDER_WARN_THRESHOLD_MS = 20;
 
 interface MobilePlaybookViewProps {
   // State
@@ -30,6 +35,7 @@ interface MobilePlaybookViewProps {
   showFiltersSheet: boolean;
   showStatsSheet: boolean;
   activeTeamId: string | null;
+  isLoadingPlays: boolean;
 
   // Data
   debouncedSearchQuery: string;
@@ -82,6 +88,7 @@ export function MobilePlaybookView({
   showFiltersSheet,
   showStatsSheet,
   activeTeamId,
+  isLoadingPlays,
   debouncedSearchQuery,
   optimisticPlays,
   formationAudit,
@@ -112,9 +119,16 @@ export function MobilePlaybookView({
   mobileSecondaryButtonSize,
   suggestions,
 }: MobilePlaybookViewProps) {
+  const renderStartRef = useRef<number>(0);
+  if (typeof performance !== "undefined") {
+    renderStartRef.current = performance.now();
+  }
+
   // Use playsCreated from state as the source of truth for whether plays exist
   // optimisticPlays only contains newly created/updated plays, not all plays
   const hasPlays = state.playsCreated > 0;
+  const showHeaderSkeleton =
+    isLoadingPlays && state.currentView === "playbook" && !hasPlays;
 
   // View titles for header
   const viewTitles: Record<CoachingView, string> = {
@@ -127,42 +141,66 @@ export function MobilePlaybookView({
   // Determine if we should show the search/filter header
   const showSearchHeader = state.currentView === "playbook" && hasPlays;
 
+  useEffect(() => {
+    if (!import.meta.env.DEV || typeof performance === "undefined") {
+      return;
+    }
+    const duration = performance.now() - renderStartRef.current;
+    if (duration > MOBILE_RENDER_WARN_THRESHOLD_MS) {
+      debug(
+        `[MobilePlaybookView] render ${duration.toFixed(1)}ms (view=${state.currentView}, plays=${state.playsCreated})`
+      );
+    }
+  });
+
   return (
     <>
       {/* Fixed Header - Shows for playbook view with plays, or view title for other views */}
       <div
         className="fixed top-0 left-0 right-0 z-sticky bg-surface-primary/98 backdrop-blur-lg border-b border-border shadow-sm"
         style={{
-          paddingTop: "max(env(safe-area-inset-top, 0px), 12px)",
-          paddingBottom: "12px",
-          paddingLeft: "16px",
-          paddingRight: "16px",
+          paddingTop: "max(env(safe-area-inset-top, 0px), var(--spacing-md))",
+          paddingBottom: "var(--spacing-md)",
+          paddingLeft: "var(--spacing-lg)",
+          paddingRight: "var(--spacing-lg)",
         }}
       >
         {/* View header */}
-        <div className="flex items-center justify-between mb-2">
-          <Typography variant="headline-sm" className="text-primary font-bold">
-            {viewTitles[state.currentView]}
-          </Typography>
-          {state.currentView === "playbook" && hasPlays && (
-            <Button
-              onClick={() => {
-                triggerHapticFeedback("light");
-                setShowFiltersSheet(true);
-              }}
-              variant="ghost"
-              size="sm"
-              className="h-9 px-3"
+        <div className="mb-2 flex items-center justify-between gap-3">
+          {showHeaderSkeleton ? (
+            <div className="h-7 flex-1 rounded-lg bg-neutral-200 animate-pulse" />
+          ) : (
+            <Typography
+              variant="headline-sm"
+              className="text-primary font-bold"
             >
-              <Icon name="filter" className="h-4 w-4 mr-1.5" />
-              Filter
-              {Object.keys(state.advancedFilters).length > 0 && (
-                <span className="ml-1.5 bg-brand-jade text-white text-xs rounded-full px-1.5 py-0.5 min-w-5 text-center">
-                  {Object.keys(state.advancedFilters).length}
-                </span>
-              )}
-            </Button>
+              {viewTitles[state.currentView]}
+            </Typography>
           )}
+          {state.currentView === "playbook" &&
+            (showHeaderSkeleton ? (
+              <div className="h-9 w-16 flex-shrink-0 rounded-lg bg-neutral-200 animate-pulse" />
+            ) : (
+              hasPlays && (
+                <Button
+                  onClick={() => {
+                    triggerHapticFeedback("light");
+                    setShowFiltersSheet(true);
+                  }}
+                  variant="ghost"
+                  size="sm"
+                  className="h-9 px-3"
+                >
+                  <Icon name="filter" className="mr-1.5 h-4 w-4" />
+                  Filter
+                  {Object.keys(state.advancedFilters).length > 0 && (
+                    <span className="ml-1.5 rounded-full bg-brand-jade px-1.5 py-0.5 text-center text-xs text-white">
+                      {Object.keys(state.advancedFilters).length}
+                    </span>
+                  )}
+                </Button>
+              )
+            ))}
           {state.currentView === "practice-script" && (
             <Button
               onClick={() => {
@@ -194,42 +232,50 @@ export function MobilePlaybookView({
         </div>
 
         {/* Search input - only for playbook view */}
-        {showSearchHeader && (
-          <div className="relative">
-            <Icon
-              name="search"
-              className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 text-neutral-400 pointer-events-none"
-            />
-            <input
-              type="search"
-              placeholder="Search plays, formations..."
-              value={state.searchQuery}
-              onChange={(e) =>
-                dispatch({ type: "SET_SEARCH", query: e.target.value })
-              }
-              className="w-full h-11 pl-11 pr-11 bg-neutral-100 border-0 rounded-xl text-base text-primary placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-brand-jade/50 focus:bg-white transition-all"
-            />
-            {state.searchQuery && (
-              <motion.button
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0, opacity: 0 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 500,
-                  damping: 25,
-                }}
-                onClick={() => {
-                  triggerHapticFeedback("light");
-                  dispatch({ type: "SET_SEARCH", query: "" });
-                }}
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 w-9 h-9 flex items-center justify-center hover:bg-neutral-200 rounded-full transition-colors"
-                aria-label="Clear search"
-              >
-                <Icon name="close" className="h-4 w-4 text-neutral-500" />
-              </motion.button>
+        {state.currentView === "playbook" && (
+          <>
+            {showSearchHeader ? (
+              <div className="relative">
+                <Icon
+                  name="search"
+                  className="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 transform text-neutral-400"
+                />
+                <input
+                  type="search"
+                  placeholder="Search plays, formations..."
+                  value={state.searchQuery}
+                  onChange={(e) =>
+                    dispatch({ type: "SET_SEARCH", query: e.target.value })
+                  }
+                  className="h-11 w-full rounded-xl border-0 bg-neutral-100 pl-11 pr-11 text-base text-primary placeholder-neutral-500 transition-all focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-jade/50"
+                />
+                {state.searchQuery && (
+                  <motion.button
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0, opacity: 0 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 500,
+                      damping: 25,
+                    }}
+                    onClick={() => {
+                      triggerHapticFeedback("light");
+                      dispatch({ type: "SET_SEARCH", query: "" });
+                    }}
+                    className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 transform items-center justify-center rounded-full transition-colors hover:bg-neutral-200"
+                    aria-label="Clear search"
+                  >
+                    <Icon name="close" className="h-4 w-4 text-neutral-500" />
+                  </motion.button>
+                )}
+              </div>
+            ) : (
+              showHeaderSkeleton && (
+                <div className="h-11 w-full rounded-xl bg-neutral-200 animate-pulse" />
+              )
             )}
-          </div>
+          </>
         )}
       </div>
 
@@ -251,14 +297,7 @@ export function MobilePlaybookView({
             {/* Loading State - Show skeleton while data loads */}
             {!hasPlays && (
               <div className="px-4 py-6">
-                <div className="space-y-3">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div
-                      key={i}
-                      className="h-24 bg-neutral-200 rounded-xl animate-pulse"
-                    />
-                  ))}
-                </div>
+                <MobilePlayCardSkeletonList count={4} />
               </div>
             )}
 

@@ -16,7 +16,6 @@ import { FormationBadge } from "../playbook/FormationBadge";
 import { FormationService } from "../../services/formationService";
 import { PersonnelService } from "../../services/personnelService";
 import { FormationLinkConfirmationModal } from "./FormationLinkConfirmationModal";
-import { supabase } from "../../lib/supabase";
 import type { Formation } from "../../types/formation";
 import type { PersonnelConfiguration } from "../../types/personnel";
 import { Link2, ChevronDown } from "lucide-react";
@@ -67,16 +66,17 @@ export const FormationLinkingPanel: React.FC<FormationLinkingPanelProps> = ({
     );
     try {
       // First, try to import any formations from plays
-      const currentUser = await supabase.auth.getUser();
-      debug("[FormationLinkingPanel] Current user:", currentUser.data.user?.id);
-      if (currentUser.data.user) {
+      const { getCurrentUserId } = await import("../../lib/auth-helpers");
+      const currentUserId = getCurrentUserId();
+      debug("[FormationLinkingPanel] Current user:", currentUserId);
+      if (currentUserId) {
         try {
           debug(
             "[FormationLinkingPanel] Attempting to import formations from plays..."
           );
           const result = await FormationService.importFormationsFromPlays(
             playbookId,
-            currentUser.data.user.id
+            currentUserId
           );
 
           debug("[FormationLinkingPanel] Import result:", result);

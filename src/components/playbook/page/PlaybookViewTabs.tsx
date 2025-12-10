@@ -72,6 +72,17 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
 }) => {
   // CSV Import state
   const [showCSVImport, setShowCSVImport] = useState(false);
+  const playsTarget = 100;
+  const completionPercent = Math.min(
+    100,
+    Math.round(((playsCreated || 0) / Math.max(playsTarget, 1)) * 100)
+  );
+  const hasPlaybookSelector =
+    Array.isArray(playbooks) &&
+    playbooks.length > 0 &&
+    Boolean(activePlaybookId) &&
+    Boolean(onPlaybookChange) &&
+    Boolean(teamId);
   return (
     <div className="divider-b bg-gradient-to-b from-white/95 to-white/80 dark:from-slate-900/95 dark:to-slate-900/80 shadow-sm">
       <div className="container-page px-6">
@@ -90,23 +101,21 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
         </div>
 
         {/* Top row: Title, stats, team type selector, and search */}
-        <div className="flex items-center justify-between py-3 overflow-visible">
-          <div className="flex items-center space-x-4 overflow-visible">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-jade-600 shadow-lg shadow-emerald-500/25 overflow-visible">
+        <div className="flex flex-col gap-4 py-3 overflow-visible md:flex-row md:items-center md:justify-between">
+          <div className="flex min-w-0 items-start gap-4 overflow-visible">
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-jade-600 shadow-lg shadow-emerald-500/25 overflow-visible">
               <Icon name="file" className="h-6 w-6 text-white" />
             </div>
-            <div className="flex flex-col">
+            <div className="flex min-w-0 flex-col">
               <Typography
                 variant="headline-md"
                 as="h1"
-                className="text-primary font-semibold"
+                className="text-primary font-semibold leading-tight line-clamp-2 md:line-clamp-1"
               >
-                {title}
+                {title || "Playbook"}
               </Typography>
-              <div className="flex items-center flex-wrap gap-2 mt-1.5 overflow-visible">
-                <ProgressBadge
-                  progress={Math.round((playsCreated / 100) * 100)}
-                >
+              <div className="mt-1.5 flex flex-wrap items-center gap-2 overflow-visible">
+                <ProgressBadge progress={completionPercent}>
                   {playsCreated}/100 plays
                 </ProgressBadge>
                 <Badge variant="info" size="sm">
@@ -119,22 +128,22 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
                 )}
               </div>
             </div>
-            {/* Team Type Toggle - responsive: hidden on mobile, shows on md+ */}
-            {currentTeamType && onTeamTypeChange && (
-              <div className="hidden md:block md:ml-6">
-                <TeamTypeToggle
-                  currentType={currentTeamType}
-                  onTypeChange={onTeamTypeChange}
-                />
-              </div>
-            )}
           </div>
+
+          {currentTeamType && onTeamTypeChange && (
+            <div className="w-full md:ml-6 md:w-auto">
+              <TeamTypeToggle
+                currentType={currentTeamType}
+                onTypeChange={onTeamTypeChange}
+              />
+            </div>
+          )}
         </div>
 
         {/* Bottom row: Navigation tabs and actions */}
         <div className="flex flex-wrap items-center justify-between gap-3 pb-2">
           {/* View Tabs - Left side */}
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button
               id="tab-playbook"
               role="tab"
@@ -250,7 +259,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
           </div>
 
           {/* Action Buttons - Right side */}
-          <div className="flex items-center gap-2 overflow-visible">
+          <div className="flex w-full flex-wrap items-center gap-2 overflow-visible md:w-auto">
             {/* Formation Library Button */}
             <Button
               onClick={() => {
@@ -284,19 +293,17 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
             </Button>
 
             {/* Playbook Selector - Compact inline version */}
-            {playbooks &&
-              playbooks.length > 0 &&
-              activePlaybookId &&
-              onPlaybookChange &&
-              teamId && (
+            {hasPlaybookSelector && (
+              <div className="min-w-56 flex-1 sm:flex-none">
                 <PlaybookSelector
                   playbooks={playbooks}
-                  activePlaybookId={activePlaybookId}
-                  onPlaybookChange={onPlaybookChange}
+                  activePlaybookId={activePlaybookId as string}
+                  onPlaybookChange={onPlaybookChange as (id: string) => void}
                   onPlaybookUpdated={onPlaybookUpdated}
-                  teamId={teamId}
+                  teamId={teamId as string}
                 />
-              )}
+              </div>
+            )}
 
             {/* Playbook Health */}
             {onOpenHealth && (

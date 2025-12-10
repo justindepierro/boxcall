@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { useAuth } from "../../app/auth-store";
 import { Typography } from "../design-system";
-import { Button, Card, Input, Select } from "../ui";
+import { Button, Card, Input, Dropdown } from "../ui";
 import { AuthLogo } from "../ui/Logo";
 
 interface RegisterFormProps {
@@ -147,14 +147,13 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             required
             fullWidth
           />
-          <Select
+          <Dropdown
             label="Role"
             value={formData.role}
-            onChange={(value) => handleInputChange("role", String(value))}
+            onChange={(value) => handleInputChange("role", value)}
             options={roleOptions}
-            status={validationErrors.role ? "error" : undefined}
+            error={!!validationErrors.role}
             errorMessage={validationErrors.role}
-            required
             fullWidth
           />
           <Input

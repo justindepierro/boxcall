@@ -3,6 +3,7 @@
  * Manages recent searches in localStorage for GlobalSearch component
  */
 import { useState, useCallback, useEffect } from "react";
+import { logError } from "../utils/logger";
 
 const STORAGE_KEY = "bc_search_history";
 const MAX_HISTORY_SIZE = 10;
@@ -21,7 +22,7 @@ export function useSearchHistory() {
         return Array.isArray(parsed) ? parsed : [];
       }
     } catch (error) {
-      console.error("[useSearchHistory] Error loading history:", error);
+      logError("[useSearchHistory] Error loading history:", error);
     }
     return [];
   });
@@ -31,7 +32,7 @@ export function useSearchHistory() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
     } catch (error) {
-      console.error("[useSearchHistory] Error saving history:", error);
+      logError("[useSearchHistory] Error saving history:", error);
     }
   }, [history]);
 
@@ -68,7 +69,7 @@ export function useSearchHistory() {
     try {
       localStorage.removeItem(STORAGE_KEY);
     } catch (error) {
-      console.error("[useSearchHistory] Error clearing history:", error);
+      logError("[useSearchHistory] Error clearing history:", error);
     }
   }, []);
 

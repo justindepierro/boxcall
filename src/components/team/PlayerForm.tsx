@@ -6,6 +6,7 @@ import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 
 import type { TeamPlayer, TeamPlayerInsert } from "../../types/team-management";
+import { logError } from "../../utils/logger";
 
 interface PlayerFormProps {
   player?: TeamPlayer | null;
@@ -143,7 +144,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
       };
       onSave(playerData);
     } catch (error) {
-      console.error("Error saving player:", error);
+      logError("Error saving player:", error);
     } finally {
       setSaving(false);
     }

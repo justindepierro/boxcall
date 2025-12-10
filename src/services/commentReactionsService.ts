@@ -7,6 +7,8 @@
 
 import { supabase } from "../lib/supabase";
 import { emitTelemetry } from "../lib/telemetry";
+import { getCurrentUserId } from "../lib/auth-helpers";
+import { logError } from "../utils/logger";
 
 export type ReactionType =
   | "like"
@@ -63,8 +65,9 @@ export class CommentReactionsService {
     reactions: CommentReaction[];
   }> {
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) {
+      // Use cached user ID for bulletproof performance
+      const userId = getCurrentUserId();
+      if (!userId) {
         throw new Error("User not authenticated");
       }
 
@@ -95,9 +98,7 @@ export class CommentReactionsService {
           (reactions as CommentReaction[] | null)?.filter(
             (r) => r.reaction_type === type
           ) || [];
-        const userHasReacted = typeReactions.some(
-          (r) => r.user_id === user.user?.id
-        );
+        const userHasReacted = typeReactions.some((r) => r.user_id === userId);
 
         summary.push({
           reaction_type: type,
@@ -111,7 +112,7 @@ export class CommentReactionsService {
         reactions: (reactions as CommentReaction[] | null) || [],
       };
     } catch (error) {
-      console.error("Error fetching comment reactions:", error);
+      logError("Error fetching comment reactions:", error);
       return { summary: [], reactions: [] };
     }
   }
@@ -128,8 +129,9 @@ export class CommentReactionsService {
     error?: string;
   }> {
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) {
+      // Use cached user ID for bulletproof performance
+      const userId = getCurrentUserId();
+      if (!userId) {
         return {
           success: false,
           action: null,
@@ -142,7 +144,7 @@ export class CommentReactionsService {
         .from("comment_reactions")
         .select("id")
         .eq("comment_id", commentId)
-        .eq("user_id", user.user.id)
+        .eq("user_id", userId)
         .eq("reaction_type", reactionType)
         .maybeSingle();
 
@@ -170,7 +172,7 @@ export class CommentReactionsService {
         return { ...result, action: "added" };
       }
     } catch (error) {
-      console.error("Error toggling comment reaction:", error);
+      logError("Error toggling comment reaction:", error);
       return {
         success: false,
         action: null,
@@ -187,14 +189,15 @@ export class CommentReactionsService {
     reactionType: ReactionType
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) {
+      // Use cached user ID for bulletproof performance
+      const userId = getCurrentUserId();
+      if (!userId) {
         return { success: false, error: "User not authenticated" };
       }
 
       const { error } = await supabase.from("comment_reactions").insert({
         comment_id: commentId,
-        user_id: user.user.id,
+        user_id: userId,
         reaction_type: reactionType,
       });
 
@@ -208,7 +211,7 @@ export class CommentReactionsService {
 
       return { success: true };
     } catch (error) {
-      console.error("Error adding comment reaction:", error);
+      logError("Error adding comment reaction:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error",
@@ -224,8 +227,9 @@ export class CommentReactionsService {
     reactionType: ReactionType
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) {
+      // Use cached user ID for bulletproof performance
+      const userId = getCurrentUserId();
+      if (!userId) {
         return { success: false, error: "User not authenticated" };
       }
 
@@ -234,14 +238,14 @@ export class CommentReactionsService {
         .from("comment_reactions")
         .delete()
         .eq("comment_id", commentId)
-        .eq("user_id", user.user.id)
+        .eq("user_id", userId)
         .eq("reaction_type", reactionType);
 
       if (error) throw error;
 
       return { success: true };
     } catch (error) {
-      console.error("Error removing comment reaction:", error);
+      logError("Error removing comment reaction:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error",
@@ -263,8 +267,9 @@ export class CommentReactionsService {
     try {
       if (commentIds.length === 0) return {};
 
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return {};
+      // Use cached user ID for bulletproof performance
+      const userId = getCurrentUserId();
+      if (!userId) return {};
 
       // Fetch all reactions for these comments
       const { data: reactions, error } = await supabase
@@ -294,7 +299,7 @@ export class CommentReactionsService {
             (r) => r.reaction_type === type
           );
           const userHasReacted = typeReactions.some(
-            (r) => r.user_id === user.user?.id
+            (r) => r.user_id === userId
           );
 
           return {
@@ -309,7 +314,7 @@ export class CommentReactionsService {
 
       return result;
     } catch (error) {
-      console.error("Error fetching comment reactions batch:", error);
+      logError("Error fetching comment reactions batch:", error);
       return {};
     }
   }

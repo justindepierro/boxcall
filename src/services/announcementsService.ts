@@ -6,7 +6,9 @@
  */
 
 import { supabase } from "../lib/supabase";
+import { getCurrentUserId } from "../lib/auth-helpers";
 import { emitTelemetry } from "../lib/telemetry";
+import { error as logError } from "../utils/logger";
 
 // ============================================
 // TYPE DEFINITIONS
@@ -126,7 +128,7 @@ export class AnnouncementsService {
       const { data, error } = await query;
 
       if (error) {
-        console.error("Error fetching announcements:", error);
+        logError("Error fetching announcements:", error);
         throw error;
       }
 
@@ -150,7 +152,7 @@ export class AnnouncementsService {
       // Fetch team member roles to check for coaches
       const { data: teamMembers } = await supabase
         .from("team_members")
-        .select("user_id, role")
+        .select("user_id, team_role")
         .eq("team_id", teamId)
         .in("user_id", authorIds);
 
@@ -158,7 +160,7 @@ export class AnnouncementsService {
       const profileMap = new Map((profiles || []).map((p: any) => [p.id, p]));
 
       const roleMap = new Map(
-        (teamMembers || []).map((m: any) => [m.user_id, m.role])
+        (teamMembers || []).map((m: any) => [m.user_id, m.team_role])
       );
 
       // Helper function to format author name based on role
@@ -193,7 +195,7 @@ export class AnnouncementsService {
 
       return enrichedData as unknown as Announcement[];
     } catch (error) {
-      console.error("Error in getAnnouncements:", error);
+      logError("Error in getAnnouncements:", error);
       throw error;
     }
   }
@@ -213,13 +215,13 @@ export class AnnouncementsService {
         .single();
 
       if (error) {
-        console.error("Error fetching announcement:", error);
+        logError("Error fetching announcement:", error);
         return null;
       }
 
       return data as unknown as Announcement;
     } catch (error) {
-      console.error("Error in getAnnouncement:", error);
+      logError("Error in getAnnouncement:", error);
       return null;
     }
   }
@@ -233,11 +235,9 @@ export class AnnouncementsService {
     error?: string;
   }> {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const userId = getCurrentUserId();
 
-      if (!user) {
+      if (!userId) {
         return {
           success: false,
           error: "User not authenticated",
@@ -246,7 +246,7 @@ export class AnnouncementsService {
 
       const newAnnouncement = {
         ...announcement,
-        created_by: user.id,
+        created_by: userId,
         attachments: announcement.attachments || [],
         visibility: announcement.visibility || "all",
         is_pinned: announcement.is_pinned || false,
@@ -259,7 +259,7 @@ export class AnnouncementsService {
         .single();
 
       if (error) {
-        console.error("Error creating announcement:", error);
+        logError("Error creating announcement:", error);
         return {
           success: false,
           error: error.message,
@@ -278,7 +278,7 @@ export class AnnouncementsService {
         announcement: data as unknown as Announcement,
       };
     } catch (error) {
-      console.error("Error in createAnnouncement:", error);
+      logError("Error in createAnnouncement:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error),
@@ -306,7 +306,7 @@ export class AnnouncementsService {
         .single();
 
       if (error) {
-        console.error("Error updating announcement:", error);
+        logError("Error updating announcement:", error);
         return {
           success: false,
           error: error.message,
@@ -323,7 +323,7 @@ export class AnnouncementsService {
         announcement: data as unknown as Announcement,
       };
     } catch (error) {
-      console.error("Error in updateAnnouncement:", error);
+      logError("Error in updateAnnouncement:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error),
@@ -354,7 +354,7 @@ export class AnnouncementsService {
         .eq("id", announcementId);
 
       if (error) {
-        console.error("Error toggling pin:", error);
+        logError("Error toggling pin:", error);
         return {
           success: false,
           error: error.message,
@@ -368,7 +368,7 @@ export class AnnouncementsService {
 
       return { success: true };
     } catch (error) {
-      console.error("Error in togglePin:", error);
+      logError("Error in togglePin:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error),
@@ -391,7 +391,7 @@ export class AnnouncementsService {
         .single();
 
       if (fetchError || !announcement) {
-        console.error("Error fetching announcement:", fetchError);
+        logError("Error fetching announcement:", fetchError);
         return {
           success: false,
           error:
@@ -406,7 +406,7 @@ export class AnnouncementsService {
         .eq("id", announcementId);
 
       if (error) {
-        console.error("Error deleting announcement:", error);
+        logError("Error deleting announcement:", error);
         return {
           success: false,
           error:
@@ -421,7 +421,7 @@ export class AnnouncementsService {
 
       return { success: true };
     } catch (error) {
-      console.error("Error deleting announcement:", error);
+      logError("Error deleting announcement:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error),
@@ -442,7 +442,7 @@ export class AnnouncementsService {
         .eq("id", announcementId);
 
       if (error) {
-        console.error("Error permanently deleting announcement:", error);
+        logError("Error permanently deleting announcement:", error);
         return {
           success: false,
           error: error.message,
@@ -455,7 +455,7 @@ export class AnnouncementsService {
 
       return { success: true };
     } catch (error) {
-      console.error("Error in permanentlyDelete:", error);
+      logError("Error in permanentlyDelete:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error),
@@ -484,7 +484,7 @@ export class AnnouncementsService {
         ).length,
       };
     } catch (error) {
-      console.error("Error getting announcement stats:", error);
+      logError("Error getting announcement stats:", error);
       return { total: 0, pinned: 0, recent: 0 };
     }
   }
@@ -494,28 +494,26 @@ export class AnnouncementsService {
    */
   static async getDrafts(teamId: string): Promise<Announcement[]> {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return [];
+      const userId = getCurrentUserId();
+      if (!userId) return [];
 
       const { data, error } = await supabase
         .from("team_announcements" as any)
         .select("*")
         .eq("team_id", teamId)
         .eq("status", "draft")
-        .eq("created_by", user.id)
+        .eq("created_by", userId)
         .is("deleted_at", null)
         .order("updated_at", { ascending: false });
 
       if (error) {
-        console.error("Error fetching drafts:", error);
+        logError("Error fetching drafts:", error);
         return [];
       }
 
       return (data || []) as unknown as Announcement[];
     } catch (error) {
-      console.error("Error in getDrafts:", error);
+      logError("Error in getDrafts:", error);
       return [];
     }
   }
@@ -531,11 +529,9 @@ export class AnnouncementsService {
     error?: string;
   }> {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const userId = getCurrentUserId();
 
-      if (!user) {
+      if (!userId) {
         return {
           success: false,
           error: "User not authenticated",
@@ -545,7 +541,7 @@ export class AnnouncementsService {
       const draftData = {
         ...announcement,
         status: "draft" as AnnouncementStatus,
-        created_by: user.id,
+        created_by: userId,
         attachments: announcement.attachments || [],
         visibility: announcement.visibility || "all",
         is_pinned: announcement.is_pinned || false,
@@ -560,7 +556,7 @@ export class AnnouncementsService {
           .from("team_announcements" as any)
           .update(draftData)
           .eq("id", announcement.id)
-          .eq("created_by", user.id) // Ensure user owns the draft
+          .eq("created_by", userId) // Ensure user owns the draft
           .select()
           .single();
 
@@ -579,7 +575,7 @@ export class AnnouncementsService {
       }
 
       if (error) {
-        console.error("Error saving draft:", error);
+        logError("Error saving draft:", error);
         return {
           success: false,
           error: error.message,
@@ -596,7 +592,7 @@ export class AnnouncementsService {
         announcement: data as unknown as Announcement,
       };
     } catch (error) {
-      console.error("Error in saveDraft:", error);
+      logError("Error in saveDraft:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error),
@@ -611,10 +607,8 @@ export class AnnouncementsService {
     draftId: string
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
+      const userId = getCurrentUserId();
+      if (!userId) {
         return { success: false, error: "Not authenticated" };
       }
 
@@ -622,11 +616,11 @@ export class AnnouncementsService {
         .from("team_announcements" as any)
         .update({ status: "published" })
         .eq("id", draftId)
-        .eq("created_by", user.id)
+        .eq("created_by", userId)
         .eq("status", "draft");
 
       if (error) {
-        console.error("Error publishing draft:", error);
+        logError("Error publishing draft:", error);
         return { success: false, error: error.message };
       }
 
@@ -634,7 +628,7 @@ export class AnnouncementsService {
 
       return { success: true };
     } catch (error) {
-      console.error("Error in publishDraft:", error);
+      logError("Error in publishDraft:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error),
@@ -697,7 +691,7 @@ export class AnnouncementsService {
         return false;
       });
     } catch (error) {
-      console.error("Error searching announcements:", error);
+      logError("Error searching announcements:", error);
       return [];
     }
   }

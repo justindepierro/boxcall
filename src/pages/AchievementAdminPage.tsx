@@ -3,13 +3,14 @@ import { supabase } from "../lib/supabase";
 import type { AchievementDefinition } from "../services/achievementService";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
-import { Select } from "../components/ui/Select";
+import { Dropdown } from "../components/ui/Dropdown";
 import { Card } from "../components/ui/Card";
 import { Badge } from "../components/ui/Badge";
 import type { BadgeVariant } from "../components/ui/Badge/Badge";
 import { Icon } from "../components/ui/Icon";
 import { Modal } from "../components/ui/Modal";
 import { LoadingScreen } from "../components/ui/LoadingScreen";
+import { logError } from "../utils/logger";
 
 interface AchievementFormData {
   name: string;
@@ -94,7 +95,7 @@ export const AchievementAdminPage: React.FC = () => {
       if (error) throw error;
       setAchievements(data || []);
     } catch (error) {
-      console.error("Error loading achievements:", error);
+      logError("Error loading achievements:", error);
     } finally {
       setLoading(false);
     }
@@ -115,7 +116,7 @@ export const AchievementAdminPage: React.FC = () => {
       setShowCreateModal(false);
       setFormData(defaultFormData);
     } catch (error) {
-      console.error("Error creating achievement:", error);
+      logError("Error creating achievement:", error);
     } finally {
       setSaving(false);
     }
@@ -141,7 +142,7 @@ export const AchievementAdminPage: React.FC = () => {
       setEditingAchievement(null);
       setFormData(defaultFormData);
     } catch (error) {
-      console.error("Error updating achievement:", error);
+      logError("Error updating achievement:", error);
     } finally {
       setSaving(false);
     }
@@ -160,7 +161,7 @@ export const AchievementAdminPage: React.FC = () => {
 
       setAchievements((prev) => prev.filter((a) => a.id !== id));
     } catch (error) {
-      console.error("Error deleting achievement:", error);
+      logError("Error deleting achievement:", error);
     }
   };
 
@@ -223,7 +224,7 @@ export const AchievementAdminPage: React.FC = () => {
       setAchievements((prev) => [...prev, ...(inserted || [])]);
       alert(`Successfully uploaded ${inserted?.length || 0} achievements`);
     } catch (error) {
-      console.error("Error uploading achievements:", error);
+      logError("Error uploading achievements:", error);
       alert("Error uploading achievements. Please check the file format.");
     }
   };
@@ -388,7 +389,7 @@ export const AchievementAdminPage: React.FC = () => {
           />
 
           <div className="grid grid-cols-2 gap-4">
-            <Select
+            <Dropdown
               label="Category"
               value={formData.category}
               onChange={(value) =>
@@ -396,7 +397,7 @@ export const AchievementAdminPage: React.FC = () => {
               }
               options={categoryOptions}
             />
-            <Select
+            <Dropdown
               label="Rarity"
               value={formData.rarity}
               onChange={(value) =>
@@ -407,7 +408,7 @@ export const AchievementAdminPage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <Select
+            <Dropdown
               label="Trigger Type"
               value={formData.trigger_type}
               onChange={(value) =>
@@ -415,13 +416,13 @@ export const AchievementAdminPage: React.FC = () => {
               }
               options={triggerTypeOptions}
             />
-            <Select
+            <Dropdown
               label="Trigger Target"
               value={formData.trigger_target}
               onChange={(value) =>
                 setFormData((prev) => ({
                   ...prev,
-                  trigger_target: String(value),
+                  trigger_target: value,
                 }))
               }
               options={triggerTargetOptions}

@@ -8,6 +8,7 @@ import { Typography } from "../design-system/Typography";
 import React, { useState, useEffect } from "react";
 import { Icon } from "../ui/Icon/Icon";
 import { customFieldsService } from "@services/customFieldsService";
+import { logError } from "../../utils/logger";
 import type {
   CustomFieldDefinition,
   CustomFieldValues,
@@ -54,7 +55,7 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
         );
         setValues(mergedValues);
       } catch (error) {
-        console.error("Error loading custom field definitions:", error);
+        logError("Error loading custom field definitions:", error);
       } finally {
         setLoading(false);
       }
@@ -322,7 +323,7 @@ export const CustomFieldsGrouped: React.FC<CustomFieldsGroupedProps> = ({
         const grouped = await customFieldsService.getFieldsByCategory(teamId);
         setFieldsByCategory(grouped);
       } catch (error) {
-        console.error("Error loading grouped custom fields:", error);
+        logError("Error loading grouped custom fields:", error);
       } finally {
         setLoading(false);
       }

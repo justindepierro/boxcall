@@ -57,6 +57,9 @@ export const MobileGamePlanCard: React.FC<MobileGamePlanCardProps> = ({
   };
 
   const totalPlays = situations.reduce((sum, sit) => sum + sit.plays.length, 0);
+  const updatedLabel = updatedAt
+    ? new Date(updatedAt).toLocaleDateString()
+    : null;
 
   // Get location color
   const getLocationColor = () => {
@@ -158,42 +161,49 @@ export const MobileGamePlanCard: React.FC<MobileGamePlanCardProps> = ({
 
       {/* Action Bar */}
       <div className="flex items-center justify-between px-3 py-2 bg-neutral-50 dark:bg-neutral-800/50 border-t border-neutral-100 dark:border-neutral-800">
-        {/* PDF Export - Primary Action */}
-        <button
-          onClick={(e) => handleAction(onExportPDF, e)}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-brand-jade text-white font-medium text-sm active:scale-95 transition-transform"
-          aria-label="Export PDF"
-        >
-          <Icon name="download" className="w-4 h-4" />
-          Call Sheet
-        </button>
+        {/* PDF Export - Primary Action + Updated timestamp */}
+        <div className="flex flex-col">
+          <button
+            onClick={(e) => handleAction(onExportPDF, e)}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-brand-jade text-white font-medium text-sm active:scale-95 transition-transform"
+            aria-label="Export PDF"
+          >
+            <Icon name="download" className="w-4 h-4" />
+            Call Sheet
+          </button>
+          {updatedLabel && (
+            <span className="mt-1 text-xs text-secondary text-left">
+              Updated {updatedLabel}
+            </span>
+          )}
+        </div>
 
         {/* Secondary Actions */}
         <div className="flex items-center gap-0.5">
           <button
             onClick={(e) => handleAction(onEdit, e)}
-            className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all"
+            className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all"
             aria-label="Edit"
           >
             <Icon name="edit" className="w-5 h-5 text-neutral-500" />
           </button>
           <button
             onClick={(e) => handleAction(onDuplicate, e)}
-            className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all"
+            className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all"
             aria-label="Duplicate"
           >
             <Icon name="copy" className="w-5 h-5 text-neutral-500" />
           </button>
           <button
             onClick={(e) => handleAction(onArchive, e)}
-            className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all"
+            className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all"
             aria-label="Archive"
           >
             <Icon name="folder" className="w-5 h-5 text-neutral-500" />
           </button>
           <button
             onClick={(e) => handleAction(onDelete, e)}
-            className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-error-50 dark:hover:bg-error-900/30 active:scale-95 transition-all"
+            className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-error-50 dark:hover:bg-error-900/30 active:scale-95 transition-all"
             aria-label="Delete"
           >
             <Icon name="delete" className="w-5 h-5 text-error-500" />
@@ -203,5 +213,3 @@ export const MobileGamePlanCard: React.FC<MobileGamePlanCardProps> = ({
     </div>
   );
 };
-
-export default MobileGamePlanCard;

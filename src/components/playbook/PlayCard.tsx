@@ -36,6 +36,7 @@ import {
   normalizePlayText,
 } from "./play-card/helpers";
 import { usePlayFieldValues } from "./AddNewPlayModal/hooks/usePlayFieldValues";
+import { logError } from "../../utils/logger";
 
 interface PlayCardProps {
   play: PlayType;
@@ -343,7 +344,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
           await onSave(play.id, { [field]: value });
         }
       } catch (error) {
-        console.error(
+        logError(
           `[PlayCard] Failed to save ${fieldName}, reverting:`,
           error
         );

@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon, type IconName } from "../../ui/Icon/Icon";
+import { Icon } from "../../ui/Icon/Icon";
 import { Typography } from "../../design-system/Typography";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 
@@ -145,13 +145,13 @@ export const MobilePracticeCard: React.FC<MobilePracticeCardProps> = ({
           {new Date(updatedAt).toLocaleDateString()}
         </Typography>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           <button
             onClick={(e) => {
               e.stopPropagation();
               handleAction(onEdit);
             }}
-            className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 active:scale-95 transition-all"
+            className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 active:scale-95 transition-all"
             aria-label="Edit"
           >
             <Icon name="edit" className="w-5 h-5 text-neutral-500" />
@@ -161,7 +161,7 @@ export const MobilePracticeCard: React.FC<MobilePracticeCardProps> = ({
               e.stopPropagation();
               handleAction(onDuplicate);
             }}
-            className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 active:scale-95 transition-all"
+            className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 active:scale-95 transition-all"
             aria-label="Duplicate"
           >
             <Icon name="copy" className="w-5 h-5 text-neutral-500" />
@@ -171,7 +171,7 @@ export const MobilePracticeCard: React.FC<MobilePracticeCardProps> = ({
               e.stopPropagation();
               handleAction(onArchive);
             }}
-            className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 active:scale-95 transition-all"
+            className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 active:scale-95 transition-all"
             aria-label="Archive"
           >
             <Icon name="folder" className="w-5 h-5 text-neutral-500" />
@@ -181,7 +181,7 @@ export const MobilePracticeCard: React.FC<MobilePracticeCardProps> = ({
               e.stopPropagation();
               handleAction(onDelete);
             }}
-            className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-error-50 dark:hover:bg-error-900/30 active:scale-95 transition-all"
+            className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-error-50 dark:hover:bg-error-900/30 active:scale-95 transition-all"
             aria-label="Delete"
           >
             <Icon name="delete" className="w-5 h-5 text-error-500" />
@@ -191,5 +191,3 @@ export const MobilePracticeCard: React.FC<MobilePracticeCardProps> = ({
     </div>
   );
 };
-
-export default MobilePracticeCard;

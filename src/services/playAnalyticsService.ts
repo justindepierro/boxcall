@@ -7,6 +7,7 @@
  */
 
 import { supabase } from "../lib/supabase";
+import { logError } from "../utils/logger";
 import type {
   GamePlanEnhanced,
   GamePlanSituation,
@@ -181,7 +182,7 @@ export class PlayAnalyticsService {
         },
       };
     } catch (error) {
-      console.error("Error fetching game planning analytics:", error);
+      logError("Error fetching game planning analytics:", error);
       return PlayAnalyticsService.generateMockGamePlanningData();
     }
   }

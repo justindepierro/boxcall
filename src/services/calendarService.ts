@@ -10,6 +10,7 @@
  */
 import { CalendarAPI, CalendarRSVP, CalendarComments } from "../infra/calendar";
 import { supabase } from "../lib/supabase";
+import { getCurrentUserId } from "../lib/auth-helpers";
 
 import type {
   CalendarEventCreate,
@@ -133,19 +134,14 @@ export class CalendarService {
     const { teamId, title, eventType, startsAt, location } = input;
 
     // Retrieve current authenticated user for created_by (required by NOT NULL + RLS policies)
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError) throw authError;
-    if (!user) throw new Error("No authenticated user");
+    const userId = getCurrentUserId();
+    if (!userId) throw new Error("No authenticated user");
 
     const { data, error } = await supabase
       .from("team_events")
       .insert({
         team_id: teamId,
-        created_by: user.id,
+        created_by: userId,
         title,
         event_type: eventType,
         starts_at: startsAt,

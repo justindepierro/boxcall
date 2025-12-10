@@ -2,6 +2,7 @@
 // Handles @mention parsing, suggestions, and processing
 
 import { supabase } from "../lib/supabase";
+import { logError } from "../utils/logger";
 
 export interface MentionSuggestion {
   id: string;
@@ -66,7 +67,7 @@ export class MentionsService {
         type: "user" as const,
       }));
     } catch (error) {
-      console.error("Failed to get mention suggestions:", error);
+      logError("Failed to get mention suggestions:", error);
       return [];
     }
   }
@@ -132,7 +133,7 @@ export class MentionsService {
             .includes(query.toLowerCase());
         });
     } catch (error) {
-      console.error("Failed to get team member suggestions:", error);
+      logError("Failed to get team member suggestions:", error);
       return [];
     }
   }
@@ -159,7 +160,7 @@ export class MentionsService {
 
       if (error) throw error;
     } catch (error) {
-      console.error("Failed to save mentions:", error);
+      logError("Failed to save mentions:", error);
     }
   }
 
@@ -189,7 +190,7 @@ export class MentionsService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error("Failed to get mentions for user:", error);
+      logError("Failed to get mentions for user:", error);
       return [];
     }
   }
@@ -255,7 +256,7 @@ export class MentionsService {
       // Return unique user IDs
       return Array.from(new Set(userIds));
     } catch (error) {
-      console.error("Error extracting mentioned user IDs:", error);
+      logError("Error extracting mentioned user IDs:", error);
       return [];
     }
   }

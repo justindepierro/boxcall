@@ -7,6 +7,7 @@ import type { CSVParseResult } from "@services/csv";
 import { Button } from "../../ui/Button/Button";
 import { CSVValidationRowEditor } from "./CSVValidationRowEditor";
 import { Modal } from "../../ui/Modal/Modal";
+import { logError } from "../../../utils/logger";
 
 interface CSVImportModalProps {
   isOpen: boolean;
@@ -86,7 +87,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       setParseResult(result);
       setStep("preview");
     } catch (error) {
-      console.error("Error reading file:", error);
+      logError("Error reading file:", error);
       alert("Error reading file. Please try again.");
     } finally {
       setIsProcessing(false);
@@ -166,7 +167,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
         onImportComplete(importResult);
       }
     } catch (error) {
-      console.error("❌ Import failed:", error);
+      logError("❌ Import failed:", error);
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error occurred";
       setImportError(errorMessage);

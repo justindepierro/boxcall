@@ -10,6 +10,7 @@
  */
 
 import type { PostgrestError } from "@supabase/supabase-js";
+import { debug, error as logError, warn } from "../../utils/logger";
 
 export enum DatabaseErrorType {
   // Connection errors
@@ -206,24 +207,24 @@ export class DatabaseErrorHandler {
 
       case RecoveryStrategy.REFRESH_TOKEN:
         // Trigger token refresh
-        console.log("🔄 Attempting to refresh authentication token...");
+        debug("🔄 Attempting to refresh authentication token...");
         // This would integrate with your auth service
         break;
 
       case RecoveryStrategy.REAUTHENTICATE:
         // Trigger re-authentication
-        console.log("🔐 Re-authentication required");
+        debug("🔐 Re-authentication required");
         // This would redirect to login
         break;
 
       case RecoveryStrategy.USER_INPUT:
         // Error requires user action
-        console.log("👤 User input required to resolve error");
+        debug("👤 User input required to resolve error");
         break;
 
       case RecoveryStrategy.SYSTEM_ADMIN:
         // System administrator intervention required
-        console.error("🚨 System administrator intervention required");
+        logError("🚨 System administrator intervention required");
         break;
 
       default:
@@ -468,13 +469,13 @@ export class DatabaseErrorHandler {
 
     switch (error.severity) {
       case "critical":
-        console.error("🚨 CRITICAL DATABASE ERROR:", logData);
+        logError("🚨 CRITICAL DATABASE ERROR:", logData);
         break;
       case "high":
-        console.error("❌ HIGH DATABASE ERROR:", logData);
+        logError("❌ HIGH DATABASE ERROR:", logData);
         break;
       case "medium":
-        console.warn("⚠️ MEDIUM DATABASE ERROR:", logData);
+        warn("⚠️ MEDIUM DATABASE ERROR:", logData);
         break;
       case "low":
         console.info("ℹ️ LOW DATABASE ERROR:", logData);

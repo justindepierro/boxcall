@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "../lib/supabase";
 import type { Play } from "../types/play";
+import { logError } from "../utils/logger";
 
 interface UseFormationAuditResult {
   plays: Play[];
@@ -38,7 +39,7 @@ export function useFormationAudit(
 
       setPlays((data as Play[]) || []);
     } catch (err) {
-      console.error("useFormationAudit failed", err);
+      logError("useFormationAudit failed", err);
       setError(
         err instanceof Error
           ? err.message

@@ -6,6 +6,8 @@
  * @date October 13, 2025
  */
 
+import { logError } from "./logger";
+
 const DB_NAME = "BoxCallSaveQueue";
 const DB_VERSION = 1;
 const STORE_NAME = "saveOperations";
@@ -75,7 +77,7 @@ export async function persistOperation(
       };
     });
   } catch (error) {
-    console.error("[SaveQueueDB] Error persisting operation:", error);
+    logError("[SaveQueueDB] Error persisting operation:", error);
     throw error;
   }
 }
@@ -105,7 +107,7 @@ export async function loadOperations(): Promise<PersistedSaveOperation[]> {
       };
     });
   } catch (error) {
-    console.error("[SaveQueueDB] Error loading operations:", error);
+    logError("[SaveQueueDB] Error loading operations:", error);
     return []; // Return empty array on error
   }
 }
@@ -132,7 +134,7 @@ export async function removeOperation(operationId: string): Promise<void> {
       };
     });
   } catch (error) {
-    console.error("[SaveQueueDB] Error removing operation:", error);
+    logError("[SaveQueueDB] Error removing operation:", error);
     throw error;
   }
 }
@@ -159,7 +161,7 @@ export async function clearAllOperations(): Promise<void> {
       };
     });
   } catch (error) {
-    console.error("[SaveQueueDB] Error clearing operations:", error);
+    logError("[SaveQueueDB] Error clearing operations:", error);
     throw error;
   }
 }
@@ -185,7 +187,7 @@ export async function getOperationCount(): Promise<number> {
       };
     });
   } catch (error) {
-    console.error("[SaveQueueDB] Error counting operations:", error);
+    logError("[SaveQueueDB] Error counting operations:", error);
     return 0;
   }
 }
@@ -228,7 +230,7 @@ export async function updateRetryCount(
       };
     });
   } catch (error) {
-    console.error("[SaveQueueDB] Error updating retry count:", error);
+    logError("[SaveQueueDB] Error updating retry count:", error);
     throw error;
   }
 }

@@ -17,6 +17,7 @@ import { supabase } from "../../lib/supabase";
 import { Typography } from "../design-system/Typography";
 import { MultiBadgeDisplay } from "./MultiBadgeDisplay";
 import { usePopoverContext } from "../../contexts/PopoverContext";
+import { logError } from "../../utils/logger";
 
 interface UserProfilePopoverProps {
   userId: string;
@@ -127,26 +128,17 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
             .single();
 
           if (profileError) {
-            console.error("Error fetching profile:", profileError);
+            logError("Error fetching profile:", profileError);
             return;
           }
 
           setProfile(profileData);
 
           // Fetch achievements (top 3) - wrap in try/catch to handle if table doesn't exist
-          try {
-            const { data: achievementsData } = await supabase
-              .from("achievements")
-              .select("title, icon_name, category")
-              .eq("user_id", userId)
-              .eq("is_public", true)
-              .limit(3);
-
-            setAchievements(achievementsData || []);
-          } catch (error) {
-            console.log("Achievements not available:", error);
-            setAchievements([]);
-          }
+          // Note: achievements table uses player_id (team_players.id), not user_id (auth.users.id)
+          // For now, skip achievements query since the schema mismatch makes it non-functional
+          // TODO: Implement proper achievement lookup via team_players -> achievements join
+          setAchievements([]);
 
           // Fetch team-specific data if teamId is provided
           if (teamId) {
@@ -177,12 +169,12 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
                   positions: playerData.position ? [playerData.position] : null,
                 });
               }
-            } catch (error) {
-              console.log("Player info not available:", error);
+            } catch {
+              // Player info not available - continue silently
             }
           }
         } catch (error) {
-          console.error("Error fetching profile data:", error);
+          logError("Error fetching profile data:", error);
         } finally {
           setLoading(false);
         }

@@ -6,6 +6,8 @@
  */
 
 import { supabase } from "../lib/supabase";
+import { getCurrentUserId } from "../lib/auth-helpers";
+import { error as logError } from "../utils/logger";
 import type { Play } from "../types/play";
 import type { BillickSituationType } from "../constants/gamePlanSituations";
 import { getAllBillickSituations } from "../constants/gamePlanSituations";
@@ -91,7 +93,7 @@ export class GamePlanService {
    * Create a new game plan with all 12 Billick situations
    */
   static async createGamePlan(data: CreateGamePlanData): Promise<GamePlan> {
-    const { data: userData } = await supabase.auth.getUser();
+    const userId = getCurrentUserId();
 
     const { data: gamePlan, error } = await supabase
       .from("game_plans")
@@ -102,14 +104,14 @@ export class GamePlanService {
         game_date: data.gameDate || null,
         game_location: data.gameLocation || null,
         notes: data.notes || null,
-        created_by: userData.user?.id || null,
+        created_by: userId || null,
         is_archived: false,
       } as any)
       .select()
       .single();
 
     if (error) {
-      console.error("❌ Error creating game plan:", error);
+      logError("❌ Error creating game plan:", error);
       throw new Error(`Failed to create game plan: ${error.message}`);
     }
 
@@ -126,7 +128,7 @@ export class GamePlanService {
       .insert(situationInserts as any);
 
     if (situationsError) {
-      console.error("❌ Error creating situations:", situationsError);
+      logError("❌ Error creating situations:", situationsError);
       // Don't fail the whole operation, situations can be added later
     }
 
@@ -140,10 +142,12 @@ export class GamePlanService {
     teamId: string,
     includeArchived = false
   ): Promise<GamePlan[]> {
-    let query = supabase
-      .from("game_plans")
-      .select(
-        `
+    try {
+      // Use new api() client for bulletproof requests
+      const { api } = await import("../lib/api/client");
+
+      // Build the query with proper select
+      let selectQuery = `
         *,
         game_plan_situations (
           *,
@@ -152,34 +156,43 @@ export class GamePlanService {
             plays (*)
           )
         )
-      `
-      )
-      .eq("team_id", teamId)
-      .order("game_date", { ascending: false, nullsFirst: false })
-      .order("created_at", { ascending: false });
+      `;
 
-    if (!includeArchived) {
-      query = query.eq("is_archived", false);
+      // For non-archived, we need to filter
+      // Note: api() doesn't support chained conditional filters the same way,
+      // so we'll filter in JS for the archived flag
+      const { data, error } = await api("game_plans")
+        .select(selectQuery)
+        .eq("team_id", teamId as any)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        logError("❌ Error fetching game plans:", error);
+        throw new Error(`Failed to fetch game plans: ${error.message}`);
+      }
+
+      // Filter archived in JS (simpler than complex query builder)
+      const filtered = includeArchived
+        ? data || []
+        : (data || []).filter((plan: any) => !plan.is_archived);
+
+      return filtered.map(this.mapGamePlanFromDb);
+    } catch (error) {
+      logError("❌ Error in getGamePlans:", error);
+      throw error;
     }
-
-    const { data, error } = await query;
-
-    if (error) {
-      console.error("❌ Error fetching game plans:", error);
-      throw new Error(`Failed to fetch game plans: ${error.message}`);
-    }
-
-    return (data || []).map(this.mapGamePlanFromDb);
   }
 
   /**
    * Get a single game plan by ID
    */
   static async getGamePlan(gamePlanId: string): Promise<GamePlan> {
-    const { data, error } = await supabase
-      .from("game_plans")
-      .select(
-        `
+    try {
+      const { api } = await import("../lib/api/client");
+
+      const { data, error } = await api("game_plans")
+        .select(
+          `
         *,
         game_plan_situations (
           *,
@@ -189,16 +202,24 @@ export class GamePlanService {
           )
         )
       `
-      )
-      .eq("id", gamePlanId)
-      .single();
+        )
+        .eq("id", gamePlanId as any)
+        .limit(1);
 
-    if (error) {
-      console.error("❌ Error fetching game plan:", error);
-      throw new Error(`Failed to fetch game plan: ${error.message}`);
+      if (error) {
+        logError("❌ Error fetching game plan:", error);
+        throw new Error(`Failed to fetch game plan: ${error.message}`);
+      }
+
+      if (!data || data.length === 0) {
+        throw new Error("Game plan not found");
+      }
+
+      return this.mapGamePlanFromDb(data[0]);
+    } catch (error) {
+      logError("❌ Error in getGamePlan:", error);
+      throw error;
     }
-
-    return this.mapGamePlanFromDb(data);
   }
 
   /**
@@ -225,7 +246,7 @@ export class GamePlanService {
       .single();
 
     if (error) {
-      console.error("❌ Error updating game plan:", error);
+      logError("❌ Error updating game plan:", error);
       throw new Error(`Failed to update game plan: ${error.message}`);
     }
 
@@ -242,7 +263,7 @@ export class GamePlanService {
       .eq("id", gamePlanId);
 
     if (error) {
-      console.error("❌ Error deleting game plan:", error);
+      logError("❌ Error deleting game plan:", error);
       throw new Error(`Failed to delete game plan: ${error.message}`);
     }
   }
@@ -279,7 +300,7 @@ export class GamePlanService {
       .single();
 
     if (error) {
-      console.error("❌ Error creating situation:", error);
+      logError("❌ Error creating situation:", error);
       throw new Error(`Failed to create situation: ${error.message}`);
     }
 
@@ -309,7 +330,7 @@ export class GamePlanService {
       .single();
 
     if (error) {
-      console.error("❌ Error adding play to situation:", error);
+      logError("❌ Error adding play to situation:", error);
       throw new Error(`Failed to add play to situation: ${error.message}`);
     }
 
@@ -326,7 +347,7 @@ export class GamePlanService {
       .eq("id", gamePlanPlayId);
 
     if (error) {
-      console.error("❌ Error removing play from situation:", error);
+      logError("❌ Error removing play from situation:", error);
       throw new Error(`Failed to remove play from situation: ${error.message}`);
     }
   }
@@ -345,7 +366,7 @@ export class GamePlanService {
       .eq("id", gamePlanPlayId);
 
     if (error) {
-      console.error("❌ Error updating play priority:", error);
+      logError("❌ Error updating play priority:", error);
       throw new Error(`Failed to update play priority: ${error.message}`);
     }
   }

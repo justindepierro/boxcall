@@ -3,8 +3,10 @@
 // All data is validated before database operations. Re-enable checking when Supabase types are fixed.
 
 import { supabase } from "../lib/supabase";
+import { getCurrentUserId } from "../lib/auth-helpers";
 import { practiceScriptCache } from "./practiceScriptCache";
 import { ActivityService } from "./activityService";
+import { debug, error as logError } from "../utils/logger";
 
 import type {
   CreatePracticeBlockData,
@@ -677,7 +679,7 @@ export class PracticeService {
         })
       );
     } catch (error) {
-      console.error("Error searching practice scripts:", error);
+      logError("Error searching practice scripts:", error);
       return [];
     }
   }
@@ -700,13 +702,13 @@ export class PracticeService {
         description: data.description,
         team_id: data.teamId,
         focus_areas: data.tags || [],
-        created_by: (await supabase.auth.getUser()).data.user?.id,
+        created_by: getCurrentUserId(),
       })
       .select()
       .single();
 
     if (error) {
-      console.error("Error creating practice script:", error);
+      logError("Error creating practice script:", error);
       throw new Error("Failed to create practice script");
     }
 
@@ -755,7 +757,7 @@ export class PracticeService {
       .single();
 
     if (error) {
-      console.error("Error updating practice script:", error);
+      logError("Error updating practice script:", error);
       throw new Error("Failed to update practice script");
     }
 
@@ -800,7 +802,7 @@ export class PracticeService {
       });
 
     if (playError) {
-      console.error("Error adding play to script:", playError);
+      logError("Error adding play to script:", playError);
       throw new Error("Failed to add play to practice script");
     }
 
@@ -861,7 +863,7 @@ export class PracticeService {
         | "all_out";
     }
   ): Promise<void> {
-    console.log("[PracticeService] updateScriptPlay called with:", {
+    debug("[PracticeService] updateScriptPlay called with:", {
       scriptPlayId,
       data,
     });
@@ -882,7 +884,7 @@ export class PracticeService {
     if (data.coverage !== undefined) updateData.coverage = data.coverage;
     if (data.blitz !== undefined) updateData.blitz = data.blitz;
 
-    console.log("[PracticeService] Updating with data:", updateData);
+    debug("[PracticeService] Updating with data:", updateData);
 
     const { error } = await supabase
       .from("practice_script_plays")
@@ -890,7 +892,7 @@ export class PracticeService {
       .eq("id", scriptPlayId);
 
     if (error) {
-      console.error("Error updating script play:", error);
+      logError("Error updating script play:", error);
       throw new Error("Failed to update script play");
     }
 
@@ -945,7 +947,7 @@ export class PracticeService {
   ): Promise<void> {
     if (updates.length === 0) return;
 
-    console.log(`[PracticeService] Batch updating ${updates.length} plays...`);
+    debug(`[PracticeService] Batch updating ${updates.length} plays...`);
     const startTime = performance.now();
 
     try {
@@ -974,24 +976,24 @@ export class PracticeService {
             .eq("id", scriptPlayId);
 
           if (error) {
-            console.error(`Error updating play ${scriptPlayId}:`, error);
+            logError(`Error updating play ${scriptPlayId}:`, error);
             throw error;
           }
         })
       );
 
       const updateTime = performance.now() - startTime;
-      console.log(
+      debug(
         `✅ [PracticeService] Batch updated ${updates.length} plays in ${updateTime.toFixed(2)}ms`
       );
-      console.log(
+      debug(
         `   Average: ${(updateTime / updates.length).toFixed(2)}ms per play`
       );
 
       // Invalidate all script caches once after batch
       await practiceScriptCache.invalidatePattern(/^script/);
     } catch (error) {
-      console.error("Error in batch update:", error);
+      logError("Error in batch update:", error);
       throw new Error("Failed to batch update script plays");
     }
   }
@@ -1005,17 +1007,24 @@ export class PracticeService {
     // Check cache first
     const cached = await practiceScriptCache.get<PracticeScript[]>(cacheKey);
     if (cached) {
-      console.log("✅ [PracticeService] Cache hit for team scripts:", teamId);
+      debug("✅ [PracticeService] Cache hit for team scripts:", teamId);
       return cached;
     }
 
-    console.log("🔍 [PracticeService] Cache miss, fetching from database...");
+    debug(
+      "🔍 [PracticeService] Cache miss, fetching from database for team:",
+      teamId
+    );
     const startTime = performance.now();
 
     try {
+      // Use new api() client - no auth check needed (token is managed globally)
+      const { api } = await import("../lib/api/client");
+
       // OPTIMIZATION: Single query with join to get scripts AND plays
-      const { data: scriptsWithPlays, error: scriptsError } = await supabase
-        .from("practice_scripts")
+      const { data: scriptsWithPlays, error: scriptsError } = await api(
+        "practice_scripts"
+      )
         .select(
           `
           *,
@@ -1025,15 +1034,23 @@ export class PracticeService {
           )
         `
         )
-        .eq("team_id", teamId)
+        .eq("team_id", teamId as any)
         .order("updated_at", { ascending: false });
 
+      debug("🔍 [PracticeService] Query result:", {
+        hasData: !!scriptsWithPlays,
+        count: scriptsWithPlays?.length ?? 0,
+        error: scriptsError,
+        teamId,
+      });
+
       if (scriptsError) {
-        console.error("Error fetching practice scripts:", scriptsError);
+        logError("Error fetching practice scripts:", scriptsError);
         throw new Error("Failed to fetch practice scripts");
       }
 
       if (!scriptsWithPlays || scriptsWithPlays.length === 0) {
+        debug("🔍 [PracticeService] No scripts found for team:", teamId);
         await practiceScriptCache.set(cacheKey, [], 1);
         return [];
       }
@@ -1047,13 +1064,13 @@ export class PracticeService {
       await practiceScriptCache.set(cacheKey, mappedScripts, 1);
 
       const queryTime = performance.now() - startTime;
-      console.log(
+      debug(
         `✅ [PracticeService] Fetched ${mappedScripts.length} scripts in ${queryTime.toFixed(2)}ms`
       );
 
       return mappedScripts;
     } catch (error) {
-      console.error("Error in getPracticeScripts:", error);
+      logError("Error in getPracticeScripts:", error);
       return [];
     }
   }
@@ -1069,19 +1086,21 @@ export class PracticeService {
     // Check cache first
     const cached = await practiceScriptCache.get<PracticeScript>(cacheKey);
     if (cached) {
-      console.log("✅ [PracticeService] Cache hit for script:", scriptId);
+      debug("✅ [PracticeService] Cache hit for script:", scriptId);
       return cached;
     }
 
-    console.log(
-      "🔍 [PracticeService] Cache miss, fetching script from database..."
-    );
+    debug("🔍 [PracticeService] Cache miss, fetching script from database...");
     const startTime = performance.now();
 
     try {
+      // Use new api() client
+      const { api } = await import("../lib/api/client");
+
       // OPTIMIZATION: Single query with join
-      const { data: script, error: scriptError } = await supabase
-        .from("practice_scripts")
+      const { data: scripts, error: scriptError } = await api(
+        "practice_scripts"
+      )
         .select(
           `
           *,
@@ -1091,30 +1110,32 @@ export class PracticeService {
           )
         `
         )
-        .eq("id", scriptId)
-        .single();
+        .eq("id", scriptId as any)
+        .limit(1);
 
       if (scriptError) {
         if (scriptError.code === "PGRST116") {
           return null;
         }
-        console.error("Error fetching practice script:", scriptError);
+        logError("Error fetching practice script:", scriptError);
         throw new Error("Failed to fetch practice script");
       }
 
-      const mappedScript = this.mapDatabaseScriptToPracticeScript(script);
+      if (!scripts || scripts.length === 0) {
+        return null;
+      }
+
+      const mappedScript = this.mapDatabaseScriptToPracticeScript(scripts[0]);
 
       // Cache the result
       await practiceScriptCache.set(cacheKey, mappedScript, 1);
 
       const queryTime = performance.now() - startTime;
-      console.log(
-        `✅ [PracticeService] Fetched script in ${queryTime.toFixed(2)}ms`
-      );
+      debug(`✅ [PracticeService] Fetched script in ${queryTime.toFixed(2)}ms`);
 
       return mappedScript;
     } catch (error) {
-      console.error("Error in getPracticeScript:", error);
+      logError("Error in getPracticeScript:", error);
       return null;
     }
   }
@@ -1161,7 +1182,7 @@ export class PracticeService {
       .limit(1);
 
     if (fetchError) {
-      console.error("Error fetching Quick Adds script:", fetchError);
+      logError("Error fetching Quick Adds script:", fetchError);
     }
 
     if (existingScripts && existingScripts.length > 0) {
@@ -1198,9 +1219,7 @@ export class PracticeService {
     scriptId: string,
     newName: string
   ): Promise<PracticeScript> {
-    console.log(
-      `[PracticeService] Duplicating script ${scriptId} as "${newName}"`
-    );
+    debug(`[PracticeService] Duplicating script ${scriptId} as "${newName}"`);
 
     // 1. Get original script with plays
     const original = await this.getPracticeScript(scriptId);
@@ -1240,7 +1259,7 @@ export class PracticeService {
       }
     }
 
-    console.log(
+    debug(
       `✅ [PracticeService] Duplicated script with ${original.plays?.length || 0} plays`
     );
 
@@ -1252,7 +1271,7 @@ export class PracticeService {
    * Archive a practice script (Phase 6 - soft delete)
    */
   static async archivePracticeScript(scriptId: string): Promise<void> {
-    console.log(`[PracticeService] Archiving script ${scriptId}`);
+    debug(`[PracticeService] Archiving script ${scriptId}`);
 
     const { error } = await supabase
       .from("practice_scripts")
@@ -1263,7 +1282,7 @@ export class PracticeService {
       .eq("id", scriptId);
 
     if (error) {
-      console.error("Error archiving script:", error);
+      logError("Error archiving script:", error);
       throw new Error("Failed to archive practice script");
     }
 
@@ -1271,14 +1290,14 @@ export class PracticeService {
     await practiceScriptCache.invalidate(`script_${scriptId}`);
     await practiceScriptCache.invalidatePattern(/^scripts_team_/);
 
-    console.log(`✅ [PracticeService] Archived script ${scriptId}`);
+    debug(`✅ [PracticeService] Archived script ${scriptId}`);
   }
 
   /**
    * Unarchive a practice script (Phase 6)
    */
   static async unarchivePracticeScript(scriptId: string): Promise<void> {
-    console.log(`[PracticeService] Unarchiving script ${scriptId}`);
+    debug(`[PracticeService] Unarchiving script ${scriptId}`);
 
     const { error } = await supabase
       .from("practice_scripts")
@@ -1289,7 +1308,7 @@ export class PracticeService {
       .eq("id", scriptId);
 
     if (error) {
-      console.error("Error unarchiving script:", error);
+      logError("Error unarchiving script:", error);
       throw new Error("Failed to unarchive practice script");
     }
 
@@ -1297,7 +1316,7 @@ export class PracticeService {
     await practiceScriptCache.invalidate(`script_${scriptId}`);
     await practiceScriptCache.invalidatePattern(/^scripts_team_/);
 
-    console.log(`✅ [PracticeService] Unarchived script ${scriptId}`);
+    debug(`✅ [PracticeService] Unarchived script ${scriptId}`);
   }
 
   /**
@@ -1305,7 +1324,7 @@ export class PracticeService {
    * Warning: This permanently deletes the script and all associated plays
    */
   static async deletePracticeScript(scriptId: string): Promise<void> {
-    console.log(`[PracticeService] Deleting script ${scriptId}`);
+    debug(`[PracticeService] Deleting script ${scriptId}`);
 
     const { error } = await supabase
       .from("practice_scripts")
@@ -1313,7 +1332,7 @@ export class PracticeService {
       .eq("id", scriptId);
 
     if (error) {
-      console.error("Error deleting script:", error);
+      logError("Error deleting script:", error);
       throw new Error("Failed to delete practice script");
     }
 
@@ -1321,14 +1340,14 @@ export class PracticeService {
     await practiceScriptCache.invalidate(`script_${scriptId}`);
     await practiceScriptCache.invalidatePattern(/^scripts_team_/);
 
-    console.log(`✅ [PracticeService] Deleted script ${scriptId}`);
+    debug(`✅ [PracticeService] Deleted script ${scriptId}`);
   }
 
   /**
    * Remove a play from a practice script (Phase 6)
    */
   static async removePlayFromScript(scriptPlayId: string): Promise<void> {
-    console.log(`[PracticeService] Removing play ${scriptPlayId} from script`);
+    debug(`[PracticeService] Removing play ${scriptPlayId} from script`);
 
     const { error } = await supabase
       .from("practice_script_plays")
@@ -1336,14 +1355,14 @@ export class PracticeService {
       .eq("id", scriptPlayId);
 
     if (error) {
-      console.error("Error removing play from script:", error);
+      logError("Error removing play from script:", error);
       throw new Error("Failed to remove play from script");
     }
 
     // Invalidate all script caches
     await practiceScriptCache.invalidatePattern(/^script/);
 
-    console.log(`✅ [PracticeService] Removed play from script`);
+    debug(`✅ [PracticeService] Removed play from script`);
   }
 
   /**
@@ -1354,7 +1373,7 @@ export class PracticeService {
     scriptId: string,
     playIds: string[]
   ): Promise<void> {
-    console.log(
+    debug(
       `[PracticeService] Reordering ${playIds.length} plays in script ${scriptId}`
     );
 
@@ -1368,7 +1387,7 @@ export class PracticeService {
           .eq("practice_script_id", scriptId);
 
         if (error) {
-          console.error(`Error reordering play ${playId}:`, error);
+          logError(`Error reordering play ${playId}:`, error);
           throw error;
         }
       })
@@ -1377,7 +1396,7 @@ export class PracticeService {
     // Invalidate cache
     await practiceScriptCache.invalidate(`script_${scriptId}`);
 
-    console.log(`✅ [PracticeService] Reordered plays in script`);
+    debug(`✅ [PracticeService] Reordered plays in script`);
   }
 
   /**
@@ -1452,7 +1471,7 @@ export class PracticeService {
         plays: [], // Templates don't store plays directly
       }));
     } catch (error) {
-      console.error("Error fetching practice templates:", error);
+      logError("Error fetching practice templates:", error);
       return [];
     }
   }
@@ -1480,7 +1499,7 @@ export class PracticeService {
           description: templateData.description,
           duration: templateData.duration || sourceScript.duration,
           is_public: templateData.isPublic || false,
-          created_by: (await supabase.auth.getUser()).data.user?.id,
+          created_by: getCurrentUserId(),
         })
         .select()
         .single();
@@ -1503,7 +1522,7 @@ export class PracticeService {
         plays: sourceScript.plays, // Include plays for immediate use
       };
     } catch (error) {
-      console.error("Error creating template from script:", error);
+      logError("Error creating template from script:", error);
       throw new Error("Failed to create practice template");
     }
   }
@@ -1540,7 +1559,7 @@ export class PracticeService {
 
       return newScript;
     } catch (error) {
-      console.error("Error creating script from template:", error);
+      logError("Error creating script from template:", error);
       throw new Error("Failed to create script from template");
     }
   }
@@ -1557,7 +1576,7 @@ export class PracticeService {
 
       if (error) throw error;
     } catch (error) {
-      console.error("Error deleting practice template:", error);
+      logError("Error deleting practice template:", error);
       throw new Error("Failed to delete practice template");
     }
   }
@@ -1605,7 +1624,7 @@ export class PracticeService {
         plays: [],
       };
     } catch (error) {
-      console.error("Error updating practice template:", error);
+      logError("Error updating practice template:", error);
       throw new Error("Failed to update practice template");
     }
   }

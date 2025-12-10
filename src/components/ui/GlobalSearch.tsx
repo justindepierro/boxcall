@@ -11,6 +11,13 @@ import { useNavigate } from "react-router-dom";
 import { getActiveTeamId } from "../../utils/activeTeam";
 import { supabase } from "../../lib/supabase";
 import { triggerHapticFeedback } from "../../lib/hapticFeedback";
+import { logError } from "../../utils/logger";
+
+// Debug logging - set to false in production
+const DEBUG_SEARCH = false;
+const debugLog = DEBUG_SEARCH
+  ? (...args: unknown[]) => debugLog(...args)
+  : () => {};
 
 interface GlobalSearchProps {
   className?: string;
@@ -330,14 +337,14 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
         // Performance logging (dev only)
         if (import.meta.env.DEV) {
           const duration = performance.now() - startTime;
-          console.log(
+          debugLog(
             `🔍 Search completed in ${duration.toFixed(2)}ms - ${searchResults.length} results`
           );
         }
       } catch (error: any) {
         // Ignore abort errors
         if (error?.name !== "AbortError") {
-          console.error("Search error:", error);
+          logError("Search error:", error);
           setResults([]);
         }
       } finally {

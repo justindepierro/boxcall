@@ -7,6 +7,7 @@
  */
 
 import { supabase } from "../../lib/supabase";
+import { debug, error as logError } from "../../utils/logger";
 import type {
   IntelligenceAnalysis,
   FieldAnalysis,
@@ -38,10 +39,7 @@ export class FormationIntelligenceService {
       .eq("is_archived", false);
 
     if (error) {
-      console.error(
-        "[FormationIntelligenceService] Error fetching plays:",
-        error
-      );
+      logError("[FormationIntelligenceService] Error fetching plays:", error);
       throw new Error(`Failed to fetch plays: ${error.message}`);
     }
 
@@ -57,11 +55,8 @@ export class FormationIntelligenceService {
       formationGroups.get(formationName)!.push(play as PlayData);
     }
 
-    console.log(
-      "📊 [Intelligence] Formation groups count:",
-      formationGroups.size
-    );
-    console.log(
+    debug("📊 [Intelligence] Formation groups count:", formationGroups.size);
+    debug(
       "📊 [Intelligence] Formation names:",
       Array.from(formationGroups.keys())
     );
@@ -247,7 +242,7 @@ export class FormationIntelligenceService {
       .eq("playbook_id", playbookId);
 
     if (error || !formations) {
-      console.error(
+      logError(
         "[FormationIntelligenceService] Error detecting opposites:",
         error
       );

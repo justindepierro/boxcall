@@ -5,6 +5,8 @@
  * Phase 2B Sprint 4: Live Dashboard Sharing
  */
 
+import { logError } from "../utils/logger";
+
 export interface CollaborationUser {
   id: string;
   name: string;
@@ -115,7 +117,7 @@ class RealTimeCollaborationService {
 
       return session;
     } catch (error) {
-      console.error("Failed to start collaboration session:", error);
+      logError("Failed to start collaboration session:", error);
       throw new Error("Could not start collaboration session");
     }
   }
@@ -193,7 +195,7 @@ class RealTimeCollaborationService {
         };
 
         this.ws.onerror = (error) => {
-          console.error("WebSocket error:", error);
+          logError("WebSocket error:", error);
           reject(error);
         };
       } catch (error) {
@@ -264,7 +266,7 @@ class RealTimeCollaborationService {
    */
   private handleReconnect(): void {
     if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-      console.error("Max reconnection attempts reached");
+      logError("Max reconnection attempts reached");
       return;
     }
 

@@ -10,6 +10,7 @@
  */
 
 import { dbConnectivity } from "./DatabaseConnectivityService";
+import { debug, error as logError, warn } from "../../utils/logger";
 
 interface HealthMetrics {
   timestamp: Date;
@@ -116,18 +117,18 @@ export class DatabaseHealthMonitor {
    */
   startMonitoring(intervalMs: number = 30000): void {
     if (this.isMonitoring) {
-      console.warn("Health monitoring already running");
+      warn("Health monitoring already running");
       return;
     }
 
     this.isMonitoring = true;
-    console.log("🏥 Starting database health monitoring...");
+    debug("🏥 Starting database health monitoring...");
 
     this.monitoringInterval = setInterval(async () => {
       try {
         await this.performHealthCheck();
       } catch (error) {
-        console.error("Health monitoring error:", error);
+        logError("Health monitoring error:", error);
       }
     }, intervalMs);
   }
@@ -141,7 +142,7 @@ export class DatabaseHealthMonitor {
       this.monitoringInterval = undefined;
     }
     this.isMonitoring = false;
-    console.log("⏹️ Stopped database health monitoring");
+    debug("⏹️ Stopped database health monitoring");
   }
 
   /**
@@ -188,7 +189,7 @@ export class DatabaseHealthMonitor {
       this.checkAlerts(metrics);
 
       const totalTime = performance.now() - startTime;
-      console.log(`✅ Health check completed in ${totalTime.toFixed(2)}ms`);
+      debug(`✅ Health check completed in ${totalTime.toFixed(2)}ms`);
     } catch (error) {
       const totalTime = performance.now() - startTime;
 
@@ -204,10 +205,7 @@ export class DatabaseHealthMonitor {
       this.addMetrics(errorMetrics);
       this.checkAlerts(errorMetrics);
 
-      console.error(
-        `❌ Health check failed in ${totalTime.toFixed(2)}ms:`,
-        error
-      );
+      logError(`❌ Health check failed in ${totalTime.toFixed(2)}ms:`, error);
     }
   }
 
@@ -280,21 +278,21 @@ export class DatabaseHealthMonitor {
 
     switch (alert.severity) {
       case "critical":
-        console.error(logMessage, {
+        logError(logMessage, {
           alertId: alert.id,
           responseTime: alert.metrics.responseTime,
           timestamp: alert.timestamp,
         });
         break;
       case "high":
-        console.error(logMessage, {
+        logError(logMessage, {
           alertId: alert.id,
           responseTime: alert.metrics.responseTime,
           timestamp: alert.timestamp,
         });
         break;
       case "medium":
-        console.warn(logMessage, {
+        warn(logMessage, {
           alertId: alert.id,
           responseTime: alert.metrics.responseTime,
           timestamp: alert.timestamp,
@@ -318,7 +316,7 @@ export class DatabaseHealthMonitor {
     if (alert && !alert.resolved) {
       alert.resolved = true;
       alert.resolvedAt = new Date();
-      console.log(`✅ Alert resolved: ${alert.message}`);
+      debug(`✅ Alert resolved: ${alert.message}`);
     }
   }
 

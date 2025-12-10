@@ -17,6 +17,7 @@ import { PlayConfidenceService } from "./playConfidenceService";
 import { ExecutionTrackingService } from "./executionTrackingService";
 import type { GameSituation } from "../types/session";
 import type { Play } from "../types/database";
+import { logError } from "../utils/logger";
 
 // ==============================================
 // TYPES
@@ -467,7 +468,7 @@ export class SituationalRecommender {
         executionCount: stats.executionCount,
       };
     } catch (error) {
-      console.error("Error fetching play stats:", error);
+      logError("Error fetching play stats:", error);
       return {
         successRate: 0,
         avgYardsGained: 0,
@@ -508,7 +509,7 @@ export class SituationalRecommender {
         coverage,
       };
     } catch (error) {
-      console.error("Error fetching coverage stats:", error);
+      logError("Error fetching coverage stats:", error);
       return null;
     }
   }
@@ -551,7 +552,7 @@ export class SituationalRecommender {
 
       return stats;
     } catch (error) {
-      console.error("Error fetching hash stats:", error);
+      logError("Error fetching hash stats:", error);
       return null;
     }
   }

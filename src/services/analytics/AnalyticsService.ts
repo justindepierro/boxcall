@@ -8,6 +8,8 @@
  * - Sentry (for error tracking)
  */
 
+import { debug } from "../../utils/logger";
+
 interface AnalyticsEvent {
   name: string;
   properties?: Record<string, any>;
@@ -63,7 +65,7 @@ class GoogleAnalyticsProvider implements AnalyticsProvider {
     });
 
     this.initialized = true;
-    console.log("📊 Google Analytics initialized");
+    debug("📊 Google Analytics initialized");
   }
 
   async track(event: AnalyticsEvent): Promise<void> {
@@ -119,7 +121,7 @@ class PosthogProvider implements AnalyticsProvider {
       api_host: "https://app.posthog.com",
       loaded: () => {
         this.initialized = true;
-        console.log("📊 PostHog initialized");
+        debug("📊 PostHog initialized");
       },
     });
   }
@@ -151,7 +153,7 @@ class CustomAnalyticsProvider implements AnalyticsProvider {
   private user: UserProperties | null = null;
 
   async initialize(): Promise<void> {
-    console.log("📊 Custom Analytics initialized");
+    debug("📊 Custom Analytics initialized");
   }
 
   async track(event: AnalyticsEvent): Promise<void> {
@@ -225,7 +227,7 @@ export class AnalyticsService {
       !import.meta.env.PROD &&
       import.meta.env.VITE_ENABLE_ANALYTICS !== "true"
     ) {
-      console.log("📊 Analytics disabled in development");
+      debug("📊 Analytics disabled in development");
       return;
     }
 
@@ -240,9 +242,7 @@ export class AnalyticsService {
     );
 
     this.initialized = true;
-    console.log(
-      `📊 Analytics initialized with ${this.providers.length} providers`
-    );
+    debug(`📊 Analytics initialized with ${this.providers.length} providers`);
   }
 
   async track(event: AnalyticsEvent): Promise<void> {
@@ -335,12 +335,12 @@ export class AnalyticsService {
   async setUserProperties(properties: UserProperties) {
     // For now, we'll use identify with the current user
     // In a full implementation, you'd track the current user ID
-    console.log("Setting user properties:", properties);
+    debug("Setting user properties:", properties);
   }
 
   async reset() {
     // Reset analytics tracking (useful for logout)
-    console.log("📊 Analytics reset");
+    debug("📊 Analytics reset");
 
     // Reset PostHog if available
     if (window.posthog) {

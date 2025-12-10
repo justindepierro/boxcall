@@ -5,6 +5,8 @@
  */
 
 import { supabase } from "../lib/supabase";
+import { getCurrentUserId } from "../lib/auth-helpers";
+import { logError } from "../utils/logger";
 
 const BUCKET_NAME = "announcement-images";
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB original
@@ -99,10 +101,8 @@ export async function uploadImage(file: File): Promise<UploadImageResult> {
     }
 
     // Get current user
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
+    const userId = getCurrentUserId();
+    if (!userId) {
       return {
         success: false,
         error: "You must be logged in to upload images.",
@@ -124,7 +124,7 @@ export async function uploadImage(file: File): Promise<UploadImageResult> {
     const timestamp = Date.now();
     const randomString = Math.random().toString(36).substring(2, 15);
     const extension = fileToUpload.name.split(".").pop();
-    const filename = `${user.id}/${timestamp}-${randomString}.${extension}`;
+    const filename = `${userId}/${timestamp}-${randomString}.${extension}`;
 
     // Upload to Supabase Storage
     const { data, error } = await supabase.storage
@@ -135,7 +135,7 @@ export async function uploadImage(file: File): Promise<UploadImageResult> {
       });
 
     if (error) {
-      console.error("Upload error:", error);
+      logError("Upload error:", error);
       return {
         success: false,
         error: error.message || "Failed to upload image.",
@@ -152,7 +152,7 @@ export async function uploadImage(file: File): Promise<UploadImageResult> {
       url: publicUrl,
     };
   } catch (error) {
-    console.error("Unexpected upload error:", error);
+    logError("Unexpected upload error:", error);
     return {
       success: false,
       error: "An unexpected error occurred while uploading.",
@@ -171,7 +171,7 @@ export async function deleteImage(url: string): Promise<boolean> {
       `/storage/v1/object/public/${BUCKET_NAME}/`
     );
     if (pathParts.length !== 2) {
-      console.error("Invalid URL format:", url);
+      logError("Invalid URL format:", url);
       return false;
     }
     const path = pathParts[1];
@@ -180,13 +180,13 @@ export async function deleteImage(url: string): Promise<boolean> {
     const { error } = await supabase.storage.from(BUCKET_NAME).remove([path]);
 
     if (error) {
-      console.error("Delete error:", error);
+      logError("Delete error:", error);
       return false;
     }
 
     return true;
   } catch (error) {
-    console.error("Unexpected delete error:", error);
+    logError("Unexpected delete error:", error);
     return false;
   }
 }
