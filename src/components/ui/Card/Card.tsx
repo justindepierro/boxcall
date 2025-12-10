@@ -24,27 +24,27 @@ const cardStyles: CardStylesConfig = {
   base: "rounded-lg transition-all duration-300 ease-out overflow-visible",
   variants: {
     // Default: Standard card with medium shadow (MOST COMMON)
-    default: "bg-white shadow-md hover:shadow-xl",
+    default: "bg-bg-primary shadow-md hover:shadow-xl",
 
     // Elevated: Stronger shadow for prominent cards - MORE DRAMATIC
-    elevated: "bg-white shadow-lg hover:shadow-2xl",
+    elevated: "bg-bg-primary shadow-lg hover:shadow-2xl",
 
     // Subtle: Minimal shadow for secondary content
-    subtle: "bg-gray-50 shadow-sm hover:shadow-lg",
+    subtle: "bg-bg-subtle shadow-sm hover:shadow-lg",
 
     // Glass: Translucent with backdrop blur
     glass:
-      "bg-white/80 backdrop-blur-sm shadow-lg hover:shadow-2xl border border-gray-200",
+      "bg-bg-primary/80 backdrop-blur-sm shadow-lg hover:shadow-2xl border border-divider",
 
     // Filled: Muted background, no elevation (for backgrounds)
-    filled: "bg-gray-100 shadow-none hover:shadow-md",
+    filled: "bg-bg-muted shadow-none hover:shadow-md",
 
     // Accent: Brand gradient with shadow - MORE VIBRANT
     accent:
-      "bg-gradient-to-br from-jade-500/15 via-gray-50 to-gray-100 hover:from-jade-500/25 shadow-lg hover:shadow-xl",
+      "bg-gradient-to-br from-jade-500/15 via-bg-subtle to-bg-muted hover:from-jade-500/25 shadow-lg hover:shadow-xl",
 
     // Floating: Maximum shadow for modals/overlays
-    floating: "bg-white shadow-2xl",
+    floating: "bg-bg-primary shadow-2xl",
   },
   sizes: {
     sm: "p-3", // 12px - compact

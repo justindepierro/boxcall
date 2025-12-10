@@ -659,7 +659,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                 variant="subtle"
                 size="sm"
                 className={
-                  viewMode === "list" ? "bg-white dark:bg-slate-700" : ""
+                  viewMode === "list" ? "bg-white dark:bg-navy-700" : ""
                 }
               >
                 <Icon name="list" className="h-4 w-4" />
@@ -675,7 +675,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                 variant="subtle"
                 size="sm"
                 className={
-                  viewMode === "grid" ? "bg-white dark:bg-slate-700" : ""
+                  viewMode === "grid" ? "bg-white dark:bg-navy-700" : ""
                 }
               >
                 <Icon name="grid" className="h-4 w-4" />

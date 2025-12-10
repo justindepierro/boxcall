@@ -125,7 +125,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
         className={`
-          px-3 py-2 border rounded-lg bg-white dark:bg-gray-800 
+          px-3 py-2 border rounded-lg bg-white dark:bg-navy-800 
           text-sm w-full sm:w-auto sm:min-w-44 
           flex items-center justify-between
           transition-colors
@@ -134,7 +134,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
               ? "opacity-50 cursor-not-allowed"
               : "cursor-pointer hover:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
           }
-          ${isOpen ? "border-primary-500" : "border-gray-300 dark:border-gray-600"}
+          ${isOpen ? "border-primary-500" : "border-secondary dark:border-navy-600"}
         `}
         style={{ height: "42px" }}
         aria-haspopup="listbox"

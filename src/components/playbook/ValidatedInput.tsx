@@ -308,7 +308,7 @@ export const ValidatedInput: React.FC<ValidatedInputProps> = ({
           validation.suggestions.length > 0 && (
             <div
               ref={dropdownRef}
-              className="absolute z-dropdown w-full mt-1 bg-white dark:bg-gray-800 border border-border-secondary rounded-lg shadow-lg max-h-60 overflow-auto"
+              className="absolute z-dropdown w-full mt-1 bg-white dark:bg-navy-800 border border-border-secondary rounded-lg shadow-lg max-h-60 overflow-auto"
             >
               <div className="p-2">
                 <p className="text-xs font-medium text-muted px-2 py-1 mb-1">

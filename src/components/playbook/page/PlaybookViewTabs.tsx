@@ -84,7 +84,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
     Boolean(onPlaybookChange) &&
     Boolean(teamId);
   return (
-    <div className="divider-b bg-gradient-to-b from-white/95 to-white/80 dark:from-slate-900/95 dark:to-slate-900/80 shadow-sm">
+    <div className="divider-b bg-gradient-to-b from-white/95 to-white/80 dark:from-navy-900/95 dark:to-navy-900/80 shadow-sm">
       <div className="container-page px-6">
         {/* Breadcrumb */}
         <div className="pt-4 pb-2">
@@ -156,7 +156,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               className={`px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm ${
                 currentView === "playbook"
                   ? "bg-interactive-primary-base hover:bg-interactive-primary-hover text-white shadow-lg"
-                  : "bg-subtle hover:bg-muted dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-jade-600 dark:text-jade-400"
+                  : "bg-subtle hover:bg-muted dark:bg-navy-800/60 dark:hover:bg-navy-800/90 text-jade-600 dark:text-jade-400"
               }`}
               icon={
                 <Icon
@@ -184,7 +184,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               className={`px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm ${
                 currentView === "practice-script"
                   ? "bg-interactive-primary-base hover:bg-interactive-primary-hover text-white shadow-lg"
-                  : "bg-subtle hover:bg-muted dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-jade-600 dark:text-jade-400"
+                  : "bg-subtle hover:bg-muted dark:bg-navy-800/60 dark:hover:bg-navy-800/90 text-jade-600 dark:text-jade-400"
               }`}
               icon={
                 <Icon
@@ -212,7 +212,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               className={`px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm ${
                 currentView === "game-plan"
                   ? "bg-interactive-primary-base hover:bg-interactive-primary-hover text-white shadow-lg"
-                  : "bg-subtle hover:bg-muted dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-jade-600 dark:text-jade-400"
+                  : "bg-subtle hover:bg-muted dark:bg-navy-800/60 dark:hover:bg-navy-800/90 text-jade-600 dark:text-jade-400"
               }`}
               icon={
                 <Icon
@@ -240,7 +240,7 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               className={`px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm ${
                 currentView === "analytics"
                   ? "bg-interactive-primary-base hover:bg-interactive-primary-hover text-white shadow-lg"
-                  : "bg-subtle hover:bg-muted dark:bg-slate-800/60 dark:hover:bg-slate-800/90 text-jade-600 dark:text-jade-400"
+                  : "bg-subtle hover:bg-muted dark:bg-navy-800/60 dark:hover:bg-navy-800/90 text-jade-600 dark:text-jade-400"
               }`}
               icon={
                 <Icon

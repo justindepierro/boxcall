@@ -59,7 +59,7 @@ export const AppIconTile = memo<AppIconTileProps>(
 
             {/* Badge (like notification count) - Positioned outside container */}
             {badge !== undefined && badge !== null && (
-              <div className="absolute -top-2 -right-2 min-w-5 h-5 px-1.5 rounded-full bg-error-500 border-2 border-white dark:border-slate-900 flex items-center justify-center shadow-lg z-20">
+              <div className="absolute -top-2 -right-2 min-w-5 h-5 px-1.5 rounded-full bg-error-500 border-2 border-white dark:border-navy-900 flex items-center justify-center shadow-lg z-20">
                 <span className="text-white text-xss font-bold leading-none">
                   {badge}
                 </span>
@@ -69,7 +69,7 @@ export const AppIconTile = memo<AppIconTileProps>(
 
           {/* Bottom Label - Optional text below icon */}
           {bottomLabel && (
-            <div className="text-xss font-medium text-secondary dark:text-slate-400">
+            <div className="text-xss font-medium text-secondary dark:text-neutral-400">
               {bottomLabel}
             </div>
           )}

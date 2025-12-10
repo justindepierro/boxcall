@@ -206,7 +206,7 @@ const PlayerDetailPage = () => {
                         className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                           player.is_active
                             ? "bg-green-100 text-green-800"
-                            : "bg-muted text-gray-800"
+                            : "bg-muted text-neutral-800"
                         }`}
                       >
                         {player.roster_status ||

@@ -55,8 +55,8 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
         <div
           className={`relative w-full flex flex-col ${
             isMobile
-              ? "h-full bg-primary dark:bg-slate-900"
-              : "max-w-6xl max-h-[94vh] mx-4 backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 rounded-2xl border-2 border-white/30 dark:border-slate-700/30 shadow-2xl animate-genie-open"
+              ? "h-full bg-primary dark:bg-navy-900"
+              : "max-w-6xl max-h-[94vh] mx-4 backdrop-blur-xl bg-white/95 dark:bg-navy-900/95 rounded-2xl border-2 border-white/30 dark:border-navy-700/30 shadow-2xl animate-genie-open"
           }`}
           onClick={(e) => e.stopPropagation()}
         >
@@ -196,7 +196,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                 <div className="space-y-6">
                   {/* Diagram Preview */}
                   {play.diagram_url && (
-                    <div className="relative rounded-2xl overflow-hidden border-2 dark:border-slate-700 shadow-lg">
+                    <div className="relative rounded-2xl overflow-hidden border-2 dark:border-navy-700 shadow-lg">
                       <img
                         src={play.diagram_url}
                         alt={`${play.formation} ${play.play_name} diagram`}
@@ -331,7 +331,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                               key={item.label}
                               className="flex justify-between items-center"
                             >
-                              <span className="text-sm text-secondary dark:text-slate-400">
+                              <span className="text-sm text-secondary dark:text-neutral-400">
                                 {item.label}
                               </span>
                               <span className="text-sm font-medium text-primary dark:text-white">

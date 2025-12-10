@@ -71,8 +71,8 @@ const getRoleConfig = (role: string) => {
         label: role.charAt(0).toUpperCase() + role.slice(1),
         icon: User,
         colors:
-          "bg-muted text-primary border dark:bg-primary dark:bg-gray-900/20 dark:text-gray-400 dark:border-gray-800",
-        iconColor: "text-secondary dark:text-gray-400",
+          "bg-muted text-primary border-secondary dark:bg-navy-900/20 dark:text-neutral-400 dark:border-navy-800",
+        iconColor: "text-secondary dark:text-neutral-400",
       };
   }
 };
@@ -150,13 +150,13 @@ export const SubscriptionBadge: React.FC<SubscriptionBadgeProps> = ({
         return {
           label: "Free",
           colors:
-            "bg-muted text-primary dark:bg-secondary dark:bg-gray-800 dark:text-gray-200",
+            "bg-muted text-primary dark:bg-navy-800 dark:text-neutral-200",
         };
       default:
         return {
           label: tier.charAt(0).toUpperCase() + tier.slice(1),
           colors:
-            "bg-muted text-primary dark:bg-secondary dark:bg-gray-800 dark:text-gray-200",
+            "bg-muted text-primary dark:bg-navy-800 dark:text-neutral-200",
         };
     }
   };

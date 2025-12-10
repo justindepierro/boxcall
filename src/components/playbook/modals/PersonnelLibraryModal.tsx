@@ -147,7 +147,7 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
       />
 
       {/* Modal Panel */}
-      <div className="fixed top-16 left-1/2 -translate-x-1/2 w-[95vw] md:w-[85vw] lg:w-[75vw] xl:w-[65vw] h-[calc(100vh-5rem)] bg-white dark:bg-gray-900 z-50 shadow-2xl rounded-lg overflow-hidden flex flex-col animate-fade-in">
+      <div className="fixed top-16 left-1/2 -translate-x-1/2 w-[95vw] md:w-[85vw] lg:w-[75vw] xl:w-[65vw] h-[calc(100vh-5rem)] bg-white dark:bg-navy-900 z-50 shadow-2xl rounded-lg overflow-hidden flex flex-col animate-fade-in">
         {/* Header */}
         <div className="bg-gradient-to-r from-purple-600 to-purple-700 p-4 sm:p-6 border-b border-divider shadow-lg">
           <div className="flex items-center justify-between mb-4">
@@ -217,7 +217,7 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6 bg-white dark:bg-gray-900">
+        <div className="flex-1 overflow-y-auto p-6 bg-white dark:bg-navy-900">
           {loading ? (
             <div className="flex items-center justify-center h-64">
               <Icon

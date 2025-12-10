@@ -223,7 +223,7 @@ export const FamilyPermissionsSettings: React.FC<
               className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 ${
                 permissions[toggle.key]
                   ? "bg-jade-600 dark:bg-jade-500"
-                  : "bg-gray-200 dark:bg-gray-700"
+                  : "bg-neutral-200 dark:bg-navy-700"
               }`}
             >
               <span
@@ -286,7 +286,7 @@ export const FamilyPermissionsSettings: React.FC<
             className={`px-lg py-sm rounded-lg text-sm font-semibold transition-all ${
               hasChanges && !isSaving
                 ? "bg-jade-600 hover:bg-jade-700 text-white shadow-sm hover:shadow-md"
-                : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed"
+                : "bg-neutral-200 dark:bg-navy-700 text-neutral-400 dark:text-neutral-500 cursor-not-allowed"
             }`}
           >
             {isSaving ? (

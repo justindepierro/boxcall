@@ -113,7 +113,7 @@ export const SelectionModeToggle: React.FC<SelectionModeToggleProps> = ({
         className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all font-semibold ${
           isActive
             ? "bg-gradient-to-r from-green-500 to-green-600 text-white ring-2 ring-green-500/30 shadow-lg"
-            : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 border-2 border-slate-200 dark:border-slate-600"
+            : "bg-white dark:bg-navy-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-navy-700 border-2 border-neutral-200 dark:border-navy-600"
         } ${className}`}
         whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.97 }}

@@ -88,7 +88,7 @@ export const CreateFormationModal: React.FC<CreateFormationModalProps> = ({
       />
 
       {/* Modal */}
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-md bg-white dark:bg-gray-900 z-modal shadow-2xl rounded-lg overflow-hidden animate-fade-in">
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-md bg-white dark:bg-navy-900 z-modal shadow-2xl rounded-lg overflow-hidden animate-fade-in">
         {/* Header */}
         <div className="bg-gradient-to-r from-jade-600 to-jade-700 p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">

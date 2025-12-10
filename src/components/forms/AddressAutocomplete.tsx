@@ -553,7 +553,7 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
                 ? "border-status-error focus:ring-status-error/50 focus:border-status-error focus:shadow-red-500/10"
                 : "border-secondary hover:border-jade-300 dark:hover:border-jade-600"
             }
-            ${disabled ? "bg-subtle text-muted cursor-not-allowed" : "bg-white/80 dark:bg-primary dark:bg-gray-900/80"}
+            ${disabled ? "bg-subtle text-muted cursor-not-allowed" : "bg-white/80 dark:bg-navy-900/80"}
             ${className}
           `}
         />
@@ -572,7 +572,7 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
             <Icon
               name="map-pin"
               size="xs"
-              className="text-secondary dark:text-gray-400"
+              className="text-secondary dark:text-neutral-400"
             />
           </div>
         </div>

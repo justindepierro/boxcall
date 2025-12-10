@@ -86,7 +86,7 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
         className={`${config.icon} transition-colors ${
           isFavorite
             ? "text-warning-strong fill-warning-strong"
-            : "text-slate-400 dark:text-slate-500"
+            : "text-neutral-400 dark:text-neutral-500"
         }`}
       />
       {showLabel && (

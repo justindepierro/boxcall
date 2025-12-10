@@ -69,7 +69,7 @@ export const EditPersonnelBadgeModal: React.FC<
       />
 
       {/* Modal */}
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-md bg-white dark:bg-gray-900 z-modal shadow-2xl rounded-xl overflow-hidden animate-slide-up">
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-md bg-white dark:bg-navy-900 z-modal shadow-2xl rounded-xl overflow-hidden animate-slide-up">
         {/* Header */}
         <div className="bg-gradient-to-r from-purple-600 to-purple-700 p-6">
           <div className="flex items-center justify-between">

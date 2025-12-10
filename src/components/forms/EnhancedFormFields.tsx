@@ -112,7 +112,7 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
     if (isFocused) return "focus-ring";
     if (showError) return "border-error-500";
     if (showSuccess) return "border-success-500";
-    return "border dark:border-slate-600";
+    return "border dark:border-navy-600";
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,7 +141,7 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
         <Typography
           variant="body-sm"
           as="label"
-          className="block font-medium text-secondary dark:text-slate-300"
+          className="block font-medium text-secondary dark:text-neutral-300"
         >
           {label}
           {required && <span className="text-error-500 ml-1">*</span>}
@@ -172,9 +172,9 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
           placeholder={formatPlaceholder()}
           className={`
             w-full px-3 py-2.5 rounded-lg transition-all duration-200
-            bg-white dark:bg-slate-800
-            text-primary dark:text-slate-100
-            placeholder-slate-400 dark:placeholder-slate-500
+            bg-white dark:bg-navy-800
+            text-primary dark:text-neutral-100
+            placeholder-neutral-400 dark:placeholder-neutral-500
             focus:outline-none
             ${getInputBorderColor()}
           `}
@@ -267,7 +267,7 @@ export const EnhancedSelect: React.FC<EnhancedSelectProps> = ({
 
   const getBorderColor = () => {
     if (isFocused) return "focus-ring";
-    return "border dark:border-slate-600";
+    return "border dark:border-navy-600";
   };
 
   return (
@@ -275,7 +275,7 @@ export const EnhancedSelect: React.FC<EnhancedSelectProps> = ({
       <Typography
         variant="body-sm"
         as="label"
-        className="block font-medium text-secondary dark:text-slate-300"
+        className="block font-medium text-secondary dark:text-neutral-300"
       >
         {label}
         {required && <span className="text-error-500 ml-1">*</span>}
@@ -289,8 +289,8 @@ export const EnhancedSelect: React.FC<EnhancedSelectProps> = ({
           onBlur={() => setIsFocused(false)}
           className={`
             w-full px-3 py-2.5 rounded-lg transition-all duration-200
-            bg-white dark:bg-slate-800
-            text-primary dark:text-slate-100
+            bg-white dark:bg-navy-800
+            text-primary dark:text-neutral-100
             focus:outline-none
             appearance-none
             ${getBorderColor()}

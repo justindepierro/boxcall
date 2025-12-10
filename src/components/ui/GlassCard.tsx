@@ -33,11 +33,11 @@ export interface GlassCardProps {
 
 const variants = {
   default:
-    "border-white/70 dark:border-slate-700/60 shadow-glass dark:shadow-glass-dark",
+    "border-white/70 dark:border-navy-700/60 shadow-glass dark:shadow-glass-dark",
   elevated:
-    "border-white/80 dark:border-slate-700/70 shadow-glass-elevated dark:shadow-glass-elevated-dark",
+    "border-white/80 dark:border-navy-700/70 shadow-glass-elevated dark:shadow-glass-elevated-dark",
   subtle:
-    "border-white/50 dark:border-slate-700/40 shadow-glass-subtle dark:shadow-glass-subtle-dark",
+    "border-white/50 dark:border-navy-700/40 shadow-glass-subtle dark:shadow-glass-subtle-dark",
 } as const;
 
 const paddings = {
@@ -69,8 +69,8 @@ export const GlassCard = memo<GlassCardProps>(
         className={`
           rounded-xl
           border 
-          bg-white/80 
-          dark:bg-slate-900/70 
+          bg-bg-primary/80 
+          dark:bg-navy-900/70 
           backdrop-blur-xl 
           overflow-visible
           ${variants[variant]}
