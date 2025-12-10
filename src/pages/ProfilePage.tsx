@@ -821,14 +821,14 @@ const ProfilePage: React.FC = () => {
 
           {/* Athletic Information - Only show for players */}
           {profile.app_role === "player" && (
-            <Card className="p-xl shadow-md shadow-emerald-500/10 hover:shadow-lg hover:shadow-emerald-500/20 transition-all duration-300">
+            <Card className="card-emerald p-xl rounded-2xl">
               <Typography
                 variant="headline-sm"
                 as="h2"
-                className="mb-lg text-success font-bold flex items-center"
+                className="mb-lg card-emerald-text font-bold flex items-center"
               >
-                <span className="w-8 h-8 bg-gradient-to-br from-emerald-50 to-emerald-100 border-2 border-emerald-200 rounded-lg flex items-center justify-center mr-sm">
-                  <Activity className="text-emerald-600 w-4 h-4" />
+                <span className="w-8 h-8 bg-[var(--card-emerald-bg-light)] border-2 border-[var(--card-emerald-border)] rounded-lg flex items-center justify-center mr-sm">
+                  <Activity className="card-emerald-icon w-4 h-4" />
                 </span>
                 Athletic Information
               </Typography>
@@ -952,14 +952,14 @@ const ProfilePage: React.FC = () => {
             profile.app_role === "free_coach" ||
             profile.app_role === "head_coach" ||
             profile.is_admin) && (
-            <Card className="p-xl shadow-md shadow-blue-500/10 hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300">
+            <Card className="card-blue p-xl rounded-2xl">
               <Typography
                 variant="headline-sm"
                 as="h2"
-                className="mb-lg text-blue-600 font-bold flex items-center"
+                className="mb-lg card-blue-text font-bold flex items-center"
               >
-                <span className="w-8 h-8 bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 rounded-lg flex items-center justify-center mr-sm">
-                  <Trophy className="text-blue-600 w-4 h-4" />
+                <span className="w-8 h-8 bg-[var(--card-blue-bg-light)] border-2 border-[var(--card-blue-border)] rounded-lg flex items-center justify-center mr-sm">
+                  <Trophy className="card-blue-icon w-4 h-4" />
                 </span>
                 Coaching Information
               </Typography>
@@ -1134,15 +1134,15 @@ const ProfilePage: React.FC = () => {
             profile.app_role === "free_coach" ||
             profile.app_role === "head_coach" ||
             profile.is_admin) && (
-            <Card className="relative overflow-hidden p-xl shadow-md shadow-purple-500/10 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300">
-              <div className="absolute top-0 right-0 w-20 h-20 bg-purple-100 rounded-full -mr-10 -mt-10 opacity-60"></div>
+            <Card className="card-purple relative overflow-hidden p-xl rounded-2xl">
+              <div className="absolute top-0 right-0 w-20 h-20 bg-[var(--color-accent-purple-100)] rounded-full -mr-10 -mt-10 opacity-60"></div>
               <Typography
                 variant="headline-sm"
                 as="h2"
-                className="mb-lg text-purple-600 font-bold flex items-center"
+                className="mb-lg card-purple-text font-bold flex items-center"
               >
-                <span className="w-8 h-8 bg-gradient-to-br from-purple-50 to-purple-100 border-2 border-purple-200 rounded-lg flex items-center justify-center mr-sm">
-                  <Trophy className="text-purple-600 w-4 h-4" />
+                <span className="w-8 h-8 bg-[var(--card-purple-bg-light)] border-2 border-[var(--card-purple-border)] rounded-lg flex items-center justify-center mr-sm">
+                  <Trophy className="card-purple-icon w-4 h-4" />
                 </span>
                 Coaching Information
               </Typography>
@@ -1326,16 +1326,16 @@ const ProfilePage: React.FC = () => {
           )}
 
           {/* Social Media Links - Enhanced */}
-          <Card className="relative overflow-hidden p-xl shadow-md shadow-indigo-500/10 hover:shadow-lg hover:shadow-indigo-500/20 transition-all duration-300">
-            <div className="absolute top-0 left-0 w-16 h-16 bg-indigo-100 rounded-full -ml-8 -mt-8 opacity-60"></div>
-            <div className="absolute bottom-0 right-0 w-12 h-12 bg-indigo-100 rounded-full -mr-6 -mb-6 opacity-60"></div>
+          <Card className="card-indigo relative overflow-hidden p-xl rounded-2xl">
+            <div className="absolute top-0 left-0 w-16 h-16 bg-[var(--color-accent-indigo-100)] rounded-full -ml-8 -mt-8 opacity-60"></div>
+            <div className="absolute bottom-0 right-0 w-12 h-12 bg-[var(--color-accent-indigo-100)] rounded-full -mr-6 -mb-6 opacity-60"></div>
             <Typography
               variant="headline-sm"
               as="h2"
-              className="mb-lg text-indigo-600 font-bold flex items-center"
+              className="mb-lg card-indigo-text font-bold flex items-center"
             >
-              <span className="w-8 h-8 bg-gradient-to-br from-indigo-50 to-indigo-100 border-2 border-indigo-200 rounded-lg flex items-center justify-center mr-sm">
-                <Link2 className="text-indigo-600 w-4 h-4" />
+              <span className="w-8 h-8 bg-[var(--card-indigo-bg-light)] border-2 border-[var(--card-indigo-border)] rounded-lg flex items-center justify-center mr-sm">
+                <Link2 className="card-indigo-icon w-4 h-4" />
               </span>
               Social Media & Links
             </Typography>

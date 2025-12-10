@@ -405,7 +405,7 @@ const TeamBulletin: React.FC = React.memo(() => {
             </div>
             {activityStats.onlineMembers > 0 && (
               <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-card rounded-full shadow-sm">
-                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-sm shadow-emerald-500/50" />
+                <div className="w-2 h-2 bg-[var(--color-accent-emerald-500)] rounded-full animate-pulse shadow-sm shadow-[var(--card-emerald-shadow)]" />
                 <span className="font-semibold text-primary">
                   {activityStats.onlineMembers}{" "}
                   <span className="font-normal text-secondary">online</span>
@@ -413,7 +413,7 @@ const TeamBulletin: React.FC = React.memo(() => {
               </div>
             )}
             <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-card rounded-full shadow-sm">
-              <Icon name="users" size="sm" className="text-blue-600" />
+              <Icon name="users" size="sm" className="card-blue-icon" />
               <span className="font-semibold text-primary">
                 {teamData?.memberCount || 0}{" "}
                 <span className="font-normal text-secondary">members</span>
@@ -495,13 +495,13 @@ const TeamBulletin: React.FC = React.memo(() => {
 
                   <button
                     onClick={() => setIsTeamGoalsModalOpen(true)}
-                    className="group w-full text-left hover:bg-gradient-to-r hover:from-emerald-50 hover:to-emerald-100 rounded-lg p-3 transition-all duration-200 hover:scale-[1.02] mt-2"
+                    className="group w-full text-left hover:bg-[var(--card-emerald-bg-light)] rounded-lg p-3 transition-all duration-200 hover:scale-[1.02] mt-2"
                   >
                     <div className="flex items-center gap-3">
                       <Icon
                         name="target"
                         size="md"
-                        className="text-emerald-600 group-hover:scale-110 transition-transform"
+                        className="card-emerald-icon group-hover:scale-110 transition-transform"
                       />
                       <div className="flex-1 min-w-0">
                         <Typography
@@ -523,13 +523,13 @@ const TeamBulletin: React.FC = React.memo(() => {
 
                   <button
                     onClick={() => setIsTeamVotesModalOpen(true)}
-                    className="group w-full text-left hover:bg-gradient-to-r hover:from-indigo-50 hover:to-indigo-100 rounded-lg p-3 transition-all duration-200 hover:scale-[1.02] mt-2"
+                    className="group w-full text-left hover:bg-[var(--card-indigo-bg-light)] rounded-lg p-3 transition-all duration-200 hover:scale-[1.02] mt-2"
                   >
                     <div className="flex items-center gap-3">
                       <Icon
                         name="message"
                         size="md"
-                        className="text-indigo-600 group-hover:scale-110 transition-transform"
+                        className="card-indigo-icon group-hover:scale-110 transition-transform"
                       />
                       <div className="flex-1 min-w-0">
                         <Typography
@@ -566,12 +566,12 @@ const TeamBulletin: React.FC = React.memo(() => {
                   </button>
                   <button
                     onClick={() => setIsTeamGoalsModalOpen(true)}
-                    className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-primary rounded-xl shadow-md shadow-emerald-500/10 hover:shadow-lg hover:shadow-emerald-500/20 hover:scale-105 transition-all duration-200"
+                    className="flex-shrink-0 flex flex-col items-center gap-1 px-4 py-3 bg-primary rounded-xl shadow-md shadow-[var(--card-emerald-shadow)] hover:shadow-lg hover:shadow-[var(--card-emerald-shadow-hover)] hover:scale-105 transition-all duration-200"
                   >
                     <Icon
                       name="target"
                       size="sm"
-                      className="text-emerald-600"
+                      className="card-emerald-icon"
                     />
                     <span className="text-xs font-medium text-secondary">
                       Goals
@@ -584,7 +584,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                     <Icon
                       name="message"
                       size="sm"
-                      className="text-indigo-600"
+                      className="card-indigo-icon"
                     />
                     <span className="text-xs font-medium text-secondary">
                       Votes
@@ -597,7 +597,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                     <Icon
                       name="trending-up"
                       size="sm"
-                      className="text-purple-600"
+                      className="card-purple-icon"
                     />
                     <span className="text-xs font-medium text-secondary">
                       Stats
@@ -620,7 +620,7 @@ const TeamBulletin: React.FC = React.memo(() => {
                         <Icon
                           name="users"
                           size="sm"
-                          className="text-blue-600"
+                          className="card-blue-icon"
                         />
                         <Typography
                           variant="headline-sm"

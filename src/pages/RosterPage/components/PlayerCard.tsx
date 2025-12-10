@@ -50,7 +50,7 @@ export const PlayerCard = React.memo<PlayerCardProps>(
         onClick={() => onNavigate(player.id)}
         className={`p-md transition-all duration-300 cursor-pointer ${
           isSelected
-            ? "ring-2 ring-cyan-400 bg-cyan-50/30 shadow-blue-lg"
+            ? "ring-2 ring-[var(--color-accent-cyan-400)] bg-[var(--color-accent-cyan-50)]/30 shadow-blue-lg"
             : "shadow-blue-md hover:shadow-blue-lg hover:scale-[1.02] hover:-translate-y-1"
         }`}
       >
@@ -71,7 +71,7 @@ export const PlayerCard = React.memo<PlayerCardProps>(
               <Typography variant="headline-sm" className="font-semibold mb-1">
                 {player.first_name}
                 {player.nickname && (
-                  <span className="italic text-pink-600 dark:text-pink-400">
+                  <span className="italic text-[var(--color-accent-pink-600)] dark:text-[var(--color-accent-pink-400)]">
                     {" "}
                     "{player.nickname}"
                   </span>
@@ -94,25 +94,25 @@ export const PlayerCard = React.memo<PlayerCardProps>(
                     .map((pos) => (
                       <span
                         key={pos}
-                        className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-blue-500 to-blue-600 text-white border border-blue-400/30 shadow-sm"
+                        className="badge-blue inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-sm"
                       >
                         {pos.trim()}
                       </span>
                     ))}
                 {/* Grade Level Badge - Purple gradient (progression) */}
                 {player.grade_level && (
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-purple-500 to-purple-600 text-white border border-purple-400/30 shadow-sm">
+                  <span className="badge-purple inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-sm">
                     {player.grade_level}
                   </span>
                 )}
                 {/* Invitation Status Badge */}
                 {player.invitation_status === "pending" && (
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-amber-500 to-orange-500 text-white border border-warning/30 shadow-sm">
+                  <span className="badge-orange inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-sm">
                     Invited
                   </span>
                 )}
                 {player.invitation_status === "accepted" && (
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-green-500 to-emerald-500 text-white border border-success/30 shadow-sm">
+                  <span className="badge-emerald inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-sm">
                     ✓ Accepted
                   </span>
                 )}

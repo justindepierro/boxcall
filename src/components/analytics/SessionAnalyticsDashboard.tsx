@@ -8,6 +8,7 @@ import {
   SessionAnalyticsService,
   type SessionAnalytics,
 } from "../../services/sessionAnalyticsService";
+import { getPlayTypeColor } from "@/design-system/chartColors";
 
 interface SessionAnalyticsDashboardProps {
   sessionId: string;
@@ -231,15 +232,3 @@ export const SessionAnalyticsDashboard: React.FC<
     </div>
   );
 };
-
-// Helper function to get colors for play types
-function getPlayTypeColor(playType: string): string {
-  const colors: Record<string, string> = {
-    run: "#3b82f6",
-    pass: "#ef4444",
-    screen: "#10b981",
-    rpo: "#f59e0b",
-    special: "#8b5cf6",
-  };
-  return colors[playType.toLowerCase()] || "#6b7280";
-}

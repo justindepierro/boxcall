@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import { Typography } from "../../design-system/Typography";
 import { Card } from "../../ui/Card";
+import { getSuccessRateColor } from "@/design-system/chartColors";
 
 interface SuccessRateData {
   name: string;
@@ -53,9 +54,7 @@ export const SuccessRateBarChart: React.FC<SuccessRateBarChartProps> = ({
   const chartData = data || defaultData;
 
   const getBarColor = (successRate: number) => {
-    if (successRate >= 75) return "#10b981"; // green
-    if (successRate >= 60) return "#f59e0b"; // yellow
-    return "#ef4444"; // red
+    return getSuccessRateColor(successRate);
   };
 
   const CustomTooltip = ({ active, payload, label }: any) => {

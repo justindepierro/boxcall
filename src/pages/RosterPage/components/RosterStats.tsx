@@ -45,43 +45,43 @@ export const RosterStats = React.memo<RosterStatsProps>(
         </Card>
 
         {/* Active Players - Emerald gradient */}
-        <Card className="p-md bg-gradient-to-br from-emerald-50 to-emerald-100 border-l-4 border-emerald-600 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/10">
+        <Card className="card-emerald p-md border-l-4 border-emerald-600 rounded-lg">
           <div className="flex items-center justify-between">
             <div>
               <Typography
                 variant="body-sm"
-                className="text-emerald-700 font-medium"
+                className="card-emerald-text font-medium"
               >
                 Active Players
               </Typography>
-              <Typography variant="headline-lg" className="text-emerald-900">
+              <Typography variant="headline-lg" className="card-emerald-text">
                 {activePlayerCount}
               </Typography>
             </div>
-            <Icon name="check-circle" className="w-8 h-8 text-emerald-600" />
+            <Icon name="check-circle" className="w-8 h-8 card-emerald-icon" />
           </div>
         </Card>
 
         {/* Filtered Count - Blue gradient */}
-        <Card className="p-md bg-gradient-to-br from-blue-50 to-blue-100 border-l-4 border-blue-600 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
+        <Card className="card-blue p-md border-l-4 border-blue-600 rounded-lg">
           <div className="flex items-center justify-between">
             <div>
               <Typography
                 variant="body-sm"
-                className="text-blue-700 font-medium"
+                className="card-blue-text font-medium"
               >
                 Filtered
               </Typography>
-              <Typography variant="headline-lg" className="text-blue-900">
+              <Typography variant="headline-lg" className="card-blue-text">
                 {filteredCount}
               </Typography>
             </div>
-            <Icon name="filter" className="w-8 h-8 text-blue-600" />
+            <Icon name="filter" className="w-8 h-8 card-blue-icon" />
           </div>
         </Card>
 
         {/* Selected Count - Amber gradient (attention/selection) */}
-        <Card className="p-md bg-gradient-to-br from-amber-50 to-amber-100 border-l-4 border-warning-600 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/10">
+        <Card className="p-md bg-gradient-to-br from-amber-50 to-amber-100 border-l-4 border-warning-600 transition-all duration-300 hover:shadow-lg hover:shadow-[var(--card-orange-shadow)]">
           <div className="flex items-center justify-between">
             <div>
               <Typography

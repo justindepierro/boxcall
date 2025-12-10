@@ -548,7 +548,7 @@ const GamePlansPage = () => {
         accentOverlayClass: "bg-aurora-emerald",
         glowClassName: "glow-aurora-emerald",
         statusBadge: "Ready",
-        iconClassName: "text-green-600",
+        iconClassName: "card-emerald-icon",
         footnote: "Start planning",
         onOpen: handleCreatePlan,
         body: (
@@ -600,7 +600,7 @@ const GamePlansPage = () => {
         accentOverlayClass: "bg-aurora-violet",
         glowClassName: "glow-aurora-violet",
         statusBadge: "Collaborate",
-        iconClassName: "text-purple-600",
+        iconClassName: "card-purple-icon",
         footnote: "Jump to list",
         onOpen: scrollToList,
         body: (
@@ -808,13 +808,13 @@ const GamePlansPage = () => {
                                   vs {plan.opponent}
                                 </span>
                               )}
-                              <span className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-50 to-purple-100 text-purple-900 border border-purple-200 px-2.5 py-1">
+                              <span className="badge-purple inline-flex items-center rounded-full px-2.5 py-1">
                                 {plan.gameDate
                                   ? new Date(plan.gameDate).toLocaleDateString()
                                   : "Date TBD"}
                               </span>
                               {plan.gameLocation && (
-                                <span className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-50 to-purple-100 text-purple-900 border border-purple-200 px-2.5 py-1">
+                                <span className="badge-purple inline-flex items-center rounded-full px-2.5 py-1">
                                   {plan.gameLocation}
                                 </span>
                               )}

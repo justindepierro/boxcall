@@ -245,13 +245,13 @@ const BoxCall: React.FC = () => {
         {/* Session Type Cards - Mobile-first responsive grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {/* Practice Session Card */}
-          <Card className="p-4 sm:p-6 shadow-md shadow-orange-500/10 hover:shadow-lg hover:shadow-orange-500/20 transition-all duration-300">
+          <Card className="card-orange p-4 sm:p-6 rounded-2xl">
             <div className="flex items-start gap-3 sm:gap-4 mb-4">
-              <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-2.5 sm:p-3 rounded-xl border-2 border-orange-200 flex-shrink-0">
+              <div className="bg-[var(--card-orange-bg-light)] p-2.5 sm:p-3 rounded-xl border-2 border-[var(--card-orange-border)] flex-shrink-0">
                 <Icon
                   name="clipboard-list"
                   size="lg"
-                  className="text-orange-600"
+                  className="card-orange-icon"
                 />
               </div>
               <div className="flex-1 min-w-0">
@@ -311,10 +311,10 @@ const BoxCall: React.FC = () => {
           </Card>
 
           {/* Game Session Card */}
-          <Card className="p-4 sm:p-6 shadow-md shadow-emerald-500/10 hover:shadow-lg hover:shadow-emerald-500/20 transition-all duration-300">
+          <Card className="card-emerald p-4 sm:p-6 rounded-2xl">
             <div className="flex items-start gap-3 sm:gap-4 mb-4">
-              <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-2.5 sm:p-3 rounded-xl border-2 border-emerald-200 flex-shrink-0">
-                <Icon name="zap" size="lg" className="text-emerald-600" />
+              <div className="bg-[var(--card-emerald-bg-light)] p-2.5 sm:p-3 rounded-xl border-2 border-[var(--card-emerald-border)] flex-shrink-0">
+                <Icon name="zap" size="lg" className="card-emerald-icon" />
               </div>
               <div className="flex-1 min-w-0">
                 <Typography variant="headline-md" className="mb-0.5 sm:mb-1">

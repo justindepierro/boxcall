@@ -9,6 +9,7 @@ import {
 } from "recharts";
 import { Typography } from "../../design-system/Typography";
 import { Card } from "../../ui/Card";
+import { CHART_COLORS } from "@/design-system/chartColors";
 
 interface PlayTypeData {
   name: string;
@@ -33,10 +34,10 @@ export const PlayTypeDistributionChart: React.FC<
 > = ({ data, className = "" }) => {
   // Default data if none provided
   const defaultData: PlayTypeData[] = [
-    { name: "Run", value: 45, color: "#3b82f6" },
-    { name: "Pass", value: 35, color: "#ef4444" },
-    { name: "Special Teams", value: 15, color: "#10b981" },
-    { name: "Screen", value: 5, color: "#f59e0b" },
+    { name: "Run", value: 45, color: CHART_COLORS.blue },
+    { name: "Pass", value: 35, color: CHART_COLORS.red },
+    { name: "Special Teams", value: 15, color: CHART_COLORS.emerald },
+    { name: "Screen", value: 5, color: CHART_COLORS.amber },
   ];
 
   const chartData = data || defaultData;

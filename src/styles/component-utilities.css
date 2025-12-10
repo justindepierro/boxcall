@@ -676,3 +676,151 @@
 .focus-ring:focus:not(:focus-visible) {
   outline: none;
 }
+
+/* ============================================================================
+   ACCENT CARD UTILITIES
+   Feature cards with colorful gradients using design tokens
+   ============================================================================ */
+
+/* Orange Card - Practice, BoxCall Live, Action items */
+.card-orange {
+  background: var(--card-orange-bg);
+  border: 2px solid var(--card-orange-border);
+  box-shadow: 0 4px 6px var(--card-orange-shadow);
+  transition: all 0.3s ease;
+}
+.card-orange:hover {
+  border-color: var(--card-orange-border-hover);
+  box-shadow: 0 8px 25px var(--card-orange-shadow-hover);
+  transform: scale(1.02) translateY(-2px);
+}
+.card-orange-icon {
+  color: var(--card-orange-icon);
+}
+.card-orange-text {
+  color: var(--card-orange-text);
+}
+
+/* Purple Card - Templates, Achievements, Premium */
+.card-purple {
+  background: var(--card-purple-bg);
+  border: 2px solid var(--card-purple-border);
+  box-shadow: 0 4px 6px var(--card-purple-shadow);
+  transition: all 0.3s ease;
+}
+.card-purple:hover {
+  border-color: var(--card-purple-border-hover);
+  box-shadow: 0 8px 25px var(--card-purple-shadow-hover);
+  transform: scale(1.02) translateY(-2px);
+}
+.card-purple-icon {
+  color: var(--card-purple-icon);
+}
+.card-purple-text {
+  color: var(--card-purple-text);
+}
+
+/* Blue Card - Info, Stats, Team */
+.card-blue {
+  background: var(--card-blue-bg);
+  border: 2px solid var(--card-blue-border);
+  box-shadow: 0 4px 6px var(--card-blue-shadow);
+  transition: all 0.3s ease;
+}
+.card-blue:hover {
+  border-color: var(--card-blue-border-hover);
+  box-shadow: 0 8px 25px var(--card-blue-shadow-hover);
+  transform: scale(1.02) translateY(-2px);
+}
+.card-blue-icon {
+  color: var(--card-blue-icon);
+}
+.card-blue-text {
+  color: var(--card-blue-text);
+}
+
+/* Emerald Card - Success, Active, Growth */
+.card-emerald {
+  background: var(--card-emerald-bg);
+  border: 2px solid var(--card-emerald-border);
+  box-shadow: 0 4px 6px var(--card-emerald-shadow);
+  transition: all 0.3s ease;
+}
+.card-emerald:hover {
+  border-color: var(--card-emerald-border-hover);
+  box-shadow: 0 8px 25px var(--card-emerald-shadow-hover);
+  transform: scale(1.02) translateY(-2px);
+}
+.card-emerald-icon {
+  color: var(--card-emerald-icon);
+}
+.card-emerald-text {
+  color: var(--card-emerald-text);
+}
+
+/* Indigo Card - Focus, Links, Deep content */
+.card-indigo {
+  background: var(--card-indigo-bg);
+  border: 2px solid var(--card-indigo-border);
+  box-shadow: 0 4px 6px var(--card-indigo-shadow);
+  transition: all 0.3s ease;
+}
+.card-indigo:hover {
+  border-color: var(--card-indigo-border-hover);
+  box-shadow: 0 8px 25px var(--card-indigo-shadow-hover);
+  transform: scale(1.02) translateY(-2px);
+}
+.card-indigo-icon {
+  color: var(--card-indigo-icon);
+}
+.card-indigo-text {
+  color: var(--card-indigo-text);
+}
+
+/* Cyan Card - Tech, Modern, Selection states */
+.card-cyan {
+  background: var(--card-cyan-bg);
+  border: 2px solid var(--card-cyan-border);
+  box-shadow: 0 4px 6px var(--card-cyan-shadow);
+  transition: all 0.3s ease;
+}
+.card-cyan:hover {
+  border-color: var(--card-cyan-border-hover);
+  box-shadow: 0 8px 25px var(--card-cyan-shadow-hover);
+  transform: scale(1.02) translateY(-2px);
+}
+.card-cyan-icon {
+  color: var(--card-cyan-icon);
+}
+.card-cyan-text {
+  color: var(--card-cyan-text);
+}
+
+/* ============================================================================
+   BADGE UTILITIES
+   Pills, tags, status indicators
+   ============================================================================ */
+
+.badge-blue {
+  background-color: var(--badge-blue-bg);
+  color: var(--badge-blue-text);
+  border: 1px solid var(--badge-blue-border);
+}
+
+.badge-purple {
+  background-color: var(--badge-purple-bg);
+  color: var(--badge-purple-text);
+  border: 1px solid var(--badge-purple-border);
+}
+
+.badge-orange {
+  background-color: var(--badge-orange-bg);
+  color: var(--badge-orange-text);
+  border: 1px solid var(--badge-orange-border);
+}
+
+.badge-emerald {
+  background-color: var(--badge-emerald-bg);
+  color: var(--badge-emerald-text);
+  border: 1px solid var(--badge-emerald-border);
+}

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Typography } from "../../design-system/Typography";
 import { Card } from "../../ui/Card";
 import { Badge } from "../../ui/Badge";
+import { getSuccessRateColor } from "@/design-system/chartColors";
 
 interface FieldZoneData {
   zone: string;
@@ -38,10 +39,7 @@ export const PlaySuccessHeatmap: React.FC<PlaySuccessHeatmapProps> = ({
 
   // Get color based on success rate
   const getZoneColor = (successRate: number): string => {
-    if (successRate >= 75) return "#10b981"; // green-500
-    if (successRate >= 60) return "#fbbf24"; // yellow-500
-    if (successRate >= 45) return "#f97316"; // orange-500
-    return "#ef4444"; // red-500
+    return getSuccessRateColor(successRate);
   };
 
   // Get opacity based on attempts (more attempts = more solid)

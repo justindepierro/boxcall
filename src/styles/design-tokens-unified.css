@@ -693,6 +693,123 @@
   --component-card-shadow: var(--shadow-sm);
 
   /* ============================================
+     11.2 ACCENT CARD GRADIENTS
+     For colorful feature cards, stats cards, etc.
+     ============================================ */
+
+  /* Orange Card - Energy/Action (Practice, BoxCall Live) */
+  --card-orange-bg: linear-gradient(to bottom right, var(--color-accent-orange-100), var(--color-accent-orange-50), white);
+  --card-orange-bg-light: linear-gradient(to bottom right, var(--color-accent-orange-50), var(--color-accent-orange-100));
+  --card-orange-border: var(--color-accent-orange-200);
+  --card-orange-border-hover: var(--color-accent-orange-300);
+  --card-orange-icon: var(--color-accent-orange-600);
+  --card-orange-text: var(--color-accent-orange-900);
+  --card-orange-shadow: rgba(249, 115, 22, 0.2);
+  --card-orange-shadow-hover: rgba(249, 115, 22, 0.4);
+
+  /* Purple Card - Premium/Templates/Achievements */
+  --card-purple-bg: linear-gradient(to bottom right, var(--color-accent-purple-100), var(--color-accent-purple-50), white);
+  --card-purple-bg-light: linear-gradient(to bottom right, var(--color-accent-purple-50), var(--color-accent-purple-100));
+  --card-purple-border: var(--color-accent-purple-200);
+  --card-purple-border-hover: var(--color-accent-purple-300);
+  --card-purple-icon: var(--color-accent-purple-600);
+  --card-purple-text: var(--color-accent-purple-900);
+  --card-purple-shadow: rgba(147, 51, 234, 0.2);
+  --card-purple-shadow-hover: rgba(147, 51, 234, 0.4);
+
+  /* Blue Card - Info/Stats/Team */
+  --card-blue-bg: linear-gradient(to bottom right, var(--color-accent-blue-100), var(--color-accent-blue-50), white);
+  --card-blue-bg-light: linear-gradient(to bottom right, var(--color-accent-blue-50), var(--color-accent-blue-100));
+  --card-blue-border: var(--color-accent-blue-200);
+  --card-blue-border-hover: var(--color-accent-blue-300);
+  --card-blue-icon: var(--color-accent-blue-600);
+  --card-blue-text: var(--color-accent-blue-900);
+  --card-blue-shadow: rgba(59, 130, 246, 0.2);
+  --card-blue-shadow-hover: rgba(59, 130, 246, 0.4);
+
+  /* Emerald Card - Success/Active/Growth */
+  --card-emerald-bg: linear-gradient(to bottom right, var(--color-accent-emerald-100), var(--color-accent-emerald-50), white);
+  --card-emerald-bg-light: linear-gradient(to bottom right, var(--color-accent-emerald-50), var(--color-accent-emerald-100));
+  --card-emerald-border: var(--color-accent-emerald-200);
+  --card-emerald-border-hover: var(--color-accent-emerald-300);
+  --card-emerald-icon: var(--color-accent-emerald-600);
+  --card-emerald-text: var(--color-accent-emerald-900);
+  --card-emerald-shadow: rgba(16, 185, 129, 0.2);
+  --card-emerald-shadow-hover: rgba(16, 185, 129, 0.4);
+
+  /* Indigo Card - Focus/Deep/Links */
+  --card-indigo-bg: linear-gradient(to bottom right, var(--color-accent-indigo-100), var(--color-accent-indigo-50), white);
+  --card-indigo-bg-light: linear-gradient(to bottom right, var(--color-accent-indigo-50), var(--color-accent-indigo-100));
+  --card-indigo-border: var(--color-accent-indigo-200);
+  --card-indigo-border-hover: var(--color-accent-indigo-300);
+  --card-indigo-icon: var(--color-accent-indigo-600);
+  --card-indigo-text: var(--color-accent-indigo-900);
+  --card-indigo-shadow: rgba(99, 102, 241, 0.2);
+  --card-indigo-shadow-hover: rgba(99, 102, 241, 0.4);
+
+  /* Cyan Card - Tech/Modern/Selection */
+  --card-cyan-bg: linear-gradient(to bottom right, var(--color-accent-cyan-100), var(--color-accent-cyan-50), white);
+  --card-cyan-bg-light: linear-gradient(to bottom right, var(--color-accent-cyan-50), var(--color-accent-cyan-100));
+  --card-cyan-border: var(--color-accent-cyan-200);
+  --card-cyan-border-hover: var(--color-accent-cyan-300);
+  --card-cyan-icon: var(--color-accent-cyan-600);
+  --card-cyan-text: var(--color-accent-cyan-900);
+  --card-cyan-shadow: rgba(6, 182, 212, 0.2);
+  --card-cyan-shadow-hover: rgba(6, 182, 212, 0.4);
+
+  /* ============================================
+     11.3 CHART COLOR TOKENS
+     For Recharts and data visualization
+     ============================================ */
+
+  /* Primary chart colors */
+  --chart-blue: var(--color-accent-blue-500);
+  --chart-emerald: var(--color-accent-emerald-500);
+  --chart-purple: var(--color-accent-purple-500);
+  --chart-orange: var(--color-accent-orange-500);
+  --chart-pink: var(--color-accent-pink-500);
+  --chart-cyan: var(--color-accent-cyan-500);
+  --chart-amber: var(--color-accent-amber-500);
+  --chart-red: var(--color-accent-red-500);
+  --chart-indigo: var(--color-accent-indigo-500);
+  --chart-teal: var(--color-accent-teal-500);
+
+  /* Chart axis/grid */
+  --chart-grid: var(--color-neutral-200);
+  --chart-axis: var(--color-neutral-500);
+  --chart-axis-text: var(--color-neutral-500);
+
+  /* Success rate thresholds */
+  --chart-success-high: var(--color-accent-emerald-500);
+  --chart-success-medium: var(--color-accent-amber-500);
+  --chart-success-low: var(--color-accent-red-500);
+
+  /* ============================================
+     11.4 BADGE/TAG TOKENS
+     For pills, tags, status indicators
+     ============================================ */
+
+  /* Blue badge (default info) */
+  --badge-blue-bg: var(--color-accent-blue-100);
+  --badge-blue-text: var(--color-accent-blue-700);
+  --badge-blue-border: var(--color-accent-blue-200);
+
+  /* Purple badge (premium) */
+  --badge-purple-bg: var(--color-accent-purple-100);
+  --badge-purple-text: var(--color-accent-purple-700);
+  --badge-purple-border: var(--color-accent-purple-200);
+
+  /* Orange badge (draft/pending) */
+  --badge-orange-bg: var(--color-accent-orange-100);
+  --badge-orange-text: var(--color-accent-orange-700);
+  --badge-orange-border: var(--color-accent-orange-200);
+
+  /* Emerald badge (active/success) */
+  --badge-emerald-bg: var(--color-accent-emerald-100);
+  --badge-emerald-text: var(--color-accent-emerald-700);
+  --badge-emerald-border: var(--color-accent-emerald-200);
+
+  /* ============================================
      12. Z-INDEX SCALE
      ============================================ */
 
