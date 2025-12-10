@@ -33,9 +33,24 @@ export class PreferenceService {
   private static pendingPreferences: Partial<UserPreferences> = {};
   private static saveTimer: NodeJS.Timeout | null = null;
 
+  // Cache to prevent repeated failing requests
+  private static preferencesCache: {
+    data: UserPreferences | null;
+    timestamp: number;
+    userId: string | null;
+  } | null = null;
+  private static readonly CACHE_DURATION = 30000; // 30 seconds
+
+  /**
+   * Clear the preferences cache (call on logout or user change)
+   */
+  static clearCache(): void {
+    this.preferencesCache = null;
+  }
+
   /**
    * Load all preferences for the current user from the server
-   * Returns null if user is not authenticated
+   * Returns null if user is not authenticated or no profile exists
    */
   static async loadPreferences(): Promise<UserPreferences | null> {
     try {
@@ -46,15 +61,44 @@ export class PreferenceService {
         return null;
       }
 
+      // Check cache first to prevent repeated requests
+      if (
+        this.preferencesCache &&
+        this.preferencesCache.userId === userId &&
+        Date.now() - this.preferencesCache.timestamp < this.CACHE_DURATION
+      ) {
+        debug("[PreferenceService] Returning cached preferences");
+        return this.preferencesCache.data;
+      }
+
+      // Use maybeSingle() instead of single() to avoid 406 errors
+      // when no profile exists for the user
       const { data, error } = await supabase
         .from("profiles")
         .select("settings")
         .eq("id", userId)
-        .single();
+        .maybeSingle();
 
       if (error) {
         logError("[PreferenceService] Failed to load preferences:", error);
+        // Cache the failure to prevent repeated failing requests
+        this.preferencesCache = {
+          data: null,
+          timestamp: Date.now(),
+          userId,
+        };
         return null;
+      }
+
+      // No profile found - cache this result
+      if (!data) {
+        debug("[PreferenceService] No profile found for user");
+        this.preferencesCache = {
+          data: {},
+          timestamp: Date.now(),
+          userId,
+        };
+        return {};
       }
 
       // Handle JSONB settings field - Supabase returns Json type
@@ -63,15 +107,19 @@ export class PreferenceService {
 
       debug("[PreferenceService] Loaded preferences from server");
 
-      if (
-        !settings ||
-        typeof settings !== "object" ||
-        Array.isArray(settings)
-      ) {
-        return {};
-      }
+      const preferences =
+        !settings || typeof settings !== "object" || Array.isArray(settings)
+          ? {}
+          : (settings as UserPreferences);
 
-      return settings as UserPreferences;
+      // Cache the successful result
+      this.preferencesCache = {
+        data: preferences,
+        timestamp: Date.now(),
+        userId,
+      };
+
+      return preferences;
     } catch (err) {
       logError("[PreferenceService] Exception loading preferences:", err);
       return null;
@@ -132,6 +180,12 @@ export class PreferenceService {
             }
 
             debug("[PreferenceService] Saved preferences to server:", merged);
+            // Invalidate cache after successful save
+            this.preferencesCache = {
+              data: merged,
+              timestamp: Date.now(),
+              userId,
+            };
             resolve(true);
             return true;
           } catch (error) {

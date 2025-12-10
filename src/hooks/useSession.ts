@@ -1,11 +1,9 @@
-// @ts-nocheck - Stage 3: Session management refactoring in progress
 /**
  * useSession Hook
  * Central state management for BoxCall Live Sessions
  * Handles practice and game sessions with offline support
  */
 
-// @ts-nocheck
 // TODO: Fix types when integrating Stage 3 (Session Management)
 
 import { useState, useEffect, useCallback, useRef } from "react";

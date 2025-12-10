@@ -147,9 +147,8 @@ describe("LoginPage", () => {
       </MemoryRouter>
     );
 
+    // LoginPage renders ProgressiveAuthFlow directly without PageLayout/Aurora wrappers
     expect(screen.getByTestId("progressive-auth-flow")).toBeInTheDocument();
-    expect(screen.getByTestId("page-layout")).toBeInTheDocument();
-    expect(screen.getByTestId("aurora")).toBeInTheDocument();
   });
 
   it("handles login success and navigates to destination", async () => {

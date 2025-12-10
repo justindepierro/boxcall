@@ -3,7 +3,6 @@
  * UI for conducting live or retroactive practice sessions
  */
 
-// @ts-nocheck
 // TODO: Fix types when integrating Stage 3 (Session Management)
 
 import React, { useState } from "react";

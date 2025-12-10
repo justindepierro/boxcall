@@ -53,11 +53,12 @@ export async function getCurrentUserWithRole(): Promise<{
   if (!user) {
     return null;
   }
+  // Use maybeSingle() to avoid 406 error when profile doesn't exist
   const { data: profileRow } = await supabase
     .from("profiles")
     .select("role, email")
     .eq("id", user.id)
-    .single();
+    .maybeSingle();
   const userWithRole = {
     id: user.id,
     role: (profileRow?.role ?? null) as AppRole | null,

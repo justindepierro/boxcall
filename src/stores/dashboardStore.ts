@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { useAuthStore } from "../app/auth-store";
 
 /**
  * Dashboard Personalization Store
@@ -404,8 +405,9 @@ export const useDashboardStore = create<DashboardState>()(
 
         try {
           const state = get();
-          const userId = baseLayout?.userId || "current-user"; // TODO: Get from auth
-          const userRole = baseLayout?.userRole || "player"; // TODO: Get from auth
+          const authState = useAuthStore.getState();
+          const userId = baseLayout?.userId || authState.user?.id || "current-user";
+          const userRole = baseLayout?.userRole || (authState.profile?.role as UserRole) || "player";
 
           const newLayout: DashboardLayout = baseLayout
             ? {
@@ -607,11 +609,14 @@ export const useDashboardStore = create<DashboardState>()(
         set({ loading: true, error: null });
 
         try {
-          // TODO: Implement actual API call to load layouts
           // For now, create default layout if none exists
+          // Future: Load from Supabase when dashboard_layouts table is created
           const state = get();
+          const authState = useAuthStore.getState();
+          const userRole = (authState.profile?.role as UserRole) || "player";
+          
           if (state.availableLayouts.length === 0) {
-            const defaultLayout = createDefaultLayout(userId, "player"); // TODO: Get role from auth
+            const defaultLayout = createDefaultLayout(userId, userRole);
             set({
               availableLayouts: [defaultLayout],
               currentLayout: defaultLayout,

@@ -4,7 +4,6 @@
  * Supports both practice and game sessions
  */
 
-// @ts-nocheck
 // TODO: Regenerate Supabase types for new tables (practice_sessions, game_sessions, play_executions)
 
 import { supabase } from "../lib/supabase";

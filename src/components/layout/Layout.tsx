@@ -16,7 +16,7 @@ import { Footer } from "./Footer";
 import type { DevMode } from "../../types/dev";
 import { emitTelemetry } from "../../lib/telemetry";
 import { isSuperAdminEmail } from "../../config/superAdmin";
-import { debug, warn, error as logError } from "../../utils/logger";
+import { debug, error as logError } from "../../utils/logger";
 
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 type ExtendedUserRole = UserRole | "super_admin";
@@ -112,7 +112,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           debug("[Layout] Setting active team to:", memberships[0].team_id);
           setActiveTeamId(memberships[0].team_id);
         } else {
-          warn("[Layout] No team memberships found for user");
+          debug("[Layout] No team memberships found for user (expected in dev)");
         }
       } catch (err) {
         logError("[Layout] Exception fetching user teams:", err);

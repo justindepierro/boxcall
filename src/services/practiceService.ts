@@ -1,6 +1,3 @@
-// @ts-nocheck
-// NOTE: TypeScript checking disabled for this file due to Supabase generated types being overly strict.
-// All data is validated before database operations. Re-enable checking when Supabase types are fixed.
 
 import { supabase } from "../lib/supabase";
 import { getCurrentUserId } from "../lib/auth-helpers";

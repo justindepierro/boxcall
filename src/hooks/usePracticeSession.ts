@@ -3,7 +3,6 @@
  * Practice-specific session management extending useSession
  */
 
-// @ts-nocheck
 // TODO: Fix types when integrating Stage 3 (Session Management)
 
 import { useState, useEffect, useCallback } from "react";

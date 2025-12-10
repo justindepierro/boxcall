@@ -34,6 +34,7 @@ export interface QueryOptions<T extends TableName> {
   offset?: number;
   count?: "exact" | "planned" | "estimated";
   single?: boolean;
+  maybeSingle?: boolean;
   abortSignal?: AbortSignal;
 }
 
@@ -134,23 +135,60 @@ export class ApiClient {
 
   /**
    * Get the current access token from localStorage
+   * Checks both Supabase's storage and Zustand's persisted auth store
    */
   private getStoredToken(): string | null {
     try {
-      const stored = localStorage.getItem("boxcall-auth");
-      if (!stored) return null;
+      // First try Supabase's storage (most reliable source)
+      const supabaseAuth = localStorage.getItem("boxcall-auth");
+      console.log("🔌 [ApiClient] Checking boxcall-auth:", supabaseAuth ? "exists" : "missing");
+      if (supabaseAuth) {
+        const parsed = JSON.parse(supabaseAuth);
+        console.log("🔌 [ApiClient] boxcall-auth parsed:", { 
+          hasAccessToken: !!parsed?.access_token,
+          expiresAt: parsed?.expires_at,
+          now: Math.floor(Date.now() / 1000)
+        });
+        const expiresAt = parsed?.expires_at;
+        const now = Math.floor(Date.now() / 1000);
 
-      const parsed = JSON.parse(stored);
-      const expiresAt = parsed?.expires_at;
-      const now = Math.floor(Date.now() / 1000);
-
-      // Check if token is expired (with 60s buffer)
-      if (expiresAt && expiresAt < now + 60) {
-        return null; // Token expired, don't use it
+        // Check if token is not expired (with 60s buffer)
+        if (parsed?.access_token && (!expiresAt || expiresAt >= now + 60)) {
+          console.log("🔌 [ApiClient] Using token from Supabase storage");
+          return parsed.access_token;
+        }
       }
 
-      return parsed?.access_token || null;
-    } catch {
+      // Fallback: try Zustand's persisted auth store
+      const zustandAuth = localStorage.getItem("boxcall-auth-storage");
+      console.log("🔌 [ApiClient] Checking boxcall-auth-storage:", zustandAuth ? "exists" : "missing");
+      if (zustandAuth) {
+        const parsed = JSON.parse(zustandAuth);
+        console.log("🔌 [ApiClient] boxcall-auth-storage full state:", parsed?.state);
+        const session = parsed?.state?.session;
+        console.log("🔌 [ApiClient] boxcall-auth-storage parsed:", {
+          hasSession: !!session,
+          hasAccessToken: !!session?.access_token,
+          expiresAt: session?.expires_at,
+          hasUser: !!parsed?.state?.user,
+          hasProfile: !!parsed?.state?.profile,
+          now: Math.floor(Date.now() / 1000)
+        });
+        if (session?.access_token) {
+          const expiresAt = session.expires_at;
+          const now = Math.floor(Date.now() / 1000);
+          
+          // Check if token is not expired (with 60s buffer)
+          if (!expiresAt || expiresAt >= now + 60) {
+            console.log("🔌 [ApiClient] Using token from Zustand storage");
+            return session.access_token;
+          }
+        }
+      }
+
+      return null;
+    } catch (e) {
+      console.log("🔌 [ApiClient] Error reading stored token:", e);
       return null;
     }
   }
@@ -437,7 +475,9 @@ export class ApiClient {
       headers["Prefer"] = `count=${options.count}`;
     }
 
-    if (options.single) {
+    // Only use object header for strict single() - not maybeSingle()
+    // maybeSingle() should return null instead of 406 when no rows found
+    if (options.single && !options.maybeSingle) {
       headers["Accept"] = "application/vnd.pgrst.object+json";
     }
 
@@ -468,6 +508,12 @@ export class ApiClient {
           // Ignore JSON parse errors, use empty object
         }
 
+        // Handle 406 for maybeSingle - return null instead of error
+        // PostgREST returns 406 when single() is used but 0 rows match
+        if (response.status === 406 && options.maybeSingle) {
+          return { data: null as T, error: null };
+        }
+
         throw {
           message: errorJson.message || `HTTP ${response.status}`,
           status: response.status,
@@ -486,9 +532,18 @@ export class ApiClient {
         }
       }
 
-      const data = options.single
-        ? ((await response.json()) as T)
-        : ((await response.json()) as T);
+      const responseData = await response.json();
+      
+      // Handle maybeSingle - return first element or null from array response
+      let data: T;
+      if (options.maybeSingle) {
+        data = (Array.isArray(responseData) ? responseData[0] ?? null : responseData) as T;
+      } else if (options.single) {
+        // For strict single(), response is already an object
+        data = responseData as T;
+      } else {
+        data = responseData as T;
+      }
 
       return { data, error: null, count };
     } catch (err: any) {
@@ -639,6 +694,17 @@ class QueryBuilder<T extends TableName> {
 
   single(): QueryBuilder<T> {
     this.options.single = true;
+    this.mutateOpts.single = true;
+    return this;
+  }
+
+  /**
+   * Expect at most one row. Returns null (not error) if no rows found.
+   * Unlike single(), this won't throw a 406 error when zero rows match.
+   */
+  maybeSingle(): QueryBuilder<T> {
+    this.options.single = true;
+    this.options.maybeSingle = true;
     this.mutateOpts.single = true;
     return this;
   }

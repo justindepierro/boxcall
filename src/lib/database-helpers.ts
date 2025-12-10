@@ -168,11 +168,12 @@ export async function testDatabaseConnection(): Promise<boolean> {
         throw new Error("No authenticated user found for database test");
       }
 
+      // Use maybeSingle() to avoid 406 when profile doesn't exist yet
       const { error } = await supabase
         .from("profiles")
         .select("id, full_name, email, is_active")
         .eq("id", userId)
-        .single();
+        .maybeSingle();
 
       if (error && error.code !== "PGRST116") {
         throw error;
@@ -257,7 +258,7 @@ export async function getUserProfile(userId: string): Promise<Profile | null> {
         .from("profiles")
         .select("*")
         .eq("id", userId)
-        .single();
+        .maybeSingle();
 
       if (error) {
         throw error;
@@ -412,7 +413,7 @@ export async function getUserProfileByUserId(
     .from("user_profiles")
     .select("*")
     .eq("user_id", userId)
-    .single();
+    .maybeSingle();
   if (error) {
     console.error("Error fetching user profile:", error);
     return null;

@@ -17,6 +17,7 @@ import { NetworkResilience } from "../utils/networkResilience";
 import { testDatabaseConnection } from "../lib/database-helpers";
 import { AuthMonitoring } from "../utils/authMonitoring";
 import { emitTelemetry } from "../lib/telemetry";
+import { PreferenceService } from "../services/preferenceService";
 import {
   auth as logAuth,
   success,
@@ -641,6 +642,8 @@ export const useAuth = create<AuthState>()(
           localStorage.removeItem("boxcall-auth-cache");
           // Clear profile cache on sign out
           profileCache.clear();
+          // Clear preference cache on sign out
+          PreferenceService.clearCache();
           emitTelemetry("auth.signout", { userId });
         } catch (error) {
           // Enhanced error message for sign out failures
@@ -669,6 +672,8 @@ export const useAuth = create<AuthState>()(
           // 🚀 PERFORMANCE: Clear session cache even on error
           localStorage.removeItem("boxcall-auth-cache");
           profileCache.clear();
+          // Clear preference cache even on error
+          PreferenceService.clearCache();
         }
       },
       resetPassword: async (email: string) => {
@@ -812,7 +817,8 @@ export const useAuth = create<AuthState>()(
               headers: {
                 apikey: anonKey,
                 Authorization: `Bearer ${token || anonKey}`,
-                Accept: "application/vnd.pgrst.object+json",
+                // Don't use application/vnd.pgrst.object+json to avoid 406 when no profile exists
+                Accept: "application/json",
               },
               signal: controller.signal,
             }
@@ -820,11 +826,27 @@ export const useAuth = create<AuthState>()(
 
           clearTimeout(timeoutId);
 
+          // Handle 406 (no profile found) gracefully
+          if (response.status === 406) {
+            debug("👤 [fetchUserProfile] No profile found (406), user may need to complete profile setup");
+            set({ profile: null, profileLoading: false });
+            return;
+          }
+
           if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
 
-          const data = await response.json();
+          const responseData = await response.json();
+          // Since we removed the object header, we get an array
+          const data = Array.isArray(responseData) ? responseData[0] : responseData;
+          
+          if (!data) {
+            debug("👤 [fetchUserProfile] No profile found, user may need to complete profile setup");
+            set({ profile: null, profileLoading: false });
+            return;
+          }
+          
           debug("👤 [fetchUserProfile] Got profile:", {
             id: data?.id,
             role: data?.role,
@@ -1244,10 +1266,25 @@ const initializeAuth = async () => {
       });
     } else {
       logAuth("No session found on app start");
+      
+      // Clear any stale user/profile data from persisted state
+      // This prevents showing UI as if logged in when session is actually expired
+      const currentState = useAuth.getState();
+      if (currentState.user || currentState.profile) {
+        warn("Clearing stale user/profile data - no valid session exists");
+        useAuth.setState({ 
+          user: null, 
+          profile: null, 
+          session: null,
+          loading: false 
+        });
+      } else {
+        useAuth.setState({ loading: false });
+      }
+      
       AuthMonitoring.recordEvent("auth_init_success", undefined, {
         hasSession: false,
       });
-      useAuth.setState({ loading: false });
       AuthMonitoring.endPhase("bootstrap", "success", {
         hasSession: false,
       });

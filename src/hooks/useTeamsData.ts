@@ -177,7 +177,9 @@ export function useTeamsData(teamIdOverride?: string | null) {
     if (!teamId) {
       resetScopedState();
       setLoading(false);
-      setError("Select a team to load playbook data");
+      // Don't set an error - this is a valid state when no team is selected yet
+      // The UI should show a team selection prompt instead of an error state
+      setError(null);
       return () => {
         isMounted = false;
         controller.abort();

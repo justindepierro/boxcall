@@ -164,7 +164,7 @@ export async function fetchTeamMembership(
     .select("team_role, status")
     .eq("user_id", userId)
     .eq("team_id", teamId)
-    .single();
+    .maybeSingle();
   if (error || !data) return null;
   return {
     role: data.team_role as TeamMemberRole,
@@ -197,7 +197,7 @@ async function fetchTeamSubscriptionTier(
     .from("teams")
     .select("subscription_tier")
     .eq("id", teamId)
-    .single();
+    .maybeSingle();
   return normalizeSubscriptionTier(data?.subscription_tier);
 }
 
@@ -211,7 +211,7 @@ export async function fetchSuperAdminStatus(
     .from("super_admins")
     .select("admin_level")
     .eq("user_id", userId)
-    .single();
+    .maybeSingle();
   if (error || !data) return false;
   return data.admin_level === "super_admin" || data.admin_level === "admin";
 }

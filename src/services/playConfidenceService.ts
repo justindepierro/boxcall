@@ -1,4 +1,3 @@
-// @ts-nocheck - Type mismatches with Supabase generated types
 /**
  * PlayConfidenceService
  * Phase 11 Intelligence System - AI Confidence Scoring Engine

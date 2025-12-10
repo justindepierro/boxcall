@@ -1,4 +1,3 @@
-// @ts-nocheck - Stage 3 tests need refactoring after type changes
 /**
  * OfflineExecutionQueue Tests
  * Tests offline play logging and sync functionality

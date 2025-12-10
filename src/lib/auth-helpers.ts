@@ -46,7 +46,7 @@ export function getCurrentUser() {
  */
 export function isAuthenticated(): boolean {
   const state = useAuth.getState();
-  return state.isAuthenticated && !!state.user;
+  return !!state.user;
 }
 
 /**

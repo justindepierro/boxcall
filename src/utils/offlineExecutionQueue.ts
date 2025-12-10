@@ -3,7 +3,6 @@
  * Handles localStorage persistence and sync for offline play execution tracking
  */
 
-// @ts-nocheck
 // TODO: Fix types when integrating Stage 3 (Session Management)
 
 import type { CreatePlayExecutionData } from "../types/session";

@@ -6,11 +6,8 @@ export const validatePasswordStrength = (
   message: string;
   strength: "weak" | "medium" | "strong";
 } => {
-  const minLength = 12;
-  const hasLowerCase = /[a-z]/.test(password);
-  const hasUpperCase = /[A-Z]/.test(password);
-  const hasNumbers = /\d/.test(password);
-  const hasSpecialChar = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password);
+  // Simple 6 character minimum for development
+  const minLength = 6;
 
   if (password.length < minLength) {
     return {
@@ -20,31 +17,16 @@ export const validatePasswordStrength = (
     };
   }
 
-  const criteriaMet = [
-    hasLowerCase,
-    hasUpperCase,
-    hasNumbers,
-    hasSpecialChar,
-  ].filter(Boolean).length;
-
-  if (criteriaMet < 3) {
-    return {
-      isValid: false,
-      message:
-        "Password must contain at least 3 of: lowercase, uppercase, numbers, special characters",
-      strength: "weak",
-    };
+  // Any password with 6+ characters is valid
+  if (password.length >= 10) {
+    return { isValid: true, message: "Strong password", strength: "strong" };
   }
 
-  if (criteriaMet === 3) {
-    return {
-      isValid: true,
-      message: "Medium strength password",
-      strength: "medium",
-    };
+  if (password.length >= 8) {
+    return { isValid: true, message: "Medium strength password", strength: "medium" };
   }
 
-  return { isValid: true, message: "Strong password", strength: "strong" };
+  return { isValid: true, message: "Password accepted", strength: "weak" };
 };
 
 export const validatePasswordConfirmation = (

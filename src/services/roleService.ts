@@ -84,7 +84,7 @@ export class RoleService {
       const profileStart = Date.now();
 
       const [profileResult, membershipsResult] = await Promise.all([
-        api("profiles").select("role").eq("id", userId).single(),
+        api("profiles").select("role").eq("id", userId).maybeSingle(),
         api("team_members")
           .select(
             "team_id, team_role, capabilities, role_notes, assigned_at, status"
@@ -93,31 +93,35 @@ export class RoleService {
           .eq("status", "active"),
       ]);
 
-      debug(`RoleService: Queries completed in ${Date.now() - profileStart}ms`);
+      console.log(`🔍 RoleService: Queries completed in ${Date.now() - profileStart}ms`);
+      console.log("🔍 RoleService: profileResult:", profileResult);
+      console.log("🔍 RoleService: membershipsResult:", membershipsResult);
 
       let profile = null;
       if (profileResult.error) {
-        if (import.meta.env.DEV) {
-          warn(
-            "RoleService: Profile query error (common in development):",
-            profileResult.error.message
-          );
-        }
+        console.warn(
+          "🔍 RoleService: Profile query error:",
+          profileResult.error.message
+        );
       } else if (profileResult.data) {
         profile = profileResult.data;
+        console.log("🔍 RoleService: Got profile with role:", profile.role);
+      } else {
+        console.log("🔍 RoleService: No profile found for user:", userId);
       }
 
       let memberships: any[] = [];
       if (membershipsResult.error) {
-        warn(
-          "RoleService: Team memberships query error:",
+        console.warn(
+          "🔍 RoleService: Team memberships query error:",
           membershipsResult.error.message
         );
       } else {
         memberships = membershipsResult.data || [];
+        console.log("🔍 RoleService: Got memberships:", memberships);
       }
 
-      debug("RoleService: Found", memberships?.length ?? 0, "team memberships");
+      console.log("🔍 RoleService: Found", memberships?.length ?? 0, "team memberships for user:", userId);
 
       // If no profile and no memberships, use fallback
       if (!profile && (!memberships || memberships.length === 0)) {
@@ -237,7 +241,7 @@ export class RoleService {
         .eq("user_id", userId)
         .eq("team_id", teamId)
         .eq("status", "active")
-        .single();
+        .maybeSingle();
 
       if (error || !data) {
         return null;
@@ -269,7 +273,7 @@ export class RoleService {
         .eq("user_id", userId)
         .eq("team_id", teamId)
         .eq("status", "active")
-        .single();
+        .maybeSingle();
 
       if (error || !data) {
         return false;
