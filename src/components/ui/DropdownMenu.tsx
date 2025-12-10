@@ -1,85 +1,41 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { Fragment } from "react";
+import { Menu, Transition } from "@headlessui/react";
 
 interface DropdownMenuProps {
   children: React.ReactNode;
 }
 
+/**
+ * DropdownMenu - Action menu using Headless UI Menu
+ * 
+ * For value selection (form inputs), use `Select` or `Dropdown` instead.
+ * This is for action menus (edit, delete, share, etc.)
+ */
 export const DropdownMenu: React.FC<DropdownMenuProps> = ({ children }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      return () =>
-        document.removeEventListener("mousedown", handleClickOutside);
-    }
-  }, [isOpen]);
-
-  // Close dropdown when pressing Escape
-  useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("keydown", handleEscape);
-      return () => document.removeEventListener("keydown", handleEscape);
-    }
-  }, [isOpen]);
-
   return (
-    <div ref={dropdownRef} className="relative inline-block text-left">
-      {React.Children.map(children, (child) => {
-        if (React.isValidElement(child)) {
-          if (child.type === DropdownMenuTrigger) {
-            return React.cloneElement(child, { isOpen, setIsOpen } as any);
-          }
-          if (child.type === DropdownMenuContent) {
-            return React.cloneElement(child, { isOpen, setIsOpen } as any);
-          }
-        }
-        return child;
-      })}
-    </div>
+    <Menu as="div" className="relative inline-block text-left">
+      {children}
+    </Menu>
   );
 };
 
 export const DropdownMenuTrigger = React.forwardRef<
   HTMLButtonElement,
-  React.HTMLAttributes<HTMLButtonElement> & {
+  React.ButtonHTMLAttributes<HTMLButtonElement> & {
     asChild?: boolean;
-    isOpen?: boolean;
-    setIsOpen?: (open: boolean) => void;
   }
->(({ children, asChild, isOpen, setIsOpen, onClick, ...props }, ref) => {
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setIsOpen?.(!isOpen);
-    onClick?.(e);
-  };
-
+>(({ children, asChild, ...props }, ref) => {
   if (asChild && React.isValidElement(children)) {
-    return React.cloneElement(children, {
-      onClick: handleClick,
-      ...props,
-    } as any);
+    return (
+      <Menu.Button as={Fragment}>
+        {React.cloneElement(children, { ref, ...props } as React.Attributes)}
+      </Menu.Button>
+    );
   }
   return (
-    <button ref={ref} onClick={handleClick} {...props}>
+    <Menu.Button ref={ref} {...props}>
       {children}
-    </button>
+    </Menu.Button>
   );
 });
 DropdownMenuTrigger.displayName = "DropdownMenuTrigger";
@@ -88,81 +44,70 @@ interface DropdownMenuContentProps
   extends React.HTMLAttributes<HTMLDivElement> {
   align?: "start" | "end";
   className?: string;
-  isOpen?: boolean;
-  setIsOpen?: (open: boolean) => void;
 }
 
 export const DropdownMenuContent: React.FC<DropdownMenuContentProps> = ({
   children,
   align = "start",
   className = "",
-  isOpen,
-  setIsOpen,
   ...props
 }) => {
-  if (!isOpen) return null;
-
   const alignment = align === "end" ? "right-0" : "left-0";
+  
   return (
-    <div
-      className={`absolute z-50 mt-2 w-56 origin-top ${alignment} rounded-lg bg-primary shadow-lg border border-bg-subtle focus:outline-none ${className}`}
-      role="menu"
-      {...props}
+    <Transition
+      as={Fragment}
+      enter="transition ease-out duration-100"
+      enterFrom="transform opacity-0 scale-95"
+      enterTo="transform opacity-100 scale-100"
+      leave="transition ease-in duration-75"
+      leaveFrom="transform opacity-100 scale-100"
+      leaveTo="transform opacity-0 scale-95"
     >
-      {React.Children.map(children, (child) => {
-        if (React.isValidElement(child) && child.type === DropdownMenuItem) {
-          return React.cloneElement(child, { setIsOpen } as any);
-        }
-        return child;
-      })}
-    </div>
+      <Menu.Items
+        className={`absolute z-50 mt-2 w-56 origin-top ${alignment} rounded-lg bg-surface border border-border shadow-lg focus:outline-none ${className}`}
+        {...props}
+      >
+        <div className="py-1">
+          {children}
+        </div>
+      </Menu.Items>
+    </Transition>
   );
 };
 
 interface DropdownMenuItemProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isActive?: boolean;
-  setIsOpen?: (open: boolean) => void;
   onSelect?: () => void;
 }
 
 export const DropdownMenuItem = React.forwardRef<
   HTMLButtonElement,
   DropdownMenuItemProps
->(
-  (
-    {
-      children,
-      className = "",
-      isActive,
-      setIsOpen,
-      onSelect,
-      onClick,
-      ...props
-    },
-    ref
-  ) => {
-    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-      onSelect?.();
-      setIsOpen?.(false); // Close dropdown after selection
-      onClick?.(e);
-    };
+>(({ children, className = "", isActive, onSelect, onClick, ...props }, ref) => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    onSelect?.();
+    onClick?.(e);
+  };
 
-    return (
-      <button
-        ref={ref}
-        className={`w-full px-3 py-2 text-sm text-left transition-colors ${
-          isActive
-            ? "bg-jade-100 text-jade-700 dark:bg-jade-900/40 dark:text-jade-200"
-            : "text-primary hover:bg-surface-hover dark:hover:bg-surface-hover"
-        } ${className}`}
-        role="menuitem"
-        onClick={handleClick}
-        {...props}
-      >
-        {children}
-      </button>
-    );
-  }
-);
+  return (
+    <Menu.Item>
+      {({ active }) => (
+        <button
+          ref={ref}
+          className={`w-full px-3 py-2 text-sm text-left transition-colors ${
+            active || isActive
+              ? "bg-jade-50 dark:bg-jade-900/20 text-jade-700 dark:text-jade-200"
+              : "text-primary hover:bg-surface-hover dark:hover:bg-surface-hover"
+          } ${className}`}
+          onClick={handleClick}
+          {...props}
+        >
+          {children}
+        </button>
+      )}
+    </Menu.Item>
+  );
+});
 DropdownMenuItem.displayName = "DropdownMenuItem";

@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, Fragment } from "react";
+import { Listbox, Transition } from "@headlessui/react";
 import { Typography } from "../design-system/Typography";
 import { Icon } from "../ui/Icon/Icon";
 
@@ -243,7 +244,7 @@ export const EnhancedInput: React.FC<EnhancedInputProps> = ({
   );
 };
 
-// Enhanced Select component
+// Enhanced Select component using Headless UI Listbox
 interface EnhancedSelectProps {
   label: string;
   value: string;
@@ -263,12 +264,7 @@ export const EnhancedSelect: React.FC<EnhancedSelectProps> = ({
   helperText,
   className = "",
 }) => {
-  const [isFocused, setIsFocused] = useState(false);
-
-  const getBorderColor = () => {
-    if (isFocused) return "focus-ring";
-    return "border dark:border-navy-600";
-  };
+  const selectedOption = options.find((opt) => opt.value === value);
 
   return (
     <div className={`space-y-2 ${className}`}>
@@ -281,33 +277,60 @@ export const EnhancedSelect: React.FC<EnhancedSelectProps> = ({
         {required && <span className="text-error-500 ml-1">*</span>}
       </Typography>
 
-      <div className="relative">
-        <select
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          className={`
-            w-full px-3 py-2.5 rounded-lg transition-all duration-200
-            bg-white dark:bg-navy-800
-            text-primary dark:text-neutral-100
-            focus:outline-none
-            appearance-none
-            ${getBorderColor()}
-          `}
-          required={required}
-        >
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+      <Listbox value={value} onChange={onChange}>
+        <div className="relative">
+          <Listbox.Button
+            className={`
+              w-full px-3 py-2.5 rounded-lg transition-all duration-200
+              bg-white dark:bg-navy-800
+              text-primary dark:text-neutral-100
+              border dark:border-navy-600
+              focus:outline-none focus:ring-2 focus:ring-jade-500/50 focus:border-jade-500
+              text-left cursor-pointer
+            `}
+          >
+            <span className="block truncate">
+              {selectedOption?.label || "Select..."}
+            </span>
+            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+              <Icon name="chevron-down" size="sm" className="text-muted ui-open:rotate-180 transition-transform" />
+            </span>
+          </Listbox.Button>
 
-        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-          <Icon name="chevron-down" size="sm" className="text-muted" />
+          <Transition
+            as={Fragment}
+            leave="transition ease-in duration-100"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <Listbox.Options className="absolute z-50 mt-1 w-full max-h-60 overflow-auto rounded-lg bg-surface border border-border shadow-lg focus:outline-none">
+              {options.map((option) => (
+                <Listbox.Option
+                  key={option.value}
+                  value={option.value}
+                  className={({ active, selected }) =>
+                    `relative cursor-pointer select-none py-2.5 px-3
+                    ${active ? "bg-jade-50 dark:bg-jade-900/20" : ""}
+                    ${selected ? "bg-jade-100 dark:bg-jade-900/30 text-jade-900 dark:text-jade-100" : "text-primary"}
+                    `
+                  }
+                >
+                  {({ selected }) => (
+                    <div className="flex items-center justify-between">
+                      <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>
+                        {option.label}
+                      </span>
+                      {selected && (
+                        <Icon name="check" className="h-5 w-5 text-jade-600 dark:text-jade-400" />
+                      )}
+                    </div>
+                  )}
+                </Listbox.Option>
+              ))}
+            </Listbox.Options>
+          </Transition>
         </div>
-      </div>
+      </Listbox>
 
       {helperText && (
         <Typography
