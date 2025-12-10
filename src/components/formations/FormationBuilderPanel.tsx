@@ -40,7 +40,7 @@ import type {
   StrengthType,
 } from "../../types/formation";
 import type { PersonnelConfiguration } from "../../types/personnel";
-import { Save, ChevronDown, AlertCircle, CheckCircle } from "lucide-react";
+import { Save, AlertCircle, CheckCircle } from "lucide-react";
 import { ToastContext } from "../../contexts/ToastContext";
 import { useIsMobile } from "../../hooks/useBreakpoint";
 

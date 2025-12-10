@@ -46,14 +46,6 @@ export const KeyPositionSelector: React.FC<KeyPositionSelectorProps> = ({
   helperText,
   disabled = false,
 }) => {
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedPosition = e.target.value;
-    if (selectedPosition && !positions.includes(selectedPosition)) {
-      onAdd(selectedPosition);
-      e.target.value = ""; // Reset dropdown
-    }
-  };
-
   const noPersonnel = !personnelId || availablePositions.length === 0;
   const availableToSelect = availablePositions.filter(
     (pos) => !positions.includes(pos)

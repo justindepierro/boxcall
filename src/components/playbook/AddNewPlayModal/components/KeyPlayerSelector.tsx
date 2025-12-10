@@ -64,14 +64,6 @@ export const KeyPlayerSelector: React.FC<KeyPlayerSelectorProps> = ({
     (p) => !selectedPlayerIds.includes(p.id) && p.is_active !== false
   );
 
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedPlayerId = e.target.value;
-    if (selectedPlayerId) {
-      onAdd(selectedPlayerId);
-      e.target.value = ""; // Reset dropdown
-    }
-  };
-
   const formatPlayerName = (player: TeamPlayer) => {
     let name = `${player.first_name} ${player.last_name}`;
     if (player.jersey_number) {
