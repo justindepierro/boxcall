@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { Icon } from "../ui/Icon/Icon";
+import { FormSelect } from "../ui";
 import { FORMATION_OPTIONS, PLAY_TYPE_OPTIONS } from "../../types/play";
 import { QuickFilterPresets } from "./QuickFilterPresets";
 import type { FilterPreset } from "./filterPresets";
@@ -337,25 +338,22 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                         <label className="block text-sm font-medium text-primary mb-2">
                           Field
                         </label>
-                        <select
+                        <FormSelect
                           value={newFilter.field}
-                          onChange={(e) =>
+                          onChange={(value) =>
                             setNewFilter((prev) => ({
                               ...prev,
-                              field: e.target.value,
+                              field: value,
                               operator: "equals",
                               value: "",
                             }))
                           }
-                          className="w-full h-12 px-3 text-sm border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-primary"
-                        >
-                          <option value="">Select field...</option>
-                          {FILTER_FIELDS.map((field) => (
-                            <option key={field.value} value={field.value}>
-                              {field.label}
-                            </option>
-                          ))}
-                        </select>
+                          placeholder="Select field..."
+                          options={FILTER_FIELDS.map((field) => ({
+                            value: field.value,
+                            label: field.label,
+                          }))}
+                        />
                       </div>
 
                       {/* Value Input */}
@@ -365,28 +363,22 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                             Value
                           </label>
                           {selectedField?.type === "select" ? (
-                            <select
+                            <FormSelect
                               value={newFilter.value}
-                              onChange={(e) =>
+                              onChange={(value) =>
                                 setNewFilter((prev) => ({
                                   ...prev,
-                                  value: e.target.value,
+                                  value: value,
                                 }))
                               }
-                              className="w-full h-12 px-3 text-sm border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-primary"
-                            >
-                              <option value="">Select value...</option>
-                              {selectedField.options?.map(
-                                (option: FilterOption, index: number) => (
-                                  <option
-                                    key={`${option.value}-${index}`}
-                                    value={option.value}
-                                  >
-                                    {option.label}
-                                  </option>
-                                )
-                              )}
-                            </select>
+                              placeholder="Select value..."
+                              options={selectedField.options?.map(
+                                (option: FilterOption, index: number) => ({
+                                  value: option.value,
+                                  label: option.label,
+                                })
+                              ) || []}
+                            />
                           ) : (
                             <input
                               type={
@@ -552,25 +544,22 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
               <div className="flex gap-2 items-end">
                 <div className="flex-1 min-w-0">
                   <label className="block text-xs text-muted mb-1">Field</label>
-                  <select
+                  <FormSelect
                     value={newFilter.field}
-                    onChange={(e) =>
+                    onChange={(value) =>
                       setNewFilter((prev) => ({
                         ...prev,
-                        field: e.target.value,
+                        field: value,
                         operator: "equals",
                         value: "",
                       }))
                     }
-                    className="w-full px-2 py-1.5 text-xs border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-primary"
-                  >
-                    <option value="">Select field...</option>
-                    {FILTER_FIELDS.map((field) => (
-                      <option key={field.value} value={field.value}>
-                        {field.label}
-                      </option>
-                    ))}
-                  </select>
+                    placeholder="Select field..."
+                    options={FILTER_FIELDS.map((field) => ({
+                      value: field.value,
+                      label: field.label,
+                    }))}
+                  />
                 </div>
 
                 {newFilter.field && (
@@ -579,28 +568,22 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                       Value
                     </label>
                     {selectedField?.type === "select" ? (
-                      <select
+                      <FormSelect
                         value={newFilter.value}
-                        onChange={(e) =>
+                        onChange={(value) =>
                           setNewFilter((prev) => ({
                             ...prev,
-                            value: e.target.value,
+                            value: value,
                           }))
                         }
-                        className="w-full px-2 py-1.5 text-xs border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info bg-primary"
-                      >
-                        <option value="">Select value...</option>
-                        {selectedField.options?.map(
-                          (option: FilterOption, index: number) => (
-                            <option
-                              key={`${option.value}-${index}`}
-                              value={option.value}
-                            >
-                              {option.label}
-                            </option>
-                          )
-                        )}
-                      </select>
+                        placeholder="Select value..."
+                            options={selectedField.options?.map(
+                          (option: FilterOption) => ({
+                            value: option.value,
+                            label: option.label,
+                          })
+                        ) || []}
+                      />
                     ) : (
                       <input
                         type={

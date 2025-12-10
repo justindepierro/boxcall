@@ -7,6 +7,7 @@ import { Icon } from "../ui/Icon/Icon";
 import { Input } from "../ui/Input";
 import { UserAvatar } from "../ui/UserAvatar";
 import { Tooltip } from "../ui/Tooltip/Tooltip";
+import { FormSelect } from "../ui";
 
 import type { TeamPlayer } from "../../types/team-management";
 
@@ -108,33 +109,31 @@ export const PlayerList: React.FC<PlayerListProps> = ({
           </div>
           {/* Team Level Filter */}
           <div>
-            <select
+            <FormSelect
               value={filterLevel}
-              onChange={(e) => setFilterLevel(e.target.value)}
-              className="w-full px-3 py-2 border border-secondary dark:border-secondary rounded-lg shadow-sm focus:ring-jade-500 focus:border-jade-500 bg-subtle text-primary font-sans"
-            >
-              <option value="all">All Levels</option>
-              {TEAM_LEVELS.map((level) => (
-                <option key={level.value} value={level.value}>
-                  {level.label}
-                </option>
-              ))}
-            </select>
+              onChange={(value) => setFilterLevel(value)}
+              options={[
+                { value: "all", label: "All Levels" },
+                ...TEAM_LEVELS.map((level) => ({
+                  value: level.value,
+                  label: level.label,
+                })),
+              ]}
+            />
           </div>
           {/* Position Filter */}
           <div>
-            <select
+            <FormSelect
               value={filterPosition}
-              onChange={(e) => setFilterPosition(e.target.value)}
-              className="w-full px-3 py-2 border border-secondary dark:border-secondary rounded-lg shadow-sm focus:ring-jade-500 focus:border-jade-500 bg-subtle text-primary font-sans"
-            >
-              <option value="all">All Positions</option>
-              {allPositions.map((position) => (
-                <option key={position} value={position}>
-                  {position}
-                </option>
-              ))}
-            </select>
+              onChange={(value) => setFilterPosition(value)}
+              options={[
+                { value: "all", label: "All Positions" },
+                ...allPositions.map((position) => ({
+                  value: position,
+                  label: position,
+                })),
+              ]}
+            />
           </div>
         </div>
         {/* Results Summary */}

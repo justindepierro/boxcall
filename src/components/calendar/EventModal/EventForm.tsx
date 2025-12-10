@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Input } from "../../ui";
+import { Button, Input, FormSelect } from "../../ui";
 import type { CalendarEvent } from "../../../domain/calendar/types";
 import { Typography } from "@components/design-system/Typography";
 
@@ -51,22 +51,22 @@ export const EventForm: React.FC<EventFormProps> = ({
           >
             Event Type
           </Typography>
-          <select
+          <FormSelect
             value={event.type}
-            onChange={(e) =>
+            onChange={(value) =>
               setEvent({
                 ...event,
-                type: e.target.value as CalendarEvent["type"],
+                type: value as CalendarEvent["type"],
               })
             }
-            className="w-full border border-secondary rounded-lg px-3 py-2"
-          >
-            <option value="practice">Practice</option>
-            <option value="game">Game</option>
-            <option value="meeting">Meeting</option>
-            <option value="film">Film Session</option>
-            <option value="other">Other</option>
-          </select>
+            options={[
+              { value: "practice", label: "Practice" },
+              { value: "game", label: "Game" },
+              { value: "meeting", label: "Meeting" },
+              { value: "film", label: "Film Session" },
+              { value: "other", label: "Other" },
+            ]}
+          />
         </div>
         <Input
           label="Location"

@@ -6,7 +6,7 @@
 import React, { useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { Typography } from "../design-system";
-import { Button } from "../ui";
+import { Button, FormSelect } from "../ui";
 import { Card } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
 import { DownDistanceTracker } from "./DownDistanceTracker";
@@ -370,18 +370,18 @@ const GameSession: React.FC = () => {
                           Result
                         </Typography>
                       </label>
-                      <select
+                      <FormSelect
                         value={result}
-                        onChange={(e) =>
-                          setResult(e.target.value as ExecutionResult)
+                        onChange={(value) =>
+                          setResult(value as ExecutionResult)
                         }
                         disabled={isPaused}
-                        className="w-full px-3 py-2 border border-border rounded-lg bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary"
-                      >
-                        <option value="success">Success</option>
-                        <option value="failure">Failure</option>
-                        <option value="neutral">Neutral</option>
-                      </select>
+                        options={[
+                          { value: "success", label: "Success" },
+                          { value: "failure", label: "Failure" },
+                          { value: "neutral", label: "Neutral" },
+                        ]}
+                      />
                     </div>
 
                     <div>
@@ -468,27 +468,25 @@ const GameSession: React.FC = () => {
                         Opponent Coverage
                       </Typography>
                     </label>
-                    <select
+                    <FormSelect
                       value={opponentCoverage}
-                      onChange={(e) =>
-                        setOpponentCoverage(e.target.value as OpponentCoverage)
+                      onChange={(value) =>
+                        setOpponentCoverage(value as OpponentCoverage)
                       }
                       disabled={isPaused}
-                      className="w-full px-3 py-2 border border-border rounded-lg bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-primary"
-                    >
-                      <option value="Unknown">Unknown</option>
-                      <option value="Cover 0">Cover 0 (Man, 0 deep)</option>
-                      <option value="Cover 1">Cover 1 (Man, 1 deep)</option>
-                      <option value="Cover 2">Cover 2 (2 deep, 5 under)</option>
-                      <option value="Cover 3">Cover 3 (3 deep, 4 under)</option>
-                      <option value="Cover 4">Cover 4 (Quarters)</option>
-                      <option value="Cover 6">
-                        Cover 6 (Quarter-Quarter-Half)
-                      </option>
-                      <option value="Man">Man Coverage</option>
-                      <option value="Zone">Zone Coverage</option>
-                      <option value="Blitz">Blitz</option>
-                    </select>
+                      options={[
+                        { value: "Unknown", label: "Unknown" },
+                        { value: "Cover 0", label: "Cover 0 (Man, 0 deep)" },
+                        { value: "Cover 1", label: "Cover 1 (Man, 1 deep)" },
+                        { value: "Cover 2", label: "Cover 2 (2 deep, 5 under)" },
+                        { value: "Cover 3", label: "Cover 3 (3 deep, 4 under)" },
+                        { value: "Cover 4", label: "Cover 4 (Quarters)" },
+                        { value: "Cover 6", label: "Cover 6 (Quarter-Quarter-Half)" },
+                        { value: "Man", label: "Man Coverage" },
+                        { value: "Zone", label: "Zone Coverage" },
+                        { value: "Blitz", label: "Blitz" },
+                      ]}
+                    />
                     <Typography
                       variant="body-xs"
                       className="text-tertiary mt-1"

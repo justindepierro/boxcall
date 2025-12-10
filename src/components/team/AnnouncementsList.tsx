@@ -20,6 +20,7 @@ import { AnnouncementItem } from "./AnnouncementItem";
 import { AnnouncementListSkeleton } from "../ui/Skeleton/AnnouncementSkeleton";
 import { Hash, X, RefreshCw } from "lucide-react";
 import { logError } from "../../utils/logger";
+import { FormSelect } from "../../components/ui";
 
 interface AnnouncementsListProps {
   teamId: string;
@@ -237,23 +238,24 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
           <label className="text-sm font-medium text-primary">
             Filter by visibility:
           </label>
-          <select
+          <FormSelect
             value={filters.visibility || ""}
-            onChange={(e) =>
+            onChange={(value) =>
               setFilters({
                 ...filters,
                 visibility:
-                  (e.target.value as AnnouncementVisibility) || undefined,
+                  (value as AnnouncementVisibility) || undefined,
               })
             }
-            className="rounded-md bg-primary px-3 py-2 focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">All</option>
-            <option value="all">Everyone</option>
-            <option value="staff_only">Staff Only</option>
-            <option value="players_only">Players Only</option>
-            <option value="families_only">Families Only</option>
-          </select>
+            options={[
+              { value: "", label: "All" },
+              { value: "all", label: "Everyone" },
+              { value: "staff_only", label: "Staff Only" },
+              { value: "players_only", label: "Players Only" },
+              { value: "families_only", label: "Families Only" },
+            ]}
+            className="min-w-36"
+          />
 
           <label className="text-sm font-medium ml-4">Show pinned only:</label>
           <input

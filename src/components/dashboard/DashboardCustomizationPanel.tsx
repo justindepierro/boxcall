@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "../ui";
+import { Button, FormSelect } from "../ui";
 import { Typography } from "../design-system/Typography";
 import { Icon } from "../ui/Icon";
 import { Tooltip } from "../ui/Tooltip/Tooltip";
@@ -327,24 +327,22 @@ export const DashboardCustomizationPanel: React.FC<
           Refresh Rate
         </Typography>
 
-        <select
-          value={personalizationSettings.refreshInterval}
-          onChange={(e) =>
+        <FormSelect
+          value={String(personalizationSettings.refreshInterval)}
+          onChange={(value) =>
             setPersonalizationSettings({
               ...personalizationSettings,
-              refreshInterval: parseInt(e.target.value),
+              refreshInterval: parseInt(value),
             })
           }
-          className="w-full px-sm py-xs bg-surface-app border border-muted rounded-lg 
-                     text-primary focus:outline-none focus:ring-2 focus:ring-interaction-focus 
-                     focus:border-interaction-focus"
           disabled={!personalizationSettings.autoRefresh}
-        >
-          <option value={60}>1 minute</option>
-          <option value={300}>5 minutes</option>
-          <option value={600}>10 minutes</option>
-          <option value={1800}>30 minutes</option>
-        </select>
+          options={[
+            { value: "60", label: "1 minute" },
+            { value: "300", label: "5 minutes" },
+            { value: "600", label: "10 minutes" },
+            { value: "1800", label: "30 minutes" },
+          ]}
+        />
       </div>
     </div>
   );

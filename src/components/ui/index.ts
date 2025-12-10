@@ -54,5 +54,9 @@ export type { SelectionCheckboxProps } from "./SelectionCheckbox";
 export { PhaseLabel } from "./PhaseLabel";
 export type { PhaseLabelProps } from "./PhaseLabel";
 
+// Form Select (Headless UI Listbox-based)
+export { FormSelect } from "./FormSelect/FormSelect";
+export type { FormSelectOption } from "./FormSelect/FormSelect";
+
 // iOS Safari compatible image components
 export { SafariImage, PlayDiagramImage } from "./SafariImage";

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Modal, Button } from "../ui";
+import { Modal, Button, FormSelect } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
 import { Typography } from "../design-system";
 
@@ -160,19 +160,17 @@ export function BulkEditModal({
               >
                 Position
               </label>
-              <select
+              <FormSelect
                 id="bulk-position"
                 value={position}
-                onChange={(e) => setPosition(e.target.value)}
+                onChange={(value) => setPosition(value)}
                 disabled={!applyPosition}
-                className="w-full px-sm py-xs border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-muted disabled:text-muted disabled:cursor-not-allowed"
-              >
-                {positionOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
+                placeholder="Select position..."
+                options={positionOptions.filter(opt => opt.value !== "").map((opt) => ({
+                  value: opt.value,
+                  label: opt.label,
+                }))}
+              />
             </div>
           </div>
 
@@ -191,19 +189,17 @@ export function BulkEditModal({
               >
                 Grade Level
               </label>
-              <select
+              <FormSelect
                 id="bulk-grade"
                 value={gradeLevel}
-                onChange={(e) => setGradeLevel(e.target.value)}
+                onChange={(value) => setGradeLevel(value)}
                 disabled={!applyGradeLevel}
-                className="w-full px-sm py-xs border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-muted disabled:text-muted disabled:cursor-not-allowed"
-              >
-                {gradeLevelOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
+                placeholder="Select grade level..."
+                options={gradeLevelOptions.filter(opt => opt.value !== "").map((opt) => ({
+                  value: opt.value,
+                  label: opt.label,
+                }))}
+              />
             </div>
           </div>
 

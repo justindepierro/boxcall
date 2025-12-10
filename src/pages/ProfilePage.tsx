@@ -3,6 +3,7 @@ import { useAuth, useAuthLoading, useAuthProfile } from "../app/auth-store";
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
 import { Input } from "../components/ui/Input";
+import { FormSelect } from "../components/ui";
 import { Typography } from "../components/design-system/Typography";
 import { supabase } from "../lib/supabase";
 import { LoadingScreen } from "../components/ui/LoadingScreen";
@@ -927,21 +928,21 @@ const ProfilePage: React.FC = () => {
                   >
                     Grade Level
                   </Typography>
-                  <select
+                  <FormSelect
                     value={formData.grade_level}
-                    onChange={(e) =>
-                      handleInputChange("grade_level", e.target.value)
+                    onChange={(value) =>
+                      handleInputChange("grade_level", value)
                     }
-                    className="w-full px-sm py-xs border border-secondary dark:border-text-tertiary rounded-lg shadow-sm focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus dark:bg-text-primary dark:text-inverse font-sans"
-                  >
-                    <option value="">Select grade level</option>
-                    <option value="9th">9th Grade</option>
-                    <option value="10th">10th Grade</option>
-                    <option value="11th">11th Grade</option>
-                    <option value="12th">12th Grade</option>
-                    <option value="college">College</option>
-                    <option value="adult">Adult</option>
-                  </select>
+                    placeholder="Select grade level"
+                    options={[
+                      { value: "9th", label: "9th Grade" },
+                      { value: "10th", label: "10th Grade" },
+                      { value: "11th", label: "11th Grade" },
+                      { value: "12th", label: "12th Grade" },
+                      { value: "college", label: "College" },
+                      { value: "adult", label: "Adult" },
+                    ]}
+                  />
                 </div>
               </div>
             </Card>

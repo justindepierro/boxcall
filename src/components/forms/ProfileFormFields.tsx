@@ -1,5 +1,6 @@
 import { memo } from "react";
 import { Typography } from "../design-system/Typography";
+import { FormSelect } from "../ui";
 import type { ProfileField } from "../../types/profileFields";
 
 export type FormValue = string | number | string[] | boolean | null | undefined;
@@ -56,18 +57,15 @@ export const FormField = memo<FormFieldProps>(
 
         case "select":
           return (
-            <select
+            <FormSelect
               value={String(value || "")}
-              onChange={(e) => onChange(e.target.value)}
-              className={baseInputClasses}
-            >
-              <option value="">Select {field.label}</option>
-              {field.options?.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              onChange={(val) => onChange(val)}
+              placeholder={`Select ${field.label}`}
+              options={field.options?.map((option) => ({
+                value: option.value,
+                label: option.label,
+              })) || []}
+            />
           );
 
         case "multi-select": {

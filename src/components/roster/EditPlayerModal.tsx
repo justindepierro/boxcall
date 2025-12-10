@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button, Input, Modal } from "../ui";
+import { Button, Input, Modal, FormSelect } from "../ui";
 import { useMobileModal } from "../../hooks/useMobileModal";
 import { Typography } from "../design-system";
 import { rosterService } from "../../services";
@@ -284,23 +284,20 @@ export default function EditPlayerModal({
               </div>
             )}
             {/* Position Selector */}
-            <select
+            <FormSelect
               value=""
-              onChange={(e) => {
-                if (e.target.value) {
-                  handlePositionToggle(e.target.value);
+              onChange={(value) => {
+                if (value) {
+                  handlePositionToggle(value);
                 }
               }}
               disabled={saving}
-              className="w-full px-3 py-2 border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-primary dark:bg-secondary"
-            >
-              <option value="">+ Add Position</option>
-              {positionOptions.map((pos) => (
-                <option key={pos} value={pos}>
-                  {pos}
-                </option>
-              ))}
-            </select>
+              placeholder="+ Add Position"
+              options={positionOptions.map((pos) => ({
+                value: pos,
+                label: pos,
+              }))}
+            />
             <p className="text-xs text-secondary mt-1">
               Select multiple positions if player plays more than one
             </p>
@@ -320,21 +317,18 @@ export default function EditPlayerModal({
               <label className="block text-sm font-medium mb-1">
                 Grade Level
               </label>
-              <select
+              <FormSelect
                 value={formData.grade_level}
-                onChange={(e) =>
-                  handleFieldChange("grade_level", e.target.value)
+                onChange={(value) =>
+                  handleFieldChange("grade_level", value)
                 }
                 disabled={saving}
-                className="w-full px-3 py-2 border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-primary dark:bg-secondary"
-              >
-                <option value="">Select Grade</option>
-                {gradeOptions.map((grade) => (
-                  <option key={grade} value={grade}>
-                    {grade}
-                  </option>
-                ))}
-              </select>
+                placeholder="Select Grade"
+                options={gradeOptions.map((grade) => ({
+                  value: grade,
+                  label: grade,
+                }))}
+              />
             </div>
           </div>
         </div>

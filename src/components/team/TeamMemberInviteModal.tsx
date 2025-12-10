@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Icon } from "../../components/ui/Icon/Icon";
 import { Typography } from "../../components/design-system";
 import { Button } from "../../components/ui/Button/Button";
-import { Card } from "../../components/ui";
+import { Card, FormSelect } from "../../components/ui";
 import type { TeamRole } from "../../types/roles";
 import { logError } from "../../utils/logger";
 
@@ -153,22 +153,16 @@ export const TeamMemberInviteModal: React.FC<TeamMemberInviteModalProps> = ({
               <label className="block text-sm font-medium text-secondary mb-1">
                 Role
               </label>
-              <select
+              <FormSelect
                 value={invitationData.role}
-                onChange={(e) =>
+                onChange={(value) =>
                   setInvitationData((prev) => ({
                     ...prev,
-                    role: e.target.value as TeamRole,
+                    role: value as TeamRole,
                   }))
                 }
-                className="w-full px-3 py-2 border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-info"
-              >
-                {getRoleOptions().map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                options={getRoleOptions()}
+              />
             </div>
 
             <div>

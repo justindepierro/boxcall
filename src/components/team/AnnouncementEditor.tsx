@@ -19,6 +19,7 @@ import { getCurrentUserId } from "../../lib/auth-helpers";
 import { X } from "lucide-react";
 import { RichTextEditor } from "./RichTextEditor";
 import { logError } from "../../utils/logger";
+import { FormSelect } from "../../components/ui";
 
 interface AnnouncementEditorProps {
   teamId: string;
@@ -258,20 +259,20 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
               >
                 Who can see this announcement?
               </label>
-              <select
+              <FormSelect
                 id="visibility"
                 value={visibility}
-                onChange={(e) =>
-                  setVisibility(e.target.value as AnnouncementVisibility)
+                onChange={(value) =>
+                  setVisibility(value as AnnouncementVisibility)
                 }
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 disabled={saving}
-              >
-                <option value="all">Everyone</option>
-                <option value="staff_only">Staff Only</option>
-                <option value="players_only">Players Only</option>
-                <option value="families_only">Families Only</option>
-              </select>
+                options={[
+                  { value: "all", label: "Everyone" },
+                  { value: "staff_only", label: "Staff Only" },
+                  { value: "players_only", label: "Players Only" },
+                  { value: "families_only", label: "Families Only" },
+                ]}
+              />
             </div>
 
             {/* Pin checkbox */}

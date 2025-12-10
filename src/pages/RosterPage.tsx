@@ -1,6 +1,6 @@
 import React, { useState, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, Button, Input, Modal } from "../components/ui";
+import { Card, Button, Input, Modal, FormSelect } from "../components/ui";
 import { EmptyState } from "../components/ui/EmptyState";
 import { Skeleton } from "../components/ui/Skeleton";
 import { Breadcrumb } from "../components/ui/Breadcrumb";
@@ -1010,24 +1010,16 @@ const RosterPage = () => {
               />
 
               {/* Status Filter */}
-              <select
+              <FormSelect
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-primary text-sm w-full sm:w-auto sm:min-w-40 cursor-pointer hover:border-primary transition-colors h-11"
-              >
-                <option value="" className="text-secondary">
-                  All Status
-                </option>
-                {statusOptions.map((status) => (
-                  <option
-                    key={status.value}
-                    value={status.value}
-                    className="py-1"
-                  >
-                    {status.label}
-                  </option>
-                ))}
-              </select>
+                onChange={(value) => setStatusFilter(value)}
+                placeholder="All Status"
+                options={statusOptions.map((status) => ({
+                  value: status.value,
+                  label: status.label,
+                }))}
+                className="w-full sm:w-auto sm:min-w-40"
+              />
 
               {/* Clear All Filters Button */}
               {hasActiveFilters && (
@@ -1250,33 +1242,30 @@ const RosterPage = () => {
                     </div>
                   )}
                   {/* Position Selector */}
-                  <select
+                  <FormSelect
                     value=""
-                    onChange={(e) => {
-                      if (e.target.value) {
+                    onChange={(value) => {
+                      if (value) {
                         const currentPositions = playerForm.position
                           ? playerForm.position.split(",").filter(Boolean)
                           : [];
-                        if (!currentPositions.includes(e.target.value)) {
+                        if (!currentPositions.includes(value)) {
                           setPlayerForm((prev) => ({
                             ...prev,
                             position: [
                               ...currentPositions,
-                              e.target.value,
+                              value,
                             ].join(","),
                           }));
                         }
                       }
                     }}
-                    className="w-full px-sm py-xs border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  >
-                    <option value="">+ Add Position</option>
-                    {positionOptions.map((pos) => (
-                      <option key={pos} value={pos}>
-                        {pos}
-                      </option>
-                    ))}
-                  </select>
+                    placeholder="+ Add Position"
+                    options={positionOptions.map((pos) => ({
+                      value: pos,
+                      label: pos,
+                    }))}
+                  />
                   <p className="text-xs text-secondary mt-1">
                     Select multiple positions if player plays more than one
                   </p>
@@ -1299,23 +1288,23 @@ const RosterPage = () => {
                   <label className="block text-sm font-medium mb-1">
                     Grade Level
                   </label>
-                  <select
+                  <FormSelect
                     value={playerForm.grade_level}
-                    onChange={(e) =>
+                    onChange={(value) =>
                       setPlayerForm((prev) => ({
                         ...prev,
-                        grade_level: e.target.value,
+                        grade_level: value,
                       }))
                     }
-                    className="w-full px-3 py-2 border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  >
-                    <option value="">Select Grade</option>
-                    <option value="freshman">Freshman</option>
-                    <option value="sophomore">Sophomore</option>
-                    <option value="junior">Junior</option>
-                    <option value="senior">Senior</option>
-                    <option value="graduate">Graduate</option>
-                  </select>
+                    placeholder="Select Grade"
+                    options={[
+                      { value: "freshman", label: "Freshman" },
+                      { value: "sophomore", label: "Sophomore" },
+                      { value: "junior", label: "Junior" },
+                      { value: "senior", label: "Senior" },
+                      { value: "graduate", label: "Graduate" },
+                    ]}
+                  />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <Input
@@ -1541,30 +1530,27 @@ const RosterPage = () => {
                     </div>
                   )}
                   {/* Position Selector */}
-                  <select
+                  <FormSelect
                     value=""
-                    onChange={(e) => {
-                      if (e.target.value) {
+                    onChange={(value) => {
+                      if (value) {
                         const currentPositions = playerForm.position
                           ? playerForm.position.split(",").filter(Boolean)
                           : [];
-                        if (!currentPositions.includes(e.target.value)) {
+                        if (!currentPositions.includes(value)) {
                           handleFieldChange(
                             "position",
-                            [...currentPositions, e.target.value].join(",")
+                            [...currentPositions, value].join(",")
                           );
                         }
                       }
                     }}
-                    className="w-full px-3 py-2 border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  >
-                    <option value="">+ Add Position</option>
-                    {positionOptions.map((pos) => (
-                      <option key={pos} value={pos}>
-                        {pos}
-                      </option>
-                    ))}
-                  </select>
+                    placeholder="+ Add Position"
+                    options={positionOptions.map((pos) => ({
+                      value: pos,
+                      label: pos,
+                    }))}
+                  />
                   <p className="text-xs text-secondary mt-1">
                     Select multiple positions if player plays more than one
                   </p>
@@ -1587,23 +1573,23 @@ const RosterPage = () => {
                   <label className="block text-sm font-medium mb-1">
                     Grade Level
                   </label>
-                  <select
+                  <FormSelect
                     value={playerForm.grade_level}
-                    onChange={(e) =>
+                    onChange={(value) =>
                       setPlayerForm((prev) => ({
                         ...prev,
-                        grade_level: e.target.value,
+                        grade_level: value,
                       }))
                     }
-                    className="w-full px-3 py-2 border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  >
-                    <option value="">Select Grade</option>
-                    <option value="freshman">Freshman</option>
-                    <option value="sophomore">Sophomore</option>
-                    <option value="junior">Junior</option>
-                    <option value="senior">Senior</option>
-                    <option value="graduate">Graduate</option>
-                  </select>
+                    placeholder="Select Grade"
+                    options={[
+                      { value: "freshman", label: "Freshman" },
+                      { value: "sophomore", label: "Sophomore" },
+                      { value: "junior", label: "Junior" },
+                      { value: "senior", label: "Senior" },
+                      { value: "graduate", label: "Graduate" },
+                    ]}
+                  />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <Input
@@ -1772,18 +1758,15 @@ const RosterPage = () => {
                 >
                   New Status
                 </label>
-                <select
+                <FormSelect
                   id="bulk-status"
                   value={bulkStatusValue}
-                  onChange={(e) => setBulkStatusValue(e.target.value)}
-                  className="w-full px-sm py-xs border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                >
-                  {statusOptions.map((status) => (
-                    <option key={status.value} value={status.value}>
-                      {status.label}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(value) => setBulkStatusValue(value)}
+                  options={statusOptions.map((status) => ({
+                    value: status.value,
+                    label: status.label,
+                  }))}
+                />
               </div>
 
               <div className="flex justify-end gap-sm pt-md">

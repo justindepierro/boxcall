@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Card, Button } from "../ui";
+import { Card, Button, FormSelect } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
 import { Typography } from "../design-system";
 import { rosterService } from "../../services";
@@ -260,28 +260,28 @@ export const RosterQuickAdd: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-2">
-            <select
+            <FormSelect
               value={quickAddData.position}
-              onChange={(e) =>
+              onChange={(value) =>
                 setQuickAddData((prev) => ({
                   ...prev,
-                  position: e.target.value,
+                  position: value,
                 }))
               }
-              className="px-2 py-1 text-sm border border-secondary rounded-lg focus:outline-none focus:ring-1 focus:ring-text-info"
-            >
-              <option value="">Position</option>
-              <option value="QB">QB</option>
-              <option value="RB">RB</option>
-              <option value="WR">WR</option>
-              <option value="TE">TE</option>
-              <option value="OL">OL</option>
-              <option value="DL">DL</option>
-              <option value="LB">LB</option>
-              <option value="DB">DB</option>
-              <option value="K">K</option>
-              <option value="P">P</option>
-            </select>
+              placeholder="Position"
+              options={[
+                { value: "QB", label: "QB" },
+                { value: "RB", label: "RB" },
+                { value: "WR", label: "WR" },
+                { value: "TE", label: "TE" },
+                { value: "OL", label: "OL" },
+                { value: "DL", label: "DL" },
+                { value: "LB", label: "LB" },
+                { value: "DB", label: "DB" },
+                { value: "K", label: "K" },
+                { value: "P", label: "P" },
+              ]}
+            />
             <input
               type="number"
               placeholder="Jersey #"

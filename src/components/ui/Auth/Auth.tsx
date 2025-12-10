@@ -4,6 +4,7 @@ import { Typography } from "../../design-system";
 import { Button } from "../Button";
 import { Form, FormActions, FormField } from "../Form";
 import { Input } from "../Input";
+import { FormSelect } from "../FormSelect/FormSelect";
 import {
   validatePasswordStrength,
   validatePasswordConfirmation,
@@ -379,19 +380,19 @@ export function SignupForm({
         description="Select your primary role in the team"
         required
       >
-        <select
+        <FormSelect
           value={formData.role}
-          onChange={(e) =>
-            handleInputChange("role", e.target.value as SignupData["role"])
+          onChange={(value) =>
+            handleInputChange("role", value as SignupData["role"])
           }
-          className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-600 bg-primary dark:bg-secondary text-primary"
           disabled={loading}
-        >
-          <option value="player">Player</option>
-          <option value="coach">Coach</option>
-          <option value="admin">Team Admin</option>
-          <option value="parent">Parent/Guardian</option>
-        </select>
+          options={[
+            { value: "player", label: "Player" },
+            { value: "coach", label: "Coach" },
+            { value: "admin", label: "Team Admin" },
+            { value: "parent", label: "Parent/Guardian" },
+          ]}
+        />
       </FormField>
       {/* Password Field */}
       <FormField
