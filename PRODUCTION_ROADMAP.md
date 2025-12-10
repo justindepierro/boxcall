@@ -10,7 +10,7 @@
 
 | Metric                     | Current  | Target | Priority    | Status |
 | -------------------------- | -------- | ------ | ----------- | ------ |
-| Bundle Size                | 6.1MB    | <3MB   | 🔴 Critical | ⏳     |
+| Bundle Size                | 6.1MB    | <3MB   | 🟡 High     | ⏳     |
 | Lint Warnings              | 0        | 0      | ✅ Done     | ✅     |
 | @ts-nocheck Files          | 11       | 0      | 🟡 High     | ⏳     |
 | Large Files (>500 LOC)     | 20+      | 0      | 🟡 High     | ⏳     |

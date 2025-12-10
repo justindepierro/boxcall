@@ -56,9 +56,6 @@ export default defineConfig({
     include: [
       // Pre-bundle icon libraries as single chunks
       "lucide-react",
-      "@heroicons/react/24/outline",
-      "@heroicons/react/24/solid",
-      "@heroicons/react/20/solid",
       // Pre-bundle heavy dependencies
       "react",
       "react-dom",
