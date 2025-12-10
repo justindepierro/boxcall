@@ -621,6 +621,78 @@
   --bg-gradient-accent: linear-gradient(135deg, #22c55e 0%, #84cc16 100%);
 
   /* ============================================
+     11.1 BUTTON COMPONENT TOKENS
+     ============================================ */
+
+  /* Button height tokens - Mobile-first (44px minimum for touch targets) */
+  --component-button-height-xs: 32px;
+  --component-button-height-sm: 36px;
+  --component-button-height-md: 40px;
+  --component-button-height-lg: 44px; /* Touch-compliant minimum */
+  --component-button-height-xl: 48px;
+
+  /* Button primary variant */
+  --component-button-primary-bg: var(--color-jade-600);
+  --component-button-primary-bg-hover: var(--color-jade-700);
+  --component-button-primary-bg-active: var(--color-jade-800);
+  --component-button-primary-bg-disabled: var(--color-jade-300);
+  --component-button-primary-text: #ffffff;
+  --component-button-primary-text-disabled: var(--color-jade-100);
+  --component-button-primary-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --component-button-primary-shadow-hover: 0 4px 6px rgba(0, 0, 0, 0.15);
+
+  /* Button secondary variant */
+  --component-button-secondary-bg: var(--color-jade-50);
+  --component-button-secondary-bg-hover: var(--color-jade-100);
+  --component-button-secondary-bg-active: var(--color-jade-200);
+  --component-button-secondary-bg-disabled: var(--color-neutral-100);
+  --component-button-secondary-text: var(--color-jade-700);
+  --component-button-secondary-text-disabled: var(--color-neutral-400);
+  --component-button-secondary-shadow: none;
+
+  /* Button outline variant */
+  --component-button-outline-border: var(--color-jade-500);
+  --component-button-outline-border-hover: var(--color-jade-600);
+  --component-button-outline-text: var(--color-jade-600);
+  --component-button-outline-text-hover: var(--color-jade-700);
+  --component-button-outline-bg-hover: var(--color-jade-50);
+
+  /* Button ghost variant */
+  --component-button-ghost-text: var(--color-text-primary);
+  --component-button-ghost-text-hover: var(--color-jade-600);
+  --component-button-ghost-bg-hover: var(--color-jade-50);
+
+  /* Button link variant */
+  --component-button-link-text: var(--color-jade-600);
+  --component-button-link-text-hover: var(--color-jade-700);
+
+  /* Button danger variant */
+  --component-button-danger-bg: var(--color-error);
+  --component-button-danger-bg-hover: var(--color-error-dark);
+  --component-button-danger-text: #ffffff;
+
+  /* Button success variant */
+  --component-button-success-bg: var(--color-success);
+  --component-button-success-bg-hover: var(--color-success-dark);
+  --component-button-success-text: #ffffff;
+
+  /* Button warning variant */
+  --component-button-warning-bg: var(--color-warning);
+  --component-button-warning-bg-hover: var(--color-warning-dark);
+  --component-button-warning-text: var(--color-navy-900);
+
+  /* Focus ring tokens */
+  --component-focus-ring-width: 2px;
+  --component-focus-ring-color: var(--color-jade-500);
+  --component-focus-ring-offset: 2px;
+
+  /* Card tokens */
+  --component-card-background: var(--color-bg-surface);
+  --component-card-bg-hover: var(--color-bg-secondary);
+  --component-card-border: var(--color-border-primary);
+  --component-card-shadow: var(--shadow-sm);
+
+  /* ============================================
      12. Z-INDEX SCALE
      ============================================ */
 

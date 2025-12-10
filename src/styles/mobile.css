@@ -404,3 +404,113 @@
   transform: scale(0.95);
   transition: transform 0.1s ease-out;
 }
+
+/* ============================================================================
+   MOBILE TOUCH TARGET ENFORCEMENT
+   ============================================================================ */
+
+/* On mobile devices, enforce 44px minimum touch targets for all button sizes */
+@media (max-width: 768px) and (pointer: coarse) {
+  /* Override button heights on touch devices for accessibility */
+  :root {
+    --component-button-height-xs: 44px;
+    --component-button-height-sm: 44px;
+    --component-button-height-md: 44px;
+  }
+
+  /* Ensure all buttons have minimum touch area */
+  .btn-xs,
+  .btn-sm,
+  .btn-md,
+  button,
+  [role="button"],
+  a.btn,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    min-height: 44px;
+  }
+
+  /* Icon-only buttons need width too */
+  button:has(> svg:only-child),
+  [role="button"]:has(> svg:only-child) {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Checkbox and radio inputs */
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-width: 20px;
+    min-height: 20px;
+  }
+
+  /* Checkbox/radio container touch targets */
+  label:has(input[type="checkbox"]),
+  label:has(input[type="radio"]) {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  /* Select dropdowns */
+  select {
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+
+  /* Input fields */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="number"],
+  textarea {
+    min-height: 44px;
+    font-size: 16px; /* Prevent iOS zoom */
+  }
+
+  /* List items that are interactive */
+  li[role="option"],
+  li[role="menuitem"],
+  [role="listitem"][tabindex] {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Navigation links */
+  nav a,
+  .nav-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* Tab buttons */
+  [role="tab"] {
+    min-height: 44px;
+  }
+
+  /* Dropdown menu items */
+  [role="menuitem"] {
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+}
+
+/* Utility class to force touch-compliant sizing */
+.touch-compliant {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* Utility class to add touch padding around small elements */
+.touch-padding {
+  padding: 12px;
+  margin: -12px;
+}
