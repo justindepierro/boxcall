@@ -293,10 +293,17 @@ const GameSession: React.FC = () => {
                   onClick={() => navigate("/boxcall")}
                   className="w-10 h-10 rounded-xl bg-white/80 backdrop-blur-sm border border-slate-200 flex items-center justify-center hover:bg-white transition-colors shadow-sm"
                 >
-                  <Icon name="arrow-left" size="sm" className="text-slate-600" />
+                  <Icon
+                    name="arrow-left"
+                    size="sm"
+                    className="text-slate-600"
+                  />
                 </button>
                 <div>
-                  <Typography variant="headline-lg" className="text-slate-800 font-bold">
+                  <Typography
+                    variant="headline-lg"
+                    className="text-slate-800 font-bold"
+                  >
                     {gamePlan.name}
                   </Typography>
                   <div className="flex items-center gap-2 mt-1">
@@ -309,12 +316,14 @@ const GameSession: React.FC = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-2">
                 {hasPendingSync && (
                   <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-50 border border-amber-200 text-amber-700">
                     <Icon name="cloud-off" size="sm" />
-                    <Typography variant="body-xs" className="font-medium">Syncing...</Typography>
+                    <Typography variant="body-xs" className="font-medium">
+                      Syncing...
+                    </Typography>
                   </div>
                 )}
                 {isPaused ? (
@@ -403,7 +412,11 @@ const GameSession: React.FC = () => {
                 <div className="rounded-3xl bg-white border border-emerald-100 p-6 shadow-xl shadow-emerald-500/10">
                   <h3 className="text-primary font-bold text-lg mb-4 flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-md shadow-amber-500/25">
-                      <Icon name="clipboard-check" size="sm" className="text-white" />
+                      <Icon
+                        name="clipboard-check"
+                        size="sm"
+                        className="text-white"
+                      />
                     </div>
                     Log Play Result
                   </h3>
@@ -635,9 +648,10 @@ const GameSession: React.FC = () => {
                       disabled={isPaused || !yardsGained}
                       className={`
                         w-full py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 transition-all
-                        ${isPaused || !yardsGained
-                          ? "bg-slate-100 text-slate-400 cursor-not-allowed"
-                          : "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-xl shadow-emerald-500/30 hover:shadow-2xl hover:shadow-emerald-500/40 active:scale-[0.98]"
+                        ${
+                          isPaused || !yardsGained
+                            ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+                            : "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-xl shadow-emerald-500/30 hover:shadow-2xl hover:shadow-emerald-500/40 active:scale-[0.98]"
                         }
                       `}
                     >
@@ -661,20 +675,36 @@ const GameSession: React.FC = () => {
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl p-4 text-center border border-slate-200">
-                    <div className="text-3xl font-black text-slate-700">{currentDrive.plays}</div>
-                    <div className="text-xs font-medium text-slate-500 uppercase tracking-wide mt-1">Plays</div>
+                    <div className="text-3xl font-black text-slate-700">
+                      {currentDrive.plays}
+                    </div>
+                    <div className="text-xs font-medium text-slate-500 uppercase tracking-wide mt-1">
+                      Plays
+                    </div>
                   </div>
                   <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-4 text-center border border-blue-200">
-                    <div className="text-3xl font-black text-blue-600">{currentDrive.yards}</div>
-                    <div className="text-xs font-medium text-blue-500 uppercase tracking-wide mt-1">Yards</div>
+                    <div className="text-3xl font-black text-blue-600">
+                      {currentDrive.yards}
+                    </div>
+                    <div className="text-xs font-medium text-blue-500 uppercase tracking-wide mt-1">
+                      Yards
+                    </div>
                   </div>
                   <div className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl p-4 text-center border border-emerald-200">
-                    <div className="text-3xl font-black text-emerald-600">{currentDrive.touchdowns}</div>
-                    <div className="text-xs font-medium text-emerald-500 uppercase tracking-wide mt-1">TDs</div>
+                    <div className="text-3xl font-black text-emerald-600">
+                      {currentDrive.touchdowns}
+                    </div>
+                    <div className="text-xs font-medium text-emerald-500 uppercase tracking-wide mt-1">
+                      TDs
+                    </div>
                   </div>
                   <div className="bg-gradient-to-br from-rose-50 to-red-50 rounded-2xl p-4 text-center border border-rose-200">
-                    <div className="text-3xl font-black text-rose-600">{currentDrive.turnovers}</div>
-                    <div className="text-xs font-medium text-rose-500 uppercase tracking-wide mt-1">Turnovers</div>
+                    <div className="text-3xl font-black text-rose-600">
+                      {currentDrive.turnovers}
+                    </div>
+                    <div className="text-xs font-medium text-rose-500 uppercase tracking-wide mt-1">
+                      Turnovers
+                    </div>
                   </div>
                 </div>
               </div>
@@ -687,17 +717,19 @@ const GameSession: React.FC = () => {
                   </div>
                   Game Stats
                 </h3>
-                
+
                 {/* Success Rate - Large Display */}
                 <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-5 mb-4 border border-emerald-200">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-emerald-700">Success Rate</span>
+                    <span className="text-sm font-medium text-emerald-700">
+                      Success Rate
+                    </span>
                     <span className="text-3xl font-black text-emerald-600">
                       {session?.successRate?.toFixed(0) || 0}%
                     </span>
                   </div>
                   <div className="mt-2 h-2 bg-emerald-100 rounded-full overflow-hidden">
-                    <div 
+                    <div
                       className="h-full bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full transition-all duration-500"
                       style={{ width: `${session?.successRate || 0}%` }}
                     />
@@ -708,19 +740,27 @@ const GameSession: React.FC = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between py-2 border-b border-slate-100">
                     <span className="text-sm text-slate-600">Total Plays</span>
-                    <span className="font-bold text-slate-800">{session?.totalPlays || 0}</span>
+                    <span className="font-bold text-slate-800">
+                      {session?.totalPlays || 0}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between py-2 border-b border-slate-100">
                     <span className="text-sm text-slate-600">Total Yards</span>
-                    <span className="font-bold text-blue-600">{session?.totalYards || 0}</span>
+                    <span className="font-bold text-blue-600">
+                      {session?.totalYards || 0}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between py-2 border-b border-slate-100">
                     <span className="text-sm text-slate-600">Touchdowns</span>
-                    <span className="font-bold text-emerald-600">{session?.totalTouchdowns || 0}</span>
+                    <span className="font-bold text-emerald-600">
+                      {session?.totalTouchdowns || 0}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between py-2">
                     <span className="text-sm text-slate-600">Turnovers</span>
-                    <span className="font-bold text-rose-600">{session?.totalTurnovers || 0}</span>
+                    <span className="font-bold text-rose-600">
+                      {session?.totalTurnovers || 0}
+                    </span>
                   </div>
                 </div>
               </div>

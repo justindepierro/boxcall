@@ -146,28 +146,24 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
             const getResultStyle = () => {
               if (!hasResult) {
                 if (isCurrent) {
-                  return "bg-gradient-to-br from-jade-500 to-emerald-600 text-white ring-4 ring-jade-400/30 shadow-lg shadow-jade-500/30 scale-110";
+                  // Current rep without result: white background (blue border via rep-current class)
+                  return "bg-white text-slate-700 font-bold";
                 }
                 return "bg-slate-100 text-slate-400 hover:bg-slate-200 hover:text-slate-600";
               }
 
+              // Has a result - show the result color
+              const currentScale = isCurrent ? "" : "hover:scale-105"; // rep-current handles scale
+
               switch (historyEntry.result) {
                 case "success":
-                  return isCurrent
-                    ? "bg-gradient-to-br from-emerald-500 to-green-600 text-white ring-4 ring-emerald-400/30 shadow-lg scale-110"
-                    : "bg-gradient-to-br from-emerald-400 to-green-500 text-white shadow-emerald-500/30 hover:scale-105";
+                  return `bg-gradient-to-br from-emerald-500 to-green-600 text-white ${currentScale}`;
                 case "failure":
-                  return isCurrent
-                    ? "bg-gradient-to-br from-red-500 to-rose-600 text-white ring-4 ring-red-400/30 shadow-lg scale-110"
-                    : "bg-gradient-to-br from-red-400 to-rose-500 text-white shadow-red-500/30 hover:scale-105";
+                  return `bg-gradient-to-br from-red-500 to-rose-600 text-white ${currentScale}`;
                 case "neutral":
-                  return isCurrent
-                    ? "bg-gradient-to-br from-slate-400 to-slate-500 text-white ring-4 ring-slate-400/30 shadow-lg scale-110"
-                    : "bg-gradient-to-br from-slate-300 to-slate-400 text-white hover:scale-105";
+                  return `bg-gradient-to-br from-slate-400 to-slate-500 text-white ${currentScale}`;
                 case "skipped":
-                  return isCurrent
-                    ? "bg-gradient-to-br from-amber-400 to-orange-500 text-white ring-4 ring-amber-400/30 shadow-lg scale-110"
-                    : "bg-gradient-to-br from-amber-300 to-orange-400 text-white hover:scale-105";
+                  return `bg-gradient-to-br from-amber-400 to-orange-500 text-white ${currentScale}`;
                 default:
                   return "bg-slate-100 text-slate-400";
               }
@@ -203,6 +199,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
                   w-11 h-11 rounded-2xl flex items-center justify-center
                   font-bold text-sm transition-all duration-300 shadow-sm
                   ${getResultStyle()}
+                  ${isCurrent ? "rep-current" : ""}
                   ${disabled ? "opacity-50 cursor-not-allowed" : onGoToRep ? "cursor-pointer" : "cursor-default"}
                 `}
                 aria-label={`Rep ${repNumber}${hasResult ? ` - ${historyEntry.result}` : ""}`}
@@ -216,6 +213,10 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
 
         {/* Legend for rep colors */}
         <div className="flex flex-wrap gap-3 mt-3 text-xs text-slate-500">
+          <span className="flex items-center gap-1">
+            <span className="w-3 h-3 rounded bg-white border-2 border-blue-500"></span>
+            Current
+          </span>
           <span className="flex items-center gap-1">
             <span className="w-3 h-3 rounded bg-gradient-to-br from-emerald-400 to-green-500"></span>
             Success

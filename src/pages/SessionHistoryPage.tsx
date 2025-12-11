@@ -190,7 +190,9 @@ const SessionHistoryPage: React.FC = () => {
     } else {
       // TODO: Navigate to session detail page when implemented
       // For now, just show a toast that replay isn't available
-      console.log(`Session ${session.id} has no linked ${session.type === "practice" ? "script" : "plan"}`);
+      console.log(
+        `Session ${session.id} has no linked ${session.type === "practice" ? "script" : "plan"}`
+      );
     }
   };
 
@@ -216,7 +218,10 @@ const SessionHistoryPage: React.FC = () => {
               <Icon name="arrow-left" className="h-5 w-5 text-slate-600" />
             </button>
             <div>
-              <Typography variant="headline-xl" className="text-slate-800 font-bold">
+              <Typography
+                variant="headline-xl"
+                className="text-slate-800 font-bold"
+              >
                 Session History
               </Typography>
               <Typography variant="body-md" color="muted">
@@ -282,8 +287,8 @@ const SessionHistoryPage: React.FC = () => {
               <div
                 key={session.id}
                 className={`rounded-2xl bg-white border-2 p-4 sm:p-5 cursor-pointer hover:shadow-lg transition-all group ${
-                  session.isArchived 
-                    ? "opacity-60 border-slate-200" 
+                  session.isArchived
+                    ? "opacity-60 border-slate-200"
                     : session.type === "practice"
                       ? "border-orange-200 hover:border-orange-300 shadow-md shadow-orange-500/5"
                       : "border-emerald-200 hover:border-emerald-300 shadow-md shadow-emerald-500/5"
@@ -336,13 +341,15 @@ const SessionHistoryPage: React.FC = () => {
 
                   {/* Stats - Premium */}
                   <div className="text-right flex-shrink-0">
-                    <div className={`text-2xl font-black ${
-                      session.stats.successRate >= 70 
-                        ? "text-emerald-500" 
-                        : session.stats.successRate >= 50 
-                          ? "text-amber-500" 
-                          : "text-rose-500"
-                    }`}>
+                    <div
+                      className={`text-2xl font-black ${
+                        session.stats.successRate >= 70
+                          ? "text-emerald-500"
+                          : session.stats.successRate >= 50
+                            ? "text-amber-500"
+                            : "text-rose-500"
+                      }`}
+                    >
                       {session.stats.successRate}%
                     </div>
                     <Typography variant="body-xs" color="muted">
@@ -370,7 +377,10 @@ const SessionHistoryPage: React.FC = () => {
         {/* Summary Stats - Premium */}
         {filteredSessions.length > 0 && (
           <div className="mt-6 rounded-3xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-6 shadow-xl shadow-indigo-500/25">
-            <Typography variant="body-sm" className="text-white/80 mb-4 font-medium">
+            <Typography
+              variant="body-sm"
+              className="text-white/80 mb-4 font-medium"
+            >
               📊 Performance Summary
             </Typography>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
