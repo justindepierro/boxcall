@@ -15,6 +15,8 @@ import { MentionsService } from "../../services/mentionsService";
 import { ReactionButton } from "./ReactionButton";
 import { MentionsInput } from "./MentionsInput";
 import { logError } from "../../utils/logger";
+import { useToast } from "../../hooks/useToast";
+import { ConfirmationModal } from "../ui/ConfirmationModal/ConfirmationModal";
 import type {
   CommentSectionProps,
   Comment,
@@ -44,6 +46,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
   const [editContent, setEditContent] = useState(comment.content);
   const [showMenu, setShowMenu] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const toast = useToast();
 
   const handleEdit = async () => {
     if (!editContent.trim()) return;
@@ -64,13 +68,19 @@ const CommentItem: React.FC<CommentItemProps> = ({
   };
 
   const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this comment?")) return;
+    setShowDeleteConfirm(true);
+  };
 
+  const confirmDelete = async () => {
     try {
       await socialService.deleteComment(comment.id);
+      toast.success("Comment deleted");
       window.location.reload(); // Temporary - should use proper state management
     } catch (error) {
       logError("Failed to delete comment:", error);
+      toast.error("Failed to delete comment");
+    } finally {
+      setShowDeleteConfirm(false);
     }
   };
 
@@ -225,6 +235,18 @@ const CommentItem: React.FC<CommentItemProps> = ({
           )}
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Delete Comment"
+        message="Are you sure you want to delete this comment?"
+        variant="danger"
+        confirmText="Delete"
+        cancelText="Cancel"
+      />
     </div>
   );
 };

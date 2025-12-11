@@ -9,7 +9,9 @@ import { Badge } from "../components/ui/Badge";
 import type { BadgeVariant } from "../components/ui/Badge/Badge";
 import { Icon } from "../components/ui/Icon";
 import { Modal } from "../components/ui/Modal";
+import { ConfirmationModal } from "../components/ui/ConfirmationModal";
 import { LoadingScreen } from "../components/ui/LoadingScreen";
+import { useToast } from "../hooks/useToast";
 import { logError } from "../utils/logger";
 
 interface AchievementFormData {
@@ -71,6 +73,7 @@ const triggerTargetOptions = [
 ];
 
 export const AchievementAdminPage: React.FC = () => {
+  const toast = useToast();
   const [achievements, setAchievements] = useState<AchievementDefinition[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -79,6 +82,8 @@ export const AchievementAdminPage: React.FC = () => {
   const [formData, setFormData] =
     useState<AchievementFormData>(defaultFormData);
   const [saving, setSaving] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
     loadAchievements();
@@ -149,19 +154,29 @@ export const AchievementAdminPage: React.FC = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this achievement?")) return;
+    setDeleteId(id);
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteId) return;
 
     try {
       const { error } = await supabase
         .from("achievement_definitions")
         .delete()
-        .eq("id", id);
+        .eq("id", deleteId);
 
       if (error) throw error;
 
-      setAchievements((prev) => prev.filter((a) => a.id !== id));
+      setAchievements((prev) => prev.filter((a) => a.id !== deleteId));
+      toast.success("Achievement deleted successfully");
     } catch (error) {
       logError("Error deleting achievement:", error);
+      toast.error("Failed to delete achievement. Please try again.");
+    } finally {
+      setShowDeleteConfirm(false);
+      setDeleteId(null);
     }
   };
 
@@ -209,7 +224,7 @@ export const AchievementAdminPage: React.FC = () => {
         // Parse JSON
         data = JSON.parse(text);
       } else {
-        alert("Please upload a CSV or JSON file");
+        toast.error("Please upload a CSV or JSON file");
         return;
       }
 
@@ -222,10 +237,14 @@ export const AchievementAdminPage: React.FC = () => {
       if (error) throw error;
 
       setAchievements((prev) => [...prev, ...(inserted || [])]);
-      alert(`Successfully uploaded ${inserted?.length || 0} achievements`);
+      toast.success(
+        `Successfully uploaded ${inserted?.length || 0} achievements`
+      );
     } catch (error) {
       logError("Error uploading achievements:", error);
-      alert("Error uploading achievements. Please check the file format.");
+      toast.error(
+        "Error uploading achievements. Please check the file format."
+      );
     }
   };
 
@@ -474,6 +493,20 @@ export const AchievementAdminPage: React.FC = () => {
           </div>
         </div>
       </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => {
+          setShowDeleteConfirm(false);
+          setDeleteId(null);
+        }}
+        onConfirm={confirmDelete}
+        title="Delete Achievement"
+        message="Are you sure you want to delete this achievement? This action cannot be undone."
+        confirmLabel="Delete"
+        variant="danger"
+      />
     </div>
   );
 };

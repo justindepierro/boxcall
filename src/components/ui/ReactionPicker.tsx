@@ -137,7 +137,7 @@ export const ReactionPicker: React.FC<ReactionPickerProps> = ({
                 ${
                   user_has_reacted
                     ? "bg-blue-100 text-blue-700 border-2 border-blue-500 hover:bg-blue-200"
-                    : "bg-secondary text-secondary border hover:bg-muted hover:border-gray-300"
+                    : "bg-secondary text-secondary border hover:bg-muted hover:border-secondary"
                 }
               `}
             >

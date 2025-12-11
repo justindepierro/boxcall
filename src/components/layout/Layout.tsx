@@ -59,11 +59,22 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   // Set active team to user's first team if not already set
   useEffect(() => {
-    if (!profile?.id) return;
-    if (activeTeamId) return;
+    console.log("🏈 [Layout] Team sync effect:", {
+      profileId: profile?.id,
+      activeTeamId,
+    });
+    if (!profile?.id) {
+      console.log("🏈 [Layout] No profile ID, skipping team sync");
+      return;
+    }
+    if (activeTeamId) {
+      console.log("🏈 [Layout] Already have activeTeamId:", activeTeamId);
+      return;
+    }
 
     // Fetch user's teams and set the first one as active
     const fetchUserTeams = async () => {
+      console.log("🏈 [Layout] Fetching teams for user:", profile.id);
       debug("[Layout] Fetching teams for user:", profile.id);
 
       // WORKAROUND: Supabase client queries hang in browser
@@ -78,40 +89,62 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         if (storedAuth) {
           try {
             const parsed = JSON.parse(storedAuth);
+            console.log(
+              "🏈 [Layout] Found stored auth, has access_token:",
+              !!parsed?.access_token
+            );
             if (parsed?.access_token) {
               accessToken = parsed.access_token;
             }
           } catch {
             // Use anon key
           }
+        } else {
+          console.log("🏈 [Layout] No stored auth found in localStorage");
         }
 
-        const response = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/team_members?user_id=eq.${profile.id}&status=eq.active&select=team_id&limit=1`,
-          {
-            headers: {
-              apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const url = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/team_members?user_id=eq.${profile.id}&status=eq.active&select=team_id&limit=1`;
+        console.log("🏈 [Layout] Fetching:", url);
+
+        const response = await fetch(url, {
+          headers: {
+            apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        });
 
         const elapsed = Date.now() - startTime;
+        console.log(
+          `🏈 [Layout] Fetch took ${elapsed}ms, status: ${response.status}`
+        );
         debug(`[Layout] Fetch took ${elapsed}ms, status: ${response.status}`);
 
         if (!response.ok) {
           const errorText = await response.text();
+          console.error(
+            "🏈 [Layout] Fetch failed:",
+            response.status,
+            errorText
+          );
           logError("[Layout] Fetch failed:", response.status, errorText);
           return;
         }
 
         const memberships = await response.json();
+        console.log("🏈 [Layout] Memberships response:", memberships);
 
         if (memberships && memberships.length > 0) {
+          console.log(
+            "🏈 [Layout] Setting active team to:",
+            memberships[0].team_id
+          );
           debug("[Layout] Setting active team to:", memberships[0].team_id);
           setActiveTeamId(memberships[0].team_id);
         } else {
+          console.warn(
+            "🏈 [Layout] No team memberships found for user - USER IS NOT IN team_members TABLE"
+          );
           debug(
             "[Layout] No team memberships found for user (expected in dev)"
           );

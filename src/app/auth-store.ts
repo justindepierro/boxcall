@@ -1,146 +1,36 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-
-import { supabase } from "../lib/supabase";
-
-import type { Database } from "../types/database";
-import type { Session, User } from "@supabase/supabase-js";
-// User profile type from our database (main profiles table with role)
-type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
-import {
-  checkRateLimit,
-  recordFailedAuth,
-  resetRateLimit,
-  RequestSecurity,
-} from "../utils/authRateLimit";
-import { NetworkResilience } from "../utils/networkResilience";
-import { testDatabaseConnection } from "../lib/database-helpers";
-import { AuthMonitoring } from "../utils/authMonitoring";
-import { emitTelemetry } from "../lib/telemetry";
-import { PreferenceService } from "../services/preferenceService";
-import {
-  auth as logAuth,
-  success,
-  error as logError,
-  warn,
-  info,
-  debug,
-} from "../utils/logger";
-import {
-  PROFILE_CACHE_TTL,
-  MAX_REFRESH_ATTEMPTS,
-  REFRESH_RETRY_DELAY,
-  SESSION_CHECK_INTERVAL,
-  SESSION_REFRESH_THRESHOLD,
-  MS_PER_SECOND,
-  NETWORK_MAX_RETRIES,
-  NETWORK_BASE_DELAY,
-  NETWORK_MAX_DELAY,
-} from "../utils/authConstants";
-
-// Profile cache to prevent redundant database calls
-interface ProfileCache {
-  data: UserProfile;
-  timestamp: number;
-  ttl: number;
-}
-
-let profileCache: Map<string, ProfileCache> = new Map();
-
 /**
- * Convert Supabase auth errors to user-friendly, actionable messages
+ * BoxCall Auth Store - SIMPLIFIED VERSION
  *
- * Provides context-aware error messages with clear next steps for users
+ * This replaces the 1,310-line monster with a clean, maintainable ~200 line implementation
+ * that follows Supabase best practices.
  *
- * @param error - The error object from Supabase auth operations
- * @returns A user-friendly error message with actionable guidance
+ * Key principles:
+ * 1. Let Supabase manage sessions internally (don't manually cache)
+ * 2. Use onAuthStateChange as single source of truth
+ * 3. Minimal state - only what's needed for UI
+ * 4. No complex caching layers or race conditions
+ *
+ * @see https://supabase.com/docs/guides/auth/quickstarts/react
  */
-function getAuthErrorMessage(error: any): string {
-  if (!error) {
-    return "An unexpected error occurred. Please refresh the page and try again.";
-  }
 
-  const message = error.message?.toLowerCase() || "";
-  const status = error.status;
+import { create } from "zustand";
+import { supabase } from "../lib/supabase";
+import type { Session, User } from "@supabase/supabase-js";
+import type { Database } from "../types/database";
 
-  // Invalid credentials - most common auth error
-  if (message.includes("invalid login credentials")) {
-    return "Invalid email or password. Please double-check your credentials and try again. Forgot your password? Use the reset link below.";
-  }
-
-  // Email not confirmed - user needs to take action
-  if (message.includes("email not confirmed")) {
-    return "Email not verified yet. Please check your inbox for the confirmation email. Can't find it? Check your spam folder or request a new confirmation email.";
-  }
-
-  // Rate limiting - time-based lockout
-  if (message.includes("too many requests") || status === 429) {
-    return "Too many login attempts detected. For security, please wait 5-10 minutes before trying again. This helps protect your account from unauthorized access.";
-  }
-
-  // User not found - might be typo or wrong account
-  if (message.includes("user not found")) {
-    return "No account found with this email address. Please check the email for typos, or create a new account if you haven't registered yet.";
-  }
-
-  // Weak password - needs stronger password
-  if (message.includes("weak password")) {
-    return "Password is too weak. Please choose a stronger password with at least 8 characters, including uppercase, lowercase, numbers, and symbols.";
-  }
-
-  // Signup disabled - system-level restriction
-  if (message.includes("signup disabled")) {
-    return "New registrations are temporarily disabled. Please contact support if you need access, or try again later.";
-  }
-
-  // Invalid email format
-  if (message.includes("email address is invalid")) {
-    return "The email address format is invalid. Please enter a valid email like: user@example.com";
-  }
-
-  // Password length requirement
-  if (message.includes("password should be at least")) {
-    return "Password must be at least 6 characters long. For better security, we recommend using 8+ characters with a mix of letters, numbers, and symbols.";
-  }
-
-  // Network errors - connectivity issues
-  if (
-    message.includes("network") ||
-    message.includes("fetch") ||
-    message.includes("timeout")
-  ) {
-    return "Network connection issue detected. Please check your internet connection and try again. If the problem persists, try refreshing the page.";
-  }
-
-  // Session expired - user needs to re-authenticate
-  if (
-    message.includes("session") &&
-    (message.includes("expired") || message.includes("invalid"))
-  ) {
-    return "Your session has expired for security reasons. Please sign in again to continue.";
-  }
-
-  // Fallback with original message for debugging
-  const originalMessage = error.message || "Authentication failed";
-  return `${originalMessage}. If this problem continues, please contact support with error code: ${status || "UNKNOWN"}`;
-}
+// Types
+type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
 
 interface AuthState {
-  // Authentication state
+  // Core state
   user: User | null;
   session: Session | null;
   profile: UserProfile | null;
   loading: boolean;
   profileLoading: boolean;
   error: string | null;
-  // Authentication actions
-  setUser: (user: User | null) => void;
-  setSession: (session: Session | null) => void;
-  setProfile: (profile: UserProfile | null) => void;
-  setLoading: (loading: boolean) => void;
-  setProfileLoading: (loading: boolean) => void;
-  setError: (error: string | null) => void;
-  // Auth lifecycle actions
+
+  // Actions
   signIn: (
     email: string,
     password: string
@@ -148,1316 +38,237 @@ interface AuthState {
   signUp: (
     email: string,
     password: string,
-    userData: {
-      firstName: string;
-      lastName: string;
-      role: "coach" | "player" | "family" | "admin";
-    }
+    metadata?: Record<string, unknown>
   ) => Promise<{ success: boolean; error?: string }>;
   signOut: () => Promise<void>;
   resetPassword: (
     email: string
   ) => Promise<{ success: boolean; error?: string }>;
-  refreshSession: () => Promise<{ success: boolean; error?: string }>;
-  // Utility actions
-  clearError: () => void;
-  reset: () => void;
-  // Profile fetching
   fetchUserProfile: (userId: string) => Promise<void>;
-  // Cache management
-  invalidateProfileCache: (userId: string) => void;
-  clearAllProfileCache: () => void;
-  // Offline support
-  handleOfflineAuth: (operation: () => Promise<void>) => boolean;
+  clearError: () => void;
 }
-const initialState = {
+
+// Profile cache (simple, in-memory only)
+let profileCache: { data: UserProfile; timestamp: number } | null = null;
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+function isCacheValid(): boolean {
+  return (
+    profileCache !== null && Date.now() - profileCache.timestamp < CACHE_TTL
+  );
+}
+
+// Create the store
+export const useAuth = create<AuthState>((set, _get) => ({
+  // Initial state
   user: null,
   session: null,
   profile: null,
-  loading: false,
+  loading: true,
   profileLoading: false,
   error: null,
-};
-export const useAuth = create<AuthState>()(
-  persist(
-    (set, get) => ({
-      ...initialState,
-      // Basic state setters
-      setUser: (user) => set({ user }),
-      setSession: (session) => set({ session }),
-      setProfile: (profile) => {
-        set({ profile });
-        // Invalidate cache when profile is manually set
-        if (profile?.id) {
-          profileCache.delete(profile.id);
-        }
-      },
-      setLoading: (loading) => set({ loading }),
-      setProfileLoading: (loading) => set({ profileLoading: loading }),
-      setError: (error) => set({ error }),
-      // Authentication methods - Real Supabase implementation
-      signIn: async (email: string, password: string) => {
-        AuthMonitoring.recordSignInAttempt();
 
-        // Security checks
-        if (!RequestSecurity.validateOrigin()) {
-          const errorMsg = "Request origin validation failed";
-          AuthMonitoring.recordSecurityViolation();
-          AuthMonitoring.recordError("signIn", errorMsg, undefined, {
-            reason: "origin_validation",
-          });
-          set({ error: errorMsg, loading: false });
-          return { success: false, error: errorMsg };
-        }
+  // Sign in with email/password
+  signIn: async (email, password) => {
+    set({ error: null });
 
-        if (RequestSecurity.detectSuspiciousActivity()) {
-          const errorMsg = "Suspicious activity detected";
-          AuthMonitoring.recordSecurityViolation();
-          AuthMonitoring.recordError("signIn", errorMsg, undefined, {
-            reason: "suspicious_activity",
-          });
-          set({ error: errorMsg, loading: false });
-          return { success: false, error: errorMsg };
-        }
-
-        // Check client-side rate limiting
-        const rateLimitCheck = checkRateLimit(email);
-        if (!rateLimitCheck.allowed) {
-          AuthMonitoring.recordRateLimitHit();
-          AuthMonitoring.recordError(
-            "signIn",
-            "Rate limit exceeded",
-            undefined,
-            { email, delayMs: rateLimitCheck.delayMs }
-          );
-          const delaySeconds = Math.ceil(rateLimitCheck.delayMs / 1000);
-          const errorMsg = `Too many failed attempts. Please wait ${delaySeconds} seconds before trying again.`;
-          set({ error: errorMsg, loading: false });
-          return { success: false, error: errorMsg };
-        }
-
-        // Check if offline and queue operation
-        const offlineOperation = async () => {
-          AuthMonitoring.recordOfflineQueuedOperation();
-          AuthMonitoring.recordEvent("offline_signin_queued", undefined, {
-            email,
-          });
-
-          // Re-attempt the sign-in when back online
-          const { data, error } = await NetworkResilience.retryWithBackoff(
-            () =>
-              supabase.auth.signInWithPassword({
-                email,
-                password,
-              }),
-            NETWORK_MAX_RETRIES,
-            NETWORK_BASE_DELAY,
-            NETWORK_MAX_DELAY
-          );
-          if (error) {
-            AuthMonitoring.recordNetworkError();
-            AuthMonitoring.recordError(
-              "offline_signin",
-              error.message,
-              undefined,
-              { email }
-            );
-            logError("Queued sign-in failed:", error);
-            return;
-          }
-          if (data.user && data.session) {
-            // Reset rate limiting on successful login
-            resetRateLimit(email);
-            set({
-              user: data.user,
-              session: data.session,
-              loading: false,
-            });
-            // Fetch user profile
-            await get().fetchUserProfile(data.user.id);
-            AuthMonitoring.recordSignInSuccess();
-            AuthMonitoring.recordEvent("offline_signin_success", data.user.id, {
-              email,
-            });
-            success("Queued sign-in operation completed successfully");
-          }
-        };
-
-        if (get().handleOfflineAuth(offlineOperation)) {
-          return { success: false, error: "Queued for when back online" };
-        }
-
-        set({ loading: true, error: null });
-        try {
-          const { data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-          });
-          if (error) {
-            logError("Supabase signIn error:", error);
-            logError("Error details:", {
-              message: error.message,
-              status: error.status,
-              details: error,
-            });
-            // Record failed attempt for rate limiting
-            recordFailedAuth(email);
-            AuthMonitoring.recordNetworkError();
-            AuthMonitoring.recordError("signIn", error.message, undefined, {
-              email,
-              status: error.status,
-            });
-            const userFriendlyError = getAuthErrorMessage(error);
-            set({ error: userFriendlyError, loading: false });
-            emitTelemetry("auth.signin.error", {
-              email,
-              message: userFriendlyError,
-              status: error.status,
-            });
-            return { success: false, error: userFriendlyError };
-          }
-          if (data.user && data.session) {
-            // Reset rate limiting on successful login
-            resetRateLimit(email);
-            set({
-              user: data.user,
-              session: data.session,
-              loading: false,
-            });
-            // 🚀 PERFORMANCE: Cache session for instant auth on next page load
-            try {
-              localStorage.setItem(
-                "boxcall-auth-cache",
-                JSON.stringify({
-                  user: data.user,
-                  session: data.session,
-                })
-              );
-            } catch {
-              // localStorage might be full or unavailable
-            }
-            // Fetch user profile asynchronously (don't block login on this)
-            get().fetchUserProfile(data.user.id);
-            AuthMonitoring.recordSignInSuccess();
-            AuthMonitoring.recordEvent("signin_success", data.user.id, {
-              email,
-            });
-            emitTelemetry("auth.signin.success", {
-              userId: data.user.id,
-              email,
-            });
-            return { success: true };
-          }
-          set({ loading: false });
-          return {
-            success: false,
-            error:
-              "Sign in succeeded but no user data was returned. This may be a temporary issue. Please try again or contact support if the problem persists.",
-          };
-        } catch (error) {
-          // Enhanced error message with context and next steps
-          let errorMessage: string;
-          if (error instanceof Error) {
-            // Provide context based on error type
-            if (
-              error.message.toLowerCase().includes("network") ||
-              error.message.toLowerCase().includes("fetch")
-            ) {
-              errorMessage =
-                "Network error during sign in. Please check your internet connection and try again.";
-            } else if (error.message.toLowerCase().includes("timeout")) {
-              errorMessage =
-                "Sign in request timed out. Please check your connection and try again.";
-            } else {
-              errorMessage = `Sign in failed: ${error.message}. Please try again or contact support if the issue persists.`;
-            }
-          } else {
-            errorMessage =
-              "An unexpected error occurred during sign in. Please refresh the page and try again.";
-          }
-          // Record failed attempt for rate limiting
-          recordFailedAuth(email);
-          AuthMonitoring.recordNetworkError();
-          AuthMonitoring.recordError("signIn", errorMessage, undefined, {
-            email,
-          });
-          set({ error: errorMessage, loading: false });
-          emitTelemetry("auth.signin.exception", {
-            email,
-            message: errorMessage,
-          });
-          return { success: false, error: errorMessage };
-        }
-      },
-      signUp: async (email: string, password: string, userData) => {
-        AuthMonitoring.recordSignUpAttempt();
-
-        // Security checks
-        if (!RequestSecurity.validateOrigin()) {
-          const errorMsg = "Request origin validation failed";
-          AuthMonitoring.recordSecurityViolation();
-          AuthMonitoring.recordError("signUp", errorMsg, undefined, {
-            reason: "origin_validation",
-          });
-          set({ error: errorMsg, loading: false });
-          return { success: false, error: errorMsg };
-        }
-
-        if (RequestSecurity.detectSuspiciousActivity()) {
-          const errorMsg = "Suspicious activity detected";
-          AuthMonitoring.recordSecurityViolation();
-          AuthMonitoring.recordError("signUp", errorMsg, undefined, {
-            reason: "suspicious_activity",
-          });
-          set({ error: errorMsg, loading: false });
-          return { success: false, error: errorMsg };
-        }
-
-        // Check client-side rate limiting for signups too
-        const rateLimitCheck = checkRateLimit(email);
-        if (!rateLimitCheck.allowed) {
-          AuthMonitoring.recordRateLimitHit();
-          AuthMonitoring.recordError(
-            "signUp",
-            "Rate limit exceeded",
-            undefined,
-            { email, delayMs: rateLimitCheck.delayMs }
-          );
-          const delaySeconds = Math.ceil(rateLimitCheck.delayMs / 1000);
-          const errorMsg = `Too many attempts. Please wait ${delaySeconds} seconds before trying again.`;
-          set({ error: errorMsg, loading: false });
-          return { success: false, error: errorMsg };
-        }
-
-        // Check if offline and queue operation
-        const offlineOperation = async () => {
-          AuthMonitoring.recordOfflineQueuedOperation();
-          AuthMonitoring.recordEvent("offline_signup_queued", undefined, {
-            email,
-            role: userData.role,
-          });
-
-          // Re-attempt the sign-up when back online
-          const authData = await NetworkResilience.retryWithBackoff(
-            async () => {
-              const { data, error } = await supabase.auth.signUp({
-                email,
-                password,
-              });
-              if (error) throw error;
-              return data;
-            },
-            NETWORK_MAX_RETRIES,
-            NETWORK_BASE_DELAY,
-            NETWORK_MAX_DELAY
-          );
-
-          if (!authData.user) {
-            AuthMonitoring.recordError(
-              "offline_signup",
-              "No user data returned",
-              undefined,
-              { email }
-            );
-            logError("Queued sign-up failed: No user data");
-            return;
-          }
-
-          // Create user profile in our database with retry
-          await NetworkResilience.retryWithBackoff(
-            async () => {
-              const { error: profileError } = await supabase
-                .from("profiles")
-                .insert({
-                  id: authData.user!.id,
-                  full_name: `${userData.firstName} ${userData.lastName}`,
-                  display_name: `${userData.firstName} ${userData.lastName}`,
-                  email: email,
-                  role: userData.role,
-                });
-              if (profileError) throw profileError;
-            },
-            NETWORK_MAX_RETRIES,
-            NETWORK_BASE_DELAY,
-            NETWORK_MAX_DELAY
-          );
-
-          set({
-            user: authData.user,
-            session: authData.session,
-            loading: false,
-          });
-          // Fetch the created profile
-          if (authData.session) {
-            await get().fetchUserProfile(authData.user!.id);
-          }
-          AuthMonitoring.recordSignUpSuccess();
-          AuthMonitoring.recordEvent(
-            "offline_signup_success",
-            authData.user!.id,
-            { email, role: userData.role }
-          );
-          success("Queued sign-up operation completed successfully");
-        };
-
-        if (get().handleOfflineAuth(offlineOperation)) {
-          return { success: false, error: "Queued for when back online" };
-        }
-
-        set({ loading: true, error: null });
-        try {
-          // Step 1: Create auth user with retry
-          const authData = await NetworkResilience.retryWithBackoff(
-            async () => {
-              const { data, error } = await supabase.auth.signUp({
-                email,
-                password,
-              });
-              if (error) throw error;
-              return data;
-            },
-            NETWORK_MAX_RETRIES,
-            NETWORK_BASE_DELAY,
-            NETWORK_MAX_DELAY
-          );
-
-          if (!authData.user) {
-            const errorMsg =
-              "Account creation failed. The authentication service did not return user data. Please try again, or contact support if the problem continues.";
-            set({ error: errorMsg, loading: false });
-            emitTelemetry("auth.signup.error", {
-              email,
-              message: errorMsg,
-            });
-            return { success: false, error: errorMsg };
-          }
-
-          // Step 2: Create user profile in our database with retry
-          await NetworkResilience.retryWithBackoff(
-            async () => {
-              const { error: profileError } = await supabase
-                .from("profiles")
-                .insert({
-                  id: authData.user!.id,
-                  full_name: `${userData.firstName} ${userData.lastName}`,
-                  display_name: `${userData.firstName} ${userData.lastName}`,
-                  email: email,
-                  role: userData.role,
-                });
-              if (profileError) throw profileError;
-            },
-            NETWORK_MAX_RETRIES,
-            NETWORK_BASE_DELAY,
-            NETWORK_MAX_DELAY
-          );
-
-          set({
-            user: authData.user,
-            session: authData.session,
-            loading: false,
-          });
-          // Fetch the created profile
-          if (authData.session) {
-            await get().fetchUserProfile(authData.user.id);
-          }
-          AuthMonitoring.recordSignUpSuccess();
-          AuthMonitoring.recordEvent("signup_success", authData.user.id, {
-            email,
-            role: userData.role,
-          });
-          emitTelemetry("auth.signup.success", {
-            userId: authData.user.id,
-            email,
-            role: userData.role,
-          });
-          return { success: true };
-        } catch (error) {
-          // Enhanced error message with context for signup failures
-          let errorMessage: string;
-          if (error instanceof Error) {
-            const errMsg = error.message.toLowerCase();
-            // Provide specific guidance based on error type
-            if (errMsg.includes("network") || errMsg.includes("fetch")) {
-              errorMessage =
-                "Network error during account creation. Please check your internet connection and try again.";
-            } else if (errMsg.includes("timeout")) {
-              errorMessage =
-                "Account creation timed out. Please check your connection and try again.";
-            } else if (
-              errMsg.includes("duplicate") ||
-              errMsg.includes("already exists")
-            ) {
-              errorMessage =
-                "An account with this email already exists. Try signing in instead, or use the password reset option if you forgot your password.";
-            } else if (
-              errMsg.includes("profile") ||
-              errMsg.includes("insert")
-            ) {
-              errorMessage =
-                "Account created but profile setup failed. Please contact support to complete your registration.";
-            } else {
-              errorMessage = `Account creation failed: ${error.message}. Please try again or contact support if the issue persists.`;
-            }
-          } else {
-            errorMessage =
-              "An unexpected error occurred during account creation. Please refresh the page and try again.";
-          }
-          // Record failed attempt for rate limiting
-          recordFailedAuth(email);
-          AuthMonitoring.recordNetworkError();
-          AuthMonitoring.recordError("signUp", errorMessage, undefined, {
-            email,
-            role: userData.role,
-          });
-          set({ error: errorMessage, loading: false });
-          emitTelemetry("auth.signup.exception", {
-            email,
-            role: userData.role,
-            message: errorMessage,
-          });
-          return { success: false, error: errorMessage };
-        }
-      },
-      signOut: async () => {
-        const userId = get().user?.id;
-        AuthMonitoring.recordSignOut();
-        AuthMonitoring.recordEvent("signout", userId);
-
-        set({ loading: true, error: null });
-        try {
-          const { error } = await supabase.auth.signOut();
-          if (error) {
-            AuthMonitoring.recordError("signOut", error.message, userId);
-            set({ error: error.message, loading: false });
-            return;
-          }
-          // Clear all auth state
-          set({
-            user: null,
-            session: null,
-            profile: null,
-            loading: false,
-          });
-          // 🚀 PERFORMANCE: Clear session cache on sign out
-          localStorage.removeItem("boxcall-auth-cache");
-          // Clear profile cache on sign out
-          profileCache.clear();
-          // Clear preference cache on sign out
-          PreferenceService.clearCache();
-          emitTelemetry("auth.signout", { userId });
-        } catch (error) {
-          // Enhanced error message for sign out failures
-          let errorMessage: string;
-          if (error instanceof Error) {
-            const errMsg = error.message.toLowerCase();
-            if (errMsg.includes("network") || errMsg.includes("fetch")) {
-              errorMessage =
-                "Network error during sign out. Your session may still be cleared locally.";
-            } else {
-              errorMessage = `Sign out failed: ${error.message}. Your local session has been cleared, but you may need to refresh the page.`;
-            }
-          } else {
-            errorMessage =
-              "An unexpected error occurred during sign out. Your local session has been cleared.";
-          }
-          AuthMonitoring.recordError("signOut", errorMessage, userId);
-          // Clear local state even if API call fails
-          set({
-            user: null,
-            session: null,
-            profile: null,
-            error: errorMessage,
-            loading: false,
-          });
-          // 🚀 PERFORMANCE: Clear session cache even on error
-          localStorage.removeItem("boxcall-auth-cache");
-          profileCache.clear();
-          // Clear preference cache even on error
-          PreferenceService.clearCache();
-        }
-      },
-      resetPassword: async (email: string) => {
-        set({ loading: true, error: null });
-        try {
-          const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${window.location.origin}/reset-password`,
-          });
-          if (error) {
-            const userFriendlyError = getAuthErrorMessage(error);
-            set({ error: userFriendlyError, loading: false });
-            return { success: false, error: userFriendlyError };
-          }
-          set({ loading: false });
-          return { success: true };
-        } catch (error) {
-          // Enhanced error message for password reset failures
-          let errorMessage: string;
-          if (error instanceof Error) {
-            const errMsg = error.message.toLowerCase();
-            if (errMsg.includes("network") || errMsg.includes("fetch")) {
-              errorMessage =
-                "Network error while sending password reset email. Please check your connection and try again.";
-            } else if (errMsg.includes("timeout")) {
-              errorMessage =
-                "Request timed out while sending password reset email. Please try again.";
-            } else if (
-              errMsg.includes("not found") ||
-              errMsg.includes("user")
-            ) {
-              errorMessage =
-                "If an account exists with this email, you will receive password reset instructions shortly.";
-            } else {
-              errorMessage = `Password reset failed: ${error.message}. Please try again or contact support.`;
-            }
-          } else {
-            errorMessage =
-              "An unexpected error occurred while requesting password reset. Please try again.";
-          }
-          set({ error: errorMessage, loading: false });
-          return { success: false, error: errorMessage };
-        }
-      },
-      refreshSession: async () => {
-        const userId = get().user?.id;
-        AuthMonitoring.recordSessionRefresh();
-        AuthMonitoring.recordEvent("session_refresh_attempt", userId);
-
-        set({ loading: true, error: null });
-        try {
-          const { data, error } = await supabase.auth.refreshSession();
-          if (error) {
-            logError("Session refresh failed:", error);
-            AuthMonitoring.recordError("refreshSession", error.message, userId);
-            const userFriendlyError = getAuthErrorMessage(error);
-            set({ error: userFriendlyError, loading: false });
-            return { success: false, error: userFriendlyError };
-          }
-          if (data.session) {
-            set({
-              user: data.session.user,
-              session: data.session,
-              loading: false,
-            });
-            // Refresh profile data as well
-            await get().fetchUserProfile(data.session.user.id);
-            AuthMonitoring.recordEvent(
-              "session_refresh_success",
-              data.session.user.id
-            );
-            return { success: true };
-          }
-          set({ loading: false });
-          return {
-            success: false,
-            error:
-              "Session refresh succeeded but no session data was returned. You may need to sign in again.",
-          };
-        } catch (error) {
-          // Enhanced error message for session refresh failures
-          let errorMessage: string;
-          if (error instanceof Error) {
-            const errMsg = error.message.toLowerCase();
-            if (errMsg.includes("network") || errMsg.includes("fetch")) {
-              errorMessage =
-                "Network error while refreshing your session. Please check your internet connection.";
-            } else if (errMsg.includes("timeout")) {
-              errorMessage =
-                "Session refresh timed out. Please check your connection and try again.";
-            } else if (
-              errMsg.includes("expired") ||
-              errMsg.includes("invalid")
-            ) {
-              errorMessage =
-                "Your session has expired. Please sign in again to continue.";
-            } else {
-              errorMessage = `Session refresh failed: ${error.message}. Please try signing in again.`;
-            }
-          } else {
-            errorMessage =
-              "An unexpected error occurred while refreshing your session. Please sign in again.";
-          }
-          logError("Session refresh error:", error);
-          AuthMonitoring.recordError("refreshSession", errorMessage, userId);
-          set({ error: errorMessage, loading: false });
-          return { success: false, error: errorMessage };
-        }
-      },
-      // Profile fetching method with caching - uses direct fetch to avoid Supabase client hangs
-      fetchUserProfile: async (userId: string) => {
-        debug("👤 [fetchUserProfile] Starting for user:", userId);
-
-        // Check cache first
-        const cached = profileCache.get(userId);
-        const now = Date.now();
-        if (cached && now - cached.timestamp < cached.ttl) {
-          debug("👤 [fetchUserProfile] Cache hit, using cached profile");
-          set({ profile: cached.data, profileLoading: false });
-          return;
-        }
-
-        set({ profileLoading: true });
-
-        try {
-          debug("👤 [fetchUserProfile] Fetching via direct REST API...");
-
-          // Get auth token from localStorage
-          const authData = localStorage.getItem("boxcall-auth");
-          const token = authData ? JSON.parse(authData)?.access_token : null;
-
-          const baseUrl = import.meta.env.VITE_SUPABASE_URL;
-          const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-          // Create abort controller for timeout
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-          const response = await fetch(
-            `${baseUrl}/rest/v1/profiles?id=eq.${userId}&select=*`,
-            {
-              headers: {
-                apikey: anonKey,
-                Authorization: `Bearer ${token || anonKey}`,
-                // Don't use application/vnd.pgrst.object+json to avoid 406 when no profile exists
-                Accept: "application/json",
-              },
-              signal: controller.signal,
-            }
-          );
-
-          clearTimeout(timeoutId);
-
-          // Handle 406 (no profile found) gracefully
-          if (response.status === 406) {
-            debug(
-              "👤 [fetchUserProfile] No profile found (406), user may need to complete profile setup"
-            );
-            set({ profile: null, profileLoading: false });
-            return;
-          }
-
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-          }
-
-          const responseData = await response.json();
-          // Since we removed the object header, we get an array
-          const data = Array.isArray(responseData)
-            ? responseData[0]
-            : responseData;
-
-          if (!data) {
-            debug(
-              "👤 [fetchUserProfile] No profile found, user may need to complete profile setup"
-            );
-            set({ profile: null, profileLoading: false });
-            return;
-          }
-
-          debug("👤 [fetchUserProfile] Got profile:", {
-            id: data?.id,
-            role: data?.role,
-          });
-
-          // Cache and set the profile
-          profileCache.set(userId, {
-            data,
-            timestamp: now,
-            ttl: PROFILE_CACHE_TTL,
-          });
-          set({ profile: data, profileLoading: false });
-        } catch (error) {
-          logError("👤 [fetchUserProfile] Error:", error);
-          set({ profileLoading: false });
-          // Don't fail completely - user can still use the app
-        }
-      },
-      // Cache management methods
-      invalidateProfileCache: (userId: string) => {
-        profileCache.delete(userId);
-      },
-      clearAllProfileCache: () => {
-        profileCache.clear();
-      },
-      // Offline support methods
-      handleOfflineAuth: (operation: () => Promise<void>) => {
-        if (!NetworkResilience.isOnline()) {
-          NetworkResilience.queueForOnline(operation);
-          set({
-            error:
-              "You're currently offline. This action will be performed when you're back online.",
-            loading: false,
-          });
-          return true; // Indicates operation was queued
-        }
-        return false; // Operation should proceed normally
-      },
-      // Utility methods
-      clearError: () => set({ error: null }),
-      reset: () => set(initialState),
-    }),
-    {
-      name: "boxcall-auth-storage",
-      partialize: (state) => ({
-        // Only persist non-sensitive data
-        user: state.user,
-        session: state.session,
-        profile: state.profile,
-      }),
-    }
-  )
-);
-
-// Session refresh logic with improved error handling and recovery
-let refreshInterval: NodeJS.Timeout | null = null;
-let refreshAttempts = 0;
-
-const startSessionRefresh = () => {
-  // Clear any existing interval
-  if (refreshInterval) {
-    clearInterval(refreshInterval);
-  }
-
-  // Reset refresh attempts counter
-  refreshAttempts = 0;
-
-  // Check session every 5 minutes and refresh if needed
-  refreshInterval = setInterval(async () => {
-    try {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
-
-      if (error) {
-        logError("Error checking session:", error);
-        AuthMonitoring.recordError("session_check", error.message, undefined, {
-          error,
-        });
-        return;
-      }
-
-      if (session) {
-        const now = Date.now() / MS_PER_SECOND; // Convert to seconds
-        const expiresAt = session.expires_at;
-
-        // If token expires within configured threshold, refresh it
-        if (expiresAt && expiresAt - now < SESSION_REFRESH_THRESHOLD) {
-          debug("Refreshing session before expiration");
-
-          if (refreshAttempts >= MAX_REFRESH_ATTEMPTS) {
-            logError("Max refresh attempts reached, signing out user");
-            AuthMonitoring.recordError(
-              "session_refresh",
-              "Max refresh attempts exceeded",
-              undefined,
-              {
-                attempts: refreshAttempts,
-                maxAttempts: MAX_REFRESH_ATTEMPTS,
-              }
-            );
-            await useAuth.getState().signOut();
-            return;
-          }
-
-          const { data, error: refreshError } =
-            await supabase.auth.refreshSession();
-
-          if (refreshError) {
-            logError("Error refreshing session:", refreshError);
-            AuthMonitoring.recordError(
-              "session_refresh",
-              refreshError.message,
-              undefined,
-              {
-                attempt: refreshAttempts + 1,
-                maxAttempts: MAX_REFRESH_ATTEMPTS,
-              }
-            );
-            refreshAttempts++;
-
-            // Schedule a retry after delay
-            setTimeout(() => {
-              debug("Retrying session refresh...");
-              startSessionRefresh();
-            }, REFRESH_RETRY_DELAY);
-
-            return;
-          }
-
-          if (data.session) {
-            debug("Session refreshed successfully");
-            AuthMonitoring.recordEvent(
-              "session_refresh_success",
-              data.session.user.id
-            );
-            useAuth.setState({
-              user: data.session.user,
-              session: data.session,
-              error: null,
-            });
-            // Reset attempts on success
-            refreshAttempts = 0;
-          }
-        }
-      } else {
-        debug("No active session found during refresh check");
-      }
-    } catch (unexpectedError) {
-      logError("Unexpected error during session refresh:", unexpectedError);
-      AuthMonitoring.recordError(
-        "session_refresh_unexpected",
-        unexpectedError instanceof Error
-          ? unexpectedError.message
-          : "Unknown error",
-        undefined,
-        {
-          attempt: refreshAttempts,
-        }
-      );
-    }
-  }, SESSION_CHECK_INTERVAL);
-};
-
-const stopSessionRefresh = () => {
-  if (refreshInterval) {
-    clearInterval(refreshInterval);
-    refreshInterval = null;
-  }
-};
-
-/**
- * 🚀 PERFORMANCE: Background session verification
- * Called after optimistic auth from cache to verify session is still valid
- * NOTE: Currently unused but kept for future performance optimization
- */
-const _verifyAndRefreshSession = async (_cachedSession: Session) => {
-  try {
-    AuthMonitoring.startPhase("sessionFetch");
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.getSession();
-    AuthMonitoring.endPhase("sessionFetch", error ? "error" : "success", {
-      hasSession: Boolean(session),
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     });
 
-    if (error || !session) {
-      // Session invalid - clear state and redirect to login
-      warn("Cached session invalid, clearing auth state");
-      useAuth.setState({
-        user: null,
-        session: null,
-        profile: null,
-        loading: false,
-      });
-      localStorage.removeItem("boxcall-auth-cache");
+    if (error) {
+      const message = getErrorMessage(error);
+      set({ error: message });
+      return { success: false, error: message };
+    }
+
+    // onAuthStateChange will handle setting user/session
+    return { success: true };
+  },
+
+  // Sign up with email/password
+  signUp: async (email, password, metadata) => {
+    set({ error: null });
+
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: metadata },
+    });
+
+    if (error) {
+      const message = getErrorMessage(error);
+      set({ error: message });
+      return { success: false, error: message };
+    }
+
+    return { success: true };
+  },
+
+  // Sign out
+  signOut: async () => {
+    await supabase.auth.signOut();
+    profileCache = null;
+    set({ user: null, session: null, profile: null, error: null });
+  },
+
+  // Reset password
+  resetPassword: async (email) => {
+    set({ error: null });
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+
+    if (error) {
+      const message = getErrorMessage(error);
+      set({ error: message });
+      return { success: false, error: message };
+    }
+
+    return { success: true };
+  },
+
+  // Fetch user profile
+  fetchUserProfile: async (userId) => {
+    // Return cached if valid
+    if (isCacheValid() && profileCache?.data.id === userId) {
+      set({ profile: profileCache.data, profileLoading: false });
       return;
     }
 
-    // Update with fresh session data
+    set({ profileLoading: true });
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", userId)
+      .maybeSingle();
+
+    if (error) {
+      console.error("[Auth] Profile fetch error:", error.message);
+      set({ profileLoading: false });
+      return;
+    }
+
+    if (data) {
+      profileCache = { data, timestamp: Date.now() };
+      set({ profile: data, profileLoading: false });
+    } else {
+      set({ profileLoading: false });
+    }
+  },
+
+  // Clear error
+  clearError: () => set({ error: null }),
+}));
+
+// Error message helper
+function getErrorMessage(error: { message?: string; status?: number }): string {
+  const msg = error.message?.toLowerCase() || "";
+
+  if (msg.includes("invalid login credentials")) {
+    return "Invalid email or password. Please check your credentials.";
+  }
+  if (msg.includes("email not confirmed")) {
+    return "Please verify your email before signing in.";
+  }
+  if (msg.includes("too many requests") || error.status === 429) {
+    return "Too many attempts. Please wait a few minutes.";
+  }
+  if (msg.includes("user not found")) {
+    return "No account found with this email.";
+  }
+
+  return error.message || "Authentication failed. Please try again.";
+}
+
+// ============================================================================
+// INITIALIZATION - runs once when module loads
+// ============================================================================
+
+let initialized = false;
+
+async function initializeAuth() {
+  if (initialized) return;
+  initialized = true;
+
+  console.log("🔐 [Auth] Initializing...");
+
+  // Get initial session
+  const {
+    data: { session },
+    error,
+  } = await supabase.auth.getSession();
+
+  if (error) {
+    console.error("🔐 [Auth] Session error:", error.message);
+    useAuth.setState({ loading: false });
+    return;
+  }
+
+  if (session) {
+    console.log("🔐 [Auth] Session found:", session.user.email);
     useAuth.setState({
       user: session.user,
       session: session,
-    });
-
-    // Update localStorage cache (our optimistic cache, not Supabase's)
-    localStorage.setItem(
-      "boxcall-auth-cache",
-      JSON.stringify({
-        user: session.user,
-        session: session,
-      })
-    );
-
-    // Start session refresh monitoring
-    startSessionRefresh();
-
-    // Load profile in background
-    useAuth
-      .getState()
-      .fetchUserProfile(session.user.id)
-      .catch(() => {});
-
-    debug("Background session verification complete");
-  } catch (err) {
-    warn("Background session verification failed:", err);
-  }
-};
-
-let isInitializing = false;
-
-// Initialize auth state on app start with improved error handling
-const initializeAuth = async () => {
-  // Prevent double initialization
-  if (isInitializing) {
-    debug("Auth initialization already in progress, skipping...");
-    return;
-  }
-
-  isInitializing = true;
-  const startTime = performance.now();
-
-  try {
-    logAuth("Initializing auth state...");
-
-    // 🚀 FAST PATH: Check localStorage for cached session FIRST (instant)
-    // This shows the user as logged in immediately while we verify with Supabase
-    // NOTE: Use different key than Supabase's 'boxcall-auth' to avoid conflicts
-    const cachedAuthStr = localStorage.getItem("boxcall-auth-cache");
-    AuthMonitoring.startPhase("bootstrap", {
-      strategy: cachedAuthStr ? "cache-first" : "network",
-    });
-    if (cachedAuthStr) {
-      try {
-        const cachedAuth = JSON.parse(cachedAuthStr);
-        if (cachedAuth?.user && cachedAuth?.session) {
-          // Check if session hasn't expired (with 1 minute buffer)
-          const expiresAt = cachedAuth.session.expires_at;
-          const now = Math.floor(Date.now() / 1000);
-          if (expiresAt && expiresAt > now + 60) {
-            debug(
-              "Using cached session for instant auth (will verify in background)"
-            );
-            // Optimistically set auth state from cache
-            useAuth.setState({
-              user: cachedAuth.user,
-              session: cachedAuth.session,
-              loading: false,
-              error: null,
-            });
-
-            // 🔧 FIX: Manually set the session on the Supabase client
-            // This ensures all queries have the auth token attached
-            // Using setSession instead of getSession to avoid blocking
-            debug("🔧 [AUTH] Setting session on Supabase client...");
-            supabase.auth
-              .setSession({
-                access_token: cachedAuth.session.access_token,
-                refresh_token: cachedAuth.session.refresh_token,
-              })
-              .then(({ error }) => {
-                if (error) {
-                  logError("🔧 [AUTH] Failed to set session:", error.message);
-                } else {
-                  debug(
-                    "🔧 [AUTH] Session set successfully on Supabase client"
-                  );
-                }
-              });
-
-            // 🔧 FIX: Also fetch profile in cache path (fire-and-forget, AuthGuard will wait)
-            useAuth.getState().fetchUserProfile(cachedAuth.user.id);
-
-            isInitializing = false;
-            const elapsed = performance.now() - startTime;
-            success(`Auth init from cache: ${elapsed.toFixed(0)}ms`);
-            AuthMonitoring.endPhase("bootstrap", "success", {
-              strategy: "cache",
-            });
-            return;
-          }
-        }
-      } catch {
-        // Invalid cache, continue with normal flow
-        debug("Cached auth invalid, using normal flow");
-      }
-    }
-
-    // Normal flow: Set loading to true at the start of initialization
-    useAuth.setState({ loading: true, error: null });
-
-    // Add timeout to prevent infinite loading if getSession hangs
-    const sessionPromise = supabase.auth.getSession();
-    const timeoutPromise = new Promise<{
-      data: { session: null };
-      error: null;
-    }>((resolve) => {
-      setTimeout(() => {
-        debug(
-          "⚠️ [Auth] getSession timed out after 5s, continuing without session"
-        );
-        resolve({ data: { session: null }, error: null });
-      }, 5000);
-    });
-
-    const {
-      data: { session },
-      error,
-    } = await Promise.race([sessionPromise, timeoutPromise]);
-
-    // On timeout or error, just continue without a session (user can log in)
-    if (error) {
-      logError("Error getting initial session:", error);
-      useAuth.setState({ loading: false, error: null }); // No error shown to user
-      AuthMonitoring.endPhase("bootstrap", "error", {
-        reason: "session_fetch_failed",
-      });
-      return;
-    }
-
-    if (session) {
-      logAuth("Session restored on app start:", session.user.id);
-      AuthMonitoring.recordEvent("auth_init_success", session.user.id, {
-        hasSession: true,
-      });
-
-      useAuth.setState({
-        user: session.user,
-        session: session,
-        loading: false,
-        error: null,
-      });
-
-      // Run profile fetch and DB test in PARALLEL (non-blocking)
-      // This reduces auth init time significantly
-      const backgroundTasks = async () => {
-        const profilePromise = useAuth
-          .getState()
-          .fetchUserProfile(session.user.id)
-          .then(() => success("User profile loaded successfully"))
-          .catch((profileError) => {
-            logError("Error loading user profile:", profileError);
-            AuthMonitoring.recordError(
-              "auth_init",
-              profileError instanceof Error
-                ? profileError.message
-                : "Profile fetch failed",
-              session.user.id,
-              { phase: "fetch_profile" }
-            );
-          });
-
-        const dbTestPromise = (async () => {
-          AuthMonitoring.startPhase("dbHandshake", { context: "init" });
-          try {
-            const dbConnectionOk = await testDatabaseConnection();
-            if (dbConnectionOk) {
-              success("Authenticated database connection verified");
-            } else {
-              warn("Authenticated database connection test failed");
-            }
-            AuthMonitoring.endPhase(
-              "dbHandshake",
-              dbConnectionOk ? "success" : "error",
-              { context: "init" }
-            );
-          } catch (dbError) {
-            AuthMonitoring.endPhase("dbHandshake", "error", {
-              context: "init",
-            });
-            logError(
-              "Error testing authenticated database connection:",
-              dbError
-            );
-          }
-        })();
-
-        // Wait for both to complete in parallel
-        await Promise.allSettled([profilePromise, dbTestPromise]);
-      };
-
-      // Fire and forget - don't block auth init
-      backgroundTasks();
-
-      debug("Starting session refresh monitoring...");
-      // Start session refresh monitoring
-      startSessionRefresh();
-
-      success("Auth initialization completed successfully");
-
-      // Ensure loading is definitely false at the end
-      useAuth.setState({ loading: false });
-      AuthMonitoring.endPhase("bootstrap", "success", {
-        hasSession: true,
-      });
-    } else {
-      logAuth("No session found on app start");
-
-      // Clear any stale user/profile data from persisted state
-      // This prevents showing UI as if logged in when session is actually expired
-      const currentState = useAuth.getState();
-      if (currentState.user || currentState.profile) {
-        warn("Clearing stale user/profile data - no valid session exists");
-        useAuth.setState({
-          user: null,
-          profile: null,
-          session: null,
-          loading: false,
-        });
-      } else {
-        useAuth.setState({ loading: false });
-      }
-
-      AuthMonitoring.recordEvent("auth_init_success", undefined, {
-        hasSession: false,
-      });
-      AuthMonitoring.endPhase("bootstrap", "success", {
-        hasSession: false,
-      });
-    }
-  } catch (unexpectedError) {
-    logError("Unexpected error during auth initialization:", unexpectedError);
-    AuthMonitoring.recordError(
-      "auth_init_unexpected",
-      unexpectedError instanceof Error
-        ? unexpectedError.message
-        : "Unknown error",
-      undefined,
-      {
-        phase: "unexpected",
-      }
-    );
-    useAuth.setState({
       loading: false,
-      error: "Authentication initialization failed. Please refresh the page.",
     });
-    AuthMonitoring.endPhase("bootstrap", "error", {
-      reason: "unexpected",
-    });
-  } finally {
-    isInitializing = false;
+
+    // Fetch profile in background
+    useAuth.getState().fetchUserProfile(session.user.id);
+  } else {
+    console.log("🔐 [Auth] No session");
+    useAuth.setState({ loading: false });
   }
-};
+}
 
-// Initialize auth state
-initializeAuth();
-
-// Enhanced auth state change listener with better error handling
+// Listen for auth changes
 supabase.auth.onAuthStateChange(async (event, session) => {
-  logAuth(`Auth state changed: ${event}`, session?.user?.id || "no user");
+  console.log(
+    "🔐 [Auth] State changed:",
+    event,
+    session?.user?.email || "no user"
+  );
 
-  // Don't process auth state changes during initialization
-  if (isInitializing) {
-    debug("Skipping auth state change during initialization");
-    return;
-  }
+  if (session) {
+    useAuth.setState({
+      user: session.user,
+      session: session,
+      loading: false,
+      error: null,
+    });
 
-  try {
-    switch (event) {
-      case "SIGNED_IN":
-        if (session) {
-          AuthMonitoring.recordEvent("auth_state_change", session.user.id, {
-            event,
-            hasSession: true,
-          });
-          useAuth.setState({
-            user: session.user,
-            session: session,
-            loading: false, // Ensure loading is false when signed in
-            error: null,
-          });
-
-          // Fetch profile for new sign-ins
-          try {
-            await useAuth.getState().fetchUserProfile(session.user.id);
-          } catch (profileError) {
-            logError("Error fetching profile on sign in:", profileError);
-            AuthMonitoring.recordError(
-              "auth_state_change",
-              profileError instanceof Error
-                ? profileError.message
-                : "Profile fetch failed",
-              session.user.id,
-              { event }
-            );
-          }
-
-          // Test database connection after successful sign-in
-          try {
-            AuthMonitoring.startPhase("dbHandshake", {
-              context: "post-signin",
-            });
-            const dbConnectionOk = await testDatabaseConnection();
-            if (dbConnectionOk) {
-              success("Database connection verified after sign-in");
-            }
-            AuthMonitoring.endPhase(
-              "dbHandshake",
-              dbConnectionOk ? "success" : "error",
-              {
-                context: "post-signin",
-              }
-            );
-          } catch (dbError) {
-            AuthMonitoring.endPhase("dbHandshake", "error", {
-              context: "post-signin",
-            });
-            warn("Database connection test failed after sign-in:", dbError);
-          }
-
-          startSessionRefresh();
-        }
-        break;
-
-      case "SIGNED_OUT":
-        AuthMonitoring.recordEvent("auth_state_change", undefined, {
-          event,
-          hasSession: false,
-        });
-        stopSessionRefresh();
-        // Clear all auth state
-        useAuth.setState({
-          user: null,
-          session: null,
-          profile: null,
-          error: null,
-        });
-        // Clear profile cache
-        profileCache.clear();
-        break;
-
-      case "TOKEN_REFRESHED":
-        if (session) {
-          AuthMonitoring.recordEvent("auth_state_change", session.user.id, {
-            event,
-            hasSession: true,
-          });
-          useAuth.setState({
-            user: session.user,
-            session: session,
-            error: null,
-          });
-          debug("Auth token refreshed");
-        }
-        break;
-
-      case "USER_UPDATED":
-        if (session) {
-          AuthMonitoring.recordEvent("auth_state_change", session.user.id, {
-            event,
-            hasSession: true,
-          });
-          useAuth.setState({
-            user: session.user,
-            session: session,
-            error: null,
-          });
-          info("User updated");
-        }
-        break;
-
-      default:
-        info(`Unhandled auth event: ${event}`);
+    // Fetch profile on sign in
+    if (event === "SIGNED_IN") {
+      useAuth.getState().fetchUserProfile(session.user.id);
     }
-  } catch (error) {
-    logError("Error handling auth state change:", error);
-    AuthMonitoring.recordError(
-      "auth_state_change",
-      error instanceof Error ? error.message : "Unknown error",
-      session?.user?.id,
-      { event }
-    );
+  } else {
+    profileCache = null;
+    useAuth.setState({
+      user: null,
+      session: null,
+      profile: null,
+      loading: false,
+    });
   }
 });
 
-// Selector hooks for convenience
+// Initialize
+initializeAuth();
+
+// ============================================================================
+// EXPORTS
+// ============================================================================
+
+// Selector hooks for optimized re-renders
 export const useAuthUser = () => useAuth((state) => state.user);
 export const useAuthProfile = () => useAuth((state) => state.profile);
 export const useAuthLoading = () => useAuth((state) => state.loading);
 export const useAuthProfileLoading = () =>
   useAuth((state) => state.profileLoading);
 export const useAuthError = () => useAuth((state) => state.error);
-// Authentication status selectors
 export const useIsAuthenticated = () => useAuth((state) => !!state.user);
 export const useIsCoach = () =>
   useAuth((state) => state.profile?.role === "coach");
@@ -1467,3 +278,5 @@ export const useIsFamily = () =>
   useAuth((state) => state.profile?.role === "family");
 export const useIsAdmin = () =>
   useAuth((state) => state.profile?.role === "admin");
+
+export type { AuthState, UserProfile };

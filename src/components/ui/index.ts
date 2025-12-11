@@ -53,6 +53,7 @@ export { SelectionCheckbox } from "./SelectionCheckbox";
 export type { SelectionCheckboxProps } from "./SelectionCheckbox";
 export { PhaseLabel } from "./PhaseLabel";
 export type { PhaseLabelProps } from "./PhaseLabel";
+export { ConfirmationModal } from "./ConfirmationModal";
 
 // Form Select (Headless UI Listbox-based)
 export { FormSelect } from "./FormSelect/FormSelect";

@@ -306,6 +306,7 @@ export const Icon: React.FC<IconProps> = ({
       "monitor",
       "grip-vertical",
       "maximize",
+      "cloud-off",
     ]);
     return supported.has(n as ModularIconName)
       ? (n as ModularIconName)

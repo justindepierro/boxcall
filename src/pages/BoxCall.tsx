@@ -16,6 +16,7 @@ import type { PracticeScript } from "../services/practiceService";
 import type { GamePlan } from "../services/gamePlanService";
 import type { PracticeSession, GameSession } from "../types/session";
 import { logError } from "../utils/logger";
+import { useToast } from "../hooks/useToast";
 
 /**
  * Skeleton loading state for BoxCall page
@@ -74,6 +75,8 @@ interface RecentSession {
   type: "practice" | "game";
   name: string;
   date: string;
+  /** The script/plan ID to navigate to for resuming or viewing */
+  sourceId?: string;
   stats: {
     totalPlays: number;
     successRate: number;
@@ -88,12 +91,18 @@ const mapSessionToDisplay = (
 ): RecentSession => {
   if (session.type === "practice") {
     const practiceSession = session as PracticeSession;
+    console.log("📋 [BoxCall] Mapping practice session:", {
+      sessionId: practiceSession.id,
+      practiceScriptId: practiceSession.practiceScriptId,
+      rawPracticeScriptId: (practiceSession as any).practice_script_id,
+    });
     return {
       id: practiceSession.id,
       type: "practice",
       name:
         (practiceSession as any).practice_scripts?.title || `Practice Session`,
       date: formatRelativeDate(practiceSession.sessionDate),
+      sourceId: practiceSession.practiceScriptId, // The script ID to navigate to
       stats: {
         totalPlays: practiceSession.totalReps || 0,
         successRate: Math.round(practiceSession.successRate || 0),
@@ -108,6 +117,7 @@ const mapSessionToDisplay = (
         (gameSession as any).game_plans?.name ||
         `vs ${gameSession.opponent || "Unknown"}`,
       date: formatRelativeDate(gameSession.gameDate),
+      sourceId: gameSession.gamePlanId, // The game plan ID to navigate to
       stats: {
         totalPlays: gameSession.totalPlays || 0,
         successRate: Math.round(gameSession.successRate || 0),
@@ -129,6 +139,7 @@ const mapSessionToDisplay = (
 const BoxCall: React.FC = () => {
   const navigate = useNavigate();
   const { activeTeamId } = useActiveTeamStore();
+  const toast = useToast();
   const [practiceScripts, setPracticeScripts] = useState<PracticeScript[]>([]);
   const [gamePlans, setGamePlans] = useState<GamePlan[]>([]);
   const [recentSessions, setRecentSessions] = useState<RecentSession[]>([]);
@@ -178,7 +189,7 @@ const BoxCall: React.FC = () => {
 
   const handleStartPractice = (mode: "live" | "retroactive") => {
     if (!selectedPracticeScript) {
-      alert("Please select a practice script");
+      toast.error("Please select a practice script");
       return;
     }
     triggerHapticFeedback("light");
@@ -187,7 +198,7 @@ const BoxCall: React.FC = () => {
 
   const handleStartGame = (mode: "live" | "retroactive") => {
     if (!selectedGamePlan) {
-      alert("Please select a game plan");
+      toast.error("Please select a game plan");
       return;
     }
     triggerHapticFeedback("light");
@@ -270,7 +281,7 @@ const BoxCall: React.FC = () => {
                 label="Select Practice Script"
                 options={practiceScripts.map((script) => ({
                   value: script.id,
-                  label: script.name,
+                  label: script.title || script.name || "Untitled Script",
                 }))}
                 value={selectedPracticeScript}
                 onChange={(value) => setSelectedPracticeScript(value)}
@@ -407,7 +418,13 @@ const BoxCall: React.FC = () => {
                   className="w-full flex items-center justify-between p-3 sm:p-4 border border-border rounded-lg hover:bg-secondary active:bg-secondary transition-colors cursor-pointer text-left h-16"
                   onClick={() => {
                     triggerHapticFeedback("light");
-                    navigate(`/boxcall/${session.type}/${session.id}`);
+                    // Navigate using the source ID (script/plan ID), not the session ID
+                    if (session.sourceId) {
+                      navigate(`/boxcall/${session.type}/${session.sourceId}`);
+                    } else {
+                      // Fallback to history if no source ID
+                      navigate("/boxcall/history");
+                    }
                   }}
                 >
                   <div className="flex items-center gap-3 sm:gap-4 min-w-0">

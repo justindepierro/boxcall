@@ -74,6 +74,7 @@ import { useModalManager } from "../hooks/useModalManager";
 import { FullscreenDiagramViewer } from "../components/playbook/play-card/FullscreenDiagramViewer";
 import { FormationLibraryModal } from "../components/playbook/modals/FormationLibraryModal";
 import { PersonnelLibraryModal } from "../components/playbook/modals/PersonnelLibraryModal";
+import { ConfirmationModal } from "../components/ui/ConfirmationModal/ConfirmationModal";
 
 // Lazy load modal components for code splitting (~120KB savings)
 
@@ -84,6 +85,7 @@ const PlaybookPage = () => {
   const { activeTeamId } = useActiveTeamStore();
   const isMobileOrTablet = useIsMobileOrTablet(); // Tablets (< 1024px) get mobile view
   const [mobileListExpanded, setMobileListExpanded] = useState(false);
+  const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
 
   // 🔍 DEBUG: Log activeTeamId
   debug("📚 PlaybookPage - activeTeamId:", activeTeamId);
@@ -430,40 +432,40 @@ const PlaybookPage = () => {
           break;
 
         case "delete":
-          // Confirm and delete plays
-          if (
-            window.confirm(
-              `Are you sure you want to delete ${selectedCount} ${selectedCount === 1 ? "play" : "plays"}?`
-            )
-          ) {
-            (async () => {
-              try {
-                const selectedPlayIds = Array.from(state.selectedPlayIds || []);
-                await PlaysService.deletePlays(selectedPlayIds);
-
-                // Refresh the plays list
-                dispatch({ type: "CLEAR_SELECTION" });
-
-                // Refresh activities to show deleted plays
-                await refreshActivities();
-
-                toast.success(
-                  `Deleted ${selectedCount} ${selectedCount === 1 ? "play" : "plays"}`
-                );
-              } catch (err) {
-                logError("Bulk delete failed:", err);
-                toast.error("Failed to delete plays");
-              }
-            })();
-          }
+          // Show confirmation modal for bulk delete
+          setShowBulkDeleteConfirm(true);
           break;
 
         default:
           break;
       }
     },
-    [state.selectedPlayIds, toast, dispatch, refreshActivities, openModal]
+    [state.selectedPlayIds, toast, openModal]
   );
+
+  // Confirm bulk delete handler
+  const confirmBulkDelete = useCallback(async () => {
+    const selectedCount = state.selectedPlayIds?.size || 0;
+    try {
+      const selectedPlayIds = Array.from(state.selectedPlayIds || []);
+      await PlaysService.deletePlays(selectedPlayIds);
+
+      // Refresh the plays list
+      dispatch({ type: "CLEAR_SELECTION" });
+
+      // Refresh activities to show deleted plays
+      await refreshActivities();
+
+      toast.success(
+        `Deleted ${selectedCount} ${selectedCount === 1 ? "play" : "plays"}`
+      );
+    } catch (err) {
+      logError("Bulk delete failed:", err);
+      toast.error("Failed to delete plays");
+    } finally {
+      setShowBulkDeleteConfirm(false);
+    }
+  }, [state.selectedPlayIds, dispatch, refreshActivities, toast]);
 
   // Play count handler - updates state when PlayGrid reports actual play count
   const handlePlayCountChange = useCallback(
@@ -1243,6 +1245,18 @@ const PlaybookPage = () => {
           />
         </React.Suspense>
       )}
+
+      {/* Bulk Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showBulkDeleteConfirm}
+        onClose={() => setShowBulkDeleteConfirm(false)}
+        onConfirm={confirmBulkDelete}
+        title="Delete Plays"
+        message={`Are you sure you want to delete ${state.selectedPlayIds?.size || 0} ${(state.selectedPlayIds?.size || 0) === 1 ? "play" : "plays"}?`}
+        variant="danger"
+        confirmText="Delete"
+        cancelText="Cancel"
+      />
     </div>
   );
 };

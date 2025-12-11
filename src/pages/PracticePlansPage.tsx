@@ -37,6 +37,7 @@ import {
 
 import type { PracticeScript } from "../services/practiceService";
 import { logError } from "../utils/logger";
+import { ConfirmationModal } from "../components/ui/ConfirmationModal/ConfirmationModal";
 
 const PracticePlansPage = () => {
   const navigate = useNavigate();
@@ -56,6 +57,8 @@ const PracticePlansPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("date-desc");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteScriptId, setDeleteScriptId] = useState<string | null>(null);
 
   // Get active team ID from localStorage
   useEffect(() => {
@@ -161,21 +164,23 @@ const PracticePlansPage = () => {
   };
 
   const handleDeleteScript = async (scriptId: string) => {
-    if (
-      !confirm(
-        "Are you sure you want to delete this practice script? This cannot be undone."
-      )
-    ) {
-      return;
-    }
+    setDeleteScriptId(scriptId);
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDeleteScript = async () => {
+    if (!deleteScriptId) return;
 
     try {
-      await PracticeService.deletePracticeScript(scriptId);
+      await PracticeService.deletePracticeScript(deleteScriptId);
       await loadPracticeScripts();
       toast.success("Practice script deleted successfully");
     } catch (error) {
       logError("Failed to delete script:", error);
       toast.error("Failed to delete script");
+    } finally {
+      setShowDeleteConfirm(false);
+      setDeleteScriptId(null);
     }
   };
 
@@ -765,6 +770,21 @@ const PracticePlansPage = () => {
             />
           </Suspense>
         )}
+
+        {/* Delete Confirmation Modal */}
+        <ConfirmationModal
+          isOpen={showDeleteConfirm}
+          onClose={() => {
+            setShowDeleteConfirm(false);
+            setDeleteScriptId(null);
+          }}
+          onConfirm={confirmDeleteScript}
+          title="Delete Practice Script"
+          message="Are you sure you want to delete this practice script? This cannot be undone."
+          variant="danger"
+          confirmText="Delete"
+          cancelText="Cancel"
+        />
       </div>
     </div>
   );

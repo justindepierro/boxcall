@@ -20,7 +20,8 @@ import { AnnouncementItem } from "./AnnouncementItem";
 import { AnnouncementListSkeleton } from "../ui/Skeleton/AnnouncementSkeleton";
 import { Hash, X, RefreshCw } from "lucide-react";
 import { logError } from "../../utils/logger";
-import { FormSelect } from "../../components/ui";
+import { FormSelect, ConfirmationModal } from "../../components/ui";
+import { useToast } from "../../hooks/useToast";
 
 interface AnnouncementsListProps {
   teamId: string;
@@ -35,6 +36,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
   onDelete,
   onTogglePin,
 }) => {
+  const toast = useToast();
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -45,6 +47,10 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
   const [selectedHashtag, setSelectedHashtag] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [hasNewContent, setHasNewContent] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteAnnouncementId, setDeleteAnnouncementId] = useState<
+    string | null
+  >(null);
 
   // Real-time subscriptions for live updates
   useAnnouncementsRealtime({
@@ -132,29 +138,39 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
       await loadAnnouncements();
     } catch (err) {
       logError("Error toggling pin:", err);
-      alert("Failed to pin/unpin announcement");
+      toast.error("Failed to pin/unpin announcement");
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this announcement?")) return;
+    setDeleteAnnouncementId(id);
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteAnnouncementId) return;
 
     try {
-      const result = await AnnouncementsService.deleteAnnouncement(id);
+      const result =
+        await AnnouncementsService.deleteAnnouncement(deleteAnnouncementId);
 
       if (!result.success) {
-        alert(
+        toast.error(
           result.error ||
             "Failed to delete announcement. You may not have permission."
         );
         return;
       }
 
-      if (onDelete) onDelete(id);
+      if (onDelete) onDelete(deleteAnnouncementId);
       await loadAnnouncements();
+      toast.success("Announcement deleted successfully");
     } catch (err) {
       logError("Error deleting announcement:", err);
-      alert("Failed to delete announcement. Please try again.");
+      toast.error("Failed to delete announcement. Please try again.");
+    } finally {
+      setShowDeleteConfirm(false);
+      setDeleteAnnouncementId(null);
     }
   };
 
@@ -331,6 +347,20 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
           />
         ))}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => {
+          setShowDeleteConfirm(false);
+          setDeleteAnnouncementId(null);
+        }}
+        onConfirm={confirmDelete}
+        title="Delete Announcement"
+        message="Are you sure you want to delete this announcement? This action cannot be undone."
+        confirmLabel="Delete"
+        variant="danger"
+      />
     </div>
   );
 };

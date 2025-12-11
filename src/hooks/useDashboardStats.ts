@@ -6,11 +6,11 @@
  * - This week's activity count
  * - Achievement/badge count
  *
- * Uses the unified ApiClient (api()) for all database queries.
+ * Uses the supabase client for all database queries.
  */
 
 import { useState, useEffect } from "react";
-import { api } from "../lib/api/client";
+import { supabase } from "../lib/supabase";
 import { AchievementService } from "../services/achievementService";
 import { debug, error as logError } from "../utils/logger";
 
@@ -103,17 +103,28 @@ export function useDashboardStats(userId: string | undefined): DashboardStats {
 
 /**
  * Count total plays across all user's teams
- * Uses unified api() client
+ * Uses supabase client
  */
 async function fetchTotalPlays(userId: string): Promise<number> {
   try {
+    console.log("🔍 [fetchTotalPlays] Starting for userId:", userId);
+
     // Step 1: Get user's team memberships
-    const { data: memberships, error: memberError } = await api("team_members")
+    const { data: memberships, error: memberError } = await supabase
+      .from("team_members")
       .select("team_id")
       .eq("user_id", userId)
       .eq("status", "active");
 
+    console.log("🔍 [fetchTotalPlays] team_members result:", {
+      data: memberships,
+      error: memberError,
+    });
+
     if (memberError || !memberships || memberships.length === 0) {
+      console.log(
+        "🔍 [fetchTotalPlays] No memberships found - THIS IS THE PROBLEM"
+      );
       debug("[fetchTotalPlays] No memberships found");
       return 0;
     }
@@ -122,7 +133,8 @@ async function fetchTotalPlays(userId: string): Promise<number> {
     debug("[fetchTotalPlays] Team IDs:", teamIds);
 
     // Step 2: Get playbook IDs for these teams
-    const { data: playbooks, error: playbooksError } = await api("playbooks")
+    const { data: playbooks, error: playbooksError } = await supabase
+      .from("playbooks")
       .select("id")
       .in("team_id", teamIds);
 
@@ -135,7 +147,8 @@ async function fetchTotalPlays(userId: string): Promise<number> {
     debug("[fetchTotalPlays] Playbook IDs:", playbookIds);
 
     // Step 3: Count plays across all playbooks
-    const { data: plays, error: playsError } = await api("plays")
+    const { data: plays, error: playsError } = await supabase
+      .from("plays")
       .select("id")
       .in("playbook_id", playbookIds);
 
@@ -170,7 +183,8 @@ async function fetchThisWeekActivity(userId: string): Promise<number> {
     const startOfWeekISO = startOfWeek.toISOString();
 
     // Step 1: Get user's team memberships
-    const { data: memberships, error: memberError } = await api("team_members")
+    const { data: memberships, error: memberError } = await supabase
+      .from("team_members")
       .select("team_id")
       .eq("user_id", userId)
       .eq("status", "active");
@@ -182,13 +196,15 @@ async function fetchThisWeekActivity(userId: string): Promise<number> {
     const teamIds = memberships.map((m) => m.team_id);
 
     // Step 2: Count posts from this week
-    const { data: posts, error: postsError } = await api("team_posts")
+    const { data: posts, error: postsError } = await supabase
+      .from("team_posts")
       .select("id")
       .in("team_id", teamIds)
       .gte("created_at", startOfWeekISO);
 
     // Step 3: Count calendar events from this week
-    const { data: events, error: eventsError } = await api("calendar_events")
+    const { data: events, error: eventsError } = await supabase
+      .from("calendar_events")
       .select("id")
       .in("team_id", teamIds)
       .gte("created_at", startOfWeekISO);

@@ -28,6 +28,7 @@ import {
   EDITOR_TEXT_COLORS,
   EDITOR_HIGHLIGHT_COLORS,
 } from "../../design-system/chartColors";
+import { useToast } from "../../hooks/useToast";
 
 // Custom FontFamily extension with specific fonts
 const FontFamily = Extension.create({
@@ -163,6 +164,7 @@ export function RichTextEditor({
   teamId,
 }: RichTextEditorProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const toast = useToast();
   const [showFontMenu, setShowFontMenu] = useState(false);
   const [showColorMenu, setShowColorMenu] = useState(false);
   const [showHighlightMenu, setShowHighlightMenu] = useState(false);
@@ -357,10 +359,10 @@ export function RichTextEditor({
         editor.chain().focus().setImage({ src: result.url }).run();
       } else {
         // Show error
-        alert(result.error || "Failed to upload image");
+        toast.error(result.error || "Failed to upload image");
       }
     },
-    [editor]
+    [editor, toast]
   );
 
   const handleAddImage = () => {

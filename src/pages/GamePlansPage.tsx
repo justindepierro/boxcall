@@ -38,6 +38,7 @@ import {
   downloadJSON,
   type ExportedGamePlan,
 } from "../utils/gamePlanExport";
+import { ConfirmationModal } from "../components/ui/ConfirmationModal/ConfirmationModal";
 
 const GamePlansPage = () => {
   const navigate = useNavigate();
@@ -58,6 +59,8 @@ const GamePlansPage = () => {
   // Search & Sort state
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("date-desc");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deletePlanId, setDeletePlanId] = useState<string | null>(null);
 
   // Get active team ID from localStorage or user
   useEffect(() => {
@@ -342,19 +345,24 @@ const GamePlansPage = () => {
   };
 
   const handleDeletePlan = async (planId: string) => {
-    if (!confirm("Are you sure you want to delete this game plan?")) return;
+    setDeletePlanId(planId);
+    setShowDeleteConfirm(true);
+  };
 
-    const deletedPlan = gamePlans.find((p) => p.id === planId);
-    const deletedRawPlan = rawGamePlans.find((p) => p.id === planId);
+  const confirmDeletePlan = async () => {
+    if (!deletePlanId) return;
+
+    const deletedPlan = gamePlans.find((p) => p.id === deletePlanId);
+    const deletedRawPlan = rawGamePlans.find((p) => p.id === deletePlanId);
 
     try {
       // 1. Instant UI update
-      setGamePlans((prev) => prev.filter((p) => p.id !== planId));
-      setRawGamePlans((prev) => prev.filter((p) => p.id !== planId));
+      setGamePlans((prev) => prev.filter((p) => p.id !== deletePlanId));
+      setRawGamePlans((prev) => prev.filter((p) => p.id !== deletePlanId));
       toast.success("Game plan deleted!");
 
       // 2. Background sync
-      await GamePlanService.deleteGamePlan(planId);
+      await GamePlanService.deleteGamePlan(deletePlanId);
     } catch (error) {
       logError("Failed to delete game plan:", error);
 
@@ -366,6 +374,9 @@ const GamePlansPage = () => {
         setRawGamePlans((prev) => [...prev, deletedRawPlan]);
       }
       toast.error("Failed to delete game plan");
+    } finally {
+      setShowDeleteConfirm(false);
+      setDeletePlanId(null);
     }
   };
 
@@ -978,6 +989,21 @@ const GamePlansPage = () => {
             />
           </Suspense>
         )}
+
+        {/* Delete Confirmation Modal */}
+        <ConfirmationModal
+          isOpen={showDeleteConfirm}
+          onClose={() => {
+            setShowDeleteConfirm(false);
+            setDeletePlanId(null);
+          }}
+          onConfirm={confirmDeletePlan}
+          title="Delete Game Plan"
+          message="Are you sure you want to delete this game plan?"
+          variant="danger"
+          confirmText="Delete"
+          cancelText="Cancel"
+        />
       </div>
     </div>
   );

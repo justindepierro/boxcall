@@ -232,6 +232,7 @@ export interface PlayExecution {
 
 export interface CreatePracticeSessionData {
   teamId: string;
+  name: string;
   practiceScriptId?: string;
   sessionMode: SessionMode;
   sessionDate: Date;

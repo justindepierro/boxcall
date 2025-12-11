@@ -28,6 +28,7 @@ import { Input } from "../ui/Input";
 import { FormSelect } from "../ui/FormSelect/FormSelect";
 import { supabase } from "../../lib/supabase";
 import { useAuth } from "../../app/auth-store";
+import { useToast } from "../../hooks/useToast";
 import type { Play } from "../../types/play";
 import type { PersonnelConfiguration } from "../../types/personnel";
 import { useIsMobile } from "@hooks/useBreakpoint";
@@ -71,6 +72,7 @@ export function PlayAssignmentsModal({
   personnelConfigurations = [],
 }: PlayAssignmentsModalProps) {
   const { user } = useAuth();
+  const toast = useToast();
   const isMobile = useIsMobile();
 
   const [assignments, setAssignments] = useState<Map<string, AssignmentData>>(
@@ -307,7 +309,7 @@ export function PlayAssignmentsModal({
 
       if (error) {
         logError("Error saving assignments:", error);
-        alert("Failed to save assignments. Please try again.");
+        toast.error("Failed to save assignments. Please try again.");
         return;
       }
 

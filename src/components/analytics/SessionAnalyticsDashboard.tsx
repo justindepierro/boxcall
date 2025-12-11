@@ -116,7 +116,7 @@ export const SessionAnalyticsDashboard: React.FC<
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <Icon name="chart-bar" className="h-6 w-6 text-primary" />
+        <Icon name="bar-chart" className="h-6 w-6 text-primary" />
         <Typography variant="headline-lg">Session Analytics</Typography>
       </div>
 

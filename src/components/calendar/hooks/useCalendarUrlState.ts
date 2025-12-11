@@ -56,14 +56,27 @@ export function useCalendarUrlState(options: Options = {}) {
     };
   }, [location.search]);
 
-  // Notify changes with memoized callback
-  const memoizedOnChange = useCallback(() => {
-    options.onChange?.(state);
-  }, [options, state]);
+  // Notify changes - only call onChange if it exists and state actually changed
+  const prevStateRef = useRef<CalendarUrlState | null>(null);
 
   useEffect(() => {
-    memoizedOnChange();
-  }, [memoizedOnChange]);
+    if (!options.onChange) return;
+
+    // Skip if state hasn't meaningfully changed
+    const prev = prevStateRef.current;
+    if (
+      prev &&
+      prev.view === state.view &&
+      prev.date === state.date &&
+      prev.event === state.event
+    ) {
+      return;
+    }
+
+    prevStateRef.current = state;
+    options.onChange(state);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- options object changes on every render, only need onChange
+  }, [state, options.onChange]);
 
   const setState = useCallback(
     (patch: CalendarUrlState, replace = false) => {

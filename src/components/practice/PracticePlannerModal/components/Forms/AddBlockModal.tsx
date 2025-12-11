@@ -161,7 +161,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               onBlockChange({ ...newBlock, title: e.target.value })
             }
             placeholder="e.g., Offensive line drills"
-            className="w-full border border-secondary rounded-lg px-3 py-2 focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
+            className="w-full border border-secondary rounded-lg px-3 py-2 focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
           />
         </div>
         <div>
@@ -183,7 +183,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
             }
             placeholder="15"
             min="1"
-            className="w-full border border-secondary rounded-lg px-3 py-2 focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
+            className="w-full border border-secondary rounded-lg px-3 py-2 focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
           />
         </div>
       </div>
@@ -219,7 +219,7 @@ export const AddBlockModal: React.FC<AddBlockModalProps> = ({
               onBlockChange({ ...newBlock, location: e.target.value })
             }
             placeholder="Field, Weight Room, etc."
-            className="w-full border border-secondary rounded-lg px-3 py-2 focus:ring-2 focus:ring-jade-500 focus:border-jade-600"
+            className="w-full border border-secondary rounded-lg px-3 py-2 focus:ring-2 focus:ring-jade-500 focus:border-jade-500"
           />
         </div>
       </div>

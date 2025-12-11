@@ -155,7 +155,8 @@ export type ModularIconName =
   | "moon"
   | "monitor"
   | "grip-vertical"
-  | "maximize";
+  | "maximize"
+  | "cloud-off";
 
 // Dynamic imports for perfect tree shaking (limited to our supported set)
 type LucideComponent = React.ComponentType<
@@ -284,6 +285,7 @@ const iconLoaders: Record<ModularIconName, Loader> = {
   monitor: dynamicIconImports.monitor,
   "grip-vertical": dynamicIconImports["grip-vertical"],
   maximize: dynamicIconImports.maximize,
+  "cloud-off": dynamicIconImports["cloud-off"],
 };
 
 // Icon registry for loaded components

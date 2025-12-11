@@ -19,6 +19,8 @@ import { RichTextEditor } from "./RichTextEditor";
 import { RichTextDisplay } from "./RichTextDisplay";
 import { Avatar } from "../ui/Avatar";
 import { UserProfilePopover } from "../ui/UserProfilePopover";
+import { ConfirmationModal } from "../ui/ConfirmationModal";
+import { useToast } from "../../hooks/useToast";
 
 interface AnnouncementCommentsProps {
   announcementId: string;
@@ -29,6 +31,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
   announcementId,
   teamId,
 }) => {
+  const toast = useToast();
   const [comments, setComments] = useState<CommentTree[]>([]);
   const [loading, setLoading] = useState(true);
   const [newComment, setNewComment] = useState("");
@@ -41,6 +44,8 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
   const [avatarUrls, setAvatarUrls] = useState<Map<string, string | null>>(
     new Map()
   );
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteCommentId, setDeleteCommentId] = useState<string | null>(null);
 
   // Get current user - use synchronous auth helper
   useEffect(() => {
@@ -127,7 +132,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
       setNewComment("");
       await loadComments();
     } else {
-      alert(`Failed to post comment: ${result.error}`);
+      toast.error(`Failed to post comment: ${result.error}`);
     }
     setSubmitting(false);
   };
@@ -150,7 +155,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
       setReplyContent("");
       await loadComments();
     } else {
-      alert(`Failed to post reply: ${result.error}`);
+      toast.error(`Failed to post reply: ${result.error}`);
     }
     setSubmitting(false);
   };
@@ -176,20 +181,27 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
       setEditContent("");
       await loadComments();
     } else {
-      alert(`Failed to update comment: ${result.error}`);
+      toast.error(`Failed to update comment: ${result.error}`);
     }
     setSubmitting(false);
   };
 
   const handleDelete = async (commentId: string) => {
-    if (!confirm("Are you sure you want to delete this comment?")) return;
+    setDeleteCommentId(commentId);
+    setShowDeleteConfirm(true);
+  };
 
-    const result = await CommentsService.deleteComment(commentId);
+  const confirmDeleteComment = async () => {
+    if (!deleteCommentId) return;
+
+    const result = await CommentsService.deleteComment(deleteCommentId);
     if (result.success) {
       await loadComments();
     } else {
-      alert(`Failed to delete comment: ${result.error}`);
+      toast.error(`Failed to delete comment: ${result.error}`);
     }
+    setShowDeleteConfirm(false);
+    setDeleteCommentId(null);
   };
 
   const renderComment = (node: CommentTree, depth: number = 0) => {
@@ -410,6 +422,20 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
           {comments.map((commentTree) => renderComment(commentTree))}
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => {
+          setShowDeleteConfirm(false);
+          setDeleteCommentId(null);
+        }}
+        onConfirm={confirmDeleteComment}
+        title="Delete Comment"
+        message="Are you sure you want to delete this comment? This action cannot be undone."
+        confirmLabel="Delete"
+        variant="danger"
+      />
     </div>
   );
 };

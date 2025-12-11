@@ -25,6 +25,7 @@ import { FormationLinkConfirmationModal } from "./FormationLinkConfirmationModal
 import type { Formation } from "../../types/formation";
 import { Link2, ChevronDown } from "lucide-react";
 import { error as logError } from "../../utils/logger";
+import { useToast } from "../../hooks/useToast";
 
 interface FormationLinkingModalProps {
   isOpen: boolean;
@@ -47,6 +48,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
   const [saving, setSaving] = useState(false);
   const [allFormations, setAllFormations] = useState<Formation[]>([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const toast = useToast();
 
   // Selected formations
   const [leftFormation, setLeftFormation] = useState<Formation | null>(
@@ -87,7 +89,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
   // Handle link button click
   const handleLink = async () => {
     if (!leftFormation || !rightFormation) {
-      alert("Please select both left and right formations");
+      toast.error("Please select both left and right formations");
       return;
     }
 
@@ -107,7 +109,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
         rightFormation.id
       );
 
-      alert("Formations linked successfully!");
+      toast.success("Formations linked successfully!");
 
       // Reload formations
       await loadFormations();
@@ -120,7 +122,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
       onClose();
     } catch (error) {
       logError("[FormationMatchingModal] Failed to link formations:", error);
-      alert("Failed to link formations. Please try again.");
+      toast.error("Failed to link formations. Please try again.");
     } finally {
       setSaving(false);
     }
@@ -129,7 +131,7 @@ export const FormationMatchingModal: React.FC<FormationLinkingModalProps> = ({
   // Handle create new formation
   const handleCreateNew = (side: "left" | "right") => {
     // TODO: Add formation creation flow with image upload
-    alert(`Create new ${side} formation - Coming soon with Phase 3!`);
+    toast.info(`Create new ${side} formation - Coming soon with Phase 3!`);
   };
 
   // Render formation option in dropdown

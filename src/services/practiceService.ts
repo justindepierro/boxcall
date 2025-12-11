@@ -997,58 +997,91 @@ export class PracticeService {
   /**
    * Get all practice scripts for a team - OPTIMIZED with caching
    */
-  static async getPracticeScripts(teamId: string): Promise<PracticeScript[]> {
-    const cacheKey = `scripts_team_${teamId}`;
+  static async getPracticeScripts(
+    teamId: string,
+    _forceRefresh = false
+  ): Promise<PracticeScript[]> {
+    const _cacheKey = `scripts_team_${teamId}`;
 
-    // Check cache first
-    const cached = await practiceScriptCache.get<PracticeScript[]>(cacheKey);
-    if (cached) {
-      debug("✅ [PracticeService] Cache hit for team scripts:", teamId);
-      return cached;
-    }
-
-    debug(
-      "🔍 [PracticeService] Cache miss, fetching from database for team:",
-      teamId
-    );
+    console.log("🔍 [PracticeService] Fetching scripts for team:", teamId);
     const startTime = performance.now();
 
     try {
-      // Use new api() client - no auth check needed (token is managed globally)
-      const { api } = await import("../lib/api/client");
-
-      // OPTIMIZATION: Single query with join to get scripts AND plays
-      const { data: scriptsWithPlays, error: scriptsError } = await api(
-        "practice_scripts"
-      )
-        .select(
-          `
-          *,
-          practice_script_plays (
-            *,
-            plays (*)
-          )
-        `
-        )
-        .eq("team_id", teamId as any)
+      // Use standard supabase client which handles auth internally via session
+      const { data: scripts, error: scriptsError } = await supabase
+        .from("practice_scripts")
+        .select("*")
+        .eq("team_id", teamId)
         .order("updated_at", { ascending: false });
 
-      debug("🔍 [PracticeService] Query result:", {
-        hasData: !!scriptsWithPlays,
-        count: scriptsWithPlays?.length ?? 0,
+      console.log("🔍 [PracticeService] Scripts query completed:", {
+        hasData: !!scripts,
+        count: scripts?.length ?? 0,
         error: scriptsError,
-        teamId,
       });
 
       if (scriptsError) {
         logError("Error fetching practice scripts:", scriptsError);
-        throw new Error("Failed to fetch practice scripts");
+        throw scriptsError;
       }
 
-      if (!scriptsWithPlays || scriptsWithPlays.length === 0) {
-        debug("🔍 [PracticeService] No scripts found for team:", teamId);
-        await practiceScriptCache.set(cacheKey, [], 1);
+      if (!scripts || scripts.length === 0) {
+        console.log("🔍 [PracticeService] No scripts found for team:", teamId);
         return [];
+      }
+
+      // Now fetch plays for each script
+      const scriptIds = scripts.map((s) => s.id);
+      let scriptPlays: any[] = [];
+
+      try {
+        const { data: playsData, error: playsError } = await supabase
+          .from("practice_script_plays")
+          .select("*, plays(*)")
+          .in("practice_script_id", scriptIds);
+
+        if (playsError) {
+          console.warn("🔍 [PracticeService] Plays query error:", playsError);
+        }
+
+        scriptPlays = playsData || [];
+
+        console.log("🔍 [PracticeService] Script plays query completed:", {
+          hasData: !!playsData,
+          count: scriptPlays?.length ?? 0,
+          error: playsError,
+        });
+      } catch (e) {
+        console.warn(
+          "🔍 [PracticeService] Plays query failed, returning scripts without plays:",
+          e
+        );
+        scriptPlays = [];
+      }
+
+      // Group plays by script_id
+      const playsByScript = new Map<string, any[]>();
+      if (scriptPlays && scriptPlays.length > 0) {
+        for (const sp of scriptPlays) {
+          const existing = playsByScript.get(sp.practice_script_id) || [];
+          existing.push(sp);
+          playsByScript.set(sp.practice_script_id, existing);
+        }
+      }
+
+      // Combine scripts with their plays
+      const scriptsWithPlays = scripts.map((script: any) => ({
+        ...script,
+        practice_script_plays: playsByScript.get(script.id) || [],
+      }));
+
+      // DEBUG: Log the raw data to see if plays are returned
+      if (scriptsWithPlays.length > 0) {
+        console.log("🔍 [PracticeService] Raw script data:", {
+          firstScript: scriptsWithPlays[0],
+          hasPlays: !!scriptsWithPlays[0].practice_script_plays,
+          playCount: scriptsWithPlays[0].practice_script_plays.length,
+        });
       }
 
       // Map directly to PracticeScript interface
@@ -1056,17 +1089,24 @@ export class PracticeService {
         this.mapDatabaseScriptToPracticeScript(script)
       );
 
-      // Cache the results
-      await practiceScriptCache.set(cacheKey, mappedScripts, 1);
+      console.log("✅ [PracticeService] Mapped scripts:", {
+        count: mappedScripts.length,
+        scripts: mappedScripts.map((s) => ({
+          id: s.id,
+          title: s.title,
+          playCount: s.plays?.length || 0,
+        })),
+      });
 
       const queryTime = performance.now() - startTime;
-      debug(
+      console.log(
         `✅ [PracticeService] Fetched ${mappedScripts.length} scripts in ${queryTime.toFixed(2)}ms`
       );
 
       return mappedScripts;
     } catch (error) {
       logError("Error in getPracticeScripts:", error);
+      console.error("❌ [PracticeService] Error:", error);
       return [];
     }
   }
@@ -1090,13 +1130,9 @@ export class PracticeService {
     const startTime = performance.now();
 
     try {
-      // Use new api() client
-      const { api } = await import("../lib/api/client");
-
-      // OPTIMIZATION: Single query with join
-      const { data: scripts, error: scriptError } = await api(
-        "practice_scripts"
-      )
+      // Use standard supabase client which handles auth internally
+      const { data: scripts, error: scriptError } = await supabase
+        .from("practice_scripts")
         .select(
           `
           *,
@@ -1106,7 +1142,7 @@ export class PracticeService {
           )
         `
         )
-        .eq("id", scriptId as any)
+        .eq("id", scriptId)
         .limit(1);
 
       if (scriptError) {
@@ -1421,9 +1457,12 @@ export class PracticeService {
       fieldPosition: playData.field_position,
     }));
 
+    const title = scriptData.title || scriptData.name || "Untitled Script";
+
     return {
       id: scriptData.id,
-      title: scriptData.title || scriptData.name || "Untitled Script",
+      title,
+      name: title, // Alias for backward compatibility
       description: scriptData.description,
       teamId: scriptData.team_id,
       createdBy: scriptData.created_by,

@@ -1119,6 +1119,84 @@ export type Database = {
           },
         ];
       };
+      practice_script_plays: {
+        Row: {
+          id: string;
+          practice_script_id: string;
+          play_id: string;
+          sequence_order: number;
+          repetitions: number | null;
+          coaching_points: string[] | null;
+          duration_minutes: number | null;
+          hash: string | null;
+          down_distance: string | null;
+          field_position: string | null;
+          defensive_front: string | null;
+          coverage: string | null;
+          blitz: string | null;
+          scenario_notes: string | null;
+          segment_name: string | null;
+          segment_type: string | null;
+          created_at: string | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          practice_script_id: string;
+          play_id: string;
+          sequence_order?: number;
+          repetitions?: number | null;
+          coaching_points?: string[] | null;
+          duration_minutes?: number | null;
+          hash?: string | null;
+          down_distance?: string | null;
+          field_position?: string | null;
+          defensive_front?: string | null;
+          coverage?: string | null;
+          blitz?: string | null;
+          scenario_notes?: string | null;
+          segment_name?: string | null;
+          segment_type?: string | null;
+          created_at?: string | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          practice_script_id?: string;
+          play_id?: string;
+          sequence_order?: number;
+          repetitions?: number | null;
+          coaching_points?: string[] | null;
+          duration_minutes?: number | null;
+          hash?: string | null;
+          down_distance?: string | null;
+          field_position?: string | null;
+          defensive_front?: string | null;
+          coverage?: string | null;
+          blitz?: string | null;
+          scenario_notes?: string | null;
+          segment_name?: string | null;
+          segment_type?: string | null;
+          created_at?: string | null;
+          updated_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "practice_script_plays_practice_script_id_fkey";
+            columns: ["practice_script_id"];
+            isOneToOne: false;
+            referencedRelation: "practice_scripts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "practice_script_plays_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       practice_templates: {
         Row: {
           created_at: string | null;

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button } from "../../../ui/Button/Button";
 import { Icon } from "../../../ui/Icon/Icon";
 import { Typography } from "../../../design-system/Typography";
+import { useToast } from "../../../../hooks/useToast";
 
 interface PlayTypeSectionProps {
   playType: string;
@@ -26,6 +27,7 @@ export const PlayTypeSection: React.FC<PlayTypeSectionProps> = ({
   onPlayTypeChange,
   suggestions = [],
 }) => {
+  const toast = useToast();
   const [customTypes, setCustomTypes] = useState<string[]>([]);
   const [isAddingType, setIsAddingType] = useState(false);
   const [newTypeName, setNewTypeName] = useState("");
@@ -44,23 +46,25 @@ export const PlayTypeSection: React.FC<PlayTypeSectionProps> = ({
 
     // Validate
     if (!trimmed) {
-      alert("Play type cannot be empty");
+      toast.error("Play type cannot be empty");
       return;
     }
 
     if (trimmed.length > 50) {
-      alert("Play type must be 50 characters or less");
+      toast.error("Play type must be 50 characters or less");
       return;
     }
 
     if (!/^[A-Za-z0-9\s-]+$/.test(trimmed)) {
-      alert("Play type can only contain letters, numbers, spaces, and hyphens");
+      toast.error(
+        "Play type can only contain letters, numbers, spaces, and hyphens"
+      );
       return;
     }
 
     // Check if already exists
     if (allTypes.includes(trimmed)) {
-      alert("This play type already exists");
+      toast.error("This play type already exists");
       return;
     }
 

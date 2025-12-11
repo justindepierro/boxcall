@@ -143,11 +143,8 @@ export class GamePlanService {
     includeArchived = false
   ): Promise<GamePlan[]> {
     try {
-      // Use new api() client for bulletproof requests
-      const { api } = await import("../lib/api/client");
-
-      // Build the query with proper select
-      let selectQuery = `
+      // Use standard supabase client which handles auth internally
+      const selectQuery = `
         *,
         game_plan_situations (
           *,
@@ -158,12 +155,10 @@ export class GamePlanService {
         )
       `;
 
-      // For non-archived, we need to filter
-      // Note: api() doesn't support chained conditional filters the same way,
-      // so we'll filter in JS for the archived flag
-      const { data, error } = await api("game_plans")
+      const { data, error } = await supabase
+        .from("game_plans")
         .select(selectQuery)
-        .eq("team_id", teamId as any)
+        .eq("team_id", teamId)
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -188,22 +183,21 @@ export class GamePlanService {
    */
   static async getGamePlan(gamePlanId: string): Promise<GamePlan> {
     try {
-      const { api } = await import("../lib/api/client");
-
-      const { data, error } = await api("game_plans")
+      const { data, error } = await supabase
+        .from("game_plans")
         .select(
           `
-        *,
-        game_plan_situations (
           *,
-          game_plan_plays (
+          game_plan_situations (
             *,
-            plays (*)
+            game_plan_plays (
+              *,
+              plays (*)
+            )
           )
+        `
         )
-      `
-        )
-        .eq("id", gamePlanId as any)
+        .eq("id", gamePlanId)
         .limit(1);
 
       if (error) {

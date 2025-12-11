@@ -15,7 +15,7 @@ import type {
   PlayExecution,
   // ExecutionResult, // Unused - removed
 } from "../types/session";
-import { useAuth } from "../app/auth-store";
+import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { ExecutionTrackingService } from "../services/executionTrackingService";
 import { OfflineExecutionQueue } from "../utils/offlineExecutionQueue";
 import { debug, error as logError } from "../utils/logger";
@@ -65,7 +65,7 @@ export function useSession({
   sessionMode,
   scriptOrPlanId,
 }: UseSessionProps): UseSessionReturn {
-  const { activeTeamId } = useAuth();
+  const { activeTeamId } = useActiveTeamStore();
   // const { userId } = useAuth(); // Unused - removed
 
   // Core state
@@ -88,9 +88,8 @@ export function useSession({
   const [error, setError] = useState<string | null>(null);
   const [hasPendingSync, setHasPendingSync] = useState(false);
 
-  // Refs for auto-save and persistence
+  // Refs for auto-save
   const autoSaveIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const offlineQueue = useRef(new OfflineExecutionQueue());
 
   // ================================================
   // PERSISTENCE
@@ -118,11 +117,8 @@ export function useSession({
 
   // Check for pending offline executions
   useEffect(() => {
-    const checkPending = async () => {
-      const queue = await offlineQueue.current.getQueue();
-      setHasPendingSync(queue.pendingCount > 0);
-    };
-    checkPending();
+    const pendingCount = OfflineExecutionQueue.getPendingCount();
+    setHasPendingSync(pendingCount > 0);
   }, [state.executions]);
 
   // ================================================
@@ -145,6 +141,23 @@ export function useSession({
       skippedExecutions: skipped,
       successRate: Math.round(successRate * 10) / 10, // Round to 1 decimal
     };
+  }, []);
+
+  // ================================================
+  // OFFLINE SYNC (must be before SESSION CONTROL due to dependency)
+  // ================================================
+
+  const syncOfflineExecutions = useCallback(async () => {
+    try {
+      const synced = await OfflineExecutionQueue.syncQueue();
+      if (synced > 0) {
+        debug(`Synced ${synced} offline executions`);
+        setHasPendingSync(false);
+      }
+    } catch (err) {
+      logError("Sync error:", err);
+      setError("Failed to sync offline data");
+    }
   }, []);
 
   // ================================================
@@ -320,7 +333,7 @@ export function useSession({
           });
         } else {
           // Add to offline queue
-          await offlineQueue.current.addExecution(fullExecution);
+          OfflineExecutionQueue.add(fullExecution);
 
           // Add to state with temporary ID
           const tempExecution: PlayExecution = {
@@ -347,7 +360,7 @@ export function useSession({
       } catch (err) {
         logError("Log execution error:", err);
         // On error, add to offline queue as fallback
-        await offlineQueue.current.addExecution(fullExecution);
+        OfflineExecutionQueue.add(fullExecution);
         setHasPendingSync(true);
       }
     },
@@ -443,23 +456,6 @@ export function useSession({
       ...prev,
       currentRepNumber: prev.currentRepNumber + 1,
     }));
-  }, []);
-
-  // ================================================
-  // OFFLINE SYNC
-  // ================================================
-
-  const syncOfflineExecutions = useCallback(async () => {
-    try {
-      const synced = await offlineQueue.current.syncQueue();
-      if (synced > 0) {
-        debug(`Synced ${synced} offline executions`);
-        setHasPendingSync(false);
-      }
-    } catch (err) {
-      logError("Sync error:", err);
-      setError("Failed to sync offline data");
-    }
   }, []);
 
   // ================================================

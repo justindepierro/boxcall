@@ -174,16 +174,18 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
           calendarEventsResponse,
           equipmentResponse,
         ] = await Promise.all([
-          // Search plays (only if we have a playbook) - limit to 2 for speed
+          // Search plays (only if we have a playbook) - increased limit and more fields
           playbookId
             ? supabase
                 .from("plays")
-                .select("id, play_name, formation")
+                .select(
+                  "id, play_name, formation, one_word_play, personnel, p_type, tags"
+                )
                 .eq("playbook_id", playbookId)
                 .or(
-                  `play_name.ilike.%${searchTerm}%,formation.ilike.%${searchTerm}%,one_word_play.ilike.%${searchTerm}%`
+                  `play_name.ilike.%${searchTerm}%,formation.ilike.%${searchTerm}%,one_word_play.ilike.%${searchTerm}%,personnel.ilike.%${searchTerm}%,p_type.ilike.%${searchTerm}%`
                 )
-                .limit(2)
+                .limit(5)
                 .abortSignal(signal)
             : Promise.resolve({ data: null }),
 
@@ -194,7 +196,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
                 .select("id, name")
                 .eq("playbook_id", playbookId)
                 .ilike("name", `%${searchTerm}%`)
-                .limit(2)
+                .limit(3)
                 .abortSignal(signal)
             : Promise.resolve({ data: null }),
 
@@ -258,12 +260,15 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
         ]);
 
         const searchResults: SearchResult[] = [
-          // Add plays
+          // Add plays - show one-word play if available, otherwise play name
           ...(playsResponse.data || []).map((play) => ({
             type: "play" as const,
             id: play.id,
-            title: play.play_name,
-            subtitle: `Play • Formation: ${play.formation || "Unknown"}`,
+            title: play.one_word_play || play.play_name || "Unnamed Play",
+            subtitle:
+              `Play • ${play.formation || ""}${play.personnel ? ` • ${play.personnel}` : ""}${play.p_type ? ` • ${play.p_type}` : ""}`
+                .replace(/• $/, "")
+                .trim() || "Play",
             url: `/playbook`,
           })),
 
@@ -503,7 +508,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
   );
 
   const getTypeColor = useCallback(
-    (type: SearchResult["type"]) => typeColorMap[type] || "text-gray-600",
+    (type: SearchResult["type"]) => typeColorMap[type] || "text-secondary",
     [typeColorMap]
   );
 
@@ -689,7 +694,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
                   className="p-2 hover:bg-neutral-100 dark:hover:bg-navy-800 rounded-lg transition-colors"
                   aria-label="Close search"
                 >
-                  <Icon name="x" className="h-6 w-6 text-neutral-500" />
+                  <Icon name="close" className="h-6 w-6 text-neutral-500" />
                 </button>
                 <Typography
                   variant="headline-sm"
@@ -735,7 +740,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
                     className="mr-3 p-1.5 hover:bg-neutral-200 dark:hover:bg-navy-700 rounded-lg transition-colors"
                     aria-label="Clear search"
                   >
-                    <Icon name="x" className="h-4 w-4 text-neutral-500" />
+                    <Icon name="close" className="h-4 w-4 text-neutral-500" />
                   </button>
                 )}
               </div>

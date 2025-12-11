@@ -203,7 +203,7 @@ export const MobilePlayCard: React.FC<MobilePlayCardProps> = ({
           "
           aria-label="More actions"
         >
-          <Icon name="dots-vertical" className="text-neutral-600" size="sm" />
+          <Icon name="grip-vertical" className="text-neutral-600" size="sm" />
         </button>
       </div>
     </div>

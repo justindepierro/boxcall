@@ -441,6 +441,18 @@ export class ApiClient {
   ): Promise<ApiResponse<T>> {
     const { baseUrl, anonKey } = this.config;
 
+    // CRITICAL: Always check for token before each request
+    // This handles race conditions where the request fires before onAuthStateChange
+    if (!currentAccessToken) {
+      const storedToken = this.getStoredToken();
+      if (storedToken) {
+        currentAccessToken = storedToken;
+        console.log(
+          "🔌 [ApiClient] Recovered token from storage before request"
+        );
+      }
+    }
+
     // Build URL
     const url = new URL(`${baseUrl}/rest/v1/${table}`);
 
@@ -479,6 +491,13 @@ export class ApiClient {
       Authorization: `Bearer ${currentAccessToken || anonKey}`,
       "Content-Type": "application/json",
     };
+
+    // Log auth status for debugging
+    console.log("🔌 [ApiClient] Request to", table, {
+      hasAuthToken: !!currentAccessToken,
+      tokenPrefix: currentAccessToken?.substring(0, 20) || "none",
+      usingAnonKey: !currentAccessToken,
+    });
 
     if (options.count) {
       headers["Prefer"] = `count=${options.count}`;

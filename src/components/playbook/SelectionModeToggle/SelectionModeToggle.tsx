@@ -142,7 +142,7 @@ export const SelectionModeToggle: React.FC<SelectionModeToggleProps> = ({
       className={`relative flex items-center justify-between w-full px-5 py-4 rounded-xl transition-all ${
         isActive
           ? "bg-gradient-to-br from-jade-500 via-jade-600 to-emerald-600 text-white shadow-lg shadow-jade-500/30 hover:shadow-xl hover:shadow-jade-500/40"
-          : "bg-white text-slate-700 hover:bg-slate-50 shadow-md hover:shadow-lg border border-slate-200 hover:border-jade-300"
+          : "bg-white text-primary hover:bg-secondary shadow-md hover:shadow-lg border border-secondary hover:border-jade-300"
       } ${className}`}
       whileHover={{ scale: 1.02, y: -2 }}
       whileTap={{ scale: 0.98 }}
@@ -168,9 +168,7 @@ export const SelectionModeToggle: React.FC<SelectionModeToggleProps> = ({
         <div className="flex flex-col items-start">
           <Typography
             variant="body-md"
-            className={`font-bold ${
-              isActive ? "text-white" : "text-slate-800"
-            }`}
+            className={`font-bold ${isActive ? "text-white" : "text-primary"}`}
           >
             {label}
           </Typography>

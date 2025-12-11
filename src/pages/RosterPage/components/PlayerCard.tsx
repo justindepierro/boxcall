@@ -64,7 +64,7 @@ export const PlayerCard = React.memo<PlayerCardProps>(
                 e.stopPropagation();
                 onToggleSelection(player.id);
               }}
-              className="w-5 h-5 rounded border text-jade-600 focus:ring-2 focus:ring-jade-500 cursor-pointer transition-all"
+              className="w-5 h-5 rounded border text-jade-600 focus:ring-2 focus:ring-jade-500 focus:border-jade-500 cursor-pointer transition-all"
               aria-label={`Select ${player.first_name} ${player.last_name}`}
             />
             <div>

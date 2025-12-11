@@ -6,6 +6,7 @@ import { Typography } from "../components/design-system";
 import { Icon } from "../components/ui/Icon/Icon";
 import { Tag } from "../components/ui/Tag";
 import { Button } from "../components/ui/Button/Button";
+import { useToast } from "../hooks/useToast";
 
 /**
  * Join Team Page
@@ -55,6 +56,7 @@ type JoinStep =
 const JoinTeam: React.FC = () => {
   const navigate = useNavigate();
   const { user: _user } = useAuth();
+  const toast = useToast();
 
   const [currentStep, setCurrentStep] = useState<JoinStep>("method");
   const [_selectedMethod, setSelectedMethod] = useState<string>("");
@@ -128,7 +130,7 @@ const JoinTeam: React.FC = () => {
 
   const handleInviteCodeSubmit = async () => {
     if (!inviteCode || inviteCode.length !== 6) {
-      alert("Please enter a valid 6-digit invite code");
+      toast.error("Please enter a valid 6-digit invite code");
       return;
     }
 

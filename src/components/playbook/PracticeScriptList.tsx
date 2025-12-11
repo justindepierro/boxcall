@@ -7,6 +7,8 @@ import { PracticeScriptService, type PracticeScript } from "@services";
 import { useToast } from "../../hooks/useToast";
 import { PDFExportService } from "../../services/pdfExportService";
 import { logError } from "../../utils/logger";
+import { ConfirmationModal } from "../ui/ConfirmationModal/ConfirmationModal";
+import { useAuth } from "../../app/auth-store";
 
 interface PracticeScriptListProps {
   teamId: string;
@@ -23,13 +25,31 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const { success, error: toastError } = useToast();
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const { session } = useAuth(); // Wait for auth to be ready
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const loadScripts = useCallback(async () => {
     try {
       setLoading(true);
       setFetchError(null);
+      console.log(
+        "📋 [PracticeScriptList] Starting to load scripts for team:",
+        teamId
+      );
       const fetchedScripts =
         await PracticeScriptService.getPracticeScripts(teamId);
+      console.log("📋 [PracticeScriptList] Loaded scripts:", {
+        count: fetchedScripts.length,
+        scripts: fetchedScripts.map((s) => ({
+          id: s.id,
+          title: s.title,
+          playCount: s.plays?.length || 0,
+        })),
+      });
       setScripts(fetchedScripts);
     } catch (err) {
       logError("Failed to load practice scripts:", err);
@@ -41,25 +61,33 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
   }, [teamId, toastError]);
 
   useEffect(() => {
-    loadScripts();
-  }, [loadScripts]);
+    // Only load scripts when we have a valid session
+    if (session?.access_token) {
+      console.log("📋 [PracticeScriptList] Session ready, loading scripts...");
+      loadScripts();
+    } else {
+      console.log("📋 [PracticeScriptList] Waiting for session...");
+    }
+  }, [loadScripts, session?.access_token]);
 
   const handleDeleteScript = async (scriptId: string, scriptName: string) => {
-    if (
-      !confirm(
-        `Are you sure you want to delete "${scriptName}"? This action cannot be undone.`
-      )
-    ) {
-      return;
-    }
+    setDeleteTarget({ id: scriptId, name: scriptName });
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDeleteScript = async () => {
+    if (!deleteTarget) return;
 
     try {
-      await PracticeScriptService.deletePracticeScript(scriptId);
-      success(`Deleted "${scriptName}"`);
+      await PracticeScriptService.deletePracticeScript(deleteTarget.id);
+      success(`Deleted "${deleteTarget.name}"`);
       await loadScripts(); // Refresh the list
     } catch (err) {
       logError("Failed to delete practice script:", err);
       toastError("Failed to delete practice script", "Please try again");
+    } finally {
+      setShowDeleteConfirm(false);
+      setDeleteTarget(null);
     }
   };
 
@@ -164,116 +192,133 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
   }
 
   return (
-    <div className="space-y-2">
-      {scripts.map((script) => (
-        <div
-          key={script.id}
-          className="bg-primary rounded-lg border border-muted p-4 hover:border-light transition-all hover:shadow-sm"
-        >
-          <div className="flex items-center justify-between gap-4">
-            {/* Left: Script Info */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <Typography
-                  variant="headline-sm"
-                  className="text-primary truncate"
-                  title={script.title || script.name}
-                >
-                  {script.title || script.name}
-                </Typography>
-                {script.isTemplate && (
-                  <Badge variant="neutral" size="sm">
-                    Template
-                  </Badge>
-                )}
-              </div>
-
-              <div className="flex items-center gap-4 text-sm text-secondary">
-                <div className="flex items-center gap-1">
-                  <Icon name="clock" className="h-4 w-4" />
-                  <span>{formatDuration(script.duration)}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Icon name="list" className="h-4 w-4" />
-                  <span>{script.plays?.length || 0} plays</span>
-                </div>
-                <Typography variant="caption" className="text-muted">
-                  Updated {formatDate(script.updatedAt)}
-                </Typography>
-              </div>
-
-              {script.description && (
-                <Typography
-                  variant="body-sm"
-                  className="text-secondary mt-2 line-clamp-1"
-                  title={script.description}
-                >
-                  {script.description}
-                </Typography>
-              )}
-
-              {script.tags && script.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-2">
-                  {script.tags.slice(0, 5).map((tag) => (
-                    <Badge key={tag} variant="neutral" size="sm">
-                      {tag}
-                    </Badge>
-                  ))}
-                  {script.tags.length > 5 && (
+    <>
+      <div className="space-y-2">
+        {scripts.map((script) => (
+          <div
+            key={script.id}
+            className="bg-primary rounded-lg border border-muted p-4 hover:border-light transition-all hover:shadow-sm"
+          >
+            <div className="flex items-center justify-between gap-4">
+              {/* Left: Script Info */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <Typography
+                    variant="headline-sm"
+                    className="text-primary truncate"
+                    title={script.title || script.name}
+                  >
+                    {script.title || script.name}
+                  </Typography>
+                  {script.isTemplate && (
                     <Badge variant="neutral" size="sm">
-                      +{script.tags.length - 5} more
+                      Template
                     </Badge>
                   )}
                 </div>
-              )}
-            </div>
 
-            {/* Right: Actions */}
-            <div className="flex items-center gap-2 shrink-0">
-              <Button
-                onClick={() => handleExportPDF(script)}
-                variant="primary"
-                size="sm"
-                title="Export to PDF"
-              >
-                <Icon name="download" className="h-4 w-4 mr-1" />
-                PDF
-              </Button>
-              <Button
-                onClick={() => onEditScript?.(script)}
-                variant="secondary"
-                size="sm"
-                title="Edit script"
-              >
-                <Icon name="edit" className="h-4 w-4 mr-1" />
-                Edit
-              </Button>
-              <Button
-                onClick={() => handleDuplicateScript(script)}
-                variant="outline"
-                size="sm"
-                title="Duplicate script"
-              >
-                <Icon name="copy" className="h-4 w-4" />
-              </Button>
-              <Button
-                onClick={() =>
-                  handleDeleteScript(
-                    script.id,
-                    script.title || script.name || "Untitled"
-                  )
-                }
-                variant="outline"
-                size="sm"
-                className="text-error-600 hover:text-error-700"
-                aria-label="Delete script"
-              >
-                <Icon name="trash-2" className="h-4 w-4" />
-              </Button>
+                <div className="flex items-center gap-4 text-sm text-secondary">
+                  <div className="flex items-center gap-1">
+                    <Icon name="clock" className="h-4 w-4" />
+                    <span>{formatDuration(script.duration)}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Icon name="list" className="h-4 w-4" />
+                    <span>{script.plays?.length || 0} plays</span>
+                  </div>
+                  <Typography variant="caption" className="text-muted">
+                    Updated {formatDate(script.updatedAt)}
+                  </Typography>
+                </div>
+
+                {script.description && (
+                  <Typography
+                    variant="body-sm"
+                    className="text-secondary mt-2 line-clamp-1"
+                    title={script.description}
+                  >
+                    {script.description}
+                  </Typography>
+                )}
+
+                {script.tags && script.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {script.tags.slice(0, 5).map((tag) => (
+                      <Badge key={tag} variant="neutral" size="sm">
+                        {tag}
+                      </Badge>
+                    ))}
+                    {script.tags.length > 5 && (
+                      <Badge variant="neutral" size="sm">
+                        +{script.tags.length - 5} more
+                      </Badge>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Right: Actions */}
+              <div className="flex items-center gap-2 shrink-0">
+                <Button
+                  onClick={() => handleExportPDF(script)}
+                  variant="primary"
+                  size="sm"
+                  title="Export to PDF"
+                >
+                  <Icon name="download" className="h-4 w-4 mr-1" />
+                  PDF
+                </Button>
+                <Button
+                  onClick={() => onEditScript?.(script)}
+                  variant="secondary"
+                  size="sm"
+                  title="Edit script"
+                >
+                  <Icon name="edit" className="h-4 w-4 mr-1" />
+                  Edit
+                </Button>
+                <Button
+                  onClick={() => handleDuplicateScript(script)}
+                  variant="outline"
+                  size="sm"
+                  title="Duplicate script"
+                >
+                  <Icon name="copy" className="h-4 w-4" />
+                </Button>
+                <Button
+                  onClick={() =>
+                    handleDeleteScript(
+                      script.id,
+                      script.title || script.name || "Untitled"
+                    )
+                  }
+                  variant="outline"
+                  size="sm"
+                  className="text-error-600 hover:text-error-700"
+                  aria-label="Delete script"
+                >
+                  <Icon name="trash-2" className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => {
+          setShowDeleteConfirm(false);
+          setDeleteTarget(null);
+        }}
+        onConfirm={confirmDeleteScript}
+        title="Delete Practice Script"
+        message={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
+        variant="danger"
+        confirmText="Delete"
+        cancelText="Cancel"
+      />
+    </>
   );
 };

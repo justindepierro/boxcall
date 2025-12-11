@@ -153,7 +153,7 @@ export const PracticeScriptForm: React.FC<PracticeScriptFormProps> = ({
                     type="button"
                     aria-label={`Remove ${tag}`}
                   >
-                    <Icon name="x" size={14} />
+                    <Icon name="close" size={14} />
                   </button>
                 </span>
               ))}

@@ -3,7 +3,6 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "../app/auth-store";
 import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { supabase } from "../lib/supabase";
-import { api } from "../lib/api";
 import { NetworkResilience } from "../utils/networkResilience";
 import { debug, warn, error as logError } from "../utils/logger";
 import type { Formation } from "../types/formation";
@@ -193,18 +192,17 @@ export function useTeamsData(teamIdOverride?: string | null) {
       try {
         setLoading(true);
         setError(null);
-        debug(
-          "[useTeamsData] 🔍 Starting fetchData with ApiClient for teamId:",
-          teamId
-        );
+        console.log("🔍 [useTeamsData] Starting fetchData for teamId:", teamId);
 
-        // Step 1: Fetch teams and playbooks in parallel using unified ApiClient
+        // Step 1: Fetch teams and playbooks in parallel using supabase client
         const [teamsResult, playbooksResult] = await Promise.all([
-          api("teams")
+          supabase
+            .from("teams")
             .select(TEAM_FIELDS)
             .eq("id", teamId)
             .order("created_at", { ascending: false }),
-          api("playbooks")
+          supabase
+            .from("playbooks")
             .select(PLAYBOOK_FIELDS)
             .eq("team_id", teamId)
             .order("created_at", { ascending: false }),
@@ -214,11 +212,20 @@ export function useTeamsData(teamIdOverride?: string | null) {
           return;
         }
 
-        debug("[useTeamsData] 📦 Teams result:", teamsResult);
-        debug("[useTeamsData] 📦 Playbooks result:", playbooksResult);
+        console.log("🔍 [useTeamsData] Teams result:", {
+          data: teamsResult.data,
+          error: teamsResult.error,
+        });
+        console.log("🔍 [useTeamsData] Playbooks result:", {
+          data: playbooksResult.data,
+          error: playbooksResult.error,
+        });
 
         if (teamsResult.error) {
-          logError("Error fetching teams:", teamsResult.error);
+          console.error(
+            "❌ [useTeamsData] Error fetching teams:",
+            teamsResult.error
+          );
           setError(`Failed to fetch teams: ${teamsResult.error.message}`);
           setLoading(false);
           return;
@@ -252,13 +259,15 @@ export function useTeamsData(teamIdOverride?: string | null) {
           return;
         }
 
-        // Step 2: Fetch formations and plays in parallel using unified ApiClient
+        // Step 2: Fetch formations and plays in parallel using supabase client
         const [formationsResult, playsResult] = await Promise.all([
-          api("formations")
+          supabase
+            .from("formations")
             .select("*")
             .in("playbook_id", playbookIds)
             .order("created_at", { ascending: false }),
-          api("plays")
+          supabase
+            .from("plays")
             .select(PLAY_SELECT_FIELDS)
             .in("playbook_id", playbookIds)
             .order("created_at", { ascending: false })
@@ -269,8 +278,14 @@ export function useTeamsData(teamIdOverride?: string | null) {
           return;
         }
 
-        debug("[useTeamsData] 🎭 Formations result:", formationsResult);
-        debug("[useTeamsData] 🏈 Plays result:", playsResult);
+        console.log("🔍 [useTeamsData] Formations result:", {
+          count: formationsResult.data?.length || 0,
+          error: formationsResult.error,
+        });
+        console.log("🔍 [useTeamsData] Plays result:", {
+          count: playsResult.data?.length || 0,
+          error: playsResult.error,
+        });
 
         if (formationsResult.error) {
           warn(

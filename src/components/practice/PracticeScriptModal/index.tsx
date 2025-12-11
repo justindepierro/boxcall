@@ -145,7 +145,7 @@ export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
               onClick={onClose}
               className="hover:bg-neutral-100 dark:hover:bg-navy-800"
             >
-              <Icon name="x" className="h-5 w-5" />
+              <Icon name="close" className="h-5 w-5" />
             </Button>
           </div>
 

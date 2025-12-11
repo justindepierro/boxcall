@@ -8,7 +8,16 @@ type TeamMember = Database["public"]["Tables"]["team_members"]["Row"] & {
 };
 
 async function fetchUserTeamMemberships(userId: string): Promise<TeamMember[]> {
-  if (!userId) return [];
+  console.log(
+    "🔍 [useUserTeamMemberships] Fetching memberships for userId:",
+    userId
+  );
+  if (!userId) {
+    console.log(
+      "🔍 [useUserTeamMemberships] No userId provided, returning empty"
+    );
+    return [];
+  }
 
   const { data, error } = await supabase
     .from("team_members")
@@ -21,7 +30,14 @@ async function fetchUserTeamMemberships(userId: string): Promise<TeamMember[]> {
     .eq("user_id", userId)
     .eq("status", "active");
 
+  console.log("🔍 [useUserTeamMemberships] Result:", {
+    data,
+    error,
+    count: data?.length,
+  });
+
   if (error) {
+    console.error("🔍 [useUserTeamMemberships] ERROR:", error);
     logError("Error fetching user team memberships:", error);
     return [];
   }

@@ -4,6 +4,7 @@ import { Icon } from "../../../ui/Icon/Icon";
 import { Typography } from "../../../design-system/Typography";
 import { ValidatedInput } from "../../ValidatedInput";
 import { usePersonnelConfigurations } from "../../../../hooks/usePersonnel";
+import { useToast } from "../../../../hooks/useToast";
 import type { Play } from "../../../../types/database";
 
 interface PersonnelSectionProps {
@@ -29,6 +30,7 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
   // Fetch personnel configurations from database
   const { data: configurations, isLoading } =
     usePersonnelConfigurations(playbookId);
+  const toast = useToast();
 
   // Extract unique personnel values from existing plays for validation
   const existingPersonnelValues = useMemo(() => {
@@ -46,7 +48,7 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
       onAddNew();
     } else {
       // Fallback for backwards compatibility
-      alert("Personnel configuration modal will open here (Phase 6)");
+      toast.info("Personnel configuration modal will open here (Phase 6)");
     }
   };
 

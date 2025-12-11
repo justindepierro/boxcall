@@ -59,7 +59,7 @@ export const FormSelect: React.FC<FormSelectProps> = ({
               bg-white dark:bg-navy-800
               text-primary dark:text-neutral-100
               border border-secondary dark:border-navy-600
-              focus:outline-none focus:ring-2 focus:ring-jade-500/50 focus:border-jade-500
+              focus:outline-none focus:ring-2 focus:ring-jade-500 focus:border-jade-500
               text-left cursor-pointer
               disabled:opacity-50 disabled:cursor-not-allowed
               text-sm

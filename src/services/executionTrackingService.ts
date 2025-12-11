@@ -32,14 +32,13 @@ export class ExecutionTrackingService {
       .from("practice_sessions")
       .insert({
         team_id: data.teamId,
+        name: data.name,
         practice_script_id: data.practiceScriptId,
-        session_mode: data.sessionMode,
-        session_date: data.sessionDate.toISOString().split("T")[0],
+        session_type: data.sessionMode === "live" ? "practice" : "walkthrough",
+        status: "active",
         started_at: data.startedAt?.toISOString() || new Date().toISOString(),
         notes: data.notes,
-        weather: data.weather,
-        field_conditions: data.fieldConditions,
-        recorded_by: getCurrentUserId(),
+        created_by: getCurrentUserId(),
       })
       .select()
       .single();
@@ -174,10 +173,9 @@ export class ExecutionTrackingService {
         *,
         game_plans (
           id,
-          name,
           opponent,
           game_date,
-          game_location
+          venue
         )
       `
       )
@@ -645,7 +643,7 @@ export class ExecutionTrackingService {
         .select(
           `
           *,
-          game_plans (id, name, opponent)
+          game_plans (id, opponent)
         `
         )
         .eq("team_id", teamId)

@@ -15,6 +15,7 @@ import { Typography } from "../design-system/Typography";
 import { Button } from "../ui/Button/Button";
 import { supabase } from "../../lib/supabase";
 import { logError } from "../../utils/logger";
+import { useToast } from "../../hooks/useToast";
 
 interface Playbook {
   id: string;
@@ -47,6 +48,7 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
   const [editingName, setEditingName] = useState("");
   const [saving, setSaving] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const toast = useToast();
   const [dropdownPosition, setDropdownPosition] = useState({
     top: 0,
     left: 0,
@@ -95,7 +97,7 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
       }
     } catch (error) {
       logError("Failed to update playbook name:", error);
-      alert("Failed to update playbook name. Please try again.");
+      toast.error("Failed to update playbook name. Please try again.");
     } finally {
       setSaving(false);
     }
@@ -134,7 +136,7 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
       }
     } catch (error) {
       logError("Failed to create playbook:", error);
-      alert("Failed to create playbook. Please try again.");
+      toast.error("Failed to create playbook. Please try again.");
     }
   };
 

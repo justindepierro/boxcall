@@ -20,7 +20,6 @@ import {
   capabilityListFromFlags,
 } from "../types/roles";
 import { supabase } from "../lib/supabase";
-import { api } from "../lib/api";
 import { debug, warn, logError } from "../utils/logger";
 
 export class RoleService {
@@ -84,8 +83,9 @@ export class RoleService {
       const profileStart = Date.now();
 
       const [profileResult, membershipsResult] = await Promise.all([
-        api("profiles").select("role").eq("id", userId).maybeSingle(),
-        api("team_members")
+        supabase.from("profiles").select("role").eq("id", userId).maybeSingle(),
+        supabase
+          .from("team_members")
           .select(
             "team_id, team_role, capabilities, role_notes, assigned_at, status"
           )
@@ -156,7 +156,8 @@ export class RoleService {
       let teams: any[] = [];
       if (teamIds.length > 0) {
         const teamsQueryStart = Date.now();
-        const teamsResult = await api("teams")
+        const teamsResult = await supabase
+          .from("teams")
           .select("id, name")
           .in("id", teamIds);
 
@@ -243,7 +244,8 @@ export class RoleService {
     teamId: string
   ): Promise<TeamRole | null> {
     try {
-      const { data, error } = await api("team_members")
+      const { data, error } = await supabase
+        .from("team_members")
         .select("team_role")
         .eq("user_id", userId)
         .eq("team_id", teamId)

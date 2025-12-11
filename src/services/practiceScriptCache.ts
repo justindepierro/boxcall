@@ -224,3 +224,19 @@ class PracticeScriptCacheService {
 
 // Export singleton instance
 export const practiceScriptCache = new PracticeScriptCacheService();
+
+// Expose for debugging - can be called from browser console as: window.clearPracticeScriptCache()
+if (typeof window !== "undefined") {
+  (window as any).clearPracticeScriptCache = async () => {
+    await practiceScriptCache.clear();
+    console.log(
+      "✅ Practice script cache cleared (both memory and IndexedDB)!"
+    );
+    return "Cache cleared - please refresh the page";
+  };
+
+  // Also expose cache stats
+  (window as any).getPracticeScriptCacheStats = () => {
+    return practiceScriptCache.getMetrics();
+  };
+}

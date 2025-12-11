@@ -213,7 +213,7 @@ export const PlayImageUpload: React.FC<PlayImageUploadProps> = ({
               onClick={handleRemove}
               className="bg-primary/90 backdrop-blur-sm"
             >
-              <Icon name="trash" size="sm" />
+              <Icon name="delete" size="sm" />
             </Button>
           </div>
 

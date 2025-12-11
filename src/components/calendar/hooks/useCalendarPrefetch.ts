@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { CalendarAPI } from "../../../infra/calendar/api";
 import { calendarKeys } from "../../../stores/calendar/queryKeys";
@@ -27,13 +27,21 @@ export function useCalendarPrefetch({
   events,
 }: PrefetchArgs) {
   const queryClient = useQueryClient();
+  const lastDateRef = useRef<string | null>(null);
+
   useEffect(() => {
     const api = calendarRef.current?.getApi?.();
     if (!api) return;
     const handler = () => {
       const date = api.getDate();
       const iso = date.toISOString().split("T")[0];
-      setUrlState({ date: iso });
+
+      // Only update URL state if the date actually changed
+      if (lastDateRef.current !== iso) {
+        lastDateRef.current = iso;
+        setUrlState({ date: iso });
+      }
+
       if (currentView === "dayGridMonth") {
         const year = date.getFullYear();
         const month = date.getMonth();

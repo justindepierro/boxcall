@@ -133,7 +133,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                   } ${
                     activeTab === tab
                       ? "bg-electric-100 dark:bg-electric-900/30 text-electric-700 dark:text-electric-400"
-                      : "text-secondary dark:text-muted hover:bg-muted dark:hover:bg-slate-800"
+                      : "text-secondary dark:text-muted hover:bg-muted dark:hover:bg-navy-800"
                   }`}
                 >
                   {tab.charAt(0).toUpperCase() + tab.slice(1)}

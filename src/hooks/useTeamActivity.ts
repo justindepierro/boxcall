@@ -2,12 +2,12 @@
  * useTeamActivity Hook
  * Fetches and calculates team activity statistics for the hero section
  *
- * Uses the unified api() client for database queries.
+ * Uses the supabase client for database queries.
  * Optimized for fast loading with proper error handling.
  */
 
 import { useState, useEffect, useRef } from "react";
-import { api } from "../lib/api/client";
+import { supabase } from "../lib/supabase";
 import { logError } from "../utils/logger";
 
 export interface TeamActivityStats {
@@ -46,9 +46,8 @@ export function useTeamActivity(teamId: string): TeamActivityStats {
         ).toISOString();
 
         // Fetch team members - fast query with minimal data
-        const { data: teamMembers, error: membersError } = await api(
-          "team_members"
-        )
+        const { data: teamMembers, error: membersError } = await supabase
+          .from("team_members")
           .select("user_id")
           .eq("team_id", teamId)
           .limit(100); // Cap at 100 to prevent slow queries
@@ -72,7 +71,8 @@ export function useTeamActivity(teamId: string): TeamActivityStats {
         let onlineCount = 0;
         if (userIds.length > 0 && userIds.length <= 50) {
           // Only check online status for teams with <= 50 members (performance)
-          const { data: onlineProfiles } = await api("profiles")
+          const { data: onlineProfiles } = await supabase
+            .from("profiles")
             .select("id")
             .gte("last_login", fiveMinutesAgo)
             .in("id", userIds);

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FormationService } from "../../services/formationService";
 import type { Formation } from "../../types/formation";
 import { error as logError } from "../../utils/logger";
+import { useToast } from "../../hooks/useToast";
 
 interface FormationHealthDashboardProps {
   playbookId: string;
@@ -18,6 +19,7 @@ interface HealthStats {
 export const FormationHealthDashboard: React.FC<
   FormationHealthDashboardProps
 > = ({ playbookId, onFormationUpdated }) => {
+  const toast = useToast();
   const [stats, setStats] = useState<HealthStats>({
     total: 0,
     paired: 0,
@@ -113,7 +115,7 @@ export const FormationHealthDashboard: React.FC<
       onFormationUpdated?.();
     } catch (error) {
       logError("[FormationHealthDashboard] Failed to link formations:", error);
-      alert("Failed to link formations. Please try again.");
+      toast.error("Failed to link formations. Please try again.");
     } finally {
       setActionLoading(null);
     }
@@ -130,7 +132,7 @@ export const FormationHealthDashboard: React.FC<
         "[FormationHealthDashboard] Failed to mark as standalone:",
         error
       );
-      alert("Failed to mark as standalone. Please try again.");
+      toast.error("Failed to mark as standalone. Please try again.");
     } finally {
       setActionLoading(null);
     }

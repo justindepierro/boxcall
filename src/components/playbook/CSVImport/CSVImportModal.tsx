@@ -8,6 +8,7 @@ import { Button } from "../../ui/Button/Button";
 import { CSVValidationRowEditor } from "./CSVValidationRowEditor";
 import { Modal } from "../../ui/Modal/Modal";
 import { logError } from "../../../utils/logger";
+import { useToast } from "../../../hooks/useToast";
 
 interface CSVImportModalProps {
   isOpen: boolean;
@@ -30,6 +31,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   playbookId,
   onImportComplete,
 }) => {
+  const toast = useToast();
   const [step, setStep] = useState<
     "upload" | "preview" | "importing" | "complete"
   >("upload");
@@ -72,7 +74,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
   const handleFileUpload = async (file: File) => {
     if (!file.name.toLowerCase().endsWith(".csv")) {
-      alert("Please upload a CSV file");
+      toast.error("Please upload a CSV file");
       return;
     }
 
@@ -88,7 +90,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       setStep("preview");
     } catch (error) {
       logError("Error reading file:", error);
-      alert("Error reading file. Please try again.");
+      toast.error("Error reading file. Please try again.");
     } finally {
       setIsProcessing(false);
     }

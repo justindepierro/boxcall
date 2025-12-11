@@ -13,6 +13,7 @@ import { PlaySelectorModal } from "../PlaySelectorModal";
 import { GamePlanPDFService } from "../../../services/gamePlanPdfService";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 import { logError } from "../../../utils/logger";
+import { useToast } from "../../../hooks/useToast";
 import {
   getAllBillickSituations,
   getBillickSituationColorClasses,
@@ -38,6 +39,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
   onSave,
   initialGamePlan,
 }) => {
+  const toast = useToast();
   const [formData, setFormData] = useState<GamePlanFormData>({
     name: initialGamePlan?.name || "",
     opponent: initialGamePlan?.opponent || "",
@@ -211,7 +213,9 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
 
   const handleExportPDF = async () => {
     if (!formData.name.trim() || !formData.opponent.trim()) {
-      alert("Please fill in game plan name and opponent before exporting");
+      toast.error(
+        "Please fill in game plan name and opponent before exporting"
+      );
       return;
     }
 
@@ -232,7 +236,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
       await GamePlanPDFService.exportGamePlan(gamePlan, "call-sheet");
     } catch (error) {
       logError("Error exporting PDF:", error);
-      alert("Failed to export PDF. Please try again.");
+      toast.error("Failed to export PDF. Please try again.");
     } finally {
       setIsExporting(false);
     }

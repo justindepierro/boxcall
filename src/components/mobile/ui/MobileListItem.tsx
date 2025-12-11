@@ -154,7 +154,7 @@ export function MobileListItem({
                 ${action.color === "blue" ? "bg-blue-500" : ""}
                 ${action.color === "red" ? "bg-red-500" : ""}
                 ${action.color === "green" ? "bg-green-500" : ""}
-                ${action.color === "gray" ? "bg-gray-500" : ""}
+                ${action.color === "gray" ? "bg-neutral-500" : ""}
               `}
             >
               {action.label}
