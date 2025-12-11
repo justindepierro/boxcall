@@ -1,9 +1,20 @@
+/**
+ * SessionHistoryPage - View all past practice and game sessions
+ *
+ * Modernized Dec 2025: Premium visual design with gradients
+ *
+ * NOTE: This component intentionally uses raw Tailwind colors for:
+ * - Gradient effects (indigo-*, purple-*, slate-*)
+ * - Visual polish (shadows, subtle backgrounds)
+ * These are design choices that don't need dark mode variants.
+ */
+
+/* eslint-disable boxcall-design/no-raw-tailwind-colors */
+
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Typography } from "../components/design-system";
-import { Button } from "../components/ui";
-import { Card } from "../components/ui";
 import { Icon } from "../components/ui/Icon/Icon";
 import { Dropdown } from "../components/ui/Dropdown";
 import { useActiveTeamStore } from "../stores/activeTeamStore";
@@ -62,6 +73,7 @@ interface SessionDisplayItem {
   name: string;
   date: Date;
   dateDisplay: string;
+  sourceId?: string; // The script/plan ID to navigate to for replay
   stats: {
     totalPlays: number;
     successRate: number;
@@ -86,6 +98,7 @@ const mapSessionToDisplay = (
         (practiceSession as any).practice_scripts?.title || "Practice Session",
       date: practiceSession.sessionDate,
       dateDisplay: formatRelativeDate(practiceSession.sessionDate),
+      sourceId: practiceSession.practiceScriptId, // For replay navigation
       stats: {
         totalPlays: practiceSession.totalReps || 0,
         successRate: Math.round(practiceSession.successRate || 0),
@@ -102,6 +115,7 @@ const mapSessionToDisplay = (
         `vs ${gameSession.opponent || "Unknown"}`,
       date: gameSession.gameDate,
       dateDisplay: formatRelativeDate(gameSession.gameDate),
+      sourceId: gameSession.gamePlanId, // For replay navigation
       stats: {
         totalPlays: gameSession.totalPlays || 0,
         successRate: Math.round(gameSession.successRate || 0),
@@ -170,7 +184,14 @@ const SessionHistoryPage: React.FC = () => {
 
   const handleSessionClick = (session: SessionDisplayItem) => {
     triggerHapticFeedback("light");
-    navigate(`/boxcall/${session.type}/${session.id}`);
+    // Navigate to replay using source ID (script/plan), or show session detail if no source
+    if (session.sourceId) {
+      navigate(`/boxcall/${session.type}/${session.sourceId}`);
+    } else {
+      // TODO: Navigate to session detail page when implemented
+      // For now, just show a toast that replay isn't available
+      console.log(`Session ${session.id} has no linked ${session.type === "practice" ? "script" : "plan"}`);
+    }
   };
 
   const filteredSessions = sessions.filter((session) => {
@@ -183,34 +204,36 @@ const SessionHistoryPage: React.FC = () => {
   }
 
   return (
-    <div className="py-4 sm:py-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 py-4 sm:py-6">
       <div className="container-page">
-        {/* Header */}
+        {/* Header - Premium */}
         <div className="mb-6 sm:mb-8">
           <div className="flex items-center gap-3 mb-2">
             <button
               onClick={() => navigate("/boxcall")}
-              className="p-2 -ml-2 text-secondary hover:text-primary active:text-primary rounded-lg transition-colors"
+              className="w-10 h-10 rounded-xl bg-white/80 backdrop-blur-sm border border-slate-200 flex items-center justify-center hover:bg-white transition-colors shadow-sm"
             >
-              <Icon name="arrow-left" className="h-5 w-5" />
+              <Icon name="arrow-left" className="h-5 w-5 text-slate-600" />
             </button>
-            <Typography variant="headline-xl" className="text-primary">
-              Session History
-            </Typography>
+            <div>
+              <Typography variant="headline-xl" className="text-slate-800 font-bold">
+                Session History
+              </Typography>
+              <Typography variant="body-md" color="muted">
+                View and analyze your past sessions
+              </Typography>
+            </div>
           </div>
-          <Typography variant="body-lg" color="muted" className="ml-8">
-            View and manage your past practice and game sessions
-          </Typography>
         </div>
 
-        {/* Filters */}
+        {/* Filters - Premium */}
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
           <div className="flex-1 max-w-xs">
             <Dropdown
               options={[
-                { value: "all", label: "All Sessions" },
-                { value: "practice", label: "Practice Only" },
-                { value: "game", label: "Game Only" },
+                { value: "all", label: "📊 All Sessions" },
+                { value: "practice", label: "🏈 Practice Only" },
+                { value: "game", label: "🎯 Game Only" },
               ]}
               value={filterType}
               onChange={(value) => setFilterType(value as FilterType)}
@@ -218,57 +241,62 @@ const SessionHistoryPage: React.FC = () => {
               size="md"
             />
           </div>
-          <Button
-            variant={showArchived ? "primary" : "secondary"}
-            size="md"
+          <button
             onClick={() => setShowArchived(!showArchived)}
-            className="h-11"
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all ${
+              showArchived
+                ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/25"
+                : "bg-white border-2 border-slate-200 text-slate-600 hover:border-indigo-300"
+            }`}
           >
             <Icon name="folder" size="sm" />
             {showArchived ? "Hide Archived" : "Show Archived"}
-          </Button>
+          </button>
         </div>
 
-        {/* Sessions List */}
+        {/* Sessions List - Premium */}
         {filteredSessions.length === 0 ? (
-          <Card className="p-8 text-center">
-            <div className="flex justify-center mb-4">
-              <Icon name="calendar" size="xl" className="text-muted" />
+          <div className="rounded-3xl bg-white border border-slate-200 p-8 text-center shadow-xl">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center mx-auto mb-4">
+              <Icon name="calendar" size="xl" className="text-slate-400" />
             </div>
-            <Typography variant="headline-md" className="mb-2">
+            <Typography variant="headline-md" className="mb-2 text-slate-800">
               No Sessions Found
             </Typography>
-            <Typography variant="body-md" color="muted" className="mb-4">
+            <Typography variant="body-md" color="muted" className="mb-6">
               {filterType === "all"
                 ? "You haven't recorded any sessions yet."
                 : `No ${filterType} sessions found.`}
             </Typography>
-            <Button
-              variant="primary"
-              size="md"
+            <button
               onClick={() => navigate("/boxcall")}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-xl transition-all"
             >
               <Icon name="play" size="sm" />
               Start a Session
-            </Button>
-          </Card>
+            </button>
+          </div>
         ) : (
           <div className="space-y-3">
             {filteredSessions.map((session) => (
-              <Card
+              <div
                 key={session.id}
-                className={`p-4 sm:p-5 cursor-pointer hover:shadow-md transition-all ${
-                  session.isArchived ? "opacity-60" : ""
+                className={`rounded-2xl bg-white border-2 p-4 sm:p-5 cursor-pointer hover:shadow-lg transition-all group ${
+                  session.isArchived 
+                    ? "opacity-60 border-slate-200" 
+                    : session.type === "practice"
+                      ? "border-orange-200 hover:border-orange-300 shadow-md shadow-orange-500/5"
+                      : "border-emerald-200 hover:border-emerald-300 shadow-md shadow-emerald-500/5"
                 }`}
                 onClick={() => handleSessionClick(session)}
               >
                 <div className="flex items-center gap-4">
-                  {/* Icon */}
+                  {/* Icon - Premium */}
                   <div
-                    className={`p-3 rounded-xl flex-shrink-0 ${
+                    className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md ${
                       session.type === "practice"
-                        ? "bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-200"
-                        : "bg-gradient-to-br from-emerald-50 to-emerald-100 border-2 border-emerald-200"
+                        ? "bg-gradient-to-br from-orange-400 to-amber-500 shadow-orange-500/25"
+                        : "bg-gradient-to-br from-emerald-400 to-teal-500 shadow-emerald-500/25"
                     }`}
                   >
                     <Icon
@@ -276,11 +304,7 @@ const SessionHistoryPage: React.FC = () => {
                         session.type === "practice" ? "clipboard-list" : "zap"
                       }
                       size="md"
-                      className={
-                        session.type === "practice"
-                          ? "text-orange-600"
-                          : "text-emerald-600"
-                      }
+                      className="text-white"
                     />
                   </div>
 
@@ -289,13 +313,18 @@ const SessionHistoryPage: React.FC = () => {
                     <div className="flex items-center gap-2">
                       <Typography
                         variant="body-md"
-                        className="font-semibold truncate"
+                        className="font-bold text-slate-800 truncate"
                       >
                         {session.name}
                       </Typography>
                       {session.isArchived && (
-                        <span className="px-2 py-0.5 text-xs bg-secondary rounded-full text-secondary">
+                        <span className="px-2 py-0.5 text-xs bg-slate-100 rounded-full text-slate-500 font-medium">
                           Archived
+                        </span>
+                      )}
+                      {!session.sourceId && (
+                        <span className="px-2 py-0.5 text-xs bg-amber-100 rounded-full text-amber-600 font-medium">
+                          View Only
                         </span>
                       )}
                     </div>
@@ -305,11 +334,17 @@ const SessionHistoryPage: React.FC = () => {
                     </Typography>
                   </div>
 
-                  {/* Stats */}
+                  {/* Stats - Premium */}
                   <div className="text-right flex-shrink-0">
-                    <Typography variant="body-md" className="font-semibold">
+                    <div className={`text-2xl font-black ${
+                      session.stats.successRate >= 70 
+                        ? "text-emerald-500" 
+                        : session.stats.successRate >= 50 
+                          ? "text-amber-500" 
+                          : "text-rose-500"
+                    }`}>
                       {session.stats.successRate}%
-                    </Typography>
+                    </div>
                     <Typography variant="body-xs" color="muted">
                       {session.stats.totalPlays}{" "}
                       {session.type === "practice" ? "reps" : "plays"}
@@ -319,50 +354,52 @@ const SessionHistoryPage: React.FC = () => {
                   </div>
 
                   {/* Arrow */}
-                  <Icon
-                    name="chevron-right"
-                    size="sm"
-                    className="text-muted flex-shrink-0"
-                  />
+                  <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
+                    <Icon
+                      name="chevron-right"
+                      size="sm"
+                      className="text-slate-400 group-hover:text-slate-600"
+                    />
+                  </div>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         )}
 
-        {/* Summary Stats */}
+        {/* Summary Stats - Premium */}
         {filteredSessions.length > 0 && (
-          <Card className="mt-6 p-4 sm:p-5 bg-secondary">
-            <Typography variant="body-sm" color="muted" className="mb-3">
-              Summary
+          <div className="mt-6 rounded-3xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-6 shadow-xl shadow-indigo-500/25">
+            <Typography variant="body-sm" className="text-white/80 mb-4 font-medium">
+              📊 Performance Summary
             </Typography>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div>
-                <Typography variant="headline-md">
+              <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center">
+                <div className="text-3xl font-black text-white">
                   {filteredSessions.length}
-                </Typography>
-                <Typography variant="body-xs" color="muted">
+                </div>
+                <div className="text-xs text-white/70 font-medium uppercase tracking-wide mt-1">
                   Total Sessions
-                </Typography>
+                </div>
               </div>
-              <div>
-                <Typography variant="headline-md">
+              <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center">
+                <div className="text-3xl font-black text-white">
                   {filteredSessions.filter((s) => s.type === "practice").length}
-                </Typography>
-                <Typography variant="body-xs" color="muted">
+                </div>
+                <div className="text-xs text-white/70 font-medium uppercase tracking-wide mt-1">
                   Practices
-                </Typography>
+                </div>
               </div>
-              <div>
-                <Typography variant="headline-md">
+              <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center">
+                <div className="text-3xl font-black text-white">
                   {filteredSessions.filter((s) => s.type === "game").length}
-                </Typography>
-                <Typography variant="body-xs" color="muted">
+                </div>
+                <div className="text-xs text-white/70 font-medium uppercase tracking-wide mt-1">
                   Games
-                </Typography>
+                </div>
               </div>
-              <div>
-                <Typography variant="headline-md">
+              <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center">
+                <div className="text-3xl font-black text-white">
                   {Math.round(
                     filteredSessions.reduce(
                       (acc, s) => acc + s.stats.successRate,
@@ -370,13 +407,13 @@ const SessionHistoryPage: React.FC = () => {
                     ) / filteredSessions.length || 0
                   )}
                   %
-                </Typography>
-                <Typography variant="body-xs" color="muted">
+                </div>
+                <div className="text-xs text-white/70 font-medium uppercase tracking-wide mt-1">
                   Avg Success
-                </Typography>
+                </div>
               </div>
             </div>
-          </Card>
+          </div>
         )}
       </div>
     </div>

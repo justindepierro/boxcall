@@ -91,11 +91,6 @@ const mapSessionToDisplay = (
 ): RecentSession => {
   if (session.type === "practice") {
     const practiceSession = session as PracticeSession;
-    console.log("📋 [BoxCall] Mapping practice session:", {
-      sessionId: practiceSession.id,
-      practiceScriptId: practiceSession.practiceScriptId,
-      rawPracticeScriptId: (practiceSession as any).practice_script_id,
-    });
     return {
       id: practiceSession.id,
       type: "practice",
