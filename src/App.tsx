@@ -23,7 +23,6 @@ import { PopoverProvider } from "./contexts/PopoverContext";
 import { PendingSavesNotification } from "./components/notifications/PendingSavesNotification";
 import { UndoRedoIndicator } from "./components/undo/UndoRedoIndicator";
 import { ConflictDialog } from "./components/conflicts/ConflictDialog";
-import { SaveHistoryPanel } from "./components/dev/SaveHistoryPanel";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import DevPanel from "./components/dev/DevPanel";
 import { OfflineIndicator } from "./components/ui/OfflineIndicator";
@@ -88,7 +87,6 @@ function App() {
                     <DevHealthCheck />
                     <PendingSavesNotification />
                     <UndoRedoIndicator />
-                    <SaveHistoryPanel />
                     <ConflictOverlay />
                     <AppGrid>
                       <AuthGuard>
