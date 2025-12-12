@@ -26,11 +26,7 @@ export const ROUTES = {
   PRIVACY: "/privacy-policy",
   TERMS: "/terms-of-service",
   CONTACT: "/contact",
-  DEV_DIAGNOSTICS: "/dev/diagnostics",
-  COLLABORATIVE_DEMO: "/collaborative-demo",
   DESIGN_SYSTEM: "/design-system",
-  SOCIAL: "/social",
-  SOCIAL_FEATURES_DEMO: "/social-features-demo",
 } as const;
 
 export const teamRoutes = {

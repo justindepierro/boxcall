@@ -36,11 +36,6 @@ export const LazyProfilePage = lazyRoute(
   "Profile"
 );
 
-export const LazyCollaborativeDemoPage = lazyRoute(
-  () => import("../../pages/CollaborativeDemoPage"),
-  "Collaborative Demo"
-);
-
 export const LazyDesignSystemShowcase = lazyRoute(
   () =>
     import("../design-system/DesignSystemShowcase").then((module) => ({
@@ -55,11 +50,6 @@ export const LazyTeamAnnouncements = lazyRoute(
       default: module.TeamAnnouncements,
     })),
   "Team Announcements"
-);
-
-export const LazySocialFeaturesDemo = lazyRoute(
-  () => import("../../pages/SocialFeaturesDemo"),
-  "Social Features Demo"
 );
 
 export const LazyTeamBulletin = lazyRoute(

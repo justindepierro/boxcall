@@ -41,7 +41,6 @@ import {
   LazyContactPage,
   LazyTeamSettings,
   LazyTeamAnnouncements,
-  LazySocialFeaturesDemo,
   LazyCalendarShellPage,
   LazyPlannerPage,
   RouteLoadingSpinner,
@@ -337,15 +336,6 @@ export const DataRouterApp: React.FC = () => {
         />
 
         <Route
-          path="/social"
-          element={
-            <ProtectedPage>
-              <LazySocialFeaturesDemo />
-            </ProtectedPage>
-          }
-        />
-
-        <Route
           path="/calendar"
           element={
             <ProtectedPage>
@@ -479,15 +469,6 @@ export const DataRouterApp: React.FC = () => {
           element={
             <ProtectedPage>
               <LazyAnalyticsPage />
-            </ProtectedPage>
-          }
-        />
-
-        <Route
-          path="/team/:teamId/social"
-          element={
-            <ProtectedPage>
-              <LazySocialFeaturesDemo />
             </ProtectedPage>
           }
         />
