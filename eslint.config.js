@@ -7,7 +7,6 @@ import rawTailwindColors from "./eslint-rules/no-raw-tailwind-colors.js";
 import arbitrarySpacing from "./eslint-rules/no-arbitrary-spacing.js";
 import arbitraryTypography from "./eslint-rules/no-arbitrary-typography.js";
 
-// Merge custom design system rules
 const boxcallDesignRules = {
   rules: {
     ...rawTailwindColors.rules,
@@ -21,112 +20,52 @@ export default [
     ignores: [
       "node_modules/",
       "dist/",
-      "build/",
       "coverage/",
-      ".vscode/",
-      "archive/**",
-      "scripts/**", // Exclude backup scripts
-      "tests/**", // Exclude all test directories
-      "*.log",
-      "src/components/ui/Icon/preloadShim.d.ts",
-      "src/utils/errorHandler.tsx",
-      "**/*.test.ts", // Exclude all test files
-      "**/*.test.tsx", // Exclude all test files
-      "**/*.stories.tsx", // Exclude Storybook files from linting
-      "**/*.stories.ts", // Exclude Storybook files from linting
-      "vite.config.ts", // Vite config uses different tsconfig
-      "vitest.config.ts", // Vitest config uses different tsconfig
-      "playwright.config.ts", // Playwright config uses different tsconfig
+      "scripts/**",
+      "**/*.test.{ts,tsx}",
+      "**/*.spec.{ts,tsx}",
+      "**/*.d.ts",
+      "*.config.{js,ts}",
     ],
   },
-  // Base configuration for all JS/TS files
   {
-    files: ["**/*.{js,mjs,cjs,ts,tsx}"],
+    files: ["**/*.{ts,tsx}"],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "module",
+      parser: tseslint.parser,
+      parserOptions: {
+        project: "./tsconfig.app.json",
+        ecmaFeatures: { jsx: true },
+      },
       globals: {
         ...globals.browser,
         ...globals.node,
-        React: "readonly", // Add React global for JSX
-        NodeJS: "readonly", // Add NodeJS global for TypeScript
-        gtag: "readonly", // Add gtag global for Google Analytics
+        React: "readonly",
+        NodeJS: "readonly",
+        gtag: "readonly",
+        process: "readonly",
       },
     },
     plugins: {
+      "@typescript-eslint": tseslint.plugin,
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
       "boxcall-design": boxcallDesignRules,
     },
     rules: {
       ...js.configs.recommended.rules,
+      ...tseslint.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
-      "react-refresh/only-export-components": [
-        "warn",
-        { allowConstantExport: true },
-      ],
-      "no-unused-vars": "off", // Turn off base rule for TS override
-      "no-console": "off", // Allow console in development
+      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-empty-object-type": "off",
+      "no-console": "off",
       "boxcall-design/no-raw-tailwind-colors": "error",
       "boxcall-design/no-arbitrary-spacing": "error",
       "boxcall-design/no-arbitrary-typography": "error",
-    },
-  },
-  // TypeScript specific rules
-  {
-    files: ["**/*.{ts,tsx}"],
-    languageOptions: {
-      parser: tseslint.parser,
-      parserOptions: {
-        project: "./tsconfig.app.json",
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
-    },
-    plugins: {
-      "@typescript-eslint": tseslint.plugin,
-      "boxcall-design": boxcallDesignRules,
-    },
-    rules: {
-      ...tseslint.configs.recommended.rules,
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-          ignoreRestSiblings: true,
-        },
-      ],
-      "@typescript-eslint/no-explicit-any": "off", // Allow any for rapid development
-      "@typescript-eslint/no-empty-function": "off",
-    },
-  },
-  // Relax design token rules for diagram components (intentionally always-dark)
-  {
-    files: [
-      "**/diagram/**",
-      "**/PlayDiagramBuilder.tsx",
-      "**/*Demo.tsx", // Demo/test files can use direct colors
-      "**/TooltipTest.tsx",
-    ],
-    rules: {
-      "boxcall-design/no-raw-tailwind-colors": "warn", // Warn instead of error
-      "boxcall-design/no-arbitrary-spacing": "warn",
-    },
-  },
-  // Relax arbitrary spacing for calendar/diagram components with fixed heights
-  {
-    files: [
-      "**/CalendarShell.tsx",
-      "**/CalendarSkeletons.tsx",
-      "**/VisualPlayBuilder*.tsx",
-      "**/*Modal*.tsx", // Modals often have fixed viewport heights
-      "**/PlayerComparison*.tsx", // Comparison views with aspect ratios
-    ],
-    rules: {
-      "boxcall-design/no-arbitrary-spacing": "warn", // Warn instead of error for fixed layouts
-      "boxcall-design/no-raw-tailwind-colors": "warn", // Warn instead of error for fixed sizes
     },
   },
 ];

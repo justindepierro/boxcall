@@ -16,7 +16,7 @@ import {
   createTeamMembershipDirectly,
 } from "../utils/direct-api";
 import { emitTelemetry } from "../lib/telemetry";
-import { createTeamSchema } from "../schemas/createTeamSchema";
+import { createTeamSchema } from "../validation-services/teamValidation";
 
 // ============================================
 // TYPE DEFINITIONS

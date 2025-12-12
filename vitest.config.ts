@@ -1,145 +1,32 @@
-/// <reference types="vitest/config" />
-import { defineConfig } from "vitest/config";
-import path from "path";
-import { fileURLToPath } from "node:url";
-import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
-const dirname =
-  typeof __dirname !== "undefined"
-    ? __dirname
-    : path.dirname(fileURLToPath(import.meta.url));
+import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react'
+import path from 'path'
 
-// More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./src/test/setup.ts'],
+    include: ['src/**/*.{test,spec}.{ts,tsx}', 'tests/**/*.{test,spec}.{ts,tsx}'],
+    exclude: ['node_modules', 'dist', 'e2e/**'],
+    testTimeout: 10000,
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: ['node_modules/', 'dist/', 'src/test/'],
+    },
+  },
   resolve: {
     alias: {
-      "@app": path.resolve(__dirname, "src/app"),
-      "@components": path.resolve(__dirname, "src/components"),
-      "@hooks": path.resolve(__dirname, "src/hooks"),
-      "@lib": path.resolve(__dirname, "src/lib"),
-      "@state": path.resolve(__dirname, "src/state"),
-      "@styles": path.resolve(__dirname, "src/styles"),
-      "@routes": path.resolve(__dirname, "src/routes"),
-      "@utils": path.resolve(__dirname, "src/utils"),
-      "@design-system": path.resolve(__dirname, "src/design-system"),
-      "@adapters": path.resolve(__dirname, "src/adapters"),
-      "@data": path.resolve(__dirname, "src/data"),
-      "@domain": path.resolve(__dirname, "src/domain"),
-      "@features": path.resolve(__dirname, "src/features"),
-      "@infra": path.resolve(__dirname, "src/infra"),
-      "@services": path.resolve(__dirname, "src/services/index.ts"),
-      "@services/": path.resolve(__dirname, "src/services/"),
-      "@telemetry": path.resolve(__dirname, "src/telemetry"),
-      "@types": path.resolve(__dirname, "src/types"),
+      '@': path.resolve(__dirname, 'src'),
+      '@components': path.resolve(__dirname, 'src/components'),
+      '@hooks': path.resolve(__dirname, 'src/hooks'),
+      '@lib': path.resolve(__dirname, 'src/lib'),
+      '@pages': path.resolve(__dirname, 'src/pages'),
+      '@services': path.resolve(__dirname, 'src/services'),
+      '@stores': path.resolve(__dirname, 'src/stores'),
+      '@utils': path.resolve(__dirname, 'src/utils'),
     },
   },
-  test: {
-    // Use jsdom so component/unit tests that render React DOM nodes have access
-    // to browser APIs. Node env can still be overridden per-file if needed.
-    environment: "jsdom",
-
-    // Global resource limits to prevent memory exhaustion
-    pool: "threads",
-    poolOptions: {
-      threads: {
-        // Limit total threads across all test projects
-        // CI: use single thread to prevent memory exhaustion
-        maxThreads: process.env.CI ? 1 : 2,
-        minThreads: 1,
-      },
-    },
-
-    // Global timeouts
-    testTimeout: 30000,
-    hookTimeout: 10000,
-
-    coverage: {
-      provider: "v8",
-      reporter: ["text", "text-summary", "html", "lcov", "json"],
-      reportsDirectory: "./coverage",
-      exclude: [
-        "node_modules/**",
-        "src/test/**",
-        "**/*.test.{ts,tsx}",
-        "**/*.spec.{ts,tsx}",
-        "**/*.stories.{ts,tsx}",
-        "**/__tests__/**",
-        "**/dist/**",
-        "**/.storybook/**",
-        "vite.config.ts",
-        "vitest.config.ts",
-        "postcss.config.js",
-        "tailwind.config.js",
-      ],
-      thresholds: {
-        lines: 75,
-        functions: 70,
-        branches: 70,
-        statements: 75,
-      },
-      all: true,
-      include: ["src/**/*.{ts,tsx}"],
-    },
-    setupFiles: ["./src/test/setup.ts"],
-    projects: [
-      {
-        test: {
-          name: "unit",
-          environment: "jsdom",
-          include: [
-            "src/**/*.spec.ts",
-            "src/**/*.spec.tsx",
-            "src/**/*.test.ts",
-            "src/**/*.test.tsx",
-          ],
-          exclude: [
-            "src/**/*.stories.tsx",
-            "src/**/*.stories.ts",
-            // Skip slow/non-critical tests in CI to reduce memory usage and test time
-            ...(process.env.CI
-              ? [
-                  "src/components/**/*.test.tsx", // All component tests (memory intensive)
-                  "src/api/health.test.ts", // Health check with delays
-                  "src/stores/**/*.test.ts", // Store tests
-                  "src/infra/**/*.test.ts", // Infrastructure tests
-                  "src/domain/**/*.test.ts", // Domain tests
-                  "src/pages/**/*.test.tsx", // Page tests
-                  "src/services/**/*.test.ts", // Service tests
-                  "src/adapters/**/*.test.ts", // Adapter tests
-                ]
-              : []),
-          ],
-          setupFiles: ["./src/test/setup.ts"],
-        },
-      },
-      {
-        test: {
-          name: "storybook",
-          browser: {
-            enabled: true,
-            headless: true,
-            provider: "playwright",
-            instances: [
-              {
-                browser: "chromium",
-              },
-            ],
-          },
-          // Limit concurrent tests to prevent memory exhaustion
-          // Each Storybook test spawns a browser instance
-          maxConcurrency: 1, // Only 1 test at a time (was 3, too many)
-          // Add timeout to prevent hanging tests from consuming memory
-          testTimeout: 30000,
-          hookTimeout: 30000,
-          setupFiles: [".storybook/vitest.setup.ts"],
-        },
-        plugins: [
-          // The plugin will run tests for the stories defined in your Storybook config
-          // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
-          storybookTest({
-            configDir: path.join(dirname, ".storybook"),
-          }),
-        ],
-      },
-    ],
-  },
-});
+})

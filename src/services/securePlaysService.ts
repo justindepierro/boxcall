@@ -11,7 +11,7 @@ import {
   validatePlayUpdate,
   type PlayCreateInput,
   type PlayUpdateInput,
-} from "../schemas-validation/playValidation";
+} from "../validation-services/playSchemas";
 import {
   rateLimiter,
   RateLimitPresets,
@@ -464,5 +464,5 @@ export default SecurePlaysService;
 export type {
   PlayCreateInput,
   PlayUpdateInput,
-} from "../schemas-validation/playValidation";
+} from "../validation-services/playSchemas";
 export { isRateLimitError, RateLimitError } from "../utils/rateLimiter";

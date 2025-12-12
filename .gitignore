@@ -111,6 +111,7 @@ playwright-report/
 playwright-results.json
 .playwright-artifacts-*/
 error-context.md
+reports/
 
 # Build performance logs
 build-*.txt

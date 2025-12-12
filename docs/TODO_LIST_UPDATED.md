@@ -91,3 +91,51 @@ Run these in Supabase SQL Editor:
 ## 🚀 Ready to Deploy!
 
 All code is complete, typed, tested, and optimized. Just run those migrations and you're golden! 🎉
+
+## ✅ Codebase Cleanup (December 12, 2025)
+
+Major directory and file cleanup completed:
+
+### Deleted (~243 files)
+
+- **archive/** folder - Old code, deprecated docs, obsolete migrations
+- **scripts/** - Removed 80+ one-time/obsolete scripts, kept only essential CLI tools
+- **src/stories/** - Old Storybook stories template
+- **src/components/features/** - Unused demo components (MultiBadgeDemo, PremiumFeaturesDemo)
+- **src/schemas/** and **src/schemas-validation/** - Consolidated into validation-services/
+- **src/types/phase4-3.ts** - Unused type file
+- **reports/** - Generated files (bundle analysis, dead code reports)
+- **test-results/**, **playwright-report/** - Regenerated test artifacts
+- **database/migrations/** - Duplicate of supabase/migrations
+- **Root debug guides** - MOBILE_IMAGE_DEBUG_GUIDE.md, NETLIFY_PWA_SETUP.md
+
+### Consolidated
+
+- Validation schemas now in **src/validation-services/**:
+  - playSchemas.ts (Zod schemas)
+  - playValidation.ts (validation service)
+  - formationValidation.ts
+  - personnelValidation.ts
+  - teamValidation.ts
+
+### Scripts Cleaned Up
+
+Retained only essential scripts:
+
+- `scripts/cli/` - Database CLI tools
+- `scripts/apply-schema.ts` - Schema application
+- `scripts/setup-admin.ts` - Admin setup
+- `scripts/security-audit.ts` - Security checks
+- `scripts/bundle-monitor.ts` - Bundle analysis
+- `scripts/find-dead-code.mjs` - Dead code detection
+- `scripts/token-automation/` - Design token migration tools
+
+### Updated
+
+- **.gitignore** - Added reports/ folder
+- **package.json** - Removed broken script references
+
+### Size Reduction
+
+- scripts/: 800KB → 168KB (79% reduction)
+- Total deleted: ~243 files
