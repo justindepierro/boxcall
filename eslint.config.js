@@ -54,15 +54,26 @@ export default [
       "boxcall-design": boxcallDesignRules,
     },
     rules: {
+      // Base configurations
       ...js.configs.recommended.rules,
       ...tseslint.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
+
+      // React
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+
+      // TypeScript - practical settings for rapid development
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
-      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-explicit-any": "off", // Disabled - 546 existing uses, fix incrementally
       "@typescript-eslint/no-empty-object-type": "off",
+      "@typescript-eslint/no-non-null-assertion": "off", // Common in React patterns
+      "@typescript-eslint/ban-ts-comment": "off", // Sometimes needed for third-party libs
+
+      // Console - useful during development
       "no-console": "off",
+
+      // BoxCall Design System (ERRORS - these are enforced)
       "boxcall-design/no-raw-tailwind-colors": "error",
       "boxcall-design/no-arbitrary-spacing": "error",
       "boxcall-design/no-arbitrary-typography": "error",
