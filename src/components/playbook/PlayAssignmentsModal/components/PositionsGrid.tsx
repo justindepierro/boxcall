@@ -6,12 +6,12 @@
 
 import { DragDropContext, Droppable, type DropResult } from "@hello-pangea/dnd";
 import { Typography } from "../../../design-system/Typography";
-import { Button } from "../../ui/Button";
-import { Icon } from "../../ui/Icon";
+import { Button } from "../../../ui/Button";
+import { Icon } from "../../../ui/Icon";
 import { useIsMobile } from "@hooks/useBreakpoint";
-import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
+import { triggerHapticFeedback } from "../../../../lib/hapticFeedback";
 import { PositionCard } from "./PositionCard";
-import type { AssignmentData } from "./types";
+import type { AssignmentData } from "../types";
 
 interface PositionsGridProps {
   positions: string[];

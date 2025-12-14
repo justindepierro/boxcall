@@ -5,7 +5,7 @@
  */
 
 import { Typography } from "../../../design-system/Typography";
-import { Icon } from "../../ui/Icon";
+import { Icon } from "../../../ui/Icon";
 
 export function LoadingState() {
   return (

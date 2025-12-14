@@ -4,10 +4,9 @@
  * Shows player-specific information (jersey, positions, height, weight)
  */
 
-import React from "react";
 import { Hash } from "lucide-react";
-import { Typography } from "../../design-system/Typography";
-import type { PlayerInfo } from "./types";
+import { Typography } from "../../../design-system/Typography";
+import type { PlayerInfo } from "../types";
 
 interface PlayerInfoSectionProps {
   playerInfo: PlayerInfo;

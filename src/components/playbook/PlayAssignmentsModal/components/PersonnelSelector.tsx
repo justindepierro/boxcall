@@ -45,7 +45,7 @@ export function PersonnelSelector({
           className="w-full"
         />
       </div>
-      {selectedPersonnel && (
+      {selectedPersonnel && selectedPersonnel.players && (
         <div className="flex items-center gap-1">
           {selectedPersonnel.players
             .sort((a, b) => a.sort_order - b.sort_order)

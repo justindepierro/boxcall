@@ -116,13 +116,13 @@ export function usePersonnelConfigHandlers({
           ? {
               ...config,
               players: [
-                ...config.players,
+                ...(config.players || []),
                 {
                   id: `p${Date.now()}`,
                   config_id: configId,
                   label: "",
                   player_position: "WR" as PlayerPosition,
-                  sort_order: config.players.length,
+                  sort_order: (config.players || []).length,
                   is_wildcat_qb: false,
                   created_at: new Date().toISOString(),
                 },
@@ -141,7 +141,7 @@ export function usePersonnelConfigHandlers({
           config.id === configId
             ? {
                 ...config,
-                players: config.players.filter((p) => p.id !== playerId),
+                players: (config.players || []).filter((p) => p.id !== playerId),
               }
             : config
         )
@@ -185,7 +185,7 @@ export function usePersonnelConfigHandlers({
           config.id === configId
             ? {
                 ...config,
-                players: config.players.map((player) =>
+                players: (config.players || []).map((player) =>
                   player.id === playerId
                     ? { ...player, label: normalized }
                     : player
@@ -205,7 +205,7 @@ export function usePersonnelConfigHandlers({
           config.id === configId
             ? {
                 ...config,
-                players: config.players.map((player) =>
+                players: (config.players || []).map((player) =>
                   player.id === playerId
                     ? { ...player, player_position }
                     : player
@@ -225,7 +225,7 @@ export function usePersonnelConfigHandlers({
           config.id === configId
             ? {
                 ...config,
-                players: config.players.map((player) =>
+                players: (config.players || []).map((player) =>
                   player.id === playerId
                     ? { ...player, is_wildcat_qb: !player.is_wildcat_qb }
                     : player

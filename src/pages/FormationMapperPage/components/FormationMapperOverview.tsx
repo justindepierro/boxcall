@@ -1,9 +1,12 @@
 import React from "react";
 import { Typography } from "../../../components/design-system/Typography";
 import { Card } from "../../../components/ui/Card";
-import type { Database } from "../../../types/database";
 
-type Playbook = Database["public"]["Tables"]["playbooks"]["Row"];
+// Minimal Playbook interface for Formation Mapper
+interface Playbook {
+  id: string;
+  name: string;
+}
 
 interface FormationMapperOverviewProps {
   selectedPlaybook: Playbook | null;

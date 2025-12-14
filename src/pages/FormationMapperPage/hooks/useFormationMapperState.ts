@@ -1,11 +1,20 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Play } from "../../../types/play";
 import type { Formation } from "../../../types/formation";
-import type { Database } from "../../../types/database";
 import { FormationService } from "../../../services/formationService";
 import { logError } from "../../../utils/logger";
 
-type Playbook = Database["public"]["Tables"]["playbooks"]["Row"];
+// Minimal Playbook interface for Formation Mapper
+interface Playbook {
+  id: string;
+  team_id: string | null;
+  name: string;
+  description: string | null;
+  is_active: boolean | null;
+  play_count: number | null;
+  created_at: string | null;
+  updated_at: string | null;
+}
 
 interface UseFormationMapperStateParams {
   plays: Play[];

@@ -3,9 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../../../components/ui/Button/Button";
 import { Typography } from "../../../components/design-system/Typography";
 import { Icon } from "../../../components/ui/Icon";
-import type { Database } from "../../../types/database";
 
-type Playbook = Database["public"]["Tables"]["playbooks"]["Row"];
+// Minimal Playbook interface for Formation Mapper
+interface Playbook {
+  id: string;
+  name: string;
+  is_active: boolean | null;
+}
 
 interface FormationMapperHeaderProps {
   teamPlaybooks: Playbook[];

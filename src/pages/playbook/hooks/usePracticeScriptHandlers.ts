@@ -1,9 +1,8 @@
 import { useCallback } from "react";
 import { supabase } from "../../../lib/supabase";
-import { PracticeScriptService } from "@services";
+import { PracticeScriptService, type PracticeScript } from "@services";
 import { useToast } from "../../../hooks/useToast";
 import { error as logError, debug } from "../../../utils/logger";
-import type { PracticeScript } from "../../../types/practice";
 import {
   modalPlayToServicePlay,
   validateModalPlay,

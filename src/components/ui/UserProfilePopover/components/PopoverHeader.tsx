@@ -4,11 +4,10 @@
  * Header section with avatar, name, and badges
  */
 
-import React from "react";
-import { Typography } from "../../design-system/Typography";
-import { MultiBadgeDisplay } from "../MultiBadgeDisplay";
-import { getAvatarFallback, getDisplayName } from "./utils";
-import type { PopoverProfile, TeamMemberInfo } from "./types";
+import { Typography } from "../../../design-system/Typography";
+import { MultiBadgeDisplay } from "../../MultiBadgeDisplay";
+import { getAvatarFallback, getDisplayName } from "../utils";
+import type { PopoverProfile, TeamMemberInfo } from "../types";
 
 interface PopoverHeaderProps {
   profile: PopoverProfile;

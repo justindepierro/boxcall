@@ -5,11 +5,11 @@
  */
 
 import { Typography } from "../../../design-system/Typography";
-import { Button } from "../../ui/Button";
-import { Icon } from "../../ui/Icon";
+import { Button } from "../../../ui/Button";
+import { Icon } from "../../../ui/Icon";
 import { useIsMobile } from "@hooks/useBreakpoint";
-import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
-import type { AssignmentsFooterProps } from "./types";
+import { triggerHapticFeedback } from "../../../../lib/hapticFeedback";
+import type { AssignmentsFooterProps } from "../types";
 
 export function AssignmentsFooter({
   canEdit,

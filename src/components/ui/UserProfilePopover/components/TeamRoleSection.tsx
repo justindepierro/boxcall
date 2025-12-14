@@ -4,11 +4,10 @@
  * Shows the user's role on the team
  */
 
-import React from "react";
 import { Shield, Target, User } from "lucide-react";
-import { Typography } from "../../design-system/Typography";
-import { getRoleLabel } from "./utils";
-import type { TeamMemberInfo } from "./types";
+import { Typography } from "../../../design-system/Typography";
+import { getRoleLabel } from "../utils";
+import type { TeamMemberInfo } from "../types";
 
 interface TeamRoleSectionProps {
   teamMember: TeamMemberInfo;
