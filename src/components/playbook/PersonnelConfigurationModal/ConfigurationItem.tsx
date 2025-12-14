@@ -162,7 +162,7 @@ export const ConfigurationItem: React.FC<ConfigurationItemProps> = ({
                 SKILL POSITIONS
               </Typography>
 
-              {config.players.map((player, index) => (
+              {(config.players ?? []).map((player, index) => (
                 <div key={player.id} className="flex items-center gap-2">
                   {/* Label Input */}
                   <Input

@@ -119,8 +119,8 @@ export function usePlayAssignmentsHandlers({
     setLoading(true);
 
     try {
-      // @ts-expect-error - play_assignments not in generated Database types yet
-      const { data, error } = await supabase
+      // play_assignments table not yet in generated Database types
+      const { data, error } = await (supabase as any)
         .from("play_assignments")
         .select("*")
         .eq("play_id", play.id);
@@ -254,8 +254,8 @@ export function usePlayAssignmentsHandlers({
           updated_by: user.id,
         }));
 
-      // @ts-expect-error - play_assignments not in generated Database types yet
-      const { error } = await supabase
+      // play_assignments table not yet in generated Database types
+      const { error } = await (supabase as any)
         .from("play_assignments")
         .upsert(assignmentsToSave as any, {
           onConflict: "play_id,position",

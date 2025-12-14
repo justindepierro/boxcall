@@ -118,7 +118,7 @@ export const PreSessionState: React.FC<PreSessionStateProps> = ({
             <li className="flex items-start gap-2">
               <Icon name="check" size="sm" className="mt-0.5" />
               <Typography variant="body-sm">
-                Track {scriptPlays.reduce((sum, p) => sum + (p.reps || 10), 0)}{" "}
+                Track {scriptPlays.reduce((sum, p) => sum + (p.repetitions || 10), 0)}{" "}
                 total reps
               </Typography>
             </li>

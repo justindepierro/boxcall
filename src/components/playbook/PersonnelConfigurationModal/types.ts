@@ -60,10 +60,19 @@ export interface ConfigurationListProps {
 }
 
 /**
+ * Extended PersonnelConfiguration with runtime properties
+ * Added at runtime by usePersonnelConfigHandlers
+ */
+export interface PersonnelConfigurationWithRuntime extends PersonnelConfiguration {
+  /** Runtime property - set when user marks this as the default personnel */
+  isDefault?: boolean;
+}
+
+/**
  * Props for individual configuration item
  */
 export interface ConfigurationItemProps {
-  config: PersonnelConfiguration;
+  config: PersonnelConfigurationWithRuntime;
   isExpanded: boolean;
   isCustomizerOpen: boolean;
   justSaved: boolean;
@@ -120,7 +129,7 @@ export function normalizeLabel(value: string): string {
  * Get personnel summary string
  */
 export function getPersonnelSummary(config: PersonnelConfiguration): string {
-  const counts = config.players.reduce(
+  const counts = (config.players ?? []).reduce(
     (acc, player) => {
       if (player.player_position === "RB") acc.rb++;
       else if (player.player_position === "TE") acc.te++;
@@ -149,6 +158,11 @@ export function createDefaultConfiguration(
     id: timestamp,
     playbook_id: playbookId,
     name: "New Personnel",
+    // Intelligence System defaults (not analyzed yet)
+    confidence_score: 0,
+    last_analyzed_at: null,
+    analysis_play_count: 0,
+    usage_count: 0,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     players: [

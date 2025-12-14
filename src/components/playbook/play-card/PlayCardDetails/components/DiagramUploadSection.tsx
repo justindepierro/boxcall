@@ -35,9 +35,9 @@ export const DiagramUploadSection: React.FC<DiagramUploadSectionProps> = ({
             await handleInlineSave('diagram_image_url', url || null);
           }}
           bucket="play-diagrams"
-          path={`plays/${play.playbook_id}/${play.id}`}
-          maxSizeBytes={5 * 1024 * 1024}
-          acceptedFormats={[
+          storagePath={`plays/${play.playbook_id}/${play.id}`}
+          maxSizeMB={5}
+          acceptedTypes={[
             'image/jpeg',
             'image/png',
             'image/webp',

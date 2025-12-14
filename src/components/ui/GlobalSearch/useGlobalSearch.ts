@@ -139,8 +139,8 @@ export function useGlobalSearch() {
             .abortSignal(signal),
 
           // Search team announcements
-          // @ts-expect-error - team_announcements not in generated Database types yet
-          supabase
+          // team_announcements table not yet in generated Database types
+          (supabase as any)
             .from('team_announcements')
             .select('id, title, created_at')
             .eq('team_id', activeTeamId)
@@ -220,7 +220,7 @@ export function useGlobalSearch() {
 
           // Add announcements
           // Type assertion needed due to team_announcements not being in Database types
-          ...((announcementsResponse.data || []) as Array<{ id: string; title: string; created_at: string }>).map((announcement) => ({
+          ...((announcementsResponse.data || []) as unknown as Array<{ id: string; title: string; created_at: string }>).map((announcement) => ({
             type: 'announcement' as const,
             id: announcement.id,
             title: announcement.title,
