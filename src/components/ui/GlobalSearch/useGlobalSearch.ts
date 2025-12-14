@@ -5,18 +5,17 @@
  * Handles search queries, results, keyboard navigation, and mobile modal state.
  */
 
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getActiveTeamId } from '../../../utils/activeTeam';
 import { supabase } from '../../../lib/supabase';
 import { triggerHapticFeedback } from '../../../lib/hapticFeedback';
 import { logError } from '../../../utils/logger';
-import {
+import type {
   SearchResult,
   SearchResultType,
-  GlobalSearchState,
-  debugLog,
 } from './types';
+import { debugLog } from './types';
 import {
   TYPE_ICON_MAP,
   TYPE_COLOR_MAP,

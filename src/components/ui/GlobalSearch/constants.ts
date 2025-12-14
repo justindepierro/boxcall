@@ -4,7 +4,7 @@
  * Maps and configuration values for the global search component.
  */
 
-import { SearchResultType } from './types';
+import type { SearchResultType } from './types';
 
 /**
  * Maps search result types to icon names

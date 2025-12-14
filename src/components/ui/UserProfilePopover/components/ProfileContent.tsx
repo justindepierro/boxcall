@@ -4,7 +4,6 @@
  * Main content area with profile details
  */
 
-import React from "react";
 import {
   Activity,
   Trophy,
@@ -15,11 +14,11 @@ import {
   Phone,
   User,
 } from "lucide-react";
-import { Typography } from "../../design-system/Typography";
+import { Typography } from "../../../design-system/Typography";
 import { TeamRoleSection } from "./TeamRoleSection";
 import { PlayerInfoSection } from "./PlayerInfoSection";
-import { getPositionDisplay, getSocialLinks, formatMemberSince } from "./utils";
-import type { PopoverProfile, TeamMemberInfo, PlayerInfo } from "./types";
+import { getPositionDisplay, getSocialLinks, formatMemberSince } from "../utils";
+import type { PopoverProfile, TeamMemberInfo, PlayerInfo } from "../types";
 
 interface ProfileContentProps {
   profile: PopoverProfile;
