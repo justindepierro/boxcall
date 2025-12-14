@@ -10,8 +10,6 @@
  * These are design choices that don't need dark mode variants.
  */
 
-/* eslint-disable boxcall-design/no-raw-tailwind-colors */
-
 import React, { useState } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 

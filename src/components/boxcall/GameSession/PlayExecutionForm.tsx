@@ -2,8 +2,6 @@
  * PlayExecutionForm - Form for logging play results
  */
 
-/* eslint-disable boxcall-design/no-raw-tailwind-colors */
-
 import React from 'react';
 import { Typography } from '../../design-system';
 import { FormSelect } from '../../ui';
@@ -17,7 +15,6 @@ import {
 import type { ExecutionResult, OpponentCoverage } from '../../../types/session';
 
 export const PlayExecutionForm: React.FC<PlayExecutionFormProps> = ({
-  currentPlay,
   form,
   onFormChange,
   onTagToggle,

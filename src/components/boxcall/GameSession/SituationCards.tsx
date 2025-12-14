@@ -2,8 +2,6 @@
  * SituationCards - Down/Distance and Play Selection cards
  */
 
-/* eslint-disable boxcall-design/no-raw-tailwind-colors */
-
 import React from 'react';
 import { Icon } from '../../ui/Icon/Icon';
 import { DownDistanceTracker } from '../DownDistanceTracker';
