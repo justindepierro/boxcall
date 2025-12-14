@@ -1,11 +1,11 @@
 import { useCallback } from "react";
 import type { DropResult } from "@hello-pangea/dnd";
 import { PracticeScriptService, type PracticeScript } from "@services";
-import type { Play } from "../../../types/play";
-import { useToast } from "../../../hooks/useToast";
-import { PDFExportService } from "../../../services/pdfExportService";
-import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
-import { debug, error as logError } from "../../../utils/logger";
+import type { Play } from "../../../../types/play";
+import { useToast } from "../../../../hooks/useToast";
+import { PDFExportService } from "../../../../services/pdfExportService";
+import { triggerHapticFeedback } from "../../../../lib/hapticFeedback";
+import { debug, error as logError } from "../../../../utils/logger";
 
 interface UsePracticeScriptHandlersProps {
   currentScript: PracticeScript | null;

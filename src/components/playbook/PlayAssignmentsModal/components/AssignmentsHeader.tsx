@@ -5,11 +5,11 @@
  */
 
 import { Typography } from "../../../design-system/Typography";
-import { Badge } from "../../ui/Badge";
-import { Icon } from "../../ui/Icon";
+import { Badge } from "../../../ui/Badge";
+import { Icon } from "../../../ui/Icon";
 import { useIsMobile } from "@hooks/useBreakpoint";
-import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
-import type { AssignmentsHeaderProps } from "./types";
+import { triggerHapticFeedback } from "../../../../lib/hapticFeedback";
+import type { AssignmentsHeaderProps } from "../types";
 
 export function AssignmentsHeader({
   play,

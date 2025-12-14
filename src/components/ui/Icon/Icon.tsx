@@ -137,6 +137,7 @@ export type IconName =
   | "repeat"
   | "loader"
   | "bar-chart"
+  | "bar-chart-2"
   | "chart"
   | "x-circle"
   | "sword"
@@ -151,7 +152,10 @@ export type IconName =
   | "message-circle"
   | "loader"
   | "skip-forward"
-  | "maximize";
+  | "maximize"
+  | "clipboard"
+  | "clipboard-check"
+  | "x";
 
 type AccessibleSvgProps = Pick<
   React.SVGProps<SVGSVGElement>,
@@ -307,6 +311,10 @@ export const Icon: React.FC<IconProps> = ({
       "grip-vertical",
       "maximize",
       "cloud-off",
+      "clipboard",
+      "clipboard-check",
+      "x",
+      "bar-chart-2",
     ]);
     return supported.has(n as ModularIconName)
       ? (n as ModularIconName)

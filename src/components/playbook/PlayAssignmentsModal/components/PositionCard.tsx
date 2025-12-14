@@ -5,11 +5,11 @@
  */
 
 import { Draggable } from "@hello-pangea/dnd";
-import { Badge } from "../../ui/Badge";
-import { Icon } from "../../ui/Icon";
-import { Input } from "../../ui/Input";
-import { TextArea } from "../../ui/TextArea";
-import type { PositionCardProps } from "./types";
+import { Badge } from "../../../ui/Badge";
+import { Icon } from "../../../ui/Icon";
+import { Input } from "../../../ui/Input";
+import { TextArea } from "../../../ui/TextArea";
+import type { PositionCardProps } from "../types";
 
 export function PositionCard({
   position,

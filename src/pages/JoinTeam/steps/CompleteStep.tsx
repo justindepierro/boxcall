@@ -5,11 +5,11 @@
  */
 
 import React from "react";
-import { Typography } from "../../components/design-system";
-import { Icon } from "../../components/ui/Icon/Icon";
-import { Button } from "../../components/ui/Button/Button";
-import { Tag } from "../../components/ui/Tag";
-import type { CompleteStepProps } from "./types";
+import { Typography } from "../../../components/design-system";
+import { Icon } from "../../../components/ui/Icon/Icon";
+import { Button } from "../../../components/ui/Button/Button";
+import { Tag } from "../../../components/ui/Tag";
+import type { CompleteStepProps } from "../types";
 
 export const CompleteStep: React.FC<CompleteStepProps> = ({
   selectedRole,

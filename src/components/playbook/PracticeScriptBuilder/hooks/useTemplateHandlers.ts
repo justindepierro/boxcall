@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { PracticeScriptService, type PracticeScript } from "@services";
-import { useToast } from "../../../hooks/useToast";
-import { error as logError } from "../../../utils/logger";
+import { useToast } from "../../../../hooks/useToast";
+import { error as logError } from "../../../../utils/logger";
 
 interface UseTemplateHandlersProps {
   currentScript: PracticeScript | null;

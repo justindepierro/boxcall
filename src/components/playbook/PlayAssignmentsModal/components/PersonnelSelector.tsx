@@ -5,10 +5,10 @@
  */
 
 import { Typography } from "../../../design-system/Typography";
-import { FormSelect } from "../../ui/FormSelect/FormSelect";
-import { Badge } from "../../ui/Badge";
-import { Icon } from "../../ui/Icon";
-import type { PersonnelSelectorProps } from "./types";
+import { FormSelect } from "../../../ui/FormSelect/FormSelect";
+import { Badge } from "../../../ui/Badge";
+import { Icon } from "../../../ui/Icon";
+import type { PersonnelSelectorProps } from "../types";
 
 export function PersonnelSelector({
   personnelConfigurations,

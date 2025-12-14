@@ -5,12 +5,12 @@
  */
 
 import React from "react";
-import { Button } from "../../components/ui/Button/Button";
-import { Icon } from "../../components/ui/Icon";
-import { SearchBar } from "../../components/ui/SearchBar";
-import { FilterChips } from "../../components/ui/FilterChips";
-import { SortDropdown } from "../../components/ui/SortDropdown";
-import { getFilterOptions, SORT_OPTIONS } from "./types";
+import { Button } from "../../../components/ui/Button/Button";
+import { Icon } from "../../../components/ui/Icon";
+import { SearchBar } from "../../../components/ui/SearchBar";
+import { FilterChips } from "../../../components/ui/FilterChips";
+import { SortDropdown } from "../../../components/ui/SortDropdown";
+import { getFilterOptions, SORT_OPTIONS } from "../types";
 
 interface SearchFilterSectionProps {
   searchQuery: string;

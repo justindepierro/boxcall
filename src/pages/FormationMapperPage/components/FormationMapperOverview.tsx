@@ -1,7 +1,9 @@
 import React from "react";
 import { Typography } from "../../../components/design-system/Typography";
 import { Card } from "../../../components/ui/Card";
-import type { Playbook } from "../../../types/playbook";
+import type { Database } from "../../../types/database";
+
+type Playbook = Database["public"]["Tables"]["playbooks"]["Row"];
 
 interface FormationMapperOverviewProps {
   selectedPlaybook: Playbook | null;

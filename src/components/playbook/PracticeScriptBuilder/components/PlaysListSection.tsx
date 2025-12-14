@@ -5,12 +5,12 @@ import {
   Draggable,
   type DropResult,
 } from "@hello-pangea/dnd";
-import { Typography } from "../../design-system/Typography";
-import { Button } from "../../ui/Button/Button";
-import { Icon } from "../../ui/Icon";
+import { Typography } from "../../../design-system/Typography";
+import { Button } from "../../../ui/Button/Button";
+import { Icon } from "../../../ui/Icon";
 import { PracticeScriptPlayItem } from "../PracticeScriptPlayItem";
 import type { PracticeScript } from "@services";
-import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
+import { triggerHapticFeedback } from "../../../../lib/hapticFeedback";
 
 interface PlaysListSectionProps {
   currentScript: PracticeScript | null;

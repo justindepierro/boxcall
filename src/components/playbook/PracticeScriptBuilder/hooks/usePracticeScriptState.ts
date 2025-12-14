@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import type { PracticeScript } from "@services";
-import type { Play } from "../../../types/play";
-import { supabase } from "../../../lib/supabase";
-import { useToast } from "../../../hooks/useToast";
-import { debug, error as logError } from "../../../utils/logger";
+import type { Play } from "../../../../types/play";
+import { supabase } from "../../../../lib/supabase";
+import { useToast } from "../../../../hooks/useToast";
+import { debug, error as logError } from "../../../../utils/logger";
 
 interface UsePracticeScriptStateProps {
   script?: PracticeScript;

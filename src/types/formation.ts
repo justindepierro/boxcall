@@ -127,6 +127,7 @@ export interface Formation {
 
   // Personnel Integration
   personnel_packages: string[]; // Array of personnel_configuration UUIDs
+  personnel_name?: string | null; // Denormalized personnel name for display
 
   // Usage Tracking
   usage_count: number; // Number of plays using this formation

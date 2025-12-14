@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Play } from "../../../types/play";
 import type { Formation } from "../../../types/formation";
-import type { Playbook } from "../../../types/playbook";
+import type { Database } from "../../../types/database";
 import { FormationService } from "../../../services/formationService";
 import { logError } from "../../../utils/logger";
+
+type Playbook = Database["public"]["Tables"]["playbooks"]["Row"];
 
 interface UseFormationMapperStateParams {
   plays: Play[];

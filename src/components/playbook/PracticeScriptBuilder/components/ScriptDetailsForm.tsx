@@ -1,9 +1,9 @@
 import React from "react";
-import { Typography } from "../../design-system/Typography";
-import Input from "../../ui/Input/Input";
-import Textarea from "../../ui/TextArea/TextArea";
-import { Button } from "../../ui/Button/Button";
-import { Icon } from "../../ui/Icon";
+import { Typography } from "../../../design-system/Typography";
+import Input from "../../../ui/Input/Input";
+import Textarea from "../../../ui/TextArea/TextArea";
+import { Button } from "../../../ui/Button/Button";
+import { Icon } from "../../../ui/Icon";
 
 interface ScriptDetailsFormProps {
   isEditing: boolean;
