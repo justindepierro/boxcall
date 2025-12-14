@@ -5,10 +5,10 @@
  */
 
 import React, { useMemo } from "react";
-import { Typography } from "../../components/design-system/Typography";
-import { AuroraTile } from "../../components/ui/AuroraTile";
-import type { IconName } from "../../components/ui/Icon";
-import type { PracticeScript } from "../../services/practiceService";
+import { Typography } from "../../../components/design-system/Typography";
+import { AuroraTile } from "../../../components/ui/AuroraTile";
+import type { IconName } from "../../../components/ui/Icon/Icon";
+import type { PracticeScript } from "../../../services/practiceService";
 
 interface AuroraDashboardProps {
   activeScripts: PracticeScript[];
