@@ -1,47 +1,12 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-  useRef,
-} from "react";
+import React, { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
 import { BulkActionsToolbar } from "../components/playbook/BulkActionsToolbar";
-
 import { usePlaybook } from "../contexts/PlaybookContext";
-import type { CoachingView, PlaybookState } from "../contexts/PlaybookContext";
-import {
-  PlaysService,
-  ActivityService,
-  PracticeScriptService,
-} from "@services";
-
-import { exportPlays } from "../services/exportService";
-import type { PlayActivityItem } from "@services";
-import { SecurePlaysService } from "../services/securePlaysService";
-import { useToast } from "../hooks/useToast";
-import type { Play } from "../types/play";
-import type { PracticeScript } from "../types/practice";
-
 import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { useTeamsData } from "../hooks/useTeamsData";
-
-import {
-  getOppositeFormationVariant,
-  flipDiagramPositions,
-  flipPlayName,
-  flipFormationDirection,
-} from "../utils/formationFlipHelpers";
-import { supabase } from "../lib/supabase";
-import { getCurrentUserId } from "../lib/auth-helpers";
-import { info, error as logError, debug } from "../utils/logger";
 import { useIsMobileOrTablet } from "../hooks/useBreakpoint";
 import { useMobileButtonProps } from "../hooks/useMobileButtonProps";
-
-import { triggerHapticFeedback } from "../lib/hapticFeedback";
-import { smartPreloader } from "../services/smartPreloader";
-
 import { useFormationAudit } from "../hooks/useFormationAudit";
 import { useOptimisticPlays } from "../hooks/useOptimisticPlays";
 import { usePlaybookStats } from "../hooks/usePlaybookStats";
@@ -51,41 +16,41 @@ import {
 } from "../hooks/useTeamAssetPrefetch";
 import { MobilePlaybookView } from "../components/playbook/page/MobilePlaybookView";
 import { DesktopPlaybookView } from "../components/playbook/page/DesktopPlaybookView";
-import {
-  modalPlayToServicePlay,
-  validateModalPlay,
-} from "../components/practice/PracticeScriptModal/adapters";
-
-const PracticeScriptModal = React.lazy(() =>
-  import("../components/practice/PracticeScriptModal").then((module) => ({
-    default: module.PracticeScriptModal,
-  }))
-);
-import { PlaybookModals } from "../components/playbook/page/PlaybookModals";
 import { useModalManager } from "../hooks/useModalManager";
 import { FullscreenDiagramViewer } from "../components/playbook/play-card/FullscreenDiagramViewer";
 import { FormationLibraryModal } from "../components/playbook/modals/FormationLibraryModal";
 import { PersonnelLibraryModal } from "../components/playbook/modals/PersonnelLibraryModal";
 import { ConfirmationModal } from "../components/ui/ConfirmationModal/ConfirmationModal";
+import { debug } from "../utils/logger";
+import type { Play } from "../types/play";
 
 // Extracted components
 import { MobileFiltersBottomSheet } from "./playbook";
+import { PlaybookModals } from "../components/playbook/page/PlaybookModals";
 
-// Lazy load modal components for code splitting (~120KB savings)
+// Extracted hooks
+import {
+  usePlaybookHandlers,
+  usePlaybookState,
+  usePlaybookEffects,
+  usePlaybookModalState,
+  usePracticeScriptHandlers,
+} from "./playbook/hooks";
+
+// Lazy load modal components
+const PracticeScriptModal = React.lazy(() =>
+  import("../components/practice/PracticeScriptModal").then((module) => ({
+    default: module.PracticeScriptModal,
+  }))
+);
 
 const PlaybookPage = () => {
   const { state, dispatch } = usePlaybook();
-  const toast = useToast();
   const navigate = useNavigate();
   const { activeTeamId } = useActiveTeamStore();
-  const isMobileOrTablet = useIsMobileOrTablet(); // Tablets (< 1024px) get mobile view
-  const [mobileListExpanded, setMobileListExpanded] = useState(false);
-  const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
+  const isMobileOrTablet = useIsMobileOrTablet();
 
-  // 🔍 DEBUG: Log activeTeamId
-  debug("📚 PlaybookPage - activeTeamId:", activeTeamId);
-
-  // Mobile-optimized button sizes (44px+ touch targets)
+  // Mobile-optimized button sizes
   const mobileButtonSize = useMobileButtonProps("md", true).size;
   const mobileSecondaryButtonSize = useMobileButtonProps("md", false).size;
 
@@ -99,40 +64,67 @@ const PlaybookPage = () => {
     error: teamsDataError,
   } = useTeamsData();
 
-  // 🔍 DEBUG: Log data from useTeamsData
   debug("📚 PlaybookPage - useTeamsData result:", {
     playbooksCount: playbooks.length,
     playsCount: allPlaysForStats.length,
-    formationsCount: allFormations.length,
     loading: teamsDataLoading,
     error: teamsDataError,
   });
 
-  const sanitizedFormationIdsRef = useRef(new Set<string>());
-
-  // 🚀 PERFORMANCE: Memoize filtered playbooks to avoid recalculating on every render
-  // IMPORTANT: Must be defined BEFORE debug useEffect that uses it
+  // Memoize filtered playbooks
   const teamPlaybooks = useMemo(
     () => playbooks.filter((pb) => pb.team_id === activeTeamId && pb.is_active),
     [playbooks, activeTeamId]
   );
-  const teamPlaybookIds = useMemo(
-    () => new Set(teamPlaybooks.map((pb) => pb.id)),
-    [teamPlaybooks]
-  );
-  const playsForActiveTeam = useMemo(() => {
-    if (!activeTeamId) {
-      return [];
-    }
-    if (teamPlaybookIds.size === 0) {
-      return [];
-    }
-    return allPlaysForStats.filter((play) =>
-      teamPlaybookIds.has(play.playbook_id)
-    );
-  }, [activeTeamId, allPlaysForStats, teamPlaybookIds]);
-  const teamPlayCount = playsForActiveTeam.length;
 
+  // Modal manager
+  const { openModal, closeModal, closeAllModals, isModalOpen } =
+    useModalManager();
+
+  // Modal state hook
+  const modalState = usePlaybookModalState();
+  const {
+    diagramPlay,
+    setDiagramPlay,
+    diagramMode,
+    setDiagramMode,
+    assignmentsPlay,
+    setAssignmentsPlay,
+    editingScript,
+    setEditingScript,
+    showPracticeScriptModal,
+    setShowPracticeScriptModal,
+    selectedPlaysForPractice,
+    setSelectedPlaysForPractice,
+    playToPost,
+    setPlayToPost,
+    showBulkDeleteConfirm,
+    setShowBulkDeleteConfirm,
+    mobileListExpanded,
+    setMobileListExpanded,
+    fullscreenPlayIndex,
+    fullscreenPlays,
+    handleEnterFullscreen,
+    handleExitFullscreen,
+  } = modalState;
+
+  // State management hook
+  const playbookState = usePlaybookState({
+    activeTeamId,
+    teamPlaybooks,
+    allPlaysForStats,
+    dispatch,
+  });
+  const {
+    handlePlaybookChange,
+    activePlaybookId,
+    playsForActiveTeam,
+    recentActivities,
+    refreshActivities,
+    suggestions,
+  } = playbookState;
+
+  // Asset prefetch
   useTeamAssetPrefetch({
     teamId: activeTeamId,
     formations: allFormations,
@@ -140,184 +132,13 @@ const PlaybookPage = () => {
     plays: playsForActiveTeam as PrefetchablePlayMedia[],
   });
 
-  // State for selected playbook (with preference persistence)
-  const [selectedPlaybookId, setSelectedPlaybookId] = useState<string>("");
-
-  // Initialize play count from data
-  useEffect(() => {
-    if (!activeTeamId) {
-      dispatch({ type: "SET_PLAYS_CREATED", count: 0 });
-      return;
-    }
-    dispatch({ type: "SET_PLAYS_CREATED", count: teamPlayCount });
-  }, [activeTeamId, dispatch, teamPlayCount]);
-
-  // Initialize selected playbook from preferences or default to first playbook with data
-  useEffect(() => {
-    if (teamPlaybooks.length === 0) return;
-
-    // Try to load from preferences
-    const savedPlaybookId = localStorage.getItem(
-      `bc_active_playbook_${activeTeamId}`
-    );
-
-    if (
-      savedPlaybookId &&
-      teamPlaybooks.some((pb) => pb.id === savedPlaybookId)
-    ) {
-      // Use saved preference if it's valid
-      setSelectedPlaybookId(savedPlaybookId);
-    } else {
-      // Default to first playbook with plays, or first playbook
-      const playbookWithPlays = teamPlaybooks.find(
-        (pb) => (pb.play_count || 0) > 0
-      );
-      const defaultPlaybook = playbookWithPlays || teamPlaybooks[0];
-      setSelectedPlaybookId(defaultPlaybook.id);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTeamId, teamPlaybooks.length]);
-
-  // Save preference when playbook changes
-  const handlePlaybookChange = useCallback(
-    (playbookId: string) => {
-      setSelectedPlaybookId(playbookId);
-      localStorage.setItem(`bc_active_playbook_${activeTeamId}`, playbookId);
-      debug(`[PlaybookPage] Switched to playbook: ${playbookId}`);
-    },
-    [activeTeamId]
-  );
-
-  const activePlaybookId = selectedPlaybookId || activeTeamId || ""; // Fallback to team_id
-
-  // 🚀 INSTANT SEARCH: No debounce! Array filtering is fast enough (<10ms for 200 plays)
-  // With memoization, this feels Facebook-instant on every keystroke
-  const debouncedSearchQuery = state.searchQuery; // Direct use, no debouncing (keeping var name for compatibility)
-  const selectedFiltersKey = JSON.stringify(state.selectedFilters ?? {});
-
-  useEffect(() => {
-    if (!isMobileOrTablet) return;
-    setMobileListExpanded(false);
-  }, [isMobileOrTablet, debouncedSearchQuery, selectedFiltersKey]);
-
-  const [diagramPlay, setDiagramPlay] = useState<Play | null>(null);
-  const [diagramMode, setDiagramMode] = useState<"edit" | "quick-play">("edit");
-  const [assignmentsPlay, setAssignmentsPlay] = useState<Play | null>(null);
-  const [editingScript, setEditingScript] = useState<PracticeScript | null>(
-    null
-  );
-  const [showPracticeScriptModal, setShowPracticeScriptModal] = useState(false);
-  const [selectedPlaysForPractice, setSelectedPlaysForPractice] = useState<
-    string[]
-  >([]);
-  const [suggestions, setSuggestions] = useState({
-    formations: [] as string[],
-    playNames: [] as string[],
-    personnel: [] as string[],
-  });
-
-  // 🚀 PERFORMANCE: Centralized modal state management (must be before callbacks that use it)
-  const { openModal, closeModal, closeAllModals, isModalOpen } =
-    useModalManager();
-
-  // Modal-specific data (kept separate since not all modals need data)
-  const [playToPost, setPlayToPost] = useState<Play | null>(null);
-
-  // 🚀 PERFORMANCE: Optimistic play updates (Facebook-fast pattern)
+  // Optimistic plays
   const { optimisticPlays, handleCreatePlay, handleSavePlay } =
     useOptimisticPlays(activePlaybookId, () =>
       dispatch({ type: "INCREMENT_REFRESH" })
     );
 
-  // Handle opening assignments for a play
-  const handleOpenAssignments = useCallback((play: Play) => {
-    setAssignmentsPlay(play);
-    debug("Opening assignments for play:", play);
-  }, []);
-
-  // Handle posting play to team bulletin
-  const handlePostToTeamBulletin = useCallback(
-    (play: Play) => {
-      setPlayToPost(play);
-      openModal("postToBulletin");
-      debug("Posting play to team bulletin:", play);
-    },
-    [openModal]
-  );
-
-  const [recentActivities, setRecentActivities] = useState<PlayActivityItem[]>(
-    []
-  );
-
-  // Fullscreen diagram viewer state
-  const [fullscreenPlayIndex, setFullscreenPlayIndex] = useState<number | null>(
-    null
-  );
-  const [fullscreenPlays, setFullscreenPlays] = useState<Play[]>([]);
-
-  // Handle entering fullscreen presentation mode
-  const handleEnterFullscreen = useCallback(
-    (plays: Play[], playIndex: number) => {
-      debug("[PlaybookPage] Entering fullscreen mode", {
-        playCount: plays.length,
-        startIndex: playIndex,
-      });
-      setFullscreenPlays(plays);
-      setFullscreenPlayIndex(playIndex);
-    },
-    []
-  );
-
-  // Handle exiting fullscreen
-  const handleExitFullscreen = useCallback(() => {
-    debug("[PlaybookPage] Exiting fullscreen mode");
-    setFullscreenPlayIndex(null);
-    setFullscreenPlays([]);
-  }, []);
-
-  // Helper to refresh recent activities
-  const refreshActivities = useCallback(async () => {
-    try {
-      const userId = getCurrentUserId();
-      if (!userId) return;
-
-      const activities = await ActivityService.getRecentActivities(
-        activeTeamId || undefined,
-        10
-      );
-      setRecentActivities(activities);
-      debug(`Refreshed ${activities.length} recent activities`);
-    } catch (err) {
-      logError("Failed to refresh recent activities:", err);
-    }
-  }, [activeTeamId]);
-
-  // Load recent activities on mount
-  useEffect(() => {
-    const loadActivities = async () => {
-      try {
-        // Only load activities if user is authenticated
-        const userId = getCurrentUserId();
-        if (!userId) {
-          debug("Skipping activities load - user not authenticated yet");
-          return;
-        }
-
-        const activities = await ActivityService.getRecentActivities(
-          activeTeamId || undefined,
-          10
-        );
-        setRecentActivities(activities);
-        debug(`Loaded ${activities.length} recent activities`);
-      } catch (err) {
-        logError("Failed to load recent activities:", err);
-      }
-    };
-
-    void loadActivities();
-  }, [activeTeamId]);
-
-  // 🚀 PERFORMANCE: Consolidated stats hook with intelligent memoization
+  // Stats and audit hooks
   const formationAudit = useFormationAudit(activePlaybookId || null);
   const playbookStats = usePlaybookStats(
     allPlaysForStats as unknown as Play[],
@@ -325,669 +146,60 @@ const PlaybookPage = () => {
     recentActivities,
     (formationAudit.plays || []) as unknown as Play[]
   );
-
-  // Extract individual stats for backward compatibility
   const formationAuditSummary = playbookStats.formationAudit;
 
-  const [_selectedPlayForWorkflow, _setSelectedPlayForWorkflow] =
-    useState<Play | null>(null);
+  // Handlers hook
+  const handlers = usePlaybookHandlers({
+    activeTeamId,
+    state,
+    dispatch,
+    openModal,
+    closeAllModals,
+    setDiagramPlay,
+    setDiagramMode,
+    setEditingScript,
+    setShowPracticeScriptModal,
+    setShowBulkDeleteConfirm,
+    setPlayToPost,
+    refreshActivities,
+  });
 
-  // 🚀 PERFORMANCE: Memoize handlers to prevent unnecessary re-renders of child components
-  const handleViewChange = useCallback(
-    (view: CoachingView) => {
-      dispatch({ type: "SET_VIEW", view });
-      // Record user action for smart preloading
-      smartPreloader.recordAction("change_view", `view_${view}`);
-    },
-    [dispatch]
-  );
+  // Practice script handlers
+  const { handleSavePracticeScript } = usePracticeScriptHandlers({
+    activeTeamId,
+    setShowPracticeScriptModal,
+    setEditingScript,
+  });
 
-  const handleTeamTypeChange = (
-    teamType: "offense" | "defense" | "special-teams"
-  ) => dispatch({ type: "SET_TEAM_TYPE", teamType });
+  // Effects hook (keyboard shortcuts, preloading)
+  usePlaybookEffects({
+    handleOpenBuilder: handlers.handleOpenBuilder,
+    handleQuickNewPracticeScript: handlers.handleQuickNewPracticeScript,
+    handleQuickNewGamePlan: handlers.handleQuickNewGamePlan,
+    closeAllModals,
+  });
 
-  const handleFiltersChange = useCallback(
-    (filters: PlaybookState["advancedFilters"]) => {
-      triggerHapticFeedback("selection");
-      dispatch({ type: "SET_ADVANCED_FILTERS", filters });
-    },
-    [dispatch]
-  );
+  // Search query (no debouncing for instant search)
+  const debouncedSearchQuery = state.searchQuery;
+  const selectedFiltersKey = JSON.stringify(state.selectedFilters ?? {});
 
-  const handleClearSelection = () => dispatch({ type: "CLEAR_SELECTION" });
-
-  const handleBulkAction = useCallback(
-    (action: string) => {
-      const selectedCount = state.selectedPlayIds?.size || 0;
-
-      if (selectedCount === 0) {
-        toast.warning("No plays selected");
-        return;
-      }
-
-      switch (action) {
-        case "add-tags":
-          toast.info(`Bulk tagging ${selectedCount} plays (coming soon)`);
-          break;
-
-        case "duplicate":
-          toast.info(`Duplicating ${selectedCount} plays (coming soon)`);
-          break;
-
-        case "add-to-practice":
-          // Open practice script builder with selected plays
-          {
-            const selectedPlayIds = Array.from(state.selectedPlayIds || []);
-            if (selectedPlayIds.length > 0) {
-              debug(
-                "[PlaybookPage] Opening Practice Script Builder with plays:",
-                selectedPlayIds
-              );
-              setSelectedPlaysForPractice(selectedPlayIds);
-              openModal("practiceScriptBuilder");
-            }
-          }
-          break;
-
-        case "batch-edit":
-          toast.info(`Batch editing ${selectedCount} plays (coming soon)`);
-          break;
-
-        case "export":
-          // Export selected plays to JSON
-          {
-            const selectedPlayIds = Array.from(state.selectedPlayIds || []);
-
-            if (selectedPlayIds.length > 0) {
-              (async () => {
-                try {
-                  // Fetch plays by IDs using service
-                  const selectedPlays =
-                    await PlaysService.getPlaysByIds(selectedPlayIds);
-
-                  if (selectedPlays.length > 0) {
-                    exportPlays(selectedPlays, {
-                      format: "json",
-                      prettyPrint: true,
-                      includeMetadata: true,
-                    });
-                    toast.success(
-                      `Exported ${selectedPlays.length} ${selectedPlays.length === 1 ? "play" : "plays"} to JSON`
-                    );
-                  } else {
-                    toast.error("Failed to fetch selected plays");
-                  }
-                } catch (err) {
-                  logError("Export failed:", err);
-                  toast.error("Failed to export plays");
-                }
-              })();
-            }
-          }
-          break;
-
-        case "delete":
-          // Show confirmation modal for bulk delete
-          setShowBulkDeleteConfirm(true);
-          break;
-
-        default:
-          break;
-      }
-    },
-    [state.selectedPlayIds, toast, openModal]
-  );
-
-  // Confirm bulk delete handler
-  const confirmBulkDelete = useCallback(async () => {
-    const selectedCount = state.selectedPlayIds?.size || 0;
-    try {
-      const selectedPlayIds = Array.from(state.selectedPlayIds || []);
-      await PlaysService.deletePlays(selectedPlayIds);
-
-      // Refresh the plays list
-      dispatch({ type: "CLEAR_SELECTION" });
-
-      // Refresh activities to show deleted plays
-      await refreshActivities();
-
-      toast.success(
-        `Deleted ${selectedCount} ${selectedCount === 1 ? "play" : "plays"}`
-      );
-    } catch (err) {
-      logError("Bulk delete failed:", err);
-      toast.error("Failed to delete plays");
-    } finally {
-      setShowBulkDeleteConfirm(false);
-    }
-  }, [state.selectedPlayIds, dispatch, refreshActivities, toast]);
-
-  // Play count handler - updates state when PlayGrid reports actual play count
-  const handlePlayCountChange = useCallback(
-    (count: number) => {
-      dispatch({ type: "SET_PLAYS_CREATED", count });
-    },
-    [dispatch]
-  );
-
-  // Modal handlers
-  const handleOpenBuilder = useCallback(() => {
-    triggerHapticFeedback("light");
-    openModal("addNewPlay");
-    // Record user action for smart preloading
-    smartPreloader.recordAction("open_modal", "formation_builder");
-  }, [openModal]);
-
-  const handleOpenQuickCreate = useCallback(() => {
-    triggerHapticFeedback("light");
-    openModal("addNewPlay");
-    setDiagramMode("quick-play");
-    setDiagramPlay(null); // Clear any existing play
-    // Record user action for smart preloading
-    smartPreloader.recordAction("open_modal", "quick_create");
-  }, [openModal]);
-
-  const handleOpenSettings = useCallback(() => {
-    triggerHapticFeedback("light");
-    openModal("playbookSettings");
-  }, [openModal]);
-
-  const handleOpenPersonnel = useCallback(() => {
-    triggerHapticFeedback("light");
-    openModal("personnel");
-    smartPreloader.recordAction("open_modal", "personnel_builder");
-  }, [openModal]);
-
-  const handleEditPlay = useCallback(
-    (play: Play) => {
-      triggerHapticFeedback("light");
-      setDiagramPlay(play);
-      setDiagramMode("edit");
-      openModal("addNewPlay");
-    },
-    [openModal]
-  );
-
-  const handleOpenKeyboardShortcuts = useCallback(() => {
-    triggerHapticFeedback("light");
-    openModal("keyboardShortcuts");
-  }, [openModal]);
-
+  // Reset mobile list expansion on filter/search change
   useEffect(() => {
-    if (!allPlaysForStats || allPlaysForStats.length === 0) return;
-
-    const invalidPlays = allPlaysForStats.filter((play) => {
-      if (!play || !play.id) return false;
-      const formationValue =
-        typeof play.formation === "string" ? play.formation : "";
-      if (!formationValue.trim()) return false;
-      // Simplified validation - just check if formation looks like personnel
-      const looksLikePersonnel = /^\d{2}$/.test(formationValue);
-      return (
-        looksLikePersonnel && !sanitizedFormationIdsRef.current.has(play.id)
-      );
-    });
-
-    if (invalidPlays.length === 0) return;
-
-    void (async () => {
-      let didUpdate = false;
-
-      for (const play of invalidPlays) {
-        sanitizedFormationIdsRef.current.add(play.id);
-        try {
-          await SecurePlaysService.updatePlay(play.id, {
-            formation: null,
-            formation_id: null,
-          });
-          didUpdate = true;
-          toast.warning(
-            `Cleared invalid formation "${play.formation}" from ${play.play_name || "a play"}.`
-          );
-        } catch (error) {
-          sanitizedFormationIdsRef.current.delete(play.id);
-          logError("Failed to sanitize formation", error);
-        }
-      }
-
-      if (didUpdate) {
-        dispatch({ type: "INCREMENT_REFRESH" });
-      }
-    })();
-  }, [allPlaysForStats, dispatch, toast]);
-
-  // 🚀 PRELOAD HEAVY MODALS: Load during idle time for instant open (Facebook pattern!)
-  useEffect(() => {
-    // Wait 2s after page load, then preload heavy components
-    const preloadTimer = setTimeout(() => {
-      debug("[PlaybookPage] Preloading heavy modals during idle time...");
-
-      // Preload AddNewPlayModal
-      import("../components/playbook/AddNewPlayModal").catch(() => {
-        // Silent fail
-      });
-
-      // ✅ NEW: Preload PracticeScriptBuilder (heavy component)
-      import("../components/playbook/PracticeScriptBuilder").catch(() => {
-        // Silent fail
-      });
-
-      // ✅ NEW: Preload PlaybookSettingsModal
-      import("../components/playbook/PlaybookSettingsModal").catch(() => {
-        // Silent fail
-      });
-
-      debug("[PlaybookPage] Modal preload complete! (3 heavy components)");
-    }, 2000); // 2s delay = page is loaded, user settling in
-
-    return () => clearTimeout(preloadTimer);
-  }, []); // Run once on mount
-
-  // ✅ KEYBOARD SHORTCUTS: Power user features
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Cmd/Ctrl + K: Quick search (focus search input)
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        const searchInput = document.querySelector(
-          "[data-search-input]"
-        ) as HTMLInputElement;
-        searchInput?.focus();
-        return;
-      }
-
-      // Cmd/Ctrl + N: New play
-      if ((e.metaKey || e.ctrlKey) && e.key === "n") {
-        e.preventDefault();
-        handleOpenBuilder();
-        return;
-      }
-
-      // Escape: Close all modals
-      if (e.key === "Escape") {
-        closeAllModals();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleOpenBuilder, dispatch, closeAllModals]);
-
-  // Handle pull-to-refresh on mobile
-  const handlePullRefresh = useCallback(async () => {
-    try {
-      // Simulate a small delay for better UX
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      dispatch({ type: "INCREMENT_REFRESH" });
-      toast.success("Plays refreshed");
-    } catch (error) {
-      logError("Failed to refresh plays:", error);
-      toast.error("Failed to refresh plays");
-    }
-  }, [dispatch, toast]);
-
-  // Note: handleSaveDiagram is commented out - old complex diagram functionality
-  // Keeping for reference but not using with new simple approach
-  /*
-  const _handleSaveDiagram = useCallback(
-    async ({
-      doc,
-      metadata,
-    }: {
-      doc: DiagramDocument;
-      metadata: DiagramMetadata;
-    }) => {
-      if (!diagramPlay || !activeTeamId) return;
-
-      // Get the diagram mode and appropriate messaging
-      const mode = getDiagramMode(diagramPlay);
-      const actionText = getDiagramActionText(mode);
-
-      try {
-        // Use the service to handle the save logic
-        const result = await saveDiagram(
-          diagramPlay,
-          activeTeamId,
-          doc,
-          metadata
-        );
-
-        if (result.success) {
-          dispatch({ type: "INCREMENT_REFRESH" });
-
-          // Handle post-save actions based on mode
-          if (mode === DiagramMode.WHITEBOARD) {
-            // Close the diagram editor after creating play from whiteboard
-            setDiagramPlay(null);
-            toast.success(actionText.successMessage, metadata.play_name);
-
-            if (result.play) {
-              info("Created play from whiteboard:", result.play);
-            }
-          } else {
-            // Update the current diagram play state
-            setDiagramPlay((prev) =>
-              prev
-                ? {
-                    ...prev,
-                    play_name: metadata.play_name,
-                    formation: metadata.formation,
-                    diagram_url: JSON.stringify(doc),
-                    updated_at: new Date(),
-                  }
-                : prev
-            );
-            toast.success(actionText.successMessage, metadata.play_name);
-          }
-        } else {
-          throw new Error(result.error || actionText.errorMessage);
-        }
-      } catch (error) {
-        const actionText = getDiagramActionText(mode);
-        logError("Failed to save diagram:", error);
-        toast.error(
-          actionText.errorMessage,
-          error instanceof Error ? error.message : "Please try again"
-        );
-        throw error;
-      }
-    },
-    [diagramPlay, dispatch, toast, activeTeamId]
-  );
-  */
-
-  const handleDuplicatePlay = useCallback(
-    async (play: Play, flip: boolean = false) => {
-      triggerHapticFeedback("selection");
-
-      const duplicatedPlay: Play = {
-        ...play,
-        id: "", // Will be set by the database
-        play_name: `Copy of ${play.play_name}`,
-        created_at: new Date(),
-        updated_at: new Date(),
-        times_called: 0,
-        times_successful: 0,
-      };
-
-      // If flipping, update formation and diagram
-      if (flip) {
-        try {
-          // Get opposite formation variant
-          if (play.formation_id) {
-            const oppositeFormation = await getOppositeFormationVariant(
-              play.formation_id
-            );
-
-            if (oppositeFormation) {
-              duplicatedPlay.formation_id = oppositeFormation.id;
-              duplicatedPlay.formation = oppositeFormation.name;
-              duplicatedPlay.formation_direction =
-                oppositeFormation.direction as "base" | "left" | "right" | null;
-            }
-          }
-
-          // Flip play name if it contains Left/Right
-          duplicatedPlay.play_name = flipPlayName(play.play_name);
-
-          // Flip formation direction (f_dir field)
-          duplicatedPlay.f_dir = flipFormationDirection(play.f_dir ?? "");
-
-          // Flip play direction (p_dir field)
-          duplicatedPlay.p_dir = flipFormationDirection(play.p_dir ?? "");
-
-          // Flip diagram positions
-          if (play.diagram_data) {
-            const flippedDiagram = flipDiagramPositions(play.diagram_data);
-            if (flippedDiagram) {
-              duplicatedPlay.diagram_data = flippedDiagram as any;
-            }
-          }
-
-          toast.success(
-            "Play flipped!",
-            `Created flipped version: "${duplicatedPlay.play_name}"`
-          );
-        } catch (error) {
-          logError("[PlaybookPage] Failed to flip play:", error);
-          toast.error(
-            "Flip failed",
-            "Could not flip formation, creating regular duplicate"
-          );
-        }
-      }
-
-      openModal("addNewPlay");
-    },
-    [toast, openModal]
-  );
-
-  // Workflow handlers
-  const handleAddToPracticeScript = useCallback(
-    async (play: Play) => {
-      triggerHapticFeedback("success");
-      try {
-        if (!activeTeamId) {
-          toast.error("No active team selected");
-          return;
-        }
-        const script = await PracticeScriptService.createQuickScript(
-          play,
-          activeTeamId
-        );
-        info(`Added "${play.play_name}" to practice script: "${script.name}"`);
-
-        // Refresh activities to show the new "added_to_script" activity
-        await refreshActivities();
-
-        toast.success(
-          `Added "${play.play_name}" to practice script`,
-          script.name
-        );
-      } catch (error) {
-        logError("Failed to add play to practice script:", error);
-        toast.error(
-          "Failed to add play to practice script",
-          "Please try again"
-        );
-      }
-    },
-    [activeTeamId, toast, refreshActivities]
-  );
-
-  const handleAddToGamePlan = useCallback(
-    async (_play: Play) => {
-      toast.info("Game plan integration coming soon!");
-    },
-    [toast]
-  );
-
-  // Practice Script Modal handlers
-  const handleOpenPracticeScriptBuilder = useCallback(
-    (script?: PracticeScript) => {
-      triggerHapticFeedback("light");
-      setEditingScript(script || null);
-      setShowPracticeScriptModal(true);
-    },
-    []
-  );
-
-  const handleQuickNewPracticeScript = useCallback(() => {
-    triggerHapticFeedback("light");
-    setEditingScript(null);
-    setShowPracticeScriptModal(true);
-  }, []);
-
-  const handleSavePracticeScript = useCallback(
-    async (script: Partial<PracticeScript>) => {
-      try {
-        debug("💾 Saving practice script:", {
-          script,
-          playCount: script.plays?.length || 0,
-        });
-
-        let savedScriptId: string;
-
-        if (script.id) {
-          // Update existing script metadata
-          await PracticeScriptService.updatePracticeScript(script.id, {
-            name: script.title || script.name || "Untitled Script",
-            description: script.description,
-            tags: script.tags,
-          });
-          savedScriptId = script.id;
-          debug("✅ Updated script metadata:", savedScriptId);
-        } else {
-          // Create new script
-          const newScript = await PracticeScriptService.createPracticeScript({
-            name: script.title || script.name || "Untitled Script",
-            description: script.description,
-            teamId: activeTeamId!,
-            tags: script.tags,
-          });
-          savedScriptId = newScript.id;
-          debug("✅ Created new script:", savedScriptId);
-        }
-
-        // Now save the plays if any were provided
-        if (script.plays && script.plays.length > 0) {
-          debug("📝 Saving", script.plays.length, "plays to script");
-
-          // First, clear existing plays if updating (to avoid duplicates)
-          if (script.id) {
-            const { error: deleteError } = await supabase
-              .from("practice_script_plays")
-              .delete()
-              .eq("practice_script_id", savedScriptId);
-
-            if (deleteError) {
-              logError("Error clearing existing plays:", deleteError);
-            }
-          }
-
-          // Add each play to the script
-          for (let i = 0; i < script.plays.length; i++) {
-            const play = script.plays[i];
-
-            if (!play.playId) {
-              debug("Skipping play without playId:", play);
-              continue;
-            }
-
-            // Validate play data before saving
-            const validationErrors = validateModalPlay(play);
-            if (validationErrors.length > 0) {
-              logError("Invalid play data:", play.playName, validationErrors);
-              toast.error(
-                `Skipped play "${play.playName}": ${validationErrors.join(", ")}`
-              );
-              continue;
-            }
-
-            try {
-              // Use type adapter to convert modal play to service format
-              const servicePlay = modalPlayToServicePlay(play, i + 1);
-              servicePlay.scriptId = savedScriptId;
-
-              // Create minimal play object for activity logging
-              const playForActivity = {
-                id: play.playId,
-                play_name: play.playName,
-                team_id: activeTeamId,
-              } as any;
-
-              await PracticeScriptService.addPlayToScript(
-                servicePlay,
-                playForActivity
-              );
-              debug("✅ Added play", i + 1, ":", play.playName);
-            } catch (playError) {
-              logError("Failed to add play:", play.playName, playError);
-              toast.error(`Failed to add play "${play.playName}"`);
-              // Continue with other plays even if one fails
-            }
-          }
-
-          toast.success(
-            `Practice script ${script.id ? "updated" : "created"} with ${script.plays.length} play${script.plays.length !== 1 ? "s" : ""}`
-          );
-        } else {
-          toast.success(`Practice script ${script.id ? "updated" : "created"}`);
-        }
-
-        setShowPracticeScriptModal(false);
-        setEditingScript(null);
-      } catch (error) {
-        logError("Failed to save practice script:", error);
-        toast.error("Failed to save practice script");
-      }
-    },
-    [activeTeamId, toast]
-  );
-
-  const handleQuickNewGamePlan = useCallback(() => {
-    triggerHapticFeedback("light");
-    navigate("/game-plans");
-  }, [navigate]);
-
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      // Ctrl/Cmd + P for new practice script
-      if (
-        (event.ctrlKey || event.metaKey) &&
-        event.key === "p" &&
-        !event.shiftKey
-      ) {
-        event.preventDefault();
-        handleQuickNewPracticeScript();
-      }
-      // Ctrl/Cmd + G for new game plan
-      if ((event.ctrlKey || event.metaKey) && event.key === "g") {
-        event.preventDefault();
-        handleQuickNewGamePlan();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [handleQuickNewPracticeScript, handleQuickNewGamePlan]);
-
-  // Load suggestions for inline editing
-  useEffect(() => {
-    const loadSuggestions = async () => {
-      try {
-        const [formations, playNames, personnel] = await Promise.all([
-          PlaysService.getUniqueFormations(),
-          PlaysService.getUniquePlayNames(),
-          PlaysService.getUniquePersonnel(),
-        ]);
-
-        setSuggestions({
-          formations,
-          playNames,
-          personnel,
-        });
-      } catch (error) {
-        logError("Failed to load suggestions:", error);
-        // Continue with empty suggestions - the UI will still work
-      }
-    };
-
-    loadSuggestions();
-  }, []);
+    if (!isMobileOrTablet) return;
+    setMobileListExpanded(false);
+  }, [isMobileOrTablet, debouncedSearchQuery, selectedFiltersKey, setMobileListExpanded]);
 
   return (
     <div className="min-h-screen">
-      {/* Unified Header with Navigation (includes Breadcrumb + PlaybookSelector) */}
+      {/* Unified Header with Navigation */}
       <PlaybookViewTabs
         currentView={state.currentView}
-        onViewChange={handleViewChange}
+        onViewChange={handlers.handleViewChange}
         currentTeamType={state.currentTeamType}
-        onTeamTypeChange={handleTeamTypeChange}
-        onOpenSettings={handleOpenSettings}
-        onOpenBuilder={handleOpenBuilder}
-        onOpenPersonnel={handleOpenPersonnel}
+        onTeamTypeChange={handlers.handleTeamTypeChange}
+        onOpenSettings={handlers.handleOpenSettings}
+        onOpenBuilder={handlers.handleOpenBuilder}
+        onOpenPersonnel={handlers.handleOpenPersonnel}
         onOpenHealth={() => openModal("playbookHealth")}
         onNavigate={(path) => {
           if (path === "/playbook/formations") {
@@ -1013,7 +225,7 @@ const PlaybookPage = () => {
         }}
       />
 
-      {/* Mobile/Tablet-First Layout (< 1024px) */}
+      {/* Mobile/Tablet-First Layout */}
       {isMobileOrTablet ? (
         <MobilePlaybookView
           state={state}
@@ -1033,24 +245,24 @@ const PlaybookPage = () => {
           setShowStatsSheet={(show) =>
             show ? openModal("statsSheet") : closeModal()
           }
-          handleOpenQuickCreate={handleOpenQuickCreate}
-          handleOpenPersonnel={handleOpenPersonnel}
-          handleOpenSettings={handleOpenSettings}
-          handleEditPlay={handleEditPlay}
-          handleQuickNewPracticeScript={handleQuickNewPracticeScript}
-          handleQuickNewGamePlan={handleQuickNewGamePlan}
-          handleOpenKeyboardShortcuts={handleOpenKeyboardShortcuts}
-          handlePullRefresh={handlePullRefresh}
+          handleOpenQuickCreate={handlers.handleOpenQuickCreate}
+          handleOpenPersonnel={handlers.handleOpenPersonnel}
+          handleOpenSettings={handlers.handleOpenSettings}
+          handleEditPlay={handlers.handleEditPlay}
+          handleQuickNewPracticeScript={handlers.handleQuickNewPracticeScript}
+          handleQuickNewGamePlan={handlers.handleQuickNewGamePlan}
+          handleOpenKeyboardShortcuts={handlers.handleOpenKeyboardShortcuts}
+          handlePullRefresh={handlers.handlePullRefresh}
           handleSavePlay={handleSavePlay}
-          handleDuplicatePlay={handleDuplicatePlay}
-          handleOpenBuilder={handleOpenBuilder}
-          handleOpenAssignments={handleOpenAssignments}
-          handlePostToTeamBulletin={handlePostToTeamBulletin}
-          handleAddToPracticeScript={handleAddToPracticeScript}
-          handleAddToGamePlan={handleAddToGamePlan}
-          handlePlayCountChange={handlePlayCountChange}
-          handleViewChange={handleViewChange}
-          handleOpenPracticeScriptBuilder={handleOpenPracticeScriptBuilder}
+          handleDuplicatePlay={handlers.handleDuplicatePlay}
+          handleOpenBuilder={handlers.handleOpenBuilder}
+          handleOpenAssignments={handlers.handleOpenAssignments}
+          handlePostToTeamBulletin={handlers.handlePostToTeamBulletin}
+          handleAddToPracticeScript={handlers.handleAddToPracticeScript}
+          handleAddToGamePlan={handlers.handleAddToGamePlan}
+          handlePlayCountChange={handlers.handlePlayCountChange}
+          handleViewChange={handlers.handleViewChange}
+          handleOpenPracticeScriptBuilder={handlers.handleOpenPracticeScriptBuilder}
           dispatch={dispatch}
           navigate={navigate}
           mobileButtonSize={mobileButtonSize}
@@ -1065,20 +277,20 @@ const PlaybookPage = () => {
           formationAudit={formationAudit}
           playbookStats={playbookStats}
           activeTeamId={activeTeamId}
-          handleEditPlay={handleEditPlay}
+          handleEditPlay={handlers.handleEditPlay}
           handleSavePlay={handleSavePlay}
-          handleOpenBuilder={handleOpenBuilder}
-          handleQuickNewGamePlan={handleQuickNewGamePlan}
-          handleDuplicatePlay={handleDuplicatePlay}
-          handleOpenAssignments={handleOpenAssignments}
-          handlePostToTeamBulletin={handlePostToTeamBulletin}
-          handleAddToPracticeScript={handleAddToPracticeScript}
-          handleAddToGamePlan={handleAddToGamePlan}
-          handlePlayCountChange={handlePlayCountChange}
-          handleOpenPracticeScriptBuilder={handleOpenPracticeScriptBuilder}
-          handleFiltersChange={handleFiltersChange}
-          handleClearSelection={handleClearSelection}
-          handleBulkAction={handleBulkAction}
+          handleOpenBuilder={handlers.handleOpenBuilder}
+          handleQuickNewGamePlan={handlers.handleQuickNewGamePlan}
+          handleDuplicatePlay={handlers.handleDuplicatePlay}
+          handleOpenAssignments={handlers.handleOpenAssignments}
+          handlePostToTeamBulletin={handlers.handlePostToTeamBulletin}
+          handleAddToPracticeScript={handlers.handleAddToPracticeScript}
+          handleAddToGamePlan={handlers.handleAddToGamePlan}
+          handlePlayCountChange={handlers.handlePlayCountChange}
+          handleOpenPracticeScriptBuilder={handlers.handleOpenPracticeScriptBuilder}
+          handleFiltersChange={handlers.handleFiltersChange}
+          handleClearSelection={handlers.handleClearSelection}
+          handleBulkAction={handlers.handleBulkAction}
           handleEnterFullscreen={handleEnterFullscreen}
           dispatch={dispatch}
           navigate={navigate}
@@ -1128,7 +340,7 @@ const PlaybookPage = () => {
           isOpen={isModalOpen("filtersSheet")}
           onClose={closeModal}
           advancedFilters={state.advancedFilters}
-          onFiltersChange={handleFiltersChange}
+          onFiltersChange={handlers.handleFiltersChange}
           onClearAll={() => {
             dispatch({ type: "SET_ADVANCED_FILTERS", filters: [] });
             closeModal();
@@ -1142,7 +354,7 @@ const PlaybookPage = () => {
       <BulkActionsToolbar
         selectedCount={state.selectedPlayIds?.size || 0}
         onClearSelection={() => dispatch({ type: "CLEAR_SELECTION" })}
-        onBulkAction={handleBulkAction}
+        onBulkAction={handlers.handleBulkAction}
       />
 
       {/* Fullscreen Diagram Viewer */}
@@ -1192,7 +404,7 @@ const PlaybookPage = () => {
       <ConfirmationModal
         isOpen={showBulkDeleteConfirm}
         onClose={() => setShowBulkDeleteConfirm(false)}
-        onConfirm={confirmBulkDelete}
+        onConfirm={handlers.confirmBulkDelete}
         title="Delete Plays"
         message={`Are you sure you want to delete ${state.selectedPlayIds?.size || 0} ${(state.selectedPlayIds?.size || 0) === 1 ? "play" : "plays"}?`}
         variant="danger"
