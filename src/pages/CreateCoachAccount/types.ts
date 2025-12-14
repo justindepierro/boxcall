@@ -28,13 +28,13 @@ export interface CoachAccountFormData {
 }
 
 export type CoachAccountStep =
-  | 'intro'
-  | 'personal-info'
-  | 'address-info'
-  | 'coaching-info'
-  | 'team-connection'
-  | 'payment'
-  | 'complete';
+  | "intro"
+  | "personal-info"
+  | "address-info"
+  | "coaching-info"
+  | "team-connection"
+  | "payment"
+  | "complete";
 
 export interface StepDefinition {
   id: CoachAccountStep;

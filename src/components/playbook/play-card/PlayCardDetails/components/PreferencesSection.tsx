@@ -4,12 +4,12 @@
  * Displays editable play preferences (down, distance, hash, coverage, front).
  */
 
-import React from 'react';
-import { Typography } from '../../../../design-system/Typography';
-import Icon from '../../../../ui/Icon/Icon';
-import { InlineEditField } from '../../../../ui/InlineEditField';
-import { DISTANCE_OPTIONS, DOWN_OPTIONS, HASH_OPTIONS } from '../../constants';
-import type { PreferencesSectionProps } from '../types';
+import React from "react";
+import { Typography } from "../../../../design-system/Typography";
+import Icon from "../../../../ui/Icon/Icon";
+import { InlineEditField } from "../../../../ui/InlineEditField";
+import { DISTANCE_OPTIONS, DOWN_OPTIONS, HASH_OPTIONS } from "../../constants";
+import type { PreferencesSectionProps } from "../types";
 
 export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
   optimisticPlay,
@@ -32,12 +32,12 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
           </dt>
           <dd className="flex-1">
             <InlineEditField
-              value={optimisticPlay.pref_down || ''}
-              onSave={(value) => handleInlineSave('pref_down', value)}
+              value={optimisticPlay.pref_down || ""}
+              onSave={(value) => handleInlineSave("pref_down", value)}
               placeholder="Preferred down (e.g., 1st, 2nd, 3rd)"
               suggestions={DOWN_OPTIONS.map((option) => option.label)}
               enableSuggestions={true}
-              isSaving={savingFields.has('pref_down')}
+              isSaving={savingFields.has("pref_down")}
             />
           </dd>
         </div>
@@ -47,12 +47,12 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
           </dt>
           <dd className="flex-1">
             <InlineEditField
-              value={optimisticPlay.pref_dis || ''}
-              onSave={(value) => handleInlineSave('pref_dis', value)}
+              value={optimisticPlay.pref_dis || ""}
+              onSave={(value) => handleInlineSave("pref_dis", value)}
               placeholder="Preferred distance (e.g., Short, Medium, Long)"
               suggestions={DISTANCE_OPTIONS.map((option) => option.label)}
               enableSuggestions={true}
-              isSaving={savingFields.has('pref_dis')}
+              isSaving={savingFields.has("pref_dis")}
             />
           </dd>
         </div>
@@ -62,12 +62,12 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
           </dt>
           <dd className="flex-1">
             <InlineEditField
-              value={optimisticPlay.pref_hash || ''}
-              onSave={(value) => handleInlineSave('pref_hash', value)}
+              value={optimisticPlay.pref_hash || ""}
+              onSave={(value) => handleInlineSave("pref_hash", value)}
               placeholder="Preferred hash (e.g., Left, Right, Middle)"
               suggestions={HASH_OPTIONS.map((option) => option.label)}
               enableSuggestions={true}
-              isSaving={savingFields.has('pref_hash')}
+              isSaving={savingFields.has("pref_hash")}
             />
           </dd>
         </div>
@@ -77,10 +77,10 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
           </dt>
           <dd className="flex-1">
             <InlineEditField
-              value={optimisticPlay.pref_cov || ''}
-              onSave={(value) => handleInlineSave('pref_cov', value)}
+              value={optimisticPlay.pref_cov || ""}
+              onSave={(value) => handleInlineSave("pref_cov", value)}
               placeholder="Preferred coverage"
-              isSaving={savingFields.has('pref_cov')}
+              isSaving={savingFields.has("pref_cov")}
             />
           </dd>
         </div>
@@ -90,10 +90,10 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
           </dt>
           <dd className="flex-1">
             <InlineEditField
-              value={optimisticPlay.pref_front || ''}
-              onSave={(value) => handleInlineSave('pref_front', value)}
+              value={optimisticPlay.pref_front || ""}
+              onSave={(value) => handleInlineSave("pref_front", value)}
               placeholder="Preferred defensive front"
-              isSaving={savingFields.has('pref_front')}
+              isSaving={savingFields.has("pref_front")}
             />
           </dd>
         </div>

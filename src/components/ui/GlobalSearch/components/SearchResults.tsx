@@ -4,12 +4,12 @@
  * Renders the list of search results with loading and empty states.
  */
 
-import React from 'react';
-import { Icon } from '../../Icon';
-import { Typography } from '../../../design-system';
-import type { SearchResultsProps } from '../types';
-import { MIN_QUERY_LENGTH_FOR_NO_RESULTS } from '../constants';
-import { SearchResultItem } from './SearchResultItem';
+import React from "react";
+import { Icon } from "../../Icon";
+import { Typography } from "../../../design-system";
+import type { SearchResultsProps } from "../types";
+import { MIN_QUERY_LENGTH_FOR_NO_RESULTS } from "../constants";
+import { SearchResultItem } from "./SearchResultItem";
 
 export const SearchResults: React.FC<SearchResultsProps> = ({
   isLoading,
@@ -19,7 +19,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
   getTypeIcon,
   getTypeColor,
   onResultClick,
-  emptyMessage = 'Start typing to search across all your content',
+  emptyMessage = "Start typing to search across all your content",
 }) => {
   if (isLoading) {
     return (

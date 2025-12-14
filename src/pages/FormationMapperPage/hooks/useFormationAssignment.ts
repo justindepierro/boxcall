@@ -35,7 +35,10 @@ export function useFormationAssignment({
   const toast = useToast();
 
   const assignFormations = useCallback(
-    async (groups: FormationGroup[], options?: AssignOptions): Promise<boolean> => {
+    async (
+      groups: FormationGroup[],
+      options?: AssignOptions
+    ): Promise<boolean> => {
       const validGroups = groups
         .map((group) => ({
           formation: group.formation,
@@ -122,14 +125,20 @@ export function useFormationAssignment({
 }
 
 export interface FormationAssignmentHandlers {
-  handleSuggestionAssign: (play: Play, suggestion: FormationSuggestion) => Promise<void>;
+  handleSuggestionAssign: (
+    play: Play,
+    suggestion: FormationSuggestion
+  ) => Promise<void>;
   handleAssignFormation: () => Promise<void>;
   handleBulkAssignConfirm: () => Promise<void>;
   handleBulkApplySuggestions: () => Promise<void>;
 }
 
 interface UseFormationHandlersParams {
-  assignFormations: (groups: FormationGroup[], options?: AssignOptions) => Promise<boolean>;
+  assignFormations: (
+    groups: FormationGroup[],
+    options?: AssignOptions
+  ) => Promise<boolean>;
   editingPlay: Play | null;
   selectedFormation: Formation | null;
   selectedPlays: Play[];
@@ -197,7 +206,13 @@ export function useFormationHandlers({
       setEditingPlay(null);
       setSelectedFormation(null);
     }
-  }, [assignFormations, editingPlay, selectedFormation, setEditingPlay, setSelectedFormation]);
+  }, [
+    assignFormations,
+    editingPlay,
+    selectedFormation,
+    setEditingPlay,
+    setSelectedFormation,
+  ]);
 
   const handleBulkAssignConfirm = useCallback(async () => {
     if (!bulkAssignFormation || selectedPlays.length === 0) return;
@@ -227,7 +242,10 @@ export function useFormationHandlers({
   const handleBulkApplySuggestions = useCallback(async () => {
     if (selectedPlays.length === 0) return;
 
-    const groupsMap = new Map<string, { formation: Formation; plays: Play[] }>();
+    const groupsMap = new Map<
+      string,
+      { formation: Formation; plays: Play[] }
+    >();
 
     selectedPlays.forEach((play) => {
       const suggestion = suggestionsByPlay.get(play.id)?.[0];

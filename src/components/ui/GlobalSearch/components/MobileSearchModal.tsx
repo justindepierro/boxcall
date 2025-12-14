@@ -4,11 +4,11 @@
  * Full-screen mobile search modal with results.
  */
 
-import React from 'react';
-import { Icon } from '../../Icon';
-import { Typography } from '../../../design-system';
-import type { MobileSearchModalProps } from '../types';
-import { SearchResults } from './SearchResults';
+import React from "react";
+import { Icon } from "../../Icon";
+import { Typography } from "../../../design-system";
+import type { MobileSearchModalProps } from "../types";
+import { SearchResults } from "./SearchResults";
 
 export const MobileSearchModal: React.FC<MobileSearchModalProps> = ({
   isOpen,
@@ -47,10 +47,7 @@ export const MobileSearchModal: React.FC<MobileSearchModalProps> = ({
             >
               <Icon name="close" className="h-6 w-6 text-neutral-500" />
             </button>
-            <Typography
-              variant="headline-sm"
-              className="text-primary flex-1"
-            >
+            <Typography variant="headline-sm" className="text-primary flex-1">
               Search BoxCall
             </Typography>
           </div>

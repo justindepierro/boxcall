@@ -53,7 +53,9 @@ export function useJoinTeamHandlers(): UseJoinTeamHandlersReturn {
 
   const handleInviteCodeSubmit = async () => {
     if (!inviteCode || inviteCode.length !== INVITE_CODE_LENGTH) {
-      toast.error(`Please enter a valid ${INVITE_CODE_LENGTH}-digit invite code`);
+      toast.error(
+        `Please enter a valid ${INVITE_CODE_LENGTH}-digit invite code`
+      );
       return;
     }
 

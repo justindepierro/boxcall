@@ -5,11 +5,11 @@
  * with visibility toggles (Formation and Play Details sections).
  */
 
-import React from 'react';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { Typography } from '../../../../design-system/Typography';
-import Icon from '../../../../ui/Icon/Icon';
-import type { DraggableFieldSectionProps } from '../types';
+import React from "react";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { Typography } from "../../../../design-system/Typography";
+import Icon from "../../../../ui/Icon/Icon";
+import type { DraggableFieldSectionProps } from "../types";
 
 export const DraggableFieldSection: React.FC<DraggableFieldSectionProps> = ({
   title,
@@ -58,8 +58,8 @@ export const DraggableFieldSection: React.FC<DraggableFieldSectionProps> = ({
                         {...provided.draggableProps}
                         className={`p-xs rounded transition-all duration-150 ${
                           snapshot.isDragging
-                            ? 'bg-surface-hover shadow-md scale-[1.02]'
-                            : 'hover:bg-surface-hover'
+                            ? "bg-surface-hover shadow-md scale-[1.02]"
+                            : "hover:bg-surface-hover"
                         }`}
                       >
                         <div className="flex items-center gap-xs mb-xs">
@@ -72,8 +72,8 @@ export const DraggableFieldSection: React.FC<DraggableFieldSectionProps> = ({
                           <dt
                             className={`font-medium text-sm ${
                               isVisible
-                                ? 'text-primary'
-                                : 'text-tertiary line-through'
+                                ? "text-primary"
+                                : "text-tertiary line-through"
                             }`}
                           >
                             {field.label}
@@ -83,18 +83,22 @@ export const DraggableFieldSection: React.FC<DraggableFieldSectionProps> = ({
                             className="flex-shrink-0 p-xs rounded-lg hover:bg-surface-hover text-tertiary hover:text-secondary transition-colors ml-auto"
                             title={
                               isVisible
-                                ? 'Hide from display name'
-                                : 'Show in display name'
+                                ? "Hide from display name"
+                                : "Show in display name"
                             }
                           >
                             <Icon
-                              name={isVisible ? 'eye' : 'eye-off'}
+                              name={isVisible ? "eye" : "eye-off"}
                               className="h-4 w-4"
                             />
                           </button>
                         </div>
                         <div className="w-full">
-                          {field.render(optimisticPlay, handleInlineSave, savingFields)}
+                          {field.render(
+                            optimisticPlay,
+                            handleInlineSave,
+                            savingFields
+                          )}
                         </div>
                       </div>
                     )}

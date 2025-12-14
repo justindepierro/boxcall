@@ -4,9 +4,9 @@
  * Type definitions for the PlayCardDetails component and its subcomponents.
  */
 
-import type { Play as PlayType } from '../../../../types/play';
-import type { FieldDefinitionMap } from '../fieldDefinitions';
-import type { PlayFlags } from '../../../../utils/localPlayFlags';
+import type { Play as PlayType } from "../../../../types/play";
+import type { FieldDefinitionMap } from "../fieldDefinitions";
+import type { PlayFlags } from "../../../../utils/localPlayFlags";
 
 /**
  * Props for the main PlayCardDetails component
@@ -26,7 +26,7 @@ export interface PlayCardDetailsProps {
   formationFieldVisibility: Record<string, boolean>;
   toggleFieldVisibility: (
     fieldKey: string,
-    section: 'formation' | 'playDetails'
+    section: "formation" | "playDetails"
   ) => void;
   handleFormationDragEnd: (result: any) => void;
   playDetailsFieldOrder: string[];
@@ -67,7 +67,7 @@ export interface DraggableFieldSectionProps {
   fields: FieldDefinitionMap;
   fieldVisibility: Record<string, boolean>;
   optimisticPlay: PlayType;
-  handleInlineSave: PlayCardDetailsProps['handleInlineSave'];
+  handleInlineSave: PlayCardDetailsProps["handleInlineSave"];
   savingFields: Set<string>;
   toggleFieldVisibility: (fieldKey: string) => void;
   onDragEnd: (result: any) => void;
@@ -78,7 +78,7 @@ export interface DraggableFieldSectionProps {
  */
 export interface PreferencesSectionProps {
   optimisticPlay: PlayType;
-  handleInlineSave: PlayCardDetailsProps['handleInlineSave'];
+  handleInlineSave: PlayCardDetailsProps["handleInlineSave"];
   savingFields: Set<string>;
 }
 
@@ -94,7 +94,7 @@ export interface UsageStatsSectionProps {
  */
 export interface NotesSectionProps {
   notes: string | null | undefined;
-  handleInlineSave: PlayCardDetailsProps['handleInlineSave'];
+  handleInlineSave: PlayCardDetailsProps["handleInlineSave"];
   savingFields: Set<string>;
 }
 
@@ -113,7 +113,7 @@ export interface TagsSectionProps {
 export interface DiagramUploadSectionProps {
   play: PlayType;
   optimisticPlay: PlayType;
-  handleInlineSave: PlayCardDetailsProps['handleInlineSave'];
+  handleInlineSave: PlayCardDetailsProps["handleInlineSave"];
 }
 
 /**

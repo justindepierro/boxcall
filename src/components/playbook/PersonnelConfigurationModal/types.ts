@@ -63,7 +63,8 @@ export interface ConfigurationListProps {
  * Extended PersonnelConfiguration with runtime properties
  * Added at runtime by usePersonnelConfigHandlers
  */
-export interface PersonnelConfigurationWithRuntime extends PersonnelConfiguration {
+export interface PersonnelConfigurationWithRuntime
+  extends PersonnelConfiguration {
   /** Runtime property - set when user marks this as the default personnel */
   isDefault?: boolean;
 }

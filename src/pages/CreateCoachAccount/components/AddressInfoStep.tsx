@@ -2,9 +2,9 @@
  * AddressInfoStep - Address information form for coach account
  */
 
-import React from 'react';
-import { Typography } from '../../../components/design-system';
-import type { StepProps } from '../types';
+import React from "react";
+import { Typography } from "../../../components/design-system";
+import type { StepProps } from "../types";
 
 export const AddressInfoStep: React.FC<StepProps> = ({
   formData,

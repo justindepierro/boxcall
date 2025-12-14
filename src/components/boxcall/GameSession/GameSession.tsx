@@ -10,17 +10,17 @@
  * These are design choices that don't need dark mode variants.
  */
 
-import React, { useState } from 'react';
-import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 
-import { useGameSession } from '../../../hooks/useGameSession';
-import { useActiveTeamStore } from '../../../stores/activeTeamStore';
-import { logError } from '../../../utils/logger';
-import { useToast } from '../../../hooks/useToast';
-import { ConfirmationModal } from '../../ui/ConfirmationModal/ConfirmationModal';
+import { useGameSession } from "../../../hooks/useGameSession";
+import { useActiveTeamStore } from "../../../stores/activeTeamStore";
+import { logError } from "../../../utils/logger";
+import { useToast } from "../../../hooks/useToast";
+import { ConfirmationModal } from "../../ui/ConfirmationModal/ConfirmationModal";
 
-import type { PlayLogForm } from './types';
-import { DEFAULT_PLAY_LOG_FORM } from './types';
+import type { PlayLogForm } from "./types";
+import { DEFAULT_PLAY_LOG_FORM } from "./types";
 import {
   GameSessionHeader,
   PlayExecutionForm,
@@ -31,7 +31,7 @@ import {
   PreSessionState,
   DownDistanceCard,
   PlaySelectionCard,
-} from './components';
+} from "./components";
 
 /**
  * GameSession - Live/retroactive game tracking
@@ -52,9 +52,9 @@ const GameSession: React.FC = () => {
   const { activeTeamId } = useActiveTeamStore();
   const toast = useToast();
 
-  const mode = (searchParams.get('mode') as 'live' | 'retroactive') || 'live';
-  const opponent = searchParams.get('opponent') || 'Opponent';
-  const isHomeGame = searchParams.get('home') !== 'false';
+  const mode = (searchParams.get("mode") as "live" | "retroactive") || "live";
+  const opponent = searchParams.get("opponent") || "Opponent";
+  const isHomeGame = searchParams.get("home") !== "false";
 
   const [form, setForm] = useState<PlayLogForm>(DEFAULT_PLAY_LOG_FORM);
   const [showEndConfirm, setShowEndConfirm] = useState(false);
@@ -84,7 +84,7 @@ const GameSession: React.FC = () => {
     isRedZone,
     isGoalLine,
   } = useGameSession({
-    gamePlanId: planId || '',
+    gamePlanId: planId || "",
     mode,
     opponent,
     isHomeGame,
@@ -107,8 +107,8 @@ const GameSession: React.FC = () => {
     try {
       await startSession();
     } catch (err) {
-      logError('Error starting session:', err);
-      toast.error('Failed to start session');
+      logError("Error starting session:", err);
+      toast.error("Failed to start session");
     }
   };
 
@@ -119,10 +119,10 @@ const GameSession: React.FC = () => {
   const confirmEnd = async () => {
     try {
       await endSession();
-      navigate('/boxcall');
+      navigate("/boxcall");
     } catch (err) {
-      logError('Error ending session:', err);
-      toast.error('Failed to end session');
+      logError("Error ending session:", err);
+      toast.error("Failed to end session");
     } finally {
       setShowEndConfirm(false);
     }
@@ -130,7 +130,7 @@ const GameSession: React.FC = () => {
 
   const handleLogPlay = async () => {
     if (!currentPlay) {
-      toast.error('Please select a play');
+      toast.error("Please select a play");
       return;
     }
 
@@ -152,8 +152,8 @@ const GameSession: React.FC = () => {
       // Reset form
       setForm(DEFAULT_PLAY_LOG_FORM);
     } catch (err) {
-      logError('Error logging play:', err);
-      toast.error('Failed to log play');
+      logError("Error logging play:", err);
+      toast.error("Failed to log play");
     }
   };
 
@@ -166,8 +166,8 @@ const GameSession: React.FC = () => {
   if (error || !gamePlan) {
     return (
       <ErrorState
-        message={error?.message || 'Game plan not found'}
-        onBack={() => navigate('/boxcall')}
+        message={error?.message || "Game plan not found"}
+        onBack={() => navigate("/boxcall")}
       />
     );
   }
@@ -180,7 +180,7 @@ const GameSession: React.FC = () => {
         opponent={opponent}
         playCount={gamePlanPlays.length}
         mode={mode}
-        onCancel={() => navigate('/boxcall')}
+        onCancel={() => navigate("/boxcall")}
         onStart={handleStart}
       />
     );
@@ -200,7 +200,7 @@ const GameSession: React.FC = () => {
             isPaused={isPaused}
             isGoalLine={isGoalLine}
             isRedZone={isRedZone}
-            onBack={() => navigate('/boxcall')}
+            onBack={() => navigate("/boxcall")}
             onPause={pauseSession}
             onResume={resumeSession}
             onEnd={handleEnd}
@@ -223,7 +223,7 @@ const GameSession: React.FC = () => {
                 filteredPlays={filteredPlays}
                 currentPlay={currentPlay}
                 onSelectPlay={selectPlay}
-                teamId={activeTeamId || ''}
+                teamId={activeTeamId || ""}
                 disabled={isPaused}
               />
 

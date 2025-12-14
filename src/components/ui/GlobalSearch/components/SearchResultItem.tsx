@@ -5,10 +5,10 @@
  * with icon, title, subtitle, and selection state.
  */
 
-import React from 'react';
-import { Icon } from '../../Icon';
-import { Typography } from '../../../design-system';
-import type { SearchResultItemProps } from '../types';
+import React from "react";
+import { Icon } from "../../Icon";
+import { Typography } from "../../../design-system";
+import type { SearchResultItemProps } from "../types";
 
 export const SearchResultItem = React.memo<SearchResultItemProps>(
   ({ result, index, selectedIndex, getTypeIcon, getTypeColor, onClick }) => {
@@ -23,8 +23,8 @@ export const SearchResultItem = React.memo<SearchResultItemProps>(
         border-l-4
         ${
           isSelected
-            ? 'bg-jade-50 dark:bg-jade-900/20 border-jade-500'
-            : 'border-transparent hover:bg-neutral-50 dark:hover:bg-navy-700/50 hover:border-jade-300 dark:hover:border-jade-700'
+            ? "bg-jade-50 dark:bg-jade-900/20 border-jade-500"
+            : "border-transparent hover:bg-neutral-50 dark:hover:bg-navy-700/50 hover:border-jade-300 dark:hover:border-jade-700"
         }
         group`}
       >
@@ -35,8 +35,8 @@ export const SearchResultItem = React.memo<SearchResultItemProps>(
           transition-all duration-200
           ${
             isSelected
-              ? 'bg-jade-100 dark:bg-jade-900/40 scale-110'
-              : 'bg-neutral-100 dark:bg-navy-700 group-hover:scale-105'
+              ? "bg-jade-100 dark:bg-jade-900/40 scale-110"
+              : "bg-neutral-100 dark:bg-navy-700 group-hover:scale-105"
           }`}
         >
           <Icon
@@ -65,11 +65,11 @@ export const SearchResultItem = React.memo<SearchResultItemProps>(
         <Icon
           name="chevron-right"
           className={`h-4 w-4 text-neutral-400 transition-all duration-200
-          ${isSelected ? 'opacity-100 translate-x-1' : 'opacity-0 group-hover:opacity-100 group-hover:translate-x-1'}`}
+          ${isSelected ? "opacity-100 translate-x-1" : "opacity-0 group-hover:opacity-100 group-hover:translate-x-1"}`}
         />
       </button>
     );
   }
 );
 
-SearchResultItem.displayName = 'SearchResultItem';
+SearchResultItem.displayName = "SearchResultItem";

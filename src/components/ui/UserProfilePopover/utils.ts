@@ -44,7 +44,9 @@ export function getDisplayName(
   return profile.display_name || profile.full_name || "Unknown User";
 }
 
-export function getPositionDisplay(profile: PopoverProfile | null): string | null {
+export function getPositionDisplay(
+  profile: PopoverProfile | null
+): string | null {
   if (!profile) return null;
 
   if (profile.role === "coach" && profile.years_coaching) {

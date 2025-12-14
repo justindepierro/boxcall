@@ -13,9 +13,9 @@
  * - Diagram upload
  */
 
-import React, { useEffect, useState } from 'react';
-import { getPlayFlags, type PlayFlags } from '../../../../utils/localPlayFlags';
-import type { PlayCardDetailsProps } from './types';
+import React, { useEffect, useState } from "react";
+import { getPlayFlags, type PlayFlags } from "../../../../utils/localPlayFlags";
+import type { PlayCardDetailsProps } from "./types";
 import {
   PlayDiagramPreview,
   PlayBadges,
@@ -25,7 +25,7 @@ import {
   NotesSection,
   TagsSection,
   DiagramUploadSection,
-} from './components';
+} from "./components";
 
 export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
   play,
@@ -89,7 +89,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           handleInlineSave={handleInlineSave}
           savingFields={savingFields}
           toggleFieldVisibility={(fieldKey) =>
-            toggleFieldVisibility(fieldKey, 'formation')
+            toggleFieldVisibility(fieldKey, "formation")
           }
           onDragEnd={handleFormationDragEnd}
         />
@@ -106,7 +106,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
           handleInlineSave={handleInlineSave}
           savingFields={savingFields}
           toggleFieldVisibility={(fieldKey) =>
-            toggleFieldVisibility(fieldKey, 'playDetails')
+            toggleFieldVisibility(fieldKey, "playDetails")
           }
           onDragEnd={handlePlayDetailsDragEnd}
         />

@@ -2,7 +2,10 @@ import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Play } from "../../../types/play";
 import type { PracticeScript } from "../../../types/practice";
-import type { PlaybookState, CoachingView } from "../../../contexts/PlaybookContext";
+import type {
+  PlaybookState,
+  CoachingView,
+} from "../../../contexts/PlaybookContext";
 import { PlaysService, PracticeScriptService } from "@services";
 import { exportPlays } from "../../../services/exportService";
 import { useToast } from "../../../hooks/useToast";

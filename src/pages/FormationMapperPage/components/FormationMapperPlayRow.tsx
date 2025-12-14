@@ -53,10 +53,7 @@ export const FormationMapperPlayRow: React.FC<FormationMapperPlayRowProps> = ({
               disabled={assigning}
             />
             <div className="min-w-0">
-              <Typography
-                variant="body-md"
-                className="font-semibold truncate"
-              >
+              <Typography variant="body-md" className="font-semibold truncate">
                 {play.play_name || "Untitled Play"}
               </Typography>
               <Typography variant="caption" className="text-muted">

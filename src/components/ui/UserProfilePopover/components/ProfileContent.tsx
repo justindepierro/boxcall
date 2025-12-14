@@ -17,7 +17,11 @@ import {
 import { Typography } from "../../../design-system/Typography";
 import { TeamRoleSection } from "./TeamRoleSection";
 import { PlayerInfoSection } from "./PlayerInfoSection";
-import { getPositionDisplay, getSocialLinks, formatMemberSince } from "../utils";
+import {
+  getPositionDisplay,
+  getSocialLinks,
+  formatMemberSince,
+} from "../utils";
 import type { PopoverProfile, TeamMemberInfo, PlayerInfo } from "../types";
 
 interface ProfileContentProps {
@@ -78,10 +82,7 @@ export function ProfileContent({
         <div>
           <div className="flex items-center mb-2">
             <Trophy className="w-4 h-4 mr-2 text-warning-500" />
-            <Typography
-              variant="body-sm"
-              className="font-medium text-primary"
-            >
+            <Typography variant="body-sm" className="font-medium text-primary">
               Recent Achievements
             </Typography>
           </div>
@@ -103,10 +104,7 @@ export function ProfileContent({
         <div>
           <div className="flex items-center mb-2">
             <Link2 className="w-4 h-4 mr-2 text-muted" />
-            <Typography
-              variant="body-sm"
-              className="font-medium text-primary"
-            >
+            <Typography variant="body-sm" className="font-medium text-primary">
               Social Links
             </Typography>
           </div>

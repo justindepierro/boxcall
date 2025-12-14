@@ -14,7 +14,9 @@ interface FormationMapperSelectionBarProps {
   onApplySuggestions: () => void;
 }
 
-export const FormationMapperSelectionBar: React.FC<FormationMapperSelectionBarProps> = ({
+export const FormationMapperSelectionBar: React.FC<
+  FormationMapperSelectionBarProps
+> = ({
   selectedCount,
   selectedSuggestionsCount,
   assigning,

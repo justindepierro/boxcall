@@ -5,18 +5,18 @@
  * Allows coaches to build personal playbooks and later join teams.
  */
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { useAuth } from '../../app/auth-store';
-import { Typography } from '../../components/design-system';
-import { Button } from '../../components/ui/Button/Button';
-import { Icon } from '../../components/ui/Icon/Icon';
-import { usePermissions } from '../../hooks/usePermissions';
-import { ROUTES } from '../../routes/paths';
+import { useAuth } from "../../app/auth-store";
+import { Typography } from "../../components/design-system";
+import { Button } from "../../components/ui/Button/Button";
+import { Icon } from "../../components/ui/Icon/Icon";
+import { usePermissions } from "../../hooks/usePermissions";
+import { ROUTES } from "../../routes/paths";
 
-import type { CoachAccountFormData, CoachAccountStep } from './types';
-import { COACH_ACCOUNT_STEPS, DEFAULT_FORM_DATA } from './constants';
+import type { CoachAccountFormData, CoachAccountStep } from "./types";
+import { COACH_ACCOUNT_STEPS, DEFAULT_FORM_DATA } from "./constants";
 import {
   IntroStep,
   PersonalInfoStep,
@@ -25,24 +25,23 @@ import {
   TeamConnectionStep,
   PaymentStep,
   CompleteStep,
-} from './components';
+} from "./components";
 
 export const CreateCoachAccount: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { isSuperAdmin } = usePermissions();
 
-  const [currentStep, setCurrentStep] = useState<CoachAccountStep>('intro');
+  const [currentStep, setCurrentStep] = useState<CoachAccountStep>("intro");
   const [formData, setFormData] = useState<CoachAccountFormData>({
     ...DEFAULT_FORM_DATA,
-    email: user?.email || '',
+    email: user?.email || "",
   });
 
   const currentStepIndex = COACH_ACCOUNT_STEPS.findIndex(
     (step) => step.id === currentStep
   );
-  const progress =
-    ((currentStepIndex + 1) / COACH_ACCOUNT_STEPS.length) * 100;
+  const progress = ((currentStepIndex + 1) / COACH_ACCOUNT_STEPS.length) * 100;
 
   const handleNext = () => {
     const currentIndex = COACH_ACCOUNT_STEPS.findIndex(
@@ -68,24 +67,24 @@ export const CreateCoachAccount: React.FC = () => {
 
   const handleSubmit = async () => {
     // TODO: Implement actual coach account creation logic
-    console.info('🏃‍♂️ Creating coach account with data:', formData);
+    console.info("🏃‍♂️ Creating coach account with data:", formData);
 
     if (isSuperAdmin) {
-      console.info('🔓 Super admin coach account creation - bypassing payment');
+      console.info("🔓 Super admin coach account creation - bypassing payment");
     }
 
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    setCurrentStep('complete');
+    setCurrentStep("complete");
   };
 
   const renderStepContent = () => {
     switch (currentStep) {
-      case 'intro':
+      case "intro":
         return <IntroStep />;
 
-      case 'personal-info':
+      case "personal-info":
         return (
           <PersonalInfoStep
             formData={formData}
@@ -93,7 +92,7 @@ export const CreateCoachAccount: React.FC = () => {
           />
         );
 
-      case 'address-info':
+      case "address-info":
         return (
           <AddressInfoStep
             formData={formData}
@@ -101,7 +100,7 @@ export const CreateCoachAccount: React.FC = () => {
           />
         );
 
-      case 'coaching-info':
+      case "coaching-info":
         return (
           <CoachingInfoStep
             formData={formData}
@@ -109,7 +108,7 @@ export const CreateCoachAccount: React.FC = () => {
           />
         );
 
-      case 'team-connection':
+      case "team-connection":
         return (
           <TeamConnectionStep
             formData={formData}
@@ -117,7 +116,7 @@ export const CreateCoachAccount: React.FC = () => {
           />
         );
 
-      case 'payment':
+      case "payment":
         return (
           <PaymentStep
             formData={formData}
@@ -126,7 +125,7 @@ export const CreateCoachAccount: React.FC = () => {
           />
         );
 
-      case 'complete':
+      case "complete":
         return (
           <CompleteStep
             firstName={formData.firstName}
@@ -153,7 +152,7 @@ export const CreateCoachAccount: React.FC = () => {
     <div className="py-6">
       <div className="content-medium">
         {/* Progress Bar */}
-        {currentStep !== 'intro' && currentStep !== 'complete' && (
+        {currentStep !== "intro" && currentStep !== "complete" && (
           <div className="mb-8">
             <div className="flex items-center justify-between mb-2">
               <Typography variant="body-sm" color="muted">
@@ -181,7 +180,7 @@ export const CreateCoachAccount: React.FC = () => {
         </div>
 
         {/* Navigation */}
-        {currentStep !== 'intro' && currentStep !== 'complete' && (
+        {currentStep !== "intro" && currentStep !== "complete" && (
           <div className="flex justify-between">
             <Button
               onClick={handlePrevious}
@@ -192,7 +191,7 @@ export const CreateCoachAccount: React.FC = () => {
             >
               Previous
             </Button>
-            {currentStep === 'payment' ? (
+            {currentStep === "payment" ? (
               <Button
                 onClick={handleSubmit}
                 variant="primary"
@@ -216,7 +215,7 @@ export const CreateCoachAccount: React.FC = () => {
           </div>
         )}
 
-        {currentStep === 'intro' && (
+        {currentStep === "intro" && (
           <div className="text-center">
             <Button onClick={handleNext} variant="primary" size="md">
               Get Started

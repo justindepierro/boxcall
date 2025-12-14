@@ -2,9 +2,9 @@
  * TeamConnectionStep - Team connection form for coach account
  */
 
-import React from 'react';
-import { Typography } from '../../../components/design-system';
-import type { StepProps } from '../types';
+import React from "react";
+import { Typography } from "../../../components/design-system";
+import type { StepProps } from "../types";
 
 export const TeamConnectionStep: React.FC<StepProps> = ({
   formData,

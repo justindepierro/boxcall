@@ -4,10 +4,10 @@
  * Displays the play diagram image when expanded.
  */
 
-import React from 'react';
-import { Typography } from '../../../design-system/Typography';
-import Icon from '../../../ui/Icon/Icon';
-import { PlayDiagramPreviewProps } from './types';
+import React from "react";
+import { Typography } from "../../../design-system/Typography";
+import Icon from "../../../ui/Icon/Icon";
+import { PlayDiagramPreviewProps } from "./types";
 
 export const PlayDiagramPreview: React.FC<PlayDiagramPreviewProps> = ({
   diagramUrl,

@@ -191,7 +191,9 @@ const FormationMapperPageContent: React.FC = () => {
       </div>
 
       <LinkFormationModal
-        isOpen={Boolean(stateWithPlays.editingPlay) && !stateWithPlays.showBuilder}
+        isOpen={
+          Boolean(stateWithPlays.editingPlay) && !stateWithPlays.showBuilder
+        }
         onClose={() => {
           if (stateWithPlays.assigning) return;
           stateWithPlays.setEditingPlay(null);
@@ -202,7 +204,10 @@ const FormationMapperPageContent: React.FC = () => {
         assigning={stateWithPlays.assigning}
         onFormationChange={(formationName) => {
           if (formationName) {
-            stateWithPlays.setSelectedFormation({ id: formationName, name: formationName } as any);
+            stateWithPlays.setSelectedFormation({
+              id: formationName,
+              name: formationName,
+            } as any);
           } else {
             stateWithPlays.setSelectedFormation(null);
           }
@@ -225,7 +230,10 @@ const FormationMapperPageContent: React.FC = () => {
         assigning={stateWithPlays.assigning}
         onFormationChange={(formationName) => {
           if (formationName) {
-            stateWithPlays.setBulkAssignFormation({ id: formationName, name: formationName } as any);
+            stateWithPlays.setBulkAssignFormation({
+              id: formationName,
+              name: formationName,
+            } as any);
           } else {
             stateWithPlays.setBulkAssignFormation(null);
           }

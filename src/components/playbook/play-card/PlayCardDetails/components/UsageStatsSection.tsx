@@ -4,10 +4,10 @@
  * Displays play usage statistics (times called, times successful, last used).
  */
 
-import React from 'react';
-import { Typography } from '../../../../design-system/Typography';
-import Icon from '../../../../ui/Icon/Icon';
-import type { UsageStatsSectionProps } from '../types';
+import React from "react";
+import { Typography } from "../../../../design-system/Typography";
+import Icon from "../../../../ui/Icon/Icon";
+import type { UsageStatsSectionProps } from "../types";
 
 export const UsageStatsSection: React.FC<UsageStatsSectionProps> = ({
   play,

@@ -2,9 +2,9 @@
  * IntroStep - Welcome screen for coach account creation
  */
 
-import React from 'react';
-import { Typography } from '../../../components/design-system';
-import { Icon } from '../../../components/ui/Icon/Icon';
+import React from "react";
+import { Typography } from "../../../components/design-system";
+import { Icon } from "../../../components/ui/Icon/Icon";
 
 export const IntroStep: React.FC = () => {
   return (
@@ -19,8 +19,8 @@ export const IntroStep: React.FC = () => {
         className="mb-8 container-content"
       >
         Join BoxCall as an individual coach! Build your personal playbooks,
-        create practice plans, and enhance your coaching toolkit. Later, you
-        can easily connect to any team.
+        create practice plans, and enhance your coaching toolkit. Later, you can
+        easily connect to any team.
       </Typography>
 
       {/* Value Proposition */}

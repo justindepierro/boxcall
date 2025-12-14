@@ -9,7 +9,11 @@ import { TextArea } from "../../ui/TextArea";
 import { Icon } from "../../ui/Icon";
 import type { PlayNotesProps } from "./types";
 
-export function PlayNotes({ playNotes, canEdit, onUpdateNotes }: PlayNotesProps) {
+export function PlayNotes({
+  playNotes,
+  canEdit,
+  onUpdateNotes,
+}: PlayNotesProps) {
   return (
     <div className="bg-secondary rounded-lg p-3 border border-primary">
       <div className="flex items-center gap-2 mb-2">

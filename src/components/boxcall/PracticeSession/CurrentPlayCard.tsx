@@ -172,7 +172,9 @@ export const CurrentPlayCard: React.FC<CurrentPlayCardProps> = ({
         <div className="rounded-2xl bg-white border border-jade-100 p-5 shadow-md">
           <div className="flex items-center justify-center">
             <MiniDiagram
-              players={Array.isArray(play.diagram_data) ? play.diagram_data : []}
+              players={
+                Array.isArray(play.diagram_data) ? play.diagram_data : []
+              }
             />
           </div>
         </div>

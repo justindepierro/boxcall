@@ -27,7 +27,7 @@ interface UseFormationMapperStateReturn {
   selectedPlaybookId: string;
   selectedPlaybook: Playbook | null;
   handlePlaybookChange: (playbookId: string) => void;
-  
+
   // Play selection
   selectedPlayIds: Set<string>;
   selectedPlays: Play[];
@@ -37,7 +37,7 @@ interface UseFormationMapperStateReturn {
   handleClearSelection: () => void;
   handleToggleSelectAll: () => void;
   setSelectedPlayIds: React.Dispatch<React.SetStateAction<Set<string>>>;
-  
+
   // Edit state
   editingPlay: Play | null;
   setEditingPlay: (play: Play | null) => void;
@@ -45,17 +45,17 @@ interface UseFormationMapperStateReturn {
   setShowBuilder: (show: boolean) => void;
   selectedFormation: Formation | null;
   setSelectedFormation: (formation: Formation | null) => void;
-  
+
   // Bulk assign state
   bulkAssignOpen: boolean;
   setBulkAssignOpen: (open: boolean) => void;
   bulkAssignFormation: Formation | null;
   setBulkAssignFormation: (formation: Formation | null) => void;
-  
+
   // Assignment state
   assigning: boolean;
   setAssigning: (assigning: boolean) => void;
-  
+
   // Formation catalog
   formationCatalog: Formation[];
   setFormationCatalog: (formations: Formation[]) => void;
@@ -77,20 +77,25 @@ export function useFormationMapperState({
   );
 
   // Play selection
-  const [selectedPlayIds, setSelectedPlayIds] = useState<Set<string>>(new Set());
-  
+  const [selectedPlayIds, setSelectedPlayIds] = useState<Set<string>>(
+    new Set()
+  );
+
   // Edit state
   const [editingPlay, setEditingPlay] = useState<Play | null>(null);
   const [showBuilder, setShowBuilder] = useState(false);
-  const [selectedFormation, setSelectedFormation] = useState<Formation | null>(null);
-  
+  const [selectedFormation, setSelectedFormation] = useState<Formation | null>(
+    null
+  );
+
   // Bulk assign state
   const [bulkAssignOpen, setBulkAssignOpen] = useState(false);
-  const [bulkAssignFormation, setBulkAssignFormation] = useState<Formation | null>(null);
-  
+  const [bulkAssignFormation, setBulkAssignFormation] =
+    useState<Formation | null>(null);
+
   // Assignment state
   const [assigning, setAssigning] = useState(false);
-  
+
   // Formation catalog
   const [formationCatalog, setFormationCatalog] = useState<Formation[]>([]);
   const [formationsLoading, setFormationsLoading] = useState(false);
@@ -143,23 +148,29 @@ export function useFormationMapperState({
   const allSelected = plays.length > 0 && selectedCount === plays.length;
 
   // Handlers
-  const handlePlaybookChange = useCallback((playbookId: string) => {
-    setSelectedPlaybookId(playbookId);
-    localStorage.setItem(`bc_active_playbook_${activeTeamId}`, playbookId);
-    setSelectedPlayIds(new Set());
-  }, [activeTeamId]);
+  const handlePlaybookChange = useCallback(
+    (playbookId: string) => {
+      setSelectedPlaybookId(playbookId);
+      localStorage.setItem(`bc_active_playbook_${activeTeamId}`, playbookId);
+      setSelectedPlayIds(new Set());
+    },
+    [activeTeamId]
+  );
 
-  const handleSelectPlay = useCallback((playId: string, isSelected: boolean) => {
-    setSelectedPlayIds((prev) => {
-      const next = new Set(prev);
-      if (isSelected) {
-        next.add(playId);
-      } else {
-        next.delete(playId);
-      }
-      return next;
-    });
-  }, []);
+  const handleSelectPlay = useCallback(
+    (playId: string, isSelected: boolean) => {
+      setSelectedPlayIds((prev) => {
+        const next = new Set(prev);
+        if (isSelected) {
+          next.add(playId);
+        } else {
+          next.delete(playId);
+        }
+        return next;
+      });
+    },
+    []
+  );
 
   const handleClearSelection = useCallback(() => {
     setSelectedPlayIds(new Set());
@@ -215,7 +226,7 @@ export function useFormationMapperState({
     selectedPlaybookId,
     selectedPlaybook,
     handlePlaybookChange,
-    
+
     // Play selection
     selectedPlayIds,
     selectedPlays,
@@ -225,7 +236,7 @@ export function useFormationMapperState({
     handleClearSelection,
     handleToggleSelectAll,
     setSelectedPlayIds,
-    
+
     // Edit state
     editingPlay,
     setEditingPlay,
@@ -233,17 +244,17 @@ export function useFormationMapperState({
     setShowBuilder,
     selectedFormation,
     setSelectedFormation,
-    
+
     // Bulk assign state
     bulkAssignOpen,
     setBulkAssignOpen,
     bulkAssignFormation,
     setBulkAssignFormation,
-    
+
     // Assignment state
     assigning,
     setAssigning,
-    
+
     // Formation catalog
     formationCatalog,
     setFormationCatalog,

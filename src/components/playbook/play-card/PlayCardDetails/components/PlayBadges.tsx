@@ -4,8 +4,8 @@
  * Displays phase label and one-word code badges.
  */
 
-import React from 'react';
-import { PlayBadgesProps } from './types';
+import React from "react";
+import { PlayBadgesProps } from "./types";
 
 export const PlayBadges: React.FC<PlayBadgesProps> = ({
   phaseLabel,

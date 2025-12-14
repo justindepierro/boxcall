@@ -2,10 +2,10 @@
  * PaymentStep - Payment information for coach account
  */
 
-import React from 'react';
-import { Typography } from '../../../components/design-system';
-import { Icon } from '../../../components/ui/Icon/Icon';
-import type { PaymentStepProps } from '../types';
+import React from "react";
+import { Typography } from "../../../components/design-system";
+import { Icon } from "../../../components/ui/Icon/Icon";
+import type { PaymentStepProps } from "../types";
 
 export const PaymentStep: React.FC<PaymentStepProps> = ({ isSuperAdmin }) => {
   return (

@@ -4,11 +4,11 @@
  * Displays editable play notes.
  */
 
-import React from 'react';
-import { Typography } from '../../../design-system/Typography';
-import Icon from '../../../ui/Icon/Icon';
-import { InlineEditField } from '../../../ui/InlineEditField';
-import { NotesSectionProps } from './types';
+import React from "react";
+import { Typography } from "../../../design-system/Typography";
+import Icon from "../../../ui/Icon/Icon";
+import { InlineEditField } from "../../../ui/InlineEditField";
+import { NotesSectionProps } from "./types";
 
 export const NotesSection: React.FC<NotesSectionProps> = ({
   notes,
@@ -25,12 +25,12 @@ export const NotesSection: React.FC<NotesSectionProps> = ({
         <Icon name="file" className="h-4 w-4 mr-xs" /> Notes
       </Typography>
       <InlineEditField
-        value={notes || ''}
-        onSave={(value) => handleInlineSave('notes', value)}
+        value={notes || ""}
+        onSave={(value) => handleInlineSave("notes", value)}
         placeholder="Add notes about this play..."
         type="textarea"
         rows={4}
-        isSaving={savingFields.has('notes')}
+        isSaving={savingFields.has("notes")}
       />
     </div>
   );

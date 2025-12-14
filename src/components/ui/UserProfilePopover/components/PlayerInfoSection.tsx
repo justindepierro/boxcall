@@ -17,10 +17,7 @@ export function PlayerInfoSection({ playerInfo }: PlayerInfoSectionProps) {
     <div className="p-3 bg-secondary rounded-lg">
       <div className="flex items-center gap-2 mb-3">
         <Hash className="w-4 h-4 text-blue-500" />
-        <Typography
-          variant="body-sm"
-          className="font-semibold text-primary"
-        >
+        <Typography variant="body-sm" className="font-semibold text-primary">
           Player Information
         </Typography>
       </div>

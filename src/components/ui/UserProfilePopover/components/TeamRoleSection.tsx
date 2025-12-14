@@ -35,10 +35,7 @@ export function TeamRoleSection({ teamMember }: TeamRoleSectionProps) {
     <div className="p-3 bg-secondary rounded-lg">
       <div className="flex items-center gap-2 mb-2">
         {getRoleIcon(teamMember.team_role)}
-        <Typography
-          variant="body-sm"
-          className="font-semibold text-primary"
-        >
+        <Typography variant="body-sm" className="font-semibold text-primary">
           {getRoleLabel(teamMember.team_role)}
         </Typography>
         {teamMember.status === "active" && (

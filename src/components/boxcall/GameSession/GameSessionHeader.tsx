@@ -4,10 +4,10 @@
 
 /* eslint-disable boxcall-design/no-raw-tailwind-colors */
 
-import React from 'react';
-import { Typography } from '../../design-system';
-import { Icon } from '../../ui/Icon/Icon';
-import type { GameSessionHeaderProps } from './types';
+import React from "react";
+import { Typography } from "../../design-system";
+import { Icon } from "../../ui/Icon/Icon";
+import type { GameSessionHeaderProps } from "./types";
 
 export const GameSessionHeader: React.FC<GameSessionHeaderProps> = ({
   gamePlanName,
@@ -42,7 +42,7 @@ export const GameSessionHeader: React.FC<GameSessionHeaderProps> = ({
             </Typography>
             <div className="flex items-center gap-2 mt-1">
               <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-sm">
-                {mode === 'live' ? '🔴 LIVE GAME' : '📝 RETROACTIVE'}
+                {mode === "live" ? "🔴 LIVE GAME" : "📝 RETROACTIVE"}
               </span>
               <Typography variant="body-sm" color="muted">
                 vs {opponent}
@@ -92,12 +92,12 @@ export const GameSessionHeader: React.FC<GameSessionHeaderProps> = ({
         <div
           className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm shadow-lg animate-pulse ${
             isGoalLine
-              ? 'bg-gradient-to-r from-rose-500 to-red-600 text-white shadow-rose-500/30'
-              : 'bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-amber-500/30'
+              ? "bg-gradient-to-r from-rose-500 to-red-600 text-white shadow-rose-500/30"
+              : "bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-amber-500/30"
           }`}
         >
           <Icon name="target" size="sm" />
-          {isGoalLine ? '🎯 GOAL LINE SITUATION' : '🔥 RED ZONE'}
+          {isGoalLine ? "🎯 GOAL LINE SITUATION" : "🔥 RED ZONE"}
         </div>
       )}
     </div>

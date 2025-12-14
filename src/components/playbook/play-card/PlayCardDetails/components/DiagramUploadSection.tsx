@@ -4,11 +4,11 @@
  * Section for uploading/updating play diagram images.
  */
 
-import React from 'react';
-import { Typography } from '../../../../design-system/Typography';
-import Icon from '../../../../ui/Icon/Icon';
-import { ImageUpload } from '../../../../ui/ImageUpload';
-import type { DiagramUploadSectionProps } from '../types';
+import React from "react";
+import { Typography } from "../../../../design-system/Typography";
+import Icon from "../../../../ui/Icon/Icon";
+import { ImageUpload } from "../../../../ui/ImageUpload";
+import type { DiagramUploadSectionProps } from "../types";
 
 export const DiagramUploadSection: React.FC<DiagramUploadSectionProps> = ({
   play,
@@ -32,16 +32,16 @@ export const DiagramUploadSection: React.FC<DiagramUploadSectionProps> = ({
             undefined
           }
           onChange={async (url: string | null) => {
-            await handleInlineSave('diagram_image_url', url || null);
+            await handleInlineSave("diagram_image_url", url || null);
           }}
           bucket="play-diagrams"
           storagePath={`plays/${play.playbook_id}/${play.id}`}
           maxSizeMB={5}
           acceptedTypes={[
-            'image/jpeg',
-            'image/png',
-            'image/webp',
-            'image/heic',
+            "image/jpeg",
+            "image/png",
+            "image/webp",
+            "image/heic",
           ]}
         />
       </div>

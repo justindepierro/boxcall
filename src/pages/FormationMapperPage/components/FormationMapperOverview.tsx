@@ -15,12 +15,9 @@ interface FormationMapperOverviewProps {
   lastUpdated: string | null;
 }
 
-export const FormationMapperOverview: React.FC<FormationMapperOverviewProps> = ({
-  selectedPlaybook,
-  total,
-  unresolved,
-  lastUpdated,
-}) => {
+export const FormationMapperOverview: React.FC<
+  FormationMapperOverviewProps
+> = ({ selectedPlaybook, total, unresolved, lastUpdated }) => {
   return (
     <Card variant="glass" size="lg">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

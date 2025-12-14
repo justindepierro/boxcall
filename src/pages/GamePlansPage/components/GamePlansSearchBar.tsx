@@ -2,7 +2,10 @@ import React from "react";
 import { Button } from "../../../components/ui/Button/Button";
 import { Icon } from "../../../components/ui/Icon";
 import { SearchBar } from "../../../components/ui/SearchBar";
-import { SortDropdown, type SortOption } from "../../../components/ui/SortDropdown";
+import {
+  SortDropdown,
+  type SortOption,
+} from "../../../components/ui/SortDropdown";
 
 const sortOptions: SortOption[] = [
   { id: "date-desc", label: "Newest First" },

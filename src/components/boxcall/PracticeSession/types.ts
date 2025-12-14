@@ -5,7 +5,10 @@
  */
 
 import type { ExecutionResult } from "../../../types/session";
-import type { PracticeScript, PracticeScriptPlay } from "../../../services/practiceService";
+import type {
+  PracticeScript,
+  PracticeScriptPlay,
+} from "../../../services/practiceService";
 import type { Play } from "../../../types/play";
 import type { SessionStats } from "../../../hooks/usePracticeSession";
 

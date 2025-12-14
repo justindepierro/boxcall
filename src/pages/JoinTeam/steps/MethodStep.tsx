@@ -17,12 +17,7 @@ export const MethodStep: React.FC<MethodStepProps> = ({
   return (
     <div>
       <div className="text-center mb-8">
-        <Icon
-          name="phone"
-          size="xl"
-          color="primary"
-          className="mx-auto mb-4"
-        />
+        <Icon name="phone" size="xl" color="primary" className="mx-auto mb-4" />
         <Typography variant="headline-xl" className="mb-4">
           Join a Team
         </Typography>

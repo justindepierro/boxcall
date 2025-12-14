@@ -13,7 +13,10 @@ import type {
   ExecutionResult,
   CreatePracticeSessionData,
 } from "../types/session";
-import type { PracticeScript, PracticeScriptPlay } from "../services/practiceService";
+import type {
+  PracticeScript,
+  PracticeScriptPlay,
+} from "../services/practiceService";
 import { debug, error as logError } from "../utils/logger";
 
 /**

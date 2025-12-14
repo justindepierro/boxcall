@@ -4,16 +4,16 @@
  * Displays and edits play tags & roles (positions, players, flags).
  */
 
-import React, { useState, useMemo } from 'react';
-import { Typography } from '../../../../design-system/Typography';
-import { Button } from '../../../../ui/Button/Button';
-import { FormSelect } from '../../../../ui';
+import React, { useState, useMemo } from "react";
+import { Typography } from "../../../../design-system/Typography";
+import { Button } from "../../../../ui/Button/Button";
+import { FormSelect } from "../../../../ui";
 import {
   addFlag,
   removeFlag,
   POSITION_OPTIONS,
-} from '../../../../../utils/localPlayFlags';
-import type { TagsSectionProps } from '../types';
+} from "../../../../../utils/localPlayFlags";
+import type { TagsSectionProps } from "../types";
 
 export const TagsSection: React.FC<TagsSectionProps> = ({
   playId,
@@ -21,9 +21,9 @@ export const TagsSection: React.FC<TagsSectionProps> = ({
   setFlags,
 }) => {
   const [showTagsEditor, setShowTagsEditor] = useState(false);
-  const [newFlag, setNewFlag] = useState('');
-  const [newPlayer, setNewPlayer] = useState('');
-  const [newPosition, setNewPosition] = useState('');
+  const [newFlag, setNewFlag] = useState("");
+  const [newPlayer, setNewPlayer] = useState("");
+  const [newPosition, setNewPosition] = useState("");
 
   const totalFlagsCount = useMemo(
     () => flags.positions.length + flags.players.length + flags.flags.length,
@@ -42,11 +42,7 @@ export const TagsSection: React.FC<TagsSectionProps> = ({
   return (
     <div className="bg-subtle rounded-lg p-sm">
       <div className="flex items-center justify-between">
-        <Typography
-          variant="label-lg"
-          as="h4"
-          className="text-primary mb-xs"
-        >
+        <Typography variant="label-lg" as="h4" className="text-primary mb-xs">
           Tags & Roles
         </Typography>
         <Button
@@ -55,7 +51,7 @@ export const TagsSection: React.FC<TagsSectionProps> = ({
           onClick={() => setShowTagsEditor((s) => !s)}
           aria-expanded={showTagsEditor}
         >
-          {showTagsEditor ? 'Hide' : 'Edit'}
+          {showTagsEditor ? "Hide" : "Edit"}
         </Button>
       </div>
 
@@ -89,9 +85,7 @@ export const TagsSection: React.FC<TagsSectionProps> = ({
                   size="xs"
                   variant="subtle"
                   className="!h-auto px-xs py-xs text-xs"
-                  onClick={() =>
-                    setFlags(removeFlag(playId, 'positions', pos))
-                  }
+                  onClick={() => setFlags(removeFlag(playId, "positions", pos))}
                   title="Remove"
                 >
                   {pos} ×
@@ -114,9 +108,9 @@ export const TagsSection: React.FC<TagsSectionProps> = ({
                 variant="secondary"
                 onClick={() => {
                   if (!newPosition) return;
-                  const next = addFlag(playId, 'positions', newPosition);
+                  const next = addFlag(playId, "positions", newPosition);
                   setFlags(next);
-                  setNewPosition('');
+                  setNewPosition("");
                 }}
               >
                 Add
@@ -134,7 +128,7 @@ export const TagsSection: React.FC<TagsSectionProps> = ({
                   size="xs"
                   variant="subtle"
                   className="!h-auto px-xs py-xs text-xs"
-                  onClick={() => setFlags(removeFlag(playId, 'players', pl))}
+                  onClick={() => setFlags(removeFlag(playId, "players", pl))}
                   title="Remove"
                 >
                   {pl} ×
@@ -153,9 +147,9 @@ export const TagsSection: React.FC<TagsSectionProps> = ({
                 variant="secondary"
                 onClick={() => {
                   if (!newPlayer.trim()) return;
-                  const next = addFlag(playId, 'players', newPlayer.trim());
+                  const next = addFlag(playId, "players", newPlayer.trim());
                   setFlags(next);
-                  setNewPlayer('');
+                  setNewPlayer("");
                 }}
               >
                 Add
@@ -173,7 +167,7 @@ export const TagsSection: React.FC<TagsSectionProps> = ({
                   size="xs"
                   variant="subtle"
                   className="!h-auto px-xs py-xs text-xs"
-                  onClick={() => setFlags(removeFlag(playId, 'flags', fl))}
+                  onClick={() => setFlags(removeFlag(playId, "flags", fl))}
                   title="Remove"
                 >
                   {fl} ×
@@ -192,9 +186,9 @@ export const TagsSection: React.FC<TagsSectionProps> = ({
                 variant="secondary"
                 onClick={() => {
                   if (!newFlag.trim()) return;
-                  const next = addFlag(playId, 'flags', newFlag.trim());
+                  const next = addFlag(playId, "flags", newFlag.trim());
                   setFlags(next);
-                  setNewFlag('');
+                  setNewFlag("");
                 }}
               >
                 Add

@@ -141,7 +141,9 @@ export function usePersonnelConfigHandlers({
           config.id === configId
             ? {
                 ...config,
-                players: (config.players || []).filter((p) => p.id !== playerId),
+                players: (config.players || []).filter(
+                  (p) => p.id !== playerId
+                ),
               }
             : config
         )
@@ -218,25 +220,22 @@ export function usePersonnelConfigHandlers({
     []
   );
 
-  const toggleWildcatQB = useCallback(
-    (configId: string, playerId: string) => {
-      setLocalConfigurations((prev) =>
-        prev.map((config) =>
-          config.id === configId
-            ? {
-                ...config,
-                players: (config.players || []).map((player) =>
-                  player.id === playerId
-                    ? { ...player, is_wildcat_qb: !player.is_wildcat_qb }
-                    : player
-                ),
-              }
-            : config
-        )
-      );
-    },
-    []
-  );
+  const toggleWildcatQB = useCallback((configId: string, playerId: string) => {
+    setLocalConfigurations((prev) =>
+      prev.map((config) =>
+        config.id === configId
+          ? {
+              ...config,
+              players: (config.players || []).map((player) =>
+                player.id === playerId
+                  ? { ...player, is_wildcat_qb: !player.is_wildcat_qb }
+                  : player
+              ),
+            }
+          : config
+      )
+    );
+  }, []);
 
   return {
     // Data

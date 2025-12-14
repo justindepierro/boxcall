@@ -4,9 +4,9 @@
 
 /* eslint-disable boxcall-design/no-raw-tailwind-colors */
 
-import React from 'react';
-import { Icon } from '../../ui/Icon/Icon';
-import type { DriveStatsCardProps } from './types';
+import React from "react";
+import { Icon } from "../../ui/Icon/Icon";
+import type { DriveStatsCardProps } from "./types";
 
 export const DriveStatsCard: React.FC<DriveStatsCardProps> = ({
   plays,

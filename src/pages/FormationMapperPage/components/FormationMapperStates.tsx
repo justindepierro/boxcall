@@ -22,7 +22,7 @@ export const FormationMapperLoadingState: React.FC = () => (
 
 export const FormationMapperEmptyState: React.FC = () => {
   const navigate = useNavigate();
-  
+
   return (
     <Card variant="glass" size="lg" className="text-center space-y-3">
       <Icon
@@ -96,12 +96,7 @@ export const LinkFormationModal: React.FC<LinkFormationModalProps> = ({
   onCreateNew,
   onAssign,
 }) => (
-  <Modal
-    isOpen={isOpen}
-    onClose={onClose}
-    title="Link Formation"
-    size="md"
-  >
+  <Modal isOpen={isOpen} onClose={onClose} title="Link Formation" size="md">
     {editingPlay && (
       <div className="space-y-5">
         <div>
@@ -120,11 +115,7 @@ export const LinkFormationModal: React.FC<LinkFormationModalProps> = ({
           disabled={assigning}
         />
         <div className="flex justify-end gap-2">
-          <Button
-            variant="ghost"
-            onClick={onClose}
-            disabled={assigning}
-          >
+          <Button variant="ghost" onClick={onClose} disabled={assigning}>
             Cancel
           </Button>
           <Button
@@ -204,11 +195,7 @@ export const BulkAssignModal: React.FC<BulkAssignModalProps> = ({
         disabled={assigning || selectedCount === 0 || !selectedPlaybookId}
       />
       <div className="flex justify-end gap-2">
-        <Button
-          variant="ghost"
-          onClick={onClose}
-          disabled={assigning}
-        >
+        <Button variant="ghost" onClick={onClose} disabled={assigning}>
           Cancel
         </Button>
         <Button

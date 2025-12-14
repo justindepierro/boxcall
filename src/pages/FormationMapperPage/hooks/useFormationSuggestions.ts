@@ -147,7 +147,9 @@ function calculateSuggestionsForPlay(
       reasons.push("Recent pick");
       if (
         playPersonnel &&
-        recentCombos.some((combo) => sanitize(combo.personnel) === playPersonnel)
+        recentCombos.some(
+          (combo) => sanitize(combo.personnel) === playPersonnel
+        )
       ) {
         score += 1;
       }

@@ -2,15 +2,15 @@
  * CoachingInfoStep - Coaching background form for coach account
  */
 
-import React from 'react';
-import { Typography } from '../../../components/design-system';
-import { Dropdown } from '../../../components/ui/Dropdown';
-import type { StepProps } from '../types';
+import React from "react";
+import { Typography } from "../../../components/design-system";
+import { Dropdown } from "../../../components/ui/Dropdown";
+import type { StepProps } from "../types";
 import {
   SPORT_OPTIONS,
   EXPERIENCE_OPTIONS,
   COACHING_LEVEL_OPTIONS,
-} from '../constants';
+} from "../constants";
 
 export const CoachingInfoStep: React.FC<StepProps> = ({
   formData,

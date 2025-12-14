@@ -2,13 +2,19 @@ import React from "react";
 import { Typography } from "../../../components/design-system/Typography";
 import { Button } from "../../../components/ui/Button/Button";
 import Card from "../../../components/ui/Card/Card";
-import { PRACTICE_BLOCK_TYPES, QUICK_TIME_INTERVALS } from "../../../types/practice";
+import {
+  PRACTICE_BLOCK_TYPES,
+  QUICK_TIME_INTERVALS,
+} from "../../../types/practice";
 import type { PracticeTemplate } from "../../../types/practice";
 
 interface PracticeSidebarProps {
   templates: PracticeTemplate[];
   lockedSchedule: boolean;
-  onQuickAddBlock: (type: keyof typeof PRACTICE_BLOCK_TYPES, duration: number) => void;
+  onQuickAddBlock: (
+    type: keyof typeof PRACTICE_BLOCK_TYPES,
+    duration: number
+  ) => void;
   onCreateCustomBlock: () => void;
   onSelectTemplate: (templateId: string) => void;
   onViewAllTemplates: () => void;

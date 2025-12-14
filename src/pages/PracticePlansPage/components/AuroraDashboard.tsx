@@ -110,7 +110,13 @@ export const AuroraDashboard: React.FC<AuroraDashboardProps> = ({
         ),
       },
     ],
-    [activeScripts, archivedScripts, onCreateScript, onScrollToList, onShowTemplates]
+    [
+      activeScripts,
+      archivedScripts,
+      onCreateScript,
+      onScrollToList,
+      onShowTemplates,
+    ]
   );
 
   return (

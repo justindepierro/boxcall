@@ -1,5 +1,8 @@
 import React from "react";
-import type { DraggableProvided, DraggableStateSnapshot } from "@hello-pangea/dnd";
+import type {
+  DraggableProvided,
+  DraggableStateSnapshot,
+} from "@hello-pangea/dnd";
 import { Typography } from "../../../components/design-system/Typography";
 import { Button } from "../../../components/ui/Button/Button";
 import Icon from "../../../components/ui/Icon/Icon";

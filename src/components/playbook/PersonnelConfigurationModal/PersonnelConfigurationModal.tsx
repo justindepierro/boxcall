@@ -24,7 +24,13 @@ import type { PersonnelConfigurationModalProps } from "./types";
 
 export const PersonnelConfigurationModal: React.FC<
   PersonnelConfigurationModalProps
-> = ({ isOpen, onClose, playbookId, configurations: configsProp, onSave = () => {} }) => {
+> = ({
+  isOpen,
+  onClose,
+  playbookId,
+  configurations: configsProp,
+  onSave = () => {},
+}) => {
   const isMobile = useIsMobile();
 
   const {

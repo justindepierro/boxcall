@@ -13,17 +13,17 @@
  * - Memoized results for performance
  */
 
-import React from 'react';
-import type { GlobalSearchProps } from './types';
-import { useGlobalSearch } from './useGlobalSearch';
+import React from "react";
+import type { GlobalSearchProps } from "./types";
+import { useGlobalSearch } from "./useGlobalSearch";
 import {
   MobileSearchButton,
   DesktopSearchField,
   MobileSearchModal,
-} from './components';
+} from "./components";
 
 export const GlobalSearch: React.FC<GlobalSearchProps> = ({
-  className = '',
+  className = "",
 }) => {
   const {
     // State

@@ -46,8 +46,9 @@ export function useUserProfilePopover({
   const [teamMember, setTeamMember] = useState<TeamMemberInfo | null>(null);
   const [playerInfo, setPlayerInfo] = useState<PlayerInfo | null>(null);
   const [closeTimeout, setCloseTimeout] = useState<NodeJS.Timeout | null>(null);
-  const [computedPlacement, setComputedPlacement] =
-    useState<ComputedPlacement>(placement === "auto" ? "bottom" : placement);
+  const [computedPlacement, setComputedPlacement] = useState<ComputedPlacement>(
+    placement === "auto" ? "bottom" : placement
+  );
 
   const shouldBeVisible =
     isVisible && (activePopoverId === null || activePopoverId === popoverId);

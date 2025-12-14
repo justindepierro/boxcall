@@ -1,5 +1,10 @@
 import React from "react";
-import { DragDropContext, Draggable, Droppable, type DropResult } from "@hello-pangea/dnd";
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  type DropResult,
+} from "@hello-pangea/dnd";
 import { Typography } from "../../../components/design-system/Typography";
 import { Button } from "../../../components/ui/Button/Button";
 import Card from "../../../components/ui/Card/Card";

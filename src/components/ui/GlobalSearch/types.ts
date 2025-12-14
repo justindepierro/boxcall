@@ -9,7 +9,7 @@
 export const DEBUG_SEARCH = false;
 
 export const debugLog = DEBUG_SEARCH
-  ? (...args: unknown[]) => console.log('[GlobalSearch]', ...args)
+  ? (...args: unknown[]) => console.log("[GlobalSearch]", ...args)
   : () => {};
 
 /**
@@ -23,14 +23,14 @@ export interface GlobalSearchProps {
  * Result type categories for search
  */
 export type SearchResultType =
-  | 'play'
-  | 'formation'
-  | 'player'
-  | 'announcement'
-  | 'game_plan'
-  | 'practice_script'
-  | 'calendar_event'
-  | 'equipment';
+  | "play"
+  | "formation"
+  | "player"
+  | "announcement"
+  | "game_plan"
+  | "practice_script"
+  | "calendar_event"
+  | "equipment";
 
 /**
  * A single search result item

@@ -25,7 +25,9 @@ export function usePracticePlansHandlers() {
   // State
   const [showModal, setShowModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
-  const [editingScript, setEditingScript] = useState<PracticeScript | undefined>(undefined);
+  const [editingScript, setEditingScript] = useState<
+    PracticeScript | undefined
+  >(undefined);
   const [practiceScripts, setPracticeScripts] = useState<PracticeScript[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [activeTeamId, setActiveTeamId] = useState<string | null>(null);

@@ -4,13 +4,13 @@
  * Button that opens the mobile search modal.
  */
 
-import React from 'react';
-import { Icon } from '../../Icon';
-import { MobileSearchButtonProps } from '../types';
+import React from "react";
+import { Icon } from "../../Icon";
+import { MobileSearchButtonProps } from "../types";
 
 export const MobileSearchButton: React.FC<MobileSearchButtonProps> = ({
   onClick,
-  className = '',
+  className = "",
 }) => {
   return (
     <button

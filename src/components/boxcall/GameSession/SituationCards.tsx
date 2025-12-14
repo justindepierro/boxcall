@@ -2,11 +2,11 @@
  * SituationCards - Down/Distance and Play Selection cards
  */
 
-import React from 'react';
-import { Icon } from '../../ui/Icon/Icon';
-import { DownDistanceTracker } from '../DownDistanceTracker';
-import { SituationFilter } from '../SituationFilter';
-import type { DownDistanceCardProps, PlaySelectionCardProps } from './types';
+import React from "react";
+import { Icon } from "../../ui/Icon/Icon";
+import { DownDistanceTracker } from "../DownDistanceTracker";
+import { SituationFilter } from "../SituationFilter";
+import type { DownDistanceCardProps, PlaySelectionCardProps } from "./types";
 
 export const DownDistanceCard: React.FC<DownDistanceCardProps> = ({
   situation,

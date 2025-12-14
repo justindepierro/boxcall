@@ -4,12 +4,12 @@
  * Desktop search input with dropdown results.
  */
 
-import React from 'react';
-import { Icon } from '../../Icon';
-import { Typography } from '../../../design-system';
-import type { DesktopSearchFieldProps } from '../types';
-import { MIN_QUERY_LENGTH_FOR_NO_RESULTS } from '../constants';
-import { SearchResultItem } from './SearchResultItem';
+import React from "react";
+import { Icon } from "../../Icon";
+import { Typography } from "../../../design-system";
+import type { DesktopSearchFieldProps } from "../types";
+import { MIN_QUERY_LENGTH_FOR_NO_RESULTS } from "../constants";
+import { SearchResultItem } from "./SearchResultItem";
 
 export const DesktopSearchField: React.FC<DesktopSearchFieldProps> = ({
   query,
@@ -27,13 +27,10 @@ export const DesktopSearchField: React.FC<DesktopSearchFieldProps> = ({
   onResultClick,
   getTypeIcon,
   getTypeColor,
-  className = '',
+  className = "",
 }) => {
   return (
-    <div
-      ref={containerRef}
-      className={`hidden md:block relative ${className}`}
-    >
+    <div ref={containerRef} className={`hidden md:block relative ${className}`}>
       <div className="relative group">
         {/* Search Icon */}
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">

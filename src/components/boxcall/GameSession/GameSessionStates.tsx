@@ -2,18 +2,18 @@
  * GameSessionStates - Loading, Error, and Pre-session states
  */
 
-import React from 'react';
-import { Typography } from '../../design-system';
-import { Button } from '../../ui';
-import { Card } from '../../ui';
-import { Icon } from '../../ui/Icon/Icon';
+import React from "react";
+import { Typography } from "../../design-system";
+import { Button } from "../../ui";
+import { Card } from "../../ui";
+import { Icon } from "../../ui/Icon/Icon";
 
 interface LoadingStateProps {
   message?: string;
 }
 
 export const LoadingState: React.FC<LoadingStateProps> = ({
-  message = 'Loading game session...',
+  message = "Loading game session...",
 }) => {
   return (
     <div className="py-6">
@@ -58,7 +58,7 @@ interface PreSessionStateProps {
   gamePlanName: string;
   opponent: string;
   playCount: number;
-  mode: 'live' | 'retroactive';
+  mode: "live" | "retroactive";
   onCancel: () => void;
   onStart: () => void;
 }
@@ -80,8 +80,8 @@ export const PreSessionState: React.FC<PreSessionStateProps> = ({
               {gamePlanName}
             </Typography>
             <Typography variant="body-md" color="muted">
-              vs {opponent} · {playCount} plays ·{' '}
-              {mode === 'live' ? 'Live' : 'Retroactive'} session
+              vs {opponent} · {playCount} plays ·{" "}
+              {mode === "live" ? "Live" : "Retroactive"} session
             </Typography>
           </div>
 
