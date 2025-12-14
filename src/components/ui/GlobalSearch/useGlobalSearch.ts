@@ -139,6 +139,7 @@ export function useGlobalSearch() {
             .abortSignal(signal),
 
           // Search team announcements
+          // @ts-expect-error - team_announcements not in generated Database types yet
           supabase
             .from('team_announcements')
             .select('id, title, created_at')
@@ -218,7 +219,8 @@ export function useGlobalSearch() {
           })),
 
           // Add announcements
-          ...(announcementsResponse.data || []).map((announcement) => ({
+          // Type assertion needed due to team_announcements not being in Database types
+          ...((announcementsResponse.data || []) as Array<{ id: string; title: string; created_at: string }>).map((announcement) => ({
             type: 'announcement' as const,
             id: announcement.id,
             title: announcement.title,
@@ -363,6 +365,7 @@ export function useGlobalSearch() {
           break;
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [isOpen, results, selectedIndex, isMobileModalOpen]
   );
 

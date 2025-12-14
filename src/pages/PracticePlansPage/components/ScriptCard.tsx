@@ -5,9 +5,9 @@
  */
 
 import React from "react";
-import { Icon } from "../../components/ui/Icon";
-import { Typography } from "../../components/design-system/Typography";
-import type { ScriptCardProps } from "./types";
+import Icon from "../../../components/ui/Icon/Icon";
+import { Typography } from "../../../components/design-system/Typography";
+import type { ScriptCardProps } from "../types";
 
 export const ScriptCard: React.FC<ScriptCardProps> = ({
   script,

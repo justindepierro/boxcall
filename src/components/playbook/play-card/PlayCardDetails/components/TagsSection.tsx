@@ -5,16 +5,15 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { Typography } from '../../../design-system/Typography';
-import { Button } from '../../../ui/Button/Button';
-import { FormSelect } from '../../../ui';
+import { Typography } from '../../../../design-system/Typography';
+import { Button } from '../../../../ui/Button/Button';
+import { FormSelect } from '../../../../ui';
 import {
   addFlag,
   removeFlag,
   POSITION_OPTIONS,
-  type PlayFlags,
-} from '../../../../utils/localPlayFlags';
-import { TagsSectionProps } from './types';
+} from '../../../../../utils/localPlayFlags';
+import type { TagsSectionProps } from '../types';
 
 export const TagsSection: React.FC<TagsSectionProps> = ({
   playId,
@@ -33,9 +32,9 @@ export const TagsSection: React.FC<TagsSectionProps> = ({
 
   const summaryChips = useMemo(
     () => [
-      ...flags.positions.map((x) => `Position:${x}`),
-      ...flags.players.map((x) => `Player:${x}`),
-      ...flags.flags.map((x) => `Flag:${x}`),
+      ...flags.positions.map((x: string) => `Position:${x}`),
+      ...flags.players.map((x: string) => `Player:${x}`),
+      ...flags.flags.map((x: string) => `Flag:${x}`),
     ],
     [flags.flags, flags.players, flags.positions]
   );
@@ -84,7 +83,7 @@ export const TagsSection: React.FC<TagsSectionProps> = ({
           <div>
             <div className="text-xs text-secondary mb-xs">Positions</div>
             <div className="flex flex-wrap gap-xs">
-              {flags.positions.map((pos) => (
+              {flags.positions.map((pos: string) => (
                 <Button
                   key={pos}
                   size="xs"
@@ -102,7 +101,7 @@ export const TagsSection: React.FC<TagsSectionProps> = ({
             <div className="mt-xs flex items-center gap-xs">
               <FormSelect
                 value={newPosition}
-                onChange={(value) => setNewPosition(value)}
+                onChange={(value: string) => setNewPosition(value)}
                 placeholder="Select…"
                 options={POSITION_OPTIONS.map((opt: string) => ({
                   value: opt,
@@ -129,7 +128,7 @@ export const TagsSection: React.FC<TagsSectionProps> = ({
           <div>
             <div className="text-xs text-secondary mb-xs">Players</div>
             <div className="flex flex-wrap gap-xs">
-              {flags.players.map((pl) => (
+              {flags.players.map((pl: string) => (
                 <Button
                   key={pl}
                   size="xs"
@@ -168,7 +167,7 @@ export const TagsSection: React.FC<TagsSectionProps> = ({
           <div>
             <div className="text-xs text-secondary mb-xs">Flags</div>
             <div className="flex flex-wrap gap-xs">
-              {flags.flags.map((fl) => (
+              {flags.flags.map((fl: string) => (
                 <Button
                   key={fl}
                   size="xs"

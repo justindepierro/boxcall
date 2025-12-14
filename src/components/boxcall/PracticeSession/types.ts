@@ -5,7 +5,7 @@
  */
 
 import type { ExecutionResult } from "../../../types/session";
-import type { PracticeScript, ScriptPlay } from "../../../services/types";
+import type { PracticeScript, PracticeScriptPlay } from "../../../services/practiceService";
 import type { Play } from "../../../types/play";
 import type { SessionStats } from "../../../hooks/usePracticeSession";
 
@@ -33,7 +33,7 @@ export interface OverallProgressBarProps {
  * Props for CurrentPlayCard component
  */
 export interface CurrentPlayCardProps {
-  currentPlay: ScriptPlay | null;
+  currentPlay: PracticeScriptPlay | null;
   currentPlayIndex: number;
   totalPlays: number;
   playProgress: number;
@@ -54,7 +54,7 @@ export interface SessionStatsCardProps {
  * Props for ScriptPlaysList component
  */
 export interface ScriptPlaysListProps {
-  scriptPlays: ScriptPlay[];
+  scriptPlays: PracticeScriptPlay[];
   currentPlayIndex: number;
   isPaused: boolean;
 }
@@ -105,7 +105,7 @@ export interface ErrorStateProps {
 
 export interface PreSessionStateProps {
   practiceScript: PracticeScript;
-  scriptPlays: ScriptPlay[];
+  scriptPlays: PracticeScriptPlay[];
   mode: "live" | "retroactive";
   onCancel: () => void;
   onStart: () => Promise<void>;
@@ -129,10 +129,9 @@ export function getPlayDisplayInfo(play: Play | undefined): PlayDisplayInfo {
       subtitle: null,
     };
 
-  // Use imported getDisplayName and getSubtitleText from utils
-  // These will be passed from the parent component
+  // Use play_name as the primary display, one_word_play as subtitle if both exist
   return {
-    displayName: play.call || play.name || "Unknown Play",
-    subtitle: play.name && play.call ? play.name : null,
+    displayName: play.one_word_play || play.play_name || "Unknown Play",
+    subtitle: play.play_name && play.one_word_play ? play.play_name : null,
   };
 }

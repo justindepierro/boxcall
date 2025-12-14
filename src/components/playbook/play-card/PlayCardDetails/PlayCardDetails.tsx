@@ -15,7 +15,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { getPlayFlags, type PlayFlags } from '../../../../utils/localPlayFlags';
-import { PlayCardDetailsProps } from './types';
+import type { PlayCardDetailsProps } from './types';
 import {
   PlayDiagramPreview,
   PlayBadges,

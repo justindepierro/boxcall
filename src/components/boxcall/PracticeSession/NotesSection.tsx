@@ -28,7 +28,7 @@ export const NotesSection: React.FC<NotesSectionProps> = ({
   <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
     <div className="flex items-center justify-between mb-3">
       <span className="text-primary font-semibold text-sm flex items-center gap-2">
-        <Icon name="edit-3" size="sm" className="text-slate-400" />
+        <Icon name="edit" size="sm" className="text-slate-400" />
         Session Notes
       </span>
       <Button

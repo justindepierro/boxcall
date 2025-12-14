@@ -7,6 +7,7 @@ import {
   modalPlayToServicePlay,
   validateModalPlay,
 } from "../../../components/practice/PracticeScriptModal/adapters";
+import type { PracticeScriptPlay as ModalPlay } from "../../../components/practice/PracticeScriptModal/types";
 
 interface UsePracticeScriptHandlersProps {
   activeTeamId: string | null;
@@ -22,7 +23,7 @@ export function usePracticeScriptHandlers({
   const toast = useToast();
 
   const handleSavePracticeScript = useCallback(
-    async (script: Partial<PracticeScript>) => {
+    async (script: Partial<PracticeScript> & { plays?: ModalPlay[] }) => {
       try {
         debug("💾 Saving practice script:", {
           script,

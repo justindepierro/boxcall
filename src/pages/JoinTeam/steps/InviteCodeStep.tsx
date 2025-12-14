@@ -5,11 +5,11 @@
  */
 
 import React from "react";
-import { Typography } from "../../components/design-system";
-import { Icon } from "../../components/ui/Icon/Icon";
-import { Button } from "../../components/ui/Button/Button";
-import type { InviteCodeStepProps } from "./types";
-import { INVITE_CODE_LENGTH } from "./constants";
+import { Typography } from "../../../components/design-system";
+import Icon from "../../../components/ui/Icon/Icon";
+import { Button } from "../../../components/ui/Button/Button";
+import type { InviteCodeStepProps } from "../types";
+import { INVITE_CODE_LENGTH } from "../constants";
 
 export const InviteCodeStep: React.FC<InviteCodeStepProps> = ({
   inviteCode,

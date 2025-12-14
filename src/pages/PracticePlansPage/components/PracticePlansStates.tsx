@@ -5,9 +5,9 @@
  */
 
 import React from "react";
-import { Icon } from "../../components/ui/Icon";
-import { Button } from "../../components/ui/Button/Button";
-import { Typography } from "../../components/design-system/Typography";
+import Icon from "../../../components/ui/Icon/Icon";
+import { Button } from "../../../components/ui/Button/Button";
+import { Typography } from "../../../components/design-system/Typography";
 
 interface LoadingStateProps {}
 

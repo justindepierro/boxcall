@@ -2,7 +2,7 @@
  * Types for GameSession component
  */
 
-import type { ExecutionResult, OpponentCoverage, Situation } from '../../../types/session';
+import type { ExecutionResult, OpponentCoverage, GameSituation } from '../../../types/session';
 
 export interface PlayLogForm {
   yardsGained: string;
@@ -31,15 +31,15 @@ export interface GameSessionHeaderProps {
 }
 
 export interface DownDistanceCardProps {
-  situation: Situation;
-  onUpdate: (updates: Partial<Situation>) => void;
+  situation: GameSituation;
+  onUpdate: (updates: Partial<GameSituation>) => void;
   onFirstDown: () => void;
   onNextQuarter: () => void;
   disabled: boolean;
 }
 
 export interface PlaySelectionCardProps {
-  situation: Situation;
+  situation: GameSituation;
   gamePlanPlays: Array<{
     id: string;
     play_id: string;

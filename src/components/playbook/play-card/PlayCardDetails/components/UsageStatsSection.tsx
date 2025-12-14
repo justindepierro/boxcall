@@ -5,9 +5,9 @@
  */
 
 import React from 'react';
-import { Typography } from '../../../design-system/Typography';
-import Icon from '../../../ui/Icon/Icon';
-import { UsageStatsSectionProps } from './types';
+import { Typography } from '../../../../design-system/Typography';
+import Icon from '../../../../ui/Icon/Icon';
+import type { UsageStatsSectionProps } from '../types';
 
 export const UsageStatsSection: React.FC<UsageStatsSectionProps> = ({
   play,

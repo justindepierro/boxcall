@@ -119,6 +119,7 @@ export function usePlayAssignmentsHandlers({
     setLoading(true);
 
     try {
+      // @ts-expect-error - play_assignments not in generated Database types yet
       const { data, error } = await supabase
         .from("play_assignments")
         .select("*")
@@ -253,6 +254,7 @@ export function usePlayAssignmentsHandlers({
           updated_by: user.id,
         }));
 
+      // @ts-expect-error - play_assignments not in generated Database types yet
       const { error } = await supabase
         .from("play_assignments")
         .upsert(assignmentsToSave as any, {

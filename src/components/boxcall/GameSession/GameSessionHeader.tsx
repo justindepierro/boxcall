@@ -81,7 +81,7 @@ export const GameSessionHeader: React.FC<GameSessionHeaderProps> = ({
             onClick={onEnd}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border-2 border-rose-300 text-rose-600 font-semibold hover:bg-rose-50 transition-colors"
           >
-            <Icon name="square" size="sm" />
+            <Icon name="power" size="sm" />
             End
           </button>
         </div>

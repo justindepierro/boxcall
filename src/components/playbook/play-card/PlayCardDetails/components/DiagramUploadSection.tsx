@@ -5,10 +5,10 @@
  */
 
 import React from 'react';
-import { Typography } from '../../../design-system/Typography';
-import Icon from '../../../ui/Icon/Icon';
-import { ImageUpload } from '../../../ui/ImageUpload';
-import { DiagramUploadSectionProps } from './types';
+import { Typography } from '../../../../design-system/Typography';
+import Icon from '../../../../ui/Icon/Icon';
+import { ImageUpload } from '../../../../ui/ImageUpload';
+import type { DiagramUploadSectionProps } from '../types';
 
 export const DiagramUploadSection: React.FC<DiagramUploadSectionProps> = ({
   play,
@@ -31,7 +31,7 @@ export const DiagramUploadSection: React.FC<DiagramUploadSectionProps> = ({
             (optimisticPlay as any).diagram_image_url ||
             undefined
           }
-          onChange={async (url) => {
+          onChange={async (url: string | null) => {
             await handleInlineSave('diagram_image_url', url || null);
           }}
           bucket="play-diagrams"

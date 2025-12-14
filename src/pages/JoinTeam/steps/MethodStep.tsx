@@ -5,10 +5,10 @@
  */
 
 import React from "react";
-import { Typography } from "../../components/design-system";
-import { Icon } from "../../components/ui/Icon/Icon";
-import { Button } from "../../components/ui/Button/Button";
-import type { MethodStepProps } from "./types";
+import { Typography } from "../../../components/design-system";
+import Icon from "../../../components/ui/Icon/Icon";
+import { Button } from "../../../components/ui/Button/Button";
+import type { MethodStepProps } from "../types";
 
 export const MethodStep: React.FC<MethodStepProps> = ({
   joinMethods,
