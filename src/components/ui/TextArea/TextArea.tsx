@@ -166,13 +166,17 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         />
         <div className="flex justify-between items-start">
           <div className="flex-1">
-            {getStatusMessage() && (
-              <div id={`${textareaId}-helper`}>
-                <Typography variant="body-xs" color={getStatusMessageColor()}>
-                  {getStatusMessage()}
-                </Typography>
-              </div>
-            )}
+            {(() => {
+              const statusMessage = getStatusMessage();
+              if (!statusMessage) return null;
+              return (
+                <div id={`${textareaId}-helper`}>
+                  <Typography variant="body-xs" color={getStatusMessageColor()}>
+                    {statusMessage}
+                  </Typography>
+                </div>
+              );
+            })()}
           </div>
           {showCharacterCount && (
             <div id={`${textareaId}-count`} className="ml-2 flex-shrink-0">

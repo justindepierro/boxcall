@@ -120,15 +120,16 @@ export const PracticeToGameInsight: React.FC<PracticeToGameInsightProps> = ({
       {/* Transfer Rate */}
       {practiceStats.executions > 0 && gameStats.executions > 0 && (
         <div
-          className={`p-3 rounded-lg border ${
-            transferQuality === "excellent"
-              ? "bg-success/10 border-success/30"
-              : transferQuality === "good"
-                ? "bg-primary/10 border-primary/30"
-                : transferQuality === "fair"
-                  ? "bg-warning/10 border-warning/30"
-                  : "bg-error/10 border-error/30"
-          }`}
+          className={(() => {
+            const base = "p-3 rounded-lg border ";
+            if (transferQuality === "excellent")
+              return `${base}bg-success/10 border-success/30`;
+            if (transferQuality === "good")
+              return `${base}bg-primary/10 border-primary/30`;
+            if (transferQuality === "fair")
+              return `${base}bg-warning/10 border-warning/30`;
+            return `${base}bg-error/10 border-error/30`;
+          })()}
         >
           <div className="flex items-center justify-between mb-2">
             <Typography variant="body-xs" className="font-medium">
@@ -155,13 +156,14 @@ export const PracticeToGameInsight: React.FC<PracticeToGameInsightProps> = ({
             />
           </div>
           <Typography variant="body-xs" className="text-muted mt-2">
-            {transferRate >= 10
-              ? "🎯 Game performance exceeds practice"
-              : transferRate >= 0
-                ? "✓ Good practice-to-game transfer"
-                : transferRate >= -10
-                  ? "⚠️ Slight drop in game situations"
-                  : "❌ Significant game execution gap"}
+            {(() => {
+              if (transferRate >= 10)
+                return "🎯 Game performance exceeds practice";
+              if (transferRate >= 0) return "✓ Good practice-to-game transfer";
+              if (transferRate >= -10)
+                return "⚠️ Slight drop in game situations";
+              return "❌ Significant game execution gap";
+            })()}
           </Typography>
         </div>
       )}

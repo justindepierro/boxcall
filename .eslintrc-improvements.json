@@ -1,0 +1,42 @@
+{
+  "rules": {
+    "prefer-const": "error",
+    "no-var": "error",
+    "object-shorthand": ["error", "always"],
+    "prefer-arrow-callback": "error",
+    "prefer-template": "error",
+    "prefer-destructuring": [
+      "warn",
+      {
+        "array": true,
+        "object": true
+      }
+    ],
+    "no-nested-ternary": "warn",
+    "eqeqeq": ["error", "always"],
+    "no-else-return": "error",
+    "consistent-return": "warn",
+    "no-magic-numbers": [
+      "warn",
+      {
+        "ignore": [0, 1, -1, 2],
+        "ignoreArrayIndexes": true,
+        "enforceConst": true
+      }
+    ],
+    "max-depth": ["warn", 4],
+    "max-lines-per-function": [
+      "warn",
+      {
+        "max": 150,
+        "skipBlankLines": true,
+        "skipComments": true
+      }
+    ],
+    "complexity": ["warn", 15],
+    "no-lonely-if": "error",
+    "prefer-spread": "error",
+    "no-useless-return": "error",
+    "yoda": "error"
+  }
+}

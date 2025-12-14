@@ -23,7 +23,6 @@ import { PopoverProvider } from "./contexts/PopoverContext";
 import { PendingSavesNotification } from "./components/notifications/PendingSavesNotification";
 import { UndoRedoIndicator } from "./components/undo/UndoRedoIndicator";
 import { ConflictDialog } from "./components/conflicts/ConflictDialog";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import DevPanel from "./components/dev/DevPanel";
 import { OfflineIndicator } from "./components/ui/OfflineIndicator";
 import { logError } from "./utils/logger";
@@ -46,7 +45,6 @@ function ConflictOverlay() {
  * Now uses React Router for multi-page navigation with authentication.
  */
 function App() {
-  const [showRQDevtools, setShowRQDevtools] = useState(false);
   const [showDevPanel, setShowDevPanel] = useState(false);
 
   // Initialize theme system
@@ -95,22 +93,10 @@ function App() {
                     </AppGrid>
                     <PWAIntegration />
                     <OfflineIndicator />
-                    {showRQDevtools && (
-                      <ReactQueryDevtools
-                        initialIsOpen={false}
-                        position="bottom"
-                      />
-                    )}
                     <DevPanel
                       isOpen={showDevPanel}
                       onClose={() => setShowDevPanel(false)}
                     />
-                    {/* Simple keyboard toggle: ctrl+` to show/hide React Query Devtools in dev */}
-                    {import.meta.env.DEV && (
-                      <ToggleQueryDevtools
-                        onToggle={() => setShowRQDevtools((v) => !v)}
-                      />
-                    )}
                     {/* DevPanel hotkey: ctrl+shift+D to show/hide DevPanel for authorized users */}
                     <ToggleDevPanel
                       onToggle={() => setShowDevPanel((v) => !v)}
@@ -127,20 +113,6 @@ function App() {
       </AppProvider>
     </ErrorBoundary>
   );
-}
-
-function ToggleQueryDevtools({ onToggle }: { onToggle: () => void }) {
-  useEffect(() => {
-    function handler(e: KeyboardEvent) {
-      if ((e.ctrlKey || e.metaKey) && e.key === "`") {
-        e.preventDefault();
-        onToggle();
-      }
-    }
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [onToggle]);
-  return null;
 }
 
 function ToggleDevPanel({ onToggle }: { onToggle: () => void }) {

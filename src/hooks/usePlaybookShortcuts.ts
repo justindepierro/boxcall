@@ -61,7 +61,6 @@ export function usePlaybookShortcuts(handlers: ShortcutHandlers) {
       if (e.key === "f" && !isMod && !e.shiftKey && !e.altKey) {
         e.preventDefault();
         handlers.onFavorites?.();
-        return;
       }
     };
 

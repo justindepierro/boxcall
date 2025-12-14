@@ -137,7 +137,7 @@ export class RoleService {
           const fallbackContext = {
             appRole: "player" as AppRole,
             teamMemberships: [],
-            userId: userId,
+            userId,
             lastUpdated: new Date(),
           };
           // Cache the fallback context

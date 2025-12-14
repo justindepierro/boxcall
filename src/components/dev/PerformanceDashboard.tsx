@@ -94,12 +94,11 @@ export const PerformanceDashboard: React.FC = () => {
       formattedMetrics.push({
         name: "Memory Usage",
         value: memoryMB,
-        rating:
-          memoryMB < 50
-            ? "good"
-            : memoryMB < 100
-              ? "needs-improvement"
-              : "poor",
+        rating: (() => {
+          if (memoryMB < 50) return "good";
+          if (memoryMB < 100) return "needs-improvement";
+          return "poor";
+        })(),
         unit: "MB",
       });
     }

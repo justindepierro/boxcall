@@ -2,9 +2,7 @@
 let cached: string | null = null;
 
 function generate() {
-  return (
-    "sess_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36)
-  );
+  return `sess_${Math.random().toString(36).slice(2, 10)}${Date.now().toString(36)}`;
 }
 
 export function getSessionId(): string {

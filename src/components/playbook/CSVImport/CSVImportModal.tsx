@@ -477,14 +477,15 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
                       </td>
                       <td className="px-sm py-xs text-xs">
                         <span
-                          className={`inline-flex items-center px-xs py-xs rounded-full text-xs font-medium ${
-                            preview.data.p_type === "Pass"
-                              ? "bg-info/20 text-info"
-                              : preview.data.p_type === "Run"
-                                ? "bg-success/20 text-success"
-                                : preview.data.p_type === "RPO"
-                                  ? "bg-surface-accent text-accent"
-                                  : "bg-subtle text-primary"
+                          className={`inline-flex items-center px-xs py-xs rounded-full text-xs font-medium ${(() => {
+                            if (preview.data.p_type === "Pass")
+                              return "bg-info/20 text-info";
+                            if (preview.data.p_type === "Run")
+                              return "bg-success/20 text-success";
+                            if (preview.data.p_type === "RPO")
+                              return "bg-surface-accent text-accent";
+                            return "bg-subtle text-primary";
+                          })()}
                           }`}
                         >
                           {preview.data.p_type || "Unknown"}

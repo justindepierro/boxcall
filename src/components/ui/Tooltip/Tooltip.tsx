@@ -115,8 +115,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
     switch (placement) {
       case "top":
       case "bottom": {
-        transform =
-          "translate(-50%, " + (placement === "top" ? "-100%" : "0") + ")";
+        transform = `translate(-50%, ${placement === "top" ? "-100%" : "0"})`;
         // For centered tooltips, ensure we don't go off the left or right edges
         // Account for the -50% transform by checking if centered position would clip
         const minLeft = padding + 140; // Half of max tooltip width (280px / 2)
@@ -138,8 +137,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
 
       case "left":
       case "right": {
-        transform =
-          "translate(" + (placement === "left" ? "-100%" : "0") + ", -50%)";
+        transform = `translate(${placement === "left" ? "-100%" : "0"}, -50%)`;
         // Prevent going off top
         const minTop = padding + 20;
         const maxTop = window.innerHeight - padding - 20;

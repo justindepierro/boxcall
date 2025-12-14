@@ -212,7 +212,7 @@ async function initializeAuth() {
     console.log("🔐 [Auth] Session found:", session.user.email);
     useAuth.setState({
       user: session.user,
-      session: session,
+      session,
       loading: false,
     });
 
@@ -235,7 +235,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   if (session) {
     useAuth.setState({
       user: session.user,
-      session: session,
+      session,
       loading: false,
       error: null,
     });

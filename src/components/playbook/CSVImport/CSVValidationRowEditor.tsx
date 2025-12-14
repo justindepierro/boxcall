@@ -12,6 +12,162 @@ import {
   type SimilarMatch,
 } from "../../../utils/dataValidation";
 
+// Helper to get validation state styling
+const getValidationStateClass = (state: ValidationResult["state"]) => {
+  switch (state) {
+    case "valid":
+      return "bg-success/10 text-success border border-success/20";
+    case "warning":
+      return "bg-warning/10 text-warning border border-warning/20";
+    case "error":
+      return "bg-error/10 text-error border border-error/20";
+    default:
+      return "bg-subtle text-primary border border-border";
+  }
+};
+
+const getValidationTextClass = (state: ValidationResult["state"]) => {
+  switch (state) {
+    case "valid":
+      return "text-success";
+    case "warning":
+      return "text-warning";
+    default:
+      return "text-error";
+  }
+};
+
+// Warnings List Component
+interface WarningsListProps {
+  warnings: string[];
+}
+
+const WarningsList: React.FC<WarningsListProps> = ({ warnings }) => {
+  if (warnings.length === 0) return null;
+
+  return (
+    <div className="bg-warning/10 border border-warning/20 rounded-lg p-3">
+      <p className="text-xs font-medium text-warning mb-2 flex items-center space-x-1">
+        <Icon name="alert-triangle" className="h-4 w-4" />
+        <span>Warnings ({warnings.length})</span>
+      </p>
+      <ul className="space-y-1">
+        {warnings.map((warning, idx) => (
+          <li key={idx} className="text-xs text-secondary">
+            • {warning}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+// Errors List Component
+interface ErrorsListProps {
+  errors: string[];
+}
+
+const ErrorsList: React.FC<ErrorsListProps> = ({ errors }) => {
+  if (errors.length === 0) return null;
+
+  return (
+    <div className="bg-error/10 border border-error/20 rounded-lg p-3">
+      <p className="text-xs font-medium text-error mb-2 flex items-center space-x-1">
+        <Icon name="x-circle" className="h-4 w-4" />
+        <span>Errors ({errors.length})</span>
+      </p>
+      <ul className="space-y-1">
+        {errors.map((error, idx) => (
+          <li key={idx} className="text-xs text-secondary">
+            • {error}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+// Fuzzy Match Suggestions Component
+interface FuzzyMatchSuggestionsProps {
+  matches: SimilarMatch[];
+  onAccept: (value: string) => void;
+}
+
+const FuzzyMatchSuggestions: React.FC<FuzzyMatchSuggestionsProps> = ({
+  matches,
+  onAccept,
+}) => {
+  if (matches.length === 0) return null;
+
+  return (
+    <div className="bg-subtle border border-muted rounded-lg p-2 space-y-1">
+      <p className="text-xs font-medium text-secondary mb-1">
+        💡 Did you mean:
+      </p>
+      {matches.map((match, idx) => (
+        <button
+          key={idx}
+          onClick={() => onAccept(match.value)}
+          className="w-full text-left px-2 py-1 rounded hover:bg-bg-secondary transition-colors group flex items-center justify-between"
+        >
+          <span className="text-sm font-medium group-hover:text-accent transition-colors">
+            {match.value}
+          </span>
+          <span className="text-xs text-muted bg-bg-muted px-2 py-0.5 rounded">
+            {match.confidence}% match
+          </span>
+        </button>
+      ))}
+    </div>
+  );
+};
+
+// Auto-correction Suggestion Component
+interface AutoCorrectionProps {
+  normalizedValue: string;
+  onAccept: () => void;
+}
+
+const AutoCorrectionSuggestion: React.FC<AutoCorrectionProps> = ({
+  normalizedValue,
+  onAccept,
+}) => (
+  <div className="bg-info/10 border border-info/20 rounded-lg p-2 flex items-start justify-between">
+    <div className="flex-1">
+      <p className="text-xs font-medium text-info mb-1">
+        🔧 Auto-correction available
+      </p>
+      <p className="text-xs text-secondary">
+        Normalize to:{" "}
+        <span className="font-mono font-medium">{normalizedValue}</span>
+      </p>
+    </div>
+    <Button onClick={onAccept} variant="infoLink" size="xs">
+      Apply
+    </Button>
+  </div>
+);
+
+// Validation State Icon Component
+interface ValidationStateIconProps {
+  state: ValidationResult["state"];
+  isEditing: boolean;
+}
+
+const ValidationStateIcon: React.FC<ValidationStateIconProps> = ({
+  state,
+  isEditing,
+}) => {
+  if (isEditing) return null;
+  if (state === "valid")
+    return <Icon name="check-circle" className="h-4 w-4 text-success" />;
+  if (state === "warning")
+    return <Icon name="alert-triangle" className="h-4 w-4 text-warning" />;
+  if (state === "error")
+    return <Icon name="x-circle" className="h-4 w-4 text-error" />;
+  return null;
+};
+
 interface CSVValidationRowEditorProps {
   preview: CSVPlayPreview;
   existingFormations: string[];
@@ -45,19 +201,15 @@ export function CSVValidationRowEditor({
   const [editingField, setEditingField] = useState<string | null>(null);
   const [editValue, setEditValue] = useState<string>("");
 
-  // Validate formation
+  // Validate fields
   const formationValidation = validateFormation(
     preview.data.formation || "",
     existingFormations
   );
-
-  // Validate play name
   const playNameValidation = validatePlayName(
     preview.data.play_name || "",
     existingPlayNames
   );
-
-  // Validate personnel
   const personnelValidation = validatePersonnel(
     preview.data.personnel || "",
     existingPersonnel
@@ -91,7 +243,6 @@ export function CSVValidationRowEditor({
     const isEditing = editingField === field;
     const hasWarnings = validation.state === "warning";
     const hasErrors = validation.state === "error";
-    const isValid = validation.state === "valid";
 
     // Find similar matches for suggestions
     const similarMatches: SimilarMatch[] =
@@ -104,15 +255,10 @@ export function CSVValidationRowEditor({
         <div className="flex items-center justify-between">
           <label className="text-xs font-medium text-secondary">{label}</label>
           <div className="flex items-center space-x-2">
-            {isValid && !isEditing && (
-              <Icon name="check-circle" className="h-4 w-4 text-success" />
-            )}
-            {hasWarnings && !isEditing && (
-              <Icon name="alert-triangle" className="h-4 w-4 text-warning" />
-            )}
-            {hasErrors && !isEditing && (
-              <Icon name="x-circle" className="h-4 w-4 text-error" />
-            )}
+            <ValidationStateIcon
+              state={validation.state}
+              isEditing={isEditing}
+            />
             {!isEditing && (
               <Button
                 onClick={() => startEditing(field, value)}
@@ -158,15 +304,7 @@ export function CSVValidationRowEditor({
           </div>
         ) : (
           <div
-            className={`px-3 py-2 rounded-lg text-sm font-medium ${
-              isValid
-                ? "bg-success/10 text-success border border-success/20"
-                : hasWarnings
-                  ? "bg-warning/10 text-warning border border-warning/20"
-                  : hasErrors
-                    ? "bg-error/10 text-error border border-error/20"
-                    : "bg-subtle text-primary border border-border"
-            }`}
+            className={`px-3 py-2 rounded-lg text-sm font-medium ${getValidationStateClass(validation.state)}`}
           >
             {value || "-"}
           </div>
@@ -175,13 +313,7 @@ export function CSVValidationRowEditor({
         {/* Validation Message */}
         {validation.message && !isEditing && (
           <p
-            className={`text-xs flex items-center space-x-1 ${
-              isValid
-                ? "text-success"
-                : hasWarnings
-                  ? "text-warning"
-                  : "text-error"
-            }`}
+            className={`text-xs flex items-center space-x-1 ${getValidationTextClass(validation.state)}`}
           >
             {hasWarnings && <span>⚠️</span>}
             {hasErrors && <span>❌</span>}
@@ -190,63 +322,30 @@ export function CSVValidationRowEditor({
         )}
 
         {/* Fuzzy Match Suggestions */}
-        {!isEditing &&
-          similarMatches.length > 0 &&
-          (hasWarnings || hasErrors) && (
-            <div className="bg-subtle border border-muted rounded-lg p-2 space-y-1">
-              <p className="text-xs font-medium text-secondary mb-1">
-                💡 Did you mean:
-              </p>
-              {similarMatches.map((match, idx) => (
-                <button
-                  key={idx}
-                  onClick={() =>
-                    onAcceptSuggestion(preview.rowNumber, field, match.value)
-                  }
-                  className="w-full text-left px-2 py-1 rounded hover:bg-bg-secondary transition-colors group flex items-center justify-between"
-                >
-                  <span className="text-sm font-medium group-hover:text-accent transition-colors">
-                    {match.value}
-                  </span>
-                  <span className="text-xs text-muted bg-bg-muted px-2 py-0.5 rounded">
-                    {match.confidence}% match
-                  </span>
-                </button>
-              ))}
-            </div>
-          )}
+        {!isEditing && (hasWarnings || hasErrors) && (
+          <FuzzyMatchSuggestions
+            matches={similarMatches}
+            onAccept={(matchValue) =>
+              onAcceptSuggestion(preview.rowNumber, field, matchValue)
+            }
+          />
+        )}
 
         {/* Auto-Correction Suggestion */}
         {validation.normalizedValue &&
           validation.normalizedValue !== value &&
           !isEditing &&
           validation.state !== "error" && (
-            <div className="bg-info/10 border border-info/20 rounded-lg p-2 flex items-start justify-between">
-              <div className="flex-1">
-                <p className="text-xs font-medium text-info mb-1">
-                  🔧 Auto-correction available
-                </p>
-                <p className="text-xs text-secondary">
-                  Normalize to:{" "}
-                  <span className="font-mono font-medium">
-                    {validation.normalizedValue}
-                  </span>
-                </p>
-              </div>
-              <Button
-                onClick={() =>
-                  onAcceptSuggestion(
-                    preview.rowNumber,
-                    field,
-                    validation.normalizedValue
-                  )
-                }
-                variant="infoLink"
-                size="xs"
-              >
-                Apply
-              </Button>
-            </div>
+            <AutoCorrectionSuggestion
+              normalizedValue={validation.normalizedValue}
+              onAccept={() =>
+                onAcceptSuggestion(
+                  preview.rowNumber,
+                  field,
+                  validation.normalizedValue
+                )
+              }
+            />
           )}
       </div>
     );
@@ -308,38 +407,10 @@ export function CSVValidationRowEditor({
       </div>
 
       {/* Warnings List */}
-      {preview.warnings.length > 0 && (
-        <div className="bg-warning/10 border border-warning/20 rounded-lg p-3">
-          <p className="text-xs font-medium text-warning mb-2 flex items-center space-x-1">
-            <Icon name="alert-triangle" className="h-4 w-4" />
-            <span>Warnings ({preview.warnings.length})</span>
-          </p>
-          <ul className="space-y-1">
-            {preview.warnings.map((warning, idx) => (
-              <li key={idx} className="text-xs text-secondary">
-                • {warning}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <WarningsList warnings={preview.warnings} />
 
       {/* Errors List */}
-      {preview.errors.length > 0 && (
-        <div className="bg-error/10 border border-error/20 rounded-lg p-3">
-          <p className="text-xs font-medium text-error mb-2 flex items-center space-x-1">
-            <Icon name="x-circle" className="h-4 w-4" />
-            <span>Errors ({preview.errors.length})</span>
-          </p>
-          <ul className="space-y-1">
-            {preview.errors.map((error, idx) => (
-              <li key={idx} className="text-xs text-secondary">
-                • {error}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <ErrorsList errors={preview.errors} />
     </div>
   );
 }

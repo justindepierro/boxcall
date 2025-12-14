@@ -566,13 +566,13 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
               placeholder={placeholder}
               maxLength={maxLength}
               rows={rows}
-              className={`flex-1 px-3 py-2 text-sm border-2 rounded-lg bg-white shadow-sm transition-colors ${
-                saveStatus === "error"
-                  ? "border-error-300 focus:border-error-500 focus:ring-error-500/20"
-                  : saveStatus === "success"
-                    ? "border-success-300 focus:border-success-500 focus:ring-success-500/20"
-                    : "border focus:border-electric-500 focus:ring-electric-500/20"
-              } focus:outline-none focus:ring-4 ${className}`}
+              className={`flex-1 px-3 py-2 text-sm border-2 rounded-lg bg-white shadow-sm transition-colors ${(() => {
+                if (saveStatus === "error")
+                  return "border-error-300 focus:border-error-500 focus:ring-error-500/20";
+                if (saveStatus === "success")
+                  return "border-success-300 focus:border-success-500 focus:ring-success-500/20";
+                return "border focus:border-electric-500 focus:ring-electric-500/20";
+              })()} focus:outline-none focus:ring-4 ${className}`}
             />
           ) : (
             <input
@@ -585,13 +585,13 @@ export const InlineEditField: React.FC<InlineEditFieldProps> = ({
               onBlur={handleBlur}
               placeholder={placeholder}
               maxLength={maxLength}
-              className={`flex-1 px-3 py-2 text-sm border-2 rounded-lg bg-white shadow-sm transition-colors ${
-                saveStatus === "error"
-                  ? "border-error-300 focus:border-error-500 focus:ring-error-500/20"
-                  : saveStatus === "success"
-                    ? "border-success-300 focus:border-success-500 focus:ring-success-500/20"
-                    : "border focus:border-electric-500 focus:ring-electric-500/20"
-              } focus:outline-none focus:ring-4 ${className}`}
+              className={`flex-1 px-3 py-2 text-sm border-2 rounded-lg bg-white shadow-sm transition-colors ${(() => {
+                if (saveStatus === "error")
+                  return "border-error-300 focus:border-error-500 focus:ring-error-500/20";
+                if (saveStatus === "success")
+                  return "border-success-300 focus:border-success-500 focus:ring-success-500/20";
+                return "border focus:border-electric-500 focus:ring-electric-500/20";
+              })()} focus:outline-none focus:ring-4 ${className}`}
             />
           )}
 

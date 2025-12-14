@@ -5,7 +5,7 @@ import React from "react";
 import { Typography } from "../components/design-system";
 import { AuroraTile } from "../components/ui/AuroraTile";
 
-const TemplatesPage: React.FC = React.memo(function TemplatesPage() {
+const TemplatesPage: React.FC = React.memo(() => {
   const navigate = useNavigate();
 
   const scrollToOverview = useCallback(() => {

@@ -7,13 +7,7 @@ import React, {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
-
-import { AdvancedFilters } from "../components/playbook/AdvancedFilters";
 import { BulkActionsToolbar } from "../components/playbook/BulkActionsToolbar";
-
-import { Button } from "../components/ui/Button/Button";
-import { Icon } from "../components/ui/Icon";
-import { Typography } from "../components/design-system/Typography";
 
 import { usePlaybook } from "../contexts/PlaybookContext";
 import type { CoachingView, PlaybookState } from "../contexts/PlaybookContext";
@@ -45,8 +39,6 @@ import { info, error as logError, debug } from "../utils/logger";
 import { useIsMobileOrTablet } from "../hooks/useBreakpoint";
 import { useMobileButtonProps } from "../hooks/useMobileButtonProps";
 
-import { BottomSheet } from "../components/BottomSheet";
-
 import { triggerHapticFeedback } from "../lib/hapticFeedback";
 import { smartPreloader } from "../services/smartPreloader";
 
@@ -75,6 +67,9 @@ import { FullscreenDiagramViewer } from "../components/playbook/play-card/Fullsc
 import { FormationLibraryModal } from "../components/playbook/modals/FormationLibraryModal";
 import { PersonnelLibraryModal } from "../components/playbook/modals/PersonnelLibraryModal";
 import { ConfirmationModal } from "../components/ui/ConfirmationModal/ConfirmationModal";
+
+// Extracted components
+import { MobileFiltersBottomSheet } from "./playbook";
 
 // Lazy load modal components for code splitting (~120KB savings)
 
@@ -611,7 +606,6 @@ const PlaybookPage = () => {
       // Escape: Close all modals
       if (e.key === "Escape") {
         closeAllModals();
-        return;
       }
     };
 
@@ -706,7 +700,7 @@ const PlaybookPage = () => {
     async (play: Play, flip: boolean = false) => {
       triggerHapticFeedback("selection");
 
-      let duplicatedPlay: Play = {
+      const duplicatedPlay: Play = {
         ...play,
         id: "", // Will be set by the database
         play_name: `Copy of ${play.play_name}`,
@@ -1058,6 +1052,7 @@ const PlaybookPage = () => {
           handleViewChange={handleViewChange}
           handleOpenPracticeScriptBuilder={handleOpenPracticeScriptBuilder}
           dispatch={dispatch}
+          navigate={navigate}
           mobileButtonSize={mobileButtonSize}
           mobileSecondaryButtonSize={mobileSecondaryButtonSize}
           suggestions={suggestions}
@@ -1128,72 +1123,19 @@ const PlaybookPage = () => {
       />
 
       {/* Mobile/Tablet Filters Bottom Sheet */}
-      {isMobileOrTablet && isModalOpen("filtersSheet") && (
-        <BottomSheet
-          snapPoints={[0.1, 0.6, 0.9]}
-          initialSnapPoint={1}
-          onSnapPointChange={(snapPoint) => {
-            // Close when fully minimized
-            if (snapPoint < 0.15) {
-              closeModal();
-            }
+      {isMobileOrTablet && (
+        <MobileFiltersBottomSheet
+          isOpen={isModalOpen("filtersSheet")}
+          onClose={closeModal}
+          advancedFilters={state.advancedFilters}
+          onFiltersChange={handleFiltersChange}
+          onClearAll={() => {
+            dispatch({ type: "SET_ADVANCED_FILTERS", filters: [] });
+            closeModal();
           }}
-        >
-          <div className="flex flex-col h-full">
-            {/* Header */}
-            <div className="flex items-center justify-between p-6 pb-4 border-b border-muted">
-              <Typography variant="headline-md" className="text-primary">
-                Filters & Search
-              </Typography>
-              <Button onClick={closeModal} variant="ghost" size="sm">
-                <Icon name="close" className="h-5 w-5" />
-              </Button>
-            </div>
-
-            {/* Scrollable Filters Content */}
-            <div className="flex-1 overflow-y-auto p-6 pb-20">
-              <AdvancedFilters
-                activeFilters={state.advancedFilters}
-                onFiltersChange={handleFiltersChange}
-              />
-            </div>
-
-            {/* Action Footer - Fixed at Bottom */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 bg-primary border-t border-muted shadow-lg">
-              <div className="flex gap-3">
-                <Button
-                  onClick={() => {
-                    dispatch({ type: "SET_ADVANCED_FILTERS", filters: [] });
-                    closeModal();
-                  }}
-                  variant="secondary"
-                  size={mobileSecondaryButtonSize}
-                  className="flex-1"
-                >
-                  Clear All
-                </Button>
-                <Button
-                  onClick={closeModal}
-                  variant="primary"
-                  size={mobileButtonSize}
-                  className="flex-1"
-                >
-                  <Icon name="check" className="h-4 w-4 mr-2" />
-                  Apply Filters
-                </Button>
-              </div>
-              {Object.keys(state.advancedFilters).length > 0 && (
-                <p className="text-center text-xs text-secondary mt-2">
-                  {Object.keys(state.advancedFilters).length} filter
-                  {Object.keys(state.advancedFilters).length === 1
-                    ? ""
-                    : "s"}{" "}
-                  active
-                </p>
-              )}
-            </div>
-          </div>
-        </BottomSheet>
+          mobileButtonSize={mobileButtonSize}
+          mobileSecondaryButtonSize={mobileSecondaryButtonSize}
+        />
       )}
 
       {/* Bulk Actions Floating Toolbar */}

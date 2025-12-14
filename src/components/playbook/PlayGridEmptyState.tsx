@@ -158,11 +158,13 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
               variant="body"
               className="text-secondary mb-8 text-center max-w-md"
             >
-              {searchQuery
-                ? `No plays match "${searchQuery}". Try different keywords or check your spelling.`
-                : hasActiveFilters
-                  ? "Your filters are hiding all plays. Try adjusting your criteria or clear filters to see your entire playbook."
-                  : "No plays found. Try clearing filters or creating a new play."}
+              {(() => {
+                if (searchQuery)
+                  return `No plays match "${searchQuery}". Try different keywords or check your spelling.`;
+                if (hasActiveFilters)
+                  return "Your filters are hiding all plays. Try adjusting your criteria or clear filters to see your entire playbook.";
+                return "No plays found. Try clearing filters or creating a new play.";
+              })()}
             </Typography>
 
             {/* Quick Win: Search suggestions */}

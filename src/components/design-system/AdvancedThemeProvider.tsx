@@ -113,12 +113,11 @@ export function AdvancedThemeProvider({
 
   // Update theme when design system config changes
   useEffect(() => {
-    const mode =
-      designSystemConfig.theme === "auto"
-        ? "auto"
-        : designSystemConfig.theme === "dark"
-          ? "dark"
-          : "light";
+    const mode = (() => {
+      if (designSystemConfig.theme === "auto") return "auto";
+      if (designSystemConfig.theme === "dark") return "dark";
+      return "light";
+    })();
     colorTheme.updateTheme({ mode });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [designSystemConfig.theme]);

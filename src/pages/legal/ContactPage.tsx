@@ -6,6 +6,60 @@ import { Icon } from "../../components/ui/Icon/Icon";
 import { Dropdown } from "../../components/ui/Dropdown";
 import { PageLayout } from "../../components/layout/PageLayout";
 
+/** Contact information card */
+function ContactCard({
+  icon,
+  title,
+  description,
+  contact,
+  extra,
+}: {
+  icon: string;
+  title: string;
+  description: string;
+  contact: React.ReactNode;
+  extra?: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-start gap-4">
+      <div className="flex-shrink-0">
+        <div className="w-10 h-10 bg-accent dark:bg-accent-dark rounded-lg flex items-center justify-center">
+          <Icon name={icon as any} size="sm" color="primary" />
+        </div>
+      </div>
+      <div>
+        <h3 className="font-medium text-primary">{title}</h3>
+        <p className="text-sm mt-1 text-secondary">{description}</p>
+        {contact}
+        {extra}
+      </div>
+    </div>
+  );
+}
+
+/** Support hours display */
+function SupportHours() {
+  return (
+    <div className="mt-8 p-4 bg-subtle dark:bg-muted rounded-lg">
+      <h3 className="font-medium mb-3 text-primary">Support Hours</h3>
+      <div className="space-y-2 text-sm">
+        <div className="flex justify-between">
+          <span className="text-secondary">Monday - Friday</span>
+          <span className="text-primary">9:00 AM - 6:00 PM EST</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-secondary">Saturday</span>
+          <span className="text-primary">10:00 AM - 2:00 PM EST</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-secondary">Sunday</span>
+          <span className="text-primary">Closed</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export const ContactPage: React.FC = () => {
   const [subject, setSubject] = useState("");
 
@@ -27,52 +81,37 @@ export const ContactPage: React.FC = () => {
           </Typography>
 
           <div className="space-y-6">
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0">
-                <div className="w-10 h-10 bg-accent dark:bg-accent-dark rounded-lg flex items-center justify-center">
-                  <Icon name="mail" size="sm" color="primary" />
-                </div>
-              </div>
-              <div>
-                <h3 className="font-medium text-primary">Email Support</h3>
-                <p className="text-sm mt-1 text-secondary">
-                  Get help with your account, billing, or technical issues
-                </p>
+            <ContactCard
+              icon="mail"
+              title="Email Support"
+              description="Get help with your account, billing, or technical issues"
+              contact={
                 <a
                   href="mailto:support@boxcall.com"
                   className="text-interaction-jade hover:text-brand-jade-dark font-medium"
                 >
                   support@boxcall.com
                 </a>
-              </div>
-            </div>
+              }
+            />
 
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0">
-                <div className="w-10 h-10 bg-accent dark:bg-accent-dark rounded-lg flex items-center justify-center">
-                  <Icon name="phone" size="sm" color="primary" />
-                </div>
-              </div>
-              <div>
-                <h3 className="font-medium text-primary">Phone Support</h3>
-                <p className="text-sm mt-1 text-secondary">
-                  Speak directly with our coaching support team
-                </p>
+            <ContactCard
+              icon="phone"
+              title="Phone Support"
+              description="Speak directly with our coaching support team"
+              contact={
                 <p className="text-interaction-jade font-medium">
                   1-800-BOXCALL
                 </p>
-                <p className="text-muted text-sm">Mon-Fri 9AM-6PM EST</p>
-              </div>
-            </div>
+              }
+              extra={<p className="text-muted text-sm">Mon-Fri 9AM-6PM EST</p>}
+            />
 
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0">
-                <div className="w-10 h-10 bg-accent dark:bg-accent-dark rounded-lg flex items-center justify-center">
-                  <Icon name="info" size="sm" color="primary" />
-                </div>
-              </div>
-              <div>
-                <h3 className="font-medium text-primary">Business Address</h3>
+            <ContactCard
+              icon="info"
+              title="Business Address"
+              description=""
+              contact={
                 <p className="text-sm mt-1 text-secondary">
                   BoxCall, Inc.
                   <br />
@@ -82,28 +121,11 @@ export const ContactPage: React.FC = () => {
                   <br />
                   United States
                 </p>
-              </div>
-            </div>
+              }
+            />
           </div>
 
-          {/* Business Hours */}
-          <div className="mt-8 p-4 bg-subtle dark:bg-muted rounded-lg">
-            <h3 className="font-medium mb-3 text-primary">Support Hours</h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-secondary">Monday - Friday</span>
-                <span className="text-primary">9:00 AM - 6:00 PM EST</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-secondary">Saturday</span>
-                <span className="text-primary">10:00 AM - 2:00 PM EST</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-secondary">Sunday</span>
-                <span className="text-primary">Closed</span>
-              </div>
-            </div>
-          </div>
+          <SupportHours />
         </div>
 
         {/* Contact Form */}

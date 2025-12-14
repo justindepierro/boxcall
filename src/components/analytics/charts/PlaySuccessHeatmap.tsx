@@ -260,13 +260,11 @@ export const PlaySuccessHeatmap: React.FC<PlaySuccessHeatmapProps> = ({
                 </Typography>
               </div>
               <Badge
-                variant={
-                  selectedZone.successRate >= 75
-                    ? "success"
-                    : selectedZone.successRate >= 60
-                      ? "warning"
-                      : "danger"
-                }
+                variant={(() => {
+                  if (selectedZone.successRate >= 75) return "success";
+                  if (selectedZone.successRate >= 60) return "warning";
+                  return "danger";
+                })()}
               >
                 {selectedZone.successRate}% Success
               </Badge>
@@ -319,13 +317,11 @@ export const PlaySuccessHeatmap: React.FC<PlaySuccessHeatmapProps> = ({
                 </div>
               </div>
               <Badge
-                variant={
-                  zone.successRate >= 75
-                    ? "success"
-                    : zone.successRate >= 60
-                      ? "warning"
-                      : "danger"
-                }
+                variant={(() => {
+                  if (zone.successRate >= 75) return "success";
+                  if (zone.successRate >= 60) return "warning";
+                  return "danger";
+                })()}
                 className="w-15 text-center"
               >
                 {zone.successRate}%

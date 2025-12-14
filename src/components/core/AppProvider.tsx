@@ -164,16 +164,8 @@ interface AppProviderProps {
   enableSessionSecurity?: boolean;
 }
 
-export const AppProvider: React.FC<AppProviderProps> = ({
-  children,
-  enableDevTools = import.meta.env.DEV,
-  enableShowcase = import.meta.env.DEV,
-  enableCSRF = true,
-  enableSessionSecurity = true,
-}) => {
-  // ============================================
-  // DESIGN SYSTEM STATE
-  // ============================================
+/** Hook for design system state and methods */
+function useDesignSystemState(enableDevTools: boolean) {
   const [designConfig, setDesignConfig] =
     useState<DesignSystemConfig>(defaultDesignConfig);
   const [usageTracking] = useState<ComponentUsage[]>([]);
@@ -195,13 +187,12 @@ export const AppProvider: React.FC<AppProviderProps> = ({
   );
 
   const validateDesignToken = useCallback((token: string): boolean => {
-    // Simple validation - can be expanded
     return token.startsWith("--semantic-") || token.startsWith("--font-");
   }, []);
 
   const getPerformanceMetrics = useCallback((): PerformanceMetrics => {
     return {
-      bundleSize: 0, // Would be populated by build tools
+      bundleSize: 0,
       loadTime: performance.now(),
       lcp: 0,
       fid: 0,
@@ -209,9 +200,17 @@ export const AppProvider: React.FC<AppProviderProps> = ({
     };
   }, []);
 
-  // ============================================
-  // THEME STATE
-  // ============================================
+  return {
+    designConfig,
+    updateDesignConfig,
+    trackUsage,
+    validateDesignToken,
+    getPerformanceMetrics,
+  };
+}
+
+/** Hook for theme state and methods */
+function useThemeState(enableShowcase: boolean) {
   const colorTheme = useColorTheme();
   const [teamColors, setTeamColors] = useState<TeamColors | null>(null);
   const [currentContext, setCurrentContext] = useState<
@@ -224,7 +223,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({
 
   const applyTeamTheme = useCallback((colors: TeamColors) => {
     setTeamColors(colors);
-    // Apply colors to CSS custom properties
     document.documentElement.style.setProperty(
       "--team-primary",
       colors.primary
@@ -240,7 +238,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({
   const applyEmotionTheme = useCallback(
     (emotion: "trust" | "energy" | "calm" | "achievement") => {
       setCurrentEmotion(emotion);
-      // Emotion themes would apply specific color palettes
     },
     []
   );
@@ -248,14 +245,82 @@ export const AppProvider: React.FC<AppProviderProps> = ({
   const applyContextTheme = useCallback(
     (context: "calm" | "energetic" | "professional") => {
       setCurrentContext(context);
-      // Context themes would apply specific styling
     },
     []
   );
 
-  // ============================================
-  // ACCESSIBILITY HOOKS
-  // ============================================
+  return {
+    colorTheme,
+    teamColors,
+    setTeamColors,
+    currentContext,
+    setContext: setCurrentContext,
+    currentEmotion,
+    setEmotion: setCurrentEmotion,
+    applyTeamTheme,
+    applyEmotionTheme,
+    applyContextTheme,
+    showcaseMode,
+    setShowcaseMode,
+  };
+}
+
+/** Hook for SEO meta state and DOM effects */
+function useSEOState() {
+  const [seoMeta, setSeoMeta] = useState<SEOMetaData>(defaultSEOMeta);
+
+  const updateMeta = useCallback((metadata: Partial<SEOMetaData>) => {
+    setSeoMeta((prev) => ({ ...prev, ...metadata }));
+  }, []);
+
+  const getMeta = useCallback(() => seoMeta, [seoMeta]);
+
+  // Apply SEO meta tags
+  useEffect(() => {
+    if (seoMeta.title) {
+      document.title = seoMeta.title;
+    }
+
+    if (seoMeta.description) {
+      let descMeta = document.querySelector('meta[name="description"]');
+      if (!descMeta) {
+        descMeta = document.createElement("meta");
+        descMeta.setAttribute("name", "description");
+        document.head.appendChild(descMeta);
+      }
+      descMeta.setAttribute("content", seoMeta.description);
+    }
+
+    if (seoMeta.url) {
+      let canonicalLink = document.querySelector(
+        'link[rel="canonical"]'
+      ) as HTMLLinkElement;
+      if (!canonicalLink) {
+        canonicalLink = document.createElement("link");
+        canonicalLink.setAttribute("rel", "canonical");
+        document.head.appendChild(canonicalLink);
+      }
+      canonicalLink.href = seoMeta.url;
+    }
+  }, [seoMeta]);
+
+  return { updateMeta, getMeta };
+}
+
+export const AppProvider: React.FC<AppProviderProps> = ({
+  children,
+  enableDevTools = import.meta.env.DEV,
+  enableShowcase = import.meta.env.DEV,
+  enableCSRF = true,
+  enableSessionSecurity = true,
+}) => {
+  // Design System
+  const designSystemState = useDesignSystemState(enableDevTools);
+
+  // Theme
+  const themeState = useThemeState(enableShowcase);
+
+  // Accessibility Hooks
   const {
     announce,
     announceError,
@@ -301,51 +366,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({
     }
   }, [prefersReducedMotion]);
 
-  // ============================================
-  // SEO STATE
-  // ============================================
-  const [seoMeta, setSeoMeta] = useState<SEOMetaData>(defaultSEOMeta);
+  // SEO
+  const seoState = useSEOState();
 
-  const updateMeta = useCallback((metadata: Partial<SEOMetaData>) => {
-    setSeoMeta((prev) => ({ ...prev, ...metadata }));
-  }, []);
-
-  const getMeta = useCallback(() => seoMeta, [seoMeta]);
-
-  // Apply SEO meta tags
-  useEffect(() => {
-    if (seoMeta.title) {
-      document.title = seoMeta.title;
-    }
-
-    // Update meta description
-    if (seoMeta.description) {
-      let descMeta = document.querySelector('meta[name="description"]');
-      if (!descMeta) {
-        descMeta = document.createElement("meta");
-        descMeta.setAttribute("name", "description");
-        document.head.appendChild(descMeta);
-      }
-      descMeta.setAttribute("content", seoMeta.description);
-    }
-
-    // Update canonical if available
-    if (seoMeta.url) {
-      let canonicalLink = document.querySelector(
-        'link[rel="canonical"]'
-      ) as HTMLLinkElement;
-      if (!canonicalLink) {
-        canonicalLink = document.createElement("link");
-        canonicalLink.setAttribute("rel", "canonical");
-        document.head.appendChild(canonicalLink);
-      }
-      canonicalLink.href = seoMeta.url;
-    }
-  }, [seoMeta]);
-
-  // ============================================
-  // SECURITY HOOKS (no state, just side effects)
-  // ============================================
+  // Security Hooks
   useSecurity();
   const csrfProtection = useCSRFProtection();
   const secureSession = useSecureSession();
@@ -359,31 +383,14 @@ export const AppProvider: React.FC<AppProviderProps> = ({
     }
   }, [enableCSRF, enableSessionSecurity, csrfProtection, secureSession]);
 
-  // ============================================
-  // CONTEXT VALUE
-  // ============================================
+  // Context Value
   const value: AppContextType = useMemo(
     () => ({
       // Design System
-      designConfig,
-      updateDesignConfig,
-      trackUsage,
-      validateDesignToken,
-      getPerformanceMetrics,
+      ...designSystemState,
 
       // Theme
-      colorTheme,
-      teamColors,
-      setTeamColors,
-      currentContext,
-      setContext: setCurrentContext,
-      currentEmotion,
-      setEmotion: setCurrentEmotion,
-      applyTeamTheme,
-      applyEmotionTheme,
-      applyContextTheme,
-      showcaseMode,
-      setShowcaseMode,
+      ...themeState,
 
       // Accessibility
       announce,
@@ -395,23 +402,11 @@ export const AppProvider: React.FC<AppProviderProps> = ({
       a11yViolations: violations,
 
       // SEO
-      updateMeta,
-      getMeta,
+      ...seoState,
     }),
     [
-      designConfig,
-      updateDesignConfig,
-      trackUsage,
-      validateDesignToken,
-      getPerformanceMetrics,
-      colorTheme,
-      teamColors,
-      currentContext,
-      currentEmotion,
-      applyTeamTheme,
-      applyEmotionTheme,
-      applyContextTheme,
-      showcaseMode,
+      designSystemState,
+      themeState,
       announce,
       announceError,
       announceSuccess,
@@ -419,8 +414,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({
       skipLinksEnabled,
       prefersReducedMotion,
       violations,
-      updateMeta,
-      getMeta,
+      seoState,
     ]
   );
 

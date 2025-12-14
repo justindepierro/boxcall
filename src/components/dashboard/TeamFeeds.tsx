@@ -9,6 +9,79 @@ import { Typography } from "../design-system";
 import { Card, Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
 
+/** Generate mock feed data based on dev mode */
+function getMockFeeds(devMode: string | null) {
+  // Blank slate or production with no teams - empty state
+  if (devMode === "blank_slate" || devMode === "production") {
+    return [];
+  }
+
+  // Dev profiles with realistic data
+  if (devMode?.startsWith("dev_")) {
+    return [
+      {
+        id: 1,
+        type: "announcement",
+        team: "BoxCall Development Varsity",
+        title: "Practice moved to indoor facility",
+        time: "2 hours ago",
+        icon: "info" as const,
+      },
+      {
+        id: 2,
+        type: "achievement",
+        team: "BoxCall Development Varsity",
+        title: "Great practice today! Defense looked sharp.",
+        time: "4 hours ago",
+        icon: "trophy" as const,
+      },
+      {
+        id: 3,
+        type: "schedule",
+        team: "BoxCall Development Varsity",
+        title: "Game film session added for Thursday",
+        time: "1 day ago",
+        icon: "calendar" as const,
+      },
+    ];
+  }
+
+  // Legacy mock modes
+  if (
+    (devMode as string) === "super_admin_mock" ||
+    devMode?.startsWith("view_as_")
+  ) {
+    return [
+      {
+        id: 1,
+        type: "announcement",
+        team: "Varsity Football",
+        title: "Practice moved to indoor facility",
+        time: "2 hours ago",
+        icon: "info" as const,
+      },
+      {
+        id: 2,
+        type: "achievement",
+        team: "JV Football",
+        title: "Great practice today! Defense looked sharp.",
+        time: "4 hours ago",
+        icon: "trophy" as const,
+      },
+      {
+        id: 3,
+        type: "schedule",
+        team: "Varsity Football",
+        title: "Game film session added for Thursday",
+        time: "1 day ago",
+        icon: "calendar" as const,
+      },
+    ];
+  }
+
+  return [];
+}
+
 /**
  * Team Feeds - Cross-team activity and updates
  *
@@ -21,81 +94,7 @@ const TeamFeeds: React.FC = () => {
   const { devMode } = useDevMode();
   const [showAllFeeds, setShowAllFeeds] = useState(false);
 
-  // Get feeds based on dev mode
-  const getFeeds = () => {
-    // Blank slate or production with no teams - empty state
-    if (devMode === "blank_slate" || devMode === "production") {
-      return [];
-    }
-
-    // Dev profiles with realistic data
-    if (devMode?.startsWith("dev_")) {
-      return [
-        {
-          id: 1,
-          type: "announcement",
-          team: "BoxCall Development Varsity",
-          title: "Practice moved to indoor facility",
-          time: "2 hours ago",
-          icon: "info" as const,
-        },
-        {
-          id: 2,
-          type: "achievement",
-          team: "BoxCall Development Varsity",
-          title: "Great practice today! Defense looked sharp.",
-          time: "4 hours ago",
-          icon: "trophy" as const,
-        },
-        {
-          id: 3,
-          type: "schedule",
-          team: "BoxCall Development Varsity",
-          title: "Game film session added for Thursday",
-          time: "1 day ago",
-          icon: "calendar" as const,
-        },
-      ];
-    }
-
-    // Legacy mock modes
-    // Allow legacy mock modes (cast for narrowed union compatibility)
-    if (
-      (devMode as string) === "super_admin_mock" ||
-      devMode?.startsWith("view_as_")
-    ) {
-      return [
-        {
-          id: 1,
-          type: "announcement",
-          team: "Varsity Football",
-          title: "Practice moved to indoor facility",
-          time: "2 hours ago",
-          icon: "info" as const,
-        },
-        {
-          id: 2,
-          type: "achievement",
-          team: "JV Football",
-          title: "Great practice today! Defense looked sharp.",
-          time: "4 hours ago",
-          icon: "trophy" as const,
-        },
-        {
-          id: 3,
-          type: "schedule",
-          team: "Varsity Football",
-          title: "Game film session added for Thursday",
-          time: "1 day ago",
-          icon: "calendar" as const,
-        },
-      ];
-    }
-
-    return [];
-  };
-
-  const feeds = getFeeds();
+  const feeds = getMockFeeds(devMode);
   const maxInitialFeeds = 3;
   const displayedFeeds = showAllFeeds ? feeds : feeds.slice(0, maxInitialFeeds);
   const hiddenFeedsCount = feeds.length - maxInitialFeeds;

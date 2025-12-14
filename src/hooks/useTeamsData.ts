@@ -70,7 +70,7 @@ interface DatabasePlay {
   updated_at: string;
 }
 
-const PAGE_SIZE = 50; // Reduced from 100 for faster initial load
+const PAGE_SIZE = 50;
 const TEAM_FIELDS =
   "id, name, school_name, mascot, season_year, created_at, updated_at";
 const PLAYBOOK_FIELDS =
@@ -111,13 +111,7 @@ export function useTeamsData(teamIdOverride?: string | null) {
   const updatePlay = useCallback(
     async (playId: string, updates: Partial<DatabasePlay>) => {
       try {
-        debug("[useTeamsData] Updating play:", {
-          playId,
-          updates,
-          "updates.f_dir": updates.f_dir,
-          "updates.p_dir": updates.p_dir,
-        });
-
+        debug("[useTeamsData] Updating play:", { playId, updates });
         const { data, error } = await supabase
           .from("plays")
           // @ts-expect-error - Supabase type issue with plays table update
@@ -132,22 +126,11 @@ export function useTeamsData(teamIdOverride?: string | null) {
         }
 
         debug("[useTeamsData] Database returned:", data);
-        debug("[useTeamsData] Database returned f_dir:", (data as any)?.f_dir);
-        debug("[useTeamsData] Database returned p_dir:", (data as any)?.p_dir);
-
-        // Update local state with the data returned from database
-        // Use 'data' instead of 'updates' to ensure we have the actual database values
-        setPlays((prevPlays) => {
-          const updated = prevPlays.map((play) =>
+        setPlays((prevPlays) =>
+          prevPlays.map((play) =>
             play.id === playId ? (data as DatabasePlay) : play
-          );
-          const updatedPlay = updated.find((p) => p.id === playId);
-          debug("[useTeamsData] Updated local state for play:", updatedPlay);
-          debug("[useTeamsData] Updated play f_dir:", updatedPlay?.f_dir);
-          debug("[useTeamsData] Updated play p_dir:", updatedPlay?.p_dir);
-          return updated;
-        });
-
+          )
+        );
         return data;
       } catch (err) {
         logError("[useTeamsData] Error in updatePlay:", err);
@@ -192,9 +175,9 @@ export function useTeamsData(teamIdOverride?: string | null) {
       try {
         setLoading(true);
         setError(null);
-        console.log("🔍 [useTeamsData] Starting fetchData for teamId:", teamId);
+        debug("[useTeamsData] Starting fetchData for teamId:", teamId);
 
-        // Step 1: Fetch teams and playbooks in parallel using supabase client
+        // Step 1: Fetch teams and playbooks in parallel
         const [teamsResult, playbooksResult] = await Promise.all([
           supabase
             .from("teams")
@@ -208,24 +191,10 @@ export function useTeamsData(teamIdOverride?: string | null) {
             .order("created_at", { ascending: false }),
         ]);
 
-        if (!isMounted || controller.signal.aborted) {
-          return;
-        }
-
-        console.log("🔍 [useTeamsData] Teams result:", {
-          data: teamsResult.data,
-          error: teamsResult.error,
-        });
-        console.log("🔍 [useTeamsData] Playbooks result:", {
-          data: playbooksResult.data,
-          error: playbooksResult.error,
-        });
+        if (!isMounted || controller.signal.aborted) return;
 
         if (teamsResult.error) {
-          console.error(
-            "❌ [useTeamsData] Error fetching teams:",
-            teamsResult.error
-          );
+          logError("[useTeamsData] Error fetching teams:", teamsResult.error);
           setError(`Failed to fetch teams: ${teamsResult.error.message}`);
           setLoading(false);
           return;
@@ -237,7 +206,6 @@ export function useTeamsData(teamIdOverride?: string | null) {
           warn("Playbooks table not available:", playbooksResult.error.message);
           setPlaybooks([]);
         } else {
-          // For now, we'll set play_count to 0 and update later
           scopedPlaybooks = (playbooksResult.data || []).map((pb: any) => ({
             ...pb,
             play_count: 0,
@@ -246,10 +214,8 @@ export function useTeamsData(teamIdOverride?: string | null) {
         }
 
         const playbookIds = scopedPlaybooks.map((pb) => pb.id);
-        debug("[useTeamsData] 📚 Playbook IDs:", playbookIds);
-
         if (playbookIds.length === 0) {
-          debug("[useTeamsData] ⚠️ No playbooks found, skipping plays fetch");
+          debug("[useTeamsData] No playbooks found");
           setFormations([]);
           setPlays([]);
           setTotalPlaysCount(0);
@@ -259,7 +225,7 @@ export function useTeamsData(teamIdOverride?: string | null) {
           return;
         }
 
-        // Step 2: Fetch formations and plays in parallel using supabase client
+        // Step 2: Fetch formations and plays in parallel
         const [formationsResult, playsResult] = await Promise.all([
           supabase
             .from("formations")
@@ -274,18 +240,7 @@ export function useTeamsData(teamIdOverride?: string | null) {
             .limit(PAGE_SIZE),
         ]);
 
-        if (!isMounted || controller.signal.aborted) {
-          return;
-        }
-
-        console.log("🔍 [useTeamsData] Formations result:", {
-          count: formationsResult.data?.length || 0,
-          error: formationsResult.error,
-        });
-        console.log("🔍 [useTeamsData] Plays result:", {
-          count: playsResult.data?.length || 0,
-          error: playsResult.error,
-        });
+        if (!isMounted || controller.signal.aborted) return;
 
         if (formationsResult.error) {
           warn(
@@ -300,15 +255,14 @@ export function useTeamsData(teamIdOverride?: string | null) {
           warn("Plays table not available:", playsResult.error.message);
         } else {
           const playsData = (playsResult.data || []) as DatabasePlay[];
-          debug("[useTeamsData] ✅ Loaded", playsData.length, "plays");
+          debug("[useTeamsData] Loaded", playsData.length, "plays");
           setHasMorePlays(playsData.length === PAGE_SIZE);
           setPlays(playsData);
-          setTotalPlaysCount(playsData.length); // Set count from actual data
+          setTotalPlaysCount(playsData.length);
         }
 
         setPlaysPage(0);
         setLoading(false);
-        debug("[useTeamsData] ✅ fetchData complete!");
       } catch (err) {
         if (controller.signal.aborted || !isMounted) {
           return;

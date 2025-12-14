@@ -124,25 +124,23 @@ export class SocialServiceImpl implements SocialService {
         // Same reaction type - remove it
         await this.removeReaction(request.content_type, request.content_id);
         return null;
-      } else {
-        // Different reaction type - update it
-        const { data, error } = await supabase
-          .from("reactions")
-          .update({
-            reaction_type: request.reaction_type,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("id", existing.id)
-          .select()
-          .single();
-
-        if (error) throw error;
-        return data;
       }
-    } else {
-      // No existing reaction - add it
-      return await this.addReaction(request);
+      // Different reaction type - update it
+      const { data, error } = await supabase
+        .from("reactions")
+        .update({
+          reaction_type: request.reaction_type,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", existing.id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
     }
+    // No existing reaction - add it
+    return await this.addReaction(request);
   }
 
   // =============================================================================
@@ -264,7 +262,7 @@ export class SocialServiceImpl implements SocialService {
     contentId: string,
     parentId?: string
   ): Promise<Comment[]> {
-    let query = supabase
+    const query = supabase
       .from("comments")
       .select(
         `

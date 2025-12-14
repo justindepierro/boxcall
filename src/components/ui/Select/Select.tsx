@@ -477,7 +477,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
           <div
             ref={menuRef}
             className={menuClasses}
-            style={{ maxHeight: maxHeight }}
+            style={{ maxHeight }}
             role="listbox"
             aria-multiselectable={multiple}
           >

@@ -160,17 +160,16 @@ export class CommentReactionsService {
           });
         }
         return { ...result, action: "removed" };
-      } else {
-        // Add reaction
-        const result = await this.addReaction(commentId, reactionType);
-        if (result.success) {
-          emitTelemetry("comment.reaction_added", {
-            comment_id: commentId,
-            reaction_type: reactionType,
-          });
-        }
-        return { ...result, action: "added" };
       }
+      // Add reaction
+      const result = await this.addReaction(commentId, reactionType);
+      if (result.success) {
+        emitTelemetry("comment.reaction_added", {
+          comment_id: commentId,
+          reaction_type: reactionType,
+        });
+      }
+      return { ...result, action: "added" };
     } catch (error) {
       logError("Error toggling comment reaction:", error);
       return {

@@ -285,9 +285,8 @@ export function usePracticeAttendance(practiceId: string) {
         const existing = prev.find((a) => a.playerId === playerId);
         if (existing) {
           return prev.map((a) => (a.playerId === playerId ? record : a));
-        } else {
-          return [...prev, record];
         }
+        return [...prev, record];
       });
       return record;
     } catch (err) {

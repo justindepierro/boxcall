@@ -16,6 +16,17 @@ import {
 import { colorTokens } from "../design-system/tokens";
 import { logError } from "../utils/logger";
 
+// Widget update types that should be sent through collaboration service
+const WIDGET_UPDATE_TYPES = [
+  "widget_move",
+  "widget_resize",
+  "widget_edit",
+  "widget_add",
+  "widget_remove",
+] as const;
+
+type WidgetUpdateType = (typeof WIDGET_UPDATE_TYPES)[number];
+
 export interface UseCollaborationOptions {
   teamId: string;
   dashboardId: string;
@@ -90,7 +101,6 @@ export function useCollaboration(
 ): UseCollaborationReturn {
   const { teamId, dashboardId, user, autoConnect = false } = options;
 
-  // State
   const [session, setSession] = useState<CollaborationSession | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
@@ -106,19 +116,13 @@ export function useCollaboration(
   const [updateSubscribers, setUpdateSubscribers] = useState<
     Array<(update: UpdateSubscription) => void>
   >([]);
-
-  // Refs for cleanup
   const cleanupFunctionsRef = useRef<Array<() => void>>([]);
 
-  /**
-   * Start collaboration session
-   */
+  // Start collaboration session
   const startSession = useCallback(async () => {
     if (isConnecting || isConnected) return;
-
     setIsConnecting(true);
     setError(null);
-
     try {
       const newSession = await collaborationService.startSession(
         teamId,
@@ -137,9 +141,7 @@ export function useCollaboration(
     }
   }, [teamId, dashboardId, user, isConnecting, isConnected]);
 
-  /**
-   * End collaboration session
-   */
+  // End collaboration session
   const endSession = useCallback(() => {
     collaborationService.endSession();
     setSession(null);
@@ -149,79 +151,56 @@ export function useCollaboration(
     setError(null);
   }, []);
 
-  /**
-   * Send dashboard update
-   */
+  // Send dashboard update
   const sendDashboardUpdate = useCallback(
     (update: Omit<DashboardUpdate, "userId" | "timestamp">) => {
-      if (!isConnected) {
-        console.warn("Cannot send dashboard update: not connected");
-        return;
-      }
-
+      if (!isConnected)
+        return console.warn("Cannot send dashboard update: not connected");
       collaborationService.sendDashboardUpdate(update);
     },
     [isConnected]
   );
 
-  /**
-   * Send cursor update
-   */
+  // Send cursor update
   const sendCursorUpdate = useCallback(
     (cursor: Omit<CursorUpdate, "userId">) => {
       if (!isConnected) return;
-
       collaborationService.sendCursorUpdate(cursor);
     },
     [isConnected]
   );
 
-  /**
-   * Handle user joined
-   */
+  // Handle user joined - add if not already present
   const handleUserJoined = useCallback((newUser: CollaborationUser) => {
-    setParticipants((prev) => {
-      if (prev.find((p) => p.id === newUser.id)) return prev;
-      return [...prev, newUser];
-    });
+    setParticipants((prev) =>
+      prev.find((p) => p.id === newUser.id) ? prev : [...prev, newUser]
+    );
   }, []);
 
-  /**
-   * Handle user left
-   */
+  // Handle user left
   const handleUserLeft = useCallback((userId: string) => {
     setParticipants((prev) => prev.filter((p) => p.id !== userId));
     setActiveCursors((prev) => {
-      const newCursors = new Map(prev);
-      newCursors.delete(userId);
-      return newCursors;
+      const c = new Map(prev);
+      c.delete(userId);
+      return c;
     });
   }, []);
 
-  /**
-   * Handle dashboard update
-   */
+  // Handle dashboard update
   const handleDashboardUpdate = useCallback((update: DashboardUpdate) => {
-    setRecentUpdates((prev) => {
-      const newUpdates = [update, ...prev].slice(0, 10); // Keep last 10 updates
-      return newUpdates;
-    });
+    setRecentUpdates((prev) => [update, ...prev].slice(0, 10));
   }, []);
 
-  /**
-   * Handle cursor update
-   */
+  // Handle cursor update
   const handleCursorUpdate = useCallback(
     (cursor: CursorUpdate) => {
-      // Don't show our own cursor
-      if (cursor.userId === user.id) return;
-
+      if (cursor.userId === user.id) return; // Don't show our own cursor
       setActiveCursors((prev) => {
         const newCursors = new Map(prev);
         newCursors.set(cursor.userId, cursor);
         return newCursors;
       });
-
       // Remove cursor after inactivity
       setTimeout(() => {
         setActiveCursors((prev) => {
@@ -237,21 +216,13 @@ export function useCollaboration(
     [user.id]
   );
 
-  /**
-   * Handle connection status change
-   */
+  // Handle connection status change
   const handleConnectionStatus = useCallback((connected: boolean) => {
     setIsConnected(connected);
-    if (!connected) {
-      setError("Connection lost. Attempting to reconnect...");
-    } else {
-      setError(null);
-    }
+    setError(connected ? null : "Connection lost. Attempting to reconnect...");
   }, []);
 
-  /**
-   * Setup event listeners on mount
-   */
+  // Setup event listeners on mount
   useEffect(() => {
     const cleanupFunctions = [
       collaborationService.onUserJoined(handleUserJoined),
@@ -260,17 +231,9 @@ export function useCollaboration(
       collaborationService.onCursorUpdate(handleCursorUpdate),
       collaborationService.onConnectionStatus(handleConnectionStatus),
     ];
-
     cleanupFunctionsRef.current = cleanupFunctions;
-
-    // Auto-connect if requested
-    if (autoConnect) {
-      startSession();
-    }
-
-    return () => {
-      cleanupFunctions.forEach((cleanup) => cleanup());
-    };
+    if (autoConnect) startSession();
+    return () => cleanupFunctions.forEach((cleanup) => cleanup());
   }, [
     autoConnect,
     startSession,
@@ -281,18 +244,10 @@ export function useCollaboration(
     handleConnectionStatus,
   ]);
 
-  /**
-   * Cleanup on unmount
-   */
-  useEffect(() => {
-    return () => {
-      endSession();
-    };
-  }, [endSession]);
+  // Cleanup on unmount
+  useEffect(() => () => endSession(), [endSession]);
 
-  /**
-   * Calculate permissions
-   */
+  // Calculate permissions
   const canEdit = session
     ? collaborationService.canEdit(user.id, session)
     : false;
@@ -301,9 +256,7 @@ export function useCollaboration(
     : true;
   const currentUser = collaborationService.getCurrentUser();
 
-  /**
-   * Widget-level collaboration methods
-   */
+  // Widget-level collaboration methods
   const updateCursor = useCallback(
     (cursor: Partial<CollaborativeCursor>) => {
       setCollaborativeCursors((prev) => {
@@ -318,7 +271,7 @@ export function useCollaboration(
             widgetX: cursor.widgetX,
             widgetY: cursor.widgetY,
             action: cursor.action || "hover",
-            color: colorTokens.blue[500], // Default blue color
+            color: colorTokens.blue[500],
           });
         }
         return updated;
@@ -341,21 +294,10 @@ export function useCollaboration(
       if (
         isConnected &&
         update.widgetId &&
-        [
-          "widget_move",
-          "widget_resize",
-          "widget_edit",
-          "widget_add",
-          "widget_remove",
-        ].includes(update.type)
+        WIDGET_UPDATE_TYPES.includes(update.type as WidgetUpdateType)
       ) {
         sendDashboardUpdate({
-          type: update.type as
-            | "widget_move"
-            | "widget_resize"
-            | "widget_edit"
-            | "widget_add"
-            | "widget_remove",
+          type: update.type as WidgetUpdateType,
           widgetId: update.widgetId,
           data: {
             position: update.data?.position as
@@ -378,10 +320,8 @@ export function useCollaboration(
   const subscribeToUpdates = useCallback(
     (callback: (update: UpdateSubscription) => void) => {
       setUpdateSubscribers((prev) => [...prev, callback]);
-
-      return () => {
+      return () =>
         setUpdateSubscribers((prev) => prev.filter((sub) => sub !== callback));
-      };
     },
     []
   );
@@ -403,34 +343,23 @@ export function useCollaboration(
   );
 
   return {
-    // Session state
     session,
     isConnected,
     isConnecting,
     error,
-
-    // Participants
     participants,
     currentUser,
-
-    // Recent activity
     recentUpdates,
     activeCursors,
-
-    // Widget-level collaboration
     cursors: collaborativeCursors,
     updateCursor,
     broadcastUpdate,
     subscribeToUpdates,
     resolveConflict,
-
-    // Actions
     startSession,
     endSession,
     sendDashboardUpdate,
     sendCursorUpdate,
-
-    // Permissions
     canEdit,
     canView,
   };

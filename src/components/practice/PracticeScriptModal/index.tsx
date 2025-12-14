@@ -93,7 +93,7 @@ export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
       name: scriptData.name,
       description: scriptData.opponent || undefined,
       tags: tags.length > 0 ? tags : undefined,
-      plays: plays, // Include the plays array so parent can save them
+      plays, // Include the plays array so parent can save them
     };
 
     console.log("💾 Saving script with plays:", {

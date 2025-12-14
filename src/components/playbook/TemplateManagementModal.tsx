@@ -13,6 +13,136 @@ import { triggerHapticFeedback } from "../../lib/hapticFeedback";
 import { logError } from "../../utils/logger";
 import { ConfirmationModal } from "../ui/ConfirmationModal/ConfirmationModal";
 
+interface TemplateCardProps {
+  template: PracticeTemplate;
+  isSelected: boolean;
+  onSelect: () => void;
+  onDelete: (id: string) => void;
+}
+
+const TemplateCard: React.FC<TemplateCardProps> = ({
+  template,
+  isSelected,
+  onSelect,
+  onDelete,
+}) => (
+  <div
+    onClick={onSelect}
+    className={(() => {
+      const base = "p-4 border-2 rounded-lg cursor-pointer transition-all ";
+      if (isSelected) return `${base}border-primary bg-primary-light`;
+      return `${base}border-border hover:border-primary-light`;
+    })()}
+  >
+    <div className="flex items-start justify-between">
+      <div className="flex-1">
+        <div className="flex items-center gap-2 mb-1">
+          <Typography variant="body-md" className="font-medium">
+            {template.name}
+          </Typography>
+          {template.isPublic && (
+            <Badge variant="info" size="sm">
+              Public
+            </Badge>
+          )}
+        </div>
+        {template.description && (
+          <Typography variant="body-sm" className="text-secondary">
+            {template.description}
+          </Typography>
+        )}
+        {template.duration && (
+          <Typography variant="caption" className="text-muted mt-1">
+            Duration: {template.duration} minutes
+          </Typography>
+        )}
+      </div>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete(template.id);
+        }}
+        className="text-error hover:text-error"
+      >
+        <Icon name="delete" className="h-4 w-4" />
+      </Button>
+    </div>
+  </div>
+);
+
+interface SaveTemplateFormProps {
+  templateName: string;
+  templateDescription: string;
+  onNameChange: (value: string) => void;
+  onDescriptionChange: (value: string) => void;
+  onSave: () => void;
+  onCancel: () => void;
+}
+
+const SaveTemplateForm: React.FC<SaveTemplateFormProps> = ({
+  templateName,
+  templateDescription,
+  onNameChange,
+  onDescriptionChange,
+  onSave,
+  onCancel,
+}) => (
+  <>
+    <div>
+      <Typography variant="body-sm" className="text-secondary mb-4">
+        Create a reusable template from this practice script. Templates help you
+        quickly set up similar practices (e.g., "Tuesday Install", "Friday
+        Walkthrough").
+      </Typography>
+    </div>
+
+    <div>
+      <label className="block text-sm font-medium text-primary mb-2">
+        Template Name *
+      </label>
+      <Input
+        value={templateName}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onNameChange(e.target.value)
+        }
+        placeholder="e.g., Tuesday Install, Friday Walkthrough"
+        className="w-full"
+      />
+    </div>
+
+    <div>
+      <label className="block text-sm font-medium text-primary mb-2">
+        Description (Optional)
+      </label>
+      <Textarea
+        value={templateDescription}
+        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+          onDescriptionChange(e.target.value)
+        }
+        placeholder="Describe when to use this template..."
+        rows={3}
+        className="w-full"
+      />
+    </div>
+
+    <div className="flex justify-end space-x-2 pt-4 border-t border-border">
+      <Button variant="ghost" onClick={onCancel}>
+        Cancel
+      </Button>
+      <Button
+        variant="primary"
+        onClick={onSave}
+        disabled={!templateName.trim()}
+      >
+        <Icon name="save" className="h-4 w-4 mr-2" />
+        Create Template
+      </Button>
+    </div>
+  </>
+);
+
 interface TemplateManagementModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -116,59 +246,14 @@ export const TemplateManagementModal: React.FC<
       >
         <div className="space-y-6">
           {mode === "save" ? (
-            // Save Template Mode
-            <>
-              <div>
-                <Typography variant="body-sm" className="text-secondary mb-4">
-                  Create a reusable template from this practice script.
-                  Templates help you quickly set up similar practices (e.g.,
-                  "Tuesday Install", "Friday Walkthrough").
-                </Typography>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-primary mb-2">
-                  Template Name *
-                </label>
-                <Input
-                  value={templateName}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setTemplateName(e.target.value)
-                  }
-                  placeholder="e.g., Tuesday Install, Friday Walkthrough"
-                  className="w-full"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-primary mb-2">
-                  Description (Optional)
-                </label>
-                <Textarea
-                  value={templateDescription}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                    setTemplateDescription(e.target.value)
-                  }
-                  placeholder="Describe when to use this template..."
-                  rows={3}
-                  className="w-full"
-                />
-              </div>
-
-              <div className="flex justify-end space-x-2 pt-4 border-t border-border">
-                <Button variant="ghost" onClick={onClose}>
-                  Cancel
-                </Button>
-                <Button
-                  variant="primary"
-                  onClick={handleSave}
-                  disabled={!templateName.trim()}
-                >
-                  <Icon name="save" className="h-4 w-4 mr-2" />
-                  Create Template
-                </Button>
-              </div>
-            </>
+            <SaveTemplateForm
+              templateName={templateName}
+              templateDescription={templateDescription}
+              onNameChange={setTemplateName}
+              onDescriptionChange={setTemplateDescription}
+              onSave={handleSave}
+              onCancel={onClose}
+            />
           ) : (
             // Load Template Mode
             <>
@@ -178,120 +263,82 @@ export const TemplateManagementModal: React.FC<
                 </Typography>
               </div>
 
-              {loading ? (
-                <div className="text-center py-8">
-                  <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent mb-4"></div>
-                  <Typography variant="body-sm" className="text-muted">
-                    Loading templates...
-                  </Typography>
-                </div>
-              ) : templates.length === 0 ? (
-                <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
-                  <Icon
-                    name="file"
-                    className="h-16 w-16 text-muted mx-auto mb-4"
-                  />
-                  <Typography
-                    variant="headline-sm"
-                    className="text-secondary mb-2"
-                  >
-                    No templates yet
-                  </Typography>
-                  <Typography variant="body-sm" className="text-muted">
-                    Create your first template by saving a practice script.
-                  </Typography>
-                </div>
-              ) : (
-                <>
-                  <div className="space-y-3 max-h-96 overflow-y-auto">
-                    {templates.map((template) => (
-                      <div
-                        key={template.id}
-                        onClick={() => setSelectedTemplateId(template.id)}
-                        className={`
-                        p-4 border-2 rounded-lg cursor-pointer transition-all
-                        ${selectedTemplateId === template.id ? "border-primary bg-primary-light" : "border-border hover:border-primary-light"}
-                      `}
-                      >
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <Typography
-                                variant="body-md"
-                                className="font-medium"
-                              >
-                                {template.name}
-                              </Typography>
-                              {template.isPublic && (
-                                <Badge variant="info" size="sm">
-                                  Public
-                                </Badge>
-                              )}
-                            </div>
-                            {template.description && (
-                              <Typography
-                                variant="body-sm"
-                                className="text-secondary"
-                              >
-                                {template.description}
-                              </Typography>
-                            )}
-                            {template.duration && (
-                              <Typography
-                                variant="caption"
-                                className="text-muted mt-1"
-                              >
-                                Duration: {template.duration} minutes
-                              </Typography>
-                            )}
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDelete(template.id);
-                            }}
-                            className="text-error hover:text-error"
-                          >
-                            <Icon name="delete" className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {selectedTemplateId && (
-                    <div className="mt-6">
-                      <label className="block text-sm font-medium text-primary mb-2">
-                        New Script Name *
-                      </label>
-                      <Input
-                        value={scriptName}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          setScriptName(e.target.value)
-                        }
-                        placeholder="e.g., Week 3 - Tuesday Install"
-                        className="w-full"
-                      />
+              {(() => {
+                if (loading) {
+                  return (
+                    <div className="text-center py-8">
+                      <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent mb-4"></div>
+                      <Typography variant="body-sm" className="text-muted">
+                        Loading templates...
+                      </Typography>
                     </div>
-                  )}
+                  );
+                }
+                if (templates.length === 0) {
+                  return (
+                    <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
+                      <Icon
+                        name="file"
+                        className="h-16 w-16 text-muted mx-auto mb-4"
+                      />
+                      <Typography
+                        variant="headline-sm"
+                        className="text-secondary mb-2"
+                      >
+                        No templates yet
+                      </Typography>
+                      <Typography variant="body-sm" className="text-muted">
+                        Create your first template by saving a practice script.
+                      </Typography>
+                    </div>
+                  );
+                }
+                return (
+                  <>
+                    <div className="space-y-3 max-h-96 overflow-y-auto">
+                      {templates.map((template) => (
+                        <TemplateCard
+                          key={template.id}
+                          template={template}
+                          isSelected={selectedTemplateId === template.id}
+                          onSelect={() => setSelectedTemplateId(template.id)}
+                          onDelete={handleDelete}
+                        />
+                      ))}
+                    </div>
 
-                  <div className="flex justify-end space-x-2 pt-4 border-t border-border">
-                    <Button variant="ghost" onClick={onClose}>
-                      Cancel
-                    </Button>
-                    <Button
-                      variant="primary"
-                      onClick={handleLoad}
-                      disabled={!selectedTemplateId || !scriptName.trim()}
-                    >
-                      <Icon name="folder" className="h-4 w-4 mr-2" />
-                      Load Template
-                    </Button>
-                  </div>
-                </>
-              )}
+                    {selectedTemplateId && (
+                      <div className="mt-6">
+                        <label className="block text-sm font-medium text-primary mb-2">
+                          New Script Name *
+                        </label>
+                        <Input
+                          value={scriptName}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setScriptName(e.target.value)
+                          }
+                          placeholder="e.g., Week 3 - Tuesday Install"
+                          className="w-full"
+                        />
+                      </div>
+                    )}
+
+                    <div className="flex justify-end space-x-2 pt-4 border-t border-border">
+                      <Button variant="ghost" onClick={onClose}>
+                        Cancel
+                      </Button>
+                      <Button
+                        variant="primary"
+                        onClick={handleLoad}
+                        disabled={!selectedTemplateId || !scriptName.trim()}
+                      >
+                        <Icon name="folder" className="h-4 w-4 mr-2" />
+                        Load Template
+                      </Button>
+                    </div>
+                  </>
+                );
+              })()}
             </>
           )}
         </div>

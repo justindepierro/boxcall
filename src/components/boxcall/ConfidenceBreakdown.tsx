@@ -109,13 +109,13 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
                   {overallScore}%
                 </Typography>
                 <span
-                  className={`px-2 py-1 rounded text-xs font-medium ${
-                    recommendation === "high"
-                      ? "bg-success/20 text-success"
-                      : recommendation === "medium"
-                        ? "bg-warning/20 text-warning"
-                        : "bg-error/20 text-error"
-                  }`}
+                  className={`px-2 py-1 rounded text-xs font-medium ${(() => {
+                    if (recommendation === "high")
+                      return "bg-success/20 text-success";
+                    if (recommendation === "medium")
+                      return "bg-warning/20 text-warning";
+                    return "bg-error/20 text-error";
+                  })()}`}
                 >
                   {recommendation.toUpperCase()}
                 </span>
@@ -123,13 +123,11 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
             </div>
             <div className="w-full bg-primary rounded-full h-3">
               <div
-                className={`h-3 rounded-full transition-all ${
-                  overallScore >= 70
-                    ? "bg-success"
-                    : overallScore >= 40
-                      ? "bg-warning"
-                      : "bg-error"
-                }`}
+                className={`h-3 rounded-full transition-all ${(() => {
+                  if (overallScore >= 70) return "bg-success";
+                  if (overallScore >= 40) return "bg-warning";
+                  return "bg-error";
+                })()}`}
                 style={{ width: `${overallScore}%` }}
               />
             </div>
@@ -214,13 +212,11 @@ export const ConfidenceBreakdown: React.FC<ConfidenceBreakdownProps> = ({
                   {/* Progress bar */}
                   <div className="w-full bg-primary rounded-full h-2 mb-2">
                     <div
-                      className={`h-2 rounded-full ${
-                        component.score >= 70
-                          ? "bg-success"
-                          : component.score >= 40
-                            ? "bg-warning"
-                            : "bg-error"
-                      }`}
+                      className={`h-2 rounded-full ${(() => {
+                        if (component.score >= 70) return "bg-success";
+                        if (component.score >= 40) return "bg-warning";
+                        return "bg-error";
+                      })()}`}
                       style={{ width: `${component.score}%` }}
                     />
                   </div>

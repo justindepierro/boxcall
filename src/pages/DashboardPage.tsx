@@ -28,7 +28,7 @@ import { shimmerSkeleton, statusIndicator } from "../utils/animations";
  * - Roster quick add
  * - Mobile-first responsive design
  */
-const DashboardPage = React.memo(function DashboardPage() {
+const DashboardPage = React.memo(() => {
   const { user, profile, loading, profileLoading } = useAuth();
   const navigate = useNavigate();
   const dashboardStats = useDashboardStats(user?.id);
@@ -42,17 +42,17 @@ const DashboardPage = React.memo(function DashboardPage() {
     return (
       <div className="min-h-screen bg-secondary p-6">
         <div className="max-w-7xl mx-auto space-y-6">
-          <div className={shimmerSkeleton.base + " h-12"}>
+          <div className={`${shimmerSkeleton.base} h-12`}>
             <div className={shimmerSkeleton.overlay} />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className={shimmerSkeleton.base + " h-32"}>
+            <div className={`${shimmerSkeleton.base} h-32`}>
               <div className={shimmerSkeleton.overlay} />
             </div>
-            <div className={shimmerSkeleton.base + " h-32"}>
+            <div className={`${shimmerSkeleton.base} h-32`}>
               <div className={shimmerSkeleton.overlay} />
             </div>
-            <div className={shimmerSkeleton.base + " h-32"}>
+            <div className={`${shimmerSkeleton.base} h-32`}>
               <div className={shimmerSkeleton.overlay} />
             </div>
           </div>
@@ -135,7 +135,7 @@ const DashboardPage = React.memo(function DashboardPage() {
               <div className="flex items-center justify-between text-sm">
                 <span className="text-secondary">Status</span>
                 <span className="flex items-center text-jade-600 font-semibold">
-                  <span className={statusIndicator.active + " mr-2"}></span>
+                  <span className={`${statusIndicator.active} mr-2`}></span>
                   Active
                 </span>
               </div>

@@ -186,11 +186,11 @@ export function useResourcePreloader(urls: string[]) {
       const link = document.createElement("link");
       link.rel = "preload";
       link.href = url;
-      link.as = url.endsWith(".js")
-        ? "script"
-        : url.endsWith(".css")
-          ? "style"
-          : "fetch";
+      link.as = (() => {
+        if (url.endsWith(".js")) return "script";
+        if (url.endsWith(".css")) return "style";
+        return "fetch";
+      })();
       document.head.appendChild(link);
     });
   }, [urls]);

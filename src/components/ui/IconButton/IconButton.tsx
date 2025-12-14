@@ -31,7 +31,7 @@ const variantStyles = {
 };
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
-  function IconButton(
+  (
     {
       size = "xs",
       variant = "ghost",
@@ -44,7 +44,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       ...rest
     },
     ref
-  ) {
+  ) => {
     // Map IconButton variants to existing Button variants.
     const buttonVariant: ButtonProps["variant"] =
       variant === "danger" ? "danger" : "ghost";

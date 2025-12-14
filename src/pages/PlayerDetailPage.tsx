@@ -20,6 +20,136 @@ import EditPlayerModal from "../components/roster/EditPlayerModal";
  * - Breadcrumb navigation back to roster
  * - Stats placeholder for Phase 4
  */
+
+// Loading skeleton state
+const LoadingState: React.FC = () => (
+  <div className="min-h-screen bg-secondary p-4 md:p-6">
+    <div className="max-w-7xl mx-auto space-y-6">
+      <header className="mb-6">
+        <Typography variant="headline-lg" className="text-primary mb-1">
+          Loading Player...
+        </Typography>
+        <Typography variant="body" className="text-secondary">
+          Please wait...
+        </Typography>
+      </header>
+      <div className="space-y-lg">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-lg">
+          {[...Array(3)].map((_, i) => (
+            <Card key={i} className="animate-pulse">
+              <div className="h-48 bg-muted rounded-lg"></div>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// Error/not found state
+const ErrorState: React.FC<{ onBack: () => void }> = ({ onBack }) => (
+  <div className="min-h-screen bg-secondary p-4 md:p-6">
+    <div className="max-w-7xl mx-auto space-y-6">
+      <header className="mb-6">
+        <Typography variant="headline-lg" className="text-primary mb-1">
+          Player Not Found
+        </Typography>
+        <Typography variant="body" className="text-secondary">
+          The requested player could not be found
+        </Typography>
+      </header>
+      <Button onClick={onBack}>
+        <Icon name="chevron-left" className="w-4 h-4 mr-xs" />
+        Back to Roster
+      </Button>
+    </div>
+  </div>
+);
+
+// Player info cards grid
+const PlayerInfoCards: React.FC<{
+  player: RosterPlayerView;
+  height: string;
+  weight: string;
+}> = ({ player, height, weight }) => (
+  <div className="grid grid-cols-1 lg:grid-cols-3 gap-lg">
+    {/* Basic Information Card */}
+    <Card>
+      <div className="p-md">
+        <Typography variant="headline-md" className="mb-md">
+          Basic Information
+        </Typography>
+        <dl className="space-y-sm">
+          <div>
+            <dt className="text-secondary text-sm">Full Name</dt>
+            <dd className="font-medium">
+              {player.first_name} {player.last_name}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-secondary text-sm">Position</dt>
+            <dd className="font-medium">{player.position || "N/A"}</dd>
+          </div>
+          <div>
+            <dt className="text-secondary text-sm">Jersey Number</dt>
+            <dd className="font-medium">{player.jersey_number || "N/A"}</dd>
+          </div>
+          <div>
+            <dt className="text-secondary text-sm">Grade Level</dt>
+            <dd className="font-medium">{player.grade_level || "N/A"}</dd>
+          </div>
+          <div>
+            <dt className="text-secondary text-sm">Status</dt>
+            <dd>
+              <span
+                className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                  player.is_active
+                    ? "bg-green-100 text-green-800"
+                    : "bg-muted text-neutral-800"
+                }`}
+              >
+                {player.roster_status ||
+                  (player.is_active ? "Active" : "Inactive")}
+              </span>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </Card>
+
+    {/* Physical Information Card */}
+    <Card>
+      <div className="p-md">
+        <Typography variant="headline-md" className="mb-md">
+          Physical Information
+        </Typography>
+        <dl className="space-y-sm">
+          <div>
+            <dt className="text-secondary text-sm">Height</dt>
+            <dd className="font-medium">{height}</dd>
+          </div>
+          <div>
+            <dt className="text-secondary text-sm">Weight</dt>
+            <dd className="font-medium">{weight}</dd>
+          </div>
+        </dl>
+      </div>
+    </Card>
+
+    {/* Additional Info Card */}
+    <Card>
+      <div className="p-md">
+        <Typography variant="headline-md" className="mb-md">
+          Additional Information
+        </Typography>
+        <Typography variant="body-sm" className="text-secondary">
+          Additional player information and notes will be available soon.
+        </Typography>
+      </div>
+    </Card>
+  </div>
+);
+
 const PlayerDetailPage = () => {
   const { playerId } = useParams<{ playerId: string }>();
   const navigate = useNavigate();
@@ -65,50 +195,11 @@ const PlayerDetailPage = () => {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-secondary p-4 md:p-6">
-        <div className="max-w-7xl mx-auto space-y-6">
-          <header className="mb-6">
-            <Typography variant="headline-lg" className="text-primary mb-1">
-              Loading Player...
-            </Typography>
-            <Typography variant="body" className="text-secondary">
-              Please wait...
-            </Typography>
-          </header>
-          <div className="space-y-lg">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-lg">
-              {[...Array(3)].map((_, i) => (
-                <Card key={i} className="animate-pulse">
-                  <div className="h-48 bg-muted rounded-lg"></div>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <LoadingState />;
   }
 
   if (!player) {
-    return (
-      <div className="min-h-screen bg-secondary p-4 md:p-6">
-        <div className="max-w-7xl mx-auto space-y-6">
-          <header className="mb-6">
-            <Typography variant="headline-lg" className="text-primary mb-1">
-              Player Not Found
-            </Typography>
-            <Typography variant="body" className="text-secondary">
-              The requested player could not be found
-            </Typography>
-          </header>
-          <Button onClick={() => navigate("/roster")}>
-            <Icon name="chevron-left" className="w-4 h-4 mr-xs" />
-            Back to Roster
-          </Button>
-        </div>
-      </div>
-    );
+    return <ErrorState onBack={() => navigate("/roster")} />;
   }
 
   const height = player.height_inches
@@ -169,87 +260,7 @@ const PlayerDetailPage = () => {
           </div>
 
           {/* Player Profile Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-lg">
-            {/* Basic Information Card */}
-            <Card>
-              <div className="p-md">
-                <Typography variant="headline-md" className="mb-md">
-                  Basic Information
-                </Typography>
-                <dl className="space-y-sm">
-                  <div>
-                    <dt className="text-secondary text-sm">Full Name</dt>
-                    <dd className="font-medium">
-                      {player.first_name} {player.last_name}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-secondary text-sm">Position</dt>
-                    <dd className="font-medium">{player.position || "N/A"}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-secondary text-sm">Jersey Number</dt>
-                    <dd className="font-medium">
-                      {player.jersey_number || "N/A"}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-secondary text-sm">Grade Level</dt>
-                    <dd className="font-medium">
-                      {player.grade_level || "N/A"}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-secondary text-sm">Status</dt>
-                    <dd>
-                      <span
-                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                          player.is_active
-                            ? "bg-green-100 text-green-800"
-                            : "bg-muted text-neutral-800"
-                        }`}
-                      >
-                        {player.roster_status ||
-                          (player.is_active ? "Active" : "Inactive")}
-                      </span>
-                    </dd>
-                  </div>
-                </dl>
-              </div>
-            </Card>
-
-            {/* Physical Information Card */}
-            <Card>
-              <div className="p-md">
-                <Typography variant="headline-md" className="mb-md">
-                  Physical Information
-                </Typography>
-                <dl className="space-y-sm">
-                  <div>
-                    <dt className="text-secondary text-sm">Height</dt>
-                    <dd className="font-medium">{height}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-secondary text-sm">Weight</dt>
-                    <dd className="font-medium">{weight}</dd>
-                  </div>
-                </dl>
-              </div>
-            </Card>
-
-            {/* Additional Info Card */}
-            <Card>
-              <div className="p-md">
-                <Typography variant="headline-md" className="mb-md">
-                  Additional Information
-                </Typography>
-                <Typography variant="body-sm" className="text-secondary">
-                  Additional player information and notes will be available
-                  soon.
-                </Typography>
-              </div>
-            </Card>
-          </div>
+          <PlayerInfoCards player={player} height={height} weight={weight} />
 
           {/* Statistics Placeholder (Phase 4) */}
           <Card>

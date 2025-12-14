@@ -22,8 +22,11 @@ export const GlassmorphicDropdown: React.FC<GlassmorphicDropdownProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  const widthClass =
-    width === "full" ? "w-full" : width === "auto" ? "w-auto" : width;
+  const widthClass = (() => {
+    if (width === "full") return "w-full";
+    if (width === "auto") return "w-auto";
+    return width;
+  })();
 
   return (
     <div

@@ -11,6 +11,100 @@ import { formatDistanceToNow } from "date-fns";
 import { Avatar } from "./Avatar";
 import { useNavigate } from "react-router-dom";
 
+/** Notification list content with loading/empty states */
+function NotificationList({
+  loading,
+  notifications,
+  onNotificationClick,
+  onMarkAsRead,
+  onDelete,
+}: {
+  loading: boolean;
+  notifications: NotificationWithUser[];
+  onNotificationClick: (notification: NotificationWithUser) => void;
+  onMarkAsRead: (id: string, event: React.MouseEvent) => void;
+  onDelete: (id: string, event: React.MouseEvent) => void;
+}) {
+  if (loading) {
+    return (
+      <div className="p-8 text-center text-muted">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent mx-auto" />
+      </div>
+    );
+  }
+
+  if (notifications.length === 0) {
+    return (
+      <div className="p-8 text-center text-muted">
+        <Bell className="w-12 h-12 mx-auto mb-2 opacity-30" />
+        <p>No notifications yet</p>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      {notifications.map((notification) => (
+        <div
+          key={notification.id}
+          onClick={() => onNotificationClick(notification)}
+          className={`
+            p-4 border-b border-border last:border-b-0 cursor-pointer
+            hover:bg-muted transition-colors
+            ${!notification.read ? "bg-blue-50" : ""}
+          `}
+        >
+          <div className="flex items-start gap-3">
+            {/* Avatar */}
+            {notification.triggered_by_user && (
+              <Avatar
+                src={notification.triggered_by_user.avatar_url}
+                name={notification.triggered_by_user.display_name}
+                size="sm"
+              />
+            )}
+
+            {/* Content */}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-primary">
+                {notification.title}
+              </p>
+              <p className="text-xs text-secondary mt-1 line-clamp-2">
+                {notification.message}
+              </p>
+              <p className="text-xs text-muted mt-1">
+                {formatDistanceToNow(new Date(notification.created_at), {
+                  addSuffix: true,
+                })}
+              </p>
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center gap-1">
+              {!notification.read && (
+                <button
+                  onClick={(e) => onMarkAsRead(notification.id, e)}
+                  className="p-1 rounded hover:bg-secondary transition-colors"
+                  title="Mark as read"
+                >
+                  <Check className="w-4 h-4 text-accent" />
+                </button>
+              )}
+              <button
+                onClick={(e) => onDelete(notification.id, e)}
+                className="p-1 rounded hover:bg-secondary transition-colors"
+                title="Delete"
+              >
+                <X className="w-4 h-4 text-secondary" />
+              </button>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export const NotificationBell: React.FC = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState<NotificationWithUser[]>(
@@ -145,83 +239,13 @@ export const NotificationBell: React.FC = () => {
 
           {/* Notifications List */}
           <div className="overflow-y-auto flex-1">
-            {loading ? (
-              <div className="p-8 text-center text-muted">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent mx-auto" />
-              </div>
-            ) : notifications.length === 0 ? (
-              <div className="p-8 text-center text-muted">
-                <Bell className="w-12 h-12 mx-auto mb-2 opacity-30" />
-                <p>No notifications yet</p>
-              </div>
-            ) : (
-              <div>
-                {notifications.map((notification) => (
-                  <div
-                    key={notification.id}
-                    onClick={() => handleNotificationClick(notification)}
-                    className={`
-                      p-4 border-b border-border last:border-b-0 cursor-pointer
-                      hover:bg-muted transition-colors
-                      ${!notification.read ? "bg-blue-50" : ""}
-                    `}
-                  >
-                    <div className="flex items-start gap-3">
-                      {/* Avatar */}
-                      {notification.triggered_by_user && (
-                        <Avatar
-                          src={notification.triggered_by_user.avatar_url}
-                          name={notification.triggered_by_user.display_name}
-                          size="sm"
-                        />
-                      )}
-
-                      {/* Content */}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-primary">
-                          {notification.title}
-                        </p>
-                        <p className="text-xs text-secondary mt-1 line-clamp-2">
-                          {notification.message}
-                        </p>
-                        <p className="text-xs text-muted mt-1">
-                          {formatDistanceToNow(
-                            new Date(notification.created_at),
-                            {
-                              addSuffix: true,
-                            }
-                          )}
-                        </p>
-                      </div>
-
-                      {/* Actions */}
-                      <div className="flex items-center gap-1">
-                        {!notification.read && (
-                          <button
-                            onClick={(e) =>
-                              handleMarkAsRead(notification.id, e)
-                            }
-                            className="p-1 rounded hover:bg-secondary transition-colors"
-                            title="Mark as read"
-                          >
-                            <Check className="w-4 h-4 text-accent" />
-                          </button>
-                        )}
-                        <button
-                          onClick={(e) =>
-                            handleDeleteNotification(notification.id, e)
-                          }
-                          className="p-1 rounded hover:bg-secondary transition-colors"
-                          title="Delete"
-                        >
-                          <X className="w-4 h-4 text-secondary" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            <NotificationList
+              loading={loading}
+              notifications={notifications}
+              onNotificationClick={handleNotificationClick}
+              onMarkAsRead={handleMarkAsRead}
+              onDelete={handleDeleteNotification}
+            />
           </div>
 
           {/* Footer */}

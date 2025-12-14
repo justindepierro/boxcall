@@ -218,105 +218,114 @@ export const PersonnelLibraryModal: React.FC<PersonnelLibraryModalProps> = ({
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6 bg-white dark:bg-navy-900">
-          {loading ? (
-            <div className="flex items-center justify-center h-64">
-              <Icon
-                name="loader"
-                size="xl"
-                className="animate-spin text-secondary"
-              />
-            </div>
-          ) : filteredPersonnel.length === 0 ? (
-            <div className="text-center py-12">
-              <Icon
-                name="users"
-                size="xl"
-                className="text-secondary mb-4 mx-auto"
-              />
-              <p className="text-secondary text-lg">
-                No personnel packages found
-              </p>
-              <p className="text-tertiary text-sm mt-2">
-                Create personnel packages in the Playbook Builder
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredPersonnel.map((config) => {
-                const badge = config.badgeCustomization as any;
-                const bgColor =
-                  badge?.backgroundColor || DEFAULT_BADGE_COLORS.bg;
-                const textColor = badge?.textColor || DEFAULT_BADGE_COLORS.text;
+          {(() => {
+            if (loading)
+              return (
+                <div className="flex items-center justify-center h-64">
+                  <Icon
+                    name="loader"
+                    size="xl"
+                    className="animate-spin text-secondary"
+                  />
+                </div>
+              );
+            if (filteredPersonnel.length === 0)
+              return (
+                <div className="text-center py-12">
+                  <Icon
+                    name="users"
+                    size="xl"
+                    className="text-secondary mb-4 mx-auto"
+                  />
+                  <p className="text-secondary text-lg">
+                    No personnel packages found
+                  </p>
+                  <p className="text-tertiary text-sm mt-2">
+                    Create personnel packages in the Playbook Builder
+                  </p>
+                </div>
+              );
+            return (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filteredPersonnel.map((config) => {
+                  const badge = config.badgeCustomization as any;
+                  const bgColor =
+                    badge?.backgroundColor || DEFAULT_BADGE_COLORS.bg;
+                  const textColor =
+                    badge?.textColor || DEFAULT_BADGE_COLORS.text;
 
-                return (
-                  <div
-                    key={config.id}
-                    className="card p-6 hover:shadow-xl hover:border-purple-500/40 hover:scale-[1.02] transition-all duration-200"
-                  >
-                    <div className="flex items-start justify-between gap-3 mb-4">
-                      <div className="flex-1">
-                        <div
-                          className="inline-flex px-6 py-3 rounded-xl text-lg font-bold shadow-lg"
-                          style={{
-                            backgroundColor: bgColor,
-                            color: textColor,
-                            boxShadow: `0 8px 16px -4px ${bgColor}40, 0 4px 8px -2px ${bgColor}30`,
-                          }}
+                  return (
+                    <div
+                      key={config.id}
+                      className="card p-6 hover:shadow-xl hover:border-purple-500/40 hover:scale-[1.02] transition-all duration-200"
+                    >
+                      <div className="flex items-start justify-between gap-3 mb-4">
+                        <div className="flex-1">
+                          <div
+                            className="inline-flex px-6 py-3 rounded-xl text-lg font-bold shadow-lg"
+                            style={{
+                              backgroundColor: bgColor,
+                              color: textColor,
+                              boxShadow: `0 8px 16px -4px ${bgColor}40, 0 4px 8px -2px ${bgColor}30`,
+                            }}
+                          >
+                            {config.name}
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => setEditingPersonnel(config)}
+                          className="flex-shrink-0 p-2.5 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 text-purple-600 dark:text-purple-400 transition-colors border border-transparent hover:border-purple-300 dark:hover:border-purple-700"
+                          title="Customize Badge Colors"
                         >
-                          {config.name}
-                        </div>
+                          <Icon name="settings" size="md" />
+                        </button>
                       </div>
-                      <button
-                        onClick={() => setEditingPersonnel(config)}
-                        className="flex-shrink-0 p-2.5 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 text-purple-600 dark:text-purple-400 transition-colors border border-transparent hover:border-purple-300 dark:hover:border-purple-700"
-                        title="Customize Badge Colors"
-                      >
-                        <Icon name="settings" size="md" />
-                      </button>
-                    </div>
 
-                    {config.description && (
-                      <p className="text-sm text-secondary mb-3">
-                        {config.description}
-                      </p>
-                    )}
-
-                    {config.confidence_score !== null &&
-                      config.confidence_score > 0 && (
-                        <div className="mb-3">
-                          <div className="flex items-center justify-between text-xs mb-1">
-                            <span className="text-secondary">Confidence</span>
-                            <span className="text-primary font-medium">
-                              {config.confidence_score}%
-                            </span>
-                          </div>
-                          <div className="w-full bg-surface-muted rounded-full h-2">
-                            <div
-                              className="h-2 rounded-full bg-gradient-to-r from-purple-500 to-purple-600"
-                              style={{ width: `${config.confidence_score}%` }}
-                            />
-                          </div>
-                        </div>
+                      {config.description && (
+                        <p className="text-sm text-secondary mb-3">
+                          {config.description}
+                        </p>
                       )}
 
-                    <div className="flex items-center justify-between pt-3 border-t border-divider">
-                      <span className="text-xs text-secondary">Usage</span>
-                      <span className="text-sm font-medium text-primary">
-                        {config.usage_count || 0} plays
-                      </span>
-                    </div>
+                      {config.confidence_score !== null &&
+                        config.confidence_score > 0 && (
+                          <div className="mb-3">
+                            <div className="flex items-center justify-between text-xs mb-1">
+                              <span className="text-secondary">Confidence</span>
+                              <span className="text-primary font-medium">
+                                {config.confidence_score}%
+                              </span>
+                            </div>
+                            <div className="w-full bg-surface-muted rounded-full h-2">
+                              <div
+                                className="h-2 rounded-full bg-gradient-to-r from-purple-500 to-purple-600"
+                                style={{ width: `${config.confidence_score}%` }}
+                              />
+                            </div>
+                          </div>
+                        )}
 
-                    {config.last_analyzed_at && (
-                      <div className="text-xs text-tertiary mt-2">
-                        Analyzed:{" "}
-                        {new Date(config.last_analyzed_at).toLocaleDateString()}
+                      <div className="flex items-center justify-between pt-3 border-t border-divider">
+                        <span className="text-xs text-secondary">Usage</span>
+                        <span className="text-sm font-medium text-primary">
+                          {config.usage_count || 0} plays
+                        </span>
                       </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
+
+                      {config.last_analyzed_at && (
+                        <div className="text-xs text-tertiary mt-2">
+                          Analyzed:{" "}
+                          {new Date(
+                            config.last_analyzed_at
+                          ).toLocaleDateString()}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })()}
         </div>
 
         {/* Footer Stats */}

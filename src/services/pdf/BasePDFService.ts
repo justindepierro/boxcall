@@ -188,9 +188,8 @@ export abstract class BasePDFService {
       return `${mins} min`;
     } else if (mins === 0) {
       return `${hours} hr`;
-    } else {
-      return `${hours}:${mins.toString().padStart(2, "0")}`;
     }
+    return `${hours}:${mins.toString().padStart(2, "0")}`;
   }
   /**
    * Abstract methods that must be implemented by subclasses

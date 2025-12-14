@@ -24,6 +24,98 @@ interface TrendAnalyticsDashboardProps {
   teamId: string;
 }
 
+const LoadingState: React.FC = () => (
+  <div className="flex items-center justify-center p-12">
+    <div className="text-center">
+      <Icon
+        name="refresh-cw"
+        className="h-8 w-8 animate-spin text-primary mx-auto mb-4"
+      />
+      <Typography variant="body-lg">Loading trend analytics...</Typography>
+    </div>
+  </div>
+);
+
+const ErrorState: React.FC<{ message: string }> = ({ message }) => (
+  <div className="p-6 text-center">
+    <Icon name="alert-triangle" className="h-12 w-12 text-error mx-auto mb-4" />
+    <Typography variant="headline-sm" className="text-error mb-2">
+      Analytics Error
+    </Typography>
+    <Typography variant="body-sm" className="text-secondary">
+      {message}
+    </Typography>
+  </div>
+);
+
+const OverviewCard: React.FC<{
+  trendDirection: number;
+  totalTrendPoints: number;
+  avgSuccessRate: number;
+}> = ({ trendDirection, totalTrendPoints, avgSuccessRate }) => (
+  <Card className="p-6">
+    <Typography variant="headline-md" className="mb-4">
+      Trend Analysis Overview
+    </Typography>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="text-center">
+        <Typography variant="headline-lg" className="text-success-600">
+          {trendDirection >= 0 ? "+" : ""}
+          {trendDirection.toFixed(1)}%
+        </Typography>
+        <Typography variant="body-sm" className="text-secondary">
+          Success Rate Trend
+        </Typography>
+      </div>
+      <div className="text-center">
+        <Typography variant="headline-lg" className="text-primary">
+          {totalTrendPoints}
+        </Typography>
+        <Typography variant="body-sm" className="text-secondary">
+          Weeks Analyzed
+        </Typography>
+      </div>
+      <div className="text-center">
+        <Typography variant="headline-lg" className="text-info-600">
+          {avgSuccessRate.toFixed(1)}%
+        </Typography>
+        <Typography variant="body-sm" className="text-secondary">
+          Average Success
+        </Typography>
+      </div>
+    </div>
+  </Card>
+);
+
+const TrendTooltip: React.FC<{
+  active?: boolean;
+  payload?: any;
+  label?: string;
+}> = ({ active, payload, label }) => {
+  if (!active || !payload || !payload.length) {
+    return null;
+  }
+
+  return (
+    <div className="bg-primary rounded-lg p-3 shadow-xl">
+      <Typography variant="body-sm" className="font-medium mb-1">
+        {label}
+      </Typography>
+      {payload.map((entry: any, index: number) => (
+        <Typography key={index} variant="body-xs" className="text-secondary">
+          {entry.dataKey === "successRate" ? "Success Rate" : entry.dataKey}:{" "}
+          {(() => {
+            if (entry.dataKey === "successRate") return `${entry.value}%`;
+            if (entry.dataKey === "avgYards")
+              return `${entry.value.toFixed(1)} yds`;
+            return entry.value;
+          })()}
+        </Typography>
+      ))}
+    </div>
+  );
+};
+
 /**
  * TrendAnalyticsDashboard - Full trend analysis for plays and formations
  *
@@ -82,34 +174,11 @@ export const TrendAnalyticsDashboard: React.FC<
   }, [playId, teamId]);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center p-12">
-        <div className="text-center">
-          <Icon
-            name="refresh-cw"
-            className="h-8 w-8 animate-spin text-primary mx-auto mb-4"
-          />
-          <Typography variant="body-lg">Loading trend analytics...</Typography>
-        </div>
-      </div>
-    );
+    return <LoadingState />;
   }
 
   if (error) {
-    return (
-      <div className="p-6 text-center">
-        <Icon
-          name="alert-triangle"
-          className="h-12 w-12 text-error mx-auto mb-4"
-        />
-        <Typography variant="headline-sm" className="text-error mb-2">
-          Analytics Error
-        </Typography>
-        <Typography variant="body-sm" className="text-secondary">
-          {error}
-        </Typography>
-      </div>
-    );
+    return <ErrorState message={error} />;
   }
 
   // Calculate trend metrics
@@ -131,34 +200,6 @@ export const TrendAnalyticsDashboard: React.FC<
     avgYards: point.avgYards,
   }));
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-primary rounded-lg p-3 shadow-xl">
-          <Typography variant="body-sm" className="font-medium mb-1">
-            {label}
-          </Typography>
-          {payload.map((entry: any, index: number) => (
-            <Typography
-              key={index}
-              variant="body-xs"
-              className="text-secondary"
-            >
-              {entry.dataKey === "successRate" ? "Success Rate" : entry.dataKey}
-              :{" "}
-              {entry.dataKey === "successRate"
-                ? `${entry.value}%`
-                : entry.dataKey === "avgYards"
-                  ? `${entry.value.toFixed(1)} yds`
-                  : entry.value}
-            </Typography>
-          ))}
-        </div>
-      );
-    }
-    return null;
-  };
-
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
@@ -167,38 +208,11 @@ export const TrendAnalyticsDashboard: React.FC<
       </div>
 
       {/* Overview */}
-      <Card className="p-6">
-        <Typography variant="headline-md" className="mb-4">
-          Trend Analysis Overview
-        </Typography>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="text-center">
-            <Typography variant="headline-lg" className="text-success-600">
-              {trendDirection >= 0 ? "+" : ""}
-              {trendDirection.toFixed(1)}%
-            </Typography>
-            <Typography variant="body-sm" className="text-secondary">
-              Success Rate Trend
-            </Typography>
-          </div>
-          <div className="text-center">
-            <Typography variant="headline-lg" className="text-primary">
-              {totalTrendPoints}
-            </Typography>
-            <Typography variant="body-sm" className="text-secondary">
-              Weeks Analyzed
-            </Typography>
-          </div>
-          <div className="text-center">
-            <Typography variant="headline-lg" className="text-info-600">
-              {avgSuccessRate.toFixed(1)}%
-            </Typography>
-            <Typography variant="body-sm" className="text-secondary">
-              Average Success
-            </Typography>
-          </div>
-        </div>
-      </Card>
+      <OverviewCard
+        trendDirection={trendDirection}
+        totalTrendPoints={totalTrendPoints}
+        avgSuccessRate={avgSuccessRate}
+      />
 
       {/* Success Rate Trends Chart */}
       {chartData.length > 0 && (
@@ -221,7 +235,7 @@ export const TrendAnalyticsDashboard: React.FC<
                   domain={[0, 100]}
                   tickFormatter={(value) => `${value}%`}
                 />
-                <Tooltip content={<CustomTooltip />} />
+                <Tooltip content={(props) => <TrendTooltip {...props} />} />
                 <Legend />
                 <Line
                   type="monotone"

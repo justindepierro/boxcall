@@ -29,6 +29,150 @@ interface AnnouncementEditorProps {
   onSave: () => void;
 }
 
+const TitleField: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+  disabled: boolean;
+}> = ({ value, onChange, disabled }) => (
+  <div>
+    <label htmlFor="title" className="block text-sm font-medium mb-1">
+      Title *
+    </label>
+    <input
+      id="title"
+      type="text"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder="Enter announcement title"
+      className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      required
+      disabled={disabled}
+    />
+  </div>
+);
+
+const ContentField: React.FC<{
+  content: string;
+  onChange: (value: string) => void;
+  disabled: boolean;
+  teamId: string;
+}> = ({ content, onChange, disabled, teamId }) => (
+  <div>
+    <label htmlFor="content" className="block text-sm font-medium mb-1">
+      Content *
+    </label>
+    <RichTextEditor
+      content={content}
+      onChange={onChange}
+      placeholder="Write your announcement... You can add images by dragging & dropping or pasting them!"
+      disabled={disabled}
+      teamId={teamId}
+    />
+  </div>
+);
+
+const VisibilityField: React.FC<{
+  value: AnnouncementVisibility;
+  onChange: (value: AnnouncementVisibility) => void;
+  disabled: boolean;
+}> = ({ value, onChange, disabled }) => (
+  <div>
+    <label htmlFor="visibility" className="block text-sm font-medium mb-1">
+      Who can see this announcement?
+    </label>
+    <FormSelect
+      id="visibility"
+      value={value}
+      onChange={(value) => onChange(value as AnnouncementVisibility)}
+      disabled={disabled}
+      options={[
+        { value: "all", label: "Everyone" },
+        { value: "staff_only", label: "Staff Only" },
+        { value: "players_only", label: "Players Only" },
+        { value: "families_only", label: "Families Only" },
+      ]}
+    />
+  </div>
+);
+
+const PinCheckbox: React.FC<{
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  disabled: boolean;
+}> = ({ checked, onChange, disabled }) => (
+  <div className="flex items-center gap-2">
+    <input
+      id="isPinned"
+      type="checkbox"
+      checked={checked}
+      onChange={(e) => onChange(e.target.checked)}
+      className="rounded focus:ring-2 focus:ring-brand-primary"
+      disabled={disabled}
+    />
+    <label htmlFor="isPinned" className="text-sm font-medium">
+      Pin this announcement to the top
+    </label>
+  </div>
+);
+
+const ModalHeader: React.FC<{
+  isEditing: boolean;
+  onClose: () => void;
+  disabled: boolean;
+}> = ({ isEditing, onClose, disabled }) => (
+  <div className="flex items-center justify-between mb-6">
+    <h2 className="text-2xl font-bold">
+      {isEditing ? "Edit Announcement" : "New Announcement"}
+    </h2>
+    <button
+      onClick={onClose}
+      disabled={disabled}
+      className="p-2 rounded-lg hover:bg-muted transition-colors disabled:opacity-50"
+      aria-label="Close"
+    >
+      <X className="w-5 h-5" />
+    </button>
+  </div>
+);
+
+const ModalActions: React.FC<{
+  onCancel: () => void;
+  saving: boolean;
+  isEditing: boolean;
+}> = ({ onCancel, saving, isEditing }) => (
+  <div className="flex gap-3 justify-end pt-4">
+    <button
+      type="button"
+      onClick={onCancel}
+      disabled={saving}
+      className="px-4 py-2 border rounded-lg hover:bg-secondary transition-colors disabled:opacity-50"
+    >
+      Cancel
+    </button>
+    <button
+      type="submit"
+      disabled={saving}
+      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      {(() => {
+        if (saving) return "Saving...";
+        if (isEditing) return "Update";
+        return "Create";
+      })()}
+    </button>
+  </div>
+);
+
+const getAuthorName = async (userId: string | null): Promise<string> => {
+  if (!userId) return "Someone";
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("display_name, full_name")
+    .eq("id", userId)
+    .single();
+  return profile?.display_name || profile?.full_name || "Someone";
+};
+
 export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
   teamId,
   announcement,
@@ -104,16 +248,7 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
 
       // Get current user info for notifications
       const userId = getCurrentUserId();
-      const { data: profile } = userId
-        ? await supabase
-            .from("profiles")
-            .select("display_name, full_name")
-            .eq("id", userId)
-            .single()
-        : { data: null };
-
-      const authorName =
-        profile?.display_name || profile?.full_name || "Someone";
+      const authorName = await getAuthorName(userId);
 
       if (announcement) {
         // Update existing announcement
@@ -193,20 +328,11 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
       {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
         <div className="relative bg-primary rounded-lg shadow-2xl max-w-2xl w-full p-6">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">
-              {announcement ? "Edit Announcement" : "New Announcement"}
-            </h2>
-            <button
-              onClick={handleCancel}
-              disabled={saving}
-              className="p-2 rounded-lg hover:bg-muted transition-colors disabled:opacity-50"
-              aria-label="Close"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
+          <ModalHeader
+            isEditing={!!announcement}
+            onClose={handleCancel}
+            disabled={saving}
+          />
 
           {/* Error message */}
           {error && (
@@ -217,78 +343,26 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Title */}
-            <div>
-              <label htmlFor="title" className="block text-sm font-medium mb-1">
-                Title *
-              </label>
-              <input
-                id="title"
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Enter announcement title"
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required
-                disabled={saving}
-              />
-            </div>
+            <TitleField value={title} onChange={setTitle} disabled={saving} />
 
-            {/* Content */}
-            <div>
-              <label
-                htmlFor="content"
-                className="block text-sm font-medium mb-1"
-              >
-                Content *
-              </label>
-              <RichTextEditor
-                content={content}
-                onChange={setContent}
-                placeholder="Write your announcement... You can add images by dragging & dropping or pasting them!"
-                disabled={saving}
-                teamId={teamId}
-              />
-            </div>
+            <ContentField
+              content={content}
+              onChange={setContent}
+              disabled={saving}
+              teamId={teamId}
+            />
 
-            {/* Visibility */}
-            <div>
-              <label
-                htmlFor="visibility"
-                className="block text-sm font-medium mb-1"
-              >
-                Who can see this announcement?
-              </label>
-              <FormSelect
-                id="visibility"
-                value={visibility}
-                onChange={(value) =>
-                  setVisibility(value as AnnouncementVisibility)
-                }
-                disabled={saving}
-                options={[
-                  { value: "all", label: "Everyone" },
-                  { value: "staff_only", label: "Staff Only" },
-                  { value: "players_only", label: "Players Only" },
-                  { value: "families_only", label: "Families Only" },
-                ]}
-              />
-            </div>
+            <VisibilityField
+              value={visibility}
+              onChange={setVisibility}
+              disabled={saving}
+            />
 
-            {/* Pin checkbox */}
-            <div className="flex items-center gap-2">
-              <input
-                id="isPinned"
-                type="checkbox"
-                checked={isPinned}
-                onChange={(e) => setIsPinned(e.target.checked)}
-                className="rounded focus:ring-2 focus:ring-brand-primary"
-                disabled={saving}
-              />
-              <label htmlFor="isPinned" className="text-sm font-medium">
-                Pin this announcement to the top
-              </label>
-            </div>
+            <PinCheckbox
+              checked={isPinned}
+              onChange={setIsPinned}
+              disabled={saving}
+            />
 
             {/* Attachments placeholder */}
             <div className="pt-4 border-t">
@@ -297,24 +371,11 @@ export const AnnouncementEditor: React.FC<AnnouncementEditorProps> = ({
               </p>
             </div>
 
-            {/* Actions */}
-            <div className="flex gap-3 justify-end pt-4">
-              <button
-                type="button"
-                onClick={handleCancel}
-                disabled={saving}
-                className="px-4 py-2 border rounded-lg hover:bg-secondary transition-colors disabled:opacity-50"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={saving}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {saving ? "Saving..." : announcement ? "Update" : "Create"}
-              </button>
-            </div>
+            <ModalActions
+              onCancel={handleCancel}
+              saving={saving}
+              isEditing={!!announcement}
+            />
           </form>
         </div>
       </div>

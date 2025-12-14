@@ -192,74 +192,80 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
           </div>
 
           <Combobox.Options className="absolute z-[100] mt-1 max-h-96 w-full overflow-auto rounded-md bg-surface border border-border shadow-2xl">
-            {isLoadingPlays ? (
-              <div className="px-4 py-3 text-sm text-muted flex items-center gap-2">
-                <Icon name="loader-2" className="animate-spin" size={16} />
-                Loading plays...
-              </div>
-            ) : filteredPlays.length === 0 ? (
-              <div className="px-4 py-3 text-sm text-muted">
-                No plays found. Enter a custom play name.
-              </div>
-            ) : (
-              <div className="divide-y divide-border">
-                {filteredPlays.map((play) => {
-                  // Use the same display logic as the playbook list view
-                  const displayName = getDisplayName(play, false);
+            {(() => {
+              if (isLoadingPlays)
+                return (
+                  <div className="px-4 py-3 text-sm text-muted flex items-center gap-2">
+                    <Icon name="loader-2" className="animate-spin" size={16} />
+                    Loading plays...
+                  </div>
+                );
+              if (filteredPlays.length === 0)
+                return (
+                  <div className="px-4 py-3 text-sm text-muted">
+                    No plays found. Enter a custom play name.
+                  </div>
+                );
+              return (
+                <div className="divide-y divide-border">
+                  {filteredPlays.map((play) => {
+                    // Use the same display logic as the playbook list view
+                    const displayName = getDisplayName(play, false);
 
-                  return (
-                    <Combobox.Option
-                      key={play.id}
-                      value={play}
-                      className={({ active }) =>
-                        `flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors ${
-                          active ? "bg-accent" : "bg-surface hover:bg-accent"
-                        }`
-                      }
-                    >
-                      {/* Thumbnail (if available) */}
-                      {play.diagram_image_url && (
-                        <div className="shrink-0 w-16 h-12 rounded-lg overflow-hidden shadow-sm">
-                          <img
-                            src={play.diagram_image_url}
-                            alt={`${displayName} diagram`}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      )}
-
-                      {/* Play info */}
-                      <div className="flex-1 min-w-0">
-                        <div className="font-mono font-semibold text-sm text-primary truncate">
-                          {displayName}
-                        </div>
-                        <div className="flex items-center gap-2 mt-1">
-                          {/* Personnel badge */}
-                          {play.personnel && (
-                            <PersonnelBadge
-                              personnel={play.personnel}
-                              size="sm"
+                    return (
+                      <Combobox.Option
+                        key={play.id}
+                        value={play}
+                        className={({ active }) =>
+                          `flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors ${
+                            active ? "bg-accent" : "bg-surface hover:bg-accent"
+                          }`
+                        }
+                      >
+                        {/* Thumbnail (if available) */}
+                        {play.diagram_image_url && (
+                          <div className="shrink-0 w-16 h-12 rounded-lg overflow-hidden shadow-sm">
+                            <img
+                              src={play.diagram_image_url}
+                              alt={`${displayName} diagram`}
+                              className="w-full h-full object-cover"
                             />
-                          )}
-                          {/* Play type badge */}
-                          {play.p_type && (
-                            <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded text-xs font-medium">
-                              {play.p_type}
-                            </span>
-                          )}
-                          {/* Formation */}
-                          {play.formation && (
-                            <span className="text-xs text-secondary truncate">
-                              {play.formation}
-                            </span>
-                          )}
+                          </div>
+                        )}
+
+                        {/* Play info */}
+                        <div className="flex-1 min-w-0">
+                          <div className="font-mono font-semibold text-sm text-primary truncate">
+                            {displayName}
+                          </div>
+                          <div className="flex items-center gap-2 mt-1">
+                            {/* Personnel badge */}
+                            {play.personnel && (
+                              <PersonnelBadge
+                                personnel={play.personnel}
+                                size="sm"
+                              />
+                            )}
+                            {/* Play type badge */}
+                            {play.p_type && (
+                              <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded text-xs font-medium">
+                                {play.p_type}
+                              </span>
+                            )}
+                            {/* Formation */}
+                            {play.formation && (
+                              <span className="text-xs text-secondary truncate">
+                                {play.formation}
+                              </span>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    </Combobox.Option>
-                  );
-                })}
-              </div>
-            )}
+                      </Combobox.Option>
+                    );
+                  })}
+                </div>
+              );
+            })()}
           </Combobox.Options>
         </Combobox>
         <Typography variant="caption" color="muted" className="mt-1">

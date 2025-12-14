@@ -65,10 +65,9 @@ export const ConfettiBurst: React.FC<ConfettiBurstProps> = ({
 
   return (
     <div
-      className={
-        "pointer-events-none fixed inset-0 z-tooltip overflow-hidden " +
-        (className || "")
-      }
+      className={`pointer-events-none fixed inset-0 z-tooltip overflow-hidden ${
+        className || ""
+      }`}
       aria-hidden
     >
       <div className="absolute inset-0">

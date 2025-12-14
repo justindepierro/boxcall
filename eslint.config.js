@@ -60,11 +60,17 @@ export default [
       ...reactHooks.configs.recommended.rules,
 
       // React
-      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+      "react-refresh/only-export-components": [
+        "warn",
+        { allowConstantExport: true },
+      ],
 
       // TypeScript - practical settings for rapid development
       "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+      ],
       "@typescript-eslint/no-explicit-any": "off", // Disabled - 546 existing uses, fix incrementally
       "@typescript-eslint/no-empty-object-type": "off",
       "@typescript-eslint/no-non-null-assertion": "off", // Common in React patterns
@@ -72,6 +78,32 @@ export default [
 
       // Console - useful during development
       "no-console": "off",
+
+      // Code Quality & Consistency
+      "prefer-const": "error",
+      "no-var": "error",
+      "object-shorthand": ["error", "always"],
+      "prefer-arrow-callback": "error",
+      "prefer-template": "warn",
+      eqeqeq: ["error", "always", { null: "ignore" }],
+      "no-else-return": "error",
+      "no-lonely-if": "error",
+      "prefer-spread": "error",
+      "no-useless-return": "error",
+      yoda: "error",
+      "no-nested-ternary": "warn",
+
+      // Complexity & Readability
+      "max-depth": ["warn", 4],
+      complexity: ["warn", 20],
+      "max-lines-per-function": [
+        "warn",
+        {
+          max: 200,
+          skipBlankLines: true,
+          skipComments: true,
+        },
+      ],
 
       // BoxCall Design System (ERRORS - these are enforced)
       "boxcall-design/no-raw-tailwind-colors": "error",

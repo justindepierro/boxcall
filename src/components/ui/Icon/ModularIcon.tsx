@@ -405,11 +405,10 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
         isMounted = false;
         clearTimeout(fallbackTimeout);
       };
-    } else {
-      // No loader found, show fallback immediately
-      setShowFallback(true);
-      setLoading(false);
     }
+    // No loader found, show fallback immediately
+    setShowFallback(true);
+    setLoading(false);
   }, [name, isTestEnvironment]);
 
   // Define accessibility props that will be used across all rendering paths
@@ -417,8 +416,8 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
     role: role ?? (ariaHidden ? undefined : "img"),
     "aria-label": ariaHidden ? undefined : (ariaLabel ?? name),
     "aria-hidden": ariaHidden,
-    tabIndex: tabIndex,
-    focusable: focusable,
+    tabIndex,
+    focusable,
   };
 
   // For tests, render a simple SVG synchronously

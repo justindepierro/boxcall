@@ -36,6 +36,172 @@ interface ToolItem {
   devOnly?: boolean;
 }
 
+// Tool menu item component
+const ToolMenuItem: React.FC<{
+  item: ToolItem;
+  onAction: () => void;
+}> = ({ item, onAction }) => (
+  <Button
+    variant="ghost"
+    size="sm"
+    className="w-full justify-start p-2 h-auto"
+    onClick={onAction}
+  >
+    <div className="flex items-start gap-2 w-full">
+      <Icon name={item.icon} size="xs" className="mt-0.5" />
+      <div className="flex-1 text-left">
+        <div className="text-sm font-medium">{item.label}</div>
+        {item.description && (
+          <div className="text-xs text-muted">{item.description}</div>
+        )}
+      </div>
+    </div>
+  </Button>
+);
+
+// Category section with expandable items
+const CategorySection: React.FC<{
+  category: ToolCategory;
+  isActive: boolean;
+  onToggle: () => void;
+  onItemAction: (action: () => void) => void;
+  isDev: boolean;
+}> = ({ category, isActive, onToggle, onItemAction, isDev }) => (
+  <div className="mb-2">
+    <Button
+      variant="ghost"
+      className="w-full justify-start p-3 h-auto"
+      onClick={onToggle}
+    >
+      <div className="flex items-center gap-3 w-full">
+        <Icon name={category.icon} size="sm" />
+        <span className="flex-1 text-left">{category.label}</span>
+        <Icon name={isActive ? "chevron-up" : "chevron-down"} size="xs" />
+      </div>
+    </Button>
+
+    {isActive && (
+      <div className="ml-4 mt-2 space-y-1 animate-in slide-in-from-top-1 fade-in duration-150">
+        {category.items
+          .filter((item) => isDev || !item.devOnly)
+          .map((item) => (
+            <ToolMenuItem
+              key={item.id}
+              item={item}
+              onAction={() => onItemAction(item.action)}
+            />
+          ))}
+      </div>
+    )}
+  </div>
+);
+
+// Settings floating panel
+const SettingsPanel: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+  categories: ToolCategory[];
+  activeCategory: string | null;
+  onCategoryClick: (categoryId: string) => void;
+  isDev: boolean;
+}> = ({
+  isOpen,
+  onClose,
+  categories,
+  activeCategory,
+  onCategoryClick,
+  isDev,
+}) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="absolute bottom-16 right-0 w-80 bg-primary rounded-lg shadow-xl border border-muted animate-in slide-in-from-bottom-2 fade-in duration-200">
+      <div className="p-4 border-b border-muted">
+        <Typography
+          variant="headline-sm"
+          className="flex items-center justify-between"
+        >
+          <span className="flex items-center gap-2">
+            <Icon name="settings" size="sm" />
+            Settings & Tools
+          </span>
+          <Button variant="ghost" size="sm" onClick={onClose} className="p-1">
+            <Icon name="close" size="sm" />
+          </Button>
+        </Typography>
+      </div>
+
+      <div className="p-2 max-h-96 overflow-y-auto">
+        {categories.map((category) => (
+          <CategorySection
+            key={category.id}
+            category={category}
+            isActive={activeCategory === category.id}
+            onToggle={() => onCategoryClick(category.id)}
+            onItemAction={(action) => {
+              action();
+              onClose();
+            }}
+            isDev={isDev}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Development tools modal
+const DevToolsModal: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+}> = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-text-primary/50 z-modal flex items-center justify-center">
+      <div className="bg-primary rounded-lg shadow-xl max-w-4xl max-h-[80vh] w-full mx-4 overflow-hidden">
+        <div className="p-4 border-b border-muted flex justify-between items-center">
+          <Typography variant="headline-sm">Development Tools</Typography>
+          <Button variant="ghost" onClick={onClose}>
+            <Icon name="close" size="sm" />
+          </Button>
+        </div>
+        <div className="p-4 max-h-96 overflow-y-auto">
+          <Typography variant="body-md" className="text-muted">
+            Development tools interface will be embedded here.
+            <br />
+            <small>
+              Note: DevTools component has been temporarily simplified for the
+              unified interface.
+            </small>
+          </Typography>
+
+          <div className="mt-4 space-y-3">
+            <div className="flex items-center justify-between p-3 bg-surface-hover rounded-lg">
+              <span>Debug Mode</span>
+              <Button variant="outline" size="sm">
+                Toggle
+              </Button>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-surface-hover rounded-lg">
+              <span>Console Logs</span>
+              <Button variant="outline" size="sm">
+                View
+              </Button>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-surface-hover rounded-lg">
+              <span>Performance</span>
+              <Button variant="outline" size="sm">
+                Monitor
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const UnifiedSettingsPanel: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -134,92 +300,14 @@ export const UnifiedSettingsPanel: React.FC = () => {
     <>
       {/* Main floating button */}
       <div className="fixed bottom-6 right-6 z-50">
-        {isOpen && (
-          <div className="absolute bottom-16 right-0 w-80 bg-primary rounded-lg shadow-xl border border-muted animate-in slide-in-from-bottom-2 fade-in duration-200">
-            <div className="p-4 border-b border-muted">
-              <Typography
-                variant="headline-sm"
-                className="flex items-center justify-between"
-              >
-                <span className="flex items-center gap-2">
-                  <Icon name="settings" size="sm" />
-                  Settings & Tools
-                </span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsOpen(false)}
-                  className="p-1"
-                >
-                  <Icon name="close" size="sm" />
-                </Button>
-              </Typography>
-            </div>
-
-            <div className="p-2 max-h-96 overflow-y-auto">
-              {filteredCategories.map((category) => (
-                <div key={category.id} className="mb-2">
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start p-3 h-auto"
-                    onClick={() => handleCategoryClick(category.id)}
-                  >
-                    <div className="flex items-center gap-3 w-full">
-                      <Icon name={category.icon} size="sm" />
-                      <span className="flex-1 text-left">{category.label}</span>
-                      <Icon
-                        name={
-                          activeCategory === category.id
-                            ? "chevron-up"
-                            : "chevron-down"
-                        }
-                        size="xs"
-                      />
-                    </div>
-                  </Button>
-
-                  {activeCategory === category.id && (
-                    <div className="ml-4 mt-2 space-y-1 animate-in slide-in-from-top-1 fade-in duration-150">
-                      {category.items
-                        .filter((item) => isDev || !item.devOnly)
-                        .map((item) => (
-                          <div key={item.id}>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="w-full justify-start p-2 h-auto"
-                              onClick={() => {
-                                item.action();
-                                setIsOpen(false);
-                              }}
-                            >
-                              <div className="flex items-start gap-2 w-full">
-                                <Icon
-                                  name={item.icon}
-                                  size="xs"
-                                  className="mt-0.5"
-                                />
-                                <div className="flex-1 text-left">
-                                  <div className="text-sm font-medium">
-                                    {item.label}
-                                  </div>
-                                  {item.description && (
-                                    <div className="text-xs text-muted">
-                                      {item.description}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </Button>
-                          </div>
-                        ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        <SettingsPanel
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          categories={filteredCategories}
+          activeCategory={activeCategory}
+          onCategoryClick={handleCategoryClick}
+          isDev={isDev}
+        />
 
         {/* Toggle button */}
         <Button
@@ -241,49 +329,11 @@ export const UnifiedSettingsPanel: React.FC = () => {
         onClose={() => setShowCustomization(false)}
       />
 
-      {isDev && showDevTools && (
-        <div className="fixed inset-0 bg-text-primary/50 z-modal flex items-center justify-center">
-          <div className="bg-primary rounded-lg shadow-xl max-w-4xl max-h-[80vh] w-full mx-4 overflow-hidden">
-            <div className="p-4 border-b border-muted flex justify-between items-center">
-              <Typography variant="headline-sm">Development Tools</Typography>
-              <Button variant="ghost" onClick={() => setShowDevTools(false)}>
-                <Icon name="close" size="sm" />
-              </Button>
-            </div>
-            <div className="p-4 max-h-96 overflow-y-auto">
-              <Typography variant="body-md" className="text-muted">
-                Development tools interface will be embedded here.
-                <br />
-                <small>
-                  Note: DevTools component has been temporarily simplified for
-                  the unified interface.
-                </small>
-              </Typography>
-
-              {/* Placeholder for dev tools content */}
-              <div className="mt-4 space-y-3">
-                <div className="flex items-center justify-between p-3 bg-surface-hover rounded-lg">
-                  <span>Debug Mode</span>
-                  <Button variant="outline" size="sm">
-                    Toggle
-                  </Button>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-surface-hover rounded-lg">
-                  <span>Console Logs</span>
-                  <Button variant="outline" size="sm">
-                    View
-                  </Button>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-surface-hover rounded-lg">
-                  <span>Performance</span>
-                  <Button variant="outline" size="sm">
-                    Monitor
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      {isDev && (
+        <DevToolsModal
+          isOpen={showDevTools}
+          onClose={() => setShowDevTools(false)}
+        />
       )}
     </>
   );

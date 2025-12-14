@@ -397,7 +397,7 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
                     onClick={() => setActiveSituation(situation.type)}
                     className={`
                       relative px-3 py-2 rounded-lg text-sm font-medium transition-all
-                      ${isActive ? colorClasses.bg + " " + colorClasses.text : "bg-surface-elevated text-secondary hover:bg-surface-overlay"}
+                      ${isActive ? `${colorClasses.bg} ${colorClasses.text}` : "bg-surface-elevated text-secondary hover:bg-surface-overlay"}
                       ${playCount > 0 ? "border-2 border-primary-light" : "border border-muted"}
                       ${hasWarnings ? "border-status-warning" : ""}
                     `}

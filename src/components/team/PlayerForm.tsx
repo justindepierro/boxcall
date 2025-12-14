@@ -447,7 +447,11 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
               loading={saving}
               disabled={saving}
             >
-              {saving ? "Saving..." : player ? "Update Player" : "Add Player"}
+              {(() => {
+                if (saving) return "Saving...";
+                if (player) return "Update Player";
+                return "Add Player";
+              })()}
             </Button>
           </div>
         </form>

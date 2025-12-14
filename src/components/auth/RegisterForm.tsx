@@ -9,6 +9,149 @@ interface RegisterFormProps {
   onSuccess?: () => void;
   onSwitchToLogin?: () => void;
 }
+
+interface ValidationErrors {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+  role?: string;
+}
+
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  role: "coach" | "player" | "family" | "admin";
+}
+
+/** Validate registration form data */
+function validateFormData(formData: FormData): ValidationErrors {
+  const errors: ValidationErrors = {};
+
+  if (!formData.firstName.trim()) {
+    errors.firstName = "First name is required";
+  }
+  if (!formData.lastName.trim()) {
+    errors.lastName = "Last name is required";
+  }
+  if (!formData.email) {
+    errors.email = "Email is required";
+  } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    errors.email = "Please enter a valid email address";
+  }
+  if (!formData.password) {
+    errors.password = "Password is required";
+  } else if (formData.password.length < 6) {
+    errors.password = "Password must be at least 6 characters";
+  }
+  if (!formData.confirmPassword) {
+    errors.confirmPassword = "Please confirm your password";
+  } else if (formData.password !== formData.confirmPassword) {
+    errors.confirmPassword = "Passwords do not match";
+  }
+  if (!formData.role) {
+    errors.role = "Please select your role";
+  }
+
+  return errors;
+}
+
+const roleOptions = [
+  { value: "coach", label: "Coach" },
+  { value: "player", label: "Player" },
+  { value: "family", label: "Family Member" },
+  { value: "admin", label: "Administrator" },
+];
+
+interface FormFieldsProps {
+  formData: FormData;
+  validationErrors: ValidationErrors;
+  onInputChange: (field: string, value: string) => void;
+}
+
+/** Registration form input fields */
+function FormFields({
+  formData,
+  validationErrors,
+  onInputChange,
+}: FormFieldsProps) {
+  return (
+    <>
+      <div className="grid grid-cols-2 gap-3">
+        <Input
+          type="text"
+          label="First Name"
+          placeholder="John"
+          value={formData.firstName}
+          onChange={(e) => onInputChange("firstName", e.target.value)}
+          status={validationErrors.firstName ? "error" : undefined}
+          errorMessage={validationErrors.firstName}
+          required
+          fullWidth
+        />
+        <Input
+          type="text"
+          label="Last Name"
+          placeholder="Smith"
+          value={formData.lastName}
+          onChange={(e) => onInputChange("lastName", e.target.value)}
+          status={validationErrors.lastName ? "error" : undefined}
+          errorMessage={validationErrors.lastName}
+          required
+          fullWidth
+        />
+      </div>
+      <Input
+        type="email"
+        label="Email"
+        placeholder="coach@team.com"
+        value={formData.email}
+        onChange={(e) => onInputChange("email", e.target.value)}
+        status={validationErrors.email ? "error" : undefined}
+        errorMessage={validationErrors.email}
+        required
+        fullWidth
+      />
+      <Dropdown
+        label="Role"
+        value={formData.role}
+        onChange={(value) => onInputChange("role", value)}
+        options={roleOptions}
+        error={!!validationErrors.role}
+        errorMessage={validationErrors.role}
+        fullWidth
+      />
+      <Input
+        type="password"
+        label="Password"
+        placeholder="Create a password"
+        value={formData.password}
+        onChange={(e) => onInputChange("password", e.target.value)}
+        status={validationErrors.password ? "error" : undefined}
+        errorMessage={validationErrors.password}
+        showPasswordToggle
+        required
+        fullWidth
+      />
+      <Input
+        type="password"
+        label="Confirm Password"
+        placeholder="Confirm your password"
+        value={formData.confirmPassword}
+        onChange={(e) => onInputChange("confirmPassword", e.target.value)}
+        status={validationErrors.confirmPassword ? "error" : undefined}
+        errorMessage={validationErrors.confirmPassword}
+        showPasswordToggle
+        required
+        fullWidth
+      />
+    </>
+  );
+}
 /**
  * RegisterForm Component
  *
@@ -20,83 +163,47 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   onSwitchToLogin,
 }) => {
   const { signUp, loading, error, clearError } = useAuth();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
-    role: "coach" as "coach" | "player" | "family" | "admin",
+    role: "coach",
   });
-  const [validationErrors, setValidationErrors] = useState<{
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    password?: string;
-    confirmPassword?: string;
-    role?: string;
-  }>({});
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>(
+    {}
+  );
+
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    // Clear validation error when user starts typing
-    if (validationErrors[field as keyof typeof validationErrors]) {
+    if (validationErrors[field as keyof ValidationErrors]) {
       setValidationErrors((prev) => ({ ...prev, [field]: undefined }));
     }
-    // Clear auth error
     if (error) {
       clearError();
     }
   };
-  const validateForm = () => {
-    const errors: typeof validationErrors = {};
-    if (!formData.firstName.trim()) {
-      errors.firstName = "First name is required";
-    }
-    if (!formData.lastName.trim()) {
-      errors.lastName = "Last name is required";
-    }
-    if (!formData.email) {
-      errors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = "Please enter a valid email address";
-    }
-    if (!formData.password) {
-      errors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      errors.password = "Password must be at least 6 characters";
-    }
-    if (!formData.confirmPassword) {
-      errors.confirmPassword = "Please confirm your password";
-    } else if (formData.password !== formData.confirmPassword) {
-      errors.confirmPassword = "Passwords do not match";
-    }
 
-    if (!formData.role) {
-      errors.role = "Please select your role";
-    }
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm()) {
+
+    const errors = validateFormData(formData);
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
       return;
     }
+
     const result = await signUp(formData.email, formData.password, {
       firstName: formData.firstName.trim(),
       lastName: formData.lastName.trim(),
       role: formData.role,
     });
+
     if (result.success) {
       onSuccess?.();
     }
   };
-  const roleOptions = [
-    { value: "coach", label: "Coach" },
-    { value: "player", label: "Player" },
-    { value: "family", label: "Family Member" },
-    { value: "admin", label: "Administrator" },
-  ];
   return (
     <Card className="w-full content-narrow p-6">
       <div className="p-6">
@@ -112,76 +219,12 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           </Typography>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
-            <Input
-              type="text"
-              label="First Name"
-              placeholder="John"
-              value={formData.firstName}
-              onChange={(e) => handleInputChange("firstName", e.target.value)}
-              status={validationErrors.firstName ? "error" : undefined}
-              errorMessage={validationErrors.firstName}
-              required
-              fullWidth
-            />
-            <Input
-              type="text"
-              label="Last Name"
-              placeholder="Smith"
-              value={formData.lastName}
-              onChange={(e) => handleInputChange("lastName", e.target.value)}
-              status={validationErrors.lastName ? "error" : undefined}
-              errorMessage={validationErrors.lastName}
-              required
-              fullWidth
-            />
-          </div>
-          <Input
-            type="email"
-            label="Email"
-            placeholder="coach@team.com"
-            value={formData.email}
-            onChange={(e) => handleInputChange("email", e.target.value)}
-            status={validationErrors.email ? "error" : undefined}
-            errorMessage={validationErrors.email}
-            required
-            fullWidth
+          <FormFields
+            formData={formData}
+            validationErrors={validationErrors}
+            onInputChange={handleInputChange}
           />
-          <Dropdown
-            label="Role"
-            value={formData.role}
-            onChange={(value) => handleInputChange("role", value)}
-            options={roleOptions}
-            error={!!validationErrors.role}
-            errorMessage={validationErrors.role}
-            fullWidth
-          />
-          <Input
-            type="password"
-            label="Password"
-            placeholder="Create a password"
-            value={formData.password}
-            onChange={(e) => handleInputChange("password", e.target.value)}
-            status={validationErrors.password ? "error" : undefined}
-            errorMessage={validationErrors.password}
-            showPasswordToggle
-            required
-            fullWidth
-          />
-          <Input
-            type="password"
-            label="Confirm Password"
-            placeholder="Confirm your password"
-            value={formData.confirmPassword}
-            onChange={(e) =>
-              handleInputChange("confirmPassword", e.target.value)
-            }
-            status={validationErrors.confirmPassword ? "error" : undefined}
-            errorMessage={validationErrors.confirmPassword}
-            showPasswordToggle
-            required
-            fullWidth
-          />
+
           {error && (
             <div className="p-3 bg-subtle dark:bg-surface-error/10 border border-muted dark:border-error rounded-lg">
               <Typography

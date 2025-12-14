@@ -31,6 +31,141 @@ const COMMON_PERSONNEL = [
   { name: "22 Personnel", description: "2 RB, 2 TE, 1 WR" },
 ];
 
+/** Common personnel quick-select list */
+function CommonPersonnelList({
+  onSelect,
+  isCreating,
+}: {
+  onSelect: (name: string, desc: string) => void;
+  isCreating: boolean;
+}) {
+  return (
+    <div>
+      <Typography variant="label-md" className="mb-3 text-primary">
+        Common Personnel
+      </Typography>
+      <Typography variant="body-sm" className="mb-4 text-secondary">
+        Choose a standard configuration
+      </Typography>
+      <div className="space-y-2">
+        {COMMON_PERSONNEL.map((p) => (
+          <button
+            key={p.name}
+            onClick={() => onSelect(p.name, p.description)}
+            disabled={isCreating}
+            className="w-full flex items-center justify-between p-4 rounded-lg border border-secondary hover:border-accent hover:bg-secondary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <div className="text-left">
+              <Typography
+                variant="body-md"
+                className="text-primary font-medium"
+              >
+                {p.name}
+              </Typography>
+              <Typography variant="body-sm" className="text-secondary">
+                {p.description}
+              </Typography>
+            </div>
+            <Icon name="chevron-right" className="h-5 w-5 text-tertiary" />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** Custom personnel creation form */
+function CustomPersonnelForm({
+  name,
+  description,
+  onNameChange,
+  onDescriptionChange,
+  onCreate,
+  isCreating,
+}: {
+  name: string;
+  description: string;
+  onNameChange: (name: string) => void;
+  onDescriptionChange: (desc: string) => void;
+  onCreate: () => void;
+  isCreating: boolean;
+}) {
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block mb-2">
+          <Typography variant="label-md" className="text-primary">
+            Personnel Name *
+          </Typography>
+        </label>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => onNameChange(e.target.value)}
+          placeholder="e.g., Spread, Jumbo, Goal Line"
+          className="w-full px-3 py-3 text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-info focus:border-primary/0 bg-primary text-primary"
+          maxLength={50}
+        />
+      </div>
+
+      <div>
+        <label className="block mb-2">
+          <Typography variant="label-md" className="text-primary">
+            Description
+          </Typography>
+        </label>
+        <textarea
+          value={description}
+          onChange={(e) => onDescriptionChange(e.target.value)}
+          placeholder="Describe this personnel package..."
+          rows={3}
+          className="w-full px-3 py-3 text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-info focus:border-primary/0 bg-primary text-primary resize-none"
+          maxLength={200}
+        />
+      </div>
+
+      <Button
+        variant="primary"
+        onClick={onCreate}
+        disabled={!name.trim() || isCreating}
+        className="w-full"
+      >
+        {isCreating ? (
+          <>
+            <Icon name="refresh-cw" className="h-4 w-4 mr-2 animate-spin" />
+            Creating...
+          </>
+        ) : (
+          <>
+            <Icon name="plus" className="h-4 w-4 mr-2" />
+            Create Personnel
+          </>
+        )}
+      </Button>
+    </div>
+  );
+}
+
+/** Help section with info about personnel setup */
+function HelpSection() {
+  return (
+    <div className="p-4 bg-secondary/50 rounded-lg border border-secondary">
+      <div className="flex items-start gap-3">
+        <Icon name="info" className="h-5 w-5 text-info mt-0.5 flex-shrink-0" />
+        <div>
+          <Typography variant="label-md" className="text-primary mb-1">
+            Quick Setup
+          </Typography>
+          <Typography variant="body-sm" className="text-secondary">
+            Create a basic personnel config now. You can add player positions
+            and customize badges later in the Personnel Manager.
+          </Typography>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export const PersonnelCreationPanel: React.FC<PersonnelCreationPanelProps> = ({
   isOpen,
   onClose,
@@ -126,40 +261,10 @@ export const PersonnelCreationPanel: React.FC<PersonnelCreationPanelProps> = ({
           {/* Content */}
           <div className="flex-1 p-6 space-y-6 overflow-y-auto">
             {/* Quick Create - Common Personnel */}
-            <div>
-              <Typography variant="label-md" className="mb-3 text-primary">
-                Common Personnel
-              </Typography>
-              <Typography variant="body-sm" className="mb-4 text-secondary">
-                Choose a standard configuration
-              </Typography>
-              <div className="space-y-2">
-                {COMMON_PERSONNEL.map((p) => (
-                  <button
-                    key={p.name}
-                    onClick={() => handleQuickCreate(p.name, p.description)}
-                    disabled={isCreating}
-                    className="w-full flex items-center justify-between p-4 rounded-lg border border-secondary hover:border-accent hover:bg-secondary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <div className="text-left">
-                      <Typography
-                        variant="body-md"
-                        className="text-primary font-medium"
-                      >
-                        {p.name}
-                      </Typography>
-                      <Typography variant="body-sm" className="text-secondary">
-                        {p.description}
-                      </Typography>
-                    </div>
-                    <Icon
-                      name="chevron-right"
-                      className="h-5 w-5 text-tertiary"
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
+            <CommonPersonnelList
+              onSelect={handleQuickCreate}
+              isCreating={isCreating}
+            />
 
             {/* Divider */}
             <div className="relative">
@@ -177,81 +282,17 @@ export const PersonnelCreationPanel: React.FC<PersonnelCreationPanelProps> = ({
             </div>
 
             {/* Custom Personnel Form */}
-            <div className="space-y-4">
-              <div>
-                <label className="block mb-2">
-                  <Typography variant="label-md" className="text-primary">
-                    Personnel Name *
-                  </Typography>
-                </label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g., Spread, Jumbo, Goal Line"
-                  className="w-full px-3 py-3 text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-info focus:border-primary/0 bg-primary text-primary"
-                  maxLength={50}
-                />
-              </div>
-
-              <div>
-                <label className="block mb-2">
-                  <Typography variant="label-md" className="text-primary">
-                    Description
-                  </Typography>
-                </label>
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Describe this personnel package..."
-                  rows={3}
-                  className="w-full px-3 py-3 text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-info focus:border-primary/0 bg-primary text-primary resize-none"
-                  maxLength={200}
-                />
-              </div>
-
-              <Button
-                variant="primary"
-                onClick={handleCustomCreate}
-                disabled={!name.trim() || isCreating}
-                className="w-full"
-              >
-                {isCreating ? (
-                  <>
-                    <Icon
-                      name="refresh-cw"
-                      className="h-4 w-4 mr-2 animate-spin"
-                    />
-                    Creating...
-                  </>
-                ) : (
-                  <>
-                    <Icon name="plus" className="h-4 w-4 mr-2" />
-                    Create Personnel
-                  </>
-                )}
-              </Button>
-            </div>
+            <CustomPersonnelForm
+              name={name}
+              description={description}
+              onNameChange={setName}
+              onDescriptionChange={setDescription}
+              onCreate={handleCustomCreate}
+              isCreating={isCreating}
+            />
 
             {/* Help Text */}
-            <div className="p-4 bg-secondary/50 rounded-lg border border-secondary">
-              <div className="flex items-start gap-3">
-                <Icon
-                  name="info"
-                  className="h-5 w-5 text-info mt-0.5 flex-shrink-0"
-                />
-                <div>
-                  <Typography variant="label-md" className="text-primary mb-1">
-                    Quick Setup
-                  </Typography>
-                  <Typography variant="body-sm" className="text-secondary">
-                    Create a basic personnel config now. You can add player
-                    positions and customize badges later in the Personnel
-                    Manager.
-                  </Typography>
-                </div>
-              </div>
-            </div>
+            <HelpSection />
           </div>
 
           {/* Footer */}

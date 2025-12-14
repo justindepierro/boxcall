@@ -198,6 +198,150 @@ const EmptyState: React.FC<{ message: string }> = ({ message }) => (
     <p className="text-sm text-secondary">{message}</p>
   </div>
 );
+
+const TableBody = <T extends TableRow = TableRow>({
+  loading,
+  paginatedData,
+  columns,
+  selectable,
+  emptyMessage,
+  selectedRows,
+  handleSelectRow,
+  size,
+  striped,
+}: {
+  loading: boolean;
+  paginatedData: T[];
+  columns: TableColumn<T>[];
+  selectable: boolean;
+  emptyMessage: string;
+  selectedRows: string[];
+  handleSelectRow: (rowId: string, checked: boolean) => void;
+  size?: "sm" | "md" | "lg";
+  striped: boolean;
+}) => {
+  if (loading) {
+    return (
+      <tr>
+        <td colSpan={columns.length + (selectable ? 1 : 0)}>
+          <LoadingSpinner />
+        </td>
+      </tr>
+    );
+  }
+
+  if (paginatedData.length === 0) {
+    return (
+      <tr>
+        <td colSpan={columns.length + (selectable ? 1 : 0)}>
+          <EmptyState message={emptyMessage} />
+        </td>
+      </tr>
+    );
+  }
+
+  return (
+    <>
+      {paginatedData.map((row, rowIndex) => {
+        const isSelected = selectedRows.includes(row.id);
+        const isEven = rowIndex % 2 === 0;
+        return (
+          <tr
+            key={row.id}
+            className={getRowStyles(isSelected, isEven, striped, true)}
+          >
+            {selectable && (
+              <td className={getCellStyles(size)}>
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  onChange={(e) => handleSelectRow(row.id, e.target.checked)}
+                  className="rounded-lg border-secondary dark:border-text-tertiary text-jade-600 focus:ring-jade-500"
+                />
+              </td>
+            )}
+            {columns.map((column) => {
+              const value = column.accessorKey
+                ? row[column.accessorKey]
+                : undefined;
+              return (
+                <td
+                  key={column.id}
+                  className={getCellStyles(size, column.align)}
+                >
+                  {column.cell
+                    ? column.cell(value, row, rowIndex)
+                    : String(value || "")}
+                </td>
+              );
+            })}
+          </tr>
+        );
+      })}
+    </>
+  );
+};
+
+const PaginationControls: React.FC<{
+  currentPage: number;
+  totalPages: number;
+  pageSize: number;
+  totalItems?: number;
+  filteredDataLength: number;
+  onPageChange?: (page: number) => void;
+}> = ({
+  currentPage,
+  totalPages,
+  pageSize,
+  totalItems,
+  filteredDataLength,
+  onPageChange,
+}) => (
+  <div className="flex items-center justify-between">
+    <div className="text-sm text-primary dark:text-border-light">
+      Showing {currentPage * pageSize + 1} to{" "}
+      {Math.min((currentPage + 1) * pageSize, totalItems || filteredDataLength)}{" "}
+      of {totalItems || filteredDataLength} results
+    </div>
+    <div className="flex items-center space-x-2">
+      <Button
+        variant="ghost"
+        size="sm"
+        disabled={currentPage === 0}
+        onClick={() => onPageChange?.(currentPage - 1)}
+      >
+        Previous
+      </Button>
+      <span className="text-sm text-primary dark:text-border-light">
+        Page {currentPage + 1} of {totalPages}
+      </span>
+      <Button
+        variant="ghost"
+        size="sm"
+        disabled={currentPage >= totalPages - 1}
+        onClick={() => onPageChange?.(currentPage + 1)}
+      >
+        Next
+      </Button>
+    </div>
+  </div>
+);
+
+const SearchBar: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+}> = ({ value, onChange, placeholder }) => (
+  <div className="flex justify-between items-center">
+    <Input
+      placeholder={placeholder}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className="max-w-sm"
+    />
+  </div>
+);
+
 export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
   const {
     columns,
@@ -233,14 +377,12 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
   const handleSort = (columnId: string) => {
     const column = columns.find((col) => col.id === columnId);
     if (!column?.sortable) return;
-    const newDirection: SortDirection =
-      currentSortState.columnId === columnId
-        ? currentSortState.direction === "asc"
-          ? "desc"
-          : currentSortState.direction === "desc"
-            ? null
-            : "asc"
-        : "asc";
+    const newDirection: SortDirection = (() => {
+      if (currentSortState.columnId !== columnId) return "asc";
+      if (currentSortState.direction === "asc") return "desc";
+      if (currentSortState.direction === "desc") return null;
+      return "asc";
+    })();
     const newSortState = { columnId, direction: newDirection };
     if (onSortChange) {
       onSortChange(newSortState);
@@ -315,14 +457,11 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
   return (
     <div className={["space-y-4", className].filter(Boolean).join(" ")}>
       {searchable && (
-        <div className="flex justify-between items-center">
-          <Input
-            placeholder={searchPlaceholder}
-            value={currentGlobalFilter}
-            onChange={(e) => handleGlobalFilterChange(e.target.value)}
-            className="max-w-sm"
-          />
-        </div>
+        <SearchBar
+          value={currentGlobalFilter}
+          onChange={handleGlobalFilterChange}
+          placeholder={searchPlaceholder}
+        />
       )}
       <div className="overflow-x-auto border-card rounded-lg">
         <table className={getTableStyles(size)}>
@@ -365,93 +504,29 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
             </tr>
           </thead>
           <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan={columns.length + (selectable ? 1 : 0)}>
-                  <LoadingSpinner />
-                </td>
-              </tr>
-            ) : paginatedData.length === 0 ? (
-              <tr>
-                <td colSpan={columns.length + (selectable ? 1 : 0)}>
-                  <EmptyState message={emptyMessage} />
-                </td>
-              </tr>
-            ) : (
-              paginatedData.map((row, rowIndex) => {
-                const isSelected = selectedRows.includes(row.id);
-                const isEven = rowIndex % 2 === 0;
-                return (
-                  <tr
-                    key={row.id}
-                    className={getRowStyles(isSelected, isEven, striped, true)}
-                  >
-                    {selectable && (
-                      <td className={getCellStyles(size)}>
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onChange={(e) =>
-                            handleSelectRow(row.id, e.target.checked)
-                          }
-                          className="rounded-lg border-secondary dark:border-text-tertiary text-jade-600 focus:ring-jade-500"
-                        />
-                      </td>
-                    )}
-                    {columns.map((column) => {
-                      const value = column.accessorKey
-                        ? row[column.accessorKey]
-                        : undefined;
-                      return (
-                        <td
-                          key={column.id}
-                          className={getCellStyles(size, column.align)}
-                        >
-                          {column.cell
-                            ? column.cell(value, row, rowIndex)
-                            : String(value || "")}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                );
-              })
-            )}
+            <TableBody
+              loading={loading}
+              paginatedData={paginatedData}
+              columns={columns}
+              selectable={selectable}
+              emptyMessage={emptyMessage}
+              selectedRows={selectedRows}
+              handleSelectRow={handleSelectRow}
+              size={size}
+              striped={striped}
+            />
           </tbody>
         </table>
       </div>
       {pagination && (
-        <div className="flex items-center justify-between">
-          <div className="text-sm text-primary dark:text-border-light">
-            Showing {currentPage * pageSize + 1} to{" "}
-            {Math.min(
-              (currentPage + 1) * pageSize,
-              totalItems || filteredAndSortedData.length
-            )}{" "}
-            of {totalItems || filteredAndSortedData.length} results
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              disabled={currentPage === 0}
-              onClick={() => onPageChange?.(currentPage - 1)}
-            >
-              Previous
-            </Button>
-            <span className="text-sm text-primary dark:text-border-light">
-              Page {currentPage + 1} of {totalPages}
-            </span>
-            <Button
-              variant="ghost"
-              size="sm"
-              disabled={currentPage >= totalPages - 1}
-              onClick={() => onPageChange?.(currentPage + 1)}
-            >
-              Next
-            </Button>
-          </div>
-        </div>
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          pageSize={pageSize}
+          totalItems={totalItems}
+          filteredDataLength={filteredAndSortedData.length}
+          onPageChange={onPageChange}
+        />
       )}
     </div>
   );

@@ -60,16 +60,16 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
   useEffect(() => {
     const addEvent = (event: string) => {
       setAuthEvents((prev) => [
-        new Date().toLocaleTimeString() + ": " + event,
+        `${new Date().toLocaleTimeString()}: ${event}`,
         ...prev.slice(0, 9),
       ]);
     };
 
     // Listen for auth state changes
-    if (user) addEvent("User authenticated: " + user.email);
+    if (user) addEvent(`User authenticated: ${user.email}`);
     if (session) addEvent("Session updated");
-    if (profile) addEvent("Profile loaded: " + profile.role);
-    if (error) addEvent("Error: " + error);
+    if (profile) addEvent(`Profile loaded: ${profile.role}`);
+    if (error) addEvent(`Error: ${error}`);
     if (loading) addEvent("Loading state changed");
   }, [user, session, profile, error, loading]);
 
@@ -96,14 +96,14 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
     const result = await refreshSession();
     if (result.success) {
       setAuthEvents((prev) => [
-        new Date().toLocaleTimeString() + ": Session refreshed successfully",
+        `${new Date().toLocaleTimeString()}: Session refreshed successfully`,
         ...prev.slice(0, 9),
       ]);
     } else {
       setAuthEvents((prev) => [
-        new Date().toLocaleTimeString() +
-          ": Session refresh failed: " +
-          result.error,
+        `${new Date().toLocaleTimeString()}: Session refresh failed: ${
+          result.error
+        }`,
         ...prev.slice(0, 9),
       ]);
     }
@@ -138,13 +138,16 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
           <div>
             <strong>Status:</strong>
             <span
-              className={`ml-xs px-xs py-xs rounded-lg text-xs ${
-                monitoringData.health.overall === "healthy"
-                  ? "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300"
-                  : monitoringData.health.overall === "warning"
-                    ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300"
-                    : "bg-error-bg text-error-800 dark:bg-error-900/20 dark:text-error-400"
-              }`}
+              className={(() => {
+                const base = "ml-xs px-xs py-xs rounded-lg text-xs ";
+                if (monitoringData.health.overall === "healthy") {
+                  return `${base}bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300`;
+                }
+                if (monitoringData.health.overall === "warning") {
+                  return `${base}bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300`;
+                }
+                return `${base}bg-error-bg text-error-800 dark:bg-error-900/20 dark:text-error-400`;
+              })()}
             >
               {monitoringData.health.overall}
             </span>
@@ -184,11 +187,11 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
           </div>
           <div>
             <strong>Session Valid:</strong>{" "}
-            {isValidSession === null
-              ? "❓ Unknown"
-              : isValidSession
-                ? "✅ Yes"
-                : "❌ No"}
+            {(() => {
+              if (isValidSession === null) return "❓ Unknown";
+              if (isValidSession) return "✅ Yes";
+              return "❌ No";
+            })()}
           </div>
           <div>
             <strong>Profile Loaded:</strong> {profile ? "✅ Yes" : "❌ No"}

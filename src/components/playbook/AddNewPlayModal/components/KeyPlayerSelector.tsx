@@ -103,97 +103,104 @@ export const KeyPlayerSelector: React.FC<KeyPlayerSelectorProps> = ({
       )}
 
       {/* Loading state */}
-      {loading ? (
-        <div className="p-3 bg-secondary rounded-md border border-muted">
-          <Typography variant="body-sm" color="muted" className="italic">
-            <Icon
-              name="refresh-cw"
-              className="h-4 w-4 mr-2 inline animate-spin"
-            />
-            Loading roster...
-          </Typography>
-        </div>
-      ) : noPlayers ? (
-        /* No players warning */
-        <div className="p-3 bg-secondary rounded-md border border-muted">
-          <Typography variant="body-sm" color="muted" className="italic">
-            <Icon name="info" className="h-4 w-4 mr-2 inline" />
-            No players found in roster
-          </Typography>
-        </div>
-      ) : (
-        <>
-          {/* Player dropdown */}
-          <FormSelect
-            value=""
-            onChange={(value) => {
-              if (value) {
-                onAdd(value);
+      {(() => {
+        if (loading) {
+          return (
+            <div className="p-3 bg-secondary rounded-md border border-muted">
+              <Typography variant="body-sm" color="muted" className="italic">
+                <Icon
+                  name="refresh-cw"
+                  className="h-4 w-4 mr-2 inline animate-spin"
+                />
+                Loading roster...
+              </Typography>
+            </div>
+          );
+        }
+        if (noPlayers) {
+          return (
+            <div className="p-3 bg-secondary rounded-md border border-muted">
+              <Typography variant="body-sm" color="muted" className="italic">
+                <Icon name="info" className="h-4 w-4 mr-2 inline" />
+                No players found in roster
+              </Typography>
+            </div>
+          );
+        }
+        return (
+          <>
+            {/* Player dropdown */}
+            <FormSelect
+              value=""
+              onChange={(value) => {
+                if (value) {
+                  onAdd(value);
+                }
+              }}
+              disabled={disabled || availablePlayers.length === 0}
+              placeholder={
+                availablePlayers.length === 0
+                  ? "All players selected"
+                  : "Select player..."
               }
-            }}
-            disabled={disabled || availablePlayers.length === 0}
-            placeholder={
-              availablePlayers.length === 0
-                ? "All players selected"
-                : "Select player..."
-            }
-            options={availablePlayers.map((player) => ({
-              value: player.id,
-              label: formatPlayerName(player),
-            }))}
-          />
+              options={availablePlayers.map((player) => ({
+                value: player.id,
+                label: formatPlayerName(player),
+              }))}
+            />
 
-          {/* Selected players (profile cards) */}
-          {selectedPlayers.length > 0 && (
-            <div className="space-y-2 mt-3">
-              {selectedPlayers.map((player) => (
-                <div
-                  key={player.id}
-                  className="flex items-center justify-between px-3 py-2 
+            {/* Selected players (profile cards) */}
+            {selectedPlayers.length > 0 && (
+              <div className="space-y-2 mt-3">
+                {selectedPlayers.map((player) => (
+                  <div
+                    key={player.id}
+                    className="flex items-center justify-between px-3 py-2 
                              bg-secondary rounded-md border border-muted
                              hover:bg-tertiary transition-colors"
-                >
-                  <div className="flex items-center gap-2">
-                    {/* Jersey number badge */}
-                    <div
-                      className="w-8 h-8 rounded-full bg-primary-default text-white 
+                  >
+                    <div className="flex items-center gap-2">
+                      {/* Jersey number badge */}
+                      <div
+                        className="w-8 h-8 rounded-full bg-primary-default text-white 
                                     flex items-center justify-center font-bold text-sm shrink-0"
-                    >
-                      {player.jersey_number || "?"}
-                    </div>
+                      >
+                        {player.jersey_number || "?"}
+                      </div>
 
-                    {/* Player info */}
-                    <div className="flex flex-col">
-                      <Typography variant="body-sm" className="font-medium">
-                        {player.first_name} {player.last_name}
-                      </Typography>
-                      {player.position && (
-                        <Typography variant="caption" color="muted">
-                          {player.position}
+                      {/* Player info */}
+                      <div className="flex flex-col">
+                        <Typography variant="body-sm" className="font-medium">
+                          {player.first_name} {player.last_name}
                         </Typography>
-                      )}
+                        {player.position && (
+                          <Typography variant="caption" color="muted">
+                            {player.position}
+                          </Typography>
+                        )}
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Remove button */}
-                  <button
-                    type="button"
-                    onClick={() => onRemove(player.id)}
-                    disabled={disabled}
-                    className="text-muted hover:text-danger-default focus:outline-none 
+                    {/* Remove button */}
+                    <button
+                      type="button"
+                      onClick={() => onRemove(player.id)}
+                      disabled={disabled}
+                      className="text-muted hover:text-danger-default focus:outline-none 
                                focus:ring-2 focus:ring-danger-default rounded p-1
                                disabled:opacity-50 disabled:cursor-not-allowed
                                transition-colors"
-                    aria-label={`Remove ${player.first_name} ${player.last_name}`}
-                  >
-                    <Icon name="close" className="h-4 w-4" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </>
-      )}
+                      aria-label={`Remove ${player.first_name} ${player.last_name}`}
+                    >
+                      <Icon name="close" className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        );
+      })()}
     </div>
   );
 };

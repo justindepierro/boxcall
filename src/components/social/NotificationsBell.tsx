@@ -142,48 +142,61 @@ export const NotificationsBell: React.FC<NotificationsBellProps> = ({
             <h3 className="text-lg font-semibold">Notifications</h3>
           </div>
 
-          {loading ? (
-            <div className="p-4 text-center text-muted">
-              Loading notifications...
-            </div>
-          ) : notifications.length === 0 ? (
-            <div className="p-4 text-center text-muted">
-              No notifications yet
-            </div>
-          ) : (
-            <div className="divide-y divide-border">
-              {notifications.map((notification) => (
-                <button
-                  key={notification.id}
-                  onClick={() => handleNotificationClick(notification)}
-                  className={`w-full p-4 text-left hover:bg-secondary focus:outline-none focus:bg-secondary ${
-                    !notification.is_read ? "bg-info/20" : ""
-                  }`}
-                >
-                  <div className="flex items-start space-x-3">
-                    <div className="flex-shrink-0">
-                      <span className="text-lg">
-                        {getNotificationIcon(notification.notification_type)}
-                      </span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm text-primary">
-                        {formatNotificationMessage(notification)}
-                      </p>
-                      <p className="text-xs text-muted mt-1">
-                        {new Date(notification.created_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                    {!notification.is_read && (
+          {(() => {
+            if (loading) {
+              return (
+                <div className="p-4 text-center text-muted">
+                  Loading notifications...
+                </div>
+              );
+            }
+            if (notifications.length === 0) {
+              return (
+                <div className="p-4 text-center text-muted">
+                  No notifications yet
+                </div>
+              );
+            }
+            return (
+              <div className="divide-y divide-border">
+                {notifications.map((notification) => (
+                  <button
+                    key={notification.id}
+                    onClick={() => handleNotificationClick(notification)}
+                    className={(() => {
+                      const base =
+                        "w-full p-4 text-left hover:bg-secondary focus:outline-none focus:bg-secondary ";
+                      if (!notification.is_read) return `${base}bg-info/20`;
+                      return base;
+                    })()}
+                  >
+                    <div className="flex items-start space-x-3">
                       <div className="flex-shrink-0">
-                        <div className="w-2 h-2 bg-text-info rounded-full"></div>
+                        <span className="text-lg">
+                          {getNotificationIcon(notification.notification_type)}
+                        </span>
                       </div>
-                    )}
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-primary">
+                          {formatNotificationMessage(notification)}
+                        </p>
+                        <p className="text-xs text-muted mt-1">
+                          {new Date(
+                            notification.created_at
+                          ).toLocaleDateString()}
+                        </p>
+                      </div>
+                      {!notification.is_read && (
+                        <div className="flex-shrink-0">
+                          <div className="w-2 h-2 bg-text-info rounded-full"></div>
+                        </div>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            );
+          })()}
 
           {notifications.length > 0 && (
             <div className="p-4 border-t border-border">

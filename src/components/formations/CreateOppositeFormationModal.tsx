@@ -268,12 +268,11 @@ export const CreateOppositeFormationModal: React.FC<
   };
 
   // Determine what direction the opposite would be
-  const oppositeDirection =
-    originalFormation.direction === "left"
-      ? "right"
-      : originalFormation.direction === "right"
-        ? "left"
-        : "right"; // Default for standalone
+  const oppositeDirection = (() => {
+    if (originalFormation.direction === "left") return "right";
+    if (originalFormation.direction === "right") return "left";
+    return "right"; // Default for standalone
+  })();
 
   return (
     <Modal
@@ -378,16 +377,29 @@ export const CreateOppositeFormationModal: React.FC<
               disabled={loading}
             />
             <Typography variant="body-xs" className="text-muted">
-              {!suggestedName || suggestedName === originalFormation.name ? (
-                <>
-                  💡 Tip: Name it differently from "{originalFormation.name}"
-                  (e.g., "Lake", "{originalFormation.name} Right", etc.)
-                </>
-              ) : customName === suggestedName ? (
-                <>✨ Smart suggestion applied. Feel free to edit the name.</>
-              ) : (
-                <>Custom name will be used for the opposite formation.</>
-              )}
+              {(() => {
+                if (
+                  !suggestedName ||
+                  suggestedName === originalFormation.name
+                ) {
+                  return (
+                    <>
+                      💡 Tip: Name it differently from "{originalFormation.name}
+                      " (e.g., "Lake", "{originalFormation.name} Right", etc.)
+                    </>
+                  );
+                }
+                if (customName === suggestedName) {
+                  return (
+                    <>
+                      ✨ Smart suggestion applied. Feel free to edit the name.
+                    </>
+                  );
+                }
+                return (
+                  <>Custom name will be used for the opposite formation.</>
+                );
+              })()}
             </Typography>
           </div>
         </div>

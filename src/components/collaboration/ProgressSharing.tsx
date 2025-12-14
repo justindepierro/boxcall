@@ -405,13 +405,11 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
                           <Icon
                             name={getTrendIcon(metric.trend)}
                             size="xs"
-                            className={
-                              metric.trend === "up"
-                                ? "text-success"
-                                : metric.trend === "down"
-                                  ? "text-danger"
-                                  : "text-muted"
-                            }
+                            className={(() => {
+                              if (metric.trend === "up") return "text-success";
+                              if (metric.trend === "down") return "text-danger";
+                              return "text-muted";
+                            })()}
                           />
                         </div>
                       </div>
@@ -548,26 +546,23 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
                   <Card key={insight.id} variant="glass" className="p-3">
                     <div className="flex items-start gap-3">
                       <div
-                        className={`p-2 rounded-lg ${
-                          insight.type === "strength"
-                            ? "bg-success/10 text-success"
-                            : insight.type === "opportunity"
-                              ? "bg-warning/10 text-warning"
-                              : insight.type === "trend"
-                                ? "bg-primary/10 text-primary"
-                                : "bg-secondary/10 text-secondary"
-                        }`}
+                        className={`p-2 rounded-lg ${(() => {
+                          if (insight.type === "strength")
+                            return "bg-success/10 text-success";
+                          if (insight.type === "opportunity")
+                            return "bg-warning/10 text-warning";
+                          if (insight.type === "trend")
+                            return "bg-primary/10 text-primary";
+                          return "bg-secondary/10 text-secondary";
+                        })()}`}
                       >
                         <Icon
-                          name={
-                            insight.type === "strength"
-                              ? "check"
-                              : insight.type === "opportunity"
-                                ? "target"
-                                : insight.type === "trend"
-                                  ? "arrow-up"
-                                  : "search"
-                          }
+                          name={(() => {
+                            if (insight.type === "strength") return "check";
+                            if (insight.type === "opportunity") return "target";
+                            if (insight.type === "trend") return "arrow-up";
+                            return "search";
+                          })()}
                           size="sm"
                         />
                       </div>
@@ -590,13 +585,13 @@ export const ProgressSharing: React.FC<ProgressSharingProps> = ({
                             {insight.confidence}% confidence
                           </Typography>
                           <span
-                            className={`px-2 py-1 rounded-lg text-xs ${
-                              insight.priority === "high"
-                                ? "bg-danger/10 text-danger"
-                                : insight.priority === "medium"
-                                  ? "bg-warning/10 text-warning"
-                                  : "bg-text-muted/10 text-muted"
-                            }`}
+                            className={`px-2 py-1 rounded-lg text-xs ${(() => {
+                              if (insight.priority === "high")
+                                return "bg-danger/10 text-danger";
+                              if (insight.priority === "medium")
+                                return "bg-warning/10 text-warning";
+                              return "bg-text-muted/10 text-muted";
+                            })()}`}
                           >
                             {insight.priority} priority
                           </span>

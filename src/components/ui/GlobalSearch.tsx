@@ -625,52 +625,66 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
             overflow-hidden
             animate-in fade-in slide-in-from-top-2 duration-300"
           >
-            {isLoading ? (
-              <div className="px-6 py-8 text-center">
-                <Icon
-                  name="loader"
-                  className="h-8 w-8 text-jade-500 animate-spin mx-auto mb-3"
-                />
-                <Typography
-                  variant="body-sm"
-                  className="text-neutral-500 dark:text-neutral-400"
-                >
-                  Searching across your content...
-                </Typography>
-              </div>
-            ) : results.length > 0 ? (
-              <div className="py-2 overflow-y-auto max-h-96 custom-scrollbar">
-                {results.map((result, index) => (
-                  <SearchResultItem
-                    key={`${result.type}-${result.id}`}
-                    result={result}
-                    index={index}
-                    selectedIndex={selectedIndex}
-                    getTypeIcon={getTypeIcon}
-                    getTypeColor={getTypeColor}
-                    onClick={handleResultClick}
-                  />
-                ))}
-              </div>
-            ) : query.length >= 2 ? (
-              <div className="px-6 py-8 text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-neutral-100 dark:bg-navy-700 flex items-center justify-center">
-                  <Icon name="search" className="h-8 w-8 text-neutral-400" />
-                </div>
-                <Typography
-                  variant="body-sm"
-                  className="font-medium text-navy-900 dark:text-white mb-1"
-                >
-                  No results found
-                </Typography>
-                <Typography
-                  variant="body-xs"
-                  className="text-neutral-500 dark:text-neutral-400"
-                >
-                  Try searching for plays, players, or announcements
-                </Typography>
-              </div>
-            ) : null}
+            {(() => {
+              if (isLoading) {
+                return (
+                  <div className="px-6 py-8 text-center">
+                    <Icon
+                      name="loader"
+                      className="h-8 w-8 text-jade-500 animate-spin mx-auto mb-3"
+                    />
+                    <Typography
+                      variant="body-sm"
+                      className="text-neutral-500 dark:text-neutral-400"
+                    >
+                      Searching across your content...
+                    </Typography>
+                  </div>
+                );
+              }
+              if (results.length > 0) {
+                return (
+                  <div className="py-2 overflow-y-auto max-h-96 custom-scrollbar">
+                    {results.map((result, index) => (
+                      <SearchResultItem
+                        key={`${result.type}-${result.id}`}
+                        result={result}
+                        index={index}
+                        selectedIndex={selectedIndex}
+                        getTypeIcon={getTypeIcon}
+                        getTypeColor={getTypeColor}
+                        onClick={handleResultClick}
+                      />
+                    ))}
+                  </div>
+                );
+              }
+              if (query.length >= 2) {
+                return (
+                  <div className="px-6 py-8 text-center">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-neutral-100 dark:bg-navy-700 flex items-center justify-center">
+                      <Icon
+                        name="search"
+                        className="h-8 w-8 text-neutral-400"
+                      />
+                    </div>
+                    <Typography
+                      variant="body-sm"
+                      className="font-medium text-navy-900 dark:text-white mb-1"
+                    >
+                      No results found
+                    </Typography>
+                    <Typography
+                      variant="body-xs"
+                      className="text-neutral-500 dark:text-neutral-400"
+                    >
+                      Try searching for plays, players, or announcements
+                    </Typography>
+                  </div>
+                );
+              }
+              return null;
+            })()}
           </div>
         )}
       </div>
@@ -747,64 +761,75 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
 
               {/* Results */}
               <div className="max-h-[calc(100vh-12rem)] overflow-y-auto custom-scrollbar">
-                {isLoading ? (
-                  <div className="px-6 py-8 text-center">
-                    <Icon
-                      name="loader"
-                      className="h-8 w-8 text-jade-500 animate-spin mx-auto mb-3"
-                    />
-                    <Typography
-                      variant="body-sm"
-                      className="text-neutral-500 dark:text-neutral-400"
-                    >
-                      Searching...
-                    </Typography>
-                  </div>
-                ) : results.length > 0 ? (
-                  <div className="space-y-1">
-                    {results.map((result, index) => (
-                      <SearchResultItem
-                        key={`${result.type}-${result.id}`}
-                        result={result}
-                        index={index}
-                        selectedIndex={selectedIndex}
-                        getTypeIcon={getTypeIcon}
-                        getTypeColor={getTypeColor}
-                        onClick={handleResultClick}
-                      />
-                    ))}
-                  </div>
-                ) : query.length >= 2 ? (
-                  <div className="px-6 py-8 text-center">
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-neutral-100 dark:bg-navy-700 flex items-center justify-center">
-                      <Icon
-                        name="search"
-                        className="h-8 w-8 text-neutral-400"
-                      />
+                {(() => {
+                  if (isLoading) {
+                    return (
+                      <div className="px-6 py-8 text-center">
+                        <Icon
+                          name="loader"
+                          className="h-8 w-8 text-jade-500 animate-spin mx-auto mb-3"
+                        />
+                        <Typography
+                          variant="body-sm"
+                          className="text-neutral-500 dark:text-neutral-400"
+                        >
+                          Searching...
+                        </Typography>
+                      </div>
+                    );
+                  }
+                  if (results.length > 0) {
+                    return (
+                      <div className="space-y-1">
+                        {results.map((result, index) => (
+                          <SearchResultItem
+                            key={`${result.type}-${result.id}`}
+                            result={result}
+                            index={index}
+                            selectedIndex={selectedIndex}
+                            getTypeIcon={getTypeIcon}
+                            getTypeColor={getTypeColor}
+                            onClick={handleResultClick}
+                          />
+                        ))}
+                      </div>
+                    );
+                  }
+                  if (query.length >= 2) {
+                    return (
+                      <div className="px-6 py-8 text-center">
+                        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-neutral-100 dark:bg-navy-700 flex items-center justify-center">
+                          <Icon
+                            name="search"
+                            className="h-8 w-8 text-neutral-400"
+                          />
+                        </div>
+                        <Typography
+                          variant="body-sm"
+                          className="font-medium text-navy-900 dark:text-white mb-1"
+                        >
+                          No results found
+                        </Typography>
+                        <Typography
+                          variant="body-xs"
+                          className="text-neutral-500 dark:text-neutral-400"
+                        >
+                          Try searching for plays, players, or announcements
+                        </Typography>
+                      </div>
+                    );
+                  }
+                  return (
+                    <div className="px-6 py-8 text-center">
+                      <Typography
+                        variant="body-sm"
+                        className="text-neutral-500 dark:text-neutral-400"
+                      >
+                        Start typing to search across all your content
+                      </Typography>
                     </div>
-                    <Typography
-                      variant="body-sm"
-                      className="font-medium text-navy-900 dark:text-white mb-1"
-                    >
-                      No results found
-                    </Typography>
-                    <Typography
-                      variant="body-xs"
-                      className="text-neutral-500 dark:text-neutral-400"
-                    >
-                      Try searching for plays, players, or announcements
-                    </Typography>
-                  </div>
-                ) : (
-                  <div className="px-6 py-8 text-center">
-                    <Typography
-                      variant="body-sm"
-                      className="text-neutral-500 dark:text-neutral-400"
-                    >
-                      Start typing to search across all your content
-                    </Typography>
-                  </div>
-                )}
+                  );
+                })()}
               </div>
             </div>
           </div>

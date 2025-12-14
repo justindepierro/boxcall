@@ -93,18 +93,17 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
               size="lg"
               disabled={!isCoach || uploading}
               onClick={() => fileInputRef.current?.click()}
-              aria-label={
-                isCoach
-                  ? localLogo
-                    ? "Change team logo"
-                    : "Upload team logo"
-                  : "Team logo"
-              }
-              className={
-                localLogo
-                  ? "w-20 h-20 rounded-none border-muted dark:border-text-tertiary bg-subtle dark:bg-tertiary overflow-hidden"
-                  : "w-20 h-20 rounded-none border-light dark:border-text-tertiary bg-subtle dark:bg-tertiary hover:border-text-secondary dark:hover:border-text-secondary"
-              }
+              aria-label={(() => {
+                if (!isCoach) return "Team logo";
+                if (localLogo) return "Change team logo";
+                return "Upload team logo";
+              })()}
+              className={(() => {
+                if (localLogo) {
+                  return "w-20 h-20 rounded-none border-muted dark:border-text-tertiary bg-subtle dark:bg-tertiary overflow-hidden";
+                }
+                return "w-20 h-20 rounded-none border-light dark:border-text-tertiary bg-subtle dark:bg-tertiary hover:border-text-secondary dark:hover:border-text-secondary";
+              })()}
             >
               {localLogo ? (
                 <img
@@ -116,7 +115,11 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
                 <div className="text-center flex flex-col items-center text-secondary dark:text-border-light">
                   <LogoIcon size="lg" color="brand" />
                   <span className="text-2xs font-medium mt-1">
-                    {uploading ? "Uploading..." : isCoach ? "Add Logo" : "Logo"}
+                    {(() => {
+                      if (uploading) return "Uploading...";
+                      if (isCoach) return "Add Logo";
+                      return "Logo";
+                    })()}
                   </span>
                 </div>
               )}

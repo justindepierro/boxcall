@@ -93,11 +93,9 @@ export const Modal: React.FC<ModalProps> = ({
       if (modalRef.current) {
         modalRef.current.focus();
       }
-    } else {
+    } else if (previousActiveElement.current) {
       // Restore focus to the previously focused element
-      if (previousActiveElement.current) {
-        previousActiveElement.current.focus();
-      }
+      previousActiveElement.current.focus();
     }
     return () => {
       // Cleanup on unmount
@@ -132,11 +130,9 @@ export const Modal: React.FC<ModalProps> = ({
           lastElement?.focus();
           event.preventDefault();
         }
-      } else {
-        if (document.activeElement === lastElement) {
-          firstElement?.focus();
-          event.preventDefault();
-        }
+      } else if (document.activeElement === lastElement) {
+        firstElement?.focus();
+        event.preventDefault();
       }
     };
     document.addEventListener("keydown", handleTab);

@@ -250,12 +250,12 @@ export const MobilePracticeSession: React.FC = () => {
             {Array.from({ length: totalRepsForCurrentPlay }).map((_, idx) => (
               <div
                 key={idx}
-                className={`h-3 w-3 rounded-full transition-all ${
-                  idx < currentRepNumber - 1
-                    ? "bg-success-600"
-                    : idx === currentRepNumber - 1
-                      ? "bg-primary ring-4 ring-primary/20 scale-125"
-                      : "bg-secondary"
+                className={`h-3 w-3 rounded-full transition-all ${(() => {
+                  if (idx < currentRepNumber - 1) return "bg-success-600";
+                  if (idx === currentRepNumber - 1)
+                    return "bg-primary ring-4 ring-primary/20 scale-125";
+                  return "bg-secondary";
+                })()}
                 }`}
               />
             ))}

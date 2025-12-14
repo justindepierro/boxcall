@@ -133,7 +133,7 @@ export class CSVDataValidator {
         );
       } else if (personnel.length === 1) {
         // Auto-correct single digit personnel
-        const corrected = personnel + "1";
+        const corrected = `${personnel}1`;
         rowData.personnel = corrected;
         warnings.push(
           `Auto-corrected personnel "${personnel}" to "${corrected}"`

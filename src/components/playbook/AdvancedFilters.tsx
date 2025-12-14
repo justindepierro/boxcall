@@ -368,7 +368,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                               onChange={(value) =>
                                 setNewFilter((prev) => ({
                                   ...prev,
-                                  value: value,
+                                  value,
                                 }))
                               }
                               placeholder="Select value..."
@@ -575,7 +575,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
                         onChange={(value) =>
                           setNewFilter((prev) => ({
                             ...prev,
-                            value: value,
+                            value,
                           }))
                         }
                         placeholder="Select value..."

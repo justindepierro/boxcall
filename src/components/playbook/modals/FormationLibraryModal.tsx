@@ -286,91 +286,99 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6 bg-white dark:bg-navy-900">
-          {loading ? (
-            <div className="flex items-center justify-center h-64">
-              <Icon
-                name="loader"
-                size="xl"
-                className="animate-spin text-secondary"
-              />
-            </div>
-          ) : filteredFormations.length === 0 ? (
-            <div className="text-center py-12">
-              <Icon
-                name="grid"
-                size="xl"
-                className="text-secondary mb-4 mx-auto"
-              />
-              <p className="text-secondary text-lg">No formations found</p>
-              <p className="text-tertiary text-sm mt-2">
-                Click "Import from Plays" to get started
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-              {filteredFormations.map((formation) => (
-                <div
-                  key={formation.id}
-                  className="card p-5 hover:shadow-xl hover:border-jade-500/30 hover:-translate-y-0.5 transition-all duration-200"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-lg font-semibold text-primary">
-                      {formation.name}
-                    </h3>
-                    {formation.opposite_formation_id && (
-                      <span className="badge-info text-xs">Paired</span>
-                    )}
-                  </div>
-
-                  {formation.run_strength || formation.pass_strength ? (
-                    <div className="space-y-2 mb-3">
-                      {formation.run_strength && (
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-secondary">Run:</span>
-                          <span className="text-primary font-medium">
-                            {formation.run_strength}
-                          </span>
-                        </div>
-                      )}
-                      {formation.pass_strength && (
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-secondary">Pass:</span>
-                          <span className="text-primary font-medium">
-                            {formation.pass_strength}
-                          </span>
-                        </div>
+          {(() => {
+            if (loading)
+              return (
+                <div className="flex items-center justify-center h-64">
+                  <Icon
+                    name="loader"
+                    size="xl"
+                    className="animate-spin text-secondary"
+                  />
+                </div>
+              );
+            if (filteredFormations.length === 0)
+              return (
+                <div className="text-center py-12">
+                  <Icon
+                    name="grid"
+                    size="xl"
+                    className="text-secondary mb-4 mx-auto"
+                  />
+                  <p className="text-secondary text-lg">No formations found</p>
+                  <p className="text-tertiary text-sm mt-2">
+                    Click "Import from Plays" to get started
+                  </p>
+                </div>
+              );
+            return (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {filteredFormations.map((formation) => (
+                  <div
+                    key={formation.id}
+                    className="card p-5 hover:shadow-xl hover:border-jade-500/30 hover:-translate-y-0.5 transition-all duration-200"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <h3 className="text-lg font-semibold text-primary">
+                        {formation.name}
+                      </h3>
+                      {formation.opposite_formation_id && (
+                        <span className="badge-info text-xs">Paired</span>
                       )}
                     </div>
-                  ) : null}
 
-                  {formation.confidence_score !== null &&
-                    formation.confidence_score > 0 && (
-                      <div className="mb-3">
-                        <div className="flex items-center justify-between text-xs mb-1">
-                          <span className="text-secondary">Confidence</span>
-                          <span className="text-primary font-medium">
-                            {formation.confidence_score}%
-                          </span>
-                        </div>
-                        <div className="w-full bg-surface-muted rounded-full h-2">
-                          <div
-                            className="h-2 rounded-full bg-gradient-to-r from-jade-500 to-jade-600"
-                            style={{ width: `${formation.confidence_score}%` }}
-                          />
-                        </div>
+                    {formation.run_strength || formation.pass_strength ? (
+                      <div className="space-y-2 mb-3">
+                        {formation.run_strength && (
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-secondary">Run:</span>
+                            <span className="text-primary font-medium">
+                              {formation.run_strength}
+                            </span>
+                          </div>
+                        )}
+                        {formation.pass_strength && (
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-secondary">Pass:</span>
+                            <span className="text-primary font-medium">
+                              {formation.pass_strength}
+                            </span>
+                          </div>
+                        )}
                       </div>
-                    )}
+                    ) : null}
 
-                  <div className="flex items-center justify-between pt-3 border-t border-divider">
-                    <span className="text-xs text-secondary">Usage</span>
-                    <span className="text-sm font-medium text-primary">
-                      {formation.usage_count || 0} plays
-                    </span>
+                    {formation.confidence_score !== null &&
+                      formation.confidence_score > 0 && (
+                        <div className="mb-3">
+                          <div className="flex items-center justify-between text-xs mb-1">
+                            <span className="text-secondary">Confidence</span>
+                            <span className="text-primary font-medium">
+                              {formation.confidence_score}%
+                            </span>
+                          </div>
+                          <div className="w-full bg-surface-muted rounded-full h-2">
+                            <div
+                              className="h-2 rounded-full bg-gradient-to-r from-jade-500 to-jade-600"
+                              style={{
+                                width: `${formation.confidence_score}%`,
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                    <div className="flex items-center justify-between pt-3 border-t border-divider">
+                      <span className="text-xs text-secondary">Usage</span>
+                      <span className="text-sm font-medium text-primary">
+                        {formation.usage_count || 0} plays
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            );
+          })()}
         </div>
 
         {/* Footer Stats */}

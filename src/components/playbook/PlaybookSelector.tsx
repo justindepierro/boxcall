@@ -30,11 +30,134 @@ interface Playbook {
 
 interface PlaybookSelectorProps {
   playbooks: Playbook[];
-  activePlaybookId: string;
+  activePlaybookId: string | null;
   onPlaybookChange: (playbookId: string) => void;
   onPlaybookUpdated?: () => void;
   teamId: string;
 }
+
+const savePlaybookName = async (
+  playbookId: string,
+  newName: string,
+  onSuccess?: () => void
+): Promise<void> => {
+  const { error } = await supabase
+    .from("playbooks")
+    .update({
+      name: newName.trim(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", playbookId);
+
+  if (error) throw error;
+
+  if (onSuccess) {
+    onSuccess();
+  }
+};
+
+const createNewPlaybook = async (
+  teamId: string,
+  name: string,
+  onSuccess?: (playbookId: string) => void
+): Promise<void> => {
+  const { data, error } = await supabase
+    .from("playbooks")
+    .insert({
+      team_id: teamId,
+      name: name.trim(),
+      is_active: true,
+    })
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  if (data && onSuccess) {
+    onSuccess((data as any).id);
+  }
+};
+
+const EditMode: React.FC<{
+  editingName: string;
+  setEditingName: (name: string) => void;
+  onSave: (e: React.MouseEvent) => void;
+  onCancel: (e: React.MouseEvent) => void;
+  saving: boolean;
+}> = ({ editingName, setEditingName, onSave, onCancel, saving }) => (
+  <div
+    className="flex-1 flex items-center gap-xs"
+    onClick={(e) => e.stopPropagation()}
+  >
+    <input
+      type="text"
+      value={editingName}
+      onChange={(e) => setEditingName(e.target.value)}
+      className="flex-1 px-sm py-xs border border-primary rounded text-primary bg-primary focus:outline-none focus:ring-2 focus:ring-primary-500"
+      autoFocus
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          onSave(e as any);
+        } else if (e.key === "Escape") {
+          onCancel(e as any);
+        }
+      }}
+      disabled={saving}
+    />
+    <button
+      onClick={onSave}
+      disabled={saving}
+      className="p-xs text-success-600 hover:bg-success-100 rounded transition-colors"
+      title="Save"
+    >
+      <Check className="w-4 h-4" />
+    </button>
+    <button
+      onClick={onCancel}
+      disabled={saving}
+      className="p-xs text-muted hover:bg-muted rounded transition-colors"
+      title="Cancel"
+    >
+      <X className="w-4 h-4" />
+    </button>
+  </div>
+);
+
+const DisplayMode: React.FC<{
+  playbook: Playbook;
+  isActive: boolean;
+  onSelect: () => void;
+  onEdit: (e: React.MouseEvent) => void;
+}> = ({ playbook, isActive, onSelect, onEdit }) => (
+  <>
+    <button onClick={onSelect} className="flex-1 text-left">
+      <div className="flex items-center gap-sm">
+        <div className="flex-1">
+          <Typography
+            variant="body-md"
+            className={`font-medium ${
+              isActive ? "text-primary-600" : "text-primary"
+            }`}
+          >
+            {playbook.name}
+          </Typography>
+          <Typography variant="caption" className="text-secondary">
+            {playbook.play_count || 0} play
+            {playbook.play_count !== 1 ? "s" : ""}
+          </Typography>
+        </div>
+        {isActive && <div className="w-2 h-2 bg-primary-500 rounded-full" />}
+      </div>
+    </button>
+    <button
+      onClick={onEdit}
+      className="p-xs text-muted hover:text-primary hover:bg-muted rounded transition-colors"
+      title="Rename playbook"
+    >
+      <Edit2 className="w-4 h-4" />
+    </button>
+  </>
+);
 
 export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
   playbooks,
@@ -81,20 +204,12 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
 
     setSaving(true);
     try {
-      const { error } = await supabase
-        .from("playbooks")
-        .update({
-          name: editingName.trim(),
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", editingId);
-
-      if (error) throw error;
-
-      setEditingId(null);
-      if (onPlaybookUpdated) {
-        onPlaybookUpdated();
-      }
+      await savePlaybookName(editingId, editingName, () => {
+        setEditingId(null);
+        if (onPlaybookUpdated) {
+          onPlaybookUpdated();
+        }
+      });
     } catch (error) {
       logError("Failed to update playbook name:", error);
       toast.error("Failed to update playbook name. Please try again.");
@@ -114,26 +229,12 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
     if (!name || !name.trim()) return;
 
     try {
-      const { data, error } = await supabase
-        .from("playbooks")
-        .insert({
-          team_id: teamId,
-          name: name.trim(),
-          is_active: true,
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      if (onPlaybookUpdated) {
-        onPlaybookUpdated();
-      }
-
-      // Switch to the new playbook
-      if (data) {
-        onPlaybookChange((data as any).id);
-      }
+      await createNewPlaybook(teamId, name, (playbookId) => {
+        if (onPlaybookUpdated) {
+          onPlaybookUpdated();
+        }
+        onPlaybookChange(playbookId);
+      });
     } catch (error) {
       logError("Failed to create playbook:", error);
       toast.error("Failed to create playbook. Please try again.");
@@ -218,86 +319,23 @@ export const PlaybookSelector: React.FC<PlaybookSelectorProps> = ({
                     }`}
                   >
                     {editingId === playbook.id ? (
-                      // Edit Mode
-                      <div
-                        className="flex-1 flex items-center gap-xs"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <input
-                          type="text"
-                          value={editingName}
-                          onChange={(e) => setEditingName(e.target.value)}
-                          className="flex-1 px-sm py-xs border border-primary rounded text-primary bg-primary focus:outline-none focus:ring-2 focus:ring-primary-500"
-                          autoFocus
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              handleSaveEdit(e as any);
-                            } else if (e.key === "Escape") {
-                              handleCancelEdit(e as any);
-                            }
-                          }}
-                          disabled={saving}
-                        />
-                        <button
-                          onClick={handleSaveEdit}
-                          disabled={saving}
-                          className="p-xs text-success-600 hover:bg-success-100 rounded transition-colors"
-                          title="Save"
-                        >
-                          <Check className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={handleCancelEdit}
-                          disabled={saving}
-                          className="p-xs text-muted hover:bg-muted rounded transition-colors"
-                          title="Cancel"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
+                      <EditMode
+                        editingName={editingName}
+                        setEditingName={setEditingName}
+                        onSave={handleSaveEdit}
+                        onCancel={handleCancelEdit}
+                        saving={saving}
+                      />
                     ) : (
-                      // Display Mode
-                      <>
-                        <button
-                          onClick={() => {
-                            onPlaybookChange(playbook.id);
-                            setIsOpen(false);
-                          }}
-                          className="flex-1 text-left"
-                        >
-                          <div className="flex items-center gap-sm">
-                            <div className="flex-1">
-                              <Typography
-                                variant="body-md"
-                                className={`font-medium ${
-                                  playbook.id === activePlaybookId
-                                    ? "text-primary-600"
-                                    : "text-primary"
-                                }`}
-                              >
-                                {playbook.name}
-                              </Typography>
-                              <Typography
-                                variant="caption"
-                                className="text-secondary"
-                              >
-                                {playbook.play_count || 0} play
-                                {playbook.play_count !== 1 ? "s" : ""}
-                              </Typography>
-                            </div>
-                            {playbook.id === activePlaybookId && (
-                              <div className="w-2 h-2 bg-primary-500 rounded-full" />
-                            )}
-                          </div>
-                        </button>
-                        <button
-                          onClick={(e) => handleStartEdit(playbook, e)}
-                          className="p-xs text-muted hover:text-primary hover:bg-muted rounded transition-colors"
-                          title="Rename playbook"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </button>
-                      </>
+                      <DisplayMode
+                        playbook={playbook}
+                        isActive={playbook.id === activePlaybookId}
+                        onSelect={() => {
+                          onPlaybookChange(playbook.id);
+                          setIsOpen(false);
+                        }}
+                        onEdit={(e) => handleStartEdit(playbook, e)}
+                      />
                     )}
                   </div>
                 ))}

@@ -183,7 +183,7 @@ export const monitorMemoryUsage = () => {
 
     // Warn if memory usage is high
     if (memoryInfo.usage > 70) {
-      console.warn("High memory usage detected:", memoryInfo.usage + "%");
+      console.warn("High memory usage detected:", `${memoryInfo.usage}%`);
     }
 
     return memoryInfo;

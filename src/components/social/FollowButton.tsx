@@ -84,11 +84,12 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
     return (
       <button
         onClick={handleFollowToggle}
-        className={`flex items-center gap-1 ${buttonSizeClasses[size]} rounded-full transition-colors ${
-          is_following
-            ? "text-success bg-success/20 hover:bg-success/20"
-            : "text-tertiary hover:text-primary hover:bg-secondary"
-        }`}
+        className={(() => {
+          const base = `flex items-center gap-1 ${buttonSizeClasses[size]} rounded-full transition-colors `;
+          if (is_following)
+            return `${base}text-success bg-success/20 hover:bg-success/20`;
+          return `${base}text-tertiary hover:text-primary hover:bg-secondary`;
+        })()}
         disabled={isLoading}
         title={is_following ? "Unfollow" : "Follow"}
       >
@@ -108,22 +109,27 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
   return (
     <button
       onClick={handleFollowToggle}
-      className={`flex items-center gap-2 ${buttonSizeClasses[size]} border rounded-lg font-medium transition-colors ${
-        is_following
-          ? "border-text-success bg-success/20 text-success hover:bg-success/20"
-          : "border-light bg-primary text-primary hover:bg-secondary"
-      }`}
+      className={(() => {
+        const base = `flex items-center gap-2 ${buttonSizeClasses[size]} border rounded-lg font-medium transition-colors `;
+        if (is_following)
+          return `${base}border-text-success bg-success/20 text-success hover:bg-success/20`;
+        return `${base}border-light bg-primary text-primary hover:bg-secondary`;
+      })()}
       disabled={isLoading}
     >
-      {isLoading ? (
-        <div
-          className={`${sizeClasses[size]} border-2 border-text-primary border-t-transparent rounded-full animate-spin`}
-        />
-      ) : is_following ? (
-        <UserCheck className={sizeClasses[size]} />
-      ) : (
-        <UserPlus className={sizeClasses[size]} />
-      )}
+      {(() => {
+        if (isLoading) {
+          return (
+            <div
+              className={`${sizeClasses[size]} border-2 border-text-primary border-t-transparent rounded-full animate-spin`}
+            />
+          );
+        }
+        if (is_following) {
+          return <UserCheck className={sizeClasses[size]} />;
+        }
+        return <UserPlus className={sizeClasses[size]} />;
+      })()}
 
       <span>{is_following ? "Following" : "Follow"}</span>
 

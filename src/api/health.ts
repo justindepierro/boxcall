@@ -178,11 +178,11 @@ export async function healthCheck(): Promise<HealthStatus> {
   );
   const anyDown = [database, storage, auth].some((s) => s.status === "down");
 
-  const status: HealthStatus["status"] = anyDown
-    ? "unhealthy"
-    : allOperational
-      ? "healthy"
-      : "degraded";
+  const status: HealthStatus["status"] = (() => {
+    if (anyDown) return "unhealthy";
+    if (allOperational) return "healthy";
+    return "degraded";
+  })();
 
   return {
     status,

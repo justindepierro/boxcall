@@ -50,10 +50,9 @@ export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
       ref={containerRef}
       role="tablist"
       aria-orientation={orientation}
-      className={
-        "inline-flex rounded-lg bg-subtle border-muted shadow-sm p-0.5 gap-0.5 " +
-        (className || "")
-      }
+      className={`inline-flex rounded-lg bg-subtle border-muted shadow-sm p-0.5 gap-0.5 ${
+        className || ""
+      }`}
       onKeyDown={(e) => {
         if (orientation === "horizontal") {
           if (e.key === "ArrowRight") {
@@ -63,14 +62,12 @@ export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
             e.preventDefault();
             move(-1);
           }
-        } else {
-          if (e.key === "ArrowDown") {
-            e.preventDefault();
-            move(1);
-          } else if (e.key === "ArrowUp") {
-            e.preventDefault();
-            move(-1);
-          }
+        } else if (e.key === "ArrowDown") {
+          e.preventDefault();
+          move(1);
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          move(-1);
         }
         if (e.key === "Home") {
           e.preventDefault();
@@ -98,8 +95,8 @@ export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
             // Use ghost for base, apply custom classes for contrast
             variant={selected ? "primary" : "ghost"}
             size="xs"
-            className={
-              (selected
+            className={`${
+              selected
                 ? "!bg-brand-jade-dark text-inverse border-brand-jade-dark"
                 : [
                     // Base unselected adopts subtle surface vs raw gray
@@ -109,9 +106,8 @@ export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
                     "focus-visible:ring-2 focus-visible:ring-brand-jade focus-visible:ring-offset-1 focus-visible:outline-none",
                     // Active press feedback
                     "active:bg-subtle",
-                  ].join(" ")) +
-              " rounded-lg min-w-14 font-medium transition-colors"
-            }
+                  ].join(" ")
+            } rounded-lg min-w-14 font-medium transition-colors`}
             onClick={() => onChange(v)}
           >
             {labels[v]}

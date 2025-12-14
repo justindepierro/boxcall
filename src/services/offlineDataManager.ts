@@ -145,15 +145,14 @@ class OfflineDataManager {
         };
         request.onerror = () => resolve([]);
       });
-    } else {
-      const index = store.index("type");
-      const request = index.getAll(type);
-
-      return new Promise((resolve) => {
-        request.onsuccess = () => resolve(request.result || []);
-        request.onerror = () => resolve([]);
-      });
     }
+    const index = store.index("type");
+    const request = index.getAll(type);
+
+    return new Promise((resolve) => {
+      request.onsuccess = () => resolve(request.result || []);
+      request.onerror = () => resolve([]);
+    });
   }
 
   // Queue action for sync when online

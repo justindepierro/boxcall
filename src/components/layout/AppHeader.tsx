@@ -53,14 +53,12 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
     useSaveState();
 
   // Get role display info
-  const roleDisplay =
-    profile?.role === "admin"
-      ? "Super Admin"
-      : profile?.role === "coach"
-        ? "Coach"
-        : profile?.role === "player"
-          ? "Player"
-          : "User";
+  const roleDisplay = (() => {
+    if (profile?.role === "admin") return "Super Admin";
+    if (profile?.role === "coach") return "Coach";
+    if (profile?.role === "player") return "Player";
+    return "User";
+  })();
   const showDevBadge = devMode && devMode !== "production";
   const teams =
     roleContext?.teamMemberships.map((tm) => ({

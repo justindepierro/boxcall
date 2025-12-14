@@ -106,7 +106,7 @@ export class SecurePlaysService {
             type: "rate_limit",
             severity: "medium",
             action: "create_play",
-            userId: userId,
+            userId,
             details: {
               limit: RateLimitPresets.PLAY_CREATE.maxRequests,
               window: RateLimitPresets.PLAY_CREATE.windowMs,
@@ -144,7 +144,7 @@ export class SecurePlaysService {
           type: "validation_error",
           severity: "low",
           action: "create_play",
-          userId: userId,
+          userId,
           details: {
             error: error.message,
             issues: error.issues || [],
@@ -224,7 +224,7 @@ export class SecurePlaysService {
             type: "rate_limit",
             severity: "medium",
             action: "update_play",
-            userId: userId,
+            userId,
             details: {
               playId: id,
               limit: RateLimitPresets.PLAY_UPDATE.maxRequests,
@@ -256,7 +256,7 @@ export class SecurePlaysService {
           type: "validation_error",
           severity: "low",
           action: "update_play",
-          userId: userId,
+          userId,
           details: {
             playId: id,
             error: error.message,
@@ -344,7 +344,7 @@ export class SecurePlaysService {
             type: "rate_limit",
             severity: "medium",
             action: "delete_play",
-            userId: userId,
+            userId,
             details: {
               playId: id,
               limit: RateLimitPresets.PLAY_DELETE.maxRequests,

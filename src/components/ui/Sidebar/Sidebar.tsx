@@ -292,12 +292,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
               event.preventDefault();
               lastElement.focus();
             }
-          } else {
+          } else if (document.activeElement === lastElement) {
             // Tab
-            if (document.activeElement === lastElement) {
-              event.preventDefault();
-              firstElement.focus();
-            }
+            event.preventDefault();
+            firstElement.focus();
           }
         }
         return;
@@ -447,47 +445,55 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           )}
           <nav className="py-4">
-            {loading ? (
-              // Skeleton loading state
-              Array.from({ length: 6 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="mx-2 my-1 px-4 py-3 rounded-lg animate-pulse"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="w-9 h-4 bg-surface-hover rounded-lg"></div>
-                    <div className="flex-1 h-4 bg-surface-hover rounded-lg"></div>
+            {(() => {
+              if (loading) {
+                return Array.from({ length: 6 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="mx-2 my-1 px-4 py-3 rounded-lg animate-pulse"
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className="w-9 h-4 bg-surface-hover rounded-lg"></div>
+                      <div className="flex-1 h-4 bg-surface-hover rounded-lg"></div>
+                    </div>
                   </div>
-                </div>
-              ))
-            ) : filteredItems.length > 0 ? (
-              filteredItems.map((item, index) => (
-                <SidebarItemComponent
-                  key={item.id}
-                  item={item}
-                  index={index}
-                  onItemClick={handleItemClick}
-                />
-              ))
-            ) : searchQuery ? (
-              <div className="px-4 py-8 text-center text-muted">
-                <svg
-                  className="w-12 h-12 mx-auto mb-3 text-tertiary"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                ));
+              }
+              if (filteredItems.length > 0) {
+                return filteredItems.map((item, index) => (
+                  <SidebarItemComponent
+                    key={item.id}
+                    item={item}
+                    index={index}
+                    onItemClick={handleItemClick}
                   />
-                </svg>
-                <p className="text-sm">No items found for "{searchQuery}"</p>
-              </div>
-            ) : null}
+                ));
+              }
+              if (searchQuery) {
+                return (
+                  <div className="px-4 py-8 text-center text-muted">
+                    <svg
+                      className="w-12 h-12 mx-auto mb-3 text-tertiary"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                    <p className="text-sm">
+                      No items found for "{searchQuery}"
+                    </p>
+                  </div>
+                );
+              }
+              return null;
+            })()}
           </nav>
         </div>
         {/* Footer */}

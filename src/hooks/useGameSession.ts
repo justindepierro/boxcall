@@ -98,6 +98,113 @@ interface UseGameSessionReturn {
   isGoalLine: boolean; // yardLine >= 95
 }
 
+// Helper: Filter plays by Billick situations (down, distance, field zone)
+const filterPlaysBySituation = (
+  gamePlanPlays: GamePlanPlay[],
+  situation: GameSituation
+): GamePlanPlay[] => {
+  const { down, distance, yardLine } = situation;
+
+  return gamePlanPlays.filter((planPlay) => {
+    const play = planPlay.play;
+    if (!play) return false;
+
+    // Filter by down (if play has down restrictions)
+    if (play.down && play.down !== down) return false;
+
+    // Filter by distance (short: 1-3, medium: 4-7, long: 8+)
+    if (play.distance) {
+      if (distance <= 3 && play.distance !== "short") return false;
+      if (distance >= 4 && distance <= 7 && play.distance !== "medium")
+        return false;
+      if (distance >= 8 && play.distance !== "long") return false;
+    }
+
+    // Filter by field zone
+    if (play.field_zone) {
+      if (yardLine < 50 && play.field_zone === "opponent") return false;
+      if (yardLine >= 50 && yardLine < 80 && play.field_zone === "midfield")
+        return false;
+      if (yardLine >= 80 && yardLine < 95 && play.field_zone === "red_zone")
+        return false;
+      if (yardLine >= 95 && play.field_zone === "goal_line") return false;
+    }
+
+    return true;
+  });
+};
+
+// Helper: Calculate new situation after play execution
+const calculateNextSituation = (
+  situation: GameSituation,
+  yardsGained: number,
+  options?: {
+    wasTouchdown?: boolean;
+    wasTurnover?: boolean;
+  }
+): GameSituation => {
+  if (options?.wasTouchdown) {
+    // Touchdown - reset to own 25 (simulating kickoff)
+    return {
+      ...situation,
+      down: 1,
+      distance: 10,
+      yardLine: 25,
+    };
+  }
+
+  if (options?.wasTurnover) {
+    // Turnover - possession changes (handled externally)
+    return situation;
+  }
+
+  // Normal play progression
+  const newYardLine = Math.min(100, situation.yardLine + yardsGained);
+  const yardsToFirstDown = situation.distance - yardsGained;
+
+  if (yardsToFirstDown <= 0) {
+    // First down!
+    return {
+      ...situation,
+      down: 1,
+      distance: 10,
+      yardLine: newYardLine,
+    };
+  }
+
+  if (situation.down < 4) {
+    // Advance down
+    return {
+      ...situation,
+      down: situation.down + 1,
+      distance: yardsToFirstDown,
+      yardLine: newYardLine,
+    };
+  }
+
+  // 4th down - turnover on downs
+  return {
+    ...situation,
+    down: 1,
+    distance: 10,
+    yardLine: newYardLine,
+  };
+};
+
+// Load game plan and associated plays
+async function loadGamePlanData(gamePlanId: string): Promise<{
+  plan: GamePlan;
+  plays: GamePlanPlay[];
+}> {
+  const plan = await GamePlanService.getGamePlan(gamePlanId);
+  if (!plan) {
+    throw new Error("Game plan not found");
+  }
+
+  const plays = await GamePlanService.getGamePlanPlays(gamePlanId);
+  return { plan, plays };
+}
+
 /**
  * Hook for managing game session tracking
  * Extends base useSession with game-specific logic
@@ -153,15 +260,8 @@ export function useGameSession({
       setIsLoading(true);
       setError(null);
 
-      const plan = await GamePlanService.getGamePlan(gamePlanId);
-      if (!plan) {
-        throw new Error("Game plan not found");
-      }
-
+      const { plan, plays } = await loadGamePlanData(gamePlanId);
       setGamePlan(plan);
-
-      // Load game plan plays with full play details
-      const plays = await GamePlanService.getGamePlanPlays(gamePlanId);
       setGamePlanPlays(plays);
     } catch (err) {
       logError("Error loading game plan:", err);
@@ -208,37 +308,10 @@ export function useGameSession({
   }, []);
 
   // Filter plays by situation (Billick Situations)
-  const filteredPlays = useMemo(() => {
-    const { down, distance, yardLine } = situation;
-
-    return gamePlanPlays.filter((planPlay) => {
-      const play = planPlay.play;
-      if (!play) return false;
-
-      // Filter by down (if play has down restrictions)
-      if (play.down && play.down !== down) return false;
-
-      // Filter by distance (short: 1-3, medium: 4-7, long: 8+)
-      if (play.distance) {
-        if (distance <= 3 && play.distance !== "short") return false;
-        if (distance >= 4 && distance <= 7 && play.distance !== "medium")
-          return false;
-        if (distance >= 8 && play.distance !== "long") return false;
-      }
-
-      // Filter by field zone
-      if (play.field_zone) {
-        if (yardLine < 50 && play.field_zone === "opponent") return false;
-        if (yardLine >= 50 && yardLine < 80 && play.field_zone === "midfield")
-          return false;
-        if (yardLine >= 80 && yardLine < 95 && play.field_zone === "red_zone")
-          return false;
-        if (yardLine >= 95 && play.field_zone === "goal_line") return false;
-      }
-
-      return true;
-    });
-  }, [gamePlanPlays, situation]);
+  const filteredPlays = useMemo(
+    () => filterPlaysBySituation(gamePlanPlays, situation),
+    [gamePlanPlays, situation]
+  );
 
   // Recommended plays (sorted by confidence - Phase 11 feature)
   const recommendedPlays = useMemo(() => {
@@ -294,52 +367,16 @@ export function useGameSession({
         turnovers: prev.turnovers + (options?.wasTurnover ? 1 : 0),
       }));
 
-      // Auto-advance logic
-      if (options?.wasTouchdown) {
-        // Touchdown - reset drive
-        setCurrentDrive({ plays: 0, yards: 0, touchdowns: 0, turnovers: 0 });
-        // In a real game, this would be a kickoff
-        setSituation({
-          ...situation,
-          down: 1,
-          distance: 10,
-          yardLine: 25,
-        });
-      } else if (options?.wasTurnover) {
-        // Turnover - reset drive
-        setCurrentDrive({ plays: 0, yards: 0, touchdowns: 0, turnovers: 0 });
-        // In a real game, possession changes
-      } else {
-        // Normal play - check for first down
-        const newYardLine = Math.min(100, situation.yardLine + yardsGained);
-        const yardsToFirstDown = situation.distance - yardsGained;
+      // Calculate and apply next situation
+      const nextSituation = calculateNextSituation(situation, yardsGained, {
+        wasTouchdown: options?.wasTouchdown,
+        wasTurnover: options?.wasTurnover,
+      });
+      setSituation(nextSituation);
 
-        if (yardsToFirstDown <= 0) {
-          // First down!
-          setSituation({
-            ...situation,
-            down: 1,
-            distance: 10,
-            yardLine: newYardLine,
-          });
-        } else if (situation.down < 4) {
-          // Advance down
-          setSituation({
-            ...situation,
-            down: situation.down + 1,
-            distance: yardsToFirstDown,
-            yardLine: newYardLine,
-          });
-        } else {
-          // 4th down - turnover on downs
-          setCurrentDrive({ plays: 0, yards: 0, touchdowns: 0, turnovers: 0 });
-          setSituation({
-            ...situation,
-            down: 1,
-            distance: 10,
-            yardLine: newYardLine,
-          });
-        }
+      // Reset drive on scoring plays or turnovers
+      if (options?.wasTouchdown || options?.wasTurnover) {
+        setCurrentDrive({ plays: 0, yards: 0, touchdowns: 0, turnovers: 0 });
       }
     },
     [sessionState, situation, logExecution]

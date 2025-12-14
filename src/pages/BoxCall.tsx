@@ -103,22 +103,21 @@ const mapSessionToDisplay = (
         successRate: Math.round(practiceSession.successRate || 0),
       },
     };
-  } else {
-    const gameSession = session as GameSession;
-    return {
-      id: gameSession.id,
-      type: "game",
-      name:
-        (gameSession as any).game_plans?.name ||
-        `vs ${gameSession.opponent || "Unknown"}`,
-      date: formatRelativeDate(gameSession.gameDate),
-      sourceId: gameSession.gamePlanId, // The game plan ID to navigate to
-      stats: {
-        totalPlays: gameSession.totalPlays || 0,
-        successRate: Math.round(gameSession.successRate || 0),
-      },
-    };
   }
+  const gameSession = session as GameSession;
+  return {
+    id: gameSession.id,
+    type: "game",
+    name:
+      (gameSession as any).game_plans?.name ||
+      `vs ${gameSession.opponent || "Unknown"}`,
+    date: formatRelativeDate(gameSession.gameDate),
+    sourceId: gameSession.gamePlanId, // The game plan ID to navigate to
+    stats: {
+      totalPlays: gameSession.totalPlays || 0,
+      successRate: Math.round(gameSession.successRate || 0),
+    },
+  };
 };
 
 /**

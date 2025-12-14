@@ -33,6 +33,45 @@ interface FormationDirectionReviewPanelProps {
   onBack?: () => void; // NEW: Callback to navigate back to previous tab
 }
 
+/** Loading skeleton while scanning formations */
+function LoadingSkeleton({ showBackButton }: { showBackButton: boolean }) {
+  return (
+    <div className="p-lg space-y-md">
+      {showBackButton && (
+        <div className="h-8 w-48 bg-subtle rounded animate-pulse"></div>
+      )}
+      <div className="h-24 bg-subtle rounded animate-pulse"></div>
+      <div className="space-y-sm">
+        <div className="h-8 bg-subtle rounded w-1/3 animate-pulse"></div>
+        <div className="h-32 bg-subtle rounded animate-pulse"></div>
+        <div className="h-32 bg-subtle rounded animate-pulse"></div>
+      </div>
+      <Typography variant="body-sm" className="text-muted text-center">
+        Scanning formations for direction issues...
+      </Typography>
+    </div>
+  );
+}
+
+/** Success state when all formations are configured */
+function SuccessState() {
+  return (
+    <div className="p-lg bg-success-50 rounded-lg border border-success-200">
+      <div className="flex items-center gap-md">
+        <Check className="w-6 h-6 text-success-600 flex-shrink-0" />
+        <div>
+          <Typography variant="headline-md" className="text-success-800">
+            All formations are properly configured! 🎉
+          </Typography>
+          <Typography variant="body-sm" className="text-success-700 mt-xs">
+            Every formation has proper direction setup.
+          </Typography>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export const FormationDirectionReviewPanel: React.FC<
   FormationDirectionReviewPanelProps
 > = ({ playbookId, onFixComplete, onBack }) => {
@@ -144,46 +183,11 @@ export const FormationDirectionReviewPanel: React.FC<
   };
 
   if (loading) {
-    return (
-      <div className="p-lg space-y-md">
-        {/* Skeleton for back button */}
-        {onBack && (
-          <div className="h-8 w-48 bg-subtle rounded animate-pulse"></div>
-        )}
-
-        {/* Skeleton for summary */}
-        <div className="h-24 bg-subtle rounded animate-pulse"></div>
-
-        {/* Skeleton for formation list */}
-        <div className="space-y-sm">
-          <div className="h-8 bg-subtle rounded w-1/3 animate-pulse"></div>
-          <div className="h-32 bg-subtle rounded animate-pulse"></div>
-          <div className="h-32 bg-subtle rounded animate-pulse"></div>
-        </div>
-
-        <Typography variant="body-sm" className="text-muted text-center">
-          Scanning formations for direction issues...
-        </Typography>
-      </div>
-    );
+    return <LoadingSkeleton showBackButton={!!onBack} />;
   }
 
   if (issues.length === 0) {
-    return (
-      <div className="p-lg bg-success-50 rounded-lg border border-success-200">
-        <div className="flex items-center gap-md">
-          <Check className="w-6 h-6 text-success-600 flex-shrink-0" />
-          <div>
-            <Typography variant="headline-md" className="text-success-800">
-              All formations are properly configured! 🎉
-            </Typography>
-            <Typography variant="body-sm" className="text-success-700 mt-xs">
-              Every formation has proper direction setup.
-            </Typography>
-          </div>
-        </div>
-      </div>
-    );
+    return <SuccessState />;
   }
 
   // Group by severity

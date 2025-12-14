@@ -71,6 +71,122 @@ interface FormationLibraryPageContentProps {
   playbookId: string;
 }
 
+// Extracted stats component
+interface FormationStatsProps {
+  formations: Formation[];
+}
+
+const FormationStats: React.FC<FormationStatsProps> = ({ formations }) => (
+  <div className="mt-8 bg-white rounded-lg border border-divider p-4">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div>
+        <p className="text-sm text-secondary">Total Formations</p>
+        <p className="text-2xl font-bold text-primary">{formations.length}</p>
+      </div>
+      <div>
+        <p className="text-sm text-secondary">With Metadata</p>
+        <p className="text-2xl font-bold text-primary">
+          {formations.filter((f) => f.formation_type).length}
+        </p>
+      </div>
+      <div>
+        <p className="text-sm text-secondary">Linked Pairs</p>
+        <p className="text-2xl font-bold text-primary">
+          {formations.filter((f) => f.opposite_formation_id).length / 2}
+        </p>
+      </div>
+      <div>
+        <p className="text-sm text-secondary">Total Usage</p>
+        <p className="text-2xl font-bold text-primary">
+          {formations.reduce((sum, f) => sum + f.usage_count, 0)}
+        </p>
+      </div>
+    </div>
+  </div>
+);
+
+// Extracted header component
+interface FormationLibraryHeaderProps {
+  analyzing: boolean;
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+  onImport: () => void;
+  onAnalyze: () => void;
+}
+
+const FormationLibraryHeader: React.FC<FormationLibraryHeaderProps> = ({
+  analyzing,
+  searchQuery,
+  onSearchChange,
+  onImport,
+  onAnalyze,
+}) => (
+  <div className="bg-white border-b border-divider sticky top-0 z-10">
+    <div className="max-w-7xl mx-auto px-4 py-4">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h1 className="text-2xl font-bold text-primary">Formation Library</h1>
+          <p className="text-sm text-secondary mt-1">
+            Manage formations with intelligent metadata
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onImport}
+            disabled={analyzing}
+            className="btn-secondary flex items-center gap-2"
+          >
+            {analyzing ? (
+              <>
+                <Icon name="loader" size="sm" className="animate-spin" />
+                Importing...
+              </>
+            ) : (
+              <>
+                <Icon name="download" size="sm" />
+                Import from Plays
+              </>
+            )}
+          </button>
+          <button
+            onClick={onAnalyze}
+            disabled={analyzing}
+            className="btn-primary flex items-center gap-2"
+          >
+            {analyzing ? (
+              <>
+                <Icon name="loader" size="sm" className="animate-spin" />
+                Analyzing...
+              </>
+            ) : (
+              <>
+                <Icon name="sparkles" size="sm" />
+                Analyze Plays
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Search */}
+      <div className="relative">
+        <Icon
+          name="search"
+          size="sm"
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary"
+        />
+        <input
+          type="text"
+          placeholder="Search formations..."
+          value={searchQuery}
+          onChange={(e) => onSearchChange(e.target.value)}
+          className="input-primary w-full pl-10"
+        />
+      </div>
+    </div>
+  </div>
+);
+
 const FormationLibraryPageContent: React.FC<
   FormationLibraryPageContentProps
 > = ({ playbookId }) => {
@@ -228,140 +344,60 @@ const FormationLibraryPageContent: React.FC<
   return (
     <div className="min-h-screen bg-surface">
       {/* Header */}
-      <div className="bg-white border-b border-divider sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h1 className="text-2xl font-bold text-primary">
-                Formation Library
-              </h1>
-              <p className="text-sm text-secondary mt-1">
-                Manage formations with intelligent metadata
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={handleImportFromPlays}
-                disabled={analyzing}
-                className="btn-secondary flex items-center gap-2"
-              >
-                {analyzing ? (
-                  <>
-                    <Icon name="loader" size="sm" className="animate-spin" />
-                    Importing...
-                  </>
-                ) : (
-                  <>
-                    <Icon name="download" size="sm" />
-                    Import from Plays
-                  </>
-                )}
-              </button>
-              <button
-                onClick={handleAnalyze}
-                disabled={analyzing}
-                className="btn-primary flex items-center gap-2"
-              >
-                {analyzing ? (
-                  <>
-                    <Icon name="loader" size="sm" className="animate-spin" />
-                    Analyzing...
-                  </>
-                ) : (
-                  <>
-                    <Icon name="sparkles" size="sm" />
-                    Analyze Plays
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-
-          {/* Search */}
-          <div className="relative">
-            <Icon
-              name="search"
-              size="sm"
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary"
-            />
-            <input
-              type="text"
-              placeholder="Search formations..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="input-primary w-full pl-10"
-            />
-          </div>
-        </div>
-      </div>
+      <FormationLibraryHeader
+        analyzing={analyzing}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onImport={handleImportFromPlays}
+        onAnalyze={handleAnalyze}
+      />
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 py-6">
-        {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <Icon
-              name="loader"
-              size="lg"
-              className="animate-spin text-primary"
-            />
-          </div>
-        ) : filteredFormations.length === 0 ? (
-          <div className="text-center py-12">
-            <Icon
-              name="folder"
-              size="xl"
-              className="text-secondary mb-4 mx-auto"
-            />
-            <p className="text-secondary text-lg">No formations found</p>
-            <p className="text-sm text-muted mt-2">
-              {searchQuery
-                ? "Try a different search term"
-                : "Create formations to see them here"}
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredFormations.map((formation) => (
-              <FormationCard
-                key={formation.id}
-                formation={formation}
-                analysis={analyses.get(formation.name.toLowerCase())}
-              />
-            ))}
-          </div>
-        )}
+        {(() => {
+          if (loading) {
+            return (
+              <div className="flex items-center justify-center py-12">
+                <Icon
+                  name="loader"
+                  size="lg"
+                  className="animate-spin text-primary"
+                />
+              </div>
+            );
+          }
+          if (filteredFormations.length === 0) {
+            return (
+              <div className="text-center py-12">
+                <Icon
+                  name="folder"
+                  size="xl"
+                  className="text-secondary mb-4 mx-auto"
+                />
+                <p className="text-secondary text-lg">No formations found</p>
+                <p className="text-sm text-muted mt-2">
+                  {searchQuery
+                    ? "Try a different search term"
+                    : "Create formations to see them here"}
+                </p>
+              </div>
+            );
+          }
+          return (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredFormations.map((formation) => (
+                <FormationCard
+                  key={formation.id}
+                  formation={formation}
+                  analysis={analyses.get(formation.name.toLowerCase())}
+                />
+              ))}
+            </div>
+          );
+        })()}
 
         {/* Stats */}
-        {formations.length > 0 && (
-          <div className="mt-8 bg-white rounded-lg border border-divider p-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div>
-                <p className="text-sm text-secondary">Total Formations</p>
-                <p className="text-2xl font-bold text-primary">
-                  {formations.length}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-secondary">With Metadata</p>
-                <p className="text-2xl font-bold text-primary">
-                  {formations.filter((f) => f.formation_type).length}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-secondary">Linked Pairs</p>
-                <p className="text-2xl font-bold text-primary">
-                  {formations.filter((f) => f.opposite_formation_id).length / 2}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-secondary">Total Usage</p>
-                <p className="text-2xl font-bold text-primary">
-                  {formations.reduce((sum, f) => sum + f.usage_count, 0)}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
+        {formations.length > 0 && <FormationStats formations={formations} />}
       </div>
     </div>
   );

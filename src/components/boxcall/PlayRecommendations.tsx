@@ -83,13 +83,11 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
             <div className="flex items-center gap-3">
               {/* Rank Badge */}
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
-                  index === 0
-                    ? "bg-success text-white"
-                    : index === 1
-                      ? "bg-primary text-white"
-                      : "bg-secondary text-muted border border-border"
-                }`}
+                className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${(() => {
+                  if (index === 0) return "bg-success text-white";
+                  if (index === 1) return "bg-primary text-white";
+                  return "bg-secondary text-muted border border-border";
+                })()}`}
               >
                 {index + 1}
               </div>
@@ -146,13 +144,11 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
               </div>
               <div className="w-full bg-primary rounded-full h-1.5">
                 <div
-                  className={`h-1.5 rounded-full ${
-                    rec.confidenceScore >= 70
-                      ? "bg-success"
-                      : rec.confidenceScore >= 40
-                        ? "bg-warning"
-                        : "bg-error"
-                  }`}
+                  className={`h-1.5 rounded-full ${(() => {
+                    if (rec.confidenceScore >= 70) return "bg-success";
+                    if (rec.confidenceScore >= 40) return "bg-warning";
+                    return "bg-error";
+                  })()}`}
                   style={{ width: `${rec.confidenceScore}%` }}
                 />
               </div>
@@ -169,13 +165,11 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
               </div>
               <div className="w-full bg-primary rounded-full h-1.5">
                 <div
-                  className={`h-1.5 rounded-full ${
-                    rec.situationMatchScore >= 70
-                      ? "bg-success"
-                      : rec.situationMatchScore >= 40
-                        ? "bg-warning"
-                        : "bg-error"
-                  }`}
+                  className={`h-1.5 rounded-full ${(() => {
+                    if (rec.situationMatchScore >= 70) return "bg-success";
+                    if (rec.situationMatchScore >= 40) return "bg-warning";
+                    return "bg-error";
+                  })()}`}
                   style={{ width: `${rec.situationMatchScore}%` }}
                 />
               </div>
@@ -249,13 +243,13 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
                   </Typography>
                   <Typography
                     variant="body-sm"
-                    className={`font-medium ${
-                      rec.coverageStats.successRate >= 75
-                        ? "text-success"
-                        : rec.coverageStats.successRate >= 50
-                          ? "text-warning"
-                          : "text-error"
-                    }`}
+                    className={`font-medium ${(() => {
+                      if (rec.coverageStats.successRate >= 75)
+                        return "text-success";
+                      if (rec.coverageStats.successRate >= 50)
+                        return "text-warning";
+                      return "text-error";
+                    })()}`}
                   >
                     {rec.coverageStats.successRate.toFixed(0)}%
                   </Typography>
@@ -331,13 +325,11 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
                   return (
                     <div
                       key={hash}
-                      className={`p-2 rounded border ${
-                        isBest
-                          ? "bg-success/10 border-success"
-                          : isCurrent
-                            ? "bg-primary/10 border-primary"
-                            : "bg-secondary border-border"
-                      }`}
+                      className={`p-2 rounded border ${(() => {
+                        if (isBest) return "bg-success/10 border-success";
+                        if (isCurrent) return "bg-primary/10 border-primary";
+                        return "bg-secondary border-border";
+                      })()}`}
                     >
                       <div className="flex items-center gap-1 mb-1">
                         <Typography
@@ -358,13 +350,11 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
                       </div>
                       <Typography
                         variant="body-xs"
-                        className={`font-medium ${
-                          stats.successRate >= 75
-                            ? "text-success"
-                            : stats.successRate >= 50
-                              ? "text-warning"
-                              : "text-error"
-                        }`}
+                        className={`font-medium ${(() => {
+                          if (stats.successRate >= 75) return "text-success";
+                          if (stats.successRate >= 50) return "text-warning";
+                          return "text-error";
+                        })()}`}
                       >
                         {stats.successRate.toFixed(0)}%
                       </Typography>

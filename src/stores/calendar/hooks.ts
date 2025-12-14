@@ -337,7 +337,7 @@ export function useAddComment(eventId: string) {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (body: string) =>
-      CalendarAPI.addComment({ event_id: eventId, body: body }),
+      CalendarAPI.addComment({ event_id: eventId, body }),
     onMutate: async (body) => {
       const key = calendarKeys.comments(eventId);
       interface CommentLike {

@@ -107,7 +107,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
                 plays: plays.map((play, index) => ({
                   id: `temp-${play.id}-${index}`, // Temporary ID
                   playId: play.id,
-                  play: play,
+                  play,
                   order: index,
                   repetitions: 5, // Default reps
                   // Default game scenario
@@ -538,7 +538,7 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
       try {
         await PracticeScriptService.createTemplateFromScript(currentScript.id, {
           name: templateName,
-          description: description,
+          description,
           teamId,
           duration: currentScript.duration,
           isPublic: false,
@@ -706,86 +706,101 @@ export const PracticeScriptBuilder: React.FC<PracticeScriptBuilderProps> = ({
             </Button>
           </div>
 
-          {isLoadingPlays ? (
-            <div className="text-center py-12">
-              <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent mb-4"></div>
-              <Typography variant="body-sm" className="text-muted">
-                Loading selected plays...
-              </Typography>
-            </div>
-          ) : !currentScript?.plays?.length ? (
-            <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
-              <Icon name="file" className="h-16 w-16 text-muted mx-auto mb-4" />
-              <Typography variant="headline-sm" className="text-secondary mb-2">
-                No plays added yet
-              </Typography>
-              <Typography variant="body-sm" className="text-muted mb-6">
-                Add plays from your playbook to create a structured practice
-                session.
-              </Typography>
-              <Button
-                variant="primary"
-                size={isMobile ? "lg" : "md"}
-                onClick={() => {
-                  if (isMobile) triggerHapticFeedback("light");
-                  setShowPlaySelector(true);
-                }}
-              >
-                <Icon name="plus" className="h-4 w-4 mr-2" />
-                Add Your First Play
-              </Button>
-            </div>
-          ) : (
-            <DragDropContext onDragEnd={handleDragEnd}>
-              <Droppable droppableId="practice-plays">
-                {(provided) => (
-                  <div
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    className="space-y-3"
+          {(() => {
+            if (isLoadingPlays)
+              return (
+                <div className="text-center py-12">
+                  <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent mb-4"></div>
+                  <Typography variant="body-sm" className="text-muted">
+                    Loading selected plays...
+                  </Typography>
+                </div>
+              );
+            if (!currentScript?.plays?.length)
+              return (
+                <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
+                  <Icon
+                    name="file"
+                    className="h-16 w-16 text-muted mx-auto mb-4"
+                  />
+                  <Typography
+                    variant="headline-sm"
+                    className="text-secondary mb-2"
                   >
-                    {currentScript.plays?.map((scriptPlay, index) => (
-                      <Draggable
-                        key={scriptPlay.id}
-                        draggableId={scriptPlay.id}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            className={`${
-                              snapshot.isDragging ? "shadow-lg rotate-2" : ""
-                            }`}
-                          >
-                            <PracticeScriptPlayItem
-                              scriptPlay={scriptPlay}
-                              index={index}
-                              onRemove={() => handleRemovePlay(scriptPlay.id)}
-                              onUpdateNotes={(notes: string) =>
-                                handleUpdatePlayNotes(scriptPlay.id, notes)
-                              }
-                              onUpdateRepetitions={(reps: number) =>
-                                handleUpdatePlayRepetitions(scriptPlay.id, reps)
-                              }
-                              onUpdateScenario={(scenario) =>
-                                handleUpdatePlayScenario(
-                                  scriptPlay.id,
-                                  scenario
-                                )
-                              }
-                              dragHandleProps={provided.dragHandleProps}
-                            />
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </DragDropContext>
-          )}
+                    No plays added yet
+                  </Typography>
+                  <Typography variant="body-sm" className="text-muted mb-6">
+                    Add plays from your playbook to create a structured practice
+                    session.
+                  </Typography>
+                  <Button
+                    variant="primary"
+                    size={isMobile ? "lg" : "md"}
+                    onClick={() => {
+                      if (isMobile) triggerHapticFeedback("light");
+                      setShowPlaySelector(true);
+                    }}
+                  >
+                    <Icon name="plus" className="h-4 w-4 mr-2" />
+                    Add Your First Play
+                  </Button>
+                </div>
+              );
+            return (
+              <DragDropContext onDragEnd={handleDragEnd}>
+                <Droppable droppableId="practice-plays">
+                  {(provided) => (
+                    <div
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      className="space-y-3"
+                    >
+                      {currentScript.plays?.map((scriptPlay, index) => (
+                        <Draggable
+                          key={scriptPlay.id}
+                          draggableId={scriptPlay.id}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              className={`${
+                                snapshot.isDragging ? "shadow-lg rotate-2" : ""
+                              }`}
+                            >
+                              <PracticeScriptPlayItem
+                                scriptPlay={scriptPlay}
+                                index={index}
+                                onRemove={() => handleRemovePlay(scriptPlay.id)}
+                                onUpdateNotes={(notes: string) =>
+                                  handleUpdatePlayNotes(scriptPlay.id, notes)
+                                }
+                                onUpdateRepetitions={(reps: number) =>
+                                  handleUpdatePlayRepetitions(
+                                    scriptPlay.id,
+                                    reps
+                                  )
+                                }
+                                onUpdateScenario={(scenario) =>
+                                  handleUpdatePlayScenario(
+                                    scriptPlay.id,
+                                    scenario
+                                  )
+                                }
+                                dragHandleProps={provided.dragHandleProps}
+                              />
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
+            );
+          })()}
         </div>
 
         {/* Summary */}

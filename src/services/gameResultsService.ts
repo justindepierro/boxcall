@@ -45,12 +45,11 @@ export async function logGameResult(
   input: LogGameResultInput
 ): Promise<GameResultListItem> {
   // Calculate result
-  const result =
-    input.pointsFor > input.pointsAgainst
-      ? "win"
-      : input.pointsFor < input.pointsAgainst
-        ? "loss"
-        : "tie";
+  const result = (() => {
+    if (input.pointsFor > input.pointsAgainst) return "win";
+    if (input.pointsFor < input.pointsAgainst) return "loss";
+    return "tie";
+  })();
 
   const { data, error } = await supabase
     .from("game_results")

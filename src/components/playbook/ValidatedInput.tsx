@@ -57,6 +57,137 @@ interface ValidatedInputProps {
   helperText?: string; // Additional help text below input
 }
 
+const getValidationResult = (
+  type: ValidatedInputType,
+  value: string,
+  existingValues: string[]
+): ValidationResult | null => {
+  if (!value) return null;
+
+  switch (type) {
+    case "formation":
+      return validateFormation(value, existingValues);
+    case "playName":
+      return validatePlayName(value, existingValues);
+    case "personnel":
+      return validatePersonnel(value, existingValues);
+    case "formationType":
+      return validateFormationType(value, existingValues);
+    case "backfieldAlignment":
+      return validateBackfieldAlignment(value, existingValues);
+    case "shift":
+      return validateShift(value, existingValues);
+    case "motion":
+      return validateMotion(value, existingValues);
+    case "runStrength":
+      return validateRunStrength(value, existingValues);
+    case "passStrength":
+      return validatePassStrength(value, existingValues);
+    case "protection":
+      return validateProtection(value, existingValues);
+    case "oneWordPlay":
+      return validateOneWordPlay(value, existingValues);
+    case "wristbandNumber":
+      return validateWristbandNumber(value, existingValues);
+    default:
+      return null;
+  }
+};
+
+const SavingIndicator: React.FC = () => (
+  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+    <div className="flex items-center gap-2">
+      <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
+      <span className="text-xs text-success-dark font-medium">Saved</span>
+    </div>
+  </div>
+);
+
+const SuggestionsDropdown: React.FC<{
+  suggestions: Array<{ value: string; confidence: number }>;
+  validationState: "valid" | "warning" | "error";
+  onAccept: (value: string) => void;
+  dropdownRef: React.RefObject<HTMLDivElement>;
+}> = ({ suggestions, validationState, onAccept, dropdownRef }) => (
+  <div
+    ref={dropdownRef}
+    className="absolute z-dropdown w-full mt-1 bg-white dark:bg-navy-800 border border-border-secondary rounded-lg shadow-lg max-h-60 overflow-auto"
+  >
+    <div className="p-2">
+      <p className="text-xs font-medium text-muted px-2 py-1 mb-1">
+        {validationState === "warning"
+          ? "Similar matches found:"
+          : "Suggestions:"}
+      </p>
+      {suggestions.map((suggestion, index) => (
+        <button
+          key={index}
+          type="button"
+          onClick={() => onAccept(suggestion.value)}
+          className="w-full text-left px-3 py-2 rounded-lg hover:bg-bg-secondary transition-colors group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="font-medium group-hover:text-text-accent transition-colors">
+              {suggestion.value}
+            </span>
+            <span className="text-xs text-muted bg-bg-muted px-2 py-0.5 rounded">
+              {suggestion.confidence}%
+            </span>
+          </div>
+        </button>
+      ))}
+    </div>
+  </div>
+);
+
+const ValidationMessage: React.FC<{
+  validation: ValidationResult;
+  isSaving: boolean;
+  showSuggestions: boolean;
+}> = ({ validation, isSaving, showSuggestions }) => {
+  if (isSaving || showSuggestions || !validation.message) return null;
+
+  const getMessageColor = () => {
+    switch (validation.state) {
+      case "valid":
+        return "text-green-600";
+      case "warning":
+        return "text-yellow-600";
+      case "error":
+        return "text-red-600";
+      default:
+        return "text-muted";
+    }
+  };
+
+  return (
+    <p className={`mt-1 text-xs ${getMessageColor()} flex items-center gap-1`}>
+      {validation.state === "error" && "❌ "}
+      {validation.state === "warning" && "⚠️ "}
+      {validation.state === "valid" && "✅ "}
+      {validation.message}
+    </p>
+  );
+};
+
+const KeyboardHints: React.FC<{
+  disabled: boolean;
+  hasValidationMessage: boolean;
+  hasHelperText: boolean;
+}> = ({ disabled, hasValidationMessage, hasHelperText }) => {
+  if (disabled || hasValidationMessage || hasHelperText) return null;
+
+  return (
+    <p className="mt-1 text-xs text-muted">
+      <kbd className="px-1 py-0.5 bg-bg-secondary rounded text-xs">Enter</kbd>{" "}
+      to continue
+      {" · "}
+      <kbd className="px-1 py-0.5 bg-bg-secondary rounded text-xs">Esc</kbd> to
+      clear
+    </p>
+  );
+};
+
 export const ValidatedInput: React.FC<ValidatedInputProps> = ({
   label,
   value,
@@ -104,48 +235,8 @@ export const ValidatedInput: React.FC<ValidatedInputProps> = ({
 
     // INSTANT validation (no debounce) to encourage reusing existing values
     // This keeps our database Clean AF for analytics
-    let result: ValidationResult;
-
-    switch (type) {
-      case "formation":
-        result = validateFormation(value, existingValues);
-        break;
-      case "playName":
-        result = validatePlayName(value, existingValues);
-        break;
-      case "personnel":
-        result = validatePersonnel(value, existingValues);
-        break;
-      case "formationType":
-        result = validateFormationType(value, existingValues);
-        break;
-      case "backfieldAlignment":
-        result = validateBackfieldAlignment(value, existingValues);
-        break;
-      case "shift":
-        result = validateShift(value, existingValues);
-        break;
-      case "motion":
-        result = validateMotion(value, existingValues);
-        break;
-      case "runStrength":
-        result = validateRunStrength(value, existingValues);
-        break;
-      case "passStrength":
-        result = validatePassStrength(value, existingValues);
-        break;
-      case "protection":
-        result = validateProtection(value, existingValues);
-        break;
-      case "oneWordPlay":
-        result = validateOneWordPlay(value, existingValues);
-        break;
-      case "wristbandNumber":
-        result = validateWristbandNumber(value, existingValues);
-        break;
-      default:
-        return;
-    }
+    const result = getValidationResult(type, value, existingValues);
+    if (!result) return;
 
     setValidation(result);
 
@@ -250,8 +341,8 @@ export const ValidatedInput: React.FC<ValidatedInputProps> = ({
     return validation.borderColor;
   };
 
-  // Get message color
-  const getMessageColor = () => {
+  // Get message color - kept for future use when validation messages are displayed
+  const _getMessageColor = () => {
     if (!validation) return "text-muted";
     switch (validation.state) {
       case "valid":
@@ -291,50 +382,18 @@ export const ValidatedInput: React.FC<ValidatedInputProps> = ({
         />
 
         {/* Saving Indicator */}
-        {isSaving && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
-              <span className="text-xs text-success-dark font-medium">
-                Saved
-              </span>
-            </div>
-          </div>
-        )}
+        {isSaving && <SavingIndicator />}
 
         {/* Suggestions Dropdown */}
         {showSuggestions &&
           validation?.suggestions &&
           validation.suggestions.length > 0 && (
-            <div
-              ref={dropdownRef}
-              className="absolute z-dropdown w-full mt-1 bg-white dark:bg-navy-800 border border-border-secondary rounded-lg shadow-lg max-h-60 overflow-auto"
-            >
-              <div className="p-2">
-                <p className="text-xs font-medium text-muted px-2 py-1 mb-1">
-                  {validation.state === "warning"
-                    ? "Similar matches found:"
-                    : "Suggestions:"}
-                </p>
-                {validation.suggestions.map((suggestion, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    onClick={() => handleAcceptSuggestion(suggestion.value)}
-                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-bg-secondary transition-colors group"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium group-hover:text-text-accent transition-colors">
-                        {suggestion.value}
-                      </span>
-                      <span className="text-xs text-muted bg-bg-muted px-2 py-0.5 rounded">
-                        {suggestion.confidence}%
-                      </span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
+            <SuggestionsDropdown
+              suggestions={validation.suggestions}
+              validationState={validation.state}
+              onAccept={handleAcceptSuggestion}
+              dropdownRef={dropdownRef}
+            />
           )}
       </div>
 
@@ -344,31 +403,20 @@ export const ValidatedInput: React.FC<ValidatedInputProps> = ({
       )}
 
       {/* Validation Message */}
-      {validation?.message && !isSaving && !showSuggestions && (
-        <p
-          className={`mt-1 text-xs ${getMessageColor()} flex items-center gap-1`}
-        >
-          {validation.state === "error" && "❌ "}
-          {validation.state === "warning" && "⚠️ "}
-          {validation.state === "valid" && "✅ "}
-          {validation.message}
-        </p>
+      {validation && (
+        <ValidationMessage
+          validation={validation}
+          isSaving={isSaving}
+          showSuggestions={showSuggestions}
+        />
       )}
 
       {/* Keyboard Hints (only when not showing validation message) */}
-      {!disabled && !validation?.message && !helperText && (
-        <p className="mt-1 text-xs text-muted">
-          <kbd className="px-1 py-0.5 bg-bg-secondary rounded text-xs">
-            Enter
-          </kbd>{" "}
-          to continue
-          {" · "}
-          <kbd className="px-1 py-0.5 bg-bg-secondary rounded text-xs">
-            Esc
-          </kbd>{" "}
-          to clear
-        </p>
-      )}
+      <KeyboardHints
+        disabled={disabled}
+        hasValidationMessage={!!validation?.message}
+        hasHelperText={!!helperText}
+      />
     </div>
   );
 };

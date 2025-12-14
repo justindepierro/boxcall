@@ -73,8 +73,11 @@ class WebVitalsMonitor {
 
     // Log to console in development
     if (import.meta.env.DEV) {
-      const icon =
-        rating === "good" ? "✅" : rating === "needs-improvement" ? "⚠️" : "❌";
+      const icon = (() => {
+        if (rating === "good") return "✅";
+        if (rating === "needs-improvement") return "⚠️";
+        return "❌";
+      })();
       debug(
         `${icon} ${name}: ${metric.value.toFixed(2)}${name === "CLS" ? "" : "ms"} (${rating})`
       );
@@ -185,9 +188,13 @@ class WebVitalsMonitor {
     const goodPercentage = totalCount > 0 ? goodCount / totalCount : 1;
 
     let overallRating: "good" | "needs-improvement" | "poor";
-    if (goodPercentage >= 0.75) overallRating = "good";
-    else if (goodPercentage >= 0.5) overallRating = "needs-improvement";
-    else overallRating = "poor";
+    if (goodPercentage >= 0.75) {
+      overallRating = "good";
+    } else if (goodPercentage >= 0.5) {
+      overallRating = "needs-improvement";
+    } else {
+      overallRating = "poor";
+    }
 
     return {
       webVitals: this.getMetrics(),

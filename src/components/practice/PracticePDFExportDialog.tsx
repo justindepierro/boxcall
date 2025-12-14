@@ -208,7 +208,7 @@ export const PracticePDFExportDialog: React.FC<
     if (exportOptions.includeSpecial) categories.push("Special Teams");
     if (categories.length === 0)
       return "Meeting, Weight Room, Transitions only";
-    return categories.join(", ") + " + General activities";
+    return `${categories.join(", ")} + General activities`;
   };
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="md">

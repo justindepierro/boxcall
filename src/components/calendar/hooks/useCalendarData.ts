@@ -38,11 +38,11 @@ export function useCalendarData({
     isError,
     error: eventsError,
   } = useSearchEvents(debouncedSearch, baseQueryParams);
-  const error = isError
-    ? eventsError instanceof Error
-      ? eventsError.message
-      : "Failed to load calendar events"
-    : null;
+  const error = (() => {
+    if (!isError) return null;
+    if (eventsError instanceof Error) return eventsError.message;
+    return "Failed to load calendar events";
+  })();
   const createEventMutation = useCreateEvent(
     userId,
     devMode,

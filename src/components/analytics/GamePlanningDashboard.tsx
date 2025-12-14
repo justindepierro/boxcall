@@ -402,13 +402,11 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
                     </Typography>
                   </div>
                   <Badge
-                    variant={
-                      opportunity.confidence > 0.8
-                        ? "success"
-                        : opportunity.confidence > 0.6
-                          ? "warning"
-                          : "neutral"
-                    }
+                    variant={(() => {
+                      if (opportunity.confidence > 0.8) return "success";
+                      if (opportunity.confidence > 0.6) return "warning";
+                      return "neutral";
+                    })()}
                   >
                     {Math.round(opportunity.confidence * 100)}% confidence
                   </Badge>

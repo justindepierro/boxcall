@@ -36,12 +36,11 @@ export class PDFExportService {
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      const formatSuffix =
-        format === "ultra-compact"
-          ? "_ultra"
-          : format === "compact"
-            ? "_compact"
-            : "";
+      const formatSuffix = (() => {
+        if (format === "ultra-compact") return "_ultra";
+        if (format === "compact") return "_compact";
+        return "";
+      })();
       link.download = `${(script.name ?? "practice_script").replace(/[^a-z0-9]/gi, "_").toLowerCase()}${formatSuffix}_practice_script.pdf`;
 
       // Prevent browser prompt - force direct download

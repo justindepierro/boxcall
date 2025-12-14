@@ -169,100 +169,100 @@ const defaultElements: Record<TypographyVariant, TypographyElement> = {
  * @param align - Text alignment
  * @param truncate - Whether to truncate text with ellipsis
  */
-const TypographyBase = React.forwardRef(function TypographyBase<
-  E extends TypographyElement = "p",
->(
-  {
-    variant,
-    as,
-    children,
-    className = "",
-    color,
-    align,
-    truncate = false,
-    htmlFor,
-    ...restProps
-  }: PolymorphicProps<E> & { htmlFor?: string },
-  ref: React.ForwardedRef<ElementFor<E>>
-) {
-  // Map alias variants to concrete sizes
-  const normalizeVariant = (
-    v: TypographyVariant | TypographyVariantAlias
-  ): TypographyVariant => {
-    switch (v) {
-      case "display":
-        return "display-lg";
-      case "headline":
-        return "headline-md";
-      case "body":
-        return "body-md";
-      case "code":
-        return "code-md";
-      case "label":
-        return "label-md";
-      default:
-        return v as TypographyVariant;
-    }
-  };
+const TypographyBase = React.forwardRef(
+  (
+    {
+      variant,
+      as,
+      children,
+      className = "",
+      color,
+      align,
+      truncate = false,
+      htmlFor,
+      ...restProps
+    }: PolymorphicProps<Element> & { htmlFor?: string },
+    ref: React.ForwardedRef<ElementFor<Element>>
+  ) => {
+    // Map alias variants to concrete sizes
+    const normalizeVariant = (
+      v: TypographyVariant | TypographyVariantAlias
+    ): TypographyVariant => {
+      switch (v) {
+        case "display":
+          return "display-lg";
+        case "headline":
+          return "headline-md";
+        case "body":
+          return "body-md";
+        case "code":
+          return "code-md";
+        case "label":
+          return "label-md";
+        default:
+          return v as TypographyVariant;
+      }
+    };
 
-  // Infer a sensible variant from the chosen element, if variant is not provided
-  const deriveVariantFromElement = (
-    el?: TypographyElement
-  ): TypographyVariant | undefined => {
-    switch (el) {
-      case "h1":
-        return "headline-xl";
-      case "h2":
-        return "headline-lg";
-      case "h3":
-        return "headline-md";
-      case "h4":
-      case "h5":
-      case "h6":
-        return "headline-sm";
-      case "label":
-        return "label-md";
-      case "code":
-        return "code-md";
-      case "span":
-        return "body-sm";
-      case "div":
-      case "p":
-      default:
-        return "body-md";
-    }
-  };
+    // Infer a sensible variant from the chosen element, if variant is not provided
+    const deriveVariantFromElement = (
+      el?: TypographyElement
+    ): TypographyVariant | undefined => {
+      switch (el) {
+        case "h1":
+          return "headline-xl";
+        case "h2":
+          return "headline-lg";
+        case "h3":
+          return "headline-md";
+        case "h4":
+        case "h5":
+        case "h6":
+          return "headline-sm";
+        case "label":
+          return "label-md";
+        case "code":
+          return "code-md";
+        case "span":
+          return "body-sm";
+        case "div":
+        case "p":
+        default:
+          return "body-md";
+      }
+    };
 
-  const actualVariant = normalizeVariant(
-    (variant as TypographyVariant | TypographyVariantAlias) ??
-      deriveVariantFromElement(as) ??
-      "body-md"
-  );
-  // Determine the HTML element to render
-  const Element = as || defaultElements[actualVariant];
-  // Build class string
-  const classes = [
-    typographyClasses[actualVariant],
-    color ? colorClasses[color] : "text-primary", // Default text color when no color specified
-    align && alignClasses[align],
-    truncate && "truncate",
-    className,
-  ]
-    .filter(Boolean)
-    .join(" ");
-  const extraProps: Record<string, unknown> = {};
-  if (htmlFor && Element === "label") extraProps.htmlFor = htmlFor;
-  return (
-    <Element
-      ref={ref as never}
-      className={classes}
-      {...extraProps}
-      {...(restProps as object)}
-    >
-      {children}
-    </Element>
-  );
-});
+    const actualVariant = normalizeVariant(
+      (variant as TypographyVariant | TypographyVariantAlias) ??
+        deriveVariantFromElement(as) ??
+        "body-md"
+    );
+    // Determine the HTML element to render
+    const Element = as || defaultElements[actualVariant];
+    // Build class string
+    const classes = [
+      typographyClasses[actualVariant],
+      color ? colorClasses[color] : "text-primary", // Default text color when no color specified
+      align && alignClasses[align],
+      truncate && "truncate",
+      className,
+    ]
+      .filter(Boolean)
+      .join(" ");
+    const extraProps: Record<string, unknown> = {};
+    if (htmlFor && Element === "label") extraProps.htmlFor = htmlFor;
+    return (
+      <Element
+        ref={ref as never}
+        className={classes}
+        {...extraProps}
+        {...(restProps as object)}
+      >
+        {children}
+      </Element>
+    );
+  }
+);
 // Set display name for debugging
 type TypographyComponent = <E extends TypographyElement = "p">(
   props: PolymorphicProps<E> & { ref?: React.Ref<ElementFor<E>> }

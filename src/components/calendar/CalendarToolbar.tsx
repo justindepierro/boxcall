@@ -23,10 +23,9 @@ export const CalendarToolbar: React.FC<CalendarToolbarProps> = ({
 }) => {
   return (
     <div
-      className={
-        "flex flex-wrap items-center justify-between gap-3 mb-4 " +
-        (className || "")
-      }
+      className={`flex flex-wrap items-center justify-between gap-3 mb-4 ${
+        className || ""
+      }`}
     >
       <div className="flex items-center gap-2">
         <Button variant="subtle" size="xs" className="" onClick={onToday}>

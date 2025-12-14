@@ -35,6 +35,214 @@ interface PlayCardListHeaderProps {
   personnelConfigurations?: PersonnelConfiguration[];
 }
 
+const CollapsedBadges: React.FC<{
+  play: PlayType;
+  getPlayTypeColor: StyleResolver;
+  personnelConfig?: PersonnelConfiguration;
+}> = ({ play, getPlayTypeColor, personnelConfig }) => (
+  <>
+    {play.personnel && (
+      <PersonnelBadge
+        personnel={play.personnel}
+        size="sm"
+        badgeCustomization={personnelConfig?.badgeCustomization}
+      />
+    )}
+
+    <span
+      className={`px-2.5 py-1 rounded-xl text-xs font-semibold shadow-sm ${getPlayTypeColor(play.p_type)}`}
+    >
+      {play.p_type}
+    </span>
+
+    {play.wristband_number && (
+      <WristbandBadge wristbandNumber={play.wristband_number} size="sm" />
+    )}
+
+    {play.formation && (
+      <span className="px-2 py-1 bg-purple-100 text-purple-800 border border-purple-300 rounded-lg text-xs font-semibold">
+        {play.formation}
+      </span>
+    )}
+
+    {play.pref_hash && (
+      <span className="px-2 py-1 bg-surface-muted text-secondary border border-divider rounded-lg text-xs font-medium">
+        {play.pref_hash}
+      </span>
+    )}
+
+    {play.protection && (
+      <span className="px-2 py-1 bg-orange-100 text-orange-800 border border-orange-300 rounded-lg text-xs font-semibold">
+        {play.protection}
+      </span>
+    )}
+
+    {play.motion && (
+      <span className="px-2 py-1 bg-cyan-100 text-cyan-800 border border-cyan-300 rounded-lg text-xs font-semibold">
+        ↗️ {play.motion}
+      </span>
+    )}
+
+    {play.pref_down && (
+      <span className="px-2 py-1 bg-warning-lightest text-warning-dark border border-warning-light rounded-lg text-xs font-semibold">
+        {play.pref_down}
+      </span>
+    )}
+  </>
+);
+
+const ExpandedBadges: React.FC<{
+  play: PlayType;
+  getPlayTypeColor: StyleResolver;
+  getConfidenceColor: (confidence: number) => string;
+  phaseLabel: string | null;
+  personnelConfig?: PersonnelConfiguration;
+}> = ({
+  play,
+  getPlayTypeColor,
+  getConfidenceColor,
+  phaseLabel,
+  personnelConfig,
+}) => (
+  <>
+    {play.personnel && (
+      <PersonnelBadge
+        personnel={play.personnel}
+        size="sm"
+        badgeCustomization={personnelConfig?.badgeCustomization}
+      />
+    )}
+
+    <span
+      className={`px-2.5 py-1 rounded-xl text-xs font-semibold shadow-sm ${getPlayTypeColor(play.p_type)}`}
+    >
+      {play.p_type}
+    </span>
+
+    {play.wristband_number && (
+      <WristbandBadge wristbandNumber={play.wristband_number} size="sm" />
+    )}
+
+    {phaseLabel && (
+      <span className="px-2 py-0.5 bg-warning-500 text-primary rounded-full text-2xs font-semibold tracking-wide uppercase border border-warning-600">
+        {phaseLabel}
+      </span>
+    )}
+
+    <span
+      className={`text-xs font-medium ${getConfidenceColor(typeof play.confidence_base === "number" ? play.confidence_base : 70)}`}
+    >
+      {typeof play.confidence_base === "number" ? play.confidence_base : 70}%
+    </span>
+
+    {play.times_called && play.times_called > 0 && (
+      <>
+        <span className="px-2 py-0.5 bg-info-50 text-info-700 border border-info-200 rounded-full text-xs font-medium flex items-center gap-1">
+          <Icon name="trending-up" size={12} />
+          {play.times_called}x called
+        </span>
+
+        {play.times_successful !== undefined && (
+          <span
+            className={`px-2 py-0.5 rounded-full text-xs font-medium ${getSuccessRateBadgeColor(
+              play.times_successful / play.times_called
+            )}`}
+          >
+            {Math.round((play.times_successful / play.times_called) * 100)}%
+            success
+          </span>
+        )}
+      </>
+    )}
+  </>
+);
+
+const ActionButtons: React.FC<{
+  play: PlayType;
+  onSelectionChange?: (playId: string, selected: boolean) => void;
+  isFavorite: boolean;
+  onToggleFavorite: () => void;
+  onOpenAssignments?: () => void;
+  isExpanded: boolean;
+  onToggleExpand: () => void;
+}> = ({
+  play,
+  onSelectionChange,
+  isFavorite,
+  onToggleFavorite,
+  onOpenAssignments,
+  isExpanded,
+  onToggleExpand,
+}) => (
+  <div className="flex items-center gap-1 ml-4">
+    {!onSelectionChange && (
+      <Button
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggleFavorite();
+        }}
+        variant="ghost"
+        size="sm"
+        icon={
+          <Icon
+            name={isFavorite ? "star" : "star"}
+            className={
+              isFavorite ? "text-warning-500 fill-current" : "text-muted"
+            }
+          />
+        }
+        iconPosition="only"
+        aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+        title={isFavorite ? "Remove from favorites" : "Add to favorites"}
+      />
+    )}
+
+    {onOpenAssignments && (
+      <Button
+        onClick={(e) => {
+          e.stopPropagation();
+          onOpenAssignments();
+        }}
+        variant="ghost"
+        size="sm"
+        icon={<Icon name="users" className="text-primary-500" />}
+        iconPosition="only"
+        aria-label="Player Assignments"
+        title="Player Assignments"
+      />
+    )}
+
+    <Button
+      onClick={onToggleExpand}
+      variant="ghost"
+      size="sm"
+      icon={
+        <Icon
+          name="chevron-down"
+          className={`h-5 w-5 transition-transform duration-300 ease-in-out ${
+            isExpanded ? "rotate-180" : "rotate-0"
+          }`}
+        />
+      }
+      iconPosition="only"
+      aria-label={isExpanded ? "Collapse details" : "Expand details"}
+      aria-expanded={isExpanded}
+      aria-controls={`play-details-${play.id}`}
+      title={isExpanded ? "Collapse" : "Expand details"}
+    />
+  </div>
+);
+
+function getSuccessRateBadgeColor(rate: number): string {
+  if (rate >= 0.7) {
+    return "bg-success-50 text-success-700 border border-success-200";
+  }
+  if (rate >= 0.5) {
+    return "bg-warning-50 text-warning-700 border border-warning-200";
+  }
+  return "bg-error-50 text-error-700 border border-error-200";
+}
+
 export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
   play,
   optimisticPlay,
@@ -121,218 +329,35 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
         >
           {/* 🎯 COLLAPSED STATE: Show essential info + preview data */}
           {!isExpanded && (
-            <>
-              {/* Personnel badge - Most important identifier */}
-              {optimisticPlay.personnel && (
-                <PersonnelBadge
-                  personnel={optimisticPlay.personnel}
-                  size="sm"
-                  badgeCustomization={personnelConfig?.badgeCustomization}
-                />
-              )}
-
-              {/* Play type badge */}
-              <span
-                className={`px-2.5 py-1 rounded-xl text-xs font-semibold shadow-sm ${getPlayTypeColor(optimisticPlay.p_type)}`}
-              >
-                {optimisticPlay.p_type}
-              </span>
-
-              {/* Wristband badge (if exists - highly visible identifier) */}
-              {optimisticPlay.wristband_number && (
-                <WristbandBadge
-                  wristbandNumber={optimisticPlay.wristband_number}
-                  size="sm"
-                />
-              )}
-
-              {/* Formation info - helps identify play quickly */}
-              {optimisticPlay.formation && (
-                <span className="px-2 py-1 bg-purple-100 text-purple-800 border border-purple-300 rounded-lg text-xs font-semibold">
-                  {optimisticPlay.formation}
-                </span>
-              )}
-
-              {/* Preferred hash - important for run plays */}
-              {optimisticPlay.pref_hash && (
-                <span className="px-2 py-1 bg-surface-muted text-secondary border border-divider rounded-lg text-xs font-medium">
-                  {optimisticPlay.pref_hash}
-                </span>
-              )}
-
-              {/* Protection scheme - important for pass plays */}
-              {optimisticPlay.protection && (
-                <span className="px-2 py-1 bg-orange-100 text-orange-800 border border-orange-300 rounded-lg text-xs font-semibold">
-                  {optimisticPlay.protection}
-                </span>
-              )}
-
-              {/* Motion - visual identifier */}
-              {optimisticPlay.motion && (
-                <span className="px-2 py-1 bg-cyan-100 text-cyan-800 border border-cyan-300 rounded-lg text-xs font-semibold">
-                  ↗️ {optimisticPlay.motion}
-                </span>
-              )}
-
-              {/* Preferred down/distance */}
-              {optimisticPlay.pref_down && (
-                <span className="px-2 py-1 bg-warning-lightest text-warning-dark border border-warning-light rounded-lg text-xs font-semibold">
-                  {optimisticPlay.pref_down}
-                </span>
-              )}
-            </>
+            <CollapsedBadges
+              play={optimisticPlay}
+              getPlayTypeColor={getPlayTypeColor}
+              personnelConfig={personnelConfig}
+            />
           )}
 
           {/* 📊 EXPANDED STATE: Show ALL badges and stats */}
           {isExpanded && (
-            <>
-              {/* Personnel badge */}
-              {optimisticPlay.personnel && (
-                <PersonnelBadge
-                  personnel={optimisticPlay.personnel}
-                  size="sm"
-                  badgeCustomization={personnelConfig?.badgeCustomization}
-                />
-              )}
-
-              {/* Play type badge */}
-              <span
-                className={`px-2.5 py-1 rounded-xl text-xs font-semibold shadow-sm ${getPlayTypeColor(optimisticPlay.p_type)}`}
-              >
-                {optimisticPlay.p_type}
-              </span>
-
-              {/* Wristband badge */}
-              {optimisticPlay.wristband_number && (
-                <WristbandBadge
-                  wristbandNumber={optimisticPlay.wristband_number}
-                  size="sm"
-                />
-              )}
-
-              {/* Installation phase badge */}
-              {phaseLabel && (
-                <span className="px-2 py-0.5 bg-warning-500 text-primary rounded-full text-2xs font-semibold tracking-wide uppercase border border-warning-600">
-                  {phaseLabel}
-                </span>
-              )}
-
-              {/* Confidence */}
-              <span
-                className={`text-xs font-medium ${getConfidenceColor(typeof optimisticPlay.confidence_base === "number" ? optimisticPlay.confidence_base : 70)}`}
-              >
-                {typeof optimisticPlay.confidence_base === "number"
-                  ? optimisticPlay.confidence_base
-                  : 70}
-                %
-              </span>
-
-              {/* Usage stats badges */}
-              {optimisticPlay.times_called &&
-                optimisticPlay.times_called > 0 && (
-                  <>
-                    <span className="px-2 py-0.5 bg-info-50 text-info-700 border border-info-200 rounded-full text-xs font-medium flex items-center gap-1">
-                      <Icon name="trending-up" size={12} />
-                      {optimisticPlay.times_called}x called
-                    </span>
-
-                    {optimisticPlay.times_successful !== undefined && (
-                      <span
-                        className={`px-2 py-0.5 rounded-full text-xs font-medium ${getSuccessRateBadgeColor(
-                          optimisticPlay.times_successful /
-                            optimisticPlay.times_called
-                        )}`}
-                      >
-                        {Math.round(
-                          (optimisticPlay.times_successful /
-                            optimisticPlay.times_called) *
-                            100
-                        )}
-                        % success
-                      </span>
-                    )}
-                  </>
-                )}
-            </>
+            <ExpandedBadges
+              play={optimisticPlay}
+              getPlayTypeColor={getPlayTypeColor}
+              getConfidenceColor={getConfidenceColor}
+              phaseLabel={phaseLabel}
+              personnelConfig={personnelConfig}
+            />
           )}
         </div>
       </div>
 
-      <div className="flex items-center gap-1 ml-4">
-        {/* Star button for favorites (hidden when selection mode is on) */}
-        {!onSelectionChange && (
-          <Button
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleFavorite();
-            }}
-            variant="ghost"
-            size="sm"
-            icon={
-              <Icon
-                name={isFavorite ? "star" : "star"}
-                className={
-                  isFavorite ? "text-warning-500 fill-current" : "text-muted"
-                }
-              />
-            }
-            iconPosition="only"
-            aria-label={
-              isFavorite ? "Remove from favorites" : "Add to favorites"
-            }
-            title={isFavorite ? "Remove from favorites" : "Add to favorites"}
-          />
-        )}
-
-        {/* Assignments button */}
-        {onOpenAssignments && (
-          <Button
-            onClick={(e) => {
-              e.stopPropagation();
-              onOpenAssignments();
-            }}
-            variant="ghost"
-            size="sm"
-            icon={<Icon name="users" className="text-primary-500" />}
-            iconPosition="only"
-            aria-label="Player Assignments"
-            title="Player Assignments"
-          />
-        )}
-
-        {/* Expand/collapse button */}
-        <Button
-          onClick={onToggleExpand}
-          variant="ghost"
-          size="sm"
-          icon={
-            <Icon
-              name="chevron-down"
-              className={`h-5 w-5 transition-transform duration-300 ease-in-out ${
-                isExpanded ? "rotate-180" : "rotate-0"
-              }`}
-            />
-          }
-          iconPosition="only"
-          aria-label={isExpanded ? "Collapse details" : "Expand details"}
-          aria-expanded={isExpanded}
-          aria-controls={`play-details-${play.id}`}
-          title={isExpanded ? "Collapse" : "Expand details"}
-        />
-      </div>
+      <ActionButtons
+        play={play}
+        onSelectionChange={onSelectionChange}
+        isFavorite={isFavorite}
+        onToggleFavorite={onToggleFavorite}
+        onOpenAssignments={onOpenAssignments}
+        isExpanded={isExpanded}
+        onToggleExpand={onToggleExpand}
+      />
     </div>
   );
 };
-
-/**
- * Helper function to get badge color based on success rate
- */
-function getSuccessRateBadgeColor(rate: number): string {
-  if (rate >= 0.7) {
-    return "bg-success-50 text-success-700 border border-success-200";
-  }
-  if (rate >= 0.5) {
-    return "bg-warning-50 text-warning-700 border border-warning-200";
-  }
-  return "bg-error-50 text-error-700 border border-error-200";
-}

@@ -693,13 +693,13 @@ const PracticeSession: React.FC = () => {
                         disabled={isPaused}
                         className={`
                           w-full text-left p-3.5 rounded-2xl border-2 transition-all duration-200 group
-                          ${
-                            isActive
-                              ? "bg-gradient-to-r from-jade-50 to-emerald-50 border-jade-400 shadow-md shadow-jade-500/15"
-                              : isCompleted
-                                ? "bg-gradient-to-r from-emerald-50/50 to-green-50/50 border-emerald-200"
-                                : "bg-white border-slate-200 hover:border-jade-300 hover:shadow-sm"
-                          }
+                          ${(() => {
+                            if (isActive)
+                              return "bg-gradient-to-r from-jade-50 to-emerald-50 border-jade-400 shadow-md shadow-jade-500/15";
+                            if (isCompleted)
+                              return "bg-gradient-to-r from-emerald-50/50 to-green-50/50 border-emerald-200";
+                            return "bg-white border-slate-200 hover:border-jade-300 hover:shadow-sm";
+                          })()}
                           ${isPaused ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
                         `}
                       >
@@ -708,13 +708,13 @@ const PracticeSession: React.FC = () => {
                           <span
                             className={`
                             w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold shadow-sm transition-all
-                            ${
-                              isActive
-                                ? "bg-gradient-to-br from-jade-500 to-emerald-600 text-white shadow-jade-500/30 scale-110"
-                                : isCompleted
-                                  ? "bg-gradient-to-br from-emerald-400 to-green-500 text-white"
-                                  : "bg-slate-100 text-slate-500 group-hover:bg-jade-100 group-hover:text-jade-600"
-                            }
+                            ${(() => {
+                              if (isActive)
+                                return "bg-gradient-to-br from-jade-500 to-emerald-600 text-white shadow-jade-500/30 scale-110";
+                              if (isCompleted)
+                                return "bg-gradient-to-br from-emerald-400 to-green-500 text-white";
+                              return "bg-slate-100 text-slate-500 group-hover:bg-jade-100 group-hover:text-jade-600";
+                            })()}
                           `}
                           >
                             {isCompleted ? "✓" : index + 1}
@@ -722,13 +722,11 @@ const PracticeSession: React.FC = () => {
 
                           <div className="flex-1 min-w-0">
                             <p
-                              className={`font-mono font-bold text-sm truncate transition-colors ${
-                                isActive
-                                  ? "text-jade-700"
-                                  : isCompleted
-                                    ? "text-emerald-700"
-                                    : "text-primary group-hover:text-jade-600"
-                              }`}
+                              className={`font-mono font-bold text-sm truncate transition-colors ${(() => {
+                                if (isActive) return "text-jade-700";
+                                if (isCompleted) return "text-emerald-700";
+                                return "text-primary group-hover:text-jade-600";
+                              })()}`}
                             >
                               {playInfo.displayName}
                             </p>

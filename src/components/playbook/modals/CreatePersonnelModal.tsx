@@ -55,7 +55,7 @@ export const CreatePersonnelModal: React.FC<CreatePersonnelModalProps> = ({
       // Create personnel configuration
       const { error } = await supabase.from("personnel_configurations").insert({
         playbook_id: playbookId,
-        name: name,
+        name,
         description: description.trim() || null,
         badge_customization: {
           color: DEFAULT_BADGE_COLORS.bg,

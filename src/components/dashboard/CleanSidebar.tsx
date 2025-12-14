@@ -43,7 +43,7 @@ export const CleanSidebar: React.FC<CleanSidebarProps> = ({
     ...item,
     isActive:
       location.pathname === item.href ||
-      location.pathname.startsWith(item.href + "/"),
+      location.pathname.startsWith(`${item.href}/`),
   }));
 
   return (

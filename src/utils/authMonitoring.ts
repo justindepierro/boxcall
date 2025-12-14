@@ -260,12 +260,11 @@ export class AuthMonitoring {
     const recentErrors = this.getRecentErrors(5);
 
     return {
-      overall:
-        rates.signIn > 95 && rates.signUp > 95
-          ? "healthy"
-          : rates.signIn > 80
-            ? "warning"
-            : "critical",
+      overall: (() => {
+        if (rates.signIn > 95 && rates.signUp > 95) return "healthy";
+        if (rates.signIn > 80) return "warning";
+        return "critical";
+      })(),
       signInSuccessRate: rates.signIn,
       signUpSuccessRate: rates.signUp,
       retrySuccessRate: rates.retry,

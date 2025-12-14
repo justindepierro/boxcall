@@ -97,13 +97,12 @@ export const EventForm: React.FC<EventFormProps> = ({
           disabled={submitting || !event.title || !event.start}
           onClick={() => onSubmit(event)}
         >
-          {submitting
-            ? mode === "create"
-              ? "Creating..."
-              : "Saving..."
-            : mode === "create"
-              ? "Create Event"
-              : "Save Changes"}
+          {(() => {
+            if (submitting) {
+              return mode === "create" ? "Creating..." : "Saving...";
+            }
+            return mode === "create" ? "Create Event" : "Save Changes";
+          })()}
         </Button>
         <Button variant="secondary" onClick={onCancel}>
           Cancel

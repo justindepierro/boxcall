@@ -7,12 +7,14 @@ import { Icon } from "../ui/Icon/Icon";
 import { Badge } from "../ui/Badge";
 import { teamRoutes } from "../../routes/paths";
 
-interface TeamOnboardingWizardProps {
-  teamId: string;
-  teamName: string;
-  schoolName: string;
-  onComplete: () => void;
-  onSkip: () => void;
+interface OnboardingStepConfig {
+  id: OnboardingStep;
+  title: string;
+  description: string;
+  icon: string;
+  estimatedTime: string;
+  primaryAction: string;
+  secondaryAction?: string;
 }
 
 type OnboardingStep =
@@ -23,14 +25,130 @@ type OnboardingStep =
   | "explore-features"
   | "complete";
 
-interface OnboardingStepConfig {
-  id: OnboardingStep;
-  title: string;
-  description: string;
-  icon: string;
-  estimatedTime: string;
-  primaryAction: string;
-  secondaryAction?: string;
+const CoachesTip: React.FC = () => (
+  <div className="mt-8 p-4 bg-jade-50 dark:bg-jade-900/20 rounded-lg border border-jade-200 dark:border-jade-800">
+    <div className="flex items-start gap-3">
+      <Icon
+        name="lightbulb"
+        size="sm"
+        className="text-jade-600 dark:text-jade-400 mt-0.5"
+      />
+      <div className="text-left">
+        <Typography
+          variant="body-sm"
+          className="font-medium text-jade-800 dark:text-jade-200 mb-1"
+        >
+          Pro Tip: Different Coaching Roles
+        </Typography>
+        <Typography
+          variant="body-sm"
+          className="text-jade-700 dark:text-jade-300"
+        >
+          Invite assistant coaches, coordinators, and team managers. Each role
+          has different permissions to help manage your team effectively.
+        </Typography>
+      </div>
+    </div>
+  </div>
+);
+
+const PlayersTip: React.FC = () => (
+  <div className="mt-8 p-4 bg-status-info-bg rounded-lg border border-status-info">
+    <div className="flex items-start gap-3">
+      <Icon name="upload" size="sm" className="text-status-info mt-0.5" />
+      <div className="text-left">
+        <Typography variant="body-sm" className="font-medium text-primary mb-1">
+          Multiple Ways to Add Players
+        </Typography>
+        <Typography variant="body-sm" className="text-secondary">
+          Upload a CSV roster, add players manually, or send invite links for
+          self-registration. Parents can also be included in communications.
+        </Typography>
+      </div>
+    </div>
+  </div>
+);
+
+interface StepContentProps {
+  config: OnboardingStepConfig;
+  currentStep: OnboardingStep;
+  onPrimaryAction: () => void;
+  onSecondaryAction: () => void;
+}
+
+const StepContent: React.FC<StepContentProps> = ({
+  config,
+  currentStep,
+  onPrimaryAction,
+  onSecondaryAction,
+}) => (
+  <div className="text-center container-content">
+    {/* Icon */}
+    <div className="mb-6">
+      <div className="w-16 h-16 mx-auto bg-aurora-emerald rounded-full flex items-center justify-center">
+        <Icon name={config.icon as any} size="lg" className="text-white" />
+      </div>
+    </div>
+
+    {/* Title */}
+    <Typography variant="headline-xl" className="mb-4">
+      {config.title}
+    </Typography>
+
+    {/* Description */}
+    <Typography
+      variant="body-lg"
+      color="muted"
+      className="mb-8 leading-relaxed"
+    >
+      {config.description}
+    </Typography>
+
+    {/* Time estimate */}
+    {config.estimatedTime && (
+      <div className="mb-8">
+        <Badge variant="neutral" className="text-xs">
+          <Icon name="clock" size="xs" className="mr-1" />
+          {config.estimatedTime}
+        </Badge>
+      </div>
+    )}
+
+    {/* Action buttons */}
+    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+      <Button
+        onClick={onPrimaryAction}
+        variant="primary"
+        size="md"
+        className="min-w-36"
+      >
+        {config.primaryAction}
+      </Button>
+
+      {config.secondaryAction && (
+        <Button
+          onClick={onSecondaryAction}
+          variant="ghost"
+          size="md"
+          className="min-w-36"
+        >
+          {config.secondaryAction}
+        </Button>
+      )}
+    </div>
+
+    {/* Step-specific tips */}
+    {currentStep === "invite-coaches" && <CoachesTip />}
+    {currentStep === "add-players" && <PlayersTip />}
+  </div>
+);
+
+interface TeamOnboardingWizardProps {
+  teamId: string;
+  teamName: string;
+  schoolName: string;
+  onComplete: () => void;
+  onSkip: () => void;
 }
 
 export const TeamOnboardingWizard: React.FC<TeamOnboardingWizardProps> = ({
@@ -149,124 +267,6 @@ export const TeamOnboardingWizard: React.FC<TeamOnboardingWizardProps> = ({
     handleNext();
   };
 
-  const renderStepContent = () => {
-    return (
-      <div className="text-center container-content">
-        {/* Icon */}
-        <div className="mb-6">
-          <div className="w-16 h-16 mx-auto bg-aurora-emerald rounded-full flex items-center justify-center">
-            <Icon
-              name={currentStepConfig.icon as any}
-              size="lg"
-              className="text-white"
-            />
-          </div>
-        </div>
-
-        {/* Title */}
-        <Typography variant="headline-xl" className="mb-4">
-          {currentStepConfig.title}
-        </Typography>
-
-        {/* Description */}
-        <Typography
-          variant="body-lg"
-          color="muted"
-          className="mb-8 leading-relaxed"
-        >
-          {currentStepConfig.description}
-        </Typography>
-
-        {/* Time estimate */}
-        {currentStepConfig.estimatedTime && (
-          <div className="mb-8">
-            <Badge variant="neutral" className="text-xs">
-              <Icon name="clock" size="xs" className="mr-1" />
-              {currentStepConfig.estimatedTime}
-            </Badge>
-          </div>
-        )}
-
-        {/* Action buttons */}
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Button
-            onClick={handlePrimaryAction}
-            variant="primary"
-            size="md"
-            className="min-w-36"
-          >
-            {currentStepConfig.primaryAction}
-          </Button>
-
-          {currentStepConfig.secondaryAction && (
-            <Button
-              onClick={handleSecondaryAction}
-              variant="ghost"
-              size="md"
-              className="min-w-36"
-            >
-              {currentStepConfig.secondaryAction}
-            </Button>
-          )}
-        </div>
-
-        {/* Step-specific additional content */}
-        {currentStep === "invite-coaches" && (
-          <div className="mt-8 p-4 bg-jade-50 dark:bg-jade-900/20 rounded-lg border border-jade-200 dark:border-jade-800">
-            <div className="flex items-start gap-3">
-              <Icon
-                name="lightbulb"
-                size="sm"
-                className="text-jade-600 dark:text-jade-400 mt-0.5"
-              />
-              <div className="text-left">
-                <Typography
-                  variant="body-sm"
-                  className="font-medium text-jade-800 dark:text-jade-200 mb-1"
-                >
-                  Pro Tip: Different Coaching Roles
-                </Typography>
-                <Typography
-                  variant="body-sm"
-                  className="text-jade-700 dark:text-jade-300"
-                >
-                  Invite assistant coaches, coordinators, and team managers.
-                  Each role has different permissions to help manage your team
-                  effectively.
-                </Typography>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {currentStep === "add-players" && (
-          <div className="mt-8 p-4 bg-status-info-bg rounded-lg border border-status-info">
-            <div className="flex items-start gap-3">
-              <Icon
-                name="upload"
-                size="sm"
-                className="text-status-info mt-0.5"
-              />
-              <div className="text-left">
-                <Typography
-                  variant="body-sm"
-                  className="font-medium text-primary mb-1"
-                >
-                  Multiple Ways to Add Players
-                </Typography>
-                <Typography variant="body-sm" className="text-secondary">
-                  Upload a CSV roster, add players manually, or send invite
-                  links for self-registration. Parents can also be included in
-                  communications.
-                </Typography>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
-
   return (
     <div className="min-h-screen bg-aurora-mist dark:bg-surface-inverse py-8">
       <div className="content-medium px-4">
@@ -292,7 +292,12 @@ export const TeamOnboardingWizard: React.FC<TeamOnboardingWizardProps> = ({
 
         {/* Step content */}
         <div className="bg-white dark:bg-secondary rounded-xl shadow-lg border p-8">
-          {renderStepContent()}
+          <StepContent
+            config={currentStepConfig}
+            currentStep={currentStep}
+            onPrimaryAction={handlePrimaryAction}
+            onSecondaryAction={handleSecondaryAction}
+          />
         </div>
 
         {/* Footer navigation */}

@@ -27,16 +27,18 @@ export const FullCalendarAdapter = {
     };
   },
   fromFullCalendar(raw: FullCalendarEventLike): CalendarEvent {
+    const toISOString = (
+      value: string | Date | undefined
+    ): string | undefined => {
+      if (!value) return undefined;
+      return typeof value === "string" ? value : value.toISOString();
+    };
+
     return {
       id: raw.id,
       title: raw.title,
-      start:
-        typeof raw.start === "string" ? raw.start : raw.start.toISOString(),
-      end: raw.end
-        ? typeof raw.end === "string"
-          ? raw.end
-          : raw.end.toISOString()
-        : undefined,
+      start: toISOString(raw.start)!,
+      end: toISOString(raw.end),
       type: (raw.extendedProps?.type as CalendarEvent["type"]) ?? "other",
       team_id: raw.extendedProps?.team_id as string | undefined,
       location: raw.extendedProps?.location as string | undefined,

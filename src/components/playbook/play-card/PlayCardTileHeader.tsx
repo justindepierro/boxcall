@@ -32,6 +32,114 @@ interface PlayCardTileHeaderProps {
   personnelConfigurations?: PersonnelConfiguration[];
 }
 
+// Extracted tile image section with photo/gradient variants
+const TileImageSection: React.FC<{
+  play: PlayType;
+  optimisticPlay: PlayType;
+  tileTitle: string;
+  isExpanded?: boolean;
+}> = ({ play, optimisticPlay, tileTitle, isExpanded }) => (
+  <motion.div
+    className={`relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-md shadow-jade-500/10 hover:shadow-xl hover:shadow-jade-500/20 transition-all duration-300 ${
+      isExpanded ? "ring-2 ring-jade-500" : ""
+    }`}
+    whileHover={{ scale: 1.03 }}
+    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+  >
+    {play.diagram_url || (play as any).diagram_image_url ? (
+      /* Photo thumbnail */
+      <>
+        <img
+          src={play.diagram_url || (play as any).diagram_image_url}
+          alt={`${tileTitle} diagram`}
+          className="w-full h-full object-cover"
+          crossOrigin="anonymous"
+          decoding="async"
+          referrerPolicy="no-referrer-when-downgrade"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        <div className="absolute top-3 left-3">
+          <div className="px-2 py-1 bg-white/20 backdrop-blur-sm rounded-lg border border-white/30">
+            <Icon name="image" className="w-4 h-4 text-white" />
+          </div>
+        </div>
+      </>
+    ) : (
+      /* Gradient with icon */
+      <>
+        <div
+          className={`absolute inset-0 bg-gradient-to-br ${getTileGradient(
+            optimisticPlay.p_type
+          )}`}
+        />
+        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-50" />
+        <Icon
+          name={getTileIcon(optimisticPlay.p_type)}
+          className="absolute inset-0 m-auto w-[50%] h-[50%] text-white/90 drop-shadow-lg"
+          aria-hidden="true"
+        />
+      </>
+    )}
+  </motion.div>
+);
+
+// Compact metadata shown when collapsed
+const CompactMetadata: React.FC<{ optimisticPlay: PlayType }> = ({
+  optimisticPlay,
+}) => (
+  <div className="flex items-center gap-2 mt-1.5 text-muted text-xs">
+    {optimisticPlay.p_type && (
+      <span className="flex items-center gap-1">
+        <Icon name="zap" className="h-3 w-3" />
+        {optimisticPlay.p_type}
+      </span>
+    )}
+    {optimisticPlay.times_called !== undefined &&
+      optimisticPlay.times_called > 0 && (
+        <span className="flex items-center gap-1">
+          <Icon name="refresh-cw" className="h-3 w-3" />
+          {optimisticPlay.times_called}x
+        </span>
+      )}
+  </div>
+);
+
+// Badge section with conditional rendering
+const BadgeSection: React.FC<{
+  optimisticPlay: PlayType;
+  personnelConfig?: PersonnelConfiguration;
+  phaseLabel: string | null;
+  isExpanded?: boolean;
+}> = ({ optimisticPlay, personnelConfig, phaseLabel, isExpanded }) => (
+  <div className="mt-3 flex flex-wrap items-center gap-2">
+    {/* Personnel badge - ALWAYS VISIBLE */}
+    {optimisticPlay.personnel && (
+      <PersonnelBadge
+        personnel={optimisticPlay.personnel}
+        size="sm"
+        badgeCustomization={personnelConfig?.badgeCustomization}
+      />
+    )}
+
+    {/* Secondary badges - ONLY SHOW WHEN EXPANDED */}
+    {isExpanded && (
+      <>
+        {optimisticPlay.wristband_number && (
+          <WristbandBadge
+            wristbandNumber={optimisticPlay.wristband_number}
+            size="sm"
+          />
+        )}
+        {phaseLabel && (
+          <span className="px-2 py-0.5 bg-warning-500 text-primary rounded-full text-2xs font-semibold tracking-wide uppercase border border-warning-600">
+            {phaseLabel}
+          </span>
+        )}
+      </>
+    )}
+  </div>
+);
+
 export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
   play,
   optimisticPlay,
@@ -63,11 +171,12 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
 
   const tileSubtitle =
     subtitleText ||
-    (showOneWordCalls && play.one_word_play
-      ? play.formation || optimisticPlay.p_type
-      : play.one_word_play
-        ? play.one_word_play.toUpperCase()
-        : optimisticPlay.p_type);
+    (() => {
+      if (showOneWordCalls && play.one_word_play)
+        return play.formation || optimisticPlay.p_type;
+      if (play.one_word_play) return play.one_word_play.toUpperCase();
+      return optimisticPlay.p_type;
+    })();
 
   return (
     <motion.div
@@ -97,45 +206,12 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
         )}
 
         {/* Photo or Gradient Card */}
-        <motion.div
-          className={`relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-md shadow-jade-500/10 hover:shadow-xl hover:shadow-jade-500/20 transition-all duration-300 ${isExpanded ? "ring-2 ring-jade-500" : ""}`}
-          whileHover={{ scale: 1.03 }}
-          transition={{ type: "spring", stiffness: 400, damping: 17 }}
-        >
-          {play.diagram_url || (play as any).diagram_image_url ? (
-            /* Photo thumbnail */
-            <>
-              <img
-                src={play.diagram_url || (play as any).diagram_image_url}
-                alt={`${tileTitle} diagram`}
-                className="w-full h-full object-cover"
-                // iOS Safari compatibility
-                crossOrigin="anonymous"
-                decoding="async"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-              <div className="absolute top-3 left-3">
-                <div className="px-2 py-1 bg-white/20 backdrop-blur-sm rounded-lg border border-white/30">
-                  <Icon name="image" className="w-4 h-4 text-white" />
-                </div>
-              </div>
-            </>
-          ) : (
-            /* Gradient with icon */
-            <>
-              <div
-                className={`absolute inset-0 bg-gradient-to-br ${getTileGradient(optimisticPlay.p_type)}`}
-              />
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-50" />
-              <Icon
-                name={getTileIcon(optimisticPlay.p_type)}
-                className="absolute inset-0 m-auto w-[50%] h-[50%] text-white/90 drop-shadow-lg"
-                aria-hidden="true"
-              />
-            </>
-          )}
-        </motion.div>
+        <TileImageSection
+          play={play}
+          optimisticPlay={optimisticPlay}
+          tileTitle={tileTitle}
+          isExpanded={isExpanded}
+        />
 
         {/* Favorite button - top-left (hidden when selection mode is on) */}
         {!onSelectionChange && (
@@ -198,57 +274,17 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
         )}
 
         {/* 3-TIER DESIGN: Compact metadata when collapsed */}
-        {!isExpanded && (
-          <div className="flex items-center gap-2 mt-1.5 text-muted text-xs">
-            {optimisticPlay.p_type && (
-              <span className="flex items-center gap-1">
-                <Icon name="zap" className="h-3 w-3" />
-                {optimisticPlay.p_type}
-              </span>
-            )}
-            {optimisticPlay.times_called !== undefined &&
-              optimisticPlay.times_called > 0 && (
-                <span className="flex items-center gap-1">
-                  <Icon name="refresh-cw" className="h-3 w-3" />
-                  {optimisticPlay.times_called}x
-                </span>
-              )}
-          </div>
-        )}
+        {!isExpanded && <CompactMetadata optimisticPlay={optimisticPlay} />}
       </div>
 
       {/* Badges - PRIMARY INFO ONLY (personnel badge) */}
       {/* 3-TIER DESIGN: Show only essential info in collapsed state */}
-      <div className="mt-3 flex flex-wrap items-center gap-2">
-        {/* Personnel badge - ALWAYS VISIBLE (critical for coaches) */}
-        {optimisticPlay.personnel && (
-          <PersonnelBadge
-            personnel={optimisticPlay.personnel}
-            size="sm"
-            badgeCustomization={personnelConfig?.badgeCustomization}
-          />
-        )}
-
-        {/* Secondary badges - ONLY SHOW WHEN EXPANDED */}
-        {isExpanded && (
-          <>
-            {/* Wristband badge */}
-            {optimisticPlay.wristband_number && (
-              <WristbandBadge
-                wristbandNumber={optimisticPlay.wristband_number}
-                size="sm"
-              />
-            )}
-
-            {/* Installation phase badge */}
-            {phaseLabel && (
-              <span className="px-2 py-0.5 bg-warning-500 text-primary rounded-full text-2xs font-semibold tracking-wide uppercase border border-warning-600">
-                {phaseLabel}
-              </span>
-            )}
-          </>
-        )}
-      </div>
+      <BadgeSection
+        optimisticPlay={optimisticPlay}
+        personnelConfig={personnelConfig}
+        phaseLabel={phaseLabel}
+        isExpanded={isExpanded}
+      />
 
       {/* Details button - outside the tile */}
       {/* 3-TIER DESIGN: Clear expand/collapse action */}

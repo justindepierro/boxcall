@@ -30,6 +30,148 @@ interface FormationTrendChartProps {
   showAvgYards?: boolean;
 }
 
+// Custom tooltip component
+const CustomTooltip = ({ active, payload }: any) => {
+  if (!active || !payload || !payload.length) {
+    return null;
+  }
+
+  const point = payload[0].payload as FormationTrendDataPoint;
+
+  const getSuccessColor = (rate: number) => {
+    if (rate >= 75) return "text-success-600";
+    if (rate >= 60) return "text-warning-600";
+    return "text-error-600";
+  };
+
+  return (
+    <Card className="shadow-lg">
+      <div className="p-3 space-y-1">
+        <Typography variant="body-sm" className="font-semibold">
+          {point.weekLabel}
+        </Typography>
+        <div className="space-y-0.5">
+          <div className="flex justify-between gap-4">
+            <Typography variant="body-xs" className="text-secondary">
+              Success Rate:
+            </Typography>
+            <Typography
+              variant="body-xs"
+              className={`font-semibold ${getSuccessColor(point.successRate)}`}
+            >
+              {point.successRate}%
+            </Typography>
+          </div>
+          <div className="flex justify-between gap-4">
+            <Typography variant="body-xs" className="text-secondary">
+              Avg Yards:
+            </Typography>
+            <Typography variant="body-xs" className="font-semibold">
+              {point.avgYards.toFixed(1)}
+            </Typography>
+          </div>
+          <div className="flex justify-between gap-4">
+            <Typography variant="body-xs" className="text-secondary">
+              Attempts:
+            </Typography>
+            <Typography variant="body-xs" className="font-semibold">
+              {point.attempts}
+            </Typography>
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+};
+
+// Calculate trend statistics
+const calculateStats = (data: FormationTrendDataPoint[]) => {
+  const latestPoint = data[data.length - 1];
+  const firstPoint = data[0];
+  const successChange = latestPoint.successRate - firstPoint.successRate;
+  const totalAttempts = data.reduce((sum, point) => sum + point.attempts, 0);
+  const avgSuccess =
+    data.reduce((sum, point) => sum + point.successRate, 0) / data.length;
+  const avgYards =
+    data.reduce((sum, point) => sum + point.avgYards, 0) / data.length;
+
+  return {
+    latestPoint,
+    firstPoint,
+    successChange,
+    totalAttempts,
+    avgSuccess,
+    avgYards,
+  };
+};
+
+// Calculate Y-axis domains
+const calculateAxisDomains = (data: FormationTrendDataPoint[]) => {
+  const minSuccess = Math.min(...data.map((d) => d.successRate));
+  const maxSuccess = Math.max(...data.map((d) => d.successRate));
+  const successMin = Math.max(0, Math.floor((minSuccess - 10) / 10) * 10);
+  const successMax = Math.min(100, Math.ceil((maxSuccess + 10) / 10) * 10);
+
+  const minYards = Math.min(...data.map((d) => d.avgYards));
+  const maxYards = Math.max(...data.map((d) => d.avgYards));
+  const yardsMin = Math.max(-5, Math.floor(minYards - 2));
+  const yardsMax = Math.ceil(maxYards + 2);
+
+  return { successMin, successMax, yardsMin, yardsMax };
+};
+
+// Summary stats display
+const SummaryStats: React.FC<{
+  avgSuccess: number;
+  avgYards: number;
+  successChange: number;
+}> = ({ avgSuccess, avgYards, successChange }) => {
+  const getTrendColor = (change: number) => {
+    if (change > 0) return "text-success-600";
+    if (change < 0) return "text-error-600";
+    return "text-secondary";
+  };
+
+  const getTrendIcon = (change: number) => {
+    if (change > 0) return "↑ ";
+    if (change < 0) return "↓ ";
+    return "→ ";
+  };
+
+  return (
+    <div className="mt-6 grid grid-cols-3 gap-4 border-t pt-4">
+      <div>
+        <Typography variant="body-xs" className="text-secondary mb-1">
+          Avg Success Rate
+        </Typography>
+        <Typography variant="body-sm" className="font-semibold">
+          {avgSuccess.toFixed(1)}%
+        </Typography>
+      </div>
+      <div>
+        <Typography variant="body-xs" className="text-secondary mb-1">
+          Avg Yards/Play
+        </Typography>
+        <Typography variant="body-sm" className="font-semibold">
+          {avgYards.toFixed(1)}
+        </Typography>
+      </div>
+      <div>
+        <Typography variant="body-xs" className="text-secondary mb-1">
+          Trend
+        </Typography>
+        <Typography
+          variant="body-sm"
+          className={`font-semibold ${getTrendColor(successChange)}`}
+        >
+          {getTrendIcon(successChange)}
+          {Math.abs(successChange).toFixed(1)}%
+        </Typography>
+      </div>
+    </div>
+  );
+};
+
 export const FormationTrendChart: React.FC<FormationTrendChartProps> = ({
   data,
   formationName,
@@ -52,79 +194,15 @@ export const FormationTrendChart: React.FC<FormationTrendChartProps> = ({
     );
   }
 
-  const CustomTooltip = ({ active, payload }: any) => {
-    if (!active || !payload || !payload.length) {
-      return null;
-    }
+  const stats = calculateStats(data);
+  const { successMin, successMax, yardsMin, yardsMax } =
+    calculateAxisDomains(data);
 
-    const point = payload[0].payload as FormationTrendDataPoint;
-
-    return (
-      <Card className="shadow-lg">
-        <div className="p-3 space-y-1">
-          <Typography variant="body-sm" className="font-semibold">
-            {point.weekLabel}
-          </Typography>
-          <div className="space-y-0.5">
-            <div className="flex justify-between gap-4">
-              <Typography variant="body-xs" className="text-secondary">
-                Success Rate:
-              </Typography>
-              <Typography
-                variant="body-xs"
-                className={`font-semibold ${
-                  point.successRate >= 75
-                    ? "text-success-600"
-                    : point.successRate >= 60
-                      ? "text-warning-600"
-                      : "text-error-600"
-                }`}
-              >
-                {point.successRate}%
-              </Typography>
-            </div>
-            <div className="flex justify-between gap-4">
-              <Typography variant="body-xs" className="text-secondary">
-                Avg Yards:
-              </Typography>
-              <Typography variant="body-xs" className="font-semibold">
-                {point.avgYards.toFixed(1)}
-              </Typography>
-            </div>
-            <div className="flex justify-between gap-4">
-              <Typography variant="body-xs" className="text-secondary">
-                Attempts:
-              </Typography>
-              <Typography variant="body-xs" className="font-semibold">
-                {point.attempts}
-              </Typography>
-            </div>
-          </div>
-        </div>
-      </Card>
-    );
+  const getSuccessColor = (rate: number) => {
+    if (rate >= targetSuccessRate) return "text-success-600";
+    if (rate >= 60) return "text-warning-600";
+    return "text-error-600";
   };
-
-  // Calculate stats
-  const latestPoint = data[data.length - 1];
-  const firstPoint = data[0];
-  const successChange = latestPoint.successRate - firstPoint.successRate;
-  const totalAttempts = data.reduce((sum, point) => sum + point.attempts, 0);
-  const avgSuccess =
-    data.reduce((sum, point) => sum + point.successRate, 0) / data.length;
-  const avgYards =
-    data.reduce((sum, point) => sum + point.avgYards, 0) / data.length;
-
-  // Calculate Y-axis domains
-  const minSuccess = Math.min(...data.map((d) => d.successRate));
-  const maxSuccess = Math.max(...data.map((d) => d.successRate));
-  const successMin = Math.max(0, Math.floor((minSuccess - 10) / 10) * 10);
-  const successMax = Math.min(100, Math.ceil((maxSuccess + 10) / 10) * 10);
-
-  const minYards = Math.min(...data.map((d) => d.avgYards));
-  const maxYards = Math.max(...data.map((d) => d.avgYards));
-  const yardsMin = Math.max(-5, Math.floor(minYards - 2));
-  const yardsMax = Math.ceil(maxYards + 2);
 
   return (
     <Card className={className}>
@@ -135,7 +213,7 @@ export const FormationTrendChart: React.FC<FormationTrendChartProps> = ({
               {formationName} Performance
             </Typography>
             <Typography variant="body-xs" className="text-secondary">
-              {data.length} weeks • {totalAttempts} total attempts
+              {data.length} weeks • {stats.totalAttempts} total attempts
             </Typography>
           </div>
           <div className="text-right">
@@ -144,25 +222,21 @@ export const FormationTrendChart: React.FC<FormationTrendChartProps> = ({
             </Typography>
             <Typography
               variant="headline-md"
-              className={
-                latestPoint.successRate >= targetSuccessRate
-                  ? "text-success-600"
-                  : latestPoint.successRate >= 60
-                    ? "text-warning-600"
-                    : "text-error-600"
-              }
+              className={getSuccessColor(stats.latestPoint.successRate)}
             >
-              {latestPoint.successRate}%
+              {stats.latestPoint.successRate}%
             </Typography>
-            {successChange !== 0 && (
+            {stats.successChange !== 0 && (
               <Typography
                 variant="body-xs"
                 className={
-                  successChange > 0 ? "text-success-600" : "text-error-600"
+                  stats.successChange > 0
+                    ? "text-success-600"
+                    : "text-error-600"
                 }
               >
-                {successChange > 0 ? "+" : ""}
-                {successChange.toFixed(1)}% from start
+                {stats.successChange > 0 ? "+" : ""}
+                {stats.successChange.toFixed(1)}% from start
               </Typography>
             )}
           </div>
@@ -258,42 +332,11 @@ export const FormationTrendChart: React.FC<FormationTrendChartProps> = ({
         </ResponsiveContainer>
 
         {/* Summary Stats */}
-        <div className="mt-6 grid grid-cols-3 gap-4 border-t pt-4">
-          <div>
-            <Typography variant="body-xs" className="text-secondary mb-1">
-              Avg Success Rate
-            </Typography>
-            <Typography variant="body-sm" className="font-semibold">
-              {avgSuccess.toFixed(1)}%
-            </Typography>
-          </div>
-          <div>
-            <Typography variant="body-xs" className="text-secondary mb-1">
-              Avg Yards/Play
-            </Typography>
-            <Typography variant="body-sm" className="font-semibold">
-              {avgYards.toFixed(1)}
-            </Typography>
-          </div>
-          <div>
-            <Typography variant="body-xs" className="text-secondary mb-1">
-              Trend
-            </Typography>
-            <Typography
-              variant="body-sm"
-              className={`font-semibold ${
-                successChange > 0
-                  ? "text-success-600"
-                  : successChange < 0
-                    ? "text-error-600"
-                    : "text-secondary"
-              }`}
-            >
-              {successChange > 0 ? "↑ " : successChange < 0 ? "↓ " : "→ "}
-              {Math.abs(successChange).toFixed(1)}%
-            </Typography>
-          </div>
-        </div>
+        <SummaryStats
+          avgSuccess={stats.avgSuccess}
+          avgYards={stats.avgYards}
+          successChange={stats.successChange}
+        />
       </div>
     </Card>
   );

@@ -144,11 +144,15 @@ export const ProfilePopoverDemo: React.FC = () => {
               />
               <div className="text-right">
                 <Typography variant="body-sm" className="text-muted">
-                  {user.role === "coach" || user.role === "assistant_coach"
-                    ? "Coaching Staff"
-                    : user.role === "player"
-                      ? "Team Member"
-                      : "Family"}
+                  {(() => {
+                    if (
+                      user.role === "coach" ||
+                      user.role === "assistant_coach"
+                    )
+                      return "Coaching Staff";
+                    if (user.role === "player") return "Team Member";
+                    return "Family";
+                  })()}
                 </Typography>
               </div>
             </div>

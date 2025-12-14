@@ -127,15 +127,14 @@ export const StreakIndicator: React.FC<StreakIndicatorProps> = ({
             {last5Results.map((result, index) => (
               <span
                 key={index}
-                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold border ${getResultColor(
-                  result
-                )} ${
-                  result === "success"
-                    ? "bg-success/10 border-success/30"
-                    : result === "failure"
-                      ? "bg-error/10 border-error/30"
-                      : "bg-secondary border-border"
-                }`}
+                className={(() => {
+                  const base = `w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold border ${getResultColor(result)} `;
+                  if (result === "success")
+                    return `${base}bg-success/10 border-success/30`;
+                  if (result === "failure")
+                    return `${base}bg-error/10 border-error/30`;
+                  return `${base}bg-secondary border-border`;
+                })()}
                 title={result}
               >
                 {getResultIcon(result)}

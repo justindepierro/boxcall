@@ -57,6 +57,133 @@ const defaultPalette: ColorPalette = {
   info: colorTokens.blue[500],
 };
 
+// Apply team colors to palette
+function applyTeamColors(
+  basePalette: ColorPalette,
+  teamColors?: TeamColors
+): ColorPalette {
+  if (!teamColors) return basePalette;
+
+  return {
+    ...basePalette,
+    primary: teamColors.primary || basePalette.primary,
+    secondary: teamColors.secondary || basePalette.secondary,
+    accent: teamColors.secondary || basePalette.accent,
+  };
+}
+
+// Apply emotion-based palette adjustments
+function applyEmotionTheme(
+  basePalette: ColorPalette,
+  emotion?: EmotionTheme
+): ColorPalette {
+  if (!emotion) return basePalette;
+
+  switch (emotion) {
+    case "trust":
+      return {
+        ...basePalette,
+        primary: colorTokens.emerald[500],
+        background: "#F0FDF4",
+        surface: "#DCFCE7",
+      };
+    case "energy":
+      return {
+        ...basePalette,
+        primary: colorTokens.red[500],
+        accent: colorTokens.amber[500],
+        background: colorTokens.red[50],
+        surface: colorTokens.red[100],
+      };
+    case "calm":
+      return {
+        ...basePalette,
+        primary: colorTokens.blue[500],
+        background: "#EFF6FF",
+        surface: colorTokens.blue[50],
+      };
+    case "achievement":
+      return {
+        ...basePalette,
+        primary: colorTokens.violet[500],
+        accent: colorTokens.amber[500],
+        background: colorTokens.purple[100],
+        surface: colorTokens.purple[200],
+      };
+    default:
+      return basePalette;
+  }
+}
+
+// Apply context-based palette adjustments
+function applyContextTheme(
+  basePalette: ColorPalette,
+  context?: ContextTheme
+): ColorPalette {
+  if (!context) return basePalette;
+
+  switch (context) {
+    case "professional":
+      return {
+        ...basePalette,
+        background: "#ffffff",
+        surface: "#F8FAFC",
+        text: "#1E293B",
+      };
+    case "energetic":
+      return {
+        ...basePalette,
+        background: colorTokens.amber[100],
+        surface: colorTokens.amber[200],
+        primary: colorTokens.amber[500],
+      };
+    case "calm":
+      return {
+        ...basePalette,
+        background: colorTokens.emerald[50],
+        surface: colorTokens.emerald[100],
+        primary: colorTokens.emerald[500],
+      };
+    default:
+      return basePalette;
+  }
+}
+
+// Apply dark mode transformations
+function applyDarkMode(
+  basePalette: ColorPalette,
+  isDark: boolean
+): ColorPalette {
+  if (!isDark) return basePalette;
+
+  return {
+    ...basePalette,
+    background: "#0F172A",
+    surface: "#1E293B",
+    text: "#F8FAFC",
+    primary: basePalette.primary,
+    secondary: "#94A3B8",
+  };
+}
+
+// Generate complete palette from theme config
+function generatePalette(
+  config: ThemeConfig,
+  prefersDark: boolean
+): ColorPalette {
+  let palette = { ...defaultPalette };
+
+  palette = applyTeamColors(palette, config.teamColors);
+  palette = applyEmotionTheme(palette, config.emotion);
+  palette = applyContextTheme(palette, config.context);
+
+  const isDark =
+    config.mode === "dark" || (config.mode === "auto" && prefersDark);
+  palette = applyDarkMode(palette, isDark);
+
+  return palette;
+}
+
 export function useColorTheme(
   initialConfig?: Partial<ThemeConfig>
 ): UseColorThemeReturn {
@@ -111,103 +238,9 @@ export function useColorTheme(
 
   // Update palette when theme config changes
   useEffect(() => {
-    // Inline palette generation to avoid dependency issues
-    let basePalette: ColorPalette = { ...defaultPalette };
-
-    // Apply team colors if available
-    if (themeConfig.teamColors) {
-      basePalette = {
-        ...basePalette,
-        primary: themeConfig.teamColors.primary || basePalette.primary,
-        secondary: themeConfig.teamColors.secondary || basePalette.secondary,
-        accent: themeConfig.teamColors.secondary || basePalette.accent, // Use secondary as accent
-      };
-    }
-
-    // Apply emotion-based adjustments
-    if (themeConfig.emotion) {
-      switch (themeConfig.emotion) {
-        case "trust":
-          basePalette = {
-            ...basePalette,
-            primary: colorTokens.emerald[500], // Green for trust
-            background: "#F0FDF4",
-            surface: "#DCFCE7",
-          };
-          break;
-        case "energy":
-          basePalette = {
-            ...basePalette,
-            primary: colorTokens.red[500], // Red for energy
-            accent: colorTokens.amber[500], // Orange accent
-            background: colorTokens.red[50],
-            surface: colorTokens.red[100],
-          };
-          break;
-        case "calm":
-          basePalette = {
-            ...basePalette,
-            primary: colorTokens.blue[500], // Blue for calm
-            background: "#EFF6FF",
-            surface: colorTokens.blue[50],
-          };
-          break;
-        case "achievement":
-          basePalette = {
-            ...basePalette,
-            primary: colorTokens.violet[500], // Purple for achievement
-            accent: colorTokens.amber[500], // Gold accent
-            background: colorTokens.purple[100],
-            surface: colorTokens.purple[200],
-          };
-          break;
-      }
-    }
-
-    // Apply context-based adjustments
-    if (themeConfig.context) {
-      switch (themeConfig.context) {
-        case "professional":
-          basePalette = {
-            ...basePalette,
-            background: "#ffffff",
-            surface: "#F8FAFC",
-            text: "#1E293B",
-          };
-          break;
-        case "energetic":
-          basePalette = {
-            ...basePalette,
-            background: colorTokens.amber[100], // Light yellow
-            surface: colorTokens.amber[200],
-            primary: colorTokens.amber[500],
-          };
-          break;
-        case "calm":
-          basePalette = {
-            ...basePalette,
-            background: colorTokens.emerald[50], // Light green
-            surface: colorTokens.emerald[100],
-            primary: colorTokens.emerald[500],
-          };
-          break;
-      }
-    }
-
-    // Apply dark mode transformations if needed
-    if (themeConfig.mode === "dark") {
-      basePalette = {
-        ...basePalette,
-        background: "#0F172A",
-        surface: "#1E293B",
-        text: "#F8FAFC",
-        primary: basePalette.primary, // Keep custom primary
-        secondary: "#94A3B8",
-      };
-    }
-
-    setPalette(basePalette);
-    applyPaletteToCSS(basePalette);
+    const palette = generatePalette(themeConfig, false);
+    setPalette(palette);
+    applyPaletteToCSS(palette);
   }, [themeConfig]);
 
   // Apply palette as CSS custom properties
@@ -224,102 +257,9 @@ export function useColorTheme(
 
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const handleChange = () => {
-      // Use same palette generation logic as main effect
-      let basePalette: ColorPalette = { ...defaultPalette };
-
-      // Apply team colors if available
-      if (themeConfig.teamColors) {
-        basePalette = {
-          ...basePalette,
-          primary: themeConfig.teamColors.primary || basePalette.primary,
-          secondary: themeConfig.teamColors.secondary || basePalette.secondary,
-          accent: themeConfig.teamColors.secondary || basePalette.accent,
-        };
-      }
-
-      // Apply emotion-based adjustments
-      if (themeConfig.emotion) {
-        switch (themeConfig.emotion) {
-          case "trust":
-            basePalette = {
-              ...basePalette,
-              primary: colorTokens.emerald[500],
-              background: "#F0FDF4",
-              surface: "#DCFCE7",
-            };
-            break;
-          case "energy":
-            basePalette = {
-              ...basePalette,
-              primary: colorTokens.red[500],
-              accent: colorTokens.amber[500],
-              background: colorTokens.red[50],
-              surface: colorTokens.red[100],
-            };
-            break;
-          case "calm":
-            basePalette = {
-              ...basePalette,
-              primary: colorTokens.blue[500],
-              background: "#EFF6FF",
-              surface: colorTokens.blue[50],
-            };
-            break;
-          case "achievement":
-            basePalette = {
-              ...basePalette,
-              primary: colorTokens.violet[500],
-              accent: colorTokens.amber[500],
-              background: colorTokens.purple[100],
-              surface: colorTokens.purple[200],
-            };
-            break;
-        }
-      }
-
-      // Apply context-based adjustments
-      if (themeConfig.context) {
-        switch (themeConfig.context) {
-          case "professional":
-            basePalette = {
-              ...basePalette,
-              background: "#ffffff",
-              surface: "#F8FAFC",
-              text: "#1E293B",
-            };
-            break;
-          case "energetic":
-            basePalette = {
-              ...basePalette,
-              background: colorTokens.amber[100],
-              surface: colorTokens.amber[200],
-              primary: colorTokens.amber[500],
-            };
-            break;
-          case "calm":
-            basePalette = {
-              ...basePalette,
-              background: colorTokens.emerald[50],
-              surface: colorTokens.emerald[100],
-              primary: colorTokens.emerald[500],
-            };
-            break;
-        }
-      }
-
-      // Apply system preference
-      if (mediaQuery.matches) {
-        basePalette = {
-          ...basePalette,
-          background: "#0F172A",
-          surface: "#1E293B",
-          text: "#F8FAFC",
-          secondary: "#94A3B8",
-        };
-      }
-
-      setPalette(basePalette);
-      applyPaletteToCSS(basePalette);
+      const newPalette = generatePalette(themeConfig, mediaQuery.matches);
+      setPalette(newPalette);
+      applyPaletteToCSS(newPalette);
     };
 
     // Initial setup for auto mode

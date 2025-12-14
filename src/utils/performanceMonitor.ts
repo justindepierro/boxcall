@@ -165,12 +165,11 @@ class PerformanceMonitor {
       this.reportMetric({
         name: "bundleLoadTime",
         value: bundleLoadTime,
-        rating:
-          bundleLoadTime < 3000
-            ? "good"
-            : bundleLoadTime < 5000
-              ? "needs-improvement"
-              : "poor",
+        rating: (() => {
+          if (bundleLoadTime < 3000) return "good";
+          if (bundleLoadTime < 5000) return "needs-improvement";
+          return "poor";
+        })(),
         timestamp: Date.now(),
         sessionId: this.sessionId,
       });
@@ -238,12 +237,11 @@ class PerformanceMonitor {
       this.reportMetric({
         name: "routeChange",
         value: routeChangeTime,
-        rating:
-          routeChangeTime < 200
-            ? "good"
-            : routeChangeTime < 500
-              ? "needs-improvement"
-              : "poor",
+        rating: (() => {
+          if (routeChangeTime < 200) return "good";
+          if (routeChangeTime < 500) return "needs-improvement";
+          return "poor";
+        })(),
         timestamp: Date.now(),
         sessionId: this.sessionId,
       });
@@ -266,12 +264,11 @@ class PerformanceMonitor {
         this.reportMetric({
           name: "componentRender",
           value: renderTime,
-          rating:
-            renderTime < 16
-              ? "good"
-              : renderTime < 50
-                ? "needs-improvement"
-                : "poor",
+          rating: (() => {
+            if (renderTime < 16) return "good";
+            if (renderTime < 50) return "needs-improvement";
+            return "poor";
+          })(),
           timestamp: Date.now(),
           sessionId: this.sessionId,
         });

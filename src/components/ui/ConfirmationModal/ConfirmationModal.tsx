@@ -81,13 +81,15 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
       <div className="p-6">
         <div className="flex items-start gap-4">
           <div
-            className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
-              variant === "danger"
-                ? "bg-error-100 dark:bg-error-900/30"
-                : variant === "warning"
-                  ? "bg-warning-100 dark:bg-warning-900/30"
-                  : "bg-info-100 dark:bg-info-900/30"
-            }`}
+            className={(() => {
+              const base =
+                "flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ";
+              if (variant === "danger")
+                return `${base}bg-error-100 dark:bg-error-900/30`;
+              if (variant === "warning")
+                return `${base}bg-warning-100 dark:bg-warning-900/30`;
+              return `${base}bg-info-100 dark:bg-info-900/30`;
+            })()}
           >
             <Icon
               name={config.icon}

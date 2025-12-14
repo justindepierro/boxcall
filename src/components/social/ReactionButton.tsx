@@ -29,6 +29,39 @@ const reactionColors: Record<ReactionType, string> = {
   angry: "text-warning",
 };
 
+/** Calculate optimistic reaction update */
+function calculateOptimisticUpdate(
+  current: ReactionSummary,
+  reactionType: ReactionType
+): ReactionSummary {
+  const wasUserReaction = current.user_reaction === reactionType;
+  const oldReaction = current.user_reaction;
+
+  // Calculate new total count without nested ternary
+  const getNewTotalCount = () => {
+    if (wasUserReaction) return current.total_count - 1;
+    if (oldReaction) return current.total_count; // switching reactions, count stays same
+    return current.total_count + 1;
+  };
+
+  return {
+    ...current,
+    user_reaction: wasUserReaction ? undefined : reactionType,
+    total_count: getNewTotalCount(),
+    reactions: {
+      ...current.reactions,
+      // Remove old reaction if switching
+      ...(oldReaction && oldReaction !== reactionType
+        ? { [oldReaction]: (current.reactions[oldReaction] || 1) - 1 }
+        : {}),
+      // Add/remove new reaction
+      [reactionType]: wasUserReaction
+        ? (current.reactions[reactionType] || 1) - 1
+        : (current.reactions[reactionType] || 0) + 1,
+    },
+  };
+}
+
 export const ReactionButton: React.FC<ReactionButtonProps> = ({
   contentType,
   contentId,
@@ -61,33 +94,9 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
 
     // OPTIMISTIC UPDATE - Instant feedback like Facebook!
     const previousSummary = { ...reactionSummary };
-    const wasUserReaction = reactionSummary.user_reaction === reactionType;
-
-    setReactionSummary({
-      ...reactionSummary,
-      user_reaction: wasUserReaction ? undefined : reactionType,
-      total_count: wasUserReaction
-        ? reactionSummary.total_count - 1
-        : reactionSummary.user_reaction
-          ? reactionSummary.total_count
-          : reactionSummary.total_count + 1,
-      reactions: {
-        ...reactionSummary.reactions,
-        // Remove old reaction if switching
-        ...(reactionSummary.user_reaction &&
-        reactionSummary.user_reaction !== reactionType
-          ? {
-              [reactionSummary.user_reaction]:
-                (reactionSummary.reactions[reactionSummary.user_reaction] ||
-                  1) - 1,
-            }
-          : {}),
-        // Add/remove new reaction
-        [reactionType]: wasUserReaction
-          ? (reactionSummary.reactions[reactionType] || 1) - 1
-          : (reactionSummary.reactions[reactionType] || 0) + 1,
-      },
-    });
+    setReactionSummary(
+      calculateOptimisticUpdate(reactionSummary, reactionType)
+    );
     setShowPicker(false);
 
     try {
@@ -134,11 +143,12 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
       <div className="relative">
         <button
           onClick={() => setShowPicker(!showPicker)}
-          className={`flex items-center gap-1 ${buttonSizeClasses[size]} rounded-full transition-colors ${
-            userReaction
-              ? `${reactionColors[userReaction]} bg-opacity-10 hover:bg-opacity-20`
-              : "text-secondary hover:text-primary hover:bg-secondary"
-          }`}
+          className={(() => {
+            const base = `flex items-center gap-1 ${buttonSizeClasses[size]} rounded-full transition-colors `;
+            if (userReaction)
+              return `${base}${reactionColors[userReaction]} bg-opacity-10 hover:bg-opacity-20`;
+            return `${base}text-secondary hover:text-primary hover:bg-secondary`;
+          })()}
           disabled={isLoading}
         >
           {userReaction ? (
@@ -202,26 +212,37 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
       }`}
       disabled={isLoading}
     >
-      {userReaction ? (
-        <>
-          {React.createElement(reactionIcons[userReaction], {
-            className: `${sizeClasses[size]} ${reactionColors[userReaction]}`,
-          })}
-          <span className="capitalize text-sm">{userReaction}</span>
-        </>
-      ) : topReaction ? (
-        <>
-          {React.createElement(reactionIcons[topReaction[0] as ReactionType], {
-            className: `${sizeClasses[size]} ${reactionColors[topReaction[0] as ReactionType]}`,
-          })}
-          <span className="text-sm">{topReaction[1]}</span>
-        </>
-      ) : (
-        <>
-          <Heart className={`${sizeClasses[size]} text-secondary`} />
-          <span className="text-sm text-muted">React</span>
-        </>
-      )}
+      {(() => {
+        if (userReaction) {
+          return (
+            <>
+              {React.createElement(reactionIcons[userReaction], {
+                className: `${sizeClasses[size]} ${reactionColors[userReaction]}`,
+              })}
+              <span className="capitalize text-sm">{userReaction}</span>
+            </>
+          );
+        }
+        if (topReaction) {
+          return (
+            <>
+              {React.createElement(
+                reactionIcons[topReaction[0] as ReactionType],
+                {
+                  className: `${sizeClasses[size]} ${reactionColors[topReaction[0] as ReactionType]}`,
+                }
+              )}
+              <span className="text-sm">{topReaction[1]}</span>
+            </>
+          );
+        }
+        return (
+          <>
+            <Heart className={`${sizeClasses[size]} text-secondary`} />
+            <span className="text-sm text-muted">React</span>
+          </>
+        );
+      })()}
 
       {showPicker && (
         <div className="absolute top-full mt-2 left-0 bg-white dark:bg-navy-800 border border-neutral-200 dark:border-navy-600 rounded-lg shadow-2xl p-2 flex gap-1 z-popover">

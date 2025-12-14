@@ -82,13 +82,12 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
           title="Database Performance Monitor"
         >
           <div
-            className={`w-2 h-2 rounded-full ${
-              performanceStatus.status === "good"
-                ? "bg-success-500"
-                : performanceStatus.status === "warning"
-                  ? "bg-warning-500"
-                  : "bg-error-500"
-            }`}
+            className={`w-2 h-2 rounded-full ${(() => {
+              if (performanceStatus.status === "good") return "bg-success-500";
+              if (performanceStatus.status === "warning")
+                return "bg-warning-500";
+              return "bg-error-500";
+            })()}`}
           />
           <span className="text-sm font-medium">DB</span>
           <span className="text-xs text-secondary">
@@ -108,12 +107,12 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
       <div className="px-4 py-3 border-b border-muted flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div
-            className={`w-3 h-3 rounded-full ${
-              performanceStatus.status === "good"
-                ? "bg-success-500"
-                : performanceStatus.status === "warning"
-                  ? "bg-warning-500"
-                  : "bg-error-500"
+            className={`w-3 h-3 rounded-full ${(() => {
+              if (performanceStatus.status === "good") return "bg-success-500";
+              if (performanceStatus.status === "warning")
+                return "bg-warning-500";
+              return "bg-error-500";
+            })()}
             }`}
           />
           <h3 className="text-sm font-semibold text-primary">
@@ -184,13 +183,11 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
             Cache Hit Rate
           </div>
           <div
-            className={`text-lg font-bold ${
-              cache.hitRate > 70
-                ? "text-success-600"
-                : cache.hitRate > 40
-                  ? "text-warning-600"
-                  : "text-error-600"
-            }`}
+            className={`text-lg font-bold ${(() => {
+              if (cache.hitRate > 70) return "text-success-600";
+              if (cache.hitRate > 40) return "text-warning-600";
+              return "text-error-600";
+            })()}`}
           >
             {formatPercentage(cache.hitRate)}
           </div>
@@ -201,11 +198,13 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
           <div className="text-xs text-secondary font-medium">Error Rate</div>
           <div
             className={`text-lg font-bold ${
-              databaseMetrics.errorRate < 1
+              databaseMetrics.errorRate === 0
                 ? "text-success-600"
-                : databaseMetrics.errorRate < 5
-                  ? "text-warning-600"
-                  : "text-error-600"
+                : (() => {
+                    if (databaseMetrics.errorRate < 5)
+                      return "text-warning-600";
+                    return "text-error-600";
+                  })()
             }`}
           >
             {formatPercentage(databaseMetrics.errorRate)}
@@ -256,11 +255,11 @@ const DatabasePerformanceMonitor: React.FC<DatabasePerformanceMonitorProps> = ({
               <div className="flex justify-between">
                 <span className="text-warning-600">Slow Queries:</span>
                 <span
-                  className={`font-medium ${
-                    databaseMetrics.slowQueries > 0
-                      ? "text-error-600"
-                      : "text-success-600"
-                  }`}
+                  className={`font-medium ${(() => {
+                    if (databaseMetrics.slowQueries > 0)
+                      return "text-error-600";
+                    return "text-success-600";
+                  })()}`}
                 >
                   {databaseMetrics.slowQueries}
                 </span>

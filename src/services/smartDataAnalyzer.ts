@@ -79,16 +79,25 @@ export class SmartDataAnalyzer {
     const strength = this.calculateCorrelation(data);
 
     // Determine trend direction and significance
-    const direction =
-      slope > 0.01 ? "increasing" : slope < -0.01 ? "decreasing" : "stable";
-    const significance =
-      strength > 0.7 ? "high" : strength > 0.4 ? "medium" : "low";
+    const direction = (() => {
+      if (slope > 0.01) return "increasing";
+      if (slope < -0.01) return "decreasing";
+      return "stable";
+    })();
+    const significance = (() => {
+      if (strength > 0.7) return "high";
+      if (strength > 0.4) return "medium";
+      return "low";
+    })();
 
     // Determine optimal timeframe based on data density
     const timeSpan = data[data.length - 1].timestamp - data[0].timestamp;
     const daySpan = timeSpan / (1000 * 60 * 60 * 24);
-    const timeframe =
-      daySpan > 30 ? "monthly" : daySpan > 7 ? "weekly" : "daily";
+    const timeframe = (() => {
+      if (daySpan > 30) return "monthly";
+      if (daySpan > 7) return "weekly";
+      return "daily";
+    })();
 
     return {
       direction,

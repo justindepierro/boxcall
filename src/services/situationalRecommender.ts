@@ -238,9 +238,9 @@ export class SituationalRecommender {
       // Own territory - conservative
       if (play.play_type === "run") score += 5;
       if (confidence.overallScore >= 75) score += 5;
-    } else {
+    } else if (play.play_type === "pass") {
       // Opponent territory - aggressive OK
-      if (play.play_type === "pass") score += 5;
+      score += 5;
     }
 
     // Streak bonus/penalty (Phase 12.3)

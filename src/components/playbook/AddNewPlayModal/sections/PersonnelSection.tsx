@@ -60,13 +60,11 @@ export const PersonnelSection: React.FC<PersonnelSectionProps> = ({
         value={personnel}
         onChange={(e) => onPersonnelChange(e.target.value)}
         existingValues={existingPersonnelValues}
-        placeholder={
-          !playbookId
-            ? "Playbook required"
-            : isLoading
-              ? "Loading personnel..."
-              : "e.g., 11, 12, 21, Trips, Empty"
-        }
+        placeholder={(() => {
+          if (!playbookId) return "Playbook required";
+          if (isLoading) return "Loading personnel...";
+          return "e.g., 11, 12, 21, Trips, Empty";
+        })()}
         disabled={isLoading || !playbookId}
         onEnterPress={onNextField}
         helperText={

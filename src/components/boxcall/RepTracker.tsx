@@ -185,6 +185,13 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
               }
             };
 
+            // Determine cursor style based on state
+            const getCursorStyle = () => {
+              if (disabled) return "opacity-50 cursor-not-allowed";
+              if (onGoToRep) return "cursor-pointer";
+              return "cursor-default";
+            };
+
             return (
               <button
                 key={repNumber}
@@ -200,7 +207,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
                   font-bold text-sm transition-all duration-300 shadow-sm
                   ${getResultStyle()}
                   ${isCurrent ? "rep-current" : ""}
-                  ${disabled ? "opacity-50 cursor-not-allowed" : onGoToRep ? "cursor-pointer" : "cursor-default"}
+                  ${getCursorStyle()}
                 `}
                 aria-label={`Rep ${repNumber}${hasResult ? ` - ${historyEntry.result}` : ""}`}
                 aria-current={isCurrent ? "step" : undefined}

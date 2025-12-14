@@ -12,6 +12,169 @@ import { Tooltip } from "../ui/Tooltip/Tooltip";
 import { ModularIcon as Icon } from "../ui/Icon";
 import { Tag, mapEventTypeToTagVariant } from "../ui/Tag";
 
+// Extracted event card component
+interface EventCardProps {
+  event: CalendarEvent;
+  onClick: () => void;
+  formatEventTime: (start?: string, end?: string) => string;
+}
+
+const EventCard: React.FC<EventCardProps> = ({
+  event,
+  onClick,
+  formatEventTime,
+}) => (
+  <div
+    onClick={onClick}
+    className="flex items-start space-x-3 p-3 rounded-lg hover:bg-muted transition-colors cursor-pointer border border-secondary"
+  >
+    {/* Event Icon */}
+    <div className="flex-shrink-0 mt-1">
+      <Icon
+        name={(() => {
+          if (event.type === "game") return "shield";
+          if (event.type === "practice") return "activity";
+          return "calendar";
+        })()}
+        size="sm"
+        className="text-jade-600"
+      />
+    </div>
+
+    {/* Event Details */}
+    <div className="flex-1 min-w-0">
+      <div className="flex items-center space-x-2 mb-1">
+        <Typography
+          variant="body-md"
+          className="font-medium text-primary truncate"
+        >
+          {event.title}
+        </Typography>
+        <Tag variant={mapEventTypeToTagVariant(event.type)} size="sm">
+          {event.type}
+        </Tag>
+      </div>
+
+      <Typography variant="body-sm" className="text-secondary mb-1">
+        {format(new Date(event.start), "EEE, MMM d")} •{" "}
+        {formatEventTime(event.start, event.end)}
+      </Typography>
+
+      {event.location && (
+        <Typography variant="body-xs" className="text-muted truncate">
+          <LegacyIcon
+            name="map-pin"
+            size="sm"
+            className="inline align-middle"
+          />{" "}
+          {event.location}
+        </Typography>
+      )}
+    </div>
+  </div>
+);
+
+// Extracted event detail modal
+interface EventDetailModalProps {
+  event: CalendarEvent | null;
+  onClose: () => void;
+  formatEventTime: (start?: string, end?: string) => string;
+}
+
+const EventDetailModal: React.FC<EventDetailModalProps> = ({
+  event,
+  onClose,
+  formatEventTime,
+}) => {
+  if (!event) return null;
+
+  return (
+    <div className="fixed inset-0 bg-text-primary bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-primary rounded-lg shadow-xl max-w-md w-full max-h-96 overflow-y-auto">
+        <div className="p-6">
+          <div className="flex items-start justify-between mb-4">
+            <Typography variant="headline-md" className="text-primary pr-4">
+              {event.title}
+            </Typography>
+            <Tooltip content="Close event details (Esc)">
+              <Button
+                variant="ghost"
+                size="xs"
+                onClick={onClose}
+                aria-label="Close"
+                className="text-muted hover:text-secondary"
+                icon={<Icon name="close" size="sm" />}
+                iconPosition="only"
+              />
+            </Tooltip>
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex items-center space-x-2">
+              <Tag variant={mapEventTypeToTagVariant(event.type)} size="sm">
+                {event.type}
+              </Tag>
+              {event.is_home && (
+                <Tag variant="success" size="sm">
+                  Home
+                </Tag>
+              )}
+            </div>
+
+            <div className="flex items-center space-x-2 text-secondary">
+              <Icon name="calendar" size="sm" />
+              <Typography variant="body-sm">
+                {format(new Date(event.start), "EEEE, MMMM d, yyyy")}
+              </Typography>
+            </div>
+
+            <div className="flex items-center space-x-2 text-secondary">
+              <Icon name="clock" size="sm" />
+              <Typography variant="body-sm">
+                {formatEventTime(event.start, event.end)}
+              </Typography>
+            </div>
+
+            {event.location && (
+              <div className="flex items-center space-x-2 text-secondary">
+                <Icon name="target" size="sm" />
+                <Typography variant="body-sm">{event.location}</Typography>
+              </div>
+            )}
+
+            {event.team_name && (
+              <div className="flex items-center space-x-2 text-secondary">
+                <Icon name="users" size="sm" />
+                <Typography variant="body-sm" className="font-medium">
+                  {event.team_name}
+                </Typography>
+              </div>
+            )}
+
+            {event.opponent && (
+              <div className="flex items-center space-x-2 text-secondary">
+                <Icon name="shield" size="sm" />
+                <Typography variant="body-sm" className="font-medium">
+                  vs. {event.opponent}
+                </Typography>
+              </div>
+            )}
+          </div>
+
+          <div className="flex space-x-3 mt-6">
+            <Button variant="primary" size="sm" className="flex-1">
+              RSVP Going
+            </Button>
+            <Button variant="secondary" size="sm" className="flex-1">
+              Maybe
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 interface PersonalCalendarProps {
   userId: string;
 }
@@ -165,66 +328,12 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
                 </div>
               ) : (
                 upcomingEvents.map((event) => (
-                  <div
+                  <EventCard
                     key={event.id}
+                    event={event}
                     onClick={() => handleEventClick(event)}
-                    className="flex items-start space-x-3 p-3 rounded-lg hover:bg-muted transition-colors cursor-pointer border border-secondary"
-                  >
-                    {/* Event Icon */}
-                    <div className="flex-shrink-0 mt-1">
-                      <Icon
-                        name={
-                          event.type === "game"
-                            ? "shield"
-                            : event.type === "practice"
-                              ? "activity"
-                              : "calendar"
-                        }
-                        size="sm"
-                        className="text-jade-600"
-                      />
-                    </div>
-
-                    {/* Event Details */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center space-x-2 mb-1">
-                        <Typography
-                          variant="body-md"
-                          className="font-medium text-primary truncate"
-                        >
-                          {event.title}
-                        </Typography>
-                        <Tag
-                          variant={mapEventTypeToTagVariant(event.type)}
-                          size="sm"
-                        >
-                          {event.type}
-                        </Tag>
-                      </div>
-
-                      <Typography
-                        variant="body-sm"
-                        className="text-secondary mb-1"
-                      >
-                        {format(new Date(event.start), "EEE, MMM d")} •{" "}
-                        {formatEventTime(event.start, event.end)}
-                      </Typography>
-
-                      {event.location && (
-                        <Typography
-                          variant="body-xs"
-                          className="text-muted truncate"
-                        >
-                          <LegacyIcon
-                            name="map-pin"
-                            size="sm"
-                            className="inline align-middle"
-                          />{" "}
-                          {event.location}
-                        </Typography>
-                      )}
-                    </div>
-                  </div>
+                    formatEventTime={formatEventTime}
+                  />
                 ))
               )}
             </div>
@@ -233,99 +342,11 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
       </Card>
 
       {/* Event Detail Modal */}
-      {selectedEvent && (
-        <div className="fixed inset-0 bg-text-primary bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-primary rounded-lg shadow-xl max-w-md w-full max-h-96 overflow-y-auto">
-            <div className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <Typography variant="headline-md" className="text-primary pr-4">
-                  {selectedEvent.title}
-                </Typography>
-                <Tooltip content="Close event details (Esc)">
-                  <Button
-                    variant="ghost"
-                    size="xs"
-                    onClick={() => setSelectedEvent(null)}
-                    aria-label="Close"
-                    className="text-muted hover:text-secondary"
-                    icon={<Icon name="close" size="sm" />}
-                    iconPosition="only"
-                  />
-                </Tooltip>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2">
-                  <Tag
-                    variant={mapEventTypeToTagVariant(selectedEvent.type)}
-                    size="sm"
-                  >
-                    {selectedEvent.type}
-                  </Tag>
-                  {selectedEvent.is_home && (
-                    <Tag variant="success" size="sm">
-                      Home
-                    </Tag>
-                  )}
-                </div>
-
-                <div className="flex items-center space-x-2 text-secondary">
-                  <Icon name="calendar" size="sm" />
-                  <Typography variant="body-sm">
-                    {format(
-                      new Date(selectedEvent.start),
-                      "EEEE, MMMM d, yyyy"
-                    )}
-                  </Typography>
-                </div>
-
-                <div className="flex items-center space-x-2 text-secondary">
-                  <Icon name="clock" size="sm" />
-                  <Typography variant="body-sm">
-                    {formatEventTime(selectedEvent.start, selectedEvent.end)}
-                  </Typography>
-                </div>
-
-                {selectedEvent.location && (
-                  <div className="flex items-center space-x-2 text-secondary">
-                    <Icon name="target" size="sm" />
-                    <Typography variant="body-sm">
-                      {selectedEvent.location}
-                    </Typography>
-                  </div>
-                )}
-
-                {selectedEvent.team_name && (
-                  <div className="flex items-center space-x-2 text-secondary">
-                    <Icon name="users" size="sm" />
-                    <Typography variant="body-sm" className="font-medium">
-                      {selectedEvent.team_name}
-                    </Typography>
-                  </div>
-                )}
-
-                {selectedEvent.opponent && (
-                  <div className="flex items-center space-x-2 text-secondary">
-                    <Icon name="shield" size="sm" />
-                    <Typography variant="body-sm" className="font-medium">
-                      vs. {selectedEvent.opponent}
-                    </Typography>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex space-x-3 mt-6">
-                <Button variant="primary" size="sm" className="flex-1">
-                  RSVP Going
-                </Button>
-                <Button variant="secondary" size="sm" className="flex-1">
-                  Maybe
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <EventDetailModal
+        event={selectedEvent}
+        onClose={() => setSelectedEvent(null)}
+        formatEventTime={formatEventTime}
+      />
     </>
   );
 };

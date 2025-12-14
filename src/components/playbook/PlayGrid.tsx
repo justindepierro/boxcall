@@ -318,14 +318,14 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
         selectedCategory: selectedCategory || null,
         selectedSubcategory: selectedSubcategory || null,
         resultCount: filteredPlays.length,
-        resultBucket:
-          filteredPlays.length === 0
-            ? "0"
-            : filteredPlays.length <= 10
-              ? "1-10"
-              : filteredPlays.length <= 50
-                ? "11-50"
-                : ">50",
+        resultBucket: (() => {
+          if (filteredPlays.length === 0) return "0";
+          if (filteredPlays.length <= 10) return "1-10";
+          if (filteredPlays.length <= 50) return "<=50";
+          return ">50";
+        })()
+          ? "11-50"
+          : ">50",
       }),
     [
       searchQuery,
@@ -713,7 +713,13 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
             <div className="flex items-center gap-2">
               <IconButton
                 aria-label={`Direction format: ${directionDisplayFormat || "full"}`}
-                tooltip={`Direction format: ${(directionDisplayFormat || "full") === "full" ? "Full words" : (directionDisplayFormat || "full") === "abbrev" ? "Abbreviations" : "Letters"}`}
+                tooltip={(() => {
+                  const format = directionDisplayFormat || "full";
+                  if (format === "full") return "Direction format: Full words";
+                  if (format === "abbrev")
+                    return "Direction format: Abbreviations";
+                  return "Direction format: Letters";
+                })()}
                 onClick={() => {
                   const formats: ("full" | "abbrev" | "letter")[] = [
                     "full",
@@ -732,11 +738,12 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                 <Icon name="move" className="h-5 w-5 text-info" />
               </IconButton>
               <span className="text-sm text-secondary">
-                {(directionDisplayFormat || "full") === "full"
-                  ? "Right/Left"
-                  : (directionDisplayFormat || "full") === "abbrev"
-                    ? "Rt/Lt"
-                    : "R/L"}
+                {(() => {
+                  const format = directionDisplayFormat || "full";
+                  if (format === "full") return "Right/Left";
+                  if (format === "abbrev") return "Rt/Lt";
+                  return "R/L";
+                })()}
               </span>
             </div>
           </div>
@@ -744,207 +751,68 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       )}
 
       {/* Play Grid - Conditional Rendering based on view mode */}
-      {!showEmpty && !loading && !error && viewMode === "grid" ? (
-        <>
-          {isMobile ? (
-            <div className="space-y-3">
-              {visiblePlays.slice(0, mobileVisibleCount).map((play, index) => (
-                <div key={play.id} data-card-index={index}>
-                  <SwipeActions
-                    playId={play.id}
-                    onEdit={() => onEdit?.(play)}
-                    onDuplicate={() => onDuplicate?.(play)}
-                    onDelete={() => console.log("Delete play:", play.id)}
-                  >
-                    <MobilePlayCard
-                      play={play}
-                      onEdit={() => onEdit?.(play)}
-                      onMore={() => console.log("More actions:", play.id)}
-                      onClick={() => onEdit?.(play)}
-                      isSelected={selectedPlayIds.has(play.id)}
-                      showOneWordCalls={showOneWordCalls}
-                    />
-                  </SwipeActions>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <DragDropContext onDragEnd={handleDragEnd}>
-              <Droppable droppableId="play-grid" direction="horizontal">
-                {(provided) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    className="grid gap-6 overflow-visible auto-rows-max sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
-                    style={{
-                      transition: "grid-template-rows 0.3s ease",
-                    }}
-                  >
-                    {visiblePlays.map((play, index) => (
-                      <Draggable
-                        key={play.id}
-                        draggableId={play.id}
-                        index={index}
+      {(() => {
+        if (showEmpty || loading || error || viewMode !== "grid") return null;
+        return (
+          <>
+            {isMobile ? (
+              <div className="space-y-3">
+                {visiblePlays
+                  .slice(0, mobileVisibleCount)
+                  .map((play, index) => (
+                    <div key={play.id} data-card-index={index}>
+                      <SwipeActions
+                        playId={play.id}
+                        onEdit={() => onEdit?.(play)}
+                        onDuplicate={() => onDuplicate?.(play)}
+                        onDelete={() => console.log("Delete play:", play.id)}
                       >
-                        {(provided, snapshot) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            className={`w-full overflow-visible transition-all duration-300 ${
-                              snapshot.isDragging ? "opacity-50" : ""
-                            } ${
-                              expandedPlayId === play.id
-                                ? "col-span-2 sm:col-span-2 md:col-span-3 lg:col-span-3 xl:col-span-4 2xl:col-span-5"
-                                : ""
-                            }`}
-                          >
-                            <PlayCardWrapper
-                              play={play}
-                              variant="tile"
-                              index={index}
-                              showOneWordCalls={showOneWordCalls}
-                              onEdit={onEdit}
-                              onSave={handlePlaySave}
-                              onDuplicate={onDuplicate}
-                              onOpenAssignments={onOpenAssignments}
-                              onPostToTeamBulletin={onPostToTeamBulletin}
-                              isSelected={selectedPlayIds.has(play.id)}
-                              onSelectionChange={
-                                enableBulkOperations
-                                  ? handlePlaySelect
-                                  : undefined
-                              }
-                              formationSuggestions={
-                                collectedSuggestions.formations
-                              }
-                              playNameSuggestions={
-                                collectedSuggestions.playNames
-                              }
-                              playTypeSuggestions={
-                                collectedSuggestions.playTypes
-                              }
-                              personnelSuggestions={
-                                collectedSuggestions.personnel
-                              }
-                              personnelConfigurations={personnelConfigurations}
-                              directionDisplayFormat={directionDisplayFormat}
-                              expandedPlayId={expandedPlayId}
-                              onToggleExpand={handleToggleExpand}
-                              existingPlays={plays}
-                            />
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </DragDropContext>
-          )}
-          {/* Mobile Progressive Loading - Infinite Scroll */}
-          {hasMorePlays && (
-            <div ref={loadMoreRef} className="flex justify-center py-6">
-              {isLoadingMore ? (
-                <div className="flex items-center gap-2 text-secondary">
-                  <div className="w-5 h-5 border-2 border-brand-jade border-t-transparent rounded-full animate-spin" />
-                  <span className="text-sm">Loading more...</span>
-                </div>
-              ) : (
-                <Button
-                  onClick={() => {
-                    setIsLoadingMore(true);
-                    setTimeout(() => {
-                      setMobileVisibleCount((prev) => {
-                        const next = Math.min(prev + 20, displayPlays.length);
-                        if (next === displayPlays.length) {
-                          onMobileListExpand?.();
-                        }
-                        return next;
-                      });
-                      setIsLoadingMore(false);
-                    }, 300);
-                  }}
-                  variant="secondary"
-                  className="w-full max-w-xs"
-                >
-                  Load More (
-                  {Math.max(displayPlays.length - mobileVisibleCount, 0)}{" "}
-                  remaining)
-                </Button>
-              )}
-            </div>
-          )}
-
-          {/* Mobile: All plays loaded message */}
-          {isMobile &&
-            (mobileListExpanded || mobileVisibleCount >= displayPlays.length) &&
-            displayPlays.length > MOBILE_INITIAL_PLAYS && (
-              <div className="text-center py-8">
-                <Typography variant="body-sm" className="text-secondary">
-                  All {displayPlays.length} plays loaded
-                </Typography>
+                        <MobilePlayCard
+                          play={play}
+                          onEdit={() => onEdit?.(play)}
+                          onMore={() => console.log("More actions:", play.id)}
+                          onClick={() => onEdit?.(play)}
+                          isSelected={selectedPlayIds.has(play.id)}
+                          showOneWordCalls={showOneWordCalls}
+                        />
+                      </SwipeActions>
+                    </div>
+                  ))}
               </div>
-            )}
-        </>
-      ) : !showEmpty &&
-        !loading &&
-        !error &&
-        (disableVirtual || displayPlays.length < VIRTUALIZE_THRESHOLD) ? (
-        <>
-          {isMobile ? (
-            <div className="space-y-3" role="list">
-              {visiblePlays.map((play, index) => (
-                <div key={play.id} role="listitem" data-card-index={index}>
-                  <SwipeActions
-                    playId={play.id}
-                    onEdit={() => onEdit?.(play)}
-                    onDuplicate={() => onDuplicate?.(play)}
-                    onDelete={() => console.log("Delete play:", play.id)}
-                  >
-                    <MobilePlayCard
-                      play={play}
-                      onEdit={() => onEdit?.(play)}
-                      onMore={() => console.log("More actions:", play.id)}
-                      onClick={() => onEdit?.(play)}
-                      isSelected={selectedPlayIds.has(play.id)}
-                      showOneWordCalls={showOneWordCalls}
-                    />
-                  </SwipeActions>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <DragDropContext onDragEnd={handleDragEnd}>
-              <Droppable droppableId="play-list">
-                {(provided) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    className="space-y-4 overflow-visible"
-                    role="list"
-                  >
-                    {visiblePlays.map((play, index) => (
-                      <Draggable
-                        key={play.id}
-                        draggableId={play.id}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            className={`mb-4 ${snapshot.isDragging ? "opacity-50" : ""}`}
-                            role="listitem"
-                          >
+            ) : (
+              <DragDropContext onDragEnd={handleDragEnd}>
+                <Droppable droppableId="play-grid" direction="horizontal">
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className="grid gap-6 overflow-visible auto-rows-max sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
+                      style={{
+                        transition: "grid-template-rows 0.3s ease",
+                      }}
+                    >
+                      {visiblePlays.map((play, index) => (
+                        <Draggable
+                          key={play.id}
+                          draggableId={play.id}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
                             <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
                               {...provided.dragHandleProps}
-                              className="cursor-grab active:cursor-grabbing"
+                              className={`w-full overflow-visible transition-all duration-300 ${
+                                snapshot.isDragging ? "opacity-50" : ""
+                              } ${
+                                expandedPlayId === play.id
+                                  ? "col-span-2 sm:col-span-2 md:col-span-3 lg:col-span-3 xl:col-span-4 2xl:col-span-5"
+                                  : ""
+                              }`}
                             >
                               <PlayCardWrapper
                                 play={play}
-                                variant="list"
+                                variant="tile"
                                 index={index}
                                 showOneWordCalls={showOneWordCalls}
                                 onEdit={onEdit}
@@ -953,7 +821,11 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                                 onOpenAssignments={onOpenAssignments}
                                 onPostToTeamBulletin={onPostToTeamBulletin}
                                 isSelected={selectedPlayIds.has(play.id)}
-                                onSelectionChange={handlePlaySelect}
+                                onSelectionChange={
+                                  enableBulkOperations
+                                    ? handlePlaySelect
+                                    : undefined
+                                }
                                 formationSuggestions={
                                   collectedSuggestions.formations
                                 }
@@ -975,89 +847,253 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
                                 existingPlays={plays}
                               />
                             </div>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </DragDropContext>
-          )}
-          {hasMorePlays && (
-            <div ref={loadMoreRef} className="flex justify-center py-6">
-              {isLoadingMore ? (
-                <div className="flex items-center gap-2 text-secondary">
-                  <div className="w-5 h-5 border-2 border-brand-jade border-t-transparent rounded-full animate-spin" />
-                  <span className="text-sm">Loading...</span>
-                </div>
-              ) : (
-                <Button
-                  onClick={() => {
-                    setMobileVisibleCount(displayPlays.length);
-                    onMobileListExpand?.();
-                  }}
-                  variant="secondary"
-                  className="w-full max-w-xs"
-                >
-                  See All {displayPlays.length} Plays
-                </Button>
-              )}
-            </div>
-          )}
-        </>
-      ) : !showEmpty && !loading && !error ? (
-        <div
-          style={{ height: "calc(100vh - 320px)" }}
-          aria-label="Play list"
-          role="list"
-        >
-          <Virtuoso
-            data={displayPlays}
-            overscan={5}
-            computeItemKey={(_: number, playItem: Play) => playItem.id}
-            itemContent={renderPlayItem}
-            endReached={() => {
-              // Load more plays when user scrolls near the end
-              if (hasMorePlaysFromDB && !loadingMorePlays) {
-                debug("Virtuoso endReached - loading more plays");
-                loadMorePlays();
-              }
-            }}
-            components={{
-              Footer: () =>
-                loadingMorePlays ? (
-                  <div className="flex justify-center py-4">
-                    <div className="flex items-center gap-2 text-muted">
-                      <Icon
-                        name="refresh-cw"
-                        className="h-4 w-4 animate-spin"
-                      />
-                      <Typography variant="body-sm">
-                        Loading more plays...
-                      </Typography>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
                     </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
+            )}
+            {/* Mobile Progressive Loading - Infinite Scroll */}
+            {hasMorePlays && (
+              <div ref={loadMoreRef} className="flex justify-center py-6">
+                {isLoadingMore ? (
+                  <div className="flex items-center gap-2 text-secondary">
+                    <div className="w-5 h-5 border-2 border-brand-jade border-t-transparent rounded-full animate-spin" />
+                    <span className="text-sm">Loading more...</span>
                   </div>
-                ) : hasMorePlaysFromDB ? (
-                  <div className="flex justify-center py-2">
-                    <Typography variant="body-sm" className="text-muted">
-                      Scroll down to load more
-                    </Typography>
+                ) : (
+                  <Button
+                    onClick={() => {
+                      setIsLoadingMore(true);
+                      setTimeout(() => {
+                        setMobileVisibleCount((prev) => {
+                          const next = Math.min(prev + 20, displayPlays.length);
+                          if (next === displayPlays.length) {
+                            onMobileListExpand?.();
+                          }
+                          return next;
+                        });
+                        setIsLoadingMore(false);
+                      }, 300);
+                    }}
+                    variant="secondary"
+                    className="w-full max-w-xs"
+                  >
+                    Load More (
+                    {Math.max(displayPlays.length - mobileVisibleCount, 0)}{" "}
+                    remaining)
+                  </Button>
+                )}
+              </div>
+            )}
+
+            {/* Mobile: All plays loaded message */}
+            {isMobile &&
+              (mobileListExpanded ||
+                mobileVisibleCount >= displayPlays.length) &&
+              displayPlays.length > MOBILE_INITIAL_PLAYS && (
+                <div className="text-center py-8">
+                  <Typography variant="body-sm" className="text-secondary">
+                    All {displayPlays.length} plays loaded
+                  </Typography>
+                </div>
+              )}
+          </>
+        );
+      })()}
+      {(() => {
+        if (showEmpty || loading || error) return null;
+        if (!disableVirtual && displayPlays.length >= VIRTUALIZE_THRESHOLD)
+          return null;
+        return (
+          <>
+            {isMobile ? (
+              <div className="space-y-3" role="list">
+                {visiblePlays.map((play, index) => (
+                  <div key={play.id} role="listitem" data-card-index={index}>
+                    <SwipeActions
+                      playId={play.id}
+                      onEdit={() => onEdit?.(play)}
+                      onDuplicate={() => onDuplicate?.(play)}
+                      onDelete={() => console.log("Delete play:", play.id)}
+                    >
+                      <MobilePlayCard
+                        play={play}
+                        onEdit={() => onEdit?.(play)}
+                        onMore={() => console.log("More actions:", play.id)}
+                        onClick={() => onEdit?.(play)}
+                        isSelected={selectedPlayIds.has(play.id)}
+                        showOneWordCalls={showOneWordCalls}
+                      />
+                    </SwipeActions>
                   </div>
-                ) : totalPlaysCount !== null &&
-                  totalPlaysCount > 0 &&
-                  displayPlays.length >= totalPlaysCount ? (
-                  <div className="flex justify-center py-4">
-                    <Typography variant="body-sm" className="text-muted">
-                      All {totalPlaysCount} plays loaded
-                    </Typography>
+                ))}
+              </div>
+            ) : (
+              <DragDropContext onDragEnd={handleDragEnd}>
+                <Droppable droppableId="play-list">
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className="space-y-4 overflow-visible"
+                      role="list"
+                    >
+                      {visiblePlays.map((play, index) => (
+                        <Draggable
+                          key={play.id}
+                          draggableId={play.id}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              className={`mb-4 ${snapshot.isDragging ? "opacity-50" : ""}`}
+                              role="listitem"
+                            >
+                              <div
+                                {...provided.dragHandleProps}
+                                className="cursor-grab active:cursor-grabbing"
+                              >
+                                <PlayCardWrapper
+                                  play={play}
+                                  variant="list"
+                                  index={index}
+                                  showOneWordCalls={showOneWordCalls}
+                                  onEdit={onEdit}
+                                  onSave={handlePlaySave}
+                                  onDuplicate={onDuplicate}
+                                  onOpenAssignments={onOpenAssignments}
+                                  onPostToTeamBulletin={onPostToTeamBulletin}
+                                  isSelected={selectedPlayIds.has(play.id)}
+                                  onSelectionChange={handlePlaySelect}
+                                  formationSuggestions={
+                                    collectedSuggestions.formations
+                                  }
+                                  playNameSuggestions={
+                                    collectedSuggestions.playNames
+                                  }
+                                  playTypeSuggestions={
+                                    collectedSuggestions.playTypes
+                                  }
+                                  personnelSuggestions={
+                                    collectedSuggestions.personnel
+                                  }
+                                  personnelConfigurations={
+                                    personnelConfigurations
+                                  }
+                                  directionDisplayFormat={
+                                    directionDisplayFormat
+                                  }
+                                  expandedPlayId={expandedPlayId}
+                                  onToggleExpand={handleToggleExpand}
+                                  existingPlays={plays}
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
+            )}
+            {hasMorePlays && (
+              <div ref={loadMoreRef} className="flex justify-center py-6">
+                {isLoadingMore ? (
+                  <div className="flex items-center gap-2 text-secondary">
+                    <div className="w-5 h-5 border-2 border-brand-jade border-t-transparent rounded-full animate-spin" />
+                    <span className="text-sm">Loading...</span>
                   </div>
-                ) : null,
-            }}
-          />
-        </div>
-      ) : null}
+                ) : (
+                  <Button
+                    onClick={() => {
+                      setMobileVisibleCount(displayPlays.length);
+                      onMobileListExpand?.();
+                    }}
+                    variant="secondary"
+                    className="w-full max-w-xs"
+                  >
+                    See All {displayPlays.length} Plays
+                  </Button>
+                )}
+              </div>
+            )}
+          </>
+        );
+      })()}
+      {(() => {
+        if (showEmpty || loading || error) return null;
+        return (
+          <div
+            style={{ height: "calc(100vh - 320px)" }}
+            aria-label="Play list"
+            role="list"
+          >
+            <Virtuoso
+              data={displayPlays}
+              overscan={5}
+              computeItemKey={(_: number, playItem: Play) => playItem.id}
+              itemContent={renderPlayItem}
+              endReached={() => {
+                // Load more plays when user scrolls near the end
+                if (hasMorePlaysFromDB && !loadingMorePlays) {
+                  debug("Virtuoso endReached - loading more plays");
+                  loadMorePlays();
+                }
+              }}
+              components={{
+                Footer: () => {
+                  if (loadingMorePlays) {
+                    return (
+                      <div className="flex justify-center py-4">
+                        <div className="flex items-center gap-2 text-muted">
+                          <Icon
+                            name="refresh-cw"
+                            className="h-4 w-4 animate-spin"
+                          />
+                          <Typography variant="body-sm">
+                            Loading more plays...
+                          </Typography>
+                        </div>
+                      </div>
+                    );
+                  }
+                  if (hasMorePlaysFromDB) {
+                    return (
+                      <div className="flex justify-center py-2">
+                        <Typography variant="body-sm" className="text-muted">
+                          Scroll down to load more
+                        </Typography>
+                      </div>
+                    );
+                  }
+                  if (
+                    totalPlaysCount !== null &&
+                    totalPlaysCount > 0 &&
+                    displayPlays.length >= totalPlaysCount
+                  ) {
+                    return (
+                      <div className="flex justify-center py-4">
+                        <Typography variant="body-sm" className="text-muted">
+                          All {totalPlaysCount} plays loaded
+                        </Typography>
+                      </div>
+                    );
+                  }
+                  return null;
+                },
+              }}
+            />
+          </div>
+        );
+      })()}
 
       {/* Play Detail Modal */}
       {/* Tile variant now uses the same inline details as list view, so the modal remains retired. */}

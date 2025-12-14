@@ -177,6 +177,158 @@ const mockFormationTrendData = [
   },
 ];
 
+const HeatmapTab: React.FC<{ data: typeof mockFieldZoneData }> = ({ data }) => (
+  <div>
+    <Card className="mb-4 p-4">
+      <Typography variant="headline-sm" className="mb-2">
+        Play Success Heatmap (14.2)
+      </Typography>
+      <Typography variant="body-sm" className="text-secondary">
+        Interactive SVG football field with 8 zones, color-coded by success
+        rate. Click zones for details.
+      </Typography>
+    </Card>
+    <PlaySuccessHeatmap
+      data={data}
+      title="Field Position Success Rate - Mock Data"
+    />
+  </div>
+);
+
+const ConfidenceTab: React.FC<{
+  data: typeof mockConfidenceTrendData;
+}> = ({ data }) => (
+  <div>
+    <Card className="mb-4 p-4">
+      <Typography variant="headline-sm" className="mb-2">
+        Confidence Trend Chart (14.3)
+      </Typography>
+      <Typography variant="body-sm" className="text-secondary">
+        LineChart showing play confidence evolution over 6 weeks. Dual Y-axis
+        with confidence % and success rate %.
+      </Typography>
+    </Card>
+    <ConfidenceTrendChart
+      data={data}
+      title="Power Right - Confidence Trend (Mock Data)"
+      showSuccessRate={true}
+      showReps={true}
+      targetConfidence={80}
+    />
+  </div>
+);
+
+const FormationTab: React.FC<{ data: typeof mockFormationTrendData }> = ({
+  data,
+}) => (
+  <div>
+    <Card className="mb-4 p-4">
+      <Typography variant="headline-sm" className="mb-2">
+        Formation Trend Chart (14.3)
+      </Typography>
+      <Typography variant="body-sm" className="text-secondary">
+        Formation performance over time with success rate and avg yards
+        tracking.
+      </Typography>
+    </Card>
+    <FormationTrendChart
+      data={data}
+      formationName="Spread (Mock Data)"
+      targetSuccessRate={70}
+      showAvgYards={true}
+    />
+  </div>
+);
+
+const SessionTab: React.FC = () => (
+  <div>
+    <Card className="mb-4 p-4">
+      <Typography variant="headline-sm" className="mb-2">
+        Session Analytics Dashboard (14.1)
+      </Typography>
+      <Typography variant="body-sm" className="text-secondary mb-2">
+        Comprehensive post-session analytics with charts. Requires real session
+        ID.
+      </Typography>
+      <div className="p-4 bg-warning-50 border border-warning-200 rounded-lg">
+        <div className="flex items-start gap-2">
+          <Icon name="alert-triangle" className="text-warning-600" size={20} />
+          <div>
+            <Typography variant="body-sm" className="font-semibold mb-1">
+              Real Data Required
+            </Typography>
+            <Typography variant="body-sm" className="text-secondary">
+              This component needs a valid session ID from your database. Create
+              a practice or game session first, then use:{" "}
+              <code className="px-1 py-0.5 bg-muted rounded text-xs">
+                &lt;SessionAnalyticsDashboard sessionId="your-session-id" /&gt;
+              </code>
+            </Typography>
+          </div>
+        </div>
+      </div>
+    </Card>
+    <Card className="p-8 text-center">
+      <Icon name="database" className="text-secondary mx-auto mb-4" size={48} />
+      <Typography variant="headline-md" className="mb-2">
+        Session Dashboard Demo
+      </Typography>
+      <Typography variant="body-sm" className="text-secondary mb-4">
+        To test with real data, pass a session ID from your database
+      </Typography>
+      <code className="text-sm text-secondary">
+        {`<SessionAnalyticsDashboard sessionId="uuid-here" />`}
+      </code>
+    </Card>
+  </div>
+);
+
+const TrendsTab: React.FC = () => (
+  <div>
+    <Card className="mb-4 p-4">
+      <Typography variant="headline-sm" className="mb-2">
+        Trend Analytics Dashboard (14.3)
+      </Typography>
+      <Typography variant="body-sm" className="text-secondary mb-2">
+        Comprehensive trend analysis dashboard. Requires play ID or formation
+        ID.
+      </Typography>
+      <div className="p-4 bg-warning-50 border border-warning-200 rounded-lg">
+        <div className="flex items-start gap-2">
+          <Icon name="alert-triangle" className="text-warning-600" size={20} />
+          <div>
+            <Typography variant="body-sm" className="font-semibold mb-1">
+              Real Data Required
+            </Typography>
+            <Typography variant="body-sm" className="text-secondary">
+              This component needs a valid play ID or formation ID. Use:{" "}
+              <code className="px-1 py-0.5 bg-muted rounded text-xs">
+                &lt;TrendAnalyticsDashboard playId="uuid" teamId="uuid" /&gt;
+              </code>
+            </Typography>
+          </div>
+        </div>
+      </div>
+    </Card>
+    <Card className="p-8 text-center">
+      <Icon
+        name="trending-up"
+        className="text-secondary mx-auto mb-4"
+        size={48}
+      />
+      <Typography variant="headline-md" className="mb-2">
+        Trend Dashboard Demo
+      </Typography>
+      <Typography variant="body-sm" className="text-secondary mb-4">
+        To test with real data, pass play/formation IDs and team ID
+      </Typography>
+      <code className="text-sm text-secondary">
+        {`<TrendAnalyticsDashboard playId="uuid" teamId="uuid" />`}
+      </code>
+    </Card>
+  </div>
+);
+
 export const SuperAdminAnalyticsTestPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
     "heatmap" | "confidence" | "formation" | "session" | "trends"
@@ -248,180 +400,15 @@ export const SuperAdminAnalyticsTestPage: React.FC = () => {
 
         {/* Component Display Area */}
         <div className="space-y-6">
-          {/* Heatmap Tab */}
-          {activeTab === "heatmap" && (
-            <div>
-              <Card className="mb-4 p-4">
-                <Typography variant="headline-sm" className="mb-2">
-                  Play Success Heatmap (14.2)
-                </Typography>
-                <Typography variant="body-sm" className="text-secondary">
-                  Interactive SVG football field with 8 zones, color-coded by
-                  success rate. Click zones for details.
-                </Typography>
-              </Card>
-              <PlaySuccessHeatmap
-                data={mockFieldZoneData}
-                title="Field Position Success Rate - Mock Data"
-              />
-            </div>
-          )}
-
-          {/* Confidence Trends Tab */}
+          {activeTab === "heatmap" && <HeatmapTab data={mockFieldZoneData} />}
           {activeTab === "confidence" && (
-            <div>
-              <Card className="mb-4 p-4">
-                <Typography variant="headline-sm" className="mb-2">
-                  Confidence Trend Chart (14.3)
-                </Typography>
-                <Typography variant="body-sm" className="text-secondary">
-                  LineChart showing play confidence evolution over 6 weeks. Dual
-                  Y-axis with confidence % and success rate %.
-                </Typography>
-              </Card>
-              <ConfidenceTrendChart
-                data={mockConfidenceTrendData}
-                title="Power Right - Confidence Trend (Mock Data)"
-                showSuccessRate={true}
-                showReps={true}
-                targetConfidence={80}
-              />
-            </div>
+            <ConfidenceTab data={mockConfidenceTrendData} />
           )}
-
-          {/* Formation Trends Tab */}
           {activeTab === "formation" && (
-            <div>
-              <Card className="mb-4 p-4">
-                <Typography variant="headline-sm" className="mb-2">
-                  Formation Trend Chart (14.3)
-                </Typography>
-                <Typography variant="body-sm" className="text-secondary">
-                  Formation performance over time with success rate and avg
-                  yards tracking.
-                </Typography>
-              </Card>
-              <FormationTrendChart
-                data={mockFormationTrendData}
-                formationName="Spread (Mock Data)"
-                targetSuccessRate={70}
-                showAvgYards={true}
-              />
-            </div>
+            <FormationTab data={mockFormationTrendData} />
           )}
-
-          {/* Session Dashboard Tab */}
-          {activeTab === "session" && (
-            <div>
-              <Card className="mb-4 p-4">
-                <Typography variant="headline-sm" className="mb-2">
-                  Session Analytics Dashboard (14.1)
-                </Typography>
-                <Typography variant="body-sm" className="text-secondary mb-2">
-                  Comprehensive post-session analytics with charts. Requires
-                  real session ID.
-                </Typography>
-                <div className="p-4 bg-warning-50 border border-warning-200 rounded-lg">
-                  <div className="flex items-start gap-2">
-                    <Icon
-                      name="alert-triangle"
-                      className="text-warning-600"
-                      size={20}
-                    />
-                    <div>
-                      <Typography
-                        variant="body-sm"
-                        className="font-semibold mb-1"
-                      >
-                        Real Data Required
-                      </Typography>
-                      <Typography variant="body-sm" className="text-secondary">
-                        This component needs a valid session ID from your
-                        database. Create a practice or game session first, then
-                        use:{" "}
-                        <code className="px-1 py-0.5 bg-muted rounded text-xs">
-                          &lt;SessionAnalyticsDashboard
-                          sessionId="your-session-id" /&gt;
-                        </code>
-                      </Typography>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-              <Card className="p-8 text-center">
-                <Icon
-                  name="database"
-                  className="text-secondary mx-auto mb-4"
-                  size={48}
-                />
-                <Typography variant="headline-md" className="mb-2">
-                  Session Dashboard Demo
-                </Typography>
-                <Typography variant="body-sm" className="text-secondary mb-4">
-                  To test with real data, pass a session ID from your database
-                </Typography>
-                <code className="text-sm text-secondary">
-                  {`<SessionAnalyticsDashboard sessionId="uuid-here" />`}
-                </code>
-              </Card>
-            </div>
-          )}
-
-          {/* Trend Dashboard Tab */}
-          {activeTab === "trends" && (
-            <div>
-              <Card className="mb-4 p-4">
-                <Typography variant="headline-sm" className="mb-2">
-                  Trend Analytics Dashboard (14.3)
-                </Typography>
-                <Typography variant="body-sm" className="text-secondary mb-2">
-                  Comprehensive trend analysis dashboard. Requires play ID or
-                  formation ID.
-                </Typography>
-                <div className="p-4 bg-warning-50 border border-warning-200 rounded-lg">
-                  <div className="flex items-start gap-2">
-                    <Icon
-                      name="alert-triangle"
-                      className="text-warning-600"
-                      size={20}
-                    />
-                    <div>
-                      <Typography
-                        variant="body-sm"
-                        className="font-semibold mb-1"
-                      >
-                        Real Data Required
-                      </Typography>
-                      <Typography variant="body-sm" className="text-secondary">
-                        This component needs a valid play ID or formation ID.
-                        Use:{" "}
-                        <code className="px-1 py-0.5 bg-muted rounded text-xs">
-                          &lt;TrendAnalyticsDashboard playId="uuid"
-                          teamId="uuid" /&gt;
-                        </code>
-                      </Typography>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-              <Card className="p-8 text-center">
-                <Icon
-                  name="trending-up"
-                  className="text-secondary mx-auto mb-4"
-                  size={48}
-                />
-                <Typography variant="headline-md" className="mb-2">
-                  Trend Dashboard Demo
-                </Typography>
-                <Typography variant="body-sm" className="text-secondary mb-4">
-                  To test with real data, pass play/formation IDs and team ID
-                </Typography>
-                <code className="text-sm text-secondary">
-                  {`<TrendAnalyticsDashboard playId="uuid" teamId="uuid" />`}
-                </code>
-              </Card>
-            </div>
-          )}
+          {activeTab === "session" && <SessionTab />}
+          {activeTab === "trends" && <TrendsTab />}
         </div>
 
         {/* Info Panel */}

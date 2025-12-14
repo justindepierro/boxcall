@@ -18,6 +18,155 @@ export interface BulkEditUpdates {
   weight_lbs?: number;
 }
 
+const POSITION_OPTIONS = [
+  { value: "", label: "Select position..." },
+  { value: "QB", label: "QB - Quarterback" },
+  { value: "RB", label: "RB - Running Back" },
+  { value: "WR", label: "WR - Wide Receiver" },
+  { value: "TE", label: "TE - Tight End" },
+  { value: "OL", label: "OL - Offensive Line" },
+  { value: "DL", label: "DL - Defensive Line" },
+  { value: "LB", label: "LB - Linebacker" },
+  { value: "CB", label: "CB - Cornerback" },
+  { value: "S", label: "S - Safety" },
+  { value: "K", label: "K - Kicker" },
+  { value: "P", label: "P - Punter" },
+];
+
+const GRADE_LEVEL_OPTIONS = [
+  { value: "", label: "Select grade..." },
+  { value: "9", label: "9th Grade (Freshman)" },
+  { value: "10", label: "10th Grade (Sophomore)" },
+  { value: "11", label: "11th Grade (Junior)" },
+  { value: "12", label: "12th Grade (Senior)" },
+];
+
+const SelectField: React.FC<{
+  id: string;
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  applyChecked: boolean;
+  onApplyChange: (checked: boolean) => void;
+  options: { value: string; label: string }[];
+}> = ({ id, label, value, onChange, applyChecked, onApplyChange, options }) => (
+  <div className="flex items-start gap-sm">
+    <input
+      type="checkbox"
+      checked={applyChecked}
+      onChange={(e) => onApplyChange(e.target.checked)}
+      className="mt-2 h-4 w-4 rounded border-bg-secondary text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2"
+    />
+    <div className="flex-1">
+      <label
+        htmlFor={id}
+        className="block text-sm font-medium text-primary mb-2"
+      >
+        {label}
+      </label>
+      <FormSelect
+        id={id}
+        value={value}
+        onChange={onChange}
+        disabled={!applyChecked}
+        placeholder={options[0]?.label || "Select..."}
+        options={options.filter((opt) => opt.value !== "")}
+      />
+    </div>
+  </div>
+);
+
+const HeightField: React.FC<{
+  heightFeet: string;
+  heightInches: string;
+  onHeightFeetChange: (value: string) => void;
+  onHeightInchesChange: (value: string) => void;
+  applyChecked: boolean;
+  onApplyChange: (checked: boolean) => void;
+}> = ({
+  heightFeet,
+  heightInches,
+  onHeightFeetChange,
+  onHeightInchesChange,
+  applyChecked,
+  onApplyChange,
+}) => (
+  <div className="flex items-start gap-sm">
+    <input
+      type="checkbox"
+      checked={applyChecked}
+      onChange={(e) => onApplyChange(e.target.checked)}
+      className="mt-2 h-4 w-4 rounded border-bg-secondary text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2"
+    />
+    <div className="flex-1">
+      <label className="block text-sm font-medium text-primary mb-2">
+        Height
+      </label>
+      <div className="flex gap-sm">
+        <div className="flex-1">
+          <input
+            type="number"
+            placeholder="Feet"
+            value={heightFeet}
+            onChange={(e) => onHeightFeetChange(e.target.value)}
+            disabled={!applyChecked}
+            min="3"
+            max="8"
+            className="w-full px-sm py-xs border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-muted disabled:text-muted disabled:cursor-not-allowed"
+          />
+        </div>
+        <div className="flex-1">
+          <input
+            type="number"
+            placeholder="Inches"
+            value={heightInches}
+            onChange={(e) => onHeightInchesChange(e.target.value)}
+            disabled={!applyChecked}
+            min="0"
+            max="11"
+            className="w-full px-sm py-xs border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-muted disabled:text-muted disabled:cursor-not-allowed"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const WeightField: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+  applyChecked: boolean;
+  onApplyChange: (checked: boolean) => void;
+}> = ({ value, onChange, applyChecked, onApplyChange }) => (
+  <div className="flex items-start gap-sm">
+    <input
+      type="checkbox"
+      checked={applyChecked}
+      onChange={(e) => onApplyChange(e.target.checked)}
+      className="mt-2 h-4 w-4 rounded border-bg-secondary text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2"
+    />
+    <div className="flex-1">
+      <label
+        htmlFor="bulk-weight"
+        className="block text-sm font-medium text-primary mb-2"
+      >
+        Weight (lbs)
+      </label>
+      <input
+        id="bulk-weight"
+        type="number"
+        placeholder="Weight in pounds"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        disabled={!applyChecked}
+        min="50"
+        max="500"
+        className="w-full px-sm py-xs border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-muted disabled:text-muted disabled:cursor-not-allowed"
+      />
+    </div>
+  </div>
+);
+
 export function BulkEditModal({
   isOpen,
   onClose,
@@ -39,29 +188,6 @@ export function BulkEditModal({
   const [applyGradeLevel, setApplyGradeLevel] = useState(false);
   const [applyHeight, setApplyHeight] = useState(false);
   const [applyWeight, setApplyWeight] = useState(false);
-
-  const positionOptions = [
-    { value: "", label: "Select position..." },
-    { value: "QB", label: "QB - Quarterback" },
-    { value: "RB", label: "RB - Running Back" },
-    { value: "WR", label: "WR - Wide Receiver" },
-    { value: "TE", label: "TE - Tight End" },
-    { value: "OL", label: "OL - Offensive Line" },
-    { value: "DL", label: "DL - Defensive Line" },
-    { value: "LB", label: "LB - Linebacker" },
-    { value: "CB", label: "CB - Cornerback" },
-    { value: "S", label: "S - Safety" },
-    { value: "K", label: "K - Kicker" },
-    { value: "P", label: "P - Punter" },
-  ];
-
-  const gradeLevelOptions = [
-    { value: "", label: "Select grade..." },
-    { value: "9", label: "9th Grade (Freshman)" },
-    { value: "10", label: "10th Grade (Sophomore)" },
-    { value: "11", label: "11th Grade (Junior)" },
-    { value: "12", label: "12th Grade (Senior)" },
-  ];
 
   const handleSave = async () => {
     // Build updates object with only checked fields
@@ -146,136 +272,44 @@ export function BulkEditModal({
 
         <div className="space-y-lg pt-sm">
           {/* Position Field */}
-          <div className="flex items-start gap-sm">
-            <input
-              type="checkbox"
-              checked={applyPosition}
-              onChange={(e) => setApplyPosition(e.target.checked)}
-              className="mt-2 h-4 w-4 rounded border-bg-secondary text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2"
-            />
-            <div className="flex-1">
-              <label
-                htmlFor="bulk-position"
-                className="block text-sm font-medium text-primary mb-2"
-              >
-                Position
-              </label>
-              <FormSelect
-                id="bulk-position"
-                value={position}
-                onChange={(value) => setPosition(value)}
-                disabled={!applyPosition}
-                placeholder="Select position..."
-                options={positionOptions
-                  .filter((opt) => opt.value !== "")
-                  .map((opt) => ({
-                    value: opt.value,
-                    label: opt.label,
-                  }))}
-              />
-            </div>
-          </div>
+          <SelectField
+            id="bulk-position"
+            label="Position"
+            value={position}
+            onChange={setPosition}
+            applyChecked={applyPosition}
+            onApplyChange={setApplyPosition}
+            options={POSITION_OPTIONS}
+          />
 
           {/* Grade Level Field */}
-          <div className="flex items-start gap-sm">
-            <input
-              type="checkbox"
-              checked={applyGradeLevel}
-              onChange={(e) => setApplyGradeLevel(e.target.checked)}
-              className="mt-2 h-4 w-4 rounded border-bg-secondary text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2"
-            />
-            <div className="flex-1">
-              <label
-                htmlFor="bulk-grade"
-                className="block text-sm font-medium text-primary mb-2"
-              >
-                Grade Level
-              </label>
-              <FormSelect
-                id="bulk-grade"
-                value={gradeLevel}
-                onChange={(value) => setGradeLevel(value)}
-                disabled={!applyGradeLevel}
-                placeholder="Select grade level..."
-                options={gradeLevelOptions
-                  .filter((opt) => opt.value !== "")
-                  .map((opt) => ({
-                    value: opt.value,
-                    label: opt.label,
-                  }))}
-              />
-            </div>
-          </div>
+          <SelectField
+            id="bulk-grade"
+            label="Grade Level"
+            value={gradeLevel}
+            onChange={setGradeLevel}
+            applyChecked={applyGradeLevel}
+            onApplyChange={setApplyGradeLevel}
+            options={GRADE_LEVEL_OPTIONS}
+          />
 
           {/* Height Field */}
-          <div className="flex items-start gap-sm">
-            <input
-              type="checkbox"
-              checked={applyHeight}
-              onChange={(e) => setApplyHeight(e.target.checked)}
-              className="mt-2 h-4 w-4 rounded border-bg-secondary text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2"
-            />
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-primary mb-2">
-                Height
-              </label>
-              <div className="flex gap-sm">
-                <div className="flex-1">
-                  <input
-                    type="number"
-                    placeholder="Feet"
-                    value={heightFeet}
-                    onChange={(e) => setHeightFeet(e.target.value)}
-                    disabled={!applyHeight}
-                    min="3"
-                    max="8"
-                    className="w-full px-sm py-xs border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-muted disabled:text-muted disabled:cursor-not-allowed"
-                  />
-                </div>
-                <div className="flex-1">
-                  <input
-                    type="number"
-                    placeholder="Inches"
-                    value={heightInches}
-                    onChange={(e) => setHeightInches(e.target.value)}
-                    disabled={!applyHeight}
-                    min="0"
-                    max="11"
-                    className="w-full px-sm py-xs border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-muted disabled:text-muted disabled:cursor-not-allowed"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+          <HeightField
+            heightFeet={heightFeet}
+            heightInches={heightInches}
+            onHeightFeetChange={setHeightFeet}
+            onHeightInchesChange={setHeightInches}
+            applyChecked={applyHeight}
+            onApplyChange={setApplyHeight}
+          />
 
           {/* Weight Field */}
-          <div className="flex items-start gap-sm">
-            <input
-              type="checkbox"
-              checked={applyWeight}
-              onChange={(e) => setApplyWeight(e.target.checked)}
-              className="mt-2 h-4 w-4 rounded border-bg-secondary text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2"
-            />
-            <div className="flex-1">
-              <label
-                htmlFor="bulk-weight"
-                className="block text-sm font-medium text-primary mb-2"
-              >
-                Weight (lbs)
-              </label>
-              <input
-                id="bulk-weight"
-                type="number"
-                placeholder="Weight in pounds"
-                value={weight}
-                onChange={(e) => setWeight(e.target.value)}
-                disabled={!applyWeight}
-                min="50"
-                max="500"
-                className="w-full px-sm py-xs border border-bg-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-muted disabled:text-muted disabled:cursor-not-allowed"
-              />
-            </div>
-          </div>
+          <WeightField
+            value={weight}
+            onChange={setWeight}
+            applyChecked={applyWeight}
+            onApplyChange={setApplyWeight}
+          />
         </div>
 
         <div className="flex justify-end gap-sm pt-md border-t border-bg-secondary">

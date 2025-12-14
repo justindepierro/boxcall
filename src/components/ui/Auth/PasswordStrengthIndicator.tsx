@@ -76,13 +76,12 @@ export function PasswordStrengthIndicator({
       {/* Strength message */}
       <Typography
         variant="caption"
-        className={`font-medium ${
-          validation.strength === "strong"
-            ? "text-success"
-            : validation.strength === "medium"
-              ? "text-warning"
-              : "text-error"
-        }`}
+        className={(() => {
+          const base = "font-medium ";
+          if (validation.strength === "strong") return `${base}text-success`;
+          if (validation.strength === "medium") return `${base}text-warning`;
+          return `${base}text-error`;
+        })()}
       >
         {validation.message}
       </Typography>

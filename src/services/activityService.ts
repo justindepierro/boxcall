@@ -82,7 +82,7 @@ export class ActivityService {
         playName: params.playName,
         createdAt: data.created_at,
         details: params.details,
-        userId: userId,
+        userId,
         teamId: params.teamId,
         playId: params.playId,
       };

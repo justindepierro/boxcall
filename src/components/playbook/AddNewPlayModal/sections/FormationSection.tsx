@@ -59,21 +59,20 @@ export const FormationSection: React.FC<FormationSectionProps> = ({
           variant={formationDir ? "primary" : "outline"}
           size="sm"
           onClick={() => {
-            const nextValue =
-              formationDir.toLowerCase() === "left"
-                ? "Right"
-                : formationDir.toLowerCase() === "right"
-                  ? ""
-                  : "Left";
+            const nextValue = (() => {
+              if (formationDir.toLowerCase() === "left") return "Right";
+              if (formationDir.toLowerCase() === "right") return "";
+              return "Left";
+            })();
             onFormationDirChange(nextValue);
           }}
           className="px-sm min-w-24"
         >
-          {formationDir
-            ? formationDir.toLowerCase() === "left"
-              ? "Left"
-              : "Right"
-            : "Neutral"}
+          {(() => {
+            if (!formationDir) return "Neutral";
+            if (formationDir.toLowerCase() === "left") return "Left";
+            return "Right";
+          })()}
         </Button>
         <Button
           type="button"

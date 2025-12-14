@@ -11,6 +11,204 @@ import { FormSelect } from "../ui";
 
 import type { TeamPlayer } from "../../types/team-management";
 
+// Extracted filter controls component
+interface PlayerFiltersProps {
+  searchTerm: string;
+  onSearchChange: (term: string) => void;
+  filterLevel: string;
+  onLevelChange: (level: string) => void;
+  filterPosition: string;
+  onPositionChange: (position: string) => void;
+  allPositions: string[];
+}
+
+const PlayerFilters: React.FC<PlayerFiltersProps> = ({
+  searchTerm,
+  onSearchChange,
+  filterLevel,
+  onLevelChange,
+  filterPosition,
+  onPositionChange,
+  allPositions,
+}) => (
+  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+    {/* Search */}
+    <div className="md:col-span-2">
+      <Input
+        type="text"
+        placeholder="Search players, positions, or jersey numbers..."
+        value={searchTerm}
+        onChange={(e) => onSearchChange(e.target.value)}
+        className="w-full"
+      />
+    </div>
+    {/* Team Level Filter */}
+    <div>
+      <FormSelect
+        value={filterLevel}
+        onChange={(value) => onLevelChange(value)}
+        options={[
+          { value: "all", label: "All Levels" },
+          ...TEAM_LEVELS.map((level) => ({
+            value: level.value,
+            label: level.label,
+          })),
+        ]}
+      />
+    </div>
+    {/* Position Filter */}
+    <div>
+      <FormSelect
+        value={filterPosition}
+        onChange={(value) => onPositionChange(value)}
+        options={[
+          { value: "all", label: "All Positions" },
+          ...allPositions.map((position) => ({
+            value: position,
+            label: position,
+          })),
+        ]}
+      />
+    </div>
+  </div>
+);
+
+// Extracted player card component
+interface PlayerCardProps {
+  player: TeamPlayer;
+  onEdit: () => void;
+  onDelete: () => void;
+  getTeamLevelColor: (level: string) => string;
+  getTeamLevelLabel: (level: string) => string;
+}
+
+const PlayerCard: React.FC<PlayerCardProps> = ({
+  player,
+  onEdit,
+  onDelete,
+  getTeamLevelColor,
+  getTeamLevelLabel,
+}) => (
+  <div className="bg-primary rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+    {/* Player Header */}
+    <div className="flex items-start justify-between mb-3">
+      <div className="flex items-center space-x-3">
+        {/* Jersey Number */}
+        <div className="w-12 h-12 surface-subtle0 rounded-lg flex items-center justify-center text-inverse font-display font-bold">
+          {player.jersey_number || "?"}
+        </div>
+        {/* Name and Level with UserAvatar */}
+        <div>
+          {player.user_id ? (
+            <UserAvatar
+              userId={player.user_id}
+              name={`${player.first_name} ${player.last_name}`}
+              role="player"
+              size="sm"
+              showName={true}
+              showPopover={true}
+              showOnHover={true}
+              placement="bottom"
+            />
+          ) : (
+            <Typography variant="headline-sm" as="h3">
+              {player.first_name} {player.last_name}
+            </Typography>
+          )}
+          <span
+            className={`inline-block px-2 py-1 font-medium rounded-full text-inverse bg-${getTeamLevelColor(player.team_level)}-600 mt-1`}
+          >
+            <Typography variant="caption" as="span">
+              {getTeamLevelLabel(player.team_level)}
+            </Typography>
+          </span>
+        </div>
+      </div>
+      {/* Actions Menu */}
+      <div className="flex space-x-1">
+        <Tooltip content="Edit player">
+          <Button
+            type="button"
+            variant="ghost"
+            size="xs"
+            onClick={onEdit}
+            aria-label="Edit Player"
+            className="p-1 h-auto w-auto text-secondary hover:text-brand-jade"
+          >
+            <Icon name="edit" size="sm" />
+          </Button>
+        </Tooltip>
+        <Tooltip content="Remove player">
+          <Button
+            type="button"
+            variant="ghost"
+            size="xs"
+            onClick={onDelete}
+            aria-label="Remove Player"
+            className="p-1 h-auto w-auto text-secondary hover:text-error"
+          >
+            <Icon name="delete" size="sm" />
+          </Button>
+        </Tooltip>
+      </div>
+    </div>
+    {/* Positions */}
+    <div className="mb-3">
+      <div className="flex flex-wrap gap-1">
+        {player.positions.map((position) => (
+          <span
+            key={position}
+            className="inline-block px-2 py-1 font-medium bg-subtle text-secondary rounded-lg"
+          >
+            <Typography variant="caption" as="span">
+              #{position}
+            </Typography>
+          </span>
+        ))}
+      </div>
+    </div>
+    {/* Physical Stats */}
+    <div className="grid grid-cols-2 gap-2">
+      {player.height && (
+        <Typography variant="body-sm" color="muted">
+          <span className="font-medium">Height:</span> {player.height}
+        </Typography>
+      )}
+      {player.weight && (
+        <Typography variant="body-sm" color="muted">
+          <span className="font-medium">Weight:</span> {player.weight} lbs
+        </Typography>
+      )}
+      {player.graduation_year && (
+        <Typography variant="body-sm" color="muted" className="col-span-2">
+          <span className="font-medium">Class:</span> {player.graduation_year}
+        </Typography>
+      )}
+    </div>
+    {/* Contact Info */}
+    {(player.email || player.phone) && (
+      <div className="mt-3 pt-3">
+        {player.email && (
+          <div className="truncate flex items-center gap-1">
+            <Icon name="mail" size="xs" />
+            <Typography variant="caption" color="muted" as="span">
+              {player.email}
+            </Typography>
+          </div>
+        )}
+        {player.phone && (
+          <div className="flex items-center gap-1">
+            <Icon name="phone" size="xs" />
+            <Typography variant="caption" color="muted" as="span">
+              {player.phone}
+            </Typography>
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+);
+
 interface PlayerListProps {
   players: TeamPlayer[];
   onEditPlayer: (player: TeamPlayer) => void;
@@ -96,46 +294,15 @@ export const PlayerList: React.FC<PlayerListProps> = ({
     <div className="bg-primary rounded-lg shadow-sm">
       {/* Search and Filters */}
       <div className="p-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {/* Search */}
-          <div className="md:col-span-2">
-            <Input
-              type="text"
-              placeholder="Search players, positions, or jersey numbers..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full"
-            />
-          </div>
-          {/* Team Level Filter */}
-          <div>
-            <FormSelect
-              value={filterLevel}
-              onChange={(value) => setFilterLevel(value)}
-              options={[
-                { value: "all", label: "All Levels" },
-                ...TEAM_LEVELS.map((level) => ({
-                  value: level.value,
-                  label: level.label,
-                })),
-              ]}
-            />
-          </div>
-          {/* Position Filter */}
-          <div>
-            <FormSelect
-              value={filterPosition}
-              onChange={(value) => setFilterPosition(value)}
-              options={[
-                { value: "all", label: "All Positions" },
-                ...allPositions.map((position) => ({
-                  value: position,
-                  label: position,
-                })),
-              ]}
-            />
-          </div>
-        </div>
+        <PlayerFilters
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          filterLevel={filterLevel}
+          onLevelChange={setFilterLevel}
+          filterPosition={filterPosition}
+          onPositionChange={setFilterPosition}
+          allPositions={allPositions}
+        />
         {/* Results Summary */}
         <div className="mt-4 flex items-center justify-between">
           <Typography variant="body-sm" color="muted">
@@ -163,134 +330,14 @@ export const PlayerList: React.FC<PlayerListProps> = ({
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 bc-grid-gap">
             {filteredPlayers.map((player) => (
-              <div
+              <PlayerCard
                 key={player.id}
-                className="bg-primary rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow"
-              >
-                {/* Player Header */}
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center space-x-3">
-                    {/* Jersey Number */}
-                    <div className="w-12 h-12 surface-subtle0 rounded-lg flex items-center justify-center text-inverse font-display font-bold">
-                      {player.jersey_number || "?"}
-                    </div>
-                    {/* Name and Level with UserAvatar */}
-                    <div>
-                      {player.user_id ? (
-                        <UserAvatar
-                          userId={player.user_id}
-                          name={`${player.first_name} ${player.last_name}`}
-                          role="player"
-                          size="sm"
-                          showName={true}
-                          showPopover={true}
-                          showOnHover={true}
-                          placement="bottom"
-                        />
-                      ) : (
-                        <Typography variant="headline-sm" as="h3">
-                          {player.first_name} {player.last_name}
-                        </Typography>
-                      )}
-                      <span
-                        className={`inline-block px-2 py-1 font-medium rounded-full text-inverse bg-${getTeamLevelColor(player.team_level)}-600 mt-1`}
-                      >
-                        <Typography variant="caption" as="span">
-                          {getTeamLevelLabel(player.team_level)}
-                        </Typography>
-                      </span>
-                    </div>
-                  </div>
-                  {/* Actions Menu */}
-                  <div className="flex space-x-1">
-                    <Tooltip content="Edit player">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="xs"
-                        onClick={() => onEditPlayer(player)}
-                        aria-label="Edit Player"
-                        className="p-1 h-auto w-auto text-secondary hover:text-brand-jade"
-                      >
-                        <Icon name="edit" size="sm" />
-                      </Button>
-                    </Tooltip>
-                    <Tooltip content="Remove player">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="xs"
-                        onClick={() => onDeletePlayer(player.id)}
-                        aria-label="Remove Player"
-                        className="p-1 h-auto w-auto text-secondary hover:text-error"
-                      >
-                        <Icon name="delete" size="sm" />
-                      </Button>
-                    </Tooltip>
-                  </div>
-                </div>
-                {/* Positions */}
-                <div className="mb-3">
-                  <div className="flex flex-wrap gap-1">
-                    {player.positions.map((position) => (
-                      <span
-                        key={position}
-                        className="inline-block px-2 py-1 font-medium bg-subtle text-secondary rounded-lg"
-                      >
-                        <Typography variant="caption" as="span">
-                          #{position}
-                        </Typography>
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                {/* Physical Stats */}
-                <div className="grid grid-cols-2 gap-2">
-                  {player.height && (
-                    <Typography variant="body-sm" color="muted">
-                      <span className="font-medium">Height:</span>{" "}
-                      {player.height}
-                    </Typography>
-                  )}
-                  {player.weight && (
-                    <Typography variant="body-sm" color="muted">
-                      <span className="font-medium">Weight:</span>{" "}
-                      {player.weight} lbs
-                    </Typography>
-                  )}
-                  {player.graduation_year && (
-                    <Typography
-                      variant="body-sm"
-                      color="muted"
-                      className="col-span-2"
-                    >
-                      <span className="font-medium">Class:</span>{" "}
-                      {player.graduation_year}
-                    </Typography>
-                  )}
-                </div>
-                {/* Contact Info */}
-                {(player.email || player.phone) && (
-                  <div className="mt-3 pt-3">
-                    {player.email && (
-                      <div className="truncate flex items-center gap-1">
-                        <Icon name="mail" size="xs" />
-                        <Typography variant="caption" color="muted" as="span">
-                          {player.email}
-                        </Typography>
-                      </div>
-                    )}
-                    {player.phone && (
-                      <div className="flex items-center gap-1">
-                        <Icon name="phone" size="xs" />
-                        <Typography variant="caption" color="muted" as="span">
-                          {player.phone}
-                        </Typography>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
+                player={player}
+                onEdit={() => onEditPlayer(player)}
+                onDelete={() => onDeletePlayer(player.id)}
+                getTeamLevelColor={getTeamLevelColor}
+                getTeamLevelLabel={getTeamLevelLabel}
+              />
             ))}
           </div>
         )}

@@ -24,6 +24,118 @@ interface CustomFieldsProps {
   className?: string;
 }
 
+// Common input classes
+const COMMON_INPUT_CLASSES =
+  "w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500";
+
+// Individual field type renderers
+const TextInput: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+}> = ({ value, onChange, placeholder }) => (
+  <input
+    type="text"
+    value={value || ""}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={placeholder}
+    className={COMMON_INPUT_CLASSES}
+  />
+);
+
+const UrlInput: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+}> = ({ value, onChange }) => (
+  <input
+    type="url"
+    value={value || ""}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder="https://example.com"
+    className={COMMON_INPUT_CLASSES}
+  />
+);
+
+const NumberInput: React.FC<{
+  value: number;
+  onChange: (value: number) => void;
+}> = ({ value, onChange }) => (
+  <input
+    type="number"
+    value={value || ""}
+    onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
+    className={COMMON_INPUT_CLASSES}
+  />
+);
+
+const DateInput: React.FC<{
+  value: Date | string;
+  onChange: (value: string) => void;
+}> = ({ value, onChange }) => {
+  const dateValue = (() => {
+    if (value instanceof Date) return value.toISOString().split("T")[0];
+    if (typeof value === "string") return value;
+    return "";
+  })();
+
+  return (
+    <input
+      type="date"
+      value={dateValue}
+      onChange={(e) => onChange(e.target.value)}
+      className={COMMON_INPUT_CLASSES}
+    />
+  );
+};
+
+const BooleanInput: React.FC<{
+  value: boolean;
+  onChange: (value: boolean) => void;
+  label: string;
+}> = ({ value, onChange, label }) => (
+  <label className="flex items-center space-x-2 cursor-pointer">
+    <input
+      type="checkbox"
+      checked={value || false}
+      onChange={(e) => onChange(e.target.checked)}
+      className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-light rounded-lg"
+    />
+    <span className="text-sm text-primary">{label}</span>
+  </label>
+);
+
+const MultiSelectInput: React.FC<{
+  value: string[];
+  onChange: (value: string[]) => void;
+  options: string[];
+}> = ({ value, onChange, options }) => {
+  const selectedValues = value || [];
+
+  return (
+    <div className="space-y-2">
+      {options.map((option) => (
+        <label
+          key={option}
+          className="flex items-center space-x-2 cursor-pointer"
+        >
+          <input
+            type="checkbox"
+            checked={selectedValues.includes(option)}
+            onChange={(e) => {
+              const newValues = e.target.checked
+                ? [...selectedValues, option]
+                : selectedValues.filter((v) => v !== option);
+              onChange(newValues);
+            }}
+            className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-light rounded-lg"
+          />
+          <span className="text-sm text-primary">{option}</span>
+        </label>
+      ))}
+    </div>
+  );
+};
+
 export const CustomFields: React.FC<CustomFieldsProps> = ({
   teamId,
   customFields = {},
@@ -96,85 +208,48 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
   // Render field input based on type
   const renderFieldInput = (definition: CustomFieldDefinition) => {
     const value = values[definition.field_name];
-    const commonClasses =
-      "w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-jade-500 focus:border-jade-500";
 
     switch (definition.field_type) {
       case "text":
         return (
-          <input
-            type="text"
-            value={(value as string) || ""}
-            onChange={(e) =>
-              updateFieldValue(definition.field_name, e.target.value)
-            }
+          <TextInput
+            value={value as string}
+            onChange={(val) => updateFieldValue(definition.field_name, val)}
             placeholder={definition.field_description}
-            className={commonClasses}
           />
         );
 
       case "url":
         return (
-          <input
-            type="url"
-            value={(value as string) || ""}
-            onChange={(e) =>
-              updateFieldValue(definition.field_name, e.target.value)
-            }
-            placeholder="https://example.com"
-            className={commonClasses}
+          <UrlInput
+            value={value as string}
+            onChange={(val) => updateFieldValue(definition.field_name, val)}
           />
         );
 
       case "number":
         return (
-          <input
-            type="number"
-            value={(value as number) || ""}
-            onChange={(e) =>
-              updateFieldValue(
-                definition.field_name,
-                parseFloat(e.target.value) || 0
-              )
-            }
-            className={commonClasses}
+          <NumberInput
+            value={value as number}
+            onChange={(val) => updateFieldValue(definition.field_name, val)}
           />
         );
 
-      case "date": {
-        const dateValue =
-          value instanceof Date
-            ? value.toISOString().split("T")[0]
-            : typeof value === "string"
-              ? value
-              : "";
+      case "date":
         return (
-          <input
-            type="date"
-            value={dateValue}
-            onChange={(e) =>
-              updateFieldValue(definition.field_name, e.target.value)
-            }
-            className={commonClasses}
+          <DateInput
+            value={value as Date | string}
+            onChange={(val) => updateFieldValue(definition.field_name, val)}
           />
         );
-      }
 
       case "boolean":
         return (
-          <label className="flex items-center space-x-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={(value as boolean) || false}
-              onChange={(e) =>
-                updateFieldValue(definition.field_name, e.target.checked)
-              }
-              className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-light rounded-lg"
-            />
-            <span className="text-sm text-primary">
-              {definition.field_label}
-            </span>
-          </label>
+          <BooleanInput
+            value={value as boolean}
+            onChange={(val) => updateFieldValue(definition.field_name, val)}
+            label={definition.field_label}
+          />
         );
 
       case "select":
@@ -192,42 +267,20 @@ export const CustomFields: React.FC<CustomFieldsProps> = ({
           />
         );
 
-      case "multi_select": {
-        const selectedValues = (value as string[]) || [];
+      case "multi_select":
         return (
-          <div className="space-y-2">
-            {definition.field_options?.map((option) => (
-              <label
-                key={option}
-                className="flex items-center space-x-2 cursor-pointer"
-              >
-                <input
-                  type="checkbox"
-                  checked={selectedValues.includes(option)}
-                  onChange={(e) => {
-                    const newValues = e.target.checked
-                      ? [...selectedValues, option]
-                      : selectedValues.filter((v) => v !== option);
-                    updateFieldValue(definition.field_name, newValues);
-                  }}
-                  className="h-4 w-4 text-jade-600 focus:ring-jade-500 border-light rounded-lg"
-                />
-                <span className="text-sm text-primary">{option}</span>
-              </label>
-            ))}
-          </div>
+          <MultiSelectInput
+            value={value as string[]}
+            onChange={(val) => updateFieldValue(definition.field_name, val)}
+            options={definition.field_options || []}
+          />
         );
-      }
 
       default:
         return (
-          <input
-            type="text"
+          <TextInput
             value={String(value || "")}
-            onChange={(e) =>
-              updateFieldValue(definition.field_name, e.target.value)
-            }
-            className={commonClasses}
+            onChange={(val) => updateFieldValue(definition.field_name, val)}
           />
         );
     }

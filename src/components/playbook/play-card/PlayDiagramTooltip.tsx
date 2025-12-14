@@ -23,6 +23,102 @@ interface PlayDiagramTooltipProps {
   onEnterFullscreen?: (plays: PlayType[], playIndex: number) => void; // Callback to enter fullscreen mode
 }
 
+const ActionButtons: React.FC<{
+  onFullscreen?: () => void;
+  onClose: () => void;
+  showFullscreenButton: boolean;
+}> = ({ onFullscreen, onClose, showFullscreenButton }) => (
+  <div className="absolute top-3 right-3 z-10 flex gap-2">
+    {showFullscreenButton && onFullscreen && (
+      <button
+        onClick={onFullscreen}
+        className="flex items-center justify-center p-2 bg-jade-600 hover:bg-jade-700 rounded-full shadow-md transition-all hover:scale-110"
+        aria-label="Enter fullscreen presentation mode"
+        title="Fullscreen (for projector)"
+      >
+        <Icon name="maximize" size="sm" className="text-white" />
+      </button>
+    )}
+
+    <button
+      onClick={onClose}
+      className="flex items-center justify-center p-2 bg-surface/90 hover:bg-surface rounded-full border border-divider shadow-md transition-all hover:scale-110"
+      aria-label="Close preview"
+    >
+      <Icon name="close" size="sm" className="text-secondary" />
+    </button>
+  </div>
+);
+
+const PlayInfoHeader: React.FC<{
+  displayName: string;
+  playType?: string | null;
+  personnel?: string | null;
+}> = ({ displayName, playType, personnel }) => (
+  <div className="bg-gradient-to-r from-jade-50 to-jade-100 px-4 md:px-6 py-3 border-b border-jade-200">
+    <div className="flex items-start gap-2 pr-8">
+      <Icon name="eye" className="text-jade-600 flex-shrink-0 mt-1" size="sm" />
+      <div className="flex-1 min-w-0">
+        <h3 className="text-base md:text-lg font-bold text-primary truncate">
+          {displayName}
+        </h3>
+        <div className="flex items-center gap-2 mt-1 flex-wrap">
+          {playType && (
+            <span className="text-xs md:text-sm text-secondary">
+              {playType}
+            </span>
+          )}
+          {personnel && (
+            <span className="px-2 py-0.5 bg-jade-600 text-white rounded-md text-xs font-semibold">
+              {personnel}
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const DiagramPreview: React.FC<{
+  imageUrl?: string | null;
+  altText: string;
+}> = ({ imageUrl, altText }) => {
+  if (!imageUrl) return null;
+
+  return (
+    <div className="relative bg-neutral-50 max-h-[60vh] overflow-y-auto">
+      <img
+        src={imageUrl}
+        alt={altText}
+        className="w-full object-contain"
+        style={{ maxHeight: "50vh" }}
+      />
+    </div>
+  );
+};
+
+const QuickStatsFooter: React.FC<{
+  timesCalled: number;
+  installPhase?: string | null;
+}> = ({ timesCalled, installPhase }) => (
+  <div className="bg-neutral-50 px-4 md:px-6 py-3 border-t border-muted">
+    <div className="flex items-center justify-between text-xs md:text-sm gap-2">
+      <div className="flex items-center gap-2 flex-1 min-w-0">
+        <Icon name="eye" size="sm" className="text-jade-600 flex-shrink-0" />
+        <span className="text-secondary truncate">
+          <strong className="text-primary font-bold">{timesCalled}</strong>{" "}
+          times called
+        </span>
+      </div>
+      {installPhase && (
+        <span className="px-3 py-1.5 bg-jade-600 text-white rounded-lg font-bold text-xs uppercase tracking-wide shadow-sm flex-shrink-0">
+          {installPhase}
+        </span>
+      )}
+    </div>
+  </div>
+);
+
 export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
   children,
   play,
@@ -164,92 +260,32 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
             >
               <div className="bg-surface border-2 border-jade-500 rounded-2xl shadow-2xl overflow-hidden">
                 {/* Action Buttons */}
-                <div className="absolute top-3 right-3 z-10 flex gap-2">
-                  {/* Fullscreen Button */}
-                  {onEnterFullscreen && allPlays.length > 0 && (
-                    <button
-                      onClick={handleEnterFullscreen}
-                      className="flex items-center justify-center p-2 bg-jade-600 hover:bg-jade-700 rounded-full shadow-md transition-all hover:scale-110"
-                      aria-label="Enter fullscreen presentation mode"
-                      title="Fullscreen (for projector)"
-                    >
-                      <Icon name="maximize" size="sm" className="text-white" />
-                    </button>
+                <ActionButtons
+                  onFullscreen={handleEnterFullscreen}
+                  onClose={closeTooltip}
+                  showFullscreenButton={Boolean(
+                    onEnterFullscreen && allPlays.length > 0
                   )}
-
-                  {/* Close Button */}
-                  <button
-                    onClick={closeTooltip}
-                    className="flex items-center justify-center p-2 bg-surface/90 hover:bg-surface rounded-full border border-divider shadow-md transition-all hover:scale-110"
-                    aria-label="Close preview"
-                  >
-                    <Icon name="close" size="sm" className="text-secondary" />
-                  </button>
-                </div>
+                />
 
                 {/* Play Info Header */}
-                <div className="bg-gradient-to-r from-jade-50 to-jade-100 px-4 md:px-6 py-3 border-b border-jade-200">
-                  <div className="flex items-start gap-2 pr-8">
-                    <Icon
-                      name="eye"
-                      className="text-jade-600 flex-shrink-0 mt-1"
-                      size="sm"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-base md:text-lg font-bold text-primary truncate">
-                        {displayName}
-                      </h3>
-                      <div className="flex items-center gap-2 mt-1 flex-wrap">
-                        {play.p_type && (
-                          <span className="text-xs md:text-sm text-secondary">
-                            {play.p_type}
-                          </span>
-                        )}
-                        {play.personnel && (
-                          <span className="px-2 py-0.5 bg-jade-600 text-white rounded-md text-xs font-semibold">
-                            {play.personnel}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <PlayInfoHeader
+                  displayName={displayName}
+                  playType={play.p_type}
+                  personnel={play.personnel}
+                />
 
                 {/* Diagram Preview */}
-                {play.diagram_image_url && (
-                  <div className="relative bg-neutral-50 max-h-[60vh] overflow-y-auto">
-                    <img
-                      src={play.diagram_image_url}
-                      alt={`${displayName} diagram`}
-                      className="w-full object-contain"
-                      style={{ maxHeight: "50vh" }}
-                    />
-                  </div>
-                )}
+                <DiagramPreview
+                  imageUrl={play.diagram_image_url}
+                  altText={`${displayName} diagram`}
+                />
 
                 {/* Quick Stats Footer */}
-                <div className="bg-neutral-50 px-4 md:px-6 py-3 border-t border-muted">
-                  <div className="flex items-center justify-between text-xs md:text-sm gap-2">
-                    <div className="flex items-center gap-2 flex-1 min-w-0">
-                      <Icon
-                        name="eye"
-                        size="sm"
-                        className="text-jade-600 flex-shrink-0"
-                      />
-                      <span className="text-secondary truncate">
-                        <strong className="text-primary font-bold">
-                          {play.times_called || 0}
-                        </strong>{" "}
-                        times called
-                      </span>
-                    </div>
-                    {play.install_phase && (
-                      <span className="px-3 py-1.5 bg-jade-600 text-white rounded-lg font-bold text-xs uppercase tracking-wide shadow-sm flex-shrink-0">
-                        {play.install_phase}
-                      </span>
-                    )}
-                  </div>
-                </div>
+                <QuickStatsFooter
+                  timesCalled={play.times_called || 0}
+                  installPhase={play.install_phase}
+                />
               </div>
             </div>
           </>,

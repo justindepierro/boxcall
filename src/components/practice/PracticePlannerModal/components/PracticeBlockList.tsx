@@ -21,6 +21,220 @@ interface PracticeBlockListProps {
   getCategoryIcon: (category: PracticeBlock["category"]) => string;
 }
 
+// Duration summary header
+const DurationSummary: React.FC<{
+  totalDuration: number;
+  scheduledDuration: number;
+  userRole: "head_coach" | "position_coach";
+}> = ({ totalDuration, scheduledDuration, userRole }) => {
+  const isOvertime = totalDuration > scheduledDuration;
+
+  return (
+    <div className="flex items-center justify-between mb-4">
+      <div>
+        <Typography variant="body-md" className="font-medium">
+          Practice Blocks Overview
+        </Typography>
+        <Typography variant="body-sm" color="muted">
+          Drag to reorder • Click to edit •{" "}
+          {userRole === "head_coach" ? "Full control" : "Position coach view"}
+        </Typography>
+      </div>
+      <div className="text-right">
+        <div
+          className={`text-lg font-bold ${
+            isOvertime ? "text-error" : "text-success"
+          }`}
+        >
+          {totalDuration} / {scheduledDuration} min
+        </div>
+        {isOvertime && (
+          <div className="text-sm text-error flex items-center">
+            <Icon name="alert-triangle" size="xs" className="mr-1" />
+            {totalDuration - scheduledDuration} min overtime
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Empty state placeholder
+const EmptyState: React.FC = () => (
+  <div className="text-center py-8">
+    <Icon name="plus-circle" size="lg" className="mx-auto mb-2 text-muted" />
+    <Typography variant="body-md" color="muted">
+      No practice blocks yet
+    </Typography>
+    <Typography variant="body-sm" color="muted" className="mt-1">
+      Add your first block to get started
+    </Typography>
+  </div>
+);
+
+// Groups within a practice block
+const GroupsList: React.FC<{
+  groups: Array<{ id: string; name: string; location?: string }>;
+}> = ({ groups }) => (
+  <div className="ml-10 mt-3 pl-4 border-l-2 border-muted">
+    <Typography variant="body-sm" className="font-medium mb-2">
+      Groups ({groups.length}):
+    </Typography>
+    <div className="space-y-2">
+      {groups.map((group) => (
+        <div
+          key={group.id}
+          className="flex items-center justify-between p-2 bg-primary/50 rounded-lg"
+        >
+          <div className="flex-1">
+            <Typography variant="body-sm" className="font-medium">
+              {group.name}
+            </Typography>
+            {group.location && (
+              <Typography variant="body-xs" color="muted">
+                {group.location}
+              </Typography>
+            )}
+          </div>
+          <Button variant="neutralLink" size="sm">
+            <Icon name="edit" size="xs" />
+          </Button>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// Individual practice block card
+const PracticeBlockCard: React.FC<{
+  block: PracticeBlock;
+  index: number;
+  userRole: "head_coach" | "position_coach";
+  getCategoryColor: (category: PracticeBlock["category"]) => string;
+  getCategoryIcon: (category: PracticeBlock["category"]) => string;
+  onEditBlock: (block: PracticeBlock) => void;
+  onDeleteBlock: (blockId: string) => void;
+  onAddGroup: (blockId: string) => void;
+}> = ({
+  block,
+  index,
+  userRole,
+  getCategoryColor,
+  getCategoryIcon,
+  onEditBlock,
+  onDeleteBlock,
+  onAddGroup,
+}) => (
+  <Draggable key={block.id} draggableId={block.id} index={index}>
+    {(provided, snapshot) => (
+      <Card
+        ref={provided.innerRef}
+        {...provided.draggableProps}
+        className={`p-4 transition-all ${
+          snapshot.isDragging
+            ? "shadow-lg rotate-2 scale-105"
+            : "hover:shadow-md"
+        } ${getCategoryColor(block.category)}`}
+      >
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <div className="flex items-center space-x-3 mb-2">
+              {/* Drag Handle */}
+              <div
+                {...provided.dragHandleProps}
+                className="cursor-grab active:cursor-grabbing p-1 rounded-lg hover:bg-text-primary/5"
+              >
+                <Icon name="menu" size="sm" className="text-muted" />
+              </div>
+
+              {/* Category Icon */}
+              <div className="flex items-center space-x-2">
+                <Icon
+                  name={getCategoryIcon(block.category) as ModularIconName}
+                  size="md"
+                />
+                <div>
+                  <Typography variant="body-md" className="font-medium">
+                    {block.title ||
+                      block.category
+                        .replace("-", " ")
+                        .replace(/\b\w/g, (l) => l.toUpperCase())}
+                  </Typography>
+                  <Typography variant="body-sm" color="muted">
+                    {block.startTime} - {block.endTime} ({block.duration} min)
+                  </Typography>
+                </div>
+              </div>
+            </div>
+
+            {/* Block Details */}
+            {(block.location || block.notes) && (
+              <div className="ml-10 space-y-1">
+                {block.location && (
+                  <div className="flex items-center text-sm text-secondary">
+                    <Icon name="map" size="xs" className="mr-1" />
+                    {block.location}
+                  </div>
+                )}
+                {block.notes && (
+                  <div className="flex items-start text-sm text-secondary">
+                    <Icon name="message" size="xs" className="mr-1 mt-0.5" />
+                    <span>{block.notes}</span>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Assigned Coach */}
+            {block.assignedCoach && (
+              <div className="ml-10 mt-2">
+                <Tag variant="info" size="sm">
+                  <Icon name="user" size="xs" className="mr-1" />
+                  {block.assignedCoach}
+                </Tag>
+              </div>
+            )}
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center space-x-2 ml-4">
+            {userRole === "head_coach" && (
+              <Button
+                variant="neutralLink"
+                size="sm"
+                onClick={() => onAddGroup(block.id)}
+              >
+                <Icon name="plus" size="sm" />
+              </Button>
+            )}
+
+            <Button
+              variant="neutralLink"
+              size="sm"
+              onClick={() => onEditBlock(block)}
+            >
+              <Icon name="edit" size="sm" />
+            </Button>
+
+            <Button
+              variant="dangerLink"
+              size="sm"
+              onClick={() => onDeleteBlock(block.id)}
+            >
+              <Icon name="close" size="sm" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Groups within block */}
+        {block.groups && block.groups.length > 0 && (
+          <GroupsList groups={block.groups} />
+        )}
+      </Card>
+    )}
+  </Draggable>
+);
+
 export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
   practiceBlocks,
   totalDuration,
@@ -33,37 +247,14 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
   getCategoryColor,
   getCategoryIcon,
 }) => {
-  const isOvertime = totalDuration > scheduledDuration;
-
   return (
     <div className="space-y-4">
       {/* Duration Summary */}
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <Typography variant="body-md" className="font-medium">
-            Practice Blocks Overview
-          </Typography>
-          <Typography variant="body-sm" color="muted">
-            Drag to reorder • Click to edit •{" "}
-            {userRole === "head_coach" ? "Full control" : "Position coach view"}
-          </Typography>
-        </div>
-        <div className="text-right">
-          <div
-            className={`text-lg font-bold ${
-              isOvertime ? "text-error" : "text-success"
-            }`}
-          >
-            {totalDuration} / {scheduledDuration} min
-          </div>
-          {isOvertime && (
-            <div className="text-sm text-error flex items-center">
-              <Icon name="alert-triangle" size="xs" className="mr-1" />
-              {totalDuration - scheduledDuration} min overtime
-            </div>
-          )}
-        </div>
-      </div>
+      <DurationSummary
+        totalDuration={totalDuration}
+        scheduledDuration={scheduledDuration}
+        userRole={userRole}
+      />
 
       {/* Practice Blocks List */}
       <DragDropContext onDragEnd={onDragEnd}>
@@ -79,194 +270,20 @@ export const PracticeBlockList: React.FC<PracticeBlockListProps> = ({
               }`}
             >
               {practiceBlocks.length === 0 ? (
-                <div className="text-center py-8">
-                  <Icon
-                    name="plus-circle"
-                    size="lg"
-                    className="mx-auto mb-2 text-muted"
-                  />
-                  <Typography variant="body-md" color="muted">
-                    No practice blocks yet
-                  </Typography>
-                  <Typography variant="body-sm" color="muted" className="mt-1">
-                    Add your first block to get started
-                  </Typography>
-                </div>
+                <EmptyState />
               ) : (
                 practiceBlocks.map((block, index) => (
-                  <Draggable
+                  <PracticeBlockCard
                     key={block.id}
-                    draggableId={block.id}
+                    block={block}
                     index={index}
-                  >
-                    {(provided, snapshot) => (
-                      <Card
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        className={`p-4 transition-all ${
-                          snapshot.isDragging
-                            ? "shadow-lg rotate-2 scale-105"
-                            : "hover:shadow-md"
-                        } ${getCategoryColor(block.category)}`}
-                      >
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-3 mb-2">
-                              {/* Drag Handle */}
-                              <div
-                                {...provided.dragHandleProps}
-                                className="cursor-grab active:cursor-grabbing p-1 rounded-lg hover:bg-text-primary/5"
-                              >
-                                <Icon
-                                  name="menu"
-                                  size="sm"
-                                  className="text-muted"
-                                />
-                              </div>
-
-                              {/* Category Icon */}
-                              <div className="flex items-center space-x-2">
-                                <Icon
-                                  name={
-                                    getCategoryIcon(
-                                      block.category
-                                    ) as ModularIconName
-                                  }
-                                  size="md"
-                                />
-                                <div>
-                                  <Typography
-                                    variant="body-md"
-                                    className="font-medium"
-                                  >
-                                    {block.title ||
-                                      block.category
-                                        .replace("-", " ")
-                                        .replace(/\b\w/g, (l) =>
-                                          l.toUpperCase()
-                                        )}
-                                  </Typography>
-                                  <Typography variant="body-sm" color="muted">
-                                    {block.startTime} - {block.endTime} (
-                                    {block.duration} min)
-                                  </Typography>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Block Details */}
-                            {(block.location || block.notes) && (
-                              <div className="ml-10 space-y-1">
-                                {block.location && (
-                                  <div className="flex items-center text-sm text-secondary">
-                                    <Icon
-                                      name="map"
-                                      size="xs"
-                                      className="mr-1"
-                                    />
-                                    {block.location}
-                                  </div>
-                                )}
-                                {block.notes && (
-                                  <div className="flex items-start text-sm text-secondary">
-                                    <Icon
-                                      name="message"
-                                      size="xs"
-                                      className="mr-1 mt-0.5"
-                                    />
-                                    <span>{block.notes}</span>
-                                  </div>
-                                )}
-                              </div>
-                            )}
-
-                            {/* Assigned Coach */}
-                            {block.assignedCoach && (
-                              <div className="ml-10 mt-2">
-                                <Tag variant="info" size="sm">
-                                  <Icon
-                                    name="user"
-                                    size="xs"
-                                    className="mr-1"
-                                  />
-                                  {block.assignedCoach}
-                                </Tag>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Actions */}
-                          <div className="flex items-center space-x-2 ml-4">
-                            {userRole === "head_coach" && (
-                              <Button
-                                variant="neutralLink"
-                                size="sm"
-                                onClick={() => onAddGroup(block.id)}
-                              >
-                                <Icon name="plus" size="sm" />
-                              </Button>
-                            )}
-
-                            <Button
-                              variant="neutralLink"
-                              size="sm"
-                              onClick={() => onEditBlock(block)}
-                            >
-                              <Icon name="edit" size="sm" />
-                            </Button>
-
-                            <Button
-                              variant="dangerLink"
-                              size="sm"
-                              onClick={() => onDeleteBlock(block.id)}
-                            >
-                              <Icon name="close" size="sm" />
-                            </Button>
-                          </div>
-                        </div>
-
-                        {/* Groups within block */}
-                        {block.groups && block.groups.length > 0 && (
-                          <div className="ml-10 mt-3 pl-4 border-l-2 border-muted">
-                            <Typography
-                              variant="body-sm"
-                              className="font-medium mb-2"
-                            >
-                              Groups ({block.groups.length}):
-                            </Typography>
-                            <div className="space-y-2">
-                              {block.groups.map((group) => (
-                                <div
-                                  key={group.id}
-                                  className="flex items-center justify-between p-2 bg-primary/50 rounded-lg"
-                                >
-                                  <div className="flex-1">
-                                    <Typography
-                                      variant="body-sm"
-                                      className="font-medium"
-                                    >
-                                      {group.name}
-                                    </Typography>
-                                    {group.location && (
-                                      <Typography
-                                        variant="body-xs"
-                                        color="muted"
-                                      >
-                                        {group.location}
-                                      </Typography>
-                                    )}
-                                  </div>
-                                  <Button variant="neutralLink" size="sm">
-                                    <Icon name="edit" size="xs" />
-                                  </Button>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </Card>
-                    )}
-                  </Draggable>
+                    userRole={userRole}
+                    getCategoryColor={getCategoryColor}
+                    getCategoryIcon={getCategoryIcon}
+                    onEditBlock={onEditBlock}
+                    onDeleteBlock={onDeleteBlock}
+                    onAddGroup={onAddGroup}
+                  />
                 ))
               )}
               {provided.placeholder}

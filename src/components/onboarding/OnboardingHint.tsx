@@ -76,12 +76,13 @@ export const OnboardingHint: React.FC<OnboardingHintProps> = ({
       {actions.length > 0 && (
         <div className="flex flex-wrap gap-3 mt-2">
           {actions.map((a, i) => {
-            const base =
-              a.variant === "primary"
-                ? "bg-jade-600 hover:bg-brand-jade-dark text-inverse"
-                : a.variant === "secondary"
-                  ? "border-muted hover:bg-muted"
-                  : "text-jade-600 dark:text-jade-400 hover:underline";
+            const base = (() => {
+              if (a.variant === "primary")
+                return "bg-jade-600 hover:bg-brand-jade-dark text-inverse";
+              if (a.variant === "secondary")
+                return "border-muted hover:bg-muted";
+              return "text-jade-600 dark:text-jade-400 hover:underline";
+            })();
             if (a.href) {
               return (
                 <a
@@ -101,13 +102,11 @@ export const OnboardingHint: React.FC<OnboardingHintProps> = ({
                   telemetry.onboardingAction(a.label);
                   a.onClick?.();
                 }}
-                variant={
-                  a.variant === "primary"
-                    ? "primary"
-                    : a.variant === "secondary"
-                      ? "outline"
-                      : "link"
-                }
+                variant={(() => {
+                  if (a.variant === "primary") return "primary";
+                  if (a.variant === "secondary") return "outline";
+                  return "link";
+                })()}
                 size="sm"
               >
                 {a.label}

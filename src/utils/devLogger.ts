@@ -86,8 +86,11 @@ export const devLogger = {
     data?: any
   ) => {
     if (isDev && isDebugMode) {
-      const emoji =
-        action === "mount" ? "🟢" : action === "unmount" ? "🔴" : "🔄";
+      const emoji = (() => {
+        if (action === "mount") return "🟢";
+        if (action === "unmount") return "🔴";
+        return "🔄";
+      })();
       console.log(`${emoji} [COMPONENT] ${name} - ${action}`, data || "");
     }
   },

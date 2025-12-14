@@ -108,15 +108,17 @@ export const ScriptSelectorModal: React.FC<ScriptSelectorModalProps> = ({
                         {script.duration} min
                       </span>
                       <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          script.category === "offense"
-                            ? "bg-info/20 text-info"
-                            : script.category === "defense"
-                              ? "bg-surface-error text-error"
-                              : script.category === "special-teams"
-                                ? "bg-success/20 text-success"
-                                : "bg-secondary text-primary"
-                        }`}
+                        className={(() => {
+                          const base =
+                            "px-2 py-1 rounded-full text-xs font-medium ";
+                          if (script.category === "offense")
+                            return `${base}bg-info/20 text-info`;
+                          if (script.category === "defense")
+                            return `${base}bg-surface-error text-error`;
+                          if (script.category === "special-teams")
+                            return `${base}bg-success/20 text-success`;
+                          return `${base}bg-secondary text-primary`;
+                        })()}
                       >
                         {script.category.replace("-", " ")}
                       </span>

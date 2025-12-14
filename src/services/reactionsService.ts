@@ -248,15 +248,14 @@ export class ReactionsService {
           action: "removed",
           error: result.error,
         };
-      } else {
-        // Add reaction
-        const result = await this.addReaction(announcementId, reactionType);
-        return {
-          success: result.success,
-          action: "added",
-          error: result.error,
-        };
       }
+      // Add reaction
+      const result = await this.addReaction(announcementId, reactionType);
+      return {
+        success: result.success,
+        action: "added",
+        error: result.error,
+      };
     } catch (error) {
       logError("Error in toggleReaction:", error);
       return {

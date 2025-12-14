@@ -266,12 +266,11 @@ export class PlayerPerformanceAnalyticsService {
       // Mock trends
       trends.push({
         metric: "Team Average Rating",
-        trend:
-          overview.averageTeamRating > 7
-            ? "up"
-            : overview.averageTeamRating < 6
-              ? "down"
-              : "stable",
+        trend: (() => {
+          if (overview.averageTeamRating > 7) return "up";
+          if (overview.averageTeamRating < 6) return "down";
+          return "stable";
+        })(),
         change: 0.3, // Mock change
         period: "Last 30 days",
       });

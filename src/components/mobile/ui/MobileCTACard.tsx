@@ -64,7 +64,10 @@ export function MobileCTACard({
   };
 
   // Map variant to Button variant type
-  const buttonVariant = variant === "accent" ? "primary" : variant;
+  const buttonVariant = (() => {
+    if (variant === "accent") return "primary";
+    return variant;
+  })();
 
   return (
     <Card
@@ -87,19 +90,25 @@ export function MobileCTACard({
       }}
     >
       {/* Icon or Illustration */}
-      {illustration ? (
-        <div className="w-20 h-20">{illustration}</div>
-      ) : icon ? (
-        <div
-          className="
-          w-16 h-16 rounded-full 
-          bg-brand-primary/10 
-          flex items-center justify-center
-        "
-        >
-          <Icon name={icon} size="xl" className="text-brand-primary" />
-        </div>
-      ) : null}
+      {(() => {
+        if (illustration) {
+          return <div className="w-20 h-20">{illustration}</div>;
+        }
+        if (icon) {
+          return (
+            <div
+              className="
+              w-16 h-16 rounded-full 
+              bg-brand-primary/10 
+              flex items-center justify-center
+            "
+            >
+              <Icon name={icon} size="xl" className="text-brand-primary" />
+            </div>
+          );
+        }
+        return null;
+      })()}
 
       {/* Title */}
       <h3 className="text-2xl font-semibold text-primary leading-tight">

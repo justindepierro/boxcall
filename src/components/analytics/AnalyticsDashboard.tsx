@@ -718,13 +718,11 @@ const FormationCard: React.FC<{ formation: FormationAnalytics }> = ({
     <div className="flex items-center justify-between mb-md">
       <Typography variant="headline-sm">{formation.formation}</Typography>
       <Badge
-        variant={
-          formation.successRate >= 70
-            ? "success"
-            : formation.successRate >= 50
-              ? "warning"
-              : "danger"
-        }
+        variant={(() => {
+          if (formation.successRate >= 70) return "success";
+          if (formation.successRate >= 50) return "warning";
+          return "danger";
+        })()}
       >
         {formation.successRate}%
       </Badge>

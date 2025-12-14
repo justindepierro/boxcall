@@ -3,6 +3,167 @@ import { Icon } from "../Icon/Icon";
 
 import type { InlineEditableTextProps } from "./InlineEditableText.types";
 
+// Size configurations
+const SIZE_CLASSES = {
+  sm: "px-2 py-1 text-sm min-h-6",
+  md: "px-3 py-2 text-sm min-h-8",
+  lg: "px-4 py-3 text-base min-h-10",
+};
+
+type ValidationResult = {
+  isValid: boolean;
+  message?: string;
+  level?: "error" | "warning";
+};
+
+// Validation logic
+const createValidator = (
+  options: Pick<
+    InlineEditableTextProps,
+    | "minLength"
+    | "maxLength"
+    | "allowSymbols"
+    | "showLengthWarnings"
+    | "maxRecommendedLength"
+    | "validationRules"
+    | "customValidator"
+  >
+) => {
+  return (val: string): ValidationResult => {
+    // Custom validator takes precedence
+    if (options.customValidator) {
+      return options.customValidator(val);
+    }
+
+    // Length validation
+    if (options.minLength && val.length < options.minLength) {
+      return {
+        isValid: false,
+        message: `Minimum ${options.minLength} characters required`,
+        level: "error",
+      };
+    }
+
+    if (options.maxLength && val.length > options.maxLength) {
+      return {
+        isValid: false,
+        message: `Maximum ${options.maxLength} characters allowed`,
+        level: "error",
+      };
+    }
+
+    // Symbol validation
+    if (!options.allowSymbols && /[^a-zA-Z0-9\s]/.test(val)) {
+      return {
+        isValid: false,
+        message: "Symbols are not allowed",
+        level: "error",
+      };
+    }
+
+    // Length warning for diagram compatibility
+    if (
+      options.showLengthWarnings &&
+      val.length > (options.maxRecommendedLength || 2)
+    ) {
+      return {
+        isValid: true,
+        message: `Long text may overdraw on diagram shapes`,
+        level: "warning",
+      };
+    }
+
+    // Custom validation rules
+    if (options.validationRules) {
+      for (const rule of options.validationRules) {
+        if (!rule.validate(val)) {
+          return {
+            isValid: false,
+            message: rule.message,
+            level: rule.level,
+          };
+        }
+      }
+    }
+
+    return { isValid: true };
+  };
+};
+
+// Style calculation helpers
+const getDisplayClasses = (
+  isEditing: boolean,
+  validationResult: ValidationResult,
+  size: "sm" | "md" | "lg",
+  className: string
+) => {
+  const baseClasses = `
+    inline-flex items-center gap-2 rounded-lg transition-all duration-200 cursor-pointer
+    border-2 border-bg-primary hover:border-light hover:border-text-tertiary
+    ${SIZE_CLASSES[size]}
+    ${className}
+  `;
+
+  if (isEditing) {
+    if (validationResult.isValid) {
+      return `${baseClasses} bg-success/20 border-text-success`;
+    } else if (validationResult.level === "warning") {
+      return `${baseClasses} bg-warning/20 border-text-warning`;
+    }
+    return `${baseClasses} bg-surface-error border-text-error`;
+  }
+
+  return `${baseClasses} hover:bg-secondary`;
+};
+
+const getTextClasses = (value: string, placeholder?: string) => {
+  const baseClasses = "flex-1 truncate";
+
+  if (!value && placeholder) {
+    return `${baseClasses} text-secondary italic`;
+  }
+
+  return baseClasses;
+};
+
+const getInputClasses = (validationResult: ValidationResult) => {
+  const baseClasses = `
+    flex-1 bg-primary border-none outline-none p-0 m-0
+    text-primary font-inherit leading-inherit
+    placeholder:text-secondary
+  `;
+
+  if (validationResult.isValid) {
+    return `${baseClasses} text-success`;
+  } else if (validationResult.level === "warning") {
+    return `${baseClasses} text-warning`;
+  }
+  return `${baseClasses} text-error`;
+};
+
+// Validation message component
+const ValidationMessage: React.FC<{
+  validationResult: ValidationResult;
+  showValidation: boolean;
+  isEditing: boolean;
+}> = ({ validationResult, showValidation, isEditing }) => {
+  if (!showValidation || validationResult.isValid || !isEditing) return null;
+
+  const messageClasses =
+    validationResult.level === "warning" ? "text-warning" : "text-error";
+
+  return (
+    <>
+      <div className={`text-xs mt-1 ${messageClasses}`}>
+        {validationResult.message}
+      </div>
+      <div id="validation-message" className="sr-only">
+        {validationResult.message}
+      </div>
+    </>
+  );
+};
+
 /**
  * InlineEditableText Component
  *
@@ -37,85 +198,24 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value);
-  const [validationResult, setValidationResult] = useState<{
-    isValid: boolean;
-    message?: string;
-    level?: "error" | "warning";
-  }>({ isValid: true });
+  const [validationResult, setValidationResult] = useState<ValidationResult>({
+    isValid: true,
+  });
 
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Size configurations
-  const sizeClasses = {
-    sm: "px-2 py-1 text-sm min-h-6",
-    md: "px-3 py-2 text-sm min-h-8",
-    lg: "px-4 py-3 text-base min-h-10",
-  };
-
-  // Update edit value when prop value changes
-  useEffect(() => {
-    setEditValue(value);
-  }, [value]);
-
-  // Validation function
+  // Create validator function
   const validateValue = useCallback(
-    (
-      val: string
-    ): { isValid: boolean; message?: string; level?: "error" | "warning" } => {
-      // Custom validator takes precedence
-      if (customValidator) {
-        return customValidator(val);
-      }
-
-      // Length validation
-      if (minLength && val.length < minLength) {
-        return {
-          isValid: false,
-          message: `Minimum ${minLength} characters required`,
-          level: "error",
-        };
-      }
-
-      if (maxLength && val.length > maxLength) {
-        return {
-          isValid: false,
-          message: `Maximum ${maxLength} characters allowed`,
-          level: "error",
-        };
-      }
-
-      // Symbol validation
-      if (!allowSymbols && /[^a-zA-Z0-9\s]/.test(val)) {
-        return {
-          isValid: false,
-          message: "Symbols are not allowed",
-          level: "error",
-        };
-      }
-
-      // Length warning for diagram compatibility
-      if (showLengthWarnings && val.length > maxRecommendedLength) {
-        return {
-          isValid: true,
-          message: `Long text may overdraw on diagram shapes`,
-          level: "warning",
-        };
-      }
-
-      // Custom validation rules
-      for (const rule of validationRules) {
-        if (!rule.validate(val)) {
-          return {
-            isValid: false,
-            message: rule.message,
-            level: rule.level,
-          };
-        }
-      }
-
-      return { isValid: true };
-    },
+    createValidator({
+      minLength,
+      maxLength,
+      allowSymbols,
+      showLengthWarnings,
+      maxRecommendedLength,
+      validationRules,
+      customValidator,
+    }),
     [
       minLength,
       maxLength,
@@ -126,6 +226,11 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
       customValidator,
     ]
   );
+
+  // Update edit value when prop value changes
+  useEffect(() => {
+    setEditValue(value);
+  }, [value]);
 
   // Update validation when edit value changes
   useEffect(() => {
@@ -197,73 +302,16 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
     []
   );
 
-  // Determine display classes based on state
-  const getDisplayClasses = () => {
-    const baseClasses = `
-      inline-flex items-center gap-2 rounded-lg transition-all duration-200 cursor-pointer
-      border-2 border-bg-primary hover:border-light hover:border-text-tertiary
-      ${sizeClasses[size]}
-      ${className}
-    `;
-
-    if (isEditing) {
-      if (validationResult.isValid) {
-        return `${baseClasses} bg-success/20 border-text-success`;
-      } else if (validationResult.level === "warning") {
-        return `${baseClasses} bg-warning/20 border-text-warning`;
-      } else {
-        return `${baseClasses} bg-surface-error border-text-error`;
-      }
-    }
-
-    return `${baseClasses} hover:bg-secondary`;
-  };
-
-  const getTextClasses = () => {
-    const baseClasses = "flex-1 truncate";
-
-    if (!value && placeholder) {
-      return `${baseClasses} text-secondary italic`;
-    }
-
-    return baseClasses;
-  };
-
-  const getInputClasses = () => {
-    const baseClasses = `
-      flex-1 bg-primary border-none outline-none p-0 m-0
-      text-primary font-inherit leading-inherit
-      placeholder:text-secondary
-    `;
-
-    if (validationResult.isValid) {
-      return `${baseClasses} text-success`;
-    } else if (validationResult.level === "warning") {
-      return `${baseClasses} text-warning`;
-    } else {
-      return `${baseClasses} text-error`;
-    }
-  };
-
-  // Render validation message
-  const renderValidationMessage = () => {
-    if (!showValidation || validationResult.isValid || !isEditing) return null;
-
-    const messageClasses =
-      validationResult.level === "warning" ? "text-warning" : "text-error";
-
-    return (
-      <div className={`text-xs mt-1 ${messageClasses}`}>
-        {validationResult.message}
-      </div>
-    );
-  };
-
   return (
     <div className="inline-block">
       <div
         ref={containerRef}
-        className={getDisplayClasses()}
+        className={getDisplayClasses(
+          isEditing,
+          validationResult,
+          size,
+          className
+        )}
         onClick={isEditing ? undefined : handleStartEdit}
         role="button"
         tabIndex={disabled ? -1 : 0}
@@ -283,7 +331,7 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
             onChange={handleInputChange}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-            className={getInputClasses()}
+            className={getInputClasses(validationResult)}
             placeholder={placeholder}
             maxLength={maxLength}
             autoFocus={autoFocus}
@@ -294,7 +342,9 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
           />
         ) : (
           <>
-            <span className={getTextClasses()}>{value || placeholder}</span>
+            <span className={getTextClasses(value, placeholder)}>
+              {value || placeholder}
+            </span>
             {icon && (
               <span className="flex-shrink-0 text-muted dark:text-muted">
                 {icon}
@@ -311,11 +361,11 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
         )}
       </div>
 
-      {renderValidationMessage() && (
-        <div id="validation-message" className="sr-only">
-          {validationResult.message}
-        </div>
-      )}
+      <ValidationMessage
+        validationResult={validationResult}
+        showValidation={showValidation}
+        isEditing={isEditing}
+      />
     </div>
   );
 };

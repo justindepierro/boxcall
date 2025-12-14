@@ -397,11 +397,11 @@ export class DatabaseOptimizationService {
         duration,
         success: !result.error,
         cacheHit: false,
-        rowCount: Array.isArray(result.data)
-          ? result.data.length
-          : result.data
-            ? 1
-            : 0,
+        rowCount: (() => {
+          if (Array.isArray(result.data)) return result.data.length;
+          if (result.data) return 1;
+          return 0;
+        })(),
         error: result.error?.message,
         timestamp: new Date(),
       };

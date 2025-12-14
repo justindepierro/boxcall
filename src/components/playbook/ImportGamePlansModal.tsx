@@ -13,6 +13,140 @@ interface ImportGamePlansModalProps {
   onImport: (data: ExportedGamePlan) => Promise<void>;
 }
 
+interface FileUploadSectionProps {
+  selectedFile: File | null;
+  validationError: string | null;
+  parsedData: ExportedGamePlan | null;
+  importing: boolean;
+  fileInputRef: React.RefObject<HTMLInputElement>;
+  onFileSelect: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+/** File upload input with validation display */
+function FileUploadSection({
+  selectedFile,
+  validationError,
+  parsedData,
+  importing,
+  fileInputRef,
+  onFileSelect,
+}: FileUploadSectionProps) {
+  return (
+    <div>
+      <label className="mb-2 block text-sm font-medium text-primary">
+        Select JSON File
+      </label>
+      <div className="flex items-center gap-3">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".json"
+          onChange={onFileSelect}
+          disabled={importing}
+          className="hidden"
+        />
+        <Button
+          onClick={() => fileInputRef.current?.click()}
+          variant="secondary"
+          size="sm"
+          disabled={importing}
+          className="flex-1"
+        >
+          <Icon name="upload" className="mr-2 h-4 w-4" />
+          {selectedFile ? "Change File" : "Choose File"}
+        </Button>
+      </div>
+
+      {selectedFile && !validationError && (
+        <div className="mt-2 flex items-center gap-2 rounded-md bg-success-bg p-3">
+          <Icon name="check-circle" className="h-5 w-5 text-success-600" />
+          <div className="flex-1">
+            <Typography variant="body-sm" className="text-primary">
+              {selectedFile.name}
+            </Typography>
+            {parsedData && (
+              <Typography variant="body-xs" className="text-secondary">
+                {parsedData.plans.length} game plan
+                {parsedData.plans.length !== 1 ? "s" : ""} found
+              </Typography>
+            )}
+          </div>
+        </div>
+      )}
+
+      {validationError && (
+        <div className="mt-2 flex items-center gap-2 rounded-md bg-error-bg p-3">
+          <Icon name="alert-circle" className="h-5 w-5 text-error-600" />
+          <Typography variant="body-sm" className="text-primary">
+            {validationError}
+          </Typography>
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface ImportSummaryProps {
+  parsedData: ExportedGamePlan;
+}
+
+/** Import summary statistics */
+function ImportSummary({ parsedData }: ImportSummaryProps) {
+  const totalSituations = parsedData.plans.reduce(
+    (sum, p) => sum + p.situations.length,
+    0
+  );
+
+  return (
+    <div className="rounded-md border border-border bg-secondary p-4">
+      <Typography variant="body-sm" className="mb-3 font-medium text-primary">
+        Import Summary
+      </Typography>
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-secondary">Game plans to import:</span>
+          <span className="font-medium text-primary">
+            {parsedData.plans.length}
+          </span>
+        </div>
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-secondary">Total situations:</span>
+          <span className="font-medium text-primary">{totalSituations}</span>
+        </div>
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-secondary">Exported:</span>
+          <span className="font-medium text-primary">
+            {new Date(parsedData.exportedAt).toLocaleDateString()}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Import warning message */
+function ImportWarning() {
+  return (
+    <div className="rounded-md bg-warning-bg p-3">
+      <div className="flex gap-2">
+        <Icon
+          name="alert-triangle"
+          className="h-5 w-5 text-warning-600 flex-shrink-0 mt-0.5"
+        />
+        <div>
+          <Typography variant="body-sm" className="text-primary font-medium">
+            Import Note
+          </Typography>
+          <Typography variant="body-xs" className="text-secondary mt-1">
+            Game plans will be imported as new items. Existing plans will not be
+            modified.
+          </Typography>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function ImportGamePlansModal({
   isOpen,
   onClose,
@@ -104,119 +238,20 @@ export function ImportGamePlansModal({
 
         {/* Content */}
         <div className="space-y-6">
-          {/* File Upload */}
-          <div>
-            <label className="mb-2 block text-sm font-medium text-primary">
-              Select JSON File
-            </label>
-            <div className="flex items-center gap-3">
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".json"
-                onChange={handleFileSelect}
-                disabled={importing}
-                className="hidden"
-              />
-              <Button
-                onClick={() => fileInputRef.current?.click()}
-                variant="secondary"
-                size="sm"
-                disabled={importing}
-                className="flex-1"
-              >
-                <Icon name="upload" className="mr-2 h-4 w-4" />
-                {selectedFile ? "Change File" : "Choose File"}
-              </Button>
-            </div>
+          <FileUploadSection
+            selectedFile={selectedFile}
+            validationError={validationError}
+            parsedData={parsedData}
+            importing={importing}
+            fileInputRef={fileInputRef}
+            onFileSelect={handleFileSelect}
+          />
 
-            {selectedFile && !validationError && (
-              <div className="mt-2 flex items-center gap-2 rounded-md bg-success-bg p-3">
-                <Icon
-                  name="check-circle"
-                  className="h-5 w-5 text-success-600"
-                />
-                <div className="flex-1">
-                  <Typography variant="body-sm" className="text-primary">
-                    {selectedFile.name}
-                  </Typography>
-                  {parsedData && (
-                    <Typography variant="body-xs" className="text-secondary">
-                      {parsedData.plans.length} game plan
-                      {parsedData.plans.length !== 1 ? "s" : ""} found
-                    </Typography>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {validationError && (
-              <div className="mt-2 flex items-center gap-2 rounded-md bg-error-bg p-3">
-                <Icon name="alert-circle" className="h-5 w-5 text-error-600" />
-                <Typography variant="body-sm" className="text-primary">
-                  {validationError}
-                </Typography>
-              </div>
-            )}
-          </div>
-
-          {/* Import Details */}
           {parsedData && !validationError && (
-            <div className="rounded-md border border-border bg-secondary p-4">
-              <Typography
-                variant="body-sm"
-                className="mb-3 font-medium text-primary"
-              >
-                Import Summary
-              </Typography>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-secondary">Game plans to import:</span>
-                  <span className="font-medium text-primary">
-                    {parsedData.plans.length}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-secondary">Total situations:</span>
-                  <span className="font-medium text-primary">
-                    {parsedData.plans.reduce(
-                      (sum, p) => sum + p.situations.length,
-                      0
-                    )}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-secondary">Exported:</span>
-                  <span className="font-medium text-primary">
-                    {new Date(parsedData.exportedAt).toLocaleDateString()}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Warning */}
-          {parsedData && !validationError && (
-            <div className="rounded-md bg-warning-bg p-3">
-              <div className="flex gap-2">
-                <Icon
-                  name="alert-triangle"
-                  className="h-5 w-5 text-warning-600 flex-shrink-0 mt-0.5"
-                />
-                <div>
-                  <Typography
-                    variant="body-sm"
-                    className="text-primary font-medium"
-                  >
-                    Import Note
-                  </Typography>
-                  <Typography variant="body-xs" className="text-secondary mt-1">
-                    Game plans will be imported as new items. Existing plans
-                    will not be modified.
-                  </Typography>
-                </div>
-              </div>
-            </div>
+            <>
+              <ImportSummary parsedData={parsedData} />
+              <ImportWarning />
+            </>
           )}
         </div>
 

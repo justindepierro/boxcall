@@ -18,6 +18,69 @@ interface PostToTeamBulletinModalProps {
   onSuccess?: () => void;
 }
 
+/** Modal header with title and close button */
+function ModalHeader({
+  onClose,
+  isSubmitting,
+}: {
+  onClose: () => void;
+  isSubmitting: boolean;
+}) {
+  return (
+    <div className="flex items-center justify-between p-6 border-b border-border">
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-lg bg-brand-primary/10 flex items-center justify-center">
+          <Icon name="message" className="w-5 h-5 text-brand-primary" />
+        </div>
+        <div>
+          <Typography variant="headline-sm" className="font-semibold">
+            Post to Team Bulletin
+          </Typography>
+          <Typography variant="body-sm" color="muted">
+            Share this play with your team
+          </Typography>
+        </div>
+      </div>
+      <button
+        onClick={onClose}
+        disabled={isSubmitting}
+        className="text-secondary hover:text-primary transition-colors p-2 -mr-2"
+        aria-label="Close"
+      >
+        <X className="w-5 h-5" />
+      </button>
+    </div>
+  );
+}
+
+/** Play preview card */
+function PlayPreview({
+  play,
+  playDisplayName,
+}: {
+  play: PlayType;
+  playDisplayName: string;
+}) {
+  return (
+    <div className="bg-subtle rounded-lg p-4 border border-border">
+      <div className="flex items-center gap-3">
+        <div className="w-12 h-12 rounded-lg bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
+          <Icon name="file" className="w-6 h-6 text-brand-primary" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <Typography variant="body-md" className="font-medium truncate">
+            {playDisplayName}
+          </Typography>
+          <Typography variant="body-sm" color="muted">
+            {play.p_type || "Play"}
+            {play.personnel && ` • ${play.personnel}`}
+          </Typography>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export const PostToTeamBulletinModal: React.FC<
   PostToTeamBulletinModalProps
 > = ({ isOpen, onClose, play, teamId, onSuccess }) => {
@@ -126,50 +189,11 @@ export const PostToTeamBulletinModal: React.FC<
   return (
     <Modal isOpen={isOpen} onClose={handleClose} size="md">
       <div className="bg-primary rounded-xl shadow-2xl max-w-2xl w-full">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-border">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-brand-primary/10 flex items-center justify-center">
-              <Icon name="message" className="w-5 h-5 text-brand-primary" />
-            </div>
-            <div>
-              <Typography variant="headline-sm" className="font-semibold">
-                Post to Team Bulletin
-              </Typography>
-              <Typography variant="body-sm" color="muted">
-                Share this play with your team
-              </Typography>
-            </div>
-          </div>
-          <button
-            onClick={handleClose}
-            disabled={isSubmitting}
-            className="text-secondary hover:text-primary transition-colors p-2 -mr-2"
-            aria-label="Close"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+        <ModalHeader onClose={handleClose} isSubmitting={isSubmitting} />
 
         {/* Content */}
         <div className="p-6 space-y-4">
-          {/* Play Preview */}
-          <div className="bg-subtle rounded-lg p-4 border border-border">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-lg bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
-                <Icon name="file" className="w-6 h-6 text-brand-primary" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <Typography variant="body-md" className="font-medium truncate">
-                  {playDisplayName}
-                </Typography>
-                <Typography variant="body-sm" color="muted">
-                  {play.p_type || "Play"}
-                  {play.personnel && ` • ${play.personnel}`}
-                </Typography>
-              </div>
-            </div>
-          </div>
+          <PlayPreview play={play} playDisplayName={playDisplayName} />
 
           {/* Message Input */}
           <div>

@@ -338,22 +338,20 @@ export const usePracticeState = (event: CalendarEvent) => {
           // Continue current block
           currentBlock.duration = (currentBlock.duration || 0) + 1;
         }
-      } else {
+      } else if (currentBlock) {
         // No allocation - finish current block if exists
-        if (currentBlock) {
-          newBlocks.push({
-            id: Date.now().toString() + Math.random(),
-            startTime: "",
-            endTime: "",
-            duration: currentBlock.duration || 0,
-            category: currentBlock.category!,
-            title: `${currentBlock.category?.replace("-", " ").replace(/\b\w/g, (l) => l.toUpperCase())} Time`,
-            location: "",
-            notes: "",
-            assignedCoach: currentBlock.assignedCoach,
-          });
-          currentBlock = null;
-        }
+        newBlocks.push({
+          id: Date.now().toString() + Math.random(),
+          startTime: "",
+          endTime: "",
+          duration: currentBlock.duration || 0,
+          category: currentBlock.category!,
+          title: `${currentBlock.category?.replace("-", " ").replace(/\b\w/g, (l) => l.toUpperCase())} Time`,
+          location: "",
+          notes: "",
+          assignedCoach: currentBlock.assignedCoach,
+        });
+        currentBlock = null;
       }
     }
 

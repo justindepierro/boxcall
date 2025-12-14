@@ -352,9 +352,8 @@ export class GestureDetector {
     // Determine primary direction
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
       return { direction: deltaX > 0 ? "right" : "left", velocity };
-    } else {
-      return { direction: deltaY > 0 ? "down" : "up", velocity };
     }
+    return { direction: deltaY > 0 ? "down" : "up", velocity };
   }
 
   /** Detect pinch gesture */

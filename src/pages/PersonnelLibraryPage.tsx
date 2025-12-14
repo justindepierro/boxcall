@@ -174,37 +174,46 @@ const PersonnelLibraryPageContent: React.FC<
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 py-6">
-        {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <Icon
-              name="loader"
-              size="lg"
-              className="animate-spin text-primary"
-            />
-          </div>
-        ) : filteredPersonnel.length === 0 ? (
-          <div className="text-center py-12">
-            <Icon
-              name="users"
-              size="xl"
-              className="text-secondary mb-4 mx-auto"
-            />
-            <p className="text-secondary text-lg">
-              No personnel packages found
-            </p>
-            <p className="text-sm text-muted mt-2">
-              {searchQuery
-                ? "Try a different search term"
-                : "Create personnel packages to see them here"}
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredPersonnel.map((config) => (
-              <PersonnelCard key={config.id} config={config} />
-            ))}
-          </div>
-        )}
+        {(() => {
+          if (loading) {
+            return (
+              <div className="flex items-center justify-center py-12">
+                <Icon
+                  name="loader"
+                  size="lg"
+                  className="animate-spin text-primary"
+                />
+              </div>
+            );
+          }
+          if (filteredPersonnel.length === 0) {
+            return (
+              <div className="text-center py-12">
+                <Icon
+                  name="users"
+                  size="xl"
+                  className="text-secondary mb-4 mx-auto"
+                />
+                <p className="text-secondary text-lg">
+                  No personnel packages found
+                </p>
+                <p className="text-sm text-muted mt-2">
+                  {(() => {
+                    if (searchQuery) return "Try a different search term";
+                    return "Create personnel packages to see them here";
+                  })()}
+                </p>
+              </div>
+            );
+          }
+          return (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredPersonnel.map((config) => (
+                <PersonnelCard key={config.id} config={config} />
+              ))}
+            </div>
+          );
+        })()}
 
         {/* Stats */}
         {personnel.length > 0 && (

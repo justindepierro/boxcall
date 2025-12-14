@@ -607,38 +607,52 @@ const FormationMapperPage = () => {
                 <Typography variant="caption" className="text-muted">
                   Updated {updatedAt}
                 </Typography>
-                {formationsLoading && suggestions.length === 0 ? (
-                  <Typography variant="caption" className="text-secondary mt-2">
-                    Loading suggestions…
-                  </Typography>
-                ) : suggestions.length > 0 ? (
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {suggestions.map((suggestion) => (
-                      <Button
-                        key={`${play.id}-${suggestion.formation.id}`}
-                        variant="secondary"
-                        size="xs"
-                        disabled={assigning}
-                        onClick={() => handleSuggestionAssign(play, suggestion)}
-                        className="flex items-center gap-2 max-w-xs"
-                        title={suggestion.reasons.join(", ") || undefined}
+                {(() => {
+                  if (formationsLoading && suggestions.length === 0)
+                    return (
+                      <Typography
+                        variant="caption"
+                        className="text-secondary mt-2"
                       >
-                        <Icon
-                          name="sparkles"
-                          className="h-3 w-3 text-success-500"
-                        />
-                        <span className="truncate">
-                          {suggestion.formation.name}
-                        </span>
-                      </Button>
-                    ))}
-                  </div>
-                ) : (
-                  <Typography variant="caption" className="text-secondary mt-2">
-                    No smart suggestions yet — assign manually to train the
-                    mapper.
-                  </Typography>
-                )}
+                        Loading suggestions…
+                      </Typography>
+                    );
+                  if (suggestions.length > 0)
+                    return (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {suggestions.map((suggestion) => (
+                          <Button
+                            key={`${play.id}-${suggestion.formation.id}`}
+                            variant="secondary"
+                            size="xs"
+                            disabled={assigning}
+                            onClick={() =>
+                              handleSuggestionAssign(play, suggestion)
+                            }
+                            className="flex items-center gap-2 max-w-xs"
+                            title={suggestion.reasons.join(", ") || undefined}
+                          >
+                            <Icon
+                              name="sparkles"
+                              className="h-3 w-3 text-success-500"
+                            />
+                            <span className="truncate">
+                              {suggestion.formation.name}
+                            </span>
+                          </Button>
+                        ))}
+                      </div>
+                    );
+                  return (
+                    <Typography
+                      variant="caption"
+                      className="text-secondary mt-2"
+                    >
+                      No smart suggestions yet — assign manually to train the
+                      mapper.
+                    </Typography>
+                  );
+                })()}
               </div>
             </div>
           </div>
@@ -813,39 +827,52 @@ const FormationMapperPage = () => {
             </Card>
           )}
 
-          {loading ? (
-            <Card variant="glass" size="lg">
-              <div className="flex items-center gap-2">
-                <Icon
-                  name="loader"
-                  className="h-5 w-5 animate-spin text-muted"
-                />
-                <Typography variant="body-sm" className="text-secondary">
-                  Loading plays needing formation mapping...
-                </Typography>
+          {(() => {
+            if (loading)
+              return (
+                <Card variant="glass" size="lg">
+                  <div className="flex items-center gap-2">
+                    <Icon
+                      name="loader"
+                      className="h-5 w-5 animate-spin text-muted"
+                    />
+                    <Typography variant="body-sm" className="text-secondary">
+                      Loading plays needing formation mapping...
+                    </Typography>
+                  </div>
+                </Card>
+              );
+            if (plays.length === 0)
+              return (
+                <Card
+                  variant="glass"
+                  size="lg"
+                  className="text-center space-y-3"
+                >
+                  <Icon
+                    name="check-circle"
+                    className="mx-auto h-10 w-10 text-success-500"
+                  />
+                  <Typography variant="headline-sm" className="text-primary">
+                    All synced!
+                  </Typography>
+                  <Typography variant="body-sm" className="text-secondary">
+                    Every play in this playbook is linked to a formation.
+                  </Typography>
+                  <Button
+                    variant="secondary"
+                    onClick={() => navigate("/playbook")}
+                  >
+                    Back to Playbook
+                  </Button>
+                </Card>
+              );
+            return (
+              <div className="space-y-3">
+                <div className="grid gap-3">{plays.map(renderPlayRow)}</div>
               </div>
-            </Card>
-          ) : plays.length === 0 ? (
-            <Card variant="glass" size="lg" className="text-center space-y-3">
-              <Icon
-                name="check-circle"
-                className="mx-auto h-10 w-10 text-success-500"
-              />
-              <Typography variant="headline-sm" className="text-primary">
-                All synced!
-              </Typography>
-              <Typography variant="body-sm" className="text-secondary">
-                Every play in this playbook is linked to a formation.
-              </Typography>
-              <Button variant="secondary" onClick={() => navigate("/playbook")}>
-                Back to Playbook
-              </Button>
-            </Card>
-          ) : (
-            <div className="space-y-3">
-              <div className="grid gap-3">{plays.map(renderPlayRow)}</div>
-            </div>
-          )}
+            );
+          })()}
         </div>
 
         {selectedCount > 0 && (

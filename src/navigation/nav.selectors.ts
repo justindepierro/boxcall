@@ -5,7 +5,7 @@ function isRouteMatch(href: string | undefined, pathname: string): boolean {
   if (pathname === href) return true;
   // treat parent paths as matching prefixes on segment boundaries
   if (href === "/") return pathname === "/";
-  return pathname.startsWith(href.endsWith("/") ? href : href + "/");
+  return pathname.startsWith(href.endsWith("/") ? href : `${href}/`);
 }
 
 export type ActiveState = {

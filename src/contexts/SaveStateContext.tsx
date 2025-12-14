@@ -86,6 +86,77 @@ const SaveStateContext = createContext<SaveStateContextValue | undefined>(
 
 export { SaveStateContext };
 
+// Hook to handle queue persistence to IndexedDB
+function useQueuePersistence(
+  saveQueue: SaveOperation[],
+  hasLoadedPersistedQueue: React.MutableRefObject<boolean>
+) {
+  useEffect(() => {
+    const persistQueue = async () => {
+      try {
+        // Clear existing persisted operations
+        await clearAllOperations();
+
+        // Persist current queue (metadata only, not the operation function)
+        for (const op of saveQueue) {
+          const persistedOp: PersistedSaveOperation = {
+            id: op.id,
+            entityType: op.entityType,
+            entityId: op.entityId,
+            operationData: {}, // We don't have the data, just metadata
+            retries: op.retries,
+            maxRetries: op.maxRetries,
+            timestamp: op.timestamp,
+            description: op.description,
+          };
+          await persistOperation(persistedOp);
+        }
+
+        info(
+          `[SaveQueue] Persisted ${saveQueue.length} operations to IndexedDB`
+        );
+      } catch (error) {
+        logError("[SaveQueue] Failed to persist queue:", error);
+      }
+    };
+
+    if (hasLoadedPersistedQueue.current) {
+      persistQueue();
+    }
+  }, [saveQueue, hasLoadedPersistedQueue]);
+}
+
+// Hook to handle online/offline status
+function useOnlineStatus(
+  setIsOnline: (online: boolean) => void,
+  saveQueueLength: number,
+  retryFailedSaves: () => Promise<void>
+) {
+  useEffect(() => {
+    const handleOnline = () => {
+      info("[SaveQueue] Back online - retrying queued operations");
+      setIsOnline(true);
+      // Automatically retry queued operations when coming back online
+      if (saveQueueLength > 0) {
+        retryFailedSaves();
+      }
+    };
+
+    const handleOffline = () => {
+      info("[SaveQueue] Gone offline");
+      setIsOnline(false);
+    };
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, [setIsOnline, saveQueueLength, retryFailedSaves]);
+}
+
 export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -303,64 +374,10 @@ export const SaveStateProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [saveQueue]);
 
   // Persist queue to IndexedDB whenever it changes
-  useEffect(() => {
-    const persistQueue = async () => {
-      try {
-        // Clear existing persisted operations
-        await clearAllOperations();
-
-        // Persist current queue (metadata only, not the operation function)
-        for (const op of saveQueue) {
-          const persistedOp: PersistedSaveOperation = {
-            id: op.id,
-            entityType: op.entityType,
-            entityId: op.entityId,
-            operationData: {}, // We don't have the data, just metadata
-            retries: op.retries,
-            maxRetries: op.maxRetries,
-            timestamp: op.timestamp,
-            description: op.description,
-          };
-          await persistOperation(persistedOp);
-        }
-
-        info(
-          `[SaveQueue] Persisted ${saveQueue.length} operations to IndexedDB`
-        );
-      } catch (error) {
-        logError("[SaveQueue] Failed to persist queue:", error);
-      }
-    };
-
-    if (hasLoadedPersistedQueue.current) {
-      persistQueue();
-    }
-  }, [saveQueue]);
+  useQueuePersistence(saveQueue, hasLoadedPersistedQueue);
 
   // Track online/offline status and auto-retry when back online
-  useEffect(() => {
-    const handleOnline = () => {
-      info("[SaveQueue] Back online - retrying queued operations");
-      setIsOnline(true);
-      // Automatically retry queued operations when coming back online
-      if (saveQueue.length > 0) {
-        retryFailedSaves();
-      }
-    };
-
-    const handleOffline = () => {
-      info("[SaveQueue] Gone offline");
-      setIsOnline(false);
-    };
-
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
-
-    return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
-    };
-  }, [saveQueue.length, retryFailedSaves]);
+  useOnlineStatus(setIsOnline, saveQueue.length, retryFailedSaves);
 
   // Conflict resolution methods (v3.3)
   const showConflict = useCallback(

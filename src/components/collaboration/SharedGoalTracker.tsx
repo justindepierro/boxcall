@@ -37,6 +37,129 @@ interface Milestone {
   targetDate: string;
 }
 
+/**
+ * Get progress color based on percentage
+ */
+const getProgressColor = (progress: number) => {
+  if (progress >= 90) return "text-success";
+  if (progress >= 70) return "text-primary";
+  if (progress >= 40) return "text-warning";
+  return "text-secondary";
+};
+
+/**
+ * Individual goal card component
+ */
+interface GoalCardProps {
+  goal: Goal;
+  onSelect: (goal: Goal) => void;
+}
+
+const GoalCard: React.FC<GoalCardProps> = ({ goal, onSelect }) => (
+  <Card
+    variant="glass"
+    className="p-3 hover:shadow-sm transition-shadow cursor-pointer"
+    onClick={() => onSelect(goal)}
+  >
+    <div className="flex items-start justify-between">
+      <div className="flex-1">
+        <div className="flex items-center gap-2 mb-1">
+          <Typography variant="body-sm" className="font-medium">
+            {goal.title}
+          </Typography>
+          <span
+            className={(() => {
+              const base = "px-2 py-1 rounded-lg text-xs ";
+              if (goal.type === "team")
+                return `${base}bg-primary/10 text-primary`;
+              if (goal.type === "individual")
+                return `${base}bg-secondary/10 text-secondary`;
+              return `${base}bg-warning/10 text-warning`;
+            })()}
+          >
+            {goal.type}
+          </span>
+        </div>
+        <Typography variant="caption" color="muted" className="mb-2">
+          {goal.description}
+        </Typography>
+
+        {/* Progress Bar */}
+        <div className="flex items-center gap-2">
+          <div className="flex-1 bg-border-secondary rounded-full h-2">
+            <div
+              className="bg-primary rounded-full h-2 transition-all"
+              style={{ width: `${goal.progress}%` }}
+            />
+          </div>
+          <Typography
+            variant="caption"
+            className={getProgressColor(goal.progress)}
+          >
+            {goal.progress}%
+          </Typography>
+        </div>
+
+        {/* Target Date */}
+        <Typography variant="caption" color="muted" className="mt-1">
+          Target: {new Date(goal.targetDate).toLocaleDateString()}
+        </Typography>
+      </div>
+
+      <div className="flex items-center gap-1">
+        {goal.status === "completed" && (
+          <Icon name="check-circle" size="sm" className="text-success" />
+        )}
+        <Icon name="chevron-right" size="xs" className="text-muted" />
+      </div>
+    </div>
+  </Card>
+);
+
+/**
+ * Create goal modal component
+ */
+interface CreateGoalModalProps {
+  onClose: () => void;
+  onCreate: (goalData: Partial<Goal>) => void;
+}
+
+const CreateGoalModal: React.FC<CreateGoalModalProps> = ({
+  onClose,
+  onCreate,
+}) => (
+  <div className="fixed inset-0 bg-text-primary/50 flex items-center justify-center z-50">
+    <Card variant="glass" className="p-6 max-w-md w-full mx-4">
+      <Typography variant="headline-sm" className="mb-4">
+        Create New Goal
+      </Typography>
+      <div className="space-y-4">
+        <Input placeholder="Goal title..." />
+        <TextArea placeholder="Goal description..." />
+        <div className="flex gap-2">
+          <Button
+            variant="primary"
+            onClick={() =>
+              onCreate({
+                title: "Sample Goal",
+                description: "This is a sample goal",
+                type: "individual",
+                targetDate: "2025-12-31",
+                category: "performance",
+              })
+            }
+          >
+            Create Goal
+          </Button>
+          <Button variant="ghost" onClick={onClose}>
+            Cancel
+          </Button>
+        </div>
+      </div>
+    </Card>
+  </div>
+);
+
 export interface SharedGoalTrackerProps {
   /**
    * Widget ID for collaboration
@@ -163,16 +286,6 @@ export const SharedGoalTracker: React.FC<SharedGoalTrackerProps> = ({
     return true;
   });
 
-  /**
-   * Get progress color
-   */
-  const getProgressColor = (progress: number) => {
-    if (progress >= 90) return "text-success";
-    if (progress >= 70) return "text-primary";
-    if (progress >= 40) return "text-warning";
-    return "text-secondary";
-  };
-
   return (
     <CollaborativeWidget
       widgetId={widgetId}
@@ -250,80 +363,11 @@ export const SharedGoalTracker: React.FC<SharedGoalTrackerProps> = ({
               </div>
             ) : (
               filteredGoals.map((goal) => (
-                <Card
+                <GoalCard
                   key={goal.id}
-                  variant="glass"
-                  className="p-3 hover:shadow-sm transition-shadow cursor-pointer"
-                  onClick={() => setSelectedGoal(goal)}
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Typography variant="body-sm" className="font-medium">
-                          {goal.title}
-                        </Typography>
-                        <span
-                          className={`px-2 py-1 rounded-lg text-xs ${
-                            goal.type === "team"
-                              ? "bg-primary/10 text-primary"
-                              : goal.type === "individual"
-                                ? "bg-secondary/10 text-secondary"
-                                : "bg-warning/10 text-warning"
-                          }`}
-                        >
-                          {goal.type}
-                        </span>
-                      </div>
-                      <Typography
-                        variant="caption"
-                        color="muted"
-                        className="mb-2"
-                      >
-                        {goal.description}
-                      </Typography>
-
-                      {/* Progress Bar */}
-                      <div className="flex items-center gap-2">
-                        <div className="flex-1 bg-border-secondary rounded-full h-2">
-                          <div
-                            className="bg-primary rounded-full h-2 transition-all"
-                            style={{ width: `${goal.progress}%` }}
-                          />
-                        </div>
-                        <Typography
-                          variant="caption"
-                          className={getProgressColor(goal.progress)}
-                        >
-                          {goal.progress}%
-                        </Typography>
-                      </div>
-
-                      {/* Target Date */}
-                      <Typography
-                        variant="caption"
-                        color="muted"
-                        className="mt-1"
-                      >
-                        Target: {new Date(goal.targetDate).toLocaleDateString()}
-                      </Typography>
-                    </div>
-
-                    <div className="flex items-center gap-1">
-                      {goal.status === "completed" && (
-                        <Icon
-                          name="check-circle"
-                          size="sm"
-                          className="text-success"
-                        />
-                      )}
-                      <Icon
-                        name="chevron-right"
-                        size="xs"
-                        className="text-muted"
-                      />
-                    </div>
-                  </div>
-                </Card>
+                  goal={goal}
+                  onSelect={setSelectedGoal}
+                />
               ))
             )}
           </div>
@@ -353,41 +397,12 @@ export const SharedGoalTracker: React.FC<SharedGoalTrackerProps> = ({
             </div>
           )}
 
-          {/* Create Goal Modal Placeholder */}
+          {/* Create Goal Modal */}
           {isCreatingGoal && (
-            <div className="fixed inset-0 bg-text-primary/50 flex items-center justify-center z-50">
-              <Card variant="glass" className="p-6 max-w-md w-full mx-4">
-                <Typography variant="headline-sm" className="mb-4">
-                  Create New Goal
-                </Typography>
-                <div className="space-y-4">
-                  <Input placeholder="Goal title..." />
-                  <TextArea placeholder="Goal description..." />
-                  <div className="flex gap-2">
-                    <Button
-                      variant="primary"
-                      onClick={() =>
-                        handleCreateGoal({
-                          title: "Sample Goal",
-                          description: "This is a sample goal",
-                          type: "individual",
-                          targetDate: "2025-12-31",
-                          category: "performance",
-                        })
-                      }
-                    >
-                      Create Goal
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      onClick={() => setIsCreatingGoal(false)}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            </div>
+            <CreateGoalModal
+              onClose={() => setIsCreatingGoal(false)}
+              onCreate={handleCreateGoal}
+            />
           )}
         </Card>
       )}

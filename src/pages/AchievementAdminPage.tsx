@@ -249,20 +249,12 @@ export const AchievementAdminPage: React.FC = () => {
   };
 
   const getRarityColor = (rarity: string): BadgeVariant => {
-    switch (rarity) {
-      case "common":
-        return "neutral";
-      case "uncommon":
-        return "info";
-      case "rare":
-        return "success";
-      case "epic":
-        return "warning";
-      case "legendary":
-        return "accent";
-      default:
-        return "neutral";
-    }
+    if (rarity === "common") return "neutral";
+    if (rarity === "uncommon") return "info";
+    if (rarity === "rare") return "success";
+    if (rarity === "epic") return "warning";
+    if (rarity === "legendary") return "accent";
+    return "neutral";
   };
 
   if (loading) {
@@ -488,7 +480,11 @@ export const AchievementAdminPage: React.FC = () => {
               onClick={editingAchievement ? handleUpdate : handleCreate}
               disabled={saving}
             >
-              {saving ? "Saving..." : editingAchievement ? "Update" : "Create"}
+              {(() => {
+                if (saving) return "Saving...";
+                if (editingAchievement) return "Update";
+                return "Create";
+              })()}
             </Button>
           </div>
         </div>

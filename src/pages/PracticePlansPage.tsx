@@ -528,216 +528,228 @@ const PracticePlansPage = () => {
           </div>
         )}
 
-        {isLoading ? (
-          <div className="space-y-4 py-10" aria-busy="true">
-            <div className="h-32 rounded-xl bg-secondary animate-pulse" />
-            <div className="h-32 rounded-xl bg-secondary animate-pulse" />
-            <div className="h-32 rounded-xl bg-secondary animate-pulse" />
-          </div>
-        ) : activeScripts.length === 0 &&
-          archivedScripts.length === 0 &&
-          !searchQuery &&
-          activeFilters.length === 0 ? (
-          // Empty State
-          <div className="py-16 text-center">
-            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-muted">
-              <Icon name="file" className="h-12 w-12 text-muted" />
-            </div>
-            <Typography variant="headline-md" className="mb-2 text-primary">
-              No Practice Scripts Yet
-            </Typography>
-            <Typography
-              variant="body-lg"
-              className="mx-auto mb-8 max-w-md text-secondary"
-            >
-              Create your first practice script to organize plays for your
-              team's training sessions.
-            </Typography>
-            <div className="flex flex-col gap-4 justify-center sm:flex-row">
-              <Button onClick={handleCreateScript} variant="primary" size="lg">
-                <Icon name="plus" className="mr-2 h-5 w-5" />
-                Create New Script
-              </Button>
-              <Button
-                onClick={() => navigate("/playbook")}
-                variant="secondary"
-                size="lg"
-              >
-                <Icon name="book" className="mr-2 h-5 w-5" />
-                Browse Playbook
-              </Button>
-            </div>
-          </div>
-        ) : (
-          // Scripts List
-          <div className="space-y-6" id="practice-scripts-section">
-            {/* Header with Create Button */}
-            <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <Typography
-                  variant="headline-md"
-                  className="text-primary font-semibold"
-                >
-                  Your Practice Scripts
+        {(() => {
+          if (isLoading) {
+            return (
+              <div className="space-y-4 py-10" aria-busy="true">
+                <div className="h-32 rounded-xl bg-secondary animate-pulse" />
+                <div className="h-32 rounded-xl bg-secondary animate-pulse" />
+                <div className="h-32 rounded-xl bg-secondary animate-pulse" />
+              </div>
+            );
+          }
+          if (
+            activeScripts.length === 0 &&
+            archivedScripts.length === 0 &&
+            !searchQuery &&
+            activeFilters.length === 0
+          ) {
+            return (
+              <div className="py-16 text-center">
+                <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-muted">
+                  <Icon name="file" className="h-12 w-12 text-muted" />
+                </div>
+                <Typography variant="headline-md" className="mb-2 text-primary">
+                  No Practice Scripts Yet
                 </Typography>
-                <div className="mt-1 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-wide text-secondary">
-                  <span className="inline-flex items-center rounded-full bg-secondary px-2.5 py-1">
-                    {activeScripts.length} Active
-                  </span>
-                  {archivedScripts.length > 0 && (
-                    <span className="inline-flex items-center rounded-full bg-secondary px-2.5 py-1">
-                      {archivedScripts.length} Archived
-                    </span>
-                  )}
+                <Typography
+                  variant="body-lg"
+                  className="mx-auto mb-8 max-w-md text-secondary"
+                >
+                  Create your first practice script to organize plays for your
+                  team's training sessions.
+                </Typography>
+                <div className="flex flex-col gap-4 justify-center sm:flex-row">
+                  <Button
+                    onClick={handleCreateScript}
+                    variant="primary"
+                    size="lg"
+                  >
+                    <Icon name="plus" className="mr-2 h-5 w-5" />
+                    Create New Script
+                  </Button>
+                  <Button
+                    onClick={() => navigate("/playbook")}
+                    variant="secondary"
+                    size="lg"
+                  >
+                    <Icon name="book" className="mr-2 h-5 w-5" />
+                    Browse Playbook
+                  </Button>
                 </div>
               </div>
-              <Button
-                onClick={handleCreateScript}
-                variant="primary"
-                className="w-full sm:w-auto"
-              >
-                <Icon name="plus" className="h-4 w-4 mr-2" />
-                New Script
-              </Button>
-            </div>
-
-            {/* Scripts Grid */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {activeScripts.map((script) => (
-                <div
-                  key={script.id}
-                  className="bg-primary rounded-2xl border border-border p-5 shadow-orange-md hover:shadow-orange-lg hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 hover:border-hover cursor-pointer"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0 space-y-1.5">
-                      <Typography
-                        variant="headline-sm"
-                        className="text-primary font-semibold leading-tight line-clamp-2"
-                      >
-                        {script.title || script.name || "Untitled Script"}
-                      </Typography>
-                      {script.description && (
-                        <Typography
-                          variant="body-sm"
-                          className="text-secondary line-clamp-2"
-                        >
-                          {script.description}
-                        </Typography>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Stats */}
-                  <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-secondary">
-                    <span className="inline-flex items-center gap-2">
-                      <Icon name="play" className="h-4 w-4" />
-                      {script.plays?.length || 0} plays
+            );
+          }
+          return (
+            <div className="space-y-6" id="practice-scripts-section">
+              {/* Header with Create Button */}
+              <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <Typography
+                    variant="headline-md"
+                    className="text-primary font-semibold"
+                  >
+                    Your Practice Scripts
+                  </Typography>
+                  <div className="mt-1 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-wide text-secondary">
+                    <span className="inline-flex items-center rounded-full bg-secondary px-2.5 py-1">
+                      {activeScripts.length} Active
                     </span>
-                    <span className="inline-flex items-center gap-2">
-                      <Icon name="clock" className="h-4 w-4" />
-                      {script.duration || 120} min
-                    </span>
-                  </div>
-
-                  {/* Tags */}
-                  {script.tags && script.tags.length > 0 && (
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {script.tags.slice(0, 3).map((tag, idx) => (
-                        <span
-                          key={idx}
-                          className="px-2 py-1 text-xs rounded-full bg-gradient-to-r from-orange-50 to-orange-100 text-orange-900 border border-orange-200"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                      {script.tags.length > 3 && (
-                        <span className="px-2 py-1 text-xs rounded bg-secondary text-muted">
-                          +{script.tags.length - 3} more
-                        </span>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Actions */}
-                  <div className="flex items-center justify-between pt-4 border-t border-border">
-                    <Typography variant="body-sm" className="text-muted">
-                      {new Date(script.updatedAt).toLocaleDateString()}
-                    </Typography>
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={() => handleEditScript(script)}
-                        className="p-2 text-muted hover:text-primary hover:bg-secondary rounded transition-colors"
-                        title="Edit script"
-                      >
-                        <Icon name="edit" className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDuplicateScript(script)}
-                        className="p-2 text-muted hover:text-primary hover:bg-secondary rounded transition-colors"
-                        title="Duplicate script"
-                      >
-                        <Icon name="copy" className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => handleArchiveScript(script)}
-                        className="p-2 text-muted hover:text-primary hover:bg-secondary rounded transition-colors"
-                        title="Archive script"
-                      >
-                        <Icon name="folder" className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteScript(script.id)}
-                        className="p-2 text-muted hover:text-error-600 hover:bg-error-50 rounded transition-colors"
-                        title="Delete script"
-                      >
-                        <Icon name="delete" className="h-4 w-4" />
-                      </button>
-                    </div>
+                    {archivedScripts.length > 0 && (
+                      <span className="inline-flex items-center rounded-full bg-secondary px-2.5 py-1">
+                        {archivedScripts.length} Archived
+                      </span>
+                    )}
                   </div>
                 </div>
-              ))}
-            </div>
-
-            {/* Archived Scripts Section */}
-            {archivedScripts.length > 0 && (
-              <div className="mt-12">
-                <Typography
-                  variant="headline-sm"
-                  className="text-secondary mb-4"
+                <Button
+                  onClick={handleCreateScript}
+                  variant="primary"
+                  className="w-full sm:w-auto"
                 >
-                  Archived Scripts ({archivedScripts.length})
-                </Typography>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {archivedScripts.map((script) => (
-                    <div
-                      key={script.id}
-                      className="bg-muted/50 rounded-lg border border-border p-4 opacity-60"
-                    >
-                      <div className="flex items-start justify-between mb-2">
+                  <Icon name="plus" className="h-4 w-4 mr-2" />
+                  New Script
+                </Button>
+              </div>
+
+              {/* Scripts Grid */}
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {activeScripts.map((script) => (
+                  <div
+                    key={script.id}
+                    className="bg-primary rounded-2xl border border-border p-5 shadow-orange-md hover:shadow-orange-lg hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 hover:border-hover cursor-pointer"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0 space-y-1.5">
                         <Typography
-                          variant="body-md"
-                          className="text-secondary truncate flex-1"
+                          variant="headline-sm"
+                          className="text-primary font-semibold leading-tight line-clamp-2"
                         >
                           {script.title || script.name || "Untitled Script"}
                         </Typography>
+                        {script.description && (
+                          <Typography
+                            variant="body-sm"
+                            className="text-secondary line-clamp-2"
+                          >
+                            {script.description}
+                          </Typography>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Stats */}
+                    <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-secondary">
+                      <span className="inline-flex items-center gap-2">
+                        <Icon name="play" className="h-4 w-4" />
+                        {script.plays?.length || 0} plays
+                      </span>
+                      <span className="inline-flex items-center gap-2">
+                        <Icon name="clock" className="h-4 w-4" />
+                        {script.duration || 120} min
+                      </span>
+                    </div>
+
+                    {/* Tags */}
+                    {script.tags && script.tags.length > 0 && (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {script.tags.slice(0, 3).map((tag, idx) => (
+                          <span
+                            key={idx}
+                            className="px-2 py-1 text-xs rounded-full bg-gradient-to-r from-orange-50 to-orange-100 text-orange-900 border border-orange-200"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                        {script.tags.length > 3 && (
+                          <span className="px-2 py-1 text-xs rounded bg-secondary text-muted">
+                            +{script.tags.length - 3} more
+                          </span>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Actions */}
+                    <div className="flex items-center justify-between pt-4 border-t border-border">
+                      <Typography variant="body-sm" className="text-muted">
+                        {new Date(script.updatedAt).toLocaleDateString()}
+                      </Typography>
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => handleEditScript(script)}
+                          className="p-2 text-muted hover:text-primary hover:bg-secondary rounded transition-colors"
+                          title="Edit script"
+                        >
+                          <Icon name="edit" className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDuplicateScript(script)}
+                          className="p-2 text-muted hover:text-primary hover:bg-secondary rounded transition-colors"
+                          title="Duplicate script"
+                        >
+                          <Icon name="copy" className="h-4 w-4" />
+                        </button>
                         <button
                           onClick={() => handleArchiveScript(script)}
-                          className="p-1 text-muted hover:text-primary rounded transition-colors"
-                          title="Restore script"
+                          className="p-2 text-muted hover:text-primary hover:bg-secondary rounded transition-colors"
+                          title="Archive script"
                         >
-                          <Icon name="inbox" className="h-4 w-4" />
+                          <Icon name="folder" className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteScript(script.id)}
+                          className="p-2 text-muted hover:text-error-600 hover:bg-error-50 rounded transition-colors"
+                          title="Delete script"
+                        >
+                          <Icon name="delete" className="h-4 w-4" />
                         </button>
                       </div>
-                      <Typography variant="body-sm" className="text-muted">
-                        {script.plays?.length || 0} plays • Archived
-                      </Typography>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
-            )}
-          </div>
-        )}
+
+              {/* Archived Scripts Section */}
+              {archivedScripts.length > 0 && (
+                <div className="mt-12">
+                  <Typography
+                    variant="headline-sm"
+                    className="text-secondary mb-4"
+                  >
+                    Archived Scripts ({archivedScripts.length})
+                  </Typography>
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {archivedScripts.map((script) => (
+                      <div
+                        key={script.id}
+                        className="bg-muted/50 rounded-lg border border-border p-4 opacity-60"
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <Typography
+                            variant="body-md"
+                            className="text-secondary truncate flex-1"
+                          >
+                            {script.title || script.name || "Untitled Script"}
+                          </Typography>
+                          <button
+                            onClick={() => handleArchiveScript(script)}
+                            className="p-1 text-muted hover:text-primary rounded transition-colors"
+                            title="Restore script"
+                          >
+                            <Icon name="inbox" className="h-4 w-4" />
+                          </button>
+                        </div>
+                        <Typography variant="body-sm" className="text-muted">
+                          {script.plays?.length || 0} plays • Archived
+                        </Typography>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* Practice Script Modal */}
         {showModal && (

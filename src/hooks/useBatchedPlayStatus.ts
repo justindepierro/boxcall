@@ -19,7 +19,7 @@ const CACHE_TTL = 30000; // 30 seconds
 
 // Pending batch requests
 let batchTimer: NodeJS.Timeout | null = null;
-let pendingPlayIds = new Set<string>();
+const pendingPlayIds = new Set<string>();
 const BATCH_DELAY = 100; // 100ms debounce
 
 /**

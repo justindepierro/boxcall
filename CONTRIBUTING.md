@@ -87,25 +87,53 @@ Key principles:
 - **Active docs** in main folders
 - **Historical docs** in archive/
 
+## Code Quality Standards
+
+BoxCall follows strict code quality standards for consistency and maintainability:
+
+- **Code Style Guide**: See [CODE_STYLE_GUIDE.md](./CODE_STYLE_GUIDE.md)
+- **Quality Checklist**: Use [CODE_QUALITY_CHECKLIST.md](./CODE_QUALITY_CHECKLIST.md) before commits
+- **Design System**: All styling must use design tokens (enforced by ESLint)
+
+### Quick Quality Checks
+
+```bash
+npm run validate           # Type-check + lint + test
+npm run lint:fix-all       # Auto-fix linting + formatting
+npm run check:consistency  # Full consistency check
+```
+
+### Code Standards Enforced
+
+- ✅ **TypeScript**: Strict mode, no excessive `any`
+- ✅ **Modern JS**: `const`/`let` only, template literals, arrow functions
+- ✅ **Design tokens**: No raw colors, spacing, or typography
+- ✅ **Function limits**: Max 200 lines, complexity <20
+- ✅ **Formatting**: Prettier with consistent rules
+
 ## PR Checklist
 
-Before requesting review run:
+Before requesting review:
 
-```
-npm run validate:full
-```
+**Automated checks:**
 
-Ensure:
+- [ ] `npm run type-check` - No TypeScript errors
+- [ ] `npm run lint` - ESLint passes (<600 warnings)
+- [ ] `npm run test` - All tests pass
+- [ ] `npm run format:check` - Code properly formatted
 
-- Type check passes
-- Lint passes (no new warnings ideally)
-- Tests pass (add tests for new logic)
-- Style & contrast gates pass
-- Duplicate key readiness & health scripts pass
-- Docs validator passes
-- No unexpected bundle size regressions (`bundlesize`)
+**Manual checks:**
 
-Include in PR description:
+- [ ] No `console.log()` in production code
+- [ ] No `@ts-ignore` without justification
+- [ ] Design tokens used (no raw colors/spacing)
+- [ ] Functions under 200 lines
+- [ ] Error handling with user-friendly messages
+- [ ] Documentation updated if needed
+
+**Quick command:** `npm run validate`
+
+**PR Description should include:**
 
 - Purpose & scope (concise)
 - Any migration steps (and verification)

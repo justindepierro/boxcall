@@ -65,13 +65,12 @@ export const TeamMemberInviteModal: React.FC<TeamMemberInviteModalProps> = ({
         { value: "coordinator", label: "Coordinator" },
         { value: "manager", label: "Manager" },
       ];
-    } else {
-      return [
-        { value: "player", label: "Player" },
-        { value: "family", label: "Family Member" },
-        { value: "alumni", label: "Alumni" },
-      ];
     }
+    return [
+      { value: "player", label: "Player" },
+      { value: "family", label: "Family Member" },
+      { value: "alumni", label: "Alumni" },
+    ];
   };
 
   if (!isOpen) return null;

@@ -11,6 +11,110 @@ interface SwipeActionsProps {
   onArchive?: () => void;
 }
 
+// Swipe configuration constants
+const SWIPE_CONFIG = {
+  THRESHOLD: 50, // Easier to trigger
+  MAX_SWIPE: 200, // 3 actions × ~64px + padding
+  RUBBER_BAND_FACTOR: 0.3, // Resistance at edges
+};
+
+// Action button configuration
+interface ActionButtonConfig {
+  action: "edit" | "duplicate" | "delete" | "archive";
+  label: string;
+  icon: string;
+  bgColor: string;
+  activeColor: string;
+  ariaLabel: string;
+}
+
+const ACTION_BUTTONS: Record<string, ActionButtonConfig> = {
+  edit: {
+    action: "edit",
+    label: "Edit",
+    icon: "edit",
+    bgColor: "bg-brand-jade",
+    activeColor: "active:bg-brand-jade/80",
+    ariaLabel: "Edit play",
+  },
+  duplicate: {
+    action: "duplicate",
+    label: "Copy",
+    icon: "copy",
+    bgColor: "bg-info-500",
+    activeColor: "active:bg-info-600",
+    ariaLabel: "Duplicate play",
+  },
+  delete: {
+    action: "delete",
+    label: "Delete",
+    icon: "delete",
+    bgColor: "bg-error-500",
+    activeColor: "active:bg-error-600",
+    ariaLabel: "Delete play",
+  },
+  archive: {
+    action: "archive",
+    label: "Archive",
+    icon: "folder",
+    bgColor: "bg-neutral-500",
+    activeColor: "active:bg-neutral-600",
+    ariaLabel: "Archive play",
+  },
+};
+
+// Action button component
+const ActionButton: React.FC<{
+  config: ActionButtonConfig;
+  onClick: () => void;
+}> = ({ config, onClick }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className={`
+      flex flex-col items-center justify-center
+      w-16 h-full
+      ${config.bgColor}
+      text-white
+      ${config.activeColor}
+      transition-colors duration-100
+    `}
+    aria-label={config.ariaLabel}
+  >
+    <Icon name={config.icon as any} size="sm" className="mb-0.5" />
+    <span className="text-xs font-medium">{config.label}</span>
+  </button>
+);
+
+// Hook to handle click outside to close
+function useClickOutside(
+  isOpen: boolean,
+  containerRef: React.RefObject<HTMLElement>,
+  onClose: () => void
+) {
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (
+        isOpen &&
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [isOpen, containerRef, onClose]);
+}
+
 /**
  * Swipeable action drawer for play cards - Improved UX
  *
@@ -48,9 +152,7 @@ export const SwipeActions: React.FC<SwipeActionsProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const hasCrossedThreshold = useRef(false);
 
-  const SWIPE_THRESHOLD = 50; // Easier to trigger
-  const MAX_SWIPE = 200; // 3 actions × ~64px + padding
-  const RUBBER_BAND_FACTOR = 0.3; // Resistance at edges
+  const { THRESHOLD, MAX_SWIPE, RUBBER_BAND_FACTOR } = SWIPE_CONFIG;
 
   // Reset swipe position
   const reset = useCallback(() => {
@@ -77,7 +179,7 @@ export const SwipeActions: React.FC<SwipeActionsProps> = ({
       const diff = startX.current - currentX.current;
 
       // Haptic feedback when crossing threshold
-      if (!hasCrossedThreshold.current && diff >= SWIPE_THRESHOLD) {
+      if (!hasCrossedThreshold.current && diff >= THRESHOLD) {
         hasCrossedThreshold.current = true;
         triggerHapticFeedback("light");
       }
@@ -99,7 +201,7 @@ export const SwipeActions: React.FC<SwipeActionsProps> = ({
         setSwipeX(-(MAX_SWIPE - closeAmount));
       }
     },
-    [isDragging, isOpen, MAX_SWIPE, SWIPE_THRESHOLD]
+    [isDragging, isOpen, MAX_SWIPE, THRESHOLD, RUBBER_BAND_FACTOR]
   );
 
   // Handle touch end
@@ -107,7 +209,7 @@ export const SwipeActions: React.FC<SwipeActionsProps> = ({
     setIsDragging(false);
     const diff = startX.current - currentX.current;
 
-    if (diff >= SWIPE_THRESHOLD) {
+    if (diff >= THRESHOLD) {
       // Snap to open position with haptic
       setSwipeX(-MAX_SWIPE);
       setIsOpen(true);
@@ -115,7 +217,7 @@ export const SwipeActions: React.FC<SwipeActionsProps> = ({
       // Snap back to closed
       reset();
     }
-  }, [SWIPE_THRESHOLD, MAX_SWIPE, reset]);
+  }, [THRESHOLD, MAX_SWIPE, reset]);
 
   // Handle mouse down (for desktop testing)
   const handleMouseDown = useCallback(
@@ -129,7 +231,7 @@ export const SwipeActions: React.FC<SwipeActionsProps> = ({
         currentX.current = moveEvent.clientX;
         const diff = startX.current - currentX.current;
 
-        if (!hasCrossedThreshold.current && diff >= SWIPE_THRESHOLD) {
+        if (!hasCrossedThreshold.current && diff >= THRESHOLD) {
           hasCrossedThreshold.current = true;
         }
 
@@ -152,7 +254,7 @@ export const SwipeActions: React.FC<SwipeActionsProps> = ({
         setIsDragging(false);
         const diff = startX.current - currentX.current;
 
-        if (diff >= SWIPE_THRESHOLD) {
+        if (diff >= THRESHOLD) {
           setSwipeX(-MAX_SWIPE);
           setIsOpen(true);
         } else {
@@ -166,31 +268,11 @@ export const SwipeActions: React.FC<SwipeActionsProps> = ({
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
     },
-    [isOpen, MAX_SWIPE, SWIPE_THRESHOLD, reset, RUBBER_BAND_FACTOR]
+    [isOpen, MAX_SWIPE, THRESHOLD, reset, RUBBER_BAND_FACTOR]
   );
 
   // Close on click outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      if (
-        isOpen &&
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        reset();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("touchstart", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("touchstart", handleClickOutside);
-    };
-  }, [isOpen, reset]);
+  useClickOutside(isOpen, containerRef, reset);
 
   // Handle action clicks
   const handleAction = useCallback(
@@ -227,84 +309,29 @@ export const SwipeActions: React.FC<SwipeActionsProps> = ({
     >
       {/* Action buttons (hidden behind card) - Improved design */}
       <div className="absolute right-0 top-0 h-full flex items-stretch">
-        {/* Edit Action */}
         {onEdit && (
-          <button
-            type="button"
+          <ActionButton
+            config={ACTION_BUTTONS.edit}
             onClick={() => handleAction("edit")}
-            className="
-              flex flex-col items-center justify-center
-              w-16 h-full
-              bg-brand-jade
-              text-white
-              active:bg-brand-jade/80
-              transition-colors duration-100
-            "
-            aria-label="Edit play"
-          >
-            <Icon name="edit" size="sm" className="mb-0.5" />
-            <span className="text-xs font-medium">Edit</span>
-          </button>
+          />
         )}
-
-        {/* Duplicate Action */}
         {onDuplicate && (
-          <button
-            type="button"
+          <ActionButton
+            config={ACTION_BUTTONS.duplicate}
             onClick={() => handleAction("duplicate")}
-            className="
-              flex flex-col items-center justify-center
-              w-16 h-full
-              bg-info-500
-              text-white
-              active:bg-info-600
-              transition-colors duration-100
-            "
-            aria-label="Duplicate play"
-          >
-            <Icon name="copy" size="sm" className="mb-0.5" />
-            <span className="text-xs font-medium">Copy</span>
-          </button>
+          />
         )}
-
-        {/* Delete Action */}
         {onDelete && (
-          <button
-            type="button"
+          <ActionButton
+            config={ACTION_BUTTONS.delete}
             onClick={() => handleAction("delete")}
-            className="
-              flex flex-col items-center justify-center
-              w-16 h-full
-              bg-error-500
-              text-white
-              active:bg-error-600
-              transition-colors duration-100
-            "
-            aria-label="Delete play"
-          >
-            <Icon name="delete" size="sm" className="mb-0.5" />
-            <span className="text-xs font-medium">Delete</span>
-          </button>
+          />
         )}
-
-        {/* Archive Action (optional) */}
         {onArchive && (
-          <button
-            type="button"
+          <ActionButton
+            config={ACTION_BUTTONS.archive}
             onClick={() => handleAction("archive")}
-            className="
-              flex flex-col items-center justify-center
-              w-16 h-full
-              bg-neutral-500
-              text-white
-              active:bg-neutral-600
-              transition-colors duration-100
-            "
-            aria-label="Archive play"
-          >
-            <Icon name="folder" size="sm" className="mb-0.5" />
-            <span className="text-xs font-medium">Archive</span>
-          </button>
+          />
         )}
       </div>
 

@@ -233,9 +233,8 @@ export class DashboardService {
     } else if (currentMonth >= 2 && currentMonth <= 5) {
       // Mar-Jun
       return { status: "Spring Season", color: "blue" };
-    } else {
-      return { status: "Off Season", color: "gray" };
     }
+    return { status: "Off Season", color: "gray" };
   }
   /**
    * Get user's primary team (most recent active membership)

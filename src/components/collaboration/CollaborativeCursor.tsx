@@ -88,9 +88,11 @@ export function CollaborativeCursor({
         {/* Action indicator */}
         {action && action !== "hovering" && (
           <div
-            className={`absolute -top-1 -left-1 w-6 h-6 border-2 rounded-full ${cursorColor} ${
-              isEditing ? "animate-ping" : isSelecting ? "animate-bounce" : ""
-            }`}
+            className={`absolute -top-1 -left-1 w-6 h-6 border-2 rounded-full ${cursorColor} ${(() => {
+              if (isEditing) return "animate-ping";
+              if (isSelecting) return "animate-bounce";
+              return "";
+            })()}`}
             style={{ animationDuration: "1s" }}
           />
         )}

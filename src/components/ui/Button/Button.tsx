@@ -273,13 +273,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         return null;
       return (
         <span
-          className={`inline-flex items-center ${sizeStyles.iconSize} flex-shrink-0 ${
-            position === "left" && children
-              ? "mr-2"
-              : position === "right" && children
-                ? "ml-2"
-                : ""
-          }`}
+          className={`inline-flex items-center ${sizeStyles.iconSize} flex-shrink-0 ${(() => {
+            if (position === "left" && children) return "mr-2";
+            if (position === "right" && children) return "ml-2";
+            return "";
+          })()}`}
         >
           {icon}
         </span>

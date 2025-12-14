@@ -95,7 +95,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
   }
 
   const winPct =
-    stats?.win_pct != null ? (stats.win_pct * 100).toFixed(1) + "%" : "-";
+    stats?.win_pct != null ? `${(stats.win_pct * 100).toFixed(1)}%` : "-";
 
   return (
     <div className="h-full flex flex-col" aria-label="Season statistics">
@@ -206,13 +206,16 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
               {results.slice(0, 5).map((r) => {
                 const pf = r.points_for;
                 const pa = r.points_against;
-                const outcome = pf > pa ? "W" : pf < pa ? "L" : "T";
-                const color =
-                  outcome === "W"
-                    ? "bg-success/20 text-success"
-                    : outcome === "L"
-                      ? "bg-surface-error text-error"
-                      : "bg-subtle text-primary";
+                const outcome = (() => {
+                  if (pf > pa) return "W";
+                  if (pf < pa) return "L";
+                  return "T";
+                })();
+                const color = (() => {
+                  if (outcome === "W") return "bg-success/20 text-success";
+                  if (outcome === "L") return "bg-surface-error text-error";
+                  return "bg-subtle text-primary";
+                })();
                 return (
                   <li
                     key={r.id}

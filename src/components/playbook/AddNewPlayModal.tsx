@@ -571,8 +571,11 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             }}
             onFormationDirChange={(value) => {
               // Update formation_direction (database field), not formationDir (legacy field)
-              const direction =
-                value === "Left" ? "left" : value === "Right" ? "right" : null;
+              const direction = (() => {
+                if (value === "Left") return "left";
+                if (value === "Right") return "right";
+                return null;
+              })();
               updateField("formation_direction", direction);
             }}
             onFormationShowInNameChange={(value) =>

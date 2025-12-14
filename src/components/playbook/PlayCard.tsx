@@ -462,12 +462,10 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         } ${isCompact ? "text-[13px]" : ""} ${isMobile ? "text-base" : ""} md:min-h-0`}
       >
         <div
-          className={`${
-            isCompact
-              ? isMobile
-                ? "p-5"
-                : "p-3 sm:p-4"
-              : isMobile
+          className={`${(() => {
+            if (isCompact) return isMobile ? "p-5" : "p-3 sm:p-4";
+            return isMobile;
+          })()}
                 ? "p-6"
                 : "p-4 sm:p-6"
           } overflow-visible`}

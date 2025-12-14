@@ -44,6 +44,59 @@ interface AnnouncementItemProps {
   isCoach?: boolean;
 }
 
+/** Action buttons for pin/edit/delete */
+function ActionButtons({
+  isPinned,
+  announcement,
+  onTogglePin,
+  onEdit,
+  onDelete,
+}: {
+  isPinned: boolean;
+  announcement: Announcement;
+  onTogglePin?: () => void;
+  onEdit?: (announcement: Announcement) => void;
+  onDelete?: (id: string) => void;
+}) {
+  if (!onTogglePin && !onEdit && !onDelete) return null;
+
+  return (
+    <div className="flex items-center gap-1">
+      {onTogglePin && (
+        <button
+          onClick={onTogglePin}
+          className={`p-1.5 rounded-md transition-colors ${
+            isPinned
+              ? "text-brand-primary hover:bg-brand-primary-light"
+              : "text-muted hover:text-primary hover:bg-secondary"
+          }`}
+          title={isPinned ? "Unpin" : "Pin"}
+        >
+          <Pin className={`w-3.5 h-3.5 ${isPinned ? "fill-current" : ""}`} />
+        </button>
+      )}
+      {onEdit && (
+        <button
+          onClick={() => onEdit(announcement)}
+          className="p-1.5 text-muted hover:text-primary hover:bg-secondary rounded-md transition-colors"
+          title="Edit"
+        >
+          <Edit2 className="w-3.5 h-3.5" />
+        </button>
+      )}
+      {onDelete && (
+        <button
+          onClick={() => onDelete(announcement.id)}
+          className="p-1.5 text-muted hover:text-error-600 hover:bg-error-bg rounded-md transition-colors"
+          title="Delete"
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+        </button>
+      )}
+    </div>
+  );
+}
+
 export const AnnouncementItem = memo<AnnouncementItemProps>(
   ({
     announcement,
@@ -155,43 +208,13 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(
                 </div>
 
                 {/* Action Buttons - Compact */}
-                {(onTogglePin || onEdit || onDelete) && (
-                  <div className="flex items-center gap-1">
-                    {onTogglePin && (
-                      <button
-                        onClick={handleTogglePin}
-                        className={`p-1.5 rounded-md transition-colors ${
-                          isPinned
-                            ? "text-brand-primary hover:bg-brand-primary-light"
-                            : "text-muted hover:text-primary hover:bg-secondary"
-                        }`}
-                        title={isPinned ? "Unpin" : "Pin"}
-                      >
-                        <Pin
-                          className={`w-3.5 h-3.5 ${isPinned ? "fill-current" : ""}`}
-                        />
-                      </button>
-                    )}
-                    {onEdit && (
-                      <button
-                        onClick={() => onEdit(announcement)}
-                        className="p-1.5 text-muted hover:text-primary hover:bg-secondary rounded-md transition-colors"
-                        title="Edit"
-                      >
-                        <Edit2 className="w-3.5 h-3.5" />
-                      </button>
-                    )}
-                    {onDelete && (
-                      <button
-                        onClick={() => onDelete(announcement.id)}
-                        className="p-1.5 text-muted hover:text-error-600 hover:bg-error-bg rounded-md transition-colors"
-                        title="Delete"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    )}
-                  </div>
-                )}
+                <ActionButtons
+                  isPinned={isPinned}
+                  announcement={announcement}
+                  onTogglePin={onTogglePin ? handleTogglePin : undefined}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                />
               </div>
 
               {/* Title - Compact */}

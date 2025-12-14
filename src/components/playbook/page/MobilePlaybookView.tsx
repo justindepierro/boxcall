@@ -70,6 +70,7 @@ interface MobilePlaybookViewProps {
   handleViewChange: (view: CoachingView) => void;
   handleOpenPracticeScriptBuilder: (script?: PracticeScript) => void;
   dispatch: any; // TODO: Type properly
+  navigate: (path: string) => void;
 
   // UI
   mobileButtonSize: any; // TODO: Type properly
@@ -115,6 +116,7 @@ export function MobilePlaybookView({
   handleViewChange,
   handleOpenPracticeScriptBuilder,
   dispatch,
+  navigate,
   mobileButtonSize,
   mobileSecondaryButtonSize,
   suggestions,
@@ -322,7 +324,7 @@ export function MobilePlaybookView({
                       const commonPlayGridProps = {
                         searchQuery: debouncedSearchQuery,
                         filters: state.selectedFilters,
-                        optimisticPlays: optimisticPlays,
+                        optimisticPlays,
                         onAddToPracticeScript: handleAddToPracticeScript,
                         onAddToGamePlan: handleAddToGamePlan,
                         onEdit: handleEditPlay,
@@ -431,9 +433,9 @@ export function MobilePlaybookView({
                   plays={formationAudit.plays}
                   loading={formationAudit.loading}
                   error={formationAudit.error}
-                  onRefresh={() => {}}
+                  onRefresh={() => dispatch({ type: "REFRESH" })}
                   onResolve={handleEditPlay}
-                  onOpenMapper={() => {}}
+                  onOpenMapper={() => navigate("/playbook/formation-mapper")}
                   isMobile
                 />
               </div>

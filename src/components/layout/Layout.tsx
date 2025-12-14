@@ -231,13 +231,13 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </Typography>
                 <div className="flex items-center gap-1.5 text-xs leading-tight">
                   <span className="text-secondary truncate">
-                    {isSuperAdminEmail(profile?.email ?? null)
-                      ? "Super Admin"
-                      : profile?.role === "coach"
-                        ? "Coach"
-                        : profile?.role === "player"
-                          ? "Player"
-                          : "User"}
+                    {(() => {
+                      if (isSuperAdminEmail(profile?.email ?? null))
+                        return "Super Admin";
+                      if (profile?.role === "coach") return "Coach";
+                      if (profile?.role === "player") return "Player";
+                      return "User";
+                    })()}
                   </span>
                   {devMode && devMode !== "production" && (
                     <span className="text-warning-600 dark:text-warning-400 font-medium">

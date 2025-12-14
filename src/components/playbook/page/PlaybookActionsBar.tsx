@@ -5,6 +5,191 @@ import { Badge } from "../../ui/Badge";
 import { AdvancedSearchBar } from "../../playbook/AdvancedSearchBar";
 import type { ServerPlaybookViewPreset } from "../../../types/playbookViewPreset";
 
+interface ExportDropdownProps {
+  onExportCSV: () => void;
+  onExportScope?: (scope: "selected" | "current" | "all") => void;
+}
+
+const ExportDropdown: React.FC<ExportDropdownProps> = ({
+  onExportCSV,
+  onExportScope,
+}) => (
+  <div className="relative group">
+    <Button
+      onClick={() =>
+        onExportScope ? onExportScope("selected") : onExportCSV()
+      }
+      variant="subtle"
+      size="sm"
+      className="px-3 py-2 pr-2 flex items-center"
+      aria-haspopup="menu"
+      aria-expanded="false"
+    >
+      <Icon name="download" className="h-4 w-4 mr-2" /> Export
+      <Icon name="chevron-down" className="h-3 w-3 ml-1 text-secondary" />
+    </Button>
+    <div className="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition pointer-events-none group-hover:pointer-events-auto absolute right-0 mt-1 min-w-44 surface-popover rounded-lg shadow-lg border border-muted py-1 z-popover">
+      <Button
+        variant="ghost"
+        size="xs"
+        className="w-full justify-start !px-3 !py-1.5 text-xs"
+        onClick={() => onExportScope && onExportScope("selected")}
+      >
+        Selected Plays
+      </Button>
+      <Button
+        variant="ghost"
+        size="xs"
+        className="w-full justify-start !px-3 !py-1.5 text-xs"
+        onClick={() => onExportScope && onExportScope("current")}
+      >
+        Current View
+      </Button>
+      <Button
+        variant="ghost"
+        size="xs"
+        className="w-full justify-start !px-3 !py-1.5 text-xs"
+        onClick={() => onExportScope && onExportScope("all")}
+      >
+        All Plays
+      </Button>
+    </div>
+  </div>
+);
+
+interface BulkSelectionInfoProps {
+  selectedCount: number;
+  onClearSelection: () => void;
+}
+
+const BulkSelectionInfo: React.FC<BulkSelectionInfoProps> = ({
+  selectedCount,
+  onClearSelection,
+}) => (
+  <div className="text-xs text-secondary flex items-center gap-3 ml-2">
+    <span>
+      Selected: <strong>{selectedCount}</strong>
+    </span>
+    <span className="text-secondary">(persists across searches)</span>
+    {selectedCount > 0 && (
+      <Button onClick={onClearSelection} variant="ghost" size="xs">
+        Clear
+      </Button>
+    )}
+  </div>
+);
+
+interface PresetSelectorProps {
+  serverPresets: ServerPlaybookViewPreset[];
+  filterPresets: { id: string; name: string }[];
+  serverPresetsLoading: boolean;
+  activeServerPresetId?: string;
+  activePresetId?: string;
+  onApplyPreset: (id: string) => void;
+  onRenamePreset: (id: string) => void;
+  onDeletePreset: (id: string) => void;
+  onSavePreset: () => void;
+  recentServer: ServerPlaybookViewPreset[];
+  recentLocal: { id: string; name: string }[];
+}
+
+const PresetSelector: React.FC<PresetSelectorProps> = ({
+  serverPresets,
+  filterPresets,
+  serverPresetsLoading,
+  activeServerPresetId,
+  activePresetId,
+  onApplyPreset,
+  onRenamePreset,
+  onDeletePreset,
+  onSavePreset,
+  recentServer,
+  recentLocal,
+}) => (
+  <>
+    <div className="flex items-center space-x-1">
+      <select
+        value={activeServerPresetId || activePresetId || ""}
+        onChange={(e) => onApplyPreset(e.target.value)}
+        className="text-sm border-light rounded-lg px-2 py-1 min-w-60"
+        disabled={serverPresetsLoading}
+        aria-busy={serverPresetsLoading}
+      >
+        <option value="" disabled={serverPresetsLoading}>
+          {serverPresetsLoading ? "Loading presets…" : "Presets…"}
+        </option>
+        {(recentServer.length > 0 || recentLocal.length > 0) && (
+          <optgroup label="Recent">
+            {recentServer.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name} ☁ (recent)
+              </option>
+            ))}
+            {recentLocal.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name} (local recent)
+              </option>
+            ))}
+          </optgroup>
+        )}
+        {serverPresets.length > 0 && (
+          <optgroup label="Cloud">
+            {serverPresets.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name} ☁
+              </option>
+            ))}
+          </optgroup>
+        )}
+        {filterPresets.length > 0 && (
+          <optgroup label="Local">
+            {filterPresets.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name} (local)
+              </option>
+            ))}
+          </optgroup>
+        )}
+      </select>
+      {(activeServerPresetId || activePresetId) && (
+        <div className="flex items-center space-x-1">
+          <Button
+            onClick={() =>
+              activeServerPresetId
+                ? onRenamePreset(activeServerPresetId)
+                : onRenamePreset(activePresetId!)
+            }
+            variant="ghost"
+            size="xs"
+            className="px-2"
+            title="Rename preset"
+            disabled={serverPresetsLoading}
+          >
+            Rename
+          </Button>
+          <Button
+            onClick={() =>
+              activeServerPresetId
+                ? onDeletePreset(activeServerPresetId)
+                : onDeletePreset(activePresetId!)
+            }
+            variant="ghost"
+            size="xs"
+            className="px-2"
+            title="Delete preset"
+            disabled={serverPresetsLoading}
+          >
+            ✕
+          </Button>
+        </div>
+      )}
+    </div>
+    <Button onClick={onSavePreset} variant="ghost" size="sm" className="px-3">
+      Save Preset
+    </Button>
+  </>
+);
+
 export type PlaybookActionsBarProps = {
   searchQuery?: string;
   onSearchChange?: (q: string) => void;
@@ -109,91 +294,19 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
               {extraLeft}
             </div>
             <div className="flex items-center gap-2 flex-wrap justify-end">
-              <div className="flex items-center space-x-1">
-                <select
-                  value={activeServerPresetId || activePresetId || ""}
-                  onChange={(e) => onApplyPreset(e.target.value)}
-                  className="text-sm border-light rounded-lg px-2 py-1 min-w-60"
-                  disabled={serverPresetsLoading}
-                  aria-busy={serverPresetsLoading}
-                >
-                  <option value="" disabled={serverPresetsLoading}>
-                    {serverPresetsLoading ? "Loading presets…" : "Presets…"}
-                  </option>
-                  {(recentServer.length > 0 || recentLocal.length > 0) && (
-                    <optgroup label="Recent">
-                      {recentServer.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.name} ☁ (recent)
-                        </option>
-                      ))}
-                      {recentLocal.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.name} (local recent)
-                        </option>
-                      ))}
-                    </optgroup>
-                  )}
-                  {serverPresets.length > 0 && (
-                    <optgroup label="Cloud">
-                      {serverPresets.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.name} ☁
-                        </option>
-                      ))}
-                    </optgroup>
-                  )}
-                  {filterPresets.length > 0 && (
-                    <optgroup label="Local">
-                      {filterPresets.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.name} (local)
-                        </option>
-                      ))}
-                    </optgroup>
-                  )}
-                </select>
-                {(activeServerPresetId || activePresetId) && (
-                  <div className="flex items-center space-x-1">
-                    <Button
-                      onClick={() =>
-                        activeServerPresetId
-                          ? onRenamePreset(activeServerPresetId)
-                          : onRenamePreset(activePresetId!)
-                      }
-                      variant="ghost"
-                      size="xs"
-                      className="px-2"
-                      title="Rename preset"
-                      disabled={serverPresetsLoading}
-                    >
-                      Rename
-                    </Button>
-                    <Button
-                      onClick={() =>
-                        activeServerPresetId
-                          ? onDeletePreset(activeServerPresetId)
-                          : onDeletePreset(activePresetId!)
-                      }
-                      variant="ghost"
-                      size="xs"
-                      className="px-2"
-                      title="Delete preset"
-                      disabled={serverPresetsLoading}
-                    >
-                      ✕
-                    </Button>
-                  </div>
-                )}
-              </div>
-              <Button
-                onClick={onSavePreset}
-                variant="ghost"
-                size="sm"
-                className="px-3"
-              >
-                Save Preset
-              </Button>
+              <PresetSelector
+                serverPresets={serverPresets}
+                filterPresets={filterPresets}
+                serverPresetsLoading={serverPresetsLoading}
+                activeServerPresetId={activeServerPresetId}
+                activePresetId={activePresetId}
+                onApplyPreset={onApplyPreset}
+                onRenamePreset={onRenamePreset}
+                onDeletePreset={onDeletePreset}
+                onSavePreset={onSavePreset}
+                recentServer={recentServer}
+                recentLocal={recentLocal}
+              />
               <Button
                 onClick={onToggleBulk}
                 variant={enableBulkOperations ? "primary" : "ghost"}
@@ -213,50 +326,10 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                 />
                 Bulk Edit
               </Button>
-              <div className="relative group">
-                <Button
-                  onClick={() =>
-                    onExportScope ? onExportScope("selected") : onExportCSV()
-                  }
-                  variant="subtle"
-                  size="sm"
-                  className="px-3 py-2 pr-2 flex items-center"
-                  aria-haspopup="menu"
-                  aria-expanded="false"
-                >
-                  <Icon name="download" className="h-4 w-4 mr-2" /> Export
-                  <Icon
-                    name="chevron-down"
-                    className="h-3 w-3 ml-1 text-secondary"
-                  />
-                </Button>
-                <div className="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition pointer-events-none group-hover:pointer-events-auto absolute right-0 mt-1 min-w-44 surface-popover rounded-lg shadow-lg border border-muted py-1 z-popover">
-                  <Button
-                    variant="ghost"
-                    size="xs"
-                    className="w-full justify-start !px-3 !py-1.5 text-xs"
-                    onClick={() => onExportScope && onExportScope("selected")}
-                  >
-                    Selected Plays
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="xs"
-                    className="w-full justify-start !px-3 !py-1.5 text-xs"
-                    onClick={() => onExportScope && onExportScope("current")}
-                  >
-                    Current View
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="xs"
-                    className="w-full justify-start !px-3 !py-1.5 text-xs"
-                    onClick={() => onExportScope && onExportScope("all")}
-                  >
-                    All Plays
-                  </Button>
-                </div>
-              </div>
+              <ExportDropdown
+                onExportCSV={onExportCSV}
+                onExportScope={onExportScope}
+              />
               <Button
                 onClick={onOpenImport}
                 variant="subtle"
@@ -292,23 +365,10 @@ export const PlaybookActionsBar: React.FC<PlaybookActionsBarProps> = ({
                 )}
               </div>
               {enableBulkOperations && (
-                <div className="text-xs text-secondary flex items-center gap-3 ml-2">
-                  <span>
-                    Selected: <strong>{selectedCount}</strong>
-                  </span>
-                  <span className="text-secondary">
-                    (persists across searches)
-                  </span>
-                  {selectedCount > 0 && (
-                    <Button
-                      onClick={onClearSelection}
-                      variant="ghost"
-                      size="xs"
-                    >
-                      Clear
-                    </Button>
-                  )}
-                </div>
+                <BulkSelectionInfo
+                  selectedCount={selectedCount}
+                  onClearSelection={onClearSelection}
+                />
               )}
               {extraRight}
             </div>

@@ -148,6 +148,104 @@ const FormationPreview: React.FC<{
   );
 };
 
+// Custom name input section
+const NameInputSection: React.FC<{
+  customName: string;
+  setCustomName: (name: string) => void;
+  isEditingName: boolean;
+  setIsEditingName: (editing: boolean) => void;
+  oppositeDirection: string;
+  originalFormationName: string;
+  loading: boolean;
+}> = ({
+  customName,
+  setCustomName,
+  isEditingName,
+  setIsEditingName,
+  oppositeDirection,
+  originalFormationName,
+  loading,
+}) => (
+  <div className="bg-subtle border border-muted rounded-md p-md">
+    <div className="flex flex-col gap-sm">
+      <div className="flex items-center justify-between">
+        <Typography variant="label-md" className="text-primary">
+          Opposite Formation Name
+        </Typography>
+        {!isEditingName && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsEditingName(true)}
+          >
+            ✏️ Customize
+          </Button>
+        )}
+      </div>
+
+      {isEditingName ? (
+        <div className="flex gap-sm">
+          <input
+            type="text"
+            value={customName}
+            onChange={(e) => setCustomName(e.target.value)}
+            className="flex-1 px-3 py-2 border border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-brand-jade"
+            placeholder="Enter formation name..."
+            disabled={loading}
+            autoFocus
+          />
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => {
+              setIsEditingName(false);
+              setCustomName(suggestOppositeName(originalFormationName));
+            }}
+            disabled={loading}
+          >
+            Reset
+          </Button>
+        </div>
+      ) : (
+        <Typography variant="body" className="text-primary font-semibold">
+          "{customName}" ({oppositeDirection})
+        </Typography>
+      )}
+
+      <Typography variant="body-xs" className="text-muted">
+        💡 Tip: Use your team's naming convention (e.g., Rip/Liz, Red/Blue,
+        Twins Rt/Lt)
+      </Typography>
+    </div>
+  </div>
+);
+
+// Formation details section
+const FormationDetails: React.FC<{ formation: Formation }> = ({
+  formation,
+}) => (
+  <div className="bg-subtle border border-muted rounded-md p-md">
+    <div className="grid grid-cols-2 gap-md text-sm">
+      <div>
+        <Typography variant="label-md" className="text-muted">
+          Personnel
+        </Typography>
+        <Typography variant="body-sm" className="text-primary">
+          {formation.personnel_name || "None"}
+        </Typography>
+      </div>
+      <div>
+        <Typography variant="label-md" className="text-muted">
+          Category
+        </Typography>
+        <Typography variant="body-sm" className="text-primary">
+          {formation.category || "Uncategorized"}
+        </Typography>
+      </div>
+    </div>
+  </div>
+);
+
 export const CreateOppositeFormationModal: React.FC<
   CreateOppositeFormationModalProps
 > = ({
@@ -167,12 +265,11 @@ export const CreateOppositeFormationModal: React.FC<
   const [isEditingName, setIsEditingName] = useState(false);
 
   // Determine opposite direction
-  const oppositeDirection =
-    originalFormation.direction === "left"
-      ? "right"
-      : originalFormation.direction === "right"
-        ? "left"
-        : "right"; // Default for standalone
+  const oppositeDirection = (() => {
+    if (originalFormation.direction === "left") return "right";
+    if (originalFormation.direction === "right") return "left";
+    return "right"; // Default for standalone
+  })();
 
   // Calculate flipped positions and suggested name
   useEffect(() => {
@@ -286,63 +383,15 @@ export const CreateOppositeFormationModal: React.FC<
             </div>
 
             {/* Custom Name Input */}
-            <div className="bg-subtle border border-muted rounded-md p-md">
-              <div className="flex flex-col gap-sm">
-                <div className="flex items-center justify-between">
-                  <Typography variant="label-md" className="text-primary">
-                    Opposite Formation Name
-                  </Typography>
-                  {!isEditingName && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setIsEditingName(true)}
-                    >
-                      ✏️ Customize
-                    </Button>
-                  )}
-                </div>
-
-                {isEditingName ? (
-                  <div className="flex gap-sm">
-                    <input
-                      type="text"
-                      value={customName}
-                      onChange={(e) => setCustomName(e.target.value)}
-                      className="flex-1 px-3 py-2 border border-primary rounded-md focus:outline-none focus:ring-2 focus:ring-brand-jade"
-                      placeholder="Enter formation name..."
-                      disabled={loading}
-                      autoFocus
-                    />
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => {
-                        setIsEditingName(false);
-                        setCustomName(
-                          suggestOppositeName(originalFormation.name)
-                        );
-                      }}
-                      disabled={loading}
-                    >
-                      Reset
-                    </Button>
-                  </div>
-                ) : (
-                  <Typography
-                    variant="body"
-                    className="text-primary font-semibold"
-                  >
-                    "{customName}" ({oppositeDirection})
-                  </Typography>
-                )}
-
-                <Typography variant="body-xs" className="text-muted">
-                  💡 Tip: Use your team's naming convention (e.g., Rip/Liz,
-                  Red/Blue, Twins Rt/Lt)
-                </Typography>
-              </div>
-            </div>
+            <NameInputSection
+              customName={customName}
+              setCustomName={setCustomName}
+              isEditingName={isEditingName}
+              setIsEditingName={setIsEditingName}
+              oppositeDirection={oppositeDirection}
+              originalFormationName={originalFormation.name}
+              loading={loading}
+            />
 
             {/* Side-by-side preview */}
             <div className="grid grid-cols-2 gap-lg">
@@ -358,26 +407,7 @@ export const CreateOppositeFormationModal: React.FC<
             </div>
 
             {/* Formation details */}
-            <div className="bg-subtle border border-muted rounded-md p-md">
-              <div className="grid grid-cols-2 gap-md text-sm">
-                <div>
-                  <Typography variant="label-md" className="text-muted">
-                    Personnel
-                  </Typography>
-                  <Typography variant="body-sm" className="text-primary">
-                    {originalFormation.personnel_name || "None"}
-                  </Typography>
-                </div>
-                <div>
-                  <Typography variant="label-md" className="text-muted">
-                    Category
-                  </Typography>
-                  <Typography variant="body-sm" className="text-primary">
-                    {originalFormation.category || "Uncategorized"}
-                  </Typography>
-                </div>
-              </div>
-            </div>
+            <FormationDetails formation={originalFormation} />
 
             {/* Error message */}
             {error && (

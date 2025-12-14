@@ -5,10 +5,6 @@ import { useRoles } from "../hooks/useRoles";
 import { Button } from "../components/ui/Button/Button";
 import { Typography } from "../components/design-system/Typography";
 import { Icon } from "../components/ui/Icon/Icon";
-import {
-  EnhancedInput,
-  EnhancedSelect,
-} from "../components/forms/EnhancedFormFields";
 import { TeamWelcomeModal } from "../components/onboarding/TeamWelcomeModal";
 import {
   TeamService as TeamCreationService,
@@ -24,6 +20,15 @@ import type {
 } from "../services/teamService";
 import type { AddressSuggestion } from "../services/locationFinderService";
 import { logError } from "../utils/logger";
+
+// Extracted step components
+import {
+  TeamInfoStep,
+  SchoolInfoStep,
+  ReviewStep,
+  CompleteStep,
+  StepProgress,
+} from "./CreateTeam/components";
 
 /**
  * Create Team Page - Simplified Working Version
@@ -285,326 +290,48 @@ const CreateTeam: React.FC = () => {
     switch (currentStep) {
       case "team-info":
         return (
-          <div className="space-y-md">
-            <Typography variant="headline-md" className="mb-md">
-              Team Information
-            </Typography>
-            <EnhancedInput
-              label="School Name"
-              placeholder="e.g., Burke Catholic High School"
-              value={formData.schoolName}
-              onChange={(value) => updateFormData({ schoolName: value })}
-              required
-            />
-            <EnhancedInput
-              label="Team Name"
-              placeholder="e.g., Eagles"
-              value={formData.teamName}
-              onChange={(value) => updateFormData({ teamName: value })}
-              required
-            />
-            <EnhancedSelect
-              label="Sport"
-              value={formData.sport}
-              onChange={(value) => updateFormData({ sport: value })}
-              options={[
-                { value: "Football", label: "Football" },
-                { value: "Basketball", label: "Basketball" },
-                { value: "Baseball", label: "Baseball" },
-                { value: "Soccer", label: "Soccer" },
-                { value: "Other", label: "Other" },
-              ]}
-            />
-          </div>
+          <TeamInfoStep formData={formData} onUpdateFormData={updateFormData} />
         );
 
       case "school-info":
         return (
-          <div className="space-y-md">
-            <Typography variant="headline-md" className="mb-md">
-              School Details (Optional)
-            </Typography>
-
-            {/* Location Helper */}
-            <div className="bg-status-info-bg border border-blue-200 rounded-lg p-md">
-              <div className="flex items-start gap-sm">
-                <Icon
-                  name="map-pin"
-                  size="sm"
-                  color="primary"
-                  className="mt-0.5"
-                />
-                <div className="flex-1">
-                  <Typography variant="body-sm" className="font-medium mb-xs">
-                    Quick Location Setup
-                  </Typography>
-                  <Typography variant="body-sm" color="muted" className="mb-sm">
-                    We can help fill in your school's location automatically.
-                  </Typography>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={handleUseCurrentLocation}
-                    loading={locationLoading}
-                    icon={<Icon name="map-pin" size="xs" />}
-                  >
-                    Use My Current Location
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            <EnhancedInput
-              label="School District"
-              placeholder="e.g., Goshen Central School District"
-              value={formData.schoolDistrict || ""}
-              onChange={(value) => updateFormData({ schoolDistrict: value })}
-            />
-
-            <div className="relative">
-              <EnhancedInput
-                label="School Address"
-                placeholder="e.g., 545 Goshen Avenue"
-                value={formData.schoolAddress || ""}
-                onChange={(value) => {
-                  updateFormData({ schoolAddress: value });
-                  handleAddressSearch(value);
-                }}
-              />
-
-              {/* Address Suggestions */}
-              {addressSuggestions.length > 0 && (
-                <div className="absolute z-10 w-full mt-xs bg-white dark:bg-navy-800 rounded-lg shadow-xl max-h-48 overflow-y-auto border border-neutral-200 dark:border-navy-600">
-                  {addressSuggestions.map((suggestion) => (
-                    <button
-                      key={suggestion.id}
-                      className="w-full px-md py-xs text-left hover:bg-neutral-50 dark:hover:bg-navy-700 border-b border-neutral-100 dark:border-navy-700 last:border-b-0"
-                      onClick={() => handleSelectAddress(suggestion)}
-                    >
-                      <div className="font-medium">
-                        {suggestion.streetAddress}
-                      </div>
-                      <div className="text-sm text-secondary">
-                        {suggestion.city}, {suggestion.state}{" "}
-                        {suggestion.zipCode}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-md">
-              <EnhancedInput
-                label="City"
-                placeholder="e.g., Goshen"
-                value={formData.schoolCity || ""}
-                onChange={(value) => updateFormData({ schoolCity: value })}
-              />
-              <EnhancedInput
-                label="State"
-                placeholder="e.g., NY"
-                value={formData.schoolState || ""}
-                onChange={(value) => updateFormData({ schoolState: value })}
-              />
-            </div>
-
-            <EnhancedInput
-              label="ZIP Code"
-              placeholder="e.g., 10924"
-              value={formData.schoolZip || ""}
-              onChange={(value) => updateFormData({ schoolZip: value })}
-            />
-          </div>
+          <SchoolInfoStep
+            formData={formData}
+            onUpdateFormData={updateFormData}
+            onUseCurrentLocation={handleUseCurrentLocation}
+            onAddressSearch={handleAddressSearch}
+            onSelectAddress={handleSelectAddress}
+            locationLoading={locationLoading}
+            addressSuggestions={addressSuggestions}
+          />
         );
 
       case "review":
         return (
-          <div className="space-y-md">
-            <Typography variant="headline-md" className="mb-md">
-              Review Your Team
-            </Typography>
-
-            {/* Duplicate Check Loading */}
-            {duplicateCheckLoading && (
-              <div className="bg-status-info-bg border border-blue-200 rounded-lg p-md">
-                <div className="flex items-center gap-sm">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                  <Typography variant="body-sm">
-                    Checking for similar teams...
-                  </Typography>
-                </div>
-              </div>
-            )}
-
-            {/* Duplicate Warning */}
-            {showDuplicateWarning && duplicateCheck && (
-              <div className="bg-warning border border-orange-200 rounded-lg p-md">
-                <div className="flex items-start gap-sm">
-                  <Icon
-                    name="alert-triangle"
-                    size="sm"
-                    color="warning"
-                    className="mt-0.5"
-                  />
-                  <div className="flex-1">
-                    <Typography variant="body-sm" className="font-medium mb-xs">
-                      Similar Team Found
-                    </Typography>
-                    <Typography
-                      variant="body-sm"
-                      color="muted"
-                      className="mb-sm"
-                    >
-                      {duplicateCheck.warningMessage}
-                    </Typography>
-
-                    {duplicateCheck.similarTeams.length > 0 && (
-                      <div className="bg-secondary rounded-lg p-sm mb-sm">
-                        <Typography
-                          variant="body-xs"
-                          className="font-medium mb-xs"
-                        >
-                          Similar Team:
-                        </Typography>
-                        {duplicateCheck.similarTeams
-                          .slice(0, 1)
-                          .map((similar) => (
-                            <div key={similar.teamId} className="text-sm">
-                              <div className="font-medium">
-                                {similar.schoolName} {similar.teamName}
-                              </div>
-                              {similar.schoolCity && similar.schoolState && (
-                                <div className="text-secondary">
-                                  {similar.schoolCity}, {similar.schoolState}
-                                </div>
-                              )}
-                              <div className="text-xs text-muted mt-xs">
-                                Match reasons: {similar.matchReasons.join(", ")}
-                              </div>
-                            </div>
-                          ))}
-                      </div>
-                    )}
-
-                    {duplicateCheck.isDuplicate ? (
-                      <div className="flex gap-xs">
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          onClick={() => {
-                            // Contact support functionality
-                            setCreateError(
-                              "Please contact customer support to resolve this duplicate team issue."
-                            );
-                          }}
-                          icon={<Icon name="mail" size="xs" />}
-                        >
-                          Contact Support
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="flex gap-xs">
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          onClick={() => {
-                            setShowDuplicateWarning(false);
-                            setDuplicateCheck(null);
-                            setCreateError(null);
-                          }}
-                        >
-                          This is Different
-                        </Button>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          onClick={() => {
-                            // Contact support for account transfer
-                            setCreateError(
-                              "Please contact customer support for account transfer assistance."
-                            );
-                          }}
-                          icon={<Icon name="mail" size="xs" />}
-                        >
-                          I'm the New Coach
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="bg-secondary p-md rounded-lg space-y-xs">
-              <div>
-                <span className="font-medium">School:</span>{" "}
-                {formData.schoolName}
-              </div>
-              <div>
-                <span className="font-medium">Team:</span> {formData.teamName}
-              </div>
-              <div>
-                <span className="font-medium">Sport:</span> {formData.sport}
-              </div>
-              <div>
-                <span className="font-medium">Season:</span> {formData.season}
-              </div>
-              {formData.schoolDistrict && (
-                <div>
-                  <span className="font-medium">District:</span>{" "}
-                  {formData.schoolDistrict}
-                </div>
-              )}
-              {formData.schoolAddress && (
-                <div>
-                  <span className="font-medium">Address:</span>{" "}
-                  {formData.schoolAddress}
-                </div>
-              )}
-              {formData.schoolCity && formData.schoolState && (
-                <div>
-                  <span className="font-medium">Location:</span>{" "}
-                  {formData.schoolCity}, {formData.schoolState}{" "}
-                  {formData.schoolZip}
-                </div>
-              )}
-            </div>
-
-            {createError && !showDuplicateWarning && (
-              <div className="bg-error-bg border border-error-200 text-error-600 px-md py-sm rounded-lg">
-                {createError}
-              </div>
-            )}
-          </div>
+          <ReviewStep
+            formData={formData}
+            duplicateCheckLoading={duplicateCheckLoading}
+            showDuplicateWarning={showDuplicateWarning}
+            duplicateCheck={duplicateCheck}
+            createError={createError}
+            onDismissDuplicateWarning={() => {
+              setShowDuplicateWarning(false);
+              setDuplicateCheck(null);
+              setCreateError(null);
+            }}
+            onContactSupport={() => {
+              setCreateError("Please contact customer support for assistance.");
+            }}
+          />
         );
 
       case "complete":
         return (
-          <div className="text-center space-y-lg">
-            <Icon
-              name="check-circle"
-              size="xl"
-              color="success"
-              className="mx-auto"
-            />
-            <Typography variant="headline-lg">
-              Team Created Successfully!
-            </Typography>
-            <Typography variant="body-md" color="muted">
-              Congratulations! Your team "{formData.schoolName}{" "}
-              {formData.teamName}" has been created.
-            </Typography>
-            <Button
-              onClick={handleShowWelcome}
-              variant="primary"
-              size="lg"
-              icon={<Icon name="arrow-right" size="sm" />}
-              iconPosition="right"
-            >
-              Continue to Team
-            </Button>
-          </div>
+          <CompleteStep
+            schoolName={formData.schoolName}
+            teamName={formData.teamName}
+            onShowWelcome={handleShowWelcome}
+          />
         );
 
       default:
@@ -656,42 +383,7 @@ const CreateTeam: React.FC = () => {
         </header>
         <div className="container-content">
           {/* Progress Steps */}
-          <div className="mb-xl">
-            <div className="flex items-center justify-between">
-              {steps.map((step, index) => (
-                <div
-                  key={step.id}
-                  className={`flex items-center ${
-                    index < steps.length - 1 ? "flex-1" : ""
-                  }`}
-                >
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                      step.id === currentStep
-                        ? "bg-blue-600 text-white"
-                        : currentStepIndex > index
-                          ? "bg-green-600 text-white"
-                          : "bg-muted text-secondary"
-                    }`}
-                  >
-                    {index + 1}
-                  </div>
-                  {index < steps.length - 1 && (
-                    <div
-                      className={`flex-1 h-1 mx-md ${
-                        currentStepIndex > index ? "bg-green-600" : "bg-muted"
-                      }`}
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
-            <div className="mt-xs text-center">
-              <Typography variant="body-lg" className="font-medium">
-                {steps[currentStepIndex]?.title}
-              </Typography>
-            </div>
-          </div>
+          <StepProgress steps={steps} currentStepIndex={currentStepIndex} />
 
           {/* Step Content */}
           <div className="bg-primary shadow-lg rounded-lg p-lg mb-lg">

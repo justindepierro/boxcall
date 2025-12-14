@@ -65,17 +65,24 @@ export const TimelineContainer: React.FC<TimelineContainerProps> = ({
               onClick={() => onTimelineClick(minute)}
               onMouseDown={() => onMouseDown(minute)}
               onMouseEnter={() => onMouseEnter(minute)}
-              className={`flex-1 h-12 relative border-r border-muted transition-all ${
-                allocation
-                  ? getCategoryColor(allocation.category)
-                      .replace("text-", "border-t-4 border-t-")
-                      .split(" ")[0] +
-                    " " +
-                    getCategoryColor(allocation.category)
-                  : isSelected
-                    ? "bg-info/20 border-t-4 border-t-text-info"
-                    : "bg-subtle hover:bg-muted"
-              } ${is5MinuteBoundary ? "border-l-2 border-l-gray-400" : ""}`}
+              className={(() => {
+                const base = `flex-1 h-12 relative border-r border-muted transition-all `;
+                const boundaryClass = is5MinuteBoundary
+                  ? "border-l-2 border-l-gray-400"
+                  : "";
+
+                if (allocation) {
+                  const categoryColor = getCategoryColor(allocation.category);
+                  const borderColor = categoryColor
+                    .replace("text-", "border-t-4 border-t-")
+                    .split(" ")[0];
+                  return `${base}${borderColor} ${categoryColor} ${boundaryClass}`;
+                }
+                if (isSelected) {
+                  return `${base}bg-info/20 border-t-4 border-t-text-info ${boundaryClass}`;
+                }
+                return `${base}bg-subtle hover:bg-muted ${boundaryClass}`;
+              })()}
               style={{ minWidth: "3px" }}
               title={`Minute ${minute}${
                 allocation

@@ -218,12 +218,193 @@ export function LoginForm({
           htmlFor="remember-me"
           className="ml-2 block text-sm text-primary dark:text-border-light"
         >
+          {" "}
           Remember me
         </label>
       </div>
     </Form>
   );
 }
+
+// Signup form validation
+function validateSignupForm(formData: SignupData): Partial<SignupData> {
+  const errors: Partial<SignupData> = {};
+
+  if (!formData.name.trim()) {
+    errors.name = "Name is required";
+  }
+
+  if (!formData.email) {
+    errors.email = "Email is required";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    errors.email = "Please enter a valid email address";
+  }
+
+  if (!formData.password) {
+    errors.password = "Password is required";
+  } else {
+    const passwordValidation = validatePasswordStrength(formData.password);
+    if (!passwordValidation.isValid) {
+      errors.password = passwordValidation.message;
+    }
+  }
+
+  const confirmValidation = validatePasswordConfirmation(
+    formData.password,
+    formData.confirmPassword
+  );
+  if (!confirmValidation.isValid) {
+    errors.confirmPassword = confirmValidation.message;
+  }
+
+  if (!formData.acceptTerms) {
+    errors.acceptTerms = "You must accept the terms and conditions" as never;
+  }
+
+  return errors;
+}
+
+const SocialSignupSection: React.FC<{ loading: boolean }> = ({ loading }) => (
+  <div className="space-y-3">
+    <Button variant="secondary" className="w-full" disabled={loading}>
+      <span className="mr-2">
+        <Icon
+          name="link"
+          className="inline h-4 w-4 align-middle text-primary"
+        />
+      </span>
+      Sign up with Google
+    </Button>
+    <div className="relative">
+      <div className="absolute inset-0 flex items-center">
+        <div className="w-full" />
+      </div>
+      <div className="relative flex justify-center text-sm">
+        <span className="px-2 bg-primary text-secondary">
+          Or sign up with email
+        </span>
+      </div>
+    </div>
+  </div>
+);
+
+const SignupFormFields: React.FC<{
+  formData: SignupData;
+  validationErrors: Partial<SignupData>;
+  loading: boolean;
+  onInputChange: (field: keyof SignupData, value: string | boolean) => void;
+}> = ({ formData, validationErrors, loading, onInputChange }) => (
+  <>
+    <FormField label="Full Name" required error={validationErrors.name}>
+      <Input
+        type="text"
+        placeholder="Enter your full name"
+        value={formData.name}
+        onChange={(e) => onInputChange("name", e.target.value)}
+        status={validationErrors.name ? "error" : undefined}
+        disabled={loading}
+        fullWidth
+      />
+    </FormField>
+
+    <FormField label="Email" required error={validationErrors.email}>
+      <Input
+        type="email"
+        placeholder="Enter your email"
+        value={formData.email}
+        onChange={(e) => onInputChange("email", e.target.value)}
+        status={validationErrors.email ? "error" : undefined}
+        disabled={loading}
+        fullWidth
+      />
+    </FormField>
+
+    <FormField
+      label="Role"
+      description="Select your primary role in the team"
+      required
+    >
+      <FormSelect
+        value={formData.role}
+        onChange={(value) => onInputChange("role", value as SignupData["role"])}
+        disabled={loading}
+        options={[
+          { value: "player", label: "Player" },
+          { value: "coach", label: "Coach" },
+          { value: "admin", label: "Team Admin" },
+          { value: "parent", label: "Parent/Guardian" },
+        ]}
+      />
+    </FormField>
+
+    <FormField
+      label="Password"
+      description="Must be at least 8 characters with uppercase, lowercase, and number"
+      required
+      error={validationErrors.password}
+    >
+      <Input
+        type="password"
+        placeholder="Create a strong password"
+        value={formData.password}
+        onChange={(e) => onInputChange("password", e.target.value)}
+        status={validationErrors.password ? "error" : undefined}
+        showPasswordToggle
+        disabled={loading}
+        fullWidth
+      />
+      <PasswordStrengthIndicator password={formData.password} />
+    </FormField>
+
+    <FormField
+      label="Confirm Password"
+      required
+      error={validationErrors.confirmPassword}
+    >
+      <Input
+        type="password"
+        placeholder="Confirm your password"
+        value={formData.confirmPassword}
+        onChange={(e) => onInputChange("confirmPassword", e.target.value)}
+        status={validationErrors.confirmPassword ? "error" : undefined}
+        disabled={loading}
+        fullWidth
+      />
+    </FormField>
+
+    <div className="space-y-2">
+      <div className="flex items-start">
+        <input
+          id="accept-terms"
+          type="checkbox"
+          checked={formData.acceptTerms}
+          onChange={(e) => onInputChange("acceptTerms", e.target.checked)}
+          className="h-4 w-4 text-info focus:ring-jade-500 rounded-lg mt-1"
+          disabled={loading}
+        />
+        <label
+          htmlFor="accept-terms"
+          className="ml-2 block text-sm text-primary dark:text-border-light"
+        >
+          I agree to the{" "}
+          <a href="/terms" className="text-primary hover:text-secondary">
+            Terms of Service
+          </a>{" "}
+          and{" "}
+          <a href="/privacy" className="text-primary hover:text-secondary">
+            Privacy Policy
+          </a>
+        </label>
+      </div>
+      {validationErrors.acceptTerms && (
+        <Typography variant="caption" className="text-error dark:text-error">
+          {validationErrors.acceptTerms}
+        </Typography>
+      )}
+    </div>
+  </>
+);
+
 /**
  * SignupForm - Professional signup form with validation
  */
@@ -247,37 +428,13 @@ export function SignupForm({
   const [validationErrors, setValidationErrors] = useState<Partial<SignupData>>(
     {}
   );
+
   const validateForm = (): boolean => {
-    const errors: Partial<SignupData> = {};
-    if (!formData.name.trim()) {
-      errors.name = "Name is required";
-    }
-    if (!formData.email) {
-      errors.email = "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = "Please enter a valid email address";
-    }
-    if (!formData.password) {
-      errors.password = "Password is required";
-    } else {
-      const passwordValidation = validatePasswordStrength(formData.password);
-      if (!passwordValidation.isValid) {
-        errors.password = passwordValidation.message;
-      }
-    }
-    const confirmValidation = validatePasswordConfirmation(
-      formData.password,
-      formData.confirmPassword
-    );
-    if (!confirmValidation.isValid) {
-      errors.confirmPassword = confirmValidation.message;
-    }
-    if (!formData.acceptTerms) {
-      errors.acceptTerms = "You must accept the terms and conditions" as never;
-    }
+    const errors = validateSignupForm(formData);
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
+
   const handleSubmit = async () => {
     if (!validateForm()) return;
     await onSubmit(formData);
@@ -326,140 +483,17 @@ export function SignupForm({
           </Typography>
         </div>
       )}
+
       {/* Social Signup */}
-      {showSocialSignup && (
-        <div className="space-y-3">
-          <Button variant="secondary" className="w-full" disabled={loading}>
-            <span className="mr-2">
-              <Icon
-                name="link"
-                className="inline h-4 w-4 align-middle text-primary"
-              />
-            </span>
-            Sign up with Google
-          </Button>
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full" />
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-primary text-secondary">
-                Or sign up with email
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
-      {/* Name Field */}
-      <FormField label="Full Name" required error={validationErrors.name}>
-        <Input
-          type="text"
-          placeholder="Enter your full name"
-          value={formData.name}
-          onChange={(e) => handleInputChange("name", e.target.value)}
-          status={validationErrors.name ? "error" : undefined}
-          disabled={loading}
-          fullWidth
-        />
-      </FormField>
-      {/* Email Field */}
-      <FormField label="Email" required error={validationErrors.email}>
-        <Input
-          type="email"
-          placeholder="Enter your email"
-          value={formData.email}
-          onChange={(e) => handleInputChange("email", e.target.value)}
-          status={validationErrors.email ? "error" : undefined}
-          disabled={loading}
-          fullWidth
-        />
-      </FormField>
-      {/* Role Selection */}
-      <FormField
-        label="Role"
-        description="Select your primary role in the team"
-        required
-      >
-        <FormSelect
-          value={formData.role}
-          onChange={(value) =>
-            handleInputChange("role", value as SignupData["role"])
-          }
-          disabled={loading}
-          options={[
-            { value: "player", label: "Player" },
-            { value: "coach", label: "Coach" },
-            { value: "admin", label: "Team Admin" },
-            { value: "parent", label: "Parent/Guardian" },
-          ]}
-        />
-      </FormField>
-      {/* Password Field */}
-      <FormField
-        label="Password"
-        description="Must be at least 8 characters with uppercase, lowercase, and number"
-        required
-        error={validationErrors.password}
-      >
-        <Input
-          type="password"
-          placeholder="Create a strong password"
-          value={formData.password}
-          onChange={(e) => handleInputChange("password", e.target.value)}
-          status={validationErrors.password ? "error" : undefined}
-          showPasswordToggle
-          disabled={loading}
-          fullWidth
-        />
-        <PasswordStrengthIndicator password={formData.password} />
-      </FormField>
-      {/* Confirm Password Field */}
-      <FormField
-        label="Confirm Password"
-        required
-        error={validationErrors.confirmPassword}
-      >
-        <Input
-          type="password"
-          placeholder="Confirm your password"
-          value={formData.confirmPassword}
-          onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-          status={validationErrors.confirmPassword ? "error" : undefined}
-          disabled={loading}
-          fullWidth
-        />
-      </FormField>
-      {/* Terms Acceptance */}
-      <div className="space-y-2">
-        <div className="flex items-start">
-          <input
-            id="accept-terms"
-            type="checkbox"
-            checked={formData.acceptTerms}
-            onChange={(e) => handleInputChange("acceptTerms", e.target.checked)}
-            className="h-4 w-4 text-info focus:ring-jade-500 rounded-lg mt-1"
-            disabled={loading}
-          />
-          <label
-            htmlFor="accept-terms"
-            className="ml-2 block text-sm text-primary dark:text-border-light"
-          >
-            I agree to the{" "}
-            <a href="/terms" className="text-primary hover:text-secondary">
-              Terms of Service
-            </a>{" "}
-            and{" "}
-            <a href="/privacy" className="text-primary hover:text-secondary">
-              Privacy Policy
-            </a>
-          </label>
-        </div>
-        {validationErrors.acceptTerms && (
-          <Typography variant="caption" className="text-error dark:text-error">
-            {validationErrors.acceptTerms}
-          </Typography>
-        )}
-      </div>
+      {showSocialSignup && <SocialSignupSection loading={loading} />}
+
+      {/* Form Fields */}
+      <SignupFormFields
+        formData={formData}
+        validationErrors={validationErrors}
+        loading={loading}
+        onInputChange={handleInputChange}
+      />
     </Form>
   );
 }

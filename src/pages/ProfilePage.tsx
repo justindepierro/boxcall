@@ -1,28 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { useAuth, useAuthLoading, useAuthProfile } from "../app/auth-store";
 import { Button } from "../components/ui/Button";
-import { Card } from "../components/ui/Card";
-import { Input } from "../components/ui/Input";
-import { FormSelect } from "../components/ui";
 import { Typography } from "../components/design-system/Typography";
 import { supabase } from "../lib/supabase";
 import { LoadingScreen } from "../components/ui/LoadingScreen";
 import { MultiBadgeDisplay } from "../components/ui/MultiBadgeDisplay";
 import { AvatarEditor } from "../components/profile/AvatarEditor";
 import { debug, error as logError } from "../utils/logger";
-import {
-  Camera,
-  Pencil,
-  User,
-  Trophy,
-  Link2,
-  AlertTriangle,
-  Activity,
-} from "lucide-react";
+import { ProfileAvatar } from "./ProfilePage/components/ProfileAvatar";
+import { BasicInfoForm } from "./ProfilePage/components/BasicInfoForm";
+import { AthleticInfoForm } from "./ProfilePage/components/AthleticInfoForm";
+import { CoachingInfoForm } from "./ProfilePage/components/CoachingInfoForm";
+import { EmergencyContactForm } from "./ProfilePage/components/EmergencyContactForm";
+import { SocialMediaForm } from "./ProfilePage/components/SocialMediaForm";
+import { AccountSecurityForm } from "./ProfilePage/components/AccountSecurityForm";
+
 /**
  * Helper component for displaying validation errors
+ * @internal Used by form components, kept for reference
  */
-const ValidationError: React.FC<{ error?: string }> = ({ error }) => {
+const _ValidationError: React.FC<{ error?: string }> = ({ error }) => {
   if (!error) return null;
   return (
     <Typography variant="body-xs" className="text-error mt-1">
@@ -338,7 +335,7 @@ const ProfilePage: React.FC = () => {
       if (error) {
         setMessage({
           type: "error",
-          text: "Failed to update profile: " + error.message,
+          text: `Failed to update profile: ${error.message}`,
         });
       } else {
         // Clear avatar file after successful upload
@@ -485,7 +482,7 @@ const ProfilePage: React.FC = () => {
       if (error) {
         setMessage({
           type: "error",
-          text: "Failed to send password reset email: " + error.message,
+          text: `Failed to send password reset email: ${error.message}`,
         });
       } else {
         setMessage({
@@ -550,937 +547,100 @@ const ProfilePage: React.FC = () => {
         )}
         {/* Profile Form */}
         <form onSubmit={handleSaveProfile} className="space-y-lg">
-          {/* Avatar Upload Section - Enhanced */}
-          <div className="relative overflow-hidden bg-aurora-shell rounded-aurora p-xl shadow-lg">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-primary/10 rounded-full -mr-16 -mt-16"></div>
-            <div className="absolute bottom-0 left-0 w-24 h-24 bg-brand-secondary/10 rounded-full -ml-12 -mb-12"></div>
-            <div className="relative">
-              <Typography
-                variant="headline-sm"
-                as="h2"
-                className="mb-lg text-brand-primary font-bold flex items-center"
-              >
-                <span className="w-8 h-8 bg-brand-primary/20 rounded-lg flex items-center justify-center mr-sm">
-                  <Camera className="text-brand-primary w-4 h-4" />
-                </span>
-                Profile Picture
-              </Typography>
-              <div className="flex items-center space-x-lg">
-                <div className="relative">
-                  {/* Avatar Container - Larger Size */}
-                  <div className="w-32 h-32 rounded-2xl bg-aurora-emerald p-xs shadow-lg">
-                    <div className="w-full h-full rounded-xl bg-secondary flex items-center justify-center overflow-hidden">
-                      {profile.avatar_url ? (
-                        <img
-                          src={profile.avatar_url}
-                          alt="Profile"
-                          className="w-full h-full object-cover rounded-xl"
-                        />
-                      ) : (
-                        <Typography
-                          variant="headline-xl"
-                          className="text-muted font-bold"
-                        >
-                          {profile.full_name?.charAt(0) ||
-                            profile.display_name?.charAt(0) ||
-                            "U"}
-                        </Typography>
-                      )}
-                    </div>
-                  </div>
+          <ProfileAvatar
+            avatarUrl={profile.avatar_url}
+            displayName={profile.display_name}
+            fullName={profile.full_name}
+            avatarFile={avatarFile}
+            onUploadClick={() => {
+              debug("Upload Picture clicked");
+              fileInputRef.current?.click();
+            }}
+            onEditClick={async () => {
+              debug("Edit Current Picture clicked");
+              try {
+                const response = await fetch(profile.avatar_url!);
+                const blob = await response.blob();
+                const file = new File([blob], "current-avatar.jpg", {
+                  type: blob.type,
+                });
+                debug("Loaded current avatar:", file);
+                setAvatarFile(file);
+                setShowAvatarEditor(true);
+              } catch (error) {
+                logError("Failed to load current avatar:", error);
+              }
+            }}
+            onFileSelect={(file) => {
+              debug("📸 File input onChange - file:", file?.name);
+              if (file) {
+                debug("📸 Opening editor with file:", file.name);
+                setAvatarFile(file);
+                setShowAvatarEditor(true);
+              }
+            }}
+            fileInputRef={fileInputRef}
+          />
 
-                  {/* Success Badge */}
-                  {avatarFile && (
-                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-success rounded-full flex items-center justify-center shadow-md border-2 border-white dark:border-bg-primary">
-                      <span className="text-white text-sm font-bold">✓</span>
-                    </div>
-                  )}
-                </div>
-                <div className="flex-1">
-                  {/* Upload Info */}
-                  <Typography variant="body-md" className="font-medium mb-xs">
-                    Your Profile Picture
-                  </Typography>
-                  <Typography variant="body-sm" className="text-muted mb-md">
-                    Upload a new picture or edit your existing one
-                  </Typography>
+          <BasicInfoForm
+            email={profile.email || ""}
+            displayName={formData.display_name}
+            fullName={formData.full_name}
+            phone={formData.phone}
+            address={formData.address}
+            bio={formData.bio}
+            isAdmin={profile.is_admin}
+            appRole={profile.app_role || profile.role}
+            subscriptionTier={profile.subscription_tier}
+            validationErrors={validationErrors}
+            onInputChange={handleInputChange}
+          />
 
-                  {/* Action Buttons */}
-                  <div className="flex gap-sm mb-sm">
-                    <Button
-                      variant="primary"
-                      size="sm"
-                      onClick={() => {
-                        debug("Upload Picture clicked");
-                        fileInputRef.current?.click();
-                      }}
-                    >
-                      <Camera className="w-4 h-4 mr-2" />
-                      Upload Picture
-                    </Button>
+          <AthleticInfoForm
+            visible={profile.app_role === "player"}
+            position={formData.position}
+            jerseyNumber={formData.jersey_number}
+            heightInches={formData.height_inches}
+            weight={formData.weight_lbs}
+            gradeLevel={formData.grade_level}
+            validationErrors={validationErrors}
+            onInputChange={handleInputChange}
+          />
 
-                    {profile.avatar_url && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={async () => {
-                          debug("Edit Current Picture clicked");
-                          // Fetch current avatar as blob
-                          try {
-                            const response = await fetch(profile.avatar_url!);
-                            const blob = await response.blob();
-                            const file = new File(
-                              [blob],
-                              "current-avatar.jpg",
-                              { type: blob.type }
-                            );
-                            debug("Loaded current avatar:", file);
-                            setAvatarFile(file);
-                            setShowAvatarEditor(true);
-                          } catch (error) {
-                            logError("Failed to load current avatar:", error);
-                          }
-                        }}
-                      >
-                        <Pencil className="w-4 h-4 mr-2" />
-                        Edit Current
-                      </Button>
-                    )}
-                  </div>
+          <CoachingInfoForm
+            visible={
+              profile.app_role === "coach" ||
+              profile.app_role === "free_coach" ||
+              profile.app_role === "head_coach" ||
+              profile.is_admin
+            }
+            yearsCoaching={formData.years_coaching}
+            currentSchool={formData.current_school}
+            coachingExperience={formData.coaching_experience}
+            education={formData.education}
+            coachingPhilosophy={formData.coaching_philosophy}
+            certifications={formData.certifications}
+            onInputChange={handleInputChange}
+          />
 
-                  {/* Hidden File Input */}
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      debug("📸 File input onChange - file:", file?.name);
-                      if (file) {
-                        debug("📸 Opening editor with file:", file.name);
-                        setAvatarFile(file);
-                        setShowAvatarEditor(true);
-                      }
-                      // Reset input
-                      if (e.target) e.target.value = "";
-                    }}
-                    className="hidden"
-                  />
+          <EmergencyContactForm
+            emergencyContactName={formData.emergency_contact}
+            emergencyPhone={formData.emergency_phone}
+            validationErrors={validationErrors}
+            onInputChange={handleInputChange}
+          />
 
-                  <Typography variant="body-xs" className="text-tertiary">
-                    JPG, PNG, or GIF • Max 5MB • Square images work best
-                  </Typography>
-                  {avatarFile && (
-                    <div className="mt-xs p-xs bg-success/10 border border-success/20 rounded-lg">
-                      <Typography
-                        variant="body-xs"
-                        className="text-success font-medium"
-                      >
-                        ✓ Ready to upload: {avatarFile.name}
-                      </Typography>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
+          <SocialMediaForm
+            personalWebsite={formData.personal_website}
+            twitterUrl={formData.social_twitter}
+            instagramUrl={formData.social_instagram}
+            linkedinUrl={formData.social_linkedin}
+            tiktokUrl={formData.social_tiktok}
+            youtubeUrl={formData.social_youtube}
+            onInputChange={handleInputChange}
+          />
 
-          {/* Basic Information - Enhanced */}
-          <Card className="p-xl shadow-md shadow-jade-500/10 hover:shadow-lg hover:shadow-jade-500/20 transition-all duration-300">
-            <Typography
-              variant="headline-sm"
-              as="h2"
-              className="mb-lg text-brand-primary font-bold flex items-center"
-            >
-              <span className="w-8 h-8 bg-gradient-to-br from-jade-50 to-jade-100 border-2 border-jade-200 rounded-lg flex items-center justify-center mr-sm">
-                <User className="text-jade-600 w-4 h-4" />
-              </span>
-              Basic Information
-            </Typography>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-primary mb-xs"
-                >
-                  Email Address
-                </Typography>
-                <Input
-                  type="email"
-                  value={profile.email || ""}
-                  disabled
-                  className="bg-muted"
-                />
-                <p className="text-xs text-muted mt-1">
-                  Email cannot be changed
-                </p>
-              </div>
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-primary mb-xs"
-                >
-                  Display Name
-                </Typography>
-                <Input
-                  type="text"
-                  placeholder="How you'd like to be called"
-                  value={formData.display_name}
-                  onChange={(e) =>
-                    handleInputChange("display_name", e.target.value)
-                  }
-                />
-              </div>
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-primary mb-xs"
-                >
-                  Full Name
-                </Typography>
-                <Input
-                  type="text"
-                  placeholder="Your full name"
-                  value={formData.full_name}
-                  onChange={(e) =>
-                    handleInputChange("full_name", e.target.value)
-                  }
-                />
-              </div>
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-primary mb-xs"
-                >
-                  Phone Number
-                </Typography>
-                <Input
-                  type="tel"
-                  placeholder="(555) 123-4567"
-                  value={formData.phone}
-                  onChange={(e) => handleInputChange("phone", e.target.value)}
-                  className={validationErrors.phone ? "border-error-500" : ""}
-                />
-                <ValidationError error={validationErrors.phone} />
-              </div>
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-primary mb-xs"
-                >
-                  Role & Subscription
-                </Typography>
-                <MultiBadgeDisplay
-                  isAdmin={profile.is_admin}
-                  appRole={profile.app_role || profile.role}
-                  subscriptionTier={profile.subscription_tier}
-                  size="md"
-                  layout="wrap"
-                />
-                <p className="text-xs text-muted mt-xs">
-                  Role is set by team administrators
-                </p>
-              </div>
-              <div className="md:col-span-2">
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-primary dark:text-border-light mb-xs"
-                >
-                  Address
-                </Typography>
-                <Input
-                  type="text"
-                  placeholder="Your address"
-                  value={formData.address}
-                  onChange={(e) => handleInputChange("address", e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="mt-lg">
-              <Typography
-                variant="body-sm"
-                as="label"
-                className="block font-medium text-primary dark:text-border-light mb-xs"
-              >
-                Bio
-              </Typography>
-              <textarea
-                rows={4}
-                placeholder="Tell us about yourself..."
-                value={formData.bio}
-                onChange={(e) => handleInputChange("bio", e.target.value)}
-                className="w-full px-sm py-xs border border-secondary dark:border-text-tertiary rounded-lg shadow-sm focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus dark:bg-text-primary dark:text-inverse font-sans"
-              />
-            </div>
-          </Card>
-
-          {/* Athletic Information - Only show for players */}
-          {profile.app_role === "player" && (
-            <Card className="card-emerald p-xl rounded-2xl">
-              <Typography
-                variant="headline-sm"
-                as="h2"
-                className="mb-lg card-emerald-text font-bold flex items-center"
-              >
-                <span className="w-8 h-8 bg-[var(--card-emerald-bg-light)] border-2 border-[var(--card-emerald-border)] rounded-lg flex items-center justify-center mr-sm">
-                  <Activity className="card-emerald-icon w-4 h-4" />
-                </span>
-                Athletic Information
-              </Typography>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
-                <div>
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-medium text-primary mb-xs"
-                  >
-                    Position
-                  </Typography>
-                  <Input
-                    type="text"
-                    placeholder="e.g., Quarterback, Running Back"
-                    value={formData.position}
-                    onChange={(e) =>
-                      handleInputChange("position", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-medium text-primary mb-xs"
-                  >
-                    Jersey Number
-                  </Typography>
-                  <Input
-                    type="number"
-                    placeholder="99"
-                    min="0"
-                    max="99"
-                    value={formData.jersey_number}
-                    onChange={(e) =>
-                      handleInputChange("jersey_number", e.target.value)
-                    }
-                    className={
-                      validationErrors.jersey_number ? "border-error-500" : ""
-                    }
-                  />
-                  <ValidationError error={validationErrors.jersey_number} />
-                </div>
-                <div>
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-medium text-primary mb-xs"
-                  >
-                    Height (inches)
-                  </Typography>
-                  <Input
-                    type="number"
-                    placeholder="72"
-                    min="48"
-                    max="84"
-                    value={formData.height_inches}
-                    onChange={(e) =>
-                      handleInputChange("height_inches", e.target.value)
-                    }
-                    className={
-                      validationErrors.height_inches ? "border-error-500" : ""
-                    }
-                  />
-                  <ValidationError error={validationErrors.height_inches} />
-                </div>
-                <div>
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-medium text-primary mb-xs"
-                  >
-                    Weight (lbs)
-                  </Typography>
-                  <Input
-                    type="number"
-                    placeholder="180"
-                    min="80"
-                    max="400"
-                    value={formData.weight_lbs}
-                    onChange={(e) =>
-                      handleInputChange("weight_lbs", e.target.value)
-                    }
-                    className={
-                      validationErrors.weight_lbs ? "border-error-500" : ""
-                    }
-                  />
-                  <ValidationError error={validationErrors.weight_lbs} />
-                </div>
-                <div>
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-medium text-primary mb-xs"
-                  >
-                    Grade Level
-                  </Typography>
-                  <FormSelect
-                    value={formData.grade_level}
-                    onChange={(value) =>
-                      handleInputChange("grade_level", value)
-                    }
-                    placeholder="Select grade level"
-                    options={[
-                      { value: "9th", label: "9th Grade" },
-                      { value: "10th", label: "10th Grade" },
-                      { value: "11th", label: "11th Grade" },
-                      { value: "12th", label: "12th Grade" },
-                      { value: "college", label: "College" },
-                      { value: "adult", label: "Adult" },
-                    ]}
-                  />
-                </div>
-              </div>
-            </Card>
-          )}
-
-          {/* Coaching Information - Show for coaches and admins */}
-          {(profile.app_role === "coach" ||
-            profile.app_role === "free_coach" ||
-            profile.app_role === "head_coach" ||
-            profile.is_admin) && (
-            <Card className="card-blue p-xl rounded-2xl">
-              <Typography
-                variant="headline-sm"
-                as="h2"
-                className="mb-lg card-blue-text font-bold flex items-center"
-              >
-                <span className="w-8 h-8 bg-[var(--card-blue-bg-light)] border-2 border-[var(--card-blue-border)] rounded-lg flex items-center justify-center mr-sm">
-                  <Trophy className="card-blue-icon w-4 h-4" />
-                </span>
-                Coaching Information
-              </Typography>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
-                <div>
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-medium text-primary mb-xs"
-                  >
-                    Years Coaching
-                  </Typography>
-                  <Input
-                    type="number"
-                    placeholder="e.g., 5"
-                    value={formData.years_coaching}
-                    onChange={(e) =>
-                      handleInputChange("years_coaching", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-medium text-primary mb-xs"
-                  >
-                    Current School/Organization
-                  </Typography>
-                  <Input
-                    type="text"
-                    placeholder="e.g., BoxCall High School"
-                    value={formData.current_school}
-                    onChange={(e) =>
-                      handleInputChange("current_school", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-medium text-primary mb-xs"
-                  >
-                    Coaching Experience
-                  </Typography>
-                  <Input
-                    type="text"
-                    placeholder="e.g., Offensive Coordinator, Position Coach"
-                    value={formData.coaching_experience}
-                    onChange={(e) =>
-                      handleInputChange("coaching_experience", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-medium text-primary mb-xs"
-                  >
-                    Education
-                  </Typography>
-                  <Input
-                    type="text"
-                    placeholder="e.g., Bachelor's in Sports Science"
-                    value={formData.education}
-                    onChange={(e) =>
-                      handleInputChange("education", e.target.value)
-                    }
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-medium text-primary mb-xs"
-                  >
-                    Coaching Philosophy
-                  </Typography>
-                  <textarea
-                    rows={3}
-                    placeholder="Share your coaching philosophy and approach..."
-                    value={formData.coaching_philosophy}
-                    onChange={(e) =>
-                      handleInputChange("coaching_philosophy", e.target.value)
-                    }
-                    className="w-full px-sm py-xs border border-secondary dark:border-text-tertiary rounded-lg shadow-sm focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus dark:bg-text-primary dark:text-inverse font-sans"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-medium text-primary mb-xs"
-                  >
-                    Certifications
-                  </Typography>
-                  <Input
-                    type="text"
-                    placeholder="e.g., NFHS Certified, CPR/First Aid"
-                    value={formData.certifications}
-                    onChange={(e) =>
-                      handleInputChange("certifications", e.target.value)
-                    }
-                  />
-                </div>
-              </div>
-            </Card>
-          )}
-
-          {/* Emergency Contact Information - Enhanced */}
-          <Card className="p-xl shadow-md shadow-red-500/10 hover:shadow-lg hover:shadow-red-500/20 transition-all duration-300">
-            <Typography
-              variant="headline-sm"
-              as="h2"
-              className="mb-lg text-error font-bold flex items-center"
-            >
-              <span className="w-8 h-8 bg-gradient-to-br from-red-50 to-red-100 border-2 border-error-200 rounded-lg flex items-center justify-center mr-sm">
-                <AlertTriangle className="text-error-600 w-4 h-4" />
-              </span>
-              Emergency Contact
-            </Typography>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-primary mb-xs"
-                >
-                  Emergency Contact Name
-                </Typography>
-                <Input
-                  type="text"
-                  placeholder="Full name of emergency contact"
-                  value={formData.emergency_contact}
-                  onChange={(e) =>
-                    handleInputChange("emergency_contact", e.target.value)
-                  }
-                  className={
-                    validationErrors.emergency_contact ? "border-error-500" : ""
-                  }
-                />
-                <ValidationError error={validationErrors.emergency_contact} />
-              </div>
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-primary mb-xs"
-                >
-                  Emergency Contact Phone
-                </Typography>
-                <Input
-                  type="tel"
-                  placeholder="(555) 123-4567"
-                  value={formData.emergency_phone}
-                  onChange={(e) =>
-                    handleInputChange("emergency_phone", e.target.value)
-                  }
-                  className={
-                    validationErrors.emergency_phone ? "border-error-500" : ""
-                  }
-                />
-                <ValidationError error={validationErrors.emergency_phone} />
-              </div>
-            </div>
-          </Card>
-
-          {/* Coaching Information - Only show for coaches */}
-          {(profile.app_role === "coach" ||
-            profile.app_role === "free_coach" ||
-            profile.app_role === "head_coach" ||
-            profile.is_admin) && (
-            <Card className="card-purple relative overflow-hidden p-xl rounded-2xl">
-              <div className="absolute top-0 right-0 w-20 h-20 bg-[var(--color-accent-purple-100)] rounded-full -mr-10 -mt-10 opacity-60"></div>
-              <Typography
-                variant="headline-sm"
-                as="h2"
-                className="mb-lg card-purple-text font-bold flex items-center"
-              >
-                <span className="w-8 h-8 bg-[var(--card-purple-bg-light)] border-2 border-[var(--card-purple-border)] rounded-lg flex items-center justify-center mr-sm">
-                  <Trophy className="card-purple-icon w-4 h-4" />
-                </span>
-                Coaching Information
-              </Typography>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-lg">
-                <div>
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-semibold text-primary dark:text-border-light mb-xs"
-                  >
-                    Years of Coaching Experience
-                  </Typography>
-                  <Input
-                    type="number"
-                    placeholder="5"
-                    value={formData.years_coaching}
-                    onChange={(e) =>
-                      handleInputChange("years_coaching", e.target.value)
-                    }
-                    min="0"
-                    max="50"
-                  />
-                </div>
-                <div>
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-semibold text-primary dark:text-border-light mb-xs"
-                  >
-                    Current School/Organization
-                  </Typography>
-                  <Input
-                    type="text"
-                    placeholder="Madison High School"
-                    value={formData.current_school}
-                    onChange={(e) =>
-                      handleInputChange("current_school", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-semibold text-primary dark:text-border-light mb-xs"
-                  >
-                    Education
-                  </Typography>
-                  <Input
-                    type="text"
-                    placeholder="BS Exercise Science - University of Wisconsin"
-                    value={formData.education}
-                    onChange={(e) =>
-                      handleInputChange("education", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-semibold text-primary dark:text-border-light mb-xs"
-                  >
-                    Certifications
-                  </Typography>
-                  <Input
-                    type="text"
-                    placeholder="NFHS Certified, First Aid/CPR"
-                    value={formData.certifications}
-                    onChange={(e) =>
-                      handleInputChange("certifications", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-semibold text-primary dark:text-border-light mb-xs"
-                  >
-                    Specializations
-                  </Typography>
-                  <Input
-                    type="text"
-                    placeholder="Offense, Player Development, Leadership"
-                    value={formData.specializations}
-                    onChange={(e) =>
-                      handleInputChange("specializations", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-semibold text-primary dark:text-border-light mb-xs"
-                  >
-                    Coaching System
-                  </Typography>
-                  <Input
-                    type="text"
-                    placeholder="Spread Offense, 4-3 Defense"
-                    value={formData.coaching_system}
-                    onChange={(e) =>
-                      handleInputChange("coaching_system", e.target.value)
-                    }
-                  />
-                </div>
-                <div className="lg:col-span-2">
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-semibold text-primary dark:text-border-light mb-xs"
-                  >
-                    Previous Schools
-                  </Typography>
-                  <Input
-                    type="text"
-                    placeholder="West High School (2018-2021), Central Middle School (2015-2018)"
-                    value={formData.previous_schools}
-                    onChange={(e) =>
-                      handleInputChange("previous_schools", e.target.value)
-                    }
-                  />
-                </div>
-                <div className="lg:col-span-2">
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-semibold text-primary dark:text-border-light mb-xs"
-                  >
-                    Coaching Experience
-                  </Typography>
-                  <textarea
-                    placeholder="Describe your coaching background, achievements, and experience..."
-                    value={formData.coaching_experience}
-                    onChange={(e) =>
-                      handleInputChange("coaching_experience", e.target.value)
-                    }
-                    rows={3}
-                    className="w-full px-sm py-xs border border-primary dark:border-light rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none"
-                  />
-                </div>
-                <div className="lg:col-span-2">
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-semibold text-primary dark:text-border-light mb-xs"
-                  >
-                    Coaching Philosophy
-                  </Typography>
-                  <textarea
-                    placeholder="Share your coaching philosophy and approach to player development..."
-                    value={formData.coaching_philosophy}
-                    onChange={(e) =>
-                      handleInputChange("coaching_philosophy", e.target.value)
-                    }
-                    rows={3}
-                    className="w-full px-sm py-xs border border-primary dark:border-light rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none"
-                  />
-                </div>
-                <div className="lg:col-span-2">
-                  <Typography
-                    variant="body-sm"
-                    as="label"
-                    className="block font-semibold text-primary dark:text-border-light mb-xs"
-                  >
-                    Mentors & Influences
-                  </Typography>
-                  <Input
-                    type="text"
-                    placeholder="Coach Smith (Head Coach), Coach Johnson (Offensive Coordinator)"
-                    value={formData.mentors}
-                    onChange={(e) =>
-                      handleInputChange("mentors", e.target.value)
-                    }
-                  />
-                </div>
-              </div>
-            </Card>
-          )}
-
-          {/* Social Media Links - Enhanced */}
-          <Card className="card-indigo relative overflow-hidden p-xl rounded-2xl">
-            <div className="absolute top-0 left-0 w-16 h-16 bg-[var(--color-accent-indigo-100)] rounded-full -ml-8 -mt-8 opacity-60"></div>
-            <div className="absolute bottom-0 right-0 w-12 h-12 bg-[var(--color-accent-indigo-100)] rounded-full -mr-6 -mb-6 opacity-60"></div>
-            <Typography
-              variant="headline-sm"
-              as="h2"
-              className="mb-lg card-indigo-text font-bold flex items-center"
-            >
-              <span className="w-8 h-8 bg-[var(--card-indigo-bg-light)] border-2 border-[var(--card-indigo-border)] rounded-lg flex items-center justify-center mr-sm">
-                <Link2 className="card-indigo-icon w-4 h-4" />
-              </span>
-              Social Media & Links
-            </Typography>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-lg">
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-semibold text-primary dark:text-border-light mb-xs"
-                >
-                  Personal Website
-                </Typography>
-                <Input
-                  type="url"
-                  placeholder="https://www.yourwebsite.com"
-                  value={formData.personal_website}
-                  onChange={(e) =>
-                    handleInputChange("personal_website", e.target.value)
-                  }
-                />
-              </div>
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-semibold text-primary dark:text-border-light mb-xs"
-                >
-                  Twitter/X
-                </Typography>
-                <Input
-                  type="text"
-                  placeholder="@yourusername or full URL"
-                  value={formData.social_twitter}
-                  onChange={(e) =>
-                    handleInputChange("social_twitter", e.target.value)
-                  }
-                />
-              </div>
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-semibold text-primary dark:text-border-light mb-xs"
-                >
-                  Instagram
-                </Typography>
-                <Input
-                  type="text"
-                  placeholder="@yourusername or full URL"
-                  value={formData.social_instagram}
-                  onChange={(e) =>
-                    handleInputChange("social_instagram", e.target.value)
-                  }
-                />
-              </div>
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-semibold text-primary dark:text-border-light mb-xs"
-                >
-                  LinkedIn
-                </Typography>
-                <Input
-                  type="text"
-                  placeholder="linkedin.com/in/yourprofile"
-                  value={formData.social_linkedin}
-                  onChange={(e) =>
-                    handleInputChange("social_linkedin", e.target.value)
-                  }
-                />
-              </div>
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-semibold text-primary dark:text-border-light mb-xs"
-                >
-                  TikTok
-                </Typography>
-                <Input
-                  type="text"
-                  placeholder="@yourusername or full URL"
-                  value={formData.social_tiktok}
-                  onChange={(e) =>
-                    handleInputChange("social_tiktok", e.target.value)
-                  }
-                />
-              </div>
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-semibold text-primary dark:text-border-light mb-xs"
-                >
-                  YouTube
-                </Typography>
-                <Input
-                  type="text"
-                  placeholder="youtube.com/@yourchannel"
-                  value={formData.social_youtube}
-                  onChange={(e) =>
-                    handleInputChange("social_youtube", e.target.value)
-                  }
-                />
-              </div>
-            </div>
-          </Card>
-
-          {/* Account Security */}
-          <Card className="p-lg shadow-md hover:shadow-lg transition-all duration-300">
-            <Typography variant="headline-sm" as="h2" className="mb-md">
-              Account Security
-            </Typography>
-            <div className="space-y-md">
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-primary dark:text-border-light mb-xs"
-                >
-                  Password
-                </Typography>
-                <div className="flex items-center space-x-md">
-                  <Input
-                    type="password"
-                    value="••••••••••"
-                    disabled
-                    className="bg-subtle dark:bg-text-primary"
-                  />
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    onClick={handlePasswordChange}
-                  >
-                    Change Password
-                  </Button>
-                </div>
-                <p className="text-xs text-muted mt-1">
-                  A password reset link will be sent to your email
-                </p>
-              </div>
-            </div>
-          </Card>
+          <AccountSecurityForm onChangePasswordClick={handlePasswordChange} />
 
           {/* Actions */}
           <div className="flex justify-between items-center">
@@ -1497,11 +657,11 @@ const ProfilePage: React.FC = () => {
               loading={saving || avatarUploading}
               disabled={saving || avatarUploading}
             >
-              {saving && avatarUploading
-                ? "Uploading..."
-                : saving
-                  ? "Saving..."
-                  : "Save Changes"}
+              {(() => {
+                if (saving && avatarUploading) return "Uploading...";
+                if (saving) return "Saving...";
+                return "Save Changes";
+              })()}
             </Button>
           </div>
         </form>

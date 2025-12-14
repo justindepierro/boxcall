@@ -102,12 +102,13 @@ export const FormationDataDiagnostic: React.FC<{ playbookId?: string }> = ({
           sample: playsData?.[0] || null,
           all: playsData || [],
         },
-        diagnosis:
-          formations.length === 0 && playsData && playsData.length > 0
-            ? "⚠️ FOUND THE ISSUE: Formations table is empty but plays table has data! Your formation data is in plays.formation and plays.f_dir fields."
-            : formations.length > 0
-              ? "✅ Formations table has data"
-              : "❌ Both formations and plays tables appear empty",
+        diagnosis: (() => {
+          if (formations.length === 0 && playsData && playsData.length > 0) {
+            return "⚠️ FOUND THE ISSUE: Formations table is empty but plays table has data! Your formation data is in plays.formation and plays.f_dir fields.";
+          }
+          if (formations.length > 0) return "✅ Formations table has data";
+          return "❌ Both formations and plays tables appear empty";
+        })(),
       });
 
       if (!formations || formations.length === 0) {

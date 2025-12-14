@@ -105,7 +105,7 @@ export function useCalendarShellController() {
         const api = calendarRef.current?.getApi();
         if (api) {
           const currentDate = api.getDate();
-          const desired = new Date(s.date + "T00:00:00");
+          const desired = new Date(`${s.date}T00:00:00`);
           if (
             Math.abs(desired.getTime() - currentDate.getTime()) >
             1000 * 60 * 60 * 6

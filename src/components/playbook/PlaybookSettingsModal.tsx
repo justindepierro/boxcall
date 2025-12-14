@@ -198,13 +198,11 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                     }`}
                   >
                     <Icon
-                      name={
-                        theme === "light"
-                          ? "sun"
-                          : theme === "dark"
-                            ? "moon"
-                            : "monitor"
-                      }
+                      name={(() => {
+                        if (theme === "light") return "sun";
+                        if (theme === "dark") return "moon";
+                        return "monitor";
+                      })()}
                       className={`${isMobile ? "w-6 h-6" : "w-5 h-5"} mx-auto mb-1`}
                     />
                     <Typography

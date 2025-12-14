@@ -23,6 +23,102 @@ interface PlaySelectorModalProps {
   title?: string; // Custom title for the modal
 }
 
+/** Loading state */
+function LoadingState() {
+  return (
+    <div className="text-center py-8">
+      <Typography variant="body-sm" className="text-secondary">
+        Loading plays...
+      </Typography>
+    </div>
+  );
+}
+
+/** Empty state when no plays found */
+function EmptyState({ hasFilters }: { hasFilters: boolean }) {
+  return (
+    <div className="text-center py-8">
+      <Icon name="file" className="h-12 w-12 text-muted mx-auto mb-4" />
+      <Typography variant="headline-sm" className="text-secondary mb-2">
+        No plays found
+      </Typography>
+      <Typography variant="body-sm" className="text-muted">
+        {hasFilters
+          ? "Try adjusting your search or filters"
+          : "Add some plays to your playbook first"}
+      </Typography>
+    </div>
+  );
+}
+
+/** Play list item */
+function PlayListItem({
+  play,
+  onSelect,
+}: {
+  play: DatabasePlay;
+  onSelect: (play: DatabasePlay) => void;
+}) {
+  const getDisplayName = (play: DatabasePlay) => {
+    return `${play.formation}${play.f_dir ? ` ${play.f_dir}` : ""} - ${play.play_name}${play.p_dir ? ` (${play.p_dir})` : ""}`;
+  };
+
+  const getSuccessRate = (play: DatabasePlay) => {
+    if (!play.times_called || play.times_called === 0) return 0;
+    return Math.round(((play.times_successful || 0) / play.times_called) * 100);
+  };
+
+  return (
+    <div
+      className="border border-border rounded-lg p-4 hover:bg-secondary cursor-pointer transition-colors"
+      onClick={() => onSelect(play)}
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex-1 min-w-0">
+          <Typography
+            variant="body-sm"
+            className="text-primary font-medium mb-1"
+          >
+            {getDisplayName(play)}
+          </Typography>
+
+          <div className="flex items-center space-x-2 mb-2">
+            <Badge variant="neutral" size="sm">
+              {play.p_type}
+            </Badge>
+            <Badge variant="info" size="sm">
+              {play.formation}
+            </Badge>
+            {play.times_called !== undefined && play.times_called > 0 && (
+              <Badge
+                variant={getSuccessRate(play) >= 70 ? "success" : "warning"}
+                size="sm"
+              >
+                {getSuccessRate(play)}% success
+              </Badge>
+            )}
+          </div>
+
+          {play.notes && (
+            <Typography
+              variant="caption"
+              className="text-secondary line-clamp-2"
+            >
+              {play.notes}
+            </Typography>
+          )}
+        </div>
+
+        <div className="ml-4">
+          <Button variant="primary" size="sm">
+            Add to Script
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
   isOpen,
   onClose,
@@ -101,15 +197,6 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
     onClose();
   };
 
-  const getDisplayName = (play: DatabasePlay) => {
-    return `${play.formation}${play.f_dir ? ` ${play.f_dir}` : ""} - ${play.play_name}${play.p_dir ? ` (${play.p_dir})` : ""}`;
-  };
-
-  const getSuccessRate = (play: DatabasePlay) => {
-    if (!play.times_called || play.times_called === 0) return 0;
-    return Math.round(((play.times_successful || 0) / play.times_called) * 100);
-  };
-
   return (
     <Modal
       isOpen={isOpen}
@@ -173,83 +260,29 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
 
         {/* Play List */}
         <div className="max-h-96 overflow-y-auto">
-          {loading ? (
-            <div className="text-center py-8">
-              <Typography variant="body-sm" className="text-secondary">
-                Loading plays...
-              </Typography>
-            </div>
-          ) : filteredPlays.length === 0 ? (
-            <div className="text-center py-8">
-              <Icon name="file" className="h-12 w-12 text-muted mx-auto mb-4" />
-              <Typography variant="headline-sm" className="text-secondary mb-2">
-                No plays found
-              </Typography>
-              <Typography variant="body-sm" className="text-muted">
-                {searchQuery || selectedFormation || selectedPlayType
-                  ? "Try adjusting your search or filters"
-                  : "Add some plays to your playbook first"}
-              </Typography>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {filteredPlays.map((play) => (
-                <div
-                  key={play.id}
-                  className="border border-border rounded-lg p-4 hover:bg-secondary cursor-pointer transition-colors"
-                  onClick={() => handlePlaySelect(play)}
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 min-w-0">
-                      <Typography
-                        variant="body-sm"
-                        className="text-primary font-medium mb-1"
-                      >
-                        {getDisplayName(play)}
-                      </Typography>
-
-                      <div className="flex items-center space-x-2 mb-2">
-                        <Badge variant="neutral" size="sm">
-                          {play.p_type}
-                        </Badge>
-                        <Badge variant="info" size="sm">
-                          {play.formation}
-                        </Badge>
-                        {play.times_called !== undefined &&
-                          play.times_called > 0 && (
-                            <Badge
-                              variant={
-                                getSuccessRate(play) >= 70
-                                  ? "success"
-                                  : "warning"
-                              }
-                              size="sm"
-                            >
-                              {getSuccessRate(play)}% success
-                            </Badge>
-                          )}
-                      </div>
-
-                      {play.notes && (
-                        <Typography
-                          variant="caption"
-                          className="text-secondary line-clamp-2"
-                        >
-                          {play.notes}
-                        </Typography>
-                      )}
-                    </div>
-
-                    <div className="ml-4">
-                      <Button variant="primary" size="sm">
-                        Add to Script
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          {(() => {
+            if (loading) return <LoadingState />;
+            if (filteredPlays.length === 0) {
+              return (
+                <EmptyState
+                  hasFilters={
+                    !!(searchQuery || selectedFormation || selectedPlayType)
+                  }
+                />
+              );
+            }
+            return (
+              <div className="space-y-3">
+                {filteredPlays.map((play) => (
+                  <PlayListItem
+                    key={play.id}
+                    play={play}
+                    onSelect={handlePlaySelect}
+                  />
+                ))}
+              </div>
+            );
+          })()}
         </div>
 
         {/* Footer */}

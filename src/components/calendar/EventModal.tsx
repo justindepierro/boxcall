@@ -101,11 +101,11 @@ export const EventModal: React.FC<EventModalProps> = ({
                   className="text-navy-600"
                 />
                 <Typography variant="headline-md" className="text-navy-900">
-                  {isCreating
-                    ? "Create Event"
-                    : isEditing
-                      ? "Edit Event"
-                      : "Event Details"}
+                  {(() => {
+                    if (isCreating) return "Create Event";
+                    if (isEditing) return "Edit Event";
+                    return "Event Details";
+                  })()}
                 </Typography>
               </div>
               <Button
@@ -118,97 +118,111 @@ export const EventModal: React.FC<EventModalProps> = ({
                 aria-label="Close event modal"
               />
             </div>
-            {isCreating && event ? (
-              <EventForm
-                mode="create"
-                event={event}
-                setEvent={(e) => setEvent(e)}
-                submitting={createEventMutation.status === "pending"}
-                onCancel={() => {
-                  setIsCreating(false);
-                  onClose();
-                }}
-                onSubmit={async (e) => {
-                  try {
-                    await createEventMutation.mutateAsync({
-                      title: e.title,
-                      start: e.start,
-                      end: e.end,
-                      type: e.type,
-                      location: e.location,
-                      description: e.description,
-                    });
-                    setIsCreating(false);
-                    onClose();
-                  } catch (err) {
-                    logError("Failed to create event:", err);
-                  }
-                }}
-              />
-            ) : isEditing && event ? (
-              <EventForm
-                mode="edit"
-                event={event}
-                setEvent={(e) => setEvent(e)}
-                submitting={updateEventMutation.status === "pending"}
-                onCancel={() => setIsEditing(false)}
-                onSubmit={async (e) => {
-                  try {
-                    await updateEventMutation.mutateAsync({
-                      id: e.id,
-                      updates: {
-                        title: e.title,
-                        start: e.start,
-                        end: e.end,
-                        type: e.type,
-                        location: e.location,
-                        description: e.description,
-                      },
-                    });
-                    setIsEditing(false);
-                  } catch (err) {
-                    logError("Failed to update event:", err);
-                  }
-                }}
-              />
-            ) : event ? (
-              <EventDetails
-                event={event}
-                profileRole={profile?.role || null}
-                userId={userId}
-                onEdit={() => setIsEditing(true)}
-                onDelete={async () => {
-                  try {
-                    if (event.id) {
-                      await deleteEventMutation.mutateAsync(event.id);
+            {(() => {
+              if (isCreating && event) {
+                return (
+                  <EventForm
+                    mode="create"
+                    event={event}
+                    setEvent={(e) => setEvent(e)}
+                    submitting={createEventMutation.status === "pending"}
+                    onCancel={() => {
+                      setIsCreating(false);
                       onClose();
-                      setEvent(null);
+                    }}
+                    onSubmit={async (e) => {
+                      try {
+                        await createEventMutation.mutateAsync({
+                          title: e.title,
+                          start: e.start,
+                          end: e.end,
+                          type: e.type,
+                          location: e.location,
+                          description: e.description,
+                        });
+                        setIsCreating(false);
+                        onClose();
+                      } catch (err) {
+                        logError("Failed to create event:", err);
+                      }
+                    }}
+                  />
+                );
+              }
+              if (isEditing && event) {
+                return (
+                  <EventForm
+                    mode="edit"
+                    event={event}
+                    setEvent={(e) => setEvent(e)}
+                    submitting={updateEventMutation.status === "pending"}
+                    onCancel={() => setIsEditing(false)}
+                    onSubmit={async (e) => {
+                      try {
+                        await updateEventMutation.mutateAsync({
+                          id: e.id,
+                          updates: {
+                            title: e.title,
+                            start: e.start,
+                            end: e.end,
+                            type: e.type,
+                            location: e.location,
+                            description: e.description,
+                          },
+                        });
+                        setIsEditing(false);
+                      } catch (err) {
+                        logError("Failed to update event:", err);
+                      }
+                    }}
+                  />
+                );
+              }
+              if (event) {
+                return (
+                  <EventDetails
+                    event={event}
+                    profileRole={profile?.role || null}
+                    userId={userId}
+                    onEdit={() => setIsEditing(true)}
+                    onDelete={async () => {
+                      try {
+                        if (event.id) {
+                          await deleteEventMutation.mutateAsync(event.id);
+                          onClose();
+                          setEvent(null);
+                        }
+                      } catch (err) {
+                        logError("Failed to delete event:", err);
+                      }
+                    }}
+                    deletePending={deleteEventMutation.status === "pending"}
+                    onPlanPractice={() => {
+                      setShowPracticePlanner(true);
+                      onClose();
+                      onOpenPracticePlanner(event);
+                    }}
+                    rsvps={rsvps}
+                    myRsvpStatus={
+                      rsvps.data?.find((r: EventRSVP) => r.user_id === userId)
+                        ?.status
                     }
-                  } catch (err) {
-                    logError("Failed to delete event:", err);
-                  }
-                }}
-                deletePending={deleteEventMutation.status === "pending"}
-                onPlanPractice={() => {
-                  setShowPracticePlanner(true);
-                  onClose();
-                  onOpenPracticePlanner(event);
-                }}
-                rsvps={rsvps}
-                myRsvpStatus={
-                  rsvps.data?.find((r: EventRSVP) => r.user_id === userId)
-                    ?.status
-                }
-                onRsvp={(status) =>
-                  updateRSVPMutation.mutate({ userId: userId || "", status })
-                }
-                rsvpPending={updateRSVPMutation.status === "pending"}
-                comments={comments}
-                onAddComment={(body) => addCommentMutation.mutate(body)}
-                addCommentPending={addCommentMutation.status === "pending"}
-                rsvpRequired={!!event.rsvp_required}
-              />
-            ) : null}
+                    onRsvp={(status) =>
+                      updateRSVPMutation.mutate({
+                        userId: userId || "",
+                        status,
+                      })
+                    }
+                    rsvpPending={updateRSVPMutation.status === "pending"}
+                    comments={comments}
+                    onAddComment={(body) => addCommentMutation.mutate(body)}
+                    addCommentPending={addCommentMutation.status === "pending"}
+                    rsvpRequired={!!event.rsvp_required}
+                  />
+                );
+              }
+              return null;
+            })()}
           </div>
         </div>
       </div>

@@ -12,6 +12,106 @@ interface AvatarEditorProps {
   onSave: (croppedBlob: Blob) => void;
 }
 
+/** Circular crop overlay with dark background outside */
+function CropOverlay() {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+      <div className="relative w-80 h-80">
+        <div
+          className="absolute inset-0 rounded-full"
+          style={{
+            boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.7)",
+          }}
+        />
+        <div className="absolute inset-0 rounded-full border-4 border-white/80" />
+      </div>
+    </div>
+  );
+}
+
+/** Zoom and rotation controls */
+function EditorControls({
+  zoom,
+  rotation,
+  onZoomChange,
+  onZoomIn,
+  onZoomOut,
+  onRotate,
+  onReset,
+}: {
+  zoom: number;
+  rotation: number;
+  onZoomChange: (zoom: number) => void;
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onRotate: () => void;
+  onReset: () => void;
+}) {
+  return (
+    <div className="space-y-md">
+      {/* Zoom Controls */}
+      <div className="flex items-center gap-md">
+        <Typography variant="body-sm" className="w-20 font-medium">
+          Zoom
+        </Typography>
+        <div className="flex items-center gap-sm flex-1">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onZoomOut}
+            disabled={zoom <= 0.5}
+          >
+            <ZoomOut className="w-4 h-4" />
+          </Button>
+          <input
+            type="range"
+            min="0.5"
+            max="3"
+            step="0.1"
+            value={zoom}
+            onChange={(e) => onZoomChange(parseFloat(e.target.value))}
+            className="flex-1"
+          />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onZoomIn}
+            disabled={zoom >= 3}
+          >
+            <ZoomIn className="w-4 h-4" />
+          </Button>
+          <Typography variant="body-xs" className="w-12 text-right">
+            {Math.round(zoom * 100)}%
+          </Typography>
+        </div>
+      </div>
+
+      {/* Rotation Control */}
+      <div className="flex items-center gap-md">
+        <Typography variant="body-sm" className="w-20 font-medium">
+          Rotate
+        </Typography>
+        <div className="flex items-center gap-sm flex-1">
+          <Button variant="outline" size="sm" onClick={onRotate}>
+            <RotateCw className="w-4 h-4 mr-2" />
+            Rotate 90°
+          </Button>
+          <Typography variant="body-xs" className="w-12 text-right">
+            {rotation}°
+          </Typography>
+        </div>
+      </div>
+
+      {/* Reset Button */}
+      <div className="flex justify-center pt-sm">
+        <Button variant="ghost" size="sm" onClick={onReset}>
+          Reset to Original
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export const AvatarEditor: React.FC<AvatarEditorProps> = ({
   isOpen,
   onClose,
@@ -151,20 +251,8 @@ export const AvatarEditor: React.FC<AvatarEditorProps> = ({
       <div className="p-md">
         {/* Preview Area */}
         <div className="relative bg-secondary rounded-lg overflow-hidden mb-md">
-          {/* Crop Circle Overlay - Dark outside, clear inside */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-            <div className="relative w-80 h-80">
-              {/* This creates dark overlay OUTSIDE the circle using inverted box-shadow */}
-              <div
-                className="absolute inset-0 rounded-full"
-                style={{
-                  boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.7)",
-                }}
-              />
-              {/* Circle border */}
-              <div className="absolute inset-0 rounded-full border-4 border-white/80" />
-            </div>
-          </div>
+          {/* Crop Circle Overlay */}
+          <CropOverlay />
 
           {/* Image Container */}
           <div
@@ -199,67 +287,15 @@ export const AvatarEditor: React.FC<AvatarEditorProps> = ({
         </div>
 
         {/* Controls */}
-        <div className="space-y-md">
-          {/* Zoom Controls */}
-          <div className="flex items-center gap-md">
-            <Typography variant="body-sm" className="w-20 font-medium">
-              Zoom
-            </Typography>
-            <div className="flex items-center gap-sm flex-1">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleZoomOut}
-                disabled={zoom <= 0.5}
-              >
-                <ZoomOut className="w-4 h-4" />
-              </Button>
-              <input
-                type="range"
-                min="0.5"
-                max="3"
-                step="0.1"
-                value={zoom}
-                onChange={(e) => setZoom(parseFloat(e.target.value))}
-                className="flex-1"
-              />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleZoomIn}
-                disabled={zoom >= 3}
-              >
-                <ZoomIn className="w-4 h-4" />
-              </Button>
-              <Typography variant="body-xs" className="w-12 text-right">
-                {Math.round(zoom * 100)}%
-              </Typography>
-            </div>
-          </div>
-
-          {/* Rotation Control */}
-          <div className="flex items-center gap-md">
-            <Typography variant="body-sm" className="w-20 font-medium">
-              Rotate
-            </Typography>
-            <div className="flex items-center gap-sm flex-1">
-              <Button variant="outline" size="sm" onClick={handleRotate}>
-                <RotateCw className="w-4 h-4 mr-2" />
-                Rotate 90°
-              </Button>
-              <Typography variant="body-xs" className="w-12 text-right">
-                {rotation}°
-              </Typography>
-            </div>
-          </div>
-
-          {/* Reset Button */}
-          <div className="flex justify-center pt-sm">
-            <Button variant="ghost" size="sm" onClick={handleReset}>
-              Reset to Original
-            </Button>
-          </div>
-        </div>
+        <EditorControls
+          zoom={zoom}
+          rotation={rotation}
+          onZoomChange={setZoom}
+          onZoomIn={handleZoomIn}
+          onZoomOut={handleZoomOut}
+          onRotate={handleRotate}
+          onReset={handleReset}
+        />
 
         {/* Hidden Canvas for Cropping */}
         <canvas ref={canvasRef} className="hidden" />

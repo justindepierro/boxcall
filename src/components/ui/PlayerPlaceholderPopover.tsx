@@ -60,7 +60,7 @@ export const PlayerPlaceholderPopover: React.FC<
 
     // Use fixed positioning for viewport-relative calculations
     let top: number;
-    let left: number = triggerRect.left + triggerRect.width / 2;
+    const left: number = triggerRect.left + triggerRect.width / 2;
 
     // Smart placement: prefer bottom, but flip to top if not enough space
     if (spaceBelow > popoverHeight || spaceBelow > spaceAbove) {

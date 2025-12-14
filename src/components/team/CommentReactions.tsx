@@ -125,19 +125,19 @@ export const CommentReactions: React.FC<CommentReactionsProps> = ({
             key={type}
             onClick={() => handleToggleReaction(type)}
             disabled={loading}
-            className={`
+            className={(() => {
+              const base = `
               flex items-center gap-1 rounded-full font-medium
               transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
               ${compact ? "px-2 py-1" : "px-3 py-1.5"}
               ${isAnimating ? "scale-110" : "scale-100"}
-              ${
-                hasReacted
-                  ? "bg-brand-primary-light text-brand-primary-dark"
-                  : count > 0
-                    ? "bg-primary text-primary hover:bg-jade-50"
-                    : "bg-transparent text-secondary hover:bg-subtle"
-              }
-            `}
+              `;
+              if (hasReacted)
+                return `${base} bg-brand-primary-light text-brand-primary-dark`;
+              if (count > 0)
+                return `${base} bg-primary text-primary hover:bg-jade-50`;
+              return `${base} bg-transparent text-secondary hover:bg-subtle`;
+            })()}
             title={`${REACTION_LABELS[type]}${
               hasReacted ? " (You reacted)" : ""
             }${count > 0 ? ` - ${count} reaction${count !== 1 ? "s" : ""}` : ""}`}

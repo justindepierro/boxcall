@@ -105,26 +105,28 @@ const mapSessionToDisplay = (
       },
       isArchived: practiceSession.isArchived,
     };
-  } else {
-    const gameSession = session as GameSession;
-    return {
-      id: gameSession.id,
-      type: "game",
-      name:
-        (gameSession as any).game_plans?.name ||
-        `vs ${gameSession.opponent || "Unknown"}`,
-      date: gameSession.gameDate,
-      dateDisplay: formatRelativeDate(gameSession.gameDate),
-      sourceId: gameSession.gamePlanId, // For replay navigation
-      stats: {
-        totalPlays: gameSession.totalPlays || 0,
-        successRate: Math.round(gameSession.successRate || 0),
-        totalYards: gameSession.totalYards,
-      },
-      opponent: gameSession.opponent,
-      isArchived: gameSession.isArchived,
-    };
   }
+  const gameSession = session as GameSession;
+  return {
+    id: gameSession.id,
+    type: "game",
+    name: (() => {
+      if ((gameSession as any).game_plans?.name)
+        return (gameSession as any).game_plans.name;
+      if (gameSession.opponent) return `vs ${gameSession.opponent}`;
+      return "vs Unknown";
+    })(),
+    date: gameSession.gameDate,
+    dateDisplay: formatRelativeDate(gameSession.gameDate),
+    sourceId: gameSession.gamePlanId, // For replay navigation
+    stats: {
+      totalPlays: gameSession.totalPlays || 0,
+      successRate: Math.round(gameSession.successRate || 0),
+      totalYards: gameSession.totalYards,
+    },
+    opponent: gameSession.opponent,
+    isArchived: gameSession.isArchived,
+  };
 };
 
 type FilterType = "all" | "practice" | "game";
@@ -269,9 +271,12 @@ const SessionHistoryPage: React.FC = () => {
               No Sessions Found
             </Typography>
             <Typography variant="body-md" color="muted" className="mb-6">
-              {filterType === "all"
-                ? "You haven't recorded any sessions yet."
-                : `No ${filterType} sessions found.`}
+              {(() => {
+                if (filterType === "all") {
+                  return "You haven't recorded any sessions yet.";
+                }
+                return `No ${filterType} sessions found.`;
+              })()}
             </Typography>
             <button
               onClick={() => navigate("/boxcall")}
@@ -286,13 +291,15 @@ const SessionHistoryPage: React.FC = () => {
             {filteredSessions.map((session) => (
               <div
                 key={session.id}
-                className={`rounded-2xl bg-white border-2 p-4 sm:p-5 cursor-pointer hover:shadow-lg transition-all group ${
-                  session.isArchived
-                    ? "opacity-60 border-slate-200"
-                    : session.type === "practice"
-                      ? "border-orange-200 hover:border-orange-300 shadow-md shadow-orange-500/5"
-                      : "border-emerald-200 hover:border-emerald-300 shadow-md shadow-emerald-500/5"
-                }`}
+                className={`rounded-2xl bg-white border-2 p-4 sm:p-5 cursor-pointer hover:shadow-lg transition-all group ${(() => {
+                  if (session.isArchived) {
+                    return "opacity-60 border-slate-200";
+                  }
+                  if (session.type === "practice") {
+                    return "border-orange-200 hover:border-orange-300 shadow-md shadow-orange-500/5";
+                  }
+                  return "border-emerald-200 hover:border-emerald-300 shadow-md shadow-emerald-500/5";
+                })()}`}
                 onClick={() => handleSessionClick(session)}
               >
                 <div className="flex items-center gap-4">
@@ -342,13 +349,13 @@ const SessionHistoryPage: React.FC = () => {
                   {/* Stats - Premium */}
                   <div className="text-right flex-shrink-0">
                     <div
-                      className={`text-2xl font-black ${
-                        session.stats.successRate >= 70
-                          ? "text-emerald-500"
-                          : session.stats.successRate >= 50
-                            ? "text-amber-500"
-                            : "text-rose-500"
-                      }`}
+                      className={`text-2xl font-black ${(() => {
+                        if (session.stats.successRate >= 70)
+                          return "text-emerald-500";
+                        if (session.stats.successRate >= 50)
+                          return "text-amber-500";
+                        return "text-rose-500";
+                      })()}`}
                     >
                       {session.stats.successRate}%
                     </div>

@@ -207,7 +207,7 @@ export function DesktopPlaybookView({
                     const commonPlayGridProps = {
                       searchQuery: debouncedSearchQuery,
                       filters: state.selectedFilters,
-                      optimisticPlays: optimisticPlays,
+                      optimisticPlays,
                       onAddToPracticeScript: handleAddToPracticeScript,
                       onAddToGamePlan: handleAddToGamePlan,
                       onEdit: handleEditPlay,

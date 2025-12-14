@@ -23,6 +23,25 @@ import type {
   CreateCommentRequest,
 } from "../../types/social";
 
+/** Comment avatar display */
+function CommentAvatar({ user }: { user?: Comment["user"] }) {
+  return (
+    <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
+      {user?.avatar_url ? (
+        <img
+          src={user.avatar_url}
+          alt={user.display_name || "User"}
+          className="w-8 h-8 rounded-full"
+        />
+      ) : (
+        <span className="text-sm font-medium text-secondary">
+          {(user?.display_name || "U")[0].toUpperCase()}
+        </span>
+      )}
+    </div>
+  );
+}
+
 interface CommentItemProps {
   comment: Comment;
   contentType: string;
@@ -94,19 +113,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
       <div className="flex gap-sm">
         {/* Avatar */}
         <div className="flex-shrink-0">
-          <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
-            {comment.user?.avatar_url ? (
-              <img
-                src={comment.user.avatar_url}
-                alt={comment.user.display_name || "User"}
-                className="w-8 h-8 rounded-full"
-              />
-            ) : (
-              <span className="text-sm font-medium text-secondary">
-                {(comment.user?.display_name || "U")[0].toUpperCase()}
-              </span>
-            )}
-          </div>
+          <CommentAvatar user={comment.user} />
         </div>
 
         {/* Comment Content */}
@@ -383,7 +390,11 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
                   className="flex items-center gap-xs px-sm py-1 bg-info/20 text-inverse text-sm rounded-lg hover:bg-info/20-hover disabled:opacity-50"
                 >
                   <Send className="w-4 h-4" />
-                  {isSubmitting ? "Posting..." : replyTo ? "Reply" : "Comment"}
+                  {(() => {
+                    if (isSubmitting) return "Posting...";
+                    if (replyTo) return "Reply";
+                    return "Comment";
+                  })()}
                 </button>
               </div>
             </div>
@@ -393,25 +404,29 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
 
       {/* Comments List */}
       <div className="space-y-md">
-        {isLoading ? (
-          <div className="space-y-md">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="flex gap-sm">
-                <div className="w-8 h-8 bg-tertiary rounded-full animate-pulse" />
-                <div className="flex-1 space-y-xs">
-                  <div className="h-4 bg-tertiary rounded-lg animate-pulse w-1/4" />
-                  <div className="h-16 bg-tertiary rounded-lg animate-pulse" />
-                </div>
+        {(() => {
+          if (isLoading)
+            return (
+              <div className="space-y-md">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="flex gap-sm">
+                    <div className="w-8 h-8 bg-tertiary rounded-full animate-pulse" />
+                    <div className="flex-1 space-y-xs">
+                      <div className="h-4 bg-tertiary rounded-lg animate-pulse w-1/4" />
+                      <div className="h-16 bg-tertiary rounded-lg animate-pulse" />
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        ) : comments.length === 0 ? (
-          <div className="text-center py-xl text-muted">
-            <MessageCircle className="w-12 h-12 mx-auto mb-sm text-muted" />
-            <p>No comments yet. Be the first to share your thoughts!</p>
-          </div>
-        ) : (
-          comments.map((comment) => (
+            );
+          if (comments.length === 0)
+            return (
+              <div className="text-center py-xl text-muted">
+                <MessageCircle className="w-12 h-12 mx-auto mb-sm text-muted" />
+                <p>No comments yet. Be the first to share your thoughts!</p>
+              </div>
+            );
+          return comments.map((comment) => (
             <CommentItem
               key={comment.id}
               comment={comment}
@@ -421,8 +436,8 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
               onReply={handleReply}
               showReactions={showReactions}
             />
-          ))
-        )}
+          ));
+        })()}
       </div>
     </div>
   );

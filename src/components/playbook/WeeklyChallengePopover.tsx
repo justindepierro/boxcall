@@ -94,13 +94,12 @@ export const WeeklyChallengePopover: React.FC<WeeklyChallengePopoverProps> = ({
                         {challenge.title}
                       </Typography>
                       <Badge
-                        variant={
-                          challenge.difficulty === "easy"
-                            ? "success"
-                            : challenge.difficulty === "medium"
-                              ? "warning"
-                              : "danger"
-                        }
+                        variant={(() => {
+                          if (challenge.difficulty === "easy") return "success";
+                          if (challenge.difficulty === "medium")
+                            return "warning";
+                          return "danger";
+                        })()}
                         size="sm"
                       >
                         {challenge.difficulty}

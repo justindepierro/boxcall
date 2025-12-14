@@ -183,13 +183,11 @@ export const PlaybookStatsDashboard: React.FC<PlaybookStatsDashboardProps> = ({
                   className="flex items-center text-xs text-secondary"
                 >
                   <Icon
-                    name={
-                      activity.type === "created"
-                        ? "plus"
-                        : activity.type === "updated"
-                          ? "edit"
-                          : "copy"
-                    }
+                    name={(() => {
+                      if (activity.type === "created") return "plus";
+                      if (activity.type === "updated") return "edit";
+                      return "copy";
+                    })()}
                     className="h-3 w-3 mr-2 text-muted"
                   />
                   <span className="truncate">{activity.playName}</span>

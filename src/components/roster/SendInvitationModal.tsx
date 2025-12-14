@@ -135,11 +135,11 @@ export function SendInvitationModal({
             Cancel
           </Button>
           <Button variant="primary" onClick={handleSend} disabled={isLoading}>
-            {isLoading
-              ? "Sending..."
-              : isResend
-                ? "Resend Invitation"
-                : "Send Invitation"}
+            {(() => {
+              if (isLoading) return "Sending...";
+              if (isResend) return "Resend Invitation";
+              return "Send Invitation";
+            })()}
           </Button>
         </div>
       </div>

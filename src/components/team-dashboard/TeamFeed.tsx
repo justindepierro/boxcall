@@ -82,7 +82,7 @@ const PostItem: React.FC<PostItemProps> = ({
   const [expanded, setExpanded] = useState(false);
   const MAX = 280;
   const over = content.length > MAX;
-  const display = over && !expanded ? content.slice(0, MAX) + "…" : content;
+  const display = over && !expanded ? `${content.slice(0, MAX)}…` : content;
 
   // Get display name and avatar (author is an array from Supabase join)
   const authorData = author?.[0];
@@ -206,7 +206,11 @@ const PostItem: React.FC<PostItemProps> = ({
             disabled={!userId}
           >
             <Icon name="award" size="sm" className="mr-1" />
-            {likes_count > 0 ? likes_count : ""} {isLiked ? "Liked" : "Like"}
+            {likes_count > 0 ? likes_count : ""}{" "}
+            {(() => {
+              if (isLiked) return "Liked";
+              return "Like";
+            })()}
           </Button>
           <Button
             type="button"

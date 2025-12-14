@@ -21,6 +21,116 @@ import { useIncompleteFormations } from "../../hooks/useFormations";
 import type { Formation } from "../../types/formation";
 import { AlertCircle, Edit3, CheckCircle, ArrowLeft } from "lucide-react";
 
+// Identify what's missing from a formation
+const getMissingFields = (formation: Formation): string[] => {
+  const missing: string[] = [];
+
+  if (
+    !formation.personnel_name &&
+    (!formation.personnel_packages || formation.personnel_packages.length === 0)
+  ) {
+    missing.push("Personnel");
+  }
+  if (!formation.category) {
+    missing.push("Category");
+  }
+  if (!formation.formation_type) {
+    missing.push("Formation Type");
+  }
+  if (!formation.tags || formation.tags.length === 0) {
+    missing.push("Tags");
+  }
+  if (!formation.description) {
+    missing.push("Description");
+  }
+  if (!formation.direction) {
+    missing.push("Direction");
+  }
+
+  return missing;
+};
+
+interface FormationCardProps {
+  formation: Formation;
+  variant: "warning" | "error";
+  onEdit?: (formation: Formation) => void;
+}
+
+const FormationCard: React.FC<FormationCardProps> = ({
+  formation,
+  variant,
+  onEdit,
+}) => {
+  const missingFields = getMissingFields(formation);
+  const borderColor =
+    variant === "warning" ? "border-warning-200" : "border-error-200";
+  const bgColor = variant === "warning" ? "bg-warning-50" : "bg-error-50";
+  const textColor =
+    variant === "warning" ? "text-warning-700" : "text-error-700";
+
+  return (
+    <div
+      className={`bg-primary border ${borderColor} rounded-lg p-md hover:shadow-md transition-shadow`}
+    >
+      <div className="flex items-start justify-between gap-md">
+        <div className="flex-1 space-y-sm">
+          {/* Formation name and badge */}
+          <div className="flex items-center gap-sm">
+            <FormationBadge
+              formationId={formation.id}
+              direction={formation.direction}
+            />
+            <Typography variant="body-md" className="font-medium text-primary">
+              {formation.name}
+            </Typography>
+          </div>
+
+          {/* Missing fields */}
+          {missingFields.length > 0 && (
+            <div className="flex items-center gap-xs flex-wrap">
+              <Typography variant="body-xs" className="text-muted">
+                Missing:
+              </Typography>
+              {missingFields.map((field, idx) => (
+                <span
+                  key={idx}
+                  className={`px-xs py-spacing-xxs ${bgColor} ${textColor} text-xs rounded`}
+                >
+                  {field}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Current metadata */}
+          <div className="flex items-center gap-md text-xs text-muted">
+            {formation.personnel_name && (
+              <span>👥 {formation.personnel_name}</span>
+            )}
+            {formation.category && <span>📁 {formation.category}</span>}
+            {formation.usage_count > 0 && (
+              <span>
+                🎯 Used in {formation.usage_count}{" "}
+                {formation.usage_count === 1 ? "play" : "plays"}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Edit button */}
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => onEdit?.(formation)}
+        >
+          <Edit3 className="w-4 h-4 mr-xs" />
+          Edit
+        </Button>
+      </div>
+    </div>
+  );
+};
+
 interface IncompleteFormationsPanelProps {
   playbookId: string;
   onFormationEdit?: (formation: Formation) => void;
@@ -41,36 +151,6 @@ export const IncompleteFormationsPanel: React.FC<
   const incomplete = formations.filter(
     (f) => f.metadata_quality === "incomplete"
   );
-
-  // Identify what's missing from a formation
-  const getMissingFields = (formation: Formation): string[] => {
-    const missing: string[] = [];
-
-    if (
-      !formation.personnel_name &&
-      (!formation.personnel_packages ||
-        formation.personnel_packages.length === 0)
-    ) {
-      missing.push("Personnel");
-    }
-    if (!formation.category) {
-      missing.push("Category");
-    }
-    if (!formation.formation_type) {
-      missing.push("Formation Type");
-    }
-    if (!formation.tags || formation.tags.length === 0) {
-      missing.push("Tags");
-    }
-    if (!formation.description) {
-      missing.push("Description");
-    }
-    if (!formation.direction) {
-      missing.push("Direction");
-    }
-
-    return missing;
-  };
 
   // Loading skeleton
   if (loading) {
@@ -158,77 +238,14 @@ export const IncompleteFormationsPanel: React.FC<
           </div>
 
           <div className="space-y-sm">
-            {needsWork.map((formation) => {
-              const missingFields = getMissingFields(formation);
-
-              return (
-                <div
-                  key={formation.id}
-                  className="bg-primary border border-warning-200 rounded-lg p-md hover:shadow-md transition-shadow"
-                >
-                  <div className="flex items-start justify-between gap-md">
-                    <div className="flex-1 space-y-sm">
-                      {/* Formation name and badge */}
-                      <div className="flex items-center gap-sm">
-                        <FormationBadge
-                          formationId={formation.id}
-                          direction={formation.direction}
-                        />
-                        <Typography
-                          variant="body-md"
-                          className="font-medium text-primary"
-                        >
-                          {formation.name}
-                        </Typography>
-                      </div>
-
-                      {/* Missing fields */}
-                      {missingFields.length > 0 && (
-                        <div className="flex items-center gap-xs flex-wrap">
-                          <Typography variant="body-xs" className="text-muted">
-                            Missing:
-                          </Typography>
-                          {missingFields.map((field, idx) => (
-                            <span
-                              key={idx}
-                              className="px-xs py-spacing-xxs bg-warning-50 text-warning-700 text-xs rounded"
-                            >
-                              {field}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Current metadata */}
-                      <div className="flex items-center gap-md text-xs text-muted">
-                        {formation.personnel_name && (
-                          <span>👥 {formation.personnel_name}</span>
-                        )}
-                        {formation.category && (
-                          <span>📁 {formation.category}</span>
-                        )}
-                        {formation.usage_count > 0 && (
-                          <span>
-                            🎯 Used in {formation.usage_count}{" "}
-                            {formation.usage_count === 1 ? "play" : "plays"}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Edit button */}
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => onFormationEdit?.(formation)}
-                    >
-                      <Edit3 className="w-4 h-4 mr-xs" />
-                      Edit
-                    </Button>
-                  </div>
-                </div>
-              );
-            })}
+            {needsWork.map((formation) => (
+              <FormationCard
+                key={formation.id}
+                formation={formation}
+                variant="warning"
+                onEdit={onFormationEdit}
+              />
+            ))}
           </div>
         </div>
       )}
@@ -244,77 +261,14 @@ export const IncompleteFormationsPanel: React.FC<
           </div>
 
           <div className="space-y-sm">
-            {incomplete.map((formation) => {
-              const missingFields = getMissingFields(formation);
-
-              return (
-                <div
-                  key={formation.id}
-                  className="bg-primary border border-error-200 rounded-lg p-md hover:shadow-md transition-shadow"
-                >
-                  <div className="flex items-start justify-between gap-md">
-                    <div className="flex-1 space-y-sm">
-                      {/* Formation name and badge */}
-                      <div className="flex items-center gap-sm">
-                        <FormationBadge
-                          formationId={formation.id}
-                          direction={formation.direction}
-                        />
-                        <Typography
-                          variant="body-md"
-                          className="font-medium text-primary"
-                        >
-                          {formation.name}
-                        </Typography>
-                      </div>
-
-                      {/* Missing fields */}
-                      {missingFields.length > 0 && (
-                        <div className="flex items-center gap-xs flex-wrap">
-                          <Typography variant="body-xs" className="text-muted">
-                            Missing:
-                          </Typography>
-                          {missingFields.map((field, idx) => (
-                            <span
-                              key={idx}
-                              className="px-xs py-spacing-xxs bg-error-50 text-error-700 text-xs rounded"
-                            >
-                              {field}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Current metadata */}
-                      <div className="flex items-center gap-md text-xs text-muted">
-                        {formation.personnel_name && (
-                          <span>👥 {formation.personnel_name}</span>
-                        )}
-                        {formation.category && (
-                          <span>📁 {formation.category}</span>
-                        )}
-                        {formation.usage_count > 0 && (
-                          <span>
-                            🎯 Used in {formation.usage_count}{" "}
-                            {formation.usage_count === 1 ? "play" : "plays"}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Edit button */}
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => onFormationEdit?.(formation)}
-                    >
-                      <Edit3 className="w-4 h-4 mr-xs" />
-                      Edit
-                    </Button>
-                  </div>
-                </div>
-              );
-            })}
+            {incomplete.map((formation) => (
+              <FormationCard
+                key={formation.id}
+                formation={formation}
+                variant="error"
+                onEdit={onFormationEdit}
+              />
+            ))}
           </div>
         </div>
       )}

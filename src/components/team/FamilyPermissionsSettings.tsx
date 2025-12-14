@@ -62,6 +62,83 @@ const PERMISSION_TOGGLES: PermissionToggle[] = [
   },
 ];
 
+/** Single permission toggle switch row */
+function PermissionToggleRow({
+  toggle,
+  isEnabled,
+  onToggle,
+}: {
+  toggle: PermissionToggle;
+  isEnabled: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <div className="flex items-start justify-between p-md border border-secondary rounded-lg hover:border-accent transition-colors">
+      <div className="flex items-start gap-md flex-1">
+        <div className="mt-1">
+          <Icon
+            name={toggle.icon as any}
+            className={`h-5 w-5 ${
+              isEnabled ? "text-jade-600 dark:text-jade-400" : "text-tertiary"
+            }`}
+          />
+        </div>
+        <div className="flex-1">
+          <Typography variant="body-md" className="font-medium mb-spacing-2xs">
+            {toggle.label}
+          </Typography>
+          <Typography variant="caption" color="muted">
+            {toggle.description}
+          </Typography>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        role="switch"
+        aria-checked={isEnabled}
+        onClick={onToggle}
+        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 ${
+          isEnabled
+            ? "bg-jade-600 dark:bg-jade-500"
+            : "bg-neutral-200 dark:bg-navy-700"
+        }`}
+      >
+        <span
+          aria-hidden="true"
+          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-primary shadow ring-0 transition duration-200 ease-in-out ${
+            isEnabled ? "translate-x-5" : "translate-x-0"
+          }`}
+        />
+      </button>
+    </div>
+  );
+}
+
+/** Info banner explaining how family permissions work */
+function InfoBanner() {
+  return (
+    <div className="mb-lg p-md bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
+      <div className="flex items-start gap-sm">
+        <Icon
+          name="info"
+          className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5"
+        />
+        <div className="flex-1">
+          <Typography
+            variant="body-sm"
+            className="text-blue-900 dark:text-blue-100"
+          >
+            <strong>How it works:</strong> Family members receive invitation
+            emails and create accounts linked to their player. These permissions
+            determine what they can see and do after joining.
+          </Typography>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /**
  * FamilyPermissionsSettings Component
  *
@@ -186,76 +263,17 @@ export const FamilyPermissionsSettings: React.FC<
       {/* Permission Toggles */}
       <div className="space-y-md mb-xl">
         {PERMISSION_TOGGLES.map((toggle) => (
-          <div
+          <PermissionToggleRow
             key={toggle.key}
-            className="flex items-start justify-between p-md border border-secondary rounded-lg hover:border-accent transition-colors"
-          >
-            <div className="flex items-start gap-md flex-1">
-              <div className="mt-1">
-                <Icon
-                  name={toggle.icon as any}
-                  className={`h-5 w-5 ${
-                    permissions[toggle.key]
-                      ? "text-jade-600 dark:text-jade-400"
-                      : "text-tertiary"
-                  }`}
-                />
-              </div>
-              <div className="flex-1">
-                <Typography
-                  variant="body-md"
-                  className="font-medium mb-spacing-2xs"
-                >
-                  {toggle.label}
-                </Typography>
-                <Typography variant="caption" color="muted">
-                  {toggle.description}
-                </Typography>
-              </div>
-            </div>
-
-            {/* Toggle Switch */}
-            <button
-              type="button"
-              role="switch"
-              aria-checked={permissions[toggle.key]}
-              onClick={() => handleToggle(toggle.key)}
-              className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-jade-500 focus:ring-offset-2 ${
-                permissions[toggle.key]
-                  ? "bg-jade-600 dark:bg-jade-500"
-                  : "bg-neutral-200 dark:bg-navy-700"
-              }`}
-            >
-              <span
-                aria-hidden="true"
-                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-primary shadow ring-0 transition duration-200 ease-in-out ${
-                  permissions[toggle.key] ? "translate-x-5" : "translate-x-0"
-                }`}
-              />
-            </button>
-          </div>
+            toggle={toggle}
+            isEnabled={permissions[toggle.key]}
+            onToggle={() => handleToggle(toggle.key)}
+          />
         ))}
       </div>
 
       {/* Info Banner */}
-      <div className="mb-lg p-md bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
-        <div className="flex items-start gap-sm">
-          <Icon
-            name="info"
-            className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5"
-          />
-          <div className="flex-1">
-            <Typography
-              variant="body-sm"
-              className="text-blue-900 dark:text-blue-100"
-            >
-              <strong>How it works:</strong> Family members receive invitation
-              emails and create accounts linked to their player. These
-              permissions determine what they can see and do after joining.
-            </Typography>
-          </div>
-        </div>
-      </div>
+      <InfoBanner />
 
       {/* Action Buttons */}
       <div className="flex items-center justify-between">

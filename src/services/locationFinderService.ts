@@ -70,12 +70,11 @@ export class LocationFinderService {
           success: true,
           address,
         };
-      } else {
-        return {
-          success: false,
-          error: "Could not determine address from location",
-        };
       }
+      return {
+        success: false,
+        error: "Could not determine address from location",
+      };
     } catch (error) {
       debug("Geolocation error:", error);
 

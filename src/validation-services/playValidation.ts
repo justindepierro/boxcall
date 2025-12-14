@@ -177,12 +177,11 @@ export class PlayValidationService {
           const formationDir = formation.direction;
 
           if (normalizedPlayDir && formationDir) {
-            const expectedDir =
-              formationDir === "left"
-                ? "L"
-                : formationDir === "right"
-                  ? "R"
-                  : null;
+            const expectedDir = (() => {
+              if (formationDir === "left") return "L";
+              if (formationDir === "right") return "R";
+              return null;
+            })();
             if (expectedDir && normalizedPlayDir !== expectedDir) {
               warnings.push({
                 field: "f_dir",

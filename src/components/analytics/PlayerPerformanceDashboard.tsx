@@ -108,13 +108,11 @@ export const PlayerPerformanceDashboard: React.FC<
             Team Performance Overview
           </Typography>
           <Badge
-            variant={
-              overview.averageTeamRating >= 8
-                ? "success"
-                : overview.averageTeamRating >= 6
-                  ? "warning"
-                  : "danger"
-            }
+            variant={(() => {
+              if (overview.averageTeamRating >= 8) return "success";
+              if (overview.averageTeamRating >= 6) return "warning";
+              return "danger";
+            })()}
           >
             {overview.averageTeamRating}/10 Average
           </Badge>
@@ -284,26 +282,24 @@ export const PlayerPerformanceDashboard: React.FC<
               {insights.alerts.map((alert, index) => (
                 <div
                   key={index}
-                  className={`p-3 rounded-lg border ${
-                    alert.type === "critical"
-                      ? "border-text-error bg-surface-error"
-                      : alert.type === "warning"
-                        ? "border-text-warning bg-warning/20"
-                        : "border-text-info bg-info/20"
-                  }`}
+                  className={`p-3 rounded-lg border ${(() => {
+                    if (alert.type === "critical")
+                      return "border-text-error bg-surface-error";
+                    if (alert.type === "warning")
+                      return "border-text-warning bg-warning/20";
+                    return "border-text-info bg-info/20";
+                  })()}`}
                 >
                   <div className="flex items-center space-x-2">
                     <Icon
                       name={
                         alert.type === "critical" ? "alert-triangle" : "info"
                       }
-                      className={
-                        alert.type === "critical"
-                          ? "text-error"
-                          : alert.type === "warning"
-                            ? "text-warning"
-                            : "text-info"
-                      }
+                      className={(() => {
+                        if (alert.type === "critical") return "text-error";
+                        if (alert.type === "warning") return "text-warning";
+                        return "text-info";
+                      })()}
                     />
                     <Typography variant="body-sm">{alert.message}</Typography>
                   </div>
@@ -347,19 +343,17 @@ export const PlayerPerformanceDashboard: React.FC<
                   <Typography variant="body-sm">{trend.metric}</Typography>
                   <div className="flex items-center space-x-2">
                     <Badge
-                      variant={
-                        trend.trend === "up"
-                          ? "success"
-                          : trend.trend === "down"
-                            ? "danger"
-                            : "neutral"
-                      }
+                      variant={(() => {
+                        if (trend.trend === "up") return "success";
+                        if (trend.trend === "down") return "danger";
+                        return "neutral";
+                      })()}
                     >
-                      {trend.trend === "up"
-                        ? "↗"
-                        : trend.trend === "down"
-                          ? "↘"
-                          : "→"}
+                      {(() => {
+                        if (trend.trend === "up") return "↗";
+                        if (trend.trend === "down") return "↘";
+                        return "→";
+                      })()}
                       {Math.abs(trend.change)}
                     </Badge>
                     <Typography variant="body-xs" className="text-secondary">
@@ -434,13 +428,13 @@ const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                 <div className="flex justify-between">
                   <Typography variant="body">Trend:</Typography>
                   <Badge
-                    variant={
-                      player.improvementTrend === "improving"
-                        ? "success"
-                        : player.improvementTrend === "declining"
-                          ? "danger"
-                          : "neutral"
-                    }
+                    variant={(() => {
+                      if (player.improvementTrend === "improving")
+                        return "success";
+                      if (player.improvementTrend === "declining")
+                        return "danger";
+                      return "neutral";
+                    })()}
                   >
                     {player.improvementTrend}
                   </Badge>
@@ -511,13 +505,11 @@ const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                     )}
                   </div>
                   <Badge
-                    variant={
-                      performance.rating >= 8
-                        ? "success"
-                        : performance.rating >= 6
-                          ? "warning"
-                          : "danger"
-                    }
+                    variant={(() => {
+                      if (performance.rating >= 8) return "success";
+                      if (performance.rating >= 6) return "warning";
+                      return "danger";
+                    })()}
                   >
                     {performance.rating}/10
                   </Badge>

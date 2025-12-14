@@ -17,6 +17,194 @@ import type { IconName } from "../ui/Icon/Icon";
 import { MobileHeroStatsCard, MobileQuickActionGrid } from "../mobile";
 // Onboarding components removed during cleanup
 
+interface DashboardHeroTile {
+  key: string;
+  title: string;
+  description: string;
+  icon: IconName;
+  accentOverlayClass: string;
+  glowClassName: string;
+  statusBadge: string;
+  iconClassName: string;
+  iconContainerClassName: string;
+  footnote: string;
+  body: React.ReactNode;
+  target: string;
+}
+
+const DashboardStatusScreen: React.FC<{
+  title: string;
+  message: string;
+  variant?: "error" | "primary";
+  action?: React.ReactNode;
+}> = ({ title, message, variant = "error", action }) => (
+  <div className="flex items-center justify-center min-h-screen bg-background">
+    <div className="text-center max-w-md px-4">
+      <Typography variant="headline-lg" className={`text-${variant} mb-4`}>
+        {title}
+      </Typography>
+      <Typography
+        variant="body-lg"
+        color="muted"
+        className={action ? "mb-4" : ""}
+      >
+        {message}
+      </Typography>
+      {action}
+    </div>
+  </div>
+);
+
+const ProfileLoadingScreen: React.FC = () => (
+  <div className="flex items-center justify-center min-h-screen bg-background">
+    <div className="text-center max-w-md px-4">
+      <Typography variant="headline-lg" className="text-primary mb-4">
+        Loading Dashboard
+      </Typography>
+      <Typography variant="body-lg" color="muted">
+        Setting up your profile...
+      </Typography>
+      <div className="mt-4">
+        <PageLoadingSkeleton />
+      </div>
+    </div>
+  </div>
+);
+
+// Desktop Hero Section with Aurora tiles
+interface DesktopHeroSectionProps {
+  displayName: string;
+  tiles: DashboardHeroTile[];
+  onTileClick: (target: string) => void;
+}
+
+const DesktopHeroSection: React.FC<DesktopHeroSectionProps> = ({
+  displayName,
+  tiles,
+  onTileClick,
+}) => (
+  <div className="dashboard-hero-section mb-8 hidden md:block">
+    <div className="rounded-xl bg-primary p-6 shadow-lg backdrop-blur-sm sm:p-8">
+      <div className="mb-6">
+        <Typography variant="headline-sm" className="text-primary">
+          Welcome back, {displayName}
+        </Typography>
+        <Typography variant="body-sm" className="text-secondary mt-1">
+          Launch the workspace you need and keep your day moving.
+        </Typography>
+      </div>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
+        {tiles.map((tile) => (
+          <AuroraTile
+            key={tile.key}
+            title={tile.title}
+            description={tile.description}
+            icon={tile.icon}
+            accentOverlayClass={tile.accentOverlayClass}
+            glowClassName={tile.glowClassName}
+            statusBadge={tile.statusBadge}
+            iconClassName={tile.iconClassName}
+            footnote={tile.footnote}
+            onOpen={() => onTileClick(tile.target)}
+          >
+            {tile.body}
+          </AuroraTile>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+const createDashboardHeroTiles = (
+  displayName: string | null | undefined,
+  fullName: string | null | undefined,
+  teamMembershipCount: number,
+  userRole: string
+): DashboardHeroTile[] => [
+  {
+    key: "profile",
+    title: "My Role",
+    description: "Snapshot of your identity inside every team.",
+    icon: "user",
+    accentOverlayClass: "bg-gradient-to-br from-amber-400 to-amber-600",
+    glowClassName: "bg-amber-400",
+    statusBadge: (userRole || "player").replace("_", " ").toUpperCase(),
+    iconClassName: "text-amber-600",
+    iconContainerClassName:
+      "bg-gradient-to-br from-amber-50 to-amber-100 border-l-4 border-amber-500",
+    footnote: "View profile",
+    body: (
+      <div className="space-y-2 text-sm">
+        <div className="flex items-center justify-between text-secondary">
+          <span>Signed in as</span>
+          <span className="font-semibold text-primary">
+            {displayName || fullName || "Member"}
+          </span>
+        </div>
+        <div className="flex items-center justify-between text-xs text-secondary">
+          <span>Teams joined</span>
+          <span className="font-semibold text-primary">
+            {teamMembershipCount}
+          </span>
+        </div>
+      </div>
+    ),
+    target: "dashboard-profile-section",
+  },
+  {
+    key: "activity",
+    title: "Team Pulse",
+    description: "Keep up with posts, votes, and announcements.",
+    icon: "message",
+    accentOverlayClass: "bg-gradient-to-br from-cyan-400 to-cyan-600",
+    glowClassName: "bg-cyan-400",
+    statusBadge: "Updates",
+    iconClassName: "text-cyan-600",
+    iconContainerClassName:
+      "bg-gradient-to-br from-cyan-50 to-cyan-100 border-l-4 border-cyan-500",
+    footnote: "Open activity",
+    body: (
+      <div className="space-y-2 text-sm">
+        <div className="flex items-center justify-between text-secondary">
+          <span>Feed highlights</span>
+          <span className="font-semibold text-primary">Live</span>
+        </div>
+        <div className="flex items-center justify-between text-xs text-secondary">
+          <span>Mentions watched</span>
+          <span className="font-semibold text-primary">Auto</span>
+        </div>
+      </div>
+    ),
+    target: "dashboard-feed-section",
+  },
+  {
+    key: "calendar",
+    title: "Schedule",
+    description: "Practices, games, and meetings at a glance.",
+    icon: "calendar",
+    accentOverlayClass: "bg-gradient-to-br from-purple-400 to-purple-600",
+    glowClassName: "bg-purple-400",
+    statusBadge: "Today",
+    iconClassName: "text-purple-600",
+    iconContainerClassName:
+      "bg-gradient-to-br from-purple-50 to-purple-100 border-l-4 border-purple-500",
+    footnote: "Jump to calendar",
+    body: (
+      <div className="space-y-2 text-sm">
+        <div className="flex items-center justify-between text-secondary">
+          <span>Upcoming</span>
+          <span className="font-semibold text-primary">Stay sharp</span>
+        </div>
+        <div className="flex items-center justify-between text-xs text-secondary">
+          <span>Sync status</span>
+          <span className="font-semibold text-primary">Real-time</span>
+        </div>
+      </div>
+    ),
+    target: "dashboard-calendar-section",
+  },
+];
+
 /**
  * Responsive Dashboard Layout
  *
@@ -46,101 +234,29 @@ export const ResponsiveDashboardLayout: React.FC = () => {
   // Calculate derived values before any early returns
   const userRole = profile?.role || "player";
 
-  const teamMembershipCount = Array.isArray(
-    (profile as unknown as { team_memberships?: unknown[] })?.team_memberships
-  )
-    ? (profile as unknown as { team_memberships?: unknown[] }).team_memberships
-        ?.length || 0
-    : typeof (profile as unknown as { teams_count?: number })?.teams_count ===
-        "number"
-      ? (profile as unknown as { teams_count?: number }).teams_count || 0
-      : 0;
+  const teamMembershipCount = (() => {
+    const profileWithMemberships = profile as unknown as {
+      team_memberships?: unknown[];
+    };
+    const profileWithCount = profile as unknown as { teams_count?: number };
+
+    if (Array.isArray(profileWithMemberships?.team_memberships)) {
+      return profileWithMemberships.team_memberships?.length || 0;
+    }
+    if (typeof profileWithCount?.teams_count === "number") {
+      return profileWithCount.teams_count || 0;
+    }
+    return 0;
+  })();
 
   const dashboardHeroTiles = useMemo(
-    () => [
-      {
-        key: "profile",
-        title: "My Role",
-        description: "Snapshot of your identity inside every team.",
-        icon: "user" as IconName,
-        accentOverlayClass: "bg-gradient-to-br from-amber-400 to-amber-600",
-        glowClassName: "bg-amber-400",
-        statusBadge: (userRole || "player").replace("_", " ").toUpperCase(),
-        iconClassName: "text-amber-600",
-        iconContainerClassName:
-          "bg-gradient-to-br from-amber-50 to-amber-100 border-l-4 border-amber-500",
-        footnote: "View profile",
-        body: (
-          <div className="space-y-2 text-sm">
-            <div className="flex items-center justify-between text-secondary">
-              <span>Signed in as</span>
-              <span className="font-semibold text-primary">
-                {profile?.display_name || profile?.full_name || "Member"}
-              </span>
-            </div>
-            <div className="flex items-center justify-between text-xs text-secondary">
-              <span>Teams joined</span>
-              <span className="font-semibold text-primary">
-                {teamMembershipCount}
-              </span>
-            </div>
-          </div>
-        ),
-        target: "dashboard-profile-section",
-      },
-      {
-        key: "activity",
-        title: "Team Pulse",
-        description: "Keep up with posts, votes, and announcements.",
-        icon: "message" as IconName,
-        accentOverlayClass: "bg-gradient-to-br from-cyan-400 to-cyan-600",
-        glowClassName: "bg-cyan-400",
-        statusBadge: "Updates",
-        iconClassName: "text-cyan-600",
-        iconContainerClassName:
-          "bg-gradient-to-br from-cyan-50 to-cyan-100 border-l-4 border-cyan-500",
-        footnote: "Open activity",
-        body: (
-          <div className="space-y-2 text-sm">
-            <div className="flex items-center justify-between text-secondary">
-              <span>Feed highlights</span>
-              <span className="font-semibold text-primary">Live</span>
-            </div>
-            <div className="flex items-center justify-between text-xs text-secondary">
-              <span>Mentions watched</span>
-              <span className="font-semibold text-primary">Auto</span>
-            </div>
-          </div>
-        ),
-        target: "dashboard-feed-section",
-      },
-      {
-        key: "calendar",
-        title: "Schedule",
-        description: "Practices, games, and meetings at a glance.",
-        icon: "calendar" as IconName,
-        accentOverlayClass: "bg-gradient-to-br from-purple-400 to-purple-600",
-        glowClassName: "bg-purple-400",
-        statusBadge: "Today",
-        iconClassName: "text-purple-600",
-        iconContainerClassName:
-          "bg-gradient-to-br from-purple-50 to-purple-100 border-l-4 border-purple-500",
-        footnote: "Jump to calendar",
-        body: (
-          <div className="space-y-2 text-sm">
-            <div className="flex items-center justify-between text-secondary">
-              <span>Upcoming</span>
-              <span className="font-semibold text-primary">Stay sharp</span>
-            </div>
-            <div className="flex items-center justify-between text-xs text-secondary">
-              <span>Sync status</span>
-              <span className="font-semibold text-primary">Real-time</span>
-            </div>
-          </div>
-        ),
-        target: "dashboard-calendar-section",
-      },
-    ],
+    () =>
+      createDashboardHeroTiles(
+        profile?.display_name,
+        profile?.full_name,
+        teamMembershipCount,
+        userRole
+      ),
     [profile?.display_name, profile?.full_name, teamMembershipCount, userRole]
   );
 
@@ -151,73 +267,40 @@ export const ResponsiveDashboardLayout: React.FC = () => {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <div className="text-center max-w-md px-4">
-          <Typography variant="headline-lg" className="text-error mb-4">
-            Authentication Error
-          </Typography>
-          <Typography variant="body-lg" color="muted">
-            {error}
-          </Typography>
-        </div>
-      </div>
+      <DashboardStatusScreen title="Authentication Error" message={error} />
     );
   }
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <div className="text-center max-w-md px-4">
-          <Typography variant="headline-lg" className="text-error mb-4">
-            Access Denied
-          </Typography>
-          <Typography variant="body-lg" color="muted">
-            Please log in to access the dashboard
-          </Typography>
-        </div>
-      </div>
+      <DashboardStatusScreen
+        title="Access Denied"
+        message="Please log in to access the dashboard"
+      />
     );
   }
 
   // Show loading while profile is being fetched, but with a timeout
   if (!profile && profileLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <div className="text-center max-w-md px-4">
-          <Typography variant="headline-lg" className="text-primary mb-4">
-            Loading Dashboard
-          </Typography>
-          <Typography variant="body-lg" color="muted">
-            Setting up your profile...
-          </Typography>
-          <div className="mt-4">
-            <PageLoadingSkeleton />
-          </div>
-        </div>
-      </div>
-    );
+    return <ProfileLoadingScreen />;
   }
 
   // If we have a user but no profile after loading is complete, create a basic profile
   if (!profile && !loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <div className="text-center max-w-md px-4">
-          <Typography variant="headline-lg" className="text-primary mb-4">
-            Welcome to BoxCall!
-          </Typography>
-          <Typography variant="body-lg" color="muted" className="mb-4">
-            Your profile is being set up. Please refresh the page or contact
-            support if this persists.
-          </Typography>
+      <DashboardStatusScreen
+        title="Welcome to BoxCall!"
+        message="Your profile is being set up. Please refresh the page or contact support if this persists."
+        variant="primary"
+        action={
           <button
             onClick={() => window.location.reload()}
             className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
           >
             Refresh Page
           </button>
-        </div>
-      </div>
+        }
+      />
     );
   }
 
@@ -259,37 +342,11 @@ export const ResponsiveDashboardLayout: React.FC = () => {
         </div>
 
         {/* Aurora hero tiles - Desktop only */}
-        <div className="dashboard-hero-section mb-8 hidden md:block">
-          <div className="rounded-xl bg-primary p-6 shadow-lg backdrop-blur-sm sm:p-8">
-            <div className="mb-6">
-              <Typography variant="headline-sm" className="text-primary">
-                Welcome back,{" "}
-                {profile?.display_name || profile?.full_name || "Coach"}
-              </Typography>
-              <Typography variant="body-sm" className="text-secondary mt-1">
-                Launch the workspace you need and keep your day moving.
-              </Typography>
-            </div>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
-              {dashboardHeroTiles.map((tile) => (
-                <AuroraTile
-                  key={tile.key}
-                  title={tile.title}
-                  description={tile.description}
-                  icon={tile.icon}
-                  accentOverlayClass={tile.accentOverlayClass}
-                  glowClassName={tile.glowClassName}
-                  statusBadge={tile.statusBadge}
-                  iconClassName={tile.iconClassName}
-                  footnote={tile.footnote}
-                  onOpen={() => scrollToSection(tile.target)}
-                >
-                  {tile.body}
-                </AuroraTile>
-              ))}
-            </div>
-          </div>
-        </div>
+        <DesktopHeroSection
+          displayName={profile?.display_name || profile?.full_name || "Coach"}
+          tiles={dashboardHeroTiles}
+          onTileClick={scrollToSection}
+        />
 
         {/* 
           ============================================================================

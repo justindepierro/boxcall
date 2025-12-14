@@ -39,12 +39,11 @@ export class GamePlanPDFService {
       const link = document.createElement("a");
       link.href = url;
 
-      const formatSuffix =
-        format === "call-sheet"
-          ? "_call_sheet"
-          : format === "compact"
-            ? "_compact"
-            : "";
+      const formatSuffix = (() => {
+        if (format === "call-sheet") return "_call_sheet";
+        if (format === "compact") return "_compact";
+        return "";
+      })();
 
       const fileName = `${gamePlan.name.replace(/[^a-z0-9]/gi, "_").toLowerCase()}${formatSuffix}.pdf`;
       link.download = fileName;

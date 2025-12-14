@@ -53,12 +53,11 @@ export const HealthCheckPage: React.FC = () => {
   // Set appropriate status code based on health
   useEffect(() => {
     if (health && document) {
-      const statusCode =
-        health.status === "healthy"
-          ? 200
-          : health.status === "degraded"
-            ? 200
-            : 503;
+      const statusCode = (() => {
+        if (health.status === "healthy") return 200;
+        if (health.status === "degraded") return 200;
+        return 503;
+      })();
       document.title = `Health Check - ${statusCode}`;
     }
   }, [health]);

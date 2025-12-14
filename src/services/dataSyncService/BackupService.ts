@@ -20,7 +20,7 @@ function csvEscape(v: unknown): string {
   const s = String(v);
   // Quote if contains comma, quote, or newline
   if (/[",\n]/.test(s)) {
-    return '"' + s.replace(/"/g, '""') + '"';
+    return `"${s.replace(/"/g, '""')}"`;
   }
   return s;
 }

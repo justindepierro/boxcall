@@ -185,12 +185,11 @@ const TeamBulletin: React.FC = React.memo(() => {
         }
         if (!cancelled && data) {
           const syRaw = data.season_year;
-          const seasonBase =
-            typeof syRaw === "number"
-              ? syRaw
-              : syRaw
-                ? parseInt(syRaw, 10)
-                : undefined;
+          const seasonBase = (() => {
+            if (typeof syRaw === "number") return syRaw;
+            if (syRaw) return parseInt(syRaw, 10);
+            return undefined;
+          })();
           const seasonDisplay = computeAcademicYearDisplay(seasonBase);
           setTeamData({
             id: data.id,
@@ -437,12 +436,11 @@ const TeamBulletin: React.FC = React.memo(() => {
           user={{
             id: user?.id || "anonymous",
             name: profile?.display_name || profile?.full_name || "Team Member",
-            role:
-              profile?.role === "admin" || isCoach
-                ? "coach"
-                : userRole === "family"
-                  ? "parent"
-                  : "player",
+            role: (() => {
+              if (profile?.role === "admin" || isCoach) return "coach";
+              if (userRole === "family") return "parent";
+              return "player";
+            })(),
           }}
         >
           <main
