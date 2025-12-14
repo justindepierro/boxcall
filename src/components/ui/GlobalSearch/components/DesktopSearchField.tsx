@@ -7,7 +7,7 @@
 import React from 'react';
 import { Icon } from '../../Icon';
 import { Typography } from '../../../design-system';
-import { DesktopSearchFieldProps } from '../types';
+import type { DesktopSearchFieldProps } from '../types';
 import { MIN_QUERY_LENGTH_FOR_NO_RESULTS } from '../constants';
 import { SearchResultItem } from './SearchResultItem';
 

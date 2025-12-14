@@ -9,11 +9,11 @@ interface Playbook {
   id: string;
   team_id: string | null;
   name: string;
-  description: string | null;
+  description?: string | null;
   is_active: boolean | null;
   play_count: number | null;
-  created_at: string | null;
-  updated_at: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
 }
 
 interface UseFormationMapperStateParams {

@@ -6,9 +6,9 @@
  */
 
 import React from 'react';
-import { Icon } from '../Icon';
-import { Typography } from '../../design-system';
-import { SearchResultItemProps } from './types';
+import { Icon } from '../../Icon';
+import { Typography } from '../../../design-system';
+import type { SearchResultItemProps } from '../types';
 
 export const SearchResultItem = React.memo<SearchResultItemProps>(
   ({ result, index, selectedIndex, getTypeIcon, getTypeColor, onClick }) => {

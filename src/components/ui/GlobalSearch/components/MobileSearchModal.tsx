@@ -7,7 +7,7 @@
 import React from 'react';
 import { Icon } from '../../Icon';
 import { Typography } from '../../../design-system';
-import { MobileSearchModalProps } from '../types';
+import type { MobileSearchModalProps } from '../types';
 import { SearchResults } from './SearchResults';
 
 export const MobileSearchModal: React.FC<MobileSearchModalProps> = ({

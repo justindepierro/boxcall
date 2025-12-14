@@ -84,7 +84,7 @@ export interface PlayerPreviewSelectorProps {
 export interface PersonnelSelectorProps {
   personnelConfigurations: PersonnelConfiguration[];
   selectedPersonnelId: string | null;
-  selectedPersonnel?: PersonnelConfiguration;
+  selectedPersonnel?: PersonnelConfiguration | null;
   playPersonnel?: string;
   canEdit: boolean;
   onSelectPersonnel: (id: string | null) => void;

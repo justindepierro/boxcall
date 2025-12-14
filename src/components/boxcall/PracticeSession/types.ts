@@ -7,7 +7,7 @@
 import type { ExecutionResult } from "../../../types/session";
 import type { PracticeScript, ScriptPlay } from "../../../services/types";
 import type { Play } from "../../../types/play";
-import type { SessionStats, RepLog } from "../../../hooks/usePracticeSession";
+import type { SessionStats } from "../../../hooks/usePracticeSession";
 
 /**
  * Props for PracticeSessionHeader component
@@ -76,7 +76,7 @@ export interface NotesSectionProps {
 export interface RepTrackerSectionProps {
   currentRep: number;
   totalReps: number;
-  repHistory: RepLog[];
+  repHistory: Map<number, { result: ExecutionResult; notes?: string }>;
   isPaused: boolean;
   onResult: (
     result: ExecutionResult,

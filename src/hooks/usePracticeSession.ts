@@ -16,6 +16,28 @@ import type {
 import type { PracticeScript, PracticeScriptPlay } from "../types/practice";
 import { debug, error as logError } from "../utils/logger";
 
+/**
+ * Rep log entry for tracking individual rep results
+ */
+export interface RepLog {
+  repNumber: number;
+  result: ExecutionResult;
+  notes?: string;
+}
+
+/**
+ * Session stats computed from rep history
+ */
+export interface SessionStats {
+  totalReps: number;
+  completedReps: number;
+  successfulReps: number;
+  failedReps: number;
+  neutralReps: number;
+  skippedReps: number;
+  successRate: number;
+}
+
 interface UsePracticeSessionOptions {
   practiceScriptId: string;
   mode: "live" | "retroactive";

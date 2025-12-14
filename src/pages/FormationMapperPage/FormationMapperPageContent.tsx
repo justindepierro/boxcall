@@ -200,12 +200,15 @@ const FormationMapperPageContent: React.FC = () => {
         editingPlay={stateWithPlays.editingPlay}
         selectedFormation={stateWithPlays.selectedFormation}
         assigning={stateWithPlays.assigning}
-        onFormationChange={(_, formation) => {
-          stateWithPlays.setSelectedFormation(formation);
+        onFormationChange={(formationName) => {
+          if (formationName) {
+            stateWithPlays.setSelectedFormation({ id: formationName, name: formationName } as any);
+          } else {
+            stateWithPlays.setSelectedFormation(null);
+          }
         }}
         onCreateNew={() => stateWithPlays.setShowBuilder(true)}
         onAssign={handlers.handleAssignFormation}
-        onFormationsLoaded={stateWithPlays.setFormationCatalog}
       />
 
       <BulkAssignModal
@@ -220,11 +223,14 @@ const FormationMapperPageContent: React.FC = () => {
         selectedPlaybookId={stateWithPlays.selectedPlaybookId}
         bulkAssignFormation={stateWithPlays.bulkAssignFormation}
         assigning={stateWithPlays.assigning}
-        onFormationChange={(_, formation) => {
-          stateWithPlays.setBulkAssignFormation(formation);
+        onFormationChange={(formationName) => {
+          if (formationName) {
+            stateWithPlays.setBulkAssignFormation({ id: formationName, name: formationName } as any);
+          } else {
+            stateWithPlays.setBulkAssignFormation(null);
+          }
         }}
         onConfirm={handlers.handleBulkAssignConfirm}
-        onFormationsLoaded={stateWithPlays.setFormationCatalog}
       />
     </div>
   );

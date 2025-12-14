@@ -81,10 +81,9 @@ interface LinkFormationModalProps {
   editingPlay: Play | null;
   selectedFormation: Formation | null;
   assigning: boolean;
-  onFormationChange: (formationId: string | null, formation: Formation | null) => void;
+  onFormationChange: (formationName: string | null) => void;
   onCreateNew: () => void;
   onAssign: () => void;
-  onFormationsLoaded: (formations: Formation[]) => void;
 }
 
 export const LinkFormationModal: React.FC<LinkFormationModalProps> = ({
@@ -96,7 +95,6 @@ export const LinkFormationModal: React.FC<LinkFormationModalProps> = ({
   onFormationChange,
   onCreateNew,
   onAssign,
-  onFormationsLoaded,
 }) => (
   <Modal
     isOpen={isOpen}
@@ -116,17 +114,10 @@ export const LinkFormationModal: React.FC<LinkFormationModalProps> = ({
         </div>
         <FormationSelector
           playbookId={editingPlay.playbook_id}
-          value={selectedFormation?.id || null}
-          onChange={(formationId, formation) => {
-            if (formationId && formation) {
-              onFormationChange(formationId, formation);
-            } else {
-              onFormationChange(null, null);
-            }
-          }}
+          value={selectedFormation?.name || null}
+          onChange={onFormationChange}
           onCreateNew={onCreateNew}
           disabled={assigning}
-          onFormationsLoaded={onFormationsLoaded}
         />
         <div className="flex justify-end gap-2">
           <Button
@@ -158,9 +149,8 @@ interface BulkAssignModalProps {
   selectedPlaybookId: string;
   bulkAssignFormation: Formation | null;
   assigning: boolean;
-  onFormationChange: (formationId: string | null, formation: Formation | null) => void;
+  onFormationChange: (formationName: string | null) => void;
   onConfirm: () => void;
-  onFormationsLoaded: (formations: Formation[]) => void;
 }
 
 export const BulkAssignModal: React.FC<BulkAssignModalProps> = ({
@@ -173,7 +163,6 @@ export const BulkAssignModal: React.FC<BulkAssignModalProps> = ({
   assigning,
   onFormationChange,
   onConfirm,
-  onFormationsLoaded,
 }) => (
   <Modal
     isOpen={isOpen}
@@ -210,16 +199,9 @@ export const BulkAssignModal: React.FC<BulkAssignModalProps> = ({
       </div>
       <FormationSelector
         playbookId={selectedPlaybookId || selectedPlays[0]?.playbook_id || ""}
-        value={bulkAssignFormation?.id || null}
-        onChange={(formationId, formation) => {
-          if (formationId && formation) {
-            onFormationChange(formationId, formation);
-          } else {
-            onFormationChange(null, null);
-          }
-        }}
+        value={bulkAssignFormation?.name || null}
+        onChange={onFormationChange}
         disabled={assigning || selectedCount === 0 || !selectedPlaybookId}
-        onFormationsLoaded={onFormationsLoaded}
       />
       <div className="flex justify-end gap-2">
         <Button

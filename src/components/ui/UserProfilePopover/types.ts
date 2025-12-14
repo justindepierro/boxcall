@@ -17,8 +17,8 @@ export interface PopoverProfile {
   display_name: string | null;
   avatar_url: string | null;
   role: string | null;
-  is_admin: boolean | null;
-  subscription_tier: string | null;
+  is_admin?: boolean | null;
+  subscription_tier?: string | null;
   bio: string | null;
   position: string | null;
   jersey_number: number | null;
@@ -30,7 +30,7 @@ export interface PopoverProfile {
   personal_website: string | null;
   phone: string | null;
   email: string | null;
-  created_at: string;
+  created_at: string | null;
 }
 
 export interface TeamMemberInfo {

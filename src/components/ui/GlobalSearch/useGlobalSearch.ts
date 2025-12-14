@@ -105,7 +105,7 @@ export function useGlobalSearch() {
             ? supabase
                 .from('plays')
                 .select(
-                  'id, play_name, formation, one_word_play, personnel, p_type, tags'
+                  'id, play_name, formation, one_word_play, personnel, p_type'
                 )
                 .eq('playbook_id', playbookId)
                 .or(
