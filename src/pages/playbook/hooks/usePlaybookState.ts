@@ -5,7 +5,6 @@ import { getCurrentUserId } from "../../../lib/auth-helpers";
 import { error as logError, debug } from "../../../utils/logger";
 import { useToast } from "../../../hooks/useToast";
 import type { PlayActivityItem } from "@services";
-import type { Play } from "../../../types/play";
 
 interface UsePlaybookStateProps {
   activeTeamId: string | null;
