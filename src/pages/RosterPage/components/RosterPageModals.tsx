@@ -1,5 +1,4 @@
 import React, { lazy, Suspense } from "react";
-import { useNavigate } from "react-router-dom";
 import { Modal, FormSelect, Button } from "../../../components/ui";
 import { Icon } from "../../../components/ui/Icon/Icon";
 import { Typography } from "../../../components/design-system";
@@ -66,9 +65,6 @@ export const RosterPageModals: React.FC<RosterPageModalsProps> = ({
   selectedPlayerIds,
   players,
 }) => {
-  // navigate could be used for player profile links in future
-  const _navigate = useNavigate();
-
   return (
     <>
       {/* Import Modal (lazy loaded) */}

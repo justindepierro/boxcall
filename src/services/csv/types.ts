@@ -47,7 +47,7 @@ export interface CSVPlayPreview {
     one_word_play?: string;
     protection?: string;
     notes?: string;
-    [key: string]: string | undefined;
+    [key: string]: string | number | boolean | undefined;
   };
 }
 
@@ -65,6 +65,12 @@ export interface CSVParseResult {
     qualityWarning?: string;
     skippedRows?: number;
   };
+  /** Optional: Existing plays for validation suggestions */
+  existingPlays?: Array<{
+    formation?: string | null;
+    play_name?: string | null;
+    personnel?: string | null;
+  }>;
 }
 
 export interface CSVExportOptions {

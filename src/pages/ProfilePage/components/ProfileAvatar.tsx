@@ -9,9 +9,9 @@ interface ProfileAvatarProps {
   fullName: string | null;
   avatarFile: File | null;
   onUploadClick: () => void;
-  onEditClick: () => Promise<void>;
+  onEditClick: () => void;
   onFileSelect: (file: File | null) => void;
-  fileInputRef: React.RefObject<HTMLInputElement>;
+  fileInputRef: React.RefObject<HTMLInputElement | null>;
 }
 
 export const ProfileAvatar: React.FC<ProfileAvatarProps> = ({
