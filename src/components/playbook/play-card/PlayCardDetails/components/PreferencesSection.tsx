@@ -5,11 +5,11 @@
  */
 
 import React from 'react';
-import { Typography } from '../../../design-system/Typography';
-import Icon from '../../../ui/Icon/Icon';
-import { InlineEditField } from '../../../ui/InlineEditField';
-import { DISTANCE_OPTIONS, DOWN_OPTIONS, HASH_OPTIONS } from '../constants';
-import { PreferencesSectionProps } from './types';
+import { Typography } from '../../../../design-system/Typography';
+import Icon from '../../../../ui/Icon/Icon';
+import { InlineEditField } from '../../../../ui/InlineEditField';
+import { DISTANCE_OPTIONS, DOWN_OPTIONS, HASH_OPTIONS } from '../../constants';
+import type { PreferencesSectionProps } from '../types';
 
 export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
   optimisticPlay,

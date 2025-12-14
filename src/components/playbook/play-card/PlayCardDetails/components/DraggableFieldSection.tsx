@@ -7,9 +7,9 @@
 
 import React from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { Typography } from '../../../design-system/Typography';
-import Icon from '../../../ui/Icon/Icon';
-import { DraggableFieldSectionProps } from './types';
+import { Typography } from '../../../../design-system/Typography';
+import Icon from '../../../../ui/Icon/Icon';
+import type { DraggableFieldSectionProps } from '../types';
 
 export const DraggableFieldSection: React.FC<DraggableFieldSectionProps> = ({
   title,

@@ -14,7 +14,7 @@
  */
 
 import React from 'react';
-import { GlobalSearchProps } from './types';
+import type { GlobalSearchProps } from './types';
 import { useGlobalSearch } from './useGlobalSearch';
 import {
   MobileSearchButton,

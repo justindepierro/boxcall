@@ -145,14 +145,16 @@ export function ProfileContent({
       </div>
 
       {/* Member Since */}
-      <div className="border-t pt-3">
-        <div className="flex items-center text-muted">
-          <Calendar className="w-4 h-4 mr-2" />
-          <Typography variant="body-xs">
-            Member since {formatMemberSince(profile.created_at)}
-          </Typography>
+      {profile.created_at && (
+        <div className="border-t pt-3">
+          <div className="flex items-center text-muted">
+            <Calendar className="w-4 h-4 mr-2" />
+            <Typography variant="body-xs">
+              Member since {formatMemberSince(profile.created_at)}
+            </Typography>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* View Profile Button */}
       <div className="pt-2">
