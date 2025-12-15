@@ -728,8 +728,10 @@ export type Database = {
           pref_cov: string | null;
           pref_dis: string | null;
           pref_down: string | null;
+          pref_field_pos: string | null;
           pref_front: string | null;
           pref_hash: string | null;
+          pref_situation: string | null;
           protection: string | null;
           r_str: string | null;
           shift: string | null;
@@ -773,8 +775,10 @@ export type Database = {
           pref_cov?: string | null;
           pref_dis?: string | null;
           pref_down?: string | null;
+          pref_field_pos?: string | null;
           pref_front?: string | null;
           pref_hash?: string | null;
+          pref_situation?: string | null;
           protection?: string | null;
           r_str?: string | null;
           shift?: string | null;
@@ -818,8 +822,10 @@ export type Database = {
           pref_cov?: string | null;
           pref_dis?: string | null;
           pref_down?: string | null;
+          pref_field_pos?: string | null;
           pref_front?: string | null;
           pref_hash?: string | null;
+          pref_situation?: string | null;
           protection?: string | null;
           r_str?: string | null;
           shift?: string | null;

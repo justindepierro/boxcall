@@ -193,6 +193,8 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         pref_hash: formData.prefHash || undefined,
         pref_cov: formData.prefCoverage.trim() || undefined,
         pref_front: formData.prefFront.trim() || undefined,
+        pref_field_pos: formData.prefFieldPos.trim() || undefined,
+        pref_situation: formData.prefSituation.trim() || undefined,
 
         // Other
         confidence_base: formData.confidence,
@@ -629,11 +631,15 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             prefHash={formData.prefHash}
             prefCoverage={formData.prefCoverage}
             prefFront={formData.prefFront}
+            prefFieldPos={formData.prefFieldPos}
+            prefSituation={formData.prefSituation}
             onPrefDownChange={(value) => updateField("prefDown", value)}
             onPrefDistanceChange={(value) => updateField("prefDistance", value)}
             onPrefHashChange={(value) => updateField("prefHash", value)}
             onPrefCoverageChange={(value) => updateField("prefCoverage", value)}
             onPrefFrontChange={(value) => updateField("prefFront", value)}
+            onPrefFieldPosChange={(value) => updateField("prefFieldPos", value)}
+            onPrefSituationChange={(value) => updateField("prefSituation", value)}
             downOptions={DOWN_OPTIONS}
             distanceOptions={DISTANCE_OPTIONS}
             hashOptions={HASH_OPTIONS}

@@ -36,6 +36,8 @@ export interface PlayFormData {
   prefHash: string;
   prefCoverage: string;
   prefFront: string;
+  prefFieldPos: string; // NEW: Custom field position (Red Zone, Goal Line, etc.)
+  prefSituation: string; // NEW: Custom situation (2-Minute, Backed Up, etc.)
 
   // Other
   confidence: number;
@@ -111,6 +113,8 @@ export const usePlayFormState = (options: UsePlayFormStateOptions = {}) => {
     prefHash: existingPlay?.pref_hash || "",
     prefCoverage: existingPlay?.pref_cov || "",
     prefFront: existingPlay?.pref_front || "",
+    prefFieldPos: existingPlay?.pref_field_pos || "",
+    prefSituation: existingPlay?.pref_situation || "",
 
     // Other
     confidence: existingPlay?.confidence_base || 75,

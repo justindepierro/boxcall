@@ -90,6 +90,8 @@ function buildPlayDetailFields(
     pref_hash: playData.pref_hash || "",
     pref_cov: playData.pref_cov || "",
     pref_front: playData.pref_front || "",
+    pref_field_pos: playData.pref_field_pos || "",
+    pref_situation: playData.pref_situation || "",
   };
 }
 
@@ -172,6 +174,10 @@ export function buildPlayUpdateData(
   if (updates.pref_cov !== undefined) updateData.pref_cov = updates.pref_cov;
   if (updates.pref_front !== undefined)
     updateData.pref_front = updates.pref_front;
+  if (updates.pref_field_pos !== undefined)
+    updateData.pref_field_pos = updates.pref_field_pos;
+  if (updates.pref_situation !== undefined)
+    updateData.pref_situation = updates.pref_situation;
   if (updates.confidence_base !== undefined) {
     updateData.confidence_base = updates.confidence_base;
   }

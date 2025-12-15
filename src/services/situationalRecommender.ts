@@ -156,6 +156,124 @@ function getHashBonus(
   return 0;
 }
 
+/**
+ * Calculate bonus based on coach-defined preferences
+ * This is the PRIMARY factor - if the coach said this play is designed for a situation,
+ * it should get a significant bonus when that situation occurs.
+ *
+ * Preference fields from the plays table:
+ * - pref_down: "1st", "2nd", "3rd", "4th"
+ * - pref_dis: "Short", "Medium", "Long"
+ * - pref_hash: "Left", "Middle", "Right"
+ * - pref_field_pos: Coach-defined (e.g., "Red Zone", "Goal Line", "Plus Territory")
+ * - pref_situation: Coach-defined (e.g., "2-Minute", "Backed Up", "Must Have")
+ * - pref_cov: Coach-defined (e.g., "Man", "Zone", "Cover 2")
+ */
+function getCoachPreferenceBonus(
+  play: {
+    pref_down?: string | null;
+    pref_dis?: string | null;
+    pref_hash?: string | null;
+    pref_field_pos?: string | null;
+    pref_situation?: string | null;
+    pref_cov?: string | null;
+  },
+  situation: {
+    down: number;
+    distance: number;
+    yardLine: number;
+    hashMark?: "left" | "middle" | "right";
+    opponentCoverage?: string;
+  }
+): { bonus: number; reasons: string[] } {
+  let bonus = 0;
+  const reasons: string[] = [];
+
+  // Down match (+20 points - this is what the coach designed it for!)
+  if (play.pref_down) {
+    const prefDown = play.pref_down.toLowerCase().replace(/[^\d]/g, ""); // Extract number
+    if (prefDown === String(situation.down)) {
+      bonus += 20;
+      reasons.push(`✓ Coach's ${play.pref_down} down play`);
+    }
+  }
+
+  // Distance match (+15 points)
+  if (play.pref_dis) {
+    const prefDis = play.pref_dis.toLowerCase();
+    const isShort = situation.distance <= 3;
+    const isMedium = situation.distance >= 4 && situation.distance <= 7;
+    const isLong = situation.distance >= 8;
+
+    if (
+      (prefDis.includes("short") && isShort) ||
+      (prefDis.includes("medium") && isMedium) ||
+      (prefDis.includes("long") && isLong)
+    ) {
+      bonus += 15;
+      reasons.push(`✓ Designed for ${play.pref_dis} distance`);
+    }
+  }
+
+  // Hash match (+10 points)
+  if (play.pref_hash && situation.hashMark) {
+    const prefHash = play.pref_hash.toLowerCase();
+    if (prefHash === situation.hashMark.toLowerCase()) {
+      bonus += 10;
+      reasons.push(`✓ Best from ${play.pref_hash} hash`);
+    }
+  }
+
+  // Field position match (+15 points) - coach-defined terms
+  if (play.pref_field_pos) {
+    const prefFieldPos = play.pref_field_pos.toLowerCase();
+    const yardLine = situation.yardLine;
+
+    // Map common field position terms to yard line ranges
+    const isRedZone = yardLine <= 20;
+    const isGoalLine = yardLine <= 5;
+    const isPlusTerritory = yardLine <= 50 && yardLine > 20;
+    const isMidfield = yardLine > 40 && yardLine <= 60;
+    const isBackedUp = yardLine >= 90; // Own 10 or worse
+
+    if (
+      (prefFieldPos.includes("red") && isRedZone) ||
+      (prefFieldPos.includes("goal") && isGoalLine) ||
+      (prefFieldPos.includes("plus") && isPlusTerritory) ||
+      (prefFieldPos.includes("mid") && isMidfield) ||
+      (prefFieldPos.includes("backed") && isBackedUp)
+    ) {
+      bonus += 15;
+      reasons.push(`✓ ${play.pref_field_pos} play`);
+    }
+  }
+
+  // Coverage match (+12 points) - if opponent coverage matches what play is designed against
+  if (play.pref_cov && situation.opponentCoverage) {
+    const prefCov = play.pref_cov.toLowerCase();
+    const oppCov = situation.opponentCoverage.toLowerCase();
+
+    // Flexible matching for coverage terms
+    if (
+      prefCov.includes(oppCov) ||
+      oppCov.includes(prefCov) ||
+      (prefCov.includes("man") && oppCov.includes("man")) ||
+      (prefCov.includes("zone") && oppCov.includes("zone"))
+    ) {
+      bonus += 12;
+      reasons.push(`✓ Designed vs ${play.pref_cov}`);
+    }
+  }
+
+  // Custom situation is informational - shown in reasoning but no automatic bonus
+  // (since we can't automatically detect "2-Minute" or "Must Have" situations)
+  if (play.pref_situation) {
+    reasons.push(`📋 Tagged: ${play.pref_situation}`);
+  }
+
+  return { bonus, reasons };
+}
+
 // ==============================================
 // REASONING HELPER FUNCTIONS
 // ==============================================
@@ -463,7 +581,12 @@ export class SituationalRecommender {
   ): Promise<number> {
     let score = 50; // Baseline
 
-    // Add down bonus
+    // FIRST: Apply coach-defined preferences (highest priority!)
+    // If the coach specifically tagged this play for this situation, give it a big boost
+    const { bonus: coachBonus } = getCoachPreferenceBonus(play, situation);
+    score += coachBonus;
+
+    // Add down bonus (additional algorithmic bonus)
     score += getDownBonus(
       situation.down,
       play.play_type,
@@ -521,7 +644,11 @@ export class SituationalRecommender {
     matchScore: number,
     teamId: string
   ): Promise<string[]> {
+    // Start with coach-defined preference reasons (show these first!)
+    const { reasons: coachReasons } = getCoachPreferenceBonus(play, situation);
+
     const reasons: string[] = [
+      ...coachReasons,
       ...getConfidenceReasons(confidence, matchScore),
       ...getDownReasons(situation, play),
       ...getFieldZoneReasons(situation),

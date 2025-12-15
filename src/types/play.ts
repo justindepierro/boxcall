@@ -100,12 +100,14 @@ export interface Play {
   back_left_of_qb?: boolean; // TRUE if back aligns left of QB
   back_right_of_qb?: boolean; // TRUE if back aligns right of QB
 
-  // Preferences
-  pref_down?: string; // text
-  pref_dis?: string; // text
-  pref_hash?: string; // text
-  pref_cov?: string; // text
-  pref_front?: string; // text
+  // Preferences (coach-defined situational fit)
+  pref_down?: string; // text - Preferred down (1st, 2nd, 3rd, 4th)
+  pref_dis?: string; // text - Preferred distance (Short, Medium, Long)
+  pref_hash?: string; // text - Preferred hash (Left, Middle, Right)
+  pref_cov?: string; // text - Preferred coverage (coach-defined: Man, Zone, Cover 2, etc.)
+  pref_front?: string; // text - Preferred defensive front (coach-defined: 4-3, 3-4, Odd, etc.)
+  pref_field_pos?: string; // text - Preferred field position (coach-defined: Red Zone, Goal Line, etc.)
+  pref_situation?: string; // text - Custom situation (coach-defined: 2-Minute, Backed Up, etc.)
 
   // Tags and categorization
   ftag1?: string; // text
