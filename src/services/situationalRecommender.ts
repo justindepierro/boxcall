@@ -16,7 +16,7 @@
 
 import { PlayConfidenceService } from "./playConfidenceService";
 import { ExecutionTrackingService } from "./executionTrackingService";
-import type { GameSituation, GameUrgency } from "../types/session";
+import type { GameSituation } from "../types/session";
 import type { Play } from "../types/database";
 import { logError } from "../utils/logger";
 import {

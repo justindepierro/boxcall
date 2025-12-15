@@ -244,7 +244,9 @@ export function getPlayTypeRecommendation(
 ): PlayTypeRecommendation {
   const urgency = calculateGameUrgency(situation);
   const scoreDiff = situation.teamScore - situation.opponentScore;
-  const timeRemaining = parseTimeRemaining(situation.timeRemaining);
+  // Time parsing available for future granular decisions
+  const _timeRemaining = parseTimeRemaining(situation.timeRemaining);
+  void _timeRemaining; // Silence unused warning until Phase 15 enhancements
 
   switch (urgency) {
     case "ice_the_game":
