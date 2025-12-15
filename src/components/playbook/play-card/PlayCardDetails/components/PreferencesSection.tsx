@@ -2,6 +2,7 @@
  * PreferencesSection Component
  *
  * Displays editable play preferences (down, distance, hash, coverage, front).
+ * Uses autocomplete with existing database values for text fields.
  */
 
 import React from "react";
@@ -9,6 +10,7 @@ import { Typography } from "../../../../design-system/Typography";
 import Icon from "../../../../ui/Icon/Icon";
 import { InlineEditField } from "../../../../ui/InlineEditField";
 import { DISTANCE_OPTIONS, DOWN_OPTIONS, HASH_OPTIONS } from "../../constants";
+import { usePlayFieldSuggestions } from "../../../../../hooks/usePlayFieldSuggestions";
 import type { PreferencesSectionProps } from "../types";
 
 export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
@@ -16,6 +18,9 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
   handleInlineSave,
   savingFields,
 }) => {
+  // Fetch existing values from database for autocomplete suggestions
+  const suggestions = usePlayFieldSuggestions();
+
   return (
     <div className="bg-subtle rounded-lg p-sm">
       <Typography
@@ -80,6 +85,8 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
               value={optimisticPlay.pref_cov || ""}
               onSave={(value) => handleInlineSave("pref_cov", value)}
               placeholder="Preferred coverage"
+              suggestions={suggestions.coverages}
+              enableSuggestions={true}
               isSaving={savingFields.has("pref_cov")}
             />
           </dd>
@@ -93,6 +100,8 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
               value={optimisticPlay.pref_front || ""}
               onSave={(value) => handleInlineSave("pref_front", value)}
               placeholder="Preferred defensive front"
+              suggestions={suggestions.fronts}
+              enableSuggestions={true}
               isSaving={savingFields.has("pref_front")}
             />
           </dd>
@@ -106,6 +115,8 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
               value={optimisticPlay.pref_field_pos || ""}
               onSave={(value) => handleInlineSave("pref_field_pos", value)}
               placeholder="Field position (Red Zone, Goal Line, etc.)"
+              suggestions={suggestions.fieldPositions}
+              enableSuggestions={true}
               isSaving={savingFields.has("pref_field_pos")}
             />
           </dd>
@@ -119,6 +130,8 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
               value={optimisticPlay.pref_situation || ""}
               onSave={(value) => handleInlineSave("pref_situation", value)}
               placeholder="Custom situation (2-Minute, Backed Up, etc.)"
+              suggestions={suggestions.situations}
+              enableSuggestions={true}
               isSaving={savingFields.has("pref_situation")}
             />
           </dd>

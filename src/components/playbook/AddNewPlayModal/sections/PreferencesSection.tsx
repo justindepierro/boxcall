@@ -1,6 +1,8 @@
 import React from "react";
 import { Typography } from "../../../design-system/Typography";
 import { Dropdown } from "../../../ui/Dropdown";
+import { AutocompleteInput } from "../../../ui/AutocompleteInput";
+import { usePlayFieldSuggestions } from "../../../../hooks/usePlayFieldSuggestions";
 
 interface PreferencesSectionProps {
   prefDown: string;
@@ -41,14 +43,16 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
   distanceOptions,
   hashOptions,
 }) => {
+  // Fetch existing values from database for autocomplete
+  const suggestions = usePlayFieldSuggestions();
+
   return (
     <div className="bg-secondary/30 rounded-lg p-md">
       <Typography variant="label-lg" className="block mb-sm text-primary">
         Situational Preferences
       </Typography>
       <Typography variant="body-sm" className="block mb-md text-muted">
-        Define when this play works best. The AI will recommend plays that match
-        the current game situation.
+        Define when this play works best. Select from existing values or type new ones.
       </Typography>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-sm">
         <div>
@@ -84,54 +88,34 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
             size="sm"
           />
         </div>
-        <div>
-          <Typography variant="label-md" className="block mb-xs text-secondary">
-            Field Position
-          </Typography>
-          <input
-            type="text"
-            value={prefFieldPos}
-            onChange={(e) => onPrefFieldPosChange(e.target.value)}
-            placeholder="e.g., Red Zone, Goal Line"
-            className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
-          />
-        </div>
-        <div>
-          <Typography variant="label-md" className="block mb-xs text-secondary">
-            Custom Situation
-          </Typography>
-          <input
-            type="text"
-            value={prefSituation}
-            onChange={(e) => onPrefSituationChange(e.target.value)}
-            placeholder="e.g., 2-Minute, Backed Up"
-            className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
-          />
-        </div>
-        <div>
-          <Typography variant="label-md" className="block mb-xs text-secondary">
-            Coverage
-          </Typography>
-          <input
-            type="text"
-            value={prefCoverage}
-            onChange={(e) => onPrefCoverageChange(e.target.value)}
-            placeholder="e.g., Man, Zone, Cover 2"
-            className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
-          />
-        </div>
-        <div>
-          <Typography variant="label-md" className="block mb-xs text-secondary">
-            Defensive Front
-          </Typography>
-          <input
-            type="text"
-            value={prefFront}
-            onChange={(e) => onPrefFrontChange(e.target.value)}
-            placeholder="e.g., 4-3, 3-4, Odd"
-            className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
-          />
-        </div>
+        <AutocompleteInput
+          label="Field Position"
+          value={prefFieldPos}
+          onChange={onPrefFieldPosChange}
+          suggestions={suggestions.fieldPositions}
+          placeholder="e.g., Red Zone, Goal Line"
+        />
+        <AutocompleteInput
+          label="Custom Situation"
+          value={prefSituation}
+          onChange={onPrefSituationChange}
+          suggestions={suggestions.situations}
+          placeholder="e.g., 2-Minute, Backed Up"
+        />
+        <AutocompleteInput
+          label="Coverage"
+          value={prefCoverage}
+          onChange={onPrefCoverageChange}
+          suggestions={suggestions.coverages}
+          placeholder="e.g., Man, Zone, Cover 2"
+        />
+        <AutocompleteInput
+          label="Defensive Front"
+          value={prefFront}
+          onChange={onPrefFrontChange}
+          suggestions={suggestions.fronts}
+          placeholder="e.g., 4-3, 3-4, Odd"
+        />
       </div>
     </div>
   );
