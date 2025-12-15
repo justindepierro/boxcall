@@ -7,8 +7,15 @@ import { Tooltip } from "../../ui/Tooltip/Tooltip";
 import { MultiBadgeDisplay } from "../../ui/MultiBadgeDisplay";
 import type { Database } from "../../../types/database";
 
-/** Profile type from database schema */
-type Profile = Database["public"]["Tables"]["profiles"]["Row"];
+/** Base profile type from database schema */
+type BaseProfile = Database["public"]["Tables"]["profiles"]["Row"];
+
+/** Extended profile type with additional fields that may not be in generated types yet */
+type Profile = BaseProfile & {
+  is_admin?: boolean | null;
+  app_role?: string | null;
+  subscription_tier?: string | null;
+};
 
 interface ProfileAvatarSectionProps {
   profile: Profile | null;
