@@ -1,6 +1,6 @@
 import { supabase } from "../lib/supabase";
 import { getCurrentUserId } from "../lib/auth-helpers";
-import { debug, error as logError } from "../utils/logger";
+import { debug } from "../utils/logger";
 
 /**
  * Service for managing user preferences stored in profiles.settings JSONB column
