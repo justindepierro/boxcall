@@ -149,22 +149,29 @@ export class PreferenceService {
           const prefsToSave = { ...this.pendingPreferences };
           this.pendingPreferences = {}; // Clear pending
 
-          debug("[PreferenceService] Saving batched preferences:", prefsToSave);
+          console.log(
+            "[PreferenceService] Saving batched preferences:",
+            prefsToSave
+          );
 
           try {
             const userId = getCurrentUserId();
 
             if (!userId) {
-              debug("[PreferenceService] No user authenticated, skipping save");
+              console.warn(
+                "[PreferenceService] No user authenticated, skipping save"
+              );
               resolve(false);
               return false;
             }
 
-            debug("[PreferenceService] Saving for userId:", userId);
+            console.log("[PreferenceService] Saving for userId:", userId);
 
             // Load existing preferences to merge
             const existing = (await this.loadPreferences()) || {};
             const merged = { ...existing, ...prefsToSave };
+
+            console.log("[PreferenceService] Merged preferences:", merged);
 
             // Type cast needed because settings is Json type in database
             // Use .select() to verify the update actually happened
@@ -175,8 +182,10 @@ export class PreferenceService {
               .select("id, settings")
               .maybeSingle();
 
+            console.log("[PreferenceService] Update result:", { data, error });
+
             if (error) {
-              logError(
+              console.error(
                 "[PreferenceService] Failed to save preferences:",
                 error
               );
@@ -186,7 +195,7 @@ export class PreferenceService {
 
             // Check if any row was actually updated
             if (!data) {
-              logError(
+              console.error(
                 "[PreferenceService] No profile found to update for userId:",
                 userId
               );
@@ -194,8 +203,8 @@ export class PreferenceService {
               return false;
             }
 
-            debug(
-              "[PreferenceService] Saved preferences to server:",
+            console.log(
+              "[PreferenceService] ✅ Saved preferences to server:",
               data.settings
             );
             // Invalidate cache after successful save
@@ -207,7 +216,7 @@ export class PreferenceService {
             resolve(true);
             return true;
           } catch (error) {
-            logError(
+            console.error(
               "[PreferenceService] Exception saving preferences:",
               error
             );
