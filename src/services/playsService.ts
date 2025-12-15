@@ -406,7 +406,7 @@ export class PlaysService {
         .update(cleanUpdates)
         .eq("id", id)
         .select()
-        .single();
+        .maybeSingle(); // Use maybeSingle() to avoid 406 error when RLS blocks or row missing
 
       if (error) {
         logError("❌ Error updating play:", error);
@@ -414,7 +414,7 @@ export class PlaysService {
       }
 
       if (!data) {
-        throw new Error("No data returned from play update");
+        throw new Error("Play not found or you don't have permission to update it");
       }
 
       // Record activity for the updated play
