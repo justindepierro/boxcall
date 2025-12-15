@@ -49,7 +49,9 @@
     "justindepierro",
     "NPM_TOKEN",
     "NETLIFY_SITE_ID",
-    "cssConflict"
+    "cssConflict",
+    "partialize",
+    "pkce"
   ],
   "ignorePaths": [
     "node_modules",

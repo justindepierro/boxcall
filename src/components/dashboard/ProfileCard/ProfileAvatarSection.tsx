@@ -5,7 +5,10 @@ import { Typography } from "../../design-system";
 import { Button } from "../../ui";
 import { Tooltip } from "../../ui/Tooltip/Tooltip";
 import { MultiBadgeDisplay } from "../../ui/MultiBadgeDisplay";
-import type { Profile } from "../../../types/database";
+import type { Database } from "../../../types/database";
+
+/** Profile type from database schema */
+type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
 interface ProfileAvatarSectionProps {
   profile: Profile | null;

@@ -5,8 +5,8 @@
  */
 
 import React from "react";
-import type { IconName } from "../../../components/ui/Icon";
-import type { GamePlan as ModalGamePlan } from "../../../components/playbook/GamePlanModal/types";
+import type { IconName } from "../../components/ui/Icon";
+import type { GamePlan as ModalGamePlan } from "../../components/playbook/GamePlanModal/types";
 
 export interface TileConfig {
   key: string;
@@ -25,7 +25,7 @@ export interface TileConfig {
 /** Calculate total plays across all situations in a plan */
 export const getTotalPlays = (plan: ModalGamePlan): number => {
   return plan.situations.reduce(
-    (sum, situation) => sum + situation.plays.length,
+    (sum: number, situation: ModalGamePlan["situations"][number]) => sum + situation.plays.length,
     0
   );
 };

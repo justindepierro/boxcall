@@ -76,7 +76,7 @@ export interface EquipmentSearchResult {
   id: string;
   name: string;
   category: string;
-  quantity: number;
+  quantity: number | null;
 }
 
 /**

@@ -39,7 +39,6 @@ export const BioSection: React.FC<BioSectionProps> = ({
     try {
       const { error } = await supabase
         .from("profiles")
-        // @ts-expect-error - Supabase type issue with profiles table update
         .update({ bio: bioText.trim() || null })
         .eq("id", profileId);
 

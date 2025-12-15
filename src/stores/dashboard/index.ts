@@ -15,8 +15,12 @@ import {
 import {
   createDefaultLayout,
   defaultPersonalizationSettings,
-  getDefaultWidgetsForRole,
+  // Future use: role-based default widgets
+  getDefaultWidgetsForRole as _getDefaultWidgetsForRole,
 } from "./defaults";
+
+// Silence lint warning for future use
+void _getDefaultWidgetsForRole;
 import type {
   ContextType,
   ContextualAction,

@@ -9,8 +9,11 @@ import { Typography } from "../../design-system";
 import { Card, Button } from "../../ui";
 import { Icon } from "../../ui/Icon/Icon";
 import { Tooltip } from "../../ui/Tooltip/Tooltip";
-import type { Profile } from "../../../types/database";
+import type { Database } from "../../../types/database";
 import { AchievementService } from "../../../services/achievementService";
+
+/** Profile type from database schema */
+type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 import { useAuth, useAuthProfile } from "../../../app/auth-store";
 import { Edit2, User } from "lucide-react";
 
