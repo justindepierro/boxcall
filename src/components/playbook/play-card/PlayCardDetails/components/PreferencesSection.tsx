@@ -97,6 +97,32 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
             />
           </dd>
         </div>
+        <div className="flex items-center gap-sm">
+          <dt className="text-primary font-medium flex-shrink-0 w-16 sm:w-20 text-xs">
+            Field Pos
+          </dt>
+          <dd className="flex-1">
+            <InlineEditField
+              value={optimisticPlay.pref_field_pos || ""}
+              onSave={(value) => handleInlineSave("pref_field_pos", value)}
+              placeholder="Field position (Red Zone, Goal Line, etc.)"
+              isSaving={savingFields.has("pref_field_pos")}
+            />
+          </dd>
+        </div>
+        <div className="flex items-center gap-sm">
+          <dt className="text-primary font-medium flex-shrink-0 w-16 sm:w-20 text-xs">
+            Situation
+          </dt>
+          <dd className="flex-1">
+            <InlineEditField
+              value={optimisticPlay.pref_situation || ""}
+              onSave={(value) => handleInlineSave("pref_situation", value)}
+              placeholder="Custom situation (2-Minute, Backed Up, etc.)"
+              isSaving={savingFields.has("pref_situation")}
+            />
+          </dd>
+        </div>
       </dl>
     </div>
   );
