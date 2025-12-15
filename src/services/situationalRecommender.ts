@@ -2,6 +2,7 @@
  * Situational Recommender Service
  * Phase 13.1: "What should I call right now?" engine
  * Phase 13.2: Added coverage-based recommendations
+ * Phase 14: Added score/time/timeout awareness (game urgency)
  *
  * Analyzes current game situation and recommends best plays based on:
  * - Confidence scores (from Phase 11)
@@ -10,13 +11,19 @@
  * - Practice-to-game transfer rates
  * - Current momentum (streaks)
  * - Coverage-specific success rates (Phase 13.2)
+ * - Score differential, time remaining, timeouts (Phase 14)
  */
 
 import { PlayConfidenceService } from "./playConfidenceService";
 import { ExecutionTrackingService } from "./executionTrackingService";
-import type { GameSituation } from "../types/session";
+import type { GameSituation, GameUrgency } from "../types/session";
 import type { Play } from "../types/database";
 import { logError } from "../utils/logger";
+import {
+  calculateGameUrgency,
+  getPlayTypeRecommendation,
+  parseTimeRemaining,
+} from "../utils/gameUrgencyCalculator";
 
 // ==============================================
 // HELPER FUNCTIONS (Extracted to reduce complexity)
@@ -269,6 +276,125 @@ function getCoachPreferenceBonus(
   // (since we can't automatically detect "2-Minute" or "Must Have" situations)
   if (play.pref_situation) {
     reasons.push(`📋 Tagged: ${play.pref_situation}`);
+  }
+
+  return { bonus, reasons };
+}
+
+/**
+ * Phase 14: Calculate bonus based on game urgency (score/time/timeouts)
+ *
+ * This adjusts recommendations based on:
+ * - Score differential (leading/trailing)
+ * - Time remaining (2-minute drill, end of game)
+ * - Game urgency level (must_score, protect_lead, etc.)
+ * - Play type match (run vs pass based on situation)
+ */
+function getGameUrgencyBonus(
+  play: {
+    play_type?: string | null;
+    concept?: string | null;
+    pref_situation?: string | null;
+  },
+  situation: GameSituation
+): { bonus: number; reasons: string[] } {
+  let bonus = 0;
+  const reasons: string[] = [];
+
+  // Need score and time data to calculate urgency
+  if (situation.teamScore === undefined || situation.opponentScore === undefined) {
+    return { bonus, reasons };
+  }
+
+  const urgency = calculateGameUrgency(situation);
+  const playTypeRec = getPlayTypeRecommendation(situation);
+  const playType = play.play_type?.toLowerCase();
+  const concept = play.concept?.toLowerCase() || "";
+  const scoreDiff = situation.teamScore - situation.opponentScore;
+  const timeRemaining = parseTimeRemaining(situation.timeRemaining);
+
+  // Match play type to recommendation
+  if (playTypeRec.type === "run" && playType === "run") {
+    bonus += 15;
+    reasons.push(`✓ Run game fits (${playTypeRec.reason})`);
+  } else if (playTypeRec.type === "pass" && playType === "pass") {
+    bonus += 15;
+    reasons.push(`✓ Pass game fits (${playTypeRec.reason})`);
+  } else if (playTypeRec.type === "balanced") {
+    bonus += 5; // Small bonus for any play in balanced mode
+  }
+
+  // Urgency-specific bonuses
+  switch (urgency) {
+    case "two_minute":
+      // Boost plays that get out of bounds or are quick-hitting
+      if (concept.includes("out") || concept.includes("sideline") || concept.includes("quick")) {
+        bonus += 20;
+        reasons.push("⏱️ Good 2-minute drill play (stops clock)");
+      }
+      // Coach tagged as 2-minute play
+      if (play.pref_situation?.toLowerCase().includes("2-minute") ||
+          play.pref_situation?.toLowerCase().includes("two minute")) {
+        bonus += 25;
+        reasons.push("⏱️ Coach's 2-minute play");
+      }
+      break;
+
+    case "must_score":
+      // Boost aggressive plays
+      if (playType === "pass") bonus += 10;
+      if (concept.includes("deep") || concept.includes("vertical") || concept.includes("shot")) {
+        bonus += 15;
+        reasons.push("🎯 Aggressive shot play (must score)");
+      }
+      break;
+
+    case "protect_lead":
+      // Boost safe, clock-eating plays
+      if (playType === "run") bonus += 15;
+      if (concept.includes("power") || concept.includes("iso") || concept.includes("dive")) {
+        bonus += 10;
+        reasons.push("🔒 Clock management play");
+      }
+      // Penalize risky plays
+      if (concept.includes("deep") || concept.includes("shot")) {
+        bonus -= 15;
+        reasons.push("⚠️ Risky with lead");
+      }
+      break;
+
+    case "desperation":
+      // Big play or bust
+      if (concept.includes("hail mary") || concept.includes("deep") || concept.includes("trick")) {
+        bonus += 25;
+        reasons.push("🚨 Desperation play");
+      }
+      break;
+
+    case "ice_the_game":
+      // Run the ball, protect it
+      if (playType === "run") {
+        bonus += 20;
+        reasons.push("❄️ Run to ice the game");
+      }
+      if (playType === "pass") {
+        bonus -= 10; // Slight penalty for passing
+      }
+      break;
+  }
+
+  // Time-specific bonuses
+  if (timeRemaining <= 30 && scoreDiff < 0 && playType === "pass") {
+    bonus += 10;
+    reasons.push("⏰ Under 30 seconds, need to pass");
+  }
+
+  // Trailing late = aggressive boost
+  if (scoreDiff < 0 && situation.quarter >= 4 && timeRemaining <= 300) {
+    if (playType === "pass" && (concept.includes("deep") || concept.includes("vertical"))) {
+      bonus += 10;
+      reasons.push("📈 Trailing in 4th - go deep");
+    }
   }
 
   return { bonus, reasons };
@@ -586,6 +712,10 @@ export class SituationalRecommender {
     const { bonus: coachBonus } = getCoachPreferenceBonus(play, situation);
     score += coachBonus;
 
+    // Phase 14: Apply game urgency bonus (score/time awareness)
+    const { bonus: urgencyBonus } = getGameUrgencyBonus(play, situation);
+    score += urgencyBonus;
+
     // Add down bonus (additional algorithmic bonus)
     score += getDownBonus(
       situation.down,
@@ -647,8 +777,12 @@ export class SituationalRecommender {
     // Start with coach-defined preference reasons (show these first!)
     const { reasons: coachReasons } = getCoachPreferenceBonus(play, situation);
 
+    // Phase 14: Get game urgency reasons
+    const { reasons: urgencyReasons } = getGameUrgencyBonus(play, situation);
+
     const reasons: string[] = [
       ...coachReasons,
+      ...urgencyReasons,
       ...getConfidenceReasons(confidence, matchScore),
       ...getDownReasons(situation, play),
       ...getFieldZoneReasons(situation),

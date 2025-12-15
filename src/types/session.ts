@@ -30,14 +30,40 @@ export type OpponentCoverage =
 // GAME SITUATION
 // ================================================
 
+export type GameUrgency =
+  | "normal" // Standard play calling
+  | "two_minute" // 2-minute drill (hurry-up, clock management)
+  | "must_score" // Need a TD (trailing late)
+  | "protect_lead" // Conservative, run the clock
+  | "desperation" // Down big, need big plays
+  | "ice_the_game" // Up big, run out clock
+  | "go_for_two" // After TD, should go for 2pt conversion
+  | "goal_line_stand"; // Defending goal line
+
 export interface GameSituation {
-  quarter: number; // 1-4
-  timeRemaining: string; // "15:00"
+  // Field position
+  quarter: number; // 1-4 (5+ for OT)
+  timeRemaining: string; // "15:00" format
   down: number; // 1-4
   distance: number; // yards to first down
-  yardLine: number; // 0-100
+  yardLine: number; // 0-100 (0=own goal, 100=opponent goal)
   hashMark: HashMark; // left/middle/right
-  opponentCoverage?: OpponentCoverage; // Phase 13.2: What defense are they in?
+
+  // Score tracking (Phase 14)
+  teamScore: number; // Our score
+  opponentScore: number; // Their score
+
+  // Timeouts (Phase 14)
+  teamTimeouts: number; // 0-3
+  opponentTimeouts: number; // 0-3
+
+  // Game state analysis (Phase 14)
+  gameUrgency?: GameUrgency; // Calculated from score/time
+  isHurryUp?: boolean; // No-huddle mode
+  isPossessionStart?: boolean; // First play of possession
+
+  // Defense (Phase 13.2)
+  opponentCoverage?: OpponentCoverage; // What defense are they in?
 }
 
 // ================================================

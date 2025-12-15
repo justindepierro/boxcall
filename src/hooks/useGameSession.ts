@@ -1,6 +1,12 @@
 /**
  * useGameSession Hook
  * Game-specific session management extending useSession
+ *
+ * Phase 14: Added score/timeout tracking + game urgency awareness
+ * - Score tracking (teamScore, opponentScore)
+ * - Timeout tracking (teamTimeouts, opponentTimeouts)
+ * - Game urgency calculation for AI recommendations
+ * - 2-point conversion decision support
  */
 
 import { useState, useEffect, useCallback, useMemo } from "react";
@@ -12,9 +18,16 @@ import type {
   CreateGameSessionData,
   HashMark,
   OpponentCoverage,
+  GameUrgency,
 } from "../types/session";
 import type { GamePlan, GamePlanPlay } from "../types";
 import { logError } from "../utils/logger";
+import {
+  calculateGameUrgency,
+  shouldGoForTwo,
+  shouldBeInHurryUp,
+  getPlayTypeRecommendation,
+} from "../utils/gameUrgencyCalculator";
 
 interface GameSituation {
   quarter: number;
@@ -23,6 +36,15 @@ interface GameSituation {
   distance: number;
   yardLine: number;
   hashMark: HashMark;
+  // Phase 14: Score tracking
+  teamScore: number;
+  opponentScore: number;
+  // Phase 14: Timeout tracking
+  teamTimeouts: number;
+  opponentTimeouts: number;
+  // Phase 14: Game urgency (calculated)
+  gameUrgency: GameUrgency;
+  isHurryUp: boolean;
 }
 
 interface UsageGameSessionOptions {
@@ -46,6 +68,15 @@ interface UseGameSessionReturn {
   // Current situation
   situation: GameSituation;
   updateSituation: (updates: Partial<GameSituation>) => void;
+
+  // Phase 14: Score & timeout management
+  updateScore: (team: "us" | "them", points: number) => void;
+  useTimeout: (team: "us" | "them") => void;
+  resetTimeouts: (forQuarter: 1 | 2 | 3 | 4) => void;
+
+  // Phase 14: Game urgency helpers
+  shouldGoForTwo: () => { shouldGoForTwo: boolean; reasoning: string };
+  playTypeRecommendation: { type: "run" | "pass" | "balanced"; reason: string };
 
   // Filtered plays (based on situation)
   filteredPlays: GamePlanPlay[];
@@ -222,7 +253,7 @@ export function useGameSession({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  // Game situation state
+  // Game situation state (Phase 14: added score/timeout/urgency)
   const [situation, setSituation] = useState<GameSituation>({
     quarter: 1,
     timeRemaining: "15:00",
@@ -230,6 +261,15 @@ export function useGameSession({
     distance: 10,
     yardLine: 25, // Start at own 25
     hashMark: "middle",
+    // Phase 14: Score tracking
+    teamScore: 0,
+    opponentScore: 0,
+    // Phase 14: Timeout tracking (3 per half)
+    teamTimeouts: 3,
+    opponentTimeouts: 3,
+    // Phase 14: Game urgency (calculated)
+    gameUrgency: "normal",
+    isHurryUp: false,
   });
 
   // Drive tracking
@@ -302,10 +342,116 @@ export function useGameSession({
     await baseEndSession();
   }, [baseEndSession]);
 
-  // Update situation
+  // Update situation (recalculates urgency when relevant fields change)
   const updateSituation = useCallback((updates: Partial<GameSituation>) => {
-    setSituation((prev) => ({ ...prev, ...updates }));
+    setSituation((prev) => {
+      const next = { ...prev, ...updates };
+
+      // Phase 14: Recalculate game urgency when score/time changes
+      if (
+        updates.quarter !== undefined ||
+        updates.timeRemaining !== undefined ||
+        updates.teamScore !== undefined ||
+        updates.opponentScore !== undefined
+      ) {
+        next.gameUrgency = calculateGameUrgency(
+          next.teamScore,
+          next.opponentScore,
+          next.quarter,
+          next.timeRemaining,
+          next.teamTimeouts
+        );
+        next.isHurryUp = shouldBeInHurryUp(
+          next.quarter,
+          next.timeRemaining,
+          next.teamScore - next.opponentScore,
+          next.teamTimeouts
+        );
+      }
+
+      return next;
+    });
   }, []);
+
+  // Phase 14: Update score (handles touchdown/FG scoring)
+  const updateScore = useCallback(
+    (team: "us" | "them", points: number) => {
+      setSituation((prev) => {
+        const next =
+          team === "us"
+            ? { ...prev, teamScore: prev.teamScore + points }
+            : { ...prev, opponentScore: prev.opponentScore + points };
+
+        // Recalculate game urgency after score change
+        next.gameUrgency = calculateGameUrgency(
+          next.teamScore,
+          next.opponentScore,
+          next.quarter,
+          next.timeRemaining,
+          next.teamTimeouts
+        );
+        next.isHurryUp = shouldBeInHurryUp(
+          next.quarter,
+          next.timeRemaining,
+          next.teamScore - next.opponentScore,
+          next.teamTimeouts
+        );
+
+        return next;
+      });
+    },
+    []
+  );
+
+  // Phase 14: Use a timeout
+  const useTimeout = useCallback((team: "us" | "them") => {
+    setSituation((prev) => {
+      if (team === "us" && prev.teamTimeouts > 0) {
+        return { ...prev, teamTimeouts: prev.teamTimeouts - 1 };
+      }
+      if (team === "them" && prev.opponentTimeouts > 0) {
+        return { ...prev, opponentTimeouts: prev.opponentTimeouts - 1 };
+      }
+      return prev;
+    });
+  }, []);
+
+  // Phase 14: Reset timeouts (at halftime, timeouts reset to 3)
+  const resetTimeouts = useCallback((forQuarter: 1 | 2 | 3 | 4) => {
+    // NFL rule: 3 timeouts per half
+    if (forQuarter === 3) {
+      // Reset both teams at halftime
+      setSituation((prev) => ({
+        ...prev,
+        teamTimeouts: 3,
+        opponentTimeouts: 3,
+      }));
+    }
+  }, []);
+
+  // Phase 14: Should go for 2-point conversion?
+  const shouldGoForTwoDecision = useMemo(() => {
+    return shouldGoForTwo(
+      situation.teamScore,
+      situation.opponentScore,
+      situation.quarter,
+      situation.timeRemaining
+    );
+  }, [
+    situation.teamScore,
+    situation.opponentScore,
+    situation.quarter,
+    situation.timeRemaining,
+  ]);
+
+  // Phase 14: Play type recommendation based on game urgency
+  const playTypeRecommendation = useMemo(() => {
+    return getPlayTypeRecommendation(
+      situation.gameUrgency,
+      situation.quarter,
+      situation.timeRemaining
+    );
+  }, [situation.gameUrgency, situation.quarter, situation.timeRemaining]);
 
   // Filter plays by situation (Billick Situations)
   const filteredPlays = useMemo(
@@ -456,6 +602,15 @@ export function useGameSession({
     advanceDown,
     resetDowns,
     nextQuarter,
+
+    // Phase 14: Score & timeout management
+    updateScore,
+    useTimeout,
+    resetTimeouts,
+
+    // Phase 14: Game urgency helpers
+    shouldGoForTwo: () => shouldGoForTwoDecision,
+    playTypeRecommendation,
 
     // Drive tracking
     currentDrive,
