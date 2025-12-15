@@ -118,11 +118,19 @@ export function useTeamsData(teamIdOverride?: string | null) {
           .update(updates)
           .eq("id", playId)
           .select()
-          .single();
+          .maybeSingle(); // Use maybeSingle() to avoid 406 error when RLS blocks or row missing
 
         if (error) {
           logError("[useTeamsData] Error updating play:", error);
           throw new Error(`Failed to update play: ${error.message}`);
+        }
+
+        // If no data returned, the play doesn't exist or RLS blocked it
+        if (!data) {
+          logError("[useTeamsData] Play not found or access denied:", playId);
+          throw new Error(
+            "Play not found or you don't have permission to update it"
+          );
         }
 
         debug("[useTeamsData] Database returned:", data);
