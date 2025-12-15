@@ -56,8 +56,10 @@ export class PreferenceService {
     try {
       const userId = getCurrentUserId();
 
+      console.log("[PreferenceService] loadPreferences called, userId:", userId);
+
       if (!userId) {
-        debug("[PreferenceService] No user authenticated");
+        console.warn("[PreferenceService] No user authenticated");
         return null;
       }
 
@@ -67,9 +69,14 @@ export class PreferenceService {
         this.preferencesCache.userId === userId &&
         Date.now() - this.preferencesCache.timestamp < this.CACHE_DURATION
       ) {
-        debug("[PreferenceService] Returning cached preferences");
+        console.log(
+          "[PreferenceService] Returning cached preferences:",
+          this.preferencesCache.data
+        );
         return this.preferencesCache.data;
       }
+
+      console.log("[PreferenceService] Fetching from database for userId:", userId);
 
       // Use maybeSingle() instead of single() to avoid 406 errors
       // when no profile exists for the user
@@ -79,8 +86,10 @@ export class PreferenceService {
         .eq("id", userId)
         .maybeSingle();
 
+      console.log("[PreferenceService] Database response:", { data, error });
+
       if (error) {
-        logError("[PreferenceService] Failed to load preferences:", error);
+        console.error("[PreferenceService] Failed to load preferences:", error);
         // Cache the failure to prevent repeated failing requests
         this.preferencesCache = {
           data: null,
@@ -92,7 +101,7 @@ export class PreferenceService {
 
       // No profile found - cache this result
       if (!data) {
-        debug("[PreferenceService] No profile found for user");
+        console.warn("[PreferenceService] No profile found for user");
         this.preferencesCache = {
           data: {},
           timestamp: Date.now(),
@@ -105,12 +114,14 @@ export class PreferenceService {
       // Type cast needed because Supabase query builder types don't include settings
       const settings = (data as { settings?: unknown })?.settings;
 
-      debug("[PreferenceService] Loaded preferences from server");
+      console.log("[PreferenceService] Raw settings from DB:", settings);
 
       const preferences =
         !settings || typeof settings !== "object" || Array.isArray(settings)
           ? {}
           : (settings as UserPreferences);
+
+      console.log("[PreferenceService] ✅ Loaded preferences:", preferences);
 
       // Cache the successful result
       this.preferencesCache = {
@@ -121,7 +132,7 @@ export class PreferenceService {
 
       return preferences;
     } catch (err) {
-      logError("[PreferenceService] Exception loading preferences:", err);
+      console.error("[PreferenceService] Exception loading preferences:", err);
       return null;
     }
   }
