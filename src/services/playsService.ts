@@ -14,6 +14,7 @@ import Fuse from "fuse.js";
 import { ActivityService } from "./activityService";
 import { PlayValidationService } from "../validation-services/playValidation";
 import { error as logError, warn } from "../utils/logger";
+import { buildNewPlayData } from "./playDataBuilders";
 
 import type { Play } from "../types/play";
 import type { FuseResultMatch, IFuseOptions } from "fuse.js";
@@ -167,78 +168,8 @@ export class PlaysService {
       const playbookId =
         playData.playbook_id || (await this.ensureUserHasPlaybook());
 
-      // Prepare ONLY database-valid fields for insertion
-      const newPlay = {
-        id: playId,
-        playbook_id: playbookId,
-
-        // Core required fields
-        play_name: normalizePlayName(playData.play_name || "Untitled Play"),
-        p_type: playData.p_type || "Pass",
-        formation: normalizeText(playData.formation || ""),
-        formation_id: playData.formation_id || null,
-
-        // Optional text fields (all exist in database)
-        one_word_play: playData.one_word_play
-          ? normalizeText(playData.one_word_play)
-          : "",
-        notes: playData.notes || "",
-        personnel: playData.personnel || "",
-
-        // Formation details
-        f_type: playData.f_type || "",
-        f_dir: playData.f_dir || "",
-
-        // Play details
-        protection: playData.protection || "",
-        p_dir: playData.p_dir || "",
-        r_str: playData.r_str || "",
-        p_str: playData.p_str || "",
-
-        // Tags (new system - database uses ftag1, ftag2, p_tag1, p_tag2)
-        ftag1: playData.ftag1 || "",
-        ftag2: playData.ftag2 || "",
-        p_tag1: playData.p_tag1 || "",
-        p_tag2: playData.p_tag2 || "",
-
-        // Additional play data
-        back_align: playData.back_align || "",
-        shift: playData.shift || "",
-        motion: playData.motion || "",
-        key_player1: playData.key_player1 || "",
-        key_player2: playData.key_player2 || "",
-        check_into: playData.check_into || "",
-
-        // Preferences
-        pref_down: playData.pref_down || "",
-        pref_dis: playData.pref_dis || "",
-        pref_hash: playData.pref_hash || "",
-        pref_cov: playData.pref_cov || "",
-        pref_front: playData.pref_front || "",
-
-        // Performance fields (integers)
-        confidence_base: playData.confidence_base || 70,
-        times_called: playData.times_called || 0,
-        times_successful: playData.times_successful || 0,
-        complexity_score: playData.complexity_score || 1,
-
-        // Metadata
-        is_archived: playData.is_archived || false,
-        created_by: userId, // Use actual authenticated user ID
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        // Duplicate key supplied by domain layer when enforcing canonical uniqueness (optional)
-        duplicate_key:
-          typeof (playData as unknown as { duplicate_key?: string })
-            .duplicate_key === "string"
-            ? (playData as unknown as { duplicate_key?: string }).duplicate_key
-            : undefined,
-
-        // Diagram data (v2 system with JSONB storage)
-        diagram_data: playData.diagram_data || null,
-        diagram_version: playData.diagram_version || null,
-        diagram_url: playData.diagram_url || null,
-      };
+      // Build database-valid fields using helper
+      const newPlay = buildNewPlayData(playData, playId, playbookId, userId);
 
       console.info("🎯 Creating play in database:", newPlay);
 

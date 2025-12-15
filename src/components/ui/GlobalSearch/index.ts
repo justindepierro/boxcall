@@ -9,4 +9,10 @@ export type {
   GlobalSearchProps,
   SearchResult,
   SearchResultType,
+  MobileSearchButtonProps,
+  MobileSearchModalProps,
+  DesktopSearchFieldProps,
+  SearchResultsProps,
+  SearchResultItemProps,
+  GlobalSearchState,
 } from "./types";

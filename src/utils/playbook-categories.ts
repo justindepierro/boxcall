@@ -4,6 +4,48 @@ import type { Play } from "../types/play";
  * Utility functions for Smart Playbook Glossary category filtering
  */
 
+// Subcategory matching rules - maps subcategory to required terms
+const SUBCATEGORY_RULES: Record<
+  string,
+  { required?: string[]; any?: string[]; allOf?: string[] }
+> = {
+  power: { any: ["power"] },
+  "inside zone": { required: ["zone"], any: ["inside", "izo", "izr"] },
+  zone: { required: ["zone"] },
+  "outside zone": { allOf: ["outside", "zone"] },
+  sweeps: { any: ["sweep", "toss"] },
+  draws: { any: ["draw"] },
+  counters: { any: ["counter"] },
+  "quick game": { any: ["quick", "slant", "hitch"] },
+  intermediate: { any: ["dig", "comeback", "out"] },
+  "deep shots": { any: ["go", "post", "corner"] },
+  screens: { any: ["screen"] },
+  "crossing routes": { any: ["cross", "drag"] },
+  bubble: { any: ["bubble"] },
+  stick: { any: ["stick"] },
+  "slant/flat": { any: ["slant", "flat"] },
+  "speed option": { allOf: ["speed", "option"] },
+  "quick slants": { any: ["slant"] },
+  boot: { any: ["boot"] },
+  rollout: { any: ["roll"] },
+  "tight end seams": { any: ["seam"] },
+  "red zone": { any: ["red zone", "fade", "corner"] },
+  "goal line": { any: ["goal"] },
+  "2-minute": { any: ["2-minute", "hurry"] },
+  "3rd down": { any: ["3rd", "third"] },
+  "4th down": { any: ["4th", "fourth"] },
+};
+
+/** Check if text contains all of the specified terms */
+function containsAll(text: string, terms: string[]): boolean {
+  return terms.every((term) => text.includes(term));
+}
+
+/** Check if text contains any of the specified terms */
+function containsAny(text: string, terms: string[]): boolean {
+  return terms.some((term) => text.includes(term));
+}
+
 // Map play attributes to categories
 export const getPlayCategory = (play: Play): string[] => {
   const categories: string[] = [];
@@ -47,7 +89,7 @@ export const getPlayCategory = (play: Play): string[] => {
   return categories;
 };
 
-// Check if play matches subcategory
+// Check if play matches subcategory using rule-based matching
 export const playMatchesSubcategory = (
   play: Play,
   subcategory: string
@@ -56,89 +98,22 @@ export const playMatchesSubcategory = (
   const playName = play.play_name.toLowerCase();
   const formation = play.formation.toLowerCase();
   const notes = play.notes?.toLowerCase() || "";
+  const allText = `${playName} ${formation} ${notes}`;
 
-  // Direct text matching
-  if (
-    playName.includes(searchTerm) ||
-    formation.includes(searchTerm) ||
-    notes.includes(searchTerm)
-  ) {
+  // Direct text matching first
+  if (allText.includes(searchTerm)) {
     return true;
   }
 
-  // Specific subcategory mappings
-  switch (searchTerm) {
-    case "power":
-      return playName.includes("power") || formation.includes("power");
-    case "inside zone":
-    case "zone":
-      return playName.includes("zone") && !playName.includes("outside");
-    case "outside zone":
-      return playName.includes("outside") && playName.includes("zone");
-    case "sweeps":
-      return playName.includes("sweep") || playName.includes("toss");
-    case "draws":
-      return playName.includes("draw");
-    case "counters":
-      return playName.includes("counter");
-    case "quick game":
-      return (
-        playName.includes("quick") ||
-        playName.includes("slant") ||
-        playName.includes("hitch")
-      );
-    case "intermediate":
-      return (
-        playName.includes("dig") ||
-        playName.includes("comeback") ||
-        playName.includes("out")
-      );
-    case "deep shots":
-      return (
-        playName.includes("go") ||
-        playName.includes("post") ||
-        playName.includes("corner")
-      );
-    case "screens":
-      return playName.includes("screen");
-    case "crossing routes":
-      return playName.includes("cross") || playName.includes("drag");
-    case "bubble":
-      return playName.includes("bubble");
-    case "stick":
-      return playName.includes("stick");
-    case "slant/flat":
-      return playName.includes("slant") || playName.includes("flat");
-    case "speed option":
-      return playName.includes("speed") && playName.includes("option");
-    case "quick slants":
-      return playName.includes("slant");
-    case "boot":
-      return playName.includes("boot");
-    case "rollout":
-      return playName.includes("roll");
-    case "tight end seams":
-      return (
-        playName.includes("seam") ||
-        (playName.includes("tight") && playName.includes("end"))
-      );
-    case "red zone":
-      return (
-        notes.includes("red zone") ||
-        playName.includes("fade") ||
-        playName.includes("corner")
-      );
-    case "goal line":
-      return notes.includes("goal") || playName.includes("goal");
-    case "2-minute":
-      return notes.includes("2-minute") || notes.includes("hurry");
-    case "3rd down":
-      return notes.includes("3rd") || notes.includes("third");
-    case "4th down":
-      return notes.includes("4th") || notes.includes("fourth");
-    default:
-      return false;
-  }
+  // Rule-based matching
+  const rule = SUBCATEGORY_RULES[searchTerm];
+  if (!rule) return false;
+
+  if (rule.allOf && !containsAll(allText, rule.allOf)) return false;
+  if (rule.required && !containsAll(allText, rule.required)) return false;
+  if (rule.any && !containsAny(allText, rule.any)) return false;
+
+  return true;
 };
 
 // Calculate play counts for categories (mock implementation)

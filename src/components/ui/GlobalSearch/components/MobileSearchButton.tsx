@@ -6,7 +6,11 @@
 
 import React from "react";
 import { Icon } from "../../Icon";
-import { MobileSearchButtonProps } from "../types";
+
+interface MobileSearchButtonProps {
+  onClick: () => void;
+  className?: string;
+}
 
 export const MobileSearchButton: React.FC<MobileSearchButtonProps> = ({
   onClick,

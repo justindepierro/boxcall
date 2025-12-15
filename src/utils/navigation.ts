@@ -17,6 +17,43 @@ export interface NavigationItem {
   badge?: string | number;
   description?: string;
 }
+
+/** Role checks - coach-level access (admin, coach, super_admin) */
+const isCoachOrAbove = (role?: UserRole | null | string): boolean =>
+  role === "admin" || role === "coach" || (role as string) === "super_admin";
+
+/** Role checks - any authenticated user with team access */
+const isTeamMember = (role?: UserRole | null | string): boolean =>
+  role === "admin" ||
+  role === "coach" ||
+  role === "player" ||
+  (role as string) === "super_admin";
+
+/** Create a navigation item with common defaults */
+const createNavItem = (
+  id: string,
+  label: string,
+  icon: IconName,
+  href: string,
+  description: string,
+  options?: { roles?: ExtendedUserRole[]; badge?: string | number }
+): NavigationItem => ({
+  id,
+  label,
+  icon,
+  href,
+  description,
+  ...options,
+});
+
+/** Create a divider item */
+const createDivider = (id: string): NavigationItem => ({
+  id,
+  label: "",
+  href: "",
+  divider: true,
+});
+
 /**
  * Complete navigation structure for BoxCall application
  * Based on comprehensive requirements with role-based access
@@ -25,14 +62,6 @@ export const getNavigationItems = (
   userRole?: UserRole | null | string,
   activeTeamId?: string | null
 ): NavigationItem[] => {
-  // Only log in development mode to reduce console noise
-  if (process.env.NODE_ENV === "development") {
-    console.info(
-      "getNavigationItems called with userRole:",
-      userRole,
-      typeof userRole
-    );
-  }
   // Dynamic team selection (persisted after creation)
   let resolvedTeamId = activeTeamId || null;
   try {
@@ -41,185 +70,175 @@ export const getNavigationItems = (
   } catch {
     /* ignore */
   }
-  const items: NavigationItem[] = [
-    // Dashboard - Available to everyone
-    {
-      id: "dashboard",
-      label: "Dashboard",
-      icon: "home",
-      href: ROUTES.DASHBOARD,
-      description: "Personal dashboard with live feed and notifications",
-    },
-    // Team Bulletin - Available to everyone (renamed from Team Dashboard)
-    {
-      id: "team-bulletin",
-      label: "Team Bulletin",
-      icon: "users",
-      href: resolvedTeamId ? teamRoutes.bulletin(resolvedTeamId) : ROUTES.TEAMS,
-      description: "Team-specific feed, announcements, and quick actions",
-    },
-  ];
-  // BoxCall - Coaches and super_admin only (premium feature)
-  if (
-    userRole === "admin" ||
-    userRole === "coach" ||
-    (userRole as string) === "super_admin"
-  ) {
-    items.push({
-      id: "boxcall",
-      label: "BoxCall",
-      icon: "phone",
-      href: ROUTES.BOXCALL,
-      roles: ["admin", "coach", "super_admin"],
-      badge: "Pro",
-      description: "Advanced coaching tools and analytics (Premium)",
-    });
-  }
-  // Playbook - Coaches, players, and super_admin
-  const shouldShowPlaybook =
-    userRole === "admin" ||
-    userRole === "coach" ||
-    userRole === "player" ||
-    (userRole as string) === "super_admin";
-  console.info("Playbook check:", {
-    userRole,
-    userRoleType: typeof userRole,
-    isAdmin: userRole === "admin",
-    isCoach: userRole === "coach",
-    isPlayer: userRole === "player",
-    isSuperAdmin: (userRole as string) === "super_admin",
-    shouldShowPlaybook,
-  });
-  if (shouldShowPlaybook) {
-    items.push({
-      id: "playbook",
-      label: "Playbook",
-      icon: "book",
-      href: ROUTES.PLAYBOOK,
-      roles: ["admin", "coach", "player", "super_admin"],
-      description: "Team plays and strategies",
-    });
-  }
-  // Roster - Coaches and super_admin only
-  if (
-    userRole === "admin" ||
-    userRole === "coach" ||
-    (userRole as string) === "super_admin"
-  ) {
-    items.push({
-      id: "roster",
-      label: "Roster",
-      icon: "users",
-      href: ROUTES.ROSTER,
-      roles: ["admin", "coach", "super_admin"],
-      description: "Manage team roster and player profiles",
-    });
-  }
-  // Calendar - Available to everyone
-  items.push({
-    id: "calendar",
-    label: "Calendar",
-    icon: "calendar",
-    href: resolvedTeamId
-      ? teamRoutes.calendar(resolvedTeamId)
-      : ROUTES.CALENDAR,
-    description: "Personal and team calendars",
-  });
-  // Planner - Available to everyone
-  items.push({
-    id: "planner",
-    label: "Planner",
-    icon: "clipboard-list",
-    href: ROUTES.PLANNER,
-    description: "Weekly planning dashboard for coaches",
-  });
-  // Awards - Coaches and super_admin only
-  if (
-    userRole === "admin" ||
-    userRole === "coach" ||
-    (userRole as string) === "super_admin"
-  ) {
-    items.push({
-      id: "awards",
-      label: "Awards",
-      icon: "award",
-      href: ROUTES.AWARDS,
-      roles: ["admin", "coach", "super_admin"],
-      description: "Give out awards and recognition to players and staff",
-    });
-  }
-  // Profile - Available to everyone
-  items.push({
-    id: "profile",
-    label: "Profile",
-    icon: "user",
-    href: ROUTES.PROFILE,
-    description: "Edit user settings and preferences",
-  });
-  // Team Settings - Coaches and super_admin only
-  // TEMP: Expose Team Settings to all authenticated roles for rapid iteration (will re-gate later)
-  if (resolvedTeamId) {
-    items.push({
-      id: "team-announcements",
-      label: "Announcements",
-      icon: "bell",
-      href: teamRoutes.announcements(resolvedTeamId),
-      description: "Team announcements and updates",
-    });
-    items.push({
-      id: "team-settings",
-      label: "Team Settings",
-      icon: "settings",
-      href: teamRoutes.settings(resolvedTeamId),
-      description: "Manage team configuration and roster",
-    });
-  }
-  // Divider before utility pages
-  items.push({
-    id: "divider-utility",
-    label: "",
-    href: "",
-    divider: true,
-  });
-  // About - Available to everyone
-  items.push({
-    id: "about",
-    label: "About",
-    icon: "info",
-    href: ROUTES.ABOUT,
-    description: "Learn about BoxCall",
-  });
-  // Templates - Coaches and super_admin only
-  if (
-    userRole === "admin" ||
-    userRole === "coach" ||
-    (userRole as string) === "super_admin"
-  ) {
-    items.push({
-      id: "templates",
-      label: "Templates",
-      icon: "file",
-      href: ROUTES.TEMPLATES,
-      roles: ["admin", "coach", "super_admin"],
-      description: "Pre-built templates and resources",
-    });
+
+  const items: NavigationItem[] = [];
+
+  // Dashboard - Available to everyone
+  items.push(
+    createNavItem(
+      "dashboard",
+      "Dashboard",
+      "home",
+      ROUTES.DASHBOARD,
+      "Personal dashboard with live feed and notifications"
+    )
+  );
+
+  // Team Bulletin - Available to everyone
+  items.push(
+    createNavItem(
+      "team-bulletin",
+      "Team Bulletin",
+      "users",
+      resolvedTeamId ? teamRoutes.bulletin(resolvedTeamId) : ROUTES.TEAMS,
+      "Team-specific feed, announcements, and quick actions"
+    )
+  );
+
+  // BoxCall - Coach-level only (premium feature)
+  if (isCoachOrAbove(userRole)) {
+    items.push(
+      createNavItem(
+        "boxcall",
+        "BoxCall",
+        "phone",
+        ROUTES.BOXCALL,
+        "Advanced coaching tools and analytics (Premium)",
+        { roles: ["admin", "coach", "super_admin"], badge: "Pro" }
+      )
+    );
   }
 
-  // Divider before logout
-  items.push({
-    id: "divider-logout",
-    label: "",
-    href: "",
-    divider: true,
-  });
-  // Logout - Available to everyone
-  items.push({
-    id: "logout",
-    label: "Log Out",
-    icon: "arrow-right",
-    href: "/logout",
-    description: "Sign out of BoxCall",
-  });
+  // Playbook - Team members
+  if (isTeamMember(userRole)) {
+    items.push(
+      createNavItem(
+        "playbook",
+        "Playbook",
+        "book",
+        ROUTES.PLAYBOOK,
+        "Team plays and strategies",
+        { roles: ["admin", "coach", "player", "super_admin"] }
+      )
+    );
+  }
+
+  // Roster - Coach-level only
+  if (isCoachOrAbove(userRole)) {
+    items.push(
+      createNavItem(
+        "roster",
+        "Roster",
+        "users",
+        ROUTES.ROSTER,
+        "Manage team roster and player profiles",
+        { roles: ["admin", "coach", "super_admin"] }
+      )
+    );
+  }
+
+  // Calendar & Planner - Available to everyone
+  items.push(
+    createNavItem(
+      "calendar",
+      "Calendar",
+      "calendar",
+      resolvedTeamId ? teamRoutes.calendar(resolvedTeamId) : ROUTES.CALENDAR,
+      "Personal and team calendars"
+    )
+  );
+
+  items.push(
+    createNavItem(
+      "planner",
+      "Planner",
+      "clipboard-list",
+      ROUTES.PLANNER,
+      "Weekly planning dashboard for coaches"
+    )
+  );
+
+  // Awards - Coach-level only
+  if (isCoachOrAbove(userRole)) {
+    items.push(
+      createNavItem(
+        "awards",
+        "Awards",
+        "award",
+        ROUTES.AWARDS,
+        "Give out awards and recognition to players and staff",
+        { roles: ["admin", "coach", "super_admin"] }
+      )
+    );
+  }
+
+  // Profile - Available to everyone
+  items.push(
+    createNavItem(
+      "profile",
+      "Profile",
+      "user",
+      ROUTES.PROFILE,
+      "Edit user settings and preferences"
+    )
+  );
+
+  // Team-specific items
+  if (resolvedTeamId) {
+    items.push(
+      createNavItem(
+        "team-announcements",
+        "Announcements",
+        "bell",
+        teamRoutes.announcements(resolvedTeamId),
+        "Team announcements and updates"
+      )
+    );
+    items.push(
+      createNavItem(
+        "team-settings",
+        "Team Settings",
+        "settings",
+        teamRoutes.settings(resolvedTeamId),
+        "Manage team configuration and roster"
+      )
+    );
+  }
+
+  // Utility section
+  items.push(createDivider("divider-utility"));
+
+  items.push(
+    createNavItem("about", "About", "info", ROUTES.ABOUT, "Learn about BoxCall")
+  );
+
+  // Templates - Coach-level only
+  if (isCoachOrAbove(userRole)) {
+    items.push(
+      createNavItem(
+        "templates",
+        "Templates",
+        "file",
+        ROUTES.TEMPLATES,
+        "Pre-built templates and resources",
+        { roles: ["admin", "coach", "super_admin"] }
+      )
+    );
+  }
+
+  // Logout section
+  items.push(createDivider("divider-logout"));
+
+  items.push(
+    createNavItem(
+      "logout",
+      "Log Out",
+      "arrow-right",
+      "/logout",
+      "Sign out of BoxCall"
+    )
+  );
+
   return items;
 };
 /**

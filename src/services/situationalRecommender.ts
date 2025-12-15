@@ -19,6 +19,284 @@ import type { Play } from "../types/database";
 import { logError } from "../utils/logger";
 
 // ==============================================
+// HELPER FUNCTIONS (Extracted to reduce complexity)
+// ==============================================
+
+/** Calculate bonus/penalty based on down */
+function getDownBonus(
+  down: number,
+  playType: string | null | undefined,
+  concept: string | null | undefined,
+  confidenceScore: number
+): number {
+  if (down === 1) {
+    let bonus = 0;
+    if (playType === "run") bonus += 10;
+    if (playType === "pass" && concept?.includes("quick")) bonus += 5;
+    return bonus;
+  }
+  if (down === 2) return 5;
+  if (down === 3) {
+    let bonus = 0;
+    if (playType === "pass") bonus += 15;
+    return bonus;
+  }
+  if (down === 4) {
+    return confidenceScore >= 80 ? 10 : -20;
+  }
+  return 0;
+}
+
+/** Calculate bonus/penalty based on distance */
+function getDistanceBonus(
+  distance: number,
+  playType: string | null | undefined,
+  formation: string | null | undefined,
+  concept: string | null | undefined
+): number {
+  if (distance <= 3) {
+    let bonus = 0;
+    if (playType === "run") bonus += 10;
+    if (formation?.includes("I-Form") || formation?.includes("Heavy"))
+      bonus += 5;
+    return bonus;
+  }
+  if (distance <= 7) {
+    if (concept?.includes("stick") || concept?.includes("mesh")) return 10;
+    return 0;
+  }
+  // Long yardage (8+)
+  let bonus = 0;
+  if (playType === "pass") bonus += 15;
+  if (concept?.includes("vertical") || concept?.includes("deep")) bonus += 10;
+  return bonus;
+}
+
+/** Calculate bonus/penalty based on field zone */
+function getFieldZoneBonus(
+  yardLine: number,
+  playType: string | null | undefined,
+  concept: string | null | undefined,
+  distance: number,
+  confidenceScore: number
+): number {
+  if (yardLine <= 20) {
+    let bonus = 0;
+    if (concept?.includes("fade") || concept?.includes("corner")) bonus += 15;
+    if (playType === "run" && distance <= 3) bonus += 10;
+    return bonus;
+  }
+  if (yardLine <= 50) {
+    let bonus = 0;
+    if (playType === "run") bonus += 5;
+    if (confidenceScore >= 75) bonus += 5;
+    return bonus;
+  }
+  // Opponent territory
+  return playType === "pass" ? 5 : 0;
+}
+
+/** Calculate bonus/penalty based on streak and practice-to-game */
+function getStreakAndPracticeBonus(confidence: {
+  streak?: { isHot?: boolean; isCold?: boolean };
+  practiceToGame?: { needsMorePractice?: boolean; transferRate?: number };
+}): number {
+  let bonus = 0;
+  if (confidence.streak?.isHot) bonus += 15;
+  else if (confidence.streak?.isCold) bonus -= 10;
+  if (confidence.practiceToGame?.needsMorePractice) bonus -= 15;
+  else if (
+    confidence.practiceToGame &&
+    confidence.practiceToGame.transferRate >= 10
+  )
+    bonus += 10;
+  return bonus;
+}
+
+/** Calculate bonus/penalty based on coverage stats */
+function getCoverageBonus(
+  coverageStats: { successRate: number; executionCount: number } | null
+): number {
+  if (!coverageStats || coverageStats.executionCount < 3) return 0;
+  if (coverageStats.successRate >= 90) return 25;
+  if (coverageStats.successRate >= 75) return 15;
+  if (coverageStats.successRate >= 60) return 5;
+  if (coverageStats.successRate < 40) return -15;
+  return 0;
+}
+
+/** Calculate bonus/penalty based on hash preference */
+function getHashBonus(
+  hashStats: {
+    bestHash?: "left" | "middle" | "right";
+    left: { successRate: number; executionCount: number };
+    middle: { successRate: number; executionCount: number };
+    right: { successRate: number; executionCount: number };
+  } | null,
+  currentHash: "left" | "middle" | "right"
+): number {
+  if (!hashStats?.bestHash) return 0;
+  const currentHashStats = hashStats[currentHash];
+  const bestHashStats = hashStats[hashStats.bestHash];
+  if (
+    currentHash === hashStats.bestHash &&
+    bestHashStats.executionCount >= 3 &&
+    bestHashStats.successRate >= 70
+  ) {
+    return 10;
+  }
+  if (
+    currentHash !== hashStats.bestHash &&
+    currentHashStats.executionCount >= 3 &&
+    bestHashStats.executionCount >= 3 &&
+    bestHashStats.successRate - currentHashStats.successRate >= 20
+  ) {
+    return -10;
+  }
+  return 0;
+}
+
+// ==============================================
+// REASONING HELPER FUNCTIONS
+// ==============================================
+
+type ConfidenceData = {
+  overallScore: number;
+  executionCount?: number;
+  streak?: { isHot?: boolean; isCold?: boolean; current?: number };
+  practiceToGame?: { needsMorePractice?: boolean; transferRate?: number };
+};
+
+/** Get confidence-related reasoning */
+function getConfidenceReasons(
+  confidence: ConfidenceData,
+  matchScore: number
+): string[] {
+  const reasons: string[] = [];
+  if (confidence.overallScore >= 80) reasons.push("High AI confidence (80%+)");
+  else if (confidence.overallScore >= 60) reasons.push("Good AI confidence");
+  if (matchScore >= 80) reasons.push("Perfect fit for this situation");
+  else if (matchScore >= 60) reasons.push("Good match for down/distance");
+  return reasons;
+}
+
+/** Get down-specific reasoning */
+function getDownReasons(situation: GameSituation, play: Play): string[] {
+  const reasons: string[] = [];
+  if (situation.down === 3 && situation.distance <= 3) {
+    if (play.play_type === "run")
+      reasons.push("Strong 3rd & short conversion play");
+    else if (play.concept?.includes("quick"))
+      reasons.push("Quick-hitting 3rd down concept");
+  } else if (
+    situation.down === 3 &&
+    situation.distance >= 8 &&
+    play.play_type === "pass"
+  ) {
+    reasons.push("Designed for 3rd & long");
+  }
+  return reasons;
+}
+
+/** Get field zone reasoning */
+function getFieldZoneReasons(situation: GameSituation): string[] {
+  if (situation.yardLine <= 20 && situation.yardLine >= 5)
+    return ["Red zone tested"];
+  if (situation.yardLine <= 5) return ["Goal line package"];
+  return [];
+}
+
+/** Get streak and practice-to-game reasoning */
+function getStreakReasons(confidence: ConfidenceData): string[] {
+  const reasons: string[] = [];
+  if (confidence.streak?.isHot)
+    reasons.push(`🔥 Hot streak (${confidence.streak.current} in a row)`);
+  if (
+    confidence.practiceToGame?.transferRate &&
+    confidence.practiceToGame.transferRate >= 10
+  ) {
+    reasons.push("Proven in game situations");
+  } else if (confidence.practiceToGame?.needsMorePractice) {
+    reasons.push("⚠️ Needs more practice");
+  }
+  if (confidence.executionCount && confidence.executionCount >= 20)
+    reasons.push("Well-practiced play");
+  else if (
+    confidence.executionCount !== undefined &&
+    confidence.executionCount < 5
+  )
+    reasons.push("Limited execution history");
+  return reasons;
+}
+
+/** Get coverage-specific reasoning */
+function getCoverageReasons(
+  coverageStats: { successRate: number; executionCount: number } | null,
+  coverage: string
+): string[] {
+  if (!coverageStats) return [];
+  if (coverageStats.executionCount >= 3) {
+    if (coverageStats.successRate >= 90) {
+      return [
+        `🎯 Excellent vs ${coverage} (${coverageStats.successRate.toFixed(0)}%, ${coverageStats.executionCount} plays)`,
+      ];
+    }
+    if (coverageStats.successRate >= 75) {
+      return [
+        `✓ Proven vs ${coverage} (${coverageStats.successRate.toFixed(0)}%)`,
+      ];
+    }
+    if (coverageStats.successRate < 40) {
+      return [
+        `⚠️ Struggles vs ${coverage} (${coverageStats.successRate.toFixed(0)}%)`,
+      ];
+    }
+  } else if (coverageStats.executionCount > 0) {
+    return [
+      `Limited data vs ${coverage} (${coverageStats.executionCount} plays)`,
+    ];
+  }
+  return [];
+}
+
+/** Get hash preference reasoning */
+function getHashReasons(
+  hashStats: {
+    bestHash?: "left" | "middle" | "right";
+    left: { successRate: number; executionCount: number };
+    middle: { successRate: number; executionCount: number };
+    right: { successRate: number; executionCount: number };
+  } | null,
+  currentHash: "left" | "middle" | "right"
+): string[] {
+  if (!hashStats?.bestHash) return [];
+  const currentHashStats = hashStats[currentHash];
+  const bestHashStats = hashStats[hashStats.bestHash];
+  if (
+    currentHash === hashStats.bestHash &&
+    bestHashStats.executionCount >= 3 &&
+    bestHashStats.successRate >= 75
+  ) {
+    return [
+      `📍 Best from ${hashStats.bestHash} hash (${bestHashStats.successRate.toFixed(0)}%)`,
+    ];
+  }
+  if (
+    hashStats.bestHash &&
+    currentHashStats.executionCount >= 3 &&
+    bestHashStats.executionCount >= 3
+  ) {
+    const diff = bestHashStats.successRate - currentHashStats.successRate;
+    if (diff >= 20) {
+      return [
+        `⚠️ Better from ${hashStats.bestHash} hash (${bestHashStats.successRate.toFixed(0)}% vs ${currentHashStats.successRate.toFixed(0)}% here)`,
+      ];
+    }
+  }
+  return [];
+}
+
+// ==============================================
 // TYPES
 // ==============================================
 
@@ -176,91 +454,44 @@ export class SituationalRecommender {
   private static async calculateSituationMatch(
     play: Play,
     situation: GameSituation,
-    confidence: any,
+    confidence: {
+      overallScore: number;
+      streak?: { isHot?: boolean; isCold?: boolean };
+      practiceToGame?: { needsMorePractice?: boolean; transferRate?: number };
+    },
     teamId: string
   ): Promise<number> {
     let score = 50; // Baseline
 
-    // Down-specific bonuses
-    if (situation.down === 1) {
-      // 1st down: Favor runs and high-percentage passes
-      if (play.play_type === "run") score += 10;
-      if (play.play_type === "pass" && play.concept?.includes("quick"))
-        score += 5;
-    } else if (situation.down === 2) {
-      // 2nd down: Balanced
-      score += 5;
-    } else if (situation.down === 3) {
-      // 3rd down: Favor plays that gain required yards
-      if (play.play_type === "pass") score += 15;
-      if (situation.distance <= 3 && play.concept?.includes("quick"))
-        score += 10;
-    } else if (situation.down === 4) {
-      // 4th down: High confidence plays only
-      score -= 20; // Start lower, add back based on confidence
-      if (confidence.overallScore >= 80) score += 30;
-    }
+    // Add down bonus
+    score += getDownBonus(
+      situation.down,
+      play.play_type,
+      play.concept,
+      confidence.overallScore
+    );
 
-    // Distance-specific bonuses
-    if (situation.distance <= 3) {
-      // Short yardage
-      if (play.play_type === "run") score += 10;
-      if (
-        play.formation?.includes("I-Form") ||
-        play.formation?.includes("Heavy")
-      ) {
-        score += 5;
-      }
-    } else if (situation.distance <= 7) {
-      // Medium yardage
-      if (play.concept?.includes("stick") || play.concept?.includes("mesh")) {
-        score += 10;
-      }
-    } else {
-      // Long yardage (8+)
-      if (play.play_type === "pass") score += 15;
-      if (
-        play.concept?.includes("vertical") ||
-        play.concept?.includes("deep")
-      ) {
-        score += 10;
-      }
-    }
+    // Add distance bonus
+    score += getDistanceBonus(
+      situation.distance,
+      play.play_type,
+      play.formation,
+      play.concept
+    );
 
-    // Field zone bonuses
-    if (situation.yardLine <= 20) {
-      // Red zone
-      if (play.concept?.includes("fade") || play.concept?.includes("corner")) {
-        score += 15;
-      }
-      if (play.play_type === "run" && situation.distance <= 3) score += 10;
-    } else if (situation.yardLine <= 50) {
-      // Own territory - conservative
-      if (play.play_type === "run") score += 5;
-      if (confidence.overallScore >= 75) score += 5;
-    } else if (play.play_type === "pass") {
-      // Opponent territory - aggressive OK
-      score += 5;
-    }
+    // Add field zone bonus
+    score += getFieldZoneBonus(
+      situation.yardLine,
+      play.play_type,
+      play.concept,
+      situation.distance,
+      confidence.overallScore
+    );
 
-    // Streak bonus/penalty (Phase 12.3)
-    if (confidence.streak?.isHot) {
-      score += 15; // Hot streak - ride the momentum!
-    } else if (confidence.streak?.isCold) {
-      score -= 10; // Cold streak - be cautious
-    }
+    // Add streak and practice-to-game bonus
+    score += getStreakAndPracticeBonus(confidence);
 
-    // Practice-to-game bonus (Phase 12.4)
-    if (confidence.practiceToGame?.needsMorePractice) {
-      score -= 15; // Not ready for prime time
-    } else if (
-      confidence.practiceToGame &&
-      confidence.practiceToGame.transferRate >= 10
-    ) {
-      score += 10; // Proven in games
-    }
-
-    // Phase 13.2: Coverage-based bonus
+    // Coverage-based bonus
     if (
       situation.opponentCoverage &&
       situation.opponentCoverage !== "Unknown"
@@ -270,45 +501,12 @@ export class SituationalRecommender {
         teamId,
         situation.opponentCoverage
       );
-
-      if (coverageStats && coverageStats.executionCount >= 3) {
-        // Only use coverage data if we have enough samples (3+)
-        if (coverageStats.successRate >= 90) {
-          score += 25; // Huge bonus for proven plays vs this coverage
-        } else if (coverageStats.successRate >= 75) {
-          score += 15; // Good success vs this coverage
-        } else if (coverageStats.successRate >= 60) {
-          score += 5; // Decent success
-        } else if (coverageStats.successRate < 40) {
-          score -= 15; // This play struggles vs this coverage
-        }
-      }
+      score += getCoverageBonus(coverageStats);
     }
 
-    // Phase 13.3: Hash preference bonus
+    // Hash preference bonus
     const hashStats = await this.getHashStats(play.id, teamId);
-    if (hashStats && hashStats.bestHash) {
-      const currentHashStats = hashStats[situation.hashMark];
-      const bestHashStats = hashStats[hashStats.bestHash];
-
-      // Bonus if we're on the best hash and have good data
-      if (
-        situation.hashMark === hashStats.bestHash &&
-        bestHashStats.executionCount >= 3 &&
-        bestHashStats.successRate >= 70
-      ) {
-        score += 10; // Good bonus for being on preferred hash
-      }
-      // Penalty if we're NOT on best hash and there's a significant difference
-      else if (
-        situation.hashMark !== hashStats.bestHash &&
-        currentHashStats.executionCount >= 3 &&
-        bestHashStats.executionCount >= 3 &&
-        bestHashStats.successRate - currentHashStats.successRate >= 20
-      ) {
-        score -= 10; // Play works much better from different hash
-      }
-    }
+    score += getHashBonus(hashStats, situation.hashMark);
 
     return Math.max(0, Math.min(100, score));
   }
@@ -319,69 +517,18 @@ export class SituationalRecommender {
   private static async buildReasoning(
     play: Play,
     situation: GameSituation,
-    confidence: any,
+    confidence: ConfidenceData,
     matchScore: number,
     teamId: string
   ): Promise<string[]> {
-    const reasons: string[] = [];
+    const reasons: string[] = [
+      ...getConfidenceReasons(confidence, matchScore),
+      ...getDownReasons(situation, play),
+      ...getFieldZoneReasons(situation),
+      ...getStreakReasons(confidence),
+    ];
 
-    // Confidence-based reasoning
-    if (confidence.overallScore >= 80) {
-      reasons.push("High AI confidence (80%+)");
-    } else if (confidence.overallScore >= 60) {
-      reasons.push("Good AI confidence");
-    }
-
-    // Situation fit
-    if (matchScore >= 80) {
-      reasons.push("Perfect fit for this situation");
-    } else if (matchScore >= 60) {
-      reasons.push("Good match for down/distance");
-    }
-
-    // Down-specific
-    if (situation.down === 3 && situation.distance <= 3) {
-      if (play.play_type === "run") {
-        reasons.push("Strong 3rd & short conversion play");
-      } else if (play.concept?.includes("quick")) {
-        reasons.push("Quick-hitting 3rd down concept");
-      }
-    } else if (situation.down === 3 && situation.distance >= 8) {
-      if (play.play_type === "pass") {
-        reasons.push("Designed for 3rd & long");
-      }
-    }
-
-    // Field zone specific
-    if (situation.yardLine <= 20 && situation.yardLine >= 5) {
-      reasons.push("Red zone tested");
-    } else if (situation.yardLine <= 5) {
-      reasons.push("Goal line package");
-    }
-
-    // Streak momentum
-    if (confidence.streak?.isHot) {
-      reasons.push(`🔥 Hot streak (${confidence.streak.current} in a row)`);
-    }
-
-    // Practice-to-game
-    if (
-      confidence.practiceToGame &&
-      confidence.practiceToGame.transferRate >= 10
-    ) {
-      reasons.push("Proven in game situations");
-    } else if (confidence.practiceToGame?.needsMorePractice) {
-      reasons.push("⚠️ Needs more practice");
-    }
-
-    // Execution count
-    if (confidence.executionCount >= 20) {
-      reasons.push("Well-practiced play");
-    } else if (confidence.executionCount < 5) {
-      reasons.push("Limited execution history");
-    }
-
-    // Phase 13.2: Coverage-specific reasoning
+    // Coverage-specific reasoning
     if (
       situation.opponentCoverage &&
       situation.opponentCoverage !== "Unknown"
@@ -391,58 +538,14 @@ export class SituationalRecommender {
         teamId,
         situation.opponentCoverage
       );
-
-      if (coverageStats && coverageStats.executionCount >= 3) {
-        if (coverageStats.successRate >= 90) {
-          reasons.push(
-            `🎯 Excellent vs ${situation.opponentCoverage} (${coverageStats.successRate.toFixed(0)}%, ${coverageStats.executionCount} plays)`
-          );
-        } else if (coverageStats.successRate >= 75) {
-          reasons.push(
-            `✓ Proven vs ${situation.opponentCoverage} (${coverageStats.successRate.toFixed(0)}%)`
-          );
-        } else if (coverageStats.successRate < 40) {
-          reasons.push(
-            `⚠️ Struggles vs ${situation.opponentCoverage} (${coverageStats.successRate.toFixed(0)}%)`
-          );
-        }
-      } else if (coverageStats && coverageStats.executionCount > 0) {
-        reasons.push(
-          `Limited data vs ${situation.opponentCoverage} (${coverageStats.executionCount} plays)`
-        );
-      }
+      reasons.push(
+        ...getCoverageReasons(coverageStats, situation.opponentCoverage)
+      );
     }
 
-    // Phase 13.3: Hash preference reasoning
+    // Hash preference reasoning
     const hashStats = await this.getHashStats(play.id, teamId);
-    if (hashStats && hashStats.bestHash) {
-      const currentHashStats = hashStats[situation.hashMark];
-      const bestHashStats = hashStats[hashStats.bestHash];
-
-      // On the best hash
-      if (
-        situation.hashMark === hashStats.bestHash &&
-        bestHashStats.executionCount >= 3 &&
-        bestHashStats.successRate >= 75
-      ) {
-        reasons.push(
-          `📍 Best from ${hashStats.bestHash} hash (${bestHashStats.successRate.toFixed(0)}%)`
-        );
-      }
-      // Not on best hash, show difference
-      else if (
-        hashStats.bestHash &&
-        currentHashStats.executionCount >= 3 &&
-        bestHashStats.executionCount >= 3
-      ) {
-        const diff = bestHashStats.successRate - currentHashStats.successRate;
-        if (diff >= 20) {
-          reasons.push(
-            `⚠️ Better from ${hashStats.bestHash} hash (${bestHashStats.successRate.toFixed(0)}% vs ${currentHashStats.successRate.toFixed(0)}% here)`
-          );
-        }
-      }
-    }
+    reasons.push(...getHashReasons(hashStats, situation.hashMark));
 
     return reasons;
   }

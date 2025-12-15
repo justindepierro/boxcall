@@ -5,9 +5,14 @@
  */
 
 import React from "react";
-import { Typography } from "../../../design-system/Typography";
-import Icon from "../../../ui/Icon/Icon";
-import { PlayDiagramPreviewProps } from "./types";
+import { Typography } from "../../../../design-system/Typography";
+import Icon from "../../../../ui/Icon/Icon";
+
+interface PlayDiagramPreviewProps {
+  diagramUrl: string | null | undefined;
+  diagramImageUrl: string | null | undefined;
+  playName: string;
+}
 
 export const PlayDiagramPreview: React.FC<PlayDiagramPreviewProps> = ({
   diagramUrl,

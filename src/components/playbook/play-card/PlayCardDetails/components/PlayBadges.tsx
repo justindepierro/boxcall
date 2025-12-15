@@ -5,7 +5,12 @@
  */
 
 import React from "react";
-import { PlayBadgesProps } from "./types";
+
+interface PlayBadgesProps {
+  phaseLabel: string | null;
+  oneWordPlay: string | null | undefined;
+  showOneWordCalls: boolean;
+}
 
 export const PlayBadges: React.FC<PlayBadgesProps> = ({
   phaseLabel,

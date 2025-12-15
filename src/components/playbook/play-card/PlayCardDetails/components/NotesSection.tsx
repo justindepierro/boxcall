@@ -5,10 +5,19 @@
  */
 
 import React from "react";
-import { Typography } from "../../../design-system/Typography";
-import Icon from "../../../ui/Icon/Icon";
-import { InlineEditField } from "../../../ui/InlineEditField";
-import { NotesSectionProps } from "./types";
+import { Typography } from "../../../../design-system/Typography";
+import Icon from "../../../../ui/Icon/Icon";
+import { InlineEditField } from "../../../../ui/InlineEditField";
+import type { Play as PlayType } from "../../../../../types/play";
+
+interface NotesSectionProps {
+  notes: string | null | undefined;
+  handleInlineSave: (
+    field: keyof PlayType,
+    value: string | number | boolean | null
+  ) => Promise<void>;
+  savingFields: Set<string>;
+}
 
 export const NotesSection: React.FC<NotesSectionProps> = ({
   notes,
