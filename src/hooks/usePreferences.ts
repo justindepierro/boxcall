@@ -79,7 +79,15 @@ export function usePreference<K extends keyof UserPreferences>(
                 `[usePreference] Migrating ${String(key)} to server:`,
                 localValue
               );
-              await PreferenceService.savePreference(key, localValue);
+              const success = await PreferenceService.savePreference(
+                key,
+                localValue
+              );
+              if (!success) {
+                console.warn(
+                  `[usePreference] Failed to migrate ${String(key)} to server - will retry on next save`
+                );
+              }
             }
           }
         }

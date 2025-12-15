@@ -160,15 +160,20 @@ export class PreferenceService {
               return false;
             }
 
+            debug("[PreferenceService] Saving for userId:", userId);
+
             // Load existing preferences to merge
             const existing = (await this.loadPreferences()) || {};
             const merged = { ...existing, ...prefsToSave };
 
             // Type cast needed because settings is Json type in database
-            const { error } = await supabase
+            // Use .select() to verify the update actually happened
+            const { data, error } = await supabase
               .from("profiles")
               .update({ settings: merged } as never)
-              .eq("id", userId);
+              .eq("id", userId)
+              .select("id, settings")
+              .maybeSingle();
 
             if (error) {
               logError(
@@ -179,7 +184,20 @@ export class PreferenceService {
               return false;
             }
 
-            debug("[PreferenceService] Saved preferences to server:", merged);
+            // Check if any row was actually updated
+            if (!data) {
+              logError(
+                "[PreferenceService] No profile found to update for userId:",
+                userId
+              );
+              resolve(false);
+              return false;
+            }
+
+            debug(
+              "[PreferenceService] Saved preferences to server:",
+              data.settings
+            );
             // Invalidate cache after successful save
             this.preferencesCache = {
               data: merged,
