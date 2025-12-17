@@ -5,9 +5,9 @@
  * See GlobalSearch/ folder for the full implementation.
  */
 
-export { GlobalSearch } from './GlobalSearch/GlobalSearch';
+export { GlobalSearch } from "./GlobalSearch/GlobalSearch";
 export type {
   GlobalSearchProps,
   SearchResult,
   SearchResultType,
-} from './GlobalSearch/types';
+} from "./GlobalSearch/types";

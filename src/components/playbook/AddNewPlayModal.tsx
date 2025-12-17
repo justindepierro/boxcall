@@ -639,7 +639,9 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             onPrefCoverageChange={(value) => updateField("prefCoverage", value)}
             onPrefFrontChange={(value) => updateField("prefFront", value)}
             onPrefFieldPosChange={(value) => updateField("prefFieldPos", value)}
-            onPrefSituationChange={(value) => updateField("prefSituation", value)}
+            onPrefSituationChange={(value) =>
+              updateField("prefSituation", value)
+            }
             downOptions={DOWN_OPTIONS}
             distanceOptions={DISTANCE_OPTIONS}
             hashOptions={HASH_OPTIONS}

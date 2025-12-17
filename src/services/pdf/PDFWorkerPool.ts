@@ -6,7 +6,7 @@
  */
 
 import { wrap, type Remote } from "comlink";
-import type { PDFWorkerAPI } from "../workers/types/pdfWorkerTypes";
+import type { PDFWorkerAPI } from "../../workers/types/pdfWorkerTypes";
 
 interface WorkerPoolItem {
   worker: Worker;
@@ -17,10 +17,6 @@ interface WorkerPoolItem {
 class PDFWorkerPool {
   private pool: WorkerPoolItem[] = [];
   private readonly maxWorkers = 2; // Limit concurrent PDF generations
-  private readonly workerUrl = new URL(
-    "../workers/pdfWorker.ts",
-    import.meta.url
-  );
 
   /**
    * Get an available worker from the pool
@@ -35,7 +31,12 @@ class PDFWorkerPool {
 
     // Create new worker if under limit
     if (this.pool.length < this.maxWorkers) {
-      const worker = new Worker(this.workerUrl, { type: "module" });
+      const worker = new Worker(
+        new URL("../../workers/pdfWorker.ts", import.meta.url),
+        {
+          type: "module",
+        }
+      );
       const api = wrap<PDFWorkerAPI>(worker);
       const item: WorkerPoolItem = { worker, api, busy: true };
       this.pool.push(item);

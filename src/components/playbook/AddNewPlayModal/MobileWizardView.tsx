@@ -370,8 +370,12 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
                 updateField("prefCoverage", value)
               }
               onPrefFrontChange={(value) => updateField("prefFront", value)}
-              onPrefFieldPosChange={(value) => updateField("prefFieldPos", value)}
-              onPrefSituationChange={(value) => updateField("prefSituation", value)}
+              onPrefFieldPosChange={(value) =>
+                updateField("prefFieldPos", value)
+              }
+              onPrefSituationChange={(value) =>
+                updateField("prefSituation", value)
+              }
               downOptions={DOWN_OPTIONS}
               distanceOptions={DISTANCE_OPTIONS}
               hashOptions={HASH_OPTIONS}

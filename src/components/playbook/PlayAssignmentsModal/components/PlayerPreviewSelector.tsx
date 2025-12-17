@@ -5,8 +5,8 @@
  */
 
 import { Typography } from "../../../design-system/Typography";
-import { FormSelect } from "../../ui/FormSelect/FormSelect";
-import { Icon } from "../../ui/Icon";
+import { FormSelect } from "../../../ui/FormSelect/FormSelect";
+import { Icon } from "../../../ui/Icon";
 import type { PlayerPreviewSelectorProps } from "./types";
 
 export function PlayerPreviewSelector({

@@ -302,7 +302,10 @@ function getGameUrgencyBonus(
   const reasons: string[] = [];
 
   // Need score and time data to calculate urgency
-  if (situation.teamScore === undefined || situation.opponentScore === undefined) {
+  if (
+    situation.teamScore === undefined ||
+    situation.opponentScore === undefined
+  ) {
     return { bonus, reasons };
   }
 
@@ -328,13 +331,19 @@ function getGameUrgencyBonus(
   switch (urgency) {
     case "two_minute":
       // Boost plays that get out of bounds or are quick-hitting
-      if (concept.includes("out") || concept.includes("sideline") || concept.includes("quick")) {
+      if (
+        concept.includes("out") ||
+        concept.includes("sideline") ||
+        concept.includes("quick")
+      ) {
         bonus += 20;
         reasons.push("⏱️ Good 2-minute drill play (stops clock)");
       }
       // Coach tagged as 2-minute play
-      if (play.pref_situation?.toLowerCase().includes("2-minute") ||
-          play.pref_situation?.toLowerCase().includes("two minute")) {
+      if (
+        play.pref_situation?.toLowerCase().includes("2-minute") ||
+        play.pref_situation?.toLowerCase().includes("two minute")
+      ) {
         bonus += 25;
         reasons.push("⏱️ Coach's 2-minute play");
       }
@@ -343,7 +352,11 @@ function getGameUrgencyBonus(
     case "must_score":
       // Boost aggressive plays
       if (playType === "pass") bonus += 10;
-      if (concept.includes("deep") || concept.includes("vertical") || concept.includes("shot")) {
+      if (
+        concept.includes("deep") ||
+        concept.includes("vertical") ||
+        concept.includes("shot")
+      ) {
         bonus += 15;
         reasons.push("🎯 Aggressive shot play (must score)");
       }
@@ -352,7 +365,11 @@ function getGameUrgencyBonus(
     case "protect_lead":
       // Boost safe, clock-eating plays
       if (playType === "run") bonus += 15;
-      if (concept.includes("power") || concept.includes("iso") || concept.includes("dive")) {
+      if (
+        concept.includes("power") ||
+        concept.includes("iso") ||
+        concept.includes("dive")
+      ) {
         bonus += 10;
         reasons.push("🔒 Clock management play");
       }
@@ -365,7 +382,11 @@ function getGameUrgencyBonus(
 
     case "desperation":
       // Big play or bust
-      if (concept.includes("hail mary") || concept.includes("deep") || concept.includes("trick")) {
+      if (
+        concept.includes("hail mary") ||
+        concept.includes("deep") ||
+        concept.includes("trick")
+      ) {
         bonus += 25;
         reasons.push("🚨 Desperation play");
       }
@@ -391,7 +412,10 @@ function getGameUrgencyBonus(
 
   // Trailing late = aggressive boost
   if (scoreDiff < 0 && situation.quarter >= 4 && timeRemaining <= 300) {
-    if (playType === "pass" && (concept.includes("deep") || concept.includes("vertical"))) {
+    if (
+      playType === "pass" &&
+      (concept.includes("deep") || concept.includes("vertical"))
+    ) {
       bonus += 10;
       reasons.push("📈 Trailing in 4th - go deep");
     }

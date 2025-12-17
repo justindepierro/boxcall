@@ -414,7 +414,9 @@ export class PlaysService {
       }
 
       if (!data) {
-        throw new Error("Play not found or you don't have permission to update it");
+        throw new Error(
+          "Play not found or you don't have permission to update it"
+        );
       }
 
       // Record activity for the updated play

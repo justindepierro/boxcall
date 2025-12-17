@@ -169,12 +169,12 @@ async function updatePlayInDB(
     .maybeSingle(); // Use maybeSingle() to avoid 406 error when RLS blocks or row missing
 
   if (error) throw error;
-  
+
   // If no data returned, the play doesn't exist or RLS blocked it
   if (!data) {
     throw new Error("Play not found or you don't have permission to update it");
   }
-  
+
   return data as DatabasePlay;
 }
 

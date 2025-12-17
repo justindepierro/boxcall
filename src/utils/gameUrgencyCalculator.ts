@@ -212,11 +212,7 @@ export function shouldUseTimeout(
   }
 
   // Defense in 2-minute drill - use timeouts to preserve time
-  if (
-    context === "defense" &&
-    timeRemaining <= 120 &&
-    situation.quarter >= 4
-  ) {
+  if (context === "defense" && timeRemaining <= 120 && situation.quarter >= 4) {
     return { should: true, reason: "Stop the clock - 2-minute defense" };
   }
 

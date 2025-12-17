@@ -56,7 +56,10 @@ export class PreferenceService {
     try {
       const userId = getCurrentUserId();
 
-      console.log("[PreferenceService] loadPreferences called, userId:", userId);
+      console.log(
+        "[PreferenceService] loadPreferences called, userId:",
+        userId
+      );
 
       if (!userId) {
         console.warn("[PreferenceService] No user authenticated");
@@ -76,7 +79,10 @@ export class PreferenceService {
         return this.preferencesCache.data;
       }
 
-      console.log("[PreferenceService] Fetching from database for userId:", userId);
+      console.log(
+        "[PreferenceService] Fetching from database for userId:",
+        userId
+      );
 
       // Use maybeSingle() instead of single() to avoid 406 errors
       // when no profile exists for the user

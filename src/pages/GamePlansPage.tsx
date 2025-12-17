@@ -12,4 +12,4 @@
  * - components/GamePlansSearchBar.tsx - Search and sort bar
  */
 
-export { default } from "./GamePlansPage";
+export { default } from "./GamePlansPage/GamePlansPageContent";

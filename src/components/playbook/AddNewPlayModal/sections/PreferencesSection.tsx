@@ -52,7 +52,8 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
         Situational Preferences
       </Typography>
       <Typography variant="body-sm" className="block mb-md text-muted">
-        Define when this play works best. Select from existing values or type new ones.
+        Define when this play works best. Select from existing values or type
+        new ones.
       </Typography>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-sm">
         <div>

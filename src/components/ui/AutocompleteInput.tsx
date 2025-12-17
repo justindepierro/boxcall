@@ -116,8 +116,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
     [isOpen, filteredSuggestions, highlightedIndex, handleSelectSuggestion]
   );
 
-  const showDropdown =
-    isOpen && filteredSuggestions.length > 0 && !disabled;
+  const showDropdown = isOpen && filteredSuggestions.length > 0 && !disabled;
 
   return (
     <div className={`relative ${className}`}>
@@ -169,7 +168,8 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
       {/* Helper text when suggestions available */}
       {suggestions.length > 0 && !isOpen && !value && (
         <Typography variant="body-xs" className="text-muted mt-xs">
-          {suggestions.length} existing value{suggestions.length !== 1 ? "s" : ""} available
+          {suggestions.length} existing value
+          {suggestions.length !== 1 ? "s" : ""} available
         </Typography>
       )}
     </div>

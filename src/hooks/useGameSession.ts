@@ -374,34 +374,31 @@ export function useGameSession({
   }, []);
 
   // Phase 14: Update score (handles touchdown/FG scoring)
-  const updateScore = useCallback(
-    (team: "us" | "them", points: number) => {
-      setSituation((prev) => {
-        const next =
-          team === "us"
-            ? { ...prev, teamScore: prev.teamScore + points }
-            : { ...prev, opponentScore: prev.opponentScore + points };
+  const updateScore = useCallback((team: "us" | "them", points: number) => {
+    setSituation((prev) => {
+      const next =
+        team === "us"
+          ? { ...prev, teamScore: prev.teamScore + points }
+          : { ...prev, opponentScore: prev.opponentScore + points };
 
-        // Recalculate game urgency after score change
-        next.gameUrgency = calculateGameUrgency(
-          next.teamScore,
-          next.opponentScore,
-          next.quarter,
-          next.timeRemaining,
-          next.teamTimeouts
-        );
-        next.isHurryUp = shouldBeInHurryUp(
-          next.quarter,
-          next.timeRemaining,
-          next.teamScore - next.opponentScore,
-          next.teamTimeouts
-        );
+      // Recalculate game urgency after score change
+      next.gameUrgency = calculateGameUrgency(
+        next.teamScore,
+        next.opponentScore,
+        next.quarter,
+        next.timeRemaining,
+        next.teamTimeouts
+      );
+      next.isHurryUp = shouldBeInHurryUp(
+        next.quarter,
+        next.timeRemaining,
+        next.teamScore - next.opponentScore,
+        next.teamTimeouts
+      );
 
-        return next;
-      });
-    },
-    []
-  );
+      return next;
+    });
+  }, []);
 
   // Phase 14: Use a timeout
   const useTimeout = useCallback((team: "us" | "them") => {

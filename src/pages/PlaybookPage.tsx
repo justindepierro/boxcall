@@ -187,7 +187,12 @@ const PlaybookPage = () => {
   useEffect(() => {
     if (!isMobileOrTablet) return;
     setMobileListExpanded(false);
-  }, [isMobileOrTablet, debouncedSearchQuery, selectedFiltersKey, setMobileListExpanded]);
+  }, [
+    isMobileOrTablet,
+    debouncedSearchQuery,
+    selectedFiltersKey,
+    setMobileListExpanded,
+  ]);
 
   return (
     <div className="min-h-screen">
@@ -262,7 +267,9 @@ const PlaybookPage = () => {
           handleAddToGamePlan={handlers.handleAddToGamePlan}
           handlePlayCountChange={handlers.handlePlayCountChange}
           handleViewChange={handlers.handleViewChange}
-          handleOpenPracticeScriptBuilder={handlers.handleOpenPracticeScriptBuilder}
+          handleOpenPracticeScriptBuilder={
+            handlers.handleOpenPracticeScriptBuilder
+          }
           dispatch={dispatch}
           navigate={navigate}
           mobileButtonSize={mobileButtonSize}
@@ -287,7 +294,9 @@ const PlaybookPage = () => {
           handleAddToPracticeScript={handlers.handleAddToPracticeScript}
           handleAddToGamePlan={handlers.handleAddToGamePlan}
           handlePlayCountChange={handlers.handlePlayCountChange}
-          handleOpenPracticeScriptBuilder={handlers.handleOpenPracticeScriptBuilder}
+          handleOpenPracticeScriptBuilder={
+            handlers.handleOpenPracticeScriptBuilder
+          }
           handleFiltersChange={handlers.handleFiltersChange}
           handleClearSelection={handlers.handleClearSelection}
           handleBulkAction={handlers.handleBulkAction}

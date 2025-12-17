@@ -5,5 +5,5 @@
  * See PlayCardDetails/ folder for the full implementation.
  */
 
-export { PlayCardDetails } from './PlayCardDetails/PlayCardDetails';
-export type { PlayCardDetailsProps } from './PlayCardDetails/types';
+export { PlayCardDetails } from "./PlayCardDetails/PlayCardDetails";
+export type { PlayCardDetailsProps } from "./PlayCardDetails/types";

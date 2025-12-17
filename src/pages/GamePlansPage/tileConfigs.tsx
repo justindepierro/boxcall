@@ -25,7 +25,8 @@ export interface TileConfig {
 /** Calculate total plays across all situations in a plan */
 export const getTotalPlays = (plan: ModalGamePlan): number => {
   return plan.situations.reduce(
-    (sum: number, situation: ModalGamePlan["situations"][number]) => sum + situation.plays.length,
+    (sum: number, situation: ModalGamePlan["situations"][number]) =>
+      sum + situation.plays.length,
     0
   );
 };

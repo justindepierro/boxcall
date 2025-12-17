@@ -5,8 +5,8 @@
  */
 
 import { Typography } from "../../../design-system/Typography";
-import { TextArea } from "../../ui/TextArea";
-import { Icon } from "../../ui/Icon";
+import { TextArea } from "../../../ui/TextArea";
+import { Icon } from "../../../ui/Icon";
 import type { PlayNotesProps } from "./types";
 
 export function PlayNotes({

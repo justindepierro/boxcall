@@ -103,7 +103,67 @@ export const animations = {
     duration = 200,
     easing = "ease-out"
   ): string => {
-    return `hover:scale-[${scale}] hover:-translate-y-[${lift}px] transition-all duration-${duration} ease-${easing}`;
+    let scaleClass = "";
+    switch (scale) {
+      case 1.1:
+        scaleClass = "hover:scale-110";
+        break;
+      case 1.05:
+        scaleClass = "hover:scale-105";
+        break;
+      case 1.02:
+        scaleClass = "hover:scale-[1.02]";
+        break;
+      case 1.01:
+        scaleClass = "hover:scale-[1.01]";
+        break;
+    }
+
+    let liftClass = "";
+    switch (lift) {
+      case -4:
+        liftClass = "hover:-translate-y-1";
+        break;
+      case -2:
+        liftClass = "hover:-translate-y-0.5";
+        break;
+    }
+
+    let durationClass = "duration-200";
+    switch (duration) {
+      case 150:
+        durationClass = "duration-150";
+        break;
+      case 200:
+        durationClass = "duration-200";
+        break;
+      case 300:
+        durationClass = "duration-300";
+        break;
+      case 500:
+        durationClass = "duration-500";
+        break;
+    }
+
+    let easingClass = "ease-out";
+    switch (easing) {
+      case "linear":
+        easingClass = "ease-linear";
+        break;
+      case "ease":
+        easingClass = "ease-in-out";
+        break;
+      case "ease-in":
+        easingClass = "ease-in";
+        break;
+      case "ease-in-out":
+        easingClass = "ease-in-out";
+        break;
+    }
+
+    return [scaleClass, liftClass, "transition-all", durationClass, easingClass]
+      .filter(Boolean)
+      .join(" ");
   },
 
   /**
@@ -121,8 +181,9 @@ export const animations = {
     _distance = 10,
     duration = 300
   ): string => {
-    const animationName = `fadeIn${direction.charAt(0).toUpperCase() + direction.slice(1)}`;
-    return `animate-[${animationName}_${duration}ms_ease-out]`;
+    void direction;
+    void duration;
+    return "animate-fade-in";
   },
 } as const;
 

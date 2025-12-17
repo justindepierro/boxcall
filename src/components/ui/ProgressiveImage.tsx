@@ -74,7 +74,7 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
         <img
           src={placeholder}
           alt=""
-          className={`absolute inset-0 w-full h-full object-cover filter blur-[${blur}] scale-110 ${imageClassName}`}
+          className={`absolute inset-0 w-full h-full object-cover scale-110 ${imageClassName}`}
           style={{ filter: `blur(${blur})` }}
           aria-hidden="true"
         />
@@ -85,7 +85,7 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
         src={src}
         alt={alt}
         className={`
-          w-full h-full object-cover transition-all duration-${transitionDuration} ease-out
+          w-full h-full object-cover transition-all ease-out
           ${imageLoaded ? "opacity-100 filter-none scale-100" : "opacity-0 scale-105"}
           ${imageClassName}
         `}

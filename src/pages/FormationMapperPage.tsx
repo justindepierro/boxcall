@@ -24,4 +24,4 @@
  * - components/FormationMapperStates.tsx - Loading/empty/error states + modals
  */
 
-export { default } from "./FormationMapperPage";
+export { default } from "./FormationMapperPage/FormationMapperPageContent";
