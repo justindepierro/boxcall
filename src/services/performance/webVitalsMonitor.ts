@@ -14,7 +14,7 @@
  * - Database query performance
  */
 
-import { debug, error as logError } from "../utils/logger";
+import { debug, error as logError } from "../../utils/logger";
 import { onCLS, onLCP, onFCP, onTTFB, onINP, type Metric } from "web-vitals";
 import React from "react";
 

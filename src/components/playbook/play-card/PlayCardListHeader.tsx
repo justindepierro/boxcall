@@ -45,7 +45,7 @@ const CollapsedBadges: React.FC<{
       <PersonnelBadge
         personnel={play.personnel}
         size="sm"
-        badgeCustomization={personnelConfig?.badgeCustomization}
+        badgeCustomization={personnelConfig?.badgeCustomization ?? undefined}
       />
     )}
 
@@ -109,7 +109,7 @@ const ExpandedBadges: React.FC<{
       <PersonnelBadge
         personnel={play.personnel}
         size="sm"
-        badgeCustomization={personnelConfig?.badgeCustomization}
+        badgeCustomization={personnelConfig?.badgeCustomization ?? undefined}
       />
     )}
 

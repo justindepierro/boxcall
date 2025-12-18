@@ -1,6 +1,5 @@
-export const iconRegistry = new Map<IconName, LucideComponent>();
-import type { IconName } from "./types";
 import type { ComponentType } from "react";
+import type { IconName } from "./Icon";
 
 // Dynamic imports for perfect tree shaking (limited to our supported set)
 type LucideComponent = ComponentType<{
@@ -11,7 +10,9 @@ type LucideComponent = ComponentType<{
 }>;
 type Loader = () => Promise<{ default: LucideComponent } | LucideComponent>;
 
-export const iconLoaders: Record<IconName, Loader> = {
+export const iconRegistry = new Map<IconName, LucideComponent>();
+
+export const iconLoaders: Partial<Record<IconName, Loader>> = {
   activity: () => import("lucide-react/dist/esm/icons/activity.js"),
   alert: () => import("lucide-react/dist/esm/icons/alert-triangle.js"),
   "alert-circle": () => import("lucide-react/dist/esm/icons/alert-circle.js"),
@@ -99,6 +100,7 @@ export const iconLoaders: Record<IconName, Loader> = {
   "user-plus": () => import("lucide-react/dist/esm/icons/user-plus.js"),
   users: () => import("lucide-react/dist/esm/icons/users.js"),
   warning: () => import("lucide-react/dist/esm/icons/alert-triangle.js"),
+  wifi: () => import("lucide-react/dist/esm/icons/wifi.js"),
   "wifi-off": () => import("lucide-react/dist/esm/icons/wifi-off.js"),
   wrench: () => import("lucide-react/dist/esm/icons/wrench.js"),
   zap: () => import("lucide-react/dist/esm/icons/zap.js"),

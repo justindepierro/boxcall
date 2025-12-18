@@ -89,7 +89,8 @@ const PlannerPage: React.FC = React.memo(() => {
 
   const completedTasks = Object.values(planningProgress).filter(Boolean).length;
   const totalTasks = Object.keys(planningProgress).length;
-  const _progressPercentage = (completedTasks / totalTasks) * 100;
+  void completedTasks;
+  void totalTasks;
 
   return (
     <div className="min-h-screen bg-secondary p-4 md:p-6">

@@ -90,7 +90,7 @@ const OverviewCard: React.FC<{
 const TrendTooltip: React.FC<{
   active?: boolean;
   payload?: any;
-  label?: string;
+  label?: string | number;
 }> = ({ active, payload, label }) => {
   if (!active || !payload || !payload.length) {
     return null;

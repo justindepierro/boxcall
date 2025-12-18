@@ -215,7 +215,11 @@ export function PracticePlanner() {
               onStopPractice={handleStopPractice}
               onUnlockSchedule={handleUnlockSchedule}
               formatTime={formatTime}
-              getTimeRemaining={getTimeRemaining}
+              getTimeRemaining={(endTime) =>
+                getTimeRemaining(
+                  endTime instanceof Date ? endTime : new Date(endTime)
+                )
+              }
             />
 
             {/* Sidebar - Quick Actions */}

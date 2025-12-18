@@ -32,6 +32,58 @@ export interface SortState {
   columnId: string;
   direction: SortDirection;
 }
+
+const getNextSortDirection = (
+  currentSortState: SortState,
+  columnId: string
+): SortDirection => {
+  if (currentSortState.columnId !== columnId) return "asc";
+  if (currentSortState.direction === "asc") return "desc";
+  if (currentSortState.direction === "desc") return null;
+  return "asc";
+};
+
+const rowMatchesGlobalFilter = <T extends TableRow>(
+  row: T,
+  columns: TableColumn<T>[],
+  filterLower: string
+): boolean =>
+  columns.some((column) => {
+    const value = column.accessorKey ? row[column.accessorKey] : "";
+    return String(value).toLowerCase().includes(filterLower);
+  });
+
+const applyGlobalFilter = <T extends TableRow>(
+  data: T[],
+  columns: TableColumn<T>[],
+  globalFilter: string
+): T[] => {
+  if (!globalFilter) return data;
+  const filterLower = globalFilter.toLowerCase();
+  return data.filter((row) =>
+    rowMatchesGlobalFilter(row, columns, filterLower)
+  );
+};
+
+const applySorting = <T extends TableRow>(
+  data: T[],
+  columns: TableColumn<T>[],
+  sortState: SortState
+): T[] => {
+  if (!sortState.direction || !sortState.columnId) return data;
+  const column = columns.find((col) => col.id === sortState.columnId);
+  if (!column?.accessorKey) return data;
+
+  const result = [...data];
+  result.sort((a, b) => {
+    const aValue = a[column.accessorKey!];
+    const bValue = b[column.accessorKey!];
+    if (aValue === bValue) return 0;
+    const comparison = aValue < bValue ? -1 : 1;
+    return sortState.direction === "asc" ? comparison : -comparison;
+  });
+  return result;
+};
 export interface TableProps<T extends TableRow = TableRow> {
   /** Column definitions */
   columns: TableColumn<T>[];
@@ -342,6 +394,192 @@ const SearchBar: React.FC<{
   </div>
 );
 
+const getSelectionState = <T extends TableRow>(
+  paginatedData: T[],
+  selectedRows: string[]
+) => {
+  const isAllSelected =
+    paginatedData.length > 0 &&
+    paginatedData.every((row) => selectedRows.includes(row.id));
+  const isIndeterminate =
+    paginatedData.some((row) => selectedRows.includes(row.id)) &&
+    !isAllSelected;
+
+  return { isAllSelected, isIndeterminate };
+};
+
+const getTotalPages = (params: {
+  pagination: boolean;
+  totalItems: number | undefined;
+  pageSize: number;
+}) => {
+  const { pagination, totalItems, pageSize } = params;
+  if (!pagination || !totalItems) return 0;
+  return Math.ceil(totalItems / pageSize);
+};
+
+const TableHeader = <T extends TableRow = TableRow>({
+  columns,
+  selectable,
+  size,
+  isAllSelected,
+  isIndeterminate,
+  onSelectAll,
+  currentSortState,
+  onSort,
+}: {
+  columns: TableColumn<T>[];
+  selectable: boolean;
+  size?: "sm" | "md" | "lg";
+  isAllSelected: boolean;
+  isIndeterminate: boolean;
+  onSelectAll: (checked: boolean) => void;
+  currentSortState: SortState;
+  onSort: (columnId: string) => void;
+}) => (
+  <thead>
+    <tr>
+      {selectable && (
+        <th className={getHeaderStyles(size)}>
+          <input
+            type="checkbox"
+            checked={isAllSelected}
+            ref={(el) => {
+              if (el) el.indeterminate = isIndeterminate;
+            }}
+            onChange={(e) => onSelectAll(e.target.checked)}
+            className="rounded-lg border-secondary dark:border-text-tertiary text-jade-600 focus:ring-jade-500"
+          />
+        </th>
+      )}
+      {columns.map((column) => (
+        <th
+          key={column.id}
+          className={`${getHeaderStyles(size)} ${column.sortable ? "cursor-pointer select-none group" : ""}`}
+          style={{ width: column.width }}
+          onClick={() => column.sortable && onSort(column.id)}
+        >
+          <div className="flex items-center justify-between">
+            <span>{column.header}</span>
+            {column.sortable && (
+              <SortIcon
+                direction={
+                  currentSortState.columnId === column.id
+                    ? currentSortState.direction
+                    : null
+                }
+              />
+            )}
+          </div>
+        </th>
+      ))}
+    </tr>
+  </thead>
+);
+
+const TableChrome = <T extends TableRow = TableRow>({
+  searchable,
+  currentGlobalFilter,
+  onGlobalFilterChange,
+  searchPlaceholder,
+  size,
+  columns,
+  selectable,
+  isAllSelected,
+  isIndeterminate,
+  onSelectAll,
+  currentSortState,
+  onSort,
+  loading,
+  paginatedData,
+  emptyMessage,
+  selectedRows,
+  onSelectRow,
+  striped,
+  pagination,
+  currentPage,
+  totalPages,
+  pageSize,
+  totalItems,
+  filteredDataLength,
+  onPageChange,
+  className,
+}: {
+  searchable: boolean;
+  currentGlobalFilter: string;
+  onGlobalFilterChange: (value: string) => void;
+  searchPlaceholder: string;
+  size: "sm" | "md" | "lg";
+  columns: TableColumn<T>[];
+  selectable: boolean;
+  isAllSelected: boolean;
+  isIndeterminate: boolean;
+  onSelectAll: (checked: boolean) => void;
+  currentSortState: SortState;
+  onSort: (columnId: string) => void;
+  loading: boolean;
+  paginatedData: T[];
+  emptyMessage: string;
+  selectedRows: string[];
+  onSelectRow: (rowId: string, checked: boolean) => void;
+  striped: boolean;
+  pagination: boolean;
+  currentPage: number;
+  totalPages: number;
+  pageSize: number;
+  totalItems: number | undefined;
+  filteredDataLength: number;
+  onPageChange: ((page: number) => void) | undefined;
+  className: string | undefined;
+}) => (
+  <div className={["space-y-4", className].filter(Boolean).join(" ")}>
+    {searchable && (
+      <SearchBar
+        value={currentGlobalFilter}
+        onChange={onGlobalFilterChange}
+        placeholder={searchPlaceholder}
+      />
+    )}
+    <div className="overflow-x-auto border-card rounded-lg">
+      <table className={getTableStyles(size)}>
+        <TableHeader
+          columns={columns}
+          selectable={selectable}
+          size={size}
+          isAllSelected={isAllSelected}
+          isIndeterminate={isIndeterminate}
+          onSelectAll={onSelectAll}
+          currentSortState={currentSortState}
+          onSort={onSort}
+        />
+        <tbody>
+          <TableBody
+            loading={loading}
+            paginatedData={paginatedData}
+            columns={columns}
+            selectable={selectable}
+            emptyMessage={emptyMessage}
+            selectedRows={selectedRows}
+            handleSelectRow={onSelectRow}
+            size={size}
+            striped={striped}
+          />
+        </tbody>
+      </table>
+    </div>
+    {pagination && (
+      <PaginationControls
+        currentPage={currentPage}
+        totalPages={totalPages}
+        pageSize={pageSize}
+        totalItems={totalItems}
+        filteredDataLength={filteredDataLength}
+        onPageChange={onPageChange}
+      />
+    )}
+  </div>
+);
+
 export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
   const {
     columns,
@@ -377,12 +615,7 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
   const handleSort = (columnId: string) => {
     const column = columns.find((col) => col.id === columnId);
     if (!column?.sortable) return;
-    const newDirection: SortDirection = (() => {
-      if (currentSortState.columnId !== columnId) return "asc";
-      if (currentSortState.direction === "asc") return "desc";
-      if (currentSortState.direction === "desc") return null;
-      return "asc";
-    })();
+    const newDirection = getNextSortDirection(currentSortState, columnId);
     const newSortState = { columnId, direction: newDirection };
     if (onSortChange) {
       onSortChange(newSortState);
@@ -398,36 +631,8 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
     }
   };
   const filteredAndSortedData = useMemo(() => {
-    let result = [...data];
-    // Apply global filter
-    if (currentGlobalFilter) {
-      result = result.filter((row) =>
-        columns.some((column) => {
-          const value = column.accessorKey ? row[column.accessorKey] : "";
-          return String(value)
-            .toLowerCase()
-            .includes(currentGlobalFilter.toLowerCase());
-        })
-      );
-    }
-    // Apply sorting
-    if (currentSortState.direction && currentSortState.columnId) {
-      const column = columns.find(
-        (col) => col.id === currentSortState.columnId
-      );
-      if (column?.accessorKey) {
-        result.sort((a, b) => {
-          const aValue = a[column.accessorKey!];
-          const bValue = b[column.accessorKey!];
-          if (aValue === bValue) return 0;
-          const comparison = aValue < bValue ? -1 : 1;
-          return currentSortState.direction === "asc"
-            ? comparison
-            : -comparison;
-        });
-      }
-    }
-    return result;
+    const filtered = applyGlobalFilter(data, columns, currentGlobalFilter);
+    return applySorting(filtered, columns, currentSortState);
   }, [data, columns, currentGlobalFilter, currentSortState]);
   const paginatedData = useMemo(() => {
     if (!pagination) return filteredAndSortedData;
@@ -446,88 +651,41 @@ export const Table = <T extends TableRow = TableRow>(props: TableProps<T>) => {
       : selectedRows.filter((id) => id !== rowId);
     onSelectionChange(newSelection);
   };
-  const isAllSelected =
-    paginatedData.length > 0 &&
-    paginatedData.every((row) => selectedRows.includes(row.id));
-  const isIndeterminate =
-    paginatedData.some((row) => selectedRows.includes(row.id)) &&
-    !isAllSelected;
-  const totalPages =
-    pagination && totalItems ? Math.ceil(totalItems / pageSize) : 0;
+
+  const { isAllSelected, isIndeterminate } = getSelectionState(
+    paginatedData,
+    selectedRows
+  );
+  const totalPages = getTotalPages({ pagination, totalItems, pageSize });
+
   return (
-    <div className={["space-y-4", className].filter(Boolean).join(" ")}>
-      {searchable && (
-        <SearchBar
-          value={currentGlobalFilter}
-          onChange={handleGlobalFilterChange}
-          placeholder={searchPlaceholder}
-        />
-      )}
-      <div className="overflow-x-auto border-card rounded-lg">
-        <table className={getTableStyles(size)}>
-          <thead>
-            <tr>
-              {selectable && (
-                <th className={getHeaderStyles(size)}>
-                  <input
-                    type="checkbox"
-                    checked={isAllSelected}
-                    ref={(el) => {
-                      if (el) el.indeterminate = isIndeterminate;
-                    }}
-                    onChange={(e) => handleSelectAll(e.target.checked)}
-                    className="rounded-lg border-secondary dark:border-text-tertiary text-jade-600 focus:ring-jade-500"
-                  />
-                </th>
-              )}
-              {columns.map((column) => (
-                <th
-                  key={column.id}
-                  className={`${getHeaderStyles(size)} ${column.sortable ? "cursor-pointer select-none group" : ""}`}
-                  style={{ width: column.width }}
-                  onClick={() => column.sortable && handleSort(column.id)}
-                >
-                  <div className="flex items-center justify-between">
-                    <span>{column.header}</span>
-                    {column.sortable && (
-                      <SortIcon
-                        direction={
-                          currentSortState.columnId === column.id
-                            ? currentSortState.direction
-                            : null
-                        }
-                      />
-                    )}
-                  </div>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            <TableBody
-              loading={loading}
-              paginatedData={paginatedData}
-              columns={columns}
-              selectable={selectable}
-              emptyMessage={emptyMessage}
-              selectedRows={selectedRows}
-              handleSelectRow={handleSelectRow}
-              size={size}
-              striped={striped}
-            />
-          </tbody>
-        </table>
-      </div>
-      {pagination && (
-        <PaginationControls
-          currentPage={currentPage}
-          totalPages={totalPages}
-          pageSize={pageSize}
-          totalItems={totalItems}
-          filteredDataLength={filteredAndSortedData.length}
-          onPageChange={onPageChange}
-        />
-      )}
-    </div>
+    <TableChrome
+      searchable={searchable}
+      currentGlobalFilter={currentGlobalFilter}
+      onGlobalFilterChange={handleGlobalFilterChange}
+      searchPlaceholder={searchPlaceholder}
+      size={size}
+      columns={columns}
+      selectable={selectable}
+      isAllSelected={isAllSelected}
+      isIndeterminate={isIndeterminate}
+      onSelectAll={handleSelectAll}
+      currentSortState={currentSortState}
+      onSort={handleSort}
+      loading={loading}
+      paginatedData={paginatedData}
+      emptyMessage={emptyMessage}
+      selectedRows={selectedRows}
+      onSelectRow={handleSelectRow}
+      striped={striped}
+      pagination={pagination}
+      currentPage={currentPage}
+      totalPages={totalPages}
+      pageSize={pageSize}
+      totalItems={totalItems}
+      filteredDataLength={filteredAndSortedData.length}
+      onPageChange={onPageChange}
+      className={className}
+    />
   );
 };

@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Play } from "../../../types/play";
-import type { PracticeScript } from "../../../types/practice";
+import type { PracticeScript } from "../../../services/practiceService";
 import type {
   PlaybookState,
   CoachingView,
@@ -18,16 +18,17 @@ import {
   flipPlayName,
   flipFormationDirection,
 } from "../../../utils/formationFlipHelpers";
+import type { ModalOptions, ModalType } from "../../../hooks/useModalManager";
 
 interface UsePlaybookHandlersProps {
   activeTeamId: string | null;
   state: PlaybookState;
   dispatch: React.Dispatch<any>;
-  openModal: (modalId: string) => void;
+  openModal: (type: Exclude<ModalType, null>, options?: ModalOptions) => void;
   closeAllModals: () => void;
   setDiagramPlay: (play: Play | null) => void;
   setDiagramMode: (mode: "edit" | "quick-play") => void;
-  setEditingScript: (script: PracticeScript | null) => void;
+  setEditingScript: React.Dispatch<React.SetStateAction<PracticeScript | null>>;
   setShowPracticeScriptModal: (show: boolean) => void;
   setShowBulkDeleteConfirm: (show: boolean) => void;
   setPlayToPost: (play: Play | null) => void;

@@ -4,7 +4,6 @@
  * Loading and not found states for the popover
  */
 
-import React from "react";
 import { Typography } from "../../../design-system/Typography";
 
 export function LoadingState() {

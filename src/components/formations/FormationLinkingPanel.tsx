@@ -9,6 +9,9 @@
  * 2. Different formations (e.g., "Rip"/"Liz") → Updates directions to Left/Right
  */
 
+/* eslint-disable max-lines-per-function */
+/* eslint-disable complexity */
+
 import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";

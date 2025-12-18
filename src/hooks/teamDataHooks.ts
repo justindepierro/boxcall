@@ -184,12 +184,19 @@ export function useCreateEvent(teamId: string | undefined) {
     },
     onSuccess: (data, _vars, ctx) => {
       if (!ctx?.tid) return;
+      const normalized: TeamEventListItem = {
+        ...data,
+        team_id: data.team_id ?? ctx.tid,
+        created_by: data.created_by ?? "me",
+        event_type: data.event_type ?? "",
+        starts_at: data.starts_at ?? new Date().toISOString(),
+      };
       qc.setQueryData<TeamEventListItem[] | undefined>(
         qk.events(ctx.tid),
         (old) => {
-          if (!old) return [data];
+          if (!old) return [normalized];
           return [
-            data,
+            normalized,
             ...old.filter((e) => !String(e.id).startsWith("optimistic-")),
           ];
         }

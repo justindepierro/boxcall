@@ -6,5 +6,3 @@
  */
 
 export { default } from "./PracticePlansPage/PracticePlansPage";
-export { usePracticePlansHandlers } from "./PracticePlansPage/usePracticePlansHandlers";
-export * from "./PracticePlansPage/types";

@@ -49,6 +49,8 @@ export function usePlayFieldSuggestions(): PlayFieldSuggestions {
       return;
     }
 
+    const teamId = activeTeamId;
+
     let cancelled = false;
 
     async function fetchSuggestions() {
@@ -57,7 +59,7 @@ export function usePlayFieldSuggestions(): PlayFieldSuggestions {
         const { data: playbooks, error: playbookError } = await supabase
           .from("playbooks")
           .select("id")
-          .eq("team_id", activeTeamId);
+          .eq("team_id", teamId);
 
         if (playbookError || !playbooks?.length) {
           setLoading(false);

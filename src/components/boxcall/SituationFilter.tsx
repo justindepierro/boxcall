@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 import { Typography } from "../design-system";
 import { Icon } from "../ui/Icon/Icon";
 import type { GameSituation } from "../../types/session";
-import type { Play } from "../../types/database";
+import type { GamePlanPlay } from "../../services/gamePlanService";
 import {
   PlayConfidenceService,
   type ConfidenceScore,
@@ -59,10 +59,10 @@ function getRecommendationColor(recommendation: string): string {
 
 interface SituationFilterProps {
   situation: GameSituation;
-  allPlays: Play[];
-  filteredPlays: Play[];
-  selectedPlay: Play | null;
-  onSelectPlay: (play: Play) => void;
+  allPlays: GamePlanPlay[];
+  filteredPlays: GamePlanPlay[];
+  selectedPlay: GamePlanPlay | null;
+  onSelectPlay: (play: GamePlanPlay) => void;
   teamId: string;
   disabled?: boolean;
   className?: string;
@@ -161,12 +161,12 @@ const PlayConfidenceDisplay: React.FC<PlayConfidenceDisplayProps> = ({
 };
 
 interface PlayCardProps {
-  play: Play;
+  play: GamePlanPlay;
   isSelected: boolean;
   confidence: ConfidenceScore | undefined;
   disabled: boolean;
   loading: boolean;
-  onSelectPlay: (play: Play) => void;
+  onSelectPlay: (play: GamePlanPlay) => void;
   onShowConfidenceDetails: (
     confidence: ConfidenceScore,
     playName: string
@@ -183,7 +183,9 @@ const PlayCard: React.FC<PlayCardProps> = ({
   onSelectPlay,
   onShowConfidenceDetails,
 }) => {
-  const playName = (play as any).play_name || play.formation || "Unknown Play";
+  const playDetails = play.play;
+  const playName =
+    playDetails?.play_name || playDetails?.formation || "Unknown Play";
 
   return (
     <button
@@ -209,26 +211,26 @@ const PlayCard: React.FC<PlayCardProps> = ({
           </Typography>
 
           <div className="flex flex-wrap gap-2 mt-2">
-            {play.formation && (
+            {playDetails?.formation && (
               <span className="px-2 py-0.5 bg-secondary border border-border rounded text-xs">
-                {play.formation}
+                {playDetails.formation}
               </span>
             )}
-            {(play as any).personnel && (
+            {playDetails?.personnel && (
               <span className="px-2 py-0.5 bg-secondary border border-border rounded text-xs">
-                {(play as any).personnel}
+                {playDetails.personnel}
               </span>
             )}
-            {play.play_type && (
+            {playDetails?.p_type && (
               <span className="px-2 py-0.5 bg-success/10 text-success border border-success/30 rounded text-xs font-medium">
-                {play.play_type}
+                {playDetails.p_type}
               </span>
             )}
           </div>
 
-          {(play as any).notes && (
+          {play.notes && (
             <Typography variant="body-xs" color="muted" className="mt-2">
-              {(play as any).notes}
+              {play.notes}
             </Typography>
           )}
         </div>
@@ -308,7 +310,7 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
 
       setLoading(true);
       try {
-        const playIds = filteredPlays.map((p) => p.id);
+        const playIds = filteredPlays.map((p) => p.playId);
         const scores = await PlayConfidenceService.getBatchConfidence(
           playIds,
           teamId,
@@ -327,8 +329,8 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
 
   // Sort plays by confidence score (highest first)
   const sortedPlays = [...filteredPlays].sort((a, b) => {
-    const scoreA = confidenceScores.get(a.id)?.overallScore || 50;
-    const scoreB = confidenceScores.get(b.id)?.overallScore || 50;
+    const scoreA = confidenceScores.get(a.playId)?.overallScore || 50;
+    const scoreB = confidenceScores.get(b.playId)?.overallScore || 50;
     return scoreB - scoreA;
   });
 
@@ -365,7 +367,7 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
               key={play.id}
               play={play}
               isSelected={selectedPlay?.id === play.id}
-              confidence={confidenceScores.get(play.id)}
+              confidence={confidenceScores.get(play.playId)}
               disabled={disabled}
               loading={loading}
               onSelectPlay={onSelectPlay}

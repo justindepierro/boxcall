@@ -288,31 +288,51 @@ export function ProgressiveAuthFlow({
           />
         );
 
-      case "onboarding":
+      case "onboarding": {
         if (!user || !profile) {
           // Fallback to welcome if no user data
-          return <WelcomeScreen />;
+          return (
+            <WelcomeScreen
+              onSignIn={() => transitionToStep("login")}
+              onSignUp={() => transitionToStep("signup")}
+              onNavigateToTerms={() => navigate(ROUTES.TERMS)}
+              onNavigateToPrivacy={() => navigate(ROUTES.PRIVACY)}
+            />
+          );
         }
+
+        const role = (() => {
+          const raw = profile.role ?? "coach";
+          if (raw === "family") return "parent" as const;
+          if (raw === "admin" || raw === "super_admin") return "admin" as const;
+          if (raw === "player" || raw === "coach" || raw === "parent") {
+            return raw;
+          }
+          return "coach" as const;
+        })();
         return (
           <OnboardingFlow
             user={{
               id: user.id,
               email: user.email || "",
               name: profile.full_name || profile.display_name || "User",
-              role: (() => {
-                if (profile.role === "family") return "parent";
-                if (profile.role === "admin" || profile.role === "super_admin")
-                  return "admin";
-                return profile.role;
-              })(),
+              role,
               avatar: profile.avatar_url || undefined,
             }}
             onComplete={handleOnboardingComplete}
           />
         );
+      }
 
       default:
-        return <WelcomeScreen />;
+        return (
+          <WelcomeScreen
+            onSignIn={() => transitionToStep("login")}
+            onSignUp={() => transitionToStep("signup")}
+            onNavigateToTerms={() => navigate(ROUTES.TERMS)}
+            onNavigateToPrivacy={() => navigate(ROUTES.PRIVACY)}
+          />
+        );
     }
   };
 

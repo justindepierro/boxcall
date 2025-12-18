@@ -51,8 +51,22 @@ const PlaybookPage = () => {
   const isMobileOrTablet = useIsMobileOrTablet();
 
   // Mobile-optimized button sizes
-  const mobileButtonSize = useMobileButtonProps("md", true).size;
-  const mobileSecondaryButtonSize = useMobileButtonProps("md", false).size;
+  const rawMobileButtonSize = useMobileButtonProps("md", true).size;
+  const rawMobileSecondaryButtonSize = useMobileButtonProps("md", false).size;
+
+  const mobileButtonSize =
+    rawMobileButtonSize === "sm" ||
+    rawMobileButtonSize === "md" ||
+    rawMobileButtonSize === "lg"
+      ? rawMobileButtonSize
+      : "md";
+
+  const mobileSecondaryButtonSize =
+    rawMobileSecondaryButtonSize === "sm" ||
+    rawMobileSecondaryButtonSize === "md" ||
+    rawMobileSecondaryButtonSize === "lg"
+      ? rawMobileSecondaryButtonSize
+      : "md";
 
   // Get playbooks for this team
   const {
@@ -272,8 +286,8 @@ const PlaybookPage = () => {
           }
           dispatch={dispatch}
           navigate={navigate}
-          mobileButtonSize={mobileButtonSize}
-          mobileSecondaryButtonSize={mobileSecondaryButtonSize}
+          mobileButtonSize={mobileButtonSize ?? "md"}
+          mobileSecondaryButtonSize={mobileSecondaryButtonSize ?? "md"}
           suggestions={suggestions}
         />
       ) : (
@@ -304,7 +318,7 @@ const PlaybookPage = () => {
           dispatch={dispatch}
           navigate={navigate}
           suggestions={suggestions}
-          mobileButtonSize={mobileButtonSize}
+          mobileButtonSize={mobileButtonSize ?? "md"}
         />
       )}
 
@@ -325,19 +339,38 @@ const PlaybookPage = () => {
         activePlaybookId={activePlaybookId}
         selectedPlaysForPractice={selectedPlaysForPractice}
         setSelectedPlaysForPractice={setSelectedPlaysForPractice}
-        existingPlays={allPlaysForStats.map((play) => ({
-          ...play,
-          confidence_base: play.confidence_base ?? 3,
-          times_called: play.times_called ?? 0,
-          times_successful: play.times_successful ?? 0,
-          created_by: "",
-          created_at: new Date(play.created_at),
-          updated_at: new Date(play.updated_at),
-          diagram_data:
-            typeof play.diagram_data === "string"
-              ? JSON.parse(play.diagram_data)
-              : play.diagram_data,
-        }))}
+        existingPlays={allPlaysForStats.map((play) => {
+          const rawPlay = play as any;
+
+          const rawDiagram = rawPlay.diagram_data;
+          const diagram_data: Play["diagram_data"] = (() => {
+            if (typeof rawDiagram === "string") {
+              try {
+                const parsed = JSON.parse(rawDiagram);
+                return Array.isArray(parsed)
+                  ? (parsed as unknown as Play["diagram_data"])
+                  : null;
+              } catch {
+                return null;
+              }
+            }
+            return Array.isArray(rawDiagram)
+              ? (rawDiagram as unknown as Play["diagram_data"])
+              : null;
+          })();
+
+          return {
+            ...rawPlay,
+            playbook_id: String(rawPlay.playbook_id ?? activePlaybookId ?? ""),
+            confidence_base: rawPlay.confidence_base ?? 3,
+            times_called: rawPlay.times_called ?? 0,
+            times_successful: rawPlay.times_successful ?? 0,
+            created_by: String(rawPlay.created_by ?? ""),
+            created_at: new Date(rawPlay.created_at ?? Date.now()),
+            updated_at: new Date(rawPlay.updated_at ?? Date.now()),
+            diagram_data,
+          } as Play;
+        })}
         handleCreatePlay={handleCreatePlay}
         handleSavePlay={handleSavePlay}
         dispatch={dispatch}
@@ -354,8 +387,8 @@ const PlaybookPage = () => {
             dispatch({ type: "SET_ADVANCED_FILTERS", filters: [] });
             closeModal();
           }}
-          mobileButtonSize={mobileButtonSize}
-          mobileSecondaryButtonSize={mobileSecondaryButtonSize}
+          mobileButtonSize={mobileButtonSize ?? "md"}
+          mobileSecondaryButtonSize={mobileSecondaryButtonSize ?? "md"}
         />
       )}
 
@@ -399,12 +432,14 @@ const PlaybookPage = () => {
           }
         >
           <PracticeScriptModal
-            editingScript={editingScript}
+            editingScript={editingScript ?? undefined}
             onClose={() => {
               setShowPracticeScriptModal(false);
               setEditingScript(null);
             }}
-            onSave={handleSavePracticeScript}
+            onSave={(script) => {
+              void handleSavePracticeScript(script as any);
+            }}
           />
         </React.Suspense>
       )}

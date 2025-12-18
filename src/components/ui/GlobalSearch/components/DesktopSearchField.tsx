@@ -29,6 +29,60 @@ export const DesktopSearchField: React.FC<DesktopSearchFieldProps> = ({
   getTypeColor,
   className = "",
 }) => {
+  let dropdownContent: React.ReactNode = null;
+  if (isLoading) {
+    dropdownContent = (
+      <div className="px-6 py-8 text-center">
+        <Icon
+          name="loader"
+          className="h-8 w-8 text-jade-500 animate-spin mx-auto mb-3"
+        />
+        <Typography
+          variant="body-sm"
+          className="text-neutral-500 dark:text-neutral-400"
+        >
+          Searching across your content...
+        </Typography>
+      </div>
+    );
+  } else if (results.length > 0) {
+    dropdownContent = (
+      <div className="py-2 overflow-y-auto max-h-96 custom-scrollbar">
+        {results.map((result, index) => (
+          <SearchResultItem
+            key={`${result.type}-${result.id}`}
+            result={result}
+            index={index}
+            selectedIndex={selectedIndex}
+            getTypeIcon={getTypeIcon}
+            getTypeColor={getTypeColor}
+            onClick={onResultClick}
+          />
+        ))}
+      </div>
+    );
+  } else if (query.length >= MIN_QUERY_LENGTH_FOR_NO_RESULTS) {
+    dropdownContent = (
+      <div className="px-6 py-8 text-center">
+        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-neutral-100 dark:bg-navy-700 flex items-center justify-center">
+          <Icon name="search" className="h-8 w-8 text-neutral-400" />
+        </div>
+        <Typography
+          variant="body-sm"
+          className="font-medium text-navy-900 dark:text-white mb-1"
+        >
+          No results found
+        </Typography>
+        <Typography
+          variant="body-xs"
+          className="text-neutral-500 dark:text-neutral-400"
+        >
+          Try searching for plays, players, or announcements
+        </Typography>
+      </div>
+    );
+  }
+
   return (
     <div ref={containerRef} className={`hidden md:block relative ${className}`}>
       <div className="relative group">
@@ -116,52 +170,7 @@ export const DesktopSearchField: React.FC<DesktopSearchFieldProps> = ({
           overflow-hidden
           animate-in fade-in slide-in-from-top-2 duration-300"
         >
-          {isLoading ? (
-            <div className="px-6 py-8 text-center">
-              <Icon
-                name="loader"
-                className="h-8 w-8 text-jade-500 animate-spin mx-auto mb-3"
-              />
-              <Typography
-                variant="body-sm"
-                className="text-neutral-500 dark:text-neutral-400"
-              >
-                Searching across your content...
-              </Typography>
-            </div>
-          ) : results.length > 0 ? (
-            <div className="py-2 overflow-y-auto max-h-96 custom-scrollbar">
-              {results.map((result, index) => (
-                <SearchResultItem
-                  key={`${result.type}-${result.id}`}
-                  result={result}
-                  index={index}
-                  selectedIndex={selectedIndex}
-                  getTypeIcon={getTypeIcon}
-                  getTypeColor={getTypeColor}
-                  onClick={onResultClick}
-                />
-              ))}
-            </div>
-          ) : query.length >= MIN_QUERY_LENGTH_FOR_NO_RESULTS ? (
-            <div className="px-6 py-8 text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-neutral-100 dark:bg-navy-700 flex items-center justify-center">
-                <Icon name="search" className="h-8 w-8 text-neutral-400" />
-              </div>
-              <Typography
-                variant="body-sm"
-                className="font-medium text-navy-900 dark:text-white mb-1"
-              >
-                No results found
-              </Typography>
-              <Typography
-                variant="body-xs"
-                className="text-neutral-500 dark:text-neutral-400"
-              >
-                Try searching for plays, players, or announcements
-              </Typography>
-            </div>
-          ) : null}
+          {dropdownContent}
         </div>
       )}
     </div>

@@ -191,7 +191,8 @@ export const CreateOppositeFormationModal: React.FC<
     if (originalFormation) {
       // Flip positions for preview
       const FIELD_WIDTH = 53.3;
-      const flipped = originalFormation.player_positions.map((pos) => ({
+      const positions = originalFormation.player_positions ?? [];
+      const flipped = positions.map((pos) => ({
         ...pos,
         x: FIELD_WIDTH - pos.x, // Flip horizontally
       }));
@@ -316,7 +317,7 @@ export const CreateOppositeFormationModal: React.FC<
                 ✅ Current Formation
               </Typography>
               <FormationPreview
-                positions={originalFormation.player_positions}
+                positions={originalFormation.player_positions ?? []}
                 label={originalFormation.name}
               />
               <Typography variant="caption" className="text-muted mt-1">

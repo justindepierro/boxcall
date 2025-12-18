@@ -16,6 +16,47 @@ import type {
   PaginatedLibraryResponse,
 } from "../../types/library";
 
+const normalizePersonnelSortBy = (sortBy?: string): string => {
+  if (sortBy === "usage") return "usage_count";
+  if (sortBy === "confidence") return "confidence_score";
+  return sortBy || "name";
+};
+
+const applyPersonnelFilters = (query: any, filters?: LibraryFilterOptions) => {
+  if (!filters) return query;
+
+  if (filters.search) {
+    query = query.or(
+      `name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`
+    );
+  }
+
+  if (filters.min_usage) {
+    query = query.gte("usage_count", filters.min_usage);
+  }
+
+  if (filters.confidence_min) {
+    query = query.gte("confidence_score", filters.confidence_min);
+  }
+
+  return query;
+};
+
+const applyPersonnelSortAndPagination = (
+  query: any,
+  filters: LibraryFilterOptions | undefined
+) => {
+  const sortBy = normalizePersonnelSortBy(filters?.sort_by);
+  const sortOrder = filters?.sort_order || "asc";
+  query = query.order(sortBy, { ascending: sortOrder === "asc" });
+
+  const limit = filters?.limit || 50;
+  const offset = filters?.offset || 0;
+  query = query.range(offset, offset + limit - 1);
+
+  return { query, limit, offset };
+};
+
 export class PersonnelLibraryService {
   /**
    * Get all personnel configurations for a playbook
@@ -29,35 +70,10 @@ export class PersonnelLibraryService {
       .select("*, players:personnel_players(*)", { count: "exact" })
       .eq("playbook_id", playbookId);
 
-    // Apply filters
-    if (filters?.search) {
-      query = query.or(
-        `name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`
-      );
-    }
-
-    if (filters?.min_usage) {
-      query = query.gte("usage_count", filters.min_usage);
-    }
-
-    if (filters?.confidence_min) {
-      query = query.gte("confidence_score", filters.confidence_min);
-    }
-
-    // Sorting (map "usage" to actual column name "usage_count")
-    let sortBy: string = filters?.sort_by || "name";
-    if (sortBy === "usage") {
-      sortBy = "usage_count";
-    } else if (sortBy === "confidence") {
-      sortBy = "confidence_score";
-    }
-    const sortOrder = filters?.sort_order || "asc";
-    query = query.order(sortBy, { ascending: sortOrder === "asc" });
-
-    // Pagination
-    const limit = filters?.limit || 50;
-    const offset = filters?.offset || 0;
-    query = query.range(offset, offset + limit - 1);
+    query = applyPersonnelFilters(query, filters);
+    const pagination = applyPersonnelSortAndPagination(query, filters);
+    query = pagination.query;
+    const { limit, offset } = pagination;
 
     const { data, count, error } = await query;
 

@@ -13,6 +13,13 @@ import {
 import { telemetry } from "../../../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../../../telemetry/events";
 
+function getResultBucket(resultCount: number): "0" | "1-10" | "11-50" | ">50" {
+  if (resultCount === 0) return "0";
+  if (resultCount <= 10) return "1-10";
+  if (resultCount <= 50) return "11-50";
+  return ">50";
+}
+
 interface PlayFilters {
   formation?: string;
   playType?: string;
@@ -126,14 +133,7 @@ export function usePlayFiltering({
         selectedCategory: selectedCategory || null,
         selectedSubcategory: selectedSubcategory || null,
         resultCount: filteredPlays.length,
-        resultBucket:
-          filteredPlays.length === 0
-            ? "0"
-            : filteredPlays.length <= 10
-              ? "1-10"
-              : filteredPlays.length <= 50
-                ? "11-50"
-                : ">50",
+        resultBucket: getResultBucket(filteredPlays.length),
       }),
     [
       searchQuery,

@@ -14,14 +14,16 @@ import {
   dbOptimization,
   type QueryMetrics,
 } from "../services/database/DatabaseOptimizationService";
-import type { Database } from "../types/database";
+import type {
+  Database,
+  Tables,
+  TablesInsert,
+  TablesUpdate,
+} from "../types/database";
 
-type Tables<T extends keyof Database["public"]["Tables"]> =
-  Database["public"]["Tables"][T]["Row"];
-type Inserts<T extends keyof Database["public"]["Tables"]> =
-  Database["public"]["Tables"][T]["Insert"];
-type Updates<T extends keyof Database["public"]["Tables"]> =
-  Database["public"]["Tables"][T]["Update"];
+type Row<T extends keyof Database["public"]["Tables"]> = Tables<T>;
+type Inserts<T extends keyof Database["public"]["Tables"]> = TablesInsert<T>;
+type Updates<T extends keyof Database["public"]["Tables"]> = TablesUpdate<T>;
 
 interface UseOptimizedQueryState<T> {
   data: T[] | null;
@@ -53,14 +55,14 @@ interface UseOptimizedCacheState {
  */
 export function useOptimizedQuery<T extends keyof Database["public"]["Tables"]>(
   service: OptimizedBaseService<T>,
-  filters?: Partial<Tables<T>>,
+  filters?: Partial<Row<T>>,
   options?: QueryOptions & {
     enabled?: boolean;
     refetchInterval?: number;
     staleTime?: number;
   }
-): UseOptimizedQueryState<Tables<T>> {
-  const [state, setState] = useState<UseOptimizedQueryState<Tables<T>>>({
+): UseOptimizedQueryState<Row<T>> {
+  const [state, setState] = useState<UseOptimizedQueryState<Row<T>>>({
     data: null,
     loading: true,
     error: null,
@@ -237,8 +239,8 @@ export function useOptimizedMutation<
 >(
   service: OptimizedBaseService<T>,
   operation: "create" | "update" | "delete"
-): UseOptimizedMutationState<Tables<T>> {
-  const [state, setState] = useState<UseOptimizedMutationState<Tables<T>>>({
+): UseOptimizedMutationState<Row<T>> {
+  const [state, setState] = useState<UseOptimizedMutationState<Row<T>>>({
     data: null,
     loading: false,
     error: null,
@@ -282,7 +284,7 @@ export function useOptimizedMutation<
 
         setState((prev) => ({
           ...prev,
-          data: result.data as Tables<T>,
+          data: result.data as Row<T>,
           loading: false,
           error: result.error ? new Error(result.error.message) : null,
           metrics: result.metrics,
@@ -320,7 +322,7 @@ export function useOptimizedMutation<
 export function useOptimizedBatch<T extends keyof Database["public"]["Tables"]>(
   service: OptimizedBaseService<T>
 ): {
-  data: Tables<T>[] | null;
+  data: Row<T>[] | null;
   loading: boolean;
   error: Error | null;
   metrics?: QueryMetrics;
@@ -328,7 +330,7 @@ export function useOptimizedBatch<T extends keyof Database["public"]["Tables"]>(
   reset: () => void;
 } {
   const [state, setState] = useState({
-    data: null as Tables<T>[] | null,
+    data: null as Row<T>[] | null,
     loading: false,
     error: null as Error | null,
     metrics: undefined as QueryMetrics | undefined,
@@ -383,7 +385,7 @@ export function useOptimizedSearch<
   service: OptimizedBaseService<T>,
   searchColumns: string[]
 ): {
-  data: Tables<T>[] | null;
+  data: Row<T>[] | null;
   loading: boolean;
   error: Error | null;
   metrics?: QueryMetrics;
@@ -394,7 +396,7 @@ export function useOptimizedSearch<
   clear: () => void;
 } {
   const [state, setState] = useState({
-    data: null as Tables<T>[] | null,
+    data: null as Row<T>[] | null,
     loading: false,
     error: null as Error | null,
     metrics: undefined as QueryMetrics | undefined,

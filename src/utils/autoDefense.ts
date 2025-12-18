@@ -5,7 +5,22 @@
  * Provides intelligent defaults to speed up diagram creation.
  */
 
-import type { FormationAnalysis } from "@features/defense/types/formationTypes";
+export type FormationAnalysis = {
+  type:
+    | "2x2"
+    | "3x1-left"
+    | "3x1-right"
+    | "empty"
+    | "doubles"
+    | "trips"
+    | "quads"
+    | "bunch"
+    | "unbalanced"
+    | "wildcat";
+  totalEligibleReceivers: number;
+  boxCount: number;
+  strengthSide: "left" | "right" | "balanced";
+};
 
 export interface DefenseRecommendation {
   /** Recommended defense scheme ID */

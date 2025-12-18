@@ -10,8 +10,6 @@ import { logError } from "../../utils/logger";
 interface ActivityItem {
   id: string;
   activity_type: ActivityType;
-  actor_name: string;
-  actor_avatar?: string;
   content_type: string;
   content_title?: string;
   created_at: string;
@@ -41,9 +39,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
         .limit(limit);
 
       if (userId) {
-        activityQuery = activityQuery.or(
-          `actor_id.eq.${userId},mentioned_user_id.eq.${userId}`
-        );
+        activityQuery = activityQuery.eq("user_id", userId);
       }
 
       const { data: activities, error: activityError } = await activityQuery;
@@ -55,38 +51,26 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
         return;
       }
 
-      // Get unique actor IDs
-      const actorIds = [
-        ...new Set(activities.map((a) => a.actor_id).filter(Boolean)),
-      ];
-
-      // Fetch profiles for these actors
-      const { data: profiles, error: profileError } = await supabase
-        .from("profiles")
-        .select("id, display_name, avatar_url")
-        .in("id", actorIds);
-
-      if (profileError) {
-        console.warn("Failed to load profiles:", profileError);
-      }
-
-      // Create a map of profiles by ID
-      const profileMap = new Map();
-      (profiles || []).forEach((profile) => {
-        profileMap.set(profile.id, profile);
-      });
-
       // Transform the data to match our interface
       const transformedActivities: ActivityItem[] = activities.map((item) => {
-        const actorProfile = profileMap.get(item.actor_id);
+        const metadataTitle = (() => {
+          const metadata = item.metadata;
+          if (!metadata) return undefined;
+          if (typeof metadata !== "object") return undefined;
+          if (Array.isArray(metadata)) return undefined;
+          const maybeTitle = (metadata as Record<string, unknown>)[
+            "content_title"
+          ];
+          return typeof maybeTitle === "string" ? maybeTitle : undefined;
+        })();
+
         return {
           id: item.id,
-          activity_type: item.action_type || item.activity_type,
-          actor_name: actorProfile?.display_name || "Unknown User",
-          actor_avatar: actorProfile?.avatar_url,
-          content_type: item.target_type || item.content_type,
-          content_title: item.content || item.metadata?.content_title,
-          created_at: item.created_at,
+          activity_type: (item.activity_type ||
+            "comment_posted") as ActivityType,
+          content_type: item.entity_type || "unknown",
+          content_title: item.title || item.description || metadataTitle,
+          created_at: item.created_at || new Date().toISOString(),
           metadata: item.metadata,
         };
       });
@@ -121,7 +105,8 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   };
 
   const formatActivityMessage = (activity: ActivityItem): string => {
-    const { actor_name, activity_type, content_type } = activity;
+    const { activity_type, content_type } = activity;
+    const actor_name = "Someone";
 
     switch (activity_type) {
       case "reaction_added":
@@ -206,15 +191,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
           </div>
 
           {/* Actor Avatar */}
-          {activity.actor_avatar && (
-            <div className="flex-shrink-0">
-              <img
-                src={activity.actor_avatar}
-                alt={activity.actor_name}
-                className="w-8 h-8 rounded-full"
-              />
-            </div>
-          )}
+          {/* Avatar not available from current activity_feed schema */}
         </div>
       ))}
     </div>

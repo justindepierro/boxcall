@@ -8,7 +8,7 @@
  * 4. Redirect to team dashboard
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import {
@@ -48,6 +48,299 @@ interface TeamData {
   school_name: string | null;
 }
 
+const LoadingState = () => (
+  <div className="min-h-screen flex items-center justify-center bg-surface">
+    <div className="text-center">
+      <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
+      <p className="text-secondary">Loading invitation...</p>
+    </div>
+  </div>
+);
+
+const InvalidTokenState = ({ onGoHome }: { onGoHome: () => void }) => (
+  <div className="min-h-screen flex items-center justify-center bg-surface p-4">
+    <div className="max-w-md w-full bg-primary rounded-lg shadow-2xl p-8">
+      <Alert variant="error" className="mb-4">
+        <h2 className="text-lg font-semibold mb-2">Invalid Invitation</h2>
+        <p>This invitation link is not valid.</p>
+      </Alert>
+      <Button onClick={onGoHome} className="w-full">
+        Go to Home
+      </Button>
+    </div>
+  </div>
+);
+
+const ExpiredTokenState = ({ onGoHome }: { onGoHome: () => void }) => (
+  <div className="min-h-screen flex items-center justify-center bg-surface p-4">
+    <div className="max-w-md w-full bg-primary rounded-lg shadow-2xl p-8">
+      <Alert variant="warning" className="mb-4">
+        <h2 className="text-lg font-semibold mb-2">Invitation Expired</h2>
+        <p>
+          This invitation has expired. Please contact your coach to request a
+          new invitation.
+        </p>
+      </Alert>
+      <Button onClick={onGoHome} className="w-full">
+        Go to Home
+      </Button>
+    </div>
+  </div>
+);
+
+const AlreadyAcceptedState = ({
+  team,
+  onGoToTeam,
+}: {
+  team: TeamData | null;
+  onGoToTeam: (teamId: string) => void;
+}) => (
+  <div className="min-h-screen flex items-center justify-center bg-surface p-4">
+    <div className="max-w-md w-full bg-primary rounded-lg shadow-2xl p-8">
+      <Alert variant="info" className="mb-4">
+        <h2 className="text-lg font-semibold mb-2">Already a Member</h2>
+        <p>You are already a member of this team.</p>
+      </Alert>
+      {team && (
+        <Button onClick={() => onGoToTeam(team.id)} className="w-full">
+          Go to {team.name}
+        </Button>
+      )}
+    </div>
+  </div>
+);
+
+const AcceptingState = () => (
+  <div className="min-h-screen flex items-center justify-center bg-surface">
+    <div className="text-center">
+      <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
+      <p className="text-secondary">Accepting invitation...</p>
+    </div>
+  </div>
+);
+
+const SuccessState = ({
+  invitation,
+  team,
+}: {
+  invitation: InvitationData | null;
+  team: TeamData | null;
+}) => (
+  <div className="min-h-screen flex items-center justify-center bg-surface p-4">
+    <div className="max-w-md w-full bg-primary rounded-lg shadow-2xl p-8">
+      <div className="text-center">
+        <div className="w-16 h-16 bg-success-bg rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg
+            className="w-8 h-8 text-success-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        </div>
+        <h2 className="text-2xl font-bold text-primary mb-2">
+          Welcome to the Team!
+        </h2>
+        {invitation && team && (
+          <>
+            <p className="text-secondary mb-4">
+              You've successfully joined <strong>{team.name}</strong> as{" "}
+              <strong>
+                {invitation.first_name} {invitation.last_name}
+              </strong>
+              .
+            </p>
+            <p className="text-muted text-sm">
+              Redirecting to your team dashboard...
+            </p>
+          </>
+        )}
+      </div>
+    </div>
+  </div>
+);
+
+const ErrorState = ({
+  errorMessage,
+  onGoHome,
+}: {
+  errorMessage: string;
+  onGoHome: () => void;
+}) => (
+  <div className="min-h-screen flex items-center justify-center bg-surface p-4">
+    <div className="max-w-md w-full bg-primary rounded-lg shadow-2xl p-8">
+      <Alert variant="error" className="mb-4">
+        <h2 className="text-lg font-semibold mb-2">Error</h2>
+        <p>{errorMessage || "An unexpected error occurred"}</p>
+      </Alert>
+      <Button onClick={onGoHome} className="w-full">
+        Go to Home
+      </Button>
+    </div>
+  </div>
+);
+
+const AuthRequiredState = ({
+  team,
+  invitation,
+  token,
+  playerEmail,
+  authMode,
+  onSetAuthMode,
+  onSignUpSuccess,
+  onSignInSuccess,
+}: {
+  team: TeamData | null;
+  invitation: InvitationData | null;
+  token: string | null;
+  playerEmail: string;
+  authMode: "signup" | "signin";
+  onSetAuthMode: (mode: "signup" | "signin") => void;
+  onSignUpSuccess: (userId: string) => Promise<void>;
+  onSignInSuccess: () => Promise<void>;
+}) => (
+  <div className="min-h-screen flex items-center justify-center bg-surface p-4">
+    <div className="max-w-md w-full">
+      {/* Team Header */}
+      {team && invitation && (
+        <div className="bg-primary rounded-lg shadow-md p-6 mb-4">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-primary mb-2">
+              Join {team.name}
+            </h1>
+            {team.school_name && (
+              <p className="text-secondary text-sm mb-4">{team.school_name}</p>
+            )}
+            <div className="bg-secondary rounded-lg p-4">
+              <p className="text-sm text-secondary mb-1">
+                You've been invited as:
+              </p>
+              <p className="text-lg font-semibold text-primary">
+                {invitation.first_name} {invitation.last_name}
+              </p>
+              {playerEmail && (
+                <p className="text-sm text-muted">{playerEmail}</p>
+              )}
+            </div>
+            <div className="mt-4 text-xs text-muted">
+              Invitation expires:{" "}
+              {new Date(invitation.invitation_expires_at).toLocaleDateString()}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Auth Forms */}
+      <div className="bg-primary rounded-lg shadow-2xl p-6">
+        {/* Tab Switcher */}
+        <div className="flex border-b border-muted mb-6">
+          <button
+            onClick={() => onSetAuthMode("signup")}
+            className={`flex-1 py-2 text-sm font-medium border-b-2 transition-colors ${
+              authMode === "signup"
+                ? "border-primary text-primary"
+                : "border-transparent text-secondary hover:text-primary"
+            }`}
+          >
+            Create Account
+          </button>
+          <button
+            onClick={() => onSetAuthMode("signin")}
+            className={`flex-1 py-2 text-sm font-medium border-b-2 transition-colors ${
+              authMode === "signin"
+                ? "border-primary text-primary"
+                : "border-transparent text-secondary hover:text-primary"
+            }`}
+          >
+            Sign In
+          </button>
+        </div>
+
+        {/* Sign Up Form */}
+        {authMode === "signup" && invitation && (
+          <SignUpForm
+            prefilledEmail={playerEmail}
+            prefilledFirstName={invitation.first_name}
+            prefilledLastName={invitation.last_name}
+            onSuccess={onSignUpSuccess}
+            redirectTo={`/invite/accept?token=${token}`}
+          />
+        )}
+
+        {/* Sign In Form */}
+        {authMode === "signin" && (
+          <SignInForm
+            onSuccess={onSignInSuccess}
+            redirectTo={`/invite/accept?token=${token}`}
+          />
+        )}
+      </div>
+    </div>
+  </div>
+);
+
+function InvitationAcceptPageBody(params: {
+  pageState: PageState;
+  invitation: InvitationData | null;
+  team: TeamData | null;
+  token: string | null;
+  playerEmail: string;
+  errorMessage: string;
+  authMode: "signup" | "signin";
+  onGoHome: () => void;
+  onGoToTeam: (teamId: string) => void;
+  onSetAuthMode: (mode: "signup" | "signin") => void;
+  onSignUpSuccess: (userId: string) => Promise<void>;
+  onSignInSuccess: () => Promise<void>;
+}) {
+  const {
+    pageState,
+    invitation,
+    team,
+    token,
+    playerEmail,
+    errorMessage,
+    authMode,
+    onGoHome,
+    onGoToTeam,
+    onSetAuthMode,
+    onSignUpSuccess,
+    onSignInSuccess,
+  } = params;
+
+  const renderers: Record<PageState, () => ReactNode> = {
+    loading: () => <LoadingState />,
+    "invalid-token": () => <InvalidTokenState onGoHome={onGoHome} />,
+    "expired-token": () => <ExpiredTokenState onGoHome={onGoHome} />,
+    "already-accepted": () => (
+      <AlreadyAcceptedState team={team} onGoToTeam={onGoToTeam} />
+    ),
+    "auth-required": () => (
+      <AuthRequiredState
+        team={team}
+        invitation={invitation}
+        token={token}
+        playerEmail={playerEmail}
+        authMode={authMode}
+        onSetAuthMode={onSetAuthMode}
+        onSignUpSuccess={onSignUpSuccess}
+        onSignInSuccess={onSignInSuccess}
+      />
+    ),
+    accepting: () => <AcceptingState />,
+    success: () => <SuccessState invitation={invitation} team={team} />,
+    error: () => <ErrorState errorMessage={errorMessage} onGoHome={onGoHome} />,
+  };
+
+  return renderers[pageState]();
+}
+
 export function InvitationAcceptPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -59,82 +352,6 @@ export function InvitationAcceptPage() {
   const [playerEmail, setPlayerEmail] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [authMode, setAuthMode] = useState<"signup" | "signin">("signup");
-
-  // Load invitation details
-  useEffect(() => {
-    async function loadInvitation() {
-      if (!token) {
-        setPageState("invalid-token");
-        return;
-      }
-
-      try {
-        // Check if user is already logged in
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-
-        // Get invitation details
-        const invitationData = await getInvitationByToken(token);
-
-        if (!invitationData) {
-          setPageState("expired-token");
-          return;
-        }
-
-        // Check if already accepted
-        if (invitationData.invitation_status === "accepted") {
-          setPageState("already-accepted");
-          return;
-        }
-
-        // Get team details
-        const { data: teamData, error: teamError } = await supabase
-          .from("teams")
-          .select("id, name, school_name")
-          .eq("id", invitationData.team_id || "")
-          .single();
-
-        if (teamError || !teamData) {
-          setErrorMessage("Team not found");
-          setPageState("error");
-          return;
-        }
-
-        setInvitation(invitationData as InvitationData);
-        setTeam(teamData);
-
-        // Try to get email from linked profile if user_id exists
-        if (invitationData.user_id) {
-          const { data: profileData } = await supabase
-            .from("profiles")
-            .select("email")
-            .eq("id", invitationData.user_id)
-            .single();
-
-          if (profileData?.email) {
-            setPlayerEmail(profileData.email);
-          }
-        }
-
-        // If user is logged in, show confirmation
-        // If not logged in, show auth forms
-        if (user) {
-          // Auto-accept for logged-in users
-          await handleAccept(user.id);
-        } else {
-          setPageState("auth-required");
-        }
-      } catch (error) {
-        logError("Error loading invitation:", error);
-        setErrorMessage("Failed to load invitation details");
-        setPageState("error");
-      }
-    }
-
-    loadInvitation();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
 
   // Handle invitation acceptance
   async function handleAccept(userId: string) {
@@ -184,227 +401,103 @@ export function InvitationAcceptPage() {
     }
   }
 
-  // Render different states
-  if (pageState === "loading") {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-surface">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
-          <p className="text-secondary">Loading invitation...</p>
-        </div>
-      </div>
-    );
-  }
+  // Load invitation details
+  useEffect(() => {
+    let cancelled = false;
 
-  if (pageState === "invalid-token") {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-surface p-4">
-        <div className="max-w-md w-full bg-primary rounded-lg shadow-2xl p-8">
-          <Alert variant="error" className="mb-4">
-            <h2 className="text-lg font-semibold mb-2">Invalid Invitation</h2>
-            <p>This invitation link is not valid.</p>
-          </Alert>
-          <Button onClick={() => navigate("/")} className="w-full">
-            Go to Home
-          </Button>
-        </div>
-      </div>
-    );
-  }
+    async function loadInvitation() {
+      if (!token) {
+        if (!cancelled) setPageState("invalid-token");
+        return;
+      }
 
-  if (pageState === "expired-token") {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-surface p-4">
-        <div className="max-w-md w-full bg-primary rounded-lg shadow-2xl p-8">
-          <Alert variant="warning" className="mb-4">
-            <h2 className="text-lg font-semibold mb-2">Invitation Expired</h2>
-            <p>
-              This invitation has expired. Please contact your coach to request
-              a new invitation.
-            </p>
-          </Alert>
-          <Button onClick={() => navigate("/")} className="w-full">
-            Go to Home
-          </Button>
-        </div>
-      </div>
-    );
-  }
+      try {
+        // Check if user is already logged in
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
 
-  if (pageState === "already-accepted") {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-surface p-4">
-        <div className="max-w-md w-full bg-primary rounded-lg shadow-2xl p-8">
-          <Alert variant="info" className="mb-4">
-            <h2 className="text-lg font-semibold mb-2">Already a Member</h2>
-            <p>You are already a member of this team.</p>
-          </Alert>
-          {team && (
-            <Button
-              onClick={() => navigate(`/teams/${team.id}`)}
-              className="w-full"
-            >
-              Go to {team.name}
-            </Button>
-          )}
-        </div>
-      </div>
-    );
-  }
+        // Get invitation details
+        const invitationData = await getInvitationByToken(token);
 
-  if (pageState === "accepting") {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-surface">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
-          <p className="text-secondary">Accepting invitation...</p>
-        </div>
-      </div>
-    );
-  }
+        if (!invitationData) {
+          if (!cancelled) setPageState("expired-token");
+          return;
+        }
 
-  if (pageState === "success") {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-surface p-4">
-        <div className="max-w-md w-full bg-primary rounded-lg shadow-2xl p-8">
-          <div className="text-center">
-            <div className="w-16 h-16 bg-success-bg rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg
-                className="w-8 h-8 text-success-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-            </div>
-            <h2 className="text-2xl font-bold text-primary mb-2">
-              Welcome to the Team!
-            </h2>
-            {invitation && team && (
-              <>
-                <p className="text-secondary mb-4">
-                  You've successfully joined <strong>{team.name}</strong> as{" "}
-                  <strong>
-                    {invitation.first_name} {invitation.last_name}
-                  </strong>
-                  .
-                </p>
-                <p className="text-muted text-sm">
-                  Redirecting to your team dashboard...
-                </p>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
+        // Check if already accepted
+        if (invitationData.invitation_status === "accepted") {
+          if (!cancelled) setPageState("already-accepted");
+          return;
+        }
 
-  if (pageState === "error") {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-surface p-4">
-        <div className="max-w-md w-full bg-primary rounded-lg shadow-2xl p-8">
-          <Alert variant="error" className="mb-4">
-            <h2 className="text-lg font-semibold mb-2">Error</h2>
-            <p>{errorMessage || "An unexpected error occurred"}</p>
-          </Alert>
-          <Button onClick={() => navigate("/")} className="w-full">
-            Go to Home
-          </Button>
-        </div>
-      </div>
-    );
-  }
+        // Get team details
+        const { data: teamData, error: teamError } = await supabase
+          .from("teams")
+          .select("id, name, school_name")
+          .eq("id", invitationData.team_id || "")
+          .single();
 
-  // Auth required state - show sign up/sign in forms
+        if (teamError || !teamData) {
+          if (cancelled) return;
+          setErrorMessage("Team not found");
+          setPageState("error");
+          return;
+        }
+
+        if (!cancelled) {
+          setInvitation(invitationData as InvitationData);
+          setTeam(teamData);
+        }
+
+        // Try to get email from linked profile if user_id exists
+        if (invitationData.user_id) {
+          const { data: profileData } = await supabase
+            .from("profiles")
+            .select("email")
+            .eq("id", invitationData.user_id)
+            .single();
+
+          if (!cancelled && profileData?.email) {
+            setPlayerEmail(profileData.email);
+          }
+        }
+
+        // If user is logged in, auto-accept. Otherwise, show auth forms.
+        if (user) {
+          await handleAccept(user.id);
+        } else if (!cancelled) {
+          setPageState("auth-required");
+        }
+      } catch (error) {
+        logError("Error loading invitation:", error);
+        if (cancelled) return;
+        setErrorMessage("Failed to load invitation details");
+        setPageState("error");
+      }
+    }
+
+    void loadInvitation();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-surface p-4">
-      <div className="max-w-md w-full">
-        {/* Team Header */}
-        {team && invitation && (
-          <div className="bg-primary rounded-lg shadow-md p-6 mb-4">
-            <div className="text-center">
-              <h1 className="text-2xl font-bold text-primary mb-2">
-                Join {team.name}
-              </h1>
-              {team.school_name && (
-                <p className="text-secondary text-sm mb-4">
-                  {team.school_name}
-                </p>
-              )}
-              <div className="bg-secondary rounded-lg p-4">
-                <p className="text-sm text-secondary mb-1">
-                  You've been invited as:
-                </p>
-                <p className="text-lg font-semibold text-primary">
-                  {invitation.first_name} {invitation.last_name}
-                </p>
-                {playerEmail && (
-                  <p className="text-sm text-muted">{playerEmail}</p>
-                )}
-              </div>
-              <div className="mt-4 text-xs text-muted">
-                Invitation expires:{" "}
-                {new Date(
-                  invitation.invitation_expires_at
-                ).toLocaleDateString()}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Auth Forms */}
-        <div className="bg-primary rounded-lg shadow-2xl p-6">
-          {/* Tab Switcher */}
-          <div className="flex border-b border-muted mb-6">
-            <button
-              onClick={() => setAuthMode("signup")}
-              className={`flex-1 py-2 text-sm font-medium border-b-2 transition-colors ${
-                authMode === "signup"
-                  ? "border-primary text-primary"
-                  : "border-transparent text-secondary hover:text-primary"
-              }`}
-            >
-              Create Account
-            </button>
-            <button
-              onClick={() => setAuthMode("signin")}
-              className={`flex-1 py-2 text-sm font-medium border-b-2 transition-colors ${
-                authMode === "signin"
-                  ? "border-primary text-primary"
-                  : "border-transparent text-secondary hover:text-primary"
-              }`}
-            >
-              Sign In
-            </button>
-          </div>
-
-          {/* Sign Up Form */}
-          {authMode === "signup" && invitation && (
-            <SignUpForm
-              prefilledEmail={playerEmail}
-              prefilledFirstName={invitation.first_name}
-              prefilledLastName={invitation.last_name}
-              onSuccess={handleSignUpSuccess}
-              redirectTo={`/invite/accept?token=${token}`}
-            />
-          )}
-
-          {/* Sign In Form */}
-          {authMode === "signin" && (
-            <SignInForm
-              onSuccess={handleSignInSuccess}
-              redirectTo={`/invite/accept?token=${token}`}
-            />
-          )}
-        </div>
-      </div>
-    </div>
+    <InvitationAcceptPageBody
+      pageState={pageState}
+      invitation={invitation}
+      team={team}
+      token={token}
+      playerEmail={playerEmail}
+      errorMessage={errorMessage}
+      authMode={authMode}
+      onGoHome={() => navigate("/")}
+      onGoToTeam={(teamId) => navigate(`/teams/${teamId}`)}
+      onSetAuthMode={setAuthMode}
+      onSignUpSuccess={handleSignUpSuccess}
+      onSignInSuccess={handleSignInSuccess}
+    />
   );
 }

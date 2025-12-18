@@ -256,14 +256,7 @@ export function useRosterCrud(
     } finally {
       setSaving(false);
     }
-  }, [
-    modals.editingPlayer,
-    playerForm,
-    autosavePlayer,
-    toast,
-    modals,
-    resetForm,
-  ]);
+  }, [playerForm, autosavePlayer, toast, modals, resetForm]);
 
   const handleDeletePlayer = useCallback(async () => {
     if (!modals.playerToDelete) return;

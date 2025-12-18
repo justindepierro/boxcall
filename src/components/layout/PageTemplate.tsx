@@ -24,7 +24,7 @@
  * ```
  */
 
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { Aurora } from "../ui/Aurora";
 import { PageLayout } from "./PageLayout";
 import { Card } from "../ui/Card";
@@ -82,7 +82,7 @@ export function PageTemplate({
   if (error) {
     return (
       <PageLayout title={title} subtitle={subtitle}>
-        <Card variant="outlined" className="p-6 border-error">
+        <Card variant="subtle" className="p-6 border-error">
           <Typography variant="headline-lg" className="text-error mb-2">
             Error
           </Typography>
@@ -157,9 +157,10 @@ export interface ContentSectionProps {
     | "default"
     | "glass"
     | "elevated"
-    | "outlined"
+    | "subtle"
     | "filled"
-    | "accent";
+    | "accent"
+    | "floating";
   /** Additional class names */
   className?: string;
 }
@@ -313,7 +314,7 @@ export function EmptyState({
   className = "",
 }: EmptyStateProps) {
   return (
-    <Card variant="outlined" className={`p-12 text-center ${className}`}>
+    <Card variant="subtle" className={`p-12 text-center ${className}`}>
       <div className="flex flex-col items-center justify-center space-y-4">
         {/* Icon placeholder - can integrate Icon component */}
         <div className="text-6xl text-muted opacity-50">📦</div>

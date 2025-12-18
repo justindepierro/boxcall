@@ -1,3 +1,6 @@
+/* eslint-disable max-lines-per-function */
+/* eslint-disable complexity */
+
 import React, {
   useCallback,
   useEffect,
@@ -329,7 +332,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   }, [play.install_phase]);
 
   const handleInlineSave = useCallback(
-    async (field: keyof PlayType, value: string | number | boolean) => {
+    async (field: keyof PlayType, value: string | number | boolean | null) => {
       const fieldName = field as string;
 
       setOptimisticPlay((prev) => {

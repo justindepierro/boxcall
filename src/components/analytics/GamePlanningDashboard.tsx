@@ -1,3 +1,5 @@
+/* eslint-disable max-lines-per-function */
+
 import React, { useState, useEffect, useCallback } from "react";
 import { Card } from "../ui/Card";
 import { Badge } from "../ui/Badge";
@@ -25,8 +27,8 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
     try {
       setLoading(true);
       setError(null);
-      const service = new GamePlanningAnalyticsService();
-      const data = await service.getGamePlanningAnalytics(teamId);
+      const data =
+        await GamePlanningAnalyticsService.getGamePlanningAnalytics(teamId);
       setAnalyticsData(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load analytics");

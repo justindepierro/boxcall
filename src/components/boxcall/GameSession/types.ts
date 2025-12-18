@@ -7,6 +7,7 @@ import type {
   OpponentCoverage,
   GameSituation,
 } from "../../../types/session";
+import type { GamePlanPlay } from "../../../services/gamePlanService";
 
 export interface PlayLogForm {
   yardsGained: string;
@@ -44,22 +45,16 @@ export interface DownDistanceCardProps {
 
 export interface PlaySelectionCardProps {
   situation: GameSituation;
-  gamePlanPlays: Array<{
-    id: string;
-    play_id: string;
-    priority: number;
-    notes?: string;
-    plays: { id: string; name: string };
-  }>;
-  filteredPlays: Array<{ id: string; play_id: string }>;
-  currentPlay: { id: string; name: string } | null;
-  onSelectPlay: (play: { id: string; name: string }) => void;
+  gamePlanPlays: GamePlanPlay[];
+  filteredPlays: GamePlanPlay[];
+  currentPlay: GamePlanPlay | null;
+  onSelectPlay: (play: GamePlanPlay) => void;
   teamId: string;
   disabled: boolean;
 }
 
 export interface PlayExecutionFormProps {
-  currentPlay: { id: string; name: string };
+  currentPlay: GamePlanPlay;
   form: PlayLogForm;
   onFormChange: (updates: Partial<PlayLogForm>) => void;
   onTagToggle: (tagId: string) => void;

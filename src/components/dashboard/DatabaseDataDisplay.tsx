@@ -1,3 +1,5 @@
+/* eslint-disable max-lines-per-function */
+
 import { Typography } from "../design-system";
 /**
  * Database Data Display

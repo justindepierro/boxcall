@@ -176,7 +176,7 @@ export class PlaysService {
       // Insert into Supabase
       let { data, error } = await supabase
         .from("plays")
-        .insert([newPlay])
+        .insert([newPlay as any])
         .select()
         .single();
 
@@ -197,7 +197,7 @@ export class PlaysService {
 
           const retryResult = await supabase
             .from("plays")
-            .insert([newPlay])
+            .insert([newPlay as any])
             .select()
             .single();
 
@@ -227,10 +227,10 @@ export class PlaysService {
         type: "created",
         playId: data.id,
         playName: data.play_name,
-        teamId: data.team_id,
+        teamId: undefined,
       });
 
-      return data as Play;
+      return data as unknown as Play;
     } catch (error) {
       logError("❌ PlaysService.createPlay failed:", error);
       throw error;
@@ -269,7 +269,7 @@ export class PlaysService {
         throw new Error(`Failed to fetch plays: ${error.message}`);
       }
 
-      return (data as Play[]) || [];
+      return (data as unknown as Play[]) || [];
     } catch (error) {
       logError("❌ PlaysService.getPlaysByPlaybook failed:", error);
       throw error;
@@ -296,7 +296,7 @@ export class PlaysService {
         throw new Error(`Failed to fetch play: ${error.message}`);
       }
 
-      return data as Play;
+      return data as unknown as Play;
     } catch (error) {
       logError("❌ PlaysService.getPlay failed:", error);
       throw error;
@@ -424,10 +424,10 @@ export class PlaysService {
         type: "updated",
         playId: data.id,
         playName: data.play_name,
-        teamId: data.team_id,
+        teamId: undefined,
       });
 
-      return data as Play;
+      return data as unknown as Play;
     } catch (error) {
       logError("❌ PlaysService.updatePlay failed:", error);
       throw error;
@@ -442,7 +442,7 @@ export class PlaysService {
       // First, get the play data for activity recording
       const { data: play } = await supabase
         .from("plays")
-        .select("id, play_name, team_id")
+        .select("id, play_name")
         .eq("id", id)
         .single();
 
@@ -465,7 +465,7 @@ export class PlaysService {
           type: "deleted",
           playId: play.id,
           playName: play.play_name,
-          teamId: play.team_id,
+          teamId: undefined,
         });
       }
     } catch (error) {
@@ -482,7 +482,7 @@ export class PlaysService {
     try {
       const { error } = await supabase
         .from("plays")
-        .update({ is_archived: true, updated_at: new Date() })
+        .update({ is_archived: true, updated_at: new Date().toISOString() })
         .in("id", ids);
 
       if (error) {

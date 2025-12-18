@@ -25,6 +25,7 @@ import {
   validateOneWordPlay,
   validateWristbandNumber,
   type ValidationResult,
+  type ValidationState,
 } from "../../utils/dataValidation";
 
 export type ValidatedInputType =
@@ -105,9 +106,9 @@ const SavingIndicator: React.FC = () => (
 
 const SuggestionsDropdown: React.FC<{
   suggestions: Array<{ value: string; confidence: number }>;
-  validationState: "valid" | "warning" | "error";
+  validationState: ValidationState;
   onAccept: (value: string) => void;
-  dropdownRef: React.RefObject<HTMLDivElement>;
+  dropdownRef: React.RefObject<HTMLDivElement | null>;
 }> = ({ suggestions, validationState, onAccept, dropdownRef }) => (
   <div
     ref={dropdownRef}
@@ -342,20 +343,6 @@ export const ValidatedInput: React.FC<ValidatedInputProps> = ({
   };
 
   // Get message color - kept for future use when validation messages are displayed
-  const _getMessageColor = () => {
-    if (!validation) return "text-muted";
-    switch (validation.state) {
-      case "valid":
-        return "text-green-600";
-      case "warning":
-        return "text-yellow-600";
-      case "error":
-        return "text-red-600";
-      default:
-        return "text-muted";
-    }
-  };
-
   return (
     <div className={className}>
       {/* Label */}

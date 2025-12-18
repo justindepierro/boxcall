@@ -52,6 +52,126 @@ interface CommentItemProps {
   showReactions?: boolean;
 }
 
+const CommentItemActions: React.FC<{
+  comment: Comment;
+  depth: number;
+  maxDepth: number;
+  onReply?: (parentComment: Comment) => void;
+  showReactions: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
+  showMenu: boolean;
+  onToggleMenu: () => void;
+  onStartEdit: () => void;
+  onDelete: () => void;
+}> = ({
+  comment,
+  depth,
+  maxDepth,
+  onReply,
+  showReactions,
+  canEdit,
+  canDelete,
+  showMenu,
+  onToggleMenu,
+  onStartEdit,
+  onDelete,
+}) => {
+  return (
+    <div className="flex items-center gap-md mt-xs">
+      {showReactions && (
+        <ReactionButton
+          contentType="comment"
+          contentId={comment.id}
+          size="sm"
+          variant="icon"
+        />
+      )}
+
+      {depth < maxDepth && onReply && (
+        <button
+          onClick={() => onReply(comment)}
+          className="flex items-center gap-1 text-sm text-muted hover:text-secondary"
+        >
+          <Reply className="w-4 h-4" />
+          Reply
+        </button>
+      )}
+
+      {(canEdit || canDelete) && (
+        <div className="relative">
+          <button
+            onClick={onToggleMenu}
+            className="p-1 text-muted hover:text-secondary rounded-lg"
+          >
+            <MoreVertical className="w-4 h-4" />
+          </button>
+
+          {showMenu && (
+            <div className="absolute right-0 top-full mt-1 bg-white dark:bg-navy-800 border border-neutral-200 dark:border-navy-600 rounded-lg shadow-2xl py-1 z-popover">
+              {canEdit && (
+                <button
+                  onClick={onStartEdit}
+                  className="flex items-center gap-xs px-sm py-xs text-sm text-content-primary hover:bg-secondary/50 w-full text-left"
+                >
+                  <Edit2 className="w-4 h-4" />
+                  Edit
+                </button>
+              )}
+              {canDelete && (
+                <button
+                  onClick={onDelete}
+                  className="flex items-center gap-xs px-sm py-xs text-sm text-error-600 hover:bg-secondary/50 w-full text-left"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Delete
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const CommentItemReplies: React.FC<{
+  replies: Comment[];
+  contentType: string;
+  contentId: string;
+  maxDepth: number;
+  depth: number;
+  onReply?: (parentComment: Comment) => void;
+  showReactions: boolean;
+}> = ({
+  replies,
+  contentType,
+  contentId,
+  maxDepth,
+  depth,
+  onReply,
+  showReactions,
+}) => {
+  if (replies.length === 0) return null;
+
+  return (
+    <div className="mt-sm space-y-sm">
+      {replies.map((reply) => (
+        <CommentItem
+          key={reply.id}
+          comment={reply}
+          contentType={contentType}
+          contentId={contentId}
+          maxDepth={maxDepth}
+          depth={depth + 1}
+          onReply={onReply}
+          showReactions={showReactions}
+        />
+      ))}
+    </div>
+  );
+};
+
 const CommentItem: React.FC<CommentItemProps> = ({
   comment,
   contentType,
@@ -106,6 +226,14 @@ const CommentItem: React.FC<CommentItemProps> = ({
   const canEdit = comment.user_id === "current-user-id"; // TODO: Get from auth context
   const canDelete = canEdit;
 
+  const createdAtLabel = comment.created_at
+    ? new Date(comment.created_at).toLocaleDateString()
+    : "";
+  const isEdited =
+    !!comment.updated_at &&
+    !!comment.created_at &&
+    comment.updated_at !== comment.created_at;
+
   return (
     <div
       className={`${depth > 0 ? "ml-xl border-l-2 border-secondary pl-md" : ""}`}
@@ -122,12 +250,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
             <span className="font-medium text-sm text-primary">
               {comment.user?.display_name || "Anonymous"}
             </span>
-            <span className="text-xs text-muted">
-              {new Date(comment.created_at).toLocaleDateString()}
-            </span>
-            {comment.is_edited && (
-              <span className="text-xs text-muted">(edited)</span>
-            )}
+            <span className="text-xs text-muted">{createdAtLabel}</span>
+            {isEdited && <span className="text-xs text-muted">(edited)</span>}
           </div>
 
           {isEditing ? (
@@ -165,81 +289,33 @@ const CommentItem: React.FC<CommentItemProps> = ({
           )}
 
           {/* Actions */}
-          <div className="flex items-center gap-md mt-xs">
-            {showReactions && (
-              <ReactionButton
-                contentType="comment"
-                contentId={comment.id}
-                size="sm"
-                variant="icon"
-              />
-            )}
-
-            {depth < maxDepth && onReply && (
-              <button
-                onClick={() => onReply(comment)}
-                className="flex items-center gap-1 text-sm text-muted hover:text-secondary"
-              >
-                <Reply className="w-4 h-4" />
-                Reply
-              </button>
-            )}
-
-            {(canEdit || canDelete) && (
-              <div className="relative">
-                <button
-                  onClick={() => setShowMenu(!showMenu)}
-                  className="p-1 text-muted hover:text-secondary rounded-lg"
-                >
-                  <MoreVertical className="w-4 h-4" />
-                </button>
-
-                {showMenu && (
-                  <div className="absolute right-0 top-full mt-1 bg-white dark:bg-navy-800 border border-neutral-200 dark:border-navy-600 rounded-lg shadow-2xl py-1 z-popover">
-                    {canEdit && (
-                      <button
-                        onClick={() => {
-                          setIsEditing(true);
-                          setShowMenu(false);
-                        }}
-                        className="flex items-center gap-xs px-sm py-xs text-sm text-content-primary hover:bg-secondary/50 w-full text-left"
-                      >
-                        <Edit2 className="w-4 h-4" />
-                        Edit
-                      </button>
-                    )}
-                    {canDelete && (
-                      <button
-                        onClick={handleDelete}
-                        className="flex items-center gap-xs px-sm py-xs text-sm text-error-600 hover:bg-secondary/50 w-full text-left"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                        Delete
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+          <CommentItemActions
+            comment={comment}
+            depth={depth}
+            maxDepth={maxDepth}
+            onReply={onReply}
+            showReactions={showReactions}
+            canEdit={canEdit}
+            canDelete={canDelete}
+            showMenu={showMenu}
+            onToggleMenu={() => setShowMenu(!showMenu)}
+            onStartEdit={() => {
+              setIsEditing(true);
+              setShowMenu(false);
+            }}
+            onDelete={handleDelete}
+          />
 
           {/* Replies */}
-          {comment.replies && comment.replies.length > 0 && (
-            <div className="mt-sm space-y-sm">
-              {comment.replies.map((reply) => (
-                <CommentItem
-                  key={reply.id}
-                  comment={reply}
-                  contentType={contentType}
-                  contentId={contentId}
-                  maxDepth={maxDepth}
-                  depth={depth + 1}
-                  onReply={onReply}
-                  showReactions={showReactions}
-                />
-              ))}
-            </div>
-          )}
+          <CommentItemReplies
+            replies={comment.replies ?? []}
+            contentType={contentType}
+            contentId={contentId}
+            maxDepth={maxDepth}
+            depth={depth}
+            onReply={onReply}
+            showReactions={showReactions}
+          />
         </div>
       </div>
 
@@ -295,10 +371,10 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
     setIsSubmitting(true);
     try {
       const request: CreateCommentRequest = {
-        content_type: contentType,
-        content_id: contentId,
+        entity_type: contentType,
+        entity_id: contentId,
         content: newComment.trim(),
-        parent_comment_id: replyTo?.id,
+        parent_id: replyTo?.id,
       };
 
       // Create the comment first

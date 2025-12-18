@@ -3,6 +3,7 @@
 
 import { supabase } from "../lib/supabase";
 import { logError } from "../utils/logger";
+import type { Database } from "../types/database";
 
 export interface MentionSuggestion {
   id: string;
@@ -146,16 +147,23 @@ export class MentionsService {
     if (mentions.length === 0) return;
 
     try {
-      const mentionRecords = mentions.map((mention) => ({
+      const { data: authData } = await supabase.auth.getUser();
+      const mentionerUserId = authData.user?.id || null;
+
+      if (!mentionerUserId) return;
+
+      type MentionInsert = Database["public"]["Tables"]["mentions"]["Insert"];
+
+      const mentionRecords: MentionInsert[] = mentions.map((mention) => ({
         comment_id: commentId,
+        created_by_user_id: mentionerUserId,
+        mention_type: "comment",
         mentioned_user_id: mention.userId,
-        mentioner_user_id: supabase.auth
-          .getUser()
-          ?.then(({ data }) => data.user?.id),
-        mention_position: mention.position,
+        display_text: `@${mention.displayName}`,
+        position: mention.position,
+        length: mention.length,
       }));
 
-      // @ts-expect-error - mentions table not yet in generated types
       const { error } = await supabase.from("mentions").insert(mentionRecords);
 
       if (error) throw error;
@@ -167,7 +175,6 @@ export class MentionsService {
   // Get mentions for a user (for notifications)
   static async getMentionsForUser(userId: string, limit = 20): Promise<any[]> {
     try {
-      // @ts-expect-error - mentions table not yet in generated types
       const { data, error } = await supabase
         .from("mentions")
         .select(
@@ -175,12 +182,11 @@ export class MentionsService {
           *,
           comment:comments(
             content,
-            content_type,
-            content_id,
+            entity_type,
+            entity_id,
             created_at,
-            user:profiles(display_name, avatar_url)
-          ),
-          mentioner:profiles(display_name, avatar_url)
+            user_id
+          )
         `
         )
         .eq("mentioned_user_id", userId)

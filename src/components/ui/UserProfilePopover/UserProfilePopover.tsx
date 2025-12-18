@@ -43,6 +43,26 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
     teamId,
   });
 
+  let content: React.ReactNode;
+  if (loading) {
+    content = <LoadingState />;
+  } else if (profile) {
+    content = (
+      <>
+        <PopoverHeader profile={profile} teamMember={teamMember} />
+        <ProfileContent
+          profile={profile}
+          teamMember={teamMember}
+          playerInfo={playerInfo}
+          achievements={achievements}
+          onViewProfile={handleViewProfile}
+        />
+      </>
+    );
+  } else {
+    content = <NotFoundState />;
+  }
+
   return (
     <div
       ref={containerRef}
@@ -77,22 +97,7 @@ export const UserProfilePopover: React.FC<UserProfilePopoverProps> = ({
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-          {loading ? (
-            <LoadingState />
-          ) : profile ? (
-            <>
-              <PopoverHeader profile={profile} teamMember={teamMember} />
-              <ProfileContent
-                profile={profile}
-                teamMember={teamMember}
-                playerInfo={playerInfo}
-                achievements={achievements}
-                onViewProfile={handleViewProfile}
-              />
-            </>
-          ) : (
-            <NotFoundState />
-          )}
+          {content}
         </div>
       )}
     </div>

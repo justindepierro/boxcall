@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase";
+import { getCurrentUserId } from "../lib/auth-helpers";
 
 export interface TeamPostListItem {
   id: string;
@@ -7,9 +8,9 @@ export interface TeamPostListItem {
   content: string;
   created_at: string | null;
   is_pinned: boolean | null;
-  likes_count: number;
-  comments_count: number;
-  shares_count: number;
+  likes_count: number | null;
+  comments_count: number | null;
+  shares_count: number | null;
 }
 
 // Simplified column list without joins to avoid RLS issues
@@ -27,7 +28,12 @@ export async function listTeamPosts(
     .order("is_pinned", { ascending: false })
     .order("created_at", { ascending: false });
   if (error) throw error;
-  return data ?? [];
+  return (data ?? []).map((post) => ({
+    ...post,
+    likes_count: post.likes_count ?? 0,
+    comments_count: post.comments_count ?? 0,
+    shares_count: post.shares_count ?? 0,
+  }));
 }
 
 export interface CreatePostInput {
@@ -41,9 +47,17 @@ export async function createPost({
   content,
   isPinned,
 }: CreatePostInput) {
+  const authorId = getCurrentUserId();
+  if (!authorId) throw new Error("User not authenticated");
+
   const { data, error } = await supabase
     .from("team_posts")
-    .insert({ team_id: teamId, content, is_pinned: !!isPinned })
+    .insert({
+      team_id: teamId,
+      author_id: authorId,
+      content,
+      is_pinned: !!isPinned,
+    })
     .select(POST_COLUMNS)
     .single();
   if (error) throw error;
@@ -72,16 +86,11 @@ export interface PostLike {
 export interface PostComment {
   id: string;
   post_id: string;
-  user_id: string;
+  author_id: string;
   content: string;
-  created_at: string;
-  updated_at: string;
-  author?: {
-    id: string;
-    display_name: string | null;
-    full_name: string | null;
-    avatar_url: string | null;
-  };
+  created_at: string | null;
+  updated_at: string | null;
+  parent_comment_id: string | null;
 }
 
 export interface PostShare {
@@ -92,9 +101,12 @@ export interface PostShare {
 }
 
 export async function likePost(postId: string) {
+  const userId = getCurrentUserId();
+  if (!userId) throw new Error("User not authenticated");
+
   const { data, error } = await supabase
     .from("post_likes")
-    .insert({ post_id: postId })
+    .insert({ post_id: postId, user_id: userId })
     .select()
     .single();
   if (error) throw error;
@@ -124,15 +136,13 @@ export async function checkUserLike(
 }
 
 export async function addComment(postId: string, content: string) {
+  const authorId = getCurrentUserId();
+  if (!authorId) throw new Error("User not authenticated");
+
   const { data, error } = await supabase
     .from("post_comments")
-    .insert({ post_id: postId, content })
-    .select(
-      `
-      *,
-      author:profiles(id, display_name, full_name, avatar_url)
-    `
-    )
+    .insert({ post_id: postId, author_id: authorId, content })
+    .select("*")
     .single();
   if (error) throw error;
   return data;
@@ -141,12 +151,7 @@ export async function addComment(postId: string, content: string) {
 export async function getPostComments(postId: string): Promise<PostComment[]> {
   const { data, error } = await supabase
     .from("post_comments")
-    .select(
-      `
-      *,
-      author:profiles(id, display_name, full_name, avatar_url)
-    `
-    )
+    .select("*")
     .eq("post_id", postId)
     .order("created_at", { ascending: true });
   if (error) throw error;
@@ -154,9 +159,12 @@ export async function getPostComments(postId: string): Promise<PostComment[]> {
 }
 
 export async function sharePost(postId: string) {
+  const userId = getCurrentUserId();
+  if (!userId) throw new Error("User not authenticated");
+
   const { data, error } = await supabase
     .from("post_shares")
-    .insert({ post_id: postId })
+    .insert({ post_id: postId, user_id: userId })
     .select()
     .single();
   if (error) throw error;

@@ -14,7 +14,7 @@ interface UseRosterInvitationsOptions {
 }
 
 export interface UseRosterInvitationsReturn {
-  handleSendInvite: (player: RosterPlayerView, e: React.MouseEvent) => void;
+  handleSendInvite: (player: RosterPlayerView, e?: React.MouseEvent) => void;
   sendInvitation: (email: string) => Promise<void>;
   handleSendInvitationFromModal: () => Promise<void>;
 }
@@ -29,8 +29,8 @@ export function useRosterInvitations(
   const toast = useToast();
 
   const handleSendInvite = useCallback(
-    (player: RosterPlayerView, e: React.MouseEvent) => {
-      e.stopPropagation();
+    (player: RosterPlayerView, e?: React.MouseEvent) => {
+      e?.stopPropagation();
       if (!player.first_name || !player.last_name) {
         toast.error(
           "Player must have a first and last name to send an invitation"

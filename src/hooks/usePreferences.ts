@@ -52,44 +52,43 @@ export function usePreference<K extends keyof UserPreferences>(
         // Check if user is authenticated
         const userId = getCurrentUserId();
 
-        if (userId && !cancelled) {
-          // User is authenticated - load from server and update if different
-          const serverValue = await PreferenceService.getPreference(key);
+        if (!userId || cancelled) return;
 
-          if (serverValue !== undefined && !cancelled) {
-            // Get the current localStorage value for comparison
-            const localValue = getFromLocalStorage(key, defaultValue);
+        // User is authenticated - load from server and update if different
+        const serverValue = await PreferenceService.getPreference(key);
+        if (cancelled) return;
 
-            // Only update if server value is different from localStorage value
-            // This prevents unnecessary re-renders
-            if (JSON.stringify(serverValue) !== JSON.stringify(localValue)) {
-              console.log(
-                `[usePreference] Synced ${String(key)} from server:`,
-                serverValue
-              );
-              setValue(serverValue);
-              // Also update localStorage cache for next load
-              saveToLocalStorage(key, serverValue);
-            }
-          } else if (!cancelled) {
-            // Server has no value but we have a localStorage value - migrate it
-            const localValue = getFromLocalStorage(key, defaultValue);
-            if (localValue !== defaultValue) {
-              console.log(
-                `[usePreference] Migrating ${String(key)} to server:`,
-                localValue
-              );
-              const success = await PreferenceService.savePreference(
-                key,
-                localValue
-              );
-              if (!success) {
-                console.warn(
-                  `[usePreference] Failed to migrate ${String(key)} to server - will retry on next save`
-                );
-              }
-            }
-          }
+        // Get the current localStorage value for comparison/migration
+        const localValue = getFromLocalStorage(key, defaultValue);
+
+        if (serverValue !== undefined) {
+          // Only update if server value is different from localStorage value
+          // This prevents unnecessary re-renders
+          if (JSON.stringify(serverValue) === JSON.stringify(localValue))
+            return;
+
+          console.log(
+            `[usePreference] Synced ${String(key)} from server:`,
+            serverValue
+          );
+          setValue(serverValue);
+          // Also update localStorage cache for next load
+          saveToLocalStorage(key, serverValue);
+          return;
+        }
+
+        // Server has no value but we have a localStorage value - migrate it
+        if (localValue === defaultValue) return;
+
+        console.log(
+          `[usePreference] Migrating ${String(key)} to server:`,
+          localValue
+        );
+        const success = await PreferenceService.savePreference(key, localValue);
+        if (!success) {
+          console.warn(
+            `[usePreference] Failed to migrate ${String(key)} to server - will retry on next save`
+          );
         }
       } catch (error) {
         logError(`[usePreference] Error syncing ${String(key)}:`, error);

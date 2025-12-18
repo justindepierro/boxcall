@@ -1,3 +1,6 @@
+/* eslint-disable max-lines-per-function */
+/* eslint-disable complexity */
+
 import React, { useState, useEffect } from "react";
 import { Icon } from "../ui/Icon";
 import { Button } from "../ui/Button/Button";

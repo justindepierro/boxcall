@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from "react";
+import { Suspense, lazy } from "react";
 import { Modal } from "../../ui/Modal";
 import type { Play } from "../../../types/play";
 import type { ModalType } from "../../../hooks/useModalManager";
@@ -97,7 +97,7 @@ export function PlaybookModals({
         <Suspense fallback={<div>Loading...</div>}>
           <AddNewPlayModal
             isOpen={isModalOpen("addNewPlay")}
-            onClose={() => closeModal("addNewPlay")}
+            onClose={() => closeModal()}
             onCreatePlay={handleCreatePlay}
             playbookId={activePlaybookId}
             existingPlays={existingPlays}
@@ -110,9 +110,9 @@ export function PlaybookModals({
         <Suspense fallback={<div>Loading...</div>}>
           <PlaybookSettingsModal
             isOpen={isModalOpen("playbookSettings")}
-            onClose={() => closeModal("playbookSettings")}
+            onClose={() => closeModal()}
             onOpenPersonnel={() => {
-              closeModal("playbookSettings");
+              closeModal();
               // Note: This requires openModal to be passed or personnel modal to open separately
             }}
           />
@@ -124,7 +124,7 @@ export function PlaybookModals({
         <Suspense fallback={<div>Loading...</div>}>
           <PersonnelConfigurationModal
             isOpen={isModalOpen("personnel")}
-            onClose={() => closeModal("personnel")}
+            onClose={() => closeModal()}
             playbookId={activePlaybookId}
           />
         </Suspense>
@@ -135,7 +135,7 @@ export function PlaybookModals({
         <Suspense fallback={<div>Loading...</div>}>
           <PlaybookHealthModal
             isOpen={isModalOpen("playbookHealth")}
-            onClose={() => closeModal("playbookHealth")}
+            onClose={() => closeModal()}
             playbookId={activePlaybookId}
           />
         </Suspense>
@@ -143,77 +143,49 @@ export function PlaybookModals({
 
       {/* Play Assignments Modal */}
       {isModalOpen("assignments") && assignmentsPlay && (
-        <Modal
-          isOpen={isModalOpen("assignments")}
-          onClose={() => {
-            closeModal("assignments");
-            setAssignmentsPlay(null);
-          }}
-          title={`Assignments - ${assignmentsPlay.name}`}
-          size="lg"
-        >
-          <Suspense fallback={<div>Loading...</div>}>
-            <PlayAssignmentsModal
-              play={assignmentsPlay}
-              onClose={() => {
-                closeModal("assignments");
-                setAssignmentsPlay(null);
-              }}
-            />
-          </Suspense>
-        </Modal>
+        <Suspense fallback={<div>Loading...</div>}>
+          <PlayAssignmentsModal
+            play={assignmentsPlay}
+            isOpen={isModalOpen("assignments")}
+            onClose={() => {
+              closeModal();
+              setAssignmentsPlay(null);
+            }}
+          />
+        </Suspense>
       )}
 
       {/* Keyboard Shortcuts Guide */}
       {isModalOpen("keyboardShortcuts") && (
-        <Modal
-          isOpen={isModalOpen("keyboardShortcuts")}
-          onClose={() => closeModal("keyboardShortcuts")}
-          title="Keyboard Shortcuts"
-          size="md"
-        >
-          <Suspense fallback={<div>Loading...</div>}>
-            <KeyboardShortcutsGuide
-              isOpen={isModalOpen("keyboardShortcuts")}
-              onClose={() => closeModal("keyboardShortcuts")}
-            />
-          </Suspense>
-        </Modal>
+        <Suspense fallback={<div>Loading...</div>}>
+          <KeyboardShortcutsGuide
+            isOpen={isModalOpen("keyboardShortcuts")}
+            onClose={() => closeModal()}
+          />
+        </Suspense>
       )}
 
       {/* Practice Script Builder Modal */}
       {isModalOpen("practiceScriptBuilder") && (
-        <Modal
-          isOpen={isModalOpen("practiceScriptBuilder")}
-          onClose={() => {
-            closeModal("practiceScriptBuilder");
-            setEditingScript(null);
-          }}
-          title={
-            editingScript ? "Edit Practice Script" : "Create Practice Script"
-          }
-          size="xl"
-          fullScreen
-        >
-          <Suspense fallback={<div>Loading practice script builder...</div>}>
-            <PracticeScriptBuilder
-              teamId={activeTeamId || ""}
-              editingScript={editingScript}
-              selectedPlays={selectedPlaysForPractice}
-              onClose={() => {
-                closeModal("practiceScriptBuilder");
-                setEditingScript(null);
-                setSelectedPlaysForPractice([]);
-              }}
-              onSave={() => {
-                closeModal("practiceScriptBuilder");
-                setEditingScript(null);
-                setSelectedPlaysForPractice([]);
-                dispatch({ type: "REFRESH" });
-              }}
-            />
-          </Suspense>
-        </Modal>
+        <Suspense fallback={<div>Loading practice script builder...</div>}>
+          <PracticeScriptBuilder
+            isOpen={isModalOpen("practiceScriptBuilder")}
+            teamId={activeTeamId || ""}
+            script={editingScript ?? undefined}
+            selectedPlayIds={selectedPlaysForPractice}
+            onCancel={() => {
+              closeModal();
+              setEditingScript(null);
+              setSelectedPlaysForPractice([]);
+            }}
+            onSave={() => {
+              closeModal();
+              setEditingScript(null);
+              setSelectedPlaysForPractice([]);
+              dispatch({ type: "REFRESH" });
+            }}
+          />
+        </Suspense>
       )}
 
       {/* Post to Team Bulletin Modal */}
@@ -221,7 +193,7 @@ export function PlaybookModals({
         <Modal
           isOpen={isModalOpen("postToBulletin")}
           onClose={() => {
-            closeModal("postToBulletin");
+            closeModal();
             setPlayToPost(null);
           }}
           title="Post to Team Bulletin"

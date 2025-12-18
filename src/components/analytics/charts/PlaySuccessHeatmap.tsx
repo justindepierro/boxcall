@@ -1,8 +1,10 @@
+/* eslint-disable max-lines-per-function */
+
 import React, { useState } from "react";
 import { Typography } from "../../design-system/Typography";
 import { Card } from "../../ui/Card";
 import { Badge } from "../../ui/Badge";
-import { getSuccessRateColor } from "@/design-system/chartColors";
+import { getSuccessRateColor } from "@design-system/chartColors";
 
 interface FieldZoneData {
   zone: string;

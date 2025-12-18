@@ -68,7 +68,7 @@ export const NotificationsBell: React.FC<NotificationsBellProps> = ({
     try {
       await socialService.markNotificationRead(notificationId);
       setNotifications((prev) =>
-        prev.map((n) => (n.id === notificationId ? { ...n, is_read: true } : n))
+        prev.map((n) => (n.id === notificationId ? { ...n, read: true } : n))
       );
       setUnreadCount((prev) => Math.max(0, prev - 1));
     } catch (error) {
@@ -78,7 +78,7 @@ export const NotificationsBell: React.FC<NotificationsBellProps> = ({
 
   // Handle notification click
   const handleNotificationClick = (notification: Notification) => {
-    if (!notification.is_read) {
+    if (!notification.read) {
       markAsRead(notification.id);
     }
     onNotificationClick?.(notification);
@@ -166,14 +166,14 @@ export const NotificationsBell: React.FC<NotificationsBellProps> = ({
                     className={(() => {
                       const base =
                         "w-full p-4 text-left hover:bg-secondary focus:outline-none focus:bg-secondary ";
-                      if (!notification.is_read) return `${base}bg-info/20`;
+                      if (!notification.read) return `${base}bg-info/20`;
                       return base;
                     })()}
                   >
                     <div className="flex items-start space-x-3">
                       <div className="flex-shrink-0">
                         <span className="text-lg">
-                          {getNotificationIcon(notification.notification_type)}
+                          {getNotificationIcon(notification.type)}
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
@@ -181,12 +181,14 @@ export const NotificationsBell: React.FC<NotificationsBellProps> = ({
                           {formatNotificationMessage(notification)}
                         </p>
                         <p className="text-xs text-muted mt-1">
-                          {new Date(
-                            notification.created_at
-                          ).toLocaleDateString()}
+                          {notification.created_at
+                            ? new Date(
+                                notification.created_at
+                              ).toLocaleDateString()
+                            : ""}
                         </p>
                       </div>
-                      {!notification.is_read && (
+                      {!notification.read && (
                         <div className="flex-shrink-0">
                           <div className="w-2 h-2 bg-text-info rounded-full"></div>
                         </div>
@@ -204,7 +206,7 @@ export const NotificationsBell: React.FC<NotificationsBellProps> = ({
                 onClick={() => {
                   // Mark all as read
                   notifications.forEach((n) => {
-                    if (!n.is_read) markAsRead(n.id);
+                    if (!n.read) markAsRead(n.id);
                   });
                 }}
                 className="text-sm text-info hover:text-info"

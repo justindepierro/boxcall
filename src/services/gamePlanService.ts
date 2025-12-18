@@ -225,7 +225,6 @@ export class GamePlanService {
   ): Promise<GamePlan> {
     const { data, error } = await supabase
       .from("game_plans")
-      // @ts-expect-error - Type will be correct after regenerating Supabase types
       .update({
         name: updates.name,
         opponent: updates.opponent,
@@ -355,7 +354,6 @@ export class GamePlanService {
   ): Promise<void> {
     const { error } = await supabase
       .from("game_plan_plays")
-      // @ts-expect-error - Type will be correct after regenerating Supabase types
       .update({ priority, updated_at: new Date().toISOString() })
       .eq("id", gamePlanPlayId);
 

@@ -129,7 +129,11 @@ async function fetchTotalPlays(userId: string): Promise<number> {
       return 0;
     }
 
-    const teamIds = memberships.map((m) => m.team_id);
+    const teamIds = memberships
+      .map((m) => m.team_id)
+      .filter((id): id is string => !!id);
+
+    if (teamIds.length === 0) return 0;
     debug("[fetchTotalPlays] Team IDs:", teamIds);
 
     // Step 2: Get playbook IDs for these teams
@@ -193,7 +197,13 @@ async function fetchThisWeekActivity(userId: string): Promise<number> {
       return 0;
     }
 
-    const teamIds = memberships.map((m) => m.team_id);
+    const teamIds = memberships
+      .map((m) => m.team_id)
+      .filter((id): id is string => typeof id === "string" && id.length > 0);
+
+    if (teamIds.length === 0) {
+      return 0;
+    }
 
     // Step 2: Count posts from this week
     const { data: posts, error: postsError } = await supabase

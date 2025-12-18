@@ -117,7 +117,7 @@ const BadgeSection: React.FC<{
       <PersonnelBadge
         personnel={optimisticPlay.personnel}
         size="sm"
-        badgeCustomization={personnelConfig?.badgeCustomization}
+        badgeCustomization={personnelConfig?.badgeCustomization ?? undefined}
       />
     )}
 

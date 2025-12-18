@@ -6,7 +6,7 @@
  */
 
 import type { TeamRole, CapabilityFlags } from "../../roles";
-import type { Json } from "../generated";
+import type { Json } from "../index";
 
 export interface TeamTables {
   teams: {

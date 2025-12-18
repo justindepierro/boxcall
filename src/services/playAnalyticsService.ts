@@ -8,13 +8,44 @@
 
 import { supabase } from "../lib/supabase";
 import { logError } from "../utils/logger";
-import type {
-  GamePlanEnhanced,
-  GamePlanSituation,
-  GamePlanPlay,
-  GamePlanAnalytics,
-  PriorityOptimization,
-} from "../types/database/gamePlanningTypes";
+import type { PriorityOptimization } from "../types/database/gamePlanningTypes";
+
+type GamePlanEnhancedRow = {
+  id: string | null;
+  team_id: string | null;
+  status?: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+  [key: string]: unknown;
+};
+
+type GamePlanSituationRow = {
+  id: string | null;
+  game_plan_id: string | null;
+  situation_name?: string | null;
+  created_at: string | null;
+  [key: string]: unknown;
+};
+
+type GamePlanPlayRow = {
+  id: string | null;
+  game_plan_id: string | null;
+  situation_id: string | null;
+  priority?: number | null;
+  created_at: string | null;
+  [key: string]: unknown;
+};
+
+type GamePlanAnalyticsRow = {
+  id: string | null;
+  game_plan_id: string | null;
+  situation_id?: string | null;
+  execution_time?: string | null;
+  created_at: string | null;
+  success_rate?: number | null;
+  execution_quality?: number | null;
+  [key: string]: unknown;
+};
 
 // ============================================
 // GAME PLANNING ANALYTICS
@@ -63,8 +94,8 @@ export interface GamePlanningAnalyticsData {
   metrics: GamePlanningMetrics;
   insights: GamePlanningInsights;
   recentActivity: {
-    gamePlans: GamePlanEnhanced[];
-    analytics: GamePlanAnalytics[];
+    gamePlans: GamePlanEnhancedRow[];
+    analytics: GamePlanAnalyticsRow[];
   };
 }
 
@@ -188,9 +219,9 @@ export class PlayAnalyticsService {
   }
 
   private static calculateGamePlanMetrics(
-    gamePlans: GamePlanEnhanced[],
-    situations: GamePlanSituation[],
-    plays: GamePlanPlay[]
+    gamePlans: GamePlanEnhancedRow[],
+    situations: GamePlanSituationRow[],
+    plays: GamePlanPlayRow[]
   ): GamePlanningMetrics {
     const totalGamePlans = gamePlans.length;
     const activeGamePlans = gamePlans.filter(
@@ -246,10 +277,10 @@ export class PlayAnalyticsService {
   }
 
   private static generateGamePlanInsights(
-    gamePlans: GamePlanEnhanced[],
-    _situations: GamePlanSituation[],
-    _plays: GamePlanPlay[],
-    analytics: GamePlanAnalytics[]
+    gamePlans: GamePlanEnhancedRow[],
+    _situations: GamePlanSituationRow[],
+    _plays: GamePlanPlayRow[],
+    analytics: GamePlanAnalyticsRow[]
   ): GamePlanningInsights {
     const statusCounts = gamePlans.reduce(
       (counts, gp) => {
@@ -304,7 +335,7 @@ export class PlayAnalyticsService {
 
   private static async getSituationsData(
     teamId: string
-  ): Promise<GamePlanSituation[]> {
+  ): Promise<GamePlanSituationRow[]> {
     try {
       const { data: gamePlans } = await supabase
         .from("game_plans_enhanced")
@@ -320,13 +351,15 @@ export class PlayAnalyticsService {
         .in("game_plan_id", gamePlanIds);
 
       if (error) throw error;
-      return data || [];
+      return (data || []) as unknown as GamePlanSituationRow[];
     } catch {
       return [];
     }
   }
 
-  private static async getPlaysData(teamId: string): Promise<GamePlanPlay[]> {
+  private static async getPlaysData(
+    teamId: string
+  ): Promise<GamePlanPlayRow[]> {
     try {
       const { data: gamePlans } = await supabase
         .from("game_plans_enhanced")
@@ -342,7 +375,7 @@ export class PlayAnalyticsService {
         .in("game_plan_id", gamePlanIds);
 
       if (error) throw error;
-      return data || [];
+      return (data || []) as unknown as GamePlanPlayRow[];
     } catch {
       return [];
     }
@@ -350,7 +383,7 @@ export class PlayAnalyticsService {
 
   private static async getAnalyticsData(
     teamId: string
-  ): Promise<GamePlanAnalytics[]> {
+  ): Promise<GamePlanAnalyticsRow[]> {
     try {
       const { data: gamePlans } = await supabase
         .from("game_plans_enhanced")
@@ -368,7 +401,7 @@ export class PlayAnalyticsService {
         .limit(100);
 
       if (error) throw error;
-      return data || [];
+      return (data || []) as unknown as GamePlanAnalyticsRow[];
     } catch {
       return [];
     }
@@ -448,8 +481,8 @@ export class PlayAnalyticsService {
         times_successful,
         complexity_score,
         personnel,
-        down_distance,
-        field_position
+        pref_dis,
+        pref_field_pos
       `
       )
       .eq("playbook_id", playbookId);
@@ -515,8 +548,8 @@ export class PlayAnalyticsService {
       successRate: Math.round(successRate * 100) / 100,
       complexityScore: play.complexity_score || 0,
       personnel: play.personnel || "",
-      downDistance: play.down_distance || "",
-      fieldPosition: play.field_position || "",
+      downDistance: play.pref_dis || "",
+      fieldPosition: play.pref_field_pos || "",
       situationalPerformance: {
         redZone: { called: 0, successful: 0, rate: 0 },
         thirdDown: { called: 0, successful: 0, rate: 0 },
@@ -571,7 +604,7 @@ export class PlayAnalyticsService {
 
         const situationalUsage = typedPlays.reduce(
           (usage: Record<string, number>, play: any) => {
-            const situation = play.down_distance || "Unknown";
+            const situation = play.pref_dis || "Unknown";
             usage[situation] =
               (usage[situation] || 0) + (play.times_called || 0);
             return usage;
@@ -594,7 +627,7 @@ export class PlayAnalyticsService {
   private static calculateSituationalPerformance(plays: any[]) {
     const byDown = plays.reduce(
       (acc, play) => {
-        const down = play.down_distance || "Unknown";
+        const down = play.pref_dis || "Unknown";
         if (!acc[down]) acc[down] = { called: 0, successful: 0, rate: 0 };
         acc[down].called += play.times_called || 0;
         acc[down].successful += play.times_successful || 0;
@@ -605,7 +638,7 @@ export class PlayAnalyticsService {
 
     const byFieldPosition = plays.reduce(
       (acc, play) => {
-        const position = play.field_position || "Unknown";
+        const position = play.pref_field_pos || "Unknown";
         if (!acc[position])
           acc[position] = { called: 0, successful: 0, rate: 0 };
         acc[position].called += play.times_called || 0;

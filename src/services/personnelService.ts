@@ -50,6 +50,10 @@ export class PersonnelService {
         name: string;
         description: string | null;
         badge_customization: BadgeCustomization | null;
+        confidence_score?: number | null;
+        last_analyzed_at?: string | null;
+        analysis_play_count?: number | null;
+        usage_count?: number | null;
         created_at: string;
         updated_at: string;
       };
@@ -84,6 +88,10 @@ export class PersonnelService {
         playbook_id: config.playbook_id,
         name: config.name,
         description: config.description ?? undefined, // Convert null to undefined
+        confidence_score: config.confidence_score ?? 0,
+        last_analyzed_at: config.last_analyzed_at ?? null,
+        analysis_play_count: config.analysis_play_count ?? 0,
+        usage_count: config.usage_count ?? 0,
         created_at: config.created_at,
         updated_at: config.updated_at,
         badgeCustomization: config.badge_customization ?? undefined, // Convert null to undefined
@@ -128,6 +136,10 @@ export class PersonnelService {
         name: string;
         description: string | null;
         badge_customization: BadgeCustomization | null;
+        confidence_score?: number | null;
+        last_analyzed_at?: string | null;
+        analysis_play_count?: number | null;
+        usage_count?: number | null;
         created_at: string;
         updated_at: string;
       };
@@ -150,6 +162,10 @@ export class PersonnelService {
         playbook_id: typedConfig.playbook_id,
         name: typedConfig.name,
         description: typedConfig.description ?? undefined,
+        confidence_score: typedConfig.confidence_score ?? 0,
+        last_analyzed_at: typedConfig.last_analyzed_at ?? null,
+        analysis_play_count: typedConfig.analysis_play_count ?? 0,
+        usage_count: typedConfig.usage_count ?? 0,
         created_at: typedConfig.created_at,
         updated_at: typedConfig.updated_at,
         badgeCustomization: typedConfig.badge_customization ?? undefined,
@@ -240,6 +256,10 @@ export class PersonnelService {
         playbook_id: typedNewConfig.playbook_id,
         name: typedNewConfig.name,
         description: typedNewConfig.description ?? undefined,
+        confidence_score: (typedNewConfig as any).confidence_score ?? 0,
+        last_analyzed_at: (typedNewConfig as any).last_analyzed_at ?? null,
+        analysis_play_count: (typedNewConfig as any).analysis_play_count ?? 0,
+        usage_count: (typedNewConfig as any).usage_count ?? 0,
         created_at: typedNewConfig.created_at,
         updated_at: typedNewConfig.updated_at,
         badgeCustomization: typedNewConfig.badge_customization ?? undefined,
@@ -332,6 +352,12 @@ export class PersonnelService {
           playbook_id: typedUpdatedConfig.playbook_id,
           name: typedUpdatedConfig.name,
           description: typedUpdatedConfig.description ?? undefined,
+          confidence_score: (typedUpdatedConfig as any).confidence_score ?? 0,
+          last_analyzed_at:
+            (typedUpdatedConfig as any).last_analyzed_at ?? null,
+          analysis_play_count:
+            (typedUpdatedConfig as any).analysis_play_count ?? 0,
+          usage_count: (typedUpdatedConfig as any).usage_count ?? 0,
           created_at: typedUpdatedConfig.created_at,
           updated_at: typedUpdatedConfig.updated_at,
           badgeCustomization:
@@ -357,6 +383,11 @@ export class PersonnelService {
         playbook_id: typedUpdatedConfig.playbook_id,
         name: typedUpdatedConfig.name,
         description: typedUpdatedConfig.description ?? undefined,
+        confidence_score: (typedUpdatedConfig as any).confidence_score ?? 0,
+        last_analyzed_at: (typedUpdatedConfig as any).last_analyzed_at ?? null,
+        analysis_play_count:
+          (typedUpdatedConfig as any).analysis_play_count ?? 0,
+        usage_count: (typedUpdatedConfig as any).usage_count ?? 0,
         created_at: typedUpdatedConfig.created_at,
         updated_at: typedUpdatedConfig.updated_at,
         badgeCustomization: typedUpdatedConfig.badge_customization ?? undefined,

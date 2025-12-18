@@ -3,6 +3,10 @@ import { supabase } from "../lib/supabase";
 import type { Database } from "../types/database";
 import { logError } from "../utils/logger";
 
+type RawTeamMember = Database["public"]["Tables"]["team_members"]["Row"] & {
+  teams: Database["public"]["Tables"]["teams"]["Row"] | null;
+};
+
 type TeamMember = Database["public"]["Tables"]["team_members"]["Row"] & {
   teams: Database["public"]["Tables"]["teams"]["Row"];
 };
@@ -42,7 +46,8 @@ async function fetchUserTeamMemberships(userId: string): Promise<TeamMember[]> {
     return [];
   }
 
-  return data || [];
+  const typed = (data || []) as RawTeamMember[];
+  return typed.filter((m): m is TeamMember => !!m.teams);
 }
 
 export function useUserTeamMemberships(userId?: string) {

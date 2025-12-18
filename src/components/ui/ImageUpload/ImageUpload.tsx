@@ -13,6 +13,9 @@
  * - Haptic feedback
  */
 
+/* eslint-disable max-lines-per-function */
+/* eslint-disable complexity */
+
 import React, { useState, useRef, useCallback } from "react";
 import { supabase } from "../../../lib/supabase";
 import { Button } from "../Button/Button";

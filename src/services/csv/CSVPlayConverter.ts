@@ -10,6 +10,12 @@ import type { CSVPlayPreview, CSVImportResult } from "./types";
 import type { Play } from "../../types/play";
 
 export class CSVPlayConverter {
+  private static asString(value: unknown): string {
+    if (value === null || value === undefined) return "";
+    if (typeof value === "string") return value;
+    return String(value);
+  }
+
   /**
    * Convert validated preview data to Play objects
    */
@@ -32,9 +38,8 @@ export class CSVPlayConverter {
 
         // Check for confirmation-requiring scenarios
         const missingFormation =
-          !playData.formation || playData.formation.trim() === "";
-        const missingPlayType =
-          !playData.p_type || playData.p_type.trim() === "";
+          this.asString(playData.formation).trim() === "";
+        const missingPlayType = this.asString(playData.p_type).trim() === "";
 
         if (missingFormation || missingPlayType) {
           playsNeedingConfirmation++;
@@ -49,7 +54,7 @@ export class CSVPlayConverter {
           "protection",
         ];
         const filledFields = importantFields.filter(
-          (field) => playData[field] && playData[field].trim() !== ""
+          (field) => this.asString(playData[field]).trim() !== ""
         );
 
         if (filledFields.length < 5) {
@@ -128,39 +133,44 @@ export class CSVPlayConverter {
     index: number
   ): Play {
     // Normalize play type with defaults
-    const normalizedPlayType = this.normalizePlayType(playData.p_type);
+    const normalizedPlayType = this.normalizePlayType(
+      this.asString(playData.p_type)
+    );
+
+    const formation = this.asString(playData.formation).trim();
+    const playName = this.asString(playData.play_name).trim();
 
     return {
       id: `csv-import-${Date.now()}-${index}`,
       playbook_id: playbookId,
-      formation: playData.formation || "Unknown Formation",
-      play_name: playData.play_name,
-      one_word_play: playData.one_word_play || "",
+      formation: formation === "" ? "Unknown Formation" : formation,
+      play_name: playName,
+      one_word_play: this.asString(playData.one_word_play),
       p_type: normalizedPlayType,
-      personnel: playData.personnel || "",
-      f_type: playData.f_type || "",
-      protection: playData.protection || "",
-      notes: playData.notes || "",
+      personnel: this.asString(playData.personnel),
+      f_type: this.asString(playData.f_type),
+      protection: this.asString(playData.protection),
+      notes: this.asString(playData.notes),
       // Set defaults for other required fields
-      f_dir: playData.f_dir || "",
-      ftag1: playData.ftag1 || "",
-      ftag2: playData.ftag2 || "",
-      back_align: playData.back_align || "",
-      shift: playData.shift || "",
-      motion: playData.motion || "",
-      p_tag1: playData.p_tag1 || "",
-      p_tag2: playData.p_tag2 || "",
-      p_dir: playData.p_dir || "",
-      key_player1: playData.key_player1 || "",
-      key_player2: playData.key_player2 || "",
-      pref_down: playData.pref_down || "",
-      pref_dis: playData.pref_dis || "",
-      pref_hash: playData.pref_hash || "",
-      pref_cov: playData.pref_cov || "",
-      pref_front: playData.pref_front || "",
-      check_into: playData.check_into || "",
-      r_str: playData.r_str || "",
-      p_str: playData.p_str || "",
+      f_dir: this.asString(playData.f_dir),
+      ftag1: this.asString(playData.ftag1),
+      ftag2: this.asString(playData.ftag2),
+      back_align: this.asString(playData.back_align),
+      shift: this.asString(playData.shift),
+      motion: this.asString(playData.motion),
+      p_tag1: this.asString(playData.p_tag1),
+      p_tag2: this.asString(playData.p_tag2),
+      p_dir: this.asString(playData.p_dir),
+      key_player1: this.asString(playData.key_player1),
+      key_player2: this.asString(playData.key_player2),
+      pref_down: this.asString(playData.pref_down),
+      pref_dis: this.asString(playData.pref_dis),
+      pref_hash: this.asString(playData.pref_hash),
+      pref_cov: this.asString(playData.pref_cov),
+      pref_front: this.asString(playData.pref_front),
+      check_into: this.asString(playData.check_into),
+      r_str: this.asString(playData.r_str),
+      p_str: this.asString(playData.p_str),
       confidence_base: 70,
       times_called: 0,
       times_successful: 0,

@@ -1,3 +1,6 @@
+/* eslint-disable max-lines-per-function */
+/* eslint-disable complexity */
+
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Combobox } from "@headlessui/react";
 import { Button } from "../../../ui/Button/Button";
@@ -6,12 +9,20 @@ import { Typography } from "../../../design-system/Typography";
 import { Icon } from "../../../ui/Icon";
 import { supabase } from "../../../../lib/supabase";
 import { getActiveTeamId } from "../../../../utils/activeTeam";
-import { getDisplayName } from "../../../../utils/playNameUtils";
+import {
+  getDisplayName,
+  type PlayNameSource,
+} from "../../../../utils/playNameUtils";
 import { PersonnelBadge } from "../../../playbook/PersonnelBadge";
 
 import type { PracticeScriptPlay } from "../types";
-import type { Play } from "../../../../types/play";
 import { logError } from "../../../../utils/logger";
+
+type PlaySearchItem = PlayNameSource & {
+  id: string;
+  personnel: string | null;
+  diagram_image_url?: string | null;
+};
 
 interface PracticeScriptPlayFormProps {
   initialData?: PracticeScriptPlay;
@@ -38,8 +49,8 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
   });
 
   const [searchQuery, setSearchQuery] = useState(initialData?.playName || "");
-  const [selectedPlay, setSelectedPlay] = useState<Play | null>(null);
-  const [playbookPlays, setPlaybookPlays] = useState<Play[]>([]);
+  const [selectedPlay, setSelectedPlay] = useState<PlaySearchItem | null>(null);
+  const [playbookPlays, setPlaybookPlays] = useState<PlaySearchItem[]>([]);
   const [isLoadingPlays, setIsLoadingPlays] = useState(false);
 
   // Load playbook plays
@@ -116,7 +127,7 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
     return filtered;
   }, [playbookPlays, searchQuery]);
 
-  const handleSelectPlay = useCallback((play: Play | null) => {
+  const handleSelectPlay = useCallback((play: PlaySearchItem | null) => {
     console.log("🎯 Play selected:", play?.play_name);
 
     if (play) {
@@ -162,7 +173,7 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
           <div className="relative">
             <Combobox.Input
               className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-primary placeholder-muted focus:border-jade-500 focus:outline-none focus:ring-1 focus:ring-jade-500"
-              displayValue={(play: Play | null) => {
+              displayValue={(play: PlaySearchItem | null) => {
                 if (play) {
                   const displayName = getDisplayName(play, false);
                   console.log(

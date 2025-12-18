@@ -7,6 +7,7 @@
 
 import { supabase } from "../../lib/supabase";
 import { logError } from "../../utils/logger";
+import type { Json } from "../../types/database";
 import type {
   Formation,
   FormationCreate,
@@ -121,7 +122,7 @@ export class FormationLibraryService {
         strength_player_position: formation.strength_player_position || null,
         opposite_formation_id: formation.opposite_formation_id || null,
         is_standalone: formation.direction === null,
-        player_positions: formation.player_positions || [],
+        player_positions: (formation.player_positions || []) as unknown as Json,
         personnel_packages: formation.personnel_packages || [],
         confidence_score: 0,
         analysis_play_count: 0,

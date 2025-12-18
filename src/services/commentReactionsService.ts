@@ -232,7 +232,6 @@ export class CommentReactionsService {
         return { success: false, error: "User not authenticated" };
       }
 
-      // @ts-expect-error - comment_reactions table will exist after migration
       const { error } = await supabase
         .from("comment_reactions")
         .delete()

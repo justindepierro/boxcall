@@ -29,10 +29,7 @@ export const LazyLoginPage = lazyRoute(
 );
 
 export const LazyProfilePage = lazyRoute(
-  () =>
-    import("../../pages/ProfilePage").then((module) => ({
-      default: module.ProfilePage,
-    })),
+  () => import("../../pages/ProfilePage"),
   "Profile"
 );
 
@@ -58,18 +55,12 @@ export const LazyTeamBulletin = lazyRoute(
 );
 
 export const LazyCreateTeam = lazyRoute(
-  () =>
-    import("../../pages/CreateTeam").then((module) => ({
-      default: module.CreateTeam,
-    })),
+  () => import("../../pages/CreateTeam"),
   "Create Team"
 );
 
 export const LazyJoinTeam = lazyRoute(
-  () =>
-    import("../../pages/JoinTeam").then((module) => ({
-      default: module.JoinTeam,
-    })),
+  () => import("../../pages/JoinTeam"),
   "Join Team"
 );
 

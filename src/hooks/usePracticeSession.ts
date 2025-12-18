@@ -357,7 +357,7 @@ export function usePracticeSession({
           practiceSessionId: session.id,
           teamId: activeTeamId,
           playId: currentPlay.playId,
-          formationId: currentPlay.play?.formation_id,
+          formationId: currentPlay.play?.formation_id ?? undefined,
           result,
           repNumber: currentRepNumber,
           notes,

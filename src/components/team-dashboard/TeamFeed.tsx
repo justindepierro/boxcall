@@ -156,9 +156,9 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
             is_pinned={p.is_pinned}
             canPin={canPin}
             onTogglePin={togglePin}
-            likes_count={p.likes_count}
-            comments_count={p.comments_count}
-            shares_count={p.shares_count}
+            likes_count={p.likes_count ?? 0}
+            comments_count={p.comments_count ?? 0}
+            shares_count={p.shares_count ?? 0}
             userId={user?.id}
             onLike={handleLike}
             onComment={handleComment}

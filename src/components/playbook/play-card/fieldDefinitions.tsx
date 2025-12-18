@@ -225,7 +225,6 @@ export const createFormationFields = ({
   backfieldAlignmentValues = [],
   shiftValues = [],
   motionValues = [],
-  _protectionValues = [],
 }: FormationFieldFactoryOptions): FieldDefinitionMap => ({
   ...createBasicFormationFields(
     normalizeValue,

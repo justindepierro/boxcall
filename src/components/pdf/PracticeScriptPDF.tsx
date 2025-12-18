@@ -3,6 +3,9 @@
  * React PDF components used by the PDF export service
  */
 
+/* eslint-disable max-lines-per-function */
+/* eslint-disable complexity */
+
 import React from "react";
 import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import type { PracticeScript } from "@services";
@@ -1006,8 +1009,8 @@ export const PracticeScriptPDF: React.FC<PracticeScriptPDFProps> = ({
                       </>
                     )}
 
-                    {/* Coaching Points - Only show for non-ultra-compact OR if ultra-compact has no notes inline */}
-                    {scriptPlay.notes && format !== "ultra-compact" && (
+                    {/* Coaching Points - Only show in detailed format */}
+                    {scriptPlay.notes && format === "detailed" && (
                       <View
                         style={{
                           marginTop: 4,

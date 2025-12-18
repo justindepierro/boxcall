@@ -37,7 +37,7 @@ export function useFormationAudit(
         throw supabaseError;
       }
 
-      setPlays((data as Play[]) || []);
+      setPlays((data as unknown as Play[]) || []);
     } catch (err) {
       logError("useFormationAudit failed", err);
       setError(

@@ -8,32 +8,14 @@ import { Typography } from "../components/design-system/Typography";
 import { Button } from "../components/ui";
 import { useAuth } from "../app/auth-store";
 
-export const RouteErrorElement: React.FC = () => {
-  const error = useRouteError();
-  const navigate = useNavigate();
-  const { user, signOut } = useAuth();
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [retryCount, setRetryCount] = useState(0);
-
-  // Monitor online status
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
-
-    return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
-    };
-  }, []);
-
+function getRouteErrorUiState(params: { error: unknown; isOnline: boolean }) {
   let title = "Something went wrong";
   let message = "An unexpected error occurred while loading this page.";
   let statusText: string | undefined;
   let showSignOut = false;
   let showRetry = true;
+
+  const { error, isOnline } = params;
 
   if (isRouteErrorResponse(error)) {
     statusText = `${error.status} ${error.statusText}`;
@@ -47,7 +29,6 @@ export const RouteErrorElement: React.FC = () => {
       case 403:
         title = "Access Denied";
         message = "You don't have permission to view this page.";
-        showSignOut = false;
         break;
       case 404:
         title = "Page Not Found";
@@ -83,6 +64,35 @@ export const RouteErrorElement: React.FC = () => {
     }
   }
 
+  const iconText = !isOnline ? "📶" : "!";
+
+  return { title, message, statusText, showSignOut, showRetry, iconText };
+}
+
+export const RouteErrorElement: React.FC = () => {
+  const error = useRouteError();
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [retryCount, setRetryCount] = useState(0);
+
+  // Monitor online status
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
+  const { title, message, statusText, showSignOut, showRetry, iconText } =
+    getRouteErrorUiState({ error, isOnline });
+
   const handleRetry = () => {
     setRetryCount((prev) => prev + 1);
     window.location.reload();
@@ -108,7 +118,7 @@ export const RouteErrorElement: React.FC = () => {
       <div className="text-center max-w-lg">
         <div className="mb-4">
           <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-surface-error text-error">
-            {!isOnline ? "📶" : "!"}
+            {iconText}
           </span>
         </div>
 

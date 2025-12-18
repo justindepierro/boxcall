@@ -11,15 +11,8 @@ import {
   dbOptimization,
   type QueryMetrics,
 } from "../database/DatabaseOptimizationService";
-import type { Database } from "../../types/database";
+import type { Database, Tables, Inserts, Updates } from "../../types/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
-
-type Tables<T extends keyof Database["public"]["Tables"]> =
-  Database["public"]["Tables"][T]["Row"];
-type Inserts<T extends keyof Database["public"]["Tables"]> =
-  Database["public"]["Tables"][T]["Insert"];
-type Updates<T extends keyof Database["public"]["Tables"]> =
-  Database["public"]["Tables"][T]["Update"];
 
 interface OptimizedServiceOptions {
   enableQueryOptimization?: boolean;

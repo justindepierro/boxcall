@@ -3,6 +3,142 @@ import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Button } from "../Button";
 import { prefetchOnHover } from "../../../navigation/prefetch-utils";
+
+const PREFETCH_ENABLED =
+  String(import.meta.env.VITE_PREFETCH_ROUTES) === "true";
+
+function getIsNavItemActive(item: NavBarItem, pathname?: string) {
+  if (typeof item.active === "boolean") return item.active;
+  if (!item.href || !pathname) return false;
+  return pathname === item.href;
+}
+
+function getDropdownContainerClasses(isMobile: boolean) {
+  return `${isMobile ? "ml-4 mt-1" : "absolute left-0 mt-2 w-48"} bg-primary rounded-lg shadow-lg z-50`;
+}
+
+function getDropdownItemClasses(disabled?: boolean) {
+  return [
+    "block px-4 py-2 text-sm cursor-pointer",
+    disabled
+      ? "text-secondary"
+      : "text-primary hover:bg-muted dark:hover:bg-text-tertiary dark:hover:text-bg-primary",
+  ].join(" ");
+}
+
+const NavBarItemTrigger: React.FC<{
+  item: NavBarItem;
+  isMobile: boolean;
+  isActive: boolean;
+  hasDropdown: boolean;
+  isDropdownOpen: boolean;
+  anchorRef: React.RefObject<HTMLAnchorElement | HTMLDivElement>;
+  onActivate: () => void;
+  onLinkClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+}> = ({
+  item,
+  isMobile,
+  isActive,
+  hasDropdown,
+  isDropdownOpen,
+  anchorRef,
+  onActivate,
+  onLinkClick,
+}) => {
+  const wrapperClassName = `relative ${isMobile ? "block" : "inline-block"}`;
+  const itemClassName = getNavItemStyles({ ...item, active: isActive });
+
+  if (item.href && !hasDropdown) {
+    return (
+      <div className={wrapperClassName}>
+        <a
+          ref={anchorRef as React.RefObject<HTMLAnchorElement>}
+          href={item.href}
+          className={itemClassName}
+          aria-current={isActive ? "page" : undefined}
+          aria-disabled={item.disabled}
+          onClick={onLinkClick}
+        >
+          {item.icon && <span className="mr-2 flex-shrink-0">{item.icon}</span>}
+          <span>{item.label}</span>
+          {item.badge && <span className={getBadgeStyles()}>{item.badge}</span>}
+        </a>
+      </div>
+    );
+  }
+
+  return (
+    <div className={wrapperClassName}>
+      <div
+        ref={anchorRef as React.RefObject<HTMLDivElement>}
+        role="button"
+        tabIndex={0}
+        aria-disabled={item.disabled}
+        className={itemClassName}
+        onClick={onActivate}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") onActivate();
+        }}
+      >
+        {item.icon && <span className="mr-2 flex-shrink-0">{item.icon}</span>}
+        <span>{item.label}</span>
+        {hasDropdown && (
+          <svg
+            className={`ml-0.5 h-4 w-4 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        )}
+        {item.badge && <span className={getBadgeStyles()}>{item.badge}</span>}
+      </div>
+    </div>
+  );
+};
+
+const NavBarDropdownMenu: React.FC<{
+  isMobile: boolean;
+  items: NavBarItem[];
+  onItemClick?: (item: NavBarItem) => void;
+  onClose: () => void;
+}> = ({ isMobile, items, onItemClick, onClose }) => {
+  return (
+    <div className={getDropdownContainerClasses(isMobile)}>
+      {items.map((childItem, index) => (
+        <div
+          key={childItem.id || `child-${index}`}
+          className={getDropdownItemClasses(childItem.disabled)}
+          onClick={() => {
+            if (childItem.disabled) return;
+            childItem.onClick?.();
+            onItemClick?.(childItem);
+            onClose();
+          }}
+        >
+          <div className="flex items-center">
+            {childItem.icon && (
+              <span className="mr-2 flex-shrink-0">{childItem.icon}</span>
+            )}
+            <span>{childItem.label}</span>
+            {childItem.badge && (
+              <span className={`ml-auto ${getBadgeStyles()}`}>
+                {childItem.badge}
+              </span>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 export interface NavBarItem {
   /** Unique identifier for the nav item */
   id: string;
@@ -68,119 +204,54 @@ const NavBarItemComponent: React.FC<{
   const anchorRef = useRef<HTMLAnchorElement | HTMLDivElement | null>(null);
   const location = useLocation?.();
   useEffect(() => {
-    const enabled = String(import.meta.env.VITE_PREFETCH_ROUTES) === "true";
-    if (!enabled || !item.importer || !anchorRef.current) return;
+    if (!PREFETCH_ENABLED || !item.importer || !anchorRef.current) return;
     prefetchOnHover(anchorRef.current, item.importer);
   }, [item.importer]);
-  const handleClick = () => {
+
+  const hasDropdown = (item.children?.length ?? 0) > 0;
+  const isActive = getIsNavItemActive(item, location?.pathname);
+
+  const handleActivate = () => {
     if (item.disabled) return;
-    if (item.children && item.children.length > 0) {
+    if (hasDropdown) {
       setIsDropdownOpen(!isDropdownOpen);
     } else {
       item.onClick?.();
       onItemClick?.(item);
     }
   };
-  const hasDropdown = item.children && item.children.length > 0;
-  const isActive =
-    item.active ?? (item.href ? location?.pathname === item.href : false);
+
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (item.disabled) {
+      e.preventDefault();
+      return;
+    }
+    item.onClick?.();
+    onItemClick?.(item);
+  };
 
   return (
-    <div className={`relative ${isMobile ? "block" : "inline-block"}`}>
-      {item.href && !hasDropdown ? (
-        <a
-          ref={anchorRef as React.RefObject<HTMLAnchorElement>}
-          href={item.href}
-          className={getNavItemStyles({ ...item, active: isActive })}
-          aria-current={isActive ? "page" : undefined}
-          aria-disabled={item.disabled}
-          onClick={(e) => {
-            if (item.disabled) {
-              e.preventDefault();
-              return;
-            }
-            item.onClick?.();
-            onItemClick?.(item);
-          }}
-        >
-          {item.icon && <span className="mr-2 flex-shrink-0">{item.icon}</span>}
-          <span>{item.label}</span>
-          {item.badge && <span className={getBadgeStyles()}>{item.badge}</span>}
-        </a>
-      ) : (
-        <div
-          ref={anchorRef as React.RefObject<HTMLDivElement>}
-          role="button"
-          tabIndex={0}
-          aria-disabled={item.disabled}
-          className={getNavItemStyles({ ...item, active: isActive })}
-          onClick={handleClick}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") handleClick();
-          }}
-        >
-          {item.icon && <span className="mr-2 flex-shrink-0">{item.icon}</span>}
-          <span>{item.label}</span>
-          {hasDropdown && (
-            <svg
-              className={`ml-0.5 h-4 w-4 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          )}
-          {item.badge && <span className={getBadgeStyles()}>{item.badge}</span>}
-        </div>
-      )}
+    <div>
+      <NavBarItemTrigger
+        item={item}
+        isMobile={isMobile}
+        isActive={isActive}
+        hasDropdown={hasDropdown}
+        isDropdownOpen={isDropdownOpen}
+        anchorRef={
+          anchorRef as React.RefObject<HTMLAnchorElement | HTMLDivElement>
+        }
+        onActivate={handleActivate}
+        onLinkClick={handleLinkClick}
+      />
       {/* Dropdown Menu */}
       {hasDropdown && isDropdownOpen && (
-        <div
-          className={`
-          ${isMobile ? "ml-4 mt-1" : "absolute left-0 mt-2 w-48"}
-          bg-primary rounded-lg shadow-lg z-50
-        `}
-        >
-          {item.children?.map((childItem, index) => (
-            <div
-              key={childItem.id || `child-${index}`}
-              className={`
-                block px-4 py-2 text-sm cursor-pointer
-                ${
-                  childItem.disabled
-                    ? "text-secondary"
-                    : "text-primary hover:bg-muted dark:hover:bg-text-tertiary dark:hover:text-bg-primary"
-                }
-              `}
-              onClick={() => {
-                if (!childItem.disabled) {
-                  childItem.onClick?.();
-                  onItemClick?.(childItem);
-                  setIsDropdownOpen(false);
-                }
-              }}
-            >
-              <div className="flex items-center">
-                {childItem.icon && (
-                  <span className="mr-2 flex-shrink-0">{childItem.icon}</span>
-                )}
-                <span>{childItem.label}</span>
-                {childItem.badge && (
-                  <span className={`ml-auto ${getBadgeStyles()}`}>
-                    {childItem.badge}
-                  </span>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+        <NavBarDropdownMenu
+          isMobile={isMobile}
+          items={item.children ?? []}
+          onItemClick={onItemClick}
+          onClose={() => setIsDropdownOpen(false)}
+        />
       )}
     </div>
   );

@@ -138,7 +138,7 @@ const RosterPage = () => {
           <RosterToolbar
             totalPlayers={stats.totalPlayers}
             activePlayerCount={stats.activePlayerCount}
-            filteredPlayerCount={filters.filteredPlayers.length}
+            filteredCount={filters.filteredPlayers.length}
             selectedCount={selection.selectedPlayerIds.size}
             hasSelection={selection.selectedPlayerIds.size > 0}
             onAddPlayer={modals.openAddModal}
@@ -152,9 +152,9 @@ const RosterPage = () => {
           <RosterFiltersBar
             searchTerm={filters.searchTerm}
             onSearchChange={filters.setSearchTerm}
-            positionFilters={filters.positionFilters}
+            positionFilters={new Set(filters.positionFilters)}
             onTogglePosition={filters.togglePositionFilter}
-            gradeLevelFilters={filters.gradeLevelFilters}
+            gradeLevelFilters={new Set(filters.gradeLevelFilters)}
             onToggleGradeLevel={filters.toggleGradeLevelFilter}
             statusFilter={filters.statusFilter}
             onStatusChange={filters.setStatusFilter}
@@ -208,7 +208,9 @@ const RosterPage = () => {
                 onSelectAll={() => selection.selectAll(filters.filteredPlayers)}
                 onEditPlayer={crud.openEditModal}
                 onDeletePlayer={(player) => modals.openDeleteDialog(player)}
-                onSendInvitation={invitations.handleSendInvite}
+                onSendInvitation={(player) =>
+                  invitations.handleSendInvite(player)
+                }
                 onViewProfile={(id) => navigate(`/roster/${id}`)}
                 onToggleStatus={bulk.togglePlayerStatus}
                 isAllSelected={

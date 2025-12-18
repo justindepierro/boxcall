@@ -89,6 +89,24 @@ export abstract class BaseService<
     this.cache = cache || new InMemoryCacheManager();
   }
 
+  protected getTableName(): string {
+    return String(this.tableName);
+  }
+
+  // Intentionally untyped query builder: keeps strict Supabase generics from
+  // leaking SelectQueryError/column constraints into calling code.
+  protected table() {
+    return (this.supabase as any).from(this.getTableName());
+  }
+
+  protected getRowId(row: unknown): string | null {
+    if (row && typeof row === "object" && "id" in row) {
+      const id = (row as { id?: unknown }).id;
+      return typeof id === "string" ? id : null;
+    }
+    return null;
+  }
+
   // Standard CRUD operations with caching and monitoring
 
   /**
@@ -96,28 +114,32 @@ export abstract class BaseService<
    */
   async create(data: Inserts<T>): Promise<Tables<T>> {
     return this.executeWithMetrics("create", async () => {
-      const { data: result, error } = await this.supabase
-        .from(this.tableName as string)
-        .insert(data)
+      const { data: result, error } = await this.table()
+        .insert(data as unknown as Record<string, unknown>)
         .select()
         .single();
 
       if (error) throw error;
 
       // Invalidate relevant cache entries
-      await this.invalidateCache(result.id as string);
+      const createdId = this.getRowId(result);
+      if (createdId) {
+        await this.invalidateCache(createdId);
+      }
 
       // Emit domain event
-      await this.emitEvent({
-        aggregateId: result.id as string,
-        aggregateType: String(this.tableName),
-        eventType: "created",
-        eventData: result,
-        causedBy: "system", // TODO: Get from auth context
-        timestamp: new Date(),
-      });
+      if (createdId) {
+        await this.emitEvent({
+          aggregateId: createdId,
+          aggregateType: String(this.tableName),
+          eventType: "created",
+          eventData: result as Record<string, unknown>,
+          causedBy: "system", // TODO: Get from auth context
+          timestamp: new Date(),
+        });
+      }
 
-      return result;
+      return result as Tables<T>;
     });
   }
 
@@ -132,8 +154,7 @@ export abstract class BaseService<
     if (cached) return cached;
 
     return this.executeWithMetrics("findById", async () => {
-      const { data, error } = await this.supabase
-        .from(this.tableName as string)
+      const { data, error } = await this.table()
         .select("*")
         .eq("id", id)
         .single();
@@ -144,9 +165,9 @@ export abstract class BaseService<
       }
 
       // Cache the result
-      await this.cache.set(cacheKey, data, 300); // 5 minutes TTL
+      await this.cache.set(cacheKey, data as Tables<T>, 300); // 5 minutes TTL
 
-      return data;
+      return data as Tables<T>;
     });
   }
 
@@ -158,20 +179,22 @@ export abstract class BaseService<
     limit = 100
   ): Promise<Tables<T>[]> {
     return this.executeWithMetrics("findMany", async () => {
-      let query = this.supabase.from(this.tableName as string).select("*");
+      let query = this.table().select("*");
 
       // Apply filters
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined) {
-          query = query.eq(key, value);
+      Object.entries(filters as Record<string, unknown>).forEach(
+        ([key, value]) => {
+          if (value !== undefined) {
+            query = query.eq(key, value as any);
+          }
         }
-      });
+      );
 
       const { data, error } = await query.limit(limit);
 
       if (error) throw error;
 
-      return data || [];
+      return (data || []) as Tables<T>[];
     });
   }
 
@@ -180,9 +203,8 @@ export abstract class BaseService<
    */
   async update(id: string, data: Updates<T>): Promise<Tables<T>> {
     return this.executeWithMetrics("update", async () => {
-      const { data: result, error } = await this.supabase
-        .from(this.tableName as string)
-        .update(data)
+      const { data: result, error } = await this.table()
+        .update(data as unknown as Record<string, unknown>)
         .eq("id", id)
         .select()
         .single();
@@ -202,7 +224,7 @@ export abstract class BaseService<
         timestamp: new Date(),
       });
 
-      return result;
+      return result as Tables<T>;
     });
   }
 
@@ -211,10 +233,7 @@ export abstract class BaseService<
    */
   async delete(id: string): Promise<void> {
     await this.executeWithMetrics("delete", async () => {
-      const { error } = await this.supabase
-        .from(this.tableName as string)
-        .delete()
-        .eq("id", id);
+      const { error } = await this.table().delete().eq("id", id);
 
       if (error) throw error;
 
@@ -238,16 +257,16 @@ export abstract class BaseService<
    */
   async count(filters: Partial<Tables<T>> = {}): Promise<number> {
     return this.executeWithMetrics("count", async () => {
-      let query = this.supabase
-        .from(this.tableName as string)
-        .select("*", { count: "exact", head: true });
+      let query = this.table().select("*", { count: "exact", head: true });
 
       // Apply filters
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined) {
-          query = query.eq(key, value);
+      Object.entries(filters as Record<string, unknown>).forEach(
+        ([key, value]) => {
+          if (value !== undefined) {
+            query = query.eq(key, value as any);
+          }
         }
-      });
+      );
 
       const { count, error } = await query;
 

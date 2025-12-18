@@ -175,7 +175,7 @@ export function useSession({
 
     try {
       // Load practice script or game plan
-      let loadedContent;
+      let loadedContent: Partial<SessionState> = {};
       if (sessionType === "practice" && scriptOrPlanId) {
         // TODO: Load practice script from PracticeService
         loadedContent = { practiceScript: undefined };

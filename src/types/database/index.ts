@@ -7,33 +7,104 @@ export type Json =
   | Json[];
 
 export type Database = {
-  graphql_public: {
-    Tables: {
-      [_ in never]: never;
-    };
-    Views: {
-      [_ in never]: never;
-    };
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json;
-          operationName?: string;
-          query?: string;
-          variables?: Json;
-        };
-        Returns: Json;
-      };
-    };
-    Enums: {
-      [_ in never]: never;
-    };
-    CompositeTypes: {
-      [_ in never]: never;
-    };
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "12.2.3 (519615d)";
   };
   public: {
     Tables: {
+      achievement_definitions: {
+        Row: {
+          category: string | null;
+          created_at: string | null;
+          criteria: Json | null;
+          description: string | null;
+          icon: string | null;
+          id: string;
+          is_active: boolean | null;
+          name: string;
+          points: number | null;
+          team_id: string | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          category?: string | null;
+          created_at?: string | null;
+          criteria?: Json | null;
+          description?: string | null;
+          icon?: string | null;
+          id?: string;
+          is_active?: boolean | null;
+          name: string;
+          points?: number | null;
+          team_id?: string | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          category?: string | null;
+          created_at?: string | null;
+          criteria?: Json | null;
+          description?: string | null;
+          icon?: string | null;
+          id?: string;
+          is_active?: boolean | null;
+          name?: string;
+          points?: number | null;
+          team_id?: string | null;
+          updated_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "achievement_definitions_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      achievement_progress: {
+        Row: {
+          achievement_id: string;
+          completed_at: string | null;
+          created_at: string | null;
+          current_value: number | null;
+          id: string;
+          target_value: number | null;
+          updated_at: string | null;
+          user_id: string;
+        };
+        Insert: {
+          achievement_id: string;
+          completed_at?: string | null;
+          created_at?: string | null;
+          current_value?: number | null;
+          id?: string;
+          target_value?: number | null;
+          updated_at?: string | null;
+          user_id: string;
+        };
+        Update: {
+          achievement_id?: string;
+          completed_at?: string | null;
+          created_at?: string | null;
+          current_value?: number | null;
+          id?: string;
+          target_value?: number | null;
+          updated_at?: string | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "achievement_progress_achievement_id_fkey";
+            columns: ["achievement_id"];
+            isOneToOne: false;
+            referencedRelation: "achievement_definitions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       achievements: {
         Row: {
           achievement_type: string;
@@ -75,6 +146,249 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      activities: {
+        Row: {
+          action: string;
+          created_at: string | null;
+          entity_id: string | null;
+          entity_type: string | null;
+          id: string;
+          metadata: Json | null;
+          team_id: string | null;
+          user_id: string | null;
+        };
+        Insert: {
+          action: string;
+          created_at?: string | null;
+          entity_id?: string | null;
+          entity_type?: string | null;
+          id?: string;
+          metadata?: Json | null;
+          team_id?: string | null;
+          user_id?: string | null;
+        };
+        Update: {
+          action?: string;
+          created_at?: string | null;
+          entity_id?: string | null;
+          entity_type?: string | null;
+          id?: string;
+          metadata?: Json | null;
+          team_id?: string | null;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "activities_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      activity_feed: {
+        Row: {
+          activity_type: string;
+          created_at: string | null;
+          description: string | null;
+          entity_id: string | null;
+          entity_type: string | null;
+          id: string;
+          metadata: Json | null;
+          team_id: string | null;
+          title: string;
+          user_id: string | null;
+        };
+        Insert: {
+          activity_type: string;
+          created_at?: string | null;
+          description?: string | null;
+          entity_id?: string | null;
+          entity_type?: string | null;
+          id?: string;
+          metadata?: Json | null;
+          team_id?: string | null;
+          title: string;
+          user_id?: string | null;
+        };
+        Update: {
+          activity_type?: string;
+          created_at?: string | null;
+          description?: string | null;
+          entity_id?: string | null;
+          entity_type?: string | null;
+          id?: string;
+          metadata?: Json | null;
+          team_id?: string | null;
+          title?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "activity_feed_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      announcement_comments: {
+        Row: {
+          announcement_id: string;
+          content: string;
+          content_json: Json | null;
+          created_at: string | null;
+          deleted_at: string | null;
+          id: string;
+          parent_id: string | null;
+          updated_at: string | null;
+          user_id: string;
+        };
+        Insert: {
+          announcement_id: string;
+          content: string;
+          content_json?: Json | null;
+          created_at?: string | null;
+          deleted_at?: string | null;
+          id?: string;
+          parent_id?: string | null;
+          updated_at?: string | null;
+          user_id: string;
+        };
+        Update: {
+          announcement_id?: string;
+          content?: string;
+          content_json?: Json | null;
+          created_at?: string | null;
+          deleted_at?: string | null;
+          id?: string;
+          parent_id?: string | null;
+          updated_at?: string | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "announcement_comments_announcement_id_fkey";
+            columns: ["announcement_id"];
+            isOneToOne: false;
+            referencedRelation: "team_announcements";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "announcement_comments_parent_id_fkey";
+            columns: ["parent_id"];
+            isOneToOne: false;
+            referencedRelation: "announcement_comments";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      announcement_reactions: {
+        Row: {
+          announcement_id: string;
+          created_at: string | null;
+          id: string;
+          reaction_type: string;
+          user_id: string;
+        };
+        Insert: {
+          announcement_id: string;
+          created_at?: string | null;
+          id?: string;
+          reaction_type: string;
+          user_id: string;
+        };
+        Update: {
+          announcement_id?: string;
+          created_at?: string | null;
+          id?: string;
+          reaction_type?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "announcement_reactions_announcement_id_fkey";
+            columns: ["announcement_id"];
+            isOneToOne: false;
+            referencedRelation: "team_announcements";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      announcement_views: {
+        Row: {
+          announcement_id: string;
+          id: string;
+          team_id: string;
+          user_id: string;
+          viewed_at: string;
+        };
+        Insert: {
+          announcement_id: string;
+          id?: string;
+          team_id: string;
+          user_id: string;
+          viewed_at?: string;
+        };
+        Update: {
+          announcement_id?: string;
+          id?: string;
+          team_id?: string;
+          user_id?: string;
+          viewed_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "announcement_views_announcement_id_fkey";
+            columns: ["announcement_id"];
+            isOneToOne: false;
+            referencedRelation: "team_announcements";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "announcement_views_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      avatars: {
+        Row: {
+          created_at: string | null;
+          file_name: string | null;
+          file_size: number | null;
+          id: string;
+          is_active: boolean | null;
+          mime_type: string | null;
+          storage_path: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string | null;
+          file_name?: string | null;
+          file_size?: number | null;
+          id?: string;
+          is_active?: boolean | null;
+          mime_type?: string | null;
+          storage_path: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string | null;
+          file_name?: string | null;
+          file_size?: number | null;
+          id?: string;
+          is_active?: boolean | null;
+          mime_type?: string | null;
+          storage_path?: string;
+          user_id?: string;
+        };
+        Relationships: [];
       };
       calendar_events: {
         Row: {
@@ -129,6 +443,79 @@ export type Database = {
           },
         ];
       };
+      comment_reactions: {
+        Row: {
+          comment_id: string;
+          created_at: string | null;
+          id: string;
+          reaction_type: string;
+          user_id: string;
+        };
+        Insert: {
+          comment_id: string;
+          created_at?: string | null;
+          id?: string;
+          reaction_type: string;
+          user_id: string;
+        };
+        Update: {
+          comment_id?: string;
+          created_at?: string | null;
+          id?: string;
+          reaction_type?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "comment_reactions_comment_id_fkey";
+            columns: ["comment_id"];
+            isOneToOne: false;
+            referencedRelation: "announcement_comments";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      comments: {
+        Row: {
+          content: string;
+          created_at: string | null;
+          entity_id: string;
+          entity_type: string;
+          id: string;
+          parent_id: string | null;
+          updated_at: string | null;
+          user_id: string;
+        };
+        Insert: {
+          content: string;
+          created_at?: string | null;
+          entity_id: string;
+          entity_type: string;
+          id?: string;
+          parent_id?: string | null;
+          updated_at?: string | null;
+          user_id: string;
+        };
+        Update: {
+          content?: string;
+          created_at?: string | null;
+          entity_id?: string;
+          entity_type?: string;
+          id?: string;
+          parent_id?: string | null;
+          updated_at?: string | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "comments_parent_id_fkey";
+            columns: ["parent_id"];
+            isOneToOne: false;
+            referencedRelation: "comments";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       equipment: {
         Row: {
           category: string;
@@ -176,71 +563,267 @@ export type Database = {
           },
         ];
       };
-      formations: {
+      follows: {
         Row: {
           created_at: string | null;
-          description: string | null;
-          diagram_data: Json | null;
+          follower_id: string;
+          following_id: string;
           id: string;
-          name: string;
-          personnel_packages: string[] | null;
-          playbook_id: string;
-          updated_at: string | null;
-          formation_type: string | null;
-          run_strength: string | null;
-          pass_strength: string | null;
-          strength_player_position: string | null;
-          is_standalone: boolean | null;
-          confidence_score: number | null;
-          last_analyzed_at: string | null;
-          analysis_play_count: number | null;
-          metadata_quality: string | null;
-          opposite_formation_id: string | null;
-          usage_count: number | null;
         };
         Insert: {
           created_at?: string | null;
-          description?: string | null;
-          diagram_data?: Json | null;
+          follower_id: string;
+          following_id: string;
           id?: string;
-          name: string;
-          personnel_packages?: string[] | null;
-          playbook_id: string;
-          updated_at?: string | null;
-          formation_type?: string | null;
-          run_strength?: string | null;
-          pass_strength?: string | null;
-          strength_player_position?: string | null;
-          is_standalone?: boolean | null;
-          confidence_score?: number | null;
-          last_analyzed_at?: string | null;
-          analysis_play_count?: number | null;
-          metadata_quality?: string | null;
-          opposite_formation_id?: string | null;
-          usage_count?: number | null;
         };
         Update: {
           created_at?: string | null;
-          description?: string | null;
-          diagram_data?: Json | null;
+          follower_id?: string;
+          following_id?: string;
           id?: string;
-          name?: string;
-          personnel_packages?: string[] | null;
-          playbook_id?: string;
-          updated_at?: string | null;
-          formation_type?: string | null;
-          run_strength?: string | null;
-          pass_strength?: string | null;
-          strength_player_position?: string | null;
-          is_standalone?: boolean | null;
-          confidence_score?: number | null;
-          last_analyzed_at?: string | null;
-          analysis_play_count?: number | null;
-          metadata_quality?: string | null;
-          opposite_formation_id?: string | null;
-          usage_count?: number | null;
+        };
+        Relationships: [];
+      };
+      formation_sync_audit: {
+        Row: {
+          detected_at: string;
+          formation_text: string | null;
+          id: number;
+          notes: string | null;
+          personnel: string | null;
+          play_id: string;
+          playbook_id: string | null;
+          status: string;
+        };
+        Insert: {
+          detected_at?: string;
+          formation_text?: string | null;
+          id?: number;
+          notes?: string | null;
+          personnel?: string | null;
+          play_id: string;
+          playbook_id?: string | null;
+          status?: string;
+        };
+        Update: {
+          detected_at?: string;
+          formation_text?: string | null;
+          id?: number;
+          notes?: string | null;
+          personnel?: string | null;
+          play_id?: string;
+          playbook_id?: string | null;
+          status?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: "formation_sync_audit_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: true;
+            referencedRelation: "plays";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "formation_sync_audit_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: true;
+            referencedRelation: "plays_missing_formation_link";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "formation_sync_audit_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: true;
+            referencedRelation: "plays_missing_personnel_link";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      formations: {
+        Row: {
+          analysis_play_count: number | null;
+          base_formation_id: string | null;
+          category: string | null;
+          confidence_score: number | null;
+          created_at: string;
+          created_by: string | null;
+          creation_context: Json | null;
+          creation_source:
+            | Database["public"]["Enums"]["formation_creation_source"]
+            | null;
+          deleted_at: string | null;
+          description: string | null;
+          diagram_data: Json | null;
+          direction: string | null;
+          directionality_type: string | null;
+          formation_type: string | null;
+          id: string;
+          is_custom: boolean | null;
+          is_standalone: boolean | null;
+          last_analyzed_at: string | null;
+          metadata_completeness: number | null;
+          metadata_quality: string | null;
+          name: string;
+          opposite_formation_id: string | null;
+          pass_strength: string | null;
+          personnel_id: string | null;
+          personnel_name: string | null;
+          personnel_packages: string[] | null;
+          playbook_id: string;
+          player_positions: Json;
+          positions: Json;
+          run_strength: string | null;
+          strength_player_label: string | null;
+          strength_player_position: string | null;
+          tags: string[] | null;
+          updated_at: string;
+          usage_count: number | null;
+          version: number | null;
+        };
+        Insert: {
+          analysis_play_count?: number | null;
+          base_formation_id?: string | null;
+          category?: string | null;
+          confidence_score?: number | null;
+          created_at?: string;
+          created_by?: string | null;
+          creation_context?: Json | null;
+          creation_source?:
+            | Database["public"]["Enums"]["formation_creation_source"]
+            | null;
+          deleted_at?: string | null;
+          description?: string | null;
+          diagram_data?: Json | null;
+          direction?: string | null;
+          directionality_type?: string | null;
+          formation_type?: string | null;
+          id?: string;
+          is_custom?: boolean | null;
+          is_standalone?: boolean | null;
+          last_analyzed_at?: string | null;
+          metadata_completeness?: number | null;
+          metadata_quality?: string | null;
+          name: string;
+          opposite_formation_id?: string | null;
+          pass_strength?: string | null;
+          personnel_id?: string | null;
+          personnel_name?: string | null;
+          personnel_packages?: string[] | null;
+          playbook_id: string;
+          player_positions?: Json;
+          positions?: Json;
+          run_strength?: string | null;
+          strength_player_label?: string | null;
+          strength_player_position?: string | null;
+          tags?: string[] | null;
+          updated_at?: string;
+          usage_count?: number | null;
+          version?: number | null;
+        };
+        Update: {
+          analysis_play_count?: number | null;
+          base_formation_id?: string | null;
+          category?: string | null;
+          confidence_score?: number | null;
+          created_at?: string;
+          created_by?: string | null;
+          creation_context?: Json | null;
+          creation_source?:
+            | Database["public"]["Enums"]["formation_creation_source"]
+            | null;
+          deleted_at?: string | null;
+          description?: string | null;
+          diagram_data?: Json | null;
+          direction?: string | null;
+          directionality_type?: string | null;
+          formation_type?: string | null;
+          id?: string;
+          is_custom?: boolean | null;
+          is_standalone?: boolean | null;
+          last_analyzed_at?: string | null;
+          metadata_completeness?: number | null;
+          metadata_quality?: string | null;
+          name?: string;
+          opposite_formation_id?: string | null;
+          pass_strength?: string | null;
+          personnel_id?: string | null;
+          personnel_name?: string | null;
+          personnel_packages?: string[] | null;
+          playbook_id?: string;
+          player_positions?: Json;
+          positions?: Json;
+          run_strength?: string | null;
+          strength_player_label?: string | null;
+          strength_player_position?: string | null;
+          tags?: string[] | null;
+          updated_at?: string;
+          usage_count?: number | null;
+          version?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "formations_base_formation_id_fkey";
+            columns: ["base_formation_id"];
+            isOneToOne: false;
+            referencedRelation: "formations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "formations_base_formation_id_fkey";
+            columns: ["base_formation_id"];
+            isOneToOne: false;
+            referencedRelation: "formations_missing_personnel";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "formations_base_formation_id_fkey";
+            columns: ["base_formation_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_formation_link";
+            referencedColumns: ["matching_formation_id"];
+          },
+          {
+            foreignKeyName: "formations_opposite_formation_id_fkey";
+            columns: ["opposite_formation_id"];
+            isOneToOne: false;
+            referencedRelation: "formations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "formations_opposite_formation_id_fkey";
+            columns: ["opposite_formation_id"];
+            isOneToOne: false;
+            referencedRelation: "formations_missing_personnel";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "formations_opposite_formation_id_fkey";
+            columns: ["opposite_formation_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_formation_link";
+            referencedColumns: ["matching_formation_id"];
+          },
+          {
+            foreignKeyName: "formations_personnel_id_fkey";
+            columns: ["personnel_id"];
+            isOneToOne: false;
+            referencedRelation: "orphaned_personnel_configs";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "formations_personnel_id_fkey";
+            columns: ["personnel_id"];
+            isOneToOne: false;
+            referencedRelation: "personnel_configurations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "formations_personnel_id_fkey";
+            columns: ["personnel_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_personnel_link";
+            referencedColumns: ["matching_personnel_id"];
+          },
           {
             foreignKeyName: "formations_playbook_id_fkey";
             columns: ["playbook_id"];
@@ -284,6 +867,20 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "game_plan_plays_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_formation_link";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "game_plan_plays_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_personnel_link";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "game_plan_plays_situation_id_fkey";
             columns: ["situation_id"];
             isOneToOne: false;
@@ -295,28 +892,34 @@ export type Database = {
       game_plan_situations: {
         Row: {
           created_at: string | null;
+          display_order: number;
           distance: number | null;
           down: number | null;
           game_plan_id: string | null;
           id: string;
+          notes: string | null;
           situation_type: string;
           yard_line: number | null;
         };
         Insert: {
           created_at?: string | null;
+          display_order?: number;
           distance?: number | null;
           down?: number | null;
           game_plan_id?: string | null;
           id?: string;
+          notes?: string | null;
           situation_type: string;
           yard_line?: number | null;
         };
         Update: {
           created_at?: string | null;
+          display_order?: number;
           distance?: number | null;
           down?: number | null;
           game_plan_id?: string | null;
           id?: string;
+          notes?: string | null;
           situation_type?: string;
           yard_line?: number | null;
         };
@@ -325,7 +928,21 @@ export type Database = {
             foreignKeyName: "game_plan_situations_game_plan_id_fkey";
             columns: ["game_plan_id"];
             isOneToOne: false;
+            referencedRelation: "game_plan_analytics";
+            referencedColumns: ["game_plan_id"];
+          },
+          {
+            foreignKeyName: "game_plan_situations_game_plan_id_fkey";
+            columns: ["game_plan_id"];
+            isOneToOne: false;
             referencedRelation: "game_plans";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "game_plan_situations_game_plan_id_fkey";
+            columns: ["game_plan_id"];
+            isOneToOne: false;
+            referencedRelation: "game_plans_enhanced";
             referencedColumns: ["id"];
           },
         ];
@@ -333,9 +950,14 @@ export type Database = {
       game_plans: {
         Row: {
           created_at: string | null;
+          created_by: string | null;
           game_date: string;
+          game_location: string | null;
           home_away: string | null;
           id: string;
+          is_archived: boolean | null;
+          name: string | null;
+          notes: string | null;
           opponent: string;
           team_id: string | null;
           updated_at: string | null;
@@ -343,9 +965,14 @@ export type Database = {
         };
         Insert: {
           created_at?: string | null;
+          created_by?: string | null;
           game_date: string;
+          game_location?: string | null;
           home_away?: string | null;
           id?: string;
+          is_archived?: boolean | null;
+          name?: string | null;
+          notes?: string | null;
           opponent: string;
           team_id?: string | null;
           updated_at?: string | null;
@@ -353,9 +980,14 @@ export type Database = {
         };
         Update: {
           created_at?: string | null;
+          created_by?: string | null;
           game_date?: string;
+          game_location?: string | null;
           home_away?: string | null;
           id?: string;
+          is_archived?: boolean | null;
+          name?: string | null;
+          notes?: string | null;
           opponent?: string;
           team_id?: string | null;
           updated_at?: string | null;
@@ -417,6 +1049,217 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "game_results_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      game_sessions: {
+        Row: {
+          created_at: string | null;
+          created_by: string | null;
+          ended_at: string | null;
+          failed_plays: number | null;
+          field_conditions: string | null;
+          game_date: string | null;
+          game_plan_id: string | null;
+          id: string;
+          is_archived: boolean | null;
+          is_home_game: boolean | null;
+          is_home_team: boolean | null;
+          neutral_plays: number | null;
+          notes: string | null;
+          opponent: string | null;
+          opponent_name: string | null;
+          opponent_score: number | null;
+          recorded_by: string | null;
+          session_mode: string;
+          started_at: string;
+          status: string;
+          success_rate: number | null;
+          successful_plays: number | null;
+          team_id: string;
+          team_score: number | null;
+          total_plays: number | null;
+          total_touchdowns: number | null;
+          total_turnovers: number | null;
+          total_yards: number | null;
+          updated_at: string | null;
+          weather: string | null;
+        };
+        Insert: {
+          created_at?: string | null;
+          created_by?: string | null;
+          ended_at?: string | null;
+          failed_plays?: number | null;
+          field_conditions?: string | null;
+          game_date?: string | null;
+          game_plan_id?: string | null;
+          id?: string;
+          is_archived?: boolean | null;
+          is_home_game?: boolean | null;
+          is_home_team?: boolean | null;
+          neutral_plays?: number | null;
+          notes?: string | null;
+          opponent?: string | null;
+          opponent_name?: string | null;
+          opponent_score?: number | null;
+          recorded_by?: string | null;
+          session_mode?: string;
+          started_at?: string;
+          status?: string;
+          success_rate?: number | null;
+          successful_plays?: number | null;
+          team_id: string;
+          team_score?: number | null;
+          total_plays?: number | null;
+          total_touchdowns?: number | null;
+          total_turnovers?: number | null;
+          total_yards?: number | null;
+          updated_at?: string | null;
+          weather?: string | null;
+        };
+        Update: {
+          created_at?: string | null;
+          created_by?: string | null;
+          ended_at?: string | null;
+          failed_plays?: number | null;
+          field_conditions?: string | null;
+          game_date?: string | null;
+          game_plan_id?: string | null;
+          id?: string;
+          is_archived?: boolean | null;
+          is_home_game?: boolean | null;
+          is_home_team?: boolean | null;
+          neutral_plays?: number | null;
+          notes?: string | null;
+          opponent?: string | null;
+          opponent_name?: string | null;
+          opponent_score?: number | null;
+          recorded_by?: string | null;
+          session_mode?: string;
+          started_at?: string;
+          status?: string;
+          success_rate?: number | null;
+          successful_plays?: number | null;
+          team_id?: string;
+          team_score?: number | null;
+          total_plays?: number | null;
+          total_touchdowns?: number | null;
+          total_turnovers?: number | null;
+          total_yards?: number | null;
+          updated_at?: string | null;
+          weather?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "game_sessions_game_plan_id_fkey";
+            columns: ["game_plan_id"];
+            isOneToOne: false;
+            referencedRelation: "game_plan_analytics";
+            referencedColumns: ["game_plan_id"];
+          },
+          {
+            foreignKeyName: "game_sessions_game_plan_id_fkey";
+            columns: ["game_plan_id"];
+            isOneToOne: false;
+            referencedRelation: "game_plans";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "game_sessions_game_plan_id_fkey";
+            columns: ["game_plan_id"];
+            isOneToOne: false;
+            referencedRelation: "game_plans_enhanced";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "game_sessions_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      games: {
+        Row: {
+          created_at: string | null;
+          game_date: string;
+          game_plan_id: string | null;
+          game_time: string | null;
+          game_type: string | null;
+          id: string;
+          is_home_game: boolean | null;
+          location: string | null;
+          notes: string | null;
+          opponent_name: string;
+          opponent_score: number | null;
+          our_score: number | null;
+          result: string | null;
+          team_id: string;
+          updated_at: string | null;
+        };
+        Insert: {
+          created_at?: string | null;
+          game_date: string;
+          game_plan_id?: string | null;
+          game_time?: string | null;
+          game_type?: string | null;
+          id?: string;
+          is_home_game?: boolean | null;
+          location?: string | null;
+          notes?: string | null;
+          opponent_name: string;
+          opponent_score?: number | null;
+          our_score?: number | null;
+          result?: string | null;
+          team_id: string;
+          updated_at?: string | null;
+        };
+        Update: {
+          created_at?: string | null;
+          game_date?: string;
+          game_plan_id?: string | null;
+          game_time?: string | null;
+          game_type?: string | null;
+          id?: string;
+          is_home_game?: boolean | null;
+          location?: string | null;
+          notes?: string | null;
+          opponent_name?: string;
+          opponent_score?: number | null;
+          our_score?: number | null;
+          result?: string | null;
+          team_id?: string;
+          updated_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "games_game_plan_id_fkey";
+            columns: ["game_plan_id"];
+            isOneToOne: false;
+            referencedRelation: "game_plan_analytics";
+            referencedColumns: ["game_plan_id"];
+          },
+          {
+            foreignKeyName: "games_game_plan_id_fkey";
+            columns: ["game_plan_id"];
+            isOneToOne: false;
+            referencedRelation: "game_plans";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "games_game_plan_id_fkey";
+            columns: ["game_plan_id"];
+            isOneToOne: false;
+            referencedRelation: "game_plans_enhanced";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "games_team_id_fkey";
             columns: ["team_id"];
             isOneToOne: false;
             referencedRelation: "teams";
@@ -515,44 +1358,161 @@ export type Database = {
           },
         ];
       };
+      mentions: {
+        Row: {
+          announcement_id: string | null;
+          comment_id: string | null;
+          created_at: string | null;
+          created_by_user_id: string;
+          display_text: string | null;
+          id: string;
+          length: number | null;
+          mention_type: string;
+          mentioned_user_id: string;
+          position: number | null;
+        };
+        Insert: {
+          announcement_id?: string | null;
+          comment_id?: string | null;
+          created_at?: string | null;
+          created_by_user_id: string;
+          display_text?: string | null;
+          id?: string;
+          length?: number | null;
+          mention_type: string;
+          mentioned_user_id: string;
+          position?: number | null;
+        };
+        Update: {
+          announcement_id?: string | null;
+          comment_id?: string | null;
+          created_at?: string | null;
+          created_by_user_id?: string;
+          display_text?: string | null;
+          id?: string;
+          length?: number | null;
+          mention_type?: string;
+          mentioned_user_id?: string;
+          position?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "mentions_announcement_id_fkey";
+            columns: ["announcement_id"];
+            isOneToOne: false;
+            referencedRelation: "team_announcements";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "mentions_comment_id_fkey";
+            columns: ["comment_id"];
+            isOneToOne: false;
+            referencedRelation: "announcement_comments";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      notifications: {
+        Row: {
+          announcement_id: string | null;
+          comment_id: string | null;
+          created_at: string | null;
+          data: Json | null;
+          id: string;
+          message: string;
+          read: boolean | null;
+          title: string;
+          triggered_by_user_id: string | null;
+          type: string;
+          updated_at: string | null;
+          user_id: string;
+        };
+        Insert: {
+          announcement_id?: string | null;
+          comment_id?: string | null;
+          created_at?: string | null;
+          data?: Json | null;
+          id?: string;
+          message: string;
+          read?: boolean | null;
+          title: string;
+          triggered_by_user_id?: string | null;
+          type: string;
+          updated_at?: string | null;
+          user_id: string;
+        };
+        Update: {
+          announcement_id?: string | null;
+          comment_id?: string | null;
+          created_at?: string | null;
+          data?: Json | null;
+          id?: string;
+          message?: string;
+          read?: boolean | null;
+          title?: string;
+          triggered_by_user_id?: string | null;
+          type?: string;
+          updated_at?: string | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "notifications_announcement_id_fkey";
+            columns: ["announcement_id"];
+            isOneToOne: false;
+            referencedRelation: "team_announcements";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "notifications_comment_id_fkey";
+            columns: ["comment_id"];
+            isOneToOne: false;
+            referencedRelation: "announcement_comments";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       personnel_configurations: {
         Row: {
+          analysis_play_count: number | null;
           badge_customization: Json | null;
+          confidence_score: number | null;
           created_at: string | null;
+          deleted_at: string | null;
           description: string | null;
           id: string;
+          last_analyzed_at: string | null;
           name: string;
           playbook_id: string;
           updated_at: string | null;
-          confidence_score: number | null;
-          last_analyzed_at: string | null;
-          analysis_play_count: number | null;
           usage_count: number | null;
         };
         Insert: {
+          analysis_play_count?: number | null;
           badge_customization?: Json | null;
+          confidence_score?: number | null;
           created_at?: string | null;
+          deleted_at?: string | null;
           description?: string | null;
           id?: string;
+          last_analyzed_at?: string | null;
           name: string;
           playbook_id: string;
           updated_at?: string | null;
-          confidence_score?: number | null;
-          last_analyzed_at?: string | null;
-          analysis_play_count?: number | null;
           usage_count?: number | null;
         };
         Update: {
+          analysis_play_count?: number | null;
           badge_customization?: Json | null;
+          confidence_score?: number | null;
           created_at?: string | null;
+          deleted_at?: string | null;
           description?: string | null;
           id?: string;
+          last_analyzed_at?: string | null;
           name?: string;
           playbook_id?: string;
           updated_at?: string | null;
-          confidence_score?: number | null;
-          last_analyzed_at?: string | null;
-          analysis_play_count?: number | null;
           usage_count?: number | null;
         };
         Relationships: [
@@ -598,7 +1558,95 @@ export type Database = {
             foreignKeyName: "personnel_players_config_id_fkey";
             columns: ["config_id"];
             isOneToOne: false;
+            referencedRelation: "orphaned_personnel_configs";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "personnel_players_config_id_fkey";
+            columns: ["config_id"];
+            isOneToOne: false;
             referencedRelation: "personnel_configurations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "personnel_players_config_id_fkey";
+            columns: ["config_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_personnel_link";
+            referencedColumns: ["matching_personnel_id"];
+          },
+        ];
+      };
+      play_assignments: {
+        Row: {
+          assignment_text: string | null;
+          created_at: string | null;
+          created_by: string | null;
+          hashtags: Json | null;
+          id: string;
+          play_id: string;
+          play_notes: string | null;
+          playbook_id: string;
+          player_tags: Json | null;
+          position: string;
+          updated_at: string | null;
+          updated_by: string | null;
+        };
+        Insert: {
+          assignment_text?: string | null;
+          created_at?: string | null;
+          created_by?: string | null;
+          hashtags?: Json | null;
+          id?: string;
+          play_id: string;
+          play_notes?: string | null;
+          playbook_id: string;
+          player_tags?: Json | null;
+          position: string;
+          updated_at?: string | null;
+          updated_by?: string | null;
+        };
+        Update: {
+          assignment_text?: string | null;
+          created_at?: string | null;
+          created_by?: string | null;
+          hashtags?: Json | null;
+          id?: string;
+          play_id?: string;
+          play_notes?: string | null;
+          playbook_id?: string;
+          player_tags?: Json | null;
+          position?: string;
+          updated_at?: string | null;
+          updated_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "play_assignments_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_assignments_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_formation_link";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_assignments_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_personnel_link";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_assignments_playbook_id_fkey";
+            columns: ["playbook_id"];
+            isOneToOne: false;
+            referencedRelation: "playbooks";
             referencedColumns: ["id"];
           },
         ];
@@ -648,200 +1696,196 @@ export type Database = {
             referencedRelation: "plays";
             referencedColumns: ["id"];
           },
-        ];
-      };
-      playbooks: {
-        Row: {
-          created_at: string | null;
-          description: string | null;
-          id: string;
-          is_active: boolean | null;
-          last_modified_at: string | null;
-          name: string;
-          play_count: number | null;
-          team_id: string | null;
-          updated_at: string | null;
-        };
-        Insert: {
-          created_at?: string | null;
-          description?: string | null;
-          id?: string;
-          is_active?: boolean | null;
-          last_modified_at?: string | null;
-          name?: string;
-          play_count?: number | null;
-          team_id?: string | null;
-          updated_at?: string | null;
-        };
-        Update: {
-          created_at?: string | null;
-          description?: string | null;
-          id?: string;
-          is_active?: boolean | null;
-          last_modified_at?: string | null;
-          name?: string;
-          play_count?: number | null;
-          team_id?: string | null;
-          updated_at?: string | null;
-        };
-        Relationships: [
           {
-            foreignKeyName: "playbooks_team_id_fkey";
-            columns: ["team_id"];
+            foreignKeyName: "play_calls_play_id_fkey";
+            columns: ["play_id"];
             isOneToOne: false;
-            referencedRelation: "teams";
+            referencedRelation: "plays_missing_formation_link";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_calls_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_personnel_link";
             referencedColumns: ["id"];
           },
         ];
       };
-      plays: {
+      play_executions: {
         Row: {
-          back_align: string | null;
-          check_into: string | null;
-          confidence_base: number | null;
+          confidence_after: number | null;
+          confidence_before: number | null;
           created_at: string | null;
-          creation_context: Json | null;
-          creation_source:
-            | Database["public"]["Enums"]["play_creation_source"]
-            | null;
-          diagram_data: Json | null;
-          diagram_image_url: string | null;
-          f_dir: string | null;
-          f_type: string | null;
-          formation: string;
-          ftag1: string | null;
-          ftag2: string | null;
+          defensive_look: string | null;
+          distance: number | null;
+          down: number | null;
+          executed_at: string;
+          field_zone: string | null;
+          formation_id: string | null;
+          game_clock: string | null;
+          game_session_id: string | null;
+          hash: string | null;
+          hash_mark: string | null;
           id: string;
-          key_player1: string | null;
-          key_player2: string | null;
-          motion: string | null;
+          is_scripted: boolean | null;
           notes: string | null;
-          one_word_play: string | null;
-          p_dir: string | null;
-          p_str: string | null;
-          p_tag1: string | null;
-          p_tag2: string | null;
-          p_type: string;
-          personnel: string | null;
-          play_name: string;
-          playbook_id: string | null;
-          pref_cov: string | null;
-          pref_dis: string | null;
-          pref_down: string | null;
-          pref_field_pos: string | null;
-          pref_front: string | null;
-          pref_hash: string | null;
-          pref_situation: string | null;
-          protection: string | null;
-          r_str: string | null;
-          shift: string | null;
-          times_called: number | null;
-          times_successful: number | null;
-          updated_at: string | null;
-          current_version: number | null;
-          version_created_at: string | null;
-          version_created_by: string | null;
+          opponent_coverage: string | null;
+          penalty_yards: number | null;
+          play_id: string | null;
+          practice_session_id: string | null;
+          quarter: number | null;
+          quick_tags: string[] | null;
+          recorded_by: string | null;
+          recorded_mode: string;
+          rep_number: number | null;
+          result: string;
+          score_differential: number | null;
+          session_type: string | null;
+          team_id: string;
+          time_remaining: string | null;
+          was_penalty: boolean | null;
+          was_touchdown: boolean | null;
+          was_turnover: boolean | null;
+          yard_line: number | null;
+          yards_gained: number | null;
         };
         Insert: {
-          back_align?: string | null;
-          check_into?: string | null;
-          confidence_base?: number | null;
+          confidence_after?: number | null;
+          confidence_before?: number | null;
           created_at?: string | null;
-          creation_context?: Json | null;
-          creation_source?:
-            | Database["public"]["Enums"]["play_creation_source"]
-            | null;
-          diagram_data?: Json | null;
-          diagram_image_url?: string | null;
-          f_dir?: string | null;
-          f_type?: string | null;
-          formation: string;
-          ftag1?: string | null;
-          ftag2?: string | null;
+          defensive_look?: string | null;
+          distance?: number | null;
+          down?: number | null;
+          executed_at?: string;
+          field_zone?: string | null;
+          formation_id?: string | null;
+          game_clock?: string | null;
+          game_session_id?: string | null;
+          hash?: string | null;
+          hash_mark?: string | null;
           id?: string;
-          key_player1?: string | null;
-          key_player2?: string | null;
-          motion?: string | null;
+          is_scripted?: boolean | null;
           notes?: string | null;
-          one_word_play?: string | null;
-          p_dir?: string | null;
-          p_str?: string | null;
-          p_tag1?: string | null;
-          p_tag2?: string | null;
-          p_type: string;
-          personnel?: string | null;
-          play_name: string;
-          playbook_id?: string | null;
-          pref_cov?: string | null;
-          pref_dis?: string | null;
-          pref_down?: string | null;
-          pref_field_pos?: string | null;
-          pref_front?: string | null;
-          pref_hash?: string | null;
-          pref_situation?: string | null;
-          protection?: string | null;
-          r_str?: string | null;
-          shift?: string | null;
-          times_called?: number | null;
-          times_successful?: number | null;
-          updated_at?: string | null;
-          current_version?: number | null;
-          version_created_at?: string | null;
-          version_created_by?: string | null;
+          opponent_coverage?: string | null;
+          penalty_yards?: number | null;
+          play_id?: string | null;
+          practice_session_id?: string | null;
+          quarter?: number | null;
+          quick_tags?: string[] | null;
+          recorded_by?: string | null;
+          recorded_mode?: string;
+          rep_number?: number | null;
+          result?: string;
+          score_differential?: number | null;
+          session_type?: string | null;
+          team_id: string;
+          time_remaining?: string | null;
+          was_penalty?: boolean | null;
+          was_touchdown?: boolean | null;
+          was_turnover?: boolean | null;
+          yard_line?: number | null;
+          yards_gained?: number | null;
         };
         Update: {
-          back_align?: string | null;
-          check_into?: string | null;
-          confidence_base?: number | null;
+          confidence_after?: number | null;
+          confidence_before?: number | null;
           created_at?: string | null;
-          creation_context?: Json | null;
-          creation_source?:
-            | Database["public"]["Enums"]["play_creation_source"]
-            | null;
-          diagram_data?: Json | null;
-          diagram_image_url?: string | null;
-          f_dir?: string | null;
-          f_type?: string | null;
-          formation?: string;
-          ftag1?: string | null;
-          ftag2?: string | null;
+          defensive_look?: string | null;
+          distance?: number | null;
+          down?: number | null;
+          executed_at?: string;
+          field_zone?: string | null;
+          formation_id?: string | null;
+          game_clock?: string | null;
+          game_session_id?: string | null;
+          hash?: string | null;
+          hash_mark?: string | null;
           id?: string;
-          key_player1?: string | null;
-          key_player2?: string | null;
-          motion?: string | null;
+          is_scripted?: boolean | null;
           notes?: string | null;
-          one_word_play?: string | null;
-          p_dir?: string | null;
-          p_str?: string | null;
-          p_tag1?: string | null;
-          p_tag2?: string | null;
-          p_type?: string;
-          personnel?: string | null;
-          play_name?: string;
-          playbook_id?: string | null;
-          pref_cov?: string | null;
-          pref_dis?: string | null;
-          pref_down?: string | null;
-          pref_field_pos?: string | null;
-          pref_front?: string | null;
-          pref_hash?: string | null;
-          pref_situation?: string | null;
-          protection?: string | null;
-          r_str?: string | null;
-          shift?: string | null;
-          times_called?: number | null;
-          times_successful?: number | null;
-          updated_at?: string | null;
-          current_version?: number | null;
-          version_created_at?: string | null;
-          version_created_by?: string | null;
+          opponent_coverage?: string | null;
+          penalty_yards?: number | null;
+          play_id?: string | null;
+          practice_session_id?: string | null;
+          quarter?: number | null;
+          quick_tags?: string[] | null;
+          recorded_by?: string | null;
+          recorded_mode?: string;
+          rep_number?: number | null;
+          result?: string;
+          score_differential?: number | null;
+          session_type?: string | null;
+          team_id?: string;
+          time_remaining?: string | null;
+          was_penalty?: boolean | null;
+          was_touchdown?: boolean | null;
+          was_turnover?: boolean | null;
+          yard_line?: number | null;
+          yards_gained?: number | null;
         };
         Relationships: [
           {
-            foreignKeyName: "plays_playbook_id_fkey";
-            columns: ["playbook_id"];
+            foreignKeyName: "play_executions_formation_id_fkey";
+            columns: ["formation_id"];
             isOneToOne: false;
-            referencedRelation: "playbooks";
+            referencedRelation: "formations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_executions_formation_id_fkey";
+            columns: ["formation_id"];
+            isOneToOne: false;
+            referencedRelation: "formations_missing_personnel";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_executions_formation_id_fkey";
+            columns: ["formation_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_formation_link";
+            referencedColumns: ["matching_formation_id"];
+          },
+          {
+            foreignKeyName: "play_executions_game_session_id_fkey";
+            columns: ["game_session_id"];
+            isOneToOne: false;
+            referencedRelation: "game_sessions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_executions_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_executions_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_formation_link";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_executions_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_personnel_link";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_executions_practice_session_id_fkey";
+            columns: ["practice_session_id"];
+            isOneToOne: false;
+            referencedRelation: "practice_sessions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_executions_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
             referencedColumns: ["id"];
           },
         ];
@@ -876,17 +1920,363 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: "play_versions_created_by_fkey";
-            columns: ["created_by"];
+            foreignKeyName: "play_versions_play_id_fkey";
+            columns: ["play_id"];
             isOneToOne: false;
-            referencedRelation: "users";
+            referencedRelation: "plays";
             referencedColumns: ["id"];
           },
           {
             foreignKeyName: "play_versions_play_id_fkey";
             columns: ["play_id"];
             isOneToOne: false;
-            referencedRelation: "plays";
+            referencedRelation: "plays_missing_formation_link";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_versions_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_personnel_link";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      playbook_view_presets: {
+        Row: {
+          archived: boolean | null;
+          created_at: string | null;
+          filters: Json;
+          id: string;
+          name: string;
+          team_id: string | null;
+          updated_at: string | null;
+          user_id: string;
+        };
+        Insert: {
+          archived?: boolean | null;
+          created_at?: string | null;
+          filters?: Json;
+          id?: string;
+          name: string;
+          team_id?: string | null;
+          updated_at?: string | null;
+          user_id: string;
+        };
+        Update: {
+          archived?: boolean | null;
+          created_at?: string | null;
+          filters?: Json;
+          id?: string;
+          name?: string;
+          team_id?: string | null;
+          updated_at?: string | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "playbook_view_presets_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      playbooks: {
+        Row: {
+          created_at: string | null;
+          created_by: string;
+          description: string | null;
+          id: string;
+          is_active: boolean | null;
+          last_modified_at: string | null;
+          name: string;
+          play_count: number | null;
+          team_id: string | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          created_at?: string | null;
+          created_by: string;
+          description?: string | null;
+          id?: string;
+          is_active?: boolean | null;
+          last_modified_at?: string | null;
+          name?: string;
+          play_count?: number | null;
+          team_id?: string | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          created_at?: string | null;
+          created_by?: string;
+          description?: string | null;
+          id?: string;
+          is_active?: boolean | null;
+          last_modified_at?: string | null;
+          name?: string;
+          play_count?: number | null;
+          team_id?: string | null;
+          updated_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "playbooks_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      plays: {
+        Row: {
+          back_align: string | null;
+          back_left_of_qb: boolean | null;
+          back_right_of_qb: boolean | null;
+          check_into: string | null;
+          complexity_score: number | null;
+          confidence_base: number | null;
+          created_at: string | null;
+          created_by: string | null;
+          creation_context: Json | null;
+          creation_source:
+            | Database["public"]["Enums"]["play_creation_source"]
+            | null;
+          current_version: number | null;
+          diagram_data: Json | null;
+          diagram_image_url: string | null;
+          diagram_url: string | null;
+          diagram_version: number | null;
+          duplicate_key: string | null;
+          f_dir: string | null;
+          f_type: string | null;
+          flags: string[] | null;
+          formation: string;
+          formation_direction: string | null;
+          formation_id: string | null;
+          formation_status: string;
+          ftag1: string | null;
+          ftag2: string | null;
+          id: string;
+          is_archived: boolean | null;
+          key_player1: string | null;
+          key_player2: string | null;
+          key_players: string[] | null;
+          key_positions: string[] | null;
+          metadata_migrated_at: string | null;
+          motion: string | null;
+          notes: string | null;
+          one_word_play: string | null;
+          p_dir: string | null;
+          p_str: string | null;
+          p_tag1: string | null;
+          p_tag2: string | null;
+          p_type: string;
+          personnel: string | null;
+          personnel_id: string | null;
+          play_name: string;
+          playbook_id: string | null;
+          pref_cov: string | null;
+          pref_dis: string | null;
+          pref_down: string | null;
+          pref_field_pos: string | null;
+          pref_front: string | null;
+          pref_hash: string | null;
+          pref_situation: string | null;
+          protection: string | null;
+          r_str: string | null;
+          sanitized_at: string | null;
+          shift: string | null;
+          tags: string[] | null;
+          times_called: number | null;
+          times_successful: number | null;
+          updated_at: string | null;
+          version_created_at: string | null;
+          version_created_by: string | null;
+          wristband_number: string | null;
+        };
+        Insert: {
+          back_align?: string | null;
+          back_left_of_qb?: boolean | null;
+          back_right_of_qb?: boolean | null;
+          check_into?: string | null;
+          complexity_score?: number | null;
+          confidence_base?: number | null;
+          created_at?: string | null;
+          created_by?: string | null;
+          creation_context?: Json | null;
+          creation_source?:
+            | Database["public"]["Enums"]["play_creation_source"]
+            | null;
+          current_version?: number | null;
+          diagram_data?: Json | null;
+          diagram_image_url?: string | null;
+          diagram_url?: string | null;
+          diagram_version?: number | null;
+          duplicate_key?: string | null;
+          f_dir?: string | null;
+          f_type?: string | null;
+          flags?: string[] | null;
+          formation: string;
+          formation_direction?: string | null;
+          formation_id?: string | null;
+          formation_status?: string;
+          ftag1?: string | null;
+          ftag2?: string | null;
+          id?: string;
+          is_archived?: boolean | null;
+          key_player1?: string | null;
+          key_player2?: string | null;
+          key_players?: string[] | null;
+          key_positions?: string[] | null;
+          metadata_migrated_at?: string | null;
+          motion?: string | null;
+          notes?: string | null;
+          one_word_play?: string | null;
+          p_dir?: string | null;
+          p_str?: string | null;
+          p_tag1?: string | null;
+          p_tag2?: string | null;
+          p_type: string;
+          personnel?: string | null;
+          personnel_id?: string | null;
+          play_name: string;
+          playbook_id?: string | null;
+          pref_cov?: string | null;
+          pref_dis?: string | null;
+          pref_down?: string | null;
+          pref_field_pos?: string | null;
+          pref_front?: string | null;
+          pref_hash?: string | null;
+          pref_situation?: string | null;
+          protection?: string | null;
+          r_str?: string | null;
+          sanitized_at?: string | null;
+          shift?: string | null;
+          tags?: string[] | null;
+          times_called?: number | null;
+          times_successful?: number | null;
+          updated_at?: string | null;
+          version_created_at?: string | null;
+          version_created_by?: string | null;
+          wristband_number?: string | null;
+        };
+        Update: {
+          back_align?: string | null;
+          back_left_of_qb?: boolean | null;
+          back_right_of_qb?: boolean | null;
+          check_into?: string | null;
+          complexity_score?: number | null;
+          confidence_base?: number | null;
+          created_at?: string | null;
+          created_by?: string | null;
+          creation_context?: Json | null;
+          creation_source?:
+            | Database["public"]["Enums"]["play_creation_source"]
+            | null;
+          current_version?: number | null;
+          diagram_data?: Json | null;
+          diagram_image_url?: string | null;
+          diagram_url?: string | null;
+          diagram_version?: number | null;
+          duplicate_key?: string | null;
+          f_dir?: string | null;
+          f_type?: string | null;
+          flags?: string[] | null;
+          formation?: string;
+          formation_direction?: string | null;
+          formation_id?: string | null;
+          formation_status?: string;
+          ftag1?: string | null;
+          ftag2?: string | null;
+          id?: string;
+          is_archived?: boolean | null;
+          key_player1?: string | null;
+          key_player2?: string | null;
+          key_players?: string[] | null;
+          key_positions?: string[] | null;
+          metadata_migrated_at?: string | null;
+          motion?: string | null;
+          notes?: string | null;
+          one_word_play?: string | null;
+          p_dir?: string | null;
+          p_str?: string | null;
+          p_tag1?: string | null;
+          p_tag2?: string | null;
+          p_type?: string;
+          personnel?: string | null;
+          personnel_id?: string | null;
+          play_name?: string;
+          playbook_id?: string | null;
+          pref_cov?: string | null;
+          pref_dis?: string | null;
+          pref_down?: string | null;
+          pref_field_pos?: string | null;
+          pref_front?: string | null;
+          pref_hash?: string | null;
+          pref_situation?: string | null;
+          protection?: string | null;
+          r_str?: string | null;
+          sanitized_at?: string | null;
+          shift?: string | null;
+          tags?: string[] | null;
+          times_called?: number | null;
+          times_successful?: number | null;
+          updated_at?: string | null;
+          version_created_at?: string | null;
+          version_created_by?: string | null;
+          wristband_number?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plays_formation_id_fkey";
+            columns: ["formation_id"];
+            isOneToOne: false;
+            referencedRelation: "formations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plays_formation_id_fkey";
+            columns: ["formation_id"];
+            isOneToOne: false;
+            referencedRelation: "formations_missing_personnel";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plays_formation_id_fkey";
+            columns: ["formation_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_formation_link";
+            referencedColumns: ["matching_formation_id"];
+          },
+          {
+            foreignKeyName: "plays_personnel_id_fkey";
+            columns: ["personnel_id"];
+            isOneToOne: false;
+            referencedRelation: "orphaned_personnel_configs";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plays_personnel_id_fkey";
+            columns: ["personnel_id"];
+            isOneToOne: false;
+            referencedRelation: "personnel_configurations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plays_personnel_id_fkey";
+            columns: ["personnel_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_personnel_link";
+            referencedColumns: ["matching_personnel_id"];
+          },
+          {
+            foreignKeyName: "plays_playbook_id_fkey";
+            columns: ["playbook_id"];
+            isOneToOne: false;
+            referencedRelation: "playbooks";
             referencedColumns: ["id"];
           },
         ];
@@ -1087,30 +2477,134 @@ export type Database = {
           },
         ];
       };
+      practice_script_plays: {
+        Row: {
+          blitz: string | null;
+          coaching_points: string[] | null;
+          coverage: string | null;
+          created_at: string | null;
+          defensive_front: string | null;
+          down_distance: string | null;
+          field_position: string | null;
+          hash: string | null;
+          id: string;
+          play_id: string;
+          practice_script_id: string;
+          repetitions: number;
+          scenario_notes: string | null;
+          segment_name: string | null;
+          segment_type: string | null;
+          sequence_order: number;
+          updated_at: string | null;
+        };
+        Insert: {
+          blitz?: string | null;
+          coaching_points?: string[] | null;
+          coverage?: string | null;
+          created_at?: string | null;
+          defensive_front?: string | null;
+          down_distance?: string | null;
+          field_position?: string | null;
+          hash?: string | null;
+          id?: string;
+          play_id: string;
+          practice_script_id: string;
+          repetitions?: number;
+          scenario_notes?: string | null;
+          segment_name?: string | null;
+          segment_type?: string | null;
+          sequence_order?: number;
+          updated_at?: string | null;
+        };
+        Update: {
+          blitz?: string | null;
+          coaching_points?: string[] | null;
+          coverage?: string | null;
+          created_at?: string | null;
+          defensive_front?: string | null;
+          down_distance?: string | null;
+          field_position?: string | null;
+          hash?: string | null;
+          id?: string;
+          play_id?: string;
+          practice_script_id?: string;
+          repetitions?: number;
+          scenario_notes?: string | null;
+          segment_name?: string | null;
+          segment_type?: string | null;
+          sequence_order?: number;
+          updated_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "practice_script_plays_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "practice_script_plays_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_formation_link";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "practice_script_plays_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_personnel_link";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "practice_script_plays_practice_script_id_fkey";
+            columns: ["practice_script_id"];
+            isOneToOne: false;
+            referencedRelation: "practice_scripts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       practice_scripts: {
         Row: {
           created_at: string | null;
+          created_by: string | null;
           description: string | null;
           duration: number | null;
+          duration_minutes: number | null;
+          focus_areas: string[] | null;
           id: string;
+          is_archived: boolean | null;
+          is_template: boolean | null;
           team_id: string | null;
           title: string;
           updated_at: string | null;
         };
         Insert: {
           created_at?: string | null;
+          created_by?: string | null;
           description?: string | null;
           duration?: number | null;
+          duration_minutes?: number | null;
+          focus_areas?: string[] | null;
           id?: string;
+          is_archived?: boolean | null;
+          is_template?: boolean | null;
           team_id?: string | null;
           title: string;
           updated_at?: string | null;
         };
         Update: {
           created_at?: string | null;
+          created_by?: string | null;
           description?: string | null;
           duration?: number | null;
+          duration_minutes?: number | null;
+          focus_areas?: string[] | null;
           id?: string;
+          is_archived?: boolean | null;
+          is_template?: boolean | null;
           team_id?: string | null;
           title?: string;
           updated_at?: string | null;
@@ -1125,80 +2619,104 @@ export type Database = {
           },
         ];
       };
-      practice_script_plays: {
+      practice_sessions: {
         Row: {
-          id: string;
-          practice_script_id: string;
-          play_id: string;
-          sequence_order: number;
-          repetitions: number | null;
-          coaching_points: string[] | null;
-          duration_minutes: number | null;
-          hash: string | null;
-          down_distance: string | null;
-          field_position: string | null;
-          defensive_front: string | null;
-          coverage: string | null;
-          blitz: string | null;
-          scenario_notes: string | null;
-          segment_name: string | null;
-          segment_type: string | null;
+          completed_reps: number | null;
           created_at: string | null;
+          created_by: string | null;
+          duration_minutes: number | null;
+          ended_at: string | null;
+          failed_reps: number | null;
+          field_conditions: string | null;
+          id: string;
+          is_archived: boolean | null;
+          name: string;
+          neutral_reps: number | null;
+          notes: string | null;
+          practice_script_id: string | null;
+          recorded_by: string | null;
+          session_date: string;
+          session_mode: string;
+          session_type: string;
+          started_at: string;
+          status: string;
+          success_rate: number | null;
+          successful_reps: number | null;
+          team_id: string;
+          total_plays: number | null;
+          total_reps: number | null;
           updated_at: string | null;
+          weather: string | null;
         };
         Insert: {
-          id?: string;
-          practice_script_id: string;
-          play_id: string;
-          sequence_order?: number;
-          repetitions?: number | null;
-          coaching_points?: string[] | null;
-          duration_minutes?: number | null;
-          hash?: string | null;
-          down_distance?: string | null;
-          field_position?: string | null;
-          defensive_front?: string | null;
-          coverage?: string | null;
-          blitz?: string | null;
-          scenario_notes?: string | null;
-          segment_name?: string | null;
-          segment_type?: string | null;
+          completed_reps?: number | null;
           created_at?: string | null;
+          created_by?: string | null;
+          duration_minutes?: number | null;
+          ended_at?: string | null;
+          failed_reps?: number | null;
+          field_conditions?: string | null;
+          id?: string;
+          is_archived?: boolean | null;
+          name: string;
+          neutral_reps?: number | null;
+          notes?: string | null;
+          practice_script_id?: string | null;
+          recorded_by?: string | null;
+          session_date?: string;
+          session_mode?: string;
+          session_type?: string;
+          started_at?: string;
+          status?: string;
+          success_rate?: number | null;
+          successful_reps?: number | null;
+          team_id: string;
+          total_plays?: number | null;
+          total_reps?: number | null;
           updated_at?: string | null;
+          weather?: string | null;
         };
         Update: {
-          id?: string;
-          practice_script_id?: string;
-          play_id?: string;
-          sequence_order?: number;
-          repetitions?: number | null;
-          coaching_points?: string[] | null;
-          duration_minutes?: number | null;
-          hash?: string | null;
-          down_distance?: string | null;
-          field_position?: string | null;
-          defensive_front?: string | null;
-          coverage?: string | null;
-          blitz?: string | null;
-          scenario_notes?: string | null;
-          segment_name?: string | null;
-          segment_type?: string | null;
+          completed_reps?: number | null;
           created_at?: string | null;
+          created_by?: string | null;
+          duration_minutes?: number | null;
+          ended_at?: string | null;
+          failed_reps?: number | null;
+          field_conditions?: string | null;
+          id?: string;
+          is_archived?: boolean | null;
+          name?: string;
+          neutral_reps?: number | null;
+          notes?: string | null;
+          practice_script_id?: string | null;
+          recorded_by?: string | null;
+          session_date?: string;
+          session_mode?: string;
+          session_type?: string;
+          started_at?: string;
+          status?: string;
+          success_rate?: number | null;
+          successful_reps?: number | null;
+          team_id?: string;
+          total_plays?: number | null;
+          total_reps?: number | null;
           updated_at?: string | null;
+          weather?: string | null;
         };
         Relationships: [
           {
-            foreignKeyName: "practice_script_plays_practice_script_id_fkey";
+            foreignKeyName: "practice_sessions_practice_script_id_fkey";
             columns: ["practice_script_id"];
             isOneToOne: false;
             referencedRelation: "practice_scripts";
             referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "practice_script_plays_play_id_fkey";
-            columns: ["play_id"];
+            foreignKeyName: "practice_sessions_team_id_fkey";
+            columns: ["team_id"];
             isOneToOne: false;
-            referencedRelation: "plays";
+            referencedRelation: "teams";
             referencedColumns: ["id"];
           },
         ];
@@ -1250,6 +2768,7 @@ export type Database = {
       profiles: {
         Row: {
           address: string | null;
+          app_role: string | null;
           avatar_url: string | null;
           bio: string | null;
           certifications: string | null;
@@ -1268,6 +2787,7 @@ export type Database = {
           height_inches: number | null;
           id: string;
           is_active: boolean | null;
+          is_admin: boolean | null;
           jersey_number: number | null;
           last_login: string | null;
           mentors: string | null;
@@ -1284,12 +2804,15 @@ export type Database = {
           social_twitter: string | null;
           social_youtube: string | null;
           specializations: string | null;
+          subscription_expires_at: string | null;
+          subscription_tier: string | null;
           updated_at: string | null;
           weight_lbs: number | null;
           years_coaching: number | null;
         };
         Insert: {
           address?: string | null;
+          app_role?: string | null;
           avatar_url?: string | null;
           bio?: string | null;
           certifications?: string | null;
@@ -1308,6 +2831,7 @@ export type Database = {
           height_inches?: number | null;
           id: string;
           is_active?: boolean | null;
+          is_admin?: boolean | null;
           jersey_number?: number | null;
           last_login?: string | null;
           mentors?: string | null;
@@ -1324,12 +2848,15 @@ export type Database = {
           social_twitter?: string | null;
           social_youtube?: string | null;
           specializations?: string | null;
+          subscription_expires_at?: string | null;
+          subscription_tier?: string | null;
           updated_at?: string | null;
           weight_lbs?: number | null;
           years_coaching?: number | null;
         };
         Update: {
           address?: string | null;
+          app_role?: string | null;
           avatar_url?: string | null;
           bio?: string | null;
           certifications?: string | null;
@@ -1348,6 +2875,7 @@ export type Database = {
           height_inches?: number | null;
           id?: string;
           is_active?: boolean | null;
+          is_admin?: boolean | null;
           jersey_number?: number | null;
           last_login?: string | null;
           mentors?: string | null;
@@ -1364,20 +2892,114 @@ export type Database = {
           social_twitter?: string | null;
           social_youtube?: string | null;
           specializations?: string | null;
+          subscription_expires_at?: string | null;
+          subscription_tier?: string | null;
           updated_at?: string | null;
           weight_lbs?: number | null;
           years_coaching?: number | null;
         };
         Relationships: [];
       };
+      reactions: {
+        Row: {
+          created_at: string | null;
+          entity_id: string;
+          entity_type: string;
+          id: string;
+          reaction_type: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string | null;
+          entity_id: string;
+          entity_type: string;
+          id?: string;
+          reaction_type?: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string | null;
+          entity_id?: string;
+          entity_type?: string;
+          id?: string;
+          reaction_type?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      team_announcements: {
+        Row: {
+          attachments: Json | null;
+          content: string;
+          content_json: Json | null;
+          created_at: string | null;
+          created_by: string;
+          deleted_at: string | null;
+          id: string;
+          is_pinned: boolean | null;
+          scheduled_for: string | null;
+          status: string;
+          team_id: string;
+          title: string;
+          updated_at: string | null;
+          view_count: number | null;
+          visibility: string | null;
+        };
+        Insert: {
+          attachments?: Json | null;
+          content: string;
+          content_json?: Json | null;
+          created_at?: string | null;
+          created_by: string;
+          deleted_at?: string | null;
+          id?: string;
+          is_pinned?: boolean | null;
+          scheduled_for?: string | null;
+          status?: string;
+          team_id: string;
+          title: string;
+          updated_at?: string | null;
+          view_count?: number | null;
+          visibility?: string | null;
+        };
+        Update: {
+          attachments?: Json | null;
+          content?: string;
+          content_json?: Json | null;
+          created_at?: string | null;
+          created_by?: string;
+          deleted_at?: string | null;
+          id?: string;
+          is_pinned?: boolean | null;
+          scheduled_for?: string | null;
+          status?: string;
+          team_id?: string;
+          title?: string;
+          updated_at?: string | null;
+          view_count?: number | null;
+          visibility?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "team_announcements_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       team_events: {
         Row: {
           created_at: string | null;
           created_by: string | null;
           description: string | null;
+          ends_at: string | null;
           event_date: string;
           event_type: string | null;
           id: string;
+          location: string | null;
+          starts_at: string | null;
           team_id: string | null;
           title: string;
           updated_at: string | null;
@@ -1386,9 +3008,12 @@ export type Database = {
           created_at?: string | null;
           created_by?: string | null;
           description?: string | null;
+          ends_at?: string | null;
           event_date: string;
           event_type?: string | null;
           id?: string;
+          location?: string | null;
+          starts_at?: string | null;
           team_id?: string | null;
           title: string;
           updated_at?: string | null;
@@ -1397,9 +3022,12 @@ export type Database = {
           created_at?: string | null;
           created_by?: string | null;
           description?: string | null;
+          ends_at?: string | null;
           event_date?: string;
           event_type?: string | null;
           id?: string;
+          location?: string | null;
+          starts_at?: string | null;
           team_id?: string | null;
           title?: string;
           updated_at?: string | null;
@@ -1419,6 +3047,7 @@ export type Database = {
           assigned_at: string | null;
           capabilities: Json | null;
           id: string;
+          invited_by: string | null;
           role_notes: string | null;
           status: string | null;
           team_id: string | null;
@@ -1429,6 +3058,7 @@ export type Database = {
           assigned_at?: string | null;
           capabilities?: Json | null;
           id?: string;
+          invited_by?: string | null;
           role_notes?: string | null;
           status?: string | null;
           team_id?: string | null;
@@ -1439,6 +3069,7 @@ export type Database = {
           assigned_at?: string | null;
           capabilities?: Json | null;
           id?: string;
+          invited_by?: string | null;
           role_notes?: string | null;
           status?: string | null;
           team_id?: string | null;
@@ -1446,6 +3077,13 @@ export type Database = {
           user_id?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: "team_members_invited_by_fkey";
+            columns: ["invited_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "team_members_team_id_fkey";
             columns: ["team_id"];
@@ -1532,6 +3170,54 @@ export type Database = {
           },
         ];
       };
+      team_players_view: {
+        Row: {
+          created_at: string | null;
+          first_name: string | null;
+          full_name: string | null;
+          grade_level: string | null;
+          height_inches: number | null;
+          id: string | null;
+          is_active: boolean | null;
+          jersey_number: number | null;
+          last_name: string | null;
+          position: string | null;
+          team_id: string | null;
+          updated_at: string | null;
+          weight_lbs: number | null;
+        };
+        Insert: {
+          created_at?: string | null;
+          first_name?: string | null;
+          full_name?: string | null;
+          grade_level?: string | null;
+          height_inches?: number | null;
+          id?: string | null;
+          is_active?: boolean | null;
+          jersey_number?: number | null;
+          last_name?: string | null;
+          position?: string | null;
+          team_id?: string | null;
+          updated_at?: string | null;
+          weight_lbs?: number | null;
+        };
+        Update: {
+          created_at?: string | null;
+          first_name?: string | null;
+          full_name?: string | null;
+          grade_level?: string | null;
+          height_inches?: number | null;
+          id?: string | null;
+          is_active?: boolean | null;
+          jersey_number?: number | null;
+          last_name?: string | null;
+          position?: string | null;
+          team_id?: string | null;
+          updated_at?: string | null;
+          weight_lbs?: number | null;
+        };
+        Relationships: [];
+      };
       team_posts: {
         Row: {
           author_id: string;
@@ -1583,6 +3269,7 @@ export type Database = {
         Row: {
           backup_version: number | null;
           created_at: string | null;
+          created_by: string | null;
           id: string;
           last_backup_at: string | null;
           mascot: string | null;
@@ -1595,6 +3282,7 @@ export type Database = {
         Insert: {
           backup_version?: number | null;
           created_at?: string | null;
+          created_by?: string | null;
           id?: string;
           last_backup_at?: string | null;
           mascot?: string | null;
@@ -1607,6 +3295,7 @@ export type Database = {
         Update: {
           backup_version?: number | null;
           created_at?: string | null;
+          created_by?: string | null;
           id?: string;
           last_backup_at?: string | null;
           mascot?: string | null;
@@ -1620,6 +3309,202 @@ export type Database = {
       };
     };
     Views: {
+      formation_quality_analytics: {
+        Row: {
+          avg_completeness: number | null;
+          creation_source:
+            | Database["public"]["Enums"]["formation_creation_source"]
+            | null;
+          formation_count: number | null;
+          max_completeness: number | null;
+          metadata_quality: string | null;
+          min_completeness: number | null;
+          missing_diagrams_count: number | null;
+        };
+        Relationships: [];
+      };
+      formations_missing_personnel: {
+        Row: {
+          category: string | null;
+          id: string | null;
+          name: string | null;
+          playbook_id: string | null;
+          usage_count: number | null;
+        };
+        Insert: {
+          category?: string | null;
+          id?: string | null;
+          name?: string | null;
+          playbook_id?: string | null;
+          usage_count?: never;
+        };
+        Update: {
+          category?: string | null;
+          id?: string | null;
+          name?: string | null;
+          playbook_id?: string | null;
+          usage_count?: never;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "formations_playbook_id_fkey";
+            columns: ["playbook_id"];
+            isOneToOne: false;
+            referencedRelation: "playbooks";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      game_plan_analytics: {
+        Row: {
+          created_at: string | null;
+          game_date: string | null;
+          game_plan_id: string | null;
+          opponent: string | null;
+          situation_count: number | null;
+          team_id: string | null;
+          total_plays: number | null;
+          updated_at: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "game_plans_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      game_plans_enhanced: {
+        Row: {
+          created_at: string | null;
+          created_by: string | null;
+          game_date: string | null;
+          game_location: string | null;
+          home_away: string | null;
+          id: string | null;
+          is_archived: boolean | null;
+          notes: string | null;
+          opponent: string | null;
+          situation_count: number | null;
+          team_id: string | null;
+          team_name: string | null;
+          total_plays: number | null;
+          updated_at: string | null;
+          venue: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "game_plans_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      live_sessions: {
+        Row: {
+          created_at: string | null;
+          ended_at: string | null;
+          id: string | null;
+          is_archived: boolean | null;
+          name: string | null;
+          notes: string | null;
+          opponent: string | null;
+          session_mode: string | null;
+          session_type: string | null;
+          started_at: string | null;
+          team_id: string | null;
+        };
+        Relationships: [];
+      };
+      orphaned_personnel_configs: {
+        Row: {
+          formation_count: number | null;
+          id: string | null;
+          name: string | null;
+          play_count: number | null;
+          playbook_id: string | null;
+        };
+        Insert: {
+          formation_count?: never;
+          id?: string | null;
+          name?: string | null;
+          play_count?: never;
+          playbook_id?: string | null;
+        };
+        Update: {
+          formation_count?: never;
+          id?: string | null;
+          name?: string | null;
+          play_count?: never;
+          playbook_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "personnel_configurations_playbook_id_fkey";
+            columns: ["playbook_id"];
+            isOneToOne: false;
+            referencedRelation: "playbooks";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      play_confidence_stats: {
+        Row: {
+          avg_yards: number | null;
+          confidence_level: string | null;
+          distance_bucket: string | null;
+          down: number | null;
+          field_zone: string | null;
+          formation: string | null;
+          hash: string | null;
+          incompletes: number | null;
+          last_executed: string | null;
+          penalties: number | null;
+          personnel: string | null;
+          play_id: string | null;
+          play_name: string | null;
+          session_type: string | null;
+          success_rate: number | null;
+          successes: number | null;
+          team_id: string | null;
+          total_reps: number | null;
+          turnovers: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "play_executions_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_executions_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_formation_link";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_executions_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_personnel_link";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_executions_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       play_creation_analytics: {
         Row: {
           avg_confidence: number | null;
@@ -1634,6 +3519,52 @@ export type Database = {
         };
         Relationships: [];
       };
+      play_overall_confidence: {
+        Row: {
+          avg_success_rate: number | null;
+          confidence_tier: string | null;
+          formation: string | null;
+          game_reps: number | null;
+          last_executed: string | null;
+          personnel: string | null;
+          play_id: string | null;
+          play_name: string | null;
+          practice_reps: number | null;
+          team_id: string | null;
+          total_reps: number | null;
+          weighted_confidence: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "play_executions_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_executions_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_formation_link";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_executions_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_personnel_link";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_executions_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       play_tab_usage_analytics: {
         Row: {
           active_tab: string | null;
@@ -1645,6 +3576,92 @@ export type Database = {
           with_diagram_count: number | null;
         };
         Relationships: [];
+      };
+      plays_missing_formation_link: {
+        Row: {
+          formation_text: string | null;
+          id: string | null;
+          matching_formation_id: string | null;
+          matching_formation_name: string | null;
+          play_name: string | null;
+          playbook_id: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plays_playbook_id_fkey";
+            columns: ["playbook_id"];
+            isOneToOne: false;
+            referencedRelation: "playbooks";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      plays_missing_personnel_link: {
+        Row: {
+          id: string | null;
+          matching_personnel_id: string | null;
+          matching_personnel_name: string | null;
+          personnel_text: string | null;
+          play_name: string | null;
+          playbook_id: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plays_playbook_id_fkey";
+            columns: ["playbook_id"];
+            isOneToOne: false;
+            referencedRelation: "playbooks";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      practice_vs_game_comparison: {
+        Row: {
+          distance_bucket: string | null;
+          down: number | null;
+          field_zone: string | null;
+          formation: string | null;
+          game_reps: number | null;
+          game_success_rate: number | null;
+          play_id: string | null;
+          play_name: string | null;
+          practice_confidence: string | null;
+          practice_reps: number | null;
+          practice_success_rate: number | null;
+          prediction_accuracy: string | null;
+          team_id: string | null;
+          variance: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "play_executions_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_executions_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_formation_link";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_executions_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_personnel_link";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_executions_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       season_stats: {
         Row: {
@@ -1668,20 +3685,212 @@ export type Database = {
         };
         Relationships: [];
       };
+      situational_play_recommendations: {
+        Row: {
+          confidence_level: string | null;
+          distance_bucket: string | null;
+          down: number | null;
+          field_zone: string | null;
+          formation: string | null;
+          play_id: string | null;
+          play_name: string | null;
+          rank: number | null;
+          success_rate: number | null;
+          team_id: string | null;
+          total_reps: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "play_executions_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_executions_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_formation_link";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_executions_play_id_fkey";
+            columns: ["play_id"];
+            isOneToOne: false;
+            referencedRelation: "plays_missing_personnel_link";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "play_executions_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      team_play_analytics_summary: {
+        Row: {
+          confident_plays: number | null;
+          developing_plays: number | null;
+          overall_success_rate: number | null;
+          proven_plays: number | null;
+          team_id: string | null;
+          total_plays_tracked: number | null;
+          total_reps_logged: number | null;
+          untested_plays: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "play_executions_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Functions: {
       accept_player_invitation: {
         Args: { p_token: string; p_user_id: string };
         Returns: Json;
       };
+      add_play_tag: {
+        Args: { play_id: string; tag: string };
+        Returns: undefined;
+      };
+      batch_link_plays_to_formations: {
+        Args: { dry_run?: boolean; p_playbook_id?: string };
+        Returns: {
+          action: string;
+          formation_text: string;
+          matched_formation_id: string;
+          matched_formation_name: string;
+          play_id: string;
+          play_name: string;
+        }[];
+      };
+      batch_link_plays_to_personnel: {
+        Args: { dry_run?: boolean; p_playbook_id?: string };
+        Returns: {
+          action: string;
+          matched_personnel_id: string;
+          matched_personnel_name: string;
+          personnel_text: string;
+          play_id: string;
+          play_name: string;
+        }[];
+      };
+      calculate_formation_metadata_completeness: {
+        Args: {
+          formation_row: Database["public"]["Tables"]["formations"]["Row"];
+        };
+        Returns: number;
+      };
+      check_formation_variant_consistency: {
+        Args: never;
+        Returns: {
+          formation_id: string;
+          formation_name: string;
+          issue_description: string;
+          issue_type: string;
+        }[];
+      };
       cleanup_expired_invitations: { Args: never; Returns: number };
       count_diagram_players: {
         Args: { p_diagram_data: Json };
         Returns: number;
       };
+      create_named_play_version: {
+        Args: { p_description?: string; p_play_id: string };
+        Returns: number;
+      };
       dearmor: { Args: { "": string }; Returns: string };
+      detect_opposite_formations: {
+        Args: never;
+        Returns: {
+          formation_id: string;
+          formation_name: string;
+          match_confidence: string;
+          opposite_id: string;
+          opposite_name: string;
+        }[];
+      };
+      distance_bucket: { Args: { distance: number }; Returns: string };
+      extract_base_formation_name: {
+        Args: { formation_text: string };
+        Returns: string;
+      };
+      fix_formation_variant_links: {
+        Args: never;
+        Returns: {
+          fix_description: string;
+          fixed_formation_id: string;
+          fixed_formation_name: string;
+        }[];
+      };
+      flip_formation_positions: {
+        Args: { field_width?: number; positions: Json };
+        Returns: Json;
+      };
+      formation_has_variants: {
+        Args: { formation_id: string };
+        Returns: boolean;
+      };
       gen_random_uuid: { Args: never; Returns: string };
       gen_salt: { Args: { "": string }; Returns: string };
+      get_all_play_tags: {
+        Args: { team_id_param?: string };
+        Returns: {
+          play_count: number;
+          tag: string;
+        }[];
+      };
+      get_diagram_player_count: {
+        Args: { diagram_data: Json };
+        Returns: number;
+      };
+      get_diagram_players_by_team: {
+        Args: { diagram_data: Json; team_name: string };
+        Returns: Json;
+      };
+      get_formation_metadata_quality: {
+        Args: { completeness_score: number };
+        Returns: string;
+      };
+      get_formation_variants: {
+        Args: { formation_id: string };
+        Returns: {
+          variant_direction: string;
+          variant_id: string;
+          variant_name: string;
+        }[];
+      };
+      get_my_team_ids: { Args: never; Returns: string[] };
+      get_personnel_configuration_by_name: {
+        Args: { p_name: string; p_playbook_id: string };
+        Returns: {
+          created_at: string;
+          description: string;
+          id: string;
+          name: string;
+          playbook_id: string;
+          updated_at: string;
+        }[];
+      };
+      get_personnel_players: {
+        Args: { p_config_id: string };
+        Returns: {
+          config_id: string;
+          id: string;
+          is_wildcat_qb: boolean;
+          label: string;
+          player_position: string;
+          sort_order: number;
+        }[];
+      };
       get_play_with_diagram: {
         Args: { p_play_id: string };
         Returns: {
@@ -1694,13 +3903,95 @@ export type Database = {
           updated_at: string;
         }[];
       };
+      get_playbook_team_id: {
+        Args: { p_playbook_id: string };
+        Returns: string;
+      };
+      get_user_mentions: {
+        Args: {
+          limit_count?: number;
+          offset_count?: number;
+          target_user_id: string;
+        };
+        Returns: {
+          announcement_id: string;
+          announcement_title: string;
+          comment_id: string;
+          created_at: string;
+          created_by_avatar_url: string;
+          created_by_display_name: string;
+          created_by_user_id: string;
+          display_text: string;
+          id: string;
+          mention_type: string;
+        }[];
+      };
+      is_active_team_member: {
+        Args: { p_team_id: string; p_user_id: string };
+        Returns: boolean;
+      };
+      is_base_formation: { Args: { formation_id: string }; Returns: boolean };
+      is_coaching_team_member: {
+        Args: { p_team_id: string; p_user_id: string };
+        Returns: boolean;
+      };
+      is_team_coach: { Args: { check_team_id: string }; Returns: boolean };
+      is_user_team_coach: { Args: { team_uuid: string }; Returns: boolean };
+      is_user_team_member: { Args: { team_uuid: string }; Returns: boolean };
+      link_formations_bidirectional: {
+        Args: {
+          formation1_direction?: string;
+          formation1_id: string;
+          formation2_direction?: string;
+          formation2_id: string;
+        };
+        Returns: undefined;
+      };
+      link_formations_transaction: {
+        Args: {
+          p_base_formation_id: string;
+          p_left_formation_id?: string;
+          p_personnel_packages?: string[];
+          p_right_formation_id?: string;
+        };
+        Returns: Json;
+      };
       pgp_armor_headers: {
         Args: { "": string };
         Returns: Record<string, unknown>[];
       };
+      remove_play_tag: {
+        Args: { play_id: string; tag: string };
+        Returns: undefined;
+      };
+      restore_formation: { Args: { formation_id: string }; Returns: undefined };
+      restore_personnel_config: {
+        Args: { config_id: string };
+        Returns: undefined;
+      };
+      rollback_play_to_version: {
+        Args: { p_play_id: string; p_version_number: number };
+        Returns: boolean;
+      };
+      soft_delete_formation: {
+        Args: { formation_id: string };
+        Returns: undefined;
+      };
+      soft_delete_personnel_config: {
+        Args: { config_id: string };
+        Returns: undefined;
+      };
+      unlink_formations_bidirectional: {
+        Args: { formation_id: string };
+        Returns: undefined;
+      };
       update_play_diagram: {
         Args: { p_diagram_data: Json; p_play_id: string };
         Returns: undefined;
+      };
+      users_share_active_team: {
+        Args: { p_user_a: string; p_user_b: string };
+        Returns: boolean;
       };
       uuid_generate_v1: { Args: never; Returns: string };
       uuid_generate_v1mc: { Args: never; Returns: string };
@@ -1720,6 +4011,15 @@ export type Database = {
       uuid_ns_x500: { Args: never; Returns: string };
     };
     Enums: {
+      formation_creation_source:
+        | "play_builder"
+        | "diagram_editor"
+        | "formation_library"
+        | "formation_builder"
+        | "bulk_import"
+        | "api"
+        | "migration"
+        | "unknown";
       play_creation_source:
         | "add_play_modal"
         | "diagram_editor"
@@ -1821,6 +4121,36 @@ export type TablesUpdate<
       : never
     : never;
 
+// Backwards-compatible aliases used across app services/components
+export type Inserts<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = TablesInsert<DefaultSchemaTableNameOrOptions, TableName>;
+
+export type Updates<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = TablesUpdate<DefaultSchemaTableNameOrOptions, TableName>;
+
+export type Play = Tables<"plays">;
+export type Team = Tables<"teams">;
+export type Profile = Tables<"profiles">;
+export type Game = Tables<"games">;
+export type PlayCall = Tables<"play_calls">;
+export type UserProfile = Profile;
+
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
@@ -1856,11 +4186,18 @@ export type CompositeTypes<
     : never;
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {
+      formation_creation_source: [
+        "play_builder",
+        "diagram_editor",
+        "formation_library",
+        "formation_builder",
+        "bulk_import",
+        "api",
+        "migration",
+        "unknown",
+      ],
       play_creation_source: [
         "add_play_modal",
         "diagram_editor",

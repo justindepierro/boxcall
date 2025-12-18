@@ -260,7 +260,7 @@ export class BackupService {
       const { data, error } = await this.supabase
         .from("game_plans")
         .select(
-          "id, team_id, name, week_number, opponent, game_date, created_by, created_at, updated_at, is_template, tags, total_plays"
+          "id, team_id, name, opponent, game_date, game_location, notes, created_by, created_at, updated_at, is_archived"
         )
         .eq("team_id", teamId)
         .order("updated_at", { ascending: false });
@@ -269,24 +269,26 @@ export class BackupService {
 
       const mapped = (data as unknown[]).map((row) => {
         const r = row as Record<string, unknown>;
+        const opponentRaw = r["opponent"] as string | null | undefined;
+        const gameLocationRaw = r["game_location"] as string | null | undefined;
+        const notesRaw = r["notes"] as string | null | undefined;
         return {
           id: String(r["id"]),
-          name: String(r["name"]),
-          weekNumber: (r["week_number"] as number | undefined) ?? 0,
-          opponent: (r["opponent"] as string | undefined) ?? "",
-          date: r["game_date"] ? new Date(String(r["game_date"])) : new Date(),
           teamId: String(r["team_id"]),
-          createdBy: (r["created_by"] as string | undefined) ?? "",
+          name: String(r["name"]),
+          opponent: opponentRaw ?? undefined,
+          gameDate: r["game_date"] ? String(r["game_date"]) : undefined,
+          gameLocation: gameLocationRaw ?? undefined,
+          notes: notesRaw ?? undefined,
+          createdBy: (r["created_by"] as string | undefined) ?? undefined,
           createdAt: r["created_at"]
             ? new Date(String(r["created_at"]))
             : new Date(),
           updatedAt: r["updated_at"]
             ? new Date(String(r["updated_at"]))
             : new Date(),
-          isTemplate: Boolean(r["is_template"]),
+          isArchived: Boolean(r["is_archived"]),
           situations: [],
-          totalPlays: (r["total_plays"] as number | undefined) ?? 0,
-          tags: Array.isArray(r["tags"]) ? (r["tags"] as string[]) : [],
         } as GamePlan;
       });
       return mapped;
@@ -338,10 +340,9 @@ export class BackupService {
       "name",
       "teamId",
       "opponent",
-      "weekNumber",
-      "date",
-      "totalPlays",
-      "tags",
+      "gameDate",
+      "gameLocation",
+      "isArchived",
       "createdAt",
       "updatedAt",
     ];
@@ -350,10 +351,9 @@ export class BackupService {
       g.name,
       g.teamId,
       g.opponent ?? "",
-      String(g.weekNumber ?? 0),
-      g.date instanceof Date ? g.date.toISOString() : String(g.date),
-      String(g.totalPlays ?? 0),
-      (g.tags || []).join("|"),
+      g.gameDate ?? "",
+      g.gameLocation ?? "",
+      g.isArchived ? "true" : "false",
       g.createdAt instanceof Date
         ? g.createdAt.toISOString()
         : String(g.createdAt),

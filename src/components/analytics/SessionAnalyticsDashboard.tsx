@@ -8,7 +8,7 @@ import {
   SessionAnalyticsService,
   type SessionAnalytics,
 } from "../../services/sessionAnalyticsService";
-import { getPlayTypeColor } from "@/design-system/chartColors";
+import { getPlayTypeColor } from "@design-system/chartColors";
 
 interface SessionAnalyticsDashboardProps {
   sessionId: string;

@@ -18,6 +18,69 @@ import {
   type ExportedGamePlan,
 } from "../../../utils/gamePlanExport";
 
+type ImportPlan = ExportedGamePlan["plans"][number];
+
+function groupSituationsByName(plan: ImportPlan) {
+  const situationsMap = new Map<
+    string,
+    Array<{
+      playId: string;
+      orderIndex: number;
+      notes: string | null;
+    }>
+  >();
+
+  for (const situation of plan.situations) {
+    let bucket = situationsMap.get(situation.situationName);
+    if (!bucket) {
+      bucket = [];
+      situationsMap.set(situation.situationName, bucket);
+    }
+    bucket.push({
+      playId: situation.playId,
+      orderIndex: situation.orderIndex,
+      notes: situation.notes,
+    });
+  }
+
+  return situationsMap;
+}
+
+async function importSingleGamePlan(plan: ImportPlan, teamId: string) {
+  const newPlan = await GamePlanService.createGamePlan({
+    name: plan.name,
+    opponent: plan.opponent || undefined,
+    gameDate: plan.gameDate || undefined,
+    notes: plan.notes || undefined,
+    teamId,
+  });
+
+  const situationsMap = groupSituationsByName(plan);
+
+  for (const [situationName, plays] of situationsMap) {
+    const targetSituation = newPlan.situations?.find(
+      (situation) =>
+        situation.situationType.toLowerCase() === situationName.toLowerCase()
+    );
+
+    if (!targetSituation) {
+      console.warn(`Skipping plays for unknown situation "${situationName}"`);
+      continue;
+    }
+
+    await Promise.all(
+      plays.map((play) =>
+        GamePlanService.addPlayToSituation({
+          situationId: targetSituation.id,
+          playId: play.playId,
+          priority: play.orderIndex + 1,
+          notes: play.notes || undefined,
+        })
+      )
+    );
+  }
+}
+
 interface UseGamePlansExportProps {
   activeTeamId: string | null;
   rawGamePlans: ServiceGamePlan[];
@@ -80,64 +143,7 @@ export function useGamePlansExport({
 
         for (const plan of data.plans) {
           try {
-            // Create the game plan
-            const newPlan = await GamePlanService.createGamePlan({
-              name: plan.name,
-              opponent: plan.opponent || undefined,
-              gameDate: plan.gameDate || undefined,
-              notes: plan.notes || undefined,
-              teamId: activeTeamId,
-            });
-
-            // Group situations by situationName
-            const situationsMap = new Map<
-              string,
-              Array<{
-                playId: string;
-                orderIndex: number;
-                notes: string | null;
-              }>
-            >();
-
-            for (const sit of plan.situations) {
-              if (!situationsMap.has(sit.situationName)) {
-                situationsMap.set(sit.situationName, []);
-              }
-              situationsMap.get(sit.situationName)!.push({
-                playId: sit.playId,
-                orderIndex: sit.orderIndex,
-                notes: sit.notes,
-              });
-            }
-
-            // Add plays to each situation
-            for (const [situationName, plays] of situationsMap) {
-              const targetSituation = newPlan.situations?.find(
-                (situation) =>
-                  situation.situationType.toLowerCase() ===
-                  situationName.toLowerCase()
-              );
-
-              if (!targetSituation) {
-                console.warn(
-                  `Skipping plays for unknown situation "${situationName}"`
-                );
-                continue;
-              }
-
-              // Import plays for this situation
-              await Promise.all(
-                plays.map((play) =>
-                  GamePlanService.addPlayToSituation({
-                    situationId: targetSituation.id,
-                    playId: play.playId,
-                    priority: play.orderIndex + 1,
-                    notes: play.notes || undefined,
-                  })
-                )
-              );
-            }
-
+            await importSingleGamePlan(plan, activeTeamId);
             imported++;
           } catch (error) {
             logError(`Failed to import game plan "${plan.name}":`, error);

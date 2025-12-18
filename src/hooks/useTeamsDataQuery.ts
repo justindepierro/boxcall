@@ -36,25 +36,25 @@ interface Playbook {
 // Database play type (raw from Supabase) - only essential fields
 interface DatabasePlay {
   id: string;
-  playbook_id: string;
+  playbook_id: string | null;
   formation: string;
   play_name: string;
-  one_word_play?: string;
+  one_word_play?: string | null;
   p_type: string;
-  personnel?: string;
-  f_type?: string;
-  f_dir?: string;
-  p_dir?: string;
-  protection?: string;
-  r_str?: string;
-  p_str?: string;
-  pref_down?: string;
-  pref_dis?: string;
-  pref_hash?: string;
+  personnel?: string | null;
+  f_type?: string | null;
+  f_dir?: string | null;
+  p_dir?: string | null;
+  protection?: string | null;
+  r_str?: string | null;
+  p_str?: string | null;
+  pref_down?: string | null;
+  pref_dis?: string | null;
+  pref_hash?: string | null;
   confidence_base?: number;
   times_called?: number;
   times_successful?: number;
-  wristband_number?: number;
+  wristband_number?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -80,7 +80,15 @@ async function fetchTeams(): Promise<Team[]> {
     .order("created_at", { ascending: false });
 
   if (error) throw error;
-  return data || [];
+  return (data || []).map((t: any) => ({
+    id: String(t.id),
+    name: String(t.name),
+    school_name: t.school_name ?? undefined,
+    mascot: t.mascot ?? undefined,
+    season_year: t.season_year ?? undefined,
+    created_at: String(t.created_at ?? ""),
+    updated_at: String(t.updated_at ?? ""),
+  }));
 }
 
 // Fetch playbooks
@@ -152,7 +160,33 @@ async function fetchPlaysPage(page: number): Promise<DatabasePlay[]> {
     .range(from, to);
 
   if (error) throw error;
-  return data || [];
+
+  return (data || []).map(
+    (p: any): DatabasePlay => ({
+      id: String(p.id),
+      playbook_id: p.playbook_id ?? null,
+      formation: String(p.formation ?? ""),
+      play_name: String(p.play_name ?? ""),
+      one_word_play: p.one_word_play ?? null,
+      p_type: String(p.p_type ?? ""),
+      personnel: p.personnel ?? null,
+      f_type: p.f_type ?? null,
+      f_dir: p.f_dir ?? null,
+      p_dir: p.p_dir ?? null,
+      protection: p.protection ?? null,
+      r_str: p.r_str ?? null,
+      p_str: p.p_str ?? null,
+      pref_down: p.pref_down ?? null,
+      pref_dis: p.pref_dis ?? null,
+      pref_hash: p.pref_hash ?? null,
+      confidence_base: p.confidence_base ?? undefined,
+      times_called: p.times_called ?? undefined,
+      times_successful: p.times_successful ?? undefined,
+      wristband_number: p.wristband_number ?? null,
+      created_at: String(p.created_at ?? ""),
+      updated_at: String(p.updated_at ?? ""),
+    })
+  );
 }
 
 // Update a play
@@ -162,7 +196,6 @@ async function updatePlayInDB(
 ): Promise<DatabasePlay> {
   const { data, error } = await supabase
     .from("plays")
-    // @ts-expect-error - Supabase type issue with plays table update
     .update(updates)
     .eq("id", playId)
     .select()

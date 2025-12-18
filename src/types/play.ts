@@ -1,6 +1,3 @@
-// Import diagram types
-import type { FormationPlayerPosition } from "./formation";
-
 // Play creation source tracking
 export type PlayCreationSource =
   | "add_play_modal" // From AddNewPlayModal (hero tile)
@@ -157,7 +154,7 @@ export interface Play {
   install_phase?: string; // e.g., 'install1','install2','install3','situational','gameplan'
 
   // Diagram fields (NEW - October 12, 2025)
-  diagram_data?: FormationPlayerPosition[] | null; // JSONB - array of player positions
+  diagram_data?: unknown | null; // JSONB - diagram payload (validated elsewhere)
   diagram_version?: number | null; // integer - diagram format version (1-10)
   diagram_url?: string | null; // text - PNG thumbnail URL only (not diagram JSON)
 

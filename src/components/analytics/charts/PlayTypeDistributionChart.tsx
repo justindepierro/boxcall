@@ -9,7 +9,7 @@ import {
 } from "recharts";
 import { Typography } from "../../design-system/Typography";
 import { Card } from "../../ui/Card";
-import { CHART_COLORS } from "@/design-system/chartColors";
+import { CHART_COLORS } from "@design-system/chartColors";
 
 interface PlayTypeData {
   name: string;

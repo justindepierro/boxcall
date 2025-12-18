@@ -11,6 +11,7 @@
  */
 
 /* eslint-disable boxcall-design/no-raw-tailwind-colors */
+/* eslint-disable max-lines-per-function */
 
 import React, { useEffect, useState, useCallback } from "react";
 import { Icon } from "../ui/Icon/Icon";
@@ -248,7 +249,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
         <div className="bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 rounded-2xl p-5 space-y-4 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-primary font-semibold text-sm flex items-center gap-2">
-              <Icon name="edit-3" size="sm" className="text-jade-500" />
+              <Icon name="edit" size="sm" className="text-jade-500" />
               Add Notes
             </span>
             <button

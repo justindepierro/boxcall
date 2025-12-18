@@ -82,9 +82,17 @@ export class DashboardService {
       // Get unique team IDs with proper typing
       const teamIds = [
         ...new Set(
-          memberships.map((m) => (m as unknown as TeamMember).team_id)
+          memberships
+            .map((m) => (m as unknown as TeamMember).team_id)
+            .filter(
+              (id): id is string => typeof id === "string" && id.length > 0
+            )
         ),
       ];
+
+      if (teamIds.length === 0) {
+        return [];
+      }
 
       // Get team data separately
       const { data: teams, error: teamsError } = await supabase
@@ -116,6 +124,7 @@ export class DashboardService {
       if (memberCounts) {
         memberCounts.forEach((member) => {
           const teamId = member.team_id;
+          if (!teamId) return;
           memberCountMap.set(teamId, (memberCountMap.get(teamId) || 0) + 1);
         });
       }
@@ -130,7 +139,9 @@ export class DashboardService {
         userTeams.push({
           team: team as unknown as Team,
           membership: membership as unknown as TeamMember,
-          memberCount: memberCountMap.get(typedMembership.team_id) || 0,
+          memberCount: typedMembership.team_id
+            ? memberCountMap.get(typedMembership.team_id) || 0
+            : 0,
         });
       }
 
@@ -244,8 +255,8 @@ export class DashboardService {
     // Sort by joined date and return most recent
     const sorted = [...userTeams].sort(
       (a, b) =>
-        new Date(b.membership.joined_at || "").getTime() -
-        new Date(a.membership.joined_at || "").getTime()
+        new Date((b.membership as any).assigned_at || "").getTime() -
+        new Date((a.membership as any).assigned_at || "").getTime()
     );
     return sorted[0];
   }

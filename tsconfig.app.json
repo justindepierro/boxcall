@@ -18,7 +18,6 @@
 
     /* Node module resolution for dynamic imports and .d.ts module declarations */
     "moduleResolution": "node",
-    "ignoreDeprecations": "6.0",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",

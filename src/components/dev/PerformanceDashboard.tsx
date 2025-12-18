@@ -32,11 +32,11 @@ export const PerformanceDashboard: React.FC = () => {
       });
     }
 
-    if (perfMetrics.FID) {
+    if (perfMetrics.INP) {
       formattedMetrics.push({
-        name: "FID (First Input Delay)",
-        value: perfMetrics.FID.value,
-        rating: perfMetrics.FID.rating,
+        name: "INP (Interaction to Next Paint)",
+        value: perfMetrics.INP.value,
+        rating: perfMetrics.INP.rating,
         unit: "ms",
       });
     }

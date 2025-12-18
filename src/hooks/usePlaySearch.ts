@@ -2,6 +2,110 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { supabase } from "../lib/supabase";
 import { telemetry } from "../telemetry/dispatcher";
 
+const nowMs = (): number =>
+  typeof performance !== "undefined" ? performance.now() : Date.now();
+
+type FulltextRow = { play_id: string; rank?: number };
+type FuzzyRow = { play_id: string; similarity?: number };
+
+const mapFulltextResults = (rows: unknown): PlaySearchResult[] =>
+  Array.isArray(rows)
+    ? (rows as FulltextRow[]).map((r) => ({
+        ...r,
+        source: "fulltext" as const,
+      }))
+    : [];
+
+const mapFuzzyResults = (rows: unknown): PlaySearchResult[] =>
+  Array.isArray(rows)
+    ? (rows as FuzzyRow[]).map((r) => ({ ...r, source: "fuzzy" as const }))
+    : [];
+
+const enqueueSuggestionShownIfChanged = (params: {
+  query: string;
+  playbookId?: string;
+  combined: PlaySearchResult[];
+  lastShownIds: React.MutableRefObject<string>;
+}) => {
+  const { query, playbookId, combined, lastShownIds } = params;
+  const idsKey = combined.map((r) => r.play_id).join(",");
+  if (!idsKey || idsKey === lastShownIds.current) return;
+
+  lastShownIds.current = idsKey;
+  telemetry.enqueue({
+    type: "suggestion:shown",
+    data: {
+      query,
+      playbookId,
+      result_ids: combined.map((r) => r.play_id),
+      count: combined.length,
+      fuzzy: combined[0]?.source === "fuzzy",
+    },
+  });
+};
+
+const enqueueSearchQueryTelemetry = (params: {
+  query: string;
+  playbookId?: string;
+  count: number;
+  usedFuzzy: boolean;
+  ftDuration: number;
+  fuzzyDuration: number;
+  totalDuration: number;
+}) => {
+  const {
+    query,
+    playbookId,
+    count,
+    usedFuzzy,
+    ftDuration,
+    fuzzyDuration,
+    totalDuration,
+  } = params;
+
+  telemetry.enqueue({
+    type: "search:query",
+    data: {
+      query,
+      playbookId,
+      count,
+      usedFuzzy,
+      ftDurationMs: Math.round(ftDuration),
+      fuzzyDurationMs: usedFuzzy ? Math.round(fuzzyDuration) : null,
+      totalDurationMs: Math.round(totalDuration),
+    },
+  });
+};
+
+const enqueueSearchErrorTelemetry = (params: {
+  query: string;
+  playbookId?: string;
+  message: string;
+  ftDuration: number;
+  attemptedFuzzy: boolean;
+  totalDuration: number;
+}) => {
+  const {
+    query,
+    playbookId,
+    message,
+    ftDuration,
+    attemptedFuzzy,
+    totalDuration,
+  } = params;
+  telemetry.enqueue({
+    type: "search:error",
+    data: {
+      query,
+      playbookId,
+      message,
+      ftDurationMs: Math.round(ftDuration),
+      fuzzyTried: attemptedFuzzy,
+      totalDurationMs: Math.round(totalDuration),
+    },
+  });
+};
+
 export interface PlaySearchResult {
   play_id: string;
   rank?: number;
@@ -49,102 +153,61 @@ export function usePlaySearch(
       setError(undefined);
       let combined: PlaySearchResult[] = [];
       // Timing metrics
-      const t0 =
-        typeof performance !== "undefined" ? performance.now() : Date.now();
+      const t0 = nowMs();
       let ftDuration = 0;
       let fuzzyDuration = 0;
       let usedFuzzy = false;
       try {
-        type FT = { play_id: string; rank?: number };
-        type FZ = { play_id: string; similarity?: number };
-        const ftStart =
-          typeof performance !== "undefined" ? performance.now() : Date.now();
-        const { data: fulltext, error: ftErr } = await supabase.rpc(
+        const ftStart = nowMs();
+        const { data: fulltext, error: ftErr } = await (supabase as any).rpc(
           "search_plays",
           { q, lim: limit, playbook: playbookId }
         );
         if (ftErr) throw ftErr;
-        ftDuration =
-          (typeof performance !== "undefined"
-            ? performance.now()
-            : Date.now()) - ftStart;
-        combined = Array.isArray(fulltext)
-          ? (fulltext as FT[]).map((r: FT) => ({
-              ...r,
-              source: "fulltext" as const,
-            }))
-          : [];
+        ftDuration = nowMs() - ftStart;
+        combined = mapFulltextResults(fulltext);
         if (!combined.length) {
-          const fzStart =
-            typeof performance !== "undefined" ? performance.now() : Date.now();
-          const { data: fuzzy, error: fErr } = await supabase.rpc(
+          const fzStart = nowMs();
+          const { data: fuzzy, error: fErr } = await (supabase as any).rpc(
             "search_plays_fuzzy",
             { q, lim: limit, playbook: playbookId }
           );
           setAttemptedFuzzy(true);
           if (!fErr && fuzzy) {
-            combined = Array.isArray(fuzzy)
-              ? (fuzzy as FZ[]).map((r: FZ) => ({
-                  ...r,
-                  source: "fuzzy" as const,
-                }))
-              : [];
+            combined = mapFuzzyResults(fuzzy);
           }
-          fuzzyDuration =
-            (typeof performance !== "undefined"
-              ? performance.now()
-              : Date.now()) - fzStart;
+          fuzzyDuration = nowMs() - fzStart;
           usedFuzzy = true;
         } else {
           setAttemptedFuzzy(false);
         }
         setResults(combined);
-        const idsKey = combined.map((r) => r.play_id).join(",");
-        if (idsKey && idsKey !== lastShownIds.current) {
-          lastShownIds.current = idsKey;
-          telemetry.enqueue({
-            type: "suggestion:shown",
-            data: {
-              query: q,
-              playbookId,
-              result_ids: combined.map((r) => r.play_id),
-              count: combined.length,
-              fuzzy: combined[0]?.source === "fuzzy",
-            },
-          });
-        }
-        const totalDuration =
-          (typeof performance !== "undefined"
-            ? performance.now()
-            : Date.now()) - t0;
-        telemetry.enqueue({
-          type: "search:query",
-          data: {
-            query: q,
-            playbookId,
-            count: combined.length,
-            usedFuzzy,
-            ftDurationMs: Math.round(ftDuration),
-            fuzzyDurationMs: usedFuzzy ? Math.round(fuzzyDuration) : null,
-            totalDurationMs: Math.round(totalDuration),
-          },
+        enqueueSuggestionShownIfChanged({
+          query: q,
+          playbookId,
+          combined,
+          lastShownIds,
+        });
+        const totalDuration = nowMs() - t0;
+        enqueueSearchQueryTelemetry({
+          query: q,
+          playbookId,
+          count: combined.length,
+          usedFuzzy,
+          ftDuration,
+          fuzzyDuration,
+          totalDuration,
         });
       } catch (e) {
         setError(e instanceof Error ? e.message : "search failed");
-        const totalDuration =
-          (typeof performance !== "undefined"
-            ? performance.now()
-            : Date.now()) - t0;
-        telemetry.enqueue({
-          type: "search:error",
-          data: {
-            query: q,
-            playbookId,
-            message: e instanceof Error ? e.message : String(e),
-            ftDurationMs: Math.round(ftDuration),
-            fuzzyTried: attemptedFuzzy,
-            totalDurationMs: Math.round(totalDuration),
-          },
+        const totalDuration = nowMs() - t0;
+        enqueueSearchErrorTelemetry({
+          query: q,
+          playbookId,
+          message: e instanceof Error ? e.message : String(e),
+          ftDuration,
+          attemptedFuzzy,
+          totalDuration,
         });
       } finally {
         setLoading(false);

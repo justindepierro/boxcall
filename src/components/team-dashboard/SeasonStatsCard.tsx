@@ -70,7 +70,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
         teamId,
         gameDate: form.gameDate,
         opponent: form.opponent,
-        site: form.site,
+        homeAway: form.site === "away" ? "away" : "home",
         pointsFor: Number(form.pointsFor),
         pointsAgainst: Number(form.pointsAgainst),
         notes: form.notes || undefined,
@@ -172,7 +172,7 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                 >
                   PF
                 </Typography>
-                <div className="text-lg font-semibold">{stats.pf_total}</div>
+                <div className="text-lg font-semibold">{stats.points_for}</div>
               </div>
               <div>
                 <Typography
@@ -182,7 +182,9 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
                 >
                   PA
                 </Typography>
-                <div className="text-lg font-semibold">{stats.pa_total}</div>
+                <div className="text-lg font-semibold">
+                  {stats.points_against}
+                </div>
               </div>
               <div>
                 <Typography
@@ -204,8 +206,8 @@ export const SeasonStatsCard: React.FC<SeasonStatsCardProps> = ({
               aria-label="Recent game results"
             >
               {results.slice(0, 5).map((r) => {
-                const pf = r.points_for;
-                const pa = r.points_against;
+                const pf = r.our_score ?? 0;
+                const pa = r.opponent_score ?? 0;
                 const outcome = (() => {
                   if (pf > pa) return "W";
                   if (pf < pa) return "L";

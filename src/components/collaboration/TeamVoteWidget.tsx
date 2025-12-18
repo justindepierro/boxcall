@@ -1,6 +1,9 @@
 /**
  * Team Vote Widget Component
  */
+
+/* eslint-disable max-lines-per-function */
+
 export interface TeamVoteWidgetProps {
   /**
    * Widget ID for collaboration

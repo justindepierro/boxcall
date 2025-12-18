@@ -57,36 +57,6 @@ export class DatabaseDebug {
     try {
       console.info("🔧 Creating demo playbook...");
 
-      // First, create or get demo user
-      const demoUserId = "00000000-0000-0000-0000-000000000001";
-
-      // Check if demo user exists
-      const { data: existingUser } = await supabase
-        .from("users")
-        .select("id")
-        .eq("id", demoUserId)
-        .limit(1);
-
-      if (!existingUser || existingUser.length === 0) {
-        // Create demo user - minimal required fields
-        console.info("👤 Creating demo user...");
-        const { error: userError } = await supabase.from("users").insert([
-          {
-            id: demoUserId,
-            email: "demo@boxcall.app",
-            // Add any other required fields for users table
-          },
-        ]);
-
-        if (userError) {
-          logError("❌ Error creating demo user:", userError);
-          // If we can't create user, let's try without created_by constraint
-          console.info("⚠️ Continuing without demo user...");
-        } else {
-          console.info("✅ Demo user created successfully");
-        }
-      }
-
       // Check if demo team exists
       const { data: teams } = await supabase
         .from("teams")
@@ -106,7 +76,7 @@ export class DatabaseDebug {
             school_name: "BoxCall High",
             mascot: "Eagles",
             season_year: 2025,
-            created_by: demoUserId,
+            created_by: null,
           },
         ]);
 

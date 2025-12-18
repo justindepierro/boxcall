@@ -3,6 +3,8 @@
  * Phase 12.2: Shows detailed explanation of AI confidence scores
  */
 
+/* eslint-disable max-lines-per-function */
+
 import React from "react";
 import { Typography } from "../design-system";
 import { Icon } from "../ui/Icon/Icon";

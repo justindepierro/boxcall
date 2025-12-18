@@ -166,10 +166,22 @@ export async function fetchTeamMembership(
     .eq("team_id", teamId)
     .maybeSingle();
   if (error || !data) return null;
+
+  const normalizeStatus = (
+    value: unknown
+  ): "active" | "inactive" | "pending" | null => {
+    if (value === null || value === undefined) return null;
+    if (value === "active" || value === "inactive" || value === "pending") {
+      return value;
+    }
+    return null;
+  };
+
+  const teamRole = (data.team_role ?? TEAM_ROLES.PLAYER) as TeamMemberRole;
   return {
-    role: data.team_role as TeamMemberRole,
-    team_role: data.team_role, // For backward compatibility
-    status: data.status,
+    role: teamRole,
+    team_role: String(teamRole), // For backward compatibility
+    status: normalizeStatus(data.status),
   };
 }
 
@@ -193,12 +205,16 @@ function normalizeSubscriptionTier(value: unknown): SubscriptionTier {
 async function fetchTeamSubscriptionTier(
   teamId: string
 ): Promise<SubscriptionTier> {
-  const { data } = await supabase
+  // NOTE: Some environments may not have subscription_tier in generated DB types.
+  const { data } = await (supabase as any)
     .from("teams")
     .select("subscription_tier")
     .eq("id", teamId)
     .maybeSingle();
-  return normalizeSubscriptionTier(data?.subscription_tier);
+
+  const tier = (data as unknown as { subscription_tier?: unknown } | null)
+    ?.subscription_tier;
+  return normalizeSubscriptionTier(tier);
 }
 
 // Super admin check helper (developer/admin panel access)
@@ -207,13 +223,16 @@ export async function fetchSuperAdminStatus(
   role: AppRole | null | undefined
 ): Promise<boolean> {
   if (!userId || role !== "admin") return false;
-  const { data, error } = await supabase
+  // NOTE: super_admins may not exist in some generated DB types.
+  const { data, error } = await (supabase as any)
     .from("super_admins")
     .select("admin_level")
     .eq("user_id", userId)
     .maybeSingle();
   if (error || !data) return false;
-  return data.admin_level === "super_admin" || data.admin_level === "admin";
+  const adminLevel = (data as unknown as { admin_level?: string | null })
+    .admin_level;
+  return adminLevel === "super_admin" || adminLevel === "admin";
 }
 
 // Consolidated authorization decision helper

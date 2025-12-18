@@ -6,6 +6,7 @@
  */
 
 import { supabase } from "../lib/supabase";
+import { getCurrentUserId } from "../lib/auth-helpers";
 import { error as logError, info } from "../utils/logger";
 import type {
   ServerPlaybookViewPreset,
@@ -59,9 +60,15 @@ export class PlaybookViewPresetsService {
     try {
       info("[PlaybookViewPresets] Creating new preset:", input.name);
 
+      const userId = getCurrentUserId();
+      if (!userId) {
+        throw new Error("Must be signed in to create a preset");
+      }
+
       const { data, error } = await supabase
         .from(TABLE)
         .insert({
+          user_id: userId,
           name: input.name,
           filters: input.filters,
           team_id: input.team_id ?? null,

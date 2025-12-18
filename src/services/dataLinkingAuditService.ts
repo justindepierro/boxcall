@@ -53,9 +53,12 @@ export interface FormationVariantIssue {
 export interface BatchLinkResult {
   play_id: string;
   play_name: string;
-  formation_text: string;
-  matched_formation_id: string;
-  matched_formation_name: string;
+  formation_text?: string;
+  matched_formation_id?: string;
+  matched_formation_name?: string;
+  personnel_text?: string;
+  matched_personnel_id?: string;
+  matched_personnel_name?: string;
   action: "WOULD UPDATE" | "UPDATED";
 }
 
@@ -218,11 +221,10 @@ export class DataLinkingAuditService {
     playbookId: string | null = null,
     dryRun: boolean = true
   ): Promise<BatchLinkResult[]> {
-    // @ts-expect-error - RPC function not in generated types yet
     const { data, error } = await supabase.rpc(
       "batch_link_plays_to_formations",
       {
-        p_playbook_id: playbookId,
+        p_playbook_id: playbookId ?? undefined,
         dry_run: dryRun,
       }
     );
@@ -235,7 +237,7 @@ export class DataLinkingAuditService {
       throw error;
     }
 
-    return data as BatchLinkResult[];
+    return (data ?? []) as BatchLinkResult[];
   }
 
   /**
@@ -245,11 +247,10 @@ export class DataLinkingAuditService {
     playbookId: string | null = null,
     dryRun: boolean = true
   ): Promise<BatchLinkResult[]> {
-    // @ts-expect-error - RPC function not in generated types yet
     const { data, error } = await supabase.rpc(
       "batch_link_plays_to_personnel",
       {
-        p_playbook_id: playbookId,
+        p_playbook_id: playbookId ?? undefined,
         dry_run: dryRun,
       }
     );
@@ -262,7 +263,7 @@ export class DataLinkingAuditService {
       throw error;
     }
 
-    return data as BatchLinkResult[];
+    return (data ?? []) as BatchLinkResult[];
   }
 
   /**

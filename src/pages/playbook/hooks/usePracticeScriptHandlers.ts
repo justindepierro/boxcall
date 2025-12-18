@@ -12,7 +12,7 @@ import type { PracticeScriptPlay as ModalPlay } from "../../../components/practi
 interface UsePracticeScriptHandlersProps {
   activeTeamId: string | null;
   setShowPracticeScriptModal: (show: boolean) => void;
-  setEditingScript: (script: PracticeScript | null) => void;
+  setEditingScript: React.Dispatch<React.SetStateAction<PracticeScript | null>>;
 }
 
 export function usePracticeScriptHandlers({

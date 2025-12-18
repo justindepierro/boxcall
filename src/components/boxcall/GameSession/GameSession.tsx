@@ -10,6 +10,8 @@
  * These are design choices that don't need dark mode variants.
  */
 
+/* eslint-disable max-lines-per-function */
+
 import React, { useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 
@@ -32,6 +34,25 @@ import {
   DownDistanceCard,
   PlaySelectionCard,
 } from "./components";
+
+type GameSessionViewState = "loading" | "error" | "pre-session" | "active";
+
+const getGameSessionViewState = (params: {
+  isLoading: boolean;
+  error: unknown;
+  gamePlan: unknown;
+  isSessionActive: boolean;
+  isPaused: boolean;
+  session: unknown;
+}): GameSessionViewState => {
+  const { isLoading, error, gamePlan, isSessionActive, isPaused, session } =
+    params;
+
+  if (isLoading) return "loading";
+  if (error || !gamePlan) return "error";
+  if (!isSessionActive && !isPaused && !session) return "pre-session";
+  return "active";
+};
 
 /**
  * GameSession - Live/retroactive game tracking
@@ -134,22 +155,20 @@ const GameSession: React.FC = () => {
       return;
     }
 
-    const yards = parseInt(form.yardsGained) || 0;
+    const yardsGained = Number(form.yardsGained) || 0;
+    const penaltyYards = Number(form.penaltyYards) || 0;
 
     try {
-      await logPlay(currentPlay, form.result, yards, {
+      await logPlay(currentPlay, form.result, yardsGained, {
         wasTouchdown: form.wasTouchdown,
         wasTurnover: form.wasTurnover,
         wasPenalty: form.wasPenalty,
-        penaltyYards: form.penaltyYards
-          ? parseInt(form.penaltyYards)
-          : undefined,
+        penaltyYards: form.wasPenalty ? penaltyYards : undefined,
         notes: form.notes || undefined,
         quickTags: form.quickTags.length > 0 ? form.quickTags : undefined,
         opponentCoverage: form.opponentCoverage,
       });
 
-      // Reset form
       setForm(DEFAULT_PLAY_LOG_FORM);
     } catch (err) {
       logError("Error logging play:", err);
@@ -157,122 +176,125 @@ const GameSession: React.FC = () => {
     }
   };
 
-  // Loading state
-  if (isLoading) {
-    return <LoadingState />;
-  }
+  const viewState = getGameSessionViewState({
+    isLoading,
+    error,
+    gamePlan,
+    isSessionActive,
+    isPaused,
+    session,
+  });
 
-  // Error state
-  if (error || !gamePlan) {
-    return (
-      <ErrorState
-        message={error?.message || "Game plan not found"}
-        onBack={() => navigate("/boxcall")}
-      />
-    );
-  }
+  const errorMessage = (() => {
+    if (error instanceof Error) return error.message;
+    if (typeof error === "string") return error;
+    return "Game plan not found";
+  })();
 
-  // Pre-session start screen
-  if (!isSessionActive && !isPaused && !session) {
-    return (
+  const renderers: Record<GameSessionViewState, () => React.ReactNode> = {
+    loading: () => <LoadingState />,
+    error: () => (
+      <ErrorState message={errorMessage} onBack={() => navigate("/boxcall")} />
+    ),
+    "pre-session": () => (
       <PreSessionState
-        gamePlanName={gamePlan.name}
+        gamePlanName={gamePlan?.name ?? "Game Plan"}
         opponent={opponent}
         playCount={gamePlanPlays.length}
         mode={mode}
         onCancel={() => navigate("/boxcall")}
         onStart={handleStart}
       />
-    );
-  }
+    ),
+    active: () => (
+      <>
+        {/* Premium gradient background */}
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/30 to-teal-50/50">
+          <div className="container-page py-6">
+            <GameSessionHeader
+              gamePlanName={gamePlan?.name ?? "Game Plan"}
+              mode={mode}
+              opponent={opponent}
+              hasPendingSync={hasPendingSync}
+              isPaused={isPaused}
+              isGoalLine={isGoalLine}
+              isRedZone={isRedZone}
+              onBack={() => navigate("/boxcall")}
+              onPause={pauseSession}
+              onResume={resumeSession}
+              onEnd={handleEnd}
+            />
 
-  // Active session screen
-  return (
-    <>
-      {/* Premium gradient background */}
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/30 to-teal-50/50">
-        <div className="container-page py-6">
-          <GameSessionHeader
-            gamePlanName={gamePlan.name}
-            mode={mode}
-            opponent={opponent}
-            hasPendingSync={hasPendingSync}
-            isPaused={isPaused}
-            isGoalLine={isGoalLine}
-            isRedZone={isRedZone}
-            onBack={() => navigate("/boxcall")}
-            onPause={pauseSession}
-            onResume={resumeSession}
-            onEnd={handleEnd}
-          />
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left Column: Down/Distance & Play Selection */}
-            <div className="lg:col-span-2 space-y-6">
-              <DownDistanceCard
-                situation={situation}
-                onUpdate={updateSituation}
-                onFirstDown={resetDowns}
-                onNextQuarter={nextQuarter}
-                disabled={isPaused}
-              />
-
-              <PlaySelectionCard
-                situation={situation}
-                gamePlanPlays={gamePlanPlays}
-                filteredPlays={filteredPlays}
-                currentPlay={currentPlay}
-                onSelectPlay={selectPlay}
-                teamId={activeTeamId || ""}
-                disabled={isPaused}
-              />
-
-              {currentPlay && (
-                <PlayExecutionForm
-                  currentPlay={currentPlay}
-                  form={form}
-                  onFormChange={handleFormChange}
-                  onTagToggle={handleTagToggle}
-                  onSubmit={handleLogPlay}
-                  isPaused={isPaused}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Left Column: Down/Distance & Play Selection */}
+              <div className="lg:col-span-2 space-y-6">
+                <DownDistanceCard
+                  situation={situation}
+                  onUpdate={updateSituation}
+                  onFirstDown={resetDowns}
+                  onNextQuarter={nextQuarter}
+                  disabled={isPaused}
                 />
-              )}
-            </div>
 
-            {/* Right Column: Stats */}
-            <div className="space-y-6">
-              <DriveStatsCard
-                plays={currentDrive.plays}
-                yards={currentDrive.yards}
-                touchdowns={currentDrive.touchdowns}
-                turnovers={currentDrive.turnovers}
-              />
+                <PlaySelectionCard
+                  situation={situation}
+                  gamePlanPlays={gamePlanPlays}
+                  filteredPlays={filteredPlays}
+                  currentPlay={currentPlay}
+                  onSelectPlay={selectPlay}
+                  teamId={activeTeamId || ""}
+                  disabled={isPaused}
+                />
 
-              <GameStatsCard
-                successRate={session?.successRate || 0}
-                totalPlays={session?.totalPlays || 0}
-                totalYards={session?.totalYards || 0}
-                totalTouchdowns={session?.totalTouchdowns || 0}
-                totalTurnovers={session?.totalTurnovers || 0}
-              />
+                {currentPlay && (
+                  <PlayExecutionForm
+                    currentPlay={currentPlay}
+                    form={form}
+                    onFormChange={handleFormChange}
+                    onTagToggle={handleTagToggle}
+                    onSubmit={handleLogPlay}
+                    isPaused={isPaused}
+                  />
+                )}
+              </div>
+
+              {/* Right Column: Stats */}
+              <div className="space-y-6">
+                <DriveStatsCard
+                  plays={currentDrive.plays}
+                  yards={currentDrive.yards}
+                  touchdowns={currentDrive.touchdowns}
+                  turnovers={currentDrive.turnovers}
+                />
+
+                <GameStatsCard
+                  successRate={session?.successRate || 0}
+                  totalPlays={session?.totalPlays || 0}
+                  totalYards={session?.totalYards || 0}
+                  totalTouchdowns={session?.totalTouchdowns || 0}
+                  totalTurnovers={session?.totalTurnovers || 0}
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* End Session Confirmation Modal */}
-      <ConfirmationModal
-        isOpen={showEndConfirm}
-        onClose={() => setShowEndConfirm(false)}
-        onConfirm={confirmEnd}
-        title="End Game Session"
-        message="Are you sure you want to end this game session?"
-        variant="warning"
-        confirmText="End Session"
-        cancelText="Cancel"
-      />
-    </>
-  );
+        {/* End Session Confirmation Modal */}
+        <ConfirmationModal
+          isOpen={showEndConfirm}
+          onClose={() => setShowEndConfirm(false)}
+          onConfirm={confirmEnd}
+          title="End Session?"
+          message="Are you sure you want to end this session? This will finalize the game statistics."
+          confirmText="End Session"
+          cancelText="Cancel"
+          variant="danger"
+        />
+      </>
+    ),
+  };
+
+  return renderers[viewState]();
 };
 
 export default GameSession;

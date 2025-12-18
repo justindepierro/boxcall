@@ -11,10 +11,7 @@ export function getRouteImporter(path: string): RouteImporter | undefined {
     case "/dashboard":
       return () => import("../pages/DashboardPage");
     case "/profile":
-      return () =>
-        import("../pages/ProfilePage").then((m) => ({
-          default: m.ProfilePage,
-        }));
+      return () => import("../pages/ProfilePage");
     case "/calendar":
       return () => import("../pages/CalendarShellPage");
     case "/playbook":

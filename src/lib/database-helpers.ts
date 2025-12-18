@@ -351,7 +351,7 @@ export async function getTeamFiles(teamId: string): Promise<TeamFile[]> {
 export async function getUserProfileByUserId(
   userId: string
 ): Promise<UserProfile | null> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from("user_profiles")
     .select("*")
     .eq("user_id", userId)
@@ -360,7 +360,7 @@ export async function getUserProfileByUserId(
     console.error("Error fetching user profile:", error);
     return null;
   }
-  return data;
+  return data as UserProfile | null;
 }
 
 // DEPRECATED: post_reactions table doesn't exist

@@ -1,7 +1,7 @@
 import React from "react";
 import { BottomSheet } from "../../BottomSheet";
 import { Typography } from "../../design-system/Typography";
-import { Icon } from "../../ui/Icon";
+import { Icon, type IconName } from "../../ui/Icon";
 
 export interface PlaybookStats {
   totalPlays: number;
@@ -113,7 +113,7 @@ const FormationMapperCard: React.FC<{ needsMapping: number }> = ({
 );
 
 const PlayTypeCard: React.FC<{
-  icon: string;
+  icon: IconName;
   label: string;
   count: number;
   iconColor: string;
@@ -201,7 +201,7 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
               iconColor="text-success-500"
             />
             <PlayTypeCard
-              icon="arrow-up-right"
+              icon="arrow-right"
               label="RPO"
               count={stats.rpoPlays}
               iconColor="text-warning-500"

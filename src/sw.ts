@@ -98,7 +98,7 @@ registerRoute(
         maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
       }),
     ],
-  })
+  } as any)
 );
 
 // =====================================================
@@ -142,7 +142,7 @@ registerRoute(
         maxAgeSeconds: 15 * 60, // 15 minutes
       }),
     ],
-  })
+  } as any)
 );
 
 // =====================================================
@@ -155,7 +155,6 @@ registerRoute(
     url.hostname !== location.hostname && !url.hostname.includes("supabase.co"),
   new CacheFirst({
     cacheName: "external-resources",
-    networkTimeoutSeconds: 10,
     plugins: [
       new CacheableResponsePlugin({
         statuses: [0, 200],
@@ -183,7 +182,7 @@ registerRoute(
         statuses: [0, 200],
       }),
     ],
-  })
+  } as any)
 );
 
 // =====================================================

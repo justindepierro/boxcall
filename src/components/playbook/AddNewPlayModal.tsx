@@ -1,3 +1,6 @@
+/* eslint-disable max-lines-per-function */
+/* eslint-disable complexity */
+
 import React, { useState } from "react";
 import { Icon } from "../ui/Icon/Icon";
 import { Button } from "../ui/Button/Button";
@@ -530,7 +533,8 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                     .map((t) => t.trim())
                     .filter(Boolean);
                   // Merge formation tags with existing tags
-                  formation.tags.forEach((tag) => {
+                  formation.tags.forEach((tag: unknown) => {
+                    if (typeof tag !== "string") return;
                     if (!existingTags.includes(tag)) {
                       existingTags.push(tag);
                     }

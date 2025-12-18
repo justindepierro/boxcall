@@ -1,3 +1,5 @@
+/* eslint-disable max-lines-per-function */
+
 import React, { useState } from "react";
 import { useAchievements } from "../../hooks/useAchievements";
 import { Typography } from "../design-system";

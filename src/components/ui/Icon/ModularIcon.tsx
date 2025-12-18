@@ -78,6 +78,7 @@ export type ModularIconName =
   | "wrench"
   | "help-circle"
   | "bug"
+  | "wifi"
   | "wifi-off"
   | "server"
   | "save"
@@ -211,6 +212,7 @@ const iconLoaders: Record<ModularIconName, Loader> = {
   wrench: dynamicIconImports.wrench,
   "help-circle": dynamicIconImports["help-circle"],
   bug: dynamicIconImports.bug,
+  wifi: dynamicIconImports.wifi,
   "wifi-off": dynamicIconImports["wifi-off"],
   server: dynamicIconImports.server,
   save: dynamicIconImports.save,

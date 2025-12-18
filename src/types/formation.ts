@@ -111,6 +111,16 @@ export interface Formation {
   pass_strength: StrengthType | null; // Default pass strength: left, right, balanced
   strength_player_position: string | null; // Position that sets strength: "TE", "H", "RB"
 
+  // Optional classification / organization
+  category?: FormationCategory | null;
+  tags?: string[] | null;
+
+  // Metadata completeness + creation tracking (may be absent in older rows)
+  metadata_completeness?: number | null;
+  creation_source?: FormationCreationSource | null;
+  creation_context?: FormationCreationContext | null;
+  version?: number | null;
+
   // Left/Right Variant System
   opposite_formation_id: string | null; // Direct link to opposite-side formation (left ↔ right)
   direction: FormationDirection; // "left", "right", or null (standalone)

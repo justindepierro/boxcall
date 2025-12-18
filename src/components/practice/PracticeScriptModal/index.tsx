@@ -11,7 +11,9 @@ import {
 } from "./validation";
 
 import type { PracticeScript } from "../../../services/practiceService";
+import type { PracticeScriptPlay as ServicePracticeScriptPlay } from "../../../services/practiceService";
 import type { PracticeScriptFormData, PracticeScriptPlay } from "./types";
+import type { Play } from "../../../types/play";
 
 interface PracticeScriptModalProps {
   onClose: () => void;
@@ -87,13 +89,77 @@ export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
 
     setIsSaving(true);
 
+    const servicePlays: ServicePracticeScriptPlay[] = plays
+      .filter((p) => typeof p.playId === "string" && p.playId.trim() !== "")
+      .map((p, index) => {
+        const hash =
+          p.hash === "left" || p.hash === "middle" || p.hash === "right"
+            ? p.hash
+            : undefined;
+
+        const coverage =
+          p.defensiveCoverage === "cover_0" ||
+          p.defensiveCoverage === "cover_1" ||
+          p.defensiveCoverage === "cover_2" ||
+          p.defensiveCoverage === "cover_3" ||
+          p.defensiveCoverage === "cover_4" ||
+          p.defensiveCoverage === "cover_6" ||
+          p.defensiveCoverage === "quarters" ||
+          p.defensiveCoverage === "man"
+            ? p.defensiveCoverage
+            : undefined;
+
+        const defensiveFront =
+          p.defenseFront === "base" ||
+          p.defenseFront === "4-3" ||
+          p.defenseFront === "3-4" ||
+          p.defenseFront === "nickel" ||
+          p.defenseFront === "dime" ||
+          p.defenseFront === "bear" ||
+          p.defenseFront === "tite"
+            ? p.defenseFront
+            : undefined;
+
+        const blitz =
+          p.blitz === "none" ||
+          p.blitz === "edge" ||
+          p.blitz === "a_gap" ||
+          p.blitz === "b_gap" ||
+          p.blitz === "sim_pressure" ||
+          p.blitz === "zone_blitz" ||
+          p.blitz === "all_out"
+            ? p.blitz
+            : undefined;
+
+        const minimalPlay = {
+          id: p.playId!,
+          play_name: p.playName,
+          personnel: p.personnel || null,
+        } as unknown as Play;
+
+        return {
+          id: p.id,
+          playId: p.playId!,
+          play: minimalPlay,
+          order: index,
+          notes: p.notes || undefined,
+          repetitions: 1,
+          hash,
+          downDistance: p.situation || undefined,
+          defensiveFront,
+          coverage,
+          blitz,
+          addedAt: new Date(),
+        };
+      });
+
     const script: Partial<PracticeScript> = {
       id: editingScript?.id,
       title: scriptData.name,
       name: scriptData.name,
       description: scriptData.opponent || undefined,
       tags: tags.length > 0 ? tags : undefined,
-      plays, // Include the plays array so parent can save them
+      plays: servicePlays, // Normalize to service type for downstream save
     };
 
     console.log("💾 Saving script with plays:", {

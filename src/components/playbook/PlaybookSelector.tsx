@@ -16,6 +16,7 @@ import { Button } from "../ui/Button/Button";
 import { supabase } from "../../lib/supabase";
 import { logError } from "../../utils/logger";
 import { useToast } from "../../hooks/useToast";
+import { getCurrentUserId } from "../../lib/auth-helpers";
 
 interface Playbook {
   id: string;
@@ -61,10 +62,14 @@ const createNewPlaybook = async (
   name: string,
   onSuccess?: (playbookId: string) => void
 ): Promise<void> => {
+  const userId = getCurrentUserId();
+  if (!userId) throw new Error("No authenticated user");
+
   const { data, error } = await supabase
     .from("playbooks")
     .insert({
       team_id: teamId,
+      created_by: userId,
       name: name.trim(),
       is_active: true,
     })

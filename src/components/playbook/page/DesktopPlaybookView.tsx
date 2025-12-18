@@ -250,7 +250,7 @@ export function DesktopPlaybookView({
                       Practice Scripts
                     </Typography>
                     <Button
-                      onClick={handleOpenPracticeScriptBuilder}
+                      onClick={() => handleOpenPracticeScriptBuilder()}
                       variant="primary"
                       size={mobileButtonSize}
                     >

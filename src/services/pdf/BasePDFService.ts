@@ -211,17 +211,19 @@ export abstract class BasePDFService {
  * Creates appropriate PDF service based on document type
  */
 export class PDFServiceFactory {
-  // Use unknown[] for constructor args to avoid 'any'
   private static services: Map<
     string,
-    new (...args: unknown[]) => BasePDFService
+    new (template?: PDFTemplate, branding?: PDFBranding) => BasePDFService
   > = new Map();
   /**
    * Register a PDF service for a specific document type
    */
   static registerService(
     documentType: string,
-    serviceClass: new (...args: unknown[]) => BasePDFService
+    serviceClass: new (
+      template?: PDFTemplate,
+      branding?: PDFBranding
+    ) => BasePDFService
   ): void {
     this.services.set(documentType, serviceClass);
   }

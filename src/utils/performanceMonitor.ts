@@ -14,16 +14,6 @@ interface WebVitalsMetric {
   sessionId: string;
 }
 
-// Performance regression detection
-interface PerformanceBaseline {
-  LCP: { p50: number; p75: number; p95: number };
-  INP: { p50: number; p75: number; p95: number };
-  CLS: { p50: number; p75: number; p95: number };
-  FCP: { p50: number; p75: number; p95: number };
-  TTFB: { p50: number; p75: number; p95: number };
-  lastUpdated: string;
-}
-
 // TypeScript definition for Chrome's memory API
 interface MemoryInfo {
   jsHeapSizeLimit: number;
@@ -51,7 +41,6 @@ class PerformanceMonitor {
   private observers: PerformanceObserver[] = [];
   private isEnabled: boolean;
   private sessionId: string;
-  private baseline: PerformanceBaseline | null = null;
 
   constructor() {
     this.isEnabled = !import.meta.env.DEV && "performance" in window;
@@ -59,24 +48,11 @@ class PerformanceMonitor {
 
     if (this.isEnabled) {
       this.initializeMonitoring();
-      this.loadBaseline();
     }
   }
 
   private generateSessionId(): string {
     return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  }
-
-  private async loadBaseline(): Promise<void> {
-    // Load baseline from localStorage or fetch from server
-    try {
-      const stored = localStorage.getItem("performance-baseline");
-      if (stored) {
-        this.baseline = JSON.parse(stored);
-      }
-    } catch (error) {
-      console.warn("Failed to load performance baseline:", error);
-    }
   }
 
   private initializeMonitoring() {

@@ -114,7 +114,6 @@ export function useTeamsData(teamIdOverride?: string | null) {
         debug("[useTeamsData] Updating play:", { playId, updates });
         const { data, error } = await supabase
           .from("plays")
-          // @ts-expect-error - Supabase type issue with plays table update
           .update(updates)
           .eq("id", playId)
           .select()
@@ -179,6 +178,8 @@ export function useTeamsData(teamIdOverride?: string | null) {
       };
     }
 
+    const teamIdForQuery: string = teamId;
+
     async function fetchData() {
       try {
         setLoading(true);
@@ -190,12 +191,12 @@ export function useTeamsData(teamIdOverride?: string | null) {
           supabase
             .from("teams")
             .select(TEAM_FIELDS)
-            .eq("id", teamId)
+            .eq("id", teamIdForQuery)
             .order("created_at", { ascending: false }),
           supabase
             .from("playbooks")
             .select(PLAYBOOK_FIELDS)
-            .eq("team_id", teamId)
+            .eq("team_id", teamIdForQuery)
             .order("created_at", { ascending: false }),
         ]);
 
@@ -207,7 +208,17 @@ export function useTeamsData(teamIdOverride?: string | null) {
           setLoading(false);
           return;
         }
-        setTeams(teamsResult.data || []);
+        setTeams(
+          (teamsResult.data || []).map((t) => ({
+            id: String((t as any).id),
+            name: String((t as any).name),
+            school_name: (t as any).school_name ?? undefined,
+            mascot: (t as any).mascot ?? undefined,
+            season_year: (t as any).season_year ?? undefined,
+            created_at: String((t as any).created_at ?? ""),
+            updated_at: String((t as any).updated_at ?? ""),
+          }))
+        );
 
         let scopedPlaybooks: any[] = [];
         if (playbooksResult.error) {
@@ -311,13 +322,14 @@ export function useTeamsData(teamIdOverride?: string | null) {
       const to = from + PAGE_SIZE - 1;
 
       // Query only essential fields for faster loading
-      const { data, error } = await NetworkResilience.retryWithBackoff(() =>
-        supabase
-          .from("plays")
-          .select(PLAY_SELECT_FIELDS)
-          .in("playbook_id", playbookIds)
-          .order("created_at", { ascending: false })
-          .range(from, to)
+      const { data, error } = await NetworkResilience.retryWithBackoff(
+        async () =>
+          (await supabase
+            .from("plays")
+            .select(PLAY_SELECT_FIELDS)
+            .in("playbook_id", playbookIds)
+            .order("created_at", { ascending: false })
+            .range(from, to)) as any
       );
 
       if (error) {

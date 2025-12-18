@@ -145,37 +145,38 @@ const FormationMapperPageContent: React.FC = () => {
             formationsError={stateWithPlays.formationsError}
           />
 
-          {loading ? (
-            <FormationMapperLoadingState />
-          ) : plays.length === 0 ? (
-            <FormationMapperEmptyState />
-          ) : (
-            <div className="space-y-3">
-              <div className="grid gap-3">
-                {plays.map((play) => (
-                  <FormationMapperPlayRow
-                    key={play.id}
-                    play={play}
-                    isSelected={stateWithPlays.selectedPlayIds.has(play.id)}
-                    suggestions={suggestionsByPlay.get(play.id) ?? []}
-                    formationsLoading={stateWithPlays.formationsLoading}
-                    assigning={stateWithPlays.assigning}
-                    onSelectPlay={stateWithPlays.handleSelectPlay}
-                    onSuggestionAssign={handlers.handleSuggestionAssign}
-                    onAssignClick={(p) => {
-                      stateWithPlays.setEditingPlay(p);
-                      stateWithPlays.setSelectedFormation(null);
-                    }}
-                    onCreateNewClick={(p) => {
-                      stateWithPlays.setEditingPlay(p);
-                      stateWithPlays.setSelectedFormation(null);
-                      stateWithPlays.setShowBuilder(true);
-                    }}
-                  />
-                ))}
+          {(() => {
+            if (loading) return <FormationMapperLoadingState />;
+            if (plays.length === 0) return <FormationMapperEmptyState />;
+
+            return (
+              <div className="space-y-3">
+                <div className="grid gap-3">
+                  {plays.map((play) => (
+                    <FormationMapperPlayRow
+                      key={play.id}
+                      play={play}
+                      isSelected={stateWithPlays.selectedPlayIds.has(play.id)}
+                      suggestions={suggestionsByPlay.get(play.id) ?? []}
+                      formationsLoading={stateWithPlays.formationsLoading}
+                      assigning={stateWithPlays.assigning}
+                      onSelectPlay={stateWithPlays.handleSelectPlay}
+                      onSuggestionAssign={handlers.handleSuggestionAssign}
+                      onAssignClick={(p) => {
+                        stateWithPlays.setEditingPlay(p);
+                        stateWithPlays.setSelectedFormation(null);
+                      }}
+                      onCreateNewClick={(p) => {
+                        stateWithPlays.setEditingPlay(p);
+                        stateWithPlays.setSelectedFormation(null);
+                        stateWithPlays.setShowBuilder(true);
+                      }}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
         </div>
 
         <FormationMapperSelectionBar

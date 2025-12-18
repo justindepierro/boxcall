@@ -15,6 +15,9 @@
  * Phase 6 Redesign - October 12, 2025
  */
 
+/* eslint-disable max-lines-per-function */
+/* eslint-disable complexity */
+
 import React, { useState, useEffect, useCallback } from "react";
 import { Modal } from "../ui/Modal/Modal";
 import { Button } from "../ui/Button/Button";

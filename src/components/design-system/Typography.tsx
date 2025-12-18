@@ -181,8 +181,8 @@ const TypographyBase = React.forwardRef(
       truncate = false,
       htmlFor,
       ...restProps
-    }: PolymorphicProps<Element> & { htmlFor?: string },
-    ref: React.ForwardedRef<ElementFor<Element>>
+    }: PolymorphicProps<TypographyElement> & { htmlFor?: string },
+    ref: React.ForwardedRef<ElementFor<TypographyElement>>
   ) => {
     // Map alias variants to concrete sizes
     const normalizeVariant = (

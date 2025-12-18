@@ -102,8 +102,8 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
     try {
       // Background server update
       await socialService.toggleReaction({
-        content_type: contentType,
-        content_id: contentId,
+        entity_type: contentType,
+        entity_id: contentId,
         reaction_type: reactionType,
       });
       // Verify with server (but don't block UI)

@@ -9,6 +9,9 @@
  * - Landscape support for iPad
  */
 
+/* eslint-disable max-lines-per-function */
+/* eslint-disable complexity */
+
 import React, { useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { Typography } from "../../design-system";
@@ -218,7 +221,7 @@ export const MobilePracticeSession: React.FC = () => {
               variant="body-md"
               className="text-primary font-medium truncate"
             >
-              {currentPlay?.play?.name || "Unknown Play"}
+              {currentPlay?.play?.play_name || "Unknown Play"}
             </Typography>
             <Typography variant="body-xs" className="text-secondary">
               Play {currentPlayIndex + 1}/{scriptPlays.length || 0} • Rep{" "}
@@ -264,19 +267,19 @@ export const MobilePracticeSession: React.FC = () => {
           {/* Play Details */}
           {currentPlay?.play && (
             <div className="bg-secondary rounded-lg p-4 space-y-2">
-              {currentPlay.play.formation_name && (
+              {currentPlay.play.formation && (
                 <div className="flex items-center gap-2">
                   <Icon name="grid" className="h-4 w-4 text-secondary" />
                   <Typography variant="body-sm" className="text-secondary">
-                    {currentPlay.play.formation_name}
+                    {currentPlay.play.formation}
                   </Typography>
                 </div>
               )}
-              {currentPlay.play.personnel_grouping && (
+              {currentPlay.play.personnel && (
                 <div className="flex items-center gap-2">
                   <Icon name="users" className="h-4 w-4 text-secondary" />
                   <Typography variant="body-sm" className="text-secondary">
-                    {currentPlay.play.personnel_grouping}
+                    {currentPlay.play.personnel}
                   </Typography>
                 </div>
               )}

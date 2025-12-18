@@ -54,6 +54,12 @@ export interface SEOConfig {
       url: string;
       logo: string;
       sameAs: string[];
+      description?: string;
+      contactPoint?: {
+        telephone?: string;
+        contactType?: string;
+        email?: string;
+      };
     };
     website: {
       "@type": string;
@@ -62,6 +68,7 @@ export interface SEOConfig {
       potentialAction: {
         "@type": string;
         target: string;
+        "query-input"?: string;
       };
     };
   };
@@ -126,9 +133,11 @@ export const seoConfig: SEOConfig = {
 
   structuredData: {
     organization: {
+      "@type": "Organization",
       name: "BoxCall",
       url: import.meta.env.VITE_APP_URL || "https://boxcall.app",
       logo: `${import.meta.env.VITE_APP_URL || "https://boxcall.app"}/logo-512.png`,
+      sameAs: [],
       description: "Professional football coaching platform",
       contactPoint: {
         telephone: "+1-555-BOXCALL",
@@ -137,9 +146,11 @@ export const seoConfig: SEOConfig = {
       },
     },
     website: {
+      "@type": "WebSite",
       url: import.meta.env.VITE_APP_URL || "https://boxcall.app",
       name: "BoxCall",
       potentialAction: {
+        "@type": "SearchAction",
         target: `${import.meta.env.VITE_APP_URL || "https://boxcall.app"}/search?q={search_term_string}`,
         "query-input": "required name=search_term_string",
       },

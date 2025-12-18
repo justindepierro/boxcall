@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import type { Play } from "../../../types/play";
-import type { PracticeScript } from "../../../types/practice";
+import type { PracticeScript } from "../../../services/practiceService";
 import { debug } from "../../../utils/logger";
 
 export function usePlaybookModalState() {

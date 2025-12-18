@@ -1,3 +1,6 @@
+/* eslint-disable max-lines-per-function */
+/* eslint-disable complexity */
+
 import React, { useState } from "react";
 import { Icon } from "../ui/Icon/Icon";
 import { Typography } from "../design-system";

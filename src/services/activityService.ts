@@ -6,6 +6,7 @@
 import { supabase } from "../lib/supabase";
 import { getCurrentUserId } from "../lib/auth-helpers";
 import { info, error as logError } from "../utils/logger";
+import type { Json } from "../types/database";
 
 export type ActivityType =
   | "created"
@@ -56,10 +57,13 @@ export class ActivityService {
       const activityData = {
         user_id: userId,
         team_id: params.teamId,
-        play_id: params.playId,
-        activity_type: params.type,
-        play_name: params.playName,
-        details: params.details,
+        action: params.type,
+        entity_type: "play",
+        entity_id: params.playId,
+        metadata: {
+          playName: params.playName,
+          details: (params.details ?? null) as unknown as Json,
+        } as Json,
         created_at: new Date().toISOString(),
       };
 
@@ -80,7 +84,7 @@ export class ActivityService {
         id: data.id,
         activityType: params.type,
         playName: params.playName,
-        createdAt: data.created_at,
+        createdAt: data.created_at ?? new Date().toISOString(),
         details: params.details,
         userId,
         teamId: params.teamId,
@@ -133,13 +137,21 @@ export class ActivityService {
       // Transform database records to PlayActivityItem format
       return data.map((record) => ({
         id: record.id,
-        activityType: record.activity_type as ActivityType,
-        playName: record.play_name,
-        createdAt: record.created_at,
-        details: record.details,
-        userId: record.user_id,
-        teamId: record.team_id,
-        playId: record.play_id,
+        activityType: record.action as ActivityType,
+        playName:
+          typeof record.metadata === "object" && record.metadata
+            ? ((record.metadata as any).playName as string | undefined)
+            : undefined,
+        createdAt: record.created_at ?? new Date().toISOString(),
+        details:
+          typeof record.metadata === "object" && record.metadata
+            ? ((record.metadata as any).details as
+                | Record<string, unknown>
+                | undefined)
+            : undefined,
+        userId: record.user_id ?? userId,
+        teamId: record.team_id ?? undefined,
+        playId: record.entity_id ?? undefined,
       }));
     } catch (err) {
       logError("Error fetching activities:", err);
@@ -168,13 +180,21 @@ export class ActivityService {
 
       return data.map((record) => ({
         id: record.id,
-        activityType: record.activity_type as ActivityType,
-        playName: record.play_name,
-        createdAt: record.created_at,
-        details: record.details,
-        userId: record.user_id,
-        teamId: record.team_id,
-        playId: record.play_id,
+        activityType: record.action as ActivityType,
+        playName:
+          typeof record.metadata === "object" && record.metadata
+            ? ((record.metadata as any).playName as string | undefined)
+            : undefined,
+        createdAt: record.created_at ?? new Date().toISOString(),
+        details:
+          typeof record.metadata === "object" && record.metadata
+            ? ((record.metadata as any).details as
+                | Record<string, unknown>
+                | undefined)
+            : undefined,
+        userId: record.user_id ?? "",
+        teamId: record.team_id ?? undefined,
+        playId: record.entity_id ?? undefined,
       }));
     } catch (err) {
       logError("Error fetching play activities:", err);
@@ -224,7 +244,7 @@ export class ActivityService {
 
       let query = supabase
         .from("activities")
-        .select("activity_type")
+        .select("action")
         .eq("user_id", userId);
 
       if (teamId) {
@@ -238,7 +258,7 @@ export class ActivityService {
       // Count activities by type
       const stats: Record<string, number> = {};
       data.forEach((record) => {
-        const type = record.activity_type;
+        const type = record.action;
         stats[type] = (stats[type] || 0) + 1;
       });
 

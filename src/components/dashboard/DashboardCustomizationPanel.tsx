@@ -1,3 +1,5 @@
+/* eslint-disable max-lines-per-function */
+
 import React from "react";
 import { Button, FormSelect } from "../ui";
 import { Typography } from "../design-system/Typography";

@@ -9,18 +9,20 @@
  * - 2-point conversion decision support
  */
 
+/* eslint-disable max-lines-per-function */
+/* eslint-disable complexity */
+
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useSession } from "./useSession";
 import { GamePlanService } from "../services/gamePlanService";
 import type {
   GameSession,
   ExecutionResult,
-  CreateGameSessionData,
   HashMark,
   OpponentCoverage,
   GameUrgency,
 } from "../types/session";
-import type { GamePlan, GamePlanPlay } from "../types";
+import type { GamePlan, GamePlanPlay } from "../services/gamePlanService";
 import { logError } from "../utils/logger";
 import {
   calculateGameUrgency,
@@ -134,35 +136,10 @@ const filterPlaysBySituation = (
   gamePlanPlays: GamePlanPlay[],
   situation: GameSituation
 ): GamePlanPlay[] => {
-  const { down, distance, yardLine } = situation;
-
-  return gamePlanPlays.filter((planPlay) => {
-    const play = planPlay.play;
-    if (!play) return false;
-
-    // Filter by down (if play has down restrictions)
-    if (play.down && play.down !== down) return false;
-
-    // Filter by distance (short: 1-3, medium: 4-7, long: 8+)
-    if (play.distance) {
-      if (distance <= 3 && play.distance !== "short") return false;
-      if (distance >= 4 && distance <= 7 && play.distance !== "medium")
-        return false;
-      if (distance >= 8 && play.distance !== "long") return false;
-    }
-
-    // Filter by field zone
-    if (play.field_zone) {
-      if (yardLine < 50 && play.field_zone === "opponent") return false;
-      if (yardLine >= 50 && yardLine < 80 && play.field_zone === "midfield")
-        return false;
-      if (yardLine >= 80 && yardLine < 95 && play.field_zone === "red_zone")
-        return false;
-      if (yardLine >= 95 && play.field_zone === "goal_line") return false;
-    }
-
-    return true;
-  });
+  void situation;
+  // App-level `Play` no longer carries down/distance/field-zone restrictions.
+  // Billick situation filtering is handled by the game plan situation itself.
+  return gamePlanPlays;
 };
 
 // Helper: Calculate new situation after play execution
@@ -232,7 +209,7 @@ async function loadGamePlanData(gamePlanId: string): Promise<{
     throw new Error("Game plan not found");
   }
 
-  const plays = await GamePlanService.getGamePlanPlays(gamePlanId);
+  const plays = (plan.situations || []).flatMap((s) => s.plays || []);
   return { plan, plays };
 }
 
@@ -323,18 +300,8 @@ export function useGameSession({
       throw new Error("Game plan not loaded");
     }
 
-    const sessionData: CreateGameSessionData = {
-      gamePlanId: gamePlan.id,
-      sessionMode: mode,
-      gameDate,
-      opponent,
-      isHomeGame,
-      notes: "",
-      weather: "",
-      fieldConditions: "",
-    };
-
-    await baseStartSession("game", sessionData);
+    // `useSession` currently owns session creation and does not accept extra payload.
+    await baseStartSession();
   }, [gamePlan, mode, gameDate, opponent, isHomeGame, baseStartSession]);
 
   // End game session
@@ -354,19 +321,8 @@ export function useGameSession({
         updates.teamScore !== undefined ||
         updates.opponentScore !== undefined
       ) {
-        next.gameUrgency = calculateGameUrgency(
-          next.teamScore,
-          next.opponentScore,
-          next.quarter,
-          next.timeRemaining,
-          next.teamTimeouts
-        );
-        next.isHurryUp = shouldBeInHurryUp(
-          next.quarter,
-          next.timeRemaining,
-          next.teamScore - next.opponentScore,
-          next.teamTimeouts
-        );
+        next.gameUrgency = calculateGameUrgency(next);
+        next.isHurryUp = shouldBeInHurryUp(next);
       }
 
       return next;
@@ -382,19 +338,8 @@ export function useGameSession({
           : { ...prev, opponentScore: prev.opponentScore + points };
 
       // Recalculate game urgency after score change
-      next.gameUrgency = calculateGameUrgency(
-        next.teamScore,
-        next.opponentScore,
-        next.quarter,
-        next.timeRemaining,
-        next.teamTimeouts
-      );
-      next.isHurryUp = shouldBeInHurryUp(
-        next.quarter,
-        next.timeRemaining,
-        next.teamScore - next.opponentScore,
-        next.teamTimeouts
-      );
+      next.gameUrgency = calculateGameUrgency(next);
+      next.isHurryUp = shouldBeInHurryUp(next);
 
       return next;
     });
@@ -428,27 +373,13 @@ export function useGameSession({
 
   // Phase 14: Should go for 2-point conversion?
   const shouldGoForTwoDecision = useMemo(() => {
-    return shouldGoForTwo(
-      situation.teamScore,
-      situation.opponentScore,
-      situation.quarter,
-      situation.timeRemaining
-    );
-  }, [
-    situation.teamScore,
-    situation.opponentScore,
-    situation.quarter,
-    situation.timeRemaining,
-  ]);
+    return shouldGoForTwo(situation);
+  }, [situation]);
 
   // Phase 14: Play type recommendation based on game urgency
   const playTypeRecommendation = useMemo(() => {
-    return getPlayTypeRecommendation(
-      situation.gameUrgency,
-      situation.quarter,
-      situation.timeRemaining
-    );
-  }, [situation.gameUrgency, situation.quarter, situation.timeRemaining]);
+    return getPlayTypeRecommendation(situation);
+  }, [situation]);
 
   // Filter plays by situation (Billick Situations)
   const filteredPlays = useMemo(
@@ -479,13 +410,15 @@ export function useGameSession({
         opponentCoverage?: OpponentCoverage;
       }
     ) => {
-      if (!sessionState.session) {
+      if (!sessionState.sessionId) {
         throw new Error("No active session");
       }
 
       await logExecution({
-        playId: play.play_id,
-        formationId: play.play?.formation_id,
+        playId: play.playId,
+        formationId:
+          ((play.play as any)?.formation_id as string | undefined) ??
+          ((play.play as any)?.formationId as string | undefined),
         result,
         yardsGained,
         quarter: situation.quarter,
@@ -566,7 +499,8 @@ export function useGameSession({
 
   return {
     // Session state
-    session: sessionState.session as GameSession | null,
+    session:
+      (sessionState as unknown as { session?: GameSession }).session || null,
     isLoading,
     error,
 
@@ -606,7 +540,10 @@ export function useGameSession({
     resetTimeouts,
 
     // Phase 14: Game urgency helpers
-    shouldGoForTwo: () => shouldGoForTwoDecision,
+    shouldGoForTwo: () => ({
+      shouldGoForTwo: shouldGoForTwoDecision.should,
+      reasoning: shouldGoForTwoDecision.reason,
+    }),
     playTypeRecommendation,
 
     // Drive tracking

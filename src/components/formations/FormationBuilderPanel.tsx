@@ -165,6 +165,7 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
           setTags,
           setDescription,
           setSelectedPersonnelIds: state.setSelectedPersonnelIds,
+          toast,
         });
 
       // Show all formations (no filtering needed)

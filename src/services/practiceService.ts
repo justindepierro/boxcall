@@ -43,6 +43,7 @@ export interface PracticeScriptPlay {
   order: number;
   notes?: string;
   repetitions: number;
+  estimatedTime?: number;
   // Game scenario configuration
   hash?: "left" | "middle" | "right";
   downDistance?: string; // e.g., "1st & 10", "3rd & 3"
@@ -93,6 +94,7 @@ export interface AddPlayToPracticeScriptData {
   orderIndex?: number;
   notes?: string;
   repetitions?: number;
+  estimatedTime?: number;
   // Game scenario configuration
   hash?: "left" | "middle" | "right";
   downDistance?: string;
@@ -191,7 +193,6 @@ export class PracticeService {
   ): Promise<PracticeSchedule> {
     const { data, error } = await supabase
       .from("practice_schedules")
-      // @ts-expect-error - Supabase type issue with practice_schedules table update
       .update({
         ...updates,
         updated_at: new Date().toISOString(),
@@ -218,41 +219,11 @@ export class PracticeService {
     scheduleId: string,
     blockData: CreatePracticeBlockData
   ): Promise<PracticeBlock> {
-    // Get current schedule to update blocks array
-    const { data: schedule, error: fetchError } = await supabase
-      .from("practice_schedules")
-      .select("blocks")
-      .eq("id", scheduleId)
-      .single();
-
-    if (fetchError) throw fetchError;
-
-    const newBlock: PracticeBlock = {
-      id: crypto.randomUUID(),
-      title: blockData.title,
-      description: blockData.description,
-      startTime: new Date(), // Will be calculated based on order
-      endTime: new Date(), // Will be calculated based on duration
-      duration: blockData.duration,
-      order: schedule.blocks.length,
-      isLocked: false,
-      practiceScriptId: blockData.practiceScriptId,
-      notes: blockData.notes,
-      equipmentIds: blockData.equipmentIds || [],
-    };
-
-    const updatedBlocks = [...schedule.blocks, newBlock];
-
-    const { error: updateError } = await supabase
-      .from("practice_schedules")
-      .update({
-        blocks: updatedBlocks,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", scheduleId);
-
-    if (updateError) throw updateError;
-    return newBlock;
+    void scheduleId;
+    void blockData;
+    throw new Error(
+      "Practice blocks are not supported by the current practice_schedules schema"
+    );
   }
 
   static async updatePracticeBlock(
@@ -260,84 +231,51 @@ export class PracticeService {
     blockId: string,
     updates: Partial<PracticeBlock>
   ): Promise<void> {
-    const { data: schedule, error: fetchError } = await supabase
-      .from("practice_schedules")
-      .select("blocks")
-      .eq("id", scheduleId)
-      .single();
-
-    if (fetchError) throw fetchError;
-
-    const updatedBlocks = schedule.blocks.map((block: PracticeBlock) =>
-      block.id === blockId ? { ...block, ...updates } : block
+    void scheduleId;
+    void blockId;
+    void updates;
+    throw new Error(
+      "Practice blocks are not supported by the current practice_schedules schema"
     );
-
-    const { error: updateError } = await supabase
-      .from("practice_schedules")
-      .update({
-        blocks: updatedBlocks,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", scheduleId);
-
-    if (updateError) throw updateError;
   }
 
   static async reorderPracticeBlocks(
     scheduleId: string,
     blocks: PracticeBlock[]
   ): Promise<void> {
-    // Recalculate times based on new order
-    const reorderedBlocks = this.recalculateBlockTimes(blocks);
-
-    const { error } = await supabase
-      .from("practice_schedules")
-      .update({
-        blocks: reorderedBlocks,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", scheduleId);
-
-    if (error) throw error;
+    void scheduleId;
+    void blocks;
+    throw new Error(
+      "Practice blocks are not supported by the current practice_schedules schema"
+    );
   }
 
   static async deletePracticeBlock(
     scheduleId: string,
     blockId: string
   ): Promise<void> {
-    const { data: schedule, error: fetchError } = await supabase
-      .from("practice_schedules")
-      .select("blocks")
-      .eq("id", scheduleId)
-      .single();
-
-    if (fetchError) throw fetchError;
-
-    const updatedBlocks = schedule.blocks.filter(
-      (block: PracticeBlock) => block.id !== blockId
+    void scheduleId;
+    void blockId;
+    throw new Error(
+      "Practice blocks are not supported by the current practice_schedules schema"
     );
-
-    const { error: updateError } = await supabase
-      .from("practice_schedules")
-      .update({
-        blocks: updatedBlocks,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", scheduleId);
-
-    if (updateError) throw updateError;
   }
 
   // Practice Template Operations
   static async createPracticeTemplate(
     template: Omit<PracticeTemplate, "id" | "createdAt" | "usageCount">
   ): Promise<PracticeTemplate> {
+    const { name, description, teamId, duration, isPublic, createdBy } =
+      template;
     const { data, error } = await supabase
       .from("practice_templates")
       .insert({
-        ...template,
-        created_at: new Date().toISOString(),
-        usage_count: 0,
+        name,
+        description: description ?? null,
+        team_id: teamId,
+        duration,
+        is_public: isPublic,
+        created_by: createdBy,
       })
       .select()
       .single();
@@ -353,7 +291,7 @@ export class PracticeService {
       .from("practice_templates")
       .select("*")
       .or(`team_id.eq.${teamId},is_public.eq.true`)
-      .order("usage_count", { ascending: false });
+      .order("created_at", { ascending: false });
 
     if (error) throw error;
     return data.map(this.transformTemplateFromDB);
@@ -363,41 +301,11 @@ export class PracticeService {
     templateId: string,
     scheduleData: CreatePracticeScheduleData
   ): Promise<PracticeSchedule> {
-    // Get template
-    const { data: template, error: templateError } = await supabase
-      .from("practice_templates")
-      .select("*")
-      .eq("id", templateId)
-      .single();
-
-    if (templateError) throw templateError;
-
-    // Create schedule with template blocks
-    const schedule = await this.createPracticeSchedule(scheduleData);
-
-    // Add template blocks with calculated times
-    const blocksWithTimes = this.calculateBlockTimesFromTemplate(
-      template.blocks,
-      scheduleData.startTime
+    void templateId;
+    void scheduleData;
+    throw new Error(
+      "Creating schedules from templates is not supported by the current practice_templates schema"
     );
-
-    const { error: updateError } = await supabase
-      .from("practice_schedules")
-      .update({
-        blocks: blocksWithTimes,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", schedule.id);
-
-    if (updateError) throw updateError;
-
-    // Increment template usage
-    await supabase
-      .from("practice_templates")
-      .update({ usage_count: template.usage_count + 1 })
-      .eq("id", templateId);
-
-    return { ...schedule, blocks: blocksWithTimes };
   }
 
   // Attendance Management
@@ -491,7 +399,7 @@ export class PracticeService {
       .select("*")
       .or(`team_id.eq.${teamId},is_public.eq.true`)
       .or(`name.ilike.%${query}%,description.ilike.%${query}%`)
-      .order("usage_count", { ascending: false });
+      .order("created_at", { ascending: false });
 
     if (error) throw error;
     return data.map(this.transformTemplateFromDB);
@@ -534,21 +442,17 @@ export class PracticeService {
     return {
       id: dbTemplate.id as string,
       name: dbTemplate.name as string,
-      description: dbTemplate.description as string,
-      teamId: dbTemplate.team_id as string,
-      duration: dbTemplate.duration as number,
-      blocks: (dbTemplate.blocks as PracticeBlock[]) || [],
-      defaultLocation: dbTemplate.default_location as string,
-      defaultFieldType: dbTemplate.default_field_type as
-        | "indoor"
-        | "outdoor"
-        | "gym"
-        | "field",
-      equipmentRequired: (dbTemplate.equipment_required as string[]) || [],
-      isPublic: dbTemplate.is_public as boolean,
-      createdBy: dbTemplate.created_by as string,
-      createdAt: new Date(dbTemplate.created_at as string),
-      usageCount: dbTemplate.usage_count as number,
+      description: (dbTemplate.description as string | null) ?? undefined,
+      teamId: (dbTemplate.team_id as string | null) ?? null,
+      duration: (dbTemplate.duration as number | null) ?? null,
+      isPublic: Boolean(dbTemplate.is_public),
+      createdBy: (dbTemplate.created_by as string | null) ?? null,
+      createdAt: dbTemplate.created_at
+        ? new Date(dbTemplate.created_at as string)
+        : new Date(),
+      updatedAt: dbTemplate.updated_at
+        ? new Date(dbTemplate.updated_at as string)
+        : undefined,
     };
   }
 
@@ -592,56 +496,6 @@ export class PracticeService {
       location: dbEquipment.location as string,
       lastChecked: new Date(dbEquipment.last_checked as string),
     };
-  }
-
-  private static recalculateBlockTimes(
-    blocks: PracticeBlock[]
-  ): PracticeBlock[] {
-    let currentTime = blocks[0]?.startTime || new Date();
-
-    return blocks.map((block, index) => {
-      const startTime = new Date(currentTime);
-      const endTime = new Date(startTime.getTime() + block.duration * 60000);
-
-      currentTime = endTime;
-
-      return {
-        ...block,
-        order: index,
-        startTime,
-        endTime,
-      };
-    });
-  }
-
-  private static calculateBlockTimesFromTemplate(
-    templateBlocks: Record<string, unknown>[],
-    practiceStartTime: Date
-  ): PracticeBlock[] {
-    let currentTime = new Date(practiceStartTime);
-
-    return templateBlocks.map((templateBlock, index) => {
-      const startTime = new Date(currentTime);
-      const endTime = new Date(
-        startTime.getTime() + (templateBlock.duration as number) * 60000
-      );
-
-      currentTime = endTime;
-
-      return {
-        id: crypto.randomUUID(),
-        title: templateBlock.title as string,
-        description: templateBlock.description as string,
-        duration: templateBlock.duration as number,
-        startTime,
-        endTime,
-        order: index,
-        isLocked: false,
-        practiceScriptId: templateBlock.practiceScriptId as string,
-        notes: templateBlock.notes as string,
-        equipmentIds: (templateBlock.equipmentIds as string[]) || [],
-      };
-    });
   }
 
   private static async searchPracticeScripts(
@@ -802,22 +656,22 @@ export class PracticeService {
       throw new Error("Failed to add play to practice script");
     }
 
+    const script = await this.getPracticeScript(data.scriptId);
+    if (!script) {
+      throw new Error("Failed to retrieve updated practice script");
+    }
+
     // Record activity for adding play to practice script
     await ActivityService.recordActivity({
       type: "added_to_script",
       playId: data.playId,
       playName: _play.play_name,
-      teamId: _play.team_id,
+      teamId: script.teamId,
       details: {
         scriptId: data.scriptId,
         repetitions: data.repetitions || 5,
       },
     });
-
-    const script = await this.getPracticeScript(data.scriptId);
-    if (!script) {
-      throw new Error("Failed to retrieve updated practice script");
-    }
     return script;
   }
 
@@ -1001,8 +855,6 @@ export class PracticeService {
     teamId: string,
     _forceRefresh = false
   ): Promise<PracticeScript[]> {
-    const _cacheKey = `scripts_team_${teamId}`;
-
     console.log("🔍 [PracticeService] Fetching scripts for team:", teamId);
     const startTime = performance.now();
 
@@ -1496,13 +1348,17 @@ export class PracticeService {
       return data.map((template) => ({
         id: template.id,
         name: template.name,
-        description: template.description,
+        description: template.description ?? undefined,
         teamId: template.team_id,
         duration: template.duration,
-        isPublic: template.is_public || false,
+        isPublic: template.is_public ?? false,
         createdBy: template.created_by,
-        createdAt: new Date(template.created_at),
-        updatedAt: new Date(template.updated_at),
+        createdAt: template.created_at
+          ? new Date(template.created_at)
+          : new Date(),
+        updatedAt: template.updated_at
+          ? new Date(template.updated_at)
+          : undefined,
         plays: [], // Templates don't store plays directly
       }));
     } catch (error) {
@@ -1547,13 +1403,17 @@ export class PracticeService {
       return {
         id: template.id,
         name: template.name,
-        description: template.description,
+        description: template.description ?? undefined,
         teamId: template.team_id,
         duration: template.duration,
-        isPublic: template.is_public,
+        isPublic: template.is_public ?? false,
         createdBy: template.created_by,
-        createdAt: new Date(template.created_at),
-        updatedAt: new Date(template.updated_at),
+        createdAt: template.created_at
+          ? new Date(template.created_at)
+          : new Date(),
+        updatedAt: template.updated_at
+          ? new Date(template.updated_at)
+          : undefined,
         plays: sourceScript.plays, // Include plays for immediate use
       };
     } catch (error) {
@@ -1579,6 +1439,7 @@ export class PracticeService {
 
       if (templateError) throw templateError;
       if (!template) throw new Error("Template not found");
+      if (!template.team_id) throw new Error("Template has no team_id");
 
       // Create new script with template data
       const newScript = await this.createPracticeScript({
@@ -1649,13 +1510,17 @@ export class PracticeService {
       return {
         id: template.id,
         name: template.name,
-        description: template.description,
+        description: template.description ?? undefined,
         teamId: template.team_id,
         duration: template.duration,
-        isPublic: template.is_public,
+        isPublic: template.is_public ?? false,
         createdBy: template.created_by,
-        createdAt: new Date(template.created_at),
-        updatedAt: new Date(template.updated_at),
+        createdAt: template.created_at
+          ? new Date(template.created_at)
+          : new Date(),
+        updatedAt: template.updated_at
+          ? new Date(template.updated_at)
+          : undefined,
         plays: [],
       };
     } catch (error) {

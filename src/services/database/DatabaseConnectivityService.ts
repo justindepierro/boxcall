@@ -11,7 +11,7 @@
  */
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "../types/database";
+import type { Database } from "../../types/database";
 import { debug, error as logError } from "../../utils/logger";
 
 interface ConnectionConfig {
@@ -113,10 +113,10 @@ export class DatabaseConnectivityService {
         ...config.options?.auth,
       },
       db: {
-        schema: "public",
-        ...config.options?.db,
+        // Keep schema literal to satisfy Supabase's schema generic.
+        schema: "public" as const,
       },
-    });
+    }) as unknown as SupabaseClient<Database>;
 
     this.initializeConnectionPool();
     this.startHealthMonitoring();
@@ -139,7 +139,7 @@ export class DatabaseConnectivityService {
             detectSessionInUrl: true,
           },
         }
-      );
+      ) as unknown as SupabaseClient<Database>;
 
       this.connectionPool.push(client);
     }
@@ -199,7 +199,7 @@ export class DatabaseConnectivityService {
     operation: () => Promise<T>,
     operationName: string
   ): Promise<T> {
-    let lastError: Error;
+    let lastError: Error = new Error(`${operationName} failed`);
 
     for (let attempt = 1; attempt <= this.retryConfig.maxAttempts; attempt++) {
       try {

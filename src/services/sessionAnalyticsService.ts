@@ -166,8 +166,8 @@ export class SessionAnalyticsService {
     return {
       sessionId,
       sessionType: session.session_type as "game" | "practice",
-      date: session.created_at,
-      opponent: session.opponent,
+      date: session.created_at ?? new Date().toISOString(),
+      opponent: session.opponent ?? undefined,
       totalPlays,
       successRate: Math.round(successRate * 10) / 10,
       avgYardsPerPlay: Math.round(avgYardsPerPlay * 10) / 10,

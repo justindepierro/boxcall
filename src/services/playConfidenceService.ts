@@ -500,7 +500,9 @@ export class PlayConfidenceService {
       return [];
     }
 
-    return data || [];
+    return ((data ?? []).filter(
+      (row) => typeof (row as any).play_id === "string"
+    ) ?? []) as unknown as ExecutionRecord[];
   }
 
   /**

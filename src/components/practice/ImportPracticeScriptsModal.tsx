@@ -22,7 +22,7 @@ function FileUploadSection({
   onFileSelect,
   importing,
 }: {
-  fileInputRef: React.RefObject<HTMLInputElement>;
+  fileInputRef: React.RefObject<HTMLInputElement | null>;
   selectedFile: File | null;
   validationError: string | null;
   parsedData: ExportedPracticeScript | null;

@@ -275,7 +275,8 @@ export const CreateOppositeFormationModal: React.FC<
   useEffect(() => {
     if (originalFormation) {
       const FIELD_WIDTH = 53.3;
-      const flipped = originalFormation.player_positions.map((pos) => ({
+      const positions = originalFormation.player_positions ?? [];
+      const flipped = positions.map((pos) => ({
         ...pos,
         x: FIELD_WIDTH - pos.x, // Flip horizontally
       }));
@@ -396,7 +397,7 @@ export const CreateOppositeFormationModal: React.FC<
             {/* Side-by-side preview */}
             <div className="grid grid-cols-2 gap-lg">
               <FormationPreview
-                positions={originalFormation.player_positions}
+                positions={originalFormation.player_positions ?? []}
                 label={`Original (${originalFormation.direction || "Standalone"})`}
               />
               <FormationPreview

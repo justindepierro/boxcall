@@ -69,6 +69,42 @@ const getSectionStyles = (type: "header" | "footer", size: string) => {
   return sizes[size as keyof typeof sizes];
 };
 
+function buildCardClasses(options: {
+  variant: keyof CardStylesConfig["variants"];
+  size: keyof CardStylesConfig["sizes"];
+  interactive: boolean;
+  disabled: boolean;
+  loading: boolean;
+  className: string;
+}) {
+  const classes: string[] = [
+    cardStyles.base,
+    cardStyles.variants[options.variant],
+    cardStyles.sizes[options.size],
+    options.className,
+  ];
+
+  if (options.interactive && !options.disabled) {
+    classes.push(cardStyles.interactive);
+  }
+  if (options.disabled) {
+    classes.push(cardStyles.disabled);
+  }
+  if (options.loading) {
+    classes.push(cardStyles.loading);
+  }
+
+  return classes.filter(Boolean).join(" ");
+}
+
+function buildSectionClasses(
+  type: "header" | "footer",
+  size: string,
+  extra: string
+) {
+  return [getSectionStyles(type, size), extra].filter(Boolean).join(" ");
+}
+
 /**
  * Card Component
  *
@@ -102,25 +138,19 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
     ref
   ) => {
     // Build card classes using only Tailwind dark mode classes
-    const cardClasses = [
-      cardStyles.base,
-      cardStyles.variants[variant],
-      cardStyles.sizes[size],
-      interactive && !disabled ? cardStyles.interactive : "",
-      disabled ? cardStyles.disabled : "",
-      loading ? cardStyles.loading : "",
+    const cardClasses = buildCardClasses({
+      variant,
+      size,
+      interactive,
+      disabled,
+      loading,
       className,
-    ]
-      .filter(Boolean)
-      .join(" ");
-    // Header classes with theme awareness
-    const headerClasses = [getSectionStyles("header", size), headerClassName]
-      .filter(Boolean)
-      .join(" ");
-    // Footer classes with theme awareness
-    const footerClasses = [getSectionStyles("footer", size), footerClassName]
-      .filter(Boolean)
-      .join(" ");
+    });
+
+    // Header/footer classes with theme awareness
+    const headerClasses = buildSectionClasses("header", size, headerClassName);
+    const footerClasses = buildSectionClasses("footer", size, footerClassName);
+
     // Content classes
     const contentClasses = ["flex-1", contentClassName]
       .filter(Boolean)

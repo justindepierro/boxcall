@@ -30,16 +30,15 @@ export type ActivityType =
 export interface Reaction {
   id: string;
   user_id: string;
-  content_type: ContentType;
-  content_id: string;
+  entity_type: string;
+  entity_id: string;
   reaction_type: ReactionType;
-  created_at: string;
-  updated_at: string;
+  created_at: string | null;
 }
 
 export interface ReactionSummary {
-  content_type: ContentType;
-  content_id: string;
+  entity_type: string;
+  entity_id: string;
   total_count: number;
   reactions: {
     [key in ReactionType]?: number;
@@ -48,8 +47,8 @@ export interface ReactionSummary {
 }
 
 export interface CreateReactionRequest {
-  content_type: ContentType;
-  content_id: string;
+  entity_type: ContentType;
+  entity_id: string;
   reaction_type: ReactionType;
 }
 
@@ -60,20 +59,20 @@ export interface CreateReactionRequest {
 export interface Follow {
   id: string;
   follower_id: string;
-  following_type: FollowingType;
   following_id: string;
-  created_at: string;
+  created_at: string | null;
 }
 
 export interface FollowSummary {
-  following_type: FollowingType;
+  // NOTE: current schema does not store following_type; callers may treat
+  // following_id as a team or user depending on feature usage.
+  following_type?: FollowingType;
   following_id: string;
   follower_count: number;
   is_following: boolean;
 }
 
 export interface CreateFollowRequest {
-  following_type: FollowingType;
   following_id: string;
 }
 
@@ -84,14 +83,12 @@ export interface CreateFollowRequest {
 export interface Comment {
   id: string;
   user_id: string;
-  content_type: ContentType;
-  content_id: string;
-  parent_comment_id?: string;
+  entity_type: string;
+  entity_id: string;
+  parent_id: string | null;
   content: string;
-  is_edited: boolean;
-  edited_at?: string;
-  created_at: string;
-  updated_at: string;
+  created_at: string | null;
+  updated_at: string | null;
   // Populated from joins
   user?: {
     id: string;
@@ -104,9 +101,9 @@ export interface Comment {
 }
 
 export interface CreateCommentRequest {
-  content_type: ContentType;
-  content_id: string;
-  parent_comment_id?: string;
+  entity_type: ContentType;
+  entity_id: string;
+  parent_id?: string;
   content: string;
 }
 
@@ -143,15 +140,16 @@ export interface Mention {
 export interface Notification {
   id: string;
   user_id: string;
-  notification_type: NotificationType;
+  type: string;
   title: string;
   message: string;
-  related_content_type?: ContentType | "team" | "user";
-  related_content_id?: string;
-  is_read: boolean;
-  read_at?: string;
-  action_url?: string;
-  created_at: string;
+  announcement_id?: string | null;
+  comment_id?: string | null;
+  read: boolean | null;
+  created_at: string | null;
+  updated_at?: string | null;
+  triggered_by_user_id?: string | null;
+  data?: unknown | null;
 }
 
 export interface NotificationSummary {
@@ -166,12 +164,14 @@ export interface NotificationSummary {
 
 export interface ActivityItem {
   id: string;
-  user_id: string;
-  activity_type: ActivityType;
-  content_type?: ContentType | "team" | "user";
-  content_id?: string;
-  metadata: Record<string, any>;
-  created_at: string;
+  user_id: string | null;
+  activity_type: string;
+  entity_type?: string | null;
+  entity_id?: string | null;
+  metadata: unknown | null;
+  title?: string;
+  description?: string | null;
+  created_at: string | null;
   // Populated from joins
   user?: {
     id: string;

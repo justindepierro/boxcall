@@ -37,6 +37,14 @@ export interface FormationQualityScore {
   grade: "A" | "B" | "C" | "D" | "F";
 }
 
+function hasPlayDiagram(play: Partial<Play>): boolean {
+  if (play.diagram_image_url) return true;
+  if (play.diagram_url) return true;
+  if (Array.isArray(play.diagram_data) && play.diagram_data.length > 0)
+    return true;
+  return false;
+}
+
 // ========================================
 // Play Quality Scoring
 // ========================================
@@ -119,17 +127,27 @@ export function calculatePlayQuality(play: Partial<Play>): DataQualityScore {
   // ========================================
 
   // Diagram (15 points)
-  if (play.has_diagram) {
+  if (hasPlayDiagram(play)) {
     advancedPoints += 15;
   } else {
     recommendations.push("Create a diagram for visual reference");
   }
 
   // Play preferences (strength, hash) (5 points)
-  if (play.strength || play.hash) {
+  if (
+    play.r_str ||
+    play.p_str ||
+    play.pref_hash ||
+    play.pref_front ||
+    play.pref_cov ||
+    play.pref_down ||
+    play.pref_dis ||
+    play.pref_field_pos ||
+    play.pref_situation
+  ) {
     advancedPoints += 5;
   } else {
-    recommendations.push("Add play preferences (strength, hash)");
+    recommendations.push("Add play preferences (front, coverage, hash, etc.)");
   }
 
   // Protection scheme (5 points)
@@ -201,7 +219,7 @@ export function calculateFormationQuality(
   // ========================================
 
   // Formation name (25 points)
-  if (formation.formation_name && formation.formation_name.trim().length > 0) {
+  if (formation.name && formation.name.trim().length > 0) {
     requiredPoints += 25;
   } else {
     recommendations.push("Add a formation name");
@@ -215,7 +233,11 @@ export function calculateFormationQuality(
   }
 
   // Personnel (10 points)
-  if (formation.personnel && formation.personnel.trim().length > 0) {
+  if (
+    (formation.personnel_name && formation.personnel_name.trim().length > 0) ||
+    (Array.isArray(formation.personnel_packages) &&
+      formation.personnel_packages.length > 0)
+  ) {
     requiredPoints += 10;
   } else {
     recommendations.push("Add personnel grouping (e.g., '11 Personnel')");
@@ -226,14 +248,17 @@ export function calculateFormationQuality(
   // ========================================
 
   // Notes (15 points)
-  if (formation.notes && formation.notes.trim().length > 20) {
+  if (formation.description && formation.description.trim().length > 20) {
     metadataPoints += 15;
-  } else if (!formation.notes || formation.notes.trim().length === 0) {
+  } else if (
+    !formation.description ||
+    formation.description.trim().length === 0
+  ) {
     recommendations.push("Add coaching notes or formation description");
   }
 
   // Play count (15 points) - formations with plays are more valuable
-  if (formation.play_count && formation.play_count > 0) {
+  if (formation.usage_count && formation.usage_count > 0) {
     metadataPoints += 15;
   } else {
     recommendations.push("Add plays to this formation");
@@ -396,7 +421,7 @@ export function getPriorityActions(play: Partial<Play>): string[] {
 
   // Finally advanced fields
   if (score.breakdown.advanced < 15 && score.breakdown.required === 40) {
-    if (!play.has_diagram) actions.push("Create diagram");
+    if (!hasPlayDiagram(play)) actions.push("Create diagram");
     if (!play.protection) actions.push("Document protection");
   }
 

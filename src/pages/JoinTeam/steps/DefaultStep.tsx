@@ -6,7 +6,7 @@
 
 import React from "react";
 import { Typography } from "../../../components/design-system";
-import type { JoinStep } from "./types";
+import type { JoinStep } from "../types";
 
 interface DefaultStepProps {
   currentStep: JoinStep;

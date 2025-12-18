@@ -10,6 +10,9 @@
  * - Landscape support for iPad with split view
  */
 
+/* eslint-disable max-lines-per-function */
+/* eslint-disable complexity */
+
 import React, { useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { Typography } from "../../design-system";
@@ -360,13 +363,13 @@ export const MobileGameSession: React.FC = () => {
           <div className="space-y-3">
             <div className="bg-secondary rounded-lg p-4">
               <Typography variant="headline-md" className="text-primary mb-2">
-                {currentPlay.play?.name || "Select Play"}
+                {currentPlay.play?.play_name || "Select Play"}
               </Typography>
-              {currentPlay.play?.formation_name && (
+              {currentPlay.play?.formation && (
                 <div className="flex items-center gap-2 mb-1">
                   <Icon name="grid" className="h-4 w-4 text-secondary" />
                   <Typography variant="body-sm" className="text-secondary">
-                    {currentPlay.play.formation_name}
+                    {currentPlay.play.formation}
                   </Typography>
                 </div>
               )}

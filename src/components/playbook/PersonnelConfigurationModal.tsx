@@ -6,5 +6,3 @@
  */
 
 export { PersonnelConfigurationModal } from "./PersonnelConfigurationModal/PersonnelConfigurationModal";
-export { usePersonnelConfigHandlers } from "./PersonnelConfigurationModal/usePersonnelConfigHandlers";
-export type * from "./PersonnelConfigurationModal/types";

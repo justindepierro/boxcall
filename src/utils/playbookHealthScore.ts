@@ -262,7 +262,7 @@ async function calculatePlayCompletenessScore(
   const { data: plays, error } = await supabase
     .from("plays")
     .select(
-      "id, play_name, p_type, formation, personnel, tags, notes, diagram_id, key_positions, key_players, protection_scheme, flags"
+      "id, play_name, p_type, formation, personnel, tags, notes, diagram_data, diagram_url, diagram_image_url, key_positions, key_players, protection, flags"
     )
     .eq("playbook_id", playbookId);
 
@@ -277,7 +277,26 @@ async function calculatePlayCompletenessScore(
   }
 
   // Calculate average play quality
-  const playScores = plays.map((play) => calculatePlayQuality(play));
+  const playScores = plays.map((play) =>
+    calculatePlayQuality({
+      play_name: play.play_name ?? undefined,
+      formation: play.formation ?? undefined,
+      p_type: play.p_type ?? undefined,
+      personnel: play.personnel ?? undefined,
+      tags: play.tags ?? undefined,
+      notes: play.notes ?? undefined,
+      key_positions: play.key_positions ?? undefined,
+      key_players: play.key_players ?? undefined,
+      protection: play.protection ?? undefined,
+      flags: play.flags ?? undefined,
+      diagram_data: (play as { diagram_data?: unknown }).diagram_data as any,
+      diagram_url:
+        (play as { diagram_url?: string | null }).diagram_url ?? undefined,
+      diagram_image_url:
+        (play as { diagram_image_url?: string | null }).diagram_image_url ??
+        undefined,
+    })
+  );
   const avgQuality =
     playScores.reduce((sum, s) => sum + s.total, 0) / totalPlays;
   const score = Math.round((avgQuality / 100) * 25);
@@ -285,7 +304,18 @@ async function calculatePlayCompletenessScore(
   const issues: HealthIssue[] = [];
 
   // Plays missing diagrams
-  const playsNoDiagram = plays.filter((p) => !p.diagram_id);
+  const playsNoDiagram = plays.filter((p) => {
+    const anyPlay = p as {
+      diagram_data?: unknown;
+      diagram_url?: string | null;
+      diagram_image_url?: string | null;
+    };
+    return (
+      !anyPlay.diagram_data &&
+      !anyPlay.diagram_url &&
+      !anyPlay.diagram_image_url
+    );
+  });
   if (playsNoDiagram.length > 0) {
     issues.push({
       severity: "info",
@@ -300,9 +330,9 @@ async function calculatePlayCompletenessScore(
   // Plays with minimal metadata
   const playsMinimalData = plays.filter(
     (p) =>
-      (!p.personnel || p.personnel.trim() === "") &&
+      (typeof p.personnel !== "string" || p.personnel.trim() === "") &&
       (!p.tags || p.tags.length === 0) &&
-      (!p.notes || p.notes.trim() === "")
+      (typeof p.notes !== "string" || p.notes.trim() === "")
   );
   if (playsMinimalData.length > 0) {
     issues.push({
@@ -316,7 +346,9 @@ async function calculatePlayCompletenessScore(
   }
 
   // Plays missing play type
-  const playsNoType = plays.filter((p) => !p.p_type || p.p_type.trim() === "");
+  const playsNoType = plays.filter(
+    (p) => typeof p.p_type !== "string" || p.p_type.trim() === ""
+  );
   if (playsNoType.length > 0) {
     issues.push({
       severity: "critical",

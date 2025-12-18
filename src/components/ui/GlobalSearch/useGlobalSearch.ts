@@ -276,7 +276,7 @@ interface KeyboardNavParams {
   handleResultClick: (result: SearchResult) => void;
   handleMobileSearchClose: () => void;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  inputRef: React.RefObject<HTMLInputElement>;
+  inputRef: React.RefObject<HTMLInputElement | null>;
 }
 
 function handleKeyboardNavigation(

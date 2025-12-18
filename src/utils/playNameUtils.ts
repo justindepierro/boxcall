@@ -2,6 +2,26 @@ import { normalizePlayName } from "./textNormalization";
 
 import type { Play } from "../types/play";
 
+export type PlayNameSource = {
+  play_name?: string | null;
+  one_word_play?: string | null;
+  formation?: string | null;
+  f_type?: string | null;
+  f_dir?: string | null;
+  back_align?: string | null;
+  ftag1?: string | null;
+  ftag2?: string | null;
+  shift?: string | null;
+  motion?: string | null;
+  r_str?: string | null;
+  p_str?: string | null;
+  p_dir?: string | null;
+  p_type?: string | null;
+  protection?: string | null;
+  p_tag1?: string | null;
+  p_tag2?: string | null;
+};
+
 /**
  * Format a direction value according to the display format preference
  */
@@ -83,7 +103,7 @@ function normalize(value: string | undefined | null): string {
  * 🧠 Generates a human-readable play name.
  * Uses key offensive tags and formation fields for clarity.
  */
-export function generatePlayName(play: Play): string {
+export function generatePlayName(play: PlayNameSource): string {
   if (!play || typeof play !== "object") return "[Untitled Play]";
   const oneWord = safe(play.one_word_play);
   if (oneWord) {
@@ -94,7 +114,7 @@ export function generatePlayName(play: Play): string {
 /**
  * Generates the concatenated name from play parts
  */
-export function generateConcatenatedName(play: Play): string {
+export function generateConcatenatedName(play: PlayNameSource): string {
   const parts: string[] = [];
   // Formation and directional orientation
   const formation = clean(play.formation);
@@ -146,7 +166,7 @@ export function generatePlayNamePlain(play: Play): string {
  * Gets the display name based on toggle state and optional field order
  */
 export function getDisplayName(
-  play: Play,
+  play: PlayNameSource,
   showOneWord: boolean,
   formationFieldOrder?: string[],
   playDetailsFieldOrder?: string[],

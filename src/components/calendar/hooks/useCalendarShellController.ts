@@ -76,8 +76,12 @@ export function useCalendarShellController() {
   // AI-powered suggestions
   const { suggestions, hasSuggestions } = useAISuggestions({
     events,
-    userRole: profile?.role,
+    userRole: profile?.role ?? undefined,
   });
+
+  const profileForPermissions = profile
+    ? { role: profile.role ?? undefined }
+    : null;
 
   // Conflict detection
   const { conflicts, hasConflicts, totalConflicts } =
@@ -156,7 +160,7 @@ export function useCalendarShellController() {
     calendarRef,
     setUrlState: adaptUrlState,
     events,
-    profile,
+    profile: profileForPermissions,
     setSelectedEvent,
     setShowEventModal,
     setIsCreatingEvent,
@@ -177,7 +181,7 @@ export function useCalendarShellController() {
   // Actions + permissions
   const { canAddEvent, handleAddEvent, handleExportCalendar } =
     useCalendarActions({
-      profile,
+      profile: profileForPermissions,
       setIsCreatingEvent,
       setSelectedEvent,
       setShowEventModal,

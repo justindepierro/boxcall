@@ -11,7 +11,7 @@ import {
 } from "recharts";
 import { Typography } from "../../design-system/Typography";
 import { Card } from "../../ui/Card";
-import { getSuccessRateColor } from "@/design-system/chartColors";
+import { getSuccessRateColor } from "@design-system/chartColors";
 
 interface SuccessRateData {
   name: string;

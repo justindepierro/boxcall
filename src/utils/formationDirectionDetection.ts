@@ -8,7 +8,8 @@
 export interface DirectionDetectionResult {
   hasDirection: boolean;
   detectedDirection: "L" | "R" | null;
-  suggestedFormationName?: string;
+  originalInput: string;
+  suggestedFormationName: string;
   directionKeyword?: string;
 }
 
@@ -19,6 +20,7 @@ export function detectDirectionInFormationName(
     return {
       hasDirection: false,
       detectedDirection: null,
+      originalInput: "",
       suggestedFormationName: "",
     };
   }
@@ -28,6 +30,7 @@ export function detectDirectionInFormationName(
     return {
       hasDirection: false,
       detectedDirection: null,
+      originalInput: "",
       suggestedFormationName: "",
     };
   }
@@ -39,6 +42,7 @@ export function detectDirectionInFormationName(
     return {
       hasDirection: false,
       detectedDirection: null,
+      originalInput: trimmed,
       suggestedFormationName: trimmed,
     };
   }
@@ -55,6 +59,7 @@ export function detectDirectionInFormationName(
       return {
         hasDirection: true,
         detectedDirection: "L",
+        originalInput: trimmed,
         suggestedFormationName: otherWords.join(" ").trim(),
         directionKeyword,
       };
@@ -66,6 +71,7 @@ export function detectDirectionInFormationName(
       return {
         hasDirection: true,
         detectedDirection: "R",
+        originalInput: trimmed,
         suggestedFormationName: otherWords.join(" ").trim(),
         directionKeyword,
       };
@@ -76,6 +82,7 @@ export function detectDirectionInFormationName(
   return {
     hasDirection: false,
     detectedDirection: null,
+    originalInput: trimmed,
     suggestedFormationName: trimmed,
   };
 }

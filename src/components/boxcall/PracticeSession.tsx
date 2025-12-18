@@ -6,4 +6,3 @@
  */
 
 export { default } from "./PracticeSession/PracticeSession";
-export * from "./PracticeSession/components";

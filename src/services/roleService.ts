@@ -256,7 +256,10 @@ export class RoleService {
         return null;
       }
 
-      return data.team_role;
+      const role = (data as any).team_role as unknown;
+      if (typeof role !== "string") return null;
+      if (role in TEAM_ROLE_HIERARCHY) return role as TeamRole;
+      return null;
     } catch (error) {
       logError("RoleService.getUserTeamRole error:", error);
       return null;

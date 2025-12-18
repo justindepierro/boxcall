@@ -79,14 +79,11 @@ if (supabaseUrl && supabaseAnonKey) {
       // 🔧 FIX: Disable Web Locks API to prevent cross-tab lock contention hangs
       // This was causing getSession() and all queries to hang indefinitely
       // The "no-op" lock function immediately acquires and releases locks
-      lock: async (
-        name: string,
-        acquireTimeout: number,
-        fn: () => Promise<unknown>
-      ) => {
-        // Skip the Web Locks API entirely - just run the function directly
-        return fn();
-      },
+      lock: async <R>(
+        _name: string,
+        _acquireTimeout: number,
+        fn: () => Promise<R>
+      ): Promise<R> => fn(),
     },
     // 🚀 PERFORMANCE: Add global configuration for better performance
     global: {
@@ -96,7 +93,7 @@ if (supabaseUrl && supabaseAnonKey) {
     },
     // 🚀 PERFORMANCE: Enable connection pooling and keep-alive
     db: {
-      schema: "public",
+      schema: "public" as const,
     },
     // Realtime configuration for Team Bulletin social features
     realtime: {
@@ -104,7 +101,7 @@ if (supabaseUrl && supabaseAnonKey) {
         eventsPerSecond: 10,
       },
     },
-  });
+  }) as unknown as SupabaseClient<Database>;
 
   // Log auth state changes in dev mode for debugging
   if (import.meta.env.DEV) {
@@ -165,7 +162,7 @@ if (typeof window !== "undefined") {
     // 3. Try to query team_members
     const { data: memberships, error: memberError } = await supabaseClient
       .from("team_members")
-      .select("team_id, role, status")
+      .select("team_id, team_role, status")
       .eq("user_id", session.user.id);
     console.log(
       "3. Team memberships:",
@@ -175,7 +172,10 @@ if (typeof window !== "undefined") {
     );
 
     if (memberships && memberships.length > 0) {
-      console.log("   Teams:", memberships.map((m) => m.team_id).join(", "));
+      console.log(
+        "   Teams:",
+        (memberships as any[]).map((m) => m.team_id).join(", ")
+      );
     } else {
       console.log("❌ No team memberships found - this is why nothing loads!");
       console.log("   User needs to be added to team_members table");

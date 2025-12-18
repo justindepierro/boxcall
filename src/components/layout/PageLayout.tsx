@@ -10,6 +10,7 @@ interface PageLayoutProps {
   subtitle?: string;
   actions?: React.ReactNode;
   variant?: "default" | "dashboard" | "detail" | "form" | "list";
+  maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl" | "7xl" | "full";
   className?: string;
 }
 
@@ -25,6 +26,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
   subtitle,
   actions,
   variant = "default",
+  maxWidth,
   className,
 }) => {
   const layoutClasses = clsx(
@@ -40,7 +42,23 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
 
   return (
     <div className={layoutClasses}>
-      <div className="container-page container-padding">
+      <div
+        className={clsx(
+          "container-page container-padding",
+          maxWidth &&
+            (
+              {
+                sm: "max-w-sm",
+                md: "max-w-md",
+                lg: "max-w-lg",
+                xl: "max-w-xl",
+                "2xl": "max-w-2xl",
+                "7xl": "max-w-7xl",
+                full: "max-w-full",
+              } as const
+            )[maxWidth]
+        )}
+      >
         {(title || actions) && (
           <PageHeader
             title={title}

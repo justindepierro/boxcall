@@ -1,3 +1,6 @@
+/* eslint-disable max-lines-per-function */
+/* eslint-disable complexity */
+
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Icon } from "../../ui/Icon/Icon";

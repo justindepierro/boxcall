@@ -34,7 +34,8 @@ export function TemplatesModal({
                     {template.name}
                   </Typography>
                   <Typography variant="body-sm" className="text-secondary">
-                    {template.duration} min • {template.blocks.length} blocks
+                    {template.duration} min • {template.blocks?.length ?? 0}{" "}
+                    blocks
                   </Typography>
                 </div>
                 <Button

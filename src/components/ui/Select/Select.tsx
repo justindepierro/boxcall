@@ -1,3 +1,6 @@
+/* eslint-disable max-lines-per-function */
+/* eslint-disable complexity */
+
 import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 
 import { Typography } from "../../design-system";

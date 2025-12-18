@@ -206,53 +206,36 @@ export class CustomFieldsService {
     definition: CustomFieldDefinition,
     value: CustomFieldValue
   ): boolean {
-    if (
-      definition.is_required &&
-      (value === null || value === undefined || value === "")
-    ) {
-      return false;
-    }
+    const isEmpty = value === null || value === undefined || value === "";
+    if (definition.is_required && isEmpty) return false;
+    if (value === null || value === undefined) return true; // Optional field
 
-    if (value === null || value === undefined) {
-      return true; // Optional field
-    }
+    const isValidDate = (v: CustomFieldValue) =>
+      v instanceof Date || (typeof v === "string" && !isNaN(Date.parse(v)));
+    const isValidSelect = (v: CustomFieldValue) =>
+      typeof v === "string" && (definition.field_options?.includes(v) || false);
+    const isValidMultiSelect = (v: CustomFieldValue) =>
+      Array.isArray(v) &&
+      v.every(
+        (item) =>
+          typeof item === "string" &&
+          (definition.field_options?.includes(item) || false)
+      );
 
-    switch (definition.field_type) {
-      case "text":
-      case "url":
-        return typeof value === "string";
+    const validators: Record<
+      CustomFieldDefinition["field_type"],
+      () => boolean
+    > = {
+      text: () => typeof value === "string",
+      url: () => typeof value === "string",
+      number: () => typeof value === "number" && !isNaN(value),
+      boolean: () => typeof value === "boolean",
+      date: () => isValidDate(value),
+      select: () => isValidSelect(value),
+      multi_select: () => isValidMultiSelect(value),
+    };
 
-      case "number":
-        return typeof value === "number" && !isNaN(value);
-
-      case "boolean":
-        return typeof value === "boolean";
-
-      case "date":
-        return (
-          value instanceof Date ||
-          (typeof value === "string" && !isNaN(Date.parse(value)))
-        );
-
-      case "select":
-        return (
-          typeof value === "string" &&
-          (definition.field_options?.includes(value) || false)
-        );
-
-      case "multi_select":
-        return (
-          Array.isArray(value) &&
-          value.every(
-            (v) =>
-              typeof v === "string" &&
-              (definition.field_options?.includes(v) || false)
-          )
-        );
-
-      default:
-        return false;
-    }
+    return validators[definition.field_type]?.() ?? false;
   }
 
   /**

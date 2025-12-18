@@ -127,7 +127,19 @@ export class CalendarService {
       }
       throw error;
     }
-    return data ?? [];
+
+    return (data ?? []).map(
+      (e: any): TeamEventListItem => ({
+        id: String(e.id),
+        team_id: String(e.team_id ?? teamId),
+        created_by: String(e.created_by ?? ""),
+        title: String(e.title ?? ""),
+        event_type: String(e.event_type ?? ""),
+        starts_at: String(e.starts_at ?? ""),
+        location: e.location ?? null,
+        created_at: e.created_at ?? null,
+      })
+    );
   }
 
   static async createTeamEvent(input: CreateEventInput) {
@@ -137,21 +149,32 @@ export class CalendarService {
     const userId = getCurrentUserId();
     if (!userId) throw new Error("No authenticated user");
 
-    const { data, error } = await supabase
-      .from("team_events")
+    const event_date = startsAt.slice(0, 10);
+
+    const { data, error } = await (supabase.from("team_events") as any)
       .insert({
         team_id: teamId,
         created_by: userId,
         title,
         event_type: eventType,
         starts_at: startsAt,
+        event_date,
         location,
       })
       .select(EVENT_COLUMNS)
       .single();
 
     if (error) throw error;
-    return data;
+    return {
+      id: String(data.id),
+      team_id: String(data.team_id ?? teamId),
+      created_by: String(data.created_by ?? userId),
+      title: String(data.title ?? title),
+      event_type: String(data.event_type ?? eventType),
+      starts_at: String(data.starts_at ?? startsAt),
+      location: data.location ?? null,
+      created_at: data.created_at ?? null,
+    } as TeamEventListItem;
   }
 
   // ============================================================================

@@ -21,6 +21,17 @@ import type {
   SocialService,
 } from "../types/social";
 
+function isReactionType(value: string): value is ReactionType {
+  return (
+    value === "like" ||
+    value === "love" ||
+    value === "laugh" ||
+    value === "wow" ||
+    value === "sad" ||
+    value === "angry"
+  );
+}
+
 export class SocialServiceImpl implements SocialService {
   // =============================================================================
   // REACTIONS
@@ -36,8 +47,8 @@ export class SocialServiceImpl implements SocialService {
     const { data: reactions, error } = await supabase
       .from("reactions")
       .select("*")
-      .eq("content_type", contentType)
-      .eq("content_id", contentId);
+      .eq("entity_type", contentType)
+      .eq("entity_id", contentId);
 
     if (error) throw error;
 
@@ -47,8 +58,8 @@ export class SocialServiceImpl implements SocialService {
       const { data } = await supabase
         .from("reactions")
         .select("reaction_type")
-        .eq("content_type", contentType)
-        .eq("content_id", contentId)
+        .eq("entity_type", contentType)
+        .eq("entity_id", contentId)
         .eq("user_id", userId)
         .single();
       userReaction = data;
@@ -56,17 +67,20 @@ export class SocialServiceImpl implements SocialService {
 
     // Aggregate reactions
     const reactionCounts: { [key in ReactionType]?: number } = {};
-    reactions?.forEach((reaction: Reaction) => {
-      const reactionType = reaction.reaction_type as ReactionType;
-      reactionCounts[reactionType] = (reactionCounts[reactionType] || 0) + 1;
+    reactions?.forEach((reaction) => {
+      const rawType = String(reaction.reaction_type);
+      if (!isReactionType(rawType)) return;
+      reactionCounts[rawType] = (reactionCounts[rawType] || 0) + 1;
     });
 
     return {
-      content_type: contentType,
-      content_id: contentId,
+      entity_type: contentType,
+      entity_id: contentId,
       total_count: reactions?.length || 0,
       reactions: reactionCounts,
-      user_reaction: userReaction?.reaction_type,
+      user_reaction: userReaction?.reaction_type
+        ? (String(userReaction.reaction_type) as ReactionType)
+        : undefined,
     };
   }
 
@@ -84,7 +98,10 @@ export class SocialServiceImpl implements SocialService {
       .single();
 
     if (error) throw error;
-    return data;
+    return {
+      ...data,
+      reaction_type: data.reaction_type as ReactionType,
+    };
   }
 
   async removeReaction(
@@ -97,8 +114,8 @@ export class SocialServiceImpl implements SocialService {
     const { error } = await supabase
       .from("reactions")
       .delete()
-      .eq("content_type", contentType)
-      .eq("content_id", contentId)
+      .eq("entity_type", contentType)
+      .eq("entity_id", contentId)
       .eq("user_id", userId);
 
     if (error) throw error;
@@ -115,14 +132,14 @@ export class SocialServiceImpl implements SocialService {
       .from("reactions")
       .select("*")
       .eq("user_id", userId)
-      .eq("content_type", request.content_type)
-      .eq("content_id", request.content_id)
+      .eq("entity_type", request.entity_type)
+      .eq("entity_id", request.entity_id)
       .single();
 
     if (existing) {
       if (existing.reaction_type === request.reaction_type) {
         // Same reaction type - remove it
-        await this.removeReaction(request.content_type, request.content_id);
+        await this.removeReaction(request.entity_type, request.entity_id);
         return null;
       }
       // Different reaction type - update it
@@ -130,14 +147,16 @@ export class SocialServiceImpl implements SocialService {
         .from("reactions")
         .update({
           reaction_type: request.reaction_type,
-          updated_at: new Date().toISOString(),
         })
         .eq("id", existing.id)
         .select()
         .single();
 
       if (error) throw error;
-      return data;
+      return {
+        ...data,
+        reaction_type: data.reaction_type as ReactionType,
+      };
     }
     // No existing reaction - add it
     return await this.addReaction(request);
@@ -157,7 +176,6 @@ export class SocialServiceImpl implements SocialService {
     const { count: followerCount } = await supabase
       .from("follows")
       .select("*", { count: "exact", head: true })
-      .eq("following_type", followingType)
       .eq("following_id", followingId);
 
     // Check if current user is following
@@ -167,7 +185,6 @@ export class SocialServiceImpl implements SocialService {
         .from("follows")
         .select("id")
         .eq("follower_id", userId)
-        .eq("following_type", followingType)
         .eq("following_id", followingId)
         .single();
 
@@ -200,7 +217,7 @@ export class SocialServiceImpl implements SocialService {
   }
 
   async unfollow(
-    followingType: FollowingType,
+    _followingType: FollowingType,
     followingId: string
   ): Promise<void> {
     const userId = getCurrentUserId();
@@ -210,25 +227,18 @@ export class SocialServiceImpl implements SocialService {
       .from("follows")
       .delete()
       .eq("follower_id", userId)
-      .eq("following_type", followingType)
       .eq("following_id", followingId);
 
     if (error) throw error;
   }
 
   async getFollowers(
-    followingType: FollowingType,
+    _followingType: FollowingType,
     followingId: string
   ): Promise<Follow[]> {
     const { data, error } = await supabase
       .from("follows")
-      .select(
-        `
-        *,
-        follower:profiles(id, display_name, avatar_url)
-      `
-      )
-      .eq("following_type", followingType)
+      .select("*")
       .eq("following_id", followingId)
       .order("created_at", { ascending: false });
 
@@ -239,13 +249,7 @@ export class SocialServiceImpl implements SocialService {
   async getFollowing(userId: string): Promise<Follow[]> {
     const { data, error } = await supabase
       .from("follows")
-      .select(
-        `
-        *,
-        following_team:teams(id, name, mascot),
-        following_user:profiles(id, display_name, avatar_url)
-      `
-      )
+      .select("*")
       .eq("follower_id", userId)
       .order("created_at", { ascending: false });
 
@@ -262,22 +266,15 @@ export class SocialServiceImpl implements SocialService {
     contentId: string,
     parentId?: string
   ): Promise<Comment[]> {
-    const query = supabase
+    let query = supabase
       .from("comments")
-      .select(
-        `
-        *,
-        user:profiles(id, display_name, avatar_url),
-        replies:comments!parent_comment_id(
-          *,
-          user:profiles(id, display_name, avatar_url)
-        )
-      `
-      )
-      .eq("content_type", contentType)
-      .eq("content_id", contentId)
-      .is("parent_comment_id", parentId || null)
+      .select("*")
+      .eq("entity_type", contentType)
+      .eq("entity_id", contentId)
       .order("created_at", { ascending: true });
+
+    if (parentId) query = query.eq("parent_id", parentId);
+    else query = query.is("parent_id", null);
 
     const { data, error } = await query;
     if (error) throw error;
@@ -286,12 +283,10 @@ export class SocialServiceImpl implements SocialService {
     const commentsWithReactions = await Promise.all(
       (data || []).map(async (comment) => {
         const reactions = await this.getReactions("comment", comment.id);
-        const replyCount = comment.replies?.length || 0;
-
         return {
           ...comment,
           reactions,
-          reply_count: replyCount,
+          reply_count: 0,
         };
       })
     );
@@ -309,12 +304,7 @@ export class SocialServiceImpl implements SocialService {
         user_id: userId,
         ...request,
       })
-      .select(
-        `
-        *,
-        user:profiles(id, display_name, avatar_url)
-      `
-      )
+      .select("*")
       .single();
 
     if (error) throw error;
@@ -332,18 +322,11 @@ export class SocialServiceImpl implements SocialService {
       .from("comments")
       .update({
         content: request.content,
-        is_edited: true,
-        edited_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
       .eq("id", commentId)
       .eq("user_id", userId)
-      .select(
-        `
-        *,
-        user:profiles(id, display_name, avatar_url)
-      `
-      )
+      .select("*")
       .single();
 
     if (error) throw error;
@@ -384,7 +367,7 @@ export class SocialServiceImpl implements SocialService {
       .from("notifications")
       .select("*", { count: "exact", head: true })
       .eq("user_id", userId)
-      .eq("is_read", false);
+      .eq("read", false);
 
     return {
       total_count: count || 0,
@@ -400,8 +383,7 @@ export class SocialServiceImpl implements SocialService {
     const { error } = await supabase
       .from("notifications")
       .update({
-        is_read: true,
-        read_at: new Date().toISOString(),
+        read: true,
       })
       .eq("id", notificationId)
       .eq("user_id", userId);
@@ -416,11 +398,10 @@ export class SocialServiceImpl implements SocialService {
     const { error } = await supabase
       .from("notifications")
       .update({
-        is_read: true,
-        read_at: new Date().toISOString(),
+        read: true,
       })
       .eq("user_id", userId)
-      .eq("is_read", false);
+      .eq("read", false);
 
     if (error) throw error;
   }
@@ -435,18 +416,16 @@ export class SocialServiceImpl implements SocialService {
 
     const { data, error } = await supabase
       .from("activity_feed")
-      .select(
-        `
-        *,
-        user:profiles(id, display_name, avatar_url)
-      `
-      )
+      .select("*")
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1);
 
     if (error) throw error;
-    return data || [];
+    return (data || []).map((item) => ({
+      ...item,
+      metadata: item.metadata as unknown,
+    }));
   }
 }
 

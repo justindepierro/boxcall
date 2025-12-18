@@ -249,10 +249,14 @@ export const PlaySelectorModal: React.FC<PlaySelectorModalProps> = ({
               value={selectedPersonnel}
               onChange={(value) => setSelectedPersonnel(value)}
               placeholder="All Personnel"
-              options={personnelGroups.map((personnel) => ({
-                value: personnel,
-                label: personnel,
-              }))}
+              options={personnelGroups
+                .filter(
+                  (p): p is string => typeof p === "string" && p.length > 0
+                )
+                .map((personnel) => ({
+                  value: personnel,
+                  label: personnel,
+                }))}
               className="min-w-32"
             />
           </div>

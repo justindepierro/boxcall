@@ -9,6 +9,8 @@ export interface SidebarItem {
   id: string;
   /** Display label for the sidebar item */
   label: string;
+  /** Optional route href used for active state matching */
+  href?: string;
   /** Optional icon (React component or string) */
   icon?: ReactNode;
   /** Click handler for the sidebar item */

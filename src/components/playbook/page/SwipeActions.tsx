@@ -89,7 +89,7 @@ const ActionButton: React.FC<{
 // Hook to handle click outside to close
 function useClickOutside(
   isOpen: boolean,
-  containerRef: React.RefObject<HTMLElement>,
+  containerRef: React.RefObject<HTMLElement | null>,
   onClose: () => void
 ) {
   useEffect(() => {

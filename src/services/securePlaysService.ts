@@ -43,6 +43,95 @@ interface SecurityEvent {
 
 const securityEvents: SecurityEvent[] = [];
 
+type RateLimitPreset = (typeof RateLimitPresets)[keyof typeof RateLimitPresets];
+
+function requireAuthenticatedUserForPlayAction(params: {
+  action: SecurityEvent["action"];
+  playId?: string;
+  message: string;
+}) {
+  const userId = getCurrentUserId();
+  if (userId) return userId;
+
+  trackSecurityEvent({
+    type: "auth_failure",
+    severity: "high",
+    action: params.action,
+    details: {
+      error: "Not authenticated",
+      ...(params.playId ? { playId: params.playId } : null),
+    },
+  });
+
+  throw new Error(params.message);
+}
+
+function buildRateLimitMessage(activity: string, seconds: number) {
+  if (seconds > 60) {
+    return `You're ${activity} too quickly. Please wait ${Math.ceil(seconds / 60)} minute(s) before trying again.`;
+  }
+  return `You're ${activity} too quickly. Please wait ${seconds} seconds before trying again.`;
+}
+
+function checkRateLimitOrThrow(params: {
+  rateLimitKey: string;
+  preset: RateLimitPreset;
+  userId: string;
+  action: SecurityEvent["action"];
+  activity: string;
+  playId?: string;
+}) {
+  try {
+    rateLimiter.checkOrThrow(params.rateLimitKey, params.preset);
+  } catch (error) {
+    if (isRateLimitError(error)) {
+      trackSecurityEvent({
+        type: "rate_limit",
+        severity: "medium",
+        action: params.action,
+        userId: params.userId,
+        details: {
+          ...(params.playId ? { playId: params.playId } : null),
+          limit: params.preset.maxRequests,
+          window: params.preset.windowMs,
+          retryAfter: error.retryAfterSeconds,
+        },
+      });
+
+      throw new Error(
+        buildRateLimitMessage(params.activity, error.retryAfterSeconds)
+      );
+    }
+    throw error;
+  }
+}
+
+function validatePlayUpdateOrThrow(params: {
+  id: string;
+  updates: unknown;
+  userId: string;
+}): PlayUpdateInput {
+  try {
+    return validatePlayUpdate({
+      ...(params.updates as Record<string, any>),
+      id: params.id,
+    });
+  } catch (error: any) {
+    trackSecurityEvent({
+      type: "validation_error",
+      severity: "low",
+      action: "update_play",
+      userId: params.userId,
+      details: {
+        playId: params.id,
+        error: error.message,
+        issues: error.issues || [],
+      },
+    });
+    throw new Error(`Invalid update data: ${error.message}`);
+  }
+}
+
 function trackSecurityEvent(event: Omit<SecurityEvent, "timestamp">) {
   const fullEvent: SecurityEvent = {
     ...event,
@@ -128,9 +217,14 @@ export class SecurePlaysService {
       // Validate input
       let validated: PlayCreateInput;
       try {
+        const playDataObj: Record<string, unknown> =
+          playData && typeof playData === "object" && !Array.isArray(playData)
+            ? (playData as Record<string, unknown>)
+            : {};
+
         // Clean up empty strings/null before validation
         const cleanedData = Object.fromEntries(
-          Object.entries(playData)
+          Object.entries(playDataObj)
             .map(([key, value]) => [
               key,
               value === "" || value === null ? undefined : value,
@@ -156,7 +250,6 @@ export class SecurePlaysService {
       // Validate formation & personnel
       const formationResult = await ensureValidFormation({
         playbookId: validated.playbook_id,
-        // @ts-expect-error formation_id added at runtime
         formationId: validated.formation_id,
         formationName: validated.formation,
         personnel: validated.personnel,
@@ -164,7 +257,6 @@ export class SecurePlaysService {
       });
 
       if (formationResult.formationId) {
-        // @ts-expect-error formation_id added at runtime
         validated.formation_id = formationResult.formationId;
       }
 
@@ -202,69 +294,25 @@ export class SecurePlaysService {
   static async updatePlay(id: string, updates: unknown): Promise<Play> {
     try {
       // Get current user for rate limiting
-      const userId = getCurrentUserId();
-
-      if (!userId) {
-        trackSecurityEvent({
-          type: "auth_failure",
-          severity: "high",
-          action: "update_play",
-          details: { error: "Not authenticated", playId: id },
-        });
-        throw new Error("Authentication required to update plays");
-      }
+      const userId = requireAuthenticatedUserForPlayAction({
+        action: "update_play",
+        playId: id,
+        message: "Authentication required to update plays",
+      });
 
       // Rate limit check
       const rateLimitKey = getUserRateLimitKey(userId, "play-update");
-      try {
-        rateLimiter.checkOrThrow(rateLimitKey, RateLimitPresets.PLAY_UPDATE);
-      } catch (error) {
-        if (isRateLimitError(error)) {
-          trackSecurityEvent({
-            type: "rate_limit",
-            severity: "medium",
-            action: "update_play",
-            userId,
-            details: {
-              playId: id,
-              limit: RateLimitPresets.PLAY_UPDATE.maxRequests,
-              window: RateLimitPresets.PLAY_UPDATE.windowMs,
-              retryAfter: error.retryAfterSeconds,
-            },
-          });
-
-          // Enhance error message with retry time
-          const seconds = error.retryAfterSeconds;
-          const message =
-            seconds > 60
-              ? `You're updating plays too quickly. Please wait ${Math.ceil(seconds / 60)} minute(s) before trying again.`
-              : `You're updating plays too quickly. Please wait ${seconds} seconds before trying again.`;
-          throw new Error(message);
-        }
-        throw error;
-      }
+      checkRateLimitOrThrow({
+        rateLimitKey,
+        preset: RateLimitPresets.PLAY_UPDATE,
+        userId,
+        action: "update_play",
+        activity: "updating plays",
+        playId: id,
+      });
 
       // Validate input (add id to updates for validation)
-      let validated: PlayUpdateInput;
-      try {
-        validated = validatePlayUpdate({
-          ...(updates as Record<string, any>),
-          id,
-        });
-      } catch (error: any) {
-        trackSecurityEvent({
-          type: "validation_error",
-          severity: "low",
-          action: "update_play",
-          userId,
-          details: {
-            playId: id,
-            error: error.message,
-            issues: error.issues || [],
-          },
-        });
-        throw new Error(`Invalid update data: ${error.message}`);
-      }
+      const validated = validatePlayUpdateOrThrow({ id, updates, userId });
 
       const existingPlay = await PlaysService.getPlay(id);
       if (!existingPlay) {
@@ -274,7 +322,6 @@ export class SecurePlaysService {
       const formationResult = await ensureValidFormation({
         playbookId: existingPlay.playbook_id,
         formationId:
-          // @ts-expect-error formation_id attached at runtime
           validated.formation_id ?? existingPlay.formation_id ?? undefined,
         formationName:
           validated.formation ?? existingPlay.formation ?? undefined,
@@ -283,7 +330,6 @@ export class SecurePlaysService {
       });
 
       if (formationResult.formationId) {
-        // @ts-expect-error formation_id attached at runtime
         validated.formation_id = formationResult.formationId;
       }
 

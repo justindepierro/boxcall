@@ -15,13 +15,11 @@ interface PerformanceWithMemory extends Performance {
   memory: PerformanceMemory;
 }
 
-interface WindowWithGtag extends Window {
-  gtag?: (
-    command: string,
-    action: string,
-    parameters: Record<string, unknown>
-  ) => void;
-}
+type GtagFn = (
+  command: string,
+  action: string,
+  parameters: Record<string, unknown>
+) => void;
 
 interface WindowWithPerformanceMonitor extends Window {
   performanceMonitor?: {
@@ -353,9 +351,9 @@ class WebVitalsMonitor {
   /** Send metrics to analytics service */
   private sendToAnalytics(name: string, value: number) {
     // Example: Google Analytics 4 custom event
-    const windowWithGtag = window as WindowWithGtag;
-    if (typeof windowWithGtag.gtag !== "undefined") {
-      windowWithGtag.gtag("event", "performance_metric", {
+    const gtag = (window as any).gtag as GtagFn | undefined;
+    if (typeof gtag === "function") {
+      gtag("event", "performance_metric", {
         metric_name: name,
         metric_value: value,
         custom_parameter: true,

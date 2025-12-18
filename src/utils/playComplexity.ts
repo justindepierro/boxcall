@@ -159,16 +159,6 @@ function calculatePersonnelComplexity(personnel: string): number {
 function calculateConceptDifficulty(play: Play): number {
   let score = 0;
 
-  // Success rate indicates difficulty - lower success = harder concept
-  if (play.success_rate) {
-    if (play.success_rate < 50)
-      score += 15; // Very difficult
-    else if (play.success_rate < 65)
-      score += 10; // Difficult
-    else if (play.success_rate < 80) score += 5; // Moderate
-    // High success rate adds no complexity points
-  }
-
   // Description length can indicate complexity (using notes field)
   if (play.notes) {
     const wordCount = play.notes.split(" ").length;

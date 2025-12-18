@@ -29,6 +29,33 @@ import {
 // HELPER FUNCTIONS (Extracted to reduce complexity)
 // ==============================================
 
+function getPlayTypeCategory(
+  playType: string | null | undefined
+): "run" | "pass" | "other" {
+  const lower = playType?.toLowerCase() ?? "";
+  if (lower.includes("run")) return "run";
+  if (lower.includes("pass")) return "pass";
+  if (lower.includes("rpo")) return "run";
+  if (lower.includes("action") || lower.includes("pa")) return "pass";
+  return "other";
+}
+
+function getPlayConceptText(play: {
+  play_name?: string | null;
+  tags?: string[] | null;
+  p_tag1?: string | null;
+  p_tag2?: string | null;
+  notes?: string | null;
+}): string {
+  const parts: string[] = [];
+  if (play.play_name) parts.push(play.play_name);
+  if (Array.isArray(play.tags)) parts.push(...play.tags);
+  if (play.p_tag1) parts.push(play.p_tag1);
+  if (play.p_tag2) parts.push(play.p_tag2);
+  if (play.notes) parts.push(play.notes);
+  return parts.join(" ").toLowerCase();
+}
+
 /** Calculate bonus/penalty based on down */
 function getDownBonus(
   down: number,
@@ -114,7 +141,7 @@ function getStreakAndPracticeBonus(confidence: {
   if (confidence.practiceToGame?.needsMorePractice) bonus -= 15;
   else if (
     confidence.practiceToGame &&
-    confidence.practiceToGame.transferRate >= 10
+    (confidence.practiceToGame.transferRate ?? 0) >= 10
   )
     bonus += 10;
   return bonus;
@@ -292,8 +319,12 @@ function getCoachPreferenceBonus(
  */
 function getGameUrgencyBonus(
   play: {
-    play_type?: string | null;
-    concept?: string | null;
+    p_type?: string | null;
+    play_name?: string | null;
+    tags?: string[] | null;
+    p_tag1?: string | null;
+    p_tag2?: string | null;
+    notes?: string | null;
     pref_situation?: string | null;
   },
   situation: GameSituation
@@ -311,8 +342,8 @@ function getGameUrgencyBonus(
 
   const urgency = calculateGameUrgency(situation);
   const playTypeRec = getPlayTypeRecommendation(situation);
-  const playType = play.play_type?.toLowerCase();
-  const concept = play.concept?.toLowerCase() || "";
+  const playType = getPlayTypeCategory(play.p_type);
+  const concept = getPlayConceptText(play);
   const scoreDiff = situation.teamScore - situation.opponentScore;
   const timeRemaining = parseTimeRemaining(situation.timeRemaining);
 
@@ -451,15 +482,16 @@ function getConfidenceReasons(
 /** Get down-specific reasoning */
 function getDownReasons(situation: GameSituation, play: Play): string[] {
   const reasons: string[] = [];
+  const playType = getPlayTypeCategory(play.p_type);
+  const concept = getPlayConceptText(play);
   if (situation.down === 3 && situation.distance <= 3) {
-    if (play.play_type === "run")
-      reasons.push("Strong 3rd & short conversion play");
-    else if (play.concept?.includes("quick"))
+    if (playType === "run") reasons.push("Strong 3rd & short conversion play");
+    else if (concept.includes("quick"))
       reasons.push("Quick-hitting 3rd down concept");
   } else if (
     situation.down === 3 &&
     situation.distance >= 8 &&
-    play.play_type === "pass"
+    playType === "pass"
   ) {
     reasons.push("Designed for 3rd & long");
   }
@@ -678,11 +710,11 @@ export class SituationalRecommender {
         includeStats &&
         situation.opponentCoverage &&
         situation.opponentCoverage !== "Unknown"
-          ? await this.getCoverageStats(
+          ? ((await this.getCoverageStats(
               play.id,
               teamId,
               situation.opponentCoverage
-            )
+            )) ?? undefined)
           : undefined;
 
       // Phase 13.3: Get hash preference stats
@@ -740,27 +772,30 @@ export class SituationalRecommender {
     const { bonus: urgencyBonus } = getGameUrgencyBonus(play, situation);
     score += urgencyBonus;
 
+    const playType = getPlayTypeCategory(play.p_type);
+    const concept = getPlayConceptText(play);
+
     // Add down bonus (additional algorithmic bonus)
     score += getDownBonus(
       situation.down,
-      play.play_type,
-      play.concept,
+      playType,
+      concept,
       confidence.overallScore
     );
 
     // Add distance bonus
     score += getDistanceBonus(
       situation.distance,
-      play.play_type,
+      playType,
       play.formation,
-      play.concept
+      concept
     );
 
     // Add field zone bonus
     score += getFieldZoneBonus(
       situation.yardLine,
-      play.play_type,
-      play.concept,
+      playType,
+      concept,
       situation.distance,
       confidence.overallScore
     );
@@ -851,8 +886,8 @@ export class SituationalRecommender {
       const stats = await ExecutionTrackingService.getPlayStats(playId, teamId);
       return {
         successRate: stats.successRate,
-        avgYardsGained: stats.avgYardsGained,
-        executionCount: stats.executionCount,
+        avgYardsGained: stats.avgYardsGained ?? 0,
+        executionCount: stats.totalExecutions,
       };
     } catch (error) {
       logError("Error fetching play stats:", error);

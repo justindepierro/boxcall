@@ -6,6 +6,10 @@ import { useScrollLock } from "../hooks/useScrollLock";
 interface BottomSheetProps {
   /** Content to display in the bottom sheet */
   children: React.ReactNode;
+  /** Controlled open/close support (optional) */
+  isOpen?: boolean;
+  /** Called when the sheet should close (optional) */
+  onClose?: () => void;
   /** Snap points as percentages of viewport height (0-1) */
   snapPoints?: number[];
   /** Initial snap point index */
@@ -32,6 +36,8 @@ interface BottomSheetProps {
  */
 export function BottomSheet({
   children,
+  isOpen = true,
+  onClose,
   snapPoints = [0.08, 0.5, 0.9], // Default: peek, half, full
   initialSnapPoint = 0,
   onSnapPointChange,
@@ -46,7 +52,7 @@ export function BottomSheet({
   const sheetRef = useRef<HTMLDivElement>(null);
 
   // 🚀 PERFORMANCE: Lock body scroll when sheet is significantly open (>10%)
-  const isSheetOpen = snapPoints[currentSnapIndex] > 0.1;
+  const isSheetOpen = isOpen && snapPoints[currentSnapIndex] > 0.1;
   useScrollLock(isSheetOpen);
 
   // Motion value for Y position (pixels from bottom)
@@ -82,6 +88,14 @@ export function BottomSheet({
 
     setCurrentSnapIndex(snapIndex);
     onSnapPointChange?.(snapPoints[snapIndex]);
+  };
+
+  const requestClose = () => {
+    if (onClose) {
+      onClose();
+      return;
+    }
+    animateToSnapPoint(0);
   };
 
   // Find nearest snap point
@@ -143,8 +157,14 @@ export function BottomSheet({
     }
   );
 
+  if (!isOpen) return null;
+
   // Handle backdrop tap to minimize
   const handleBackdropTap = () => {
+    if (onClose) {
+      requestClose();
+      return;
+    }
     if (currentSnapIndex > 0) {
       animateToSnapPoint(0); // Go to peek state
     }

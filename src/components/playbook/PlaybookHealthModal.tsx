@@ -52,6 +52,7 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   const loadHealthScore = useCallback(async () => {
+    if (!playbookId) return;
     try {
       setLoading(true);
       setError(null);

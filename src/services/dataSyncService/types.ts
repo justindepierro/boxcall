@@ -4,7 +4,7 @@
 
 import type { Play } from "../../types/play";
 import type { GamePlan } from "../gamePlanService";
-import type { PracticeScript } from "../practiceScriptService";
+import type { PracticeScript } from "../practiceService";
 
 export interface CachedData<T = unknown> {
   data: T;

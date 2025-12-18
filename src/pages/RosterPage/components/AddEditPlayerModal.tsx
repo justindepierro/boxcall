@@ -73,13 +73,10 @@ export const AddEditPlayerModal: React.FC<AddEditPlayerModalProps> = ({
 }) => {
   const isEdit = mode === "edit";
   const title = isEdit ? "Edit Player" : "Add New Player";
-  const submitLabel = isEdit
-    ? saving
-      ? "Saving..."
-      : "Save Now"
-    : saving
-      ? "Adding..."
-      : "Add Player";
+  let submitLabel = isEdit ? "Save Now" : "Add Player";
+  if (saving) {
+    submitLabel = isEdit ? "Saving..." : "Adding...";
+  }
 
   // Handle field change - use autosave-aware handler in edit mode
   const handleChange = <K extends keyof PlayerFormData>(

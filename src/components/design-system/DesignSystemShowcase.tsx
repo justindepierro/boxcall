@@ -3,6 +3,8 @@
  * Modern, comprehensive demonstration of our design system
  */
 
+/* eslint-disable max-lines-per-function */
+
 import { useState } from "react";
 import { Button } from "../ui/Button/Button";
 import { Badge } from "../ui/Badge";

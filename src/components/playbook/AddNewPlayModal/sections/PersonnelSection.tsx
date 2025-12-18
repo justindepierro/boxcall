@@ -5,17 +5,20 @@ import { Typography } from "../../../design-system/Typography";
 import { ValidatedInput } from "../../ValidatedInput";
 import { usePersonnelConfigurations } from "../../../../hooks/usePersonnel";
 import { useToast } from "../../../../hooks/useToast";
-import type { Play } from "../../../../types/database";
+
+type ExistingPlayForPersonnelValidation = {
+  personnel?: string | null;
+};
 
 interface PersonnelSectionProps {
   personnel: string;
   onPersonnelChange: (personnel: string) => void;
-  suggestions: string[];
-  showSuggestions: boolean;
-  onShowSuggestionsChange: (show: boolean) => void;
+  suggestions?: string[];
+  showSuggestions?: boolean;
+  onShowSuggestionsChange?: (show: boolean) => void;
   onAddNew?: () => void; // NEW: Callback to open personnel creation panel
   playbookId?: string; // NEW: Playbook ID to load personnel configurations
-  existingPlays?: Play[]; // NEW: For validation against existing plays
+  existingPlays?: ExistingPlayForPersonnelValidation[]; // NEW: For validation against existing plays
   onNextField?: () => void; // NEW: Keyboard navigation
 }
 

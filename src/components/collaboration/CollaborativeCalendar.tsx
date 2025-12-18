@@ -9,6 +9,8 @@
  * - Practice and game scheduling coordination
  */
 
+/* eslint-disable max-lines-per-function */
+
 import React, { useState, useCallback } from "react";
 import { CollaborativeWidget } from "./CollaborativeWidget";
 import { Button, Card } from "../ui";

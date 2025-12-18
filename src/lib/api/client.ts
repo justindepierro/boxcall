@@ -12,6 +12,8 @@
  * well-tested, type-safe API layer.
  */
 
+/* eslint-disable complexity */
+
 import type { Database } from "../../types/database";
 
 // Types

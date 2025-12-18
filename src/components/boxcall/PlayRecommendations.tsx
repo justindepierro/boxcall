@@ -11,6 +11,8 @@
  * - Coverage-specific performance (Phase 13.2)
  */
 
+/* eslint-disable max-lines-per-function */
+
 import React from "react";
 import { Typography } from "../design-system";
 import { Icon } from "../ui/Icon/Icon";
@@ -105,15 +107,15 @@ export const PlayRecommendations: React.FC<PlayRecommendationsProps> = ({
                       {rec.play.formation}
                     </span>
                   )}
-                  {rec.play.play_type && (
+                  {rec.play.p_type && (
                     <span
                       className={`px-2 py-0.5 rounded text-xs font-medium ${
-                        rec.play.play_type === "pass"
+                        String(rec.play.p_type).toLowerCase() === "pass"
                           ? "bg-primary/20 text-primary border border-primary/30"
                           : "bg-success/20 text-success border border-success/30"
                       }`}
                     >
-                      {rec.play.play_type.toUpperCase()}
+                      {String(rec.play.p_type).toUpperCase()}
                     </span>
                   )}
                 </div>

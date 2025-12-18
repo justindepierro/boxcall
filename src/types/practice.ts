@@ -58,16 +58,20 @@ export interface PracticeTemplate {
   id: string;
   name: string;
   description?: string;
-  teamId: string;
-  duration: number; // total template duration in minutes
-  blocks: Omit<PracticeBlock, "id" | "startTime" | "endTime">[];
-  defaultLocation: string;
-  defaultFieldType: "indoor" | "outdoor" | "gym" | "field";
-  equipmentRequired: string[];
+  teamId: string | null;
+  duration: number | null; // total template duration in minutes
+  // Legacy/template authoring fields (not present in current DB schema)
+  blocks?: Omit<PracticeBlock, "id" | "startTime" | "endTime">[];
+  defaultLocation?: string;
+  defaultFieldType?: "indoor" | "outdoor" | "gym" | "field";
+  equipmentRequired?: string[];
   isPublic: boolean; // can be shared with other teams
-  createdBy: string;
+  createdBy: string | null;
   createdAt: Date;
-  usageCount: number;
+  updatedAt?: Date;
+  usageCount?: number;
+  // Attached at runtime by some services/UI flows (not persisted in practice_templates)
+  plays?: any[];
 }
 export interface PracticeScript {
   id: string;

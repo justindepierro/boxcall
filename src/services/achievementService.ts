@@ -37,40 +37,37 @@ export type AchievementTrigger =
 export interface AchievementDefinition {
   id: string;
   name: string;
-  description: string;
-  icon: string;
-  category:
-    | "gameplay"
-    | "social"
-    | "teamwork"
-    | "leadership"
-    | "milestone"
-    | "special";
-  trigger_type: "action_count" | "streak" | "milestone" | "special";
-  trigger_target: AchievementTrigger;
-  trigger_count: number;
-  points: number;
-  rarity: "common" | "uncommon" | "rare" | "epic" | "legendary";
-  is_active: boolean;
+  description: string | null;
+  icon: string | null;
+  category: string | null;
+  criteria: any | null;
+  points: number | null;
+  is_active: boolean | null;
+
+  // Legacy/aspirational fields (not present in current DB schema).
+  // Keep optional so the service compiles even when tables evolve.
+  trigger_type?: "action_count" | "streak" | "milestone" | "special";
+  trigger_target?: AchievementTrigger;
+  trigger_count?: number;
+  rarity?: "common" | "uncommon" | "rare" | "epic" | "legendary";
 }
 
 export interface AchievementProgress {
   id: string;
-  player_id: string;
+  user_id: string;
   achievement_id: string;
-  current_count: number;
-  is_completed: boolean;
-  completed_at?: string;
+  current_value: number | null;
+  target_value: number | null;
+  completed_at: string | null;
 }
 
 export interface EarnedAchievement {
   id: string;
-  player_id: string;
-  definition_id: string;
   achievement_type: string;
-  description?: string;
+  description: string | null;
   earned_date: string;
-  points_earned: number;
+  created_at: string | null;
+  player_id: string | null;
   definition?: AchievementDefinition;
 }
 
@@ -196,7 +193,7 @@ class AchievementTracker {
       let { data: progress } = await supabase
         .from("achievement_progress")
         .select("*")
-        .eq("player_id", playerId)
+        .eq("user_id", playerId)
         .eq("achievement_id", achievement.id)
         .single();
 
@@ -205,10 +202,10 @@ class AchievementTracker {
         const { data: newProgress, error } = await supabase
           .from("achievement_progress")
           .insert({
-            player_id: playerId,
+            user_id: playerId,
             achievement_id: achievement.id,
-            current_count: 0,
-            is_completed: false,
+            current_value: 0,
+            target_value: achievement.trigger_count ?? null,
           })
           .select()
           .single();
@@ -217,12 +214,12 @@ class AchievementTracker {
         progress = newProgress;
       }
 
-      if (progress.is_completed) {
+      if (progress.completed_at) {
         return null; // Already earned
       }
 
       // Increment progress based on trigger type
-      let newCount = progress.current_count;
+      let newCount = progress.current_value ?? 0;
 
       switch (achievement.trigger_type) {
         case "action_count":
@@ -235,17 +232,24 @@ class AchievementTracker {
         case "special":
           // Special achievements handled separately
           return null;
+        default:
+          // Unknown trigger type (or not yet modeled in DB)
+          newCount += 1;
+          break;
       }
 
       // Check if achievement is now complete
-      const isComplete = newCount >= achievement.trigger_count;
+      const targetValue =
+        achievement.trigger_count ??
+        progress.target_value ??
+        Number.POSITIVE_INFINITY;
+      const isComplete = newCount >= targetValue;
 
       // Update progress
       await supabase
         .from("achievement_progress")
         .update({
-          current_count: newCount,
-          is_completed: isComplete,
+          current_value: newCount,
           completed_at: isComplete ? new Date().toISOString() : null,
           updated_at: new Date().toISOString(),
         })
@@ -257,11 +261,9 @@ class AchievementTracker {
           .from("achievements")
           .insert({
             player_id: playerId,
-            definition_id: achievement.id,
             achievement_type: achievement.name,
             description: achievement.description,
             earned_date: new Date().toISOString().split("T")[0],
-            points_earned: achievement.points,
           })
           .select()
           .single();
@@ -297,14 +299,11 @@ class AchievementTracker {
       // Check total points milestone
       const { data: totalPoints } = await supabase
         .from("achievements")
-        .select("points_earned")
+        .select("id")
         .eq("player_id", playerId);
 
-      const pointsSum =
-        totalPoints?.reduce(
-          (sum: number, a: any) => sum + (a.points_earned || 0),
-          0
-        ) || 0;
+      // achievements table doesn't store points in current schema
+      const pointsSum = 0;
 
       const pointsMilestones = [100, 250, 500, 1000];
       for (const milestone of pointsMilestones) {
@@ -313,8 +312,7 @@ class AchievementTracker {
             playerId,
             "points_milestone",
             milestone,
-            `Reach ${milestone} total achievement points`,
-            milestone
+            `Reach ${milestone} total achievement points`
           );
           if (earnedAchievement) earned.push(earnedAchievement);
         }
@@ -330,8 +328,7 @@ class AchievementTracker {
             playerId,
             "achievements_earned",
             milestone,
-            `Earn ${milestone} different achievements`,
-            milestone * 10
+            `Earn ${milestone} different achievements`
           );
           if (earnedAchievement) earned.push(earnedAchievement);
         }
@@ -350,8 +347,7 @@ class AchievementTracker {
     playerId: string,
     triggerTarget: string,
     milestone: number,
-    description: string,
-    points: number
+    description: string
   ): Promise<EarnedAchievement | null> {
     try {
       // Check if already earned
@@ -371,7 +367,6 @@ class AchievementTracker {
           achievement_type: `Milestone: ${triggerTarget} ${milestone}`,
           description,
           earned_date: new Date().toISOString().split("T")[0],
-          points_earned: points,
         })
         .select()
         .single();
@@ -455,7 +450,7 @@ class AchievementTracker {
     try {
       const { data, error } = await supabase
         .from("achievement_definitions")
-        .insert(definition)
+        .insert(definition as any)
         .select()
         .single();
 

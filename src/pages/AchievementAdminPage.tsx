@@ -14,16 +14,32 @@ import { LoadingScreen } from "../components/ui/LoadingScreen";
 import { useToast } from "../hooks/useToast";
 import { logError } from "../utils/logger";
 
+type AchievementCategory =
+  | "gameplay"
+  | "social"
+  | "teamwork"
+  | "leadership"
+  | "milestone"
+  | "special";
+
+type AchievementTriggerType =
+  | "action_count"
+  | "streak"
+  | "milestone"
+  | "special";
+
+type AchievementRarity = "common" | "uncommon" | "rare" | "epic" | "legendary";
+
 interface AchievementFormData {
   name: string;
   description: string;
   icon: string;
-  category: AchievementDefinition["category"];
-  trigger_type: AchievementDefinition["trigger_type"];
+  category: AchievementCategory;
+  trigger_type: AchievementTriggerType;
   trigger_target: string;
   trigger_count: number;
   points: number;
-  rarity: AchievementDefinition["rarity"];
+  rarity: AchievementRarity;
 }
 
 const defaultFormData: AchievementFormData = {
@@ -94,8 +110,7 @@ export const AchievementAdminPage: React.FC = () => {
       const { data, error } = await supabase
         .from("achievement_definitions")
         .select("*")
-        .order("category", { ascending: true })
-        .order("rarity", { ascending: false });
+        .order("category", { ascending: true });
 
       if (error) throw error;
       setAchievements(data || []);
@@ -109,9 +124,24 @@ export const AchievementAdminPage: React.FC = () => {
   const handleCreate = async () => {
     setSaving(true);
     try {
+      const insertRow = {
+        name: formData.name,
+        description: formData.description || null,
+        icon: formData.icon || null,
+        category: formData.category,
+        points: formData.points,
+        is_active: true,
+        criteria: {
+          trigger_type: formData.trigger_type,
+          trigger_target: formData.trigger_target,
+          trigger_count: formData.trigger_count,
+          rarity: formData.rarity,
+        },
+      };
+
       const { data, error } = await supabase
         .from("achievement_definitions")
-        .insert([formData])
+        .insert([insertRow] as any)
         .select()
         .single();
 
@@ -132,9 +162,23 @@ export const AchievementAdminPage: React.FC = () => {
 
     setSaving(true);
     try {
+      const updateRow = {
+        name: formData.name,
+        description: formData.description || null,
+        icon: formData.icon || null,
+        category: formData.category,
+        points: formData.points,
+        criteria: {
+          trigger_type: formData.trigger_type,
+          trigger_target: formData.trigger_target,
+          trigger_count: formData.trigger_count,
+          rarity: formData.rarity,
+        },
+      };
+
       const { data, error } = await supabase
         .from("achievement_definitions")
-        .update(formData)
+        .update(updateRow as any)
         .eq("id", editingAchievement.id)
         .select()
         .single();
@@ -181,17 +225,20 @@ export const AchievementAdminPage: React.FC = () => {
   };
 
   const handleEdit = (achievement: AchievementDefinition) => {
+    const criteria = (achievement.criteria ?? {}) as any;
+
     setEditingAchievement(achievement);
     setFormData({
       name: achievement.name,
-      description: achievement.description,
-      icon: achievement.icon,
-      category: achievement.category,
-      trigger_type: achievement.trigger_type,
-      trigger_target: achievement.trigger_target,
-      trigger_count: achievement.trigger_count || 1,
-      points: achievement.points,
-      rarity: achievement.rarity,
+      description: achievement.description ?? "",
+      icon: achievement.icon ?? "trophy",
+      category: (achievement.category as AchievementCategory) ?? "gameplay",
+      trigger_type:
+        (criteria.trigger_type as AchievementTriggerType) ?? "action_count",
+      trigger_target: String(criteria.trigger_target ?? ""),
+      trigger_count: Number(criteria.trigger_count ?? 1),
+      points: achievement.points ?? 10,
+      rarity: (criteria.rarity as AchievementRarity) ?? "common",
     });
   };
 
@@ -229,9 +276,24 @@ export const AchievementAdminPage: React.FC = () => {
       }
 
       // Insert achievements
+      const rows = data.map((d) => ({
+        name: d.name,
+        description: d.description || null,
+        icon: d.icon || null,
+        category: d.category,
+        points: d.points,
+        is_active: true,
+        criteria: {
+          trigger_type: d.trigger_type,
+          trigger_target: d.trigger_target,
+          trigger_count: d.trigger_count,
+          rarity: d.rarity,
+        },
+      }));
+
       const { data: inserted, error } = await supabase
         .from("achievement_definitions")
-        .insert(data)
+        .insert(rows as any)
         .select();
 
       if (error) throw error;
@@ -297,67 +359,73 @@ export const AchievementAdminPage: React.FC = () => {
 
       {/* Achievement Grid */}
       <div className="grid-dashboard">
-        {achievements.map((achievement) => (
-          <Card key={achievement.id} className="p-6">
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex items-center">
-                <Icon
-                  name={achievement.icon as any}
-                  className="w-8 h-8 text-jade-600 mr-3"
-                />
-                <div>
-                  <h3 className="font-semibold text-lg">{achievement.name}</h3>
-                  <Badge
-                    variant={getRarityColor(achievement.rarity)}
-                    className="mt-1"
+        {achievements.map((achievement) => {
+          const criteria = (achievement.criteria ?? {}) as any;
+          const rarity = (criteria.rarity ?? "common") as AchievementRarity;
+          const triggerTarget = String(criteria.trigger_target ?? "");
+          const triggerCount = Number(criteria.trigger_count ?? 1);
+
+          return (
+            <Card key={achievement.id} className="p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex items-center">
+                  <Icon
+                    name={(achievement.icon ?? "trophy") as any}
+                    className="w-8 h-8 text-jade-600 mr-3"
+                  />
+                  <div>
+                    <h3 className="font-semibold text-lg">
+                      {achievement.name}
+                    </h3>
+                    <Badge variant={getRarityColor(rarity)} className="mt-1">
+                      {rarity}
+                    </Badge>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleEdit(achievement)}
                   >
-                    {achievement.rarity}
-                  </Badge>
+                    <Icon name="edit" className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleDelete(achievement.id)}
+                    className="text-error hover:text-error"
+                  >
+                    <Icon name="delete" className="w-4 h-4" />
+                  </Button>
                 </div>
               </div>
-              <div className="flex gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleEdit(achievement)}
-                >
-                  <Icon name="edit" className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleDelete(achievement.id)}
-                  className="text-error hover:text-error"
-                >
-                  <Icon name="delete" className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
 
-            <p className="text-secondary text-sm mb-4">
-              {achievement.description}
-            </p>
+              <p className="text-secondary text-sm mb-4">
+                {achievement.description ?? ""}
+              </p>
 
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-muted">Category:</span>
-                <Badge variant="neutral">{achievement.category}</Badge>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted">Category:</span>
+                  <Badge variant="neutral">{achievement.category ?? ""}</Badge>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted">Trigger:</span>
+                  <span>
+                    {triggerTarget} ({triggerCount})
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted">Points:</span>
+                  <span className="font-semibold text-jade-600">
+                    {achievement.points ?? 0}
+                  </span>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted">Trigger:</span>
-                <span>
-                  {achievement.trigger_target} ({achievement.trigger_count})
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted">Points:</span>
-                <span className="font-semibold text-jade-600">
-                  {achievement.points}
-                </span>
-              </div>
-            </div>
-          </Card>
-        ))}
+            </Card>
+          );
+        })}
       </div>
 
       {/* Create/Edit Modal */}

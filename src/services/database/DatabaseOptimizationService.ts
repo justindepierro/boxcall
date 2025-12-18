@@ -219,7 +219,7 @@ export class DatabaseOptimizationService {
 
       // Build and execute query with proper type casting
       const client = this.getClient();
-      let query: any = client.from(table);
+      let query: any = (client as any).from(table);
 
       // Apply column selection
       if (options.columns && options.columns.length > 0) {
@@ -307,7 +307,7 @@ export class DatabaseOptimizationService {
 
     try {
       const client = this.getClient();
-      let query: any = client.from(table).insert(data);
+      let query: any = (client as any).from(table).insert(data);
 
       if (options.returning) {
         query = query.select(options.returning.join(","));
@@ -373,7 +373,7 @@ export class DatabaseOptimizationService {
 
     try {
       const client = this.getClient();
-      let query: any = client.from(table).update(updates);
+      let query: any = (client as any).from(table).update(updates);
 
       // Apply filters
       Object.entries(filters).forEach(([key, value]) => {
@@ -435,7 +435,7 @@ export class DatabaseOptimizationService {
 
     try {
       const client = this.getClient();
-      let query = client.from(table).delete();
+      let query = (client as any).from(table).delete();
 
       // Apply filters
       Object.entries(filters).forEach(([key, value]) => {

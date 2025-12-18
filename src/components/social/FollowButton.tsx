@@ -43,7 +43,6 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
         await socialService.unfollow(followingType, followingId);
       } else {
         await socialService.follow({
-          following_type: followingType,
           following_id: followingId,
         });
       }

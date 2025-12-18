@@ -18,7 +18,7 @@ interface FileUploadSectionProps {
   validationError: string | null;
   parsedData: ExportedGamePlan | null;
   importing: boolean;
-  fileInputRef: React.RefObject<HTMLInputElement>;
+  fileInputRef: React.RefObject<HTMLInputElement | null>;
   onFileSelect: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -156,7 +156,7 @@ export function ImportGamePlansModal({
   const [validationError, setValidationError] = useState<string | null>(null);
   const [parsedData, setParsedData] = useState<ExportedGamePlan | null>(null);
   const [importing, setImporting] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileSelect = async (
     event: React.ChangeEvent<HTMLInputElement>

@@ -1,4 +1,10 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import { Icon } from "../Icon/Icon";
 
 import type { InlineEditableTextProps } from "./InlineEditableText.types";
@@ -206,16 +212,17 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Create validator function
-  const validateValue = useCallback(
-    createValidator({
-      minLength,
-      maxLength,
-      allowSymbols,
-      showLengthWarnings,
-      maxRecommendedLength,
-      validationRules,
-      customValidator,
-    }),
+  const validateValue = useMemo(
+    () =>
+      createValidator({
+        minLength,
+        maxLength,
+        allowSymbols,
+        showLengthWarnings,
+        maxRecommendedLength,
+        validationRules,
+        customValidator,
+      }),
     [
       minLength,
       maxLength,

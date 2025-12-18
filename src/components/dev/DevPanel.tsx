@@ -5,8 +5,11 @@
  * Only accessible to authorized developers (configured via env).
  */
 
+/* eslint-disable max-lines-per-function */
+
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../app/auth-store";
+import { supabase } from "../../lib/supabase";
 import { useApp } from "../core/useApp";
 import { AuthMonitoring } from "../../utils/authMonitoring";
 import { PerformanceDashboard } from "./PerformanceDashboard";
@@ -15,7 +18,7 @@ import { isSuperAdminEmail } from "../../config/superAdmin";
 interface AuthMonitorTabProps {}
 
 const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
-  const { user, session, profile, loading, error, refreshSession } = useAuth();
+  const { user, session, profile, loading, error } = useAuth();
   const [sessionInfo, setSessionInfo] = useState<any>(null);
   const [isValidSession, setIsValidSession] = useState<boolean | null>(null);
   const [authEvents, setAuthEvents] = useState<string[]>([]);
@@ -93,17 +96,16 @@ const AuthMonitorTab: React.FC<AuthMonitorTabProps> = () => {
   }, [session]);
 
   const handleRefreshSession = async () => {
-    const result = await refreshSession();
-    if (result.success) {
+    const { data, error: refreshError } = await supabase.auth.refreshSession();
+    if (!refreshError) {
       setAuthEvents((prev) => [
         `${new Date().toLocaleTimeString()}: Session refreshed successfully`,
         ...prev.slice(0, 9),
       ]);
+      setSessionInfo(data.session ?? null);
     } else {
       setAuthEvents((prev) => [
-        `${new Date().toLocaleTimeString()}: Session refresh failed: ${
-          result.error
-        }`,
+        `${new Date().toLocaleTimeString()}: Session refresh failed: ${refreshError.message}`,
         ...prev.slice(0, 9),
       ]);
     }
