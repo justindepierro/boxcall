@@ -49,142 +49,161 @@ function hasPlayDiagram(play: Partial<Play>): boolean {
 // Play Quality Scoring
 // ========================================
 
-/**
- * Calculate data quality score for a play
- */
-export function calculatePlayQuality(play: Partial<Play>): DataQualityScore {
-  let requiredPoints = 0; // Max 40
-  let metadataPoints = 0; // Max 30
-  let advancedPoints = 0; // Max 30
-  const recommendations: string[] = [];
-
-  // ========================================
-  // REQUIRED FIELDS (40 points)
-  // ========================================
+function scoreRequiredFields(
+  play: Partial<Play>,
+  recommendations: string[]
+): number {
+  let points = 0;
 
   // Play name (15 points)
   if (play.play_name && play.play_name.trim().length > 0) {
-    requiredPoints += 15;
+    points += 15;
   } else {
     recommendations.push("Add a play name");
   }
 
   // Formation (15 points)
   if (play.formation && play.formation.trim().length > 0) {
-    requiredPoints += 15;
+    points += 15;
   } else {
     recommendations.push("Specify a formation");
   }
 
   // Play type (10 points)
   if (play.p_type && play.p_type.trim().length > 0) {
-    requiredPoints += 10;
+    points += 10;
   } else {
     recommendations.push("Select a play type (Run, Pass, RPO, etc.)");
   }
 
-  // ========================================
-  // METADATA FIELDS (30 points)
-  // ========================================
+  return points;
+}
+
+function scoreMetadataFields(
+  play: Partial<Play>,
+  recommendations: string[]
+): number {
+  let points = 0;
 
   // Personnel (10 points)
   if (play.personnel && play.personnel.trim().length > 0) {
-    metadataPoints += 10;
+    points += 10;
   } else {
     recommendations.push("Add personnel grouping (e.g., '11 Personnel')");
   }
 
   // Tags (5 points)
   if (play.tags && play.tags.length > 0) {
-    metadataPoints += 5;
+    points += 5;
   } else {
     recommendations.push("Add tags for better organization");
   }
 
   // Key positions (5 points)
   if (play.key_positions && play.key_positions.length > 0) {
-    metadataPoints += 5;
+    points += 5;
   } else {
     recommendations.push("Identify key positions for this play");
   }
 
   // Key players (5 points)
   if (play.key_players && play.key_players.length > 0) {
-    metadataPoints += 5;
+    points += 5;
   } else {
     recommendations.push("Assign key players to this play");
   }
 
   // Notes (5 points)
   if (play.notes && play.notes.trim().length > 20) {
-    metadataPoints += 5;
+    points += 5;
   } else if (!play.notes || play.notes.trim().length === 0) {
     recommendations.push("Add coaching notes or play description");
   }
 
-  // ========================================
-  // ADVANCED FIELDS (30 points)
-  // ========================================
+  return points;
+}
+
+function hasAnyPlayPreferences(play: Partial<Play>): boolean {
+  return Boolean(
+    play.r_str ||
+      play.p_str ||
+      play.pref_hash ||
+      play.pref_front ||
+      play.pref_cov ||
+      play.pref_down ||
+      play.pref_dis ||
+      play.pref_field_pos ||
+      play.pref_situation
+  );
+}
+
+function scoreAdvancedFields(
+  play: Partial<Play>,
+  recommendations: string[]
+): number {
+  let points = 0;
 
   // Diagram (15 points)
   if (hasPlayDiagram(play)) {
-    advancedPoints += 15;
+    points += 15;
   } else {
     recommendations.push("Create a diagram for visual reference");
   }
 
   // Play preferences (strength, hash) (5 points)
-  if (
-    play.r_str ||
-    play.p_str ||
-    play.pref_hash ||
-    play.pref_front ||
-    play.pref_cov ||
-    play.pref_down ||
-    play.pref_dis ||
-    play.pref_field_pos ||
-    play.pref_situation
-  ) {
-    advancedPoints += 5;
+  if (hasAnyPlayPreferences(play)) {
+    points += 5;
   } else {
     recommendations.push("Add play preferences (front, coverage, hash, etc.)");
   }
 
   // Protection scheme (5 points)
   if (play.protection && play.protection.trim().length > 0) {
-    advancedPoints += 5;
+    points += 5;
   } else {
     recommendations.push("Document protection scheme");
   }
 
   // Flags (5 points)
   if (play.flags && play.flags.length > 0) {
-    advancedPoints += 5;
+    points += 5;
   } else {
     recommendations.push("Add situational flags (Red Zone, Goal Line, etc.)");
   }
 
-  // ========================================
-  // Calculate Total & Grade
-  // ========================================
+  return points;
+}
+
+function getPlayQualityGrade(total: number): DataQualityScore["grade"] {
+  if (total >= 90) return "A";
+  if (total >= 80) return "B";
+  if (total >= 70) return "C";
+  if (total >= 60) return "D";
+  return "F";
+}
+
+function getPlayQualityCompleteness(
+  total: number
+): DataQualityScore["completeness"] {
+  if (total >= 90) return "Complete";
+  if (total >= 75) return "Good";
+  if (total >= 50) return "Fair";
+  if (total >= 30) return "Poor";
+  return "Minimal";
+}
+
+/**
+ * Calculate data quality score for a play
+ */
+export function calculatePlayQuality(play: Partial<Play>): DataQualityScore {
+  const recommendations: string[] = [];
+  const requiredPoints = scoreRequiredFields(play, recommendations); // Max 40
+  const metadataPoints = scoreMetadataFields(play, recommendations); // Max 30
+  const advancedPoints = scoreAdvancedFields(play, recommendations); // Max 30
 
   const total = requiredPoints + metadataPoints + advancedPoints;
-
-  // Determine grade (A-F scale)
-  let grade: "A" | "B" | "C" | "D" | "F";
-  if (total >= 90) grade = "A";
-  else if (total >= 80) grade = "B";
-  else if (total >= 70) grade = "C";
-  else if (total >= 60) grade = "D";
-  else grade = "F";
-
-  // Determine completeness label
-  let completeness: "Complete" | "Good" | "Fair" | "Poor" | "Minimal";
-  if (total >= 90) completeness = "Complete";
-  else if (total >= 75) completeness = "Good";
-  else if (total >= 50) completeness = "Fair";
-  else if (total >= 30) completeness = "Poor";
-  else completeness = "Minimal";
+  const grade = getPlayQualityGrade(total);
+  const completeness = getPlayQualityCompleteness(total);
 
   return {
     total,

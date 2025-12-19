@@ -369,6 +369,243 @@ interface PreviewStepProps {
   onImport: () => void;
 }
 
+type CSVPreviewRow = CSVParseResult["previews"][number];
+type CSVPreviewSummary = CSVParseResult["summary"];
+
+function getPlayTypePillClasses(pType: string | undefined): string {
+  if (pType === "Pass") return "bg-info/20 text-info";
+  if (pType === "Run") return "bg-success/20 text-success";
+  if (pType === "RPO") return "bg-surface-accent text-accent";
+  return "bg-subtle text-primary";
+}
+
+const PreviewSummaryStats: React.FC<{ summary: CSVPreviewSummary }> = ({
+  summary,
+}) => {
+  return (
+    <div className="grid grid-cols-4 gap-md bg-subtle rounded-lg p-md">
+      <div className="text-center">
+        <Typography variant="headline-sm" as="p" className="mb-xs">
+          {summary.totalRows}
+        </Typography>
+        <Typography variant="caption" className="text-secondary">
+          Total Rows
+        </Typography>
+      </div>
+      <div className="text-center">
+        <Typography variant="headline-sm" as="p" className="text-success mb-xs">
+          {summary.validPlays}
+        </Typography>
+        <Typography variant="caption" className="text-secondary">
+          Valid Plays
+        </Typography>
+      </div>
+      <div className="text-center">
+        <Typography variant="headline-sm" as="p" className="text-error mb-xs">
+          {summary.invalidPlays}
+        </Typography>
+        <Typography variant="caption" className="text-secondary">
+          Invalid Plays
+        </Typography>
+      </div>
+      <div className="text-center">
+        <Typography variant="headline-sm" as="p" className="text-warning mb-xs">
+          {summary.warnings}
+        </Typography>
+        <Typography variant="caption" className="text-secondary">
+          Warnings
+        </Typography>
+      </div>
+    </div>
+  );
+};
+
+const PreviewColumnMappingInfo: React.FC<{
+  suggestedMappings: CSVPreviewSummary["suggestedMappings"];
+}> = ({ suggestedMappings }) => {
+  if (Object.keys(suggestedMappings).length === 0) return null;
+
+  return (
+    <div className="bg-subtle border border-muted rounded-lg p-md">
+      <div className="flex items-start">
+        <Icon
+          name="info"
+          className="h-5 w-5 text-info mt-xs mr-sm flex-shrink-0"
+        />
+        <div>
+          <Typography
+            variant="body-sm"
+            as="h4"
+            className="font-medium text-primary mb-xs tracking-tight"
+          >
+            Smart Column Mapping Applied
+          </Typography>
+          <p className="text-sm text-secondary mb-xs">
+            We automatically detected and mapped your columns:
+          </p>
+          <div className="text-xs text-secondary space-y-xs">
+            {Object.entries(suggestedMappings).map(([original, mapped]) => (
+              <div key={original}>
+                <span className="font-mono bg-secondary px-xs rounded-lg">
+                  {original}
+                </span>
+                {" → "}
+                <span className="font-mono bg-secondary px-xs rounded-lg">
+                  {mapped}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PreviewPlaysTable: React.FC<{
+  previews: CSVPreviewRow[];
+  expandedRows: Set<number>;
+  onToggleRowExpansion: (rowNumber: number) => void;
+  onUpdatePreview: PreviewStepProps["onUpdatePreview"];
+  existingFormations: string[];
+  existingPlayNames: string[];
+  existingPersonnel: string[];
+}> = ({
+  previews,
+  expandedRows,
+  onToggleRowExpansion,
+  onUpdatePreview,
+  existingFormations,
+  existingPlayNames,
+  existingPersonnel,
+}) => {
+  return (
+    <div className="border border-muted rounded-lg overflow-hidden">
+      <div className="bg-subtle px-md py-xs divider-b">
+        <Typography
+          variant="body-sm"
+          as="h4"
+          className="font-medium text-primary tracking-tight"
+        >
+          Play Details
+        </Typography>
+      </div>
+
+      <div className="max-h-80 overflow-y-auto">
+        <table className="w-full text-sm">
+          <thead className="bg-subtle sticky top-0">
+            <tr>
+              <th className="px-sm py-xs text-left text-xs font-medium text-secondary w-8"></th>
+              <th className="px-sm py-xs text-left text-xs font-medium text-secondary">
+                Personnel
+              </th>
+              <th className="px-sm py-xs text-left text-xs font-medium text-secondary">
+                Formation
+              </th>
+              <th className="px-sm py-xs text-left text-xs font-medium text-secondary">
+                Play Name
+              </th>
+              <th className="px-sm py-xs text-left text-xs font-medium text-secondary">
+                Type
+              </th>
+              <th className="px-sm py-xs text-left text-xs font-medium text-secondary">
+                Status
+              </th>
+              <th className="px-sm py-xs text-left text-xs font-medium text-secondary w-8">
+                ...
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border">
+            {previews.map((preview) => (
+              <React.Fragment key={preview.rowNumber}>
+                <tr
+                  className={`${preview.isValid ? "bg-primary" : "bg-subtle"} hover:bg-subtle`}
+                >
+                  <td className="px-sm py-xs text-xs text-secondary">
+                    {preview.rowNumber}
+                  </td>
+                  <td className="px-sm py-xs font-mono text-xs">
+                    {preview.data.personnel || "-"}
+                  </td>
+                  <td className="px-sm py-xs font-medium text-xs">
+                    {preview.data.formation}
+                  </td>
+                  <td className="px-sm py-xs text-xs">
+                    {preview.data.play_name}
+                  </td>
+                  <td className="px-sm py-xs text-xs">
+                    <span
+                      className={`inline-flex items-center px-xs py-xs rounded-full text-xs font-medium ${getPlayTypePillClasses(
+                        preview.data.p_type
+                      )}`}
+                    >
+                      {preview.data.p_type || "Unknown"}
+                    </span>
+                  </td>
+                  <td className="px-sm py-xs">
+                    <div className="flex items-center space-x-xs">
+                      {preview.isValid ? (
+                        <Icon
+                          name="check-circle"
+                          className="h-4 w-4 text-success"
+                        />
+                      ) : (
+                        <Icon name="error" className="h-4 w-4 text-error" />
+                      )}
+                      {preview.warnings.length > 0 && (
+                        <Icon
+                          name="alert-triangle"
+                          className="h-4 w-4 text-warning"
+                        />
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-sm py-xs">
+                    <Button
+                      onClick={() => onToggleRowExpansion(preview.rowNumber)}
+                      variant="neutralLink"
+                      size="xs"
+                      icon={
+                        expandedRows.has(preview.rowNumber) ? (
+                          <Icon name="chevron-down" className="h-4 w-4" />
+                        ) : (
+                          <Icon name="chevron-right" className="h-4 w-4" />
+                        )
+                      }
+                      iconPosition="only"
+                      aria-label={
+                        expandedRows.has(preview.rowNumber)
+                          ? "Collapse row"
+                          : "Expand row"
+                      }
+                    />
+                  </td>
+                </tr>
+
+                {expandedRows.has(preview.rowNumber) && (
+                  <tr className="bg-subtle">
+                    <td colSpan={7} className="px-sm py-md">
+                      <CSVValidationRowEditor
+                        preview={preview}
+                        existingFormations={existingFormations}
+                        existingPlayNames={existingPlayNames}
+                        existingPersonnel={existingPersonnel}
+                        onUpdate={onUpdatePreview}
+                        onAcceptSuggestion={onUpdatePreview}
+                      />
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
 export const PreviewStep: React.FC<PreviewStepProps> = ({
   parseResult,
   expandedRows,
@@ -378,6 +615,16 @@ export const PreviewStep: React.FC<PreviewStepProps> = ({
   onImport,
 }) => {
   const { previews, summary } = parseResult;
+
+  const existingFormations = (parseResult.existingPlays || [])
+    .map((p) => p.formation)
+    .filter((f): f is string => !!f);
+  const existingPlayNames = (parseResult.existingPlays || [])
+    .map((p) => p.play_name)
+    .filter((n): n is string => !!n);
+  const existingPersonnel = (parseResult.existingPlays || [])
+    .map((p) => p.personnel)
+    .filter((p): p is string => !!p);
 
   return (
     <div className="space-y-lg">
@@ -394,227 +641,19 @@ export const PreviewStep: React.FC<PreviewStepProps> = ({
         </p>
       </div>
 
-      {/* Summary Stats */}
-      <div className="grid grid-cols-4 gap-md bg-subtle rounded-lg p-md">
-        <div className="text-center">
-          <Typography variant="headline-sm" as="p" className="mb-xs">
-            {summary.totalRows}
-          </Typography>
-          <Typography variant="caption" className="text-secondary">
-            Total Rows
-          </Typography>
-        </div>
-        <div className="text-center">
-          <Typography
-            variant="headline-sm"
-            as="p"
-            className="text-success mb-xs"
-          >
-            {summary.validPlays}
-          </Typography>
-          <Typography variant="caption" className="text-secondary">
-            Valid Plays
-          </Typography>
-        </div>
-        <div className="text-center">
-          <Typography variant="headline-sm" as="p" className="text-error mb-xs">
-            {summary.invalidPlays}
-          </Typography>
-          <Typography variant="caption" className="text-secondary">
-            Invalid Plays
-          </Typography>
-        </div>
-        <div className="text-center">
-          <Typography
-            variant="headline-sm"
-            as="p"
-            className="text-warning mb-xs"
-          >
-            {summary.warnings}
-          </Typography>
-          <Typography variant="caption" className="text-secondary">
-            Warnings
-          </Typography>
-        </div>
-      </div>
+      <PreviewSummaryStats summary={summary} />
 
-      {/* Column Mapping Info */}
-      {Object.keys(summary.suggestedMappings).length > 0 && (
-        <div className="bg-subtle border border-muted rounded-lg p-md">
-          <div className="flex items-start">
-            <Icon
-              name="info"
-              className="h-5 w-5 text-info mt-xs mr-sm flex-shrink-0"
-            />
-            <div>
-              <Typography
-                variant="body-sm"
-                as="h4"
-                className="font-medium text-primary mb-xs tracking-tight"
-              >
-                Smart Column Mapping Applied
-              </Typography>
-              <p className="text-sm text-secondary mb-xs">
-                We automatically detected and mapped your columns:
-              </p>
-              <div className="text-xs text-secondary space-y-xs">
-                {Object.entries(summary.suggestedMappings).map(
-                  ([original, mapped]) => (
-                    <div key={original}>
-                      <span className="font-mono bg-secondary px-xs rounded-lg">
-                        {original}
-                      </span>
-                      {" → "}
-                      <span className="font-mono bg-secondary px-xs rounded-lg">
-                        {mapped}
-                      </span>
-                    </div>
-                  )
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <PreviewColumnMappingInfo suggestedMappings={summary.suggestedMappings} />
 
-      {/* Plays Table */}
-      <div className="border border-muted rounded-lg overflow-hidden">
-        <div className="bg-subtle px-md py-xs divider-b">
-          <Typography
-            variant="body-sm"
-            as="h4"
-            className="font-medium text-primary tracking-tight"
-          >
-            Play Details
-          </Typography>
-        </div>
-
-        <div className="max-h-80 overflow-y-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-subtle sticky top-0">
-              <tr>
-                <th className="px-sm py-xs text-left text-xs font-medium text-secondary w-8"></th>
-                <th className="px-sm py-xs text-left text-xs font-medium text-secondary">
-                  Personnel
-                </th>
-                <th className="px-sm py-xs text-left text-xs font-medium text-secondary">
-                  Formation
-                </th>
-                <th className="px-sm py-xs text-left text-xs font-medium text-secondary">
-                  Play Name
-                </th>
-                <th className="px-sm py-xs text-left text-xs font-medium text-secondary">
-                  Type
-                </th>
-                <th className="px-sm py-xs text-left text-xs font-medium text-secondary">
-                  Status
-                </th>
-                <th className="px-sm py-xs text-left text-xs font-medium text-secondary w-8">
-                  ...
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {previews.map((preview) => (
-                <React.Fragment key={preview.rowNumber}>
-                  <tr
-                    className={`${preview.isValid ? "bg-primary" : "bg-subtle"} hover:bg-subtle`}
-                  >
-                    <td className="px-sm py-xs text-xs text-secondary">
-                      {preview.rowNumber}
-                    </td>
-                    <td className="px-sm py-xs font-mono text-xs">
-                      {preview.data.personnel || "-"}
-                    </td>
-                    <td className="px-sm py-xs font-medium text-xs">
-                      {preview.data.formation}
-                    </td>
-                    <td className="px-sm py-xs text-xs">
-                      {preview.data.play_name}
-                    </td>
-                    <td className="px-sm py-xs text-xs">
-                      <span
-                        className={`inline-flex items-center px-xs py-xs rounded-full text-xs font-medium ${(() => {
-                          if (preview.data.p_type === "Pass")
-                            return "bg-info/20 text-info";
-                          if (preview.data.p_type === "Run")
-                            return "bg-success/20 text-success";
-                          if (preview.data.p_type === "RPO")
-                            return "bg-surface-accent text-accent";
-                          return "bg-subtle text-primary";
-                        })()}
-                        }`}
-                      >
-                        {preview.data.p_type || "Unknown"}
-                      </span>
-                    </td>
-                    <td className="px-sm py-xs">
-                      <div className="flex items-center space-x-xs">
-                        {preview.isValid ? (
-                          <Icon
-                            name="check-circle"
-                            className="h-4 w-4 text-success"
-                          />
-                        ) : (
-                          <Icon name="error" className="h-4 w-4 text-error" />
-                        )}
-                        {preview.warnings.length > 0 && (
-                          <Icon
-                            name="alert-triangle"
-                            className="h-4 w-4 text-warning"
-                          />
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-sm py-xs">
-                      <Button
-                        onClick={() => onToggleRowExpansion(preview.rowNumber)}
-                        variant="neutralLink"
-                        size="xs"
-                        icon={
-                          expandedRows.has(preview.rowNumber) ? (
-                            <Icon name="chevron-down" className="h-4 w-4" />
-                          ) : (
-                            <Icon name="chevron-right" className="h-4 w-4" />
-                          )
-                        }
-                        iconPosition="only"
-                        aria-label={
-                          expandedRows.has(preview.rowNumber)
-                            ? "Collapse row"
-                            : "Expand row"
-                        }
-                      />
-                    </td>
-                  </tr>
-
-                  {/* Expanded Details */}
-                  {expandedRows.has(preview.rowNumber) && (
-                    <tr className="bg-subtle">
-                      <td colSpan={7} className="px-sm py-md">
-                        <CSVValidationRowEditor
-                          preview={preview}
-                          existingFormations={(parseResult?.existingPlays || [])
-                            .map((p) => p.formation)
-                            .filter((f): f is string => !!f)}
-                          existingPlayNames={(parseResult?.existingPlays || [])
-                            .map((p) => p.play_name)
-                            .filter((n): n is string => !!n)}
-                          existingPersonnel={(parseResult?.existingPlays || [])
-                            .map((p) => p.personnel)
-                            .filter((p): p is string => !!p)}
-                          onUpdate={onUpdatePreview}
-                          onAcceptSuggestion={onUpdatePreview}
-                        />
-                      </td>
-                    </tr>
-                  )}
-                </React.Fragment>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <PreviewPlaysTable
+        previews={previews}
+        expandedRows={expandedRows}
+        onToggleRowExpansion={onToggleRowExpansion}
+        onUpdatePreview={onUpdatePreview}
+        existingFormations={existingFormations}
+        existingPlayNames={existingPlayNames}
+        existingPersonnel={existingPersonnel}
+      />
 
       {/* Action Buttons */}
       <div className="flex justify-between gap-sm">

@@ -96,11 +96,17 @@ export interface UseCollaborationReturn {
   canView: boolean;
 }
 
-export function useCollaboration(
-  options: UseCollaborationOptions
-): UseCollaborationReturn {
-  const { teamId, dashboardId, user, autoConnect = false } = options;
-
+function useCollaborationSessionState({
+  teamId,
+  dashboardId,
+  user,
+  autoConnect,
+}: {
+  teamId: string;
+  dashboardId: string;
+  user: CollaborationUser;
+  autoConnect: boolean;
+}) {
   const [session, setSession] = useState<CollaborationSession | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
@@ -110,15 +116,8 @@ export function useCollaboration(
   const [activeCursors, setActiveCursors] = useState<Map<string, CursorUpdate>>(
     new Map()
   );
-  const [collaborativeCursors, setCollaborativeCursors] = useState<
-    CollaborativeCursor[]
-  >([]);
-  const [updateSubscribers, setUpdateSubscribers] = useState<
-    Array<(update: UpdateSubscription) => void>
-  >([]);
   const cleanupFunctionsRef = useRef<Array<() => void>>([]);
 
-  // Start collaboration session
   const startSession = useCallback(async () => {
     if (isConnecting || isConnected) return;
     setIsConnecting(true);
@@ -141,7 +140,6 @@ export function useCollaboration(
     }
   }, [teamId, dashboardId, user, isConnecting, isConnected]);
 
-  // End collaboration session
   const endSession = useCallback(() => {
     collaborationService.endSession();
     setSession(null);
@@ -151,7 +149,6 @@ export function useCollaboration(
     setError(null);
   }, []);
 
-  // Send dashboard update
   const sendDashboardUpdate = useCallback(
     (update: Omit<DashboardUpdate, "userId" | "timestamp">) => {
       if (!isConnected)
@@ -161,7 +158,6 @@ export function useCollaboration(
     [isConnected]
   );
 
-  // Send cursor update
   const sendCursorUpdate = useCallback(
     (cursor: Omit<CursorUpdate, "userId">) => {
       if (!isConnected) return;
@@ -170,14 +166,12 @@ export function useCollaboration(
     [isConnected]
   );
 
-  // Handle user joined - add if not already present
   const handleUserJoined = useCallback((newUser: CollaborationUser) => {
     setParticipants((prev) =>
       prev.find((p) => p.id === newUser.id) ? prev : [...prev, newUser]
     );
   }, []);
 
-  // Handle user left
   const handleUserLeft = useCallback((userId: string) => {
     setParticipants((prev) => prev.filter((p) => p.id !== userId));
     setActiveCursors((prev) => {
@@ -187,21 +181,18 @@ export function useCollaboration(
     });
   }, []);
 
-  // Handle dashboard update
   const handleDashboardUpdate = useCallback((update: DashboardUpdate) => {
     setRecentUpdates((prev) => [update, ...prev].slice(0, 10));
   }, []);
 
-  // Handle cursor update
   const handleCursorUpdate = useCallback(
     (cursor: CursorUpdate) => {
-      if (cursor.userId === user.id) return; // Don't show our own cursor
+      if (cursor.userId === user.id) return;
       setActiveCursors((prev) => {
         const newCursors = new Map(prev);
         newCursors.set(cursor.userId, cursor);
         return newCursors;
       });
-      // Remove cursor after inactivity
       setTimeout(() => {
         setActiveCursors((prev) => {
           if (prev.get(cursor.userId) === cursor) {
@@ -211,18 +202,16 @@ export function useCollaboration(
           }
           return prev;
         });
-      }, 5000); // Remove after 5 seconds of inactivity
+      }, 5000);
     },
     [user.id]
   );
 
-  // Handle connection status change
   const handleConnectionStatus = useCallback((connected: boolean) => {
     setIsConnected(connected);
     setError(connected ? null : "Connection lost. Attempting to reconnect...");
   }, []);
 
-  // Setup event listeners on mount
   useEffect(() => {
     const cleanupFunctions = [
       collaborationService.onUserJoined(handleUserJoined),
@@ -244,19 +233,42 @@ export function useCollaboration(
     handleConnectionStatus,
   ]);
 
-  // Cleanup on unmount
   useEffect(() => () => endSession(), [endSession]);
 
-  // Calculate permissions
-  const canEdit = session
-    ? collaborationService.canEdit(user.id, session)
-    : false;
-  const canView = session
-    ? collaborationService.canView(user.id, session)
-    : true;
-  const currentUser = collaborationService.getCurrentUser();
+  return {
+    session,
+    isConnected,
+    isConnecting,
+    error,
+    participants,
+    recentUpdates,
+    activeCursors,
+    startSession,
+    endSession,
+    sendDashboardUpdate,
+    sendCursorUpdate,
+    currentUser: collaborationService.getCurrentUser(),
+  };
+}
 
-  // Widget-level collaboration methods
+function useCollaborationWidgetLevel({
+  user,
+  isConnected,
+  sendDashboardUpdate,
+}: {
+  user: CollaborationUser;
+  isConnected: boolean;
+  sendDashboardUpdate: (
+    update: Omit<DashboardUpdate, "userId" | "timestamp">
+  ) => void;
+}) {
+  const [collaborativeCursors, setCollaborativeCursors] = useState<
+    CollaborativeCursor[]
+  >([]);
+  const [updateSubscribers, setUpdateSubscribers] = useState<
+    Array<(update: UpdateSubscription) => void>
+  >([]);
+
   const updateCursor = useCallback(
     (cursor: Partial<CollaborativeCursor>) => {
       setCollaborativeCursors((prev) => {
@@ -290,7 +302,6 @@ export function useCollaboration(
         }
       });
 
-      // Also send through collaboration service if it's a dashboard update
       if (
         isConnected &&
         update.widgetId &&
@@ -343,6 +354,55 @@ export function useCollaboration(
   );
 
   return {
+    cursors: collaborativeCursors,
+    updateCursor,
+    broadcastUpdate,
+    subscribeToUpdates,
+    resolveConflict,
+  };
+}
+
+export function useCollaboration(
+  options: UseCollaborationOptions
+): UseCollaborationReturn {
+  const { teamId, dashboardId, user, autoConnect = false } = options;
+
+  const {
+    session,
+    isConnected,
+    isConnecting,
+    error,
+    participants,
+    recentUpdates,
+    activeCursors,
+    startSession,
+    endSession,
+    sendDashboardUpdate,
+    sendCursorUpdate,
+    currentUser,
+  } = useCollaborationSessionState({
+    teamId,
+    dashboardId,
+    user,
+    autoConnect,
+  });
+
+  // Calculate permissions
+  const canEdit = session
+    ? collaborationService.canEdit(user.id, session)
+    : false;
+  const canView = session
+    ? collaborationService.canView(user.id, session)
+    : true;
+  const {
+    cursors,
+    updateCursor,
+    broadcastUpdate,
+    subscribeToUpdates,
+    resolveConflict,
+  } = useCollaborationWidgetLevel({ user, isConnected, sendDashboardUpdate });
+
+  return {
     session,
     isConnected,
     isConnecting,
@@ -351,7 +411,7 @@ export function useCollaboration(
     currentUser,
     recentUpdates,
     activeCursors,
-    cursors: collaborativeCursors,
+    cursors,
     updateCursor,
     broadcastUpdate,
     subscribeToUpdates,

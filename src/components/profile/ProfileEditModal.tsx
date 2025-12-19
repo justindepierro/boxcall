@@ -10,6 +10,113 @@ import { DashboardService } from "@services/dashboardService";
 import { supabase } from "../../lib/supabase";
 import { logError } from "../../utils/logger";
 
+function buildInitialFormValues(
+  fieldsForRender: Array<{ key: string }>,
+  currentProfile: Record<string, unknown>
+) {
+  const initialValues: Record<string, FormValue> = {};
+
+  fieldsForRender.forEach((field) => {
+    const value = currentProfile[field.key];
+    if (value !== undefined && value !== null) {
+      initialValues[field.key] = value as FormValue;
+    }
+  });
+
+  return initialValues;
+}
+
+function isValidEmail(value: string) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(value);
+}
+
+function isValidUrl(value: string) {
+  try {
+    new URL(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function validateFields(
+  fieldsForRender: Array<{
+    key: string;
+    label: string;
+    required?: boolean;
+    type?: string;
+    validation?: { min?: number; max?: number };
+  }>,
+  formValues: Record<string, FormValue>
+) {
+  const newErrors: Record<string, string> = {};
+
+  fieldsForRender.forEach((field) => {
+    const value = formValues[field.key];
+    const isEmpty = value === undefined || value === null || value === "";
+
+    if (field.required && isEmpty) {
+      newErrors[field.key] = `${field.label} is required`;
+      return;
+    }
+
+    if (!value || !field.validation) return;
+
+    if (field.type === "number" && typeof value === "number") {
+      if (field.validation.min !== undefined && value < field.validation.min) {
+        newErrors[field.key] =
+          `${field.label} must be at least ${field.validation.min}`;
+      }
+      if (field.validation.max !== undefined && value > field.validation.max) {
+        newErrors[field.key] =
+          `${field.label} must be no more than ${field.validation.max}`;
+      }
+    }
+
+    if (field.type === "email" && typeof value === "string") {
+      if (!isValidEmail(value)) {
+        newErrors[field.key] = "Please enter a valid email address";
+      }
+    }
+
+    if (field.type === "url" && typeof value === "string") {
+      if (!isValidUrl(value)) {
+        newErrors[field.key] = "Please enter a valid URL";
+      }
+    }
+  });
+
+  return newErrors;
+}
+
+async function uploadAvatarToSupabase({
+  profileId,
+  file,
+}: {
+  profileId: string;
+  file: File;
+}): Promise<string | null> {
+  try {
+    const { error } = await supabase.storage
+      .from("avatars")
+      .upload(`${profileId}/${file.name}`, file, {
+        upsert: true,
+      });
+
+    if (error) throw error;
+
+    const { data: urlData } = supabase.storage
+      .from("avatars")
+      .getPublicUrl(`${profileId}/${file.name}`);
+
+    return urlData?.publicUrl || null;
+  } catch (error) {
+    logError("Avatar upload failed:", error);
+    return null;
+  }
+}
+
 interface ProfileData {
   id: string;
   [key: string]: unknown; // Allow any profile fields
@@ -22,6 +129,173 @@ interface ProfileEditModalProps {
   currentProfile: ProfileData;
   onProfileUpdate: (updatedProfile: ProfileData) => void;
   mode?: "quick" | "full";
+}
+
+function AvatarUploadSection({
+  currentProfile,
+  onAvatarFileChange,
+}: {
+  currentProfile: ProfileData;
+  onAvatarFileChange: (file: File | null) => void;
+}) {
+  return (
+    <div className="space-y-4">
+      <Typography
+        variant="headline-sm"
+        className="text-primary border-b border-muted pb-2"
+      >
+        Profile Picture
+      </Typography>
+      <div className="flex items-center space-x-4">
+        <div className="w-20 h-20 rounded-full bg-jade-100 flex items-center justify-center overflow-hidden">
+          {currentProfile?.avatar_url &&
+          typeof currentProfile.avatar_url === "string" ? (
+            <img
+              src={currentProfile.avatar_url}
+              alt="Profile"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <Typography variant="headline-sm" className="text-jade-800">
+              {(typeof currentProfile?.full_name === "string" &&
+                currentProfile.full_name.charAt(0)) ||
+                "U"}
+            </Typography>
+          )}
+        </div>
+        <div className="flex-1">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => onAvatarFileChange(e.target.files?.[0] || null)}
+            className="mb-2"
+          />
+          <Typography variant="body-xs" className="text-muted">
+            Upload a new profile picture (JPG, PNG, or GIF)
+          </Typography>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProfileEditFields({
+  mode,
+  config,
+  basicQuickFields,
+  formValues,
+  onChange,
+  errors,
+}: {
+  mode: "quick" | "full";
+  config: ReturnType<typeof getProfileConfigForRole>;
+  basicQuickFields: Array<any>;
+  formValues: Record<string, FormValue>;
+  onChange: (key: string, value: FormValue) => void;
+  errors: Record<string, string>;
+}) {
+  return (
+    <>
+      {mode === "quick" ? (
+        <ProfileFormSection
+          title="Quick Details"
+          fields={basicQuickFields}
+          values={formValues}
+          onChange={onChange}
+          errors={errors}
+        />
+      ) : (
+        <ProfileFormSection
+          title="Basic Information"
+          fields={config.basicFields}
+          values={formValues}
+          onChange={onChange}
+          errors={errors}
+        />
+      )}
+
+      {mode === "full" && config.athleticFields && (
+        <ProfileFormSection
+          title="Athletic Information"
+          fields={config.athleticFields}
+          values={formValues}
+          onChange={onChange}
+          errors={errors}
+        />
+      )}
+
+      {mode === "full" && config.academicFields && (
+        <ProfileFormSection
+          title="Academic Information"
+          fields={config.academicFields}
+          values={formValues}
+          onChange={onChange}
+          errors={errors}
+        />
+      )}
+
+      {mode === "full" && config.professionalFields && (
+        <ProfileFormSection
+          title="Professional Information"
+          fields={config.professionalFields}
+          values={formValues}
+          onChange={onChange}
+          errors={errors}
+        />
+      )}
+
+      {mode === "full" && config.contactFields && (
+        <ProfileFormSection
+          title="Contact Information"
+          fields={config.contactFields}
+          values={formValues}
+          onChange={onChange}
+          errors={errors}
+        />
+      )}
+    </>
+  );
+}
+
+function ProfileEditFooter({
+  mode,
+  isSubmitting,
+  avatarUploading,
+  onManageSettings,
+  onCancel,
+}: {
+  mode: "quick" | "full";
+  isSubmitting: boolean;
+  avatarUploading: boolean;
+  onManageSettings: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <div className="flex items-center justify-between pt-6 border-t border-muted gap-3">
+      {mode === "quick" && (
+        <Button type="button" variant="infoLink" onClick={onManageSettings}>
+          Manage account settings
+        </Button>
+      )}
+      <div className="flex items-center gap-3 ml-auto">
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={onCancel}
+          disabled={isSubmitting}
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={isSubmitting || avatarUploading}
+        >
+          {isSubmitting || avatarUploading ? "Saving..." : "Save Changes"}
+        </Button>
+      </div>
+    </div>
+  );
 }
 
 export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
@@ -63,15 +337,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
   // Initialize form values from current profile (only for visible fields)
   useEffect(() => {
     if (currentProfile && isOpen) {
-      const initialValues: Record<string, FormValue> = {};
-      fieldsForRender.forEach((field) => {
-        const value = currentProfile[field.key];
-        if (value !== undefined && value !== null) {
-          initialValues[field.key] = value as FormValue;
-        }
-      });
-
-      setFormValues(initialValues);
+      setFormValues(buildInitialFormValues(fieldsForRender, currentProfile));
     }
   }, [currentProfile, isOpen, fieldsForRender]);
 
@@ -88,83 +354,9 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
   };
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-    fieldsForRender.forEach((field) => {
-      if (
-        field.required &&
-        (!formValues[field.key] || formValues[field.key] === "")
-      ) {
-        newErrors[field.key] = `${field.label} is required`;
-      }
-
-      // Type-specific validation
-      if (formValues[field.key] && field.validation) {
-        const value = formValues[field.key];
-
-        if (field.type === "number" && typeof value === "number") {
-          if (
-            field.validation.min !== undefined &&
-            value < field.validation.min
-          ) {
-            newErrors[field.key] =
-              `${field.label} must be at least ${field.validation.min}`;
-          }
-          if (
-            field.validation.max !== undefined &&
-            value > field.validation.max
-          ) {
-            newErrors[field.key] =
-              `${field.label} must be no more than ${field.validation.max}`;
-          }
-        }
-
-        if (field.type === "email" && typeof value === "string") {
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailRegex.test(value)) {
-            newErrors[field.key] = "Please enter a valid email address";
-          }
-        }
-
-        if (field.type === "url" && typeof value === "string") {
-          try {
-            new URL(value);
-          } catch {
-            newErrors[field.key] = "Please enter a valid URL";
-          }
-        }
-      }
-    });
-
+    const newErrors = validateFields(fieldsForRender as any, formValues);
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
-
-  const handleAvatarUpload = async (): Promise<string | null> => {
-    if (!avatarFile || !currentProfile?.id) return null;
-
-    setAvatarUploading(true);
-    try {
-      // Upload to Supabase Storage
-      const { error } = await supabase.storage
-        .from("avatars")
-        .upload(`${currentProfile.id}/${avatarFile.name}`, avatarFile, {
-          upsert: true,
-        });
-
-      if (error) throw error;
-
-      // Get public URL
-      const { data: urlData } = supabase.storage
-        .from("avatars")
-        .getPublicUrl(`${currentProfile.id}/${avatarFile.name}`);
-
-      return urlData?.publicUrl || null;
-    } catch (error) {
-      logError("Avatar upload failed:", error);
-      return null;
-    } finally {
-      setAvatarUploading(false);
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -178,7 +370,15 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
       // Handle avatar upload if present
       let avatarUrl = null;
       if (avatarFile) {
-        avatarUrl = await handleAvatarUpload();
+        setAvatarUploading(true);
+        try {
+          avatarUrl = await uploadAvatarToSupabase({
+            profileId: currentProfile.id,
+            file: avatarFile,
+          });
+        } finally {
+          setAvatarUploading(false);
+        }
         if (avatarUrl) {
           formValues.avatar_url = avatarUrl;
         }
@@ -209,150 +409,41 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
     onClose();
   };
 
+  const title =
+    mode === "quick"
+      ? "Quick Edit Profile"
+      : `Edit ${userRole.charAt(0).toUpperCase() + userRole.slice(1)} Profile`;
+
   return (
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
-      title={
-        mode === "quick"
-          ? "Quick Edit Profile"
-          : `Edit ${userRole.charAt(0).toUpperCase() + userRole.slice(1)} Profile`
-      }
+      title={title}
       size={modalSize}
       className="max-h-[90vh] overflow-y-auto"
     >
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Avatar Upload Section */}
-        <div className="space-y-4">
-          <Typography
-            variant="headline-sm"
-            className="text-primary border-b border-muted pb-2"
-          >
-            Profile Picture
-          </Typography>
-          <div className="flex items-center space-x-4">
-            <div className="w-20 h-20 rounded-full bg-jade-100 flex items-center justify-center overflow-hidden">
-              {currentProfile?.avatar_url &&
-              typeof currentProfile.avatar_url === "string" ? (
-                <img
-                  src={currentProfile.avatar_url}
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <Typography variant="headline-sm" className="text-jade-800">
-                  {(typeof currentProfile?.full_name === "string" &&
-                    currentProfile.full_name.charAt(0)) ||
-                    "U"}
-                </Typography>
-              )}
-            </div>
-            <div className="flex-1">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setAvatarFile(e.target.files?.[0] || null)}
-                className="mb-2"
-              />
-              <Typography variant="body-xs" className="text-muted">
-                Upload a new profile picture (JPG, PNG, or GIF)
-              </Typography>
-            </div>
-          </div>
-        </div>
+        <AvatarUploadSection
+          currentProfile={currentProfile}
+          onAvatarFileChange={setAvatarFile}
+        />
 
-        {/* Fields */}
-        {mode === "quick" ? (
-          <ProfileFormSection
-            title="Quick Details"
-            fields={basicQuickFields}
-            values={formValues}
-            onChange={handleFieldChange}
-            errors={errors}
-          />
-        ) : (
-          <ProfileFormSection
-            title="Basic Information"
-            fields={config.basicFields}
-            values={formValues}
-            onChange={handleFieldChange}
-            errors={errors}
-          />
-        )}
+        <ProfileEditFields
+          mode={mode}
+          config={config}
+          basicQuickFields={basicQuickFields}
+          formValues={formValues}
+          onChange={handleFieldChange}
+          errors={errors}
+        />
 
-        {/* Athletic Information (for players) */}
-        {mode === "full" && config.athleticFields && (
-          <ProfileFormSection
-            title="Athletic Information"
-            fields={config.athleticFields}
-            values={formValues}
-            onChange={handleFieldChange}
-            errors={errors}
-          />
-        )}
-
-        {/* Academic Information (for players) */}
-        {mode === "full" && config.academicFields && (
-          <ProfileFormSection
-            title="Academic Information"
-            fields={config.academicFields}
-            values={formValues}
-            onChange={handleFieldChange}
-            errors={errors}
-          />
-        )}
-
-        {/* Professional Information (for coaches) */}
-        {mode === "full" && config.professionalFields && (
-          <ProfileFormSection
-            title="Professional Information"
-            fields={config.professionalFields}
-            values={formValues}
-            onChange={handleFieldChange}
-            errors={errors}
-          />
-        )}
-
-        {/* Contact Information */}
-        {mode === "full" && config.contactFields && (
-          <ProfileFormSection
-            title="Contact Information"
-            fields={config.contactFields}
-            values={formValues}
-            onChange={handleFieldChange}
-            errors={errors}
-          />
-        )}
-
-        {/* Submit Buttons */}
-        <div className="flex items-center justify-between pt-6 border-t border-muted gap-3">
-          {mode === "quick" && (
-            <Button
-              type="button"
-              variant="infoLink"
-              onClick={() => navigate("/profile")}
-            >
-              Manage account settings
-            </Button>
-          )}
-          <div className="flex items-center gap-3 ml-auto">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={handleClose}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              variant="primary"
-              disabled={isSubmitting || avatarUploading}
-            >
-              {isSubmitting || avatarUploading ? "Saving..." : "Save Changes"}
-            </Button>
-          </div>
-        </div>
+        <ProfileEditFooter
+          mode={mode}
+          isSubmitting={isSubmitting}
+          avatarUploading={avatarUploading}
+          onManageSettings={() => navigate("/profile")}
+          onCancel={handleClose}
+        />
       </form>
     </Modal>
   );

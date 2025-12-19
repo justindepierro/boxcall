@@ -173,6 +173,85 @@ interface PlayCardProps {
   ) => void;
 }
 
+function getPlayCardName(play: GamePlanPlay): string {
+  const playDetails = play.play;
+  return playDetails?.play_name || playDetails?.formation || "Unknown Play";
+}
+
+function getPlayCardClassName(params: {
+  isSelected: boolean;
+  disabled: boolean;
+}): string {
+  const { isSelected, disabled } = params;
+
+  const selectionClass = isSelected
+    ? "border-primary bg-primary/10 shadow-md"
+    : "border-border hover:border-primary/50 hover:bg-secondary";
+
+  const disabledClass = disabled
+    ? "opacity-50 cursor-not-allowed"
+    : "cursor-pointer";
+
+  return `
+        w-full text-left p-4 rounded-lg border-2 transition-all
+        ${selectionClass}
+        ${disabledClass}
+      `;
+}
+
+const PlayMetaBadges: React.FC<{ play: GamePlanPlay["play"] }> = ({ play }) => {
+  if (!play) return null;
+
+  return (
+    <div className="flex flex-wrap gap-2 mt-2">
+      {play.formation && (
+        <span className="px-2 py-0.5 bg-secondary border border-border rounded text-xs">
+          {play.formation}
+        </span>
+      )}
+      {play.personnel && (
+        <span className="px-2 py-0.5 bg-secondary border border-border rounded text-xs">
+          {play.personnel}
+        </span>
+      )}
+      {play.p_type && (
+        <span className="px-2 py-0.5 bg-success/10 text-success border border-success/30 rounded text-xs font-medium">
+          {play.p_type}
+        </span>
+      )}
+    </div>
+  );
+};
+
+const PlayConfidenceExtras: React.FC<{ confidence: ConfidenceScore }> = ({
+  confidence,
+}) => {
+  return (
+    <>
+      {confidence.streak && (
+        <div className="mt-2">
+          <StreakIndicator
+            current={confidence.streak.current}
+            isHot={confidence.streak.isHot}
+            isCold={confidence.streak.isCold}
+            last5Results={confidence.streak.last5Results}
+            compact
+          />
+        </div>
+      )}
+
+      {confidence.practiceToGame?.needsMorePractice && (
+        <div className="mt-2 flex items-center gap-1">
+          <Icon name="target" size="sm" className="text-warning" />
+          <Typography variant="body-xs" className="text-warning font-medium">
+            Needs more practice
+          </Typography>
+        </div>
+      )}
+    </>
+  );
+};
+
 /** Individual play card with confidence scoring */
 const PlayCard: React.FC<PlayCardProps> = ({
   play,
@@ -184,22 +263,13 @@ const PlayCard: React.FC<PlayCardProps> = ({
   onShowConfidenceDetails,
 }) => {
   const playDetails = play.play;
-  const playName =
-    playDetails?.play_name || playDetails?.formation || "Unknown Play";
+  const playName = getPlayCardName(play);
 
   return (
     <button
       onClick={() => onSelectPlay(play)}
       disabled={disabled}
-      className={`
-        w-full text-left p-4 rounded-lg border-2 transition-all
-        ${
-          isSelected
-            ? "border-primary bg-primary/10 shadow-md"
-            : "border-border hover:border-primary/50 hover:bg-secondary"
-        }
-        ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
-      `}
+      className={getPlayCardClassName({ isSelected, disabled })}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
@@ -210,23 +280,7 @@ const PlayCard: React.FC<PlayCardProps> = ({
             {playName}
           </Typography>
 
-          <div className="flex flex-wrap gap-2 mt-2">
-            {playDetails?.formation && (
-              <span className="px-2 py-0.5 bg-secondary border border-border rounded text-xs">
-                {playDetails.formation}
-              </span>
-            )}
-            {playDetails?.personnel && (
-              <span className="px-2 py-0.5 bg-secondary border border-border rounded text-xs">
-                {playDetails.personnel}
-              </span>
-            )}
-            {playDetails?.p_type && (
-              <span className="px-2 py-0.5 bg-success/10 text-success border border-success/30 rounded text-xs font-medium">
-                {playDetails.p_type}
-              </span>
-            )}
-          </div>
+          <PlayMetaBadges play={playDetails} />
 
           {play.notes && (
             <Typography variant="body-xs" color="muted" className="mt-2">
@@ -252,26 +306,7 @@ const PlayCard: React.FC<PlayCardProps> = ({
         />
       )}
 
-      {confidence?.streak && (
-        <div className="mt-2">
-          <StreakIndicator
-            current={confidence.streak.current}
-            isHot={confidence.streak.isHot}
-            isCold={confidence.streak.isCold}
-            last5Results={confidence.streak.last5Results}
-            compact
-          />
-        </div>
-      )}
-
-      {confidence?.practiceToGame?.needsMorePractice && (
-        <div className="mt-2 flex items-center gap-1">
-          <Icon name="target" size="sm" className="text-warning" />
-          <Typography variant="body-xs" className="text-warning font-medium">
-            Needs more practice
-          </Typography>
-        </div>
-      )}
+      {confidence && <PlayConfidenceExtras confidence={confidence} />}
     </button>
   );
 };

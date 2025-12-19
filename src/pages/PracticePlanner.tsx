@@ -38,6 +38,48 @@ const TemplatesModal = lazy(() =>
   }))
 );
 
+interface PracticePlannerHeaderActionsProps {
+  selectedSchedule:
+    | {
+        date: Date;
+        location: string;
+      }
+    | null
+    | undefined;
+  practiceStarted: boolean;
+  onBack: () => void;
+}
+
+function PracticePlannerHeaderActions(
+  props: PracticePlannerHeaderActionsProps
+) {
+  const { selectedSchedule, practiceStarted, onBack } = props;
+
+  return (
+    <div className="flex items-center gap-3">
+      <Button
+        variant="ghost"
+        onClick={onBack}
+        className="text-secondary hover:text-primary"
+      >
+        ← Back to Team
+      </Button>
+      {selectedSchedule && (
+        <div className="text-sm text-secondary">
+          {format(selectedSchedule.date, "MMM d, yyyy")} •{" "}
+          {selectedSchedule.location}
+        </div>
+      )}
+      {practiceStarted && (
+        <div className="flex items-center space-x-2 px-3 py-1 bg-jade-100 text-jade-800 rounded-lg">
+          <div className="w-2 h-2 bg-jade-600 rounded-full animate-pulse"></div>
+          <span className="font-mono text-sm">Practice Live</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function PracticePlanner() {
   const { teamId } = useParams<{ teamId: string }>();
   const navigate = useNavigate();
@@ -161,27 +203,11 @@ export function PracticePlanner() {
         subtitle="Plan and manage your team's practice sessions"
         variant="dashboard"
         actions={
-          <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              onClick={() => navigate(`/team/${teamId}`)}
-              className="text-secondary hover:text-primary"
-            >
-              ← Back to Team
-            </Button>
-            {selectedSchedule && (
-              <div className="text-sm text-secondary">
-                {format(selectedSchedule.date, "MMM d, yyyy")} •{" "}
-                {selectedSchedule.location}
-              </div>
-            )}
-            {practiceStarted && (
-              <div className="flex items-center space-x-2 px-3 py-1 bg-jade-100 text-jade-800 rounded-lg">
-                <div className="w-2 h-2 bg-jade-600 rounded-full animate-pulse"></div>
-                <span className="font-mono text-sm">Practice Live</span>
-              </div>
-            )}
-          </div>
+          <PracticePlannerHeaderActions
+            selectedSchedule={selectedSchedule}
+            practiceStarted={practiceStarted}
+            onBack={() => navigate(`/team/${teamId}`)}
+          />
         }
       >
         <div className="container-page container-padding py-8">

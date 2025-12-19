@@ -12,12 +12,12 @@ export function useMobileErrorHandler() {
   const [errorState, setErrorState] = useState<MobileErrorState | null>(null);
 
   const handleError = useCallback((error: unknown) => {
-    const message =
-      error instanceof Error
-        ? error.message
-        : typeof error === "string"
-          ? error
-          : "An unexpected error occurred";
+    let message = "An unexpected error occurred";
+    if (error instanceof Error) {
+      message = error.message;
+    } else if (typeof error === "string") {
+      message = error;
+    }
 
     // Keep the mapping simple and non-invasive
     const isNetworkish =
@@ -29,20 +29,23 @@ export function useMobileErrorHandler() {
       message.toLowerCase().includes("timeout") ||
       message.toLowerCase().includes("timed out");
 
-    const type: MobileErrorType = isTimeoutish
-      ? "timeout"
-      : isNetworkish
-        ? "network"
-        : "generic";
+    let type: MobileErrorType = "generic";
+    if (isTimeoutish) {
+      type = "timeout";
+    } else if (isNetworkish) {
+      type = "network";
+    }
+
+    let title = "Something went wrong";
+    if (type === "network") {
+      title = "Connection issue";
+    } else if (type === "timeout") {
+      title = "Request timed out";
+    }
 
     setErrorState({
       type,
-      title:
-        type === "network"
-          ? "Connection issue"
-          : type === "timeout"
-            ? "Request timed out"
-            : "Something went wrong",
+      title,
       message,
     });
   }, []);

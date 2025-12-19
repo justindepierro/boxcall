@@ -35,107 +35,80 @@ export interface SelectionModeToggleProps {
   className?: string;
 }
 
-/**
- * SelectionModeToggle - Standalone component to enable/disable selection mode
- *
- * Features:
- * - Clear visual indication of active/inactive state
- * - Shows selection count when active
- * - Multiple variants (default, compact, icon-only)
- * - Smooth animations
- * - Accessible with proper ARIA labels
- *
- * @example Default variant
- * ```tsx
- * <SelectionModeToggle
- *   isActive={enableBulkOperations}
- *   onToggle={() => dispatch({ type: "TOGGLE_BULK" })}
- *   selectedCount={selectedPlayIds.size}
- * />
- * ```
- *
- * @example Compact variant
- * ```tsx
- * <SelectionModeToggle
- *   isActive={isSelecting}
- *   onToggle={toggleSelectionMode}
- *   variant="compact"
- * />
- * ```
- *
- * @example Icon-only variant (for mobile)
- * ```tsx
- * <SelectionModeToggle
- *   isActive={isSelecting}
- *   onToggle={toggleSelectionMode}
- *   variant="icon-only"
- * />
- * ```
- */
-export const SelectionModeToggle: React.FC<SelectionModeToggleProps> = ({
-  isActive,
-  onToggle,
-  selectedCount = 0,
-  label = "Select Plays",
-  variant = "default",
-  className = "",
-}) => {
-  // Icon-only variant (minimal for toolbars/mobile)
-  if (variant === "icon-only") {
-    return (
-      <motion.button
-        onClick={onToggle}
-        className={`relative p-2.5 rounded-lg transition-all ${
-          isActive
-            ? "bg-success-bg text-success-text"
-            : "bg-muted text-secondary hover:bg-subtle hover:text-primary"
-        } ${className}`}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        aria-label={isActive ? "Exit selection mode" : "Enter selection mode"}
-        aria-pressed={isActive}
-      >
-        <Icon name={isActive ? "check-circle" : "circle"} className="w-5 h-5" />
-        {selectedCount > 0 && (
-          <span className="absolute -top-1 -right-1 w-5 h-5 bg-success-text text-white text-xs font-semibold rounded-full flex items-center justify-center">
-            {selectedCount > 9 ? "9+" : selectedCount}
-          </span>
-        )}
-      </motion.button>
-    );
-  }
+function IconOnlyToggle(props: {
+  isActive: boolean;
+  onToggle: () => void;
+  selectedCount: number;
+  className: string;
+}) {
+  const { isActive, onToggle, selectedCount, className } = props;
+  return (
+    <motion.button
+      onClick={onToggle}
+      className={`relative p-2.5 rounded-lg transition-all ${
+        isActive
+          ? "bg-success-bg text-success-text"
+          : "bg-muted text-secondary hover:bg-subtle hover:text-primary"
+      } ${className}`}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      aria-label={isActive ? "Exit selection mode" : "Enter selection mode"}
+      aria-pressed={isActive}
+    >
+      <Icon name={isActive ? "check-circle" : "circle"} className="w-5 h-5" />
+      {selectedCount > 0 && (
+        <span className="absolute -top-1 -right-1 w-5 h-5 bg-success-text text-white text-xs font-semibold rounded-full flex items-center justify-center">
+          {selectedCount > 9 ? "9+" : selectedCount}
+        </span>
+      )}
+    </motion.button>
+  );
+}
 
-  // Compact variant (smaller, inline with other controls)
-  if (variant === "compact") {
-    return (
-      <motion.button
-        onClick={onToggle}
-        className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all font-semibold ${
-          isActive
-            ? "bg-gradient-to-r from-green-500 to-green-600 text-white ring-2 ring-green-500/30 shadow-lg"
-            : "bg-white dark:bg-navy-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-navy-700 border-2 border-neutral-200 dark:border-navy-600"
-        } ${className}`}
-        whileHover={{ scale: 1.03 }}
-        whileTap={{ scale: 0.97 }}
-        aria-label={isActive ? "Exit selection mode" : "Enter selection mode"}
-        aria-pressed={isActive}
-      >
-        <Icon name={isActive ? "check-circle" : "circle"} className="w-5 h-5" />
-        <Typography variant="body-sm" className="font-bold">
-          {isActive && selectedCount > 0 ? `${selectedCount} selected` : label}
-        </Typography>
-        {isActive && selectedCount === 0 && (
-          <motion.div
-            className="w-2 h-2 bg-white rounded-full"
-            animate={{ scale: [1, 1.3, 1] }}
-            transition={{ repeat: Infinity, duration: 1.5 }}
-          />
-        )}
-      </motion.button>
-    );
-  }
+function CompactToggle(props: {
+  isActive: boolean;
+  onToggle: () => void;
+  selectedCount: number;
+  label: string;
+  className: string;
+}) {
+  const { isActive, onToggle, selectedCount, label, className } = props;
+  return (
+    <motion.button
+      onClick={onToggle}
+      className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all font-semibold ${
+        isActive
+          ? "bg-gradient-to-r from-green-500 to-green-600 text-white ring-2 ring-green-500/30 shadow-lg"
+          : "bg-white dark:bg-navy-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-navy-700 border-2 border-neutral-200 dark:border-navy-600"
+      } ${className}`}
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
+      aria-label={isActive ? "Exit selection mode" : "Enter selection mode"}
+      aria-pressed={isActive}
+    >
+      <Icon name={isActive ? "check-circle" : "circle"} className="w-5 h-5" />
+      <Typography variant="body-sm" className="font-bold">
+        {isActive && selectedCount > 0 ? `${selectedCount} selected` : label}
+      </Typography>
+      {isActive && selectedCount === 0 && (
+        <motion.div
+          className="w-2 h-2 bg-white rounded-full"
+          animate={{ scale: [1, 1.3, 1] }}
+          transition={{ repeat: Infinity, duration: 1.5 }}
+        />
+      )}
+    </motion.button>
+  );
+}
 
-  // Default variant (prominent, standalone)
+function DefaultToggle(props: {
+  isActive: boolean;
+  onToggle: () => void;
+  selectedCount: number;
+  label: string;
+  className: string;
+}) {
+  const { isActive, onToggle, selectedCount, label, className } = props;
   return (
     <motion.button
       onClick={onToggle}
@@ -204,4 +177,82 @@ export const SelectionModeToggle: React.FC<SelectionModeToggleProps> = ({
       )}
     </motion.button>
   );
+}
+
+/**
+ * SelectionModeToggle - Standalone component to enable/disable selection mode
+ *
+ * Features:
+ * - Clear visual indication of active/inactive state
+ * - Shows selection count when active
+ * - Multiple variants (default, compact, icon-only)
+ * - Smooth animations
+ * - Accessible with proper ARIA labels
+ *
+ * @example Default variant
+ * ```tsx
+ * <SelectionModeToggle
+ *   isActive={enableBulkOperations}
+ *   onToggle={() => dispatch({ type: "TOGGLE_BULK" })}
+ *   selectedCount={selectedPlayIds.size}
+ * />
+ * ```
+ *
+ * @example Compact variant
+ * ```tsx
+ * <SelectionModeToggle
+ *   isActive={isSelecting}
+ *   onToggle={toggleSelectionMode}
+ *   variant="compact"
+ * />
+ * ```
+ *
+ * @example Icon-only variant (for mobile)
+ * ```tsx
+ * <SelectionModeToggle
+ *   isActive={isSelecting}
+ *   onToggle={toggleSelectionMode}
+ *   variant="icon-only"
+ * />
+ * ```
+ */
+export const SelectionModeToggle: React.FC<SelectionModeToggleProps> = ({
+  isActive,
+  onToggle,
+  selectedCount = 0,
+  label = "Select Plays",
+  variant = "default",
+  className = "",
+}) => {
+  switch (variant) {
+    case "icon-only":
+      return (
+        <IconOnlyToggle
+          isActive={isActive}
+          onToggle={onToggle}
+          selectedCount={selectedCount}
+          className={className}
+        />
+      );
+    case "compact":
+      return (
+        <CompactToggle
+          isActive={isActive}
+          onToggle={onToggle}
+          selectedCount={selectedCount}
+          label={label}
+          className={className}
+        />
+      );
+    default:
+      return (
+        <DefaultToggle
+          isActive={isActive}
+          onToggle={onToggle}
+          selectedCount={selectedCount}
+          label={label}
+          className={className}
+        />
+      );
+  }
 };

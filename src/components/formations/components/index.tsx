@@ -46,10 +46,9 @@ export const FormationSelector: React.FC<FormationSelectorProps> = ({
               key={f.id}
               type="button"
               onClick={() => onSelectFormation(f)}
-              className={
-                "w-full text-left px-sm py-xs border-b border-secondary last:border-b-0 " +
-                (selectedFormation?.id === f.id ? "bg-muted" : "bg-primary")
-              }
+              className={`w-full text-left px-sm py-xs border-b border-secondary last:border-b-0 ${
+                selectedFormation?.id === f.id ? "bg-muted" : "bg-primary"
+              }`}
             >
               <div className="flex items-center justify-between">
                 <Typography variant="body-sm" className="text-primary">

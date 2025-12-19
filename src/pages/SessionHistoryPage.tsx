@@ -131,6 +131,248 @@ const mapSessionToDisplay = (
 
 type FilterType = "all" | "practice" | "game";
 
+const SessionHistoryHeader: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+  return (
+    <div className="mb-6 sm:mb-8">
+      <div className="flex items-center gap-3 mb-2">
+        <button
+          onClick={onBack}
+          className="w-10 h-10 rounded-xl bg-white/80 backdrop-blur-sm border border-slate-200 flex items-center justify-center hover:bg-white transition-colors shadow-sm"
+        >
+          <Icon name="arrow-left" className="h-5 w-5 text-slate-600" />
+        </button>
+        <div>
+          <Typography
+            variant="headline-xl"
+            className="text-slate-800 font-bold"
+          >
+            Session History
+          </Typography>
+          <Typography variant="body-md" color="muted">
+            View and analyze your past sessions
+          </Typography>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+SessionHistoryHeader.displayName = "SessionHistoryHeader";
+
+const SessionHistoryFilters: React.FC<{
+  filterType: FilterType;
+  onFilterTypeChange: (value: FilterType) => void;
+  showArchived: boolean;
+  onToggleArchived: () => void;
+}> = ({ filterType, onFilterTypeChange, showArchived, onToggleArchived }) => {
+  return (
+    <div className="flex flex-col sm:flex-row gap-3 mb-6">
+      <div className="flex-1 max-w-xs">
+        <Dropdown
+          options={[
+            { value: "all", label: "📊 All Sessions" },
+            { value: "practice", label: "🏈 Practice Only" },
+            { value: "game", label: "🎯 Game Only" },
+          ]}
+          value={filterType}
+          onChange={(value) => onFilterTypeChange(value as FilterType)}
+          fullWidth
+          size="md"
+        />
+      </div>
+      <button
+        onClick={onToggleArchived}
+        className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all ${
+          showArchived
+            ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/25"
+            : "bg-white border-2 border-slate-200 text-slate-600 hover:border-indigo-300"
+        }`}
+      >
+        <Icon name="folder" size="sm" />
+        {showArchived ? "Hide Archived" : "Show Archived"}
+      </button>
+    </div>
+  );
+};
+
+SessionHistoryFilters.displayName = "SessionHistoryFilters";
+
+const SessionHistoryEmptyState: React.FC<{
+  filterType: FilterType;
+  onStartSession: () => void;
+}> = ({ filterType, onStartSession }) => {
+  return (
+    <div className="rounded-3xl bg-white border border-slate-200 p-8 text-center shadow-xl">
+      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center mx-auto mb-4">
+        <Icon name="calendar" size="xl" className="text-slate-400" />
+      </div>
+      <Typography variant="headline-md" className="mb-2 text-slate-800">
+        No Sessions Found
+      </Typography>
+      <Typography variant="body-md" color="muted" className="mb-6">
+        {(() => {
+          if (filterType === "all") {
+            return "You haven't recorded any sessions yet.";
+          }
+          return `No ${filterType} sessions found.`;
+        })()}
+      </Typography>
+      <button
+        onClick={onStartSession}
+        className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-xl transition-all"
+      >
+        <Icon name="play" size="sm" />
+        Start a Session
+      </button>
+    </div>
+  );
+};
+
+SessionHistoryEmptyState.displayName = "SessionHistoryEmptyState";
+
+const SessionHistoryCard: React.FC<{
+  session: SessionDisplayItem;
+  onClick: (session: SessionDisplayItem) => void;
+}> = ({ session, onClick }) => {
+  return (
+    <div
+      className={`rounded-2xl bg-white border-2 p-4 sm:p-5 cursor-pointer hover:shadow-lg transition-all group ${(() => {
+        if (session.isArchived) {
+          return "opacity-60 border-slate-200";
+        }
+        if (session.type === "practice") {
+          return "border-orange-200 hover:border-orange-300 shadow-md shadow-orange-500/5";
+        }
+        return "border-emerald-200 hover:border-emerald-300 shadow-md shadow-emerald-500/5";
+      })()}`}
+      onClick={() => onClick(session)}
+    >
+      <div className="flex items-center gap-4">
+        <div
+          className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md ${
+            session.type === "practice"
+              ? "bg-gradient-to-br from-orange-400 to-amber-500 shadow-orange-500/25"
+              : "bg-gradient-to-br from-emerald-400 to-teal-500 shadow-emerald-500/25"
+          }`}
+        >
+          <Icon
+            name={session.type === "practice" ? "clipboard-list" : "zap"}
+            size="md"
+            className="text-white"
+          />
+        </div>
+
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <Typography
+              variant="body-md"
+              className="font-bold text-slate-800 truncate"
+            >
+              {session.name}
+            </Typography>
+            {session.isArchived && (
+              <span className="px-2 py-0.5 text-xs bg-slate-100 rounded-full text-slate-500 font-medium">
+                Archived
+              </span>
+            )}
+            {!session.sourceId && (
+              <span className="px-2 py-0.5 text-xs bg-amber-100 rounded-full text-amber-600 font-medium">
+                View Only
+              </span>
+            )}
+          </div>
+          <Typography variant="body-sm" color="muted">
+            {session.dateDisplay}
+            {session.opponent && ` • vs ${session.opponent}`}
+          </Typography>
+        </div>
+
+        <div className="text-right flex-shrink-0">
+          <div
+            className={`text-2xl font-black ${(() => {
+              if (session.stats.successRate >= 70) return "text-emerald-500";
+              if (session.stats.successRate >= 50) return "text-amber-500";
+              return "text-rose-500";
+            })()}`}
+          >
+            {session.stats.successRate}%
+          </div>
+          <Typography variant="body-xs" color="muted">
+            {session.stats.totalPlays}{" "}
+            {session.type === "practice" ? "reps" : "plays"}
+            {session.stats.totalYards !== undefined &&
+              ` • ${session.stats.totalYards} yds`}
+          </Typography>
+        </div>
+
+        <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
+          <Icon
+            name="chevron-right"
+            size="sm"
+            className="text-slate-400 group-hover:text-slate-600"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+SessionHistoryCard.displayName = "SessionHistoryCard";
+
+const SessionHistorySummary: React.FC<{ sessions: SessionDisplayItem[] }> = ({
+  sessions,
+}) => {
+  if (sessions.length === 0) return null;
+
+  return (
+    <div className="mt-6 rounded-3xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-6 shadow-xl shadow-indigo-500/25">
+      <Typography variant="body-sm" className="text-white/80 mb-4 font-medium">
+        📊 Performance Summary
+      </Typography>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center">
+          <div className="text-3xl font-black text-white">
+            {sessions.length}
+          </div>
+          <div className="text-xs text-white/70 font-medium uppercase tracking-wide mt-1">
+            Total Sessions
+          </div>
+        </div>
+        <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center">
+          <div className="text-3xl font-black text-white">
+            {sessions.filter((s) => s.type === "practice").length}
+          </div>
+          <div className="text-xs text-white/70 font-medium uppercase tracking-wide mt-1">
+            Practices
+          </div>
+        </div>
+        <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center">
+          <div className="text-3xl font-black text-white">
+            {sessions.filter((s) => s.type === "game").length}
+          </div>
+          <div className="text-xs text-white/70 font-medium uppercase tracking-wide mt-1">
+            Games
+          </div>
+        </div>
+        <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center">
+          <div className="text-3xl font-black text-white">
+            {Math.round(
+              sessions.reduce((acc, s) => acc + s.stats.successRate, 0) /
+                sessions.length || 0
+            )}
+            %
+          </div>
+          <div className="text-xs text-white/70 font-medium uppercase tracking-wide mt-1">
+            Avg Success
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+SessionHistorySummary.displayName = "SessionHistorySummary";
+
 /**
  * SessionHistoryPage - View all past practice and game sessions
  *
@@ -210,228 +452,31 @@ const SessionHistoryPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 py-4 sm:py-6">
       <div className="container-page">
-        {/* Header - Premium */}
-        <div className="mb-6 sm:mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <button
-              onClick={() => navigate("/boxcall")}
-              className="w-10 h-10 rounded-xl bg-white/80 backdrop-blur-sm border border-slate-200 flex items-center justify-center hover:bg-white transition-colors shadow-sm"
-            >
-              <Icon name="arrow-left" className="h-5 w-5 text-slate-600" />
-            </button>
-            <div>
-              <Typography
-                variant="headline-xl"
-                className="text-slate-800 font-bold"
-              >
-                Session History
-              </Typography>
-              <Typography variant="body-md" color="muted">
-                View and analyze your past sessions
-              </Typography>
-            </div>
-          </div>
-        </div>
+        <SessionHistoryHeader onBack={() => navigate("/boxcall")} />
+        <SessionHistoryFilters
+          filterType={filterType}
+          onFilterTypeChange={setFilterType}
+          showArchived={showArchived}
+          onToggleArchived={() => setShowArchived(!showArchived)}
+        />
 
-        {/* Filters - Premium */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-6">
-          <div className="flex-1 max-w-xs">
-            <Dropdown
-              options={[
-                { value: "all", label: "📊 All Sessions" },
-                { value: "practice", label: "🏈 Practice Only" },
-                { value: "game", label: "🎯 Game Only" },
-              ]}
-              value={filterType}
-              onChange={(value) => setFilterType(value as FilterType)}
-              fullWidth
-              size="md"
-            />
-          </div>
-          <button
-            onClick={() => setShowArchived(!showArchived)}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all ${
-              showArchived
-                ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/25"
-                : "bg-white border-2 border-slate-200 text-slate-600 hover:border-indigo-300"
-            }`}
-          >
-            <Icon name="folder" size="sm" />
-            {showArchived ? "Hide Archived" : "Show Archived"}
-          </button>
-        </div>
-
-        {/* Sessions List - Premium */}
         {filteredSessions.length === 0 ? (
-          <div className="rounded-3xl bg-white border border-slate-200 p-8 text-center shadow-xl">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center mx-auto mb-4">
-              <Icon name="calendar" size="xl" className="text-slate-400" />
-            </div>
-            <Typography variant="headline-md" className="mb-2 text-slate-800">
-              No Sessions Found
-            </Typography>
-            <Typography variant="body-md" color="muted" className="mb-6">
-              {(() => {
-                if (filterType === "all") {
-                  return "You haven't recorded any sessions yet.";
-                }
-                return `No ${filterType} sessions found.`;
-              })()}
-            </Typography>
-            <button
-              onClick={() => navigate("/boxcall")}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-xl transition-all"
-            >
-              <Icon name="play" size="sm" />
-              Start a Session
-            </button>
-          </div>
+          <SessionHistoryEmptyState
+            filterType={filterType}
+            onStartSession={() => navigate("/boxcall")}
+          />
         ) : (
           <div className="space-y-3">
             {filteredSessions.map((session) => (
-              <div
+              <SessionHistoryCard
                 key={session.id}
-                className={`rounded-2xl bg-white border-2 p-4 sm:p-5 cursor-pointer hover:shadow-lg transition-all group ${(() => {
-                  if (session.isArchived) {
-                    return "opacity-60 border-slate-200";
-                  }
-                  if (session.type === "practice") {
-                    return "border-orange-200 hover:border-orange-300 shadow-md shadow-orange-500/5";
-                  }
-                  return "border-emerald-200 hover:border-emerald-300 shadow-md shadow-emerald-500/5";
-                })()}`}
-                onClick={() => handleSessionClick(session)}
-              >
-                <div className="flex items-center gap-4">
-                  {/* Icon - Premium */}
-                  <div
-                    className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md ${
-                      session.type === "practice"
-                        ? "bg-gradient-to-br from-orange-400 to-amber-500 shadow-orange-500/25"
-                        : "bg-gradient-to-br from-emerald-400 to-teal-500 shadow-emerald-500/25"
-                    }`}
-                  >
-                    <Icon
-                      name={
-                        session.type === "practice" ? "clipboard-list" : "zap"
-                      }
-                      size="md"
-                      className="text-white"
-                    />
-                  </div>
-
-                  {/* Details */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <Typography
-                        variant="body-md"
-                        className="font-bold text-slate-800 truncate"
-                      >
-                        {session.name}
-                      </Typography>
-                      {session.isArchived && (
-                        <span className="px-2 py-0.5 text-xs bg-slate-100 rounded-full text-slate-500 font-medium">
-                          Archived
-                        </span>
-                      )}
-                      {!session.sourceId && (
-                        <span className="px-2 py-0.5 text-xs bg-amber-100 rounded-full text-amber-600 font-medium">
-                          View Only
-                        </span>
-                      )}
-                    </div>
-                    <Typography variant="body-sm" color="muted">
-                      {session.dateDisplay}
-                      {session.opponent && ` • vs ${session.opponent}`}
-                    </Typography>
-                  </div>
-
-                  {/* Stats - Premium */}
-                  <div className="text-right flex-shrink-0">
-                    <div
-                      className={`text-2xl font-black ${(() => {
-                        if (session.stats.successRate >= 70)
-                          return "text-emerald-500";
-                        if (session.stats.successRate >= 50)
-                          return "text-amber-500";
-                        return "text-rose-500";
-                      })()}`}
-                    >
-                      {session.stats.successRate}%
-                    </div>
-                    <Typography variant="body-xs" color="muted">
-                      {session.stats.totalPlays}{" "}
-                      {session.type === "practice" ? "reps" : "plays"}
-                      {session.stats.totalYards !== undefined &&
-                        ` • ${session.stats.totalYards} yds`}
-                    </Typography>
-                  </div>
-
-                  {/* Arrow */}
-                  <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
-                    <Icon
-                      name="chevron-right"
-                      size="sm"
-                      className="text-slate-400 group-hover:text-slate-600"
-                    />
-                  </div>
-                </div>
-              </div>
+                session={session}
+                onClick={handleSessionClick}
+              />
             ))}
           </div>
         )}
-
-        {/* Summary Stats - Premium */}
-        {filteredSessions.length > 0 && (
-          <div className="mt-6 rounded-3xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-6 shadow-xl shadow-indigo-500/25">
-            <Typography
-              variant="body-sm"
-              className="text-white/80 mb-4 font-medium"
-            >
-              📊 Performance Summary
-            </Typography>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center">
-                <div className="text-3xl font-black text-white">
-                  {filteredSessions.length}
-                </div>
-                <div className="text-xs text-white/70 font-medium uppercase tracking-wide mt-1">
-                  Total Sessions
-                </div>
-              </div>
-              <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center">
-                <div className="text-3xl font-black text-white">
-                  {filteredSessions.filter((s) => s.type === "practice").length}
-                </div>
-                <div className="text-xs text-white/70 font-medium uppercase tracking-wide mt-1">
-                  Practices
-                </div>
-              </div>
-              <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center">
-                <div className="text-3xl font-black text-white">
-                  {filteredSessions.filter((s) => s.type === "game").length}
-                </div>
-                <div className="text-xs text-white/70 font-medium uppercase tracking-wide mt-1">
-                  Games
-                </div>
-              </div>
-              <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center">
-                <div className="text-3xl font-black text-white">
-                  {Math.round(
-                    filteredSessions.reduce(
-                      (acc, s) => acc + s.stats.successRate,
-                      0
-                    ) / filteredSessions.length || 0
-                  )}
-                  %
-                </div>
-                <div className="text-xs text-white/70 font-medium uppercase tracking-wide mt-1">
-                  Avg Success
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        <SessionHistorySummary sessions={filteredSessions} />
       </div>
     </div>
   );

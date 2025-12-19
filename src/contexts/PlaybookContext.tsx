@@ -142,120 +142,182 @@ export type PlaybookAction =
   | { type: "HIDE_CONFETTI_OVERLAY" }
   | { type: "SET_IMPORTED_LOCAL_PRESETS"; value: boolean };
 
+type PlaybookActionHandler = (
+  state: PlaybookState,
+  action: any
+) => PlaybookState;
+
+const playbookActionHandlers: Partial<
+  Record<PlaybookAction["type"], PlaybookActionHandler>
+> = {
+  SET_SEARCH: (state, action: { query: string }) => ({
+    ...state,
+    searchQuery: action.query,
+  }),
+  SET_SELECTED_FILTERS: (
+    state,
+    action: { filters: PlaybookState["selectedFilters"] }
+  ) => ({
+    ...state,
+    selectedFilters: action.filters,
+  }),
+  SET_CATEGORY: (
+    state,
+    action: {
+      category: PlaybookState["selectedCategory"];
+      subcategory?: PlaybookState["selectedSubcategory"];
+    }
+  ) => ({
+    ...state,
+    selectedCategory: action.category,
+    selectedSubcategory: action.subcategory,
+  }),
+  SET_ADVANCED_FILTERS: (
+    state,
+    action: { filters: PlaybookState["advancedFilters"] }
+  ) => ({
+    ...state,
+    advancedFilters: action.filters,
+  }),
+  TOGGLE_BULK: (state) => {
+    console.log("[PlaybookContext] TOGGLE_BULK:", {
+      currentState: state.enableBulkOperations,
+      newState: !state.enableBulkOperations,
+    });
+    return {
+      ...state,
+      enableBulkOperations: !state.enableBulkOperations,
+      selectedPlayIds: new Set(),
+    };
+  },
+  SET_SELECTION: (state, action: { selection: Set<string> }) => {
+    console.log("[PlaybookContext] SET_SELECTION:", {
+      oldSize: state.selectedPlayIds?.size,
+      newSize: action.selection.size,
+    });
+    return { ...state, selectedPlayIds: action.selection };
+  },
+  TOGGLE_PLAY_SELECTION: (state, action: { playId: string }) => {
+    const newSelection = new Set(state.selectedPlayIds);
+    if (newSelection.has(action.playId)) {
+      newSelection.delete(action.playId);
+    } else {
+      newSelection.add(action.playId);
+    }
+    return { ...state, selectedPlayIds: newSelection };
+  },
+  SELECT_ALL_PLAYS: (state, action: { playIds: string[] }) => ({
+    ...state,
+    selectedPlayIds: new Set(action.playIds),
+  }),
+  CLEAR_SELECTION: (state) => ({ ...state, selectedPlayIds: new Set() }),
+  SET_PRESETS: (
+    state,
+    action: { presets: PlaybookPresetState["filterPresets"] }
+  ) => ({
+    ...state,
+    filterPresets: action.presets,
+  }),
+  SET_SERVER_PRESETS: (
+    state,
+    action: { presets: ServerPlaybookViewPreset[] }
+  ) => ({
+    ...state,
+    serverPresets: action.presets,
+  }),
+  SET_SERVER_PRESETS_LOADING: (state, action: { loading: boolean }) => ({
+    ...state,
+    serverPresetsLoading: action.loading,
+  }),
+  SET_SERVER_PRESETS_ERROR: (state, action: { error?: string | null }) => ({
+    ...state,
+    serverPresetsError: action.error,
+  }),
+  SET_ACTIVE_PRESET: (state, action: { id?: string }) => ({
+    ...state,
+    activePresetId: action.id,
+    activeServerPresetId: undefined,
+  }),
+  SET_ACTIVE_SERVER_PRESET: (state, action: { id?: string }) => ({
+    ...state,
+    activeServerPresetId: action.id,
+    activePresetId: undefined,
+  }),
+  ADD_RECENT_VIEW: (
+    state,
+    action: { id: string; scope: "server" | "local" }
+  ) => {
+    const existing = state.recentViews.filter((v) => v.id !== action.id);
+    const next = [{ id: action.id, scope: action.scope }, ...existing].slice(
+      0,
+      5
+    );
+    return { ...state, recentViews: next };
+  },
+  REMOVE_RECENT_VIEW: (state, action: { id: string }) => ({
+    ...state,
+    recentViews: state.recentViews.filter((v) => v.id !== action.id),
+  }),
+  SET_VIEW: (state, action: { view: CoachingView }) => ({
+    ...state,
+    currentView: action.view,
+  }),
+  SET_TEAM_TYPE: (
+    state,
+    action: { teamType: "offense" | "defense" | "special-teams" }
+  ) => ({
+    ...state,
+    currentTeamType: action.teamType,
+  }),
+  SET_SHOW_BUILDER: (state, action: { value: boolean }) => ({
+    ...state,
+    showBuilder: action.value,
+  }),
+  SET_SHOW_IMPORT: (state, action: { value: boolean }) => ({
+    ...state,
+    showImport: action.value,
+  }),
+  SET_MOBILE_FILTERS: (state, action: { value: boolean }) => ({
+    ...state,
+    showMobileFilters: action.value,
+  }),
+  SET_MOBILE_GLOSSARY: (state, action: { value: boolean }) => ({
+    ...state,
+    showMobileGlossary: action.value,
+  }),
+  INCREMENT_REFRESH: (state) => ({
+    ...state,
+    refreshTrigger: state.refreshTrigger + 1,
+  }),
+  SET_PLAYS_CREATED: (state, action: { count: number }) => ({
+    ...state,
+    playsCreated: action.count,
+  }),
+  SET_DIAGRAM_COVERAGE: (state, action: { coverage: number }) => ({
+    ...state,
+    diagramCoverage: action.coverage,
+  }),
+  SET_STREAK_DAYS: (state, action: { days: number }) => ({
+    ...state,
+    streakDays: action.days,
+  }),
+  TRIGGER_CELEBRATION: (state, action: { achievement: string }) => ({
+    ...state,
+    recentAchievement: action.achievement,
+    showCelebration: true,
+  }),
+  HIDE_CELEBRATION: (state) => ({ ...state, showCelebration: false }),
+  SHOW_CONFETTI_OVERLAY: (state) => ({ ...state, showConfettiOverlay: true }),
+  HIDE_CONFETTI_OVERLAY: (state) => ({ ...state, showConfettiOverlay: false }),
+  SET_IMPORTED_LOCAL_PRESETS: (state, action: { value: boolean }) => ({
+    ...state,
+    importedLocalPresets: action.value,
+  }),
+};
+
 function reducer(state: PlaybookState, action: PlaybookAction): PlaybookState {
-  switch (action.type) {
-    case "SET_SEARCH":
-      return { ...state, searchQuery: action.query };
-    case "SET_SELECTED_FILTERS":
-      return { ...state, selectedFilters: action.filters };
-    case "SET_CATEGORY":
-      return {
-        ...state,
-        selectedCategory: action.category,
-        selectedSubcategory: action.subcategory,
-      };
-    case "SET_ADVANCED_FILTERS":
-      return { ...state, advancedFilters: action.filters };
-    case "TOGGLE_BULK":
-      console.log("[PlaybookContext] TOGGLE_BULK:", {
-        currentState: state.enableBulkOperations,
-        newState: !state.enableBulkOperations,
-      });
-      return {
-        ...state,
-        enableBulkOperations: !state.enableBulkOperations,
-        selectedPlayIds: new Set(),
-      };
-    case "SET_SELECTION":
-      console.log("[PlaybookContext] SET_SELECTION:", {
-        oldSize: state.selectedPlayIds?.size,
-        newSize: action.selection.size,
-      });
-      return { ...state, selectedPlayIds: action.selection };
-    case "TOGGLE_PLAY_SELECTION": {
-      const newSelection = new Set(state.selectedPlayIds);
-      if (newSelection.has(action.playId)) {
-        newSelection.delete(action.playId);
-      } else {
-        newSelection.add(action.playId);
-      }
-      return { ...state, selectedPlayIds: newSelection };
-    }
-    case "SELECT_ALL_PLAYS":
-      return { ...state, selectedPlayIds: new Set(action.playIds) };
-    case "CLEAR_SELECTION":
-      return { ...state, selectedPlayIds: new Set() };
-    case "SET_PRESETS":
-      return { ...state, filterPresets: action.presets };
-    case "SET_SERVER_PRESETS":
-      return { ...state, serverPresets: action.presets };
-    case "SET_SERVER_PRESETS_LOADING":
-      return { ...state, serverPresetsLoading: action.loading };
-    case "SET_SERVER_PRESETS_ERROR":
-      return { ...state, serverPresetsError: action.error };
-    case "SET_ACTIVE_PRESET":
-      return {
-        ...state,
-        activePresetId: action.id,
-        activeServerPresetId: undefined,
-      };
-    case "SET_ACTIVE_SERVER_PRESET":
-      return {
-        ...state,
-        activeServerPresetId: action.id,
-        activePresetId: undefined,
-      };
-    case "ADD_RECENT_VIEW": {
-      const existing = state.recentViews.filter((v) => v.id !== action.id);
-      const next = [{ id: action.id, scope: action.scope }, ...existing].slice(
-        0,
-        5
-      );
-      return { ...state, recentViews: next };
-    }
-    case "REMOVE_RECENT_VIEW": {
-      return {
-        ...state,
-        recentViews: state.recentViews.filter((v) => v.id !== action.id),
-      };
-    }
-    case "SET_VIEW":
-      return { ...state, currentView: action.view };
-    case "SET_TEAM_TYPE":
-      return { ...state, currentTeamType: action.teamType };
-    case "SET_SHOW_BUILDER":
-      return { ...state, showBuilder: action.value };
-    case "SET_SHOW_IMPORT":
-      return { ...state, showImport: action.value };
-    case "SET_MOBILE_FILTERS":
-      return { ...state, showMobileFilters: action.value };
-    case "SET_MOBILE_GLOSSARY":
-      return { ...state, showMobileGlossary: action.value };
-    case "INCREMENT_REFRESH":
-      return { ...state, refreshTrigger: state.refreshTrigger + 1 };
-    case "SET_PLAYS_CREATED":
-      return { ...state, playsCreated: action.count };
-    case "SET_DIAGRAM_COVERAGE":
-      return { ...state, diagramCoverage: action.coverage };
-    case "SET_STREAK_DAYS":
-      return { ...state, streakDays: action.days };
-    case "TRIGGER_CELEBRATION":
-      return {
-        ...state,
-        recentAchievement: action.achievement,
-        showCelebration: true,
-      };
-    case "HIDE_CELEBRATION":
-      return { ...state, showCelebration: false };
-    case "SHOW_CONFETTI_OVERLAY":
-      return { ...state, showConfettiOverlay: true };
-    case "HIDE_CONFETTI_OVERLAY":
-      return { ...state, showConfettiOverlay: false };
-    case "SET_IMPORTED_LOCAL_PRESETS":
-      return { ...state, importedLocalPresets: action.value };
-    default:
-      return state;
-  }
+  const handler = playbookActionHandlers[action.type];
+  return handler ? handler(state, action) : state;
 }
 
 interface PlaybookContextValue {

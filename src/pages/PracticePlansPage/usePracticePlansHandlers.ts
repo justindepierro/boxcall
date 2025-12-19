@@ -10,6 +10,7 @@ import { useAuth } from "../../app/auth-store";
 import { useToast } from "../../hooks/useToast";
 import { PracticeService } from "../../services/practiceService";
 import type { PracticeScript } from "../../services/practiceService";
+import type { User } from "@supabase/supabase-js";
 import {
   exportPracticeScripts,
   downloadJSON,
@@ -17,33 +18,26 @@ import {
 } from "../../utils/practiceScriptExport";
 import { logError } from "../../utils/logger";
 
-export function usePracticePlansHandlers() {
-  const navigate = useNavigate();
-  const { user } = useAuth();
-  const toast = useToast();
-
-  // State
-  const [showModal, setShowModal] = useState(false);
-  const [showImportModal, setShowImportModal] = useState(false);
-  const [editingScript, setEditingScript] = useState<
-    PracticeScript | undefined
-  >(undefined);
-  const [practiceScripts, setPracticeScripts] = useState<PracticeScript[]>([]);
-  const [isLoading, setLoading] = useState(true);
+function useActiveTeamIdFromLocalStorage() {
   const [activeTeamId, setActiveTeamId] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeFilters, setActiveFilters] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState("date-desc");
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [deleteScriptId, setDeleteScriptId] = useState<string | null>(null);
 
-  // Get active team ID from localStorage
   useEffect(() => {
     const teamId = localStorage.getItem("activeTeamId");
     setActiveTeamId(teamId);
   }, []);
 
-  // Load practice scripts from database
+  return activeTeamId;
+}
+
+function usePracticeScriptsData(params: {
+  user: User | null;
+  activeTeamId: string | null;
+  toast: ReturnType<typeof useToast>;
+}) {
+  const { user, activeTeamId, toast } = params;
+  const [practiceScripts, setPracticeScripts] = useState<PracticeScript[]>([]);
+  const [isLoading, setLoading] = useState(true);
+
   const loadPracticeScripts = useCallback(async () => {
     if (!user || !activeTeamId) return;
 
@@ -60,20 +54,101 @@ export function usePracticePlansHandlers() {
   }, [user, activeTeamId, toast]);
 
   useEffect(() => {
-    loadPracticeScripts();
+    void loadPracticeScripts();
   }, [loadPracticeScripts]);
 
-  // CRUD Handlers
+  return {
+    practiceScripts,
+    setPracticeScripts,
+    isLoading,
+    loadPracticeScripts,
+  };
+}
+
+function filterAndSortPracticeScripts(params: {
+  practiceScripts: PracticeScript[];
+  searchQuery: string;
+  activeFilters: string[];
+  sortBy: string;
+}) {
+  const { practiceScripts, searchQuery, activeFilters, sortBy } = params;
+  let filtered = [...practiceScripts];
+
+  if (searchQuery) {
+    const query = searchQuery.toLowerCase();
+    filtered = filtered.filter(
+      (script) =>
+        (script.title || script.name || "").toLowerCase().includes(query) ||
+        (script.description || "").toLowerCase().includes(query) ||
+        (script.tags || []).some((tag) => tag.toLowerCase().includes(query))
+    );
+  }
+
+  if (activeFilters.includes("has-tags")) {
+    filtered = filtered.filter(
+      (script) => script.tags && script.tags.length > 0
+    );
+  }
+  if (activeFilters.includes("no-tags")) {
+    filtered = filtered.filter(
+      (script) => !script.tags || script.tags.length === 0
+    );
+  }
+
+  filtered.sort((a, b) => {
+    switch (sortBy) {
+      case "date-desc":
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      case "date-asc":
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      case "name-asc":
+        return (a.title || a.name || "").localeCompare(b.title || b.name || "");
+      case "name-desc":
+        return (b.title || b.name || "").localeCompare(a.title || a.name || "");
+      default:
+        return 0;
+    }
+  });
+
+  return filtered;
+}
+
+function usePracticePlansCrudHandlers(params: {
+  activeTeamId: string | null;
+  editingScript: PracticeScript | undefined;
+  setEditingScript: React.Dispatch<
+    React.SetStateAction<PracticeScript | undefined>
+  >;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  loadPracticeScripts: () => Promise<void>;
+  toast: ReturnType<typeof useToast>;
+}) {
+  const {
+    activeTeamId,
+    editingScript,
+    setEditingScript,
+    setShowModal,
+    loadPracticeScripts,
+    toast,
+  } = params;
+
   const handleCreateScript = useCallback(() => {
     console.log("Create script clicked - opening modal");
     setEditingScript(undefined);
     setShowModal(true);
-  }, []);
+  }, [setEditingScript, setShowModal]);
 
-  const handleEditScript = useCallback((script: PracticeScript) => {
-    setEditingScript(script);
-    setShowModal(true);
-  }, []);
+  const handleEditScript = useCallback(
+    (script: PracticeScript) => {
+      setEditingScript(script);
+      setShowModal(true);
+    },
+    [setEditingScript, setShowModal]
+  );
 
   const handleSaveScript = useCallback(
     (script: Partial<PracticeScript>) => {
@@ -113,7 +188,14 @@ export function usePracticePlansHandlers() {
         }
       })();
     },
-    [activeTeamId, editingScript, loadPracticeScripts, toast]
+    [
+      activeTeamId,
+      editingScript,
+      loadPracticeScripts,
+      setEditingScript,
+      setShowModal,
+      toast,
+    ]
   );
 
   const handleDuplicateScript = useCallback(
@@ -150,33 +232,23 @@ export function usePracticePlansHandlers() {
     [loadPracticeScripts, toast]
   );
 
-  const handleDeleteScript = useCallback((scriptId: string) => {
-    setDeleteScriptId(scriptId);
-    setShowDeleteConfirm(true);
-  }, []);
+  return {
+    handleCreateScript,
+    handleEditScript,
+    handleSaveScript,
+    handleDuplicateScript,
+    handleArchiveScript,
+  };
+}
 
-  const confirmDeleteScript = useCallback(async () => {
-    if (!deleteScriptId) return;
+function usePracticePlansImportExportHandlers(params: {
+  activeTeamId: string | null;
+  practiceScripts: PracticeScript[];
+  loadPracticeScripts: () => Promise<void>;
+  toast: ReturnType<typeof useToast>;
+}) {
+  const { activeTeamId, practiceScripts, loadPracticeScripts, toast } = params;
 
-    try {
-      await PracticeService.deletePracticeScript(deleteScriptId);
-      await loadPracticeScripts();
-      toast.success("Practice script deleted successfully");
-    } catch (error) {
-      logError("Failed to delete script:", error);
-      toast.error("Failed to delete script");
-    } finally {
-      setShowDeleteConfirm(false);
-      setDeleteScriptId(null);
-    }
-  }, [deleteScriptId, loadPracticeScripts, toast]);
-
-  const cancelDeleteScript = useCallback(() => {
-    setShowDeleteConfirm(false);
-    setDeleteScriptId(null);
-  }, []);
-
-  // Import/Export handlers
   const handleExportScripts = useCallback(() => {
     if (practiceScripts.length === 0) {
       toast.error("No practice scripts to export");
@@ -241,6 +313,91 @@ export function usePracticePlansHandlers() {
     [activeTeamId, loadPracticeScripts, toast]
   );
 
+  return { handleExportScripts, handleImportScripts };
+}
+
+export function usePracticePlansHandlers() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const toast = useToast();
+
+  // State
+  const [showModal, setShowModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [editingScript, setEditingScript] = useState<
+    PracticeScript | undefined
+  >(undefined);
+  const [practiceScripts, setPracticeScripts] = useState<PracticeScript[]>([]);
+  const [isLoading, setLoading] = useState(true);
+  const activeTeamId = useActiveTeamIdFromLocalStorage();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState("date-desc");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteScriptId, setDeleteScriptId] = useState<string | null>(null);
+
+  const scriptsData = usePracticeScriptsData({ user, activeTeamId, toast });
+  useEffect(() => {
+    setPracticeScripts(scriptsData.practiceScripts);
+  }, [scriptsData.practiceScripts]);
+  useEffect(() => {
+    setLoading(scriptsData.isLoading);
+  }, [scriptsData.isLoading]);
+
+  const loadPracticeScripts = scriptsData.loadPracticeScripts;
+
+  const crudHandlers = usePracticePlansCrudHandlers({
+    activeTeamId,
+    editingScript,
+    setEditingScript,
+    setShowModal,
+    loadPracticeScripts,
+    toast,
+  });
+
+  const importExportHandlers = usePracticePlansImportExportHandlers({
+    activeTeamId,
+    practiceScripts,
+    loadPracticeScripts,
+    toast,
+  });
+
+  const {
+    handleCreateScript,
+    handleEditScript,
+    handleSaveScript,
+    handleDuplicateScript,
+    handleArchiveScript,
+  } = crudHandlers;
+
+  const handleDeleteScript = useCallback((scriptId: string) => {
+    setDeleteScriptId(scriptId);
+    setShowDeleteConfirm(true);
+  }, []);
+
+  const confirmDeleteScript = useCallback(async () => {
+    if (!deleteScriptId) return;
+
+    try {
+      await PracticeService.deletePracticeScript(deleteScriptId);
+      await loadPracticeScripts();
+      toast.success("Practice script deleted successfully");
+    } catch (error) {
+      logError("Failed to delete script:", error);
+      toast.error("Failed to delete script");
+    } finally {
+      setShowDeleteConfirm(false);
+      setDeleteScriptId(null);
+    }
+  }, [deleteScriptId, loadPracticeScripts, toast]);
+
+  const cancelDeleteScript = useCallback(() => {
+    setShowDeleteConfirm(false);
+    setDeleteScriptId(null);
+  }, []);
+
+  const { handleExportScripts, handleImportScripts } = importExportHandlers;
+
   // Filter/Sort handlers
   const handleToggleFilter = useCallback((filterId: string) => {
     setActiveFilters((prev) =>
@@ -271,58 +428,16 @@ export function usePracticePlansHandlers() {
   }, [navigate]);
 
   // Computed values
-  const filteredAndSortedScripts = useMemo(() => {
-    let filtered = [...practiceScripts];
-
-    // Apply search
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (script) =>
-          (script.title || script.name || "").toLowerCase().includes(query) ||
-          (script.description || "").toLowerCase().includes(query) ||
-          (script.tags || []).some((tag) => tag.toLowerCase().includes(query))
-      );
-    }
-
-    // Apply filters
-    if (activeFilters.includes("has-tags")) {
-      filtered = filtered.filter(
-        (script) => script.tags && script.tags.length > 0
-      );
-    }
-    if (activeFilters.includes("no-tags")) {
-      filtered = filtered.filter(
-        (script) => !script.tags || script.tags.length === 0
-      );
-    }
-
-    // Apply sorting
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case "date-desc":
-          return (
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          );
-        case "date-asc":
-          return (
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-          );
-        case "name-asc":
-          return (a.title || a.name || "").localeCompare(
-            b.title || b.name || ""
-          );
-        case "name-desc":
-          return (b.title || b.name || "").localeCompare(
-            a.title || a.name || ""
-          );
-        default:
-          return 0;
-      }
-    });
-
-    return filtered;
-  }, [practiceScripts, searchQuery, activeFilters, sortBy]);
+  const filteredAndSortedScripts = useMemo(
+    () =>
+      filterAndSortPracticeScripts({
+        practiceScripts,
+        searchQuery,
+        activeFilters,
+        sortBy,
+      }),
+    [practiceScripts, searchQuery, activeFilters, sortBy]
+  );
 
   const activeScripts = useMemo(
     () => filteredAndSortedScripts.filter((s) => !s.isArchived),

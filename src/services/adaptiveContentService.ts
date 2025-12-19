@@ -20,6 +20,87 @@ export interface ContextDetectionResult {
 }
 
 export class AdaptiveContentService {
+  private static determineTimeContext(
+    hour: number,
+    reasons: string[]
+  ): TimeContext {
+    if (hour >= 6 && hour < 9) {
+      reasons.push("Morning hours (6-9 AM)");
+      return "morning";
+    }
+    if (hour >= 12 && hour < 14) {
+      reasons.push("Pre-practice hours (12-2 PM)");
+      return "pre-practice";
+    }
+    if (hour >= 14 && hour < 16) {
+      reasons.push("Typical practice hours (2-4 PM)");
+      return "practice-time";
+    }
+    if (hour >= 16 && hour < 18) {
+      reasons.push("Post-practice hours (4-6 PM)");
+      return "post-practice";
+    }
+    if (hour >= 18 && hour < 22) {
+      reasons.push("Evening hours (6-10 PM)");
+      return "evening";
+    }
+
+    reasons.push("Default time context");
+    return "morning";
+  }
+
+  private static determineMainContext(
+    timeContext: TimeContext,
+    dayOfWeek: number,
+    month: number,
+    reasons: string[]
+  ): { context: ContextType; confidence: number } {
+    // Weekend = potential game day
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
+      reasons.push("Weekend day (potential game day)");
+      return { context: "game-day", confidence: 0.7 };
+    }
+
+    // Weekday practice times
+    if (timeContext === "practice-time" && dayOfWeek >= 1 && dayOfWeek <= 5) {
+      reasons.push("Weekday during practice hours");
+      return { context: "practice-day", confidence: 0.8 };
+    }
+
+    // Weekday evenings
+    if (timeContext === "evening" && dayOfWeek >= 1 && dayOfWeek <= 5) {
+      reasons.push("Weekday evening (practice review time)");
+      return { context: "practice-day", confidence: 0.6 };
+    }
+
+    // Summer months = potential off-season
+    if (month >= 5 && month <= 7) {
+      reasons.push("Summer months (potential off-season)");
+      return { context: "off-season", confidence: 0.6 };
+    }
+
+    // Default to practice day for active season
+    reasons.push("Default context during active season");
+    return { context: "practice-day", confidence: 0.5 };
+  }
+
+  private static applyRoleAdjustments(
+    userRole: UserRole,
+    timeContext: TimeContext,
+    base: { context: ContextType; confidence: number },
+    reasons: string[]
+  ): { context: ContextType; confidence: number } {
+    if (userRole === "coach" && timeContext === "morning") {
+      reasons.push("Coaches typically plan in mornings");
+      return {
+        context: "practice-day",
+        confidence: Math.min(base.confidence + 0.1, 1.0),
+      };
+    }
+
+    return base;
+  }
+
   /**
    * Automatically detect current context based on various signals
    */
@@ -29,82 +110,32 @@ export class AdaptiveContentService {
   ): ContextDetectionResult {
     const hour = currentTime.getHours();
     const dayOfWeek = currentTime.getDay(); // 0 = Sunday, 6 = Saturday
+    const month = currentTime.getMonth();
     const reasons: string[] = [];
 
-    // Determine time context
-    let timeContext: TimeContext;
-    if (hour >= 6 && hour < 9) {
-      timeContext = "morning";
-      reasons.push("Morning hours (6-9 AM)");
-    } else if (hour >= 14 && hour < 16) {
-      timeContext = "practice-time";
-      reasons.push("Typical practice hours (2-4 PM)");
-    } else if (hour >= 16 && hour < 18) {
-      timeContext = "post-practice";
-      reasons.push("Post-practice hours (4-6 PM)");
-    } else if (hour >= 18 && hour < 22) {
-      timeContext = "evening";
-      reasons.push("Evening hours (6-10 PM)");
-    } else if (hour >= 12 && hour < 14) {
-      timeContext = "pre-practice";
-      reasons.push("Pre-practice hours (12-2 PM)");
-    } else {
-      timeContext = "morning";
-      reasons.push("Default time context");
-    }
+    const timeContext = AdaptiveContentService.determineTimeContext(
+      hour,
+      reasons
+    );
 
-    // Determine main context
-    let context: ContextType;
-    let confidence = 0.5; // Base confidence
+    const base = AdaptiveContentService.determineMainContext(
+      timeContext,
+      dayOfWeek,
+      month,
+      reasons
+    );
 
-    // Weekend = potential game day
-    if (dayOfWeek === 0 || dayOfWeek === 6) {
-      context = "game-day";
-      confidence = 0.7;
-      reasons.push("Weekend day (potential game day)");
-    }
-    // Weekday practice times
-    else if (
-      timeContext === "practice-time" &&
-      dayOfWeek >= 1 &&
-      dayOfWeek <= 5
-    ) {
-      context = "practice-day";
-      confidence = 0.8;
-      reasons.push("Weekday during practice hours");
-    }
-    // Weekday evenings
-    else if (timeContext === "evening" && dayOfWeek >= 1 && dayOfWeek <= 5) {
-      context = "practice-day";
-      confidence = 0.6;
-      reasons.push("Weekday evening (practice review time)");
-    }
-    // Summer months = potential off-season
-    else if (currentTime.getMonth() >= 5 && currentTime.getMonth() <= 7) {
-      context = "off-season";
-      confidence = 0.6;
-      reasons.push("Summer months (potential off-season)");
-    }
-    // Default to practice day for active season
-    else {
-      context = "practice-day";
-      confidence = 0.5;
-      reasons.push("Default context during active season");
-    }
-
-    // Role-specific adjustments
-    if (userRole === "coach") {
-      if (timeContext === "morning") {
-        context = "practice-day";
-        confidence = Math.min(confidence + 0.1, 1.0);
-        reasons.push("Coaches typically plan in mornings");
-      }
-    }
+    const adjusted = AdaptiveContentService.applyRoleAdjustments(
+      userRole,
+      timeContext,
+      base,
+      reasons
+    );
 
     return {
-      context,
+      context: adjusted.context,
       timeContext,
-      confidence,
+      confidence: adjusted.confidence,
       reasons,
     };
   }

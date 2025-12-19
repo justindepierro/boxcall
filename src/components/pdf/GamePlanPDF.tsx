@@ -295,6 +295,53 @@ interface GamePlanPDFProps {
   format?: GamePlanPDFFormat;
 }
 
+const GAME_PLAN_PDF_STYLE_VARIANTS = {
+  default: {
+    pageStyle: styles.page,
+    headerStyle: styles.header,
+    titleStyle: styles.title,
+    subtitleStyle: styles.subtitle,
+    metaStyle: styles.meta,
+    situationSectionStyle: styles.situationSection,
+    situationHeaderStyle: styles.situationHeader,
+    situationTitleStyle: styles.situationTitle,
+    situationDescriptionStyle: styles.situationDescription,
+    playItemStyle: styles.playItem,
+    priorityBadgeStyle: styles.priorityBadge,
+    priorityTextStyle: styles.priorityText,
+    playNameStyle: styles.playName,
+    playDetailsStyle: styles.playDetails,
+    playDetailBadgeStyle: styles.playDetailBadge,
+    playDetailTextStyle: styles.playDetailText,
+    wristbandBadgeStyle: styles.wristbandBadge,
+    wristbandTextStyle: styles.wristbandText,
+    emptyStateStyle: styles.emptyState,
+    footerStyle: styles.footer,
+  },
+  compact: {
+    pageStyle: styles.pageCompact,
+    headerStyle: styles.headerCompact,
+    titleStyle: styles.titleCompact,
+    subtitleStyle: styles.subtitleCompact,
+    metaStyle: styles.metaCompact,
+    situationSectionStyle: styles.situationSectionCompact,
+    situationHeaderStyle: styles.situationHeaderCompact,
+    situationTitleStyle: styles.situationTitleCompact,
+    situationDescriptionStyle: styles.situationDescriptionCompact,
+    playItemStyle: styles.playItemCompact,
+    priorityBadgeStyle: styles.priorityBadgeCompact,
+    priorityTextStyle: styles.priorityTextCompact,
+    playNameStyle: styles.playNameCompact,
+    playDetailsStyle: styles.playDetailsCompact,
+    playDetailBadgeStyle: styles.playDetailBadgeCompact,
+    playDetailTextStyle: styles.playDetailTextCompact,
+    wristbandBadgeStyle: styles.wristbandBadgeCompact,
+    wristbandTextStyle: styles.wristbandTextCompact,
+    emptyStateStyle: styles.emptyStateCompact,
+    footerStyle: styles.footerCompact,
+  },
+} as const;
+
 export const GamePlanPDF: React.FC<GamePlanPDFProps> = ({
   gamePlan,
   format = "call-sheet",
@@ -325,51 +372,32 @@ export const GamePlanPDF: React.FC<GamePlanPDFProps> = ({
     0
   );
 
-  // Dynamic styles based on format
-  const pageStyle = isCompact ? styles.pageCompact : styles.page;
-  const headerStyle = isCompact ? styles.headerCompact : styles.header;
-  const titleStyle = isCompact ? styles.titleCompact : styles.title;
-  const subtitleStyle = isCompact ? styles.subtitleCompact : styles.subtitle;
-  const metaStyle = isCompact ? styles.metaCompact : styles.meta;
-  const situationSectionStyle = isCompact
-    ? styles.situationSectionCompact
-    : styles.situationSection;
-  const situationHeaderStyle = isCompact
-    ? styles.situationHeaderCompact
-    : styles.situationHeader;
-  const situationTitleStyle = isCompact
-    ? styles.situationTitleCompact
-    : styles.situationTitle;
-  const situationDescriptionStyle = isCompact
-    ? styles.situationDescriptionCompact
-    : styles.situationDescription;
-  const playItemStyle = isCompact ? styles.playItemCompact : styles.playItem;
-  const priorityBadgeStyle = isCompact
-    ? styles.priorityBadgeCompact
-    : styles.priorityBadge;
-  const priorityTextStyle = isCompact
-    ? styles.priorityTextCompact
-    : styles.priorityText;
-  const playNameStyle = isCompact ? styles.playNameCompact : styles.playName;
-  const playDetailsStyle = isCompact
-    ? styles.playDetailsCompact
-    : styles.playDetails;
-  const playDetailBadgeStyle = isCompact
-    ? styles.playDetailBadgeCompact
-    : styles.playDetailBadge;
-  const playDetailTextStyle = isCompact
-    ? styles.playDetailTextCompact
-    : styles.playDetailText;
-  const wristbandBadgeStyle = isCompact
-    ? styles.wristbandBadgeCompact
-    : styles.wristbandBadge;
-  const wristbandTextStyle = isCompact
-    ? styles.wristbandTextCompact
-    : styles.wristbandText;
-  const emptyStateStyle = isCompact
-    ? styles.emptyStateCompact
-    : styles.emptyState;
-  const footerStyle = isCompact ? styles.footerCompact : styles.footer;
+  const styleVariant = isCompact
+    ? GAME_PLAN_PDF_STYLE_VARIANTS.compact
+    : GAME_PLAN_PDF_STYLE_VARIANTS.default;
+
+  const {
+    pageStyle,
+    headerStyle,
+    titleStyle,
+    subtitleStyle,
+    metaStyle,
+    situationSectionStyle,
+    situationHeaderStyle,
+    situationTitleStyle,
+    situationDescriptionStyle,
+    playItemStyle,
+    priorityBadgeStyle,
+    priorityTextStyle,
+    playNameStyle,
+    playDetailsStyle,
+    playDetailBadgeStyle,
+    playDetailTextStyle,
+    wristbandBadgeStyle,
+    wristbandTextStyle,
+    emptyStateStyle,
+    footerStyle,
+  } = styleVariant;
 
   return (
     <Document>

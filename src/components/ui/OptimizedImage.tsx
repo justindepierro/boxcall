@@ -27,6 +27,75 @@ interface OptimizedImageProps {
   onError?: () => void;
 }
 
+function usePreloadImageAsset(priority: boolean, src: string) {
+  useEffect(() => {
+    if (!priority || !src) return;
+    cdnService.preloadAsset(src, "image").catch(console.warn);
+  }, [priority, src]);
+}
+
+function useLazyInView(
+  imgRef: React.RefObject<HTMLImageElement | null>,
+  priority: boolean,
+  loading: "lazy" | "eager"
+) {
+  const [isInView, setIsInView] = useState(priority);
+
+  useEffect(() => {
+    if (priority || loading === "eager") {
+      setIsInView(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      {
+        root: null,
+        rootMargin: "50px", // Start loading 50px before image comes into view
+        threshold: 0.1,
+      }
+    );
+
+    const current = imgRef.current;
+    if (current) observer.observe(current);
+
+    return () => observer.disconnect();
+  }, [priority, loading, imgRef]);
+
+  return isInView;
+}
+
+function buildPlaceholderStyle(
+  placeholder: "blur" | "empty" | string,
+  isLoaded: boolean
+): React.CSSProperties {
+  const isBlur = placeholder === "blur";
+  const isCustomImage =
+    typeof placeholder === "string" && !isBlur && placeholder !== "empty";
+
+  return {
+    backgroundColor: isBlur ? colorTokens.gray[100] : "transparent",
+    backgroundImage: isCustomImage ? `url(${placeholder})` : undefined,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    filter: !isLoaded && isBlur ? "blur(10px)" : undefined,
+    transition: "filter 0.3s ease-in-out",
+  };
+}
+
+function getObjectFit(
+  fit: OptimizedImageProps["fit"]
+): React.CSSProperties["objectFit"] | undefined {
+  if (!fit) return undefined;
+  if (fit === "inside" || fit === "outside") return "cover";
+  return fit as React.CSSProperties["objectFit"];
+}
+
 export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   src,
   alt,
@@ -47,15 +116,10 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [isInView, setIsInView] = useState(priority);
   const imgRef = useRef<HTMLImageElement>(null);
 
-  // Preload critical images
-  useEffect(() => {
-    if (priority && src) {
-      cdnService.preloadAsset(src, "image").catch(console.warn);
-    }
-  }, [priority, src]);
+  usePreloadImageAsset(priority, src);
+  const isInView = useLazyInView(imgRef, priority, loading);
 
   // Generate optimized URLs using CDN service
   const optimizedUrls = React.useMemo(() => {
@@ -67,7 +131,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
     // Generate responsive srcSet if sizes provided
     const srcSet = responsiveSizes
       ? cdnService.getResponsiveImageSrcSet(src, responsiveSizes, options)
-      : "";
+      : undefined;
 
     return {
       main: fallback,
@@ -75,36 +139,6 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
       srcSet,
     };
   }, [src, width, height, quality, format, fit, responsiveSizes]);
-
-  // Intersection Observer for lazy loading
-  useEffect(() => {
-    if (priority || loading === "eager") {
-      setIsInView(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsInView(true);
-            observer.disconnect();
-          }
-        });
-      },
-      {
-        root: null,
-        rootMargin: "50px", // Start loading 50px before image comes into view
-        threshold: 0.1,
-      }
-    );
-
-    if (imgRef.current) {
-      observer.observe(imgRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [priority, loading]);
 
   const handleLoad = () => {
     setIsLoaded(true);
@@ -122,20 +156,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   };
 
   // Generate placeholder styles
-  const placeholderStyle: React.CSSProperties = {
-    backgroundColor:
-      placeholder === "blur" ? colorTokens.gray[100] : "transparent",
-    backgroundImage:
-      typeof placeholder === "string" &&
-      placeholder !== "blur" &&
-      placeholder !== "empty"
-        ? `url(${placeholder})`
-        : undefined,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    filter: !isLoaded && placeholder === "blur" ? "blur(10px)" : undefined,
-    transition: "filter 0.3s ease-in-out",
-  };
+  const placeholderStyle = buildPlaceholderStyle(placeholder, isLoaded);
 
   // Placeholder while loading
   const placeholderElement = (
@@ -184,9 +205,9 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         )}
 
         {/* Responsive source with multiple sizes */}
-        {optimizedUrls.srcSet && (
+        {optimizedUrls.srcSet ? (
           <source srcSet={optimizedUrls.srcSet} sizes={sizes} />
-        )}
+        ) : null}
 
         {/* Fallback image */}
         <img
@@ -201,10 +222,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
           className={`${isLoaded ? "block" : "hidden"} ${className}`}
           decoding={priority ? "sync" : "async"}
           style={{
-            objectFit:
-              fit === "inside" || fit === "outside"
-                ? "cover"
-                : (fit as React.CSSProperties["objectFit"]),
+            objectFit: getObjectFit(fit),
             aspectRatio: width && height ? `${width}/${height}` : undefined,
           }}
         />

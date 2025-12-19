@@ -182,6 +182,325 @@ function parseAddress(result: AddressResult): ParsedAddress {
   };
 }
 
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function searchMockAddresses(query: string): Promise<AddressResult[]> {
+  await delay(200);
+
+  return MOCK_ADDRESSES.filter((addr) =>
+    addr.formatted_address.toLowerCase().includes(query.toLowerCase())
+  );
+}
+
+function parseMapBoxContext(feature: any): any[] {
+  const components = [];
+
+  // MapBox structure is different from Google Places
+  if (feature.address) {
+    components.push({
+      long_name: feature.address,
+      short_name: feature.address,
+      types: ["street_number"],
+    });
+  }
+
+  if (feature.text) {
+    components.push({
+      long_name: feature.text,
+      short_name: feature.text,
+      types: ["route"],
+    });
+  }
+
+  feature.context?.forEach((ctx: any) => {
+    if (ctx.id.startsWith("place")) {
+      components.push({
+        long_name: ctx.text,
+        short_name: ctx.text,
+        types: ["locality"],
+      });
+    } else if (ctx.id.startsWith("region")) {
+      components.push({
+        long_name: ctx.text,
+        short_name: ctx.short_code?.replace("US-", "") || ctx.text,
+        types: ["administrative_area_level_1"],
+      });
+    } else if (ctx.id.startsWith("postcode")) {
+      components.push({
+        long_name: ctx.text,
+        short_name: ctx.text,
+        types: ["postal_code"],
+      });
+    }
+  });
+
+  return components;
+}
+
+async function searchNominatim(params: {
+  query: string;
+  countryCode: string;
+}): Promise<AddressResult[]> {
+  const { query, countryCode } = params;
+
+  try {
+    const countryParam = countryCode
+      ? `&countrycodes=${countryCode.toLowerCase()}`
+      : "";
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&q=${encodeURIComponent(query)}${countryParam}&email=contact@boxcall.com`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Nominatim API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    return data.map((result: any) => {
+      const address = result.address || {};
+      const addressComponents = [];
+
+      // Map Nominatim response to our format
+      if (address.house_number) {
+        addressComponents.push({
+          long_name: address.house_number,
+          short_name: address.house_number,
+          types: ["street_number"],
+        });
+      }
+
+      if (address.road) {
+        addressComponents.push({
+          long_name: address.road,
+          short_name: address.road,
+          types: ["route"],
+        });
+      }
+
+      if (address.city || address.town || address.village) {
+        const cityName = address.city || address.town || address.village;
+        addressComponents.push({
+          long_name: cityName,
+          short_name: cityName,
+          types: ["locality"],
+        });
+      }
+
+      if (address.state) {
+        addressComponents.push({
+          long_name: address.state,
+          short_name: address.state,
+          types: ["administrative_area_level_1"],
+        });
+      }
+
+      if (address.postcode) {
+        addressComponents.push({
+          long_name: address.postcode,
+          short_name: address.postcode,
+          types: ["postal_code"],
+        });
+      }
+
+      return {
+        formatted_address: result.display_name,
+        address_components: addressComponents,
+        place_id: `nominatim_${result.place_id}`,
+      };
+    });
+  } catch (error) {
+    console.warn("Nominatim search failed, falling back to mock data:", error);
+    return searchMockAddresses(query);
+  }
+}
+
+async function searchGooglePlaces(params: {
+  query: string;
+  countryCode: string;
+}): Promise<AddressResult[]> {
+  const { query, countryCode } = params;
+
+  if (!GOOGLE_PLACES_API_KEY) {
+    console.warn("Google Places API key not configured. Using mock data.");
+    return searchMockAddresses(query);
+  }
+
+  try {
+    // Dynamic import with fallback for missing package
+    try {
+      // @ts-ignore - Dynamic import may fail if package not installed
+      const googleMapsLoader = await import("@googlemaps/js-api-loader");
+      const { Loader } = googleMapsLoader;
+
+      const loader = new Loader({
+        apiKey: GOOGLE_PLACES_API_KEY,
+        version: "weekly",
+        libraries: ["places"],
+      });
+
+      const google = await (loader as any).load();
+      const service = new (google as any).maps.places.AutocompleteService();
+
+      return new Promise((resolve) => {
+        service.getPlacePredictions(
+          {
+            input: query,
+            types: ["address"],
+            componentRestrictions: countryCode
+              ? { country: countryCode }
+              : undefined,
+          },
+          (predictions: any, status: any) => {
+            if (
+              status === (google as any).maps.places.PlacesServiceStatus.OK &&
+              predictions
+            ) {
+              const results = predictions.map((prediction: any) => ({
+                formatted_address: prediction.description,
+                address_components: [], // Would need Places Details API for full components
+                place_id: prediction.place_id || "",
+              }));
+              resolve(results);
+            } else {
+              resolve([]);
+            }
+          }
+        );
+      });
+    } catch {
+      console.warn(
+        "Google Maps JS API Loader not installed. Run: npm install @googlemaps/js-api-loader"
+      );
+      return searchMockAddresses(query);
+    }
+  } catch (error) {
+    logError("Google Places API error:", error);
+    return searchMockAddresses(query);
+  }
+}
+
+async function searchMapBox(params: {
+  query: string;
+  countryCode: string;
+}): Promise<AddressResult[]> {
+  const { query, countryCode } = params;
+
+  if (!MAPBOX_ACCESS_TOKEN) {
+    console.warn("MapBox access token not configured. Using mock data.");
+    return searchMockAddresses(query);
+  }
+
+  try {
+    const countryParam = countryCode ? `&country=${countryCode}` : "";
+    const response = await fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${MAPBOX_ACCESS_TOKEN}&types=address${countryParam}&limit=5`
+    );
+
+    if (!response.ok) throw new Error("MapBox API request failed");
+
+    const data = await response.json();
+
+    return data.features.map((feature: any) => ({
+      formatted_address: feature.place_name,
+      address_components: feature.context ? parseMapBoxContext(feature) : [],
+      place_id: feature.id,
+    }));
+  } catch (error) {
+    logError("MapBox API error:", error);
+    return searchMockAddresses(query);
+  }
+}
+
+async function searchAddresses(params: {
+  query: string;
+  service: AddressAutocompleteProps["service"];
+  countryCode: string;
+}): Promise<AddressResult[]> {
+  const { query, service, countryCode } = params;
+  if (query.length < 3) return [];
+
+  switch (service) {
+    case "nominatim":
+      return searchNominatim({ query, countryCode });
+    case "google":
+      return searchGooglePlaces({ query, countryCode });
+    case "mapbox":
+      return searchMapBox({ query, countryCode });
+    case "mock":
+    default:
+      return searchMockAddresses(query);
+  }
+}
+
+function useCloseOnOutsideClick(params: {
+  containerRef: React.RefObject<HTMLDivElement | null>;
+  onClose: () => void;
+}) {
+  const { containerRef, onClose } = params;
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [containerRef, onClose]);
+}
+
+function useDebouncedAddressSuggestions(params: {
+  searchTerm: string;
+  service: AddressAutocompleteProps["service"];
+  countryCode: string;
+  debounceMs: number;
+}) {
+  const { searchTerm, service, countryCode, debounceMs } = params;
+  const [suggestions, setSuggestions] = useState<AddressResult[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const runSearch = async () => {
+      if (searchTerm.length >= 3) {
+        setLoading(true);
+        const results = await searchAddresses({
+          query: searchTerm,
+          service,
+          countryCode,
+        });
+        if (cancelled) return;
+        setSuggestions(results);
+        setLoading(false);
+        setIsOpen(true);
+      } else {
+        setSuggestions([]);
+        setIsOpen(false);
+      }
+    };
+
+    const debounce = window.setTimeout(() => {
+      void runSearch();
+    }, debounceMs);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(debounce);
+    };
+  }, [countryCode, debounceMs, searchTerm, service]);
+
+  return { suggestions, setSuggestions, isOpen, setIsOpen, loading };
+}
+
 export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   value,
   onChange,
@@ -196,289 +515,24 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   service = "nominatim",
   countryCode = "US",
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState(value);
-  const [suggestions, setSuggestions] = useState<AddressResult[]>([]);
-  const [loading, setLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Mock search function for development
-  const searchMockAddresses = async (
-    query: string
-  ): Promise<AddressResult[]> => {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 200));
-
-    return MOCK_ADDRESSES.filter((addr) =>
-      addr.formatted_address.toLowerCase().includes(query.toLowerCase())
-    );
-  };
-
-  // Nominatim (OpenStreetMap) search function - FREE!
-  const searchNominatim = async (query: string): Promise<AddressResult[]> => {
-    try {
-      const countryParam = countryCode
-        ? `&countrycodes=${countryCode.toLowerCase()}`
-        : "";
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&q=${encodeURIComponent(query)}${countryParam}&email=contact@boxcall.com`
-      );
-
-      if (!response.ok) {
-        throw new Error(`Nominatim API error: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      return data.map((result: any) => {
-        const address = result.address || {};
-        const addressComponents = [];
-
-        // Map Nominatim response to our format
-        if (address.house_number) {
-          addressComponents.push({
-            long_name: address.house_number,
-            short_name: address.house_number,
-            types: ["street_number"],
-          });
-        }
-
-        if (address.road) {
-          addressComponents.push({
-            long_name: address.road,
-            short_name: address.road,
-            types: ["route"],
-          });
-        }
-
-        if (address.city || address.town || address.village) {
-          const cityName = address.city || address.town || address.village;
-          addressComponents.push({
-            long_name: cityName,
-            short_name: cityName,
-            types: ["locality"],
-          });
-        }
-
-        if (address.state) {
-          addressComponents.push({
-            long_name: address.state,
-            short_name: address.state,
-            types: ["administrative_area_level_1"],
-          });
-        }
-
-        if (address.postcode) {
-          addressComponents.push({
-            long_name: address.postcode,
-            short_name: address.postcode,
-            types: ["postal_code"],
-          });
-        }
-
-        return {
-          formatted_address: result.display_name,
-          address_components: addressComponents,
-          place_id: `nominatim_${result.place_id}`,
-        };
-      });
-    } catch (error) {
-      console.warn(
-        "Nominatim search failed, falling back to mock data:",
-        error
-      );
-      return searchMockAddresses(query);
-    }
-  };
-
-  // Google Places API search function
-  const searchGooglePlaces = async (
-    query: string
-  ): Promise<AddressResult[]> => {
-    if (!GOOGLE_PLACES_API_KEY) {
-      console.warn("Google Places API key not configured. Using mock data.");
-      return searchMockAddresses(query);
-    }
-
-    try {
-      // Dynamic import with fallback for missing package
-      try {
-        // @ts-ignore - Dynamic import may fail if package not installed
-        const googleMapsLoader = await import("@googlemaps/js-api-loader");
-        const { Loader } = googleMapsLoader;
-
-        const loader = new Loader({
-          apiKey: GOOGLE_PLACES_API_KEY,
-          version: "weekly",
-          libraries: ["places"],
-        });
-
-        const google = await (loader as any).load();
-        const service = new (google as any).maps.places.AutocompleteService();
-
-        return new Promise((resolve) => {
-          service.getPlacePredictions(
-            {
-              input: query,
-              types: ["address"],
-              componentRestrictions: countryCode
-                ? { country: countryCode }
-                : undefined,
-            },
-            (predictions: any, status: any) => {
-              if (
-                status === (google as any).maps.places.PlacesServiceStatus.OK &&
-                predictions
-              ) {
-                const results = predictions.map((prediction: any) => ({
-                  formatted_address: prediction.description,
-                  address_components: [], // Would need Places Details API for full components
-                  place_id: prediction.place_id || "",
-                }));
-                resolve(results);
-              } else {
-                resolve([]);
-              }
-            }
-          );
-        });
-      } catch {
-        console.warn(
-          "Google Maps JS API Loader not installed. Run: npm install @googlemaps/js-api-loader"
-        );
-        return searchMockAddresses(query);
-      }
-    } catch (error) {
-      logError("Google Places API error:", error);
-      return searchMockAddresses(query);
-    }
-  };
-
-  // MapBox Geocoding API search function
-  const searchMapBox = async (query: string): Promise<AddressResult[]> => {
-    if (!MAPBOX_ACCESS_TOKEN) {
-      console.warn("MapBox access token not configured. Using mock data.");
-      return searchMockAddresses(query);
-    }
-
-    try {
-      const countryParam = countryCode ? `&country=${countryCode}` : "";
-      const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${MAPBOX_ACCESS_TOKEN}&types=address${countryParam}&limit=5`
-      );
-
-      if (!response.ok) throw new Error("MapBox API request failed");
-
-      const data = await response.json();
-
-      return data.features.map((feature: any) => ({
-        formatted_address: feature.place_name,
-        address_components: feature.context ? parseMapBoxContext(feature) : [],
-        place_id: feature.id,
-      }));
-    } catch (error) {
-      logError("MapBox API error:", error);
-      return searchMockAddresses(query);
-    }
-  };
-
-  // Main search function that delegates to the appropriate service
-  const searchAddresses = async (query: string): Promise<AddressResult[]> => {
-    if (query.length < 3) return [];
-
-    switch (service) {
-      case "nominatim":
-        return searchNominatim(query);
-      case "google":
-        return searchGooglePlaces(query);
-      case "mapbox":
-        return searchMapBox(query);
-      case "mock":
-      default:
-        return searchMockAddresses(query);
-    }
-  };
-
-  // Helper function to parse MapBox context into address components
-  const parseMapBoxContext = (feature: any): any[] => {
-    const components = [];
-
-    // MapBox structure is different from Google Places
-    if (feature.address) {
-      components.push({
-        long_name: feature.address,
-        short_name: feature.address,
-        types: ["street_number"],
-      });
-    }
-
-    if (feature.text) {
-      components.push({
-        long_name: feature.text,
-        short_name: feature.text,
-        types: ["route"],
-      });
-    }
-
-    feature.context?.forEach((ctx: any) => {
-      if (ctx.id.startsWith("place")) {
-        components.push({
-          long_name: ctx.text,
-          short_name: ctx.text,
-          types: ["locality"],
-        });
-      } else if (ctx.id.startsWith("region")) {
-        components.push({
-          long_name: ctx.text,
-          short_name: ctx.short_code?.replace("US-", "") || ctx.text,
-          types: ["administrative_area_level_1"],
-        });
-      } else if (ctx.id.startsWith("postcode")) {
-        components.push({
-          long_name: ctx.text,
-          short_name: ctx.text,
-          types: ["postal_code"],
-        });
-      }
+  const { suggestions, isOpen, setIsOpen, loading } =
+    useDebouncedAddressSuggestions({
+      searchTerm,
+      service,
+      countryCode,
+      debounceMs: 300,
     });
 
-    return components;
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  useEffect(() => {
-    const search = async () => {
-      if (searchTerm.length >= 3) {
-        setLoading(true);
-        const results = await searchAddresses(searchTerm);
-        setSuggestions(results);
-        setLoading(false);
-        setIsOpen(true);
-      } else {
-        setSuggestions([]);
-        setIsOpen(false);
-      }
-    };
-
-    const debounce = setTimeout(search, 300);
-    return () => clearTimeout(debounce);
-  }, [searchTerm]); // eslint-disable-line react-hooks/exhaustive-deps
+  useCloseOnOutsideClick({
+    containerRef,
+    onClose: () => setIsOpen(false),
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;

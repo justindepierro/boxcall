@@ -35,6 +35,65 @@ interface AchievementData {
   points: number;
 }
 
+function AchievementsSection({
+  achievements,
+  loading,
+}: {
+  achievements: AchievementData | null;
+  loading: boolean;
+}) {
+  return (
+    <>
+      {achievements ? <AchievementsGrid achievements={achievements} /> : null}
+      {loading ? <AchievementsLoading /> : null}
+    </>
+  );
+}
+
+function ProfileEditModalSection({
+  isOpen,
+  profile,
+  onClose,
+  onProfileUpdate,
+}: {
+  isOpen: boolean;
+  profile: Profile | null | undefined;
+  onClose: () => void;
+  onProfileUpdate: () => Promise<void>;
+}) {
+  if (!isOpen || !profile) return null;
+
+  return (
+    <ProfileEditModal
+      isOpen={isOpen}
+      onClose={onClose}
+      userRole={profile.role || "player"}
+      currentProfile={{ ...profile } as { id: string; [key: string]: unknown }}
+      mode="quick"
+      onProfileUpdate={onProfileUpdate}
+    />
+  );
+}
+
+function ProfileContactInfo({
+  phone,
+  isViewMode,
+}: {
+  phone: string | null | undefined;
+  isViewMode: boolean;
+}) {
+  if (!phone || isViewMode) return null;
+
+  return (
+    <div className="flex items-center space-x-xs pt-sm px-sm py-xs bg-secondary/50 rounded-lg">
+      <Icon name="phone" size="xs" color="navy" />
+      <Typography variant="body-sm" className="text-secondary">
+        {phone}
+      </Typography>
+    </div>
+  );
+}
+
 /**
  * Profile Card - Compact personal profile display
  *
@@ -142,9 +201,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           onEditClick={handleProfileEdit}
         />
 
-        {/* Achievements */}
-        {achievements && <AchievementsGrid achievements={achievements} />}
-        {achLoading && <AchievementsLoading />}
+        <AchievementsSection achievements={achievements} loading={achLoading} />
 
         {/* Bio Section */}
         <BioSection
@@ -154,32 +211,18 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           onBioUpdate={handleBioUpdate}
         />
 
-        {/* Profile Edit Modal */}
-        {editModalOpen && profile && (
-          <ProfileEditModal
-            isOpen={editModalOpen}
-            onClose={() => setEditModalOpen(false)}
-            userRole={profile.role || "player"}
-            currentProfile={
-              { ...profile } as { id: string; [key: string]: unknown }
-            }
-            mode="quick"
-            onProfileUpdate={async () => {
-              await fetchUserProfile(profile.id);
-              setEditModalOpen(false);
-            }}
-          />
-        )}
+        <ProfileEditModalSection
+          isOpen={editModalOpen}
+          profile={profile}
+          onClose={() => setEditModalOpen(false)}
+          onProfileUpdate={async () => {
+            if (!profile?.id) return;
+            await fetchUserProfile(profile.id);
+            setEditModalOpen(false);
+          }}
+        />
 
-        {/* Contact Info */}
-        {profile?.phone && !isViewMode && (
-          <div className="flex items-center space-x-xs pt-sm px-sm py-xs bg-secondary/50 rounded-lg">
-            <Icon name="phone" size="xs" color="navy" />
-            <Typography variant="body-sm" className="text-secondary">
-              {profile.phone}
-            </Typography>
-          </div>
-        )}
+        <ProfileContactInfo phone={profile?.phone} isViewMode={isViewMode} />
 
         {/* Actions */}
         <ProfileCardActions

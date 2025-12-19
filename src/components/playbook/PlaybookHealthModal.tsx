@@ -35,6 +35,323 @@ export interface PlaybookHealthModalProps {
   playbookId?: string;
 }
 
+const CATEGORY_MAX_POINTS: Record<
+  keyof PlaybookHealthScore["breakdown"],
+  number
+> = {
+  formationLinking: 30,
+  formationCompleteness: 20,
+  playCompleteness: 25,
+  dataConsistency: 15,
+  organizationQuality: 10,
+};
+
+const CATEGORY_ICONS: Record<keyof PlaybookHealthScore["breakdown"], IconName> =
+  {
+    formationLinking: "link",
+    formationCompleteness: "check-circle",
+    playCompleteness: "file",
+    dataConsistency: "shield",
+    organizationQuality: "folder",
+  };
+
+const CATEGORY_LABELS: Record<keyof PlaybookHealthScore["breakdown"], string> =
+  {
+    formationLinking: "Formation Linking",
+    formationCompleteness: "Formation Completeness",
+    playCompleteness: "Play Completeness",
+    dataConsistency: "Data Consistency",
+    organizationQuality: "Organization Quality",
+  };
+
+function getSeverityColor(
+  severity: HealthIssue["severity"]
+): "danger" | "warning" | "info" | "default" {
+  switch (severity) {
+    case "critical":
+      return "danger";
+    case "warning":
+      return "warning";
+    case "info":
+      return "info";
+    default:
+      return "default";
+  }
+}
+
+function getSeverityIcon(severity: HealthIssue["severity"]): IconName {
+  switch (severity) {
+    case "critical":
+      return "alert";
+    case "warning":
+      return "alert-triangle";
+    case "info":
+      return "info";
+    default:
+      return "info";
+  }
+}
+
+const PlaybookHealthError: React.FC<{
+  message: string;
+  onRetry: () => void;
+}> = ({ message, onRetry }) => (
+  <div className="bg-danger-50 border border-danger-200 rounded-lg p-4">
+    <div className="flex items-start space-x-3">
+      <Icon name="alert" className="h-5 w-5 text-danger-500 mt-0.5" />
+      <div>
+        <Typography variant="body-md" className="text-danger-700">
+          {message}
+        </Typography>
+        <Button variant="ghost" size="sm" onClick={onRetry} className="mt-2">
+          Try Again
+        </Button>
+      </div>
+    </div>
+  </div>
+);
+
+const PlaybookHealthOverallCard: React.FC<{
+  healthScore: PlaybookHealthScore;
+}> = ({ healthScore }) => (
+  <div className="bg-gradient-to-br from-primary-50 to-accent-50 rounded-xl p-6 border border-primary-200">
+    <div className="flex items-center justify-between">
+      <div>
+        <Typography variant="label-md" className="text-secondary mb-2">
+          Overall Health Score
+        </Typography>
+        <div className="flex items-baseline space-x-3">
+          <Typography variant="headline-xl" className="text-primary-700">
+            {healthScore.overall}
+            <span className="text-2xl text-tertiary">/100</span>
+          </Typography>
+          <Badge variant={getHealthColor(healthScore.overall) as any} size="lg">
+            Grade {getHealthGrade(healthScore.overall)}
+          </Badge>
+          <span className="text-4xl">
+            {getHealthEmoji(healthScore.overall)}
+          </span>
+        </div>
+      </div>
+
+      <div className="text-right space-y-1">
+        <Typography variant="label-md" className="text-tertiary">
+          {healthScore.stats.totalPlays} plays (
+          {healthScore.stats.uniquePlayNames} unique)
+        </Typography>
+        <Typography variant="label-md" className="text-tertiary">
+          {healthScore.stats.totalFormations} formations
+        </Typography>
+        <Typography variant="label-md" className="text-accent-600">
+          {healthScore.stats.playsWithFormationLink}/
+          {healthScore.stats.totalPlays} linked
+        </Typography>
+      </div>
+    </div>
+
+    <div className="mt-4">
+      <div className="h-3 bg-white/50 rounded-full overflow-hidden">
+        <div
+          className={cn(
+            "h-full transition-all duration-500 rounded-full",
+            healthScore.overall >= 80 && "bg-success-500",
+            healthScore.overall >= 60 &&
+              healthScore.overall < 80 &&
+              "bg-warning-500",
+            healthScore.overall < 60 && "bg-danger-500"
+          )}
+          style={{ width: `${healthScore.overall}%` }}
+        />
+      </div>
+    </div>
+  </div>
+);
+
+const PlaybookHealthBreakdown: React.FC<{
+  healthScore: PlaybookHealthScore;
+}> = ({ healthScore }) => (
+  <div>
+    <Typography variant="headline-sm" className="mb-4">
+      Score Breakdown
+    </Typography>
+    <div className="space-y-3">
+      {(
+        Object.keys(
+          healthScore.breakdown
+        ) as (keyof PlaybookHealthScore["breakdown"])[]
+      ).map((category) => {
+        const score = healthScore.breakdown[category];
+        const max = CATEGORY_MAX_POINTS[category];
+        const percentage = (score / max) * 100;
+
+        return (
+          <div
+            key={category}
+            className="bg-secondary rounded-lg p-4 hover:bg-tertiary transition-colors"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center space-x-3">
+                <Icon
+                  name={CATEGORY_ICONS[category]}
+                  className="h-5 w-5 text-primary-500"
+                />
+                <Typography variant="body-md" className="font-medium">
+                  {CATEGORY_LABELS[category]}
+                </Typography>
+              </div>
+              <Typography variant="body-sm" className="text-secondary">
+                {score}/{max}
+              </Typography>
+            </div>
+            <div className="h-2 bg-muted rounded-full overflow-hidden">
+              <div
+                className={cn(
+                  "h-full transition-all duration-300 rounded-full",
+                  percentage >= 80 && "bg-success-500",
+                  percentage >= 60 && percentage < 80 && "bg-warning-500",
+                  percentage < 60 && "bg-danger-500"
+                )}
+                style={{ width: `${percentage}%` }}
+              />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+);
+
+const PlaybookHealthRecommendations: React.FC<{
+  recommendations: string[];
+}> = ({ recommendations }) => (
+  <div>
+    <Typography variant="headline-sm" className="mb-3">
+      Recommendations
+    </Typography>
+    <div className="space-y-2">
+      {recommendations.map((rec, index) => (
+        <div
+          key={index}
+          className="flex items-start space-x-3 bg-accent-50 rounded-lg p-3"
+        >
+          <Icon
+            name="lightbulb"
+            className="h-5 w-5 text-accent-500 mt-0.5 flex-shrink-0"
+          />
+          <Typography variant="body-sm" className="text-primary">
+            {rec}
+          </Typography>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const PlaybookHealthIssuesList: React.FC<{ issues: HealthIssue[] }> = ({
+  issues,
+}) => (
+  <div>
+    <Typography variant="headline-sm" className="mb-3">
+      Issues to Fix ({issues.length})
+    </Typography>
+    <div className="space-y-3 max-h-96 overflow-y-auto">
+      {issues.map((issue, index) => (
+        <div
+          key={index}
+          className={cn(
+            "border rounded-lg p-4 hover:shadow-sm transition-shadow",
+            issue.severity === "critical" && "bg-danger-50 border-danger-200",
+            issue.severity === "warning" && "bg-warning-50 border-warning-200",
+            issue.severity === "info" && "bg-info-50 border-info-200"
+          )}
+        >
+          <div className="flex items-start justify-between mb-2">
+            <div className="flex items-start space-x-3 flex-1">
+              <Icon
+                name={getSeverityIcon(issue.severity)}
+                className={cn(
+                  "h-5 w-5 mt-0.5 flex-shrink-0",
+                  issue.severity === "critical" && "text-danger-500",
+                  issue.severity === "warning" && "text-warning-500",
+                  issue.severity === "info" && "text-info-500"
+                )}
+              />
+              <div className="flex-1">
+                <div className="flex items-center space-x-2 mb-1">
+                  <Badge
+                    variant={getSeverityColor(issue.severity) as any}
+                    size="sm"
+                  >
+                    {issue.severity.toUpperCase()}
+                  </Badge>
+                  <Typography variant="label-md" className="text-tertiary">
+                    {issue.category}
+                  </Typography>
+                </div>
+                <Typography
+                  variant="body-md"
+                  className="text-primary font-medium mb-1"
+                >
+                  {issue.description}
+                </Typography>
+                <Typography variant="body-sm" className="text-secondary">
+                  {issue.howToFix}
+                </Typography>
+                {issue.affectedItems.length > 0 && (
+                  <Typography
+                    variant="label-md"
+                    className="text-tertiary mt-2 text-xs"
+                  >
+                    Affects {issue.affectedItems.length} item(s)
+                  </Typography>
+                )}
+              </div>
+            </div>
+            <div className="text-right ml-4 flex-shrink-0">
+              <Typography
+                variant="label-md"
+                className="text-accent-600 font-bold"
+              >
+                +{issue.pointsToGain} pts
+              </Typography>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const PlaybookHealthNoIssues: React.FC = () => (
+  <div className="bg-success-50 border border-success-200 rounded-lg p-6 text-center">
+    <Icon
+      name="check-circle"
+      className="h-12 w-12 text-success-500 mx-auto mb-3"
+    />
+    <Typography variant="headline-sm" className="text-success-700 mb-2">
+      Perfect Health! 🎉
+    </Typography>
+    <Typography variant="body-sm" className="text-success-600">
+      Your playbook has no issues. Keep up the great work!
+    </Typography>
+  </div>
+);
+
+const PlaybookHealthFooter: React.FC<{
+  onRefresh: () => void;
+  onClose: () => void;
+}> = ({ onRefresh, onClose }) => (
+  <div className="flex items-center justify-between mt-6 pt-4 border-t border-border">
+    <Button variant="ghost" size="sm" onClick={onRefresh}>
+      <Icon name="refresh-cw" className="h-4 w-4 mr-2" />
+      Refresh
+    </Button>
+    <Button variant="primary" onClick={onClose}>
+      Close
+    </Button>
+  </div>
+);
+
 /**
  * PlaybookHealthModal
  *
@@ -74,78 +391,6 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
     }
   }, [isOpen, playbookId, loadHealthScore]);
 
-  const getSeverityColor = (
-    severity: HealthIssue["severity"]
-  ): "danger" | "warning" | "info" | "default" => {
-    switch (severity) {
-      case "critical":
-        return "danger";
-      case "warning":
-        return "warning";
-      case "info":
-        return "info";
-      default:
-        return "default";
-    }
-  };
-
-  const getSeverityIcon = (severity: HealthIssue["severity"]): IconName => {
-    switch (severity) {
-      case "critical":
-        return "alert";
-      case "warning":
-        return "alert-triangle";
-      case "info":
-        return "info";
-      default:
-        return "info";
-    }
-  };
-
-  const getCategoryScore = (
-    category: keyof PlaybookHealthScore["breakdown"]
-  ) => {
-    if (!healthScore) return 0;
-    return healthScore.breakdown[category];
-  };
-
-  const getCategoryMax = (category: keyof PlaybookHealthScore["breakdown"]) => {
-    const maxPoints = {
-      formationLinking: 30,
-      formationCompleteness: 20,
-      playCompleteness: 25,
-      dataConsistency: 15,
-      organizationQuality: 10,
-    };
-    return maxPoints[category];
-  };
-
-  const getCategoryIcon = (
-    category: keyof PlaybookHealthScore["breakdown"]
-  ): IconName => {
-    const icons: Record<keyof PlaybookHealthScore["breakdown"], IconName> = {
-      formationLinking: "link",
-      formationCompleteness: "check-circle",
-      playCompleteness: "file",
-      dataConsistency: "shield",
-      organizationQuality: "folder",
-    };
-    return icons[category];
-  };
-
-  const getCategoryLabel = (
-    category: keyof PlaybookHealthScore["breakdown"]
-  ) => {
-    const labels = {
-      formationLinking: "Formation Linking",
-      formationCompleteness: "Formation Completeness",
-      playCompleteness: "Play Completeness",
-      dataConsistency: "Data Consistency",
-      organizationQuality: "Organization Quality",
-    };
-    return labels[category];
-  };
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Playbook Health" size="lg">
       <div className="space-y-6">
@@ -156,292 +401,28 @@ export const PlaybookHealthModal: React.FC<PlaybookHealthModalProps> = ({
         )}
 
         {error && (
-          <div className="bg-danger-50 border border-danger-200 rounded-lg p-4">
-            <div className="flex items-start space-x-3">
-              <Icon name="alert" className="h-5 w-5 text-danger-500 mt-0.5" />
-              <div>
-                <Typography variant="body-md" className="text-danger-700">
-                  {error}
-                </Typography>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={loadHealthScore}
-                  className="mt-2"
-                >
-                  Try Again
-                </Button>
-              </div>
-            </div>
-          </div>
+          <PlaybookHealthError message={error} onRetry={loadHealthScore} />
         )}
 
         {healthScore && !loading && (
           <>
-            {/* Overall Score Card */}
-            <div className="bg-gradient-to-br from-primary-50 to-accent-50 rounded-xl p-6 border border-primary-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Typography
-                    variant="label-md"
-                    className="text-secondary mb-2"
-                  >
-                    Overall Health Score
-                  </Typography>
-                  <div className="flex items-baseline space-x-3">
-                    <Typography
-                      variant="headline-xl"
-                      className="text-primary-700"
-                    >
-                      {healthScore.overall}
-                      <span className="text-2xl text-tertiary">/100</span>
-                    </Typography>
-                    <Badge
-                      variant={getHealthColor(healthScore.overall) as any}
-                      size="lg"
-                    >
-                      Grade {getHealthGrade(healthScore.overall)}
-                    </Badge>
-                    <span className="text-4xl">
-                      {getHealthEmoji(healthScore.overall)}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Quick Stats */}
-                <div className="text-right space-y-1">
-                  <Typography variant="label-md" className="text-tertiary">
-                    {healthScore.stats.totalPlays} plays (
-                    {healthScore.stats.uniquePlayNames} unique)
-                  </Typography>
-                  <Typography variant="label-md" className="text-tertiary">
-                    {healthScore.stats.totalFormations} formations
-                  </Typography>
-                  <Typography variant="label-md" className="text-accent-600">
-                    {healthScore.stats.playsWithFormationLink}/
-                    {healthScore.stats.totalPlays} linked
-                  </Typography>
-                </div>
-              </div>
-
-              {/* Progress Bar */}
-              <div className="mt-4">
-                <div className="h-3 bg-white/50 rounded-full overflow-hidden">
-                  <div
-                    className={cn(
-                      "h-full transition-all duration-500 rounded-full",
-                      healthScore.overall >= 80 && "bg-success-500",
-                      healthScore.overall >= 60 &&
-                        healthScore.overall < 80 &&
-                        "bg-warning-500",
-                      healthScore.overall < 60 && "bg-danger-500"
-                    )}
-                    style={{ width: `${healthScore.overall}%` }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Score Breakdown */}
-            <div>
-              <Typography variant="headline-sm" className="mb-4">
-                Score Breakdown
-              </Typography>
-              <div className="space-y-3">
-                {(
-                  Object.keys(
-                    healthScore.breakdown
-                  ) as (keyof PlaybookHealthScore["breakdown"])[]
-                ).map((category) => {
-                  const score = getCategoryScore(category);
-                  const max = getCategoryMax(category);
-                  const percentage = (score / max) * 100;
-
-                  return (
-                    <div
-                      key={category}
-                      className="bg-secondary rounded-lg p-4 hover:bg-tertiary transition-colors"
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center space-x-3">
-                          <Icon
-                            name={getCategoryIcon(category)}
-                            className="h-5 w-5 text-primary-500"
-                          />
-                          <Typography variant="body-md" className="font-medium">
-                            {getCategoryLabel(category)}
-                          </Typography>
-                        </div>
-                        <Typography
-                          variant="body-sm"
-                          className="text-secondary"
-                        >
-                          {score}/{max}
-                        </Typography>
-                      </div>
-                      <div className="h-2 bg-muted rounded-full overflow-hidden">
-                        <div
-                          className={cn(
-                            "h-full transition-all duration-300 rounded-full",
-                            percentage >= 80 && "bg-success-500",
-                            percentage >= 60 &&
-                              percentage < 80 &&
-                              "bg-warning-500",
-                            percentage < 60 && "bg-danger-500"
-                          )}
-                          style={{ width: `${percentage}%` }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Recommendations */}
+            <PlaybookHealthOverallCard healthScore={healthScore} />
+            <PlaybookHealthBreakdown healthScore={healthScore} />
             {healthScore.recommendations.length > 0 && (
-              <div>
-                <Typography variant="headline-sm" className="mb-3">
-                  Recommendations
-                </Typography>
-                <div className="space-y-2">
-                  {healthScore.recommendations.map((rec, index) => (
-                    <div
-                      key={index}
-                      className="flex items-start space-x-3 bg-accent-50 rounded-lg p-3"
-                    >
-                      <Icon
-                        name="lightbulb"
-                        className="h-5 w-5 text-accent-500 mt-0.5 flex-shrink-0"
-                      />
-                      <Typography variant="body-sm" className="text-primary">
-                        {rec}
-                      </Typography>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <PlaybookHealthRecommendations
+                recommendations={healthScore.recommendations}
+              />
             )}
-
-            {/* Issues List */}
-            {healthScore.issues.length > 0 && (
-              <div>
-                <Typography variant="headline-sm" className="mb-3">
-                  Issues to Fix ({healthScore.issues.length})
-                </Typography>
-                <div className="space-y-3 max-h-96 overflow-y-auto">
-                  {healthScore.issues.map((issue, index) => (
-                    <div
-                      key={index}
-                      className={cn(
-                        "border rounded-lg p-4 hover:shadow-sm transition-shadow",
-                        issue.severity === "critical" &&
-                          "bg-danger-50 border-danger-200",
-                        issue.severity === "warning" &&
-                          "bg-warning-50 border-warning-200",
-                        issue.severity === "info" &&
-                          "bg-info-50 border-info-200"
-                      )}
-                    >
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex items-start space-x-3 flex-1">
-                          <Icon
-                            name={getSeverityIcon(issue.severity)}
-                            className={cn(
-                              "h-5 w-5 mt-0.5 flex-shrink-0",
-                              issue.severity === "critical" &&
-                                "text-danger-500",
-                              issue.severity === "warning" &&
-                                "text-warning-500",
-                              issue.severity === "info" && "text-info-500"
-                            )}
-                          />
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-2 mb-1">
-                              <Badge
-                                variant={
-                                  getSeverityColor(issue.severity) as any
-                                }
-                                size="sm"
-                              >
-                                {issue.severity.toUpperCase()}
-                              </Badge>
-                              <Typography
-                                variant="label-md"
-                                className="text-tertiary"
-                              >
-                                {issue.category}
-                              </Typography>
-                            </div>
-                            <Typography
-                              variant="body-md"
-                              className="text-primary font-medium mb-1"
-                            >
-                              {issue.description}
-                            </Typography>
-                            <Typography
-                              variant="body-sm"
-                              className="text-secondary"
-                            >
-                              {issue.howToFix}
-                            </Typography>
-                            {issue.affectedItems.length > 0 && (
-                              <Typography
-                                variant="label-md"
-                                className="text-tertiary mt-2 text-xs"
-                              >
-                                Affects {issue.affectedItems.length} item(s)
-                              </Typography>
-                            )}
-                          </div>
-                        </div>
-                        <div className="text-right ml-4 flex-shrink-0">
-                          <Typography
-                            variant="label-md"
-                            className="text-accent-600 font-bold"
-                          >
-                            +{issue.pointsToGain} pts
-                          </Typography>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* No Issues State */}
-            {healthScore.issues.length === 0 && (
-              <div className="bg-success-50 border border-success-200 rounded-lg p-6 text-center">
-                <Icon
-                  name="check-circle"
-                  className="h-12 w-12 text-success-500 mx-auto mb-3"
-                />
-                <Typography
-                  variant="headline-sm"
-                  className="text-success-700 mb-2"
-                >
-                  Perfect Health! 🎉
-                </Typography>
-                <Typography variant="body-sm" className="text-success-600">
-                  Your playbook has no issues. Keep up the great work!
-                </Typography>
-              </div>
+            {healthScore.issues.length > 0 ? (
+              <PlaybookHealthIssuesList issues={healthScore.issues} />
+            ) : (
+              <PlaybookHealthNoIssues />
             )}
           </>
         )}
       </div>
 
-      {/* Footer Actions */}
-      <div className="flex items-center justify-between mt-6 pt-4 border-t border-border">
-        <Button variant="ghost" size="sm" onClick={loadHealthScore}>
-          <Icon name="refresh-cw" className="h-4 w-4 mr-2" />
-          Refresh
-        </Button>
-        <Button variant="primary" onClick={onClose}>
-          Close
-        </Button>
-      </div>
+      <PlaybookHealthFooter onRefresh={loadHealthScore} onClose={onClose} />
     </Modal>
   );
 };

@@ -1,5 +1,11 @@
 import type { ReactNode } from "react";
-import React, { useEffect, useRef } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Button } from "../Button";
 import { Tooltip } from "../Tooltip/Tooltip";
 import { Icon } from "../Icon/Icon";
@@ -114,6 +120,305 @@ const getBadgeStyles = () => {
     bg-jade-600 dark:bg-jade-600 text-bg-primary
   `;
 };
+
+const MIN_SWIPE_DISTANCE_PX = 50;
+
+function useSidebarFilteredItems(params: {
+  items: SidebarItem[];
+  searchQuery: string;
+}) {
+  const { items, searchQuery } = params;
+  return useMemo(() => {
+    if (!searchQuery.trim()) return items;
+    return items.filter((item) =>
+      item.label.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [items, searchQuery]);
+}
+
+function useSidebarTouchToClose(params: {
+  isOpen: boolean;
+  position: SidebarProps["position"];
+  onClose?: () => void;
+}) {
+  const { isOpen, position, onClose } = params;
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  const onTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      if (!isOpen) return;
+      setTouchEnd(null);
+      setTouchStart(e.targetTouches[0].clientX);
+    },
+    [isOpen]
+  );
+
+  const onTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (!isOpen) return;
+      setTouchEnd(e.targetTouches[0].clientX);
+    },
+    [isOpen]
+  );
+
+  const onTouchEnd = useCallback(() => {
+    if (!isOpen) return;
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > MIN_SWIPE_DISTANCE_PX;
+    const isRightSwipe = distance < -MIN_SWIPE_DISTANCE_PX;
+
+    if (
+      (position === "left" && isLeftSwipe) ||
+      (position === "right" && isRightSwipe)
+    ) {
+      onClose?.();
+    }
+  }, [isOpen, onClose, position, touchEnd, touchStart]);
+
+  return { onTouchStart, onTouchMove, onTouchEnd };
+}
+
+function useSidebarOutsideClick(params: {
+  isOpen: boolean;
+  onClose?: () => void;
+  sidebarRef: React.RefObject<HTMLDivElement | null>;
+}) {
+  const { isOpen, onClose, sidebarRef } = params;
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
+        onClose?.();
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpen, onClose, sidebarRef]);
+}
+
+function useSidebarFocusManagement(params: {
+  isOpen: boolean;
+  sidebarRef: React.RefObject<HTMLDivElement | null>;
+}) {
+  const { isOpen, sidebarRef } = params;
+  const [previouslyFocusedElement, setPreviouslyFocusedElement] =
+    useState<Element | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setPreviouslyFocusedElement(document.activeElement);
+      setTimeout(() => sidebarRef.current?.focus(), 100);
+    } else if (
+      previouslyFocusedElement &&
+      previouslyFocusedElement instanceof HTMLElement
+    ) {
+      setTimeout(() => previouslyFocusedElement.focus(), 100);
+    }
+  }, [isOpen, previouslyFocusedElement, sidebarRef]);
+}
+
+function useSidebarKeyboardNavigation(params: {
+  isOpen: boolean;
+  onClose?: () => void;
+  sidebarRef: React.RefObject<HTMLDivElement | null>;
+}) {
+  const { isOpen, onClose, sidebarRef } = params;
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose?.();
+        return;
+      }
+
+      if (event.key === "Tab") {
+        const focusableElements = sidebarRef.current?.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusableElements && focusableElements.length > 0) {
+          const elements = Array.from(focusableElements) as HTMLElement[];
+          const firstElement = elements[0];
+          const lastElement = elements[elements.length - 1];
+
+          if (event.shiftKey) {
+            if (document.activeElement === firstElement) {
+              event.preventDefault();
+              lastElement.focus();
+            }
+          } else if (document.activeElement === lastElement) {
+            event.preventDefault();
+            firstElement.focus();
+          }
+        }
+        return;
+      }
+
+      if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+        event.preventDefault();
+        const focusableElements = sidebarRef.current?.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusableElements) {
+          const elements = Array.from(focusableElements) as HTMLElement[];
+          const currentIndex = elements.findIndex(
+            (el) => el === document.activeElement
+          );
+          let nextIndex;
+          if (event.key === "ArrowDown") {
+            nextIndex =
+              currentIndex < elements.length - 1 ? currentIndex + 1 : 0;
+          } else {
+            nextIndex =
+              currentIndex > 0 ? currentIndex - 1 : elements.length - 1;
+          }
+          elements[nextIndex]?.focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose, sidebarRef]);
+}
+
+const SidebarOverlay: React.FC<{ onClose?: () => void }> = ({ onClose }) => {
+  return (
+    <div
+      className="fixed inset-0 top-16 z-modal-backdrop bg-text-primary/50 dark:bg-text-primary/70 transition-opacity duration-300 ease-out motion-reduce:transition-none"
+      onClick={onClose}
+      aria-hidden="true"
+    />
+  );
+};
+
+const SidebarCollapsedHeader: React.FC<{
+  header?: ReactNode;
+  onClose?: () => void;
+  onToggle?: () => void;
+}> = ({ header, onClose, onToggle }) => {
+  return (
+    <div className="px-4 py-4 divider-b">
+      <div className="flex items-center gap-3">
+        {onToggle && (
+          <Button
+            variant="primary"
+            size="md"
+            onClick={onToggle}
+            className="!p-sm rounded-radius-md flex-shrink-0"
+            aria-label="Toggle menu"
+          >
+            <Icon name="menu" size="md" />
+          </Button>
+        )}
+        {header && <div className="flex-1 min-w-0">{header}</div>}
+        <Tooltip content="Close sidebar (Esc)">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onClose}
+            className="p-2 hover:bg-surface-hover rounded-lg transition-colors duration-200 flex-shrink-0"
+            aria-label="Close sidebar"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </Button>
+        </Tooltip>
+      </div>
+    </div>
+  );
+};
+
+const SidebarSearch: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+}> = ({ value, onChange }) => {
+  return (
+    <div className="px-4 py-3">
+      <div className="relative">
+        <svg
+          className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+        <input
+          type="text"
+          placeholder="Search navigation..."
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-full pl-10 pr-4 py-2 text-sm bg-secondary dark:bg-muted rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-jade-400 focus:border-transparent transition-colors duration-200"
+          aria-label="Search navigation items"
+        />
+      </div>
+    </div>
+  );
+};
+
+const SidebarLoadingItems: React.FC = () => {
+  return (
+    <>
+      {Array.from({ length: 6 }).map((_, index) => (
+        <div
+          key={index}
+          className="mx-2 my-1 px-4 py-3 rounded-lg animate-pulse"
+          style={{ animationDelay: `${index * 100}ms` }}
+        >
+          <div className="flex items-center space-x-3">
+            <div className="w-9 h-4 bg-surface-hover rounded-lg"></div>
+            <div className="flex-1 h-4 bg-surface-hover rounded-lg"></div>
+          </div>
+        </div>
+      ))}
+    </>
+  );
+};
+
+const SidebarNoResults: React.FC<{ searchQuery: string }> = ({
+  searchQuery,
+}) => {
+  return (
+    <div className="px-4 py-8 text-center text-muted">
+      <svg
+        className="w-12 h-12 mx-auto mb-3 text-tertiary"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1}
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        />
+      </svg>
+      <p className="text-sm">No items found for "{searchQuery}"</p>
+    </div>
+  );
+};
 const SidebarItemComponent: React.FC<{
   item: SidebarItem;
   level?: number;
@@ -195,162 +500,36 @@ export const Sidebar: React.FC<SidebarProps> = ({
   headerVisible = true,
 }) => {
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const [touchStart, setTouchStart] = React.useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = React.useState<number | null>(null);
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const [previouslyFocusedElement, setPreviouslyFocusedElement] =
-    React.useState<Element | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Mobile detection using centralized hook
   const isMobile = useIsMobile();
 
-  // Filter items based on search query
-  const filteredItems = React.useMemo(() => {
-    if (!searchQuery.trim()) return items;
-    return items.filter((item) =>
-      item.label.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [items, searchQuery]);
-
-  // Minimum swipe distance (in px)
-  const minSwipeDistance = 50;
-
-  // Touch event handlers for swipe gestures
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-
-    // Close sidebar on swipe left (for left-positioned sidebar) or swipe right (for right-positioned sidebar)
-    if (
-      (position === "left" && isLeftSwipe) ||
-      (position === "right" && isRightSwipe)
-    ) {
-      onClose?.();
-    }
-  };
-  // Close sidebar when clicking outside
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        sidebarRef.current &&
-        !sidebarRef.current.contains(event.target as Node)
-      ) {
-        onClose?.();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isOpen, onClose]);
-  // Focus management for accessibility
-  useEffect(() => {
-    if (isOpen) {
-      // Store the currently focused element
-      setPreviouslyFocusedElement(document.activeElement);
-      // Focus the sidebar when it opens
-      setTimeout(() => sidebarRef.current?.focus(), 100);
-    } else if (
-      previouslyFocusedElement &&
-      previouslyFocusedElement instanceof HTMLElement
-    ) {
-      // Restore focus when sidebar closes
-      setTimeout(() => previouslyFocusedElement.focus(), 100);
-    }
-  }, [isOpen, previouslyFocusedElement]);
-
-  // Enhanced keyboard navigation
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onClose?.();
-        return;
-      }
-
-      // Tab trapping - keep focus within sidebar
-      if (event.key === "Tab") {
-        const focusableElements = sidebarRef.current?.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        if (focusableElements && focusableElements.length > 0) {
-          const elements = Array.from(focusableElements) as HTMLElement[];
-          const firstElement = elements[0];
-          const lastElement = elements[elements.length - 1];
-
-          if (event.shiftKey) {
-            // Shift + Tab
-            if (document.activeElement === firstElement) {
-              event.preventDefault();
-              lastElement.focus();
-            }
-          } else if (document.activeElement === lastElement) {
-            // Tab
-            event.preventDefault();
-            firstElement.focus();
-          }
-        }
-        return;
-      }
-
-      // Arrow key navigation for sidebar items
-      if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-        event.preventDefault();
-        const focusableElements = sidebarRef.current?.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        if (focusableElements) {
-          const elements = Array.from(focusableElements) as HTMLElement[];
-          const currentIndex = elements.findIndex(
-            (el) => el === document.activeElement
-          );
-          let nextIndex;
-          if (event.key === "ArrowDown") {
-            nextIndex =
-              currentIndex < elements.length - 1 ? currentIndex + 1 : 0;
-          } else {
-            nextIndex =
-              currentIndex > 0 ? currentIndex - 1 : elements.length - 1;
-          }
-          elements[nextIndex]?.focus();
-        }
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
+  const filteredItems = useSidebarFilteredItems({ items, searchQuery });
+  const { onTouchStart, onTouchMove, onTouchEnd } = useSidebarTouchToClose({
+    isOpen,
+    position,
+    onClose,
+  });
+  useSidebarOutsideClick({ isOpen, onClose, sidebarRef });
+  useSidebarFocusManagement({ isOpen, sidebarRef });
+  useSidebarKeyboardNavigation({ isOpen, onClose, sidebarRef });
 
   // Note: Body scroll is NOT prevented to allow scrolling with sidebar open
   // The sidebar itself is scrollable via overflow-y-auto
 
-  const handleItemClick = () => {
+  const handleItemClick = useCallback(() => {
     // Close sidebar when item is clicked (for mobile AND tablet)
     // Always close on touch devices for better UX
     if (isMobile || window.innerWidth < 1024) {
       onClose?.();
     }
-  };
+  }, [isMobile, onClose]);
   if (!isOpen) return null;
   return (
     <>
       {/* Overlay */}
-      {showOverlay && (
-        <div
-          className="fixed inset-0 top-16 z-modal-backdrop bg-text-primary/50 dark:bg-text-primary/70 transition-opacity duration-300 ease-out motion-reduce:transition-none"
-          onClick={onClose}
-          aria-hidden="true"
-        />
-      )}
+      {showOverlay && <SidebarOverlay onClose={onClose} />}
       {/* Sidebar */}
       <div
         ref={sidebarRef}
@@ -371,45 +550,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       >
         {/* Header - Only show when main header is hidden (scrolled down) */}
         {!headerVisible && (
-          <div className="px-4 py-4 divider-b">
-            <div className="flex items-center gap-3">
-              {onToggle && (
-                <Button
-                  variant="primary"
-                  size="md"
-                  onClick={onToggle}
-                  className="!p-sm rounded-radius-md flex-shrink-0"
-                  aria-label="Toggle menu"
-                >
-                  <Icon name="menu" size="md" />
-                </Button>
-              )}
-              {header && <div className="flex-1 min-w-0">{header}</div>}
-              <Tooltip content="Close sidebar (Esc)">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={onClose}
-                  className="p-2 hover:bg-surface-hover rounded-lg transition-colors duration-200 flex-shrink-0"
-                  aria-label="Close sidebar"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </Button>
-              </Tooltip>
-            </div>
-          </div>
+          <SidebarCollapsedHeader
+            header={header}
+            onClose={onClose}
+            onToggle={onToggle}
+          />
         )}
         {/* Content */}
         <div
@@ -420,47 +565,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
         >
           {/* Search */}
           {items.length > 5 && (
-            <div className="px-4 py-3">
-              <div className="relative">
-                <svg
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-                <input
-                  type="text"
-                  placeholder="Search navigation..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 text-sm bg-secondary dark:bg-muted rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-jade-400 focus:border-transparent transition-colors duration-200"
-                  aria-label="Search navigation items"
-                />
-              </div>
-            </div>
+            <SidebarSearch value={searchQuery} onChange={setSearchQuery} />
           )}
           <nav className="py-4">
             {(() => {
               if (loading) {
-                return Array.from({ length: 6 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="mx-2 my-1 px-4 py-3 rounded-lg animate-pulse"
-                    style={{ animationDelay: `${index * 100}ms` }}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <div className="w-9 h-4 bg-surface-hover rounded-lg"></div>
-                      <div className="flex-1 h-4 bg-surface-hover rounded-lg"></div>
-                    </div>
-                  </div>
-                ));
+                return <SidebarLoadingItems />;
               }
               if (filteredItems.length > 0) {
                 return filteredItems.map((item, index) => (
@@ -473,26 +583,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 ));
               }
               if (searchQuery) {
-                return (
-                  <div className="px-4 py-8 text-center text-muted">
-                    <svg
-                      className="w-12 h-12 mx-auto mb-3 text-tertiary"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      />
-                    </svg>
-                    <p className="text-sm">
-                      No items found for "{searchQuery}"
-                    </p>
-                  </div>
-                );
+                return <SidebarNoResults searchQuery={searchQuery} />;
               }
               return null;
             })()}

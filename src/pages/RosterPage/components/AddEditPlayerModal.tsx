@@ -35,6 +35,195 @@ const GRADE_OPTIONS = [
   { value: "graduate", label: "Graduate" },
 ];
 
+function FormErrorBanner({ message }: { message: string }) {
+  return (
+    <div className="p-sm bg-error-100 dark:bg-error-900/30 border border-error-500 rounded-lg">
+      <Typography
+        variant="body-sm"
+        className="text-error-700 dark:text-error-300"
+      >
+        {message}
+      </Typography>
+    </div>
+  );
+}
+
+function getAutosaveStatusText(
+  autosavePlayer: UseAutosavePlayerReturn
+): string {
+  if (autosavePlayer.status === "saving") return "💾 Saving changes...";
+  if (autosavePlayer.status === "saved") return "✓ All changes saved";
+  if (autosavePlayer.status === "error") {
+    return "⚠️ Autosave failed - please save manually";
+  }
+  if (autosavePlayer.status === "idle" && autosavePlayer.hasUnsavedChanges) {
+    return "⏳ Saving soon...";
+  }
+  if (autosavePlayer.status === "idle" && !autosavePlayer.hasUnsavedChanges) {
+    if (autosavePlayer.lastSaved) return "✓ Up to date";
+    return "Ready to edit";
+  }
+
+  return "";
+}
+
+function AutosaveStatusBanner({
+  isEdit,
+  editingPlayer,
+  autosavePlayer,
+}: {
+  isEdit: boolean;
+  editingPlayer?: RosterPlayerView | null;
+  autosavePlayer?: UseAutosavePlayerReturn;
+}) {
+  if (!isEdit || !editingPlayer || !autosavePlayer) return null;
+
+  const statusText = getAutosaveStatusText(autosavePlayer);
+  return (
+    <div className="flex items-center justify-between px-sm py-xs rounded-lg bg-secondary/50">
+      <Typography variant="body-sm" className="text-secondary">
+        {statusText}
+      </Typography>
+      {autosavePlayer.lastSaved && (
+        <Typography variant="body-xs" className="text-tertiary">
+          {new Date(autosavePlayer.lastSaved).toLocaleTimeString()}
+        </Typography>
+      )}
+    </div>
+  );
+}
+
+function parsePositions(positionCsv: string) {
+  return positionCsv ? positionCsv.split(",").filter(Boolean) : [];
+}
+
+function PositionChips({
+  positions,
+  onRemove,
+}: {
+  positions: string[];
+  onRemove: (pos: string) => void;
+}) {
+  if (positions.length === 0) return null;
+
+  return (
+    <div className="flex gap-2 flex-wrap mb-2">
+      {positions.map((pos) => (
+        <span
+          key={pos}
+          className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200"
+        >
+          {pos}
+          <button
+            type="button"
+            onClick={() => onRemove(pos)}
+            className="ml-1 hover:text-blue-900"
+          >
+            ×
+          </button>
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function PositionsAndJerseySection({
+  positions,
+  onAddPosition,
+  onRemovePosition,
+  jerseyNumber,
+  onChangeJersey,
+}: {
+  positions: string[];
+  onAddPosition: (pos: string) => void;
+  onRemovePosition: (pos: string) => void;
+  jerseyNumber: string;
+  onChangeJersey: (value: string) => void;
+}) {
+  return (
+    <div className="grid grid-cols-2 gap-md">
+      <div>
+        <label className="block text-sm font-medium mb-xs">Position(s) *</label>
+        <PositionChips positions={positions} onRemove={onRemovePosition} />
+        <FormSelect
+          value=""
+          onChange={onAddPosition}
+          placeholder="+ Add Position"
+          options={POSITION_OPTIONS.map((pos) => ({
+            value: pos,
+            label: pos,
+          }))}
+        />
+        <p className="text-xs text-secondary mt-1">
+          Select multiple positions if player plays more than one
+        </p>
+      </div>
+      <Input
+        label="Jersey Number"
+        type="number"
+        value={jerseyNumber}
+        onChange={(e) => onChangeJersey(e.target.value)}
+      />
+    </div>
+  );
+}
+
+function InvitePlayerButton({
+  show,
+  onSendInvitation,
+  isEdit,
+  invitationStatus,
+  firstName,
+}: {
+  show: boolean;
+  onSendInvitation?: () => Promise<void>;
+  isEdit: boolean;
+  invitationStatus?: string | null;
+  firstName: string;
+}) {
+  if (!show || !onSendInvitation) return null;
+
+  return (
+    <Button
+      variant="outline"
+      onClick={onSendInvitation}
+      className="w-full border-jade-600 text-jade-700 hover:bg-accent dark:border-jade-500 dark:text-jade-400 dark:hover:bg-jade-950"
+    >
+      <Icon name="mail" className="w-4 h-4 mr-xs" />
+      {isEdit && invitationStatus === "pending"
+        ? "Resend Invitation"
+        : `Invite ${firstName || "Player"} to Team`}
+    </Button>
+  );
+}
+
+function ModalActions({
+  onClose,
+  onSubmit,
+  submitLabel,
+  disabled,
+}: {
+  onClose: () => void;
+  onSubmit: () => Promise<void>;
+  submitLabel: string;
+  disabled: boolean;
+}) {
+  return (
+    <div className="flex justify-end gap-3 pt-4">
+      <Button variant="outline" onClick={onClose}>
+        Cancel
+      </Button>
+      <Button
+        onClick={onSubmit}
+        disabled={disabled}
+        className="bg-primary hover:bg-primary/90"
+      >
+        {submitLabel}
+      </Button>
+    </div>
+  );
+}
+
 interface AddEditPlayerModalProps {
   mode: "add" | "edit";
   isOpen: boolean;
@@ -78,6 +267,8 @@ export const AddEditPlayerModal: React.FC<AddEditPlayerModalProps> = ({
     submitLabel = isEdit ? "Saving..." : "Adding...";
   }
 
+  const positions = parsePositions(formData.position);
+
   // Handle field change - use autosave-aware handler in edit mode
   const handleChange = <K extends keyof PlayerFormData>(
     field: K,
@@ -93,61 +284,28 @@ export const AddEditPlayerModal: React.FC<AddEditPlayerModalProps> = ({
   // Handle position add/remove
   const addPosition = (pos: string) => {
     if (!pos) return;
-    const currentPositions = formData.position
-      ? formData.position.split(",").filter(Boolean)
-      : [];
-    if (!currentPositions.includes(pos)) {
-      handleChange("position", [...currentPositions, pos].join(","));
+    if (!positions.includes(pos)) {
+      handleChange("position", [...positions, pos].join(","));
     }
   };
 
   const removePosition = (pos: string) => {
-    const positions = formData.position.split(",").filter((p) => p !== pos);
-    handleChange("position", positions.join(","));
+    const next = positions.filter((p) => p !== pos);
+    handleChange("position", next.join(","));
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
       <div className="space-y-md">
         {/* Error display */}
-        {formError && (
-          <div className="p-sm bg-error-100 dark:bg-error-900/30 border border-error-500 rounded-lg">
-            <Typography
-              variant="body-sm"
-              className="text-error-700 dark:text-error-300"
-            >
-              {formError}
-            </Typography>
-          </div>
-        )}
+        {formError && <FormErrorBanner message={formError} />}
 
         {/* Autosave status (edit mode only) */}
-        {isEdit && editingPlayer && autosavePlayer && (
-          <div className="flex items-center justify-between px-sm py-xs rounded-lg bg-secondary/50">
-            <Typography variant="body-sm" className="text-secondary">
-              {autosavePlayer.status === "saving" && "💾 Saving changes..."}
-              {autosavePlayer.status === "saved" && "✓ All changes saved"}
-              {autosavePlayer.status === "error" &&
-                "⚠️ Autosave failed - please save manually"}
-              {autosavePlayer.status === "idle" &&
-                autosavePlayer.hasUnsavedChanges &&
-                "⏳ Saving soon..."}
-              {autosavePlayer.status === "idle" &&
-                !autosavePlayer.hasUnsavedChanges &&
-                autosavePlayer.lastSaved &&
-                "✓ Up to date"}
-              {autosavePlayer.status === "idle" &&
-                !autosavePlayer.hasUnsavedChanges &&
-                !autosavePlayer.lastSaved &&
-                "Ready to edit"}
-            </Typography>
-            {autosavePlayer.lastSaved && (
-              <Typography variant="body-xs" className="text-tertiary">
-                {new Date(autosavePlayer.lastSaved).toLocaleTimeString()}
-              </Typography>
-            )}
-          </div>
-        )}
+        <AutosaveStatusBanner
+          isEdit={isEdit}
+          editingPlayer={editingPlayer}
+          autosavePlayer={autosavePlayer}
+        />
 
         {/* Name fields */}
         <div className="grid grid-cols-2 gap-md">
@@ -172,60 +330,15 @@ export const AddEditPlayerModal: React.FC<AddEditPlayerModalProps> = ({
           placeholder="e.g., Johnny"
         />
 
-        {/* Position and Jersey */}
-        <div className="grid grid-cols-2 gap-md">
-          <div>
-            <label className="block text-sm font-medium mb-xs">
-              Position(s) *
-            </label>
-            {/* Selected Positions Display */}
-            {formData.position && (
-              <div className="flex gap-2 flex-wrap mb-2">
-                {formData.position
-                  .split(",")
-                  .filter(Boolean)
-                  .map((pos) => (
-                    <span
-                      key={pos}
-                      className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200"
-                    >
-                      {pos}
-                      <button
-                        type="button"
-                        onClick={() => removePosition(pos)}
-                        className="ml-1 hover:text-blue-900"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-              </div>
-            )}
-            <FormSelect
-              value=""
-              onChange={addPosition}
-              placeholder="+ Add Position"
-              options={POSITION_OPTIONS.map((pos) => ({
-                value: pos,
-                label: pos,
-              }))}
-            />
-            <p className="text-xs text-secondary mt-1">
-              Select multiple positions if player plays more than one
-            </p>
-          </div>
-          <Input
-            label="Jersey Number"
-            type="number"
-            value={formData.jersey_number}
-            onChange={(e) =>
-              setFormData((prev) => ({
-                ...prev,
-                jersey_number: e.target.value,
-              }))
-            }
-          />
-        </div>
+        <PositionsAndJerseySection
+          positions={positions}
+          onAddPosition={addPosition}
+          onRemovePosition={removePosition}
+          jerseyNumber={formData.jersey_number}
+          onChangeJersey={(value) =>
+            setFormData((prev) => ({ ...prev, jersey_number: value }))
+          }
+        />
 
         {/* Grade, Height, Weight */}
         <div className="grid grid-cols-3 gap-4">
@@ -303,38 +416,26 @@ export const AddEditPlayerModal: React.FC<AddEditPlayerModalProps> = ({
           }
         />
 
-        {/* Invite button when email is entered */}
-        {formData.email_address?.trim() && onSendInvitation && (
-          <Button
-            variant="outline"
-            onClick={onSendInvitation}
-            className="w-full border-jade-600 text-jade-700 hover:bg-accent dark:border-jade-500 dark:text-jade-400 dark:hover:bg-jade-950"
-          >
-            <Icon name="mail" className="w-4 h-4 mr-xs" />
-            {isEdit && editingPlayer?.invitation_status === "pending"
-              ? "Resend Invitation"
-              : `Invite ${formData.first_name || "Player"} to Team`}
-          </Button>
-        )}
+        <InvitePlayerButton
+          show={Boolean(formData.email_address?.trim())}
+          onSendInvitation={onSendInvitation}
+          isEdit={isEdit}
+          invitationStatus={editingPlayer?.invitation_status}
+          firstName={formData.first_name}
+        />
 
         {/* Action buttons */}
-        <div className="flex justify-end gap-3 pt-4">
-          <Button variant="outline" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            onClick={onSubmit}
-            disabled={
-              saving ||
-              !formData.first_name ||
-              !formData.last_name ||
-              (!isEdit && !formData.position)
-            }
-            className="bg-primary hover:bg-primary/90"
-          >
-            {submitLabel}
-          </Button>
-        </div>
+        <ModalActions
+          onClose={onClose}
+          onSubmit={onSubmit}
+          submitLabel={submitLabel}
+          disabled={
+            saving ||
+            !formData.first_name ||
+            !formData.last_name ||
+            (!isEdit && !formData.position)
+          }
+        />
       </div>
     </Modal>
   );

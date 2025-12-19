@@ -5,6 +5,7 @@ import { Icon } from "../../components/ui/Icon";
 import { Typography } from "../../components/design-system/Typography";
 import { AuroraTile } from "../../components/ui/AuroraTile";
 import { ConfirmationModal } from "../../components/ui/ConfirmationModal/ConfirmationModal";
+import type { GamePlan as ModalGamePlan } from "../../components/playbook/GamePlanModal/types";
 
 // Lazy loaded modals
 const GamePlanModal = lazy(() =>
@@ -37,6 +38,138 @@ import {
 
 // Tile configurations
 import { createTileConfigs } from "./tileConfigs";
+
+type PlansSectionProps = {
+  isLoading: boolean;
+  activePlans: ModalGamePlan[];
+  archivedPlans: ModalGamePlan[];
+  searchQuery: string;
+  onCreatePlan: () => void;
+  onEditPlan: (plan: ModalGamePlan) => void;
+  onDuplicatePlan: (plan: ModalGamePlan) => void;
+  onArchivePlan: (plan: ModalGamePlan) => void;
+  onDeletePlan: (planId: string) => void;
+  onExportPDF: (plan: ModalGamePlan) => void;
+};
+
+const GamePlansPlansSection: React.FC<PlansSectionProps> = ({
+  isLoading,
+  activePlans,
+  archivedPlans,
+  searchQuery,
+  onCreatePlan,
+  onEditPlan,
+  onDuplicatePlan,
+  onArchivePlan,
+  onDeletePlan,
+  onExportPDF,
+}) => {
+  if (isLoading) {
+    return <GamePlansLoadingState />;
+  }
+
+  if (activePlans.length === 0 && archivedPlans.length === 0 && !searchQuery) {
+    return <GamePlansEmptyState onCreatePlan={onCreatePlan} />;
+  }
+
+  return (
+    <div className="space-y-6" id="game-plans-section">
+      {activePlans.length > 0 && (
+        <>
+          <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <Typography variant="headline-md" className="text-primary">
+              Active Game Plans ({activePlans.length})
+            </Typography>
+            <Button
+              onClick={onCreatePlan}
+              variant="primary"
+              className="w-full sm:w-auto"
+            >
+              <Icon name="plus" className="h-4 w-4 mr-2" />
+              New Plan
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
+            {activePlans.map((plan) => (
+              <GamePlanCard
+                key={plan.id}
+                plan={plan}
+                onEdit={onEditPlan}
+                onDuplicate={onDuplicatePlan}
+                onArchive={onArchivePlan}
+                onDelete={onDeletePlan}
+                onExportPDF={onExportPDF}
+              />
+            ))}
+          </div>
+        </>
+      )}
+
+      {archivedPlans.length > 0 && (
+        <div className="mt-12">
+          <Typography variant="headline-md" className="text-primary mb-4">
+            Archived Game Plans ({archivedPlans.length})
+          </Typography>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
+            {archivedPlans.map((plan) => (
+              <ArchivedPlanCard
+                key={plan.id}
+                plan={plan}
+                onRestore={onArchivePlan}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+GamePlansPlansSection.displayName = "GamePlansPlansSection";
+
+type TilesSectionProps = {
+  tileConfigs: ReturnType<typeof createTileConfigs>;
+};
+
+const GamePlansTilesSection: React.FC<TilesSectionProps> = ({
+  tileConfigs,
+}) => {
+  return (
+    <div className="mb-8">
+      <div className="rounded-xl bg-primary p-5 shadow-lg backdrop-blur-sm sm:p-6 xl:p-7">
+        <div className="mb-6">
+          <Typography variant="headline-sm" className="text-primary">
+            Dial in this week's script
+          </Typography>
+          <Typography variant="body-sm" className="text-secondary mt-1">
+            Launch the workspace you need for planning, film, and distribution.
+          </Typography>
+        </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
+          {tileConfigs.map((tile) => (
+            <AuroraTile
+              key={tile.key}
+              title={tile.title}
+              description={tile.description}
+              icon={tile.icon}
+              accentOverlayClass={tile.accentOverlayClass}
+              glowClassName={tile.glowClassName}
+              statusBadge={tile.statusBadge}
+              iconClassName={tile.iconClassName}
+              footnote={tile.footnote}
+              onOpen={tile.onOpen}
+            >
+              {tile.body}
+            </AuroraTile>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+GamePlansTilesSection.displayName = "GamePlansTilesSection";
 
 const GamePlansPageContent: React.FC = () => {
   const navigate = useNavigate();
@@ -160,112 +293,12 @@ const GamePlansPageContent: React.FC = () => {
     [activePlans, archivedPlans, handleCreatePlan, navigate]
   );
 
-  // Render content based on state
-  const renderContent = () => {
-    if (isLoading) {
-      return <GamePlansLoadingState />;
-    }
-
-    if (
-      activePlans.length === 0 &&
-      archivedPlans.length === 0 &&
-      !searchQuery
-    ) {
-      return <GamePlansEmptyState onCreatePlan={handleCreatePlan} />;
-    }
-
-    return (
-      <div className="space-y-6" id="game-plans-section">
-        {/* Active Plans Section */}
-        {activePlans.length > 0 && (
-          <>
-            <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <Typography variant="headline-md" className="text-primary">
-                Active Game Plans ({activePlans.length})
-              </Typography>
-              <Button
-                onClick={handleCreatePlan}
-                variant="primary"
-                className="w-full sm:w-auto"
-              >
-                <Icon name="plus" className="h-4 w-4 mr-2" />
-                New Plan
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
-              {activePlans.map((plan) => (
-                <GamePlanCard
-                  key={plan.id}
-                  plan={plan}
-                  onEdit={handleEditPlan}
-                  onDuplicate={handleDuplicatePlan}
-                  onArchive={handleArchivePlan}
-                  onDelete={handleDeletePlan}
-                  onExportPDF={handleExportPDF}
-                />
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* Archived Plans Section */}
-        {archivedPlans.length > 0 && (
-          <div className="mt-12">
-            <Typography variant="headline-md" className="text-primary mb-4">
-              Archived Game Plans ({archivedPlans.length})
-            </Typography>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
-              {archivedPlans.map((plan) => (
-                <ArchivedPlanCard
-                  key={plan.id}
-                  plan={plan}
-                  onRestore={handleArchivePlan}
-                />
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
-
   return (
     <div className="min-h-screen bg-secondary p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         <GamePlansHeader onCreatePlan={handleCreatePlan} />
 
-        <div className="mb-8">
-          <div className="rounded-xl bg-primary p-5 shadow-lg backdrop-blur-sm sm:p-6 xl:p-7">
-            <div className="mb-6">
-              <Typography variant="headline-sm" className="text-primary">
-                Dial in this week's script
-              </Typography>
-              <Typography variant="body-sm" className="text-secondary mt-1">
-                Launch the workspace you need for planning, film, and
-                distribution.
-              </Typography>
-            </div>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
-              {tileConfigs.map((tile) => (
-                <AuroraTile
-                  key={tile.key}
-                  title={tile.title}
-                  description={tile.description}
-                  icon={tile.icon}
-                  accentOverlayClass={tile.accentOverlayClass}
-                  glowClassName={tile.glowClassName}
-                  statusBadge={tile.statusBadge}
-                  iconClassName={tile.iconClassName}
-                  footnote={tile.footnote}
-                  onOpen={tile.onOpen}
-                >
-                  {tile.body}
-                </AuroraTile>
-              ))}
-            </div>
-          </div>
-        </div>
+        <GamePlansTilesSection tileConfigs={tileConfigs} />
 
         {/* Search & Sort Section */}
         {gamePlans.length > 0 && (
@@ -279,8 +312,18 @@ const GamePlansPageContent: React.FC = () => {
           />
         )}
 
-        {/* Content States */}
-        {renderContent()}
+        <GamePlansPlansSection
+          isLoading={isLoading}
+          activePlans={activePlans}
+          archivedPlans={archivedPlans}
+          searchQuery={searchQuery}
+          onCreatePlan={handleCreatePlan}
+          onEditPlan={handleEditPlan}
+          onDuplicatePlan={handleDuplicatePlan}
+          onArchivePlan={handleArchivePlan}
+          onDeletePlan={handleDeletePlan}
+          onExportPDF={handleExportPDF}
+        />
 
         {/* Game Plan Modal (lazy loaded) */}
         {showModal && (

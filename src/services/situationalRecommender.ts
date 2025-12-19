@@ -190,6 +190,226 @@ function getHashBonus(
   return 0;
 }
 
+type BonusResult = { bonus: number; reasons: string[] };
+
+function mergeBonusResult(into: BonusResult, from: BonusResult): void {
+  into.bonus += from.bonus;
+  into.reasons.push(...from.reasons);
+}
+
+function getPrefDownBonus(
+  prefDownValue: string | null | undefined,
+  down: number
+): BonusResult {
+  if (!prefDownValue) return { bonus: 0, reasons: [] };
+  const prefDown = prefDownValue.toLowerCase().replace(/[^\d]/g, "");
+  if (prefDown !== String(down)) return { bonus: 0, reasons: [] };
+  return { bonus: 20, reasons: [`✓ Coach's ${prefDownValue} down play`] };
+}
+
+function getPrefDistanceBonus(
+  prefDistanceValue: string | null | undefined,
+  distance: number
+): BonusResult {
+  if (!prefDistanceValue) return { bonus: 0, reasons: [] };
+  const prefDis = prefDistanceValue.toLowerCase();
+  const isShort = distance <= 3;
+  const isMedium = distance >= 4 && distance <= 7;
+  const isLong = distance >= 8;
+  const matches =
+    (prefDis.includes("short") && isShort) ||
+    (prefDis.includes("medium") && isMedium) ||
+    (prefDis.includes("long") && isLong);
+
+  if (!matches) return { bonus: 0, reasons: [] };
+  return {
+    bonus: 15,
+    reasons: [`✓ Designed for ${prefDistanceValue} distance`],
+  };
+}
+
+function getPrefHashBonus(
+  prefHashValue: string | null | undefined,
+  hashMark: "left" | "middle" | "right" | undefined
+): BonusResult {
+  if (!prefHashValue || !hashMark) return { bonus: 0, reasons: [] };
+  const prefHash = prefHashValue.toLowerCase();
+  if (prefHash !== hashMark.toLowerCase()) return { bonus: 0, reasons: [] };
+  return { bonus: 10, reasons: [`✓ Best from ${prefHashValue} hash`] };
+}
+
+function getPrefFieldPositionBonus(
+  prefFieldPosValue: string | null | undefined,
+  yardLine: number
+): BonusResult {
+  if (!prefFieldPosValue) return { bonus: 0, reasons: [] };
+  const prefFieldPos = prefFieldPosValue.toLowerCase();
+
+  const isRedZone = yardLine <= 20;
+  const isGoalLine = yardLine <= 5;
+  const isPlusTerritory = yardLine <= 50 && yardLine > 20;
+  const isMidfield = yardLine > 40 && yardLine <= 60;
+  const isBackedUp = yardLine >= 90;
+
+  const matches =
+    (prefFieldPos.includes("red") && isRedZone) ||
+    (prefFieldPos.includes("goal") && isGoalLine) ||
+    (prefFieldPos.includes("plus") && isPlusTerritory) ||
+    (prefFieldPos.includes("mid") && isMidfield) ||
+    (prefFieldPos.includes("backed") && isBackedUp);
+
+  if (!matches) return { bonus: 0, reasons: [] };
+  return { bonus: 15, reasons: [`✓ ${prefFieldPosValue} play`] };
+}
+
+function getPrefCoverageBonus(
+  prefCoverageValue: string | null | undefined,
+  opponentCoverage: string | undefined
+): BonusResult {
+  if (!prefCoverageValue || !opponentCoverage) return { bonus: 0, reasons: [] };
+  const prefCov = prefCoverageValue.toLowerCase();
+  const oppCov = opponentCoverage.toLowerCase();
+
+  const matches =
+    prefCov.includes(oppCov) ||
+    oppCov.includes(prefCov) ||
+    (prefCov.includes("man") && oppCov.includes("man")) ||
+    (prefCov.includes("zone") && oppCov.includes("zone"));
+
+  if (!matches) return { bonus: 0, reasons: [] };
+  return { bonus: 12, reasons: [`✓ Designed vs ${prefCoverageValue}`] };
+}
+
+function getPlayTypeFitBonus(
+  playTypeRec: { type: "run" | "pass" | "balanced"; reason: string },
+  playType: "run" | "pass" | "other"
+): BonusResult {
+  if (playTypeRec.type === "balanced") {
+    return { bonus: 5, reasons: [] };
+  }
+  if (playTypeRec.type === "run" && playType === "run") {
+    return { bonus: 15, reasons: [`✓ Run game fits (${playTypeRec.reason})`] };
+  }
+  if (playTypeRec.type === "pass" && playType === "pass") {
+    return { bonus: 15, reasons: [`✓ Pass game fits (${playTypeRec.reason})`] };
+  }
+  return { bonus: 0, reasons: [] };
+}
+
+function getUrgencyModeBonus(params: {
+  urgency: string;
+  playType: "run" | "pass" | "other";
+  concept: string;
+  prefSituation: string | null | undefined;
+}): BonusResult {
+  const { urgency, playType, concept, prefSituation } = params;
+
+  const handlers: Record<string, () => BonusResult> = {
+    two_minute: () => {
+      const result: BonusResult = { bonus: 0, reasons: [] };
+      const clockStops =
+        concept.includes("out") ||
+        concept.includes("sideline") ||
+        concept.includes("quick");
+      if (clockStops) {
+        result.bonus += 20;
+        result.reasons.push("⏱️ Good 2-minute drill play (stops clock)");
+      }
+      const pref = prefSituation?.toLowerCase() ?? "";
+      if (pref.includes("2-minute") || pref.includes("two minute")) {
+        result.bonus += 25;
+        result.reasons.push("⏱️ Coach's 2-minute play");
+      }
+      return result;
+    },
+    must_score: () => {
+      const result: BonusResult = { bonus: 0, reasons: [] };
+      if (playType === "pass") result.bonus += 10;
+      const aggressive =
+        concept.includes("deep") ||
+        concept.includes("vertical") ||
+        concept.includes("shot");
+      if (aggressive) {
+        result.bonus += 15;
+        result.reasons.push("🎯 Aggressive shot play (must score)");
+      }
+      return result;
+    },
+    protect_lead: () => {
+      const result: BonusResult = { bonus: 0, reasons: [] };
+      if (playType === "run") result.bonus += 15;
+      const clock =
+        concept.includes("power") ||
+        concept.includes("iso") ||
+        concept.includes("dive");
+      if (clock) {
+        result.bonus += 10;
+        result.reasons.push("🔒 Clock management play");
+      }
+      const risky = concept.includes("deep") || concept.includes("shot");
+      if (risky) {
+        result.bonus -= 15;
+        result.reasons.push("⚠️ Risky with lead");
+      }
+      return result;
+    },
+    desperation: () => {
+      const result: BonusResult = { bonus: 0, reasons: [] };
+      const boomOrBust =
+        concept.includes("hail mary") ||
+        concept.includes("deep") ||
+        concept.includes("trick");
+      if (boomOrBust) {
+        result.bonus += 25;
+        result.reasons.push("🚨 Desperation play");
+      }
+      return result;
+    },
+    ice_the_game: () => {
+      const result: BonusResult = { bonus: 0, reasons: [] };
+      if (playType === "run") {
+        result.bonus += 20;
+        result.reasons.push("❄️ Run to ice the game");
+      }
+      if (playType === "pass") {
+        result.bonus -= 10;
+      }
+      return result;
+    },
+  };
+
+  return handlers[urgency]?.() ?? { bonus: 0, reasons: [] };
+}
+
+function getLateGameTimeBonuses(params: {
+  timeRemainingSeconds: number;
+  scoreDiff: number;
+  quarter: number;
+  playType: "run" | "pass" | "other";
+  concept: string;
+}): BonusResult {
+  const { timeRemainingSeconds, scoreDiff, quarter, playType, concept } =
+    params;
+  const result: BonusResult = { bonus: 0, reasons: [] };
+
+  if (timeRemainingSeconds <= 30 && scoreDiff < 0 && playType === "pass") {
+    result.bonus += 10;
+    result.reasons.push("⏰ Under 30 seconds, need to pass");
+  }
+
+  const trailingLate =
+    scoreDiff < 0 && quarter >= 4 && timeRemainingSeconds <= 300;
+  const deepPass =
+    playType === "pass" &&
+    (concept.includes("deep") || concept.includes("vertical"));
+  if (trailingLate && deepPass) {
+    result.bonus += 10;
+    result.reasons.push("📈 Trailing in 4th - go deep");
+  }
+
+  return result;
+}
+
 /**
  * Calculate bonus based on coach-defined preferences
  * This is the PRIMARY factor - if the coach said this play is designed for a situation,
@@ -220,92 +440,33 @@ function getCoachPreferenceBonus(
     opponentCoverage?: string;
   }
 ): { bonus: number; reasons: string[] } {
-  let bonus = 0;
-  const reasons: string[] = [];
+  const result: BonusResult = { bonus: 0, reasons: [] };
 
-  // Down match (+20 points - this is what the coach designed it for!)
-  if (play.pref_down) {
-    const prefDown = play.pref_down.toLowerCase().replace(/[^\d]/g, ""); // Extract number
-    if (prefDown === String(situation.down)) {
-      bonus += 20;
-      reasons.push(`✓ Coach's ${play.pref_down} down play`);
-    }
-  }
-
-  // Distance match (+15 points)
-  if (play.pref_dis) {
-    const prefDis = play.pref_dis.toLowerCase();
-    const isShort = situation.distance <= 3;
-    const isMedium = situation.distance >= 4 && situation.distance <= 7;
-    const isLong = situation.distance >= 8;
-
-    if (
-      (prefDis.includes("short") && isShort) ||
-      (prefDis.includes("medium") && isMedium) ||
-      (prefDis.includes("long") && isLong)
-    ) {
-      bonus += 15;
-      reasons.push(`✓ Designed for ${play.pref_dis} distance`);
-    }
-  }
-
-  // Hash match (+10 points)
-  if (play.pref_hash && situation.hashMark) {
-    const prefHash = play.pref_hash.toLowerCase();
-    if (prefHash === situation.hashMark.toLowerCase()) {
-      bonus += 10;
-      reasons.push(`✓ Best from ${play.pref_hash} hash`);
-    }
-  }
-
-  // Field position match (+15 points) - coach-defined terms
-  if (play.pref_field_pos) {
-    const prefFieldPos = play.pref_field_pos.toLowerCase();
-    const yardLine = situation.yardLine;
-
-    // Map common field position terms to yard line ranges
-    const isRedZone = yardLine <= 20;
-    const isGoalLine = yardLine <= 5;
-    const isPlusTerritory = yardLine <= 50 && yardLine > 20;
-    const isMidfield = yardLine > 40 && yardLine <= 60;
-    const isBackedUp = yardLine >= 90; // Own 10 or worse
-
-    if (
-      (prefFieldPos.includes("red") && isRedZone) ||
-      (prefFieldPos.includes("goal") && isGoalLine) ||
-      (prefFieldPos.includes("plus") && isPlusTerritory) ||
-      (prefFieldPos.includes("mid") && isMidfield) ||
-      (prefFieldPos.includes("backed") && isBackedUp)
-    ) {
-      bonus += 15;
-      reasons.push(`✓ ${play.pref_field_pos} play`);
-    }
-  }
-
-  // Coverage match (+12 points) - if opponent coverage matches what play is designed against
-  if (play.pref_cov && situation.opponentCoverage) {
-    const prefCov = play.pref_cov.toLowerCase();
-    const oppCov = situation.opponentCoverage.toLowerCase();
-
-    // Flexible matching for coverage terms
-    if (
-      prefCov.includes(oppCov) ||
-      oppCov.includes(prefCov) ||
-      (prefCov.includes("man") && oppCov.includes("man")) ||
-      (prefCov.includes("zone") && oppCov.includes("zone"))
-    ) {
-      bonus += 12;
-      reasons.push(`✓ Designed vs ${play.pref_cov}`);
-    }
-  }
+  mergeBonusResult(result, getPrefDownBonus(play.pref_down, situation.down));
+  mergeBonusResult(
+    result,
+    getPrefDistanceBonus(play.pref_dis, situation.distance)
+  );
+  mergeBonusResult(
+    result,
+    getPrefHashBonus(play.pref_hash, situation.hashMark)
+  );
+  mergeBonusResult(
+    result,
+    getPrefFieldPositionBonus(play.pref_field_pos, situation.yardLine)
+  );
+  mergeBonusResult(
+    result,
+    getPrefCoverageBonus(play.pref_cov, situation.opponentCoverage)
+  );
 
   // Custom situation is informational - shown in reasoning but no automatic bonus
   // (since we can't automatically detect "2-Minute" or "Must Have" situations)
   if (play.pref_situation) {
-    reasons.push(`📋 Tagged: ${play.pref_situation}`);
+    result.reasons.push(`📋 Tagged: ${play.pref_situation}`);
   }
 
-  return { bonus, reasons };
+  return result;
 }
 
 /**
@@ -329,15 +490,14 @@ function getGameUrgencyBonus(
   },
   situation: GameSituation
 ): { bonus: number; reasons: string[] } {
-  let bonus = 0;
-  const reasons: string[] = [];
+  const result: BonusResult = { bonus: 0, reasons: [] };
 
   // Need score and time data to calculate urgency
   if (
     situation.teamScore === undefined ||
     situation.opponentScore === undefined
   ) {
-    return { bonus, reasons };
+    return result;
   }
 
   const urgency = calculateGameUrgency(situation);
@@ -345,114 +505,30 @@ function getGameUrgencyBonus(
   const playType = getPlayTypeCategory(play.p_type);
   const concept = getPlayConceptText(play);
   const scoreDiff = situation.teamScore - situation.opponentScore;
-  const timeRemaining = parseTimeRemaining(situation.timeRemaining);
+  const timeRemainingSeconds = parseTimeRemaining(situation.timeRemaining);
 
-  // Match play type to recommendation
-  if (playTypeRec.type === "run" && playType === "run") {
-    bonus += 15;
-    reasons.push(`✓ Run game fits (${playTypeRec.reason})`);
-  } else if (playTypeRec.type === "pass" && playType === "pass") {
-    bonus += 15;
-    reasons.push(`✓ Pass game fits (${playTypeRec.reason})`);
-  } else if (playTypeRec.type === "balanced") {
-    bonus += 5; // Small bonus for any play in balanced mode
-  }
+  mergeBonusResult(result, getPlayTypeFitBonus(playTypeRec, playType));
+  mergeBonusResult(
+    result,
+    getUrgencyModeBonus({
+      urgency,
+      playType,
+      concept,
+      prefSituation: play.pref_situation,
+    })
+  );
+  mergeBonusResult(
+    result,
+    getLateGameTimeBonuses({
+      timeRemainingSeconds,
+      scoreDiff,
+      quarter: situation.quarter,
+      playType,
+      concept,
+    })
+  );
 
-  // Urgency-specific bonuses
-  switch (urgency) {
-    case "two_minute":
-      // Boost plays that get out of bounds or are quick-hitting
-      if (
-        concept.includes("out") ||
-        concept.includes("sideline") ||
-        concept.includes("quick")
-      ) {
-        bonus += 20;
-        reasons.push("⏱️ Good 2-minute drill play (stops clock)");
-      }
-      // Coach tagged as 2-minute play
-      if (
-        play.pref_situation?.toLowerCase().includes("2-minute") ||
-        play.pref_situation?.toLowerCase().includes("two minute")
-      ) {
-        bonus += 25;
-        reasons.push("⏱️ Coach's 2-minute play");
-      }
-      break;
-
-    case "must_score":
-      // Boost aggressive plays
-      if (playType === "pass") bonus += 10;
-      if (
-        concept.includes("deep") ||
-        concept.includes("vertical") ||
-        concept.includes("shot")
-      ) {
-        bonus += 15;
-        reasons.push("🎯 Aggressive shot play (must score)");
-      }
-      break;
-
-    case "protect_lead":
-      // Boost safe, clock-eating plays
-      if (playType === "run") bonus += 15;
-      if (
-        concept.includes("power") ||
-        concept.includes("iso") ||
-        concept.includes("dive")
-      ) {
-        bonus += 10;
-        reasons.push("🔒 Clock management play");
-      }
-      // Penalize risky plays
-      if (concept.includes("deep") || concept.includes("shot")) {
-        bonus -= 15;
-        reasons.push("⚠️ Risky with lead");
-      }
-      break;
-
-    case "desperation":
-      // Big play or bust
-      if (
-        concept.includes("hail mary") ||
-        concept.includes("deep") ||
-        concept.includes("trick")
-      ) {
-        bonus += 25;
-        reasons.push("🚨 Desperation play");
-      }
-      break;
-
-    case "ice_the_game":
-      // Run the ball, protect it
-      if (playType === "run") {
-        bonus += 20;
-        reasons.push("❄️ Run to ice the game");
-      }
-      if (playType === "pass") {
-        bonus -= 10; // Slight penalty for passing
-      }
-      break;
-  }
-
-  // Time-specific bonuses
-  if (timeRemaining <= 30 && scoreDiff < 0 && playType === "pass") {
-    bonus += 10;
-    reasons.push("⏰ Under 30 seconds, need to pass");
-  }
-
-  // Trailing late = aggressive boost
-  if (scoreDiff < 0 && situation.quarter >= 4 && timeRemaining <= 300) {
-    if (
-      playType === "pass" &&
-      (concept.includes("deep") || concept.includes("vertical"))
-    ) {
-      bonus += 10;
-      reasons.push("📈 Trailing in 4th - go deep");
-    }
-  }
-
-  return { bonus, reasons };
+  return result;
 }
 
 // ==============================================

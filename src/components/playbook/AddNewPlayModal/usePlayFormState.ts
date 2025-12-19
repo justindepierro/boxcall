@@ -66,6 +66,148 @@ interface UsePlayFormStateOptions {
   existingPlay?: Play | null;
 }
 
+const DEFAULT_FORM_DATA: PlayFormData = {
+  // Basic fields
+  formation: "",
+  formation_id: null,
+  formation_direction: null,
+  formationShowInName: false,
+  playName: "",
+  playShowInName: false,
+  personnel: "",
+  playType: "",
+
+  // Formation details
+  formationType: "",
+  formationDir: "",
+  backAlign: "",
+  backLeftOfQb: false,
+  backRightOfQb: false,
+  shift: "",
+  motion: "",
+  formationTags: "",
+  runStrength: "",
+  passStrength: "",
+
+  // Play details
+  playDir: "",
+  protection: "",
+  checkInto: "",
+  playTags: "",
+
+  // Preferences
+  prefDown: "",
+  prefDistance: "",
+  prefHash: "",
+  prefCoverage: "",
+  prefFront: "",
+  prefFieldPos: "",
+  prefSituation: "",
+
+  // Other
+  confidence: 75,
+  oneWordPlay: "",
+  wristbandNumber: "",
+  description: "",
+
+  // Play diagram upload
+  diagram_image_url: null,
+
+  // Tags & Roles (LEGACY)
+  positions: [],
+  players: [],
+  flags: [],
+  newPosition: "",
+  newPlayer: "",
+  newFlag: "",
+
+  // NEW: Play Metadata Arrays
+  tags: [],
+  key_positions: [],
+  key_players: [],
+};
+
+function buildBasicFields(play: Play): Partial<PlayFormData> {
+  return {
+    formation: play.formation ?? "",
+    formation_id: play.formation_id ?? null,
+    formation_direction: play.formation_direction ?? null,
+    playName: play.play_name ?? "",
+    personnel: play.personnel ?? "",
+    playType: play.p_type ?? "",
+  };
+}
+
+function buildFormationDetails(play: Play): Partial<PlayFormData> {
+  return {
+    formationType: play.f_type ?? "",
+    formationDir: play.f_dir ?? "",
+    backAlign: play.back_align ?? "",
+    backLeftOfQb: play.back_left_of_qb ?? false,
+    backRightOfQb: play.back_right_of_qb ?? false,
+    shift: play.shift ?? "",
+    motion: play.motion ?? "",
+    formationTags: [play.ftag1, play.ftag2].filter(Boolean).join(", ") || "",
+    runStrength: play.r_str ?? "",
+    passStrength: play.p_str ?? "",
+  };
+}
+
+function buildPlayDetails(play: Play): Partial<PlayFormData> {
+  return {
+    playDir: play.p_dir ?? "",
+    protection: play.protection ?? "",
+    checkInto: play.check_into ?? "",
+    playTags: [play.p_tag1, play.p_tag2].filter(Boolean).join(", ") || "",
+  };
+}
+
+function buildPreferences(play: Play): Partial<PlayFormData> {
+  return {
+    prefDown: play.pref_down ?? "",
+    prefDistance: play.pref_dis ?? "",
+    prefHash: play.pref_hash ?? "",
+    prefCoverage: play.pref_cov ?? "",
+    prefFront: play.pref_front ?? "",
+    prefFieldPos: play.pref_field_pos ?? "",
+    prefSituation: play.pref_situation ?? "",
+  };
+}
+
+function buildOtherFields(play: Play): Partial<PlayFormData> {
+  return {
+    confidence: play.confidence_base ?? 75,
+    oneWordPlay: play.one_word_play ?? "",
+    wristbandNumber: play.wristband_number ?? "",
+    description: play.notes ?? "",
+    diagram_image_url: play.diagram_image_url ?? null,
+  };
+}
+
+function buildMetadataArrays(play: Play): Partial<PlayFormData> {
+  return {
+    tags: play.tags ?? [],
+    key_positions: play.key_positions ?? [],
+    key_players: play.key_players ?? [],
+  };
+}
+
+function buildInitialFormData(existingPlay?: Play | null): PlayFormData {
+  if (!existingPlay) {
+    return { ...DEFAULT_FORM_DATA };
+  }
+
+  return {
+    ...DEFAULT_FORM_DATA,
+    ...buildBasicFields(existingPlay),
+    ...buildFormationDetails(existingPlay),
+    ...buildPlayDetails(existingPlay),
+    ...buildPreferences(existingPlay),
+    ...buildOtherFields(existingPlay),
+    ...buildMetadataArrays(existingPlay),
+  };
+}
+
 /**
  * Custom hook for managing play form state
  * Extracted from AddNewPlayModal to reduce file complexity
@@ -74,70 +216,9 @@ export const usePlayFormState = (options: UsePlayFormStateOptions = {}) => {
   const { existingPlay } = options;
 
   // Initialize form data from existing play or defaults
-  const [formData, setFormData] = useState<PlayFormData>(() => ({
-    // Basic fields
-    formation: existingPlay?.formation || "",
-    formation_id: existingPlay?.formation_id || null,
-    formation_direction: existingPlay?.formation_direction || null,
-    formationShowInName: false,
-    playName: existingPlay?.play_name || "",
-    playShowInName: false,
-    personnel: existingPlay?.personnel || "",
-    playType: existingPlay?.p_type || "",
-
-    // Formation details
-    formationType: existingPlay?.f_type || "",
-    formationDir: existingPlay?.f_dir || "",
-    backAlign: existingPlay?.back_align || "",
-    backLeftOfQb: existingPlay?.back_left_of_qb || false,
-    backRightOfQb: existingPlay?.back_right_of_qb || false,
-    shift: existingPlay?.shift || "",
-    motion: existingPlay?.motion || "",
-    formationTags:
-      [existingPlay?.ftag1, existingPlay?.ftag2].filter(Boolean).join(", ") ||
-      "",
-    runStrength: existingPlay?.r_str || "",
-    passStrength: existingPlay?.p_str || "",
-
-    // Play details
-    playDir: existingPlay?.p_dir || "",
-    protection: existingPlay?.protection || "",
-    checkInto: existingPlay?.check_into || "",
-    playTags:
-      [existingPlay?.p_tag1, existingPlay?.p_tag2].filter(Boolean).join(", ") ||
-      "",
-
-    // Preferences
-    prefDown: existingPlay?.pref_down || "",
-    prefDistance: existingPlay?.pref_dis || "",
-    prefHash: existingPlay?.pref_hash || "",
-    prefCoverage: existingPlay?.pref_cov || "",
-    prefFront: existingPlay?.pref_front || "",
-    prefFieldPos: existingPlay?.pref_field_pos || "",
-    prefSituation: existingPlay?.pref_situation || "",
-
-    // Other
-    confidence: existingPlay?.confidence_base || 75,
-    oneWordPlay: existingPlay?.one_word_play || "",
-    wristbandNumber: existingPlay?.wristband_number || "",
-    description: existingPlay?.notes || "",
-
-    // Play diagram
-    diagram_image_url: existingPlay?.diagram_image_url || null,
-
-    // Tags & Roles (LEGACY)
-    positions: [],
-    players: [],
-    flags: [],
-    newPosition: "",
-    newPlayer: "",
-    newFlag: "",
-
-    // NEW: Play Metadata Arrays (October 17, 2025)
-    tags: existingPlay?.tags || [],
-    key_positions: existingPlay?.key_positions || [],
-    key_players: existingPlay?.key_players || [],
-  }));
+  const [formData, setFormData] = useState<PlayFormData>(() =>
+    buildInitialFormData(existingPlay)
+  );
 
   // Update specific form field
   const updateField = useCallback(
@@ -154,51 +235,7 @@ export const usePlayFormState = (options: UsePlayFormStateOptions = {}) => {
 
   // Reset form to defaults
   const resetForm = useCallback(() => {
-    setFormData({
-      formation: "",
-      formation_id: null,
-      formation_direction: null,
-      formationShowInName: false,
-      playName: "",
-      playShowInName: false,
-      personnel: "",
-      playType: "",
-      formationType: "",
-      formationDir: "",
-      backAlign: "",
-      backLeftOfQb: false,
-      backRightOfQb: false,
-      shift: "",
-      motion: "",
-      formationTags: "",
-      runStrength: "",
-      passStrength: "",
-      playDir: "",
-      protection: "",
-      checkInto: "",
-      playTags: "",
-      prefDown: "",
-      prefDistance: "",
-      prefHash: "",
-      prefCoverage: "",
-      prefFront: "",
-      prefFieldPos: "",
-      prefSituation: "",
-      confidence: 75,
-      oneWordPlay: "",
-      wristbandNumber: "",
-      description: "",
-      diagram_image_url: null,
-      positions: [],
-      players: [],
-      flags: [],
-      newPosition: "",
-      newPlayer: "",
-      newFlag: "",
-      tags: [],
-      key_positions: [],
-      key_players: [],
-    });
+    setFormData({ ...DEFAULT_FORM_DATA });
   }, []);
 
   // Validation helpers

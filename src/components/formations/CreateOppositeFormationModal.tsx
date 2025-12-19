@@ -26,6 +26,245 @@ import { FormationService } from "../../services/formationService";
 import { error as logError } from "../../utils/logger";
 import type { Formation, FormationPlayerPosition } from "../../types/formation";
 
+function getOppositeDirection(
+  direction: Formation["direction"]
+): "left" | "right" {
+  if (direction === "left") return "right";
+  if (direction === "right") return "left";
+  return "right";
+}
+
+function getNamingHelpText(params: {
+  originalName: string;
+  suggestedName: string | null;
+  customName: string;
+}): React.ReactNode {
+  const { originalName, suggestedName, customName } = params;
+
+  if (!suggestedName || suggestedName === originalName) {
+    return (
+      <>
+        💡 Tip: Name it differently from "{originalName}" (e.g., "Lake", "
+        {originalName} Right", etc.)
+      </>
+    );
+  }
+
+  if (customName === suggestedName) {
+    return <>✨ Smart suggestion applied. Feel free to edit the name.</>;
+  }
+
+  return <>Custom name will be used for the opposite formation.</>;
+}
+
+const CreateOppositeFormationModalContent: React.FC<{
+  originalFormation: Formation;
+  flippedPositions: FormationPlayerPosition[];
+  suggestedName: string | null;
+  customName: string;
+  setCustomName: (value: string) => void;
+  oppositeDirection: "left" | "right";
+  loading: boolean;
+  error: string | null;
+  onCreate: () => void;
+  onSkip: () => void;
+  onMarkAsStandalone: () => void;
+}> = ({
+  originalFormation,
+  flippedPositions,
+  suggestedName,
+  customName,
+  setCustomName,
+  oppositeDirection,
+  loading,
+  error,
+  onCreate,
+  onSkip,
+  onMarkAsStandalone,
+}) => {
+  return (
+    <div className="flex flex-col gap-lg p-lg">
+      <div className="flex items-start gap-md p-md bg-blue-50 border border-blue-200 rounded-lg">
+        <div className="text-3xl">🔄</div>
+        <div className="flex-1">
+          <Typography
+            variant="body-md"
+            className="text-blue-900 font-semibold mb-xs"
+          >
+            Create a Flipped Version of "{originalFormation.name}"
+          </Typography>
+          <Typography variant="body-sm" className="text-blue-700">
+            Most formations need both left and right versions. We'll
+            automatically flip all player positions horizontally to create the
+            opposite-side formation.
+          </Typography>
+        </div>
+      </div>
+
+      <div>
+        <Typography variant="label-md" className="text-secondary mb-sm">
+          Preview: Side-by-Side Comparison
+        </Typography>
+        <div className="grid grid-cols-2 gap-md">
+          <div className="flex flex-col items-center">
+            <Typography
+              variant="body-sm"
+              className="text-primary font-semibold mb-xs"
+            >
+              ✅ Current Formation
+            </Typography>
+            <FormationPreview
+              positions={originalFormation.player_positions ?? []}
+              label={originalFormation.name}
+            />
+            <Typography variant="caption" className="text-muted mt-1">
+              {originalFormation.direction === "left" && "← Left side"}
+              {originalFormation.direction === "right" && "Right side →"}
+              {!originalFormation.direction && "No direction set"}
+            </Typography>
+          </div>
+
+          <div className="flex flex-col items-center">
+            <Typography
+              variant="body-sm"
+              className="text-primary-600 font-semibold mb-xs"
+            >
+              🆕 New Formation (Flipped)
+            </Typography>
+            <FormationPreview
+              positions={flippedPositions}
+              label={customName || suggestedName || originalFormation.name}
+              flipped
+            />
+            <Typography variant="caption" className="text-muted mt-1">
+              {oppositeDirection === "left" && "← Left side"}
+              {oppositeDirection === "right" && "Right side →"}
+            </Typography>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-secondary border border-primary rounded-md p-md">
+        <div className="flex items-center justify-between mb-sm">
+          <Typography variant="label-md" className="text-primary font-semibold">
+            Name for New Formation
+          </Typography>
+          {suggestedName && suggestedName !== originalFormation.name && (
+            <button
+              onClick={() => setCustomName(suggestedName)}
+              className="text-xs text-primary-600 hover:text-primary-700 underline"
+              type="button"
+            >
+              Use suggestion: "{suggestedName}"
+            </button>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-xs">
+          <input
+            type="text"
+            value={customName}
+            onChange={(e) => setCustomName(e.target.value)}
+            placeholder="Enter name for opposite formation..."
+            className="w-full px-md py-sm border-2 border-primary rounded-md bg-primary text-primary text-base focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            disabled={loading}
+          />
+          <Typography variant="body-xs" className="text-muted">
+            {getNamingHelpText({
+              originalName: originalFormation.name,
+              suggestedName,
+              customName,
+            })}
+          </Typography>
+        </div>
+      </div>
+
+      <div className="bg-success-bg border border-success-border rounded-md p-md">
+        <Typography
+          variant="label-md"
+          className="text-success font-semibold mb-sm flex items-center gap-2"
+        >
+          <span>✓</span> What Gets Copied to New Formation
+        </Typography>
+        <div className="grid grid-cols-2 gap-md text-sm">
+          <div>
+            <Typography variant="caption" className="text-success">
+              Personnel:
+            </Typography>
+            <Typography variant="body-sm" className="text-primary font-medium">
+              {originalFormation.personnel_name || "None"}
+            </Typography>
+          </div>
+          <div>
+            <Typography variant="caption" className="text-success">
+              Category:
+            </Typography>
+            <Typography variant="body-sm" className="text-primary font-medium">
+              {originalFormation.category || "Uncategorized"}
+            </Typography>
+          </div>
+        </div>
+        <Typography variant="caption" className="text-success mt-2 block">
+          ⚡ Player positions will be flipped horizontally
+        </Typography>
+      </div>
+
+      {error && (
+        <div className="surface-error border border-error rounded-md p-md">
+          <Typography variant="body-sm" className="text-error">
+            ❌ {error}
+          </Typography>
+        </div>
+      )}
+
+      <div className="flex flex-col gap-sm pt-md border-t border-primary">
+        <Button
+          variant="primary"
+          size="lg"
+          onClick={onCreate}
+          disabled={loading || !customName.trim()}
+          fullWidth
+        >
+          {loading ? (
+            <span className="flex items-center justify-center gap-2">
+              <span className="animate-spin">⏳</span> Creating flipped
+              formation...
+            </span>
+          ) : (
+            <span className="font-semibold">
+              ✅ Create "{customName || originalFormation.name}"
+            </span>
+          )}
+        </Button>
+
+        <div className="grid grid-cols-2 gap-sm">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={onSkip}
+            disabled={loading}
+          >
+            ⏭️ Skip (do later)
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="md"
+            onClick={onMarkAsStandalone}
+            disabled={loading}
+          >
+            ❌ Don't need opposite
+          </Button>
+        </div>
+
+        <Typography variant="caption" className="text-muted text-center mt-2">
+          💡 You can create or link formations later in the Formation Manager
+        </Typography>
+      </div>
+    </div>
+  );
+};
+
 /**
  * Smart naming patterns for opposite formations
  * Detects common football formation naming conventions
@@ -268,12 +507,7 @@ export const CreateOppositeFormationModal: React.FC<
     onClose();
   };
 
-  // Determine what direction the opposite would be
-  const oppositeDirection = (() => {
-    if (originalFormation.direction === "left") return "right";
-    if (originalFormation.direction === "right") return "left";
-    return "right"; // Default for standalone
-  })();
+  const oppositeDirection = getOppositeDirection(originalFormation.direction);
 
   return (
     <Modal
@@ -284,219 +518,19 @@ export const CreateOppositeFormationModal: React.FC<
       closeOnBackdropClick={false}
       closeOnEscape={!loading}
     >
-      <div className="flex flex-col gap-lg p-lg">
-        {/* Clear Explanation */}
-        <div className="flex items-start gap-md p-md bg-blue-50 border border-blue-200 rounded-lg">
-          <div className="text-3xl">🔄</div>
-          <div className="flex-1">
-            <Typography
-              variant="body-md"
-              className="text-blue-900 font-semibold mb-xs"
-            >
-              Create a Flipped Version of "{originalFormation.name}"
-            </Typography>
-            <Typography variant="body-sm" className="text-blue-700">
-              Most formations need both left and right versions. We'll
-              automatically flip all player positions horizontally to create the
-              opposite-side formation.
-            </Typography>
-          </div>
-        </div>
-
-        {/* Side-by-side preview with better labels */}
-        <div>
-          <Typography variant="label-md" className="text-secondary mb-sm">
-            Preview: Side-by-Side Comparison
-          </Typography>
-          <div className="grid grid-cols-2 gap-md">
-            <div className="flex flex-col items-center">
-              <Typography
-                variant="body-sm"
-                className="text-primary font-semibold mb-xs"
-              >
-                ✅ Current Formation
-              </Typography>
-              <FormationPreview
-                positions={originalFormation.player_positions ?? []}
-                label={originalFormation.name}
-              />
-              <Typography variant="caption" className="text-muted mt-1">
-                {originalFormation.direction === "left" && "← Left side"}
-                {originalFormation.direction === "right" && "Right side →"}
-                {!originalFormation.direction && "No direction set"}
-              </Typography>
-            </div>
-
-            <div className="flex flex-col items-center">
-              <Typography
-                variant="body-sm"
-                className="text-primary-600 font-semibold mb-xs"
-              >
-                🆕 New Formation (Flipped)
-              </Typography>
-              <FormationPreview
-                positions={flippedPositions}
-                label={customName || suggestedName || originalFormation.name}
-                flipped
-              />
-              <Typography variant="caption" className="text-muted mt-1">
-                {oppositeDirection === "left" && "← Left side"}
-                {oppositeDirection === "right" && "Right side →"}
-              </Typography>
-            </div>
-          </div>
-        </div>
-
-        {/* Simplified naming section */}
-        <div className="bg-secondary border border-primary rounded-md p-md">
-          <div className="flex items-center justify-between mb-sm">
-            <Typography
-              variant="label-md"
-              className="text-primary font-semibold"
-            >
-              Name for New Formation
-            </Typography>
-            {suggestedName && suggestedName !== originalFormation.name && (
-              <button
-                onClick={() => setCustomName(suggestedName)}
-                className="text-xs text-primary-600 hover:text-primary-700 underline"
-                type="button"
-              >
-                Use suggestion: "{suggestedName}"
-              </button>
-            )}
-          </div>
-
-          {/* Name input */}
-          <div className="flex flex-col gap-xs">
-            <input
-              type="text"
-              value={customName}
-              onChange={(e) => setCustomName(e.target.value)}
-              placeholder="Enter name for opposite formation..."
-              className="w-full px-md py-sm border-2 border-primary rounded-md bg-primary text-primary text-base focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-              disabled={loading}
-            />
-            <Typography variant="body-xs" className="text-muted">
-              {(() => {
-                if (
-                  !suggestedName ||
-                  suggestedName === originalFormation.name
-                ) {
-                  return (
-                    <>
-                      💡 Tip: Name it differently from "{originalFormation.name}
-                      " (e.g., "Lake", "{originalFormation.name} Right", etc.)
-                    </>
-                  );
-                }
-                if (customName === suggestedName) {
-                  return (
-                    <>
-                      ✨ Smart suggestion applied. Feel free to edit the name.
-                    </>
-                  );
-                }
-                return (
-                  <>Custom name will be used for the opposite formation.</>
-                );
-              })()}
-            </Typography>
-          </div>
-        </div>
-
-        {/* What will be copied */}
-        <div className="bg-success-bg border border-success-border rounded-md p-md">
-          <Typography
-            variant="label-md"
-            className="text-success font-semibold mb-sm flex items-center gap-2"
-          >
-            <span>✓</span> What Gets Copied to New Formation
-          </Typography>
-          <div className="grid grid-cols-2 gap-md text-sm">
-            <div>
-              <Typography variant="caption" className="text-success">
-                Personnel:
-              </Typography>
-              <Typography
-                variant="body-sm"
-                className="text-primary font-medium"
-              >
-                {originalFormation.personnel_name || "None"}
-              </Typography>
-            </div>
-            <div>
-              <Typography variant="caption" className="text-success">
-                Category:
-              </Typography>
-              <Typography
-                variant="body-sm"
-                className="text-primary font-medium"
-              >
-                {originalFormation.category || "Uncategorized"}
-              </Typography>
-            </div>
-          </div>
-          <Typography variant="caption" className="text-success mt-2 block">
-            ⚡ Player positions will be flipped horizontally
-          </Typography>
-        </div>
-
-        {/* Error message */}
-        {error && (
-          <div className="surface-error border border-error rounded-md p-md">
-            <Typography variant="body-sm" className="text-error">
-              ❌ {error}
-            </Typography>
-          </div>
-        )}
-
-        {/* Action buttons with clearer labels */}
-        <div className="flex flex-col gap-sm pt-md border-t border-primary">
-          <Button
-            variant="primary"
-            size="lg"
-            onClick={handleCreateOpposite}
-            disabled={loading || !customName.trim()}
-            fullWidth
-          >
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <span className="animate-spin">⏳</span> Creating flipped
-                formation...
-              </span>
-            ) : (
-              <span className="font-semibold">
-                ✅ Create "{customName || originalFormation.name}"
-              </span>
-            )}
-          </Button>
-
-          <div className="grid grid-cols-2 gap-sm">
-            <Button
-              variant="outline"
-              size="md"
-              onClick={handleSkip}
-              disabled={loading}
-            >
-              ⏭️ Skip (do later)
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="md"
-              onClick={handleMarkAsStandalone}
-              disabled={loading}
-            >
-              ❌ Don't need opposite
-            </Button>
-          </div>
-
-          <Typography variant="caption" className="text-muted text-center mt-2">
-            💡 You can create or link formations later in the Formation Manager
-          </Typography>
-        </div>
-      </div>
+      <CreateOppositeFormationModalContent
+        originalFormation={originalFormation}
+        flippedPositions={flippedPositions}
+        suggestedName={suggestedName}
+        customName={customName}
+        setCustomName={setCustomName}
+        oppositeDirection={oppositeDirection}
+        loading={loading}
+        error={error}
+        onCreate={handleCreateOpposite}
+        onSkip={handleSkip}
+        onMarkAsStandalone={handleMarkAsStandalone}
+      />
     </Modal>
   );
 };

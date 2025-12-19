@@ -16,6 +16,144 @@ import type { PersonnelConfiguration } from "../../../types/personnel";
 import type { AssignmentData } from "./types";
 import { DEFAULT_PERSONNEL_POSITIONS, SAVE_SUCCESS_TIMEOUT } from "./constants";
 
+function reorderList<T>(
+  items: readonly T[],
+  fromIndex: number,
+  toIndex: number
+) {
+  const next = Array.from(items);
+  const [moved] = next.splice(fromIndex, 1);
+  next.splice(toIndex, 0, moved);
+  return next;
+}
+
+function getSelectedPersonnelConfig({
+  selectedPersonnelId,
+  personnelConfigurations,
+  playPersonnel,
+}: {
+  selectedPersonnelId: string | null;
+  personnelConfigurations: PersonnelConfiguration[];
+  playPersonnel: string | null | undefined;
+}) {
+  if (selectedPersonnelId) {
+    return (
+      personnelConfigurations.find((pc) => pc.id === selectedPersonnelId) ||
+      null
+    );
+  }
+
+  if (playPersonnel && personnelConfigurations.length > 0) {
+    const lower = playPersonnel.toLowerCase();
+    return (
+      personnelConfigurations.find((pc) =>
+        pc.name.toLowerCase().includes(lower)
+      ) || null
+    );
+  }
+
+  return null;
+}
+
+function buildDefaultPositions({
+  selectedPersonnel,
+  playPersonnel,
+}: {
+  selectedPersonnel: PersonnelConfiguration | null;
+  playPersonnel: string | null | undefined;
+}): string[] {
+  if (selectedPersonnel?.players) {
+    const skillLabels = selectedPersonnel.players
+      .filter((p) => p.player_position !== "QB" || p.sort_order === 0)
+      .sort((a, b) => a.sort_order - b.sort_order)
+      .map((p) => p.label);
+
+    const linePositions = ["TE", "LT", "LG", "C", "RG", "RT"];
+    const interleaved: string[] = [];
+    const maxLength = Math.max(skillLabels.length, linePositions.length);
+
+    for (let i = 0; i < maxLength; i++) {
+      if (i < skillLabels.length) {
+        interleaved.push(skillLabels[i]);
+      }
+      if (i < linePositions.length) {
+        interleaved.push(linePositions[i]);
+      }
+    }
+
+    return interleaved;
+  }
+
+  if (!playPersonnel) {
+    return DEFAULT_PERSONNEL_POSITIONS["11"];
+  }
+
+  const personnelCode = playPersonnel.match(/\d+/)?.[0] || "11";
+  return (
+    DEFAULT_PERSONNEL_POSITIONS[personnelCode] ||
+    DEFAULT_PERSONNEL_POSITIONS["11"]
+  );
+}
+
+function mapDbRowsToState(data: any[] | null | undefined) {
+  const assignmentMap = new Map<string, AssignmentData>();
+  data?.forEach((assignment: any) => {
+    assignmentMap.set(assignment.position, {
+      id: assignment.id,
+      position: assignment.position,
+      assignment_text: assignment.assignment_text || "",
+    });
+  });
+
+  const firstAssignment = data?.[0] as any;
+  return {
+    assignmentMap,
+    playNotes: (firstAssignment?.play_notes as string | undefined) || "",
+  };
+}
+
+function renameAssignmentKey(
+  prev: Map<string, AssignmentData>,
+  oldLabel: string,
+  newLabel: string
+) {
+  const next = new Map(prev);
+  const oldData = next.get(oldLabel);
+  if (!oldData) return next;
+
+  next.delete(oldLabel);
+  next.set(newLabel, { ...oldData, position: newLabel });
+  return next;
+}
+
+function buildAssignmentsUpsertPayload({
+  assignments,
+  playId,
+  playbookId,
+  playNotes,
+  userId,
+}: {
+  assignments: Map<string, AssignmentData>;
+  playId: string;
+  playbookId: string;
+  playNotes: string;
+  userId: string;
+}) {
+  return Array.from(assignments.values())
+    .filter((a) => a.assignment_text.trim())
+    .map((a) => ({
+      play_id: playId,
+      playbook_id: playbookId,
+      position: a.position,
+      assignment_text: a.assignment_text,
+      player_tags: [],
+      hashtags: [],
+      play_notes: playNotes,
+      created_by: userId,
+      updated_by: userId,
+    }));
+}
+
 interface UsePlayAssignmentsHandlersProps {
   play: Play;
   isOpen: boolean;
@@ -61,52 +199,19 @@ export function usePlayAssignmentsHandlers({
 
   // Find the selected personnel configuration or default to play's personnel
   const selectedPersonnel = useMemo(() => {
-    if (selectedPersonnelId) {
-      return personnelConfigurations.find(
-        (pc) => pc.id === selectedPersonnelId
-      );
-    }
-    if (play.personnel && personnelConfigurations.length > 0) {
-      return personnelConfigurations.find((pc) =>
-        pc.name.toLowerCase().includes(play.personnel?.toLowerCase() || "")
-      );
-    }
-    return null;
+    return getSelectedPersonnelConfig({
+      selectedPersonnelId,
+      personnelConfigurations,
+      playPersonnel: play.personnel,
+    });
   }, [selectedPersonnelId, personnelConfigurations, play.personnel]);
 
   // Generate positions from personnel configuration or defaults
   const defaultPositions = useMemo(() => {
-    if (selectedPersonnel && selectedPersonnel.players) {
-      const skillLabels = selectedPersonnel.players
-        .filter((p) => p.player_position !== "QB" || p.sort_order === 0)
-        .sort((a, b) => a.sort_order - b.sort_order)
-        .map((p) => p.label);
-
-      const linePositions = ["TE", "LT", "LG", "C", "RG", "RT"];
-      const interleaved: string[] = [];
-      const maxLength = Math.max(skillLabels.length, linePositions.length);
-
-      for (let i = 0; i < maxLength; i++) {
-        if (i < skillLabels.length) {
-          interleaved.push(skillLabels[i]);
-        }
-        if (i < linePositions.length) {
-          interleaved.push(linePositions[i]);
-        }
-      }
-
-      return interleaved;
-    }
-
-    if (!play.personnel) {
-      return DEFAULT_PERSONNEL_POSITIONS["11"];
-    }
-
-    const personnelCode = play.personnel.match(/\d+/)?.[0] || "11";
-    return (
-      DEFAULT_PERSONNEL_POSITIONS[personnelCode] ||
-      DEFAULT_PERSONNEL_POSITIONS["11"]
-    );
+    return buildDefaultPositions({
+      selectedPersonnel,
+      playPersonnel: play.personnel,
+    });
   }, [play.personnel, selectedPersonnel]);
 
   const positions =
@@ -130,18 +235,9 @@ export function usePlayAssignmentsHandlers({
         return;
       }
 
-      const assignmentMap = new Map<string, AssignmentData>();
-      data?.forEach((assignment: any) => {
-        assignmentMap.set(assignment.position, {
-          id: assignment.id,
-          position: assignment.position,
-          assignment_text: assignment.assignment_text || "",
-        });
-      });
-
-      setAssignments(assignmentMap);
-      const firstAssignment = data?.[0] as any;
-      setPlayNotes(firstAssignment?.play_notes || "");
+      const mapped = mapDbRowsToState(data);
+      setAssignments(mapped.assignmentMap);
+      setPlayNotes(mapped.playNotes);
       setHasChanges(false);
     } finally {
       setLoading(false);
@@ -161,11 +257,9 @@ export function usePlayAssignmentsHandlers({
 
       triggerHapticFeedback("medium");
 
-      const items = Array.from(positions);
-      const [reorderedItem] = items.splice(result.source.index, 1);
-      items.splice(result.destination.index, 0, reorderedItem);
-
-      setCustomPositions(items);
+      setCustomPositions(
+        reorderList(positions, result.source.index, result.destination.index)
+      );
       setHasChanges(true);
     },
     [positions]
@@ -179,24 +273,17 @@ export function usePlayAssignmentsHandlers({
         return;
       }
 
+      const nextLabel = newLabel.trim();
+
       setCustomPositions((prev) => {
         const currentPositions = prev.length > 0 ? prev : defaultPositions;
         return currentPositions.map((pos) =>
-          pos === oldLabel ? newLabel.trim() : pos
+          pos === oldLabel ? nextLabel : pos
         );
       });
 
       setAssignments((prev) => {
-        const newMap = new Map(prev);
-        const oldData = newMap.get(oldLabel);
-        if (oldData) {
-          newMap.delete(oldLabel);
-          newMap.set(newLabel.trim(), {
-            ...oldData,
-            position: newLabel.trim(),
-          });
-        }
-        return newMap;
+        return renameAssignmentKey(prev, oldLabel, nextLabel);
       });
 
       setEditingLabel(null);
@@ -240,19 +327,13 @@ export function usePlayAssignmentsHandlers({
     setSaving(true);
 
     try {
-      const assignmentsToSave = Array.from(assignments.values())
-        .filter((a) => a.assignment_text.trim())
-        .map((a) => ({
-          play_id: play.id,
-          playbook_id: play.playbook_id,
-          position: a.position,
-          assignment_text: a.assignment_text,
-          player_tags: [],
-          hashtags: [],
-          play_notes: playNotes,
-          created_by: user.id,
-          updated_by: user.id,
-        }));
+      const assignmentsToSave = buildAssignmentsUpsertPayload({
+        assignments,
+        playId: play.id,
+        playbookId: play.playbook_id,
+        playNotes,
+        userId: user.id,
+      });
 
       // play_assignments table not yet in generated Database types
       const { error } = await (supabase as any)

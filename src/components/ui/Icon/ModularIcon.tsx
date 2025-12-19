@@ -327,6 +327,118 @@ const colorMap = {
   info: getComponentColor("icon", "info"),
 };
 
+type IconRenderMode = "test" | "loading" | "fallback" | "icon";
+
+function getIconRenderMode(params: {
+  isTestEnvironment: boolean;
+  loading: boolean;
+  showFallback: boolean;
+  hasIconComponent: boolean;
+}): IconRenderMode {
+  const { isTestEnvironment, loading, showFallback, hasIconComponent } = params;
+
+  if (isTestEnvironment) return "test";
+  if ((loading && !showFallback) || (!hasIconComponent && !showFallback)) {
+    return "loading";
+  }
+  if (!hasIconComponent || showFallback) return "fallback";
+  return "icon";
+}
+
+function TestIconSvg({
+  name,
+  size,
+  color,
+  strokeWidth,
+}: {
+  name: string;
+  size: number;
+  color: string;
+  strokeWidth: number;
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      stroke={color}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      data-testid={`${name}-icon`}
+    >
+      <circle cx="12" cy="12" r="10" />
+    </svg>
+  );
+}
+
+function LoadingSpinnerSvg({
+  size,
+  color,
+  strokeWidth,
+}: {
+  size: number;
+  color: string;
+  strokeWidth: number;
+}) {
+  return (
+    <svg
+      className="animate-spin"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      stroke={color}
+      strokeWidth={strokeWidth}
+    >
+      <circle
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeOpacity="0.2"
+      />
+      <path
+        d="M12 6V12L16 14"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function FallbackHelpIconSvg({
+  size,
+  color,
+  strokeWidth,
+}: {
+  size: number;
+  color: string;
+  strokeWidth: number;
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      stroke={color}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+      <path d="M12 17h.01" />
+    </svg>
+  );
+}
+
 /**
  * ModularIcon - Tree-shakeable icon component
  *
@@ -430,110 +542,68 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
     focusable,
   };
 
-  // For tests, render a simple SVG synchronously
-  if (isTestEnvironment) {
-    return (
-      <span
-        {...accessibilityProps}
-        className={`inline-flex items-center justify-center flex-shrink-0 ${className}`}
-      >
-        <svg
-          width={typeof size === "number" ? size : sizeMap[size]}
-          height={typeof size === "number" ? size : sizeMap[size]}
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          stroke={colorMap[color]}
-          strokeWidth={strokeWidth}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          data-testid={`${name}-icon`}
-        >
-          {/* Simple test icon - just a circle */}
-          <circle cx="12" cy="12" r="10" />
-        </svg>
-      </span>
-    );
-  }
-
-  if ((loading && !showFallback) || (!IconComponent && !showFallback)) {
-    // Show loading spinner for first 500ms or if no component and not in fallback mode
-    return (
-      <span
-        {...accessibilityProps}
-        className={`inline-flex items-center justify-center flex-shrink-0 ${className}`}
-      >
-        <svg
-          className="animate-spin"
-          width={typeof size === "number" ? size : sizeMap[size]}
-          height={typeof size === "number" ? size : sizeMap[size]}
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          stroke={colorMap[color]}
-          strokeWidth={strokeWidth}
-        >
-          {/* Loading spinner */}
-          <circle
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeOpacity="0.2"
-          />
-          <path
-            d="M12 6V12L16 14"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </span>
-    );
-  }
-
-  if (!IconComponent || showFallback) {
-    // Return a proper help-circle fallback when we have no icon component or are in fallback mode
-    return (
-      <span
-        {...accessibilityProps}
-        className={`inline-flex items-center justify-center flex-shrink-0 ${className}`}
-      >
-        <svg
-          width={typeof size === "number" ? size : sizeMap[size]}
-          height={typeof size === "number" ? size : sizeMap[size]}
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          stroke={colorMap[color]}
-          strokeWidth={strokeWidth}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {/* Help circle icon */}
-          <circle cx="12" cy="12" r="10" />
-          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-          <path d="M12 17h.01" />
-        </svg>
-      </span>
-    );
-  }
-
   const iconSize = typeof size === "number" ? size : sizeMap[size];
   const iconColor = colorMap[color];
+  const LoadedIcon = IconComponent;
+  const renderMode = getIconRenderMode({
+    isTestEnvironment,
+    loading,
+    showFallback,
+    hasIconComponent: Boolean(IconComponent),
+  });
 
-  return (
-    <span
-      {...accessibilityProps}
-      className={`inline-flex items-center justify-center flex-shrink-0 ${className}`}
-    >
-      <IconComponent
-        size={iconSize}
-        color={iconColor}
-        strokeWidth={strokeWidth}
-      />
-    </span>
-  );
+  const wrapperClassName = `inline-flex items-center justify-center flex-shrink-0 ${className}`;
+
+  switch (renderMode) {
+    case "test":
+      return (
+        <span {...accessibilityProps} className={wrapperClassName}>
+          <TestIconSvg
+            name={name}
+            size={iconSize}
+            color={iconColor}
+            strokeWidth={strokeWidth}
+          />
+        </span>
+      );
+    case "loading":
+      return (
+        <span {...accessibilityProps} className={wrapperClassName}>
+          <LoadingSpinnerSvg
+            size={iconSize}
+            color={iconColor}
+            strokeWidth={strokeWidth}
+          />
+        </span>
+      );
+    case "fallback":
+      return (
+        <span {...accessibilityProps} className={wrapperClassName}>
+          <FallbackHelpIconSvg
+            size={iconSize}
+            color={iconColor}
+            strokeWidth={strokeWidth}
+          />
+        </span>
+      );
+    case "icon":
+    default: {
+      if (!LoadedIcon) {
+        return <span {...accessibilityProps} className={wrapperClassName} />;
+      }
+
+      const LoadedIconComponent = LoadedIcon;
+      return (
+        <span {...accessibilityProps} className={wrapperClassName}>
+          <LoadedIconComponent
+            size={iconSize}
+            color={iconColor}
+            strokeWidth={strokeWidth}
+          />
+        </span>
+      );
+    }
+  }
 };
 
 // Convenience components for quick adoption

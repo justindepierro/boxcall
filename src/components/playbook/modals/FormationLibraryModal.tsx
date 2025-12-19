@@ -15,6 +15,277 @@ import { supabase } from "../../../lib/supabase";
 import { CreateFormationModal } from "./CreateFormationModal";
 import { logError } from "../../../utils/logger";
 
+type FormationLibraryStats = {
+  total: number;
+  withMetadata: number;
+  linkedPairs: number;
+  totalUsage: number;
+};
+
+function filterFormations(formations: Formation[], searchQuery: string) {
+  const normalized = searchQuery.trim().toLowerCase();
+  if (!normalized) return formations;
+  return formations.filter((f) => f.name.toLowerCase().includes(normalized));
+}
+
+function computeStats(
+  formations: Formation[],
+  filteredFormations: Formation[]
+): FormationLibraryStats {
+  return {
+    total: formations.length,
+    withMetadata: formations.filter(
+      (f) => f.confidence_score && f.confidence_score > 0
+    ).length,
+    linkedPairs: formations.filter((f) => f.opposite_formation_id).length,
+    totalUsage: filteredFormations.reduce(
+      (sum, f) => sum + (f.usage_count || 0),
+      0
+    ),
+  };
+}
+
+const FormationLibraryBackdrop: React.FC<{ onClose: () => void }> = ({
+  onClose,
+}) => (
+  <div
+    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 animate-fade-in"
+    onClick={onClose}
+  />
+);
+
+type FormationLibraryHeaderProps = {
+  onClose: () => void;
+  analyzing: boolean;
+  onCreateNew: () => void;
+  onImportFromPlays: () => void;
+  onAnalyze: () => void;
+};
+
+const FormationLibraryHeader: React.FC<FormationLibraryHeaderProps> = ({
+  onClose,
+  analyzing,
+  onCreateNew,
+  onImportFromPlays,
+  onAnalyze,
+}) => (
+  <div className="bg-gradient-to-r from-jade-600 to-jade-700 p-4 sm:p-6 border-b border-divider shadow-lg">
+    <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
+          <Icon name="grid" size="lg" className="text-white" />
+        </div>
+        <div>
+          <h2 className="text-2xl font-bold text-white">Formation Library</h2>
+          <p className="text-sm text-white/80 mt-1">
+            Manage formations with intelligent metadata
+          </p>
+        </div>
+      </div>
+      <button
+        onClick={onClose}
+        className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+      >
+        <Icon name="close" size="lg" className="text-white" />
+      </button>
+    </div>
+
+    <div className="flex items-center gap-2">
+      <button
+        onClick={onCreateNew}
+        className="btn-primary flex items-center gap-2 bg-white text-jade-600 hover:bg-white/90 shadow-md"
+      >
+        <Icon name="plus" size="sm" />
+        Create New
+      </button>
+      <button
+        onClick={onImportFromPlays}
+        disabled={analyzing}
+        className="btn-secondary flex items-center gap-2 bg-orange-500 text-white border-orange-600 hover:bg-orange-600 disabled:bg-neutral-400 disabled:border-neutral-500 shadow-md"
+      >
+        {analyzing ? (
+          <>
+            <Icon name="loader" size="sm" className="animate-spin" />
+            Importing...
+          </>
+        ) : (
+          <>
+            <Icon name="download" size="sm" />
+            Import from Plays
+          </>
+        )}
+      </button>
+      <button
+        onClick={onAnalyze}
+        disabled={analyzing}
+        className="btn-secondary flex items-center gap-2 text-white border-white/30 hover:bg-white/10 disabled:opacity-50"
+      >
+        {analyzing ? (
+          <>
+            <Icon name="loader" size="sm" className="animate-spin" />
+            Analyzing...
+          </>
+        ) : (
+          <>
+            <Icon name="sparkles" size="sm" />
+            Analyze Plays
+          </>
+        )}
+      </button>
+    </div>
+  </div>
+);
+
+type FormationLibrarySearchProps = {
+  searchQuery: string;
+  onChangeSearchQuery: (value: string) => void;
+};
+
+const FormationLibrarySearch: React.FC<FormationLibrarySearchProps> = ({
+  searchQuery,
+  onChangeSearchQuery,
+}) => (
+  <div className="p-4 sm:p-6 border-b border-divider bg-surface-secondary">
+    <div className="relative">
+      <Icon
+        name="search"
+        size="sm"
+        className="absolute left-3 top-1/2 -translate-y-1/2 text-jade-500"
+      />
+      <input
+        type="text"
+        placeholder="Search formations..."
+        value={searchQuery}
+        onChange={(e) => onChangeSearchQuery(e.target.value)}
+        className="input-field pl-10 focus:ring-2 focus:ring-jade-500/50 focus:border-jade-500"
+      />
+    </div>
+  </div>
+);
+
+const FormationCard: React.FC<{ formation: Formation }> = ({ formation }) => (
+  <div className="card p-5 hover:shadow-xl hover:border-jade-500/30 hover:-translate-y-0.5 transition-all duration-200">
+    <div className="flex items-start justify-between mb-3">
+      <h3 className="text-lg font-semibold text-primary">{formation.name}</h3>
+      {formation.opposite_formation_id && (
+        <span className="badge-info text-xs">Paired</span>
+      )}
+    </div>
+
+    {formation.run_strength || formation.pass_strength ? (
+      <div className="space-y-2 mb-3">
+        {formation.run_strength && (
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-secondary">Run:</span>
+            <span className="text-primary font-medium">
+              {formation.run_strength}
+            </span>
+          </div>
+        )}
+        {formation.pass_strength && (
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-secondary">Pass:</span>
+            <span className="text-primary font-medium">
+              {formation.pass_strength}
+            </span>
+          </div>
+        )}
+      </div>
+    ) : null}
+
+    {formation.confidence_score !== null && formation.confidence_score > 0 && (
+      <div className="mb-3">
+        <div className="flex items-center justify-between text-xs mb-1">
+          <span className="text-secondary">Confidence</span>
+          <span className="text-primary font-medium">
+            {formation.confidence_score}%
+          </span>
+        </div>
+        <div className="w-full bg-surface-muted rounded-full h-2">
+          <div
+            className="h-2 rounded-full bg-gradient-to-r from-jade-500 to-jade-600"
+            style={{ width: `${formation.confidence_score}%` }}
+          />
+        </div>
+      </div>
+    )}
+
+    <div className="flex items-center justify-between pt-3 border-t border-divider">
+      <span className="text-xs text-secondary">Usage</span>
+      <span className="text-sm font-medium text-primary">
+        {formation.usage_count || 0} plays
+      </span>
+    </div>
+  </div>
+);
+
+type FormationLibraryContentProps = {
+  loading: boolean;
+  formations: Formation[];
+};
+
+const FormationLibraryContent: React.FC<FormationLibraryContentProps> = ({
+  loading,
+  formations,
+}) => {
+  if (loading)
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Icon name="loader" size="xl" className="animate-spin text-secondary" />
+      </div>
+    );
+
+  if (formations.length === 0)
+    return (
+      <div className="text-center py-12">
+        <Icon name="grid" size="xl" className="text-secondary mb-4 mx-auto" />
+        <p className="text-secondary text-lg">No formations found</p>
+        <p className="text-tertiary text-sm mt-2">
+          Click "Import from Plays" to get started
+        </p>
+      </div>
+    );
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      {formations.map((formation) => (
+        <FormationCard key={formation.id} formation={formation} />
+      ))}
+    </div>
+  );
+};
+
+const FormationLibraryFooterStats: React.FC<{
+  stats: FormationLibraryStats;
+}> = ({ stats }) => (
+  <div className="border-t border-divider bg-surface-secondary p-4 shadow-inner">
+    <div className="grid grid-cols-4 gap-4 text-center">
+      <div>
+        <div className="text-2xl font-bold text-primary">{stats.total}</div>
+        <div className="text-xs text-secondary">Total Formations</div>
+      </div>
+      <div>
+        <div className="text-2xl font-bold text-primary">
+          {stats.withMetadata}
+        </div>
+        <div className="text-xs text-secondary">With Metadata</div>
+      </div>
+      <div>
+        <div className="text-2xl font-bold text-primary">
+          {stats.linkedPairs}
+        </div>
+        <div className="text-xs text-secondary">Linked Pairs</div>
+      </div>
+      <div>
+        <div className="text-2xl font-bold text-primary">
+          {stats.totalUsage}
+        </div>
+        <div className="text-xs text-secondary">Total Usage</div>
+      </div>
+    </div>
+  </div>
+);
+
 interface FormationLibraryModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -168,248 +439,35 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
 
   if (!isOpen) return null;
 
-  const filteredFormations = formations.filter((f) =>
-    searchQuery
-      ? f.name.toLowerCase().includes(searchQuery.toLowerCase())
-      : true
-  );
-
-  const stats = {
-    total: formations.length,
-    withMetadata: formations.filter(
-      (f) => f.confidence_score && f.confidence_score > 0
-    ).length,
-    linkedPairs: formations.filter((f) => f.opposite_formation_id).length,
-    totalUsage: filteredFormations.reduce(
-      (sum, f) => sum + (f.usage_count || 0),
-      0
-    ),
-  };
+  const filteredFormations = filterFormations(formations, searchQuery);
+  const stats = computeStats(formations, filteredFormations);
 
   return (
     <>
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 animate-fade-in"
-        onClick={onClose}
-      />
+      <FormationLibraryBackdrop onClose={onClose} />
 
       {/* Modal Panel */}
       <div className="fixed top-16 left-1/2 -translate-x-1/2 w-[95vw] md:w-[85vw] lg:w-[75vw] xl:w-[65vw] h-[calc(100vh-5rem)] bg-white dark:bg-navy-900 z-50 shadow-2xl rounded-lg overflow-hidden flex flex-col animate-fade-in">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-jade-600 to-jade-700 p-4 sm:p-6 border-b border-divider shadow-lg">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                <Icon name="grid" size="lg" className="text-white" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-white">
-                  Formation Library
-                </h2>
-                <p className="text-sm text-white/80 mt-1">
-                  Manage formations with intelligent metadata
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={onClose}
-              className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
-            >
-              <Icon name="close" size="lg" className="text-white" />
-            </button>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowCreateModal(true)}
-              className="btn-primary flex items-center gap-2 bg-white text-jade-600 hover:bg-white/90 shadow-md"
-            >
-              <Icon name="plus" size="sm" />
-              Create New
-            </button>
-            <button
-              onClick={handleImportFromPlays}
-              disabled={analyzing}
-              className="btn-secondary flex items-center gap-2 bg-orange-500 text-white border-orange-600 hover:bg-orange-600 disabled:bg-neutral-400 disabled:border-neutral-500 shadow-md"
-            >
-              {analyzing ? (
-                <>
-                  <Icon name="loader" size="sm" className="animate-spin" />
-                  Importing...
-                </>
-              ) : (
-                <>
-                  <Icon name="download" size="sm" />
-                  Import from Plays
-                </>
-              )}
-            </button>
-            <button
-              onClick={handleAnalyze}
-              disabled={analyzing}
-              className="btn-secondary flex items-center gap-2 text-white border-white/30 hover:bg-white/10 disabled:opacity-50"
-            >
-              {analyzing ? (
-                <>
-                  <Icon name="loader" size="sm" className="animate-spin" />
-                  Analyzing...
-                </>
-              ) : (
-                <>
-                  <Icon name="sparkles" size="sm" />
-                  Analyze Plays
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-
-        {/* Search */}
-        <div className="p-4 sm:p-6 border-b border-divider bg-surface-secondary">
-          <div className="relative">
-            <Icon
-              name="search"
-              size="sm"
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-jade-500"
-            />
-            <input
-              type="text"
-              placeholder="Search formations..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="input-field pl-10 focus:ring-2 focus:ring-jade-500/50 focus:border-jade-500"
-            />
-          </div>
-        </div>
+        <FormationLibraryHeader
+          onClose={onClose}
+          analyzing={analyzing}
+          onCreateNew={() => setShowCreateModal(true)}
+          onImportFromPlays={handleImportFromPlays}
+          onAnalyze={handleAnalyze}
+        />
+        <FormationLibrarySearch
+          searchQuery={searchQuery}
+          onChangeSearchQuery={setSearchQuery}
+        />
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6 bg-white dark:bg-navy-900">
-          {(() => {
-            if (loading)
-              return (
-                <div className="flex items-center justify-center h-64">
-                  <Icon
-                    name="loader"
-                    size="xl"
-                    className="animate-spin text-secondary"
-                  />
-                </div>
-              );
-            if (filteredFormations.length === 0)
-              return (
-                <div className="text-center py-12">
-                  <Icon
-                    name="grid"
-                    size="xl"
-                    className="text-secondary mb-4 mx-auto"
-                  />
-                  <p className="text-secondary text-lg">No formations found</p>
-                  <p className="text-tertiary text-sm mt-2">
-                    Click "Import from Plays" to get started
-                  </p>
-                </div>
-              );
-            return (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                {filteredFormations.map((formation) => (
-                  <div
-                    key={formation.id}
-                    className="card p-5 hover:shadow-xl hover:border-jade-500/30 hover:-translate-y-0.5 transition-all duration-200"
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <h3 className="text-lg font-semibold text-primary">
-                        {formation.name}
-                      </h3>
-                      {formation.opposite_formation_id && (
-                        <span className="badge-info text-xs">Paired</span>
-                      )}
-                    </div>
-
-                    {formation.run_strength || formation.pass_strength ? (
-                      <div className="space-y-2 mb-3">
-                        {formation.run_strength && (
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-secondary">Run:</span>
-                            <span className="text-primary font-medium">
-                              {formation.run_strength}
-                            </span>
-                          </div>
-                        )}
-                        {formation.pass_strength && (
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-secondary">Pass:</span>
-                            <span className="text-primary font-medium">
-                              {formation.pass_strength}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    ) : null}
-
-                    {formation.confidence_score !== null &&
-                      formation.confidence_score > 0 && (
-                        <div className="mb-3">
-                          <div className="flex items-center justify-between text-xs mb-1">
-                            <span className="text-secondary">Confidence</span>
-                            <span className="text-primary font-medium">
-                              {formation.confidence_score}%
-                            </span>
-                          </div>
-                          <div className="w-full bg-surface-muted rounded-full h-2">
-                            <div
-                              className="h-2 rounded-full bg-gradient-to-r from-jade-500 to-jade-600"
-                              style={{
-                                width: `${formation.confidence_score}%`,
-                              }}
-                            />
-                          </div>
-                        </div>
-                      )}
-
-                    <div className="flex items-center justify-between pt-3 border-t border-divider">
-                      <span className="text-xs text-secondary">Usage</span>
-                      <span className="text-sm font-medium text-primary">
-                        {formation.usage_count || 0} plays
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            );
-          })()}
+          <FormationLibraryContent
+            loading={loading}
+            formations={filteredFormations}
+          />
         </div>
-
-        {/* Footer Stats */}
-        <div className="border-t border-divider bg-surface-secondary p-4 shadow-inner">
-          <div className="grid grid-cols-4 gap-4 text-center">
-            <div>
-              <div className="text-2xl font-bold text-primary">
-                {stats.total}
-              </div>
-              <div className="text-xs text-secondary">Total Formations</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-primary">
-                {stats.withMetadata}
-              </div>
-              <div className="text-xs text-secondary">With Metadata</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-primary">
-                {stats.linkedPairs}
-              </div>
-              <div className="text-xs text-secondary">Linked Pairs</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-primary">
-                {stats.totalUsage}
-              </div>
-              <div className="text-xs text-secondary">Total Usage</div>
-            </div>
-          </div>
-        </div>
+        <FormationLibraryFooterStats stats={stats} />
       </div>
 
       {/* Create Formation Modal */}

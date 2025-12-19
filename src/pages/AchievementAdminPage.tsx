@@ -88,6 +88,376 @@ const triggerTargetOptions = [
   { value: "achievements_earned", label: "Achievements Earned" },
 ];
 
+const getRarityColor = (rarity: string): BadgeVariant => {
+  if (rarity === "common") return "neutral";
+  if (rarity === "uncommon") return "info";
+  if (rarity === "rare") return "success";
+  if (rarity === "epic") return "warning";
+  if (rarity === "legendary") return "accent";
+  return "neutral";
+};
+
+const buildAchievementCriteria = (formData: AchievementFormData) => ({
+  trigger_type: formData.trigger_type,
+  trigger_target: formData.trigger_target,
+  trigger_count: formData.trigger_count,
+  rarity: formData.rarity,
+});
+
+const buildInsertRow = (formData: AchievementFormData) => ({
+  name: formData.name,
+  description: formData.description || null,
+  icon: formData.icon || null,
+  category: formData.category,
+  points: formData.points,
+  is_active: true,
+  criteria: buildAchievementCriteria(formData),
+});
+
+const buildUpdateRow = (formData: AchievementFormData) => ({
+  name: formData.name,
+  description: formData.description || null,
+  icon: formData.icon || null,
+  category: formData.category,
+  points: formData.points,
+  criteria: buildAchievementCriteria(formData),
+});
+
+const fetchAchievements = async () => {
+  const { data, error } = await supabase
+    .from("achievement_definitions")
+    .select("*")
+    .order("category", { ascending: true });
+
+  if (error) throw error;
+  return (data || []) as AchievementDefinition[];
+};
+
+const insertAchievement = async (formData: AchievementFormData) => {
+  const insertRow = buildInsertRow(formData);
+
+  const { data, error } = await supabase
+    .from("achievement_definitions")
+    .insert([insertRow] as any)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data as AchievementDefinition;
+};
+
+const updateAchievement = async (params: {
+  id: string;
+  formData: AchievementFormData;
+}) => {
+  const { id, formData } = params;
+  const updateRow = buildUpdateRow(formData);
+
+  const { data, error } = await supabase
+    .from("achievement_definitions")
+    .update(updateRow as any)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data as AchievementDefinition;
+};
+
+const deleteAchievement = async (id: string) => {
+  const { error } = await supabase
+    .from("achievement_definitions")
+    .delete()
+    .eq("id", id);
+
+  if (error) throw error;
+};
+
+const parseUploadedAchievements = async (file: File) => {
+  const text = await file.text();
+
+  if (file.name.endsWith(".csv")) {
+    const lines = text.split("\n").filter((line) => line.trim());
+    const headers = lines[0].split(",").map((h) => h.trim().replace(/"/g, ""));
+
+    return lines.slice(1).map((line) => {
+      const values = line.split(",").map((v) => v.trim().replace(/"/g, ""));
+      const obj: Record<string, string> = {};
+      headers.forEach((header, index) => {
+        obj[header] = values[index];
+      });
+      return obj as unknown as AchievementFormData;
+    });
+  }
+
+  if (file.name.endsWith(".json")) {
+    return JSON.parse(text) as AchievementFormData[];
+  }
+
+  return null;
+};
+
+interface AchievementAdminToolbarProps {
+  onUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onCreate: () => void;
+}
+
+const AchievementAdminToolbar: React.FC<AchievementAdminToolbarProps> = ({
+  onUpload,
+  onCreate,
+}) => {
+  return (
+    <div className="flex justify-between items-center mb-8">
+      <div>
+        <h1 className="text-3xl font-bold text-primary">
+          Achievement Management
+        </h1>
+        <p className="text-secondary mt-2">
+          Create and manage Xbox-style achievements for your users
+        </p>
+      </div>
+      <div className="flex gap-4">
+        <label className="inline-flex items-center px-4 py-2 border border-secondary rounded-lg shadow-sm text-sm font-medium text-secondary bg-primary hover:bg-secondary cursor-pointer">
+          <Icon name="upload" className="w-4 h-4 mr-2" />
+          Upload CSV/JSON
+          <input
+            type="file"
+            accept=".csv,.json"
+            onChange={onUpload}
+            className="hidden"
+          />
+        </label>
+        <Button onClick={onCreate}>
+          <Icon name="plus" className="w-4 h-4 mr-2" />
+          Create Achievement
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+interface AchievementGridProps {
+  achievements: AchievementDefinition[];
+  onEdit: (achievement: AchievementDefinition) => void;
+  onDelete: (id: string) => void;
+}
+
+const AchievementGrid: React.FC<AchievementGridProps> = ({
+  achievements,
+  onEdit,
+  onDelete,
+}) => {
+  return (
+    <div className="grid-dashboard">
+      {achievements.map((achievement) => {
+        const criteria = (achievement.criteria ?? {}) as any;
+        const rarity = (criteria.rarity ?? "common") as AchievementRarity;
+        const triggerTarget = String(criteria.trigger_target ?? "");
+        const triggerCount = Number(criteria.trigger_count ?? 1);
+
+        return (
+          <Card key={achievement.id} className="p-6">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center">
+                <Icon
+                  name={(achievement.icon ?? "trophy") as any}
+                  className="w-8 h-8 text-jade-600 mr-3"
+                />
+                <div>
+                  <h3 className="font-semibold text-lg">{achievement.name}</h3>
+                  <Badge variant={getRarityColor(rarity)} className="mt-1">
+                    {rarity}
+                  </Badge>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onEdit(achievement)}
+                >
+                  <Icon name="edit" className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onDelete(achievement.id)}
+                  className="text-error hover:text-error"
+                >
+                  <Icon name="delete" className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+
+            <p className="text-secondary text-sm mb-4">
+              {achievement.description ?? ""}
+            </p>
+
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted">Category:</span>
+                <Badge variant="neutral">{achievement.category ?? ""}</Badge>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted">Trigger:</span>
+                <span>
+                  {triggerTarget} ({triggerCount})
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted">Points:</span>
+                <span className="font-semibold text-jade-600">
+                  {achievement.points ?? 0}
+                </span>
+              </div>
+            </div>
+          </Card>
+        );
+      })}
+    </div>
+  );
+};
+
+interface AchievementEditorModalProps {
+  isOpen: boolean;
+  editingAchievement: AchievementDefinition | null;
+  formData: AchievementFormData;
+  saving: boolean;
+  onClose: () => void;
+  onSubmit: () => void;
+  setFormData: React.Dispatch<React.SetStateAction<AchievementFormData>>;
+}
+
+const AchievementEditorModal: React.FC<AchievementEditorModalProps> = ({
+  isOpen,
+  editingAchievement,
+  formData,
+  saving,
+  onClose,
+  onSubmit,
+  setFormData,
+}) => {
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={editingAchievement ? "Edit Achievement" : "Create Achievement"}
+    >
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <Input
+            label="Name"
+            value={formData.name}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, name: e.target.value }))
+            }
+            placeholder="Achievement name"
+          />
+          <Input
+            label="Icon"
+            value={formData.icon}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, icon: e.target.value }))
+            }
+            placeholder="trophy"
+          />
+        </div>
+
+        <Input
+          label="Description"
+          value={formData.description}
+          onChange={(e) =>
+            setFormData((prev) => ({ ...prev, description: e.target.value }))
+          }
+          placeholder="Achievement description"
+        />
+
+        <div className="grid grid-cols-2 gap-4">
+          <Dropdown
+            label="Category"
+            value={formData.category}
+            onChange={(value) =>
+              setFormData((prev) => ({ ...prev, category: value as any }))
+            }
+            options={categoryOptions}
+          />
+          <Dropdown
+            label="Rarity"
+            value={formData.rarity}
+            onChange={(value) =>
+              setFormData((prev) => ({ ...prev, rarity: value as any }))
+            }
+            options={rarityOptions}
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <Dropdown
+            label="Trigger Type"
+            value={formData.trigger_type}
+            onChange={(value) =>
+              setFormData((prev) => ({
+                ...prev,
+                trigger_type: value as any,
+              }))
+            }
+            options={triggerTypeOptions}
+          />
+          <Dropdown
+            label="Trigger Target"
+            value={formData.trigger_target}
+            onChange={(value) =>
+              setFormData((prev) => ({
+                ...prev,
+                trigger_target: value,
+              }))
+            }
+            options={triggerTargetOptions}
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <Input
+            label="Trigger Count"
+            type="number"
+            value={formData.trigger_count.toString()}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                trigger_count: parseInt(e.target.value) || 1,
+              }))
+            }
+          />
+          <Input
+            label="Points"
+            type="number"
+            value={formData.points.toString()}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                points: parseInt(e.target.value) || 10,
+              }))
+            }
+          />
+        </div>
+
+        <div className="flex justify-end gap-4 pt-4">
+          <Button variant="outline" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button onClick={onSubmit} disabled={saving}>
+            {(() => {
+              if (saving) return "Saving...";
+              if (editingAchievement) return "Update";
+              return "Create";
+            })()}
+          </Button>
+        </div>
+      </div>
+    </Modal>
+  );
+};
+
 export const AchievementAdminPage: React.FC = () => {
   const toast = useToast();
   const [achievements, setAchievements] = useState<AchievementDefinition[]>([]);
@@ -107,13 +477,8 @@ export const AchievementAdminPage: React.FC = () => {
 
   const loadAchievements = async () => {
     try {
-      const { data, error } = await supabase
-        .from("achievement_definitions")
-        .select("*")
-        .order("category", { ascending: true });
-
-      if (error) throw error;
-      setAchievements(data || []);
+      const data = await fetchAchievements();
+      setAchievements(data);
     } catch (error) {
       logError("Error loading achievements:", error);
     } finally {
@@ -124,30 +489,8 @@ export const AchievementAdminPage: React.FC = () => {
   const handleCreate = async () => {
     setSaving(true);
     try {
-      const insertRow = {
-        name: formData.name,
-        description: formData.description || null,
-        icon: formData.icon || null,
-        category: formData.category,
-        points: formData.points,
-        is_active: true,
-        criteria: {
-          trigger_type: formData.trigger_type,
-          trigger_target: formData.trigger_target,
-          trigger_count: formData.trigger_count,
-          rarity: formData.rarity,
-        },
-      };
-
-      const { data, error } = await supabase
-        .from("achievement_definitions")
-        .insert([insertRow] as any)
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      setAchievements((prev) => [...prev, data]);
+      const created = await insertAchievement(formData);
+      setAchievements((prev) => [...prev, created]);
       setShowCreateModal(false);
       setFormData(defaultFormData);
     } catch (error) {
@@ -162,31 +505,12 @@ export const AchievementAdminPage: React.FC = () => {
 
     setSaving(true);
     try {
-      const updateRow = {
-        name: formData.name,
-        description: formData.description || null,
-        icon: formData.icon || null,
-        category: formData.category,
-        points: formData.points,
-        criteria: {
-          trigger_type: formData.trigger_type,
-          trigger_target: formData.trigger_target,
-          trigger_count: formData.trigger_count,
-          rarity: formData.rarity,
-        },
-      };
-
-      const { data, error } = await supabase
-        .from("achievement_definitions")
-        .update(updateRow as any)
-        .eq("id", editingAchievement.id)
-        .select()
-        .single();
-
-      if (error) throw error;
-
+      const updated = await updateAchievement({
+        id: editingAchievement.id,
+        formData,
+      });
       setAchievements((prev) =>
-        prev.map((a) => (a.id === editingAchievement.id ? data : a))
+        prev.map((a) => (a.id === editingAchievement.id ? updated : a))
       );
       setEditingAchievement(null);
       setFormData(defaultFormData);
@@ -206,13 +530,7 @@ export const AchievementAdminPage: React.FC = () => {
     if (!deleteId) return;
 
     try {
-      const { error } = await supabase
-        .from("achievement_definitions")
-        .delete()
-        .eq("id", deleteId);
-
-      if (error) throw error;
-
+      await deleteAchievement(deleteId);
       setAchievements((prev) => prev.filter((a) => a.id !== deleteId));
       toast.success("Achievement deleted successfully");
     } catch (error) {
@@ -249,48 +567,13 @@ export const AchievementAdminPage: React.FC = () => {
     if (!file) return;
 
     try {
-      const text = await file.text();
-      let data: AchievementFormData[];
-
-      if (file.name.endsWith(".csv")) {
-        // Parse CSV
-        const lines = text.split("\n").filter((line) => line.trim());
-        const headers = lines[0]
-          .split(",")
-          .map((h) => h.trim().replace(/"/g, ""));
-
-        data = lines.slice(1).map((line) => {
-          const values = line.split(",").map((v) => v.trim().replace(/"/g, ""));
-          const obj: any = {};
-          headers.forEach((header, index) => {
-            obj[header] = values[index];
-          });
-          return obj as AchievementFormData;
-        });
-      } else if (file.name.endsWith(".json")) {
-        // Parse JSON
-        data = JSON.parse(text);
-      } else {
+      const parsed = await parseUploadedAchievements(file);
+      if (!parsed) {
         toast.error("Please upload a CSV or JSON file");
         return;
       }
 
-      // Insert achievements
-      const rows = data.map((d) => ({
-        name: d.name,
-        description: d.description || null,
-        icon: d.icon || null,
-        category: d.category,
-        points: d.points,
-        is_active: true,
-        criteria: {
-          trigger_type: d.trigger_type,
-          trigger_target: d.trigger_target,
-          trigger_count: d.trigger_count,
-          rarity: d.rarity,
-        },
-      }));
-
+      const rows = parsed.map(buildInsertRow);
       const { data: inserted, error } = await supabase
         .from("achievement_definitions")
         .insert(rows as any)
@@ -310,15 +593,6 @@ export const AchievementAdminPage: React.FC = () => {
     }
   };
 
-  const getRarityColor = (rarity: string): BadgeVariant => {
-    if (rarity === "common") return "neutral";
-    if (rarity === "uncommon") return "info";
-    if (rarity === "rare") return "success";
-    if (rarity === "epic") return "warning";
-    if (rarity === "legendary") return "accent";
-    return "neutral";
-  };
-
   if (loading) {
     return (
       <LoadingScreen
@@ -330,233 +604,30 @@ export const AchievementAdminPage: React.FC = () => {
 
   return (
     <div className="container-page container-padding">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-primary">
-            Achievement Management
-          </h1>
-          <p className="text-secondary mt-2">
-            Create and manage Xbox-style achievements for your users
-          </p>
-        </div>
-        <div className="flex gap-4">
-          <label className="inline-flex items-center px-4 py-2 border border-secondary rounded-lg shadow-sm text-sm font-medium text-secondary bg-primary hover:bg-secondary cursor-pointer">
-            <Icon name="upload" className="w-4 h-4 mr-2" />
-            Upload CSV/JSON
-            <input
-              type="file"
-              accept=".csv,.json"
-              onChange={handleBulkUpload}
-              className="hidden"
-            />
-          </label>
-          <Button onClick={() => setShowCreateModal(true)}>
-            <Icon name="plus" className="w-4 h-4 mr-2" />
-            Create Achievement
-          </Button>
-        </div>
-      </div>
+      <AchievementAdminToolbar
+        onUpload={handleBulkUpload}
+        onCreate={() => setShowCreateModal(true)}
+      />
 
-      {/* Achievement Grid */}
-      <div className="grid-dashboard">
-        {achievements.map((achievement) => {
-          const criteria = (achievement.criteria ?? {}) as any;
-          const rarity = (criteria.rarity ?? "common") as AchievementRarity;
-          const triggerTarget = String(criteria.trigger_target ?? "");
-          const triggerCount = Number(criteria.trigger_count ?? 1);
+      <AchievementGrid
+        achievements={achievements}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
 
-          return (
-            <Card key={achievement.id} className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center">
-                  <Icon
-                    name={(achievement.icon ?? "trophy") as any}
-                    className="w-8 h-8 text-jade-600 mr-3"
-                  />
-                  <div>
-                    <h3 className="font-semibold text-lg">
-                      {achievement.name}
-                    </h3>
-                    <Badge variant={getRarityColor(rarity)} className="mt-1">
-                      {rarity}
-                    </Badge>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleEdit(achievement)}
-                  >
-                    <Icon name="edit" className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDelete(achievement.id)}
-                    className="text-error hover:text-error"
-                  >
-                    <Icon name="delete" className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-
-              <p className="text-secondary text-sm mb-4">
-                {achievement.description ?? ""}
-              </p>
-
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted">Category:</span>
-                  <Badge variant="neutral">{achievement.category ?? ""}</Badge>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted">Trigger:</span>
-                  <span>
-                    {triggerTarget} ({triggerCount})
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted">Points:</span>
-                  <span className="font-semibold text-jade-600">
-                    {achievement.points ?? 0}
-                  </span>
-                </div>
-              </div>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* Create/Edit Modal */}
-      <Modal
+      <AchievementEditorModal
         isOpen={showCreateModal || !!editingAchievement}
+        editingAchievement={editingAchievement}
+        formData={formData}
+        saving={saving}
+        setFormData={setFormData}
         onClose={() => {
           setShowCreateModal(false);
           setEditingAchievement(null);
           setFormData(defaultFormData);
         }}
-        title={editingAchievement ? "Edit Achievement" : "Create Achievement"}
-      >
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="Name"
-              value={formData.name}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, name: e.target.value }))
-              }
-              placeholder="Achievement name"
-            />
-            <Input
-              label="Icon"
-              value={formData.icon}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, icon: e.target.value }))
-              }
-              placeholder="trophy"
-            />
-          </div>
-
-          <Input
-            label="Description"
-            value={formData.description}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, description: e.target.value }))
-            }
-            placeholder="Achievement description"
-          />
-
-          <div className="grid grid-cols-2 gap-4">
-            <Dropdown
-              label="Category"
-              value={formData.category}
-              onChange={(value) =>
-                setFormData((prev) => ({ ...prev, category: value as any }))
-              }
-              options={categoryOptions}
-            />
-            <Dropdown
-              label="Rarity"
-              value={formData.rarity}
-              onChange={(value) =>
-                setFormData((prev) => ({ ...prev, rarity: value as any }))
-              }
-              options={rarityOptions}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <Dropdown
-              label="Trigger Type"
-              value={formData.trigger_type}
-              onChange={(value) =>
-                setFormData((prev) => ({ ...prev, trigger_type: value as any }))
-              }
-              options={triggerTypeOptions}
-            />
-            <Dropdown
-              label="Trigger Target"
-              value={formData.trigger_target}
-              onChange={(value) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  trigger_target: value,
-                }))
-              }
-              options={triggerTargetOptions}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="Trigger Count"
-              type="number"
-              value={formData.trigger_count.toString()}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  trigger_count: parseInt(e.target.value) || 1,
-                }))
-              }
-            />
-            <Input
-              label="Points"
-              type="number"
-              value={formData.points.toString()}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  points: parseInt(e.target.value) || 10,
-                }))
-              }
-            />
-          </div>
-
-          <div className="flex justify-end gap-4 pt-4">
-            <Button
-              variant="outline"
-              onClick={() => {
-                setShowCreateModal(false);
-                setEditingAchievement(null);
-                setFormData(defaultFormData);
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={editingAchievement ? handleUpdate : handleCreate}
-              disabled={saving}
-            >
-              {(() => {
-                if (saving) return "Saving...";
-                if (editingAchievement) return "Update";
-                return "Create";
-              })()}
-            </Button>
-          </div>
-        </div>
-      </Modal>
+        onSubmit={editingAchievement ? handleUpdate : handleCreate}
+      />
 
       {/* Delete Confirmation Modal */}
       <ConfirmationModal

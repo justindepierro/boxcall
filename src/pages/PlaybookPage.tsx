@@ -17,6 +17,7 @@ import {
 import { MobilePlaybookView } from "../components/playbook/page/MobilePlaybookView";
 import { DesktopPlaybookView } from "../components/playbook/page/DesktopPlaybookView";
 import { useModalManager } from "../hooks/useModalManager";
+import type { ModalOptions, ModalType } from "../hooks/useModalManager";
 import { FullscreenDiagramViewer } from "../components/playbook/play-card/FullscreenDiagramViewer";
 import { FormationLibraryModal } from "../components/playbook/modals/FormationLibraryModal";
 import { PersonnelLibraryModal } from "../components/playbook/modals/PersonnelLibraryModal";
@@ -44,6 +45,611 @@ const PracticeScriptModal = React.lazy(() =>
   }))
 );
 
+type MobileButtonSize = "sm" | "md" | "lg";
+
+function normalizeMobileButtonSize(
+  size: unknown,
+  fallback: MobileButtonSize
+): MobileButtonSize {
+  return size === "sm" || size === "md" || size === "lg" ? size : fallback;
+}
+
+function buildExistingPlaysForModals(
+  allPlaysForStats: unknown[],
+  activePlaybookId: string | null
+): Play[] {
+  return allPlaysForStats.map((play) => {
+    const rawPlay = play as any;
+
+    const rawDiagram = rawPlay.diagram_data;
+    const diagram_data: Play["diagram_data"] = (() => {
+      if (typeof rawDiagram === "string") {
+        try {
+          const parsed = JSON.parse(rawDiagram);
+          return Array.isArray(parsed)
+            ? (parsed as unknown as Play["diagram_data"])
+            : null;
+        } catch {
+          return null;
+        }
+      }
+      return Array.isArray(rawDiagram)
+        ? (rawDiagram as unknown as Play["diagram_data"])
+        : null;
+    })();
+
+    return {
+      ...rawPlay,
+      playbook_id: String(rawPlay.playbook_id ?? activePlaybookId ?? ""),
+      confidence_base: rawPlay.confidence_base ?? 3,
+      times_called: rawPlay.times_called ?? 0,
+      times_successful: rawPlay.times_successful ?? 0,
+      created_by: String(rawPlay.created_by ?? ""),
+      created_at: new Date(rawPlay.created_at ?? Date.now()),
+      updated_at: new Date(rawPlay.updated_at ?? Date.now()),
+      diagram_data,
+    } as Play;
+  });
+}
+
+function PlaybookPageHeader({
+  state,
+  teamPlaybooks,
+  activePlaybookId,
+  activeTeamId,
+  refreshData,
+  openModal,
+  navigate,
+  dispatch,
+  handlePlaybookChange,
+  handlers,
+}: {
+  state: any;
+  teamPlaybooks: any[];
+  activePlaybookId: string | null;
+  activeTeamId: string;
+  refreshData: () => void;
+  openModal: (type: Exclude<ModalType, null>, options?: ModalOptions) => void;
+  navigate: (path: string) => void;
+  dispatch: React.Dispatch<any>;
+  handlePlaybookChange: (id: string) => void;
+  handlers: any;
+}) {
+  return (
+    <PlaybookViewTabs
+      currentView={state.currentView}
+      onViewChange={handlers.handleViewChange}
+      currentTeamType={state.currentTeamType}
+      onTeamTypeChange={handlers.handleTeamTypeChange}
+      onOpenSettings={handlers.handleOpenSettings}
+      onOpenBuilder={handlers.handleOpenBuilder}
+      onOpenPersonnel={handlers.handleOpenPersonnel}
+      onOpenHealth={() => openModal("playbookHealth")}
+      onNavigate={(path) => {
+        if (path === "/playbook/formations") {
+          openModal("formationLibrary");
+        } else if (path === "/playbook/personnel") {
+          openModal("personnelLibrary");
+        } else {
+          navigate(path);
+        }
+      }}
+      title="Playbook"
+      playsCreated={state.playsCreated}
+      diagramCoverage={state.diagramCoverage}
+      streakDays={state.streakDays}
+      playbooks={teamPlaybooks}
+      activePlaybookId={activePlaybookId ?? undefined}
+      onPlaybookChange={handlePlaybookChange}
+      onPlaybookUpdated={refreshData}
+      teamId={activeTeamId || ""}
+      onCSVImportComplete={() => {
+        refreshData();
+        dispatch({ type: "INCREMENT_REFRESH" });
+      }}
+    />
+  );
+}
+
+function PlaybookMainView({
+  isMobileOrTablet,
+  state,
+  mobileListExpanded,
+  isModalOpen,
+  openModal,
+  closeModal,
+  activeTeamId,
+  teamsDataLoading,
+  debouncedSearchQuery,
+  optimisticPlays,
+  formationAudit,
+  formationAuditSummary,
+  setMobileListExpanded,
+  handlers,
+  handleSavePlay,
+  handleEnterFullscreen,
+  dispatch,
+  navigate,
+  mobileButtonSize,
+  mobileSecondaryButtonSize,
+  playbookStats,
+  suggestions,
+}: {
+  isMobileOrTablet: boolean;
+  state: any;
+  mobileListExpanded: boolean;
+  isModalOpen: (type: Exclude<ModalType, null>) => boolean;
+  openModal: (type: Exclude<ModalType, null>, options?: ModalOptions) => void;
+  closeModal: () => void;
+  activeTeamId: string | null;
+  teamsDataLoading: boolean;
+  debouncedSearchQuery: string;
+  optimisticPlays: any[];
+  formationAudit: any;
+  formationAuditSummary: any;
+  setMobileListExpanded: (expanded: boolean) => void;
+  handlers: any;
+  handleSavePlay: any;
+  handleEnterFullscreen: any;
+  dispatch: React.Dispatch<any>;
+  navigate: any;
+  mobileButtonSize: "sm" | "md" | "lg";
+  mobileSecondaryButtonSize: "sm" | "md" | "lg";
+  playbookStats: any;
+  suggestions: any;
+}) {
+  if (isMobileOrTablet) {
+    return (
+      <MobilePlaybookView
+        state={state}
+        mobileListExpanded={mobileListExpanded}
+        showFiltersSheet={isModalOpen("filtersSheet")}
+        showStatsSheet={isModalOpen("statsSheet")}
+        activeTeamId={activeTeamId}
+        isLoadingPlays={teamsDataLoading}
+        debouncedSearchQuery={debouncedSearchQuery}
+        optimisticPlays={optimisticPlays}
+        formationAudit={formationAudit}
+        formationAuditSummary={formationAuditSummary}
+        setMobileListExpanded={setMobileListExpanded}
+        setShowFiltersSheet={(show) =>
+          show ? openModal("filtersSheet") : closeModal()
+        }
+        setShowStatsSheet={(show) =>
+          show ? openModal("statsSheet") : closeModal()
+        }
+        handleOpenQuickCreate={handlers.handleOpenQuickCreate}
+        handleOpenPersonnel={handlers.handleOpenPersonnel}
+        handleOpenSettings={handlers.handleOpenSettings}
+        handleEditPlay={handlers.handleEditPlay}
+        handleQuickNewPracticeScript={handlers.handleQuickNewPracticeScript}
+        handleQuickNewGamePlan={handlers.handleQuickNewGamePlan}
+        handleOpenKeyboardShortcuts={handlers.handleOpenKeyboardShortcuts}
+        handlePullRefresh={handlers.handlePullRefresh}
+        handleSavePlay={handleSavePlay}
+        handleDuplicatePlay={handlers.handleDuplicatePlay}
+        handleOpenBuilder={handlers.handleOpenBuilder}
+        handleOpenAssignments={handlers.handleOpenAssignments}
+        handlePostToTeamBulletin={handlers.handlePostToTeamBulletin}
+        handleAddToPracticeScript={handlers.handleAddToPracticeScript}
+        handleAddToGamePlan={handlers.handleAddToGamePlan}
+        handlePlayCountChange={handlers.handlePlayCountChange}
+        handleViewChange={handlers.handleViewChange}
+        handleOpenPracticeScriptBuilder={
+          handlers.handleOpenPracticeScriptBuilder
+        }
+        dispatch={dispatch}
+        navigate={navigate}
+        mobileButtonSize={mobileButtonSize}
+        mobileSecondaryButtonSize={mobileSecondaryButtonSize}
+        suggestions={suggestions}
+      />
+    );
+  }
+
+  return (
+    <DesktopPlaybookView
+      state={state}
+      debouncedSearchQuery={debouncedSearchQuery}
+      optimisticPlays={optimisticPlays}
+      formationAudit={formationAudit}
+      playbookStats={playbookStats}
+      activeTeamId={activeTeamId}
+      handleEditPlay={handlers.handleEditPlay}
+      handleSavePlay={handleSavePlay}
+      handleOpenBuilder={handlers.handleOpenBuilder}
+      handleQuickNewGamePlan={handlers.handleQuickNewGamePlan}
+      handleDuplicatePlay={handlers.handleDuplicatePlay}
+      handleOpenAssignments={handlers.handleOpenAssignments}
+      handlePostToTeamBulletin={handlers.handlePostToTeamBulletin}
+      handleAddToPracticeScript={handlers.handleAddToPracticeScript}
+      handleAddToGamePlan={handlers.handleAddToGamePlan}
+      handlePlayCountChange={handlers.handlePlayCountChange}
+      handleOpenPracticeScriptBuilder={handlers.handleOpenPracticeScriptBuilder}
+      handleFiltersChange={handlers.handleFiltersChange}
+      handleClearSelection={handlers.handleClearSelection}
+      handleBulkAction={handlers.handleBulkAction}
+      handleEnterFullscreen={handleEnterFullscreen}
+      dispatch={dispatch}
+      navigate={navigate}
+      suggestions={suggestions}
+      mobileButtonSize={mobileButtonSize}
+    />
+  );
+}
+
+function PracticeScriptModalLoader({
+  show,
+  editingScript,
+  onClose,
+  onSave,
+}: {
+  show: boolean;
+  editingScript: any;
+  onClose: () => void;
+  onSave: (script: unknown) => void;
+}) {
+  if (!show) return null;
+
+  return (
+    <React.Suspense
+      fallback={
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-modal">
+          <div className="text-white">Loading...</div>
+        </div>
+      }
+    >
+      <PracticeScriptModal
+        editingScript={editingScript ?? undefined}
+        onClose={onClose}
+        onSave={onSave}
+      />
+    </React.Suspense>
+  );
+}
+
+function PlaybookPageView({
+  state,
+  dispatch,
+  navigate,
+  activeTeamId,
+  isMobileOrTablet,
+  teamPlaybooks,
+  activePlaybookId,
+  refreshData,
+  handlePlaybookChange,
+  handlers,
+  isModalOpen,
+  openModal,
+  closeModal,
+  teamsDataLoading,
+  debouncedSearchQuery,
+  optimisticPlays,
+  formationAudit,
+  formationAuditSummary,
+  mobileListExpanded,
+  setMobileListExpanded,
+  handleSavePlay,
+  handleEnterFullscreen,
+  playbookStats,
+  suggestions,
+  diagramPlay,
+  diagramMode,
+  assignmentsPlay,
+  editingScript,
+  playToPost,
+  setDiagramPlay,
+  setAssignmentsPlay,
+  setEditingScript,
+  setPlayToPost,
+  selectedPlaysForPractice,
+  setSelectedPlaysForPractice,
+  existingPlays,
+  handleCreatePlay,
+  fullscreenPlayIndex,
+  fullscreenPlays,
+  handleExitFullscreen,
+  showPracticeScriptModal,
+  setShowPracticeScriptModal,
+  handleSavePracticeScript,
+  showBulkDeleteConfirm,
+  setShowBulkDeleteConfirm,
+  mobileButtonSize,
+  mobileSecondaryButtonSize,
+}: {
+  state: any;
+  dispatch: React.Dispatch<any>;
+  navigate: (path: string) => void;
+  activeTeamId: string | null;
+  isMobileOrTablet: boolean;
+  teamPlaybooks: any[];
+  activePlaybookId: string | null;
+  refreshData: () => void;
+  handlePlaybookChange: (id: string) => void;
+  handlers: any;
+  isModalOpen: (type: Exclude<ModalType, null>) => boolean;
+  openModal: (type: Exclude<ModalType, null>, options?: ModalOptions) => void;
+  closeModal: () => void;
+  teamsDataLoading: boolean;
+  debouncedSearchQuery: string;
+  optimisticPlays: any[];
+  formationAudit: any;
+  formationAuditSummary: any;
+  mobileListExpanded: boolean;
+  setMobileListExpanded: (expanded: boolean) => void;
+  handleSavePlay: any;
+  handleEnterFullscreen: any;
+  playbookStats: any;
+  suggestions: any;
+  diagramPlay: any;
+  diagramMode: any;
+  assignmentsPlay: any;
+  editingScript: any;
+  playToPost: any;
+  setDiagramPlay: (play: any) => void;
+  setAssignmentsPlay: (play: any) => void;
+  setEditingScript: (script: any) => void;
+  setPlayToPost: (play: any) => void;
+  selectedPlaysForPractice: any;
+  setSelectedPlaysForPractice: (plays: any) => void;
+  existingPlays: Play[];
+  handleCreatePlay: any;
+  fullscreenPlayIndex: number | null;
+  fullscreenPlays: any[];
+  handleExitFullscreen: () => void;
+  showPracticeScriptModal: boolean;
+  setShowPracticeScriptModal: (show: boolean) => void;
+  handleSavePracticeScript: (script: any) => Promise<void>;
+  showBulkDeleteConfirm: boolean;
+  setShowBulkDeleteConfirm: (show: boolean) => void;
+  mobileButtonSize: MobileButtonSize;
+  mobileSecondaryButtonSize: MobileButtonSize;
+}) {
+  return (
+    <div className="min-h-screen">
+      {/* Unified Header with Navigation */}
+      <PlaybookPageHeader
+        state={state}
+        teamPlaybooks={teamPlaybooks}
+        activePlaybookId={activePlaybookId}
+        activeTeamId={activeTeamId || ""}
+        refreshData={refreshData}
+        openModal={openModal}
+        navigate={navigate}
+        dispatch={dispatch}
+        handlePlaybookChange={handlePlaybookChange}
+        handlers={handlers}
+      />
+
+      {/* Mobile/Tablet-First Layout */}
+      <PlaybookMainView
+        isMobileOrTablet={isMobileOrTablet}
+        state={state}
+        mobileListExpanded={mobileListExpanded}
+        isModalOpen={isModalOpen}
+        openModal={openModal}
+        closeModal={closeModal}
+        activeTeamId={activeTeamId}
+        teamsDataLoading={teamsDataLoading}
+        debouncedSearchQuery={debouncedSearchQuery}
+        optimisticPlays={optimisticPlays}
+        formationAudit={formationAudit}
+        formationAuditSummary={formationAuditSummary}
+        setMobileListExpanded={setMobileListExpanded}
+        handlers={handlers}
+        handleSavePlay={handleSavePlay}
+        handleEnterFullscreen={handleEnterFullscreen}
+        dispatch={dispatch}
+        navigate={navigate}
+        mobileButtonSize={mobileButtonSize}
+        mobileSecondaryButtonSize={mobileSecondaryButtonSize}
+        playbookStats={playbookStats}
+        suggestions={suggestions}
+      />
+
+      <PlaybookPageOverlays
+        state={state}
+        dispatch={dispatch}
+        isMobileOrTablet={isMobileOrTablet}
+        isModalOpen={isModalOpen}
+        closeModal={closeModal}
+        handlers={handlers}
+        diagramPlay={diagramPlay}
+        diagramMode={diagramMode}
+        assignmentsPlay={assignmentsPlay}
+        editingScript={editingScript}
+        playToPost={playToPost}
+        setDiagramPlay={setDiagramPlay}
+        setAssignmentsPlay={setAssignmentsPlay}
+        setEditingScript={setEditingScript}
+        setPlayToPost={setPlayToPost}
+        activeTeamId={activeTeamId}
+        activePlaybookId={activePlaybookId}
+        selectedPlaysForPractice={selectedPlaysForPractice}
+        setSelectedPlaysForPractice={setSelectedPlaysForPractice}
+        existingPlays={existingPlays}
+        handleCreatePlay={handleCreatePlay}
+        handleSavePlay={handleSavePlay}
+        fullscreenPlayIndex={fullscreenPlayIndex}
+        fullscreenPlays={fullscreenPlays}
+        handleExitFullscreen={handleExitFullscreen}
+        showPracticeScriptModal={showPracticeScriptModal}
+        setShowPracticeScriptModal={setShowPracticeScriptModal}
+        handleSavePracticeScript={handleSavePracticeScript}
+        showBulkDeleteConfirm={showBulkDeleteConfirm}
+        setShowBulkDeleteConfirm={setShowBulkDeleteConfirm}
+        mobileButtonSize={mobileButtonSize}
+        mobileSecondaryButtonSize={mobileSecondaryButtonSize}
+      />
+    </div>
+  );
+}
+
+function PlaybookPageOverlays({
+  state,
+  dispatch,
+  isMobileOrTablet,
+  isModalOpen,
+  closeModal,
+  handlers,
+  diagramPlay,
+  diagramMode,
+  assignmentsPlay,
+  editingScript,
+  playToPost,
+  setDiagramPlay,
+  setAssignmentsPlay,
+  setEditingScript,
+  setPlayToPost,
+  activeTeamId,
+  activePlaybookId,
+  selectedPlaysForPractice,
+  setSelectedPlaysForPractice,
+  existingPlays,
+  handleCreatePlay,
+  handleSavePlay,
+  fullscreenPlayIndex,
+  fullscreenPlays,
+  handleExitFullscreen,
+  showPracticeScriptModal,
+  setShowPracticeScriptModal,
+  handleSavePracticeScript,
+  showBulkDeleteConfirm,
+  setShowBulkDeleteConfirm,
+  mobileButtonSize,
+  mobileSecondaryButtonSize,
+}: {
+  state: any;
+  dispatch: React.Dispatch<any>;
+  isMobileOrTablet: boolean;
+  isModalOpen: (type: Exclude<ModalType, null>) => boolean;
+  closeModal: () => void;
+  handlers: any;
+  diagramPlay: any;
+  diagramMode: any;
+  assignmentsPlay: any;
+  editingScript: any;
+  playToPost: any;
+  setDiagramPlay: (play: any) => void;
+  setAssignmentsPlay: (play: any) => void;
+  setEditingScript: (script: any) => void;
+  setPlayToPost: (play: any) => void;
+  activeTeamId: string | null;
+  activePlaybookId: string | null;
+  selectedPlaysForPractice: any;
+  setSelectedPlaysForPractice: (plays: any) => void;
+  existingPlays: Play[];
+  handleCreatePlay: any;
+  handleSavePlay: any;
+  fullscreenPlayIndex: number | null;
+  fullscreenPlays: any[];
+  handleExitFullscreen: () => void;
+  showPracticeScriptModal: boolean;
+  setShowPracticeScriptModal: (show: boolean) => void;
+  handleSavePracticeScript: (script: any) => Promise<void>;
+  showBulkDeleteConfirm: boolean;
+  setShowBulkDeleteConfirm: (show: boolean) => void;
+  mobileButtonSize: MobileButtonSize;
+  mobileSecondaryButtonSize: MobileButtonSize;
+}) {
+  return (
+    <>
+      {/* Modals */}
+      <PlaybookModals
+        isModalOpen={isModalOpen}
+        closeModal={closeModal}
+        diagramPlay={diagramPlay}
+        diagramMode={diagramMode}
+        assignmentsPlay={assignmentsPlay}
+        editingScript={editingScript}
+        playToPost={playToPost}
+        setDiagramPlay={setDiagramPlay}
+        setAssignmentsPlay={setAssignmentsPlay}
+        setEditingScript={setEditingScript}
+        setPlayToPost={setPlayToPost}
+        activeTeamId={activeTeamId}
+        activePlaybookId={activePlaybookId ?? ""}
+        selectedPlaysForPractice={selectedPlaysForPractice}
+        setSelectedPlaysForPractice={setSelectedPlaysForPractice}
+        existingPlays={existingPlays}
+        handleCreatePlay={handleCreatePlay}
+        handleSavePlay={handleSavePlay}
+        dispatch={dispatch}
+      />
+
+      {/* Mobile/Tablet Filters Bottom Sheet */}
+      {isMobileOrTablet && (
+        <MobileFiltersBottomSheet
+          isOpen={isModalOpen("filtersSheet")}
+          onClose={closeModal}
+          advancedFilters={state.advancedFilters}
+          onFiltersChange={handlers.handleFiltersChange}
+          onClearAll={() => {
+            dispatch({ type: "SET_ADVANCED_FILTERS", filters: [] });
+            closeModal();
+          }}
+          mobileButtonSize={mobileButtonSize}
+          mobileSecondaryButtonSize={mobileSecondaryButtonSize}
+        />
+      )}
+
+      {/* Bulk Actions Floating Toolbar */}
+      <BulkActionsToolbar
+        selectedCount={state.selectedPlayIds?.size || 0}
+        onClearSelection={() => dispatch({ type: "CLEAR_SELECTION" })}
+        onBulkAction={handlers.handleBulkAction}
+      />
+
+      {/* Fullscreen Diagram Viewer */}
+      {fullscreenPlayIndex !== null && fullscreenPlays.length > 0 && (
+        <FullscreenDiagramViewer
+          plays={fullscreenPlays}
+          initialPlayIndex={fullscreenPlayIndex}
+          onClose={handleExitFullscreen}
+        />
+      )}
+
+      {/* Formation Library Modal */}
+      <FormationLibraryModal
+        isOpen={isModalOpen("formationLibrary")}
+        onClose={closeModal}
+        playbookId={activePlaybookId ?? ""}
+      />
+
+      {/* Personnel Library Modal */}
+      <PersonnelLibraryModal
+        isOpen={isModalOpen("personnelLibrary")}
+        onClose={closeModal}
+        playbookId={activePlaybookId ?? ""}
+      />
+
+      <PracticeScriptModalLoader
+        show={showPracticeScriptModal}
+        editingScript={editingScript}
+        onClose={() => {
+          setShowPracticeScriptModal(false);
+          setEditingScript(null);
+        }}
+        onSave={(script) => {
+          void handleSavePracticeScript(script as any);
+        }}
+      />
+
+      {/* Bulk Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showBulkDeleteConfirm}
+        onClose={() => setShowBulkDeleteConfirm(false)}
+        onConfirm={handlers.confirmBulkDelete}
+        title="Delete Plays"
+        message={`Are you sure you want to delete ${state.selectedPlayIds?.size || 0} ${(state.selectedPlayIds?.size || 0) === 1 ? "play" : "plays"}?`}
+        variant="danger"
+        confirmText="Delete"
+        cancelText="Cancel"
+      />
+    </>
+  );
+}
+
 const PlaybookPage = () => {
   const { state, dispatch } = usePlaybook();
   const navigate = useNavigate();
@@ -54,19 +660,11 @@ const PlaybookPage = () => {
   const rawMobileButtonSize = useMobileButtonProps("md", true).size;
   const rawMobileSecondaryButtonSize = useMobileButtonProps("md", false).size;
 
-  const mobileButtonSize =
-    rawMobileButtonSize === "sm" ||
-    rawMobileButtonSize === "md" ||
-    rawMobileButtonSize === "lg"
-      ? rawMobileButtonSize
-      : "md";
-
-  const mobileSecondaryButtonSize =
-    rawMobileSecondaryButtonSize === "sm" ||
-    rawMobileSecondaryButtonSize === "md" ||
-    rawMobileSecondaryButtonSize === "lg"
-      ? rawMobileSecondaryButtonSize
-      : "md";
+  const mobileButtonSize = normalizeMobileButtonSize(rawMobileButtonSize, "md");
+  const mobileSecondaryButtonSize = normalizeMobileButtonSize(
+    rawMobileSecondaryButtonSize,
+    "md"
+  );
 
   // Get playbooks for this team
   const {
@@ -208,254 +806,61 @@ const PlaybookPage = () => {
     setMobileListExpanded,
   ]);
 
+  const existingPlays = useMemo(
+    () => buildExistingPlaysForModals(allPlaysForStats, activePlaybookId),
+    [allPlaysForStats, activePlaybookId]
+  );
+
   return (
-    <div className="min-h-screen">
-      {/* Unified Header with Navigation */}
-      <PlaybookViewTabs
-        currentView={state.currentView}
-        onViewChange={handlers.handleViewChange}
-        currentTeamType={state.currentTeamType}
-        onTeamTypeChange={handlers.handleTeamTypeChange}
-        onOpenSettings={handlers.handleOpenSettings}
-        onOpenBuilder={handlers.handleOpenBuilder}
-        onOpenPersonnel={handlers.handleOpenPersonnel}
-        onOpenHealth={() => openModal("playbookHealth")}
-        onNavigate={(path) => {
-          if (path === "/playbook/formations") {
-            openModal("formationLibrary");
-          } else if (path === "/playbook/personnel") {
-            openModal("personnelLibrary");
-          } else {
-            navigate(path);
-          }
-        }}
-        title="Playbook"
-        playsCreated={state.playsCreated}
-        diagramCoverage={state.diagramCoverage}
-        streakDays={state.streakDays}
-        playbooks={teamPlaybooks}
-        activePlaybookId={activePlaybookId}
-        onPlaybookChange={handlePlaybookChange}
-        onPlaybookUpdated={refreshData}
-        teamId={activeTeamId || ""}
-        onCSVImportComplete={() => {
-          refreshData();
-          dispatch({ type: "INCREMENT_REFRESH" });
-        }}
-      />
-
-      {/* Mobile/Tablet-First Layout */}
-      {isMobileOrTablet ? (
-        <MobilePlaybookView
-          state={state}
-          mobileListExpanded={mobileListExpanded}
-          showFiltersSheet={isModalOpen("filtersSheet")}
-          showStatsSheet={isModalOpen("statsSheet")}
-          activeTeamId={activeTeamId}
-          isLoadingPlays={teamsDataLoading}
-          debouncedSearchQuery={debouncedSearchQuery}
-          optimisticPlays={optimisticPlays}
-          formationAudit={formationAudit}
-          formationAuditSummary={formationAuditSummary}
-          setMobileListExpanded={setMobileListExpanded}
-          setShowFiltersSheet={(show) =>
-            show ? openModal("filtersSheet") : closeModal()
-          }
-          setShowStatsSheet={(show) =>
-            show ? openModal("statsSheet") : closeModal()
-          }
-          handleOpenQuickCreate={handlers.handleOpenQuickCreate}
-          handleOpenPersonnel={handlers.handleOpenPersonnel}
-          handleOpenSettings={handlers.handleOpenSettings}
-          handleEditPlay={handlers.handleEditPlay}
-          handleQuickNewPracticeScript={handlers.handleQuickNewPracticeScript}
-          handleQuickNewGamePlan={handlers.handleQuickNewGamePlan}
-          handleOpenKeyboardShortcuts={handlers.handleOpenKeyboardShortcuts}
-          handlePullRefresh={handlers.handlePullRefresh}
-          handleSavePlay={handleSavePlay}
-          handleDuplicatePlay={handlers.handleDuplicatePlay}
-          handleOpenBuilder={handlers.handleOpenBuilder}
-          handleOpenAssignments={handlers.handleOpenAssignments}
-          handlePostToTeamBulletin={handlers.handlePostToTeamBulletin}
-          handleAddToPracticeScript={handlers.handleAddToPracticeScript}
-          handleAddToGamePlan={handlers.handleAddToGamePlan}
-          handlePlayCountChange={handlers.handlePlayCountChange}
-          handleViewChange={handlers.handleViewChange}
-          handleOpenPracticeScriptBuilder={
-            handlers.handleOpenPracticeScriptBuilder
-          }
-          dispatch={dispatch}
-          navigate={navigate}
-          mobileButtonSize={mobileButtonSize ?? "md"}
-          mobileSecondaryButtonSize={mobileSecondaryButtonSize ?? "md"}
-          suggestions={suggestions}
-        />
-      ) : (
-        <DesktopPlaybookView
-          state={state}
-          debouncedSearchQuery={debouncedSearchQuery}
-          optimisticPlays={optimisticPlays}
-          formationAudit={formationAudit}
-          playbookStats={playbookStats}
-          activeTeamId={activeTeamId}
-          handleEditPlay={handlers.handleEditPlay}
-          handleSavePlay={handleSavePlay}
-          handleOpenBuilder={handlers.handleOpenBuilder}
-          handleQuickNewGamePlan={handlers.handleQuickNewGamePlan}
-          handleDuplicatePlay={handlers.handleDuplicatePlay}
-          handleOpenAssignments={handlers.handleOpenAssignments}
-          handlePostToTeamBulletin={handlers.handlePostToTeamBulletin}
-          handleAddToPracticeScript={handlers.handleAddToPracticeScript}
-          handleAddToGamePlan={handlers.handleAddToGamePlan}
-          handlePlayCountChange={handlers.handlePlayCountChange}
-          handleOpenPracticeScriptBuilder={
-            handlers.handleOpenPracticeScriptBuilder
-          }
-          handleFiltersChange={handlers.handleFiltersChange}
-          handleClearSelection={handlers.handleClearSelection}
-          handleBulkAction={handlers.handleBulkAction}
-          handleEnterFullscreen={handleEnterFullscreen}
-          dispatch={dispatch}
-          navigate={navigate}
-          suggestions={suggestions}
-          mobileButtonSize={mobileButtonSize ?? "md"}
-        />
-      )}
-
-      {/* Modals */}
-      <PlaybookModals
-        isModalOpen={isModalOpen}
-        closeModal={closeModal}
-        diagramPlay={diagramPlay}
-        diagramMode={diagramMode}
-        assignmentsPlay={assignmentsPlay}
-        editingScript={editingScript}
-        playToPost={playToPost}
-        setDiagramPlay={setDiagramPlay}
-        setAssignmentsPlay={setAssignmentsPlay}
-        setEditingScript={setEditingScript}
-        setPlayToPost={setPlayToPost}
-        activeTeamId={activeTeamId}
-        activePlaybookId={activePlaybookId}
-        selectedPlaysForPractice={selectedPlaysForPractice}
-        setSelectedPlaysForPractice={setSelectedPlaysForPractice}
-        existingPlays={allPlaysForStats.map((play) => {
-          const rawPlay = play as any;
-
-          const rawDiagram = rawPlay.diagram_data;
-          const diagram_data: Play["diagram_data"] = (() => {
-            if (typeof rawDiagram === "string") {
-              try {
-                const parsed = JSON.parse(rawDiagram);
-                return Array.isArray(parsed)
-                  ? (parsed as unknown as Play["diagram_data"])
-                  : null;
-              } catch {
-                return null;
-              }
-            }
-            return Array.isArray(rawDiagram)
-              ? (rawDiagram as unknown as Play["diagram_data"])
-              : null;
-          })();
-
-          return {
-            ...rawPlay,
-            playbook_id: String(rawPlay.playbook_id ?? activePlaybookId ?? ""),
-            confidence_base: rawPlay.confidence_base ?? 3,
-            times_called: rawPlay.times_called ?? 0,
-            times_successful: rawPlay.times_successful ?? 0,
-            created_by: String(rawPlay.created_by ?? ""),
-            created_at: new Date(rawPlay.created_at ?? Date.now()),
-            updated_at: new Date(rawPlay.updated_at ?? Date.now()),
-            diagram_data,
-          } as Play;
-        })}
-        handleCreatePlay={handleCreatePlay}
-        handleSavePlay={handleSavePlay}
-        dispatch={dispatch}
-      />
-
-      {/* Mobile/Tablet Filters Bottom Sheet */}
-      {isMobileOrTablet && (
-        <MobileFiltersBottomSheet
-          isOpen={isModalOpen("filtersSheet")}
-          onClose={closeModal}
-          advancedFilters={state.advancedFilters}
-          onFiltersChange={handlers.handleFiltersChange}
-          onClearAll={() => {
-            dispatch({ type: "SET_ADVANCED_FILTERS", filters: [] });
-            closeModal();
-          }}
-          mobileButtonSize={mobileButtonSize ?? "md"}
-          mobileSecondaryButtonSize={mobileSecondaryButtonSize ?? "md"}
-        />
-      )}
-
-      {/* Bulk Actions Floating Toolbar */}
-      <BulkActionsToolbar
-        selectedCount={state.selectedPlayIds?.size || 0}
-        onClearSelection={() => dispatch({ type: "CLEAR_SELECTION" })}
-        onBulkAction={handlers.handleBulkAction}
-      />
-
-      {/* Fullscreen Diagram Viewer */}
-      {fullscreenPlayIndex !== null && fullscreenPlays.length > 0 && (
-        <FullscreenDiagramViewer
-          plays={fullscreenPlays}
-          initialPlayIndex={fullscreenPlayIndex}
-          onClose={handleExitFullscreen}
-        />
-      )}
-
-      {/* Formation Library Modal */}
-      <FormationLibraryModal
-        isOpen={isModalOpen("formationLibrary")}
-        onClose={closeModal}
-        playbookId={activePlaybookId}
-      />
-
-      {/* Personnel Library Modal */}
-      <PersonnelLibraryModal
-        isOpen={isModalOpen("personnelLibrary")}
-        onClose={closeModal}
-        playbookId={activePlaybookId}
-      />
-
-      {/* Practice Script Modal */}
-      {showPracticeScriptModal && (
-        <React.Suspense
-          fallback={
-            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-modal">
-              <div className="text-white">Loading...</div>
-            </div>
-          }
-        >
-          <PracticeScriptModal
-            editingScript={editingScript ?? undefined}
-            onClose={() => {
-              setShowPracticeScriptModal(false);
-              setEditingScript(null);
-            }}
-            onSave={(script) => {
-              void handleSavePracticeScript(script as any);
-            }}
-          />
-        </React.Suspense>
-      )}
-
-      {/* Bulk Delete Confirmation Modal */}
-      <ConfirmationModal
-        isOpen={showBulkDeleteConfirm}
-        onClose={() => setShowBulkDeleteConfirm(false)}
-        onConfirm={handlers.confirmBulkDelete}
-        title="Delete Plays"
-        message={`Are you sure you want to delete ${state.selectedPlayIds?.size || 0} ${(state.selectedPlayIds?.size || 0) === 1 ? "play" : "plays"}?`}
-        variant="danger"
-        confirmText="Delete"
-        cancelText="Cancel"
-      />
-    </div>
+    <PlaybookPageView
+      state={state}
+      dispatch={dispatch}
+      navigate={navigate}
+      activeTeamId={activeTeamId}
+      isMobileOrTablet={isMobileOrTablet}
+      teamPlaybooks={teamPlaybooks}
+      activePlaybookId={activePlaybookId}
+      refreshData={refreshData}
+      handlePlaybookChange={handlePlaybookChange}
+      handlers={handlers}
+      isModalOpen={isModalOpen}
+      openModal={openModal}
+      closeModal={closeModal}
+      teamsDataLoading={teamsDataLoading}
+      debouncedSearchQuery={debouncedSearchQuery}
+      optimisticPlays={optimisticPlays}
+      formationAudit={formationAudit}
+      formationAuditSummary={formationAuditSummary}
+      mobileListExpanded={mobileListExpanded}
+      setMobileListExpanded={setMobileListExpanded}
+      handleSavePlay={handleSavePlay}
+      handleEnterFullscreen={handleEnterFullscreen}
+      playbookStats={playbookStats}
+      suggestions={suggestions}
+      diagramPlay={diagramPlay}
+      diagramMode={diagramMode}
+      assignmentsPlay={assignmentsPlay}
+      editingScript={editingScript}
+      playToPost={playToPost}
+      setDiagramPlay={setDiagramPlay}
+      setAssignmentsPlay={setAssignmentsPlay}
+      setEditingScript={setEditingScript}
+      setPlayToPost={setPlayToPost}
+      selectedPlaysForPractice={selectedPlaysForPractice}
+      setSelectedPlaysForPractice={setSelectedPlaysForPractice}
+      existingPlays={existingPlays}
+      handleCreatePlay={handleCreatePlay}
+      fullscreenPlayIndex={fullscreenPlayIndex}
+      fullscreenPlays={fullscreenPlays}
+      handleExitFullscreen={handleExitFullscreen}
+      showPracticeScriptModal={showPracticeScriptModal}
+      setShowPracticeScriptModal={setShowPracticeScriptModal}
+      handleSavePracticeScript={handleSavePracticeScript}
+      showBulkDeleteConfirm={showBulkDeleteConfirm}
+      setShowBulkDeleteConfirm={setShowBulkDeleteConfirm}
+      mobileButtonSize={mobileButtonSize}
+      mobileSecondaryButtonSize={mobileSecondaryButtonSize}
+    />
   );
 };
 

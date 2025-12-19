@@ -494,6 +494,110 @@ export class TeamService {
     progress: TeamCreationProgress
   ): Promise<TeamCreationResult> {
     try {
+      const checkDuplicatesSafe = async (): Promise<void> => {
+        progress.setLoadingMessage("Checking for similar teams...");
+        try {
+          const duplicateCheck = await this.checkForDuplicates(
+            formData.teamName,
+            formData.schoolName,
+            formData.schoolDistrict,
+            formData.schoolCity,
+            formData.schoolState
+          );
+
+          if (duplicateCheck.isDuplicate) {
+            logError(
+              "🚨 Duplicate team detected:",
+              duplicateCheck.warningMessage
+            );
+            throw new Error(
+              duplicateCheck.warningMessage ||
+                "A very similar team already exists. Please contact support."
+            );
+          }
+
+          if (duplicateCheck.requiresApproval) {
+            debug("⚠️ Similar team found:", duplicateCheck.warningMessage);
+            emitTelemetry("team.create.similar_team_warning", {
+              similar_teams_count: duplicateCheck.similarTeams.length,
+              highest_similarity:
+                duplicateCheck.similarTeams[0]?.similarityScore || 0,
+            });
+          }
+        } catch (duplicateError) {
+          debug(
+            "⚠️ Duplicate check failed, proceeding anyway:",
+            duplicateError
+          );
+        }
+      };
+
+      const insertTeamWithTimeout = async (teamData: {
+        name: string;
+        school_name: string;
+        mascot: string;
+        season_year: number;
+      }): Promise<any> => {
+        const directInsertPromise = createTeamDirectly(teamData);
+        const insertTimeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Team insert timeout")), 20000)
+        );
+
+        const insertResult = (await Promise.race([
+          directInsertPromise,
+          insertTimeoutPromise,
+        ])) as { data: any; error: any };
+
+        const teamInsert = insertResult.data;
+        const teamErr = insertResult.error;
+
+        if (teamErr || !teamInsert) {
+          logError("❌ Team insert failed:", teamErr);
+
+          if (
+            teamErr?.code === "42501" ||
+            teamErr?.message?.includes("row-level security")
+          ) {
+            logError("🔒 RLS Policy Error - Run the SQL fix in Supabase!");
+            throw new Error(
+              "Database permission error: Your account doesn't have permission to create teams. This might be an RLS policy issue. Please contact support."
+            );
+          }
+
+          throw new Error(
+            `Failed to create team: ${teamErr?.message || "Unknown database error"}`
+          );
+        }
+
+        return teamInsert;
+      };
+
+      const insertMembershipWithTimeout = async (membershipData: {
+        team_id: string;
+        user_id: string;
+        team_role: string;
+        status: string;
+      }): Promise<void> => {
+        const memberInsertPromise =
+          createTeamMembershipDirectly(membershipData);
+        const memberTimeoutPromise = new Promise((_, reject) =>
+          setTimeout(
+            () => reject(new Error("Membership insert timeout")),
+            15000
+          )
+        );
+
+        const memberResult = (await Promise.race([
+          memberInsertPromise,
+          memberTimeoutPromise,
+        ])) as { data: any; error: any };
+
+        const memberErr = memberResult.error;
+        if (memberErr) {
+          debug("⚠️ team_members insert warning:", memberErr);
+        }
+      };
+
       // Emit start telemetry
       emitTelemetry("team.create.start", {
         sport_ui: formData.sport,
@@ -503,40 +607,8 @@ export class TeamService {
 
       progress.setLoadingMessage("Testing database connection...");
 
-      // Check for duplicate teams
-      progress.setLoadingMessage("Checking for similar teams...");
-
-      try {
-        const duplicateCheck = await this.checkForDuplicates(
-          formData.teamName,
-          formData.schoolName,
-          formData.schoolDistrict,
-          formData.schoolCity,
-          formData.schoolState
-        );
-
-        if (duplicateCheck.isDuplicate) {
-          logError(
-            "🚨 Duplicate team detected:",
-            duplicateCheck.warningMessage
-          );
-          throw new Error(
-            duplicateCheck.warningMessage ||
-              "A very similar team already exists. Please contact support."
-          );
-        }
-
-        if (duplicateCheck.requiresApproval) {
-          debug("⚠️ Similar team found:", duplicateCheck.warningMessage);
-          emitTelemetry("team.create.similar_team_warning", {
-            similar_teams_count: duplicateCheck.similarTeams.length,
-            highest_similarity:
-              duplicateCheck.similarTeams[0]?.similarityScore || 0,
-          });
-        }
-      } catch (duplicateError) {
-        debug("⚠️ Duplicate check failed, proceeding anyway:", duplicateError);
-      }
+      // Check for duplicate teams (best-effort)
+      await checkDuplicatesSafe();
 
       // Create team name
       progress.setLoadingMessage("Creating team...");
@@ -558,35 +630,7 @@ export class TeamService {
         season_year: seasonYear,
       };
 
-      const directInsertPromise = createTeamDirectly(teamData);
-      const insertTimeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Team insert timeout")), 20000)
-      );
-
-      const insertResult = (await Promise.race([
-        directInsertPromise,
-        insertTimeoutPromise,
-      ])) as { data: any; error: any };
-      const teamInsert = insertResult.data;
-      const teamErr = insertResult.error;
-
-      if (teamErr || !teamInsert) {
-        logError("❌ Team insert failed:", teamErr);
-
-        if (
-          teamErr?.code === "42501" ||
-          teamErr?.message?.includes("row-level security")
-        ) {
-          logError("🔒 RLS Policy Error - Run the SQL fix in Supabase!");
-          throw new Error(
-            "Database permission error: Your account doesn't have permission to create teams. This might be an RLS policy issue. Please contact support."
-          );
-        }
-
-        throw new Error(
-          `Failed to create team: ${teamErr?.message || "Unknown database error"}`
-        );
-      }
+      const teamInsert = await insertTeamWithTimeout(teamData);
 
       const newTeamId = teamInsert.id;
       if (!newTeamId) {
@@ -603,20 +647,7 @@ export class TeamService {
         status: "active",
       };
 
-      const memberInsertPromise = createTeamMembershipDirectly(membershipData);
-      const memberTimeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Membership insert timeout")), 15000)
-      );
-
-      const memberResult = (await Promise.race([
-        memberInsertPromise,
-        memberTimeoutPromise,
-      ])) as { data: any; error: any };
-      const memberErr = memberResult.error;
-
-      if (memberErr) {
-        debug("⚠️ team_members insert warning:", memberErr);
-      }
+      await insertMembershipWithTimeout(membershipData);
 
       // Persist active team selection
       try {

@@ -19,6 +19,40 @@ import {
   createDefaultConfiguration,
 } from "./types";
 
+function useIdSet(initialValue: Set<string> = new Set()) {
+  const [ids, setIds] = useState<Set<string>>(initialValue);
+
+  const toggleId = useCallback((id: string) => {
+    setIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  }, []);
+
+  const addId = useCallback((id: string) => {
+    setIds((prev) => new Set([...prev, id]));
+  }, []);
+
+  return { ids, setIds, toggleId, addId };
+}
+
+function createNewSkillPlayer(configId: string, sortOrder: number) {
+  return {
+    id: `p${Date.now()}`,
+    config_id: configId,
+    label: "",
+    player_position: "WR" as PlayerPosition,
+    sort_order: sortOrder,
+    is_wildcat_qb: false,
+    created_at: new Date().toISOString(),
+  };
+}
+
 interface UsePersonnelConfigHandlersProps {
   playbookId?: string;
   configurations?: PersonnelConfiguration[];
@@ -42,12 +76,13 @@ export function usePersonnelConfigHandlers({
 
   const [localConfigurations, setLocalConfigurations] =
     useState<PersonnelConfiguration[]>(configurations);
-  const [expandedConfigIds, setExpandedConfigIds] = useState<Set<string>>(
-    new Set()
-  );
-  const [customizerOpenIds, setCustomizerOpenIds] = useState<Set<string>>(
-    new Set()
-  );
+  const {
+    ids: expandedConfigIds,
+    setIds: setExpandedConfigIds,
+    toggleId: toggleExpanded,
+    addId: addExpandedConfigId,
+  } = useIdSet();
+  const { ids: customizerOpenIds, toggleId: toggleCustomizerId } = useIdSet();
   const [justSaved, setJustSaved] = useState(false);
   const toast = useToast();
 
@@ -56,7 +91,7 @@ export function usePersonnelConfigHandlers({
     if (configurations.length > 0) {
       setExpandedConfigIds(new Set([configurations[0].id]));
     }
-  }, [configurations]);
+  }, [configurations, setExpandedConfigIds]);
 
   const handleSave = useCallback(() => {
     triggerHapticFeedback("success");
@@ -69,20 +104,8 @@ export function usePersonnelConfigHandlers({
   const addPersonnelConfiguration = useCallback(() => {
     const newConfig = createDefaultConfiguration(playbookId || "");
     setLocalConfigurations((prev) => [...prev, newConfig]);
-    setExpandedConfigIds((prev) => new Set([...prev, newConfig.id]));
-  }, [playbookId]);
-
-  const toggleExpanded = useCallback((configId: string) => {
-    setExpandedConfigIds((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(configId)) {
-        newSet.delete(configId);
-      } else {
-        newSet.add(configId);
-      }
-      return newSet;
-    });
-  }, []);
+    addExpandedConfigId(newConfig.id);
+  }, [addExpandedConfigId, playbookId]);
 
   const toggleDefault = useCallback((configId: string) => {
     setLocalConfigurations((prev) =>
@@ -117,15 +140,7 @@ export function usePersonnelConfigHandlers({
               ...config,
               players: [
                 ...(config.players || []),
-                {
-                  id: `p${Date.now()}`,
-                  config_id: configId,
-                  label: "",
-                  player_position: "WR" as PlayerPosition,
-                  sort_order: (config.players || []).length,
-                  is_wildcat_qb: false,
-                  created_at: new Date().toISOString(),
-                },
+                createNewSkillPlayer(configId, (config.players || []).length),
               ],
             }
           : config
@@ -166,18 +181,13 @@ export function usePersonnelConfigHandlers({
     []
   );
 
-  const toggleCustomizer = useCallback((configId: string) => {
-    setCustomizerOpenIds((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(configId)) {
-        newSet.delete(configId);
-      } else {
-        newSet.add(configId);
-      }
-      return newSet;
-    });
-    triggerHapticFeedback("light");
-  }, []);
+  const toggleCustomizer = useCallback(
+    (configId: string) => {
+      toggleCustomizerId(configId);
+      triggerHapticFeedback("light");
+    },
+    [toggleCustomizerId]
+  );
 
   const updatePlayerLabel = useCallback(
     (configId: string, playerId: string, label: string) => {

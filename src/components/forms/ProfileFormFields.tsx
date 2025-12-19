@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, type ReactElement } from "react";
 import { Typography } from "../design-system/Typography";
 import { FormSelect } from "../ui";
 import type { ProfileField } from "../../types/profileFields";
@@ -74,128 +74,174 @@ const toggleMultiSelectValue = (params: {
   return selectedValues.filter((v) => v !== optionValue);
 };
 
-const renderProfileFieldInput = (params: {
+type RenderProfileFieldInputParams = {
   field: ProfileField;
   value: FormValue;
   onChange: (value: FormValue) => void;
   baseInputClasses: string;
-}) => {
-  const { field, value, onChange, baseInputClasses } = params;
+};
 
-  switch (field.type) {
-    case "textarea":
-      return (
-        <textarea
-          value={String(value || "")}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={field.placeholder}
-          className={`${baseInputClasses} min-h-24 resize-y`}
-          rows={4}
-        />
-      );
+type ProfileFieldInputRenderer = (
+  params: RenderProfileFieldInputParams
+) => ReactElement;
 
-    case "number":
-      return (
-        <input
-          type="number"
-          value={typeof value === "number" ? value : (value as string) || ""}
-          onChange={(e) =>
-            onChange(e.target.value ? parseFloat(e.target.value) : "")
-          }
-          placeholder={field.placeholder}
-          min={field.validation?.min}
-          max={field.validation?.max}
-          className={baseInputClasses}
-        />
-      );
+const renderTextareaInput: ProfileFieldInputRenderer = ({
+  field,
+  value,
+  onChange,
+  baseInputClasses,
+}) => (
+  <textarea
+    value={String(value || "")}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={field.placeholder}
+    className={`${baseInputClasses} min-h-24 resize-y`}
+    rows={4}
+  />
+);
 
-    case "select":
-      return (
-        <FormSelect
-          value={String(value || "")}
-          onChange={(val) => onChange(val)}
-          placeholder={`Select ${field.label}`}
-          options={
-            field.options?.map((option) => ({
-              value: option.value,
-              label: option.label,
-            })) || []
-          }
-        />
-      );
+const renderNumberInput: ProfileFieldInputRenderer = ({
+  field,
+  value,
+  onChange,
+  baseInputClasses,
+}) => (
+  <input
+    type="number"
+    value={typeof value === "number" ? value : (value as string) || ""}
+    onChange={(e) => onChange(e.target.value ? parseFloat(e.target.value) : "")}
+    placeholder={field.placeholder}
+    min={field.validation?.min}
+    max={field.validation?.max}
+    className={baseInputClasses}
+  />
+);
 
-    case "multi-select": {
-      const selectedValues = Array.isArray(value) ? value : [];
-      return (
-        <div className="space-y-xs">
-          {field.options?.map((option) => (
-            <label key={option.value} className="flex items-center space-x-xs">
-              <input
-                type="checkbox"
-                checked={selectedValues.includes(option.value)}
-                onChange={(e) =>
-                  onChange(
-                    toggleMultiSelectValue({
-                      selectedValues,
-                      optionValue: option.value,
-                      checked: e.target.checked,
-                    })
-                  )
-                }
-                className="rounded border-secondary text-jade-600 focus:ring-jade-500"
-              />
-              <Typography variant="body-sm">{option.label}</Typography>
-            </label>
-          ))}
-        </div>
-      );
+const renderSelectInput: ProfileFieldInputRenderer = ({
+  field,
+  value,
+  onChange,
+}) => (
+  <FormSelect
+    value={String(value || "")}
+    onChange={(val) => onChange(val)}
+    placeholder={`Select ${field.label}`}
+    options={
+      field.options?.map((option) => ({
+        value: option.value,
+        label: option.label,
+      })) || []
     }
+  />
+);
 
-    case "phone":
-      return (
-        <input
-          type="tel"
-          value={String(value || "")}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={field.placeholder}
-          pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-          className={baseInputClasses}
-        />
-      );
+const renderMultiSelectInput: ProfileFieldInputRenderer = ({
+  field,
+  value,
+  onChange,
+}) => {
+  const selectedValues = Array.isArray(value) ? value : [];
+  return (
+    <div className="space-y-xs">
+      {field.options?.map((option) => (
+        <label key={option.value} className="flex items-center space-x-xs">
+          <input
+            type="checkbox"
+            checked={selectedValues.includes(option.value)}
+            onChange={(e) =>
+              onChange(
+                toggleMultiSelectValue({
+                  selectedValues,
+                  optionValue: option.value,
+                  checked: e.target.checked,
+                })
+              )
+            }
+            className="rounded border-secondary text-jade-600 focus:ring-jade-500"
+          />
+          <Typography variant="body-sm">{option.label}</Typography>
+        </label>
+      ))}
+    </div>
+  );
+};
 
-    case "email":
-      return (
-        <input
-          type="email"
-          value={String(value || "")}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={field.placeholder}
-          className={baseInputClasses}
-        />
-      );
+const renderTelInput: ProfileFieldInputRenderer = ({
+  field,
+  value,
+  onChange,
+  baseInputClasses,
+}) => (
+  <input
+    type="tel"
+    value={String(value || "")}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={field.placeholder}
+    pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+    className={baseInputClasses}
+  />
+);
 
-    case "url":
-      return (
-        <input
-          type="url"
-          value={String(value || "")}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={field.placeholder}
-          className={baseInputClasses}
-        />
-      );
+const renderEmailInput: ProfileFieldInputRenderer = ({
+  field,
+  value,
+  onChange,
+  baseInputClasses,
+}) => (
+  <input
+    type="email"
+    value={String(value || "")}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={field.placeholder}
+    className={baseInputClasses}
+  />
+);
 
-    default:
-      return (
-        <input
-          type="text"
-          value={String(value || "")}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={field.placeholder}
-          className={baseInputClasses}
-        />
-      );
-  }
+const renderUrlInput: ProfileFieldInputRenderer = ({
+  field,
+  value,
+  onChange,
+  baseInputClasses,
+}) => (
+  <input
+    type="url"
+    value={String(value || "")}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={field.placeholder}
+    className={baseInputClasses}
+  />
+);
+
+const renderDefaultTextInput: ProfileFieldInputRenderer = ({
+  field,
+  value,
+  onChange,
+  baseInputClasses,
+}) => (
+  <input
+    type="text"
+    value={String(value || "")}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={field.placeholder}
+    className={baseInputClasses}
+  />
+);
+
+const profileFieldInputRenderers: Partial<
+  Record<ProfileField["type"], ProfileFieldInputRenderer>
+> = {
+  textarea: renderTextareaInput,
+  number: renderNumberInput,
+  select: renderSelectInput,
+  "multi-select": renderMultiSelectInput,
+  phone: renderTelInput,
+  email: renderEmailInput,
+  url: renderUrlInput,
+};
+
+const renderProfileFieldInput = (params: RenderProfileFieldInputParams) => {
+  const renderer = profileFieldInputRenderers[params.field.type];
+  return (renderer ?? renderDefaultTextInput)(params);
 };
 
 interface ProfileFormSectionProps {

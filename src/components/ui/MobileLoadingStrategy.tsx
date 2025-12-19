@@ -5,7 +5,10 @@
 import React, { useState, useEffect } from "react";
 import { Icon } from "./Icon/Icon";
 import { useNetworkStatus } from "../../hooks/useNetworkStatus";
-import { useMobileErrorHandler } from "../../hooks/useMobileErrorHandler";
+import {
+  useMobileErrorHandler,
+  type MobileErrorState as MobileErrorStateType,
+} from "../../hooks/useMobileErrorHandler";
 import {
   DashboardCardSkeleton,
   PlayCardSkeleton,
@@ -43,6 +46,24 @@ interface LoadingStrategyProps {
   className?: string;
 }
 
+type LoadingView = "offline" | "error" | "timeout" | "loading" | "content";
+
+function getLoadingView(params: {
+  isOnline: boolean;
+  isLoading: boolean;
+  hasTimedOut: boolean;
+  error: Error | null;
+  errorState: MobileErrorStateType | null;
+}): LoadingView {
+  const { isOnline, isLoading, hasTimedOut, error, errorState } = params;
+
+  if (!isOnline && !isLoading) return "offline";
+  if (error || errorState) return "error";
+  if (hasTimedOut && isLoading) return "timeout";
+  if (isLoading) return "loading";
+  return "content";
+}
+
 export const MobileLoadingStrategy: React.FC<LoadingStrategyProps> = ({
   isLoading = false,
   error = null,
@@ -74,9 +95,7 @@ export const MobileLoadingStrategy: React.FC<LoadingStrategyProps> = ({
 
       const maxTimer = setTimeout(() => {
         setHasTimedOut(true);
-        if (onTimeout) {
-          onTimeout();
-        }
+        onTimeout?.();
       }, maxLoadingTime);
 
       return () => {
@@ -177,59 +196,48 @@ export const MobileLoadingStrategy: React.FC<LoadingStrategyProps> = ({
     />
   );
 
-  // If offline, show offline state
-  if (!networkStatus.isOnline && !isLoading) {
-    return (
-      <OfflineErrorState
-        title="You're offline"
-        message="Your plays and data will sync automatically when you're back online."
-        showRetry={false}
-        className={className}
-      />
-    );
-  }
+  const view = getLoadingView({
+    isOnline: networkStatus.isOnline,
+    isLoading,
+    hasTimedOut,
+    error,
+    errorState,
+  });
 
-  // If there's an error or error state, show error component
-  if (error || errorState) {
-    return (
-      <MobileErrorState
-        type={errorState?.type || "generic"}
-        title={errorState?.title}
-        message={errorState?.message || error?.message}
-        onRetry={handleRetry}
-        showHome
-        className={className}
-      />
-    );
+  switch (view) {
+    case "offline":
+      return (
+        <OfflineErrorState
+          title="You're offline"
+          message="Your plays and data will sync automatically when you're back online."
+          showRetry={false}
+          className={className}
+        />
+      );
+    case "error":
+      return (
+        <MobileErrorState
+          type={errorState?.type || "generic"}
+          title={errorState?.title}
+          message={errorState?.message || error?.message}
+          onRetry={handleRetry}
+          showHome
+          className={className}
+        />
+      );
+    case "timeout":
+      return renderTimeoutState();
+    case "loading":
+      return (
+        <div className={`${className}`}>
+          {renderSkeleton()}
+          {renderNetworkHint()}
+        </div>
+      );
+    case "content":
+    default:
+      return <>{children}</>;
   }
-
-  // If loading has timed out, show timeout state
-  if (hasTimedOut && isLoading) {
-    return renderTimeoutState();
-  }
-
-  // If still loading and min time hasn't elapsed, show skeleton
-  if (isLoading && !hasMinTimeElapsed) {
-    return (
-      <div className={`${className}`}>
-        {renderSkeleton()}
-        {renderNetworkHint()}
-      </div>
-    );
-  }
-
-  // If loading but min time has elapsed, continue showing skeleton until complete
-  if (isLoading && hasMinTimeElapsed) {
-    return (
-      <div className={`${className}`}>
-        {renderSkeleton()}
-        {renderNetworkHint()}
-      </div>
-    );
-  }
-
-  // Show success content
-  return <>{children}</>;
 };
 
 // Wrapper component for common loading patterns

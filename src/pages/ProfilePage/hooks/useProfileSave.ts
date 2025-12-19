@@ -25,50 +25,58 @@ export interface UseProfileSaveReturn {
   handlePasswordChange: () => Promise<void>;
 }
 
+function toNullableString(value: string | null | undefined): string | null {
+  return value ? value : null;
+}
+
+function toNullableIntUnsafe(value: string | null | undefined): number | null {
+  return value ? parseInt(value) : null;
+}
+
+function toNullableFloatUnsafe(
+  value: string | null | undefined
+): number | null {
+  return value ? parseFloat(value) : null;
+}
+
 // Build the full profile update object
 const buildFullUpdateData = (
   formData: ProfileFormData,
   avatarUrl: string | null | undefined
 ) => ({
-  display_name: formData.display_name || null,
-  full_name: formData.full_name || null,
-  phone: formData.phone || null,
-  bio: formData.bio || null,
-  address: formData.address || null,
+  display_name: toNullableString(formData.display_name),
+  full_name: toNullableString(formData.full_name),
+  phone: toNullableString(formData.phone),
+  bio: toNullableString(formData.bio),
+  address: toNullableString(formData.address),
   avatar_url: avatarUrl,
   // Athletic information
-  position: formData.position || null,
-  jersey_number: formData.jersey_number
-    ? parseInt(formData.jersey_number)
-    : null,
-  height_inches: formData.height_inches
-    ? parseFloat(formData.height_inches)
-    : null,
-  weight_lbs: formData.weight_lbs ? parseFloat(formData.weight_lbs) : null,
-  grade_level: formData.grade_level || null,
+  position: toNullableString(formData.position),
+  jersey_number: toNullableIntUnsafe(formData.jersey_number),
+  height_inches: toNullableFloatUnsafe(formData.height_inches),
+  weight_lbs: toNullableFloatUnsafe(formData.weight_lbs),
+  grade_level: toNullableString(formData.grade_level),
   // Emergency contact information
-  emergency_contact: formData.emergency_contact || null,
-  emergency_phone: formData.emergency_phone || null,
+  emergency_contact: toNullableString(formData.emergency_contact),
+  emergency_phone: toNullableString(formData.emergency_phone),
   // Coaching information
-  coaching_experience: formData.coaching_experience || null,
-  education: formData.education || null,
-  certifications: formData.certifications || null,
-  coaching_philosophy: formData.coaching_philosophy || null,
-  specializations: formData.specializations || null,
-  current_school: formData.current_school || null,
-  previous_schools: formData.previous_schools || null,
-  mentors: formData.mentors || null,
-  coaching_system: formData.coaching_system || null,
-  years_coaching: formData.years_coaching
-    ? parseInt(formData.years_coaching)
-    : null,
+  coaching_experience: toNullableString(formData.coaching_experience),
+  education: toNullableString(formData.education),
+  certifications: toNullableString(formData.certifications),
+  coaching_philosophy: toNullableString(formData.coaching_philosophy),
+  specializations: toNullableString(formData.specializations),
+  current_school: toNullableString(formData.current_school),
+  previous_schools: toNullableString(formData.previous_schools),
+  mentors: toNullableString(formData.mentors),
+  coaching_system: toNullableString(formData.coaching_system),
+  years_coaching: toNullableIntUnsafe(formData.years_coaching),
   // Social media links
-  social_twitter: formData.social_twitter || null,
-  social_instagram: formData.social_instagram || null,
-  social_linkedin: formData.social_linkedin || null,
-  social_tiktok: formData.social_tiktok || null,
-  social_youtube: formData.social_youtube || null,
-  personal_website: formData.personal_website || null,
+  social_twitter: toNullableString(formData.social_twitter),
+  social_instagram: toNullableString(formData.social_instagram),
+  social_linkedin: toNullableString(formData.social_linkedin),
+  social_tiktok: toNullableString(formData.social_tiktok),
+  social_youtube: toNullableString(formData.social_youtube),
+  personal_website: toNullableString(formData.personal_website),
   updated_at: new Date().toISOString(),
 });
 
@@ -77,25 +85,21 @@ const buildFallbackUpdateData = (
   formData: ProfileFormData,
   avatarUrl: string | null | undefined
 ) => ({
-  display_name: formData.display_name || null,
-  full_name: formData.full_name || null,
-  phone: formData.phone || null,
-  bio: formData.bio || null,
-  address: formData.address || null,
+  display_name: toNullableString(formData.display_name),
+  full_name: toNullableString(formData.full_name),
+  phone: toNullableString(formData.phone),
+  bio: toNullableString(formData.bio),
+  address: toNullableString(formData.address),
   avatar_url: avatarUrl,
   // Athletic information (existing fields only)
-  position: formData.position || null,
-  jersey_number: formData.jersey_number
-    ? parseInt(formData.jersey_number)
-    : null,
-  height_inches: formData.height_inches
-    ? parseFloat(formData.height_inches)
-    : null,
-  weight_lbs: formData.weight_lbs ? parseFloat(formData.weight_lbs) : null,
-  grade_level: formData.grade_level || null,
+  position: toNullableString(formData.position),
+  jersey_number: toNullableIntUnsafe(formData.jersey_number),
+  height_inches: toNullableFloatUnsafe(formData.height_inches),
+  weight_lbs: toNullableFloatUnsafe(formData.weight_lbs),
+  grade_level: toNullableString(formData.grade_level),
   // Emergency contact information (existing fields only)
-  emergency_contact: formData.emergency_contact || null,
-  emergency_phone: formData.emergency_phone || null,
+  emergency_contact: toNullableString(formData.emergency_contact),
+  emergency_phone: toNullableString(formData.emergency_phone),
   updated_at: new Date().toISOString(),
 });
 

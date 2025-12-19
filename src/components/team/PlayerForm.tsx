@@ -8,6 +8,393 @@ import { Input } from "../ui/Input";
 import type { TeamPlayer, TeamPlayerInsert } from "../../types/team-management";
 import { logError } from "../../utils/logger";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function validatePlayerForm(formData: Partial<TeamPlayerInsert>) {
+  const newErrors: Record<string, string> = {};
+
+  if (!formData.first_name?.trim()) {
+    newErrors.first_name = "First name is required";
+  }
+  if (!formData.last_name?.trim()) {
+    newErrors.last_name = "Last name is required";
+  }
+  if (formData.email && !EMAIL_REGEX.test(formData.email)) {
+    newErrors.email = "Please enter a valid email address";
+  }
+  if (formData.parent_email && !EMAIL_REGEX.test(formData.parent_email)) {
+    newErrors.parent_email = "Please enter a valid parent email address";
+  }
+  if (!formData.positions || formData.positions.length === 0) {
+    newErrors.positions = "Please select at least one position";
+  }
+  if (formData.jersey_number !== undefined) {
+    if (formData.jersey_number < 0 || formData.jersey_number > 99) {
+      newErrors.jersey_number = "Jersey number must be between 0 and 99";
+    }
+  }
+  if (formData.weight !== undefined && formData.weight <= 0) {
+    newErrors.weight = "Weight must be a positive number";
+  }
+  if (formData.graduation_year !== undefined) {
+    const currentYear = new Date().getFullYear();
+    if (
+      formData.graduation_year < currentYear ||
+      formData.graduation_year > currentYear + 10
+    ) {
+      newErrors.graduation_year = `Graduation year must be between ${currentYear} and ${currentYear + 10}`;
+    }
+  }
+
+  return newErrors;
+}
+
+function buildPlayerData(params: {
+  player?: TeamPlayer | null;
+  teamId: string;
+  formData: Partial<TeamPlayerInsert>;
+}): TeamPlayer {
+  const { player, teamId, formData } = params;
+
+  return {
+    id: player?.id || Date.now().toString(),
+    team_id: teamId,
+    first_name: formData.first_name!,
+    last_name: formData.last_name!,
+    email: formData.email || undefined,
+    phone: formData.phone || undefined,
+    parent_email: formData.parent_email || undefined,
+    positions: formData.positions!,
+    jersey_number: formData.jersey_number,
+    height: formData.height || undefined,
+    weight: formData.weight,
+    graduation_year: formData.graduation_year,
+    team_level: formData.team_level!,
+    created_at: player?.created_at || new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+}
+
+type PlayerBasicInfoSectionProps = {
+  formData: Partial<TeamPlayerInsert>;
+  errors: Record<string, string>;
+  onChange: (
+    field: keyof TeamPlayerInsert,
+    value: string | number | string[] | undefined
+  ) => void;
+};
+
+const PlayerBasicInfoSection: React.FC<PlayerBasicInfoSectionProps> = ({
+  formData,
+  errors,
+  onChange,
+}) => (
+  <div>
+    <Typography variant="headline-sm" as="h3" className="mb-4">
+      Basic Information
+    </Typography>
+    <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap">
+      <div>
+        <Typography
+          variant="body-sm"
+          as="label"
+          className="block font-medium text-primary dark:text-border-light mb-1"
+        >
+          First Name *
+        </Typography>
+        <Input
+          type="text"
+          value={formData.first_name || ""}
+          onChange={(e) => onChange("first_name", e.target.value)}
+          placeholder="John"
+        />
+        {errors.first_name && (
+          <p className="text-error text-sm mt-1">{errors.first_name}</p>
+        )}
+      </div>
+      <div>
+        <Typography
+          variant="body-sm"
+          as="label"
+          className="block font-medium text-primary dark:text-border-light mb-1"
+        >
+          Last Name *
+        </Typography>
+        <Input
+          type="text"
+          value={formData.last_name || ""}
+          onChange={(e) => onChange("last_name", e.target.value)}
+          placeholder="Smith"
+        />
+        {errors.last_name && (
+          <p className="text-error text-sm mt-1">{errors.last_name}</p>
+        )}
+      </div>
+      <div>
+        <Typography
+          variant="body-sm"
+          as="label"
+          className="block font-medium text-primary dark:text-border-light mb-1"
+        >
+          Email
+        </Typography>
+        <Input
+          type="email"
+          value={formData.email || ""}
+          onChange={(e) => onChange("email", e.target.value)}
+          placeholder="john.smith@email.com"
+        />
+        {errors.email && (
+          <p className="text-error text-sm mt-1">{errors.email}</p>
+        )}
+      </div>
+      <div>
+        <Typography
+          variant="body-sm"
+          as="label"
+          className="block font-medium text-primary dark:text-border-light mb-1"
+        >
+          Phone Number
+        </Typography>
+        <Input
+          type="tel"
+          value={formData.phone || ""}
+          onChange={(e) => onChange("phone", e.target.value)}
+          placeholder="(555) 123-4567"
+        />
+      </div>
+      <div className="md:col-span-2">
+        <Typography
+          variant="body-sm"
+          as="label"
+          className="block font-medium text-primary dark:text-border-light mb-1"
+        >
+          Parent Email
+        </Typography>
+        <Input
+          type="email"
+          value={formData.parent_email || ""}
+          onChange={(e) => onChange("parent_email", e.target.value)}
+          placeholder="parent@email.com"
+        />
+        {errors.parent_email && (
+          <p className="text-error text-sm mt-1">{errors.parent_email}</p>
+        )}
+      </div>
+    </div>
+  </div>
+);
+
+type PlayerPositionsSectionProps = {
+  formData: Partial<TeamPlayerInsert>;
+  errors: Record<string, string>;
+  onTogglePosition: (position: string) => void;
+};
+
+const PlayerPositionsSection: React.FC<PlayerPositionsSectionProps> = ({
+  formData,
+  errors,
+  onTogglePosition,
+}) => (
+  <div>
+    <Typography variant="headline-sm" as="h3" className="mb-4 text-primary">
+      Positions *
+    </Typography>
+    <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
+      {FOOTBALL_POSITIONS.map((position) => (
+        <Button
+          key={position}
+          type="button"
+          size="sm"
+          variant={formData.positions?.includes(position) ? "primary" : "ghost"}
+          className={
+            formData.positions?.includes(position)
+              ? ""
+              : "bg-subtle dark:bg-secondary hover:bg-muted dark:hover:bg-tertiary text-secondary dark:text-secondary"
+          }
+          onClick={() => onTogglePosition(position)}
+        >
+          {position}
+        </Button>
+      ))}
+    </div>
+    {errors.positions && (
+      <p className="text-error text-sm mt-2">{errors.positions}</p>
+    )}
+  </div>
+);
+
+type PlayerPhysicalInfoSectionProps = {
+  formData: Partial<TeamPlayerInsert>;
+  errors: Record<string, string>;
+  onChange: (
+    field: keyof TeamPlayerInsert,
+    value: string | number | string[] | undefined
+  ) => void;
+};
+
+const PlayerPhysicalInfoSection: React.FC<PlayerPhysicalInfoSectionProps> = ({
+  formData,
+  errors,
+  onChange,
+}) => (
+  <div>
+    <Typography variant="headline-sm" as="h3" className="mb-4 text-primary">
+      Physical Information
+    </Typography>
+    <div className="grid grid-cols-1 md:grid-cols-4 bc-grid-gap">
+      <div>
+        <Typography
+          variant="body-sm"
+          as="label"
+          className="block font-medium text-primary dark:text-border-light mb-1"
+        >
+          Jersey Number
+        </Typography>
+        <Input
+          type="number"
+          min="0"
+          max="99"
+          value={formData.jersey_number || ""}
+          onChange={(e) =>
+            onChange(
+              "jersey_number",
+              e.target.value ? parseInt(e.target.value) : undefined
+            )
+          }
+          placeholder="12"
+        />
+        {errors.jersey_number && (
+          <p className="text-error text-sm mt-1">{errors.jersey_number}</p>
+        )}
+      </div>
+      <div>
+        <Typography
+          variant="body-sm"
+          as="label"
+          className="block font-medium text-primary dark:text-border-light mb-1"
+        >
+          Height
+        </Typography>
+        <Input
+          type="text"
+          value={formData.height || ""}
+          onChange={(e) => onChange("height", e.target.value)}
+          placeholder="6'2&quot;"
+        />
+      </div>
+      <div>
+        <Typography
+          variant="body-sm"
+          as="label"
+          className="block font-medium text-primary dark:text-border-light mb-1"
+        >
+          Weight (lbs)
+        </Typography>
+        <Input
+          type="number"
+          min="1"
+          value={formData.weight || ""}
+          onChange={(e) =>
+            onChange(
+              "weight",
+              e.target.value ? parseInt(e.target.value) : undefined
+            )
+          }
+          placeholder="185"
+        />
+        {errors.weight && (
+          <p className="text-error text-sm mt-1">{errors.weight}</p>
+        )}
+      </div>
+      <div>
+        <Typography
+          variant="body-sm"
+          as="label"
+          className="block font-medium text-primary dark:text-border-light mb-1"
+        >
+          Graduation Year
+        </Typography>
+        <Input
+          type="number"
+          min={new Date().getFullYear()}
+          max={new Date().getFullYear() + 10}
+          value={formData.graduation_year || ""}
+          onChange={(e) =>
+            onChange(
+              "graduation_year",
+              e.target.value ? parseInt(e.target.value) : undefined
+            )
+          }
+          placeholder="2026"
+        />
+        {errors.graduation_year && (
+          <p className="text-error text-sm mt-1">{errors.graduation_year}</p>
+        )}
+      </div>
+    </div>
+  </div>
+);
+
+type PlayerTeamLevelSectionProps = {
+  teamLevel?: TeamPlayerInsert["team_level"];
+  onChange: (level: TeamPlayerInsert["team_level"]) => void;
+};
+
+const PlayerTeamLevelSection: React.FC<PlayerTeamLevelSectionProps> = ({
+  teamLevel,
+  onChange,
+}) => (
+  <div>
+    <Typography variant="headline-sm" as="h3" className="mb-4 text-primary">
+      Team Level
+    </Typography>
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {TEAM_LEVELS.map((level) => (
+        <Button
+          key={level.value}
+          type="button"
+          size="sm"
+          variant={teamLevel === level.value ? "secondary" : "ghost"}
+          className={
+            teamLevel === level.value
+              ? ""
+              : "surface-card text-primary border-muted hover:bg-muted"
+          }
+          onClick={() => onChange(level.value)}
+        >
+          {level.label}
+        </Button>
+      ))}
+    </div>
+  </div>
+);
+
+type PlayerFormActionsProps = {
+  saving: boolean;
+  isEditing: boolean;
+  onCancel: () => void;
+};
+
+const PlayerFormActions: React.FC<PlayerFormActionsProps> = ({
+  saving,
+  isEditing,
+  onCancel,
+}) => (
+  <div className="flex justify-end space-x-3 pt-4 border-t border-muted dark:border-light">
+    <Button type="button" variant="ghost" onClick={onCancel} disabled={saving}>
+      Cancel
+    </Button>
+    <Button type="submit" variant="primary" loading={saving} disabled={saving}>
+      {(() => {
+        if (saving) return "Saving...";
+        if (isEditing) return "Update Player";
+        return "Add Player";
+      })()}
+    </Button>
+  </div>
+);
+
 interface PlayerFormProps {
   player?: TeamPlayer | null;
   teamId: string;
@@ -78,42 +465,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
   };
   // Validate form
   const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
-    if (!formData.first_name?.trim()) {
-      newErrors.first_name = "First name is required";
-    }
-    if (!formData.last_name?.trim()) {
-      newErrors.last_name = "Last name is required";
-    }
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
-    }
-    if (
-      formData.parent_email &&
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.parent_email)
-    ) {
-      newErrors.parent_email = "Please enter a valid parent email address";
-    }
-    if (!formData.positions || formData.positions.length === 0) {
-      newErrors.positions = "Please select at least one position";
-    }
-    if (formData.jersey_number !== undefined) {
-      if (formData.jersey_number < 0 || formData.jersey_number > 99) {
-        newErrors.jersey_number = "Jersey number must be between 0 and 99";
-      }
-    }
-    if (formData.weight !== undefined && formData.weight <= 0) {
-      newErrors.weight = "Weight must be a positive number";
-    }
-    if (formData.graduation_year !== undefined) {
-      const currentYear = new Date().getFullYear();
-      if (
-        formData.graduation_year < currentYear ||
-        formData.graduation_year > currentYear + 10
-      ) {
-        newErrors.graduation_year = `Graduation year must be between ${currentYear} and ${currentYear + 10}`;
-      }
-    }
+    const newErrors = validatePlayerForm(formData);
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -125,23 +477,7 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
     }
     setSaving(true);
     try {
-      const playerData: TeamPlayer = {
-        id: player?.id || Date.now().toString(),
-        team_id: teamId,
-        first_name: formData.first_name!,
-        last_name: formData.last_name!,
-        email: formData.email || undefined,
-        phone: formData.phone || undefined,
-        parent_email: formData.parent_email || undefined,
-        positions: formData.positions!,
-        jersey_number: formData.jersey_number,
-        height: formData.height || undefined,
-        weight: formData.weight,
-        graduation_year: formData.graduation_year,
-        team_level: formData.team_level!,
-        created_at: player?.created_at || new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
+      const playerData = buildPlayerData({ player, teamId, formData });
       onSave(playerData);
     } catch (error) {
       logError("Error saving player:", error);
@@ -160,300 +496,30 @@ export const PlayerForm: React.FC<PlayerFormProps> = ({
         </div>
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          {/* Basic Information */}
-          <div>
-            <Typography variant="headline-sm" as="h3" className="mb-4">
-              Basic Information
-            </Typography>
-            <div className="grid grid-cols-1 md:grid-cols-2 bc-grid-gap">
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-primary dark:text-border-light mb-1"
-                >
-                  First Name *
-                </Typography>
-                <Input
-                  type="text"
-                  value={formData.first_name || ""}
-                  onChange={(e) =>
-                    handleInputChange("first_name", e.target.value)
-                  }
-                  placeholder="John"
-                />
-                {errors.first_name && (
-                  <p className="text-error text-sm mt-1">{errors.first_name}</p>
-                )}
-              </div>
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-primary dark:text-border-light mb-1"
-                >
-                  Last Name *
-                </Typography>
-                <Input
-                  type="text"
-                  value={formData.last_name || ""}
-                  onChange={(e) =>
-                    handleInputChange("last_name", e.target.value)
-                  }
-                  placeholder="Smith"
-                />
-                {errors.last_name && (
-                  <p className="text-error text-sm mt-1">{errors.last_name}</p>
-                )}
-              </div>
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-primary dark:text-border-light mb-1"
-                >
-                  Email
-                </Typography>
-                <Input
-                  type="email"
-                  value={formData.email || ""}
-                  onChange={(e) => handleInputChange("email", e.target.value)}
-                  placeholder="john.smith@email.com"
-                />
-                {errors.email && (
-                  <p className="text-error text-sm mt-1">{errors.email}</p>
-                )}
-              </div>
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-primary dark:text-border-light mb-1"
-                >
-                  Phone Number
-                </Typography>
-                <Input
-                  type="tel"
-                  value={formData.phone || ""}
-                  onChange={(e) => handleInputChange("phone", e.target.value)}
-                  placeholder="(555) 123-4567"
-                />
-              </div>
-              <div className="md:col-span-2">
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-primary dark:text-border-light mb-1"
-                >
-                  Parent Email
-                </Typography>
-                <Input
-                  type="email"
-                  value={formData.parent_email || ""}
-                  onChange={(e) =>
-                    handleInputChange("parent_email", e.target.value)
-                  }
-                  placeholder="parent@email.com"
-                />
-                {errors.parent_email && (
-                  <p className="text-error text-sm mt-1">
-                    {errors.parent_email}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-          {/* Positions */}
-          <div>
-            <Typography
-              variant="headline-sm"
-              as="h3"
-              className="mb-4 text-primary"
-            >
-              Positions *
-            </Typography>
-            <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
-              {FOOTBALL_POSITIONS.map((position) => (
-                <Button
-                  key={position}
-                  type="button"
-                  size="sm"
-                  variant={
-                    formData.positions?.includes(position) ? "primary" : "ghost"
-                  }
-                  className={
-                    formData.positions?.includes(position)
-                      ? ""
-                      : "bg-subtle dark:bg-secondary hover:bg-muted dark:hover:bg-tertiary text-secondary dark:text-secondary"
-                  }
-                  onClick={() => handlePositionToggle(position)}
-                >
-                  {position}
-                </Button>
-              ))}
-            </div>
-            {errors.positions && (
-              <p className="text-error text-sm mt-2">{errors.positions}</p>
-            )}
-          </div>
-          {/* Physical Information */}
-          <div>
-            <Typography
-              variant="headline-sm"
-              as="h3"
-              className="mb-4 text-primary"
-            >
-              Physical Information
-            </Typography>
-            <div className="grid grid-cols-1 md:grid-cols-4 bc-grid-gap">
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-primary dark:text-border-light mb-1"
-                >
-                  Jersey Number
-                </Typography>
-                <Input
-                  type="number"
-                  min="0"
-                  max="99"
-                  value={formData.jersey_number || ""}
-                  onChange={(e) =>
-                    handleInputChange(
-                      "jersey_number",
-                      e.target.value ? parseInt(e.target.value) : undefined
-                    )
-                  }
-                  placeholder="12"
-                />
-                {errors.jersey_number && (
-                  <p className="text-error text-sm mt-1">
-                    {errors.jersey_number}
-                  </p>
-                )}
-              </div>
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-primary dark:text-border-light mb-1"
-                >
-                  Height
-                </Typography>
-                <Input
-                  type="text"
-                  value={formData.height || ""}
-                  onChange={(e) => handleInputChange("height", e.target.value)}
-                  placeholder="6'2&quot;"
-                />
-              </div>
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-primary dark:text-border-light mb-1"
-                >
-                  Weight (lbs)
-                </Typography>
-                <Input
-                  type="number"
-                  min="1"
-                  value={formData.weight || ""}
-                  onChange={(e) =>
-                    handleInputChange(
-                      "weight",
-                      e.target.value ? parseInt(e.target.value) : undefined
-                    )
-                  }
-                  placeholder="185"
-                />
-                {errors.weight && (
-                  <p className="text-error text-sm mt-1">{errors.weight}</p>
-                )}
-              </div>
-              <div>
-                <Typography
-                  variant="body-sm"
-                  as="label"
-                  className="block font-medium text-primary dark:text-border-light mb-1"
-                >
-                  Graduation Year
-                </Typography>
-                <Input
-                  type="number"
-                  min={new Date().getFullYear()}
-                  max={new Date().getFullYear() + 10}
-                  value={formData.graduation_year || ""}
-                  onChange={(e) =>
-                    handleInputChange(
-                      "graduation_year",
-                      e.target.value ? parseInt(e.target.value) : undefined
-                    )
-                  }
-                  placeholder="2026"
-                />
-                {errors.graduation_year && (
-                  <p className="text-error text-sm mt-1">
-                    {errors.graduation_year}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-          {/* Team Level */}
-          <div>
-            <Typography
-              variant="headline-sm"
-              as="h3"
-              className="mb-4 text-primary"
-            >
-              Team Level
-            </Typography>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {TEAM_LEVELS.map((level) => (
-                <Button
-                  key={level.value}
-                  type="button"
-                  size="sm"
-                  variant={
-                    formData.team_level === level.value ? "secondary" : "ghost"
-                  }
-                  className={
-                    formData.team_level === level.value
-                      ? ""
-                      : "surface-card text-primary border-muted hover:bg-muted"
-                  }
-                  onClick={() => handleInputChange("team_level", level.value)}
-                >
-                  {level.label}
-                </Button>
-              ))}
-            </div>
-          </div>
-          {/* Actions */}
-          <div className="flex justify-end space-x-3 pt-4 border-t border-muted dark:border-light">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={onCancel}
-              disabled={saving}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              variant="primary"
-              loading={saving}
-              disabled={saving}
-            >
-              {(() => {
-                if (saving) return "Saving...";
-                if (player) return "Update Player";
-                return "Add Player";
-              })()}
-            </Button>
-          </div>
+          <PlayerBasicInfoSection
+            formData={formData}
+            errors={errors}
+            onChange={handleInputChange}
+          />
+          <PlayerPositionsSection
+            formData={formData}
+            errors={errors}
+            onTogglePosition={handlePositionToggle}
+          />
+          <PlayerPhysicalInfoSection
+            formData={formData}
+            errors={errors}
+            onChange={handleInputChange}
+          />
+          <PlayerTeamLevelSection
+            teamLevel={formData.team_level}
+            onChange={(level) => handleInputChange("team_level", level)}
+          />
+          <PlayerFormActions
+            saving={saving}
+            isEditing={!!player}
+            onCancel={onCancel}
+          />
         </form>
       </div>
     </div>

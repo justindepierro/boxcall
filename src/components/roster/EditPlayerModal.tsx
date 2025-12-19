@@ -60,6 +60,162 @@ const gradeOptions = [
   "College",
 ];
 
+function buildInitialFormData(player: RosterPlayerView): PlayerFormData {
+  const heightFeet = player.height_inches
+    ? Math.floor(player.height_inches / 12).toString()
+    : "";
+  const heightInches = player.height_inches
+    ? (player.height_inches % 12).toString()
+    : "";
+
+  return {
+    first_name: player.first_name || "",
+    last_name: player.last_name || "",
+    nickname: player.nickname || "",
+    jersey_number: player.jersey_number?.toString() || "",
+    position: player.position || "",
+    grade_level: player.grade_level || "",
+    heightFeet,
+    heightInches,
+    weight_lbs: player.weight_lbs?.toString() || "",
+  };
+}
+
+function validatePlayerForm(formData: PlayerFormData): string | null {
+  if (!formData.first_name.trim() || !formData.last_name.trim()) {
+    return "First name and last name are required";
+  }
+  if (!formData.position.trim()) {
+    return "At least one position is required";
+  }
+
+  if (formData.heightFeet.trim() || formData.heightInches.trim()) {
+    const feet = parseInt(formData.heightFeet.trim() || "0", 10) || 0;
+    const inches = parseInt(formData.heightInches.trim() || "0", 10) || 0;
+    if (feet < 0 || inches < 0 || inches > 11) {
+      return "Invalid height format. Inches must be 0-11.";
+    }
+  }
+
+  return null;
+}
+
+function calculateTotalHeightInches(
+  formData: PlayerFormData
+): number | undefined {
+  const heightFeet = parseInt(formData.heightFeet.trim() || "0", 10) || 0;
+  const heightInches = parseInt(formData.heightInches.trim() || "0", 10) || 0;
+  if (heightFeet <= 0 && heightInches <= 0) return undefined;
+  return heightFeet * 12 + heightInches;
+}
+
+function buildUpdateData(formData: PlayerFormData) {
+  return {
+    first_name: formData.first_name.trim(),
+    last_name: formData.last_name.trim(),
+    nickname: formData.nickname.trim() || undefined,
+    jersey_number: formData.jersey_number.trim()
+      ? parseInt(formData.jersey_number.trim(), 10)
+      : undefined,
+    position: formData.position.trim(),
+    grade_level: formData.grade_level.trim() || undefined,
+    height_inches: calculateTotalHeightInches(formData),
+    weight_lbs: formData.weight_lbs.trim()
+      ? parseFloat(formData.weight_lbs.trim())
+      : undefined,
+  };
+}
+
+function ErrorBanner({ message }: { message: string }) {
+  return (
+    <div className="p-sm bg-error-100 dark:bg-error-900/30 border border-error-500 rounded-lg">
+      <Typography
+        variant="body-sm"
+        className="text-error-700 dark:text-error-300"
+      >
+        {message}
+      </Typography>
+    </div>
+  );
+}
+
+function PositionsField({
+  positionCsv,
+  saving,
+  onToggle,
+}: {
+  positionCsv: string;
+  saving: boolean;
+  onToggle: (pos: string) => void;
+}) {
+  const selectedPositions = positionCsv
+    ? positionCsv.split(",").filter(Boolean)
+    : [];
+
+  return (
+    <div>
+      <label className="block text-sm font-medium mb-2">Position(s) *</label>
+      {selectedPositions.length > 0 && (
+        <div className="flex gap-2 flex-wrap mb-3">
+          {selectedPositions.map((pos) => (
+            <span
+              key={pos}
+              className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700"
+            >
+              {pos}
+              <button
+                type="button"
+                onClick={() => onToggle(pos)}
+                className="ml-1 hover:text-blue-900 dark:hover:text-blue-100"
+                disabled={saving}
+              >
+                ×
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+
+      <FormSelect
+        value=""
+        onChange={(value) => {
+          if (value) onToggle(value);
+        }}
+        disabled={saving}
+        placeholder="+ Add Position"
+        options={positionOptions.map((pos) => ({
+          value: pos,
+          label: pos,
+        }))}
+      />
+      <p className="text-xs text-secondary mt-1">
+        Select multiple positions if player plays more than one
+      </p>
+    </div>
+  );
+}
+
+function ModalActions({
+  saving,
+  onCancel,
+  onSave,
+}: {
+  saving: boolean;
+  onCancel: () => void;
+  onSave: () => void;
+}) {
+  return (
+    <div className="flex justify-end gap-sm pt-4 border-t border-bg-secondary">
+      <Button variant="outline" onClick={onCancel} disabled={saving}>
+        Cancel
+      </Button>
+      <Button onClick={onSave} disabled={saving}>
+        {saving ? "Saving..." : "Save Changes"}
+      </Button>
+    </div>
+  );
+}
+
 export default function EditPlayerModal({
   player,
   isOpen,
@@ -84,26 +240,8 @@ export default function EditPlayerModal({
 
   // Initialize form data from player prop
   useEffect(() => {
-    if (player) {
-      const heightFeet = player.height_inches
-        ? Math.floor(player.height_inches / 12).toString()
-        : "";
-      const heightInches = player.height_inches
-        ? (player.height_inches % 12).toString()
-        : "";
-
-      setFormData({
-        first_name: player.first_name || "",
-        last_name: player.last_name || "",
-        nickname: player.nickname || "",
-        jersey_number: player.jersey_number?.toString() || "",
-        position: player.position || "",
-        grade_level: player.grade_level || "",
-        heightFeet,
-        heightInches,
-        weight_lbs: player.weight_lbs?.toString() || "",
-      });
-    }
+    if (!player) return;
+    setFormData(buildInitialFormData(player));
   }, [player]);
 
   const handleFieldChange = (field: keyof PlayerFormData, value: string) => {
@@ -112,56 +250,17 @@ export default function EditPlayerModal({
   };
 
   const handleSave = async () => {
-    // Validate required fields
-    if (!formData.first_name.trim() || !formData.last_name.trim()) {
-      setFormError("First name and last name are required");
+    const validationError = validatePlayerForm(formData);
+    if (validationError) {
+      setFormError(validationError);
       return;
-    }
-
-    if (!formData.position.trim()) {
-      setFormError("At least one position is required");
-      return;
-    }
-
-    // Validate height format
-    if (formData.heightFeet.trim() || formData.heightInches.trim()) {
-      const feet = parseInt(formData.heightFeet.trim() || "0", 10) || 0;
-      const inches = parseInt(formData.heightInches.trim() || "0", 10) || 0;
-
-      if (feet < 0 || inches < 0 || inches > 11) {
-        setFormError("Invalid height format. Inches must be 0-11.");
-        return;
-      }
     }
 
     try {
       setSaving(true);
       setFormError(null);
 
-      // Calculate total height in inches
-      const heightFeet = parseInt(formData.heightFeet.trim() || "0", 10) || 0;
-      const heightInches =
-        parseInt(formData.heightInches.trim() || "0", 10) || 0;
-      const totalHeightInches =
-        heightFeet > 0 || heightInches > 0
-          ? heightFeet * 12 + heightInches
-          : undefined;
-
-      // Prepare update data
-      const updateData = {
-        first_name: formData.first_name.trim(),
-        last_name: formData.last_name.trim(),
-        nickname: formData.nickname.trim() || undefined,
-        jersey_number: formData.jersey_number.trim()
-          ? parseInt(formData.jersey_number.trim(), 10)
-          : undefined,
-        position: formData.position.trim(),
-        grade_level: formData.grade_level.trim() || undefined,
-        height_inches: totalHeightInches,
-        weight_lbs: formData.weight_lbs.trim()
-          ? parseFloat(formData.weight_lbs.trim())
-          : undefined,
-      };
+      const updateData = buildUpdateData(formData);
 
       await rosterService.updatePlayer(player.id, updateData);
 
@@ -206,16 +305,7 @@ export default function EditPlayerModal({
       size={modalSize}
     >
       <div className="space-y-4 p-md">
-        {formError && (
-          <div className="p-sm bg-error-100 dark:bg-error-900/30 border border-error-500 rounded-lg">
-            <Typography
-              variant="body-sm"
-              className="text-error-700 dark:text-error-300"
-            >
-              {formError}
-            </Typography>
-          </div>
-        )}
+        {formError && <ErrorBanner message={formError} />}
 
         {/* Basic Information */}
         <div className="space-y-4">
@@ -255,53 +345,11 @@ export default function EditPlayerModal({
             Roster Information
           </Typography>
 
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Position(s) *
-            </label>
-            {/* Selected Positions Display */}
-            {formData.position && (
-              <div className="flex gap-2 flex-wrap mb-3">
-                {formData.position
-                  .split(",")
-                  .filter(Boolean)
-                  .map((pos) => (
-                    <span
-                      key={pos}
-                      className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700"
-                    >
-                      {pos}
-                      <button
-                        type="button"
-                        onClick={() => handlePositionToggle(pos)}
-                        className="ml-1 hover:text-blue-900 dark:hover:text-blue-100"
-                        disabled={saving}
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-              </div>
-            )}
-            {/* Position Selector */}
-            <FormSelect
-              value=""
-              onChange={(value) => {
-                if (value) {
-                  handlePositionToggle(value);
-                }
-              }}
-              disabled={saving}
-              placeholder="+ Add Position"
-              options={positionOptions.map((pos) => ({
-                value: pos,
-                label: pos,
-              }))}
-            />
-            <p className="text-xs text-secondary mt-1">
-              Select multiple positions if player plays more than one
-            </p>
-          </div>
+          <PositionsField
+            positionCsv={formData.position}
+            saving={saving}
+            onToggle={handlePositionToggle}
+          />
 
           <div className="grid grid-cols-2 gap-4">
             <Input
@@ -367,15 +415,7 @@ export default function EditPlayerModal({
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex justify-end gap-sm pt-4 border-t border-bg-secondary">
-          <Button variant="outline" onClick={onClose} disabled={saving}>
-            Cancel
-          </Button>
-          <Button onClick={handleSave} disabled={saving}>
-            {saving ? "Saving..." : "Save Changes"}
-          </Button>
-        </div>
+        <ModalActions saving={saving} onCancel={onClose} onSave={handleSave} />
       </div>
     </Modal>
   );

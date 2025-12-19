@@ -8,6 +8,30 @@ interface ShortcutHandlers {
   onFavorites?: () => void;
 }
 
+type ShortcutHandlerKey = keyof ShortcutHandlers;
+
+const MOD_SHORTCUTS: Record<string, ShortcutHandlerKey> = {
+  k: "onCommandPalette",
+  f: "onSearch",
+  n: "onNewPlay",
+};
+
+const PLAIN_SHORTCUTS: Record<string, ShortcutHandlerKey> = {
+  v: "onToggleView",
+  f: "onFavorites",
+};
+
+function isTypingInInput(target: EventTarget | null): boolean {
+  return (
+    target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement
+  );
+}
+
+function invokeHandler(handlers: ShortcutHandlers, key?: ShortcutHandlerKey) {
+  if (!key) return;
+  handlers[key]?.();
+}
+
 /**
  * Hook for registering playbook keyboard shortcuts
  * Cmd/Ctrl + K: Open command palette
@@ -20,47 +44,26 @@ export function usePlaybookShortcuts(handlers: ShortcutHandlers) {
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       // Don't trigger shortcuts when typing in input fields
-      if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
-      ) {
+      if (isTypingInInput(e.target)) {
         return;
       }
 
       const isMod = e.metaKey || e.ctrlKey;
+      const key = e.key.toLowerCase();
 
-      // Cmd/Ctrl + K: Command palette
-      if (isMod && e.key === "k") {
+      const modShortcut = isMod ? MOD_SHORTCUTS[key] : undefined;
+      if (modShortcut) {
         e.preventDefault();
-        handlers.onCommandPalette?.();
+        invokeHandler(handlers, modShortcut);
         return;
       }
 
-      // Cmd/Ctrl + F: Focus search
-      if (isMod && e.key === "f") {
-        e.preventDefault();
-        handlers.onSearch?.();
-        return;
-      }
-
-      // Cmd/Ctrl + N: New play
-      if (isMod && e.key === "n") {
-        e.preventDefault();
-        handlers.onNewPlay?.();
-        return;
-      }
-
-      // V: Toggle view (without modifiers)
-      if (e.key === "v" && !isMod && !e.shiftKey && !e.altKey) {
-        e.preventDefault();
-        handlers.onToggleView?.();
-        return;
-      }
-
-      // F: Show favorites (without modifiers)
-      if (e.key === "f" && !isMod && !e.shiftKey && !e.altKey) {
-        e.preventDefault();
-        handlers.onFavorites?.();
+      if (!isMod && !e.shiftKey && !e.altKey) {
+        const plainShortcut = PLAIN_SHORTCUTS[key];
+        if (plainShortcut) {
+          e.preventDefault();
+          invokeHandler(handlers, plainShortcut);
+        }
       }
     };
 

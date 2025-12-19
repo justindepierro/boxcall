@@ -23,7 +23,87 @@ import type {
   PlayerPosition,
 } from "../types/personnel";
 
+type PersonnelPlayerInput = Omit<
+  PersonnelPlayer,
+  "id" | "config_id" | "created_at"
+>;
+
 export class PersonnelService {
+  private static buildPersonnelConfigurationResult(
+    config: {
+      id: string;
+      playbook_id: string;
+      name: string;
+      description: string | null;
+      badge_customization: BadgeCustomization | null;
+      created_at: string;
+      updated_at: string;
+    },
+    players: PersonnelPlayer[]
+  ): PersonnelConfiguration {
+    return {
+      id: config.id,
+      playbook_id: config.playbook_id,
+      name: config.name,
+      description: config.description ?? undefined,
+      confidence_score: (config as any).confidence_score ?? 0,
+      last_analyzed_at: (config as any).last_analyzed_at ?? null,
+      analysis_play_count: (config as any).analysis_play_count ?? 0,
+      usage_count: (config as any).usage_count ?? 0,
+      created_at: config.created_at,
+      updated_at: config.updated_at,
+      badgeCustomization: config.badge_customization ?? undefined,
+      players,
+    };
+  }
+
+  private static validatePlayersUpdate(players: PersonnelPlayerInput[]): void {
+    if (players.length === 0) return;
+    if (players[0].player_position !== "QB") {
+      throw new Error("QB must be at position 0 (sort_order 0)");
+    }
+  }
+
+  private static async replacePersonnelPlayers(
+    configId: string,
+    players: PersonnelPlayerInput[]
+  ): Promise<PersonnelPlayer[]> {
+    const { error: deleteError } = await supabase
+      .from("personnel_players")
+      .delete()
+      .eq("config_id", configId);
+
+    if (deleteError) throw deleteError;
+
+    const playersToInsert = players.map((player, index) => ({
+      config_id: configId,
+      player_position: player.player_position,
+      label: player.label,
+      sort_order: player.sort_order ?? index,
+      is_wildcat_qb: player.is_wildcat_qb ?? false,
+    }));
+
+    const { data: insertedPlayers, error: playersError } = await supabase
+      .from("personnel_players")
+      .insert(playersToInsert)
+      .select();
+
+    if (playersError) throw playersError;
+    return (insertedPlayers || []) as PersonnelPlayer[];
+  }
+
+  private static async fetchPersonnelPlayers(
+    configId: string
+  ): Promise<PersonnelPlayer[]> {
+    const { data, error } = await supabase
+      .from("personnel_players")
+      .select("*")
+      .eq("config_id", configId)
+      .order("sort_order");
+
+    if (error) throw error;
+    return (data || []) as PersonnelPlayer[];
+  }
   /**
    * Get all personnel configurations for a playbook
    * @param playbookId - Playbook UUID
@@ -310,89 +390,16 @@ export class PersonnelService {
       };
       const typedUpdatedConfig = updatedConfig as DBConfig;
 
-      // If players array provided, replace all players
-      if (updates.players) {
-        // Validate QB at index 0
-        if (
-          updates.players.length > 0 &&
-          updates.players[0].player_position !== "QB"
-        ) {
-          throw new Error("QB must be at position 0 (sort_order 0)");
-        }
+      const playersUpdate = updates.players;
+      const typedPlayers = playersUpdate
+        ? (PersonnelService.validatePlayersUpdate(playersUpdate),
+          await PersonnelService.replacePersonnelPlayers(id, playersUpdate))
+        : await PersonnelService.fetchPersonnelPlayers(id);
 
-        // Delete existing players
-        const { error: deleteError } = await supabase
-          .from("personnel_players")
-          .delete()
-          .eq("config_id", id);
-
-        if (deleteError) throw deleteError;
-
-        // Insert new players
-        const playersToInsert = updates.players.map((player, index) => ({
-          config_id: id,
-          player_position: player.player_position,
-          label: player.label,
-          sort_order: player.sort_order ?? index,
-          is_wildcat_qb: player.is_wildcat_qb ?? false,
-        }));
-
-        const { data: players, error: playersError } = await supabase
-          .from("personnel_players")
-          .insert(playersToInsert)
-          .select();
-
-        if (playersError) throw playersError;
-
-        // Type assertion for players
-        const typedPlayers = (players || []) as PersonnelPlayer[];
-
-        return {
-          id: typedUpdatedConfig.id,
-          playbook_id: typedUpdatedConfig.playbook_id,
-          name: typedUpdatedConfig.name,
-          description: typedUpdatedConfig.description ?? undefined,
-          confidence_score: (typedUpdatedConfig as any).confidence_score ?? 0,
-          last_analyzed_at:
-            (typedUpdatedConfig as any).last_analyzed_at ?? null,
-          analysis_play_count:
-            (typedUpdatedConfig as any).analysis_play_count ?? 0,
-          usage_count: (typedUpdatedConfig as any).usage_count ?? 0,
-          created_at: typedUpdatedConfig.created_at,
-          updated_at: typedUpdatedConfig.updated_at,
-          badgeCustomization:
-            typedUpdatedConfig.badge_customization ?? undefined,
-          players: typedPlayers,
-        };
-      }
-
-      // No players update - fetch existing players
-      const { data: players, error: playersError } = await supabase
-        .from("personnel_players")
-        .select("*")
-        .eq("config_id", id)
-        .order("sort_order");
-
-      if (playersError) throw playersError;
-
-      // Type assertion for players
-      const typedPlayers = (players || []) as PersonnelPlayer[];
-
-      return {
-        id: typedUpdatedConfig.id,
-        playbook_id: typedUpdatedConfig.playbook_id,
-        name: typedUpdatedConfig.name,
-        description: typedUpdatedConfig.description ?? undefined,
-        confidence_score: (typedUpdatedConfig as any).confidence_score ?? 0,
-        last_analyzed_at: (typedUpdatedConfig as any).last_analyzed_at ?? null,
-        analysis_play_count:
-          (typedUpdatedConfig as any).analysis_play_count ?? 0,
-        usage_count: (typedUpdatedConfig as any).usage_count ?? 0,
-        created_at: typedUpdatedConfig.created_at,
-        updated_at: typedUpdatedConfig.updated_at,
-        badgeCustomization: typedUpdatedConfig.badge_customization ?? undefined,
-        players: typedPlayers,
-      };
+      return PersonnelService.buildPersonnelConfigurationResult(
+        typedUpdatedConfig,
+        typedPlayers
+      );
     } catch (error) {
       logError("Failed to update personnel configuration:", error);
       throw error;

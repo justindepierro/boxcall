@@ -35,24 +35,9 @@ interface UsePlaybookHandlersProps {
   refreshActivities: () => Promise<void>;
 }
 
-export function usePlaybookHandlers({
-  activeTeamId,
-  state,
-  dispatch,
-  openModal,
-  closeAllModals,
-  setDiagramPlay,
-  setDiagramMode,
-  setEditingScript,
-  setShowPracticeScriptModal,
-  setShowBulkDeleteConfirm,
-  setPlayToPost,
-  refreshActivities,
-}: UsePlaybookHandlersProps) {
-  const toast = useToast();
-  const navigate = useNavigate();
+function usePlaybookViewHandlers(params: { dispatch: React.Dispatch<any> }) {
+  const { dispatch } = params;
 
-  // View handlers
   const handleViewChange = useCallback(
     (view: CoachingView) => {
       dispatch({ type: "SET_VIEW", view });
@@ -80,7 +65,22 @@ export function usePlaybookHandlers({
     dispatch({ type: "CLEAR_SELECTION" });
   }, [dispatch]);
 
-  // Modal handlers
+  return {
+    handleViewChange,
+    handleTeamTypeChange,
+    handleFiltersChange,
+    handleClearSelection,
+  };
+}
+
+function usePlaybookModalHandlers(params: {
+  openModal: (type: Exclude<ModalType, null>, options?: ModalOptions) => void;
+  setDiagramPlay: (play: Play | null) => void;
+  setDiagramMode: (mode: "edit" | "quick-play") => void;
+  setPlayToPost: (play: Play | null) => void;
+}) {
+  const { openModal, setDiagramMode, setDiagramPlay, setPlayToPost } = params;
+
   const handleOpenBuilder = useCallback(() => {
     triggerHapticFeedback("light");
     openModal("addNewPlay");
@@ -134,7 +134,35 @@ export function usePlaybookHandlers({
     [openModal, setPlayToPost]
   );
 
-  // Bulk action handlers
+  return {
+    handleOpenBuilder,
+    handleOpenQuickCreate,
+    handleOpenSettings,
+    handleOpenPersonnel,
+    handleEditPlay,
+    handleOpenKeyboardShortcuts,
+    handleOpenAssignments,
+    handlePostToTeamBulletin,
+  };
+}
+
+function usePlaybookBulkHandlers(params: {
+  state: PlaybookState;
+  dispatch: React.Dispatch<any>;
+  openModal: (type: Exclude<ModalType, null>, options?: ModalOptions) => void;
+  setShowBulkDeleteConfirm: (show: boolean) => void;
+  refreshActivities: () => Promise<void>;
+  toast: ReturnType<typeof useToast>;
+}) {
+  const {
+    state,
+    dispatch,
+    openModal,
+    setShowBulkDeleteConfirm,
+    refreshActivities,
+    toast,
+  } = params;
+
   const handleBulkAction = useCallback(
     (action: string) => {
       const selectedCount = state.selectedPlayIds?.size || 0;
@@ -230,7 +258,16 @@ export function usePlaybookHandlers({
     }
   }, [state.selectedPlayIds, dispatch, refreshActivities, toast]);
 
-  // Play handlers
+  return { handleBulkAction, confirmBulkDelete };
+}
+
+function usePlaybookPlayHandlers(params: {
+  dispatch: React.Dispatch<any>;
+  openModal: (type: Exclude<ModalType, null>, options?: ModalOptions) => void;
+  toast: ReturnType<typeof useToast>;
+}) {
+  const { dispatch, openModal, toast } = params;
+
   const handlePlayCountChange = useCallback(
     (count: number) => {
       dispatch({ type: "SET_PLAYS_CREATED", count });
@@ -296,7 +333,28 @@ export function usePlaybookHandlers({
     [toast, openModal]
   );
 
-  // Workflow handlers
+  return { handlePlayCountChange, handleDuplicatePlay };
+}
+
+function usePlaybookWorkflowHandlers(params: {
+  activeTeamId: string | null;
+  dispatch: React.Dispatch<any>;
+  setEditingScript: React.Dispatch<React.SetStateAction<PracticeScript | null>>;
+  setShowPracticeScriptModal: (show: boolean) => void;
+  refreshActivities: () => Promise<void>;
+  toast: ReturnType<typeof useToast>;
+  navigate: ReturnType<typeof useNavigate>;
+}) {
+  const {
+    activeTeamId,
+    dispatch,
+    setEditingScript,
+    setShowPracticeScriptModal,
+    refreshActivities,
+    toast,
+    navigate,
+  } = params;
+
   const handleAddToPracticeScript = useCallback(
     async (play: Play) => {
       triggerHapticFeedback("success");
@@ -335,7 +393,6 @@ export function usePlaybookHandlers({
     [toast]
   );
 
-  // Practice script handlers
   const handleOpenPracticeScriptBuilder = useCallback(
     (script?: PracticeScript) => {
       triggerHapticFeedback("light");
@@ -356,7 +413,6 @@ export function usePlaybookHandlers({
     navigate("/game-plans");
   }, [navigate]);
 
-  // Pull to refresh
   const handlePullRefresh = useCallback(async () => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
@@ -369,34 +425,64 @@ export function usePlaybookHandlers({
   }, [dispatch, toast]);
 
   return {
-    // View handlers
-    handleViewChange,
-    handleTeamTypeChange,
-    handleFiltersChange,
-    handleClearSelection,
-    // Modal handlers
-    handleOpenBuilder,
-    handleOpenQuickCreate,
-    handleOpenSettings,
-    handleOpenPersonnel,
-    handleEditPlay,
-    handleOpenKeyboardShortcuts,
-    handleOpenAssignments,
-    handlePostToTeamBulletin,
-    // Bulk actions
-    handleBulkAction,
-    confirmBulkDelete,
-    // Play handlers
-    handlePlayCountChange,
-    handleDuplicatePlay,
-    // Workflow handlers
     handleAddToPracticeScript,
     handleAddToGamePlan,
     handleOpenPracticeScriptBuilder,
     handleQuickNewPracticeScript,
     handleQuickNewGamePlan,
-    // Refresh
     handlePullRefresh,
+  };
+}
+
+export function usePlaybookHandlers({
+  activeTeamId,
+  state,
+  dispatch,
+  openModal,
+  closeAllModals,
+  setDiagramPlay,
+  setDiagramMode,
+  setEditingScript,
+  setShowPracticeScriptModal,
+  setShowBulkDeleteConfirm,
+  setPlayToPost,
+  refreshActivities,
+}: UsePlaybookHandlersProps) {
+  const toast = useToast();
+  const navigate = useNavigate();
+
+  const viewHandlers = usePlaybookViewHandlers({ dispatch });
+  const modalHandlers = usePlaybookModalHandlers({
+    openModal,
+    setDiagramPlay,
+    setDiagramMode,
+    setPlayToPost,
+  });
+  const bulkHandlers = usePlaybookBulkHandlers({
+    state,
+    dispatch,
+    openModal,
+    setShowBulkDeleteConfirm,
+    refreshActivities,
+    toast,
+  });
+  const playHandlers = usePlaybookPlayHandlers({ dispatch, openModal, toast });
+  const workflowHandlers = usePlaybookWorkflowHandlers({
+    activeTeamId,
+    dispatch,
+    setEditingScript,
+    setShowPracticeScriptModal,
+    refreshActivities,
+    toast,
+    navigate,
+  });
+
+  return {
+    ...viewHandlers,
+    ...modalHandlers,
+    ...bulkHandlers,
+    ...playHandlers,
+    ...workflowHandlers,
     closeAllModals,
   };
 }

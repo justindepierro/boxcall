@@ -110,43 +110,14 @@ interface UsePracticeSessionReturn {
   hasPendingSync: boolean;
 }
 
-/**
- * Hook for managing practice session tracking
- * Self-contained - handles script loading, session creation, and rep tracking
- */
-export function usePracticeSession({
-  practiceScriptId,
-  mode,
-  sessionDate = new Date(),
-}: UsePracticeSessionOptions): UsePracticeSessionReturn {
-  const { activeTeamId } = useActiveTeamStore();
-
-  // Practice script state
+function usePracticeScriptLoader(practiceScriptId: string) {
   const [practiceScript, setPracticeScript] = useState<PracticeScript | null>(
     null
   );
   const [scriptPlays, setScriptPlays] = useState<PracticeScriptPlay[]>([]);
-
-  // Session state
-  const [session, setSession] = useState<PracticeSession | null>(null);
-  const [isSessionActive, setIsSessionActive] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-
-  // Tracking state
-  const [currentPlayIndex, setCurrentPlayIndex] = useState(0);
-  const [currentRepNumber, setCurrentRepNumber] = useState(1);
-
-  // Rep history per play (playIndex -> Map of repNumber -> result)
-  const [playRepHistory, setPlayRepHistory] = useState<
-    Map<number, Map<number, { result: ExecutionResult; notes?: string }>>
-  >(new Map());
-
-  // UI state
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const [hasPendingSync] = useState(false); // TODO: Implement offline sync
 
-  // Load practice script on mount
   useEffect(() => {
     const loadScript = async () => {
       if (!practiceScriptId) {
@@ -196,65 +167,107 @@ export function usePracticeSession({
     loadScript();
   }, [practiceScriptId]);
 
-  // Computed values
-  const currentPlay = scriptPlays[currentPlayIndex] || null;
-  const totalRepsForCurrentPlay = currentPlay?.repetitions || 10;
-  const playProgress =
-    totalRepsForCurrentPlay > 0
-      ? (currentRepNumber / totalRepsForCurrentPlay) * 100
-      : 0;
+  return { practiceScript, scriptPlays, isLoading, error };
+}
 
-  // Get rep history for current play
-  const repHistory = playRepHistory.get(currentPlayIndex) || new Map();
+function computePracticeSessionStats(
+  playRepHistory: Map<
+    number,
+    Map<number, { result: ExecutionResult; notes?: string }>
+  >,
+  scriptPlays: PracticeScriptPlay[]
+) {
+  let totalCompleted = 0;
+  let successCount = 0;
+  let failureCount = 0;
+  let neutralCount = 0;
+  let skippedCount = 0;
 
-  // Compute real-time stats from repHistory
-  const computedStats = useMemo(() => {
-    let totalCompleted = 0;
-    let successCount = 0;
-    let failureCount = 0;
-    let neutralCount = 0;
-    let skippedCount = 0;
-
-    // Iterate through all plays' history
-    playRepHistory.forEach((playHistory) => {
-      playHistory.forEach((entry) => {
-        totalCompleted++;
-        switch (entry.result) {
-          case "success":
-            successCount++;
-            break;
-          case "failure":
-            failureCount++;
-            break;
-          case "neutral":
-            neutralCount++;
-            break;
-          case "skipped":
-            skippedCount++;
-            break;
-        }
-      });
+  playRepHistory.forEach((playHistory) => {
+    playHistory.forEach((entry) => {
+      totalCompleted++;
+      switch (entry.result) {
+        case "success":
+          successCount++;
+          break;
+        case "failure":
+          failureCount++;
+          break;
+        case "neutral":
+          neutralCount++;
+          break;
+        case "skipped":
+          skippedCount++;
+          break;
+      }
     });
+  });
 
-    const totalRepsAllPlays = scriptPlays.reduce(
-      (sum, play) => sum + (play.repetitions || 10),
-      0
-    );
-    const successRate =
-      totalCompleted > 0 ? (successCount / totalCompleted) * 100 : 0;
+  const totalRepsAllPlays = scriptPlays.reduce(
+    (sum, play) => sum + (play.repetitions || 10),
+    0
+  );
+  const successRate =
+    totalCompleted > 0 ? (successCount / totalCompleted) * 100 : 0;
 
-    return {
-      totalReps: totalRepsAllPlays,
-      completedReps: totalCompleted,
-      successfulReps: successCount,
-      failedReps: failureCount,
-      neutralReps: neutralCount,
-      skippedReps: skippedCount,
-      successRate,
-    };
-  }, [playRepHistory, scriptPlays]);
+  return {
+    totalReps: totalRepsAllPlays,
+    completedReps: totalCompleted,
+    successfulReps: successCount,
+    failedReps: failureCount,
+    neutralReps: neutralCount,
+    skippedReps: skippedCount,
+    successRate,
+  };
+}
 
-  // Start practice session - creates in database
+function computeOverallProgress(params: {
+  scriptPlays: PracticeScriptPlay[];
+  currentPlayIndex: number;
+  currentRepNumber: number;
+}) {
+  const { scriptPlays, currentPlayIndex, currentRepNumber } = params;
+
+  const totalReps = scriptPlays.reduce(
+    (sum, play) => sum + (play.repetitions || 10),
+    0
+  );
+  const completedReps =
+    scriptPlays
+      .slice(0, currentPlayIndex)
+      .reduce((sum, play) => sum + (play.repetitions || 10), 0) +
+    currentRepNumber -
+    1;
+  const overallProgress = totalReps > 0 ? (completedReps / totalReps) * 100 : 0;
+
+  return { totalReps, completedReps, overallProgress };
+}
+
+function usePracticeSessionControls(params: {
+  activeTeamId: string | null;
+  practiceScript: PracticeScript | null;
+  mode: "live" | "retroactive";
+  sessionDate: Date;
+  session: PracticeSession | null;
+  setSession: React.Dispatch<React.SetStateAction<PracticeSession | null>>;
+  setIsSessionActive: React.Dispatch<React.SetStateAction<boolean>>;
+  setCurrentPlayIndex: React.Dispatch<React.SetStateAction<number>>;
+  setCurrentRepNumber: React.Dispatch<React.SetStateAction<number>>;
+  setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const {
+    activeTeamId,
+    practiceScript,
+    mode,
+    sessionDate,
+    session,
+    setSession,
+    setIsSessionActive,
+    setCurrentPlayIndex,
+    setCurrentRepNumber,
+    setIsPaused,
+  } = params;
+
   const startSession = useCallback(async () => {
     if (!activeTeamId) {
       throw new Error("No active team selected");
@@ -292,9 +305,17 @@ export function usePracticeSession({
       logError("[usePracticeSession] Error starting session:", err);
       throw err;
     }
-  }, [activeTeamId, practiceScript, mode, sessionDate]);
+  }, [
+    activeTeamId,
+    mode,
+    practiceScript,
+    sessionDate,
+    setCurrentPlayIndex,
+    setCurrentRepNumber,
+    setIsSessionActive,
+    setSession,
+  ]);
 
-  // End practice session
   const endSession = useCallback(async () => {
     if (!session) return;
 
@@ -309,43 +330,93 @@ export function usePracticeSession({
       logError("[usePracticeSession] Error ending session:", err);
       throw err;
     }
-  }, [session]);
+  }, [session, setIsSessionActive, setSession]);
 
-  // Pause/Resume session
   const pauseSession = useCallback(() => {
     setIsPaused(true);
-  }, []);
+  }, [setIsPaused]);
 
   const resumeSession = useCallback(() => {
     setIsPaused(false);
-  }, []);
+  }, [setIsPaused]);
 
-  // Play navigation
+  return { startSession, endSession, pauseSession, resumeSession };
+}
+
+function usePracticeSessionNavigation(params: {
+  scriptPlaysCount: number;
+  currentPlayIndex: number;
+  setCurrentPlayIndex: React.Dispatch<React.SetStateAction<number>>;
+  setCurrentRepNumber: React.Dispatch<React.SetStateAction<number>>;
+}) {
+  const {
+    scriptPlaysCount,
+    currentPlayIndex,
+    setCurrentPlayIndex,
+    setCurrentRepNumber,
+  } = params;
+
   const nextPlay = useCallback(() => {
-    if (currentPlayIndex < scriptPlays.length - 1) {
+    if (currentPlayIndex < scriptPlaysCount - 1) {
       setCurrentPlayIndex((prev) => prev + 1);
       setCurrentRepNumber(1);
     }
-  }, [currentPlayIndex, scriptPlays.length]);
+  }, [
+    currentPlayIndex,
+    scriptPlaysCount,
+    setCurrentPlayIndex,
+    setCurrentRepNumber,
+  ]);
 
   const previousPlay = useCallback(() => {
     if (currentPlayIndex > 0) {
       setCurrentPlayIndex((prev) => prev - 1);
       setCurrentRepNumber(1);
     }
-  }, [currentPlayIndex]);
+  }, [currentPlayIndex, setCurrentPlayIndex, setCurrentRepNumber]);
 
   const goToPlay = useCallback(
     (index: number) => {
-      if (index >= 0 && index < scriptPlays.length) {
+      if (index >= 0 && index < scriptPlaysCount) {
         setCurrentPlayIndex(index);
         setCurrentRepNumber(1);
       }
     },
-    [scriptPlays.length]
+    [scriptPlaysCount, setCurrentPlayIndex, setCurrentRepNumber]
   );
 
-  // Log a rep execution
+  return { nextPlay, previousPlay, goToPlay };
+}
+
+function usePracticeSessionRepTracking(params: {
+  session: PracticeSession | null;
+  currentPlay: PracticeScriptPlay | null;
+  activeTeamId: string | null;
+  currentRepNumber: number;
+  totalRepsForCurrentPlay: number;
+  currentPlayIndex: number;
+  mode: "live" | "retroactive";
+  nextPlay: () => void;
+  setCurrentRepNumber: React.Dispatch<React.SetStateAction<number>>;
+  setPlayRepHistory: React.Dispatch<
+    React.SetStateAction<
+      Map<number, Map<number, { result: ExecutionResult; notes?: string }>>
+    >
+  >;
+}) {
+  const {
+    session,
+    currentPlay,
+    activeTeamId,
+    currentRepNumber,
+    totalRepsForCurrentPlay,
+    currentPlayIndex,
+    mode,
+    nextPlay,
+    setCurrentRepNumber,
+    setPlayRepHistory,
+  } = params;
+
   const logRep = useCallback(
     async (result: ExecutionResult, notes?: string, tags?: string[]) => {
       if (!session || !currentPlay || !activeTeamId) {
@@ -365,7 +436,6 @@ export function usePracticeSession({
           recordedMode: mode,
         });
 
-        // Track rep result in history
         setPlayRepHistory((prev) => {
           const newHistory = new Map(prev);
           const playHistory = new Map(
@@ -376,11 +446,9 @@ export function usePracticeSession({
           return newHistory;
         });
 
-        // Auto-advance to next rep
         if (currentRepNumber < totalRepsForCurrentPlay) {
           setCurrentRepNumber((prev) => prev + 1);
         } else {
-          // Move to next play
           nextPlay();
         }
       } catch (err) {
@@ -389,18 +457,19 @@ export function usePracticeSession({
       }
     },
     [
-      session,
-      currentPlay,
       activeTeamId,
-      currentRepNumber,
-      totalRepsForCurrentPlay,
-      nextPlay,
-      mode,
+      currentPlay,
       currentPlayIndex,
+      currentRepNumber,
+      mode,
+      nextPlay,
+      session,
+      setCurrentRepNumber,
+      setPlayRepHistory,
+      totalRepsForCurrentPlay,
     ]
   );
 
-  // Skip a rep (mark as skipped but still count it)
   const skipRep = useCallback(
     async (notes?: string) => {
       await logRep("skipped", notes || "Rep skipped");
@@ -408,35 +477,108 @@ export function usePracticeSession({
     [logRep]
   );
 
-  // Manual rep navigation
   const nextRep = useCallback(() => {
     if (currentRepNumber < totalRepsForCurrentPlay) {
       setCurrentRepNumber((prev) => prev + 1);
     }
-  }, [currentRepNumber, totalRepsForCurrentPlay]);
+  }, [currentRepNumber, setCurrentRepNumber, totalRepsForCurrentPlay]);
 
-  // Jump to specific rep (for editing)
   const goToRep = useCallback(
     (repNumber: number) => {
       if (repNumber >= 1 && repNumber <= totalRepsForCurrentPlay) {
         setCurrentRepNumber(repNumber);
       }
     },
-    [totalRepsForCurrentPlay]
+    [setCurrentRepNumber, totalRepsForCurrentPlay]
   );
 
-  // Additional computed values
-  const totalReps = scriptPlays.reduce(
-    (sum, play) => sum + (play.repetitions || 10),
-    0
+  return { logRep, skipRep, nextRep, goToRep };
+}
+
+/**
+ * Hook for managing practice session tracking
+ * Self-contained - handles script loading, session creation, and rep tracking
+ */
+export function usePracticeSession({
+  practiceScriptId,
+  mode,
+  sessionDate = new Date(),
+}: UsePracticeSessionOptions): UsePracticeSessionReturn {
+  const { activeTeamId } = useActiveTeamStore();
+
+  const { practiceScript, scriptPlays, isLoading, error } =
+    usePracticeScriptLoader(practiceScriptId);
+
+  // Session state
+  const [session, setSession] = useState<PracticeSession | null>(null);
+  const [isSessionActive, setIsSessionActive] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+
+  // Tracking state
+  const [currentPlayIndex, setCurrentPlayIndex] = useState(0);
+  const [currentRepNumber, setCurrentRepNumber] = useState(1);
+
+  // Rep history per play (playIndex -> Map of repNumber -> result)
+  const [playRepHistory, setPlayRepHistory] = useState<
+    Map<number, Map<number, { result: ExecutionResult; notes?: string }>>
+  >(new Map());
+  const [hasPendingSync] = useState(false); // TODO: Implement offline sync
+
+  // Computed values
+  const currentPlay = scriptPlays[currentPlayIndex] || null;
+  const totalRepsForCurrentPlay = currentPlay?.repetitions || 10;
+  const playProgress =
+    totalRepsForCurrentPlay > 0
+      ? (currentRepNumber / totalRepsForCurrentPlay) * 100
+      : 0;
+
+  // Get rep history for current play
+  const repHistory = playRepHistory.get(currentPlayIndex) || new Map();
+
+  const computedStats = useMemo(
+    () => computePracticeSessionStats(playRepHistory, scriptPlays),
+    [playRepHistory, scriptPlays]
   );
-  const completedReps =
-    scriptPlays
-      .slice(0, currentPlayIndex)
-      .reduce((sum, play) => sum + (play.repetitions || 10), 0) +
-    currentRepNumber -
-    1;
-  const overallProgress = totalReps > 0 ? (completedReps / totalReps) * 100 : 0;
+
+  const { startSession, endSession, pauseSession, resumeSession } =
+    usePracticeSessionControls({
+      activeTeamId,
+      practiceScript,
+      mode,
+      sessionDate,
+      session,
+      setSession,
+      setIsSessionActive,
+      setCurrentPlayIndex,
+      setCurrentRepNumber,
+      setIsPaused,
+    });
+
+  const { nextPlay, previousPlay, goToPlay } = usePracticeSessionNavigation({
+    scriptPlaysCount: scriptPlays.length,
+    currentPlayIndex,
+    setCurrentPlayIndex,
+    setCurrentRepNumber,
+  });
+
+  const { logRep, skipRep, nextRep, goToRep } = usePracticeSessionRepTracking({
+    session,
+    currentPlay,
+    activeTeamId,
+    currentRepNumber,
+    totalRepsForCurrentPlay,
+    currentPlayIndex,
+    mode,
+    nextPlay,
+    setCurrentRepNumber,
+    setPlayRepHistory,
+  });
+
+  const { overallProgress } = computeOverallProgress({
+    scriptPlays,
+    currentPlayIndex,
+    currentRepNumber,
+  });
 
   const isLastRep = currentRepNumber === totalRepsForCurrentPlay;
   const isLastPlay = currentPlayIndex === scriptPlays.length - 1;

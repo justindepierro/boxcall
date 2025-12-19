@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../app/auth-store";
 import { PersonalCalendar } from "../dashboard/PersonalCalendar";
@@ -30,6 +30,96 @@ interface DashboardHeroTile {
   footnote: string;
   body: React.ReactNode;
   target: string;
+}
+
+type DashboardLayoutView =
+  | "loading"
+  | "authError"
+  | "accessDenied"
+  | "profileLoading"
+  | "profileMissing"
+  | "ready";
+
+function getTeamMembershipCount(profile: unknown): number {
+  const profileWithMemberships = profile as { team_memberships?: unknown[] };
+  const profileWithCount = profile as { teams_count?: number };
+
+  if (Array.isArray(profileWithMemberships?.team_memberships)) {
+    return profileWithMemberships.team_memberships.length;
+  }
+  if (typeof profileWithCount?.teams_count === "number") {
+    return profileWithCount.teams_count;
+  }
+  return 0;
+}
+
+function getDashboardLayoutView(params: {
+  loading: boolean;
+  error: string | null;
+  user: unknown;
+  profile: unknown;
+  profileLoading: boolean;
+}): DashboardLayoutView {
+  if (params.loading) return "loading";
+  if (params.error) return "authError";
+  if (!params.user) return "accessDenied";
+  if (!params.profile && params.profileLoading) return "profileLoading";
+  if (!params.profile && !params.loading) return "profileMissing";
+  return "ready";
+}
+
+function renderNonReadyDashboardLayoutView(
+  view: Exclude<DashboardLayoutView, "ready">,
+  error: string | null
+) {
+  switch (view) {
+    case "loading":
+      return <PageLoadingSkeleton />;
+    case "authError":
+      return (
+        <DashboardStatusScreen
+          title="Authentication Error"
+          message={error || ""}
+        />
+      );
+    case "accessDenied":
+      return (
+        <DashboardStatusScreen
+          title="Access Denied"
+          message="Please log in to access the dashboard"
+        />
+      );
+    case "profileLoading":
+      return <ProfileLoadingScreen />;
+    case "profileMissing":
+    default:
+      return (
+        <DashboardStatusScreen
+          title="Welcome to BoxCall!"
+          message="Your profile is being set up. Please refresh the page or contact support if this persists."
+          variant="primary"
+          action={
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
+            >
+              Refresh Page
+            </button>
+          }
+        />
+      );
+  }
+}
+
+function ProgressiveSection({
+  isVisible,
+  children,
+}: {
+  isVisible: boolean;
+  children: React.ReactNode;
+}) {
+  if (!isVisible) return <DashboardCardSkeleton />;
+  return <>{children}</>;
 }
 
 const DashboardStatusScreen: React.FC<{
@@ -225,6 +315,17 @@ export const ResponsiveDashboardLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const handleNavigate = useCallback(
+    (href: string) => {
+      navigate(href);
+    },
+    [navigate]
+  );
+
+  const handleEditProfileClick = useCallback(() => {
+    // TODO: Implement edit functionality
+  }, []);
+
   // Fetch real dashboard statistics
   const dashboardStats = useDashboardStats(user?.id);
 
@@ -234,20 +335,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
   // Calculate derived values before any early returns
   const userRole = profile?.role || "player";
 
-  const teamMembershipCount = (() => {
-    const profileWithMemberships = profile as unknown as {
-      team_memberships?: unknown[];
-    };
-    const profileWithCount = profile as unknown as { teams_count?: number };
-
-    if (Array.isArray(profileWithMemberships?.team_memberships)) {
-      return profileWithMemberships.team_memberships?.length || 0;
-    }
-    if (typeof profileWithCount?.teams_count === "number") {
-      return profileWithCount.teams_count || 0;
-    }
-    return 0;
-  })();
+  const teamMembershipCount = getTeamMembershipCount(profile);
 
   const dashboardHeroTiles = useMemo(
     () =>
@@ -260,48 +348,16 @@ export const ResponsiveDashboardLayout: React.FC = () => {
     [profile?.display_name, profile?.full_name, teamMembershipCount, userRole]
   );
 
-  // Early returns for loading and error states AFTER hooks
-  if (loading) {
-    return <PageLoadingSkeleton />;
-  }
+  const view = getDashboardLayoutView({
+    loading,
+    error: error ?? null,
+    user,
+    profile,
+    profileLoading,
+  });
 
-  if (error) {
-    return (
-      <DashboardStatusScreen title="Authentication Error" message={error} />
-    );
-  }
-
-  if (!user) {
-    return (
-      <DashboardStatusScreen
-        title="Access Denied"
-        message="Please log in to access the dashboard"
-      />
-    );
-  }
-
-  // Show loading while profile is being fetched, but with a timeout
-  if (!profile && profileLoading) {
-    return <ProfileLoadingScreen />;
-  }
-
-  // If we have a user but no profile after loading is complete, create a basic profile
-  if (!profile && !loading) {
-    return (
-      <DashboardStatusScreen
-        title="Welcome to BoxCall!"
-        message="Your profile is being set up. Please refresh the page or contact support if this persists."
-        variant="primary"
-        action={
-          <button
-            onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
-          >
-            Refresh Page
-          </button>
-        }
-      />
-    );
+  if (view !== "ready") {
+    return renderNonReadyDashboardLayoutView(view, error ?? null);
   }
 
   const scrollToSection = (sectionId: string) => {
@@ -361,31 +417,27 @@ export const ResponsiveDashboardLayout: React.FC = () => {
           <div className="left-column" id="dashboard-profile-section">
             {/* Profile Card */}
             <div className="profile-section">
-              {isStepVisible(0) ? (
+              <ProgressiveSection isVisible={isStepVisible(0)}>
                 <ProfileCard
                   profile={profile}
                   userRole={userRole}
-                  onEditClick={() => {
-                    // TODO: Implement edit functionality
-                  }}
+                  onEditClick={handleEditProfileClick}
                 />
-              ) : (
-                <DashboardCardSkeleton />
-              )}
+              </ProgressiveSection>
             </div>
 
             {/* Roster Quick Add */}
             <div className="roster-section">
-              {isStepVisible(1) ? (
+              <ProgressiveSection isVisible={isStepVisible(1)}>
                 <RosterQuickAdd />
-              ) : (
-                <DashboardCardSkeleton />
-              )}
+              </ProgressiveSection>
             </div>
 
             {/* Personal Feed */}
             <div className="personal-feed-section" id="dashboard-feed-section">
-              {isStepVisible(2) ? <PersonalFeed /> : <DashboardCardSkeleton />}
+              <ProgressiveSection isVisible={isStepVisible(2)}>
+                <PersonalFeed />
+              </ProgressiveSection>
             </div>
           </div>
 
@@ -393,16 +445,16 @@ export const ResponsiveDashboardLayout: React.FC = () => {
           <div className="right-column">
             {/* Team Feeds */}
             <div className="feeds-section">
-              {isStepVisible(3) ? <TeamFeeds /> : <DashboardCardSkeleton />}
+              <ProgressiveSection isVisible={isStepVisible(3)}>
+                <TeamFeeds />
+              </ProgressiveSection>
             </div>
 
             {/* Calendar */}
             <div className="calendar-section" id="dashboard-calendar-section">
-              {isStepVisible(4) ? (
-                <PersonalCalendar userId={user.id} />
-              ) : (
-                <DashboardCardSkeleton />
-              )}
+              <ProgressiveSection isVisible={isStepVisible(4)}>
+                <PersonalCalendar userId={user?.id ?? ""} />
+              </ProgressiveSection>
             </div>
           </div>
         </div>
@@ -411,7 +463,7 @@ export const ResponsiveDashboardLayout: React.FC = () => {
       {/* Mobile Bottom Navigation - Phase 4C */}
       <MobileBottomNavigation
         items={mobileNavItems}
-        onNavigate={(href) => navigate(href)}
+        onNavigate={handleNavigate}
       />
     </>
   );

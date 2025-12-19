@@ -26,6 +26,92 @@ interface ImportResult {
   warnings: string[];
 }
 
+type CSVImportStepId = "upload" | "preview" | "importing" | "complete";
+
+function renderCSVImportModalStep(params: {
+  step: CSVImportStepId;
+  isProcessing: boolean;
+  dragActive: boolean;
+  csvFile: File | null;
+  parseResult: CSVParseResult | null;
+  expandedRows: Set<number>;
+  importProgress: number;
+  importResult: ImportResult | null;
+  onDrag: (e: React.DragEvent) => void;
+  onDrop: (e: React.DragEvent) => void;
+  onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onDownloadSample: () => void;
+  onToggleRowExpansion: (rowNumber: number) => void;
+  onUpdatePreview: (
+    rowNumber: number,
+    field: string,
+    value: string | boolean | number
+  ) => void;
+  onBackToUpload: () => void;
+  onImport: () => void;
+  onClose: () => void;
+  onBackToPreview: () => void;
+}) {
+  const {
+    step,
+    isProcessing,
+    dragActive,
+    csvFile,
+    parseResult,
+    expandedRows,
+    importProgress,
+    importResult,
+    onDrag,
+    onDrop,
+    onFileChange,
+    onDownloadSample,
+    onToggleRowExpansion,
+    onUpdatePreview,
+    onBackToUpload,
+    onImport,
+    onClose,
+    onBackToPreview,
+  } = params;
+
+  switch (step) {
+    case "upload":
+      return (
+        <UploadStep
+          isProcessing={isProcessing}
+          dragActive={dragActive}
+          csvFile={csvFile}
+          onDrag={onDrag}
+          onDrop={onDrop}
+          onFileChange={onFileChange}
+          onDownloadSample={onDownloadSample}
+        />
+      );
+    case "preview":
+      return parseResult ? (
+        <PreviewStep
+          parseResult={parseResult}
+          expandedRows={expandedRows}
+          onToggleRowExpansion={onToggleRowExpansion}
+          onUpdatePreview={onUpdatePreview}
+          onBack={onBackToUpload}
+          onImport={onImport}
+        />
+      ) : null;
+    case "importing":
+      return <ImportingStep importProgress={importProgress} />;
+    case "complete":
+      return (
+        <CompleteStep
+          importResult={importResult}
+          onClose={onClose}
+          onBackToPreview={onBackToPreview}
+        />
+      );
+    default:
+      return null;
+  }
+}
+
 export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   isOpen,
   onClose,
@@ -33,9 +119,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   onImportComplete,
 }) => {
   const toast = useToast();
-  const [step, setStep] = useState<
-    "upload" | "preview" | "importing" | "complete"
-  >("upload");
+  const [step, setStep] = useState<CSVImportStepId>("upload");
   const [dragActive, setDragActive] = useState(false);
   const [csvFile, setCsvFile] = useState<File | null>(null);
   const [parseResult, setParseResult] = useState<CSVParseResult | null>(null);
@@ -210,52 +294,33 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
     }
   };
 
-  const renderStep = () => {
-    switch (step) {
-      case "upload":
-        return (
-          <UploadStep
-            isProcessing={isProcessing}
-            dragActive={dragActive}
-            csvFile={csvFile}
-            onDrag={handleDrag}
-            onDrop={handleDrop}
-            onFileChange={handleFileChange}
-            onDownloadSample={downloadSampleCSV}
-          />
-        );
-      case "preview":
-        return parseResult ? (
-          <PreviewStep
-            parseResult={parseResult}
-            expandedRows={expandedRows}
-            onToggleRowExpansion={toggleRowExpansion}
-            onUpdatePreview={handleUpdatePreview}
-            onBack={() => setStep("upload")}
-            onImport={handleImport}
-          />
-        ) : null;
-      case "importing":
-        return <ImportingStep importProgress={importProgress} />;
-      case "complete":
-        return (
-          <CompleteStep
-            importResult={importResult}
-            onClose={onClose}
-            onBackToPreview={() => {
-              setStep("preview");
-              setImportError(null);
-            }}
-          />
-        );
-      default:
-        return null;
-    }
-  };
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Import Plays" size="lg">
-      <div className="p-lg">{renderStep()}</div>
+      <div className="p-lg">
+        {renderCSVImportModalStep({
+          step,
+          isProcessing,
+          dragActive,
+          csvFile,
+          parseResult,
+          expandedRows,
+          importProgress,
+          importResult,
+          onDrag: handleDrag,
+          onDrop: handleDrop,
+          onFileChange: handleFileChange,
+          onDownloadSample: downloadSampleCSV,
+          onToggleRowExpansion: toggleRowExpansion,
+          onUpdatePreview: handleUpdatePreview,
+          onBackToUpload: () => setStep("upload"),
+          onImport: handleImport,
+          onClose,
+          onBackToPreview: () => {
+            setStep("preview");
+            setImportError(null);
+          },
+        })}
+      </div>
     </Modal>
   );
 };

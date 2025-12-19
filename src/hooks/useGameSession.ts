@@ -220,9 +220,9 @@ async function loadGamePlanData(gamePlanId: string): Promise<{
 export function useGameSession({
   gamePlanId,
   mode,
-  gameDate = new Date(),
-  opponent,
-  isHomeGame = true,
+  gameDate: _gameDate = new Date(),
+  opponent: _opponent,
+  isHomeGame: _isHomeGame = true,
 }: UsageGameSessionOptions): UseGameSessionReturn {
   const [gamePlan, setGamePlan] = useState<GamePlan | null>(null);
   const [gamePlanPlays, setGamePlanPlays] = useState<GamePlanPlay[]>([]);
@@ -302,7 +302,7 @@ export function useGameSession({
 
     // `useSession` currently owns session creation and does not accept extra payload.
     await baseStartSession();
-  }, [gamePlan, mode, gameDate, opponent, isHomeGame, baseStartSession]);
+  }, [gamePlan, baseStartSession]);
 
   // End game session
   const endSession = useCallback(async () => {

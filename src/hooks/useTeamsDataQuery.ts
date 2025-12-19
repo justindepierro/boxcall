@@ -61,6 +61,77 @@ interface DatabasePlay {
 
 const PAGE_SIZE = 100;
 
+function getCombinedLoading(states: Array<boolean | undefined>): boolean {
+  return states.some(Boolean);
+}
+
+function getCombinedError(errors: Array<unknown>): unknown {
+  return errors.find(Boolean);
+}
+
+function getLength(value: unknown[] | undefined): number {
+  return value?.length ?? 0;
+}
+
+function toStringOrEmpty(value: unknown): string {
+  return value == null ? "" : String(value);
+}
+
+function toNullableString(value: unknown): string | null {
+  return value == null ? null : String(value);
+}
+
+function toOptionalNumber(value: unknown): number | undefined {
+  return typeof value === "number" ? value : undefined;
+}
+
+function useUpdatePlayMutation(queryClient: ReturnType<typeof useQueryClient>) {
+  return useMutation({
+    mutationFn: ({
+      playId,
+      updates,
+    }: {
+      playId: string;
+      updates: Partial<DatabasePlay>;
+    }) => updatePlayInDB(playId, updates),
+    onMutate: async ({ playId, updates }) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: teamsDataKeys.plays() });
+
+      // Snapshot the previous value
+      const previousPlays = queryClient.getQueryData(
+        teamsDataKeys.playsPage(0)
+      );
+
+      // Optimistically update the cache
+      queryClient.setQueryData(
+        teamsDataKeys.playsPage(0),
+        (old: DatabasePlay[] | undefined) => {
+          if (!old) return old;
+          return old.map((play) =>
+            play.id === playId ? { ...play, ...updates } : play
+          );
+        }
+      );
+
+      return { previousPlays };
+    },
+    onError: (_err, _variables, context) => {
+      // Rollback on error
+      if (context?.previousPlays) {
+        queryClient.setQueryData(
+          teamsDataKeys.playsPage(0),
+          context.previousPlays
+        );
+      }
+    },
+    onSuccess: () => {
+      // Invalidate and refetch on success
+      queryClient.invalidateQueries({ queryKey: teamsDataKeys.plays() });
+    },
+  });
+}
+
 // Query keys for cache invalidation
 export const teamsDataKeys = {
   all: ["teamsData"] as const,
@@ -161,30 +232,30 @@ async function fetchPlaysPage(page: number): Promise<DatabasePlay[]> {
 
   if (error) throw error;
 
-  return (data || []).map(
+  return (data ?? []).map(
     (p: any): DatabasePlay => ({
-      id: String(p.id),
-      playbook_id: p.playbook_id ?? null,
-      formation: String(p.formation ?? ""),
-      play_name: String(p.play_name ?? ""),
-      one_word_play: p.one_word_play ?? null,
-      p_type: String(p.p_type ?? ""),
-      personnel: p.personnel ?? null,
-      f_type: p.f_type ?? null,
-      f_dir: p.f_dir ?? null,
-      p_dir: p.p_dir ?? null,
-      protection: p.protection ?? null,
-      r_str: p.r_str ?? null,
-      p_str: p.p_str ?? null,
-      pref_down: p.pref_down ?? null,
-      pref_dis: p.pref_dis ?? null,
-      pref_hash: p.pref_hash ?? null,
-      confidence_base: p.confidence_base ?? undefined,
-      times_called: p.times_called ?? undefined,
-      times_successful: p.times_successful ?? undefined,
-      wristband_number: p.wristband_number ?? null,
-      created_at: String(p.created_at ?? ""),
-      updated_at: String(p.updated_at ?? ""),
+      id: toStringOrEmpty(p.id),
+      playbook_id: toNullableString(p.playbook_id),
+      formation: toStringOrEmpty(p.formation),
+      play_name: toStringOrEmpty(p.play_name),
+      one_word_play: toNullableString(p.one_word_play),
+      p_type: toStringOrEmpty(p.p_type),
+      personnel: toNullableString(p.personnel),
+      f_type: toNullableString(p.f_type),
+      f_dir: toNullableString(p.f_dir),
+      p_dir: toNullableString(p.p_dir),
+      protection: toNullableString(p.protection),
+      r_str: toNullableString(p.r_str),
+      p_str: toNullableString(p.p_str),
+      pref_down: toNullableString(p.pref_down),
+      pref_dis: toNullableString(p.pref_dis),
+      pref_hash: toNullableString(p.pref_hash),
+      confidence_base: toOptionalNumber(p.confidence_base),
+      times_called: toOptionalNumber(p.times_called),
+      times_successful: toOptionalNumber(p.times_successful),
+      wristband_number: toNullableString(p.wristband_number),
+      created_at: toStringOrEmpty(p.created_at),
+      updated_at: toStringOrEmpty(p.updated_at),
     })
   );
 }
@@ -255,51 +326,7 @@ export function useTeamsDataQuery() {
     gcTime: 5 * 60 * 1000,
   });
 
-  // Update play mutation with optimistic updates
-  const updatePlayMutation = useMutation({
-    mutationFn: ({
-      playId,
-      updates,
-    }: {
-      playId: string;
-      updates: Partial<DatabasePlay>;
-    }) => updatePlayInDB(playId, updates),
-    onMutate: async ({ playId, updates }) => {
-      // Cancel outgoing refetches
-      await queryClient.cancelQueries({ queryKey: teamsDataKeys.plays() });
-
-      // Snapshot the previous value
-      const previousPlays = queryClient.getQueryData(
-        teamsDataKeys.playsPage(0)
-      );
-
-      // Optimistically update the cache
-      queryClient.setQueryData(
-        teamsDataKeys.playsPage(0),
-        (old: DatabasePlay[] | undefined) => {
-          if (!old) return old;
-          return old.map((play) =>
-            play.id === playId ? { ...play, ...updates } : play
-          );
-        }
-      );
-
-      return { previousPlays };
-    },
-    onError: (_err, _variables, context) => {
-      // Rollback on error
-      if (context?.previousPlays) {
-        queryClient.setQueryData(
-          teamsDataKeys.playsPage(0),
-          context.previousPlays
-        );
-      }
-    },
-    onSuccess: () => {
-      // Invalidate and refetch on success
-      queryClient.invalidateQueries({ queryKey: teamsDataKeys.plays() });
-    },
-  });
+  const updatePlayMutation = useUpdatePlayMutation(queryClient);
 
   // Refresh all data
   const refreshData = () => {
@@ -307,23 +334,30 @@ export function useTeamsDataQuery() {
   };
 
   // Combined loading state
-  const loading =
-    teamsQuery.isLoading ||
-    playbooksQuery.isLoading ||
-    playsQuery.isLoading ||
-    totalCountQuery.isLoading;
+  const loading = getCombinedLoading([
+    teamsQuery.isLoading,
+    playbooksQuery.isLoading,
+    playsQuery.isLoading,
+    totalCountQuery.isLoading,
+  ]);
 
   // Combined error state
-  const error =
-    teamsQuery.error ||
-    playbooksQuery.error ||
-    playsQuery.error ||
-    totalCountQuery.error;
+  const error = getCombinedError([
+    teamsQuery.error,
+    playbooksQuery.error,
+    playsQuery.error,
+    totalCountQuery.error,
+  ]);
+
+  const teams = teamsQuery.data ?? [];
+  const playbooks = playbooksQuery.data ?? [];
+  const plays = playsQuery.data ?? [];
+  const playsCount = getLength(playsQuery.data);
 
   return {
-    teams: teamsQuery.data || [],
-    playbooks: playbooksQuery.data || [],
-    plays: playsQuery.data || [],
+    teams,
+    playbooks,
+    plays,
     totalPlaysCount: totalCountQuery.data ?? null,
     loading,
     error: error ? String(error) : null,
@@ -331,12 +365,12 @@ export function useTeamsDataQuery() {
     updatePlay: (playId: string, updates: Partial<DatabasePlay>) =>
       updatePlayMutation.mutateAsync({ playId, updates }),
     // Pagination support
-    hasMorePlays: (playsQuery.data?.length || 0) === PAGE_SIZE,
+    hasMorePlays: playsCount === PAGE_SIZE,
     loadingMorePlays: false, // TODO: Implement infinite query
     totalCount:
-      (teamsQuery.data?.length || 0) +
-      (playbooksQuery.data?.length || 0) +
-      (playsQuery.data?.length || 0),
+      getLength(teamsQuery.data) +
+      getLength(playbooksQuery.data) +
+      getLength(playsQuery.data),
     loadMorePlays: async () => {
       console.warn("Infinite scroll with React Query not yet implemented");
     },

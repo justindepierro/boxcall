@@ -37,6 +37,229 @@ interface QuickPlaySheetProps {
 
 const QUICK_PLAY_TYPES = PLAY_TYPE_OPTIONS.slice(0, 4);
 
+const QuickPlaySheetHeader: React.FC<{
+  isSubmitting: boolean;
+  onClose: () => void;
+}> = ({ isSubmitting, onClose }) => {
+  return (
+    <div className="flex items-center justify-between">
+      <Typography variant="headline-md" className="font-semibold">
+        Quick Create
+      </Typography>
+      <button
+        type="button"
+        onClick={onClose}
+        className="rounded-full p-2 text-muted hover:text-primary"
+        disabled={isSubmitting}
+        aria-label="Close quick create sheet"
+      >
+        <Icon name="close" className="h-5 w-5" />
+      </button>
+    </div>
+  );
+};
+
+const QuickPlaySheetRecentCombos: React.FC<{
+  combos: PlayCombo[];
+  availableFormations: Formation[];
+  onSelectCombo: (combo: PlayCombo) => void;
+}> = ({ combos, availableFormations, onSelectCombo }) => {
+  if (combos.length === 0) return null;
+
+  return (
+    <div>
+      <Typography
+        variant="label-md"
+        className="mb-2 text-secondary uppercase tracking-wide"
+      >
+        Recent combos
+      </Typography>
+      <div className="flex flex-wrap gap-2">
+        {combos.map((combo) => {
+          const key = `${combo.formation}-${combo.personnel || "none"}-${combo.playType || "any"}`;
+          const match = availableFormations.find(
+            (formationItem) =>
+              formationItem.name.trim().toLowerCase() ===
+              combo.formation.trim().toLowerCase()
+          );
+
+          return (
+            <button
+              key={key}
+              onClick={() => onSelectCombo(combo)}
+              className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1.5 text-sm font-medium text-secondary hover:bg-muted transition-colors"
+            >
+              <Icon name="zap" className="h-4 w-4 text-primary" />
+              <span className="truncate max-w-40">
+                {match ? match.name : combo.formation}
+                {combo.personnel ? ` • ${combo.personnel}` : ""}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+const QuickPlaySheetFields: React.FC<{
+  playbookId?: string;
+  isSubmitting: boolean;
+  suggestions: QuickPlaySheetProps["suggestions"];
+  selectedFormationId: string | null;
+  setSelectedFormationId: React.Dispatch<React.SetStateAction<string | null>>;
+  playName: string;
+  setPlayName: React.Dispatch<React.SetStateAction<string>>;
+  personnel: string;
+  setPersonnel: React.Dispatch<React.SetStateAction<string>>;
+  playType: string | undefined;
+  setPlayType: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setError: React.Dispatch<React.SetStateAction<string | null>>;
+  onOpenFullEditor: () => void;
+  onClose: () => void;
+}> = ({
+  playbookId,
+  isSubmitting,
+  suggestions,
+  selectedFormationId,
+  setSelectedFormationId,
+  playName,
+  setPlayName,
+  personnel,
+  setPersonnel,
+  playType,
+  setPlayType,
+  setError,
+  onOpenFullEditor,
+  onClose,
+}) => {
+  return (
+    <div className="space-y-3">
+      {playbookId ? (
+        <FormationSelector
+          playbookId={playbookId}
+          value={selectedFormationId || ""} // formation name (TEXT)
+          onChange={(formationName) => {
+            setSelectedFormationId(formationName);
+            setError(null);
+          }}
+          onCreateNew={() => {
+            onClose();
+            onOpenFullEditor();
+          }}
+        />
+      ) : (
+        <div className="rounded-lg border border-border bg-secondary/80 p-4 text-sm text-secondary">
+          Select a playbook before creating quick plays.
+        </div>
+      )}
+
+      <div>
+        <label className="text-sm font-semibold text-secondary mb-1 block">
+          Play Name
+        </label>
+        <Input
+          value={playName}
+          onChange={(e) => setPlayName(e.target.value)}
+          placeholder="Name this play"
+        />
+      </div>
+
+      <div>
+        <label className="text-sm font-semibold text-secondary mb-1 block">
+          Personnel (optional)
+        </label>
+        <Input
+          value={personnel}
+          onChange={(e) => setPersonnel(e.target.value)}
+          placeholder={suggestions.personnel[0] || "11, 12, Blue, Empty..."}
+        />
+      </div>
+
+      <div>
+        <label className="text-sm font-semibold text-secondary mb-2 block">
+          Play Type
+        </label>
+        <div className="flex flex-wrap gap-2">
+          {QUICK_PLAY_TYPES.map((option) => (
+            <button
+              key={option.value}
+              onClick={() =>
+                setPlayType((current) =>
+                  current === option.value ? undefined : option.value
+                )
+              }
+              className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-semibold transition-all ${
+                playType === option.value
+                  ? "border-brand-jade bg-brand-jade/10 text-brand-jade"
+                  : "border-border text-secondary hover:border-hover"
+              }`}
+              disabled={isSubmitting}
+              type="button"
+            >
+              {option.label}
+            </button>
+          ))}
+          <button
+            onClick={() => setPlayType(undefined)}
+            className="inline-flex items-center gap-2 rounded-full border border-dashed border-border px-3 py-1.5 text-sm text-muted hover:border-hover"
+            disabled={isSubmitting}
+            type="button"
+          >
+            Clear
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const QuickPlaySheetErrorBanner: React.FC<{ error: string }> = ({ error }) => {
+  return (
+    <div className="flex items-center gap-2 rounded-lg border border-error-200 bg-error-50 px-3 py-2 text-sm text-error-700">
+      <Icon name="alert-triangle" className="h-4 w-4" />
+      {error}
+    </div>
+  );
+};
+
+const QuickPlaySheetActions: React.FC<{
+  isSubmitting: boolean;
+  onCreate: () => void;
+  onOpenFullEditor: () => void;
+}> = ({ isSubmitting, onCreate, onOpenFullEditor }) => {
+  return (
+    <div className="flex flex-col gap-3">
+      <Button
+        onClick={onCreate}
+        variant="primary"
+        size="lg"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? (
+          <>
+            <Icon name="loader" className="mr-2 h-4 w-4 animate-spin" />
+            Creating...
+          </>
+        ) : (
+          <>
+            <Icon name="plus" className="mr-2 h-5 w-5" />
+            Create and Diagram
+          </>
+        )}
+      </Button>
+      <Button
+        onClick={onOpenFullEditor}
+        variant="ghost"
+        size="lg"
+        disabled={isSubmitting}
+      >
+        Open full editor
+      </Button>
+    </div>
+  );
+};
+
 export const QuickPlaySheet: React.FC<QuickPlaySheetProps> = ({
   isOpen,
   onClose,
@@ -76,6 +299,48 @@ export const QuickPlaySheet: React.FC<QuickPlaySheetProps> = ({
   const comboButtons = useMemo(() => {
     return recentCombos.slice(0, 6);
   }, [recentCombos]);
+
+  const handleClose = () => {
+    if (isSubmitting) return;
+    setSelectedFormationId("");
+    setPersonnel("");
+    setPlayType(undefined);
+    setPlayName("");
+    setError(null);
+    onClose();
+  };
+
+  const handleSelectCombo = (combo: PlayCombo) => {
+    const match = availableFormations.find(
+      (formationItem) =>
+        formationItem.name.trim().toLowerCase() ===
+        combo.formation.trim().toLowerCase()
+    );
+
+    if (match) {
+      setSelectedFormationId(match.id);
+      setSelectedFormation(match);
+      if (match.personnel_name) {
+        setPersonnel(match.personnel_name);
+      } else if (combo.personnel) {
+        setPersonnel(combo.personnel);
+      } else {
+        setPersonnel("");
+      }
+      setError(null);
+    } else {
+      setSelectedFormationId(null);
+      setSelectedFormation(null);
+      setError(
+        `Formation "${combo.formation}" isn’t in your library yet. Select it from the dropdown or create it.`
+      );
+      if (combo.personnel) {
+        setPersonnel(combo.personnel);
+      }
+    }
+
+    setPlayType(combo.playType);
+  };
 
   const handleCreate = async () => {
     if (!playbookId) {
@@ -149,190 +414,41 @@ export const QuickPlaySheet: React.FC<QuickPlaySheetProps> = ({
       zIndex={60}
     >
       <div className="px-4 pb-6 pt-3 space-y-6">
-        <div className="flex items-center justify-between">
-          <Typography variant="headline-md" className="font-semibold">
-            Quick Create
-          </Typography>
-          <button
-            type="button"
-            onClick={() => {
-              if (isSubmitting) return;
-              setSelectedFormationId("");
-              setPersonnel("");
-              setPlayType(undefined);
-              setPlayName("");
-              setError(null);
-              onClose();
-            }}
-            className="rounded-full p-2 text-muted hover:text-primary"
-            disabled={isSubmitting}
-            aria-label="Close quick create sheet"
-          >
-            <Icon name="close" className="h-5 w-5" />
-          </button>
-        </div>
+        <QuickPlaySheetHeader
+          isSubmitting={isSubmitting}
+          onClose={handleClose}
+        />
 
-        {comboButtons.length > 0 && (
-          <div>
-            <Typography
-              variant="label-md"
-              className="mb-2 text-secondary uppercase tracking-wide"
-            >
-              Recent combos
-            </Typography>
-            <div className="flex flex-wrap gap-2">
-              {comboButtons.map((combo) => (
-                <button
-                  key={`${combo.formation}-${combo.personnel || "none"}-${combo.playType || "any"}`}
-                  onClick={() => {
-                    const match = availableFormations.find(
-                      (formationItem) =>
-                        formationItem.name.trim().toLowerCase() ===
-                        combo.formation.trim().toLowerCase()
-                    );
-                    if (match) {
-                      setSelectedFormationId(match.id);
-                      setSelectedFormation(match);
-                      if (match.personnel_name) {
-                        setPersonnel(match.personnel_name);
-                      } else if (combo.personnel) {
-                        setPersonnel(combo.personnel);
-                      } else {
-                        setPersonnel("");
-                      }
-                      setError(null);
-                    } else {
-                      setSelectedFormationId(null);
-                      setSelectedFormation(null);
-                      setError(
-                        `Formation "${combo.formation}" isn’t in your library yet. Select it from the dropdown or create it.`
-                      );
-                      if (combo.personnel) {
-                        setPersonnel(combo.personnel);
-                      }
-                    }
-                    setPlayType(combo.playType);
-                  }}
-                  className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1.5 text-sm font-medium text-secondary hover:bg-muted transition-colors"
-                >
-                  <Icon name="zap" className="h-4 w-4 text-primary" />
-                  <span className="truncate max-w-40">
-                    {combo.formation}
-                    {combo.personnel ? ` • ${combo.personnel}` : ""}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+        <QuickPlaySheetRecentCombos
+          combos={comboButtons}
+          availableFormations={availableFormations}
+          onSelectCombo={handleSelectCombo}
+        />
 
-        <div className="space-y-3">
-          {playbookId ? (
-            <FormationSelector
-              playbookId={playbookId}
-              value={selectedFormationId || ""} // Now uses formation name (TEXT)
-              onChange={(formationName) => {
-                // Simple: just update the formation name
-                setSelectedFormationId(formationName);
-                setError(null);
-              }}
-              onCreateNew={() => {
-                onClose();
-                onOpenFullEditor();
-              }}
-            />
-          ) : (
-            <div className="rounded-lg border border-border bg-secondary/80 p-4 text-sm text-secondary">
-              Select a playbook before creating quick plays.
-            </div>
-          )}
-          <div>
-            <label className="text-sm font-semibold text-secondary mb-1 block">
-              Play Name
-            </label>
-            <Input
-              value={playName}
-              onChange={(e) => setPlayName(e.target.value)}
-              placeholder="Name this play"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-semibold text-secondary mb-1 block">
-              Personnel (optional)
-            </label>
-            <Input
-              value={personnel}
-              onChange={(e) => setPersonnel(e.target.value)}
-              placeholder={suggestions.personnel[0] || "11, 12, Blue, Empty..."}
-            />
-          </div>
-          <div>
-            <label className="text-sm font-semibold text-secondary mb-2 block">
-              Play Type
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {QUICK_PLAY_TYPES.map((option) => (
-                <button
-                  key={option.value}
-                  onClick={() =>
-                    setPlayType((current) =>
-                      current === option.value ? undefined : option.value
-                    )
-                  }
-                  className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-semibold transition-all ${
-                    playType === option.value
-                      ? "border-brand-jade bg-brand-jade/10 text-brand-jade"
-                      : "border-border text-secondary hover:border-hover"
-                  }`}
-                >
-                  {option.label}
-                </button>
-              ))}
-              <button
-                onClick={() => setPlayType(undefined)}
-                className="inline-flex items-center gap-2 rounded-full border border-dashed border-border px-3 py-1.5 text-sm text-muted hover:border-hover"
-              >
-                Clear
-              </button>
-            </div>
-          </div>
-        </div>
+        <QuickPlaySheetFields
+          playbookId={playbookId}
+          isSubmitting={isSubmitting}
+          suggestions={suggestions}
+          selectedFormationId={selectedFormationId}
+          setSelectedFormationId={setSelectedFormationId}
+          playName={playName}
+          setPlayName={setPlayName}
+          personnel={personnel}
+          setPersonnel={setPersonnel}
+          playType={playType}
+          setPlayType={setPlayType}
+          setError={setError}
+          onOpenFullEditor={onOpenFullEditor}
+          onClose={onClose}
+        />
 
-        {error && (
-          <div className="flex items-center gap-2 rounded-lg border border-error-200 bg-error-50 px-3 py-2 text-sm text-error-700">
-            <Icon name="alert-triangle" className="h-4 w-4" />
-            {error}
-          </div>
-        )}
+        {error && <QuickPlaySheetErrorBanner error={error} />}
 
-        <div className="flex flex-col gap-3">
-          <Button
-            onClick={handleCreate}
-            variant="primary"
-            size="lg"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <>
-                <Icon name="loader" className="mr-2 h-4 w-4 animate-spin" />
-                Creating...
-              </>
-            ) : (
-              <>
-                <Icon name="plus" className="mr-2 h-5 w-5" />
-                Create and Diagram
-              </>
-            )}
-          </Button>
-          <Button
-            onClick={onOpenFullEditor}
-            variant="ghost"
-            size="lg"
-            disabled={isSubmitting}
-          >
-            Open full editor
-          </Button>
-        </div>
+        <QuickPlaySheetActions
+          isSubmitting={isSubmitting}
+          onCreate={handleCreate}
+          onOpenFullEditor={onOpenFullEditor}
+        />
       </div>
     </BottomSheet>
   );

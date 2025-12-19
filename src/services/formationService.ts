@@ -39,7 +39,6 @@ export type BulkDeleteResult = { count: number };
 
 function warn(methodName: string) {
   if (import.meta.env.DEV) {
-    // eslint-disable-next-line no-console
     console.warn(`[FormationService] ${methodName} is currently a no-op stub.`);
   }
 }

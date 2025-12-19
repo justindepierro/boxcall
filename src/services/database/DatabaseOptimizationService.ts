@@ -171,6 +171,95 @@ export class DatabaseOptimizationService {
   /**
    * Optimized select query with caching
    */
+  private buildSelectQueryString(
+    table: string,
+    columns: string[] | undefined,
+    suffix?: string
+  ): string {
+    const selected = columns?.join(",") || "*";
+    return `SELECT ${selected} FROM ${table}${suffix ? ` ${suffix}` : ""}`;
+  }
+
+  private buildSelectMetrics(
+    query: string,
+    duration: number,
+    cacheHit: boolean,
+    data: unknown[] | null,
+    success: boolean
+  ): QueryMetrics {
+    return {
+      query,
+      duration,
+      success,
+      cacheHit,
+      rowCount: data?.length,
+      timestamp: new Date(),
+    };
+  }
+
+  private applyColumnSelection(query: any, columns: string[] | undefined): any {
+    if (columns && columns.length > 0) {
+      return query.select(columns.join(","));
+    }
+    return query.select("*");
+  }
+
+  private applySingleFilter(query: any, key: string, value: any): any {
+    if (Array.isArray(value)) {
+      return query.in(key, value);
+    }
+
+    if (typeof value === "object" && value !== null) {
+      // Handle range filters, etc.
+      if ("gte" in value) query = query.gte(key, value.gte);
+      if ("lte" in value) query = query.lte(key, value.lte);
+      if ("gt" in value) query = query.gt(key, value.gt);
+      if ("lt" in value) query = query.lt(key, value.lt);
+      if ("like" in value) query = query.like(key, value.like);
+      if ("ilike" in value) query = query.ilike(key, value.ilike);
+      return query;
+    }
+
+    return query.eq(key, value);
+  }
+
+  private applyFilters(
+    query: any,
+    filters: Record<string, any> | undefined
+  ): any {
+    if (!filters) return query;
+
+    Object.entries(filters).forEach(([key, value]) => {
+      query = this.applySingleFilter(query, key, value);
+    });
+
+    return query;
+  }
+
+  private applyOrdering(
+    query: any,
+    orderBy: { column: string; ascending?: boolean } | undefined
+  ): any {
+    if (!orderBy) return query;
+    return query.order(orderBy.column, {
+      ascending: orderBy.ascending !== false,
+    });
+  }
+
+  private applyPagination(
+    query: any,
+    limit: number | undefined,
+    offset: number | undefined
+  ): any {
+    if (limit) {
+      query = query.limit(limit);
+    }
+    if (offset) {
+      query = query.range(offset, offset + (limit || 1000) - 1);
+    }
+    return query;
+  }
+
   async optimizedSelect<T = any>(
     table: string,
     options: {
@@ -203,14 +292,13 @@ export class DatabaseOptimizationService {
           data = cachedData;
 
           const duration = performance.now() - startTime;
-          const metrics: QueryMetrics = {
-            query: `SELECT ${options.columns?.join(",") || "*"} FROM ${table} (cached)`,
+          const metrics = this.buildSelectMetrics(
+            this.buildSelectQueryString(table, options.columns, "(cached)"),
             duration,
-            success: true,
-            cacheHit: true,
-            rowCount: data?.length,
-            timestamp: new Date(),
-          };
+            true,
+            data,
+            true
+          );
 
           this.recordMetrics(metrics);
           return { data, error: null, metrics };
@@ -221,49 +309,10 @@ export class DatabaseOptimizationService {
       const client = this.getClient();
       let query: any = (client as any).from(table);
 
-      // Apply column selection
-      if (options.columns && options.columns.length > 0) {
-        query = query.select(options.columns.join(","));
-      } else {
-        query = query.select("*");
-      }
-
-      // Apply filters
-      if (options.filters) {
-        Object.entries(options.filters).forEach(([key, value]) => {
-          if (Array.isArray(value)) {
-            query = query.in(key, value);
-          } else if (typeof value === "object" && value !== null) {
-            // Handle range filters, etc.
-            if ("gte" in value) query = query.gte(key, value.gte);
-            if ("lte" in value) query = query.lte(key, value.lte);
-            if ("gt" in value) query = query.gt(key, value.gt);
-            if ("lt" in value) query = query.lt(key, value.lt);
-            if ("like" in value) query = query.like(key, value.like);
-            if ("ilike" in value) query = query.ilike(key, value.ilike);
-          } else {
-            query = query.eq(key, value);
-          }
-        });
-      }
-
-      // Apply ordering
-      if (options.orderBy) {
-        query = query.order(options.orderBy.column, {
-          ascending: options.orderBy.ascending !== false,
-        });
-      }
-
-      // Apply pagination
-      if (options.limit) {
-        query = query.limit(options.limit);
-      }
-      if (options.offset) {
-        query = query.range(
-          options.offset,
-          options.offset + (options.limit || 1000) - 1
-        );
-      }
+      query = this.applyColumnSelection(query, options.columns);
+      query = this.applyFilters(query, options.filters);
+      query = this.applyOrdering(query, options.orderBy);
+      query = this.applyPagination(query, options.limit, options.offset);
 
       const result = await query;
       data = result.data;

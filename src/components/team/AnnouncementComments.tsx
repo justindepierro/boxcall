@@ -27,6 +27,492 @@ interface AnnouncementCommentsProps {
   teamId?: string; // Optional: for team-specific context in popovers
 }
 
+const getPlainTextFromTipTapJson = (jsonContent: string): string => {
+  try {
+    const json = JSON.parse(jsonContent);
+    const extractText = (node: any): string => {
+      if (node.type === "text") {
+        return node.text || "";
+      }
+      if (node.content && Array.isArray(node.content)) {
+        return node.content.map(extractText).join("");
+      }
+      return "";
+    };
+    return extractText(json).trim() || jsonContent;
+  } catch {
+    return jsonContent;
+  }
+};
+
+const collectUserIdsFromCommentTree = (nodes: CommentTree[]): string[] => {
+  const userIds = new Set<string>();
+  const collectUserIds = (commentNodes: CommentTree[]) => {
+    commentNodes.forEach((node) => {
+      userIds.add(node.comment.user_id);
+      if (node.replies.length > 0) {
+        collectUserIds(node.replies);
+      }
+    });
+  };
+  collectUserIds(nodes);
+  return Array.from(userIds);
+};
+
+const loadAvatarUrlsByUserId = async (
+  userIds: string[]
+): Promise<Map<string, string | null>> => {
+  if (userIds.length === 0) return new Map();
+
+  const { data } = await supabase
+    .from("profiles")
+    .select("id, avatar_url")
+    .in("id", userIds);
+
+  const avatarMap = new Map<string, string | null>();
+  if (data) {
+    data.forEach((profile) => {
+      avatarMap.set(profile.id, profile.avatar_url);
+    });
+  }
+  return avatarMap;
+};
+
+type CommentNodeProps = {
+  node: CommentTree;
+  depth: number;
+  teamId?: string;
+  currentUserId: string | null;
+  avatarUrls: Map<string, string | null>;
+  submitting: boolean;
+  replyingTo: string | null;
+  replyContent: string;
+  onChangeReplyContent: (value: string) => void;
+  onStartReplying: (commentId: string) => void;
+  onCancelReplying: () => void;
+  onSubmitReply: (parentId: string) => void;
+  editingComment: string | null;
+  editContent: string;
+  onChangeEditContent: (value: string) => void;
+  onStartEdit: (comment: CommentWithAuthor) => void;
+  onCancelEdit: () => void;
+  onSaveEdit: (commentId: string) => void;
+  onDelete: (commentId: string) => void;
+  onReload: () => void;
+};
+
+type ReplyFormProps = {
+  commentId: string;
+  teamId?: string;
+  submitting: boolean;
+  replyContent: string;
+  onChangeReplyContent: (value: string) => void;
+  onSubmitReply: (parentId: string) => void;
+  onCancelReplying: () => void;
+};
+
+const ReplyForm: React.FC<ReplyFormProps> = ({
+  commentId,
+  teamId,
+  submitting,
+  replyContent,
+  onChangeReplyContent,
+  onSubmitReply,
+  onCancelReplying,
+}) => (
+  <div className="mt-2 ml-4">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmitReply(commentId);
+      }}
+      className="space-y-2"
+    >
+      <RichTextEditor
+        content={replyContent}
+        onChange={onChangeReplyContent}
+        placeholder="Write a reply..."
+        disabled={submitting}
+        teamId={teamId}
+      />
+      <div className="flex gap-2">
+        <button
+          type="submit"
+          disabled={submitting || !replyContent.trim()}
+          className="px-3 py-1 bg-brand-primary text-white rounded text-sm hover:bg-brand-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+        >
+          <Send className="w-3 h-3" />
+          Reply
+        </button>
+        <button
+          type="button"
+          onClick={onCancelReplying}
+          disabled={submitting}
+          className="px-3 py-1 border rounded text-sm hover:bg-secondary transition-colors"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+);
+
+type RepliesListProps = Omit<CommentNodeProps, "node"> & {
+  replies: CommentTree[];
+};
+
+const RepliesList: React.FC<RepliesListProps> = ({
+  replies,
+  depth,
+  teamId,
+  currentUserId,
+  avatarUrls,
+  submitting,
+  replyingTo,
+  replyContent,
+  onChangeReplyContent,
+  onStartReplying,
+  onCancelReplying,
+  onSubmitReply,
+  editingComment,
+  editContent,
+  onChangeEditContent,
+  onStartEdit,
+  onCancelEdit,
+  onSaveEdit,
+  onDelete,
+  onReload,
+}) => {
+  if (replies.length === 0) return null;
+
+  return (
+    <div className="space-y-0">
+      {replies.map((reply) => (
+        <CommentNode
+          key={reply.comment.id}
+          node={reply}
+          depth={depth + 1}
+          teamId={teamId}
+          currentUserId={currentUserId}
+          avatarUrls={avatarUrls}
+          submitting={submitting}
+          replyingTo={replyingTo}
+          replyContent={replyContent}
+          onChangeReplyContent={onChangeReplyContent}
+          onStartReplying={onStartReplying}
+          onCancelReplying={onCancelReplying}
+          onSubmitReply={onSubmitReply}
+          editingComment={editingComment}
+          editContent={editContent}
+          onChangeEditContent={onChangeEditContent}
+          onStartEdit={onStartEdit}
+          onCancelEdit={onCancelEdit}
+          onSaveEdit={onSaveEdit}
+          onDelete={onDelete}
+          onReload={onReload}
+        />
+      ))}
+    </div>
+  );
+};
+
+const CommentNode: React.FC<CommentNodeProps> = ({
+  node,
+  depth,
+  teamId,
+  currentUserId,
+  avatarUrls,
+  submitting,
+  replyingTo,
+  replyContent,
+  onChangeReplyContent,
+  onStartReplying,
+  onCancelReplying,
+  onSubmitReply,
+  editingComment,
+  editContent,
+  onChangeEditContent,
+  onStartEdit,
+  onCancelEdit,
+  onSaveEdit,
+  onDelete,
+  onReload,
+}) => {
+  const { comment, replies } = node;
+  const isEditing = editingComment === comment.id;
+  const isReplying = replyingTo === comment.id;
+  const isOwnComment = currentUserId === comment.user_id;
+
+  return (
+    <div key={comment.id} className={`${depth > 0 ? "ml-6 mt-3" : "mt-4"}`}>
+      <div className="rounded-xl p-4 bg-primary hover:bg-subtle transition-colors border border-muted">
+        <div className="flex items-start gap-3 mb-2">
+          <UserProfilePopover
+            userId={comment.user_id}
+            teamId={teamId}
+            trigger={
+              <Avatar
+                src={avatarUrls.get(comment.user_id) || null}
+                name={comment.author_name}
+                size="sm"
+              />
+            }
+            showOnHover={true}
+          />
+
+          <div className="flex-1">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <UserProfilePopover
+                  userId={comment.user_id}
+                  teamId={teamId}
+                  trigger={
+                    <span className="font-medium text-primary hover:underline cursor-pointer">
+                      {comment.author_name}
+                    </span>
+                  }
+                  showOnHover={true}
+                />
+                <span className="text-xs text-muted">
+                  {format(new Date(comment.created_at), "MMM d 'at' h:mm a")}
+                </span>
+                {comment.updated_at !== comment.created_at && (
+                  <span className="text-xs text-muted">(edited)</span>
+                )}
+              </div>
+              {isOwnComment && !isEditing && (
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => onStartEdit(comment)}
+                    className="p-1 text-muted hover:text-primary transition-colors"
+                    title="Edit"
+                  >
+                    <Edit2 className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={() => onDelete(comment.id)}
+                    className="p-1 text-muted hover:text-error-600 transition-colors"
+                    title="Delete"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {isEditing ? (
+          <div className="space-y-2">
+            <RichTextEditor
+              content={editContent}
+              onChange={onChangeEditContent}
+              placeholder="Edit your comment..."
+              disabled={submitting}
+              teamId={teamId}
+            />
+            <div className="flex gap-2">
+              <button
+                onClick={() => onSaveEdit(comment.id)}
+                disabled={submitting || !editContent.trim()}
+                className="px-3 py-1 bg-brand-primary text-white rounded text-sm hover:bg-brand-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Save
+              </button>
+              <button
+                onClick={onCancelEdit}
+                disabled={submitting}
+                className="px-3 py-1 border rounded text-sm hover:bg-secondary transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="prose prose-sm max-w-none text-primary text-sm mb-3">
+              {comment.content_json ? (
+                <RichTextDisplay content={comment.content_json} />
+              ) : (
+                <p className="whitespace-pre-wrap">{comment.content}</p>
+              )}
+            </div>
+
+            <div className="mb-2">
+              <CommentReactions
+                commentId={comment.id}
+                onReactionChange={onReload}
+                compact={true}
+              />
+            </div>
+
+            {!isReplying && (
+              <button
+                onClick={() => onStartReplying(comment.id)}
+                className="flex items-center gap-1 text-xs text-brand-primary hover:text-brand-primary-hover"
+              >
+                <Reply className="w-3 h-3" />
+                Reply
+              </button>
+            )}
+          </>
+        )}
+      </div>
+
+      {isReplying && (
+        <ReplyForm
+          commentId={comment.id}
+          teamId={teamId}
+          submitting={submitting}
+          replyContent={replyContent}
+          onChangeReplyContent={onChangeReplyContent}
+          onSubmitReply={onSubmitReply}
+          onCancelReplying={onCancelReplying}
+        />
+      )}
+
+      <RepliesList
+        replies={replies}
+        depth={depth}
+        teamId={teamId}
+        currentUserId={currentUserId}
+        avatarUrls={avatarUrls}
+        submitting={submitting}
+        replyingTo={replyingTo}
+        replyContent={replyContent}
+        onChangeReplyContent={onChangeReplyContent}
+        onStartReplying={onStartReplying}
+        onCancelReplying={onCancelReplying}
+        onSubmitReply={onSubmitReply}
+        editingComment={editingComment}
+        editContent={editContent}
+        onChangeEditContent={onChangeEditContent}
+        onStartEdit={onStartEdit}
+        onCancelEdit={onCancelEdit}
+        onSaveEdit={onSaveEdit}
+        onDelete={onDelete}
+        onReload={onReload}
+      />
+    </div>
+  );
+};
+
+type NewCommentFormProps = {
+  content: string;
+  onChange: (value: string) => void;
+  onSubmit: (e: React.FormEvent) => void;
+  submitting: boolean;
+  teamId?: string;
+};
+
+const NewCommentForm: React.FC<NewCommentFormProps> = ({
+  content,
+  onChange,
+  onSubmit,
+  submitting,
+  teamId,
+}) => (
+  <form onSubmit={onSubmit} className="space-y-3">
+    <RichTextEditor
+      content={content}
+      onChange={onChange}
+      placeholder="Add a comment... You can add images by dragging & dropping or pasting them!"
+      disabled={submitting}
+      teamId={teamId}
+    />
+    <button
+      type="submit"
+      disabled={submitting || !content.trim()}
+      className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-brand-jade text-white rounded-lg hover:from-blue-700 hover:to-jade-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-semibold shadow-md hover:shadow-lg"
+    >
+      <Send className="w-4 h-4" />
+      Post Comment
+    </button>
+  </form>
+);
+
+type CommentsListProps = {
+  comments: CommentTree[];
+  teamId?: string;
+  currentUserId: string | null;
+  avatarUrls: Map<string, string | null>;
+  submitting: boolean;
+  replyingTo: string | null;
+  replyContent: string;
+  onChangeReplyContent: (value: string) => void;
+  onStartReplying: (commentId: string) => void;
+  onCancelReplying: () => void;
+  onSubmitReply: (parentId: string) => void;
+  editingComment: string | null;
+  editContent: string;
+  onChangeEditContent: (value: string) => void;
+  onStartEdit: (comment: CommentWithAuthor) => void;
+  onCancelEdit: () => void;
+  onSaveEdit: (commentId: string) => void;
+  onDelete: (commentId: string) => void;
+  onReload: () => void;
+};
+
+const CommentsList: React.FC<CommentsListProps> = ({
+  comments,
+  teamId,
+  currentUserId,
+  avatarUrls,
+  submitting,
+  replyingTo,
+  replyContent,
+  onChangeReplyContent,
+  onStartReplying,
+  onCancelReplying,
+  onSubmitReply,
+  editingComment,
+  editContent,
+  onChangeEditContent,
+  onStartEdit,
+  onCancelEdit,
+  onSaveEdit,
+  onDelete,
+  onReload,
+}) => {
+  if (comments.length === 0) {
+    return (
+      <p className="text-center text-muted py-8">
+        No comments yet. Be the first to comment!
+      </p>
+    );
+  }
+
+  return (
+    <div className="space-y-1">
+      {comments.map((commentTree) => (
+        <CommentNode
+          key={commentTree.comment.id}
+          node={commentTree}
+          depth={0}
+          teamId={teamId}
+          currentUserId={currentUserId}
+          avatarUrls={avatarUrls}
+          submitting={submitting}
+          replyingTo={replyingTo}
+          replyContent={replyContent}
+          onChangeReplyContent={onChangeReplyContent}
+          onStartReplying={onStartReplying}
+          onCancelReplying={onCancelReplying}
+          onSubmitReply={onSubmitReply}
+          editingComment={editingComment}
+          editContent={editContent}
+          onChangeEditContent={onChangeEditContent}
+          onStartEdit={onStartEdit}
+          onCancelEdit={onCancelEdit}
+          onSaveEdit={onSaveEdit}
+          onDelete={onDelete}
+          onReload={onReload}
+        />
+      ))}
+    </div>
+  );
+};
+
 export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
   announcementId,
   teamId,
@@ -55,57 +541,14 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
     });
   }, []);
 
-  // Helper to extract plain text from TipTap JSON
-  const getPlainText = (jsonContent: string): string => {
-    try {
-      const json = JSON.parse(jsonContent);
-      const extractText = (node: any): string => {
-        if (node.type === "text") {
-          return node.text || "";
-        }
-        if (node.content && Array.isArray(node.content)) {
-          return node.content.map(extractText).join("");
-        }
-        return "";
-      };
-      return extractText(json).trim() || jsonContent;
-    } catch {
-      return jsonContent;
-    }
-  };
-
   const loadComments = useCallback(async () => {
     setLoading(true);
     const tree = await CommentsService.getCommentsTree(announcementId);
     setComments(tree);
 
-    // Load avatars for all comment authors
-    const userIds = new Set<string>();
-    const collectUserIds = (nodes: CommentTree[]) => {
-      nodes.forEach((node) => {
-        userIds.add(node.comment.user_id);
-        if (node.replies.length > 0) {
-          collectUserIds(node.replies);
-        }
-      });
-    };
-    collectUserIds(tree);
-
-    // Fetch all avatars in one query
-    if (userIds.size > 0) {
-      const { data } = await supabase
-        .from("profiles")
-        .select("id, avatar_url")
-        .in("id", Array.from(userIds));
-
-      if (data) {
-        const avatarMap = new Map<string, string | null>();
-        data.forEach((profile) => {
-          avatarMap.set(profile.id, profile.avatar_url);
-        });
-        setAvatarUrls(avatarMap);
-      }
-    }
+    const userIds = collectUserIdsFromCommentTree(tree);
+    const avatarMap = await loadAvatarUrlsByUserId(userIds);
+    setAvatarUrls(avatarMap);
 
     setLoading(false);
   }, [announcementId]);
@@ -120,7 +563,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
     if (!newComment.trim() || submitting) return;
 
     setSubmitting(true);
-    const plainTextContent = getPlainText(newComment);
+    const plainTextContent = getPlainTextFromTipTapJson(newComment);
 
     const result = await CommentsService.addComment({
       announcement_id: announcementId,
@@ -141,7 +584,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
     if (!replyContent.trim() || submitting) return;
 
     setSubmitting(true);
-    const plainTextContent = getPlainText(replyContent);
+    const plainTextContent = getPlainTextFromTipTapJson(replyContent);
 
     const result = await CommentsService.addComment({
       announcement_id: announcementId,
@@ -169,7 +612,7 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
     if (!editContent.trim() || submitting) return;
 
     setSubmitting(true);
-    const plainTextContent = getPlainText(editContent);
+    const plainTextContent = getPlainTextFromTipTapJson(editContent);
 
     const result = await CommentsService.updateComment(commentId, {
       content: plainTextContent,
@@ -204,187 +647,6 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
     setDeleteCommentId(null);
   };
 
-  const renderComment = (node: CommentTree, depth: number = 0) => {
-    const { comment, replies } = node;
-    const isEditing = editingComment === comment.id;
-    const isReplying = replyingTo === comment.id;
-    const isOwnComment = currentUserId === comment.user_id;
-
-    return (
-      <div key={comment.id} className={`${depth > 0 ? "ml-6 mt-3" : "mt-4"}`}>
-        {/* Comment */}
-        <div className="rounded-xl p-4 bg-primary hover:bg-subtle transition-colors border border-muted">
-          <div className="flex items-start gap-3 mb-2">
-            {/* Avatar with Popover */}
-            <UserProfilePopover
-              userId={comment.user_id}
-              teamId={teamId}
-              trigger={
-                <Avatar
-                  src={avatarUrls.get(comment.user_id) || null}
-                  name={comment.author_name}
-                  size="sm"
-                />
-              }
-              showOnHover={true}
-            />
-
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <UserProfilePopover
-                    userId={comment.user_id}
-                    teamId={teamId}
-                    trigger={
-                      <span className="font-medium text-primary hover:underline cursor-pointer">
-                        {comment.author_name}
-                      </span>
-                    }
-                    showOnHover={true}
-                  />
-                  <span className="text-xs text-muted">
-                    {format(new Date(comment.created_at), "MMM d 'at' h:mm a")}
-                  </span>
-                  {comment.updated_at !== comment.created_at && (
-                    <span className="text-xs text-muted">(edited)</span>
-                  )}
-                </div>
-                {isOwnComment && !isEditing && (
-                  <div className="flex gap-1">
-                    <button
-                      onClick={() => handleStartEdit(comment)}
-                      className="p-1 text-muted hover:text-primary transition-colors"
-                      title="Edit"
-                    >
-                      <Edit2 className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(comment.id)}
-                      className="p-1 text-muted hover:text-error-600 transition-colors"
-                      title="Delete"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Comment Content or Edit Form */}
-          {isEditing ? (
-            <div className="space-y-2">
-              <RichTextEditor
-                content={editContent}
-                onChange={setEditContent}
-                placeholder="Edit your comment..."
-                disabled={submitting}
-                teamId={teamId}
-              />
-              <div className="flex gap-2">
-                <button
-                  onClick={() => handleSaveEdit(comment.id)}
-                  disabled={submitting || !editContent.trim()}
-                  className="px-3 py-1 bg-brand-primary text-white rounded text-sm hover:bg-brand-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Save
-                </button>
-                <button
-                  onClick={() => {
-                    setEditingComment(null);
-                    setEditContent("");
-                  }}
-                  disabled={submitting}
-                  className="px-3 py-1 border rounded text-sm hover:bg-secondary transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          ) : (
-            <>
-              <div className="prose prose-sm max-w-none text-primary text-sm mb-3">
-                {comment.content_json ? (
-                  <RichTextDisplay content={comment.content_json} />
-                ) : (
-                  <p className="whitespace-pre-wrap">{comment.content}</p>
-                )}
-              </div>
-
-              {/* Reactions */}
-              <div className="mb-2">
-                <CommentReactions
-                  commentId={comment.id}
-                  onReactionChange={loadComments}
-                  compact={true}
-                />
-              </div>
-
-              {!isReplying && (
-                <button
-                  onClick={() => setReplyingTo(comment.id)}
-                  className="flex items-center gap-1 text-xs text-brand-primary hover:text-brand-primary-hover"
-                >
-                  <Reply className="w-3 h-3" />
-                  Reply
-                </button>
-              )}
-            </>
-          )}
-        </div>
-
-        {/* Reply Form */}
-        {isReplying && (
-          <div className="mt-2 ml-4">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSubmitReply(comment.id);
-              }}
-              className="space-y-2"
-            >
-              <RichTextEditor
-                content={replyContent}
-                onChange={setReplyContent}
-                placeholder="Write a reply..."
-                disabled={submitting}
-                teamId={teamId}
-              />
-              <div className="flex gap-2">
-                <button
-                  type="submit"
-                  disabled={submitting || !replyContent.trim()}
-                  className="px-3 py-1 bg-brand-primary text-white rounded text-sm hover:bg-brand-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
-                >
-                  <Send className="w-3 h-3" />
-                  Reply
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setReplyingTo(null);
-                    setReplyContent("");
-                  }}
-                  disabled={submitting}
-                  className="px-3 py-1 border rounded text-sm hover:bg-secondary transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
-
-        {/* Nested Replies */}
-        {replies.length > 0 && (
-          <div className="space-y-0">
-            {replies.map((reply) => renderComment(reply, depth + 1))}
-          </div>
-        )}
-      </div>
-    );
-  };
-
   if (loading) {
     return (
       <div className="text-center py-4 text-muted">Loading comments...</div>
@@ -393,35 +655,41 @@ export const AnnouncementComments: React.FC<AnnouncementCommentsProps> = ({
 
   return (
     <div className="space-y-4">
-      {/* New Comment Form */}
-      <form onSubmit={handleSubmitComment} className="space-y-3">
-        <RichTextEditor
-          content={newComment}
-          onChange={setNewComment}
-          placeholder="Add a comment... You can add images by dragging & dropping or pasting them!"
-          disabled={submitting}
-          teamId={teamId}
-        />
-        <button
-          type="submit"
-          disabled={submitting || !newComment.trim()}
-          className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-brand-jade text-white rounded-lg hover:from-blue-700 hover:to-jade-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-semibold shadow-md hover:shadow-lg"
-        >
-          <Send className="w-4 h-4" />
-          Post Comment
-        </button>
-      </form>
+      <NewCommentForm
+        content={newComment}
+        onChange={setNewComment}
+        onSubmit={handleSubmitComment}
+        submitting={submitting}
+        teamId={teamId}
+      />
 
-      {/* Comments List */}
-      {comments.length === 0 ? (
-        <p className="text-center text-muted py-8">
-          No comments yet. Be the first to comment!
-        </p>
-      ) : (
-        <div className="space-y-1">
-          {comments.map((commentTree) => renderComment(commentTree))}
-        </div>
-      )}
+      <CommentsList
+        comments={comments}
+        teamId={teamId}
+        currentUserId={currentUserId}
+        avatarUrls={avatarUrls}
+        submitting={submitting}
+        replyingTo={replyingTo}
+        replyContent={replyContent}
+        onChangeReplyContent={setReplyContent}
+        onStartReplying={setReplyingTo}
+        onCancelReplying={() => {
+          setReplyingTo(null);
+          setReplyContent("");
+        }}
+        onSubmitReply={handleSubmitReply}
+        editingComment={editingComment}
+        editContent={editContent}
+        onChangeEditContent={setEditContent}
+        onStartEdit={handleStartEdit}
+        onCancelEdit={() => {
+          setEditingComment(null);
+          setEditContent("");
+        }}
+        onSaveEdit={handleSaveEdit}
+        onDelete={handleDelete}
+        onReload={loadComments}
+      />
 
       {/* Delete Confirmation Modal */}
       <ConfirmationModal

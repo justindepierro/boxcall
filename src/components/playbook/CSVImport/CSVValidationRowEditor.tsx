@@ -168,6 +168,143 @@ const ValidationStateIcon: React.FC<ValidationStateIconProps> = ({
   return null;
 };
 
+type CSVEditableField = "formation" | "play_name" | "personnel";
+
+interface CSVValidationFieldEditorProps {
+  rowNumber: number;
+  field: CSVEditableField;
+  label: string;
+  value: string;
+  validation: ValidationResult;
+  existingValues: string[];
+  editingField: CSVEditableField | null;
+  editValue: string;
+  onStartEditing: (field: CSVEditableField, currentValue: string) => void;
+  onCancelEditing: () => void;
+  onSaveEdit: (field: CSVEditableField) => void;
+  onEditValueChange: (value: string) => void;
+  onAcceptSuggestion: (
+    rowNumber: number,
+    field: string,
+    suggestedValue: string
+  ) => void;
+}
+
+const CSVValidationFieldEditor: React.FC<CSVValidationFieldEditorProps> = ({
+  rowNumber,
+  field,
+  label,
+  value,
+  validation,
+  existingValues,
+  editingField,
+  editValue,
+  onStartEditing,
+  onCancelEditing,
+  onSaveEdit,
+  onEditValueChange,
+  onAcceptSuggestion,
+}) => {
+  const isEditing = editingField === field;
+  const hasWarnings = validation.state === "warning";
+  const hasErrors = validation.state === "error";
+
+  const similarMatches: SimilarMatch[] =
+    hasWarnings || hasErrors
+      ? findSimilarMatches(value, existingValues, 3)
+      : [];
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <label className="text-xs font-medium text-secondary">{label}</label>
+        <div className="flex items-center space-x-2">
+          <ValidationStateIcon state={validation.state} isEditing={isEditing} />
+          {!isEditing && (
+            <Button
+              onClick={() => onStartEditing(field, value)}
+              variant="neutralLink"
+              size="xs"
+              icon={<Icon name="edit" className="h-3 w-3" />}
+              iconPosition="only"
+              aria-label={`Edit ${label}`}
+            />
+          )}
+        </div>
+      </div>
+
+      {isEditing ? (
+        <div className="flex items-center space-x-2">
+          <input
+            type="text"
+            value={editValue}
+            onChange={(e) => onEditValueChange(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") onSaveEdit(field);
+              if (e.key === "Escape") onCancelEditing();
+            }}
+            className="flex-1 px-2 py-1 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+            autoFocus
+          />
+          <Button
+            onClick={() => onSaveEdit(field)}
+            variant="primary"
+            size="xs"
+            icon={<Icon name="check" className="h-3 w-3" />}
+            iconPosition="only"
+            aria-label="Save"
+          />
+          <Button
+            onClick={onCancelEditing}
+            variant="outline"
+            size="xs"
+            icon={<Icon name="x-circle" className="h-3 w-3" />}
+            iconPosition="only"
+            aria-label="Cancel"
+          />
+        </div>
+      ) : (
+        <div
+          className={`px-3 py-2 rounded-lg text-sm font-medium ${getValidationStateClass(validation.state)}`}
+        >
+          {value || "-"}
+        </div>
+      )}
+
+      {validation.message && !isEditing && (
+        <p
+          className={`text-xs flex items-center space-x-1 ${getValidationTextClass(validation.state)}`}
+        >
+          {hasWarnings && <span>⚠️</span>}
+          {hasErrors && <span>❌</span>}
+          <span>{validation.message}</span>
+        </p>
+      )}
+
+      {!isEditing && (hasWarnings || hasErrors) && (
+        <FuzzyMatchSuggestions
+          matches={similarMatches}
+          onAccept={(matchValue) =>
+            onAcceptSuggestion(rowNumber, field, matchValue)
+          }
+        />
+      )}
+
+      {validation.normalizedValue &&
+        validation.normalizedValue !== value &&
+        !isEditing &&
+        validation.state !== "error" && (
+          <AutoCorrectionSuggestion
+            normalizedValue={validation.normalizedValue}
+            onAccept={() =>
+              onAcceptSuggestion(rowNumber, field, validation.normalizedValue)
+            }
+          />
+        )}
+    </div>
+  );
+};
+
 interface CSVValidationRowEditorProps {
   preview: CSVPlayPreview;
   existingFormations: string[];
@@ -198,7 +335,9 @@ export function CSVValidationRowEditor({
   onUpdate,
   onAcceptSuggestion,
 }: CSVValidationRowEditorProps) {
-  const [editingField, setEditingField] = useState<string | null>(null);
+  const [editingField, setEditingField] = useState<CSVEditableField | null>(
+    null
+  );
   const [editValue, setEditValue] = useState<string>("");
 
   // Validate fields
@@ -215,7 +354,7 @@ export function CSVValidationRowEditor({
     existingPersonnel
   );
 
-  const startEditing = (field: string, currentValue: string) => {
+  const startEditing = (field: CSVEditableField, currentValue: string) => {
     setEditingField(field);
     setEditValue(currentValue);
   };
@@ -225,130 +364,12 @@ export function CSVValidationRowEditor({
     setEditValue("");
   };
 
-  const saveEdit = (field: string) => {
+  const saveEdit = (field: CSVEditableField) => {
     if (editValue.trim()) {
       onUpdate(preview.rowNumber, field, editValue.trim());
     }
     setEditingField(null);
     setEditValue("");
-  };
-
-  const renderFieldWithValidation = (
-    field: string,
-    label: string,
-    value: string,
-    validation: ValidationResult,
-    existingValues: string[]
-  ) => {
-    const isEditing = editingField === field;
-    const hasWarnings = validation.state === "warning";
-    const hasErrors = validation.state === "error";
-
-    // Find similar matches for suggestions
-    const similarMatches: SimilarMatch[] =
-      hasWarnings || hasErrors
-        ? findSimilarMatches(value, existingValues, 3)
-        : [];
-
-    return (
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <label className="text-xs font-medium text-secondary">{label}</label>
-          <div className="flex items-center space-x-2">
-            <ValidationStateIcon
-              state={validation.state}
-              isEditing={isEditing}
-            />
-            {!isEditing && (
-              <Button
-                onClick={() => startEditing(field, value)}
-                variant="neutralLink"
-                size="xs"
-                icon={<Icon name="edit" className="h-3 w-3" />}
-                iconPosition="only"
-                aria-label={`Edit ${label}`}
-              />
-            )}
-          </div>
-        </div>
-
-        {isEditing ? (
-          <div className="flex items-center space-x-2">
-            <input
-              type="text"
-              value={editValue}
-              onChange={(e) => setEditValue(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") saveEdit(field);
-                if (e.key === "Escape") cancelEditing();
-              }}
-              className="flex-1 px-2 py-1 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
-              autoFocus
-            />
-            <Button
-              onClick={() => saveEdit(field)}
-              variant="primary"
-              size="xs"
-              icon={<Icon name="check" className="h-3 w-3" />}
-              iconPosition="only"
-              aria-label="Save"
-            />
-            <Button
-              onClick={cancelEditing}
-              variant="outline"
-              size="xs"
-              icon={<Icon name="x-circle" className="h-3 w-3" />}
-              iconPosition="only"
-              aria-label="Cancel"
-            />
-          </div>
-        ) : (
-          <div
-            className={`px-3 py-2 rounded-lg text-sm font-medium ${getValidationStateClass(validation.state)}`}
-          >
-            {value || "-"}
-          </div>
-        )}
-
-        {/* Validation Message */}
-        {validation.message && !isEditing && (
-          <p
-            className={`text-xs flex items-center space-x-1 ${getValidationTextClass(validation.state)}`}
-          >
-            {hasWarnings && <span>⚠️</span>}
-            {hasErrors && <span>❌</span>}
-            <span>{validation.message}</span>
-          </p>
-        )}
-
-        {/* Fuzzy Match Suggestions */}
-        {!isEditing && (hasWarnings || hasErrors) && (
-          <FuzzyMatchSuggestions
-            matches={similarMatches}
-            onAccept={(matchValue) =>
-              onAcceptSuggestion(preview.rowNumber, field, matchValue)
-            }
-          />
-        )}
-
-        {/* Auto-Correction Suggestion */}
-        {validation.normalizedValue &&
-          validation.normalizedValue !== value &&
-          !isEditing &&
-          validation.state !== "error" && (
-            <AutoCorrectionSuggestion
-              normalizedValue={validation.normalizedValue}
-              onAccept={() =>
-                onAcceptSuggestion(
-                  preview.rowNumber,
-                  field,
-                  validation.normalizedValue
-                )
-              }
-            />
-          )}
-      </div>
-    );
   };
 
   return (
@@ -371,29 +392,53 @@ export function CSVValidationRowEditor({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {renderFieldWithValidation(
-          "formation",
-          "Formation",
-          preview.data.formation || "",
-          formationValidation,
-          existingFormations
-        )}
+        <CSVValidationFieldEditor
+          rowNumber={preview.rowNumber}
+          field="formation"
+          label="Formation"
+          value={preview.data.formation || ""}
+          validation={formationValidation}
+          existingValues={existingFormations}
+          editingField={editingField}
+          editValue={editValue}
+          onStartEditing={startEditing}
+          onCancelEditing={cancelEditing}
+          onSaveEdit={saveEdit}
+          onEditValueChange={setEditValue}
+          onAcceptSuggestion={onAcceptSuggestion}
+        />
 
-        {renderFieldWithValidation(
-          "play_name",
-          "Play Name",
-          preview.data.play_name || "",
-          playNameValidation,
-          existingPlayNames
-        )}
+        <CSVValidationFieldEditor
+          rowNumber={preview.rowNumber}
+          field="play_name"
+          label="Play Name"
+          value={preview.data.play_name || ""}
+          validation={playNameValidation}
+          existingValues={existingPlayNames}
+          editingField={editingField}
+          editValue={editValue}
+          onStartEditing={startEditing}
+          onCancelEditing={cancelEditing}
+          onSaveEdit={saveEdit}
+          onEditValueChange={setEditValue}
+          onAcceptSuggestion={onAcceptSuggestion}
+        />
 
-        {renderFieldWithValidation(
-          "personnel",
-          "Personnel",
-          preview.data.personnel || "",
-          personnelValidation,
-          existingPersonnel
-        )}
+        <CSVValidationFieldEditor
+          rowNumber={preview.rowNumber}
+          field="personnel"
+          label="Personnel"
+          value={preview.data.personnel || ""}
+          validation={personnelValidation}
+          existingValues={existingPersonnel}
+          editingField={editingField}
+          editValue={editValue}
+          onStartEditing={startEditing}
+          onCancelEditing={cancelEditing}
+          onSaveEdit={saveEdit}
+          onEditValueChange={setEditValue}
+          onAcceptSuggestion={onAcceptSuggestion}
+        />
 
         {/* Play Type (simple display, no validation yet) */}
         <div className="space-y-2">

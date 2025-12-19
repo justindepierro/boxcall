@@ -78,74 +78,32 @@ const PLAYBOOK_FIELDS =
 const PLAY_SELECT_FIELDS =
   "id, playbook_id, formation, play_name, one_word_play, p_type, personnel, f_type, f_dir, p_dir, protection, r_str, p_str, pref_down, pref_dis, pref_hash, pref_cov, pref_front, ftag1, ftag2, p_tag1, p_tag2, back_align, back_left_of_qb, back_right_of_qb, shift, motion, key_player1, key_player2, check_into, notes, diagram_url, diagram_image_url, wristband_number, confidence_base, times_called, times_successful, created_at, updated_at";
 
-export function useTeamsData(teamIdOverride?: string | null) {
-  const [teams, setTeams] = useState<Team[]>([]);
-  const [playbooks, setPlaybooks] = useState<Playbook[]>([]);
-  const [plays, setPlays] = useState<DatabasePlay[]>([]);
-  const [formations, setFormations] = useState<Formation[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const { user: _user } = useAuth(); // DEMO MODE: Not used during demo
-  const activeTeamId = useActiveTeamStore((state) => state.activeTeamId);
-  const teamId = teamIdOverride ?? activeTeamId;
-
-  // Pagination state for plays
-  const [playsPage, setPlaysPage] = useState(0);
-  const [hasMorePlays, setHasMorePlays] = useState(true);
-  const [loadingMorePlays, setLoadingMorePlays] = useState(false);
-  const [totalPlaysCount, setTotalPlaysCount] = useState<number | null>(null);
+function useTeamsDataInitialLoadEffect({
+  teamId,
+  refreshTrigger,
+  setTeams,
+  setPlaybooks,
+  setPlays,
+  setFormations,
+  setLoading,
+  setError,
+  setPlaysPage,
+  setHasMorePlays,
+  setTotalPlaysCount,
+}: {
+  teamId: string | null;
+  refreshTrigger: number;
+  setTeams: React.Dispatch<React.SetStateAction<Team[]>>;
+  setPlaybooks: React.Dispatch<React.SetStateAction<Playbook[]>>;
+  setPlays: React.Dispatch<React.SetStateAction<DatabasePlay[]>>;
+  setFormations: React.Dispatch<React.SetStateAction<Formation[]>>;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setError: React.Dispatch<React.SetStateAction<string | null>>;
+  setPlaysPage: React.Dispatch<React.SetStateAction<number>>;
+  setHasMorePlays: React.Dispatch<React.SetStateAction<boolean>>;
+  setTotalPlaysCount: React.Dispatch<React.SetStateAction<number | null>>;
+}) {
   const abortControllerRef = useRef<AbortController | null>(null);
-
-  // Use main supabase client (now configured with service role key for demo)
-
-  // Function to manually refresh data (resets pagination)
-  const refreshData = useCallback(() => {
-    setPlaysPage(0);
-    setHasMorePlays(true);
-    setPlays([]);
-    setRefreshTrigger((prev) => prev + 1);
-  }, []);
-
-  // Function to update a play
-  const updatePlay = useCallback(
-    async (playId: string, updates: Partial<DatabasePlay>) => {
-      try {
-        debug("[useTeamsData] Updating play:", { playId, updates });
-        const { data, error } = await supabase
-          .from("plays")
-          .update(updates)
-          .eq("id", playId)
-          .select()
-          .maybeSingle(); // Use maybeSingle() to avoid 406 error when RLS blocks or row missing
-
-        if (error) {
-          logError("[useTeamsData] Error updating play:", error);
-          throw new Error(`Failed to update play: ${error.message}`);
-        }
-
-        // If no data returned, the play doesn't exist or RLS blocked it
-        if (!data) {
-          logError("[useTeamsData] Play not found or access denied:", playId);
-          throw new Error(
-            "Play not found or you don't have permission to update it"
-          );
-        }
-
-        debug("[useTeamsData] Database returned:", data);
-        setPlays((prevPlays) =>
-          prevPlays.map((play) =>
-            play.id === playId ? (data as DatabasePlay) : play
-          )
-        );
-        return data;
-      } catch (err) {
-        logError("[useTeamsData] Error in updatePlay:", err);
-        throw err;
-      }
-    },
-    []
-  );
 
   useEffect(() => {
     abortControllerRef.current?.abort();
@@ -166,8 +124,6 @@ export function useTeamsData(teamIdOverride?: string | null) {
     if (!teamId) {
       resetScopedState();
       setLoading(false);
-      // Don't set an error - this is a valid state when no team is selected yet
-      // The UI should show a team selection prompt instead of an error state
       setError(null);
       return () => {
         isMounted = false;
@@ -186,7 +142,6 @@ export function useTeamsData(teamIdOverride?: string | null) {
         setError(null);
         debug("[useTeamsData] Starting fetchData for teamId:", teamId);
 
-        // Step 1: Fetch teams and playbooks in parallel
         const [teamsResult, playbooksResult] = await Promise.all([
           supabase
             .from("teams")
@@ -244,7 +199,6 @@ export function useTeamsData(teamIdOverride?: string | null) {
           return;
         }
 
-        // Step 2: Fetch formations and plays in parallel
         const [formationsResult, playsResult] = await Promise.all([
           supabase
             .from("formations")
@@ -301,7 +255,102 @@ export function useTeamsData(teamIdOverride?: string | null) {
         abortControllerRef.current = null;
       }
     };
-  }, [refreshTrigger, teamId]);
+  }, [
+    refreshTrigger,
+    teamId,
+    setTeams,
+    setPlaybooks,
+    setPlays,
+    setFormations,
+    setLoading,
+    setError,
+    setPlaysPage,
+    setHasMorePlays,
+    setTotalPlaysCount,
+  ]);
+}
+
+export function useTeamsData(teamIdOverride?: string | null) {
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [playbooks, setPlaybooks] = useState<Playbook[]>([]);
+  const [plays, setPlays] = useState<DatabasePlay[]>([]);
+  const [formations, setFormations] = useState<Formation[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const { user: _user } = useAuth(); // DEMO MODE: Not used during demo
+  const activeTeamId = useActiveTeamStore((state) => state.activeTeamId);
+  const teamId = teamIdOverride ?? activeTeamId;
+
+  // Pagination state for plays
+  const [playsPage, setPlaysPage] = useState(0);
+  const [hasMorePlays, setHasMorePlays] = useState(true);
+  const [loadingMorePlays, setLoadingMorePlays] = useState(false);
+  const [totalPlaysCount, setTotalPlaysCount] = useState<number | null>(null);
+
+  // Use main supabase client (now configured with service role key for demo)
+
+  // Function to manually refresh data (resets pagination)
+  const refreshData = useCallback(() => {
+    setPlaysPage(0);
+    setHasMorePlays(true);
+    setPlays([]);
+    setRefreshTrigger((prev) => prev + 1);
+  }, []);
+
+  // Function to update a play
+  const updatePlay = useCallback(
+    async (playId: string, updates: Partial<DatabasePlay>) => {
+      try {
+        debug("[useTeamsData] Updating play:", { playId, updates });
+        const { data, error } = await supabase
+          .from("plays")
+          .update(updates)
+          .eq("id", playId)
+          .select()
+          .maybeSingle(); // Use maybeSingle() to avoid 406 error when RLS blocks or row missing
+
+        if (error) {
+          logError("[useTeamsData] Error updating play:", error);
+          throw new Error(`Failed to update play: ${error.message}`);
+        }
+
+        // If no data returned, the play doesn't exist or RLS blocked it
+        if (!data) {
+          logError("[useTeamsData] Play not found or access denied:", playId);
+          throw new Error(
+            "Play not found or you don't have permission to update it"
+          );
+        }
+
+        debug("[useTeamsData] Database returned:", data);
+        setPlays((prevPlays) =>
+          prevPlays.map((play) =>
+            play.id === playId ? (data as DatabasePlay) : play
+          )
+        );
+        return data;
+      } catch (err) {
+        logError("[useTeamsData] Error in updatePlay:", err);
+        throw err;
+      }
+    },
+    []
+  );
+
+  useTeamsDataInitialLoadEffect({
+    teamId,
+    refreshTrigger,
+    setTeams,
+    setPlaybooks,
+    setPlays,
+    setFormations,
+    setLoading,
+    setError,
+    setPlaysPage,
+    setHasMorePlays,
+    setTotalPlaysCount,
+  });
 
   // Function to load more plays (for infinite scroll)
   const loadMorePlays = useCallback(async () => {

@@ -64,6 +64,164 @@ export function useFormationSuggestions({
   }, [plays, formationCatalog, combos]);
 }
 
+function applyNameMatchingScore(params: {
+  playFormationNormalized: string;
+  playFormationSanitized: string;
+  formationNameNormalized: string;
+  formationNameSanitized: string;
+  score: number;
+  reasons: string[];
+}): number {
+  const {
+    playFormationNormalized,
+    playFormationSanitized,
+    formationNameNormalized,
+    formationNameSanitized,
+    reasons,
+  } = params;
+
+  let { score } = params;
+  if (!playFormationNormalized || !formationNameNormalized) return score;
+
+  if (playFormationNormalized === formationNameNormalized) {
+    score += 6;
+    reasons.push("Exact name match");
+    return score;
+  }
+
+  if (
+    playFormationNormalized.includes(formationNameNormalized) ||
+    formationNameNormalized.includes(playFormationNormalized)
+  ) {
+    score += 3;
+    reasons.push("Similar name");
+    return score;
+  }
+
+  if (
+    playFormationSanitized &&
+    formationNameSanitized &&
+    playFormationSanitized.includes(formationNameSanitized)
+  ) {
+    score += 2;
+    reasons.push("Partial name match");
+  }
+
+  return score;
+}
+
+function applyPersonnelMatchingScore(params: {
+  playPersonnel: string;
+  formationPersonnel: string;
+  formationPersonnelName: string | null | undefined;
+  score: number;
+  reasons: string[];
+}): number {
+  const { playPersonnel, formationPersonnel, formationPersonnelName, reasons } =
+    params;
+  let { score } = params;
+
+  if (!playPersonnel || !formationPersonnel) return score;
+
+  if (playPersonnel === formationPersonnel) {
+    score += 3;
+    reasons.push(`${formationPersonnelName} personnel`);
+    return score;
+  }
+
+  if (
+    playPersonnel.includes(formationPersonnel) ||
+    formationPersonnel.includes(playPersonnel)
+  ) {
+    score += 1;
+    reasons.push("Personnel overlap");
+  }
+
+  return score;
+}
+
+function applyDirectionMatchingScore(params: {
+  playDirection: string;
+  formationDirection: string;
+  formationDirectionLabel: string | null | undefined;
+  score: number;
+  reasons: string[];
+}): number {
+  const {
+    playDirection,
+    formationDirection,
+    formationDirectionLabel,
+    reasons,
+  } = params;
+  let { score } = params;
+
+  if (!playDirection || !formationDirection) return score;
+  if (!playDirection.startsWith(formationDirection)) return score;
+
+  score += 1;
+  reasons.push(`${formationDirectionLabel} side`);
+  return score;
+}
+
+function getRecentCombos(params: {
+  formation: Formation;
+  formationNameNormalized: string;
+  combosByFormationId: Map<string, PlayCombo[]>;
+  combosByName: Map<string, PlayCombo[]>;
+}): PlayCombo[] {
+  const {
+    formation,
+    formationNameNormalized,
+    combosByFormationId,
+    combosByName,
+  } = params;
+
+  return [
+    ...(formation.id ? (combosByFormationId.get(formation.id) ?? []) : []),
+    ...(formationNameNormalized
+      ? (combosByName.get(formationNameNormalized) ?? [])
+      : []),
+  ];
+}
+
+function applyRecentComboScore(params: {
+  recentCombos: PlayCombo[];
+  playPersonnel: string;
+  playType: string;
+  score: number;
+  reasons: string[];
+  sanitize: (value?: string | null) => string;
+}): number {
+  const { recentCombos, playPersonnel, playType, reasons, sanitize } = params;
+  let { score } = params;
+
+  if (recentCombos.length === 0) return score;
+  score += 2;
+  reasons.push("Recent pick");
+
+  if (
+    playPersonnel &&
+    recentCombos.some((combo) => sanitize(combo.personnel) === playPersonnel)
+  ) {
+    score += 1;
+  }
+  if (
+    playType &&
+    recentCombos.some((combo) => sanitize(combo.playType) === playType)
+  ) {
+    score += 1;
+  }
+
+  return score;
+}
+
+function applyUsageScore(formation: Formation, score: number): number {
+  if (formation.usage_count > 0) {
+    return score + Math.min(2, Math.floor(formation.usage_count / 25));
+  }
+  return score;
+}
+
 function calculateSuggestionsForPlay(
   play: Play,
   formationCatalog: Formation[],
@@ -91,80 +249,45 @@ function calculateSuggestionsForPlay(
     let score = 0;
     const reasons: string[] = [];
 
-    // Name matching
-    if (playFormationNormalized && formationNameNormalized) {
-      if (playFormationNormalized === formationNameNormalized) {
-        score += 6;
-        reasons.push("Exact name match");
-      } else if (
-        playFormationNormalized.includes(formationNameNormalized) ||
-        formationNameNormalized.includes(playFormationNormalized)
-      ) {
-        score += 3;
-        reasons.push("Similar name");
-      } else if (
-        playFormationSanitized &&
-        formationNameSanitized &&
-        playFormationSanitized.includes(formationNameSanitized)
-      ) {
-        score += 2;
-        reasons.push("Partial name match");
-      }
-    }
+    score = applyNameMatchingScore({
+      playFormationNormalized,
+      playFormationSanitized,
+      formationNameNormalized,
+      formationNameSanitized,
+      score,
+      reasons,
+    });
+    score = applyPersonnelMatchingScore({
+      playPersonnel,
+      formationPersonnel,
+      formationPersonnelName: formation.personnel_name,
+      score,
+      reasons,
+    });
+    score = applyDirectionMatchingScore({
+      playDirection,
+      formationDirection,
+      formationDirectionLabel: formation.direction,
+      score,
+      reasons,
+    });
 
-    // Personnel matching
-    if (playPersonnel && formationPersonnel) {
-      if (playPersonnel === formationPersonnel) {
-        score += 3;
-        reasons.push(`${formation.personnel_name} personnel`);
-      } else if (
-        playPersonnel.includes(formationPersonnel) ||
-        formationPersonnel.includes(playPersonnel)
-      ) {
-        score += 1;
-        reasons.push("Personnel overlap");
-      }
-    }
+    const recentCombos = getRecentCombos({
+      formation,
+      formationNameNormalized,
+      combosByFormationId,
+      combosByName,
+    });
+    score = applyRecentComboScore({
+      recentCombos,
+      playPersonnel,
+      playType,
+      score,
+      reasons,
+      sanitize,
+    });
 
-    // Direction matching
-    if (playDirection && formationDirection) {
-      if (playDirection.startsWith(formationDirection)) {
-        score += 1;
-        reasons.push(`${formation.direction} side`);
-      }
-    }
-
-    // Recent combo matching
-    const recentCombos = [
-      ...(formation.id ? (combosByFormationId.get(formation.id) ?? []) : []),
-      ...(formationNameNormalized
-        ? (combosByName.get(formationNameNormalized) ?? [])
-        : []),
-    ];
-
-    if (recentCombos.length > 0) {
-      score += 2;
-      reasons.push("Recent pick");
-      if (
-        playPersonnel &&
-        recentCombos.some(
-          (combo) => sanitize(combo.personnel) === playPersonnel
-        )
-      ) {
-        score += 1;
-      }
-      if (
-        playType &&
-        recentCombos.some((combo) => sanitize(combo.playType) === playType)
-      ) {
-        score += 1;
-      }
-    }
-
-    // Usage count bonus
-    if (formation.usage_count > 0) {
-      score += Math.min(2, Math.floor(formation.usage_count / 25));
-    }
+    score = applyUsageScore(formation, score);
 
     if (score > 0) {
       suggestions.push({

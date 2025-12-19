@@ -7,6 +7,12 @@
 import { normalizePlayName, normalizeText } from "../utils/textNormalization";
 import type { Play } from "../types/play";
 
+function applyIfDefined<T>(value: T | undefined, apply: (v: T) => void): void {
+  if (value !== undefined) {
+    apply(value);
+  }
+}
+
 /**
  * Build a new play object for database insertion
  */
@@ -132,64 +138,111 @@ export function buildPlayUpdateData(
   };
 
   // Only include fields that are explicitly provided
-  if (updates.play_name !== undefined) {
-    updateData.play_name = normalizePlayName(updates.play_name);
-  }
-  if (updates.p_type !== undefined) updateData.p_type = updates.p_type;
-  if (updates.formation !== undefined) {
-    updateData.formation = normalizeText(updates.formation);
-  }
-  if (updates.formation_id !== undefined) {
-    updateData.formation_id = updates.formation_id;
-  }
-  if (updates.one_word_play !== undefined) {
-    updateData.one_word_play = normalizeText(updates.one_word_play);
-  }
-  if (updates.notes !== undefined) updateData.notes = updates.notes;
-  if (updates.personnel !== undefined) updateData.personnel = updates.personnel;
-  if (updates.f_type !== undefined) updateData.f_type = updates.f_type;
-  if (updates.f_dir !== undefined) updateData.f_dir = updates.f_dir;
-  if (updates.protection !== undefined)
-    updateData.protection = updates.protection;
-  if (updates.p_dir !== undefined) updateData.p_dir = updates.p_dir;
-  if (updates.r_str !== undefined) updateData.r_str = updates.r_str;
-  if (updates.p_str !== undefined) updateData.p_str = updates.p_str;
-  if (updates.ftag1 !== undefined) updateData.ftag1 = updates.ftag1;
-  if (updates.ftag2 !== undefined) updateData.ftag2 = updates.ftag2;
-  if (updates.p_tag1 !== undefined) updateData.p_tag1 = updates.p_tag1;
-  if (updates.p_tag2 !== undefined) updateData.p_tag2 = updates.p_tag2;
-  if (updates.back_align !== undefined)
-    updateData.back_align = updates.back_align;
-  if (updates.shift !== undefined) updateData.shift = updates.shift;
-  if (updates.motion !== undefined) updateData.motion = updates.motion;
-  if (updates.key_player1 !== undefined)
-    updateData.key_player1 = updates.key_player1;
-  if (updates.key_player2 !== undefined)
-    updateData.key_player2 = updates.key_player2;
-  if (updates.check_into !== undefined)
-    updateData.check_into = updates.check_into;
-  if (updates.pref_down !== undefined) updateData.pref_down = updates.pref_down;
-  if (updates.pref_dis !== undefined) updateData.pref_dis = updates.pref_dis;
-  if (updates.pref_hash !== undefined) updateData.pref_hash = updates.pref_hash;
-  if (updates.pref_cov !== undefined) updateData.pref_cov = updates.pref_cov;
-  if (updates.pref_front !== undefined)
-    updateData.pref_front = updates.pref_front;
-  if (updates.pref_field_pos !== undefined)
-    updateData.pref_field_pos = updates.pref_field_pos;
-  if (updates.pref_situation !== undefined)
-    updateData.pref_situation = updates.pref_situation;
-  if (updates.confidence_base !== undefined) {
-    updateData.confidence_base = updates.confidence_base;
-  }
-  if (updates.is_archived !== undefined)
-    updateData.is_archived = updates.is_archived;
-  if (updates.diagram_data !== undefined)
-    updateData.diagram_data = updates.diagram_data;
-  if (updates.diagram_version !== undefined) {
-    updateData.diagram_version = updates.diagram_version;
-  }
-  if (updates.diagram_url !== undefined)
-    updateData.diagram_url = updates.diagram_url;
+  applyIfDefined(updates.play_name, (value) => {
+    updateData.play_name = normalizePlayName(value);
+  });
+  applyIfDefined(updates.p_type, (value) => {
+    updateData.p_type = value;
+  });
+  applyIfDefined(updates.formation, (value) => {
+    updateData.formation = normalizeText(value);
+  });
+  applyIfDefined(updates.formation_id, (value) => {
+    updateData.formation_id = value;
+  });
+  applyIfDefined(updates.one_word_play, (value) => {
+    updateData.one_word_play = normalizeText(value);
+  });
+  applyIfDefined(updates.notes, (value) => {
+    updateData.notes = value;
+  });
+  applyIfDefined(updates.personnel, (value) => {
+    updateData.personnel = value;
+  });
+  applyIfDefined(updates.f_type, (value) => {
+    updateData.f_type = value;
+  });
+  applyIfDefined(updates.f_dir, (value) => {
+    updateData.f_dir = value;
+  });
+  applyIfDefined(updates.protection, (value) => {
+    updateData.protection = value;
+  });
+  applyIfDefined(updates.p_dir, (value) => {
+    updateData.p_dir = value;
+  });
+  applyIfDefined(updates.r_str, (value) => {
+    updateData.r_str = value;
+  });
+  applyIfDefined(updates.p_str, (value) => {
+    updateData.p_str = value;
+  });
+  applyIfDefined(updates.ftag1, (value) => {
+    updateData.ftag1 = value;
+  });
+  applyIfDefined(updates.ftag2, (value) => {
+    updateData.ftag2 = value;
+  });
+  applyIfDefined(updates.p_tag1, (value) => {
+    updateData.p_tag1 = value;
+  });
+  applyIfDefined(updates.p_tag2, (value) => {
+    updateData.p_tag2 = value;
+  });
+  applyIfDefined(updates.back_align, (value) => {
+    updateData.back_align = value;
+  });
+  applyIfDefined(updates.shift, (value) => {
+    updateData.shift = value;
+  });
+  applyIfDefined(updates.motion, (value) => {
+    updateData.motion = value;
+  });
+  applyIfDefined(updates.key_player1, (value) => {
+    updateData.key_player1 = value;
+  });
+  applyIfDefined(updates.key_player2, (value) => {
+    updateData.key_player2 = value;
+  });
+  applyIfDefined(updates.check_into, (value) => {
+    updateData.check_into = value;
+  });
+  applyIfDefined(updates.pref_down, (value) => {
+    updateData.pref_down = value;
+  });
+  applyIfDefined(updates.pref_dis, (value) => {
+    updateData.pref_dis = value;
+  });
+  applyIfDefined(updates.pref_hash, (value) => {
+    updateData.pref_hash = value;
+  });
+  applyIfDefined(updates.pref_cov, (value) => {
+    updateData.pref_cov = value;
+  });
+  applyIfDefined(updates.pref_front, (value) => {
+    updateData.pref_front = value;
+  });
+  applyIfDefined(updates.pref_field_pos, (value) => {
+    updateData.pref_field_pos = value;
+  });
+  applyIfDefined(updates.pref_situation, (value) => {
+    updateData.pref_situation = value;
+  });
+  applyIfDefined(updates.confidence_base, (value) => {
+    updateData.confidence_base = value;
+  });
+  applyIfDefined(updates.is_archived, (value) => {
+    updateData.is_archived = value;
+  });
+  applyIfDefined(updates.diagram_data, (value) => {
+    updateData.diagram_data = value;
+  });
+  applyIfDefined(updates.diagram_version, (value) => {
+    updateData.diagram_version = value;
+  });
+  applyIfDefined(updates.diagram_url, (value) => {
+    updateData.diagram_url = value;
+  });
 
   return updateData;
 }

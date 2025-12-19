@@ -41,6 +41,345 @@ import {
 
 type StepId = "team-info" | "school-info" | "review" | "complete";
 
+const CREATE_TEAM_STEPS: Array<{ id: StepId; title: string }> = [
+  { id: "team-info", title: "Team Information" },
+  { id: "school-info", title: "School Details" },
+  { id: "review", title: "Review" },
+  { id: "complete", title: "Complete" },
+];
+
+const saveProgressSafe = (step: StepId, data: TeamCreationInput) => {
+  try {
+    ProgressTrackingService.saveProgress(step, data, []);
+  } catch (error) {
+    console.warn("Could not save progress:", error);
+  }
+};
+
+const validateStep = (step: StepId, data: TeamCreationInput): boolean => {
+  if (step === "team-info") {
+    return data.teamName.length > 0 && data.schoolName.length > 0;
+  }
+
+  if (step === "school-info") {
+    return true;
+  }
+
+  if (step === "review") {
+    const validation = TeamValidationService.validateTeamForm(data);
+    return validation.success;
+  }
+
+  return true;
+};
+
+const runDuplicateCheck = async (params: {
+  formData: TeamCreationInput;
+  setDuplicateCheck: (result: DuplicateCheckResult | null) => void;
+  setShowDuplicateWarning: (value: boolean) => void;
+  setDuplicateCheckLoading: (value: boolean) => void;
+  setCreateError: (value: string | null) => void;
+}): Promise<boolean> => {
+  const {
+    formData,
+    setDuplicateCheck,
+    setShowDuplicateWarning,
+    setDuplicateCheckLoading,
+    setCreateError,
+  } = params;
+
+  setDuplicateCheckLoading(true);
+  setCreateError(null);
+
+  try {
+    const result = await TeamDuplicatePreventionService.checkForDuplicates(
+      formData.teamName,
+      formData.schoolName,
+      formData.schoolDistrict,
+      formData.schoolCity,
+      formData.schoolState
+    );
+
+    setDuplicateCheck(result);
+
+    if (result.isDuplicate) {
+      setShowDuplicateWarning(true);
+      setCreateError(result.warningMessage || "Similar team found");
+      return false;
+    }
+
+    if (result.requiresApproval) {
+      setShowDuplicateWarning(true);
+      setCreateError(
+        result.warningMessage || "Please verify this is not a duplicate"
+      );
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    logError("Duplicate check failed:", error);
+    return true;
+  } finally {
+    setDuplicateCheckLoading(false);
+  }
+};
+
+const runUseCurrentLocation = async (params: {
+  setLocationLoading: (value: boolean) => void;
+  updateFormData: (updates: Partial<TeamCreationInput>) => void;
+  setCreateError: (value: string | null) => void;
+}) => {
+  const { setLocationLoading, updateFormData, setCreateError } = params;
+
+  setLocationLoading(true);
+  try {
+    const result = await LocationFinderService.getCurrentLocation();
+
+    if (result.success && result.address) {
+      updateFormData({
+        schoolAddress: result.address.streetAddress,
+        schoolCity: result.address.city,
+        schoolState: result.address.state,
+        schoolZip: result.address.zipCode,
+      });
+
+      const district = await LocationFinderService.getSchoolDistrict(
+        result.address
+      );
+      if (district) {
+        updateFormData({ schoolDistrict: district });
+      }
+    } else {
+      setCreateError(result.error || "Could not get location");
+    }
+  } catch {
+    setCreateError("Location access failed");
+  } finally {
+    setLocationLoading(false);
+  }
+};
+
+const runAddressSearch = async (params: {
+  query: string;
+  setAddressSuggestions: (value: AddressSuggestion[]) => void;
+}) => {
+  const { query, setAddressSuggestions } = params;
+
+  if (!query || query.length < 3) {
+    setAddressSuggestions([]);
+    return;
+  }
+
+  try {
+    const result = await LocationFinderService.searchAddresses(query);
+    if (result.success) {
+      setAddressSuggestions(result.suggestions);
+    }
+  } catch (error) {
+    console.warn("Address search failed:", error);
+  }
+};
+
+const runSelectAddress = async (params: {
+  address: AddressSuggestion;
+  updateFormData: (updates: Partial<TeamCreationInput>) => void;
+  setAddressSuggestions: (value: AddressSuggestion[]) => void;
+}) => {
+  const { address, updateFormData, setAddressSuggestions } = params;
+
+  updateFormData({
+    schoolAddress: address.streetAddress,
+    schoolCity: address.city,
+    schoolState: address.state,
+    schoolZip: address.zipCode,
+  });
+
+  const district = await LocationFinderService.getSchoolDistrict(address);
+  if (district) {
+    updateFormData({ schoolDistrict: district });
+  }
+
+  setAddressSuggestions([]);
+};
+
+const runCreateTeam = async (params: {
+  userId: string;
+  userEmail: string | undefined;
+  formData: TeamCreationInput;
+  refreshRoles: () => Promise<void>;
+  setCreatedTeamId: (value: string | null) => void;
+  setCurrentStep: (value: StepId) => void;
+  setIsLoading: (value: boolean) => void;
+  setLoadingMessage: (value: string) => void;
+  setCreateError: (value: string | null) => void;
+}) => {
+  const {
+    userId,
+    userEmail,
+    formData,
+    refreshRoles,
+    setCreatedTeamId,
+    setCurrentStep,
+    setIsLoading,
+    setLoadingMessage,
+    setCreateError,
+  } = params;
+
+  setIsLoading(true);
+  setCreateError(null);
+
+  try {
+    const result = await TeamCreationService.createTeam(
+      formData,
+      { id: userId, email: userEmail },
+      { setLoadingMessage }
+    );
+
+    if (result.success && result.teamId) {
+      setCreatedTeamId(result.teamId);
+      await refreshRoles();
+
+      try {
+        ProgressTrackingService.clearProgress();
+      } catch (error) {
+        console.warn("Could not clear progress:", error);
+      }
+
+      setCurrentStep("complete");
+      return;
+    }
+
+    setCreateError(result.error || "Failed to create team");
+  } catch (error) {
+    logError("Team creation failed:", error);
+    setCreateError(error instanceof Error ? error.message : "Unknown error");
+  } finally {
+    setIsLoading(false);
+    setLoadingMessage("Creating team...");
+  }
+};
+
+interface CreateTeamStepContentProps {
+  currentStep: StepId;
+  formData: TeamCreationInput;
+  updateFormData: (updates: Partial<TeamCreationInput>) => void;
+  onUseCurrentLocation: () => Promise<void>;
+  onAddressSearch: (query: string) => Promise<void>;
+  onSelectAddress: (address: AddressSuggestion) => Promise<void>;
+  locationLoading: boolean;
+  addressSuggestions: AddressSuggestion[];
+  duplicateCheckLoading: boolean;
+  showDuplicateWarning: boolean;
+  duplicateCheck: DuplicateCheckResult | null;
+  createError: string | null;
+  dismissDuplicateWarning: () => void;
+  onContactSupport: () => void;
+  onShowWelcome: () => void;
+}
+
+const CreateTeamStepContent: React.FC<CreateTeamStepContentProps> = ({
+  currentStep,
+  formData,
+  updateFormData,
+  onUseCurrentLocation,
+  onAddressSearch,
+  onSelectAddress,
+  locationLoading,
+  addressSuggestions,
+  duplicateCheckLoading,
+  showDuplicateWarning,
+  duplicateCheck,
+  createError,
+  dismissDuplicateWarning,
+  onContactSupport,
+  onShowWelcome,
+}) => {
+  switch (currentStep) {
+    case "team-info":
+      return (
+        <TeamInfoStep formData={formData} onUpdateFormData={updateFormData} />
+      );
+
+    case "school-info":
+      return (
+        <SchoolInfoStep
+          formData={formData}
+          onUpdateFormData={updateFormData}
+          onUseCurrentLocation={onUseCurrentLocation}
+          onAddressSearch={onAddressSearch}
+          onSelectAddress={onSelectAddress}
+          locationLoading={locationLoading}
+          addressSuggestions={addressSuggestions}
+        />
+      );
+
+    case "review":
+      return (
+        <ReviewStep
+          formData={formData}
+          duplicateCheckLoading={duplicateCheckLoading}
+          showDuplicateWarning={showDuplicateWarning}
+          duplicateCheck={duplicateCheck}
+          createError={createError}
+          onDismissDuplicateWarning={dismissDuplicateWarning}
+          onContactSupport={onContactSupport}
+        />
+      );
+
+    case "complete":
+      return (
+        <CompleteStep
+          schoolName={formData.schoolName}
+          teamName={formData.teamName}
+          onShowWelcome={onShowWelcome}
+        />
+      );
+
+    default:
+      return null;
+  }
+};
+
+const CreateTeamUnauthed: React.FC = () => {
+  return (
+    <div className="min-h-screen bg-secondary p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <header className="mb-6">
+          <Typography variant="headline-lg" className="text-primary mb-1">
+            Create Team
+          </Typography>
+          <Typography variant="body" className="text-secondary">
+            Set up your team
+          </Typography>
+        </header>
+        <div className="text-center">
+          <Typography variant="body-lg">
+            Please log in to create a team.
+          </Typography>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+interface CreateTeamLoadingOverlayProps {
+  message: string;
+}
+
+const CreateTeamLoadingOverlay: React.FC<CreateTeamLoadingOverlayProps> = ({
+  message,
+}) => {
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-primary p-lg rounded-lg shadow-2xl max-w-sm w-full mx-md text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-md"></div>
+        <Typography variant="body-md">{message}</Typography>
+      </div>
+    </div>
+  );
+};
+
 const CreateTeam: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -68,7 +407,6 @@ const CreateTeam: React.FC = () => {
   const [duplicateCheckLoading, setDuplicateCheckLoading] = useState(false);
 
   // Location finder state
-  const [_showLocationFinder, _setShowLocationFinder] = useState(false);
   const [addressSuggestions, setAddressSuggestions] = useState<
     AddressSuggestion[]
   >([]);
@@ -78,131 +416,34 @@ const CreateTeam: React.FC = () => {
   const updateFormData = (updates: Partial<TeamCreationInput>) => {
     const newFormData = { ...formData, ...updates };
     setFormData(newFormData);
-    // Auto-save progress
-    try {
-      ProgressTrackingService.saveProgress(currentStep, newFormData, []);
-    } catch (error) {
-      console.warn("Could not save progress:", error);
-    }
+    saveProgressSafe(currentStep, newFormData);
   };
 
-  // Validation
-  const validateCurrentStep = (): boolean => {
-    if (currentStep === "team-info") {
-      return formData.teamName.length > 0 && formData.schoolName.length > 0;
-    }
-    if (currentStep === "school-info") {
-      return true; // Optional fields
-    }
-    if (currentStep === "review") {
-      const validation = TeamValidationService.validateTeamForm(formData);
-      return validation.success;
-    }
-    return true;
-  };
+  const validateCurrentStep = () => validateStep(currentStep, formData);
 
   // Check for duplicate teams
-  const handleDuplicateCheck = async () => {
-    setDuplicateCheckLoading(true);
-    setCreateError(null);
-
-    try {
-      const result = await TeamDuplicatePreventionService.checkForDuplicates(
-        formData.teamName,
-        formData.schoolName,
-        formData.schoolDistrict,
-        formData.schoolCity,
-        formData.schoolState
-      );
-
-      setDuplicateCheck(result);
-
-      if (result.isDuplicate) {
-        setShowDuplicateWarning(true);
-        setCreateError(result.warningMessage || "Similar team found");
-        return false;
-      } else if (result.requiresApproval) {
-        setShowDuplicateWarning(true);
-        setCreateError(
-          result.warningMessage || "Please verify this is not a duplicate"
-        );
-        return false;
-      }
-
-      return true;
-    } catch (error) {
-      logError("Duplicate check failed:", error);
-      // Allow creation if check fails
-      return true;
-    } finally {
-      setDuplicateCheckLoading(false);
-    }
-  };
-
-  // Location finder functions
-  const handleUseCurrentLocation = async () => {
-    setLocationLoading(true);
-
-    try {
-      const result = await LocationFinderService.getCurrentLocation();
-
-      if (result.success && result.address) {
-        updateFormData({
-          schoolAddress: result.address.streetAddress,
-          schoolCity: result.address.city,
-          schoolState: result.address.state,
-          schoolZip: result.address.zipCode,
-        });
-
-        // Try to get school district
-        const district = await LocationFinderService.getSchoolDistrict(
-          result.address
-        );
-        if (district) {
-          updateFormData({ schoolDistrict: district });
-        }
-      } else {
-        setCreateError(result.error || "Could not get location");
-      }
-    } catch {
-      setCreateError("Location access failed");
-    } finally {
-      setLocationLoading(false);
-    }
-  };
-
-  const handleAddressSearch = async (query: string) => {
-    if (!query || query.length < 3) {
-      setAddressSuggestions([]);
-      return;
-    }
-
-    try {
-      const result = await LocationFinderService.searchAddresses(query);
-      if (result.success) {
-        setAddressSuggestions(result.suggestions);
-      }
-    } catch (error) {
-      console.warn("Address search failed:", error);
-    }
-  };
-
-  const handleSelectAddress = async (address: AddressSuggestion) => {
-    updateFormData({
-      schoolAddress: address.streetAddress,
-      schoolCity: address.city,
-      schoolState: address.state,
-      schoolZip: address.zipCode,
+  const handleDuplicateCheck = async () =>
+    runDuplicateCheck({
+      formData,
+      setDuplicateCheck,
+      setShowDuplicateWarning,
+      setDuplicateCheckLoading,
+      setCreateError,
     });
 
-    // Try to get school district
-    const district = await LocationFinderService.getSchoolDistrict(address);
-    if (district) {
-      updateFormData({ schoolDistrict: district });
-    }
+  // Location finder functions
+  const handleUseCurrentLocation = async () =>
+    runUseCurrentLocation({
+      setLocationLoading,
+      updateFormData,
+      setCreateError,
+    });
 
-    setAddressSuggestions([]);
-  };
+  const handleAddressSearch = async (query: string) =>
+    runAddressSearch({ query, setAddressSuggestions });
+
+  const handleSelectAddress = async (address: AddressSuggestion) =>
+    runSelectAddress({ address, updateFormData, setAddressSuggestions });
 
   // Team creation handler
   const handleCreateTeam = async () => {
@@ -211,47 +452,20 @@ const CreateTeam: React.FC = () => {
       return;
     }
 
-    // Check for duplicates first
     const canProceed = await handleDuplicateCheck();
-    if (!canProceed) {
-      return;
-    }
+    if (!canProceed) return;
 
-    setIsLoading(true);
-    setCreateError(null);
-
-    try {
-      const result = await TeamCreationService.createTeam(
-        formData,
-        { id: user.id, email: user.email },
-        { setLoadingMessage }
-      );
-
-      if (result.success && result.teamId) {
-        setCreatedTeamId(result.teamId);
-
-        // Refresh roles to include new team membership
-        await refreshRoles();
-
-        // Clear saved progress
-        try {
-          ProgressTrackingService.clearProgress();
-        } catch (error) {
-          console.warn("Could not clear progress:", error);
-        }
-
-        // Go to completion step
-        setCurrentStep("complete");
-      } else {
-        setCreateError(result.error || "Failed to create team");
-      }
-    } catch (error) {
-      logError("Team creation failed:", error);
-      setCreateError(error instanceof Error ? error.message : "Unknown error");
-    } finally {
-      setIsLoading(false);
-      setLoadingMessage("Creating team...");
-    }
+    await runCreateTeam({
+      userId: user.id,
+      userEmail: user.email,
+      formData,
+      refreshRoles,
+      setCreatedTeamId,
+      setCurrentStep,
+      setIsLoading,
+      setLoadingMessage,
+      setCreateError,
+    });
   };
 
   // Step navigation
@@ -285,90 +499,23 @@ const CreateTeam: React.FC = () => {
     }
   };
 
-  // Render step content
-  const renderStepContent = () => {
-    switch (currentStep) {
-      case "team-info":
-        return (
-          <TeamInfoStep formData={formData} onUpdateFormData={updateFormData} />
-        );
+  const dismissDuplicateWarning = () => {
+    setShowDuplicateWarning(false);
+    setDuplicateCheck(null);
+    setCreateError(null);
+  };
 
-      case "school-info":
-        return (
-          <SchoolInfoStep
-            formData={formData}
-            onUpdateFormData={updateFormData}
-            onUseCurrentLocation={handleUseCurrentLocation}
-            onAddressSearch={handleAddressSearch}
-            onSelectAddress={handleSelectAddress}
-            locationLoading={locationLoading}
-            addressSuggestions={addressSuggestions}
-          />
-        );
-
-      case "review":
-        return (
-          <ReviewStep
-            formData={formData}
-            duplicateCheckLoading={duplicateCheckLoading}
-            showDuplicateWarning={showDuplicateWarning}
-            duplicateCheck={duplicateCheck}
-            createError={createError}
-            onDismissDuplicateWarning={() => {
-              setShowDuplicateWarning(false);
-              setDuplicateCheck(null);
-              setCreateError(null);
-            }}
-            onContactSupport={() => {
-              setCreateError("Please contact customer support for assistance.");
-            }}
-          />
-        );
-
-      case "complete":
-        return (
-          <CompleteStep
-            schoolName={formData.schoolName}
-            teamName={formData.teamName}
-            onShowWelcome={handleShowWelcome}
-          />
-        );
-
-      default:
-        return null;
-    }
+  const handleContactSupport = () => {
+    setCreateError("Please contact customer support for assistance.");
   };
 
   if (!user) {
-    return (
-      <div className="min-h-screen bg-secondary p-4 md:p-6">
-        <div className="max-w-7xl mx-auto space-y-6">
-          <header className="mb-6">
-            <Typography variant="headline-lg" className="text-primary mb-1">
-              Create Team
-            </Typography>
-            <Typography variant="body" className="text-secondary">
-              Set up your team
-            </Typography>
-          </header>
-          <div className="text-center">
-            <Typography variant="body-lg">
-              Please log in to create a team.
-            </Typography>
-          </div>
-        </div>
-      </div>
-    );
+    return <CreateTeamUnauthed />;
   }
 
-  const steps = [
-    { id: "team-info", title: "Team Information" },
-    { id: "school-info", title: "School Details" },
-    { id: "review", title: "Review" },
-    { id: "complete", title: "Complete" },
-  ];
-
-  const currentStepIndex = steps.findIndex((step) => step.id === currentStep);
+  const currentStepIndex = CREATE_TEAM_STEPS.findIndex(
+    (step) => step.id === currentStep
+  );
 
   return (
     <div className="min-h-screen bg-secondary p-4 md:p-6">
@@ -383,11 +530,30 @@ const CreateTeam: React.FC = () => {
         </header>
         <div className="container-content">
           {/* Progress Steps */}
-          <StepProgress steps={steps} currentStepIndex={currentStepIndex} />
+          <StepProgress
+            steps={CREATE_TEAM_STEPS}
+            currentStepIndex={currentStepIndex}
+          />
 
           {/* Step Content */}
           <div className="bg-primary shadow-lg rounded-lg p-lg mb-lg">
-            {renderStepContent()}
+            <CreateTeamStepContent
+              currentStep={currentStep}
+              formData={formData}
+              updateFormData={updateFormData}
+              onUseCurrentLocation={handleUseCurrentLocation}
+              onAddressSearch={handleAddressSearch}
+              onSelectAddress={handleSelectAddress}
+              locationLoading={locationLoading}
+              addressSuggestions={addressSuggestions}
+              duplicateCheckLoading={duplicateCheckLoading}
+              showDuplicateWarning={showDuplicateWarning}
+              duplicateCheck={duplicateCheck}
+              createError={createError}
+              dismissDuplicateWarning={dismissDuplicateWarning}
+              onContactSupport={handleContactSupport}
+              onShowWelcome={handleShowWelcome}
+            />
           </div>
 
           {/* Navigation */}
@@ -421,14 +587,7 @@ const CreateTeam: React.FC = () => {
           )}
 
           {/* Loading State */}
-          {isLoading && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-primary p-lg rounded-lg shadow-2xl max-w-sm w-full mx-md text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-md"></div>
-                <Typography variant="body-md">{loadingMessage}</Typography>
-              </div>
-            </div>
-          )}
+          {isLoading && <CreateTeamLoadingOverlay message={loadingMessage} />}
 
           {/* Welcome Modal */}
           {showWelcomeModal && createdTeamId && (

@@ -15,6 +15,61 @@ interface CreatePlaySaveHandlerProps {
   finishSaving: (status: "success" | "error") => void;
 }
 
+function applyIfDefined<T>(
+  value: T | undefined,
+  apply: (value: T) => void
+): void {
+  if (value !== undefined) apply(value);
+}
+
+function mapPlayUpdatesToDbUpdates(
+  updates: Partial<Play>
+): Partial<DatabasePlay> {
+  const dbUpdates: any = {};
+
+  applyIfDefined(updates.formation, (v) => (dbUpdates.formation = v));
+  applyIfDefined(updates.play_name, (v) => (dbUpdates.play_name = v));
+  applyIfDefined(updates.one_word_play, (v) => (dbUpdates.one_word_play = v));
+  applyIfDefined(updates.p_type, (v) => (dbUpdates.p_type = v));
+  applyIfDefined(updates.personnel, (v) => (dbUpdates.personnel = v));
+  applyIfDefined(updates.f_type, (v) => (dbUpdates.f_type = v));
+  applyIfDefined(updates.f_dir, (v) => (dbUpdates.f_dir = v));
+  applyIfDefined(updates.protection, (v) => (dbUpdates.protection = v));
+  applyIfDefined(updates.p_dir, (v) => (dbUpdates.p_dir = v));
+  applyIfDefined(updates.r_str, (v) => (dbUpdates.r_str = v));
+  applyIfDefined(updates.p_str, (v) => (dbUpdates.p_str = v));
+  applyIfDefined(updates.pref_down, (v) => (dbUpdates.pref_down = v));
+  applyIfDefined(updates.pref_dis, (v) => (dbUpdates.pref_dis = v));
+  applyIfDefined(updates.pref_hash, (v) => (dbUpdates.pref_hash = v));
+  applyIfDefined(updates.pref_cov, (v) => (dbUpdates.pref_cov = v));
+  applyIfDefined(updates.pref_front, (v) => (dbUpdates.pref_front = v));
+  applyIfDefined(updates.ftag1, (v) => (dbUpdates.ftag1 = v));
+  applyIfDefined(updates.ftag2, (v) => (dbUpdates.ftag2 = v));
+  applyIfDefined(updates.p_tag1, (v) => (dbUpdates.p_tag1 = v));
+  applyIfDefined(updates.p_tag2, (v) => (dbUpdates.p_tag2 = v));
+  applyIfDefined(updates.back_align, (v) => (dbUpdates.back_align = v));
+  applyIfDefined(
+    updates.back_left_of_qb,
+    (v) => (dbUpdates.back_left_of_qb = Boolean(v))
+  );
+  applyIfDefined(
+    updates.back_right_of_qb,
+    (v) => (dbUpdates.back_right_of_qb = Boolean(v))
+  );
+  applyIfDefined(updates.shift, (v) => (dbUpdates.shift = v));
+  applyIfDefined(updates.motion, (v) => (dbUpdates.motion = v));
+  applyIfDefined(updates.key_player1, (v) => (dbUpdates.key_player1 = v));
+  applyIfDefined(updates.key_player2, (v) => (dbUpdates.key_player2 = v));
+  applyIfDefined(updates.check_into, (v) => (dbUpdates.check_into = v));
+  applyIfDefined(updates.notes, (v) => (dbUpdates.notes = v));
+  applyIfDefined(
+    updates.diagram_image_url,
+    (v) => (dbUpdates.diagram_image_url = v)
+  );
+
+  return dbUpdates;
+}
+
 /**
  * Creates a play save handler with database field mapping
  */
@@ -30,55 +85,7 @@ export function createPlaySaveHandler({
     startSaving();
 
     try {
-      // Convert Play type updates to DatabasePlay type updates
-      const dbUpdates: any = {};
-
-      // Map all possible editable fields
-      if (updates.formation !== undefined)
-        dbUpdates.formation = updates.formation;
-      if (updates.play_name !== undefined)
-        dbUpdates.play_name = updates.play_name;
-      if (updates.one_word_play !== undefined)
-        dbUpdates.one_word_play = updates.one_word_play;
-      if (updates.p_type !== undefined) dbUpdates.p_type = updates.p_type;
-      if (updates.personnel !== undefined)
-        dbUpdates.personnel = updates.personnel;
-      if (updates.f_type !== undefined) dbUpdates.f_type = updates.f_type;
-      if (updates.f_dir !== undefined) dbUpdates.f_dir = updates.f_dir;
-      if (updates.protection !== undefined)
-        dbUpdates.protection = updates.protection;
-      if (updates.p_dir !== undefined) dbUpdates.p_dir = updates.p_dir;
-      if (updates.r_str !== undefined) dbUpdates.r_str = updates.r_str;
-      if (updates.p_str !== undefined) dbUpdates.p_str = updates.p_str;
-      if (updates.pref_down !== undefined)
-        dbUpdates.pref_down = updates.pref_down;
-      if (updates.pref_dis !== undefined) dbUpdates.pref_dis = updates.pref_dis;
-      if (updates.pref_hash !== undefined)
-        dbUpdates.pref_hash = updates.pref_hash;
-      if (updates.pref_cov !== undefined) dbUpdates.pref_cov = updates.pref_cov;
-      if (updates.pref_front !== undefined)
-        dbUpdates.pref_front = updates.pref_front;
-      if (updates.ftag1 !== undefined) dbUpdates.ftag1 = updates.ftag1;
-      if (updates.ftag2 !== undefined) dbUpdates.ftag2 = updates.ftag2;
-      if (updates.p_tag1 !== undefined) dbUpdates.p_tag1 = updates.p_tag1;
-      if (updates.p_tag2 !== undefined) dbUpdates.p_tag2 = updates.p_tag2;
-      if (updates.back_align !== undefined)
-        dbUpdates.back_align = updates.back_align;
-      if (updates.back_left_of_qb !== undefined)
-        dbUpdates.back_left_of_qb = Boolean(updates.back_left_of_qb);
-      if (updates.back_right_of_qb !== undefined)
-        dbUpdates.back_right_of_qb = Boolean(updates.back_right_of_qb);
-      if (updates.shift !== undefined) dbUpdates.shift = updates.shift;
-      if (updates.motion !== undefined) dbUpdates.motion = updates.motion;
-      if (updates.key_player1 !== undefined)
-        dbUpdates.key_player1 = updates.key_player1;
-      if (updates.key_player2 !== undefined)
-        dbUpdates.key_player2 = updates.key_player2;
-      if (updates.check_into !== undefined)
-        dbUpdates.check_into = updates.check_into;
-      if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
-      if (updates.diagram_image_url !== undefined)
-        dbUpdates.diagram_image_url = updates.diagram_image_url;
+      const dbUpdates = mapPlayUpdatesToDbUpdates(updates);
 
       console.log("[PlayGrid] 🔷 Mapped updates:", {
         playId,

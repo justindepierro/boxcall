@@ -23,6 +23,233 @@ import { logError } from "../../utils/logger";
 import { FormSelect, ConfirmationModal } from "../../components/ui";
 import { useToast } from "../../hooks/useToast";
 
+type NewContentBannerProps = {
+  onRefresh: () => void;
+};
+
+const NewContentBanner: React.FC<NewContentBannerProps> = ({ onRefresh }) => (
+  <div
+    className="bg-brand-primary-light rounded-lg p-3 flex items-center justify-between shadow-md animate-fade-in cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all"
+    onClick={onRefresh}
+    role="button"
+    tabIndex={0}
+  >
+    <div className="flex items-center gap-3">
+      <RefreshCw className="w-5 h-5 text-blue-600" />
+      <div>
+        <p className="text-sm font-medium text-blue-900">New posts available</p>
+        <p className="text-xs text-blue-700">
+          Click to refresh and see the latest updates
+        </p>
+      </div>
+    </div>
+    <button className="text-blue-600 hover:text-blue-800 text-sm font-medium px-3 py-1 rounded hover:bg-blue-200 transition-colors">
+      Refresh
+    </button>
+  </div>
+);
+
+type AnnouncementErrorStateProps = {
+  error: string;
+};
+
+const AnnouncementErrorState: React.FC<AnnouncementErrorStateProps> = ({
+  error,
+}) => (
+  <div className="bg-error-bg border border-error-200 rounded-lg p-4 text-error-600">
+    {error}
+  </div>
+);
+
+const AnnouncementEmptyState: React.FC = () => (
+  <div className="text-center py-12 text-muted">
+    <p className="text-lg">No announcements yet</p>
+    <p className="text-sm mt-2">
+      Create your first announcement to get started
+    </p>
+  </div>
+);
+
+function filterAnnouncements(
+  announcements: Announcement[],
+  selectedHashtag: string | null,
+  searchQuery: string
+): Announcement[] {
+  let result = announcements;
+
+  if (selectedHashtag) {
+    result = HashtagService.filterByHashtag(result, selectedHashtag);
+  }
+
+  const query = searchQuery.trim().toLowerCase();
+  if (!query) return result;
+
+  return result.filter((announcement) => {
+    if (announcement.title.toLowerCase().includes(query)) return true;
+    if (announcement.content?.toLowerCase().includes(query)) return true;
+    return false;
+  });
+}
+
+type AnnouncementsFiltersProps = {
+  filters: AnnouncementFilters;
+  onChangeFilters: (next: AnnouncementFilters) => void;
+  searchQuery: string;
+  onChangeSearchQuery: (value: string) => void;
+  hashtagCounts: HashtagCount[];
+  selectedHashtag: string | null;
+  onToggleHashtag: (tag: string) => void;
+  onClearHashtag: () => void;
+};
+
+const AnnouncementsFilters: React.FC<AnnouncementsFiltersProps> = ({
+  filters,
+  onChangeFilters,
+  searchQuery,
+  onChangeSearchQuery,
+  hashtagCounts,
+  selectedHashtag,
+  onToggleHashtag,
+  onClearHashtag,
+}) => (
+  <div className="bg-primary rounded-lg shadow-md p-4 space-y-4">
+    <div className="flex items-center gap-2">
+      <input
+        type="text"
+        placeholder="Search announcements..."
+        value={searchQuery}
+        onChange={(e) => onChangeSearchQuery(e.target.value)}
+        className="flex-1 rounded-md border border-border px-4 py-2 text-sm focus:border-accent focus:ring-accent"
+      />
+      {searchQuery && (
+        <button
+          onClick={() => onChangeSearchQuery("")}
+          className="px-3 py-2 text-sm text-secondary hover:text-primary transition-colors"
+        >
+          Clear
+        </button>
+      )}
+    </div>
+
+    <div className="flex gap-4 items-center flex-wrap">
+      <label className="text-sm font-medium text-primary">
+        Filter by visibility:
+      </label>
+      <FormSelect
+        value={filters.visibility || ""}
+        onChange={(value) =>
+          onChangeFilters({
+            ...filters,
+            visibility: (value as AnnouncementVisibility) || undefined,
+          })
+        }
+        options={[
+          { value: "", label: "All" },
+          { value: "all", label: "Everyone" },
+          { value: "staff_only", label: "Staff Only" },
+          { value: "players_only", label: "Players Only" },
+          { value: "families_only", label: "Families Only" },
+        ]}
+        className="min-w-36"
+      />
+
+      <label className="text-sm font-medium ml-4">Show pinned only:</label>
+      <input
+        type="checkbox"
+        checked={filters.pinnedOnly || false}
+        onChange={(e) =>
+          onChangeFilters({
+            ...filters,
+            pinnedOnly: e.target.checked || undefined,
+          })
+        }
+        className="rounded focus:ring-2 focus:ring-brand-primary"
+      />
+    </div>
+
+    {hashtagCounts.length > 0 && (
+      <div className="border-t pt-4">
+        <div className="flex items-center gap-2 mb-2">
+          <Hash className="w-4 h-4 text-secondary" />
+          <label className="text-sm font-medium text-primary">
+            Filter by hashtag:
+          </label>
+          {selectedHashtag && (
+            <button
+              onClick={onClearHashtag}
+              className="text-xs text-secondary hover:text-primary flex items-center gap-1"
+            >
+              <X className="w-3 h-3" />
+              Clear
+            </button>
+          )}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {hashtagCounts.map(({ tag, count }) => (
+            <button
+              key={tag}
+              onClick={() => onToggleHashtag(tag)}
+              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                tag === selectedHashtag
+                  ? "bg-green-600 text-white"
+                  : "bg-green-100 text-green-800 hover:bg-green-200"
+              }`}
+            >
+              #{tag}
+              <span className="ml-1.5 text-xs opacity-75">({count})</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+);
+
+type AnnouncementsFeedProps = {
+  announcements: Announcement[];
+  expandedComments: Set<string>;
+  onToggleComments: (announcementId: string) => void;
+  onEdit?: (announcement: Announcement) => void;
+  onDelete?: (announcementId: string) => void;
+  onTogglePin?: (announcementId: string) => void;
+  onDeleteClick: (announcementId: string) => void;
+  onTogglePinClick: (announcementId: string) => Promise<void>;
+  onReactionChange: () => void;
+  onHashtagClick: (hashtag: string) => void;
+};
+
+const AnnouncementsFeed: React.FC<AnnouncementsFeedProps> = ({
+  announcements,
+  expandedComments,
+  onToggleComments,
+  onEdit,
+  onDelete,
+  onTogglePin,
+  onDeleteClick,
+  onTogglePinClick,
+  onReactionChange,
+  onHashtagClick,
+}) => (
+  <div className="bg-primary rounded-lg shadow-md overflow-hidden">
+    {announcements.map((announcement) => (
+      <AnnouncementItem
+        key={announcement.id}
+        announcement={announcement}
+        isExpanded={expandedComments.has(announcement.id)}
+        onToggleComments={() => onToggleComments(announcement.id)}
+        onEdit={onEdit ? () => onEdit(announcement) : undefined}
+        onDelete={onDelete ? () => onDeleteClick(announcement.id) : undefined}
+        onTogglePin={
+          onTogglePin ? () => onTogglePinClick(announcement.id) : undefined
+        }
+        onReactionChange={onReactionChange}
+        onHashtagClick={onHashtagClick}
+        isCoach={true}
+      />
+    ))}
+  </div>
+);
+
 interface AnnouncementsListProps {
   teamId: string;
   onEdit?: (announcement: Announcement) => void;
@@ -69,28 +296,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
 
   // Filter announcements by selected hashtag and search
   const filteredAnnouncements = useMemo(() => {
-    let result = announcements;
-
-    // Apply hashtag filter
-    if (selectedHashtag) {
-      result = HashtagService.filterByHashtag(result, selectedHashtag);
-    }
-
-    // Apply search filter (client-side for instant feedback)
-    if (searchQuery.trim()) {
-      const query = searchQuery.trim().toLowerCase();
-      result = result.filter((announcement) => {
-        // Search in title
-        if (announcement.title.toLowerCase().includes(query)) return true;
-
-        // Search in content
-        if (announcement.content?.toLowerCase().includes(query)) return true;
-
-        return false;
-      });
-    }
-
-    return result;
+    return filterAnnouncements(announcements, selectedHashtag, searchQuery);
   }, [announcements, selectedHashtag, searchQuery]);
 
   const toggleComments = (announcementId: string) => {
@@ -179,174 +385,53 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
   }
 
   if (error) {
-    return (
-      <div className="bg-error-bg border border-error-200 rounded-lg p-4 text-error-600">
-        {error}
-      </div>
-    );
+    return <AnnouncementErrorState error={error} />;
   }
 
   if (announcements.length === 0) {
-    return (
-      <div className="text-center py-12 text-muted">
-        <p className="text-lg">No announcements yet</p>
-        <p className="text-sm mt-2">
-          Create your first announcement to get started
-        </p>
-      </div>
-    );
+    return <AnnouncementEmptyState />;
   }
 
   return (
     <div className="space-y-4">
       {/* New content banner */}
       {hasNewContent && (
-        <div
-          className="bg-brand-primary-light rounded-lg p-3 flex items-center justify-between shadow-md animate-fade-in cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all"
-          onClick={() => {
+        <NewContentBanner
+          onRefresh={() => {
             setHasNewContent(false);
             loadAnnouncements();
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
-          role="button"
-          tabIndex={0}
-        >
-          <div className="flex items-center gap-3">
-            <RefreshCw className="w-5 h-5 text-blue-600" />
-            <div>
-              <p className="text-sm font-medium text-blue-900">
-                New posts available
-              </p>
-              <p className="text-xs text-blue-700">
-                Click to refresh and see the latest updates
-              </p>
-            </div>
-          </div>
-          <button className="text-blue-600 hover:text-blue-800 text-sm font-medium px-3 py-1 rounded hover:bg-blue-200 transition-colors">
-            Refresh
-          </button>
-        </div>
+        />
       )}
 
       {/* Filter controls */}
-      <div className="bg-primary rounded-lg shadow-md p-4 space-y-4">
-        {/* Search bar */}
-        <div className="flex items-center gap-2">
-          <input
-            type="text"
-            placeholder="Search announcements..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-1 rounded-md border border-border px-4 py-2 text-sm focus:border-accent focus:ring-accent"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              className="px-3 py-2 text-sm text-secondary hover:text-primary transition-colors"
-            >
-              Clear
-            </button>
-          )}
-        </div>
-
-        {/* Existing filters */}
-        <div className="flex gap-4 items-center flex-wrap">
-          <label className="text-sm font-medium text-primary">
-            Filter by visibility:
-          </label>
-          <FormSelect
-            value={filters.visibility || ""}
-            onChange={(value) =>
-              setFilters({
-                ...filters,
-                visibility: (value as AnnouncementVisibility) || undefined,
-              })
-            }
-            options={[
-              { value: "", label: "All" },
-              { value: "all", label: "Everyone" },
-              { value: "staff_only", label: "Staff Only" },
-              { value: "players_only", label: "Players Only" },
-              { value: "families_only", label: "Families Only" },
-            ]}
-            className="min-w-36"
-          />
-
-          <label className="text-sm font-medium ml-4">Show pinned only:</label>
-          <input
-            type="checkbox"
-            checked={filters.pinnedOnly || false}
-            onChange={(e) =>
-              setFilters({
-                ...filters,
-                pinnedOnly: e.target.checked || undefined,
-              })
-            }
-            className="rounded focus:ring-2 focus:ring-brand-primary"
-          />
-        </div>
-
-        {/* Hashtag filter */}
-        {hashtagCounts.length > 0 && (
-          <div className="border-t pt-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Hash className="w-4 h-4 text-secondary" />
-              <label className="text-sm font-medium text-primary">
-                Filter by hashtag:
-              </label>
-              {selectedHashtag && (
-                <button
-                  onClick={() => setSelectedHashtag(null)}
-                  className="text-xs text-secondary hover:text-primary flex items-center gap-1"
-                >
-                  <X className="w-3 h-3" />
-                  Clear
-                </button>
-              )}
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {hashtagCounts.map(({ tag, count }) => (
-                <button
-                  key={tag}
-                  onClick={() =>
-                    setSelectedHashtag(tag === selectedHashtag ? null : tag)
-                  }
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                    tag === selectedHashtag
-                      ? "bg-green-600 text-white"
-                      : "bg-green-100 text-green-800 hover:bg-green-200"
-                  }`}
-                >
-                  #{tag}
-                  <span className="ml-1.5 text-xs opacity-75">({count})</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
+      <AnnouncementsFilters
+        filters={filters}
+        onChangeFilters={setFilters}
+        searchQuery={searchQuery}
+        onChangeSearchQuery={setSearchQuery}
+        hashtagCounts={hashtagCounts}
+        selectedHashtag={selectedHashtag}
+        onToggleHashtag={(tag) =>
+          setSelectedHashtag(tag === selectedHashtag ? null : tag)
+        }
+        onClearHashtag={() => setSelectedHashtag(null)}
+      />
 
       {/* Announcements Feed - Compact, Twitter-style */}
-      <div className="bg-primary rounded-lg shadow-md overflow-hidden">
-        {filteredAnnouncements.map((announcement) => (
-          <AnnouncementItem
-            key={announcement.id}
-            announcement={announcement}
-            isExpanded={expandedComments.has(announcement.id)}
-            onToggleComments={() => toggleComments(announcement.id)}
-            onEdit={onEdit ? () => onEdit(announcement) : undefined}
-            onDelete={
-              onDelete ? () => handleDelete(announcement.id) : undefined
-            }
-            onTogglePin={
-              onTogglePin ? () => handleTogglePin(announcement.id) : undefined
-            }
-            onReactionChange={loadAnnouncements}
-            onHashtagClick={handleHashtagClick}
-            isCoach={true}
-          />
-        ))}
-      </div>
+      <AnnouncementsFeed
+        announcements={filteredAnnouncements}
+        expandedComments={expandedComments}
+        onToggleComments={toggleComments}
+        onEdit={onEdit}
+        onDelete={onDelete}
+        onTogglePin={onTogglePin}
+        onDeleteClick={handleDelete}
+        onTogglePinClick={handleTogglePin}
+        onReactionChange={loadAnnouncements}
+        onHashtagClick={handleHashtagClick}
+      />
 
       {/* Delete Confirmation Modal */}
       <ConfirmationModal

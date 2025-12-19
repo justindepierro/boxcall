@@ -20,32 +20,140 @@ interface UsePracticeScriptHandlersProps {
   onCancel?: () => void;
 }
 
-export function usePracticeScriptHandlers({
-  currentScript,
-  setCurrentScript,
-  scriptName,
-  scriptDescription,
-  setIsSaving,
-  setIsEditing,
-  setShowPlaySelector,
-  teamId,
-  onSave,
-  onCancel,
-}: UsePracticeScriptHandlersProps) {
-  const toast = useToast();
+function validateCanSave(params: {
+  scriptName: string;
+  currentScript: PracticeScript | null;
+  toast: ReturnType<typeof useToast>;
+}) {
+  const { scriptName, currentScript, toast } = params;
+
+  if (!scriptName.trim()) {
+    toast.error("Script name is required");
+    return false;
+  }
+
+  if (!currentScript?.plays || currentScript.plays.length === 0) {
+    toast.error("Please add at least one play to the script");
+    return false;
+  }
+
+  return true;
+}
+
+function buildBatchUpdates(currentScript: PracticeScript) {
+  return (currentScript.plays || [])
+    .filter((scriptPlay) => scriptPlay.id && !scriptPlay.id.startsWith("temp-"))
+    .map((scriptPlay) => ({
+      scriptPlayId: scriptPlay.id!,
+      data: {
+        repetitions: scriptPlay.repetitions,
+        notes: scriptPlay.notes,
+        hash: scriptPlay.hash,
+        downDistance: scriptPlay.downDistance,
+        fieldPosition: scriptPlay.fieldPosition,
+        defensiveFront: scriptPlay.defensiveFront,
+        coverage: scriptPlay.coverage,
+        blitz: scriptPlay.blitz,
+      },
+    }));
+}
+
+async function saveExistingScript(params: {
+  currentScript: PracticeScript;
+  scriptName: string;
+  scriptDescription: string;
+}) {
+  const { currentScript, scriptName, scriptDescription } = params;
+
+  let savedScript = await PracticeScriptService.updatePracticeScript(
+    currentScript.id,
+    {
+      name: scriptName.trim(),
+      description: scriptDescription.trim(),
+      tags: currentScript.tags,
+    }
+  );
+
+  const batchUpdates = buildBatchUpdates(currentScript);
+  if (batchUpdates.length > 0) {
+    await PracticeScriptService.batchUpdateScriptPlays(batchUpdates);
+  }
+
+  const reloadedScript = await PracticeScriptService.getPracticeScript(
+    currentScript.id
+  );
+  if (reloadedScript) {
+    savedScript = reloadedScript;
+  }
+
+  return savedScript;
+}
+
+async function createNewScriptWithPlays(params: {
+  currentScript: PracticeScript;
+  scriptName: string;
+  scriptDescription: string;
+  teamId: string;
+}) {
+  const { currentScript, scriptName, scriptDescription, teamId } = params;
+
+  const savedScript = await PracticeScriptService.createPracticeScript({
+    name: scriptName.trim(),
+    description: scriptDescription.trim(),
+    teamId,
+  });
+
+  for (const scriptPlay of currentScript.plays || []) {
+    await PracticeScriptService.addPlayToScript(
+      {
+        scriptId: savedScript.id,
+        playId: scriptPlay.playId,
+        orderIndex: scriptPlay.order,
+        notes: scriptPlay.notes,
+        repetitions: scriptPlay.repetitions,
+        hash: scriptPlay.hash,
+        downDistance: scriptPlay.downDistance,
+        fieldPosition: scriptPlay.fieldPosition,
+        defensiveFront: scriptPlay.defensiveFront,
+        coverage: scriptPlay.coverage,
+        blitz: scriptPlay.blitz,
+      },
+      scriptPlay.play
+    );
+  }
+
+  return savedScript;
+}
+
+function usePracticeScriptSaveHandler(params: {
+  currentScript: PracticeScript | null;
+  setCurrentScript: (script: PracticeScript | null) => void;
+  scriptName: string;
+  scriptDescription: string;
+  setIsSaving: (saving: boolean) => void;
+  setIsEditing: (editing: boolean) => void;
+  teamId: string;
+  onSave?: (script: PracticeScript) => void;
+  onCancel?: () => void;
+  toast: ReturnType<typeof useToast>;
+}) {
+  const {
+    currentScript,
+    setCurrentScript,
+    scriptName,
+    scriptDescription,
+    setIsSaving,
+    setIsEditing,
+    teamId,
+    onSave,
+    onCancel,
+    toast,
+  } = params;
 
   const handleSave = useCallback(async () => {
     debug("🚨 [PracticeScriptBuilder] SAVE BUTTON CLICKED!");
 
-    if (!scriptName.trim()) {
-      toast.error("Script name is required");
-      return;
-    }
-
-    if (!currentScript?.plays || currentScript.plays.length === 0) {
-      toast.error("Please add at least one play to the script");
-      return;
-    }
+    if (!validateCanSave({ scriptName, currentScript, toast })) return;
 
     toast.success("Saving practice script...");
     setIsSaving(true);
@@ -53,81 +161,25 @@ export function usePracticeScriptHandlers({
     try {
       let savedScript: PracticeScript;
 
-      if (currentScript.id && currentScript.id !== "") {
-        // Update existing script
+      if (currentScript?.id && currentScript.id !== "") {
         try {
-          savedScript = await PracticeScriptService.updatePracticeScript(
-            currentScript.id,
-            {
-              name: scriptName.trim(),
-              description: scriptDescription.trim(),
-              tags: currentScript.tags,
-            }
-          );
+          savedScript = await saveExistingScript({
+            currentScript,
+            scriptName,
+            scriptDescription,
+          });
         } catch (error) {
           logError("[PracticeScriptBuilder] ERROR updating script:", error);
           throw error;
         }
-
-        // Batch update plays
-        const batchUpdates = (currentScript.plays || [])
-          .filter(
-            (scriptPlay) => scriptPlay.id && !scriptPlay.id.startsWith("temp-")
-          )
-          .map((scriptPlay) => ({
-            scriptPlayId: scriptPlay.id!,
-            data: {
-              repetitions: scriptPlay.repetitions,
-              notes: scriptPlay.notes,
-              hash: scriptPlay.hash,
-              downDistance: scriptPlay.downDistance,
-              fieldPosition: scriptPlay.fieldPosition,
-              defensiveFront: scriptPlay.defensiveFront,
-              coverage: scriptPlay.coverage,
-              blitz: scriptPlay.blitz,
-            },
-          }));
-
-        if (batchUpdates.length > 0) {
-          await PracticeScriptService.batchUpdateScriptPlays(batchUpdates);
-        }
-
-        const reloadedScript = await PracticeScriptService.getPracticeScript(
-          currentScript.id
-        );
-        if (reloadedScript) {
-          savedScript = reloadedScript;
-        }
-
         setCurrentScript(savedScript);
       } else {
-        // Create new script
-        savedScript = await PracticeScriptService.createPracticeScript({
-          name: scriptName.trim(),
-          description: scriptDescription.trim(),
+        savedScript = await createNewScriptWithPlays({
+          currentScript: currentScript!,
+          scriptName,
+          scriptDescription,
           teamId,
         });
-
-        // Add all plays to the script
-        for (const scriptPlay of currentScript.plays) {
-          await PracticeScriptService.addPlayToScript(
-            {
-              scriptId: savedScript.id,
-              playId: scriptPlay.playId,
-              orderIndex: scriptPlay.order,
-              notes: scriptPlay.notes,
-              repetitions: scriptPlay.repetitions,
-              hash: scriptPlay.hash,
-              downDistance: scriptPlay.downDistance,
-              fieldPosition: scriptPlay.fieldPosition,
-              defensiveFront: scriptPlay.defensiveFront,
-              coverage: scriptPlay.coverage,
-              blitz: scriptPlay.blitz,
-            },
-            scriptPlay.play
-          );
-        }
-
         setCurrentScript(savedScript);
       }
 
@@ -144,17 +196,29 @@ export function usePracticeScriptHandlers({
       setIsSaving(false);
     }
   }, [
-    scriptName,
-    scriptDescription,
     currentScript,
-    teamId,
-    onSave,
     onCancel,
-    toast,
-    setIsSaving,
-    setIsEditing,
+    onSave,
+    scriptDescription,
+    scriptName,
     setCurrentScript,
+    setIsEditing,
+    setIsSaving,
+    teamId,
+    toast,
   ]);
+
+  return { handleSave };
+}
+
+function usePracticeScriptPlayHandlers(params: {
+  currentScript: PracticeScript | null;
+  setCurrentScript: (script: PracticeScript | null) => void;
+  setShowPlaySelector: (show: boolean) => void;
+  toast: ReturnType<typeof useToast>;
+}) {
+  const { currentScript, toast, setCurrentScript, setShowPlaySelector } =
+    params;
 
   const handleAddPlay = useCallback(
     async (play: Play) => {
@@ -333,6 +397,59 @@ export function usePracticeScriptHandlers({
       toast.error("Failed to export PDF", "Please try again");
     }
   }, [currentScript, toast]);
+
+  return {
+    handleAddPlay,
+    handleRemovePlay,
+    handleDragEnd,
+    handleUpdatePlayNotes,
+    handleUpdatePlayRepetitions,
+    handleUpdatePlayScenario,
+    handleExportPDF,
+  };
+}
+
+export function usePracticeScriptHandlers({
+  currentScript,
+  setCurrentScript,
+  scriptName,
+  scriptDescription,
+  setIsSaving,
+  setIsEditing,
+  setShowPlaySelector,
+  teamId,
+  onSave,
+  onCancel,
+}: UsePracticeScriptHandlersProps) {
+  const toast = useToast();
+
+  const { handleSave } = usePracticeScriptSaveHandler({
+    currentScript,
+    setCurrentScript,
+    scriptName,
+    scriptDescription,
+    setIsSaving,
+    setIsEditing,
+    teamId,
+    onSave,
+    onCancel,
+    toast,
+  });
+
+  const {
+    handleAddPlay,
+    handleRemovePlay,
+    handleDragEnd,
+    handleUpdatePlayNotes,
+    handleUpdatePlayRepetitions,
+    handleUpdatePlayScenario,
+    handleExportPDF,
+  } = usePracticeScriptPlayHandlers({
+    currentScript,
+    setCurrentScript,
+    setShowPlaySelector,
+    toast,
+  });
 
   return {
     handleSave,

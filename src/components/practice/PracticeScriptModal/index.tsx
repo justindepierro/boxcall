@@ -15,6 +15,116 @@ import type { PracticeScriptPlay as ServicePracticeScriptPlay } from "../../../s
 import type { PracticeScriptFormData, PracticeScriptPlay } from "./types";
 import type { Play } from "../../../types/play";
 
+const ALLOWED_HASHES = ["left", "middle", "right"] as const;
+const ALLOWED_COVERAGES = [
+  "cover_0",
+  "cover_1",
+  "cover_2",
+  "cover_3",
+  "cover_4",
+  "cover_6",
+  "quarters",
+  "man",
+] as const;
+const ALLOWED_DEFENSIVE_FRONTS = [
+  "base",
+  "4-3",
+  "3-4",
+  "nickel",
+  "dime",
+  "bear",
+  "tite",
+] as const;
+const ALLOWED_BLITZES = [
+  "none",
+  "edge",
+  "a_gap",
+  "b_gap",
+  "sim_pressure",
+  "zone_blitz",
+  "all_out",
+] as const;
+
+function coerceAllowedValue<T extends string>(
+  value: string | undefined,
+  allowed: readonly T[]
+): T | undefined {
+  if (!value) return undefined;
+  return (allowed as readonly string[]).includes(value)
+    ? (value as T)
+    : undefined;
+}
+
+function buildModalStateFromEditingScript(editingScript: PracticeScript) {
+  const scriptData: PracticeScriptFormData = {
+    name: editingScript.title || editingScript.name || "",
+    date: editingScript.createdAt
+      ? new Date(editingScript.createdAt).toISOString().split("T")[0]
+      : undefined,
+    opponent: editingScript.description || "",
+  };
+
+  const modalPlays: PracticeScriptPlay[] = (editingScript.plays || []).map(
+    (play) => ({
+      id: play.id,
+      playId: play.playId,
+      playName: play.play?.play_name || "Unknown Play",
+      personnel: play.play?.personnel,
+      notes: play.notes || "",
+      defenseFront: play.defensiveFront || "",
+      defensiveCoverage: play.coverage || "",
+      blitz: play.blitz || "",
+      stunt: "", // Not in service type
+      hash: play.hash || "",
+      situation: play.downDistance || "",
+    })
+  );
+
+  return {
+    scriptData,
+    plays: modalPlays,
+    tags: editingScript.tags || [],
+  };
+}
+
+function buildServicePlays(plays: PracticeScriptPlay[]) {
+  return plays
+    .filter((p) => typeof p.playId === "string" && p.playId.trim() !== "")
+    .map((p, index): ServicePracticeScriptPlay => {
+      const hash = coerceAllowedValue(p.hash, ALLOWED_HASHES);
+      const coverage = coerceAllowedValue(
+        p.defensiveCoverage,
+        ALLOWED_COVERAGES
+      );
+      const defensiveFront = coerceAllowedValue(
+        p.defenseFront,
+        ALLOWED_DEFENSIVE_FRONTS
+      );
+      const blitz = coerceAllowedValue(p.blitz, ALLOWED_BLITZES);
+
+      const minimalPlay = {
+        id: p.playId!,
+        play_name: p.playName,
+        personnel: p.personnel || null,
+      } as unknown as Play;
+
+      return {
+        id: p.id,
+        playId: p.playId!,
+        play: minimalPlay,
+        order: index,
+        notes: p.notes || undefined,
+        repetitions: 1,
+        hash,
+        downDistance: p.situation || undefined,
+        defensiveFront,
+        coverage,
+        blitz,
+        addedAt: new Date(),
+      };
+    });
+}
+
 interface PracticeScriptModalProps {
   onClose: () => void;
   onSave: (script: Partial<PracticeScript>) => void;
@@ -43,33 +153,10 @@ export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
   // Pre-populate form when editing
   useEffect(() => {
     if (editingScript) {
-      setScriptData({
-        name: editingScript.title || editingScript.name || "",
-        date: editingScript.createdAt
-          ? new Date(editingScript.createdAt).toISOString().split("T")[0]
-          : undefined,
-        opponent: editingScript.description || "",
-      });
-
-      // Convert service plays to modal plays
-      const modalPlays: PracticeScriptPlay[] = (editingScript.plays || []).map(
-        (play) => ({
-          id: play.id,
-          playId: play.playId,
-          playName: play.play?.play_name || "Unknown Play",
-          personnel: play.play?.personnel,
-          notes: play.notes || "",
-          defenseFront: play.defensiveFront || "",
-          defensiveCoverage: play.coverage || "",
-          blitz: play.blitz || "",
-          stunt: "", // Not in service type
-          hash: play.hash || "",
-          situation: play.downDistance || "",
-        })
-      );
-
-      setPlays(modalPlays);
-      setTags(editingScript.tags || []);
+      const nextState = buildModalStateFromEditingScript(editingScript);
+      setScriptData(nextState.scriptData);
+      setPlays(nextState.plays);
+      setTags(nextState.tags);
     }
   }, [editingScript]);
 
@@ -89,69 +176,7 @@ export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
 
     setIsSaving(true);
 
-    const servicePlays: ServicePracticeScriptPlay[] = plays
-      .filter((p) => typeof p.playId === "string" && p.playId.trim() !== "")
-      .map((p, index) => {
-        const hash =
-          p.hash === "left" || p.hash === "middle" || p.hash === "right"
-            ? p.hash
-            : undefined;
-
-        const coverage =
-          p.defensiveCoverage === "cover_0" ||
-          p.defensiveCoverage === "cover_1" ||
-          p.defensiveCoverage === "cover_2" ||
-          p.defensiveCoverage === "cover_3" ||
-          p.defensiveCoverage === "cover_4" ||
-          p.defensiveCoverage === "cover_6" ||
-          p.defensiveCoverage === "quarters" ||
-          p.defensiveCoverage === "man"
-            ? p.defensiveCoverage
-            : undefined;
-
-        const defensiveFront =
-          p.defenseFront === "base" ||
-          p.defenseFront === "4-3" ||
-          p.defenseFront === "3-4" ||
-          p.defenseFront === "nickel" ||
-          p.defenseFront === "dime" ||
-          p.defenseFront === "bear" ||
-          p.defenseFront === "tite"
-            ? p.defenseFront
-            : undefined;
-
-        const blitz =
-          p.blitz === "none" ||
-          p.blitz === "edge" ||
-          p.blitz === "a_gap" ||
-          p.blitz === "b_gap" ||
-          p.blitz === "sim_pressure" ||
-          p.blitz === "zone_blitz" ||
-          p.blitz === "all_out"
-            ? p.blitz
-            : undefined;
-
-        const minimalPlay = {
-          id: p.playId!,
-          play_name: p.playName,
-          personnel: p.personnel || null,
-        } as unknown as Play;
-
-        return {
-          id: p.id,
-          playId: p.playId!,
-          play: minimalPlay,
-          order: index,
-          notes: p.notes || undefined,
-          repetitions: 1,
-          hash,
-          downDistance: p.situation || undefined,
-          defensiveFront,
-          coverage,
-          blitz,
-          addedAt: new Date(),
-        };
-      });
+    const servicePlays = buildServicePlays(plays);
 
     const script: Partial<PracticeScript> = {
       id: editingScript?.id,

@@ -15,7 +15,7 @@ import { LoadingScreen } from "../components/ui/LoadingScreen";
 import { CollaborationProvider } from "../components/collaboration/CollaborationProvider";
 
 // Extracted components and hooks
-import { useTeamBulletinData } from "./TeamBulletin/hooks";
+import { useTeamBulletinData, type TeamData } from "./TeamBulletin/hooks";
 import {
   NoTeamState,
   SelectTeamState,
@@ -48,107 +48,110 @@ const TeamVotesModal = lazy(() =>
   }))
 );
 
-const TeamBulletin: React.FC = React.memo(() => {
-  const { teamId } = useParams<{ teamId: string }>();
-  const { user, profile } = useAuth();
-  const { roleContext } = useRoles();
-  const { devMode } = useDevMode();
-  const { isSuperAdmin } = usePermissions();
-  const navigate = useNavigate();
-  const { data: membershipRole } = useTeamMembershipRole(teamId, profile?.id);
-  const activityStats = useTeamActivity(teamId || "");
-
-  // Team data from extracted hook
-  const { teamData, isTeamDataLoading } = useTeamBulletinData({
-    teamId,
-    devMode,
-  });
-
-  // Modal states
-  const [isTrophyCaseModalOpen, setIsTrophyCaseModalOpen] = useState(false);
-  const [isSeasonStatsModalOpen, setIsSeasonStatsModalOpen] = useState(false);
-  const [isTeamGoalsModalOpen, setIsTeamGoalsModalOpen] = useState(false);
-  const [isTeamVotesModalOpen, setIsTeamVotesModalOpen] = useState(false);
-
-  // Loading states
-  const loadingInitial = useMemo(
-    () => !user || !profile || !teamId,
-    [user, profile, teamId]
+function getLoadingSubtitle(flags: {
+  isRoleContextLoading: boolean;
+  isMembershipLoading: boolean;
+  isTeamDataLoading: boolean;
+  loadingInitial: boolean;
+}): string {
+  return (
+    [
+      flags.isRoleContextLoading && "Checking team access...",
+      flags.isMembershipLoading && "Validating membership...",
+      flags.isTeamDataLoading && "Loading team information...",
+      flags.loadingInitial && "Initializing...",
+    ].filter(Boolean)[0] || "Please wait..."
   );
-  const isRoleContextLoading = !roleContext && user && profile;
-  const { isLoading: isMembershipLoading } = useTeamMembershipRole(
-    teamId,
-    profile?.id
-  );
-  const isLoading =
-    loadingInitial ||
-    isRoleContextLoading ||
-    isMembershipLoading ||
-    isTeamDataLoading;
+}
 
-  // Navigation handlers
-  const handleCreateTeam = useCallback(() => {
-    navigate(ROUTES.CREATE_TEAM);
-  }, [navigate]);
+function getCollaborationRole(params: {
+  profileRole: string | null | undefined;
+  isCoach: boolean;
+  userRole: string;
+}): "coach" | "parent" | "player" {
+  if (params.profileRole === "admin" || params.isCoach) return "coach";
+  if (params.userRole === "family") return "parent";
+  return "player";
+}
 
-  const handleJoinTeam = useCallback(() => {
-    navigate(ROUTES.JOIN_TEAM);
-  }, [navigate]);
-
-  // Computed values
-  const hasAnyTeam = useMemo(
-    () => (roleContext?.teamMemberships.length ?? 0) > 0,
-    [roleContext?.teamMemberships.length]
-  );
-  const userRole = membershipRole || profile?.role || "player";
-  const isCoach = userRole === "coach" || userRole === "head_coach";
-
-  // Modal handlers
-  const openTrophyCase = useCallback(() => setIsTrophyCaseModalOpen(true), []);
-  const openSeasonStats = useCallback(
-    () => setIsSeasonStatsModalOpen(true),
-    []
-  );
-  const openTeamGoals = useCallback(() => setIsTeamGoalsModalOpen(true), []);
-  const openTeamVotes = useCallback(() => setIsTeamVotesModalOpen(true), []);
-
-  // Loading state
-  if (isLoading) {
-    const subtitle =
-      [
-        isRoleContextLoading && "Checking team access...",
-        isMembershipLoading && "Validating membership...",
-        isTeamDataLoading && "Loading team information...",
-        loadingInitial && "Initializing...",
-      ].filter(Boolean)[0] || "Please wait...";
-
-    return <LoadingScreen title="Loading Team Dashboard" subtitle={subtitle} />;
+function getModalUserRole(
+  profileRole: string | null | undefined,
+  userRole: string
+): "coach" | "player" | "family" {
+  if (profileRole === "admin") return "coach";
+  if (userRole === "coach" || userRole === "player" || userRole === "family") {
+    return userRole;
   }
+  return "player";
+}
 
-  // Empty states
-  if (!teamId) {
-    if (!hasAnyTeam) {
-      return (
-        <NoTeamState
-          onCreateTeam={handleCreateTeam}
-          onJoinTeam={handleJoinTeam}
-        />
-      );
-    }
-    return <SelectTeamState />;
-  }
+type TeamBulletinView =
+  | "loading"
+  | "noTeam"
+  | "selectTeam"
+  | "teamNotFound"
+  | "ready";
 
-  if (!teamData) {
-    return (
-      <TeamNotFoundState
-        devMode={devMode}
-        isSuperAdmin={isSuperAdmin}
-        onCreateTeam={handleCreateTeam}
-        onJoinTeam={handleJoinTeam}
-      />
-    );
-  }
+function getTeamBulletinView(params: {
+  isLoading: boolean;
+  teamId: string | undefined;
+  hasAnyTeam: boolean;
+  teamData: unknown;
+}): TeamBulletinView {
+  if (params.isLoading) return "loading";
+  if (!params.teamId) return params.hasAnyTeam ? "selectTeam" : "noTeam";
+  if (!params.teamData) return "teamNotFound";
+  return "ready";
+}
 
+function TeamBulletinReady({
+  teamId,
+  teamData,
+  activityStats,
+  user,
+  profile,
+  userRole,
+  isCoach,
+  openSeasonStats,
+  openTrophyCase,
+  openTeamGoals,
+  openTeamVotes,
+  isTrophyCaseModalOpen,
+  setIsTrophyCaseModalOpen,
+  isSeasonStatsModalOpen,
+  setIsSeasonStatsModalOpen,
+  isTeamGoalsModalOpen,
+  setIsTeamGoalsModalOpen,
+  isTeamVotesModalOpen,
+  setIsTeamVotesModalOpen,
+}: {
+  teamId: string;
+  teamData: TeamData;
+  activityStats: ReturnType<typeof useTeamActivity>;
+  user: { id?: string } | null | undefined;
+  profile:
+    | {
+        role?: string | null;
+        display_name?: string | null;
+        full_name?: string | null;
+      }
+    | null
+    | undefined;
+  userRole: string;
+  isCoach: boolean;
+  openSeasonStats: () => void;
+  openTrophyCase: () => void;
+  openTeamGoals: () => void;
+  openTeamVotes: () => void;
+  isTrophyCaseModalOpen: boolean;
+  setIsTrophyCaseModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isSeasonStatsModalOpen: boolean;
+  setIsSeasonStatsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isTeamGoalsModalOpen: boolean;
+  setIsTeamGoalsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isTeamVotesModalOpen: boolean;
+  setIsTeamVotesModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   return (
     <div className="min-h-screen bg-secondary p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -172,11 +175,11 @@ const TeamBulletin: React.FC = React.memo(() => {
           user={{
             id: user?.id || "anonymous",
             name: profile?.display_name || profile?.full_name || "Team Member",
-            role: (() => {
-              if (profile?.role === "admin" || isCoach) return "coach";
-              if (userRole === "family") return "parent";
-              return "player";
-            })(),
+            role: getCollaborationRole({
+              profileRole: profile?.role,
+              isCoach,
+              userRole,
+            }),
           }}
         >
           <main
@@ -231,11 +234,7 @@ const TeamBulletin: React.FC = React.memo(() => {
             isOpen={isTeamGoalsModalOpen}
             onClose={() => setIsTeamGoalsModalOpen(false)}
             widgetId="team-bulletin-team-goals-modal"
-            userRole={
-              profile?.role === "admin"
-                ? "coach"
-                : (userRole as "coach" | "player" | "family") || "player"
-            }
+            userRole={getModalUserRole(profile?.role, userRole)}
             userId={user?.id || "anonymous"}
             teamId={teamId}
           />
@@ -245,11 +244,7 @@ const TeamBulletin: React.FC = React.memo(() => {
             isOpen={isTeamVotesModalOpen}
             onClose={() => setIsTeamVotesModalOpen(false)}
             widgetId="team-bulletin-team-votes-modal"
-            userRole={
-              profile?.role === "admin"
-                ? "coach"
-                : (userRole as "coach" | "player" | "family") || "player"
-            }
+            userRole={getModalUserRole(profile?.role, userRole)}
             userId={user?.id || "anonymous"}
             userName={
               profile?.display_name || profile?.full_name || "Team Member"
@@ -258,6 +253,137 @@ const TeamBulletin: React.FC = React.memo(() => {
         </Suspense>
       </div>
     </div>
+  );
+}
+
+const TeamBulletin: React.FC = React.memo(() => {
+  const { teamId } = useParams<{ teamId: string }>();
+  const { user, profile } = useAuth();
+  const { roleContext } = useRoles();
+  const { devMode } = useDevMode();
+  const { isSuperAdmin } = usePermissions();
+  const navigate = useNavigate();
+  const membership = useTeamMembershipRole(teamId, profile?.id);
+  const membershipRole = membership.data;
+  const activityStats = useTeamActivity(teamId || "");
+
+  // Team data from extracted hook
+  const { teamData, isTeamDataLoading } = useTeamBulletinData({
+    teamId,
+    devMode,
+  });
+
+  // Modal states
+  const [isTrophyCaseModalOpen, setIsTrophyCaseModalOpen] = useState(false);
+  const [isSeasonStatsModalOpen, setIsSeasonStatsModalOpen] = useState(false);
+  const [isTeamGoalsModalOpen, setIsTeamGoalsModalOpen] = useState(false);
+  const [isTeamVotesModalOpen, setIsTeamVotesModalOpen] = useState(false);
+
+  // Loading states
+  const loadingInitial = useMemo(
+    () => !user || !profile || !teamId,
+    [user, profile, teamId]
+  );
+  const isRoleContextLoading = !roleContext && Boolean(user && profile);
+  const isMembershipLoading = membership.isLoading;
+  const isLoading =
+    loadingInitial ||
+    isRoleContextLoading ||
+    isMembershipLoading ||
+    isTeamDataLoading;
+
+  // Navigation handlers
+  const handleCreateTeam = useCallback(() => {
+    navigate(ROUTES.CREATE_TEAM);
+  }, [navigate]);
+
+  const handleJoinTeam = useCallback(() => {
+    navigate(ROUTES.JOIN_TEAM);
+  }, [navigate]);
+
+  // Computed values
+  const hasAnyTeam = useMemo(
+    () => (roleContext?.teamMemberships.length ?? 0) > 0,
+    [roleContext?.teamMemberships.length]
+  );
+  const userRole = membershipRole ?? profile?.role ?? "player";
+  const isCoach = userRole === "coach" || userRole === "head_coach";
+
+  const view = getTeamBulletinView({
+    isLoading,
+    teamId,
+    hasAnyTeam,
+    teamData,
+  });
+
+  // Modal handlers
+  const openTrophyCase = useCallback(() => setIsTrophyCaseModalOpen(true), []);
+  const openSeasonStats = useCallback(
+    () => setIsSeasonStatsModalOpen(true),
+    []
+  );
+  const openTeamGoals = useCallback(() => setIsTeamGoalsModalOpen(true), []);
+  const openTeamVotes = useCallback(() => setIsTeamVotesModalOpen(true), []);
+
+  if (view !== "ready") {
+    if (view === "loading") {
+      const subtitle = getLoadingSubtitle({
+        isRoleContextLoading,
+        isMembershipLoading,
+        isTeamDataLoading,
+        loadingInitial,
+      });
+
+      return (
+        <LoadingScreen title="Loading Team Dashboard" subtitle={subtitle} />
+      );
+    }
+
+    if (view === "noTeam") {
+      return (
+        <NoTeamState
+          onCreateTeam={handleCreateTeam}
+          onJoinTeam={handleJoinTeam}
+        />
+      );
+    }
+
+    if (view === "selectTeam") {
+      return <SelectTeamState />;
+    }
+
+    return (
+      <TeamNotFoundState
+        devMode={devMode}
+        isSuperAdmin={isSuperAdmin}
+        onCreateTeam={handleCreateTeam}
+        onJoinTeam={handleJoinTeam}
+      />
+    );
+  }
+
+  return (
+    <TeamBulletinReady
+      teamId={teamId as string}
+      teamData={teamData as TeamData}
+      activityStats={activityStats}
+      user={user}
+      profile={profile}
+      userRole={userRole}
+      isCoach={isCoach}
+      openSeasonStats={openSeasonStats}
+      openTrophyCase={openTrophyCase}
+      openTeamGoals={openTeamGoals}
+      openTeamVotes={openTeamVotes}
+      isTrophyCaseModalOpen={isTrophyCaseModalOpen}
+      setIsTrophyCaseModalOpen={setIsTrophyCaseModalOpen}
+      isSeasonStatsModalOpen={isSeasonStatsModalOpen}
+      setIsSeasonStatsModalOpen={setIsSeasonStatsModalOpen}
+      isTeamGoalsModalOpen={isTeamGoalsModalOpen}
+      setIsTeamGoalsModalOpen={setIsTeamGoalsModalOpen}
+      isTeamVotesModalOpen={isTeamVotesModalOpen}
+      setIsTeamVotesModalOpen={setIsTeamVotesModalOpen}
+    />
   );
 });
 

@@ -19,6 +19,58 @@ import type {
 } from "../../types/library";
 
 export class FormationLibraryService {
+  private static applyFilters(
+    query: any,
+    filters: LibraryFilterOptions | undefined
+  ): any {
+    if (filters?.search) {
+      query = query.or(
+        `name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`
+      );
+    }
+
+    if (filters?.min_usage) {
+      query = query.gte("usage_count", filters.min_usage);
+    }
+
+    if (filters?.has_opposite !== undefined) {
+      query = filters.has_opposite
+        ? query.not("opposite_formation_id", "is", null)
+        : query.is("opposite_formation_id", null);
+    }
+
+    if (filters?.confidence_min) {
+      query = query.gte("confidence_score", filters.confidence_min);
+    }
+
+    return query;
+  }
+
+  private static applySorting(
+    query: any,
+    filters: LibraryFilterOptions | undefined
+  ): any {
+    let sortBy: string = filters?.sort_by || "name";
+    if (sortBy === "usage") sortBy = "usage_count";
+    if (sortBy === "confidence") sortBy = "confidence_score";
+
+    const sortOrder = filters?.sort_order || "asc";
+    return query.order(sortBy, { ascending: sortOrder === "asc" });
+  }
+
+  private static applyPagination(
+    query: any,
+    filters: LibraryFilterOptions | undefined
+  ): { query: any; limit: number; offset: number } {
+    const limit = filters?.limit || 50;
+    const offset = filters?.offset || 0;
+    return {
+      query: query.range(offset, offset + limit - 1),
+      limit,
+      offset,
+    };
+  }
+
   /**
    * Get all formations for a playbook
    */
@@ -31,43 +83,11 @@ export class FormationLibraryService {
       .select("*", { count: "exact" })
       .eq("playbook_id", playbookId);
 
-    // Apply filters
-    if (filters?.search) {
-      query = query.or(
-        `name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`
-      );
-    }
-
-    if (filters?.min_usage) {
-      query = query.gte("usage_count", filters.min_usage);
-    }
-
-    if (filters?.has_opposite !== undefined) {
-      if (filters.has_opposite) {
-        query = query.not("opposite_formation_id", "is", null);
-      } else {
-        query = query.is("opposite_formation_id", null);
-      }
-    }
-
-    if (filters?.confidence_min) {
-      query = query.gte("confidence_score", filters.confidence_min);
-    }
-
-    // Sorting (map "usage" to actual column name "usage_count")
-    let sortBy: string = filters?.sort_by || "name";
-    if (sortBy === "usage") {
-      sortBy = "usage_count";
-    } else if (sortBy === "confidence") {
-      sortBy = "confidence_score";
-    }
-    const sortOrder = filters?.sort_order || "asc";
-    query = query.order(sortBy, { ascending: sortOrder === "asc" });
-
-    // Pagination
-    const limit = filters?.limit || 50;
-    const offset = filters?.offset || 0;
-    query = query.range(offset, offset + limit - 1);
+    query = FormationLibraryService.applyFilters(query, filters);
+    query = FormationLibraryService.applySorting(query, filters);
+    const pagination = FormationLibraryService.applyPagination(query, filters);
+    query = pagination.query;
+    const { limit, offset } = pagination;
 
     const { data, count, error } = await query;
 

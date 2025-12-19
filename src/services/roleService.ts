@@ -29,6 +29,101 @@ export class RoleService {
   >();
   private static readonly CACHE_DURATION = 30000; // 30 seconds
 
+  private static getCachedRoleContext(userId: string): UserRoleContext | null {
+    this.clearExpiredCache();
+    const cached = this.roleContextCache.get(userId);
+    if (!cached) return null;
+    if (Date.now() - cached.timestamp >= this.CACHE_DURATION) return null;
+    debug("RoleService: Returning cached role context");
+    return cached.context;
+  }
+
+  private static cacheRoleContext(userId: string, context: UserRoleContext) {
+    this.roleContextCache.set(userId, {
+      context,
+      timestamp: Date.now(),
+    });
+  }
+
+  private static buildFallbackContext(userId: string): UserRoleContext {
+    return {
+      appRole: "player" as AppRole,
+      teamMemberships: [],
+      userId,
+      lastUpdated: new Date(),
+    };
+  }
+
+  private static extractProfile(
+    profileResult: any,
+    userId: string
+  ): any | null {
+    if (profileResult?.error) {
+      console.warn(
+        "🔍 RoleService: Profile query error:",
+        profileResult.error.message
+      );
+      return null;
+    }
+
+    if (profileResult?.data) {
+      const profile = profileResult.data;
+      console.log("🔍 RoleService: Got profile with role:", profile.role);
+      return profile;
+    }
+
+    console.log("🔍 RoleService: No profile found for user:", userId);
+    return null;
+  }
+
+  private static extractMemberships(membershipsResult: any): any[] {
+    if (membershipsResult?.error) {
+      console.warn(
+        "🔍 RoleService: Team memberships query error:",
+        membershipsResult.error.message
+      );
+      return [];
+    }
+
+    const memberships = membershipsResult?.data || [];
+    console.log("🔍 RoleService: Got memberships:", memberships);
+    return memberships;
+  }
+
+  private static async fetchTeamsByIds(teamIds: string[]): Promise<any[]> {
+    if (teamIds.length === 0) return [];
+
+    const teamsQueryStart = Date.now();
+    const teamsResult = await supabase
+      .from("teams")
+      .select("id, name")
+      .in("id", teamIds);
+
+    debug(`RoleService: Teams query took ${Date.now() - teamsQueryStart}ms`);
+
+    if (teamsResult.error) {
+      warn("RoleService: Team names fetch failed:", teamsResult.error.message);
+      return [];
+    }
+
+    return teamsResult.data || [];
+  }
+
+  private static buildTeamMemberships(
+    memberships: any[],
+    teamNameMap: Map<string, string>
+  ): TeamMembership[] {
+    return memberships.map((membership: any) => ({
+      teamId: membership.team_id,
+      teamName: teamNameMap.get(membership.team_id) || "Unknown Team",
+      teamRole: membership.team_role as TeamRole,
+      capabilities: RoleService.normalizeCapabilities(membership.capabilities),
+      isActive: membership.status === "active",
+      assignedAt: new Date(membership.assigned_at),
+      roleNotes: membership.role_notes || undefined,
+    }));
+  }
+
   private static normalizeCapabilities(value: unknown): Capability[] {
     if (!value) return [];
     if (Array.isArray(value)) {
@@ -69,13 +164,8 @@ export class RoleService {
    * Get complete user role context (app role + team memberships)
    */
   static async getUserRoleContext(userId: string): Promise<UserRoleContext> {
-    // Check cache first
-    this.clearExpiredCache();
-    const cached = this.roleContextCache.get(userId);
-    if (cached && Date.now() - cached.timestamp < this.CACHE_DURATION) {
-      debug("RoleService: Returning cached role context");
-      return cached.context;
-    }
+    const cachedContext = this.getCachedRoleContext(userId);
+    if (cachedContext) return cachedContext;
 
     debug("RoleService: getUserRoleContext started for user:", userId);
     try {
@@ -99,29 +189,8 @@ export class RoleService {
       console.log("🔍 RoleService: profileResult:", profileResult);
       console.log("🔍 RoleService: membershipsResult:", membershipsResult);
 
-      let profile = null;
-      if (profileResult.error) {
-        console.warn(
-          "🔍 RoleService: Profile query error:",
-          profileResult.error.message
-        );
-      } else if (profileResult.data) {
-        profile = profileResult.data;
-        console.log("🔍 RoleService: Got profile with role:", profile.role);
-      } else {
-        console.log("🔍 RoleService: No profile found for user:", userId);
-      }
-
-      let memberships: any[] = [];
-      if (membershipsResult.error) {
-        console.warn(
-          "🔍 RoleService: Team memberships query error:",
-          membershipsResult.error.message
-        );
-      } else {
-        memberships = membershipsResult.data || [];
-        console.log("🔍 RoleService: Got memberships:", memberships);
-      }
+      const profile = this.extractProfile(profileResult, userId);
+      const memberships = this.extractMemberships(membershipsResult);
 
       console.log(
         "🔍 RoleService: Found",
@@ -131,20 +200,11 @@ export class RoleService {
       );
 
       // If no profile and no memberships, use fallback
-      if (!profile && (!memberships || memberships.length === 0)) {
+      if (!profile && memberships.length === 0) {
         if (import.meta.env.DEV) {
           debug("RoleService: Using fallback role context for development");
-          const fallbackContext = {
-            appRole: "player" as AppRole,
-            teamMemberships: [],
-            userId,
-            lastUpdated: new Date(),
-          };
-          // Cache the fallback context
-          this.roleContextCache.set(userId, {
-            context: fallbackContext,
-            timestamp: Date.now(),
-          });
+          const fallbackContext = this.buildFallbackContext(userId);
+          this.cacheRoleContext(userId, fallbackContext);
           return fallbackContext;
         }
         throw new Error("Failed to fetch user profile and team memberships");
@@ -153,43 +213,14 @@ export class RoleService {
       // Get team names separately using unified ApiClient
       const teamIds = (memberships || []).map((m: any) => m.team_id);
 
-      let teams: any[] = [];
-      if (teamIds.length > 0) {
-        const teamsQueryStart = Date.now();
-        const teamsResult = await supabase
-          .from("teams")
-          .select("id, name")
-          .in("id", teamIds);
-
-        debug(
-          `RoleService: Teams query took ${Date.now() - teamsQueryStart}ms`
-        );
-
-        if (teamsResult.error) {
-          warn(
-            "RoleService: Team names fetch failed:",
-            teamsResult.error.message
-          );
-        } else {
-          teams = teamsResult.data || [];
-        }
-      }
+      const teams = await this.fetchTeamsByIds(teamIds);
 
       const teamNameMap = new Map(teams?.map((t) => [t.id, t.name]) || []);
 
       // Transform team memberships
-      const teamMemberships: TeamMembership[] = (memberships || []).map(
-        (membership: any) => ({
-          teamId: membership.team_id,
-          teamName: teamNameMap.get(membership.team_id) || "Unknown Team",
-          teamRole: membership.team_role as TeamRole,
-          capabilities: RoleService.normalizeCapabilities(
-            membership.capabilities
-          ),
-          isActive: membership.status === "active",
-          assignedAt: new Date(membership.assigned_at),
-          roleNotes: membership.role_notes || undefined,
-        })
+      const teamMemberships = this.buildTeamMemberships(
+        memberships,
+        teamNameMap
       );
 
       debug("RoleService: Found", teamMemberships.length, "team memberships");
@@ -205,10 +236,7 @@ export class RoleService {
       };
 
       // Cache the successful result
-      this.roleContextCache.set(userId, {
-        context: roleContext,
-        timestamp: Date.now(),
-      });
+      this.cacheRoleContext(userId, roleContext);
 
       return roleContext;
     } catch (error) {
@@ -219,18 +247,10 @@ export class RoleService {
         );
       }
       // Return safe fallback
-      const fallbackContext = {
-        appRole: "player" as AppRole,
-        teamMemberships: [],
-        userId,
-        lastUpdated: new Date(),
-      };
+      const fallbackContext = this.buildFallbackContext(userId);
 
       // Cache the fallback context to avoid repeated errors
-      this.roleContextCache.set(userId, {
-        context: fallbackContext,
-        timestamp: Date.now(),
-      });
+      this.cacheRoleContext(userId, fallbackContext);
 
       return fallbackContext;
     }

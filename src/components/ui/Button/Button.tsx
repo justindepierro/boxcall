@@ -12,6 +12,112 @@ import type {
   ButtonStylesConfig,
 } from "./Button.types";
 
+function buildButtonClasses({
+  variant,
+  size,
+  isDisabled,
+  fullWidth,
+  className,
+}: {
+  variant: ButtonProps["variant"];
+  size: ButtonProps["size"];
+  isDisabled: boolean;
+  fullWidth: boolean;
+  className: string;
+}) {
+  const variantStyles = buttonVariants[variant ?? "primary"];
+  const sizeStyles = buttonSizes[size ?? "md"];
+  const classes: string[] = [];
+
+  classes.push(
+    "inline-flex items-center justify-center flex-row flex-nowrap",
+    "font-sans rounded-lg",
+    "focus:outline-none",
+    "overflow-hidden",
+    "transition-all duration-200 ease-in-out",
+    variantStyles.base,
+    variantStyles.focus,
+    sizeStyles.fontSize
+  );
+
+  const isLinkLike = variant === "link" || variant === "brandLink";
+  if (!isDisabled && !isLinkLike) {
+    classes.push("hover:scale-[1.02]", "active:scale-[0.98]");
+  }
+
+  if (!isDisabled) {
+    if (variantStyles.hover) classes.push(variantStyles.hover);
+    if (variantStyles.active) classes.push(variantStyles.active);
+  }
+
+  if (isDisabled && variantStyles.disabled)
+    classes.push(variantStyles.disabled);
+
+  if (variant !== "link") {
+    classes.push(sizeStyles.padding, sizeStyles.height);
+  }
+
+  if (fullWidth) classes.push("w-full");
+  if (className) classes.push(className);
+
+  return classes.filter(Boolean).join(" ");
+}
+
+function getIconSpacingClass({
+  position,
+  hasChildren,
+}: {
+  position: "left" | "right";
+  hasChildren: boolean;
+}) {
+  if (!hasChildren) return "";
+  return position === "left" ? "mr-2" : "ml-2";
+}
+
+function renderButtonIcon({
+  icon,
+  iconPosition,
+  position,
+  sizeClass,
+  hasChildren,
+}: {
+  icon: React.ReactNode;
+  iconPosition: ButtonProps["iconPosition"];
+  position: "left" | "right";
+  sizeClass: string;
+  hasChildren: boolean;
+}) {
+  if (!icon) return null;
+  if (iconPosition === "only") return null;
+  if (iconPosition !== position) return null;
+
+  return (
+    <span
+      className={`inline-flex items-center ${sizeClass} flex-shrink-0 ${getIconSpacingClass(
+        {
+          position,
+          hasChildren,
+        }
+      )}`}
+    >
+      {icon}
+    </span>
+  );
+}
+
+function renderButtonLoadingSpinner({
+  loading,
+  sizeClass,
+  hasChildren,
+}: {
+  loading: boolean;
+  sizeClass: string;
+  hasChildren: boolean;
+}) {
+  if (!loading) return null;
+  return <LoadingSpinner size={`${sizeClass} ${hasChildren ? "mr-2" : ""}`} />;
+}
+
 // Button variant styles configuration - Using component token system (Priority 5)
 const buttonVariants: ButtonStylesConfig = {
   primary: {
@@ -218,10 +324,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    // Get variant styles
-    const variantStyles = buttonVariants[variant];
     const sizeStyles = buttonSizes[size];
-    // Determine if button should be disabled
     const isDisabled = disabled || loading;
 
     // Handle click with haptic feedback
@@ -231,67 +334,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       }
       onClick?.(event);
     };
-    // Build class string - Clean, minimal styling with smooth transitions
-    const baseClasses = [
-      // Base button styles - clean and minimal
-      "inline-flex items-center justify-center flex-row flex-nowrap",
-      "font-sans rounded-lg", // Clean rounded-lg corners
-      "focus:outline-none",
-      "overflow-hidden", // Handle overflow gracefully
-      // Smooth transitions for transform and colors
-      "transition-all duration-200 ease-in-out",
-      // Hover scale effect (subtle lift)
-      !isDisabled &&
-        variant !== "link" &&
-        variant !== "brandLink" &&
-        "hover:scale-[1.02]",
-      // Active scale effect (pressed feeling)
-      !isDisabled &&
-        variant !== "link" &&
-        variant !== "brandLink" &&
-        "active:scale-[0.98]",
-      // Variant styles
-      variantStyles.base,
-      !isDisabled && variantStyles.hover,
-      !isDisabled && variantStyles.active,
-      variantStyles.focus,
-      isDisabled && variantStyles.disabled,
-      // Size styles (skip for link variant)
-      variant !== "link" && sizeStyles.padding,
-      variant !== "link" && sizeStyles.height,
-      sizeStyles.fontSize,
-      // Width
-      fullWidth && "w-full",
-      // Custom classes
+    const baseClasses = buildButtonClasses({
+      variant,
+      size,
+      isDisabled,
+      fullWidth,
       className,
-    ]
-      .filter(Boolean)
-      .join(" ");
-    // Render icon
-    const renderIcon = (position: "left" | "right") => {
-      if (!icon || iconPosition === "only" || iconPosition !== position)
-        return null;
-      return (
-        <span
-          className={`inline-flex items-center ${sizeStyles.iconSize} flex-shrink-0 ${(() => {
-            if (position === "left" && children) return "mr-2";
-            if (position === "right" && children) return "ml-2";
-            return "";
-          })()}`}
-        >
-          {icon}
-        </span>
-      );
-    };
-    // Render loading spinner
-    const renderLoadingSpinner = () => {
-      if (!loading) return null;
-      return (
-        <LoadingSpinner
-          size={`${sizeStyles.iconSize} ${children ? "mr-2" : ""}`}
-        />
-      );
-    };
+    });
+
+    const hasChildren = Boolean(children);
     return (
       <button
         ref={ref}
@@ -304,8 +355,18 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         }}
         {...restProps}
       >
-        {renderLoadingSpinner()}
-        {renderIcon("left")}
+        {renderButtonLoadingSpinner({
+          loading,
+          sizeClass: sizeStyles.iconSize,
+          hasChildren,
+        })}
+        {renderButtonIcon({
+          icon,
+          iconPosition,
+          position: "left",
+          sizeClass: sizeStyles.iconSize,
+          hasChildren,
+        })}
         {iconPosition === "only" ? (
           <span
             className={`inline-flex items-center justify-center ${sizeStyles.iconSize}`}
@@ -317,7 +378,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             {children}
           </span>
         )}
-        {renderIcon("right")}
+        {renderButtonIcon({
+          icon,
+          iconPosition,
+          position: "right",
+          sizeClass: sizeStyles.iconSize,
+          hasChildren,
+        })}
       </button>
     );
   }

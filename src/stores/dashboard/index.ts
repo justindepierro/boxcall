@@ -120,330 +120,385 @@ const initialState: DashboardState = {
   adaptiveRecommendations: [],
 };
 
+function createBasicSetters(set: (partial: Partial<DashboardState>) => void) {
+  return {
+    setCurrentLayout: (layout: DashboardLayout) =>
+      set({ currentLayout: layout }),
+    setAvailableLayouts: (layouts: DashboardLayout[]) =>
+      set({ availableLayouts: layouts }),
+    setPersonalizationSettings: (settings: PersonalizationSettings) =>
+      set({ personalizationSettings: settings }),
+    setLoading: (loading: boolean) => set({ loading }),
+    setSaving: (saving: boolean) => set({ saving }),
+    setError: (error: string | null) => set({ error }),
+  };
+}
+
+function createLayoutManagementActions(params: {
+  set: (partial: Partial<DashboardState>) => void;
+  get: () => DashboardState & DashboardActions;
+}) {
+  const { set, get } = params;
+
+  return {
+    createLayout: async (name: string, baseLayout?: DashboardLayout) => {
+      set({ loading: true, error: null });
+      try {
+        const state = get();
+        const authState = useAuth.getState();
+        const userId =
+          baseLayout?.userId || authState.user?.id || "current-user";
+        const userRole =
+          baseLayout?.userRole ||
+          (authState.profile?.role as UserRole) ||
+          "player";
+
+        const newLayout: DashboardLayout = baseLayout
+          ? {
+              ...baseLayout,
+              id: `layout-${Date.now()}`,
+              name,
+              isDefault: false,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            }
+          : { ...createDefaultLayout(userId, userRole), name };
+
+        newLayout.id = `layout-${Date.now()}`;
+        set({
+          availableLayouts: [...state.availableLayouts, newLayout],
+          currentLayout: newLayout,
+          loading: false,
+        });
+        return newLayout;
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Failed to create layout";
+        set({ error: message, loading: false });
+        throw error;
+      }
+    },
+
+    updateLayout: async (
+      layoutId: string,
+      updates: Partial<DashboardLayout>
+    ) => {
+      set({ saving: true, error: null });
+      try {
+        const state = get();
+        const updatedLayouts = state.availableLayouts.map((layout) =>
+          layout.id === layoutId
+            ? { ...layout, ...updates, updatedAt: new Date().toISOString() }
+            : layout
+        );
+        const updatedCurrentLayout =
+          state.currentLayout?.id === layoutId
+            ? {
+                ...state.currentLayout,
+                ...updates,
+                updatedAt: new Date().toISOString(),
+              }
+            : state.currentLayout;
+        set({
+          availableLayouts: updatedLayouts,
+          currentLayout: updatedCurrentLayout,
+          saving: false,
+        });
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Failed to update layout";
+        set({ error: message, saving: false });
+        throw error;
+      }
+    },
+
+    deleteLayout: async (layoutId: string) => {
+      const state = get();
+      const layoutToDelete = state.availableLayouts.find(
+        (l) => l.id === layoutId
+      );
+      if (layoutToDelete?.isDefault) {
+        throw new Error("Cannot delete default layout");
+      }
+      const updatedLayouts = state.availableLayouts.filter(
+        (l) => l.id !== layoutId
+      );
+      const newCurrentLayout =
+        state.currentLayout?.id === layoutId
+          ? updatedLayouts.find((l) => l.isDefault) || updatedLayouts[0] || null
+          : state.currentLayout;
+      set({
+        availableLayouts: updatedLayouts,
+        currentLayout: newCurrentLayout,
+      });
+    },
+
+    duplicateLayout: async (layoutId: string, newName: string) => {
+      const state = get();
+      const layoutToDuplicate = state.availableLayouts.find(
+        (l) => l.id === layoutId
+      );
+      if (!layoutToDuplicate) throw new Error("Layout not found");
+      return get().createLayout(newName, layoutToDuplicate);
+    },
+  };
+}
+
+function createWidgetManagementActions(params: {
+  set: (partial: Partial<DashboardState>) => void;
+  get: () => DashboardState & DashboardActions;
+}) {
+  const { set, get } = params;
+
+  return {
+    updateWidget: (widgetId: string, updates: Partial<WidgetConfig>) => {
+      const state = get();
+      if (!state.currentLayout) return;
+      const updatedWidgets = state.currentLayout.widgets.map((widget) =>
+        widget.id === widgetId ? { ...widget, ...updates } : widget
+      );
+      const updatedLayout = {
+        ...state.currentLayout,
+        widgets: updatedWidgets,
+        updatedAt: new Date().toISOString(),
+      };
+      set({ currentLayout: updatedLayout });
+      get().updateLayout(updatedLayout.id, { widgets: updatedWidgets });
+    },
+
+    moveWidget: (widgetId: string, newPosition: WidgetConfig["position"]) => {
+      get().updateWidget(widgetId, { position: newPosition });
+    },
+
+    toggleWidgetVisibility: (widgetId: string) => {
+      const state = get();
+      const widget = state.currentLayout?.widgets.find(
+        (w) => w.id === widgetId
+      );
+      if (widget) get().updateWidget(widgetId, { visible: !widget.visible });
+    },
+
+    resizeWidget: (widgetId: string, newSize: LayoutSize) => {
+      get().updateWidget(widgetId, { size: newSize });
+    },
+  };
+}
+
+function createDragAndDropActions(params: {
+  set: (partial: Partial<DashboardState>) => void;
+  get: () => DashboardState & DashboardActions;
+}) {
+  const { set, get } = params;
+
+  return {
+    startDragging: (widget: WidgetConfig) =>
+      set({ isDragging: true, draggedWidget: widget }),
+    stopDragging: () =>
+      set({ isDragging: false, draggedWidget: null, previewLayout: null }),
+    updatePreviewLayout: (layout: DashboardLayout) =>
+      set({ previewLayout: layout }),
+
+    applyPreviewLayout: () => {
+      const state = get();
+      if (state.previewLayout) {
+        set({
+          currentLayout: state.previewLayout,
+          previewLayout: null,
+          isDragging: false,
+          draggedWidget: null,
+        });
+        get().updateLayout(state.previewLayout.id, state.previewLayout);
+      }
+    },
+  };
+}
+
+function createPersistenceActions(params: {
+  set: (partial: Partial<DashboardState>) => void;
+  get: () => DashboardState & DashboardActions;
+}) {
+  const { set, get } = params;
+
+  return {
+    saveLayout: async () => {
+      const state = get();
+      if (!state.currentLayout) return;
+      await get().updateLayout(state.currentLayout.id, state.currentLayout);
+    },
+
+    loadLayouts: async (userId: string) => {
+      set({ loading: true, error: null });
+      try {
+        const state = get();
+        const authState = useAuth.getState();
+        const userRole = (authState.profile?.role as UserRole) || "player";
+        if (state.availableLayouts.length === 0) {
+          const defaultLayout = createDefaultLayout(userId, userRole);
+          set({
+            availableLayouts: [defaultLayout],
+            currentLayout: defaultLayout,
+            loading: false,
+          });
+        } else {
+          set({ loading: false });
+        }
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Failed to load layouts";
+        set({ error: message, loading: false });
+      }
+    },
+
+    exportLayout: (layoutId: string) => {
+      const layout = get().availableLayouts.find((l) => l.id === layoutId);
+      return layout ? JSON.stringify(layout, null, 2) : "";
+    },
+
+    importLayout: async (layoutData: string) => {
+      try {
+        const layout: DashboardLayout = JSON.parse(layoutData);
+        if (!layout.id || !layout.widgets || !Array.isArray(layout.widgets)) {
+          throw new Error("Invalid layout format");
+        }
+        const importedLayout: DashboardLayout = {
+          ...layout,
+          id: `imported-${Date.now()}`,
+          name: `${layout.name} (Imported)`,
+          isDefault: false,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        const state = get();
+        set({
+          availableLayouts: [...state.availableLayouts, importedLayout],
+          currentLayout: importedLayout,
+        });
+        return importedLayout;
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Failed to import layout";
+        set({ error: message });
+        throw new Error(message);
+      }
+    },
+  };
+}
+
+function createAdaptiveActions(params: {
+  set: (partial: Partial<DashboardState>) => void;
+  get: () => DashboardState & DashboardActions;
+}) {
+  const { set, get } = params;
+
+  return {
+    setCurrentContext: (context: ContextType) => {
+      set({ currentContext: context });
+      get().calculateWidgetPriorities();
+      get().updateAdaptiveRecommendations();
+    },
+
+    setTimeContext: (context: TimeContext) => {
+      set({ timeContext: context });
+      get().calculateWidgetPriorities();
+    },
+
+    trackUserActivity: (activity: UserActivity) => {
+      const state = get();
+      const updatedActivity = [...state.userActivity, activity].slice(-100);
+      set({ userActivity: updatedActivity });
+      get().calculateWidgetPriorities();
+    },
+
+    calculateWidgetPriorities: () => {
+      const state = get();
+      const priorities = calculateWidgetPriorities(
+        state.currentLayout,
+        state.userActivity,
+        state.currentContext,
+        state.timeContext,
+        state.personalizationSettings
+      );
+      set({ widgetPriorities: priorities });
+    },
+
+    getContextualActions: () => {
+      const state = get();
+      return getContextualActions(
+        state.currentContext,
+        state.personalizationSettings
+      );
+    },
+
+    updateAdaptiveRecommendations: () => {
+      const state = get();
+      const recommendations = generateAdaptiveRecommendations(
+        state.currentLayout,
+        state.userActivity,
+        state.currentContext
+      );
+      set({ adaptiveRecommendations: recommendations });
+    },
+
+    adaptLayoutForContext: (context: ContextType) => {
+      const state = get();
+      if (
+        !state.currentLayout ||
+        !state.personalizationSettings.adaptiveFeatures
+          .enableAutoLayoutOptimization
+      ) {
+        return;
+      }
+      const adaptedWidgets = adaptWidgetsForContext(
+        state.currentLayout.widgets,
+        context
+      );
+      set({
+        currentLayout: {
+          ...state.currentLayout,
+          widgets: adaptedWidgets,
+          updatedAt: new Date().toISOString(),
+        },
+      });
+    },
+
+    getSmartWidgetOrder: () => {
+      const state = get();
+      if (
+        !state.personalizationSettings.adaptiveFeatures
+          .enableSmartPrioritization
+      ) {
+        return state.currentLayout?.widgets.map((w) => w.id) || [];
+      }
+      return [...state.widgetPriorities]
+        .sort((a, b) => b.priority - a.priority)
+        .map((p) => p.widgetId);
+    },
+  };
+}
+
+function createSimpleActions(set: (partial: Partial<DashboardState>) => void) {
+  return {
+    getRecommendedLayouts: (userRole: UserRole) => [
+      createDefaultLayout("temp", userRole),
+    ],
+    optimizeLayout: () =>
+      console.info("Layout optimization not yet implemented"),
+    reset: () => set(initialState),
+    clearError: () => set({ error: null }),
+  };
+}
+
 export const useDashboardStore = create<DashboardState & DashboardActions>()(
   persist(
     (set, get) => ({
       ...initialState,
-
-      // Basic setters
-      setCurrentLayout: (layout) => set({ currentLayout: layout }),
-      setAvailableLayouts: (layouts) => set({ availableLayouts: layouts }),
-      setPersonalizationSettings: (settings) =>
-        set({ personalizationSettings: settings }),
-      setLoading: (loading) => set({ loading }),
-      setSaving: (saving) => set({ saving }),
-      setError: (error) => set({ error }),
-
-      // Layout management
-      createLayout: async (name, baseLayout) => {
-        set({ loading: true, error: null });
-        try {
-          const state = get();
-          const authState = useAuth.getState();
-          const userId =
-            baseLayout?.userId || authState.user?.id || "current-user";
-          const userRole =
-            baseLayout?.userRole ||
-            (authState.profile?.role as UserRole) ||
-            "player";
-
-          const newLayout: DashboardLayout = baseLayout
-            ? {
-                ...baseLayout,
-                id: `layout-${Date.now()}`,
-                name,
-                isDefault: false,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-              }
-            : { ...createDefaultLayout(userId, userRole), name };
-
-          newLayout.id = `layout-${Date.now()}`;
-          set({
-            availableLayouts: [...state.availableLayouts, newLayout],
-            currentLayout: newLayout,
-            loading: false,
-          });
-          return newLayout;
-        } catch (error) {
-          const message =
-            error instanceof Error ? error.message : "Failed to create layout";
-          set({ error: message, loading: false });
-          throw error;
-        }
-      },
-
-      updateLayout: async (layoutId, updates) => {
-        set({ saving: true, error: null });
-        try {
-          const state = get();
-          const updatedLayouts = state.availableLayouts.map((layout) =>
-            layout.id === layoutId
-              ? { ...layout, ...updates, updatedAt: new Date().toISOString() }
-              : layout
-          );
-          const updatedCurrentLayout =
-            state.currentLayout?.id === layoutId
-              ? {
-                  ...state.currentLayout,
-                  ...updates,
-                  updatedAt: new Date().toISOString(),
-                }
-              : state.currentLayout;
-          set({
-            availableLayouts: updatedLayouts,
-            currentLayout: updatedCurrentLayout,
-            saving: false,
-          });
-        } catch (error) {
-          const message =
-            error instanceof Error ? error.message : "Failed to update layout";
-          set({ error: message, saving: false });
-          throw error;
-        }
-      },
-
-      deleteLayout: async (layoutId) => {
-        const state = get();
-        const layoutToDelete = state.availableLayouts.find(
-          (l) => l.id === layoutId
-        );
-        if (layoutToDelete?.isDefault) {
-          throw new Error("Cannot delete default layout");
-        }
-        const updatedLayouts = state.availableLayouts.filter(
-          (l) => l.id !== layoutId
-        );
-        const newCurrentLayout =
-          state.currentLayout?.id === layoutId
-            ? updatedLayouts.find((l) => l.isDefault) ||
-              updatedLayouts[0] ||
-              null
-            : state.currentLayout;
-        set({
-          availableLayouts: updatedLayouts,
-          currentLayout: newCurrentLayout,
-        });
-      },
-
-      duplicateLayout: async (layoutId, newName) => {
-        const state = get();
-        const layoutToDuplicate = state.availableLayouts.find(
-          (l) => l.id === layoutId
-        );
-        if (!layoutToDuplicate) throw new Error("Layout not found");
-        return get().createLayout(newName, layoutToDuplicate);
-      },
-
-      // Widget management
-      updateWidget: (widgetId, updates) => {
-        const state = get();
-        if (!state.currentLayout) return;
-        const updatedWidgets = state.currentLayout.widgets.map((widget) =>
-          widget.id === widgetId ? { ...widget, ...updates } : widget
-        );
-        const updatedLayout = {
-          ...state.currentLayout,
-          widgets: updatedWidgets,
-          updatedAt: new Date().toISOString(),
-        };
-        set({ currentLayout: updatedLayout });
-        get().updateLayout(updatedLayout.id, { widgets: updatedWidgets });
-      },
-
-      moveWidget: (widgetId, newPosition) => {
-        get().updateWidget(widgetId, { position: newPosition });
-      },
-
-      toggleWidgetVisibility: (widgetId) => {
-        const state = get();
-        const widget = state.currentLayout?.widgets.find(
-          (w) => w.id === widgetId
-        );
-        if (widget) get().updateWidget(widgetId, { visible: !widget.visible });
-      },
-
-      resizeWidget: (widgetId, newSize) => {
-        get().updateWidget(widgetId, { size: newSize });
-      },
-
-      // Drag and drop
-      startDragging: (widget) =>
-        set({ isDragging: true, draggedWidget: widget }),
-      stopDragging: () =>
-        set({ isDragging: false, draggedWidget: null, previewLayout: null }),
-      updatePreviewLayout: (layout) => set({ previewLayout: layout }),
-
-      applyPreviewLayout: () => {
-        const state = get();
-        if (state.previewLayout) {
-          set({
-            currentLayout: state.previewLayout,
-            previewLayout: null,
-            isDragging: false,
-            draggedWidget: null,
-          });
-          get().updateLayout(state.previewLayout.id, state.previewLayout);
-        }
-      },
-
-      // Smart recommendations
-      getRecommendedLayouts: (userRole) => [
-        createDefaultLayout("temp", userRole),
-      ],
-      optimizeLayout: () =>
-        console.info("Layout optimization not yet implemented"),
-
-      // Persistence
-      saveLayout: async () => {
-        const state = get();
-        if (!state.currentLayout) return;
-        await get().updateLayout(state.currentLayout.id, state.currentLayout);
-      },
-
-      loadLayouts: async (userId) => {
-        set({ loading: true, error: null });
-        try {
-          const state = get();
-          const authState = useAuth.getState();
-          const userRole = (authState.profile?.role as UserRole) || "player";
-          if (state.availableLayouts.length === 0) {
-            const defaultLayout = createDefaultLayout(userId, userRole);
-            set({
-              availableLayouts: [defaultLayout],
-              currentLayout: defaultLayout,
-              loading: false,
-            });
-          } else {
-            set({ loading: false });
-          }
-        } catch (error) {
-          const message =
-            error instanceof Error ? error.message : "Failed to load layouts";
-          set({ error: message, loading: false });
-        }
-      },
-
-      exportLayout: (layoutId) => {
-        const layout = get().availableLayouts.find((l) => l.id === layoutId);
-        return layout ? JSON.stringify(layout, null, 2) : "";
-      },
-
-      importLayout: async (layoutData) => {
-        try {
-          const layout: DashboardLayout = JSON.parse(layoutData);
-          if (!layout.id || !layout.widgets || !Array.isArray(layout.widgets)) {
-            throw new Error("Invalid layout format");
-          }
-          const importedLayout: DashboardLayout = {
-            ...layout,
-            id: `imported-${Date.now()}`,
-            name: `${layout.name} (Imported)`,
-            isDefault: false,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          };
-          const state = get();
-          set({
-            availableLayouts: [...state.availableLayouts, importedLayout],
-            currentLayout: importedLayout,
-          });
-          return importedLayout;
-        } catch (error) {
-          const message =
-            error instanceof Error ? error.message : "Failed to import layout";
-          set({ error: message });
-          throw new Error(message);
-        }
-      },
-
-      // Adaptive content methods
-      setCurrentContext: (context) => {
-        set({ currentContext: context });
-        get().calculateWidgetPriorities();
-        get().updateAdaptiveRecommendations();
-      },
-
-      setTimeContext: (context) => {
-        set({ timeContext: context });
-        get().calculateWidgetPriorities();
-      },
-
-      trackUserActivity: (activity) => {
-        const state = get();
-        const updatedActivity = [...state.userActivity, activity].slice(-100);
-        set({ userActivity: updatedActivity });
-        get().calculateWidgetPriorities();
-      },
-
-      calculateWidgetPriorities: () => {
-        const state = get();
-        const priorities = calculateWidgetPriorities(
-          state.currentLayout,
-          state.userActivity,
-          state.currentContext,
-          state.timeContext,
-          state.personalizationSettings
-        );
-        set({ widgetPriorities: priorities });
-      },
-
-      getContextualActions: () => {
-        const state = get();
-        return getContextualActions(
-          state.currentContext,
-          state.personalizationSettings
-        );
-      },
-
-      updateAdaptiveRecommendations: () => {
-        const state = get();
-        const recommendations = generateAdaptiveRecommendations(
-          state.currentLayout,
-          state.userActivity,
-          state.currentContext
-        );
-        set({ adaptiveRecommendations: recommendations });
-      },
-
-      adaptLayoutForContext: (context) => {
-        const state = get();
-        if (
-          !state.currentLayout ||
-          !state.personalizationSettings.adaptiveFeatures
-            .enableAutoLayoutOptimization
-        ) {
-          return;
-        }
-        const adaptedWidgets = adaptWidgetsForContext(
-          state.currentLayout.widgets,
-          context
-        );
-        set({
-          currentLayout: {
-            ...state.currentLayout,
-            widgets: adaptedWidgets,
-            updatedAt: new Date().toISOString(),
-          },
-        });
-      },
-
-      getSmartWidgetOrder: () => {
-        const state = get();
-        if (
-          !state.personalizationSettings.adaptiveFeatures
-            .enableSmartPrioritization
-        ) {
-          return state.currentLayout?.widgets.map((w) => w.id) || [];
-        }
-        return [...state.widgetPriorities]
-          .sort((a, b) => b.priority - a.priority)
-          .map((p) => p.widgetId);
-      },
-
-      // Utilities
-      reset: () => set(initialState),
-      clearError: () => set({ error: null }),
+      ...createBasicSetters(set),
+      ...createLayoutManagementActions({ set, get }),
+      ...createWidgetManagementActions({ set, get }),
+      ...createDragAndDropActions({ set, get }),
+      ...createPersistenceActions({ set, get }),
+      ...createAdaptiveActions({ set, get }),
+      ...createSimpleActions(set),
     }),
     {
       name: "dashboard-store",
