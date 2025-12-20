@@ -1,6 +1,12 @@
 import { supabase } from "../lib/supabase";
 import { getCurrentUserId } from "../lib/auth-helpers";
 import { debug, warn, error as logError } from "../utils/logger";
+import {
+  readLocalBoolean01,
+  readLocalJson,
+  readLocalString,
+  storageKeys,
+} from "../utils/storage";
 
 /**
  * Service for managing user preferences stored in profiles.settings JSONB column
@@ -261,13 +267,11 @@ export class PreferenceService {
     const localPrefs: Partial<UserPreferences> = {};
 
     // Migrate PlayGrid preferences
-    const oneword = localStorage.getItem("bc_playgrid_oneword");
-    if (oneword !== null) {
-      localPrefs.bc_playgrid_oneword = oneword === "1";
-    }
+    const oneword = readLocalBoolean01(storageKeys.preferences.playgridOneword);
+    if (oneword !== null) localPrefs.bc_playgrid_oneword = oneword;
 
-    const directionFormat = localStorage.getItem(
-      "bc_playgrid_direction_format"
+    const directionFormat = readLocalString(
+      storageKeys.preferences.playgridDirectionFormat
     );
     if (
       directionFormat &&
@@ -278,36 +282,32 @@ export class PreferenceService {
       localPrefs.bc_playgrid_direction_format = directionFormat;
     }
 
-    const viewManual = localStorage.getItem("bc_playgrid_view_manual");
-    if (viewManual !== null) {
-      localPrefs.bc_playgrid_view_manual = viewManual === "1";
-    }
+    const viewManual = readLocalBoolean01(
+      storageKeys.preferences.playgridViewManual
+    );
+    if (viewManual !== null) localPrefs.bc_playgrid_view_manual = viewManual;
 
-    const view = localStorage.getItem("bc_playgrid_view");
+    const view = readLocalString(storageKeys.preferences.playgridView);
     if (view) {
       localPrefs.bc_playgrid_view = view as "grid" | "list";
     }
 
     // Migrate PlayCard field visibility
     try {
-      const formationVis = localStorage.getItem(
-        "bc_formation_field_visibility"
+      const formationVis = readLocalJson<Record<string, boolean>>(
+        storageKeys.preferences.formationFieldVisibility
       );
-      if (formationVis) {
-        localPrefs.bc_formation_field_visibility = JSON.parse(formationVis);
-      }
+      if (formationVis) localPrefs.bc_formation_field_visibility = formationVis;
     } catch (error) {
       debug("[PreferenceService] Failed to parse formation visibility:", error);
     }
 
     try {
-      const playDetailsVis = localStorage.getItem(
-        "bc_play_details_field_visibility"
+      const playDetailsVis = readLocalJson<Record<string, boolean>>(
+        storageKeys.preferences.playDetailsFieldVisibility
       );
-      if (playDetailsVis) {
-        localPrefs.bc_play_details_field_visibility =
-          JSON.parse(playDetailsVis);
-      }
+      if (playDetailsVis)
+        localPrefs.bc_play_details_field_visibility = playDetailsVis;
     } catch (error) {
       debug(
         "[PreferenceService] Failed to parse play details visibility:",

@@ -12,6 +12,7 @@ import noImportFromPages from "./eslint-rules/no-import-from-pages.js";
 import noFeatureDeepImports from "./eslint-rules/no-feature-deep-imports.js";
 import noConsoleOutsideLogger from "./eslint-rules/no-console-outside-logger.js";
 import noDirectFetchOutsideServices from "./eslint-rules/no-direct-fetch-outside-services.js";
+import noDirectWebStorage from "./eslint-rules/no-direct-web-storage.js";
 
 const boxcallDesignRules = {
   rules: {
@@ -24,6 +25,7 @@ const boxcallDesignRules = {
     ...noFeatureDeepImports.rules,
     ...noConsoleOutsideLogger.rules,
     ...noDirectFetchOutsideServices.rules,
+    ...noDirectWebStorage.rules,
   },
 };
 
@@ -128,7 +130,7 @@ export default [
       "boxcall-design/no-feature-deep-imports": "error",
       "boxcall-design/no-console-outside-logger": "error",
       "boxcall-design/no-direct-fetch-outside-services": "error",
+      "boxcall-design/no-direct-web-storage": "error",
     },
   },
 ];
-

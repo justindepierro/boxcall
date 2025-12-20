@@ -386,7 +386,6 @@ export function InvitationAcceptPage() {
       setTimeout(() => {
         if (result.teamId) {
           navigate(teamRoutes.bulletin(result.teamId), { replace: true });
-        } else {
           navigate("/dashboard", { replace: true });
         }
       }, 2000);
@@ -416,15 +415,50 @@ export function InvitationAcceptPage() {
   useEffect(() => {
     let cancelled = false;
 
+    const safe = (fn: () => void) => {
+      if (!cancelled) fn();
+    };
+
+    const validateToken = (t: string | null): PageState | null => {
+      if (!t) return "invalid-token";
+      // Defensive token sanity check (prevents weird parsing/redirect issues)
+      if (t.length > 512) return "invalid-token";
+      return null;
+    };
+
+    const fetchTeam = async (teamId: string | null | undefined) => {
+      const { data: teamData, error: teamError } = await supabase
+        .from("teams")
+        .select("id, name, school_name")
+        .eq("id", teamId || "")
+        .single();
+
+      if (teamError || !teamData) {
+        throw new Error("Team not found");
+      }
+
+      return teamData as TeamData;
+    };
+
+    const fetchPlayerEmail = async (userId: string) => {
+      const { data: profileData } = await supabase
+        .from("profiles")
+        .select("email")
+        .eq("id", userId)
+        .single();
+      return profileData?.email || "";
+    };
+
     async function loadInvitation() {
-      if (!token) {
-        if (!cancelled) setPageState("invalid-token");
+      const tokenState = validateToken(token);
+      if (tokenState) {
+        safe(() => setPageState(tokenState));
         return;
       }
 
-      // Defensive token sanity check (prevents weird parsing/redirect issues)
-      if (token.length > 512) {
-        if (!cancelled) setPageState("invalid-token");
+      const tokenValue = token;
+      if (!tokenValue) {
+        safe(() => setPageState("invalid-token"));
         return;
       }
 
@@ -435,62 +469,48 @@ export function InvitationAcceptPage() {
         } = await supabase.auth.getUser();
 
         // Get invitation details
-        const invitationData = await getInvitationByToken(token);
+        const invitationData = await getInvitationByToken(tokenValue);
 
         if (!invitationData) {
-          if (!cancelled) setPageState("expired-token");
+          safe(() => setPageState("expired-token"));
           return;
         }
 
         // Check if already accepted
         if (invitationData.invitation_status === "accepted") {
-          if (!cancelled) setPageState("already-accepted");
+          safe(() => setPageState("already-accepted"));
           return;
         }
 
-        // Get team details
-        const { data: teamData, error: teamError } = await supabase
-          .from("teams")
-          .select("id, name, school_name")
-          .eq("id", invitationData.team_id || "")
-          .single();
+        const teamData = await fetchTeam(invitationData.team_id);
 
-        if (teamError || !teamData) {
-          if (cancelled) return;
-          setErrorMessage("Team not found");
-          setPageState("error");
-          return;
-        }
-
-        if (!cancelled) {
+        safe(() => {
           setInvitation(invitationData as InvitationData);
           setTeam(teamData);
-        }
+        });
 
         // Try to get email from linked profile if user_id exists
         if (invitationData.user_id) {
-          const { data: profileData } = await supabase
-            .from("profiles")
-            .select("email")
-            .eq("id", invitationData.user_id)
-            .single();
-
-          if (!cancelled && profileData?.email) {
-            setPlayerEmail(profileData.email);
-          }
+          const email = await fetchPlayerEmail(invitationData.user_id);
+          if (email) safe(() => setPlayerEmail(email));
         }
 
         // If user is logged in, auto-accept. Otherwise, show auth forms.
         if (user) {
           await handleAccept(user.id);
-        } else if (!cancelled) {
-          setPageState("auth-required");
+        } else {
+          safe(() => setPageState("auth-required"));
         }
       } catch (error) {
         logError("Error loading invitation:", error);
-        if (cancelled) return;
-        setErrorMessage("Failed to load invitation details");
-        setPageState("error");
+        safe(() => {
+          setErrorMessage(
+            error instanceof Error && error.message === "Team not found"
+              ? "Team not found"
+              : "Failed to load invitation details"
+          );
+          setPageState("error");
+        });
       }
     }
 

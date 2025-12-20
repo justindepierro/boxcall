@@ -5,6 +5,11 @@ import { getCurrentUserId } from "../../../lib/auth-helpers";
 import { error as logError, debug } from "../../../utils/logger";
 import { useToast } from "../../../hooks/useToast";
 import type { PlayActivityItem } from "@services";
+import {
+  readLocalString,
+  storageKeys,
+  writeLocalString,
+} from "../../../utils/storage";
 
 interface UsePlaybookStateProps {
   activeTeamId: string | null;
@@ -71,9 +76,9 @@ export function usePlaybookState({
   useEffect(() => {
     if (teamPlaybooks.length === 0) return;
 
-    const savedPlaybookId = localStorage.getItem(
-      `bc_active_playbook_${activeTeamId}`
-    );
+    const savedPlaybookId = activeTeamId
+      ? readLocalString(storageKeys.playbook.activePlaybookForTeam(activeTeamId))
+      : null;
 
     if (
       savedPlaybookId &&
@@ -94,7 +99,12 @@ export function usePlaybookState({
   const handlePlaybookChange = useCallback(
     (playbookId: string) => {
       setSelectedPlaybookId(playbookId);
-      localStorage.setItem(`bc_active_playbook_${activeTeamId}`, playbookId);
+      if (activeTeamId) {
+        writeLocalString(
+          storageKeys.playbook.activePlaybookForTeam(activeTeamId),
+          playbookId
+        );
+      }
       debug(`[PlaybookPage] Switched to playbook: ${playbookId}`);
     },
     [activeTeamId]

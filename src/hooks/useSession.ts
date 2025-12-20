@@ -19,9 +19,15 @@ import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { ExecutionTrackingService } from "../services/executionTrackingService";
 import { OfflineExecutionQueue } from "../utils/offlineExecutionQueue";
 import { debug, error as logError } from "../utils/logger";
+import {
+  readLocalJson,
+  removeLocalItem,
+  storageKeys,
+  writeLocalJson,
+} from "../utils/storage";
 
 const AUTO_SAVE_INTERVAL = 30000; // 30 seconds
-const SESSION_STORAGE_KEY = "boxcall_active_session";
+const SESSION_STORAGE_KEY = storageKeys.session.activeSession;
 
 interface UseSessionProps {
   sessionType: SessionType;
@@ -85,11 +91,11 @@ function useSessionLocalStoragePersistence(params: {
   const { state, setState } = params;
 
   useEffect(() => {
-    const savedSession = localStorage.getItem(SESSION_STORAGE_KEY);
-    if (!savedSession) return;
-
     try {
-      const parsed = JSON.parse(savedSession);
+      const parsed = readLocalJson<Partial<SessionState>>(SESSION_STORAGE_KEY, {
+        clearOnParseError: true,
+      });
+      if (!parsed) return;
       setState((prev) => ({ ...prev, ...parsed, isActive: false }));
     } catch (err) {
       logError("Failed to restore session:", err);
@@ -98,7 +104,7 @@ function useSessionLocalStoragePersistence(params: {
 
   useEffect(() => {
     if (!state.isActive) return;
-    localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(state));
+    writeLocalJson(SESSION_STORAGE_KEY, state);
   }, [state]);
 }
 
@@ -236,7 +242,7 @@ function useSessionControls(params: {
         endedAt: new Date(),
       }));
 
-      localStorage.removeItem(SESSION_STORAGE_KEY);
+      removeLocalItem(SESSION_STORAGE_KEY);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to end session");
       logError("End session error:", err);

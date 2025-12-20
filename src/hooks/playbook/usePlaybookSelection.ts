@@ -10,6 +10,11 @@
 
 import { useState, useEffect, useCallback } from "react";
 import type { Database } from "../../types/database";
+import {
+  readLocalString,
+  storageKeys,
+  writeLocalString,
+} from "../../utils/storage";
 
 type Playbook = Database["public"]["Tables"]["playbooks"]["Row"];
 
@@ -29,8 +34,8 @@ export function usePlaybookSelection({
     if (playbooks.length === 0) return;
 
     // Try to load from preferences
-    const savedPlaybookId = localStorage.getItem(
-      `bc_active_playbook_${activeTeamId}`
+    const savedPlaybookId = readLocalString(
+      storageKeys.playbook.activePlaybookForTeam(activeTeamId)
     );
 
     if (savedPlaybookId && playbooks.some((pb) => pb.id === savedPlaybookId)) {
@@ -50,7 +55,10 @@ export function usePlaybookSelection({
   const handlePlaybookChange = useCallback(
     (playbookId: string) => {
       setSelectedPlaybookId(playbookId);
-      localStorage.setItem(`bc_active_playbook_${activeTeamId}`, playbookId);
+      writeLocalString(
+        storageKeys.playbook.activePlaybookForTeam(activeTeamId),
+        playbookId
+      );
     },
     [activeTeamId]
   );

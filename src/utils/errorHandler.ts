@@ -4,6 +4,12 @@
  */
 
 import { debug, logError, warn } from "./logger";
+import {
+  readLocalJson,
+  removeLocalItem,
+  storageKeys,
+  writeLocalJson,
+} from "./storage";
 
 export interface ErrorReport {
   message: string;
@@ -194,8 +200,8 @@ class ErrorHandler {
 
   private storeErrorLocally(error: ErrorReport) {
     try {
-      const stored = localStorage.getItem("boxcall_errors");
-      const errors = stored ? JSON.parse(stored) : [];
+      const errors =
+        readLocalJson<ErrorReport[]>(storageKeys.errors.stored) ?? [];
       errors.push(error);
 
       // Keep only last 10 errors to avoid storage bloat
@@ -203,7 +209,7 @@ class ErrorHandler {
         errors.splice(0, errors.length - 10);
       }
 
-      localStorage.setItem("boxcall_errors", JSON.stringify(errors));
+      writeLocalJson(storageKeys.errors.stored, errors);
     } catch {
       warn("Failed to store error locally");
     }
@@ -211,7 +217,7 @@ class ErrorHandler {
 
   private clearLocalErrors() {
     try {
-      localStorage.removeItem("boxcall_errors");
+      removeLocalItem(storageKeys.errors.stored);
     } catch {
       warn("Failed to clear local errors");
     }
@@ -220,8 +226,7 @@ class ErrorHandler {
   // Get stored errors (for debugging or manual reporting)
   public getStoredErrors(): ErrorReport[] {
     try {
-      const stored = localStorage.getItem("boxcall_errors");
-      return stored ? JSON.parse(stored) : [];
+      return readLocalJson<ErrorReport[]>(storageKeys.errors.stored) ?? [];
     } catch {
       return [];
     }

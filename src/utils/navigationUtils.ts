@@ -23,6 +23,11 @@ import {
 } from "./authConstants";
 import { debug, warn } from "./logger";
 import { isSafeInternalRedirectPath } from "./redirectUtils";
+import {
+  readSessionString,
+  removeSessionItem,
+  writeSessionString,
+} from "./storage";
 
 const RETURN_URL_PARAM = "returnUrl";
 
@@ -47,7 +52,7 @@ export function saveReturnUrl(path?: string): void {
     if (!isValidReturnUrl(url)) {
       return;
     }
-    sessionStorage.setItem(STORAGE_KEYS.RETURN_URL, url);
+    writeSessionString(STORAGE_KEYS.RETURN_URL, url);
     debug("🔖 Saved return URL:", url);
   } catch (error) {
     warn("Failed to save return URL", error);
@@ -70,8 +75,8 @@ export function getAndClearReturnUrl(
   defaultUrl = DEFAULT_LOGIN_DESTINATION
 ): string {
   try {
-    const url = sessionStorage.getItem(STORAGE_KEYS.RETURN_URL);
-    sessionStorage.removeItem(STORAGE_KEYS.RETURN_URL);
+    const url = readSessionString(STORAGE_KEYS.RETURN_URL);
+    removeSessionItem(STORAGE_KEYS.RETURN_URL);
 
     if (url && isValidReturnUrl(url)) {
       debug("🔖 Retrieved return URL:", url);
@@ -208,7 +213,7 @@ export function getLoginDestination(
   // 1. Check query parameter
   const queryUrl = getReturnUrlFromQuery(search);
   if (queryUrl && isValidReturnUrl(queryUrl)) {
-    sessionStorage.removeItem(STORAGE_KEYS.RETURN_URL); // Clear storage if using query
+    removeSessionItem(STORAGE_KEYS.RETURN_URL); // Clear storage if using query
     return queryUrl;
   }
 

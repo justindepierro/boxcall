@@ -5,6 +5,7 @@ import { Icon } from "../components/ui/Icon/Icon";
 import { softNavigate } from "./softNavigate";
 import type { IconName } from "../components/ui/Icon/Icon";
 import { ROUTES, teamRoutes } from "../routes/paths";
+import { readLocalString, storageKeys } from "./storage";
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 type ExtendedUserRole = UserRole | "super_admin";
 export interface NavigationItem {
@@ -66,7 +67,7 @@ export const getNavigationItems = (
   // Dynamic team selection (persisted after creation)
   let resolvedTeamId = activeTeamId || null;
   try {
-    const stored = localStorage.getItem("activeTeamId");
+    const stored = readLocalString(storageKeys.activeTeamId);
     if (stored) resolvedTeamId = stored;
   } catch {
     /* ignore */

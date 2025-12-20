@@ -39,7 +39,10 @@
     },
     {
       "name": "practice-plans-route",
-      "match": ["src/pages/PracticePlansPage.tsx", "src/pages/PracticePlansPage.ts"],
+      "match": [
+        "src/pages/PracticePlansPage.tsx",
+        "src/pages/PracticePlansPage.ts"
+      ],
       "maxGzipBytes": 480000
     },
     {

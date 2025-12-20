@@ -38,6 +38,7 @@ import {
   getPlayTypeColor,
   normalizePlayText,
 } from "./play-card/helpers";
+import { readLocalString, storageKeys, writeLocalString } from "../../utils/storage";
 import { usePlayFieldValues } from "./AddNewPlayModal/hooks/usePlayFieldValues";
 import { debug, logError } from "../../utils/logger";
 
@@ -207,8 +208,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   // Use controlled expansion if provided, otherwise use internal state with localStorage persistence
   const [internalIsExpanded, setInternalIsExpanded] = useState(() => {
     // Load user's default preference from localStorage
-    const savedPreference = localStorage.getItem(
-      "bc_playcard_default_expanded"
+    const savedPreference = readLocalString(
+      storageKeys.playbook.playcardDefaultExpanded
     );
     return savedPreference === "true";
   });
@@ -438,8 +439,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
         setInternalIsExpanded((prev) => {
           const newState = !prev;
           // Save user's preference for next time
-          localStorage.setItem(
-            "bc_playcard_default_expanded",
+          writeLocalString(
+            storageKeys.playbook.playcardDefaultExpanded,
             String(newState)
           );
           return newState;

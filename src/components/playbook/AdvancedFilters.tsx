@@ -7,6 +7,7 @@ import { QuickFilterPresets } from "./QuickFilterPresets";
 import type { FilterPreset } from "./filterPresets";
 import { BottomSheet } from "../BottomSheet";
 import { useIsMobile } from "../../hooks/useBreakpoint";
+import { readLocalString, storageKeys, writeLocalString } from "../../utils/storage";
 
 interface ActiveFilter {
   id: string;
@@ -139,7 +140,7 @@ function useAdvancedFiltersController({
   const [showAddFilter, setShowAddFilter] = useState(false);
   // Advanced filters collapsed by default, load from localStorage for user preference
   const [showAdvanced, setShowAdvanced] = useState(() => {
-    const saved = localStorage.getItem("bc_advanced_filters_expanded");
+    const saved = readLocalString(storageKeys.playbook.advancedFiltersExpanded);
     return saved === "true";
   });
   const [activePresetId, setActivePresetId] = useState<string>("all");
@@ -243,7 +244,7 @@ function useAdvancedFiltersController({
     const next = !showAdvanced;
     setShowAdvanced(next);
     // Save user preference
-    localStorage.setItem("bc_advanced_filters_expanded", String(next));
+    writeLocalString(storageKeys.playbook.advancedFiltersExpanded, String(next));
   };
 
   return {

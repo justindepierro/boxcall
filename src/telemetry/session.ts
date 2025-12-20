@@ -1,4 +1,10 @@
 // Simple session id helper; persists per tab via sessionStorage, falls back to random.
+import {
+  readSessionString,
+  storageKeys,
+  writeSessionString,
+} from "../utils/storage";
+
 let cached: string | null = null;
 
 function generate() {
@@ -8,16 +14,15 @@ function generate() {
 export function getSessionId(): string {
   if (cached) return cached;
   try {
-    if (typeof sessionStorage !== "undefined") {
-      const existing = sessionStorage.getItem("bc_session_id");
-      if (existing) {
-        cached = existing;
-        return cached;
-      }
-      cached = generate();
-      sessionStorage.setItem("bc_session_id", cached);
+    const existing = readSessionString(storageKeys.session.id);
+    if (existing) {
+      cached = existing;
       return cached;
     }
+
+    cached = generate();
+    writeSessionString(storageKeys.session.id, cached);
+    return cached;
   } catch {
     // ignore
   }

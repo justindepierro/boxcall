@@ -8,7 +8,9 @@ const PROTECTED_ROUTES = [
 ] as const;
 
 test.describe("smoke", () => {
-  test("login page renders and invalid login shows an error", async ({ page }) => {
+  test("login page renders and invalid login shows an error", async ({
+    page,
+  }) => {
     await page.goto("/login");
 
     // Welcome step
@@ -18,7 +20,9 @@ test.describe("smoke", () => {
     await page.getByRole("button", { name: "Sign In to Your Account" }).click();
 
     await page.getByPlaceholder("Enter your email").fill("invalid@example.com");
-    await page.getByPlaceholder("Enter your password").fill("not-a-real-password");
+    await page
+      .getByPlaceholder("Enter your password")
+      .fill("not-a-real-password");
 
     await page.getByRole("button", { name: "Sign In" }).click();
 

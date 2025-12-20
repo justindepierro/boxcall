@@ -1,6 +1,8 @@
 // Local saved filter presets (Phase 1)
 // Stored in localStorage under a single key; simple shape now, can migrate later.
 
+import { readLocalJson, storageKeys, writeLocalJson } from "./storage";
+
 export interface PlaybookFilterPreset {
   id: string; // uuid or timestamp
   name: string;
@@ -15,13 +17,11 @@ export interface PlaybookFilterPreset {
   };
 }
 
-const LS_KEY = "bc_playbook_filter_presets_v1";
-
 function loadRaw(): PlaybookFilterPreset[] {
   try {
-    const raw = localStorage.getItem(LS_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
+    const parsed = readLocalJson<unknown>(storageKeys.playbook.filterPresets, {
+      clearOnParseError: true,
+    });
     if (Array.isArray(parsed)) return parsed as PlaybookFilterPreset[];
   } catch {
     /* ignore */
@@ -31,7 +31,7 @@ function loadRaw(): PlaybookFilterPreset[] {
 
 function saveRaw(presets: PlaybookFilterPreset[]) {
   try {
-    localStorage.setItem(LS_KEY, JSON.stringify(presets));
+    writeLocalJson(storageKeys.playbook.filterPresets, presets);
   } catch {
     /* ignore */
   }

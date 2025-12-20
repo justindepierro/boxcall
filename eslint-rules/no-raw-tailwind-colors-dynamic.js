@@ -46,7 +46,12 @@ export default {
         };
 
         const TARGET_ATTRIBUTES = new Set(["className", "class"]);
-        const TARGET_CALLEES = new Set(["clsx", "classnames", "classNames", "cn"]);
+        const TARGET_CALLEES = new Set([
+          "clsx",
+          "classnames",
+          "classNames",
+          "cn",
+        ]);
 
         function reportMatches(text, node) {
           if (typeof text !== "string" || !text) return;
@@ -83,7 +88,8 @@ export default {
 
           switch (expr.type) {
             case "Literal": {
-              if (typeof expr.value === "string") reportMatches(expr.value, expr);
+              if (typeof expr.value === "string")
+                reportMatches(expr.value, expr);
               return;
             }
             case "TemplateLiteral": {
@@ -121,7 +127,10 @@ export default {
               for (const prop of expr.properties) {
                 if (prop.type === "Property") {
                   // clsx({ "bg-green-600": active })
-                  if (prop.key?.type === "Literal" && typeof prop.key.value === "string") {
+                  if (
+                    prop.key?.type === "Literal" &&
+                    typeof prop.key.value === "string"
+                  ) {
                     reportMatches(prop.key.value, prop.key);
                   }
                   visitExpression(prop.value);

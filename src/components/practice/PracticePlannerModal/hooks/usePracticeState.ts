@@ -7,7 +7,11 @@ import type {
   SelectedBlock,
   PracticeGroup,
 } from "../types";
-import { logError } from "../../../../utils/logger";
+import {
+  readLocalJson,
+  storageKeys,
+  writeLocalJson,
+} from "../../../../utils/storage";
 
 export const usePracticeState = (event: CalendarEvent) => {
   const [practiceBlocks, setPracticeBlocks] = useState<PracticeBlock[]>([]);
@@ -114,23 +118,18 @@ export const usePracticeState = (event: CalendarEvent) => {
 
   // Load saved practice plan on mount
   useEffect(() => {
-    const savedPracticeKey = `practice_plan_${event.id || "default"}`;
-    const savedPractice = localStorage.getItem(savedPracticeKey);
-
-    if (savedPractice) {
-      try {
-        const savedBlocks = JSON.parse(savedPractice);
-        const blocksWithTimes = recalculateBlockTimes(savedBlocks);
-        setPracticeBlocks(blocksWithTimes);
-      } catch (error) {
-        logError("Error loading saved practice plan:", error);
-      }
-    }
+    const savedPracticeKey = storageKeys.practice.planForEvent(event.id);
+    const savedBlocks = readLocalJson<PracticeBlock[]>(savedPracticeKey, {
+      clearOnParseError: true,
+    });
+    if (!savedBlocks) return;
+    const blocksWithTimes = recalculateBlockTimes(savedBlocks);
+    setPracticeBlocks(blocksWithTimes);
   }, [event.id, event.start, recalculateBlockTimes]);
 
   const savePracticeToLocalStorage = useCallback(() => {
-    const practiceKey = `practice_plan_${event.id || "default"}`;
-    localStorage.setItem(practiceKey, JSON.stringify(practiceBlocks));
+    const practiceKey = storageKeys.practice.planForEvent(event.id);
+    writeLocalJson(practiceKey, practiceBlocks);
     setLastSaveMessage("Practice plan saved");
     setTimeout(() => setLastSaveMessage(null), 2000);
   }, [practiceBlocks, event.id]);

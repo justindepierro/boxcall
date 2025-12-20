@@ -10,6 +10,7 @@
  */
 
 import { debug, error as logError } from "../utils/logger";
+import { storageKeys, writeLocalString } from "../utils/storage";
 import { supabase } from "../lib/supabase";
 import { withDatabaseRetry } from "../lib/database-helpers";
 import { emitTelemetry } from "../lib/telemetry";
@@ -658,7 +659,7 @@ export class TeamService {
 
       // Persist active team selection
       try {
-        localStorage.setItem("activeTeamId", newTeamId);
+        writeLocalString(storageKeys.activeTeamId, newTeamId);
       } catch {
         /* ignore localStorage errors */
       }

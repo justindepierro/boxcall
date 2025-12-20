@@ -157,7 +157,9 @@ function main() {
     : path.join(rootDir, distDirArg);
 
   if (!fileExists(distDir)) {
-    console.error(`❌ dist not found at ${distDir}. Run \`npm run build\` first.`);
+    console.error(
+      `❌ dist not found at ${distDir}. Run \`npm run build\` first.`
+    );
     process.exit(1);
   }
 
@@ -195,7 +197,8 @@ function main() {
       failures.push({
         name,
         reason: "invalid-config",
-        detail: "Each target needs { name, match: string[], maxGzipBytes: number }",
+        detail:
+          "Each target needs { name, match: string[], maxGzipBytes: number }",
       });
       continue;
     }
@@ -271,7 +274,9 @@ function main() {
   if (unresolved.length > 0) {
     console.log("\nUnresolved targets:");
     for (const f of unresolved) {
-      console.log(`- ${f.name}: ${f.reason}${f.detail ? ` — ${f.detail}` : ""}`);
+      console.log(
+        `- ${f.name}: ${f.reason}${f.detail ? ` — ${f.detail}` : ""}`
+      );
     }
   }
 
@@ -283,7 +288,9 @@ function main() {
   if (failures.length > 0) {
     console.error("\n❌ Perf budget check failed:");
     for (const f of failures) {
-      console.error(`- ${f.name}: ${f.reason}${f.detail ? ` — ${f.detail}` : ""}`);
+      console.error(
+        `- ${f.name}: ${f.reason}${f.detail ? ` — ${f.detail}` : ""}`
+      );
     }
     process.exit(1);
   }

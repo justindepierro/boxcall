@@ -4,6 +4,12 @@ import {
   validatePersonnelValue,
 } from "../utils/playFieldValidation";
 import { warn } from "../utils/logger";
+import {
+  readLocalJson,
+  removeLocalItem,
+  storageKeys,
+  writeLocalJson,
+} from "../utils/storage";
 
 export interface PlayCombo {
   formation: string;
@@ -13,7 +19,6 @@ export interface PlayCombo {
   timestamp: number;
 }
 
-const STORAGE_KEY = "bc_recent_play_combos";
 const DEFAULT_LIMIT = 6;
 
 function isValidCombo(combo: PlayCombo): boolean {
@@ -27,14 +32,11 @@ function isValidCombo(combo: PlayCombo): boolean {
 }
 
 function loadCombos(): PlayCombo[] {
-  if (typeof window === "undefined") {
-    return [];
-  }
-
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw) as PlayCombo[];
+    const parsed = readLocalJson<PlayCombo[]>(storageKeys.recent.playCombos, {
+      clearOnParseError: true,
+    });
+    if (!parsed) return [];
     if (!Array.isArray(parsed)) return [];
     const sanitized = parsed
       .filter((combo) => combo && typeof combo.formation === "string")
@@ -57,9 +59,8 @@ function loadCombos(): PlayCombo[] {
 }
 
 function saveCombos(combos: PlayCombo[]) {
-  if (typeof window === "undefined") return;
   try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(combos));
+    writeLocalJson(storageKeys.recent.playCombos, combos);
   } catch (error) {
     warn("[useRecentPlayCombos] Failed to persist combos:", error);
   }
@@ -121,9 +122,7 @@ export function useRecentPlayCombos(limit: number = DEFAULT_LIMIT) {
 
   const clearCombos = useCallback(() => {
     setCombos([]);
-    if (typeof window !== "undefined") {
-      window.localStorage.removeItem(STORAGE_KEY);
-    }
+    removeLocalItem(storageKeys.recent.playCombos);
   }, []);
 
   return {

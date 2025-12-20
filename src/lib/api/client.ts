@@ -16,6 +16,7 @@
 
 import type { Database } from "../../types/database";
 import { debug } from "../../utils/logger";
+import { readLocalString, storageKeys } from "../../utils/storage";
 
 // Types
 type TableName = keyof Database["public"]["Tables"];
@@ -143,7 +144,7 @@ export class ApiClient {
   private getStoredToken(): string | null {
     try {
       // First try Supabase's storage (most reliable source)
-      const supabaseAuth = localStorage.getItem("boxcall-auth");
+      const supabaseAuth = readLocalString(storageKeys.auth.supabaseAuth);
       debug(
         "🔌 [ApiClient] Checking boxcall-auth:",
         supabaseAuth ? "exists" : "missing"
@@ -166,7 +167,7 @@ export class ApiClient {
       }
 
       // Fallback: try Zustand's persisted auth store
-      const zustandAuth = localStorage.getItem("boxcall-auth-storage");
+      const zustandAuth = readLocalString(storageKeys.auth.zustandAuth);
       debug(
         "🔌 [ApiClient] Checking boxcall-auth-storage:",
         zustandAuth ? "exists" : "missing"

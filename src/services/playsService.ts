@@ -13,6 +13,7 @@ import Fuse from "fuse.js";
 import { ActivityService } from "./activityService";
 import { PlayValidationService } from "../validation-services/playValidation";
 import { debug, error as logError, warn } from "../utils/logger";
+import { readLocalJson, storageKeys, writeLocalJson } from "../utils/storage";
 import { buildNewPlayData } from "./playDataBuilders";
 
 import type { Play } from "../types/play";
@@ -1215,10 +1216,8 @@ export class PlaybookSearchService {
    */
   private loadSearchHistory(): void {
     try {
-      const saved = localStorage.getItem("playbook_search_history");
-      if (saved) {
-        this.searchHistory = JSON.parse(saved);
-      }
+      const saved = readLocalJson<string[]>(storageKeys.playbook.searchHistory);
+      if (saved) this.searchHistory = saved;
     } catch (error) {
       warn("Failed to load search history:", error);
       this.searchHistory = [];
@@ -1230,10 +1229,7 @@ export class PlaybookSearchService {
    */
   private saveSearchHistory(): void {
     try {
-      localStorage.setItem(
-        "playbook_search_history",
-        JSON.stringify(this.searchHistory)
-      );
+      writeLocalJson(storageKeys.playbook.searchHistory, this.searchHistory);
     } catch (error) {
       warn("Failed to save search history:", error);
     }

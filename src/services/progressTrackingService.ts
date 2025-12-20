@@ -3,8 +3,12 @@
  */
 
 import { debug } from "../utils/logger";
-
-const PROGRESS_STORAGE_KEY = "team_creation_progress";
+import {
+  readLocalJson,
+  removeLocalItem,
+  storageKeys,
+  writeLocalJson,
+} from "../utils/storage";
 
 export interface TeamCreationProgress {
   currentStep: string;
@@ -33,7 +37,7 @@ export class ProgressTrackingService {
         timestamp: Date.now(),
       };
 
-      localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progress));
+      writeLocalJson(storageKeys.teamCreationProgress, progress);
       debug("💾 Progress saved:", {
         currentStep,
         completedSteps: completedSteps.length,
@@ -48,10 +52,10 @@ export class ProgressTrackingService {
    */
   static loadProgress(): TeamCreationProgress | null {
     try {
-      const savedData = localStorage.getItem(PROGRESS_STORAGE_KEY);
-      if (!savedData) return null;
-
-      const progress: TeamCreationProgress = JSON.parse(savedData);
+      const progress = readLocalJson<TeamCreationProgress>(
+        storageKeys.teamCreationProgress
+      );
+      if (!progress) return null;
 
       // Check if progress is not too old (24 hours)
       const maxAge = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
@@ -74,7 +78,7 @@ export class ProgressTrackingService {
    */
   static clearProgress(): void {
     try {
-      localStorage.removeItem(PROGRESS_STORAGE_KEY);
+      removeLocalItem(storageKeys.teamCreationProgress);
       debug("🗑️ Progress cleared");
     } catch (error) {
       debug("⚠️ Failed to clear progress:", error);

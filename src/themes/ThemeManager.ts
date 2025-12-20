@@ -1,5 +1,10 @@
 // Dynamic theme loader for lazy-loading theme definitions
 import { warn } from "../utils/logger";
+import {
+  readLocalString,
+  storageKeys,
+  writeLocalString,
+} from "../utils/storage";
 async function loadTheme(
   name: ThemeName
 ): Promise<import("./types").ThemeDefinition | undefined> {
@@ -17,14 +22,13 @@ async function loadTheme(
   }
 }
 
-const THEME_STORAGE_KEY = "app-theme";
 // Explicit theme id union (only active themes)
 export const THEME_IDS = ["light", "dark", "high-contrast"] as const;
 export type ThemeName = (typeof THEME_IDS)[number];
 export const DEFAULT_THEME: ThemeName = "light";
 
 export function getStoredTheme(): ThemeName | null {
-  const v = localStorage.getItem(THEME_STORAGE_KEY);
+  const v = readLocalString(storageKeys.theme);
   if (!v) return null;
   return (THEME_IDS as readonly string[]).includes(v) ? (v as ThemeName) : null;
 }
@@ -42,7 +46,7 @@ export async function applyTheme(name: ThemeName) {
   root.classList.remove("high-contrast");
   if (name === "high-contrast") root.classList.add("high-contrast");
   try {
-    localStorage.setItem(THEME_STORAGE_KEY, name);
+    writeLocalString(storageKeys.theme, name);
   } catch {
     /* ignore storage errors (private mode, etc.) */
   }

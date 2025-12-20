@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import { AppProviders } from "./app/providers.tsx";
+import { readLocalString, storageKeys } from "./utils/storage";
 
 // Inject build metadata (defined at build time via Vite)
 declare const __BUILD_TIME__: string;
@@ -19,7 +20,7 @@ import "./styles/density.css";
 if (import.meta.env.DEV) {
   let shouldLoad = false;
   try {
-    shouldLoad = localStorage.getItem("debugContrast") === "on";
+    shouldLoad = readLocalString(storageKeys.dev.contrastEnabled) === "on";
   } catch {
     // Ignore storage access failures (private mode, blocked, etc.)
   }

@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { readLocalJson, storageKeys, writeLocalJson } from "../utils/storage";
 
 export type SidebarMode = "rail" | "expanded";
-
-const STORAGE_KEY = "sidebar:prefs";
 
 type Persisted = {
   mode: SidebarMode;
@@ -12,9 +11,8 @@ type Persisted = {
 
 const read = (): Persisted => {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { mode: "expanded", expanded: [], favorites: [] };
-    const parsed = JSON.parse(raw) as Partial<Persisted>;
+    const parsed = readLocalJson<Partial<Persisted>>(storageKeys.sidebarPrefs);
+    if (!parsed) return { mode: "expanded", expanded: [], favorites: [] };
     return {
       mode: parsed.mode ?? "expanded",
       expanded: parsed.expanded ?? [],
@@ -27,7 +25,7 @@ const read = (): Persisted => {
 
 const write = (data: Persisted) => {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    writeLocalJson(storageKeys.sidebarPrefs, data);
   } catch {
     // ignore
   }

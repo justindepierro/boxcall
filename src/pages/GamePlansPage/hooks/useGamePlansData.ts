@@ -13,6 +13,7 @@ import type { GamePlan as ModalGamePlan } from "../../../components/playbook/Gam
 import { useAuth } from "../../../app/auth-store";
 import { useToast } from "../../../hooks/useToast";
 import { debug, error as logError } from "../../../utils/logger";
+import { readLocalString, storageKeys } from "../../../utils/storage";
 
 /**
  * Maps a ServiceGamePlan to the UI ModalGamePlan type
@@ -69,7 +70,7 @@ export function useGamePlansData() {
 
   // Get active team ID from localStorage
   useEffect(() => {
-    const teamId = localStorage.getItem("activeTeamId");
+    const teamId = readLocalString(storageKeys.activeTeamId);
     setActiveTeamId(teamId);
   }, []);
 

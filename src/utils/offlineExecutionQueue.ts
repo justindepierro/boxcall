@@ -8,8 +8,14 @@
 import type { CreatePlayExecutionData } from "../types/session";
 import { ExecutionTrackingService } from "../services/executionTrackingService";
 import { debug, logError } from "./logger";
+import {
+  getBrowserLocalStorage,
+  readLocalJson,
+  removeLocalItem,
+  storageKeys,
+  writeLocalJson,
+} from "./storage";
 
-const QUEUE_STORAGE_KEY = "boxcall_offline_executions";
 const MAX_QUEUE_SIZE = 100;
 
 // Simplified queue item for tests
@@ -57,11 +63,7 @@ export class OfflineExecutionQueue {
    * Check if localStorage is available
    */
   private static hasLocalStorage(): boolean {
-    try {
-      return typeof localStorage !== "undefined" && localStorage !== null;
-    } catch {
-      return false;
-    }
+    return getBrowserLocalStorage() !== undefined;
   }
 
   /**
@@ -71,14 +73,13 @@ export class OfflineExecutionQueue {
     if (!this.hasLocalStorage()) return [];
 
     try {
-      const stored = localStorage.getItem(QUEUE_STORAGE_KEY);
-
-      if (!stored) {
-        return [];
-      }
-
-      const parsed = JSON.parse(stored);
-      return Array.isArray(parsed) ? parsed : [];
+      const parsed = readLocalJson<unknown>(
+        storageKeys.offline.executionQueue,
+        {
+          clearOnParseError: true,
+        }
+      );
+      return Array.isArray(parsed) ? (parsed as QueueItem[]) : [];
     } catch (err) {
       // Corrupted localStorage is a recoverable scenario; clear the bad value
       // to avoid repeated parse failures.
@@ -86,11 +87,7 @@ export class OfflineExecutionQueue {
         "[OfflineExecutionQueue] Failed to parse offline queue; clearing",
         err
       );
-      try {
-        localStorage.removeItem(QUEUE_STORAGE_KEY);
-      } catch {
-        // Ignore secondary failures (e.g., storage access blocked)
-      }
+      removeLocalItem(storageKeys.offline.executionQueue);
       return [];
     }
   }
@@ -102,7 +99,7 @@ export class OfflineExecutionQueue {
     if (!this.hasLocalStorage()) return;
 
     try {
-      localStorage.setItem(QUEUE_STORAGE_KEY, JSON.stringify(queue));
+      writeLocalJson(storageKeys.offline.executionQueue, queue);
     } catch (err) {
       logError("Failed to save queue to localStorage:", err);
     }
@@ -156,7 +153,7 @@ export class OfflineExecutionQueue {
     if (!this.hasLocalStorage()) return;
 
     try {
-      localStorage.removeItem(QUEUE_STORAGE_KEY);
+      removeLocalItem(storageKeys.offline.executionQueue);
     } catch (err) {
       logError("Failed to clear queue from localStorage:", err);
     }

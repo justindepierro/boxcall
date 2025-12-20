@@ -1,5 +1,7 @@
 import { useCallback, useState } from "react";
 
+import { storageKeys, writeLocalJson } from "../../../utils/storage";
+
 import type {
   PracticeBlock,
   TimelineAllocation,
@@ -181,14 +183,13 @@ function usePracticeScaffoldLifecycleActions(params: {
     const blocksWithTimes = recalculateBlockTimes(newBlocks);
     setPracticeBlocks(blocksWithTimes);
 
-    const savedPracticeKey = `practice_plan_${eventId || "default"}`;
     try {
       const blocksToSave = blocksWithTimes.map((block) => ({
         ...block,
         startTime: "",
         endTime: "",
       }));
-      localStorage.setItem(savedPracticeKey, JSON.stringify(blocksToSave));
+      writeLocalJson(storageKeys.practice.planForEvent(eventId), blocksToSave);
     } catch {
       // ignore
     }

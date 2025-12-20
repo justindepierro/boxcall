@@ -3,6 +3,11 @@ import type { Play } from "../../../types/play";
 import type { Formation } from "../../../types/formation";
 import { FormationService } from "../../../services/formationService";
 import { logError } from "../../../utils/logger";
+import {
+  readLocalString,
+  storageKeys,
+  writeLocalString,
+} from "../../../utils/storage";
 
 // Minimal Playbook interface for Formation Mapper
 interface Playbook {
@@ -105,8 +110,9 @@ export function useFormationMapperState({
   useEffect(() => {
     if (teamPlaybooks.length === 0) return;
 
-    const storageKey = `bc_active_playbook_${activeTeamId}`;
-    const savedPlaybookId = localStorage.getItem(storageKey);
+    const savedPlaybookId = activeTeamId
+      ? readLocalString(storageKeys.playbook.activePlaybookForTeam(activeTeamId))
+      : null;
 
     if (
       savedPlaybookId &&
@@ -151,7 +157,12 @@ export function useFormationMapperState({
   const handlePlaybookChange = useCallback(
     (playbookId: string) => {
       setSelectedPlaybookId(playbookId);
-      localStorage.setItem(`bc_active_playbook_${activeTeamId}`, playbookId);
+      if (activeTeamId) {
+        writeLocalString(
+          storageKeys.playbook.activePlaybookForTeam(activeTeamId),
+          playbookId
+        );
+      }
       setSelectedPlayIds(new Set());
     },
     [activeTeamId]

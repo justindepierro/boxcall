@@ -57,10 +57,7 @@ function positionToLineCol(text, index) {
 function excerpt(text, index, length = 120) {
   const start = Math.max(0, index - 20);
   const end = Math.min(text.length, index + length);
-  return text
-    .slice(start, end)
-    .replace(/\s+/g, " ")
-    .trim();
+  return text.slice(start, end).replace(/\s+/g, " ").trim();
 }
 
 async function main() {
@@ -94,7 +91,9 @@ async function main() {
     return;
   }
 
-  console.error("🚨 Client secret check failed. Forbidden patterns found in src/\n");
+  console.error(
+    "🚨 Client secret check failed. Forbidden patterns found in src/\n"
+  );
 
   for (const f of findings) {
     console.error(

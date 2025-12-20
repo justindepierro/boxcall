@@ -4,6 +4,7 @@ import { Button } from "../../../../components/ui";
 import { Icon } from "../../../../components/ui/Icon/Icon";
 import { Typography } from "../../../design-system";
 import { requestAppReset } from "../../../../utils/appReset";
+import { removeLocalItem, storageKeys } from "../../../../utils/storage";
 
 interface DevelopmentToolsProps {
   eventId: string;
@@ -13,8 +14,8 @@ export const DevelopmentTools: React.FC<DevelopmentToolsProps> = ({
   eventId,
 }) => {
   const resetToSampleData = () => {
-    const savedPracticeKey = `practice_plan_${eventId || "default"}`;
-    localStorage.removeItem(savedPracticeKey);
+    const savedPracticeKey = storageKeys.practice.planForEvent(eventId);
+    removeLocalItem(savedPracticeKey);
     requestAppReset("practice-reset-to-sample");
   };
 

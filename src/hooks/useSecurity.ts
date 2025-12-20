@@ -7,6 +7,13 @@
 import { useEffect } from "react";
 import { securityConfig, createSecurityHeaders } from "../utils/security";
 import { debug, warn } from "../utils/logger";
+import {
+  readLocalString,
+  readSessionString,
+  storageKeys,
+  writeLocalString,
+  writeSessionString,
+} from "../utils/storage";
 
 /**
  * Hook to apply security headers and CSP
@@ -66,10 +73,10 @@ export function useSecurity() {
 export function useCSRFProtection() {
   useEffect(() => {
     // Generate CSRF token if not exists
-    let csrfToken = sessionStorage.getItem("csrf-token");
+    let csrfToken = readSessionString(storageKeys.security.csrfTokenDash);
     if (!csrfToken) {
       csrfToken = crypto.randomUUID();
-      sessionStorage.setItem("csrf-token", csrfToken);
+      writeSessionString(storageKeys.security.csrfTokenDash, csrfToken);
     }
 
     // Add CSRF token to all outgoing requests
@@ -113,7 +120,7 @@ export function useSecureSession() {
       }
 
       // Check for session timeout
-      const lastActivity = localStorage.getItem("lastActivity");
+      const lastActivity = readLocalString(storageKeys.security.lastActivity);
       if (lastActivity) {
         const timeSinceLastActivity = Date.now() - parseInt(lastActivity);
         const sessionTimeout = 30 * 60 * 1000; // 30 minutes
@@ -126,7 +133,10 @@ export function useSecureSession() {
       }
 
       // Update last activity
-      localStorage.setItem("lastActivity", Date.now().toString());
+      writeLocalString(
+        storageKeys.security.lastActivity,
+        Date.now().toString()
+      );
     };
 
     // Check on mount
@@ -141,7 +151,10 @@ export function useSecureSession() {
       "touchstart",
     ];
     const updateActivity = () => {
-      localStorage.setItem("lastActivity", Date.now().toString());
+      writeLocalString(
+        storageKeys.security.lastActivity,
+        Date.now().toString()
+      );
     };
 
     events.forEach((event) => {

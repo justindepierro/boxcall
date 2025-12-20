@@ -2,6 +2,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 import type { Database } from "../types/database";
 import { auth as logAuth, debug, warn } from "../utils/logger";
+import { getBrowserLocalStorage, storageKeys } from "../utils/storage";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -84,9 +85,9 @@ if (supabaseUrl && supabaseAnonKey) {
       autoRefreshToken: true,
       detectSessionInUrl: true,
       // 🚀 PERFORMANCE: Use localStorage (faster) instead of cookies
-      storage: typeof window !== "undefined" ? window.localStorage : undefined,
+      storage: getBrowserLocalStorage(),
       // 🚀 PERFORMANCE: Faster session check on init
-      storageKey: "boxcall-auth",
+      storageKey: storageKeys.auth.supabaseAuth,
       flowType: "pkce", // More secure, similar speed
       // 🔧 FIX: Disable Web Locks API to prevent cross-tab lock contention hangs
       // This was causing getSession() and all queries to hang indefinitely
@@ -106,12 +107,6 @@ if (supabaseUrl && supabaseAnonKey) {
     // 🚀 PERFORMANCE: Enable connection pooling and keep-alive
     db: {
       schema: "public" as const,
-    },
-    // Realtime configuration for Team Bulletin social features
-    realtime: {
-      params: {
-        eventsPerSecond: 10,
-      },
     },
   }) as unknown as SupabaseClient<Database>;
 

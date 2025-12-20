@@ -2,6 +2,7 @@ import {
   getActiveTeamIdFromStore,
   useActiveTeamStore,
 } from "../stores/activeTeamStore";
+import { readLocalString, storageKeys, writeLocalString } from "./storage";
 
 /**
  * Active Team helpers
@@ -15,16 +16,9 @@ export function getActiveTeamId(): string {
   } catch {
     // store may not be initialized yet
   }
-  if (typeof window !== "undefined") {
-    try {
-      const stored = localStorage.getItem("activeTeamId");
-      // Treat "1" as invalid and use demo team instead
-      if (stored && stored !== "1") return stored;
-      return "550e8400-e29b-41d4-a716-446655440000";
-    } catch {
-      return "550e8400-e29b-41d4-a716-446655440000";
-    }
-  }
+  const stored = readLocalString(storageKeys.activeTeamId);
+  // Treat "1" as invalid and use demo team instead
+  if (stored && stored !== "1") return stored;
   return "550e8400-e29b-41d4-a716-446655440000";
 }
 
@@ -35,11 +29,5 @@ export function setActiveTeamId(teamId: string) {
   } catch {
     // store access failed, fall through to localStorage
   }
-  if (typeof window !== "undefined") {
-    try {
-      localStorage.setItem("activeTeamId", teamId);
-    } catch {
-      // ignore storage errors
-    }
-  }
+  writeLocalString(storageKeys.activeTeamId, teamId);
 }

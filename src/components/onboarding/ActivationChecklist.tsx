@@ -13,6 +13,11 @@ import {
   addWindowAppEventListener,
   dispatchWindowAppEvent,
 } from "../../utils/appEvents";
+import {
+  readLocalJson,
+  storageKeys,
+  writeLocalJson,
+} from "../../utils/storage";
 
 interface ActivationFlags {
   team?: boolean;
@@ -23,12 +28,12 @@ interface ActivationFlags {
   completedAt?: number;
 }
 
-const LS_KEY = "bc_activation_flags";
-
 function loadFlags(): ActivationFlags {
   try {
-    const raw = localStorage.getItem(LS_KEY);
-    if (raw) return JSON.parse(raw);
+    const parsed = readLocalJson<ActivationFlags>(storageKeys.activation.flags, {
+      clearOnParseError: true,
+    });
+    if (parsed) return parsed;
   } catch {
     /* ignore */
   }
@@ -37,7 +42,7 @@ function loadFlags(): ActivationFlags {
 
 function saveFlags(f: ActivationFlags) {
   try {
-    localStorage.setItem(LS_KEY, JSON.stringify(f));
+    writeLocalJson(storageKeys.activation.flags, f);
   } catch {
     /* ignore */
   }

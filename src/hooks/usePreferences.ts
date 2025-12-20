@@ -6,6 +6,12 @@ import {
   PreferenceService,
   type UserPreferences,
 } from "../services/preferenceService";
+import {
+  readLocalString,
+  writeLocalBoolean01,
+  writeLocalJson,
+  writeLocalString,
+} from "../utils/storage";
 
 /**
  * Hook for managing user preferences with server sync
@@ -186,7 +192,7 @@ function getFromLocalStorage<K extends keyof UserPreferences>(
   try {
     // Handle legacy localStorage keys that map to our preference keys
     const localStorageKey = getLegacyLocalStorageKey(key);
-    const stored = localStorage.getItem(localStorageKey);
+    const stored = readLocalString(localStorageKey);
 
     if (stored === null) {
       return defaultValue;
@@ -226,7 +232,7 @@ function saveToLocalStorage<K extends keyof UserPreferences>(
 
     // Handle different value types
     if (key === "bc_playgrid_oneword" || key === "bc_playgrid_view_manual") {
-      localStorage.setItem(localStorageKey, value ? "1" : "0");
+      writeLocalBoolean01(localStorageKey, Boolean(value));
       return;
     }
 
@@ -236,12 +242,12 @@ function saveToLocalStorage<K extends keyof UserPreferences>(
       key === "bc_recently_viewed_plays" ||
       key === "bc_favorite_plays"
     ) {
-      localStorage.setItem(localStorageKey, JSON.stringify(value));
+      writeLocalJson(localStorageKey, value);
       return;
     }
 
     // For string values
-    localStorage.setItem(localStorageKey, String(value));
+    writeLocalString(localStorageKey, String(value));
   } catch (error) {
     logError(`[usePreference] Error saving ${String(key)}:`, error);
   }

@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { useTeamsData } from "../hooks/useTeamsData";
 import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { logError } from "../utils/logger";
+import { readLocalString, storageKeys } from "../utils/storage";
 
 export const PersonnelLibraryPage: React.FC = () => {
   const { playbooks } = useTeamsData();
@@ -26,9 +27,9 @@ export const PersonnelLibraryPage: React.FC = () => {
   );
 
   // Get playbook ID from localStorage preference or first playbook with plays
-  const savedPlaybookId = localStorage.getItem(
-    `bc_active_playbook_${activeTeamId}`
-  );
+  const savedPlaybookId = activeTeamId
+    ? readLocalString(storageKeys.playbook.activePlaybookForTeam(activeTeamId))
+    : null;
 
   // Use same logic as PlaybookPage: prefer saved, then playbook with plays, then first
   const activePlaybook = React.useMemo(() => {

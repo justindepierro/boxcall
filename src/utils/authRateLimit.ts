@@ -1,5 +1,11 @@
 // Client-side rate limiting and security utilities
 import { logError, warn } from "./logger";
+import {
+  readSessionString,
+  removeSessionItem,
+  storageKeys,
+  writeSessionString,
+} from "./storage";
 
 // CSRF Protection
 class CSRFProtection {
@@ -22,10 +28,11 @@ class CSRFProtection {
     this.tokenExpiry = now + 15 * 60 * 1000; // 15 minutes
 
     // Store in session storage for persistence
-    if (typeof window !== "undefined") {
-      sessionStorage.setItem("csrf_token", this.token);
-      sessionStorage.setItem("csrf_expiry", this.tokenExpiry.toString());
-    }
+    writeSessionString(storageKeys.security.csrfTokenUnderscore, this.token);
+    writeSessionString(
+      storageKeys.security.csrfExpiry,
+      this.tokenExpiry.toString()
+    );
 
     return this.token;
   }
@@ -61,8 +68,10 @@ class CSRFProtection {
   initialize(): void {
     if (typeof window === "undefined") return;
 
-    const storedToken = sessionStorage.getItem("csrf_token");
-    const storedExpiry = sessionStorage.getItem("csrf_expiry");
+    const storedToken = readSessionString(
+      storageKeys.security.csrfTokenUnderscore
+    );
+    const storedExpiry = readSessionString(storageKeys.security.csrfExpiry);
 
     if (storedToken && storedExpiry) {
       const expiry = parseInt(storedExpiry, 10);
@@ -71,8 +80,8 @@ class CSRFProtection {
         this.tokenExpiry = expiry;
       } else {
         // Token expired, clean up
-        sessionStorage.removeItem("csrf_token");
-        sessionStorage.removeItem("csrf_expiry");
+        removeSessionItem(storageKeys.security.csrfTokenUnderscore);
+        removeSessionItem(storageKeys.security.csrfExpiry);
       }
     }
   }

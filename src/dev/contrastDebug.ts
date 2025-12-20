@@ -15,10 +15,15 @@ interface ContrastIssue {
 }
 
 import { debug } from "../utils/logger";
+import {
+  readLocalString,
+  removeLocalItem,
+  storageKeys,
+  writeLocalString,
+} from "../utils/storage";
 
-const ACTIVE_FLAG = "debugContrast";
-const isEnabled = () =>
-  typeof window !== "undefined" && localStorage.getItem(ACTIVE_FLAG) === "on";
+const ACTIVE_FLAG = storageKeys.dev.contrastEnabled;
+const isEnabled = () => readLocalString(ACTIVE_FLAG) === "on";
 // Lightweight diagnostic (safe if console blocked)
 try {
   debug("[contrastDebug] loaded", { flag: isEnabled() });
@@ -38,10 +43,7 @@ export function isContrastDebugActive() {
 //  - undefined: only failing elements outlined (default)
 //  - 'all': annotate every scanned element with data-contrast-ratio
 //  - 'near': annotate + outline elements within NEAR_DELTA of threshold
-const getMode = () =>
-  (typeof window !== "undefined" &&
-    localStorage.getItem("debugContrastMode")) ||
-  "";
+const getMode = () => readLocalString(storageKeys.dev.contrastMode) || "";
 const NEAR_DELTA = 0.5; // within 0.5 of threshold counts as "near"
 
 function createIndicator() {
@@ -141,7 +143,7 @@ function deactivateContrastDebug() {
 
 export function enableContrastDebug() {
   try {
-    localStorage.setItem(ACTIVE_FLAG, "on");
+    writeLocalString(ACTIVE_FLAG, "on");
   } catch {
     // ignore storage failures
   }
@@ -150,7 +152,7 @@ export function enableContrastDebug() {
 
 export function disableContrastDebug() {
   try {
-    localStorage.removeItem(ACTIVE_FLAG);
+    removeLocalItem(ACTIVE_FLAG);
   } catch {
     // ignore storage failures
   }
@@ -179,10 +181,10 @@ if (isEnabled()) {
 window.addEventListener("keydown", (e) => {
   if (e.key && e.key.toLowerCase() === "c" && e.altKey && e.shiftKey) {
     if (active) {
-      localStorage.removeItem(ACTIVE_FLAG);
+      removeLocalItem(ACTIVE_FLAG);
       deactivateContrastDebug();
     } else {
-      localStorage.setItem(ACTIVE_FLAG, "on");
+      writeLocalString(ACTIVE_FLAG, "on");
       activateContrastDebug();
     }
   }
@@ -338,10 +340,10 @@ window.activateContrastDebug = activateContrastDebug;
 window.deactivateContrastDebug = deactivateContrastDebug;
 window.toggleContrastDebug = () => {
   if (active) {
-    localStorage.removeItem(ACTIVE_FLAG);
+    removeLocalItem(ACTIVE_FLAG);
     deactivateContrastDebug();
   } else {
-    localStorage.setItem(ACTIVE_FLAG, "on");
+    writeLocalString(ACTIVE_FLAG, "on");
     activateContrastDebug();
   }
 };

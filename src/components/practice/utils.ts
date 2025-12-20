@@ -1,5 +1,5 @@
 import type { PracticeBlock } from "./types";
-import { logError } from "../../utils/logger";
+import { readLocalJson, storageKeys, writeLocalJson } from "../../utils/storage";
 
 // Re-export centralized formatDuration for backwards compatibility
 export { formatDuration } from "../../utils/dateFormatting";
@@ -175,11 +175,11 @@ export const savePracticeToStorage = (
   blocks: PracticeBlock[],
   eventId: string
 ): void => {
-  const savedPracticeKey = `practice_plan_${eventId || "default"}`;
+  const savedPracticeKey = storageKeys.practice.planForEvent(eventId);
   const blocksToSave = blocks.map(
     ({ startTime: _startTime, endTime: _endTime, ...block }) => block
   );
-  localStorage.setItem(savedPracticeKey, JSON.stringify(blocksToSave));
+  writeLocalJson(savedPracticeKey, blocksToSave);
 };
 /**
  * Load practice plan from localStorage
@@ -187,15 +187,10 @@ export const savePracticeToStorage = (
 export const loadPracticeFromStorage = (
   eventId: string
 ): PracticeBlock[] | null => {
-  const savedPracticeKey = `practice_plan_${eventId || "default"}`;
-  const savedPractice = localStorage.getItem(savedPracticeKey);
-  if (savedPractice) {
-    try {
-      return JSON.parse(savedPractice);
-    } catch (error) {
-      logError("Error loading saved practice plan:", error);
-      return null;
-    }
-  }
-  return null;
+  const savedPracticeKey = storageKeys.practice.planForEvent(eventId);
+  const savedPractice = readLocalJson<PracticeBlock[]>(savedPracticeKey, {
+    clearOnParseError: true,
+  });
+  if (!savedPractice) return null;
+  return savedPractice;
 };

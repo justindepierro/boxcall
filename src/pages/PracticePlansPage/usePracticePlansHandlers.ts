@@ -18,12 +18,13 @@ import {
   type ExportedPracticeScript,
 } from "../../utils/practiceScriptExport";
 import { logError } from "../../utils/logger";
+import { readLocalString, storageKeys } from "../../utils/storage";
 
 function useActiveTeamIdFromLocalStorage() {
   const [activeTeamId, setActiveTeamId] = useState<string | null>(null);
 
   useEffect(() => {
-    const teamId = localStorage.getItem("activeTeamId");
+    const teamId = readLocalString(storageKeys.activeTeamId);
     setActiveTeamId(teamId);
   }, []);
 

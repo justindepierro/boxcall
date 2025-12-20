@@ -1,3 +1,5 @@
+import { readLocalJson, storageKeys, writeLocalJson } from "./storage";
+
 export type PlayFlagCategory = "positions" | "players" | "flags";
 
 export interface PlayFlags {
@@ -6,19 +8,18 @@ export interface PlayFlags {
   flags: string[];
 }
 
-const KEY = (id: string) => `bc_play_flags_${id}`;
-
 export function getPlayFlags(id: string): PlayFlags {
   try {
-    const raw = localStorage.getItem(KEY(id));
-    if (raw) {
-      const parsed = JSON.parse(raw) as Partial<PlayFlags>;
-      return {
-        positions: Array.isArray(parsed.positions) ? parsed.positions : [],
-        players: Array.isArray(parsed.players) ? parsed.players : [],
-        flags: Array.isArray(parsed.flags) ? parsed.flags : [],
-      };
-    }
+    const parsed = readLocalJson<Partial<PlayFlags>>(
+      storageKeys.plays.flagsForPlay(id)
+    );
+    if (!parsed) return { positions: [], players: [], flags: [] };
+
+    return {
+      positions: Array.isArray(parsed.positions) ? parsed.positions : [],
+      players: Array.isArray(parsed.players) ? parsed.players : [],
+      flags: Array.isArray(parsed.flags) ? parsed.flags : [],
+    };
   } catch {
     /* ignore */
   }
@@ -27,7 +28,7 @@ export function getPlayFlags(id: string): PlayFlags {
 
 export function setPlayFlags(id: string, data: PlayFlags): void {
   try {
-    localStorage.setItem(KEY(id), JSON.stringify(data));
+    writeLocalJson(storageKeys.plays.flagsForPlay(id), data);
   } catch {
     /* ignore */
   }

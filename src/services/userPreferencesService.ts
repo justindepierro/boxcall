@@ -5,6 +5,7 @@
  */
 
 import { logError, warn } from "../utils/logger";
+import { readLocalJson, storageKeys, writeLocalJson } from "../utils/storage";
 
 export interface UserPreferences {
   csvImport: {
@@ -19,8 +20,6 @@ export interface UserPreferences {
 }
 
 export class UserPreferencesService {
-  private static readonly STORAGE_KEY = "boxcall_user_preferences";
-
   /**
    * Get default preferences
    */
@@ -43,12 +42,11 @@ export class UserPreferencesService {
    */
   static loadPreferences(): UserPreferences {
     try {
-      const stored = localStorage.getItem(this.STORAGE_KEY);
-      if (!stored) {
-        return this.getDefaultPreferences();
-      }
+      const parsed = readLocalJson<Partial<UserPreferences>>(
+        storageKeys.userPreferences
+      );
+      if (!parsed) return this.getDefaultPreferences();
 
-      const parsed = JSON.parse(stored);
       // Merge with defaults to ensure all properties exist
       return {
         ...this.getDefaultPreferences(),
@@ -73,7 +71,7 @@ export class UserPreferencesService {
    */
   static savePreferences(preferences: UserPreferences): void {
     try {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(preferences));
+      writeLocalJson(storageKeys.userPreferences, preferences);
     } catch (error) {
       logError("Failed to save user preferences:", error);
     }

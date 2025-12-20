@@ -4,8 +4,13 @@
  */
 import { useState, useCallback, useEffect } from "react";
 import { logError } from "../utils/logger";
+import {
+  readLocalJson,
+  removeLocalItem,
+  storageKeys,
+  writeLocalJson,
+} from "../utils/storage";
 
-const STORAGE_KEY = "bc_search_history";
 const MAX_HISTORY_SIZE = 10;
 
 export interface SearchHistoryItem {
@@ -16,11 +21,10 @@ export interface SearchHistoryItem {
 export function useSearchHistory() {
   const [history, setHistory] = useState<SearchHistoryItem[]>(() => {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        return Array.isArray(parsed) ? parsed : [];
-      }
+      const parsed = readLocalJson<unknown>(storageKeys.globalSearchHistory, {
+        clearOnParseError: true,
+      });
+      return Array.isArray(parsed) ? (parsed as SearchHistoryItem[]) : [];
     } catch (error) {
       logError("[useSearchHistory] Error loading history:", error);
     }
@@ -30,7 +34,7 @@ export function useSearchHistory() {
   // Save to localStorage whenever history changes
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+      writeLocalJson(storageKeys.globalSearchHistory, history);
     } catch (error) {
       logError("[useSearchHistory] Error saving history:", error);
     }
@@ -67,7 +71,7 @@ export function useSearchHistory() {
   const clearHistory = useCallback(() => {
     setHistory([]);
     try {
-      localStorage.removeItem(STORAGE_KEY);
+      removeLocalItem(storageKeys.globalSearchHistory);
     } catch (error) {
       logError("[useSearchHistory] Error clearing history:", error);
     }

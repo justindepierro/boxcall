@@ -7,6 +7,11 @@ import React, { createContext, useState, type ReactNode } from "react";
 
 import type { DevMode } from "./dev-mode-types";
 import { isValidDevMode } from "./dev-mode-utils";
+import {
+  readLocalString,
+  storageKeys,
+  writeLocalString,
+} from "../utils/storage";
 
 const DEFAULT_DEV_MODE: DevMode = (() => {
   const envValue =
@@ -59,12 +64,12 @@ export const DevModeProvider: React.FC<DevModeProviderProps> = ({
       return DEFAULT_DEV_MODE;
     }
 
-    const stored = localStorage.getItem("boxcall-dev-mode");
+    const stored = readLocalString(storageKeys.dev.devMode);
     const storedIsValid = stored && isValidDevMode(stored);
 
     if (storedIsValid) {
       if (FORCE_MODE === "lock" && stored !== DEFAULT_DEV_MODE) {
-        localStorage.setItem("boxcall-dev-mode", DEFAULT_DEV_MODE);
+        writeLocalString(storageKeys.dev.devMode, DEFAULT_DEV_MODE);
         return DEFAULT_DEV_MODE;
       }
 
@@ -73,22 +78,20 @@ export const DevModeProvider: React.FC<DevModeProviderProps> = ({
         stored === "blank_slate" &&
         DEFAULT_DEV_MODE !== "blank_slate"
       ) {
-        localStorage.setItem("boxcall-dev-mode", DEFAULT_DEV_MODE);
+        writeLocalString(storageKeys.dev.devMode, DEFAULT_DEV_MODE);
         return DEFAULT_DEV_MODE;
       }
 
       return stored as DevMode;
     }
 
-    localStorage.setItem("boxcall-dev-mode", DEFAULT_DEV_MODE);
+    writeLocalString(storageKeys.dev.devMode, DEFAULT_DEV_MODE);
     return DEFAULT_DEV_MODE;
   });
 
   const setDevMode = (mode: DevMode) => {
     setDevModeState(mode);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("boxcall-dev-mode", mode);
-    }
+    writeLocalString(storageKeys.dev.devMode, mode);
   };
 
   const isDevMode = devMode !== "production";
