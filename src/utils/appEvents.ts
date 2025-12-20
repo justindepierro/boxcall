@@ -46,10 +46,9 @@ export type DocumentAppEventDetailMap = {
 export function dispatchWindowAppEvent(
   type: KeysWithoutDetail<WindowAppEventDetailMap>
 ): void;
-export function dispatchWindowAppEvent<K extends KeysWithDetail<WindowAppEventDetailMap>>(
-  type: K,
-  detail: WindowAppEventDetailMap[K]
-): void;
+export function dispatchWindowAppEvent<
+  K extends KeysWithDetail<WindowAppEventDetailMap>,
+>(type: K, detail: WindowAppEventDetailMap[K]): void;
 export function dispatchWindowAppEvent(
   type: keyof WindowAppEventDetailMap,
   detail?: unknown
@@ -66,10 +65,9 @@ export function dispatchWindowAppEvent(
   }
 }
 
-export function addWindowAppEventListener<K extends keyof WindowAppEventDetailMap>(
-  type: K,
-  handler: (detail: WindowAppEventDetailMap[K]) => void
-): () => void {
+export function addWindowAppEventListener<
+  K extends keyof WindowAppEventDetailMap,
+>(type: K, handler: (detail: WindowAppEventDetailMap[K]) => void): () => void {
   if (typeof window === "undefined") return () => {};
 
   const wrapped: EventListener = (event: Event) => {
@@ -83,10 +81,9 @@ export function addWindowAppEventListener<K extends keyof WindowAppEventDetailMa
 export function dispatchDocumentAppEvent(
   type: KeysWithoutDetail<DocumentAppEventDetailMap>
 ): void;
-export function dispatchDocumentAppEvent<K extends KeysWithDetail<DocumentAppEventDetailMap>>(
-  type: K,
-  detail: DocumentAppEventDetailMap[K]
-): void;
+export function dispatchDocumentAppEvent<
+  K extends KeysWithDetail<DocumentAppEventDetailMap>,
+>(type: K, detail: DocumentAppEventDetailMap[K]): void;
 export function dispatchDocumentAppEvent(
   type: keyof DocumentAppEventDetailMap,
   detail?: unknown
@@ -103,7 +100,9 @@ export function dispatchDocumentAppEvent(
   }
 }
 
-export function addDocumentAppEventListener<K extends keyof DocumentAppEventDetailMap>(
+export function addDocumentAppEventListener<
+  K extends keyof DocumentAppEventDetailMap,
+>(
   type: K,
   handler: (detail: DocumentAppEventDetailMap[K]) => void
 ): () => void {

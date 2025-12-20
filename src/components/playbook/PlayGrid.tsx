@@ -321,12 +321,14 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       {showEmpty && !loading && !error && (
         <PlayGridEmptyState
           onCreatePlay={onOpenBuilder}
-            onImportPlays={() => dispatchDocumentAppEvent(PLAYGRID_OPEN_IMPORT_EVENT)}
+          onImportPlays={() =>
+            dispatchDocumentAppEvent(PLAYGRID_OPEN_IMPORT_EVENT)
+          }
           hasActiveFilters={!!hasFilters}
           totalPlayCount={plays.length}
-            onClearFilters={() =>
-              dispatchDocumentAppEvent(PLAYGRID_CLEAR_FILTERS_EVENT)
-            }
+          onClearFilters={() =>
+            dispatchDocumentAppEvent(PLAYGRID_CLEAR_FILTERS_EVENT)
+          }
         />
       )}
 
