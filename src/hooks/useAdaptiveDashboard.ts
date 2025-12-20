@@ -221,8 +221,9 @@ export function useAdaptiveDashboard() {
     refreshContext,
 
     // Computed values
-    adaptiveRecommendations:
-      useDashboardStore.getState().adaptiveRecommendations,
+    adaptiveRecommendations: useDashboardStore(
+      (state) => state.adaptiveRecommendations
+    ),
     contextualActions: getAdaptiveActions(),
   };
 }

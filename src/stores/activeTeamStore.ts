@@ -41,3 +41,12 @@ export function getActiveTeamIdFromStore(): string | null {
     return null;
   }
 }
+
+export function setActiveTeamIdInStore(teamId: string | null): boolean {
+  try {
+    useActiveTeamStore.getState().setActiveTeamId(teamId);
+    return true;
+  } catch {
+    return false;
+  }
+}

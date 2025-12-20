@@ -16,7 +16,12 @@
  * ```
  */
 
-import { useAuth } from "../app/auth-store";
+import {
+  getCurrentProfileFromAuthStore,
+  getCurrentUserFromAuthStore,
+  getCurrentUserIdFromAuthStore,
+  isAuthenticatedFromAuthStore,
+} from "../app/auth-store";
 
 /**
  * Get the current user ID synchronously from the auth store.
@@ -25,8 +30,7 @@ import { useAuth } from "../app/auth-store";
  * @returns The user ID or null if not authenticated
  */
 export function getCurrentUserId(): string | null {
-  const state = useAuth.getState();
-  return state.user?.id ?? null;
+  return getCurrentUserIdFromAuthStore();
 }
 
 /**
@@ -35,8 +39,7 @@ export function getCurrentUserId(): string | null {
  * @returns The user object or null if not authenticated
  */
 export function getCurrentUser() {
-  const state = useAuth.getState();
-  return state.user ?? null;
+  return getCurrentUserFromAuthStore();
 }
 
 /**
@@ -45,8 +48,7 @@ export function getCurrentUser() {
  * @returns true if authenticated, false otherwise
  */
 export function isAuthenticated(): boolean {
-  const state = useAuth.getState();
-  return !!state.user;
+  return isAuthenticatedFromAuthStore();
 }
 
 /**
@@ -55,6 +57,5 @@ export function isAuthenticated(): boolean {
  * @returns The profile object or null if not available
  */
 export function getCurrentProfile() {
-  const state = useAuth.getState();
-  return state.profile ?? null;
+  return getCurrentProfileFromAuthStore();
 }

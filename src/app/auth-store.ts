@@ -284,4 +284,37 @@ export const useIsFamily = () =>
 export const useIsAdmin = () =>
   useAuth((state) => state.profile?.role === "admin");
 
+// Synchronous snapshot helpers (avoid ad-hoc getState usage in utilities/services)
+export function getCurrentUserIdFromAuthStore(): string | null {
+  try {
+    return useAuth.getState().user?.id ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export function getCurrentUserFromAuthStore() {
+  try {
+    return useAuth.getState().user ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export function isAuthenticatedFromAuthStore(): boolean {
+  try {
+    return !!useAuth.getState().user;
+  } catch {
+    return false;
+  }
+}
+
+export function getCurrentProfileFromAuthStore() {
+  try {
+    return useAuth.getState().profile ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export type { AuthState, UserProfile };

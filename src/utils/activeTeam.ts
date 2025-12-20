@@ -1,6 +1,6 @@
 import {
   getActiveTeamIdFromStore,
-  useActiveTeamStore,
+  setActiveTeamIdInStore,
 } from "../stores/activeTeamStore";
 import { readLocalString, storageKeys, writeLocalString } from "./storage";
 
@@ -23,11 +23,7 @@ export function getActiveTeamId(): string {
 }
 
 export function setActiveTeamId(teamId: string) {
-  try {
-    useActiveTeamStore.getState().setActiveTeamId(teamId);
-    return;
-  } catch {
-    // store access failed, fall through to localStorage
-  }
+  const didSet = setActiveTeamIdInStore(teamId);
+  if (didSet) return;
   writeLocalString(storageKeys.activeTeamId, teamId);
 }
