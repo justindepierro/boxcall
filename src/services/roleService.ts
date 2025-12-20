@@ -19,8 +19,17 @@ import {
   TEAM_ROLE_HIERARCHY,
   capabilityListFromFlags,
 } from "../types/roles";
-import { supabase } from "../lib/supabase";
 import { debug, warn, logError } from "../utils/logger";
+import {
+  getProfileRoleById,
+  updateProfileById,
+} from "../data/supabase/profiles";
+import {
+  getActiveTeamMembershipByUserAndTeam,
+  getActiveTeamMembershipsByUserId,
+  updateTeamMemberByUserAndTeam,
+} from "../data/supabase/teamMembers";
+import { getTeamsByIds } from "../data/supabase/teams";
 
 export class RoleService {
   private static roleContextCache = new Map<
@@ -91,15 +100,15 @@ export class RoleService {
     if (teamIds.length === 0) return [];
 
     const teamsQueryStart = Date.now();
-    const teamsResult = await supabase
-      .from("teams")
-      .select("id, name")
-      .in("id", teamIds);
+    const teamsResult = await getTeamsByIds(teamIds);
 
     debug(`RoleService: Teams query took ${Date.now() - teamsQueryStart}ms`);
 
     if (teamsResult.error) {
-      warn("RoleService: Team names fetch failed:", teamsResult.error.message);
+      warn(
+        "RoleService: Team names fetch failed:",
+        teamsResult.error.message
+      );
       return [];
     }
 
@@ -170,14 +179,8 @@ export class RoleService {
       const profileStart = Date.now();
 
       const [profileResult, membershipsResult] = await Promise.all([
-        supabase.from("profiles").select("role").eq("id", userId).maybeSingle(),
-        supabase
-          .from("team_members")
-          .select(
-            "team_id, team_role, capabilities, role_notes, assigned_at, status"
-          )
-          .eq("user_id", userId)
-          .eq("status", "active"),
+        getProfileRoleById(userId),
+        getActiveTeamMembershipsByUserId(userId),
       ]);
 
       debug(
@@ -261,19 +264,17 @@ export class RoleService {
     teamId: string
   ): Promise<TeamRole | null> {
     try {
-      const { data, error } = await supabase
-        .from("team_members")
-        .select("team_role")
-        .eq("user_id", userId)
-        .eq("team_id", teamId)
-        .eq("status", "active")
-        .maybeSingle();
+      const result = await getActiveTeamMembershipByUserAndTeam(
+        userId,
+        teamId,
+        "team_role"
+      );
 
-      if (error || !data) {
+      if (result.error || !result.data) {
         return null;
       }
 
-      const role = (data as any).team_role as unknown;
+      const role = (result.data as any).team_role as unknown;
       if (typeof role !== "string") return null;
       if (role in TEAM_ROLE_HIERARCHY) return role as TeamRole;
       return null;
@@ -296,21 +297,19 @@ export class RoleService {
     capability: Capability
   ): Promise<boolean> {
     try {
-      const { data, error } = await supabase
-        .from("team_members")
-        .select("capabilities, team_role")
-        .eq("user_id", userId)
-        .eq("team_id", teamId)
-        .eq("status", "active")
-        .maybeSingle();
+      const result = await getActiveTeamMembershipByUserAndTeam(
+        userId,
+        teamId,
+        "capabilities, team_role"
+      );
 
-      if (error || !data) {
+      if (result.error || !result.data) {
         return false;
       }
 
       // Check explicit capabilities first
       const userCapabilities = RoleService.normalizeCapabilities(
-        data.capabilities
+        (result.data as any).capabilities
       );
 
       if (userCapabilities.includes(capability)) {
@@ -318,7 +317,7 @@ export class RoleService {
       }
 
       // Fallback to default role capabilities
-      const teamRole = data.team_role as TeamRole;
+      const teamRole = (result.data as any).team_role as TeamRole;
       const defaultCapabilities = DEFAULT_TEAM_ROLE_CAPABILITIES[teamRole];
       return defaultCapabilities.includes(capability);
     } catch (error) {
@@ -520,13 +519,13 @@ export class RoleService {
         throw new Error("Insufficient permissions to update app role");
       }
 
-      const { error } = await supabase
-        .from("profiles")
-        .update({ role: newRole, updated_at: new Date().toISOString() })
-        .eq("id", userId);
+      const result = await updateProfileById(userId, {
+        role: newRole,
+        updated_at: new Date().toISOString(),
+      });
 
-      if (error) {
-        logError("Error updating app role:", error);
+      if (result.error) {
+        logError("Error updating app role:", result.error);
         return false;
       }
 
@@ -560,18 +559,14 @@ export class RoleService {
       const capabilities =
         customCapabilities || DEFAULT_TEAM_ROLE_CAPABILITIES[newRole];
 
-      const { error } = await supabase
-        .from("team_members")
-        .update({
-          team_role: newRole,
-          capabilities,
-          assigned_at: new Date().toISOString(),
-        })
-        .eq("user_id", userId)
-        .eq("team_id", teamId);
+      const result = await updateTeamMemberByUserAndTeam(userId, teamId, {
+        team_role: newRole,
+        capabilities,
+        assigned_at: new Date().toISOString(),
+      });
 
-      if (error) {
-        logError("Error updating team role:", error);
+      if (result.error) {
+        logError("Error updating team role:", result.error);
         return false;
       }
 
