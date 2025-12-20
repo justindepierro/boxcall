@@ -28,7 +28,7 @@ Policy: when we implement any item below, we also delete the legacy/duplicate pa
 
 ## Dev/Prod Discipline
 - [ ] (15) Guarantee DEV-only tooling never ships in prod bundles (dynamic import + `import.meta.env.DEV` gating)
-- [ ] (16) CI guard: no `console.*` anywhere outside the logger module
+- [x] (16) CI guard: no `console.*` anywhere outside the logger module
 - [ ] (17) CI guard: expand design-token linting (no raw colors / no arbitrary spacing/typography)
 - [ ] (18) CI guard: no direct `fetch` outside a service layer
 
