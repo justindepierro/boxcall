@@ -25,8 +25,22 @@ function createDevStub(): SupabaseClient<Database> {
   const err = (method: string) =>
     new Error(`Supabase not configured (dev fallback): ${method}`);
   const auth = {
+    async getSession() {
+      return { data: { session: null }, error: null } as unknown;
+    },
     async getUser() {
       return { data: { user: null }, error: null } as unknown;
+    },
+    onAuthStateChange() {
+      return {
+        data: {
+          subscription: {
+            unsubscribe() {
+              // no-op
+            },
+          },
+        },
+      } as unknown;
     },
     async signInWithPassword() {
       return {

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "unit": "gzipBytes",
+  "targets": [
+    {
+      "name": "app-entry",
+      "match": ["index.html"],
+      "maxGzipBytes": 500000
+    },
+    {
+      "name": "login-route",
+      "match": ["src/pages/LoginPage.tsx", "src/pages/LoginPage.ts"],
+      "maxGzipBytes": 460000
+    },
+    {
+      "name": "dashboard-route",
+      "match": ["src/pages/DashboardPage.tsx", "src/pages/DashboardPage.ts"],
+      "maxGzipBytes": 470000
+    },
+    {
+      "name": "team-bulletin-route",
+      "match": [
+        "src/pages/TeamBulletin.tsx",
+        "src/pages/TeamBulletin.ts",
+        "TeamBulletin",
+        "_TeamBulletin-"
+      ],
+      "maxGzipBytes": 520000
+    },
+    {
+      "name": "playbook-route",
+      "match": [
+        "src/pages/PlaybookPage.tsx",
+        "src/pages/PlaybookPage.ts",
+        "PlaybookPage",
+        "_PlaybookPage-"
+      ],
+      "maxGzipBytes": 750000
+    },
+    {
+      "name": "practice-plans-route",
+      "match": ["src/pages/PracticePlansPage.tsx", "src/pages/PracticePlansPage.ts"],
+      "maxGzipBytes": 480000
+    },
+    {
+      "name": "game-plans-route",
+      "match": ["src/pages/GamePlansPage.tsx", "src/pages/GamePlansPage.ts"],
+      "maxGzipBytes": 480000
+    },
+    {
+      "name": "boxcall-route",
+      "match": ["src/pages/BoxCall.tsx", "src/pages/BoxCall.ts"],
+      "maxGzipBytes": 500000
+    }
+  ]
+}

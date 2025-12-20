@@ -28,6 +28,26 @@ If a step is already checked off, skip it and continue to the next.
 - After each step: run `npm run validate` (or at least `npm run type-check` + `npm run lint`).
 - When deleting old systems, do it in the same PR as the replacement (prevents drift).
 
+## Verification Audit (Dec 20, 2025)
+
+Goal: keep this checklist honest — only check items that have durable code-level enforcement or a clearly completed replacement.
+
+Verified complete:
+- (16) Console guard exists and is enforced via `boxcall-design/no-console-outside-logger` (console allowed only in `src/utils/logger.ts`).
+- (17) Design-token linting is expanded and enforced: raw colors + arbitrary spacing/typography are errors, with warn-only coverage for dynamic raw-color expressions.
+- (20) Route-level lazy loading is in place via `src/components/lazy/LazyRoutes.tsx` (pages and heavy modals are code-split).
+- (19) Perf budgets gate is enforced via `npm run validate` and GitHub Actions (production build + Vite manifest-based per-route gzip JS budgets).
+- (28) Playwright smoke suite is present in `tests/e2e/` and enforced via GitHub Actions (`CI` workflow `e2e-smoke` job).
+
+Verified partial (keep unchecked for now):
+- (11) Zustand store surface area is not yet reduced: `src/app/store.ts` remains a broad “god store” (even though some domain stores exist elsewhere).
+- (12) Optimistic patterns exist (e.g., temp IDs + rollback utilities in data sync services), but they are not yet unified across major features into one shared approach.
+- (13) React Query defaults are standardized in `src/app/queryClient.ts` and some query-key factories exist (e.g., `src/lib/queryClient.ts`), but there’s still bespoke caching in the codebase and no single shared query-key scheme across features.
+- (14) A typed Supabase DAL exists under `src/data/supabase/`, but direct `supabase.from(...)` usage is still scattered across routes/services.
+
+Verified missing:
+- (none noted in this audit pass)
+
 ## App Recovery & Navigation
 - [x] (1) Standardize reset/recovery patterns (ErrorBoundary, soft reset, cache clear) into one documented approach
 - [x] (2) Enforce router-first navigation (soft navigation only when hooks aren’t available); ban new `window.location.*` usage
@@ -53,12 +73,12 @@ If a step is already checked off, skip it and continue to the next.
 ## Dev/Prod Discipline
 - [ ] (15) Guarantee DEV-only tooling never ships in prod bundles (dynamic import + `import.meta.env.DEV` gating)
 - [x] (16) CI guard: no `console.*` anywhere outside the logger module
-- [ ] (17) CI guard: expand design-token linting (no raw colors / no arbitrary spacing/typography)
+- [x] (17) CI guard: expand design-token linting (no raw colors / no arbitrary spacing/typography)
 - [ ] (18) CI guard: no direct `fetch` outside a service layer
 
 ## Performance
-- [ ] (19) Set per-route performance budgets (max JS/chunks on cold start) and fail CI if exceeded
-- [ ] (20) Audit route-level lazy loading so heavy editors never load on cold-start routes
+- [x] (19) Set per-route performance budgets (max JS/chunks on cold start) and fail CI if exceeded
+- [x] (20) Audit route-level lazy loading so heavy editors never load on cold-start routes
 - [ ] (21) Add a render-performance checklist for high-traffic pages (memo boundaries, stable callbacks, virtualization)
 - [ ] (22) Normalize telemetry: one schema, consistent fields, single dispatcher integration
 
@@ -70,7 +90,7 @@ If a step is already checked off, skip it and continue to the next.
 ## Testing & Quality Gates
 - [ ] (26) Add service-layer contract tests (Supabase stubs) to reduce reliance on UI-only tests
 - [ ] (27) Add regression tests for historically fragile areas (reset flows, offline sync, navigation helpers)
-- [ ] (28) Add Playwright smoke tests for top coaching workflows (Playbook, Practice, GamePlan, Bulletin, BoxCall)
+- [x] (28) Add Playwright smoke tests for top coaching workflows (Playbook, Practice, GamePlan, Bulletin, BoxCall)
 
 ## Docs & Housekeeping
 - [ ] (29) Docs cleanup: merge duplicates, keep each doc ≤300 lines, create one “Architecture + Conventions” entrypoint
