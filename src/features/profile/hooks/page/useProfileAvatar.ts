@@ -2,9 +2,9 @@
  * useProfileAvatar - Manages avatar upload and editing
  */
 import { useState, useCallback, useRef } from "react";
-import type { Database } from "../../../types/database";
-import { supabase } from "../../../lib/supabase";
-import { debug, error as logError } from "../../../utils/logger";
+import type { Database } from "../../../../types/database";
+import { supabase } from "../../../../lib/supabase";
+import { debug, error as logError } from "../../../../utils/logger";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 

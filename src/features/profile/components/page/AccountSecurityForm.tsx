@@ -1,8 +1,8 @@
 import React from "react";
-import { Card } from "../../../components/ui/Card";
-import { Button } from "../../../components/ui/Button";
-import { Input } from "../../../components/ui/Input";
-import { Typography } from "../../../components/design-system/Typography";
+import { Card } from "../../../../components/ui/Card";
+import { Button } from "../../../../components/ui/Button";
+import { Input } from "../../../../components/ui/Input";
+import { Typography } from "../../../../components/design-system/Typography";
 
 interface AccountSecurityFormProps {
   onChangePasswordClick: () => void;

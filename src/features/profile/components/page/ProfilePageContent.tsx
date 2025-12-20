@@ -2,16 +2,16 @@
  * ProfilePageContent - Main content section for profile page
  */
 import React from "react";
-import type { Database } from "../../../types/database";
+import type { Database } from "../../../../types/database";
 import type {
   ProfileFormData,
   ValidationErrors,
-} from "../hooks/useProfileForm";
-import { Button } from "../../../components/ui/Button";
-import { Typography } from "../../../components/design-system/Typography";
-import { MultiBadgeDisplay } from "../../../components/ui/MultiBadgeDisplay";
-import { AvatarEditor } from "../../../components/profile/AvatarEditor";
-import { debug } from "../../../utils/logger";
+} from "../../hooks/page";
+import { Button } from "../../../../components/ui/Button";
+import { Typography } from "../../../../components/design-system/Typography";
+import { MultiBadgeDisplay } from "../../../../components/ui/MultiBadgeDisplay";
+import { AvatarEditor } from "../../../../components/profile/AvatarEditor";
+import { debug } from "../../../../utils/logger";
 
 type BaseProfile = Database["public"]["Tables"]["profiles"]["Row"];
 

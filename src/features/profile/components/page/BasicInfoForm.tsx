@@ -1,8 +1,8 @@
 import React from "react";
-import { Card } from "../../../components/ui/Card";
-import { Input } from "../../../components/ui/Input";
-import { Typography } from "../../../components/design-system/Typography";
-import { MultiBadgeDisplay } from "../../../components/ui/MultiBadgeDisplay";
+import { Card } from "../../../../components/ui/Card";
+import { Input } from "../../../../components/ui/Input";
+import { Typography } from "../../../../components/design-system/Typography";
+import { MultiBadgeDisplay } from "../../../../components/ui/MultiBadgeDisplay";
 import { User } from "lucide-react";
 
 interface ValidationError {

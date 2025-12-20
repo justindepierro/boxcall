@@ -1,6 +1,6 @@
 import React from "react";
-import { Button } from "../../../components/ui/Button";
-import { Typography } from "../../../components/design-system/Typography";
+import { Button } from "../../../../components/ui/Button";
+import { Typography } from "../../../../components/design-system/Typography";
 import { Camera, Pencil } from "lucide-react";
 
 interface ProfileAvatarProps {

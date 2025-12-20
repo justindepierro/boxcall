@@ -1,7 +1,7 @@
 import React from "react";
-import { Card } from "../../../components/ui/Card";
-import { Input } from "../../../components/ui/Input";
-import { Typography } from "../../../components/design-system/Typography";
+import { Card } from "../../../../components/ui/Card";
+import { Input } from "../../../../components/ui/Input";
+import { Typography } from "../../../../components/design-system/Typography";
 import { AlertTriangle } from "lucide-react";
 
 interface ValidationError {

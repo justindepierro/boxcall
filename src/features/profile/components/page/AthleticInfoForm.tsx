@@ -1,8 +1,8 @@
 import React from "react";
-import { Card } from "../../../components/ui/Card";
-import { Input } from "../../../components/ui/Input";
-import { FormSelect } from "../../../components/ui";
-import { Typography } from "../../../components/design-system/Typography";
+import { Card } from "../../../../components/ui/Card";
+import { Input } from "../../../../components/ui/Input";
+import { FormSelect } from "../../../../components/ui";
+import { Typography } from "../../../../components/design-system/Typography";
 import { Activity } from "lucide-react";
 
 interface ValidationError {

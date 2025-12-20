@@ -2,19 +2,15 @@
  * useProfileSave - Manages saving profile changes to the database
  */
 import { useState, useCallback } from "react";
-import type { Database } from "../../../types/database";
+import type { Database } from "../../../../types/database";
 import type { ProfileFormData } from "./useProfileForm";
-import { supabase } from "../../../lib/supabase";
-import { debug } from "../../../utils/logger";
+import { supabase } from "../../../../lib/supabase";
+import { debug } from "../../../../utils/logger";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
 export interface UseProfileSaveReturn {
   saving: boolean;
-  message: { type: "success" | "error"; text: string } | null;
-  setMessage: React.Dispatch<
-    React.SetStateAction<{ type: "success" | "error"; text: string } | null>
-  >;
   handleSaveProfile: (
     e: React.FormEvent,
     formData: ProfileFormData,
@@ -106,13 +102,10 @@ const buildFallbackUpdateData = (
 export function useProfileSave(
   profile: Profile | null,
   fetchUserProfile: (userId: string) => Promise<void>,
-  setAvatarFile: (file: File | null) => void
+  setAvatarFile: (file: File | null) => void,
+  setMessage: (msg: { type: "success" | "error"; text: string } | null) => void
 ): UseProfileSaveReturn {
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
 
   // Save profile changes
   const handleSaveProfile = useCallback(
@@ -198,7 +191,7 @@ export function useProfileSave(
         setSaving(false);
       }
     },
-    [profile, fetchUserProfile, setAvatarFile]
+    [profile, fetchUserProfile, setAvatarFile, setMessage]
   );
 
   // Handle password change
@@ -225,12 +218,10 @@ export function useProfileSave(
     } catch {
       setMessage({ type: "error", text: "An unexpected error occurred" });
     }
-  }, [profile?.email]);
+  }, [profile?.email, setMessage]);
 
   return {
     saving,
-    message,
-    setMessage,
     handleSaveProfile,
     handlePasswordChange,
   };

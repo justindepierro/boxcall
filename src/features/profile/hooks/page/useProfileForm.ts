@@ -2,7 +2,7 @@
  * useProfileForm - Manages profile form state and validation
  */
 import { useState, useEffect, useCallback } from "react";
-import type { Database } from "../../../types/database";
+import type { Database } from "../../../../types/database";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
