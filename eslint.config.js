@@ -8,6 +8,7 @@ import arbitrarySpacing from "./eslint-rules/no-arbitrary-spacing.js";
 import arbitraryTypography from "./eslint-rules/no-arbitrary-typography.js";
 import windowLocationNavigation from "./eslint-rules/no-window-location-navigation.js";
 import noImportFromPages from "./eslint-rules/no-import-from-pages.js";
+import noFeatureDeepImports from "./eslint-rules/no-feature-deep-imports.js";
 
 const boxcallDesignRules = {
   rules: {
@@ -16,6 +17,7 @@ const boxcallDesignRules = {
     ...arbitraryTypography.rules,
     ...windowLocationNavigation.rules,
     ...noImportFromPages.rules,
+    ...noFeatureDeepImports.rules,
   },
 };
 
@@ -115,6 +117,7 @@ export default [
       "boxcall-design/no-arbitrary-typography": "error",
       "boxcall-design/no-window-location-navigation": "error",
       "boxcall-design/no-import-from-pages": "error",
+      "boxcall-design/no-feature-deep-imports": "error",
     },
   },
 ];

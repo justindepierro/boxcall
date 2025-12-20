@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 
 import React from "react";
-import { Button, FormSelect } from "../ui";
-import { Typography } from "../design-system/Typography";
-import { Icon } from "../ui/Icon";
-import { Tooltip } from "../ui/Tooltip/Tooltip";
+import { Button, FormSelect } from "../../components/ui";
+import { Typography } from "../../components/design-system/Typography";
+import { Icon } from "../../components/ui/Icon";
+import { Tooltip } from "../../components/ui/Tooltip/Tooltip";
 import { useDashboardStore } from "../../stores/dashboardStore";
 import type { LayoutSize } from "../../stores/dashboardStore";
 import { debug, logError } from "../../utils/logger";

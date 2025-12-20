@@ -12,7 +12,7 @@ import { SidebarLogo } from "../ui/Logo";
 import { AppHeader } from "./AppHeader";
 // import { OfflineBanner } from '../ui/OfflineBanner/OfflineBanner';
 import { Footer } from "./Footer";
-import { UnifiedSettingsPanel } from "../dashboard/UnifiedSettingsPanel";
+import { UnifiedSettingsPanel } from "../../features/dashboard";
 import type { DevMode } from "../../types/dev";
 import { emitTelemetry } from "../../lib/telemetry";
 import { isSuperAdminEmail } from "../../config/superAdmin";

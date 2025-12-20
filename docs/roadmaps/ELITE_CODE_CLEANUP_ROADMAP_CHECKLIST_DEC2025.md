@@ -10,9 +10,9 @@ Policy: when we implement any item below, we also delete the legacy/duplicate pa
 
 ## Architecture & Boundaries
 - [x] (3) Break up large “god components” into small tab/section components with strict props
-- [ ] (4) Define and enforce module boundaries (`src/shared/` / `src/lib/` / `src/features/`) with ESLint import rules
+- [x] (4) Define and enforce module boundaries (`src/shared/` / `src/lib/` / `src/features/`) with ESLint import rules
 - [x] (5) Consolidate duplicate UI panels (floating/settings/dev) into one canonical surface and delete the rest
-- [ ] (6) Move to feature-module ownership: each feature owns routes, hooks, services, and UI locally
+- [x] (6) Move to feature-module ownership: each feature owns routes, hooks, services, and UI locally
 
 ## TypeScript & Events
 - [ ] (7) Tighten TypeScript strictness incrementally and track remaining violations

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../ui";
-import { Icon } from "../ui/Icon/Icon";
-import { Typography } from "../design-system/Typography";
+import { Button } from "../../components/ui";
+import { Icon } from "../../components/ui/Icon/Icon";
+import { Typography } from "../../components/design-system/Typography";
 import { DashboardCustomizationPanel } from "./DashboardCustomizationPanel";
 import { debug } from "../../utils/logger";
 import { requestDevPanelControl } from "../../utils/devPanelControl";
@@ -20,7 +20,7 @@ import { requestDevPanelControl } from "../../utils/devPanelControl";
  * Replaces multiple scattered floating elements with one organized panel.
  */
 
-import type { IconName } from "../ui/Icon";
+import type { IconName } from "../../components/ui/Icon";
 
 interface ToolCategory {
   id: string;
