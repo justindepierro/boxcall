@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-import { useUI } from "../app/store";
+import { useUI } from "../stores/uiStore";
 import { logError, warn } from "./logger";
 /**
  * Error handler hook for consistent error handling across the application

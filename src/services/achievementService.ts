@@ -15,7 +15,23 @@
  */
 import { debug, error as logError } from "../utils/logger";
 import { supabase } from "../lib/supabase";
-import type { Player } from "../app/store";
+
+type Player = {
+  id: string;
+  name: string;
+  jersey: number;
+  position: string;
+  grade?: number;
+  height?: string;
+  weight?: number;
+  parentEmails: string[];
+  stats: {
+    gamesPlayed: number;
+    touchdowns: number;
+    yards: number;
+    tackles: number;
+  };
+};
 
 // Feature flag - disable advanced achievement features until DB tables exist
 const ACHIEVEMENT_SYSTEM_ENABLED = false;

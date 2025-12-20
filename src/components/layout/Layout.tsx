@@ -2,7 +2,7 @@ import React, { useMemo, useEffect } from "react";
 import { Typography } from "../design-system/Typography";
 import { useAuthProfile, useAuthProfileLoading } from "../../app/auth-store";
 import { useDevMode } from "../../app/dev-mode-hooks";
-import { useUI } from "../../app/store";
+import { useUI } from "../../stores/uiStore";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useActiveTeamStore } from "../../stores/activeTeamStore";
 import type { Database } from "../../types/database";
