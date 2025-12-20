@@ -185,7 +185,7 @@ const SessionHistoryFilters: React.FC<{
         className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all ${
           showArchived
             ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/25"
-            : "bg-white border-2 border-slate-200 text-slate-600 hover:border-indigo-300"
+            : "bg-white border-2 border-border text-secondary hover:border-indigo-300"
         }`}
       >
         <Icon name="folder" size="sm" />

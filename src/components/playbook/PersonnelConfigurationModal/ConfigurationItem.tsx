@@ -47,7 +47,7 @@ const CollapsedHeader: React.FC<CollapsedHeaderProps> = ({
           name="star"
           className={`w-5 h-5 transition-colors ${
             config.isDefault
-              ? "text-yellow-500 fill-yellow-500"
+              ? "text-warning-strong fill-warning-strong"
               : "text-tertiary"
           }`}
         />

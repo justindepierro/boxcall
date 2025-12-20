@@ -78,7 +78,7 @@ function CompactToggle(props: {
       onClick={onToggle}
       className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all font-semibold ${
         isActive
-          ? "bg-gradient-to-r from-green-500 to-green-600 text-white ring-2 ring-green-500/30 shadow-lg"
+          ? "bg-gradient-to-r from-green-500 to-green-600 text-white ring-2 ring-success-border/30 shadow-lg"
           : "bg-white dark:bg-navy-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-navy-700 border-2 border-neutral-200 dark:border-navy-600"
       } ${className}`}
       whileHover={{ scale: 1.03 }}

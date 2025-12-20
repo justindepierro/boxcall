@@ -6,8 +6,7 @@ import React from "react";
 import { Typography } from "../../design-system";
 import { FormSelect } from "../../ui";
 import { Icon } from "../../ui/Icon/Icon";
-import type { PlayExecutionFormProps } from "./types";
-import { QUICK_TAGS, RESULT_OPTIONS, COVERAGE_OPTIONS } from "./types";
+import { QUICK_TAGS, RESULT_OPTIONS, COVERAGE_OPTIONS, type PlayExecutionFormProps } from "./types";
 import type { ExecutionResult, OpponentCoverage } from "../../../types/session";
 
 export const PlayExecutionForm: React.FC<PlayExecutionFormProps> = ({
@@ -195,7 +194,7 @@ export const PlayExecutionForm: React.FC<PlayExecutionFormProps> = ({
             w-full py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 transition-all
             ${
               isPaused || !form.yardsGained
-                ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+                ? "bg-secondary text-muted cursor-not-allowed"
                 : "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-xl shadow-emerald-500/30 hover:shadow-2xl hover:shadow-emerald-500/40 active:scale-[0.98]"
             }
           `}

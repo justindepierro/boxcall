@@ -4,6 +4,7 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 import rawTailwindColors from "./eslint-rules/no-raw-tailwind-colors.js";
+import rawTailwindColorsDynamic from "./eslint-rules/no-raw-tailwind-colors-dynamic.js";
 import arbitrarySpacing from "./eslint-rules/no-arbitrary-spacing.js";
 import arbitraryTypography from "./eslint-rules/no-arbitrary-typography.js";
 import windowLocationNavigation from "./eslint-rules/no-window-location-navigation.js";
@@ -14,6 +15,7 @@ import noConsoleOutsideLogger from "./eslint-rules/no-console-outside-logger.js"
 const boxcallDesignRules = {
   rules: {
     ...rawTailwindColors.rules,
+    ...rawTailwindColorsDynamic.rules,
     ...arbitrarySpacing.rules,
     ...arbitraryTypography.rules,
     ...windowLocationNavigation.rules,
@@ -115,6 +117,8 @@ export default [
 
       // BoxCall Design System (ERRORS - these are enforced)
       "boxcall-design/no-raw-tailwind-colors": "error",
+      // Warn-only: catches raw Tailwind colors in dynamic class expressions
+      "boxcall-design/no-raw-tailwind-colors-dynamic": "warn",
       "boxcall-design/no-arbitrary-spacing": "error",
       "boxcall-design/no-arbitrary-typography": "error",
       "boxcall-design/no-window-location-navigation": "error",

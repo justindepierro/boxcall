@@ -278,7 +278,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
                       ${
                         isSelected
                           ? "bg-gradient-to-r from-jade-500 to-emerald-600 text-white border-jade-500 shadow-jade-500/25"
-                          : "bg-white border-slate-200 text-slate-600 hover:border-jade-400 hover:text-jade-600"
+                          : "bg-white border-border text-secondary hover:border-jade-400 hover:text-jade-600"
                       }
                     `}
                   >
@@ -383,8 +383,8 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
               relative h-24 rounded-2xl flex flex-col items-center justify-center gap-1.5 overflow-hidden
               bg-gradient-to-br from-slate-100 to-slate-200 
               hover:from-slate-50 hover:to-slate-100
-              border-2 border-slate-300 hover:border-slate-400
-              text-slate-600 font-semibold
+              border-2 border-border hover:border-border
+              text-secondary font-semibold
               transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
               active:scale-[0.98] group
               ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
@@ -405,9 +405,9 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
             disabled={disabled}
             className={`
               relative h-24 rounded-2xl flex flex-col items-center justify-center gap-1.5 overflow-hidden
-              bg-white hover:bg-slate-50
-              border-2 border-slate-200 hover:border-slate-300
-              text-slate-500 font-semibold
+              bg-white hover:bg-secondary
+              border-2 border-border hover:border-border
+              text-muted font-semibold
               transition-all duration-300 hover:scale-[1.02] hover:shadow-md
               active:scale-[0.98] group
               ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}

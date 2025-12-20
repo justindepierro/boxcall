@@ -199,8 +199,8 @@ const AnnouncementsFilters: React.FC<AnnouncementsFiltersProps> = ({
               onClick={() => onToggleHashtag(tag)}
               className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                 tag === selectedHashtag
-                  ? "bg-green-600 text-white"
-                  : "bg-green-100 text-green-800 hover:bg-green-200"
+                  ? "bg-success-600 text-white"
+                  : "bg-success-bg text-success-800 hover:bg-success-100"
               }`}
             >
               #{tag}
