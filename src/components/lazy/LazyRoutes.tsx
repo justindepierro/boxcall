@@ -28,6 +28,11 @@ export const LazyLoginPage = lazyRoute(
   "Login"
 );
 
+export const LazyResetPasswordPage = lazyRoute(
+  () => import("../../pages/ResetPasswordPage"),
+  "Reset Password"
+);
+
 export const LazyProfilePage = lazyRoute(
   () => import("../../pages/ProfilePage"),
   "Profile"

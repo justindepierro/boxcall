@@ -41,6 +41,7 @@ Verified complete:
 - (26) Service-layer contract tests exist (Supabase stub helper + initial contract coverage for `RosterService`).
 - (27) Regression tests added for fragile areas: app reset event (`appReset`), auth loader redirects (`loaderAuth`), and offline sync queue behavior (`OfflineExecutionQueue`).
 - (23) Client secret guard is enforced (fails CI/validate if service-role keys or JWT-like tokens appear in `src/`). Service role keys are reserved for server-side scripts/workflows.
+- (24) Auth flow hardening is in place: returnUrl sanitization is enforced in `src/utils/navigationUtils.ts` (rejects external/protocol-relative URLs), invite accept links URL-encode tokens and redirect to canonical team routes, and a real `/reset-password` route exists (validated via `npm run validate` + unit tests).
 
 Verified partial (keep unchecked for now):
 - (11) Zustand store surface area is not yet reduced: `src/app/store.ts` remains a broad “god store” (even though some domain stores exist elsewhere).
@@ -87,7 +88,7 @@ Verified missing:
 
 ## Security & Safety
 - [x] (23) Security pass: verify no service-role key usage; ensure RLS + team isolation patterns everywhere
-- [ ] (24) Harden auth flows (reset password redirects, invite accept) with consistent allowlist/validation
+- [x] (24) Harden auth flows (reset password redirects, invite accept) with consistent allowlist/validation
 - [ ] (25) Add “sensitive logging” scrubber (never log tokens/PII, even in dev)
 
 ## Testing & Quality Gates

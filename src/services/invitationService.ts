@@ -14,6 +14,7 @@
 import { supabase } from "../lib/supabase";
 import { info, error as logError } from "../utils/logger";
 import { getCurrentUserId } from "../lib/auth-helpers";
+import { createSameOriginRedirectTo } from "../utils/redirectUtils";
 import {
   sendPlayerInvitationEmail,
   sendInvitationReminderEmail,
@@ -195,7 +196,10 @@ export async function sendPlayerInvitation(
     const invitationToken = data?.invitation_token;
 
     // Generate invitation URL
-    const invitationUrl = `${window.location.origin}/invite/accept?token=${invitationToken}`;
+    const invitationPath = `/invite/accept?token=${encodeURIComponent(
+      invitationToken
+    )}`;
+    const invitationUrl = createSameOriginRedirectTo(invitationPath);
 
     // Send email via Resend
     // Note: Team logo support can be added later when logo_url column exists
@@ -292,7 +296,8 @@ export async function resendPlayerInvitation(
     }
 
     // Generate invitation URL with new token
-    const invitationUrl = `${window.location.origin}/invite/accept?token=${newToken}`;
+    const invitationPath = `/invite/accept?token=${encodeURIComponent(newToken)}`;
+    const invitationUrl = createSameOriginRedirectTo(invitationPath);
 
     // Send reminder email (different template)
     const emailResult = await sendInvitationReminderEmail({

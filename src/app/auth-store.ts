@@ -18,6 +18,8 @@ import { supabase } from "../lib/supabase";
 import type { Session, User } from "@supabase/supabase-js";
 import type { Database } from "../types/database";
 import { auth as logAuth, debug, warn, logError } from "../utils/logger";
+import { createSameOriginRedirectTo } from "../utils/redirectUtils";
+import { ROUTES } from "../routes/paths";
 
 // Types
 type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
@@ -39,7 +41,8 @@ interface AuthState {
   signUp: (
     email: string,
     password: string,
-    metadata?: Record<string, unknown>
+    metadata?: Record<string, unknown>,
+    redirectTo?: string
   ) => Promise<{ success: boolean; error?: string }>;
   signOut: () => Promise<void>;
   resetPassword: (
@@ -89,13 +92,18 @@ export const useAuth = create<AuthState>((set, _get) => ({
   },
 
   // Sign up with email/password
-  signUp: async (email, password, metadata) => {
+  signUp: async (email, password, metadata, redirectTo) => {
     set({ error: null });
 
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: metadata },
+      options: {
+        data: metadata,
+        emailRedirectTo: redirectTo
+          ? createSameOriginRedirectTo(redirectTo)
+          : undefined,
+      },
     });
 
     if (error) {
@@ -119,7 +127,7 @@ export const useAuth = create<AuthState>((set, _get) => ({
     set({ error: null });
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
+      redirectTo: createSameOriginRedirectTo(ROUTES.RESET_PASSWORD),
     });
 
     if (error) {

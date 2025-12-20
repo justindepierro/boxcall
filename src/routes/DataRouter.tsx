@@ -13,6 +13,7 @@ import { saveReturnUrl, createLoginUrl } from "../utils/navigationUtils";
 import {
   LazyDashboardPage,
   LazyLoginPage,
+  LazyResetPasswordPage,
   LazyTeamBulletin,
   LazyAnalyticsPage,
   LazyBoxCall,
@@ -124,6 +125,7 @@ const AuthenticatedLayout: React.FC<{ children: React.ReactNode }> = ({
 const PublicRoutes = (
   <>
     <Route path="/login" element={<LazyLoginPage />} />
+    <Route path="/reset-password" element={<LazyResetPasswordPage />} />
 
     {/* Health check API routes - must be public for monitoring */}
     <Route path="/health" element={<LazyHealthCheckPage />} />

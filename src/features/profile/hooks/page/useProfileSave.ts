@@ -6,6 +6,8 @@ import type { Database } from "../../../../types/database";
 import type { ProfileFormData } from "./useProfileForm";
 import { supabase } from "../../../../lib/supabase";
 import { debug } from "../../../../utils/logger";
+import { createSameOriginRedirectTo } from "../../../../utils/redirectUtils";
+import { ROUTES } from "../../../../routes/paths";
 import { updateProfileById } from "../../../../data/supabase/profiles";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
@@ -202,7 +204,7 @@ export function useProfileSave(
       const { error } = await supabase.auth.resetPasswordForEmail(
         profile.email,
         {
-          redirectTo: `${window.location.origin}/reset-password`,
+          redirectTo: createSameOriginRedirectTo(ROUTES.RESET_PASSWORD),
         }
       );
       if (error) {

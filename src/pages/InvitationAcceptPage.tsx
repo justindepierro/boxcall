@@ -21,6 +21,7 @@ import { Button } from "../components/ui/Button";
 import { Alert } from "../components/ui/Alert";
 import { Loader2 } from "lucide-react";
 import { logError } from "../utils/logger";
+import { teamRoutes } from "../routes/paths";
 
 type PageState =
   | "loading"
@@ -204,8 +205,14 @@ const AuthRequiredState = ({
   onSetAuthMode: (mode: "signup" | "signin") => void;
   onSignUpSuccess: (userId: string) => Promise<void>;
   onSignInSuccess: () => Promise<void>;
-}) => (
-  <div className="min-h-screen flex items-center justify-center bg-surface p-4">
+}) => {
+  const encodedToken = token ? encodeURIComponent(token) : null;
+  const inviteAcceptPath = encodedToken
+    ? `/invite/accept?token=${encodedToken}`
+    : "/invite/accept";
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-surface p-4">
     <div className="max-w-md w-full">
       {/* Team Header */}
       {team && invitation && (
@@ -269,21 +276,17 @@ const AuthRequiredState = ({
             prefilledFirstName={invitation.first_name}
             prefilledLastName={invitation.last_name}
             onSuccess={onSignUpSuccess}
-            redirectTo={`/invite/accept?token=${token}`}
+            redirectTo={inviteAcceptPath}
           />
         )}
 
         {/* Sign In Form */}
-        {authMode === "signin" && (
-          <SignInForm
-            onSuccess={onSignInSuccess}
-            redirectTo={`/invite/accept?token=${token}`}
-          />
-        )}
+        {authMode === "signin" && <SignInForm onSuccess={onSignInSuccess} />}
       </div>
     </div>
   </div>
-);
+  );
+};
 
 function InvitationAcceptPageBody(params: {
   pageState: PageState;
@@ -377,7 +380,11 @@ export function InvitationAcceptPage() {
 
       // Redirect to team dashboard after 2 seconds
       setTimeout(() => {
-        navigate(`/teams/${result.teamId}`);
+        if (result.teamId) {
+          navigate(teamRoutes.bulletin(result.teamId), { replace: true });
+        } else {
+          navigate("/dashboard", { replace: true });
+        }
       }, 2000);
     } catch (error) {
       logError("Error accepting invitation:", error);
@@ -407,6 +414,12 @@ export function InvitationAcceptPage() {
 
     async function loadInvitation() {
       if (!token) {
+        if (!cancelled) setPageState("invalid-token");
+        return;
+      }
+
+      // Defensive token sanity check (prevents weird parsing/redirect issues)
+      if (token.length > 512) {
         if (!cancelled) setPageState("invalid-token");
         return;
       }
@@ -494,7 +507,9 @@ export function InvitationAcceptPage() {
       errorMessage={errorMessage}
       authMode={authMode}
       onGoHome={() => navigate("/")}
-      onGoToTeam={(teamId) => navigate(`/teams/${teamId}`)}
+      onGoToTeam={(teamId) =>
+        navigate(teamRoutes.bulletin(teamId), { replace: true })
+      }
       onSetAuthMode={setAuthMode}
       onSignUpSuccess={handleSignUpSuccess}
       onSignInSuccess={handleSignInSuccess}

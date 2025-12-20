@@ -22,6 +22,7 @@ import {
   DEFAULT_LOGIN_DESTINATION,
 } from "./authConstants";
 import { debug, warn } from "./logger";
+import { isSafeInternalRedirectPath } from "./redirectUtils";
 
 const RETURN_URL_PARAM = "returnUrl";
 
@@ -42,8 +43,8 @@ const RETURN_URL_PARAM = "returnUrl";
 export function saveReturnUrl(path?: string): void {
   try {
     const url = path || window.location.pathname + window.location.search;
-    // Don't save auth-related URLs
-    if (isAuthRoute(url)) {
+    // Don't save auth-related or unsafe URLs
+    if (!isValidReturnUrl(url)) {
       return;
     }
     sessionStorage.setItem(STORAGE_KEYS.RETURN_URL, url);
@@ -72,7 +73,7 @@ export function getAndClearReturnUrl(
     const url = sessionStorage.getItem(STORAGE_KEYS.RETURN_URL);
     sessionStorage.removeItem(STORAGE_KEYS.RETURN_URL);
 
-    if (url && !isAuthRoute(url)) {
+    if (url && isValidReturnUrl(url)) {
       debug("🔖 Retrieved return URL:", url);
       return url;
     }
@@ -99,7 +100,7 @@ export function getReturnUrlFromQuery(search: string): string | null {
     const params = new URLSearchParams(search);
     const returnUrl = params.get(RETURN_URL_PARAM);
 
-    if (returnUrl && !isAuthRoute(returnUrl)) {
+    if (returnUrl && isValidReturnUrl(returnUrl)) {
       debug("🔖 Found return URL in query:", returnUrl);
       return returnUrl;
     }
@@ -127,7 +128,7 @@ export function createLoginUrl(returnUrl?: string): string {
   const url = returnUrl || window.location.pathname + window.location.search;
 
   // Don't add return URL for auth routes
-  if (isAuthRoute(url)) {
+  if (!isValidReturnUrl(url)) {
     return "/login";
   }
 
@@ -167,22 +168,11 @@ function isAuthRoute(url: string): boolean {
  */
 export function isValidReturnUrl(url: string): boolean {
   try {
-    // Must start with / (relative path)
-    if (!url.startsWith("/")) {
-      return false;
-    }
+    // Must be an internal path (relative to app origin)
+    if (!isSafeInternalRedirectPath(url)) return false;
 
     // Must not be an auth route
     if (isAuthRoute(url)) {
-      return false;
-    }
-
-    // Must not be a protocol (prevent XSS)
-    if (
-      url.includes("://") ||
-      url.startsWith("javascript:") ||
-      url.startsWith("data:")
-    ) {
       return false;
     }
 

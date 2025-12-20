@@ -22,6 +22,7 @@ export function SignUpForm({
   prefilledFirstName = "",
   prefilledLastName = "",
   onSuccess,
+  redirectTo,
 }: SignUpFormProps) {
   const { signUp, loading, error, clearError } = useAuth();
   const [formData, setFormData] = useState({
@@ -88,11 +89,16 @@ export function SignUpForm({
       return;
     }
 
-    const result = await signUp(formData.email, formData.password, {
-      firstName: formData.firstName.trim(),
-      lastName: formData.lastName.trim(),
-      role: "player", // Default role for invited players
-    });
+    const result = await signUp(
+      formData.email,
+      formData.password,
+      {
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        role: "player", // Default role for invited players
+      },
+      redirectTo
+    );
 
     if (result.success) {
       // Get the newly created user
