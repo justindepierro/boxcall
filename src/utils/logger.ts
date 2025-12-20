@@ -35,6 +35,78 @@ export enum LogLevel {
   NONE = 4,
 }
 
+type LogPrimitive = string | number | boolean | null | undefined;
+
+const REDACTED = "[REDACTED]";
+const REDACTED_EMAIL = "[REDACTED_EMAIL]";
+const REDACTED_TOKEN = "[REDACTED_TOKEN]";
+
+const SENSITIVE_KEY_PATTERN = /(pass(word)?|secret|token|access[_-]?token|refresh[_-]?token|api[_-]?key|authorization|cookie|set-cookie|session)/i;
+
+// JWTs commonly start with "eyJ" and contain 3 base64url segments.
+const JWT_PATTERN = /eyJ[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+/g;
+const BEARER_PATTERN = /(bearer)\s+([a-z0-9._~+/=-]+)/gi;
+
+// Conservative email detector (PII). This can over-match; better to redact.
+const EMAIL_PATTERN = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
+
+function scrubString(value: string): string {
+  // Order matters: JWT/Bearer first, then email.
+  return value
+    .replace(JWT_PATTERN, REDACTED_TOKEN)
+    .replace(BEARER_PATTERN, (_m, bearer) => `${bearer} ${REDACTED_TOKEN}`)
+    .replace(EMAIL_PATTERN, REDACTED_EMAIL);
+}
+
+function scrubError(err: unknown): unknown {
+  if (!(err instanceof Error)) return err;
+
+  // Create a shallow clone so we don't mutate the original error.
+  const clone = new Error(scrubString(err.message));
+  clone.name = err.name;
+  // Stack can sometimes include querystrings; scrub defensively.
+  if (typeof err.stack === "string") {
+    clone.stack = scrubString(err.stack);
+  }
+  return clone;
+}
+
+function scrubUnknown(value: unknown, depth = 0, seen = new WeakSet<object>()): unknown {
+  if (value == null) return value as LogPrimitive;
+  if (typeof value === "string") return scrubString(value);
+  if (typeof value === "number" || typeof value === "boolean") return value;
+
+  const scrubbedError = scrubError(value);
+  if (scrubbedError !== value) return scrubbedError;
+
+  if (depth > 4) return "[TRUNCATED]";
+
+  if (Array.isArray(value)) {
+    return value.map((item) => scrubUnknown(item, depth + 1, seen));
+  }
+
+  if (typeof value === "object") {
+    if (seen.has(value as object)) return "[CIRCULAR]";
+    seen.add(value as object);
+
+    const record: Record<string, unknown> = {};
+    for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
+      if (SENSITIVE_KEY_PATTERN.test(key)) {
+        record[key] = REDACTED;
+      } else {
+        record[key] = scrubUnknown(val, depth + 1, seen);
+      }
+    }
+    return record;
+  }
+
+  return value;
+}
+
+function scrubArgs(args: unknown[]): unknown[] {
+  return args.map((arg) => scrubUnknown(arg));
+}
+
 /**
  * Logger class - Centralized logging with level control
  *
@@ -83,7 +155,7 @@ class Logger {
    */
   debug(message: string, ...args: any[]): void {
     if (this.level <= LogLevel.DEBUG) {
-      console.debug(`🔍 ${message}`, ...args);
+      console.debug(`🔍 ${scrubString(message)}`, ...scrubArgs(args));
     }
   }
 
@@ -96,7 +168,7 @@ class Logger {
    */
   info(message: string, ...args: any[]): void {
     if (this.level <= LogLevel.INFO) {
-      console.log(`ℹ️ ${message}`, ...args);
+      console.log(`ℹ️ ${scrubString(message)}`, ...scrubArgs(args));
     }
   }
 
@@ -110,7 +182,7 @@ class Logger {
    */
   warn(message: string, ...args: any[]): void {
     if (this.level <= LogLevel.WARN) {
-      console.warn(`⚠️ ${message}`, ...args);
+      console.warn(`⚠️ ${scrubString(message)}`, ...scrubArgs(args));
     }
   }
 
@@ -124,7 +196,7 @@ class Logger {
    */
   error(message: string, ...args: any[]): void {
     if (this.level <= LogLevel.ERROR) {
-      console.error(`❌ ${message}`, ...args);
+      console.error(`❌ ${scrubString(message)}`, ...scrubArgs(args));
     }
   }
 
@@ -137,7 +209,7 @@ class Logger {
    */
   success(message: string, ...args: any[]): void {
     if (this.level <= LogLevel.INFO) {
-      console.log(`✅ ${message}`, ...args);
+      console.log(`✅ ${scrubString(message)}`, ...scrubArgs(args));
     }
   }
 
@@ -151,7 +223,7 @@ class Logger {
    */
   auth(message: string, ...args: any[]): void {
     if (this.level <= LogLevel.INFO) {
-      console.log(`🔐 ${message}`, ...args);
+      console.log(`🔐 ${scrubString(message)}`, ...scrubArgs(args));
     }
   }
 
@@ -165,7 +237,7 @@ class Logger {
    */
   nav(message: string, ...args: any[]): void {
     if (this.level <= LogLevel.DEBUG) {
-      console.log(`🔀 ${message}`, ...args);
+      console.log(`🔀 ${scrubString(message)}`, ...scrubArgs(args));
     }
   }
 
@@ -236,7 +308,7 @@ export const groupCollapsed = logger.groupCollapsed.bind(logger);
  */
 export function devLog(message: string, ...args: any[]): void {
   if (import.meta.env.DEV && import.meta.env.MODE !== "test") {
-    console.log(`💻 [DEV] ${message}`, ...args);
+    console.log(`💻 [DEV] ${scrubString(message)}`, ...scrubArgs(args));
   }
 }
 
