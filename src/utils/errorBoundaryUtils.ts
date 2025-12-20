@@ -4,6 +4,7 @@
  */
 import type { ErrorInfo } from "react";
 import { logError } from "./logger";
+import { sendClientErrorReport } from "../services/errorReportingService";
 
 // Hook for using error boundary programmatically
 export const useErrorHandler = () => {
@@ -43,17 +44,7 @@ export const reportError = (
 
   // Send to error tracking services
   // This would integrate with your error tracking service
-  try {
-    fetch("/api/errors", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(errorData),
-    }).catch(() => {
-      // Silently fail for error reporting
-    });
-  } catch {
-    // Ignore errors in error reporting
-  }
+  void sendClientErrorReport({ payload: errorData });
 };
 
 // Error boundary test utility

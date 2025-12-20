@@ -6,6 +6,7 @@ import type { Database } from "../../../../types/database";
 import { supabase } from "../../../../lib/supabase";
 import { debug, error as logError } from "../../../../utils/logger";
 import { updateProfileAvatarUrl } from "../../../../data/supabase/profiles";
+import { fetchUrlAsFile } from "../../../../services/fileDownloadService";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
@@ -159,10 +160,9 @@ export function useProfileAvatar(
   const handleEditCurrentAvatar = useCallback(async (avatarUrl: string) => {
     debug("Edit Current Picture clicked");
     try {
-      const response = await fetch(avatarUrl);
-      const blob = await response.blob();
-      const file = new File([blob], "current-avatar.jpg", {
-        type: blob.type,
+      const file = await fetchUrlAsFile({
+        url: avatarUrl,
+        filename: "current-avatar.jpg",
       });
       debug("Loaded current avatar:", file);
       setAvatarFile(file);

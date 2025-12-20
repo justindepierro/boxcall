@@ -11,6 +11,7 @@ import windowLocationNavigation from "./eslint-rules/no-window-location-navigati
 import noImportFromPages from "./eslint-rules/no-import-from-pages.js";
 import noFeatureDeepImports from "./eslint-rules/no-feature-deep-imports.js";
 import noConsoleOutsideLogger from "./eslint-rules/no-console-outside-logger.js";
+import noDirectFetchOutsideServices from "./eslint-rules/no-direct-fetch-outside-services.js";
 
 const boxcallDesignRules = {
   rules: {
@@ -22,6 +23,7 @@ const boxcallDesignRules = {
     ...noImportFromPages.rules,
     ...noFeatureDeepImports.rules,
     ...noConsoleOutsideLogger.rules,
+    ...noDirectFetchOutsideServices.rules,
   },
 };
 
@@ -125,6 +127,7 @@ export default [
       "boxcall-design/no-import-from-pages": "error",
       "boxcall-design/no-feature-deep-imports": "error",
       "boxcall-design/no-console-outside-logger": "error",
+      "boxcall-design/no-direct-fetch-outside-services": "error",
     },
   },
 ];

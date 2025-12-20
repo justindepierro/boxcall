@@ -43,6 +43,7 @@ Verified complete:
 - (23) Client secret guard is enforced (fails CI/validate if service-role keys or JWT-like tokens appear in `src/`). Service role keys are reserved for server-side scripts/workflows.
 - (24) Auth flow hardening is in place: returnUrl sanitization is enforced in `src/utils/navigationUtils.ts` (rejects external/protocol-relative URLs), invite accept links URL-encode tokens and redirect to canonical team routes, and a real `/reset-password` route exists (validated via `npm run validate` + unit tests).
 - (25) Sensitive logging scrubber is implemented in `src/utils/logger.ts`: JWTs/Bearer tokens/emails and common token/password keys are redacted before hitting `console.*` (covered by unit tests).
+- (18) Direct `fetch()` is banned outside the service/API layer via `boxcall-design/no-direct-fetch-outside-services` (allowed only in `src/services/*`, `src/lib/api/*`, and `src/sw.ts`).
 
 Verified partial (keep unchecked for now):
 - (11) Zustand store surface area is not yet reduced: `src/app/store.ts` remains a broad “god store” (even though some domain stores exist elsewhere).
@@ -79,7 +80,7 @@ Verified missing:
 - [ ] (15) Guarantee DEV-only tooling never ships in prod bundles (dynamic import + `import.meta.env.DEV` gating)
 - [x] (16) CI guard: no `console.*` anywhere outside the logger module
 - [x] (17) CI guard: expand design-token linting (no raw colors / no arbitrary spacing/typography)
-- [ ] (18) CI guard: no direct `fetch` outside a service layer
+- [x] (18) CI guard: no direct `fetch` outside a service layer
 
 ## Performance
 - [x] (19) Set per-route performance budgets (max JS/chunks on cold start) and fail CI if exceeded
