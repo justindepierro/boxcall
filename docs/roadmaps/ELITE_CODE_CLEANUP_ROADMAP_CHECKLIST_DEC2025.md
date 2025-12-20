@@ -4,6 +4,30 @@ Use this as the single source of truth for “make the code elite.” Check item
 
 Policy: when we implement any item below, we also delete the legacy/duplicate path — see [docs/development/DELETE_OLD_STUFF_POLICY.md](docs/development/DELETE_OLD_STUFF_POLICY.md).
 
+## Recommended Execution Order (do this first)
+
+This checklist is grouped by area below for readability, but the fastest/lowest-risk execution order is:
+
+1) **Safety/Security first**: (23) → (24) → (25)
+2) **Dev/prod discipline guards**: (16) → (17) → (18)
+3) **Data layer foundations**: (14) → (13) → (12) → (11)
+4) **App correctness + consistency**: (9) → (10) → (8) → (7)
+5) **Performance gates + hygiene**: (20) → (19) → (21) → (22)
+6) **Tests + quality gates**: (26) → (27) → (28)
+7) **Docs + cleanup cadence**: (29) → (30)
+
+If a step is already checked off, skip it and continue to the next.
+
+## Safety Rails (so we don’t lose work)
+
+- Treat each checklist item as its own commit (or small stack of commits).
+- Prefer `git commit` early/often; if unsure, do a WIP commit.
+- Avoid destructive commands during active work: `git reset --hard`, `git clean -fd`.
+	- If you need to “park” work, use `git stash -u`.
+- Before any risky git operation, run `git status` and confirm what’s staged vs untracked.
+- After each step: run `npm run validate` (or at least `npm run type-check` + `npm run lint`).
+- When deleting old systems, do it in the same PR as the replacement (prevents drift).
+
 ## App Recovery & Navigation
 - [x] (1) Standardize reset/recovery patterns (ErrorBoundary, soft reset, cache clear) into one documented approach
 - [x] (2) Enforce router-first navigation (soft navigation only when hooks aren’t available); ban new `window.location.*` usage
