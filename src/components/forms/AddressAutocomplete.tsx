@@ -83,7 +83,6 @@ function parseAddress(result: AddressResult): ParsedAddress {
   };
 }
 
-
 function useCloseOnOutsideClick(params: {
   containerRef: React.RefObject<HTMLDivElement | null>;
   onClose: () => void;
