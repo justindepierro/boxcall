@@ -76,7 +76,12 @@ Verified missing:
 
 - [x] (7) Tighten TypeScript strictness incrementally and track remaining violations
 - [x] (8) Replace stringly-typed DOM/app events with typed constants + payload types
-- [ ] (9) Normalize service return patterns (consistent Result-style or consistent throw) so components don’t guess failures
+- [x] (9) Normalize service return patterns (consistent Result-style or consistent throw) so components don't guess failures
+  - ✅ Verified: Created `src/services/serviceResult.ts` with `ServiceResult<T, Code>` type and helpers
+  - ✅ Verified: Migrated invitation service (getInvitationByToken, acceptInvitation, sendPlayerInvitation, resendPlayerInvitation) to ServiceResult with explicit error codes
+  - ✅ Verified: Migrated email service (sendEmail, sendPlayerInvitationEmail, sendInvitationReminderEmail) to ServiceResult
+  - ✅ Verified: Updated all call sites (InvitationAcceptPage, useRosterInvitations) to handle typed error codes without guessing
+  - ✅ Gate: type-check + lint pass (Dec 20, 2025)
 - [x] (10) Centralize and type all localStorage keys/usage in one storage module
 
 ## State & Data Layer

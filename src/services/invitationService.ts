@@ -19,6 +19,10 @@ import {
   sendPlayerInvitationEmail,
   sendInvitationReminderEmail,
 } from "./email/emailService";
+import {
+  serviceFail,
+  serviceOk,
+} from "./serviceResult";
 
 export interface SendInvitationParams {
   playerId: string;
@@ -33,15 +37,6 @@ export interface InvitationResult {
   success: boolean;
   message: string;
   invitationToken?: string;
-}
-
-export interface AcceptInvitationResult {
-  success: boolean;
-  message?: string;
-  error?: string;
-  teamId?: string;
-  playerName?: string;
-  alreadyMember?: boolean;
 }
 
 /**
@@ -135,9 +130,18 @@ async function logInvitationAttempt(
  * - Token expiration (7 days)
  * - Audit logging
  */
-export async function sendPlayerInvitation(
-  params: SendInvitationParams
-): Promise<InvitationResult> {
+type SendInvitationErrorCode =
+  | "invalid_email"
+  | "rate_limit"
+  | "supabase_error"
+  | "email_failed"
+  | "exception";
+
+type SendInvitationData = {
+  invitationToken: string;
+};
+
+export async function sendPlayerInvitation(params: SendInvitationParams) {
   const { playerId, email, playerName, teamName, invitedBy, teamId } = params;
 
   try {
@@ -146,22 +150,21 @@ export async function sendPlayerInvitation(
     // Validate email format
     if (!isValidEmail(email)) {
       await logInvitationAttempt(teamId, playerId, email, false);
-      return {
-        success: false,
-        message: "Invalid email address format",
-      };
+      return serviceFail<SendInvitationData, SendInvitationErrorCode>(
+        "invalid_email",
+        "Invalid email address format"
+      );
     }
 
     // Check rate limit
     const rateLimitCheck = await checkRateLimit(teamId, email);
     if (!rateLimitCheck.allowed) {
       await logInvitationAttempt(teamId, playerId, email, false);
-      return {
-        success: false,
-        message:
-          rateLimitCheck.message ||
-          "Too many invitation attempts. Please try again later.",
-      };
+      return serviceFail<SendInvitationData, SendInvitationErrorCode>(
+        "rate_limit",
+        rateLimitCheck.message ||
+          "Too many invitation attempts. Please try again later."
+      );
     }
 
     // Get current user for tracking
@@ -190,7 +193,10 @@ export async function sendPlayerInvitation(
         error
       );
       await logInvitationAttempt(teamId, playerId, email, false);
-      throw error;
+      return serviceFail<SendInvitationData, SendInvitationErrorCode>(
+        "supabase_error",
+        "Failed to update invitation status"
+      );
     }
 
     const invitationToken = data?.invitation_token;
@@ -215,7 +221,10 @@ export async function sendPlayerInvitation(
     });
 
     if (!emailResult.success) {
-      logError("[invitationService] Email delivery failed:", emailResult.error);
+      logError(
+        "[invitationService] Email delivery failed:",
+        emailResult.error.message
+      );
 
       // Update status to failed but don't throw - player is still in system
       await (supabase.from("team_players") as any)
@@ -224,31 +233,29 @@ export async function sendPlayerInvitation(
 
       await logInvitationAttempt(teamId, playerId, email, false);
 
-      return {
-        success: false,
-        message: `Failed to send email: ${emailResult.error}`,
-      };
+      return serviceFail<SendInvitationData, SendInvitationErrorCode>(
+        "email_failed",
+        `Failed to send email: ${emailResult.error.message}`
+      );
     }
 
     info(
-      `[invitationService] Invitation email sent successfully to ${email} (Message ID: ${emailResult.messageId})`
+      `[invitationService] Invitation email sent successfully to ${email} (Message ID: ${emailResult.data.messageId})`
     );
 
     // Log successful attempt
     await logInvitationAttempt(teamId, playerId, email, true);
 
-    return {
-      success: true,
-      message: `Invitation sent to ${email}`,
+    return serviceOk({
       invitationToken,
-    };
+    });
   } catch (err) {
     logError("[invitationService] Failed to send invitation:", err);
     await logInvitationAttempt(teamId, playerId, email, false);
-    return {
-      success: false,
-      message: err instanceof Error ? err.message : "Failed to send invitation",
-    };
+    return serviceFail<SendInvitationData, SendInvitationErrorCode>(
+      "exception",
+      err instanceof Error ? err.message : "Failed to send invitation"
+    );
   }
 }
 
@@ -256,6 +263,16 @@ export async function sendPlayerInvitation(
  * Resend invitation to a player
  * Regenerates token for security
  */
+type ResendInvitationErrorCode =
+  | "no_email"
+  | "supabase_error"
+  | "email_failed"
+  | "exception";
+
+type ResendInvitationData = {
+  invitationToken: string;
+};
+
 export async function resendPlayerInvitation(
   playerId: string,
   email: string,
@@ -263,12 +280,12 @@ export async function resendPlayerInvitation(
   teamName: string,
   _invitedBy: string,
   teamId: string
-): Promise<InvitationResult> {
+) {
   if (!email) {
-    return {
-      success: false,
-      message: "Player has no email address",
-    };
+    return serviceFail<ResendInvitationData, ResendInvitationErrorCode>(
+      "no_email",
+      "Player has no email address"
+    );
   }
 
   try {
@@ -292,7 +309,10 @@ export async function resendPlayerInvitation(
       .eq("id", playerId);
 
     if (error) {
-      throw error;
+      return serviceFail<ResendInvitationData, ResendInvitationErrorCode>(
+        "supabase_error",
+        "Failed to update invitation status"
+      );
     }
 
     // Generate invitation URL with new token
@@ -310,30 +330,31 @@ export async function resendPlayerInvitation(
     });
 
     if (!emailResult.success) {
-      logError("[invitationService] Reminder email failed:", emailResult.error);
-      return {
-        success: false,
-        message: `Failed to send reminder: ${emailResult.error}`,
-      };
+      logError(
+        "[invitationService] Reminder email failed:",
+        emailResult.error.message
+      );
+      return serviceFail<ResendInvitationData, ResendInvitationErrorCode>(
+        "email_failed",
+        `Failed to send reminder: ${emailResult.error.message}`
+      );
     }
 
     info(
-      `[invitationService] Reminder email sent to ${email} (Message ID: ${emailResult.messageId})`
+      `[invitationService] Reminder email sent to ${email} (Message ID: ${emailResult.data.messageId})`
     );
 
     await logInvitationAttempt(teamId, playerId, email, true);
 
-    return {
-      success: true,
-      message: `Reminder sent to ${email}`,
+    return serviceOk({
       invitationToken: newToken,
-    };
+    });
   } catch (err) {
     logError("[invitationService] Failed to resend invitation:", err);
-    return {
-      success: false,
-      message: "Failed to resend invitation",
-    };
+    return serviceFail<ResendInvitationData, ResendInvitationErrorCode>(
+      "exception",
+      "Failed to resend invitation"
+    );
   }
 }
 
@@ -342,32 +363,97 @@ export async function resendPlayerInvitation(
  * Checks expiration and validates status
  */
 export async function getInvitationByToken(token: string) {
+  type InvitationLookupErrorCode =
+    | "not_found"
+    | "expired"
+    | "invalid_status"
+    | "supabase_error";
+
+  type InvitationLookupData = {
+    id: string;
+    team_id: string;
+    first_name: string;
+    last_name: string;
+    invitation_expires_at: string;
+    invitation_status: string;
+    user_id?: string | null;
+  };
+
   const { data, error } = await supabase
     .from("team_players")
-    .select("*")
+    .select(
+      "id, team_id, first_name, last_name, invitation_expires_at, invitation_status, user_id"
+    )
     .eq("invitation_token", token)
-    .eq("invitation_status", "pending")
     .single();
 
-  if (error || !data) {
-    return null;
+  if (error) {
+    const message =
+      error.code === "PGRST116"
+        ? "Invitation not found"
+        : "Failed to load invitation";
+    return serviceFail<InvitationLookupData, InvitationLookupErrorCode>(
+      error.code === "PGRST116" ? "not_found" : "supabase_error",
+      message
+    );
+  }
+
+  if (!data) {
+    return serviceFail<InvitationLookupData, InvitationLookupErrorCode>(
+      "not_found",
+      "Invitation not found"
+    );
+  }
+
+  const invitationData = data as InvitationLookupData;
+
+  // If already accepted, return the data so the UI can show the proper state.
+  if (invitationData.invitation_status === "accepted") {
+    return serviceOk(invitationData);
+  }
+
+  // Only pending invitations can be accepted.
+  if (invitationData.invitation_status !== "pending") {
+    return serviceFail<InvitationLookupData, InvitationLookupErrorCode>(
+      "invalid_status",
+      "Invitation is not pending"
+    );
   }
 
   // Check if expired
   if (
-    data.invitation_expires_at &&
-    new Date(data.invitation_expires_at) <= new Date()
+    invitationData.invitation_expires_at &&
+    new Date(invitationData.invitation_expires_at) <= new Date()
   ) {
-    // Mark as expired
-    await (supabase.from("team_players") as any)
-      .update({ invitation_status: "expired" })
-      .eq("invitation_token", token);
+    // Mark as expired (best-effort)
+    try {
+      await (supabase.from("team_players") as any)
+        .update({ invitation_status: "expired" })
+        .eq("invitation_token", token);
+    } catch {
+      // ignore
+    }
 
-    return null;
+    return serviceFail<InvitationLookupData, InvitationLookupErrorCode>(
+      "expired",
+      "Invitation expired"
+    );
   }
 
-  return data;
+  return serviceOk(invitationData);
 }
+
+type AcceptInvitationErrorCode =
+  | "rpc_error"
+  | "already_member"
+  | "unknown"
+  | "exception";
+
+type AcceptInvitationData = {
+  teamId: string;
+  playerName: string;
+  alreadyMember: boolean;
+};
 
 /**
  * Accept invitation (for acceptance flow)
@@ -377,7 +463,7 @@ export async function getInvitationByToken(token: string) {
 export async function acceptInvitation(
   token: string,
   userId: string
-): Promise<AcceptInvitationResult> {
+) {
   try {
     info(`[invitationService] Accepting invitation for user ${userId}`);
 
@@ -389,11 +475,10 @@ export async function acceptInvitation(
 
     if (error) {
       logError("[invitationService] RPC error:", error);
-      return {
-        success: false,
-        error: "rpc_error",
-        message: "Failed to accept invitation",
-      };
+      return serviceFail<AcceptInvitationData, AcceptInvitationErrorCode>(
+        "rpc_error",
+        "Failed to accept invitation"
+      );
     }
 
     // Parse response
@@ -407,30 +492,28 @@ export async function acceptInvitation(
     };
 
     if (!result.success) {
-      return {
-        success: false,
-        error: result.error || "unknown",
-        message: result.message || "Failed to accept invitation",
-      };
+      const code =
+        result.error === "already_member" ? "already_member" : "unknown";
+      return serviceFail<AcceptInvitationData, AcceptInvitationErrorCode>(
+        code,
+        result.message || "Failed to accept invitation"
+      );
     }
 
     info(
       `[invitationService] Invitation accepted successfully for ${result.player_name}`
     );
 
-    return {
-      success: true,
-      teamId: result.team_id,
-      playerName: result.player_name,
+    return serviceOk({
+      teamId: result.team_id || "",
+      playerName: result.player_name || "",
       alreadyMember: result.already_member || false,
-      message: "Invitation accepted successfully",
-    };
+    });
   } catch (err) {
     logError("[invitationService] Error accepting invitation:", err);
-    return {
-      success: false,
-      error: "exception",
-      message: "An unexpected error occurred",
-    };
+    return serviceFail<AcceptInvitationData, AcceptInvitationErrorCode>(
+      "exception",
+      "An unexpected error occurred"
+    );
   }
 }

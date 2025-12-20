@@ -366,34 +366,26 @@ export function InvitationAcceptPage() {
 
     setPageState("accepting");
 
-    try {
-      const result = await acceptInvitation(token, userId);
+    const result = await acceptInvitation(token, userId);
 
-      if (!result.success) {
-        if (result.error === "already_member") {
-          setErrorMessage("You are already a member of this team");
-          setPageState("already-accepted");
-        } else {
-          setErrorMessage(result.message || "Failed to accept invitation");
-          setPageState("error");
-        }
-        return;
+    if (!result.success) {
+      if (result.error.code === "already_member") {
+        setErrorMessage("You are already a member of this team");
+        setPageState("already-accepted");
+      } else {
+        setErrorMessage(result.error.message);
+        setPageState("error");
       }
-
-      setPageState("success");
-
-      // Redirect to team dashboard after 2 seconds
-      setTimeout(() => {
-        if (result.teamId) {
-          navigate(teamRoutes.bulletin(result.teamId), { replace: true });
-          navigate("/dashboard", { replace: true });
-        }
-      }, 2000);
-    } catch (error) {
-      logError("Error accepting invitation:", error);
-      setErrorMessage("An unexpected error occurred");
-      setPageState("error");
+      return;
     }
+
+    setPageState("success");
+
+    // Redirect to team dashboard after 2 seconds
+    setTimeout(() => {
+      navigate(teamRoutes.bulletin(result.data.teamId), { replace: true });
+      navigate("/dashboard", { replace: true });
+    }, 2000);
   }
 
   // Handle successful sign up
@@ -469,12 +461,23 @@ export function InvitationAcceptPage() {
         } = await supabase.auth.getUser();
 
         // Get invitation details
-        const invitationData = await getInvitationByToken(tokenValue);
+        const invitationResult = await getInvitationByToken(tokenValue);
 
-        if (!invitationData) {
-          safe(() => setPageState("expired-token"));
-          return;
+        if (!invitationResult.success) {
+          const code = invitationResult.error.code;
+          if (
+            code === "not_found" ||
+            code === "expired" ||
+            code === "invalid_status"
+          ) {
+            safe(() => setPageState("expired-token"));
+            return;
+          }
+
+          throw new Error(invitationResult.error.message);
         }
+
+        const invitationData = invitationResult.data;
 
         // Check if already accepted
         if (invitationData.invitation_status === "accepted") {

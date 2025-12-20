@@ -48,31 +48,32 @@ export function useRosterInvitations(
         toast.error("Missing required information");
         return;
       }
-      try {
-        const isResend = modals.playerToInvite.invitation_status === "pending";
-        const playerName = `${modals.playerToInvite.first_name} ${modals.playerToInvite.last_name}`;
-        await sendPlayerInvitation({
-          teamId,
-          playerId: modals.playerToInvite.id,
-          email,
-          playerName,
-          teamName: "Your Team",
-          invitedBy: "Coach",
-        });
-        info(
-          `[RosterPage] ${isResend ? "Resent" : "Sent"} invitation to ${playerName} at ${email}`
+      const isResend = modals.playerToInvite.invitation_status === "pending";
+      const playerName = `${modals.playerToInvite.first_name} ${modals.playerToInvite.last_name}`;
+
+      const result = await sendPlayerInvitation({
+        teamId,
+        playerId: modals.playerToInvite.id,
+        email,
+        playerName,
+        teamName: "Your Team",
+        invitedBy: "Coach",
+      });
+
+      if (!result.success) {
+        logError(
+          "[RosterPage] Failed to send invitation:",
+          result.error.message
         );
-        toast.success(
-          `Invitation ${isResend ? "resent" : "sent"} to ${playerName}`
-        );
-        await loadRoster();
-      } catch (error) {
-        logError("[RosterPage] Failed to send invitation:", error);
-        toast.error(
-          `Failed to send invitation: ${error instanceof Error ? error.message : "Unknown error"}`
-        );
-        throw error;
+        toast.error(`Failed to send invitation: ${result.error.message}`);
+        return;
       }
+
+      info(
+        `[RosterPage] ${isResend ? "Resent" : "Sent"} invitation to ${playerName} at ${email}`
+      );
+      toast.success(`Invitation ${isResend ? "resent" : "sent"} to ${playerName}`);
+      await loadRoster();
     },
     [modals.playerToInvite, teamId, toast, loadRoster]
   );
@@ -86,27 +87,26 @@ export function useRosterInvitations(
       toast.error("Team ID not found");
       return;
     }
-    try {
-      info("[RosterPage] Sending invitation to player");
-      const playerName = `${playerForm.first_name} ${playerForm.last_name}`;
-      const result = await sendPlayerInvitation({
-        playerId: modals.editingPlayer?.id || "",
-        email: playerForm.email_address,
-        playerName,
-        teamName: "Your Team",
-        invitedBy: "Coach",
-        teamId,
-      });
-      if (result.success) {
-        toast.success(result.message);
-        await loadRoster();
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      logError("[RosterPage] Failed to send invitation:", error);
-      toast.error("Failed to send invitation. Please try again.");
+
+    info("[RosterPage] Sending invitation to player");
+    const playerName = `${playerForm.first_name} ${playerForm.last_name}`;
+    const result = await sendPlayerInvitation({
+      playerId: modals.editingPlayer?.id || "",
+      email: playerForm.email_address,
+      playerName,
+      teamName: "Your Team",
+      invitedBy: "Coach",
+      teamId,
+    });
+
+    if (!result.success) {
+      logError("[RosterPage] Failed to send invitation:", result.error.message);
+      toast.error(result.error.message);
+      return;
     }
+
+    toast.success("Invitation sent successfully");
+    await loadRoster();
   }, [playerForm, teamId, modals.editingPlayer, toast, loadRoster]);
 
   return {

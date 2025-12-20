@@ -11,6 +11,10 @@
  */
 
 import { debug, error as logError } from "../../utils/logger";
+import {
+  serviceFail,
+  serviceOk,
+} from "../serviceResult";
 
 export interface SendEmailParams {
   to: string;
@@ -20,18 +24,16 @@ export interface SendEmailParams {
   replyTo?: string;
 }
 
-export interface SendEmailResult {
-  success: boolean;
-  messageId?: string;
-  error?: string;
-}
+type SendEmailErrorCode = "http_error" | "exception";
+
+type SendEmailData = {
+  messageId: string;
+};
 
 /**
  * Send a generic email via serverless function
  */
-export async function sendEmail(
-  params: SendEmailParams
-): Promise<SendEmailResult> {
+export async function sendEmail(params: SendEmailParams) {
   try {
     const { to, subject, html, text } = params;
 
@@ -58,24 +60,23 @@ export async function sendEmail(
 
     if (!response.ok || !result.success) {
       logError("[EmailService] Error sending email:", result.error);
-      return {
-        success: false,
-        error: result.error || "Failed to send email",
-      };
+      return serviceFail<SendEmailData, SendEmailErrorCode>(
+        "http_error",
+        result.error || "Failed to send email"
+      );
     }
 
     debug("[EmailService] Email sent successfully:", result.messageId);
 
-    return {
-      success: true,
-      messageId: result.messageId,
-    };
+    return serviceOk({
+      messageId: result.messageId || "",
+    });
   } catch (error) {
     logError("[EmailService] Exception sending email:", error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
+    return serviceFail<SendEmailData, SendEmailErrorCode>(
+      "exception",
+      error instanceof Error ? error.message : "Unknown error"
+    );
   }
 }
 
@@ -95,7 +96,7 @@ export interface PlayerInvitationEmailParams {
 
 export async function sendPlayerInvitationEmail(
   params: PlayerInvitationEmailParams
-): Promise<SendEmailResult> {
+) {
   const {
     to,
     playerName,
@@ -151,7 +152,7 @@ export interface InvitationReminderEmailParams {
 
 export async function sendInvitationReminderEmail(
   params: InvitationReminderEmailParams
-): Promise<SendEmailResult> {
+) {
   const { to, playerName, teamName, teamLogoUrl, invitationLink, expiresAt } =
     params;
 
