@@ -7,7 +7,9 @@ import { config } from "dotenv";
 config({ path: "../.env.local" });
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const serviceRoleKey = process.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
+const serviceRoleKey =
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  process.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !serviceRoleKey) {
   console.error("❌ Missing required environment variables");
@@ -19,8 +21,13 @@ const supabase = createClient(supabaseUrl, serviceRoleKey, {
 });
 
 async function setupAdmin() {
-  const adminEmail = "justindepierro@gmail.com";
-  const adminPassword = "MiniCooper2010!";
+  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminPassword = process.env.ADMIN_PASSWORD;
+
+  if (!adminEmail || !adminPassword) {
+    console.error("❌ Missing ADMIN_EMAIL or ADMIN_PASSWORD in env");
+    process.exit(1);
+  }
 
   console.log("👑 SETTING UP ADMIN USER");
   console.log("========================\n");
@@ -72,7 +79,7 @@ async function setupAdmin() {
     console.log("\n🎉 ADMIN SETUP COMPLETE");
     console.log("=======================");
     console.log(`Email: ${adminEmail}`);
-    console.log(`Password: ${adminPassword}`);
+    console.log("Password: (set via ADMIN_PASSWORD env var)");
     console.log("\n💡 Next: Test login at http://localhost:5173");
   } catch (err) {
     console.error("❌ Error:", (err as Error).message);

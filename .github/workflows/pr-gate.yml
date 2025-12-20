@@ -33,6 +33,10 @@ jobs:
         id: lint
         run: npm run lint
 
+      - name: 🔐 Client Secret Guard
+        id: secrets
+        run: npm run security:client-secrets
+
       - name: 🧪 Run Unit Tests
         id: test
         run: npm run test:ci
@@ -56,6 +60,7 @@ jobs:
           script: |
             const typecheck = '${{ steps.typecheck.outcome }}';
             const lint = '${{ steps.lint.outcome }}';
+            const secrets = '${{ steps.secrets.outcome }}';
             const test = '${{ steps.test.outcome }}';
             const build = '${{ steps.build.outcome }}';
             const perf = '${{ steps.perf.outcome }}';
@@ -68,15 +73,17 @@ jobs:
             |-------|--------|
             | Type Check | ${emoji(typecheck)} ${typecheck} |
             | Lint | ${emoji(lint)} ${lint} |
+            | Client Secrets | ${emoji(secrets)} ${secrets} |
             | Tests | ${emoji(test)} ${test} |
             | Build | ${emoji(build)} ${build} |
             | Perf Budgets | ${emoji(perf)} ${perf} |
 
             ${lint === 'failure' ? '⚠️ **Lint errors detected.** Run `npm run lint` locally to see details.' : ''}
+            ${secrets === 'failure' ? '🚨 **Client secret guard failed.** Ensure no service-role keys/tokens appear in `src/`.' : ''}
             ${test === 'failure' ? '⚠️ **Tests failing.** Run `npm run test` locally to debug.' : ''}
             ${build === 'failure' ? '⚠️ **Build failed.** Check build logs for errors.' : ''}
             ${perf === 'failure' ? '⚠️ **Perf budgets exceeded.** Run `npm run build:only && npm run perf:budgets` locally to see details.' : ''}
-            ${typecheck === 'success' && lint === 'success' && test === 'success' && build === 'success' ? '🎉 **All checks passed!** Ready to merge.' : ''}
+            ${typecheck === 'success' && lint === 'success' && secrets === 'success' && test === 'success' && build === 'success' ? '🎉 **All checks passed!** Ready to merge.' : ''}
 
             ---
             📚 [Design System Lockdown Progress](https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/docs/DESIGN_SYSTEM_LOCKDOWN.md)
@@ -90,5 +97,5 @@ jobs:
             });
 
       - name: ❌ Fail if any check failed
-        if: steps.typecheck.outcome != 'success' || steps.lint.outcome != 'success' || steps.test.outcome != 'success' || steps.build.outcome != 'success' || steps.perf.outcome != 'success'
+        if: steps.typecheck.outcome != 'success' || steps.lint.outcome != 'success' || steps.secrets.outcome != 'success' || steps.test.outcome != 'success' || steps.build.outcome != 'success' || steps.perf.outcome != 'success'
         run: exit 1

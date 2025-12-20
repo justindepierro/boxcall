@@ -9,19 +9,16 @@ import { join } from "path";
 config();
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const serviceRoleKey = process.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
+const serviceRoleKey =
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  process.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
 console.log("🔍 Debug - SUPABASE_URL:", supabaseUrl ? "SET" : "NOT SET");
-console.log(
-  "🔍 Debug - SERVICE_ROLE_KEY:",
-  serviceRoleKey
-    ? "SET (" + serviceRoleKey.substring(0, 10) + "...)"
-    : "NOT SET"
-);
+console.log("🔍 Debug - SERVICE_ROLE_KEY:", serviceRoleKey ? "SET" : "NOT SET");
 
 if (!supabaseUrl || !serviceRoleKey) {
   console.error(
-    "❌ Missing required environment variables: VITE_SUPABASE_URL and VITE_SUPABASE_SERVICE_ROLE_KEY"
+    "❌ Missing required environment variables: VITE_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY"
   );
   process.exit(1);
 }

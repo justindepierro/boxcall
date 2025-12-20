@@ -40,6 +40,7 @@ Verified complete:
 - (28) Playwright smoke suite is present in `tests/e2e/` and enforced via GitHub Actions (`CI` workflow `e2e-smoke` job).
 - (26) Service-layer contract tests exist (Supabase stub helper + initial contract coverage for `RosterService`).
 - (27) Regression tests added for fragile areas: app reset event (`appReset`), auth loader redirects (`loaderAuth`), and offline sync queue behavior (`OfflineExecutionQueue`).
+- (23) Client secret guard is enforced (fails CI/validate if service-role keys or JWT-like tokens appear in `src/`). Service role keys are reserved for server-side scripts/workflows.
 
 Verified partial (keep unchecked for now):
 - (11) Zustand store surface area is not yet reduced: `src/app/store.ts` remains a broad “god store” (even though some domain stores exist elsewhere).
@@ -85,7 +86,7 @@ Verified missing:
 - [ ] (22) Normalize telemetry: one schema, consistent fields, single dispatcher integration
 
 ## Security & Safety
-- [ ] (23) Security pass: verify no service-role key usage; ensure RLS + team isolation patterns everywhere
+- [x] (23) Security pass: verify no service-role key usage; ensure RLS + team isolation patterns everywhere
 - [ ] (24) Harden auth flows (reset password redirects, invite accept) with consistent allowlist/validation
 - [ ] (25) Add “sensitive logging” scrubber (never log tokens/PII, even in dev)
 
