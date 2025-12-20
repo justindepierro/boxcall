@@ -7,6 +7,11 @@ import { PlayCardWrapper } from "./PlayCardWrapper";
 import { PlayGridSkeleton } from "./PlayGridSkeleton";
 import { PlayGridErrorState } from "./PlayGridErrorState";
 import { PlayGridEmptyState } from "./PlayGridEmptyState";
+import {
+  PLAYGRID_CLEAR_FILTERS_EVENT,
+  PLAYGRID_OPEN_IMPORT_EVENT,
+  dispatchDocumentAppEvent,
+} from "../../utils/appEvents";
 import { Virtuoso } from "react-virtuoso";
 import { useTeamsData } from "../../hooks/useTeamsData";
 import { useActiveTeamStore } from "../../stores/activeTeamStore";
@@ -316,14 +321,12 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       {showEmpty && !loading && !error && (
         <PlayGridEmptyState
           onCreatePlay={onOpenBuilder}
-          onImportPlays={() =>
-            document.dispatchEvent(new CustomEvent("playgrid:open-import"))
-          }
+            onImportPlays={() => dispatchDocumentAppEvent(PLAYGRID_OPEN_IMPORT_EVENT)}
           hasActiveFilters={!!hasFilters}
           totalPlayCount={plays.length}
-          onClearFilters={() =>
-            document.dispatchEvent(new CustomEvent("playgrid:clear-filters"))
-          }
+            onClearFilters={() =>
+              dispatchDocumentAppEvent(PLAYGRID_CLEAR_FILTERS_EVENT)
+            }
         />
       )}
 

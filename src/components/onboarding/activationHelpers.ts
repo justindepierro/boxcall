@@ -1,4 +1,9 @@
 import { telemetry } from "../../telemetry/dispatcher";
+import {
+  ACTIVATION_FLAG_SET_EVENT,
+  type ActivationFlagId,
+  dispatchWindowAppEvent,
+} from "../../utils/appEvents";
 
 const LS_KEY = "bc_activation_flags";
 interface ActivationFlags {
@@ -26,7 +31,7 @@ function saveFlags(f: ActivationFlags) {
 }
 
 function markFlag(
-  flag: keyof ActivationFlags,
+  flag: ActivationFlagId,
   telemetryType: string,
   extra?: Record<string, unknown>
 ) {
@@ -38,15 +43,10 @@ function markFlag(
     data: { timeFromSignupMs: Date.now() - signupTs, ...extra },
   });
   // Only assign boolean flags, ignore startedAt which is numeric
-  if (flag !== "startedAt") {
-    // All non-startedAt flags are boolean
-    (flags as Record<string, unknown>)[flag as string] = true;
-  }
+  (flags as Record<string, unknown>)[flag as string] = true;
   saveFlags(flags);
   try {
-    window.dispatchEvent(
-      new CustomEvent("activation:flag_set", { detail: { id: flag } })
-    );
+    dispatchWindowAppEvent(ACTIVATION_FLAG_SET_EVENT, { id: flag });
   } catch {
     /* ignore */
   }

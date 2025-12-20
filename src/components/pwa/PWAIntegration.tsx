@@ -8,19 +8,19 @@
 
 import React, { useEffect, useState } from "react";
 import { debug } from "../../utils/logger";
+import {
+  PWA_INSTALL_AVAILABLE_EVENT,
+  dispatchWindowAppEvent,
+} from "../../utils/appEvents";
 
 type InstallPrompt = any;
-
-const INSTALL_EVENT = "pwa:install-available";
 
 let deferredInstallPrompt: InstallPrompt | null = null;
 
 const dispatchInstallAvailability = () => {
-  window.dispatchEvent(
-    new CustomEvent<{ available: boolean }>(INSTALL_EVENT, {
-      detail: { available: deferredInstallPrompt !== null },
-    })
-  );
+  dispatchWindowAppEvent(PWA_INSTALL_AVAILABLE_EVENT, {
+    available: deferredInstallPrompt !== null,
+  });
 };
 
 export const isPWAInstallAvailable = () => deferredInstallPrompt !== null;

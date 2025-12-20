@@ -6,6 +6,13 @@ import { Icon } from "../ui/Icon/Icon";
 import { telemetry } from "../../telemetry/dispatcher";
 import { useAuth } from "../../app/auth-store";
 import { supabase } from "../../lib/supabase";
+import {
+  ACTIVATION_FLAG_SET_EVENT,
+  OPEN_PLAY_BUILDER_EVENT,
+  OPEN_PRACTICE_PLANNER_EVENT,
+  addWindowAppEventListener,
+  dispatchWindowAppEvent,
+} from "../../utils/appEvents";
 
 interface ActivationFlags {
   team?: boolean;
@@ -86,16 +93,10 @@ export const ActivationChecklist: React.FC = () => {
 
   // Listen for external activation flag events
   useEffect(() => {
-    const handler = (e: Event) => {
-      const detail = (e as CustomEvent).detail as
-        | { id?: keyof ActivationFlags }
-        | undefined;
-      if (detail?.id) {
-        updateFlag(detail.id, true, false); // no duplicate telemetry
-      }
-    };
-    window.addEventListener("activation:flag_set", handler);
-    return () => window.removeEventListener("activation:flag_set", handler);
+    return addWindowAppEventListener(ACTIVATION_FLAG_SET_EVENT, (detail) => {
+      if (!detail?.id) return;
+      updateFlag(detail.id, true, false); // no duplicate telemetry
+    });
   }, [updateFlag]);
 
   // Initial detection (team membership + placeholder others)
@@ -141,7 +142,7 @@ export const ActivationChecklist: React.FC = () => {
       description: "Populate your playbook",
       cta: "New Play",
       action: () => {
-        window.dispatchEvent(new CustomEvent("open-play-builder"));
+        dispatchWindowAppEvent(OPEN_PLAY_BUILDER_EVENT);
       },
     },
     {
@@ -159,7 +160,7 @@ export const ActivationChecklist: React.FC = () => {
       description: "Share plan with staff",
       cta: "Export",
       action: () => {
-        window.dispatchEvent(new CustomEvent("open-practice-planner"));
+        dispatchWindowAppEvent(OPEN_PRACTICE_PLANNER_EVENT);
       },
     },
   ];

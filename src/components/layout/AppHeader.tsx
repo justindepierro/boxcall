@@ -15,6 +15,10 @@ import {
 } from "../pwa/PWAIntegration";
 import { triggerHapticFeedback } from "../../lib/hapticFeedback";
 import { debug } from "../../utils/logger";
+import {
+  PWA_INSTALL_AVAILABLE_EVENT,
+  addWindowAppEventListener,
+} from "../../utils/appEvents";
 
 // Lazy load GlobalSearch to defer search functionality until user interacts
 const GlobalSearch = lazy(() =>
@@ -425,13 +429,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   }, [lastScrollY, isVisible, onVisibilityChange]);
 
   useEffect(() => {
-    const handleAvailability = (event: Event) => {
-      const detail = (event as CustomEvent<{ available: boolean }>).detail;
+    return addWindowAppEventListener(PWA_INSTALL_AVAILABLE_EVENT, (detail) => {
       setCanInstallPWA(Boolean(detail?.available));
-    };
-    window.addEventListener("pwa:install-available", handleAvailability);
-    return () =>
-      window.removeEventListener("pwa:install-available", handleAvailability);
+    });
   }, []);
 
   const handleInstallClick = async () => {

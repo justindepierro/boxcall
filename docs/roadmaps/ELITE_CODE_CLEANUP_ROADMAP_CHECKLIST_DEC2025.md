@@ -44,6 +44,7 @@ Verified complete:
 - (24) Auth flow hardening is in place: returnUrl sanitization is enforced in `src/utils/navigationUtils.ts` (rejects external/protocol-relative URLs), invite accept links URL-encode tokens and redirect to canonical team routes, and a real `/reset-password` route exists (validated via `npm run validate` + unit tests).
 - (25) Sensitive logging scrubber is implemented in `src/utils/logger.ts`: JWTs/Bearer tokens/emails and common token/password keys are redacted before hitting `console.*` (covered by unit tests).
 - (18) Direct `fetch()` is banned outside the service/API layer via `boxcall-design/no-direct-fetch-outside-services` (allowed only in `src/services/*`, `src/lib/api/*`, and `src/sw.ts`).
+- (8) App/DOM custom events are typed and centralized: constants + typed dispatch/listen helpers live in `src/utils/appEvents.ts`, and existing feature events use them (activation, PWA install, PlayGrid).
 - (7) TypeScript strictness is tightened incrementally: `noImplicitOverride` is enabled in TS configs, overrides are fixed (e.g., ErrorBoundary), and remaining candidates are tracked in `docs/development/TYPESCRIPT_STRICTNESS_TRACKER.md`.
 
 Verified partial (keep unchecked for now):
@@ -67,7 +68,7 @@ Verified missing:
 
 ## TypeScript & Events
 - [x] (7) Tighten TypeScript strictness incrementally and track remaining violations
-- [ ] (8) Replace stringly-typed DOM/app events with typed constants + payload types
+- [x] (8) Replace stringly-typed DOM/app events with typed constants + payload types
 - [ ] (9) Normalize service return patterns (consistent Result-style or consistent throw) so components don’t guess failures
 - [ ] (10) Centralize and type all localStorage keys/usage in one storage module
 
