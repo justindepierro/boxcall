@@ -127,8 +127,14 @@ const ResetPasswordPage: React.FC = () => {
                 placeholder="Enter a new password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                status={!password || passwordValidation.isValid ? undefined : "error"}
-                errorMessage={!password || passwordValidation.isValid ? undefined : passwordValidation.message}
+                status={
+                  !password || passwordValidation.isValid ? undefined : "error"
+                }
+                errorMessage={
+                  !password || passwordValidation.isValid
+                    ? undefined
+                    : passwordValidation.message
+                }
                 required
                 fullWidth
               />
@@ -140,7 +146,9 @@ const ResetPasswordPage: React.FC = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 status={
-                  !confirmPassword || confirmValidation.isValid ? undefined : "error"
+                  !confirmPassword || confirmValidation.isValid
+                    ? undefined
+                    : "error"
                 }
                 errorMessage={
                   !confirmPassword || confirmValidation.isValid

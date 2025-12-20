@@ -215,10 +215,7 @@ export class DatabaseConnectivityService {
         return result;
       } catch (error) {
         lastError = error as Error;
-        warn(
-          `⚠️ ${operationName} failed on attempt ${attempt}:`,
-          error
-        );
+        warn(`⚠️ ${operationName} failed on attempt ${attempt}:`, error);
 
         // Check if error is retryable
         if (

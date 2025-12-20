@@ -67,7 +67,10 @@ export function usePreference<K extends keyof UserPreferences>(
           if (JSON.stringify(serverValue) === JSON.stringify(localValue))
             return;
 
-          debug(`[usePreference] Synced ${String(key)} from server:`, serverValue);
+          debug(
+            `[usePreference] Synced ${String(key)} from server:`,
+            serverValue
+          );
           setValue(serverValue);
           // Also update localStorage cache for next load
           saveToLocalStorage(key, serverValue);
@@ -77,7 +80,10 @@ export function usePreference<K extends keyof UserPreferences>(
         // Server has no value but we have a localStorage value - migrate it
         if (localValue === defaultValue) return;
 
-        debug(`[usePreference] Migrating ${String(key)} to server:`, localValue);
+        debug(
+          `[usePreference] Migrating ${String(key)} to server:`,
+          localValue
+        );
         const success = await PreferenceService.savePreference(key, localValue);
         if (!success) {
           warn(

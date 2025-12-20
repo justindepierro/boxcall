@@ -21,7 +21,9 @@ export interface VitalsSnapshotEntry {
   timestamp: number;
 }
 
-export type VitalsSnapshot = Partial<Record<WebVitalsName, VitalsSnapshotEntry>>;
+export type VitalsSnapshot = Partial<
+  Record<WebVitalsName, VitalsSnapshotEntry>
+>;
 
 // 10% sampling by default to reduce volume
 const SAMPLE_RATE = Number(import.meta.env?.VITE_VITALS_SAMPLE_RATE ?? 0.1);

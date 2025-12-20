@@ -3,10 +3,7 @@
  */
 import React from "react";
 import type { Database } from "../../../../types/database";
-import type {
-  ProfileFormData,
-  ValidationErrors,
-} from "../../hooks/page";
+import type { ProfileFormData, ValidationErrors } from "../../hooks/page";
 import { Button } from "../../../../components/ui/Button";
 import { Typography } from "../../../../components/design-system/Typography";
 import { MultiBadgeDisplay } from "../../../../components/ui/MultiBadgeDisplay";

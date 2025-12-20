@@ -9,7 +9,9 @@ describe("redirectUtils", () => {
   it("isSafeInternalRedirectPath rejects unsafe targets", () => {
     expect(isSafeInternalRedirectPath("http://evil.com" as any)).toBe(false);
     expect(isSafeInternalRedirectPath("//evil.com" as any)).toBe(false);
-    expect(isSafeInternalRedirectPath("javascript:alert(1)" as any)).toBe(false);
+    expect(isSafeInternalRedirectPath("javascript:alert(1)" as any)).toBe(
+      false
+    );
     expect(isSafeInternalRedirectPath("/ok but space" as any)).toBe(false);
     expect(isSafeInternalRedirectPath("/bad\\path" as any)).toBe(false);
   });

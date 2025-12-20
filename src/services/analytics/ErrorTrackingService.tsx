@@ -196,7 +196,11 @@ export class ErrorTrackingService {
         Sentry.captureMessage(message, context?.level || "info");
       });
     } else {
-      debug(`🐛 Message captured (${context?.level || "info"}):`, message, context);
+      debug(
+        `🐛 Message captured (${context?.level || "info"}):`,
+        message,
+        context
+      );
     }
   }
 

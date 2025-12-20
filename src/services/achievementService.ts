@@ -502,7 +502,9 @@ export class AchievementService {
 
       // For blank slate mode, return empty achievements
       if (devMode === "blank_slate") {
-        debug("[Achievement] Returning empty achievements for blank slate mode");
+        debug(
+          "[Achievement] Returning empty achievements for blank slate mode"
+        );
         return this.getEmptyAchievements();
       }
 

@@ -105,10 +105,7 @@ export class RoleService {
     debug(`RoleService: Teams query took ${Date.now() - teamsQueryStart}ms`);
 
     if (teamsResult.error) {
-      warn(
-        "RoleService: Team names fetch failed:",
-        teamsResult.error.message
-      );
+      warn("RoleService: Team names fetch failed:", teamsResult.error.message);
       return [];
     }
 
@@ -183,9 +180,7 @@ export class RoleService {
         getActiveTeamMembershipsByUserId(userId),
       ]);
 
-      debug(
-        `RoleService: Queries completed in ${Date.now() - profileStart}ms`
-      );
+      debug(`RoleService: Queries completed in ${Date.now() - profileStart}ms`);
       debug("RoleService: profileResult:", profileResult);
       debug("RoleService: membershipsResult:", membershipsResult);
 

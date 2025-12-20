@@ -41,7 +41,8 @@ const REDACTED = "[REDACTED]";
 const REDACTED_EMAIL = "[REDACTED_EMAIL]";
 const REDACTED_TOKEN = "[REDACTED_TOKEN]";
 
-const SENSITIVE_KEY_PATTERN = /(pass(word)?|secret|token|access[_-]?token|refresh[_-]?token|api[_-]?key|authorization|cookie|set-cookie|session)/i;
+const SENSITIVE_KEY_PATTERN =
+  /(pass(word)?|secret|token|access[_-]?token|refresh[_-]?token|api[_-]?key|authorization|cookie|set-cookie|session)/i;
 
 // JWTs commonly start with "eyJ" and contain 3 base64url segments.
 const JWT_PATTERN = /eyJ[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+/g;
@@ -71,7 +72,11 @@ function scrubError(err: unknown): unknown {
   return clone;
 }
 
-function scrubUnknown(value: unknown, depth = 0, seen = new WeakSet<object>()): unknown {
+function scrubUnknown(
+  value: unknown,
+  depth = 0,
+  seen = new WeakSet<object>()
+): unknown {
   if (value == null) return value as LogPrimitive;
   if (typeof value === "string") return scrubString(value);
   if (typeof value === "number" || typeof value === "boolean") return value;

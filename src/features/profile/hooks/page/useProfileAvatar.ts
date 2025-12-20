@@ -117,7 +117,10 @@ export function useProfileAvatar(
         debug("🔗 Public URL:", avatarUrl);
 
         // Update profile with new avatar URL
-        const updateResult = await updateProfileAvatarUrl(profile.id, avatarUrl);
+        const updateResult = await updateProfileAvatarUrl(
+          profile.id,
+          avatarUrl
+        );
 
         if (updateResult.error) {
           logError("Profile update error:", updateResult.error);

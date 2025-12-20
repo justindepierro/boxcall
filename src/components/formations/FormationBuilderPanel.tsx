@@ -140,7 +140,13 @@ function usePanelOperations({
 const FORMATION_BUILDER_TABS = [
   { id: "details" as const, label: "Formation Details", icon: Save },
   ...(import.meta.env.DEV
-    ? [{ id: "diagnostic" as const, label: "Data Diagnostic", icon: AlertCircle }]
+    ? [
+        {
+          id: "diagnostic" as const,
+          label: "Data Diagnostic",
+          icon: AlertCircle,
+        },
+      ]
     : []),
   { id: "review" as const, label: "Direction Review", icon: AlertCircle },
   {
@@ -627,11 +633,13 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
           )}
 
           {/* Data Diagnostic Tab (dev-only) */}
-          {!hideSubTabs && import.meta.env.DEV && activeTab === "diagnostic" && (
-            <React.Suspense fallback={null}>
-              <FormationDataDiagnosticPanel playbookId={playbookId} />
-            </React.Suspense>
-          )}
+          {!hideSubTabs &&
+            import.meta.env.DEV &&
+            activeTab === "diagnostic" && (
+              <React.Suspense fallback={null}>
+                <FormationDataDiagnosticPanel playbookId={playbookId} />
+              </React.Suspense>
+            )}
 
           {/* Direction Review Tab */}
           {!hideSubTabs && activeTab === "review" && (

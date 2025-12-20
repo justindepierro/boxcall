@@ -28,10 +28,12 @@ const HealthStatusSection: React.FC<{
           </span>
         </div>
         <div>
-          <strong>Sign-in Success:</strong> {health.signInSuccessRate.toFixed(1)}%
+          <strong>Sign-in Success:</strong>{" "}
+          {health.signInSuccessRate.toFixed(1)}%
         </div>
         <div>
-          <strong>Sign-up Success:</strong> {health.signUpSuccessRate.toFixed(1)}%
+          <strong>Sign-up Success:</strong>{" "}
+          {health.signUpSuccessRate.toFixed(1)}%
         </div>
         <div>
           <strong>Network Errors:</strong> {health.networkErrors}
@@ -135,7 +137,8 @@ const SessionInfoSection: React.FC<{
           <strong>Time Until Expiry:</strong> {getTimeUntilExpiry()}
         </div>
         <div>
-          <strong>Session ID:</strong> {session?.access_token ? "Present" : "Missing"}
+          <strong>Session ID:</strong>{" "}
+          {session?.access_token ? "Present" : "Missing"}
         </div>
       </div>
     </div>
@@ -249,7 +252,9 @@ const AuthTimingsSection: React.FC<{
               <div className="text-xs text-secondary">
                 {statusLabel === "idle" ? "waiting" : statusLabel}
                 {avgDuration != null && (
-                  <span className="ml-1 text-muted">· avg {Math.round(avgDuration)}ms</span>
+                  <span className="ml-1 text-muted">
+                    · avg {Math.round(avgDuration)}ms
+                  </span>
                 )}
               </div>
             </div>
@@ -272,7 +277,9 @@ const RecentErrorsSection: React.FC<{
         {errors.map((err, index) => (
           <div key={index} className="mb-xs text-error-600 dark:text-error-400">
             <div className="font-medium">{err.operation}</div>
-            <div className="text-error-600 dark:text-error-500">{err.error}</div>
+            <div className="text-error-600 dark:text-error-500">
+              {err.error}
+            </div>
             <div className="text-xs text-error-500 dark:text-error-500">
               {err.timestamp.toLocaleTimeString()}
               {err.userId && ` • User: ${err.userId.slice(0, 8)}...`}

@@ -88,11 +88,7 @@ export function useEvent(id: string) {
       if (import.meta.env.DEV && match) {
         const parse = CalendarEventSchema.safeParse(match);
         if (!parse.success) {
-          warn(
-            "Invalid CalendarEvent shape",
-            parse.error.issues,
-            match
-          );
+          warn("Invalid CalendarEvent shape", parse.error.issues, match);
         }
       }
       return match;
@@ -320,11 +316,7 @@ export function useComments(eventId: string) {
         for (const c of data.slice(0, 50)) {
           const parse = CalendarCommentSchema.safeParse(c);
           if (!parse.success) {
-            warn(
-              "Invalid CalendarComment shape",
-              parse.error.issues,
-              c
-            );
+            warn("Invalid CalendarComment shape", parse.error.issues, c);
           }
         }
       }

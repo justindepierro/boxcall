@@ -8,14 +8,7 @@
  * - Can be easily disabled in production
  */
 
-import {
-  debug,
-  group,
-  groupCollapsed,
-  info,
-  logError,
-  warn,
-} from "./logger";
+import { debug, group, groupCollapsed, info, logError, warn } from "./logger";
 
 const isDev = import.meta.env.DEV;
 const isDebugMode = import.meta.env.VITE_DEBUG === "true";

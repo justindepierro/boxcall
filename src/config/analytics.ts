@@ -202,7 +202,6 @@ export function logAnalyticsConfig() {
       });
     }
   });
-
 }
 
 // Export configuration as default

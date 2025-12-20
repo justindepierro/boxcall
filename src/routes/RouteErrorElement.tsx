@@ -153,7 +153,9 @@ export const RouteErrorElement: React.FC = () => {
               variant="secondary"
               size="sm"
               onClick={handleRetry}
-              disabled={(!isOnline && retryCount >= 3) || revalidator.state !== "idle"}
+              disabled={
+                (!isOnline && retryCount >= 3) || revalidator.state !== "idle"
+              }
             >
               {retryCount > 0 ? `Retry (${retryCount})` : "Retry"}
             </Button>

@@ -64,7 +64,7 @@ export interface UseAutosavePlayerReturn {
   triggerAutosave: (updates: PlayerRosterUpdate) => void;
 
   /**
-    * Trigger a manual save immediately (no debounce)
+   * Trigger a manual save immediately (no debounce)
    */
   saveNow: (updates: PlayerRosterUpdate) => Promise<void>;
 

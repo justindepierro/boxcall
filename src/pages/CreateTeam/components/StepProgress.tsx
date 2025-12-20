@@ -23,7 +23,8 @@ export const StepProgress: React.FC<StepProgressProps> = ({
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${(() => {
                 if (index === currentStepIndex) return "bg-blue-600 text-white";
-                if (currentStepIndex > index) return "bg-success-600 text-white";
+                if (currentStepIndex > index)
+                  return "bg-success-600 text-white";
                 return "bg-muted text-secondary";
               })()}`}
             >

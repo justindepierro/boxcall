@@ -56,9 +56,8 @@ function ConflictOverlay() {
 function App() {
   const [appResetKey, setAppResetKey] = useState(0);
   const [showDevPanel, setShowDevPanel] = useState(false);
-  const [DevPanelComponent, setDevPanelComponent] = useState<
-    React.ComponentType<DevPanelProps> | null
-  >(null);
+  const [DevPanelComponent, setDevPanelComponent] =
+    useState<React.ComponentType<DevPanelProps> | null>(null);
 
   // Initialize theme system
   useTheme();

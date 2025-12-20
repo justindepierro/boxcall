@@ -48,11 +48,7 @@ describe("RosterService contract", () => {
     const { fns } = mockFromChain(
       supabaseMock,
       "team_players",
-      [
-        { method: "select" },
-        { method: "eq" },
-        { method: "order" },
-      ],
+      [{ method: "select" }, { method: "eq" }, { method: "order" }],
       { data: [row], error: null }
     );
 
@@ -61,7 +57,9 @@ describe("RosterService contract", () => {
     expect(supabaseMock.from).toHaveBeenCalledWith("team_players");
     expect(fns.select).toHaveBeenCalledWith("*");
     expect(fns.eq).toHaveBeenCalledWith("team_id", teamId);
-    expect(fns.order).toHaveBeenCalledWith("jersey_number", { ascending: true });
+    expect(fns.order).toHaveBeenCalledWith("jersey_number", {
+      ascending: true,
+    });
 
     expect(result).toEqual([
       {
@@ -96,15 +94,13 @@ describe("RosterService contract", () => {
     mockFromChain(
       supabaseMock,
       "team_players",
-      [
-        { method: "select" },
-        { method: "eq" },
-        { method: "order" },
-      ],
+      [{ method: "select" }, { method: "eq" }, { method: "order" }],
       { data: null, error: { message: "boom" } }
     );
 
-    await expect(RosterService.instance.listByTeam(teamId)).rejects.toMatchObject({
+    await expect(
+      RosterService.instance.listByTeam(teamId)
+    ).rejects.toMatchObject({
       message: "boom",
     });
   });

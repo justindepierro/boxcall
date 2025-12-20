@@ -206,7 +206,10 @@ export class PreferenceService {
               return false;
             }
 
-            debug("[PreferenceService] Saved preferences to server:", data.settings);
+            debug(
+              "[PreferenceService] Saved preferences to server:",
+              data.settings
+            );
             // Invalidate cache after successful save
             this.preferencesCache = {
               data: merged,
@@ -216,7 +219,10 @@ export class PreferenceService {
             resolve(true);
             return true;
           } catch (error) {
-            logError("[PreferenceService] Exception saving preferences:", error);
+            logError(
+              "[PreferenceService] Exception saving preferences:",
+              error
+            );
             resolve(false);
             return false;
           }

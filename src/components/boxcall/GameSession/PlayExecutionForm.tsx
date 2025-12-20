@@ -6,7 +6,12 @@ import React from "react";
 import { Typography } from "../../design-system";
 import { FormSelect } from "../../ui";
 import { Icon } from "../../ui/Icon/Icon";
-import { QUICK_TAGS, RESULT_OPTIONS, COVERAGE_OPTIONS, type PlayExecutionFormProps } from "./types";
+import {
+  QUICK_TAGS,
+  RESULT_OPTIONS,
+  COVERAGE_OPTIONS,
+  type PlayExecutionFormProps,
+} from "./types";
 import type { ExecutionResult, OpponentCoverage } from "../../../types/session";
 
 export const PlayExecutionForm: React.FC<PlayExecutionFormProps> = ({

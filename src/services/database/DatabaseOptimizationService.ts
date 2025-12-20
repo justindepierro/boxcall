@@ -154,10 +154,7 @@ export class DatabaseOptimizationService {
 
     // Log slow queries
     if (metrics.duration > this.config.slowQueryThreshold) {
-      warn(
-        `🐌 Slow query detected (${metrics.duration}ms):`,
-        metrics.query
-      );
+      warn(`🐌 Slow query detected (${metrics.duration}ms):`, metrics.query);
     }
 
     // Log all queries in development

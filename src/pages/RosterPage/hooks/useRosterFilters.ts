@@ -61,7 +61,9 @@ export const useRosterFilters = (
   const navigate = useNavigate();
   const location = useLocation();
 
-  const initialFiltersRef = useRef(parseRosterFiltersFromSearch(location.search));
+  const initialFiltersRef = useRef(
+    parseRosterFiltersFromSearch(location.search)
+  );
 
   // Filter state
   const [searchTerm, setSearchTerm] = useState(

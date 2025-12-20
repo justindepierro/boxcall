@@ -9,5 +9,7 @@ export type DevPanelControlDetail = {
 
 export function requestDevPanelControl(detail: DevPanelControlDetail): void {
   if (typeof window === "undefined") return;
-  window.dispatchEvent(new CustomEvent<DevPanelControlDetail>(DEV_PANEL_CONTROL_EVENT, { detail }));
+  window.dispatchEvent(
+    new CustomEvent<DevPanelControlDetail>(DEV_PANEL_CONTROL_EVENT, { detail })
+  );
 }

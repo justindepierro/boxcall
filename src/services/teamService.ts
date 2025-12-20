@@ -561,14 +561,19 @@ export class TeamService {
 
           const code = (err as { code?: string } | null)?.code;
           const message = err instanceof Error ? err.message : String(err);
-          if (code === "42501" || message.toLowerCase().includes("row-level security")) {
+          if (
+            code === "42501" ||
+            message.toLowerCase().includes("row-level security")
+          ) {
             logError("🔒 RLS Policy Error creating team");
             throw new Error(
               "Database permission error: Your account doesn't have permission to create teams. This might be an RLS policy issue. Please contact support."
             );
           }
 
-          throw new Error(`Failed to create team: ${message || "Unknown database error"}`);
+          throw new Error(
+            `Failed to create team: ${message || "Unknown database error"}`
+          );
         }
       };
 

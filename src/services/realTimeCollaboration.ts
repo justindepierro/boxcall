@@ -274,7 +274,9 @@ class RealTimeCollaborationService {
     setTimeout(() => {
       if (!this.isConnected && this.sessionId) {
         debug(`Reconnection attempt ${this.reconnectAttempts}`);
-        this.connect().catch((err) => logError("WebSocket reconnect failed:", err));
+        this.connect().catch((err) =>
+          logError("WebSocket reconnect failed:", err)
+        );
       }
     }, this.reconnectDelay * this.reconnectAttempts);
   }

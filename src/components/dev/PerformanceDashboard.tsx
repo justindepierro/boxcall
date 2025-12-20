@@ -42,9 +42,9 @@ function getWebVitalsRating(
 
 function getBundleLoadTimeMs(): number | null {
   if (typeof window === "undefined" || !window.performance) return null;
-  const navigation = window.performance.getEntriesByType(
-    "navigation"
-  )[0] as PerformanceNavigationTiming | undefined;
+  const navigation = window.performance.getEntriesByType("navigation")[0] as
+    | PerformanceNavigationTiming
+    | undefined;
   if (!navigation) return null;
   const loadTime = navigation.loadEventEnd - navigation.fetchStart;
   return Number.isFinite(loadTime) && loadTime >= 0 ? loadTime : null;

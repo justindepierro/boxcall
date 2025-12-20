@@ -215,7 +215,10 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
     try {
       setLoading(true);
       setFetchError(null);
-      debug("📋 [PracticeScriptList] Starting to load scripts for team:", teamId);
+      debug(
+        "📋 [PracticeScriptList] Starting to load scripts for team:",
+        teamId
+      );
       const fetchedScripts =
         await PracticeScriptService.getPracticeScripts(teamId);
       debug("📋 [PracticeScriptList] Loaded scripts:", {

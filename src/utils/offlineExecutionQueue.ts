@@ -82,7 +82,10 @@ export class OfflineExecutionQueue {
     } catch (err) {
       // Corrupted localStorage is a recoverable scenario; clear the bad value
       // to avoid repeated parse failures.
-      debug("[OfflineExecutionQueue] Failed to parse offline queue; clearing", err);
+      debug(
+        "[OfflineExecutionQueue] Failed to parse offline queue; clearing",
+        err
+      );
       try {
         localStorage.removeItem(QUEUE_STORAGE_KEY);
       } catch {

@@ -235,11 +235,7 @@ async function initializeAuth() {
 
 // Listen for auth changes
 supabase.auth.onAuthStateChange(async (event, session) => {
-  debug(
-    "[Auth] State changed:",
-    event,
-    session?.user?.email || "no user"
-  );
+  debug("[Auth] State changed:", event, session?.user?.email || "no user");
 
   if (session) {
     useAuth.setState({

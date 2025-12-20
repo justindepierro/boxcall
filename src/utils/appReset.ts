@@ -9,5 +9,7 @@ export function requestAppReset(reason?: string) {
   } catch {
     // ignore logging failures
   }
-  window.dispatchEvent(new CustomEvent(APP_RESET_EVENT, { detail: { reason } }));
+  window.dispatchEvent(
+    new CustomEvent(APP_RESET_EVENT, { detail: { reason } })
+  );
 }

@@ -5,11 +5,7 @@ import { Typography } from "../../components/design-system/Typography";
 import { LoadingScreen } from "../../components/ui/LoadingScreen";
 import { debug } from "../../utils/logger";
 import { ProfilePageContent } from "./components/page/ProfilePageContent";
-import {
-  useProfileForm,
-  useProfileAvatar,
-  useProfileSave,
-} from "./hooks/page";
+import { useProfileForm, useProfileAvatar, useProfileSave } from "./hooks/page";
 
 type ProfileMessage = { type: "success" | "error"; text: string };
 

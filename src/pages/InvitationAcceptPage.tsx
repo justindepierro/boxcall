@@ -213,78 +213,82 @@ const AuthRequiredState = ({
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface p-4">
-    <div className="max-w-md w-full">
-      {/* Team Header */}
-      {team && invitation && (
-        <div className="bg-primary rounded-lg shadow-md p-6 mb-4">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-primary mb-2">
-              Join {team.name}
-            </h1>
-            {team.school_name && (
-              <p className="text-secondary text-sm mb-4">{team.school_name}</p>
-            )}
-            <div className="bg-secondary rounded-lg p-4">
-              <p className="text-sm text-secondary mb-1">
-                You've been invited as:
-              </p>
-              <p className="text-lg font-semibold text-primary">
-                {invitation.first_name} {invitation.last_name}
-              </p>
-              {playerEmail && (
-                <p className="text-sm text-muted">{playerEmail}</p>
+      <div className="max-w-md w-full">
+        {/* Team Header */}
+        {team && invitation && (
+          <div className="bg-primary rounded-lg shadow-md p-6 mb-4">
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-primary mb-2">
+                Join {team.name}
+              </h1>
+              {team.school_name && (
+                <p className="text-secondary text-sm mb-4">
+                  {team.school_name}
+                </p>
               )}
-            </div>
-            <div className="mt-4 text-xs text-muted">
-              Invitation expires:{" "}
-              {new Date(invitation.invitation_expires_at).toLocaleDateString()}
+              <div className="bg-secondary rounded-lg p-4">
+                <p className="text-sm text-secondary mb-1">
+                  You've been invited as:
+                </p>
+                <p className="text-lg font-semibold text-primary">
+                  {invitation.first_name} {invitation.last_name}
+                </p>
+                {playerEmail && (
+                  <p className="text-sm text-muted">{playerEmail}</p>
+                )}
+              </div>
+              <div className="mt-4 text-xs text-muted">
+                Invitation expires:{" "}
+                {new Date(
+                  invitation.invitation_expires_at
+                ).toLocaleDateString()}
+              </div>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Auth Forms */}
-      <div className="bg-primary rounded-lg shadow-2xl p-6">
-        {/* Tab Switcher */}
-        <div className="flex border-b border-muted mb-6">
-          <button
-            onClick={() => onSetAuthMode("signup")}
-            className={`flex-1 py-2 text-sm font-medium border-b-2 transition-colors ${
-              authMode === "signup"
-                ? "border-primary text-primary"
-                : "border-transparent text-secondary hover:text-primary"
-            }`}
-          >
-            Create Account
-          </button>
-          <button
-            onClick={() => onSetAuthMode("signin")}
-            className={`flex-1 py-2 text-sm font-medium border-b-2 transition-colors ${
-              authMode === "signin"
-                ? "border-primary text-primary"
-                : "border-transparent text-secondary hover:text-primary"
-            }`}
-          >
-            Sign In
-          </button>
-        </div>
-
-        {/* Sign Up Form */}
-        {authMode === "signup" && invitation && (
-          <SignUpForm
-            prefilledEmail={playerEmail}
-            prefilledFirstName={invitation.first_name}
-            prefilledLastName={invitation.last_name}
-            onSuccess={onSignUpSuccess}
-            redirectTo={inviteAcceptPath}
-          />
         )}
 
-        {/* Sign In Form */}
-        {authMode === "signin" && <SignInForm onSuccess={onSignInSuccess} />}
+        {/* Auth Forms */}
+        <div className="bg-primary rounded-lg shadow-2xl p-6">
+          {/* Tab Switcher */}
+          <div className="flex border-b border-muted mb-6">
+            <button
+              onClick={() => onSetAuthMode("signup")}
+              className={`flex-1 py-2 text-sm font-medium border-b-2 transition-colors ${
+                authMode === "signup"
+                  ? "border-primary text-primary"
+                  : "border-transparent text-secondary hover:text-primary"
+              }`}
+            >
+              Create Account
+            </button>
+            <button
+              onClick={() => onSetAuthMode("signin")}
+              className={`flex-1 py-2 text-sm font-medium border-b-2 transition-colors ${
+                authMode === "signin"
+                  ? "border-primary text-primary"
+                  : "border-transparent text-secondary hover:text-primary"
+              }`}
+            >
+              Sign In
+            </button>
+          </div>
+
+          {/* Sign Up Form */}
+          {authMode === "signup" && invitation && (
+            <SignUpForm
+              prefilledEmail={playerEmail}
+              prefilledFirstName={invitation.first_name}
+              prefilledLastName={invitation.last_name}
+              onSuccess={onSignUpSuccess}
+              redirectTo={inviteAcceptPath}
+            />
+          )}
+
+          {/* Sign In Form */}
+          {authMode === "signin" && <SignInForm onSuccess={onSignInSuccess} />}
+        </div>
       </div>
     </div>
-  </div>
   );
 };
 

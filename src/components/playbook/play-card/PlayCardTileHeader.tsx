@@ -192,10 +192,10 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
             <SelectionCheckbox
               isSelected={Boolean(isSelected)}
               onChange={(selected) => {
-                      debug("[PlayCardTileHeader] SelectionCheckbox onChange:", {
-                        playId: play.id,
-                        selected,
-                      });
+                debug("[PlayCardTileHeader] SelectionCheckbox onChange:", {
+                  playId: play.id,
+                  selected,
+                });
                 onSelectionChange(play.id, selected);
               }}
               label={`Select ${tileTitle}`}

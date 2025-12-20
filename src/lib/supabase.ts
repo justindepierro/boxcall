@@ -13,10 +13,7 @@ if (import.meta.env.DEV) {
     "🔧 VITE_SUPABASE_URL:",
     supabaseUrl ? `${supabaseUrl.substring(0, 30)}...` : "MISSING"
   );
-  debug(
-    "🔧 VITE_SUPABASE_ANON_KEY:",
-    supabaseAnonKey ? "PRESENT" : "MISSING"
-  );
+  debug("🔧 VITE_SUPABASE_ANON_KEY:", supabaseAnonKey ? "PRESENT" : "MISSING");
 }
 
 function createDevStub(): SupabaseClient<Database> {
@@ -198,11 +195,7 @@ if (import.meta.env.DEV && typeof window !== "undefined") {
     const { data: teams, error: teamsError } = await supabaseClient
       .from("teams")
       .select("id, name");
-    debug(
-      "4. Teams visible:",
-      teams?.length || 0,
-      teamsError?.message || ""
-    );
+    debug("4. Teams visible:", teams?.length || 0, teamsError?.message || "");
 
     return { session, profile, memberships, teams };
   };

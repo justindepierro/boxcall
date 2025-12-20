@@ -19,7 +19,10 @@ vi.mock("../../lib/supabase", () => ({
 
 import { supabase } from "../../lib/supabase";
 import { ROUTES } from "../paths";
-import { getCurrentUserWithRole, requireAuthenticatedLoader } from "../loaderAuth";
+import {
+  getCurrentUserWithRole,
+  requireAuthenticatedLoader,
+} from "../loaderAuth";
 
 describe("loaderAuth", () => {
   beforeEach(() => {
@@ -40,11 +43,7 @@ describe("loaderAuth", () => {
     mockFromChain(
       supabase as any,
       "profiles",
-      [
-        { method: "select" },
-        { method: "eq" },
-        { method: "maybeSingle" },
-      ],
+      [{ method: "select" }, { method: "eq" }, { method: "maybeSingle" }],
       { data: { role: "coach", email: "profile@email.com" }, error: null }
     );
 
@@ -72,11 +71,7 @@ describe("loaderAuth", () => {
     mockFromChain(
       supabase as any,
       "profiles",
-      [
-        { method: "select" },
-        { method: "eq" },
-        { method: "maybeSingle" },
-      ],
+      [{ method: "select" }, { method: "eq" }, { method: "maybeSingle" }],
       { data: { role: "coach", email: null }, error: null }
     );
 

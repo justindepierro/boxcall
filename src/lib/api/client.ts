@@ -173,10 +173,7 @@ export class ApiClient {
       );
       if (zustandAuth) {
         const parsed = JSON.parse(zustandAuth);
-        debug(
-          "🔌 [ApiClient] boxcall-auth-storage full state:",
-          parsed?.state
-        );
+        debug("🔌 [ApiClient] boxcall-auth-storage full state:", parsed?.state);
         const session = parsed?.state?.session;
         debug("[ApiClient] boxcall-auth-storage parsed:", {
           hasSession: !!session,
@@ -292,7 +289,9 @@ export class ApiClient {
 
         if (attempt < maxRetries) {
           const delay = retryDelay * Math.pow(2, attempt);
-          debug(`🔌 [ApiClient] Retry ${attempt + 1}/${maxRetries} in ${delay}ms`);
+          debug(
+            `🔌 [ApiClient] Retry ${attempt + 1}/${maxRetries} in ${delay}ms`
+          );
           await this.sleep(delay);
         }
       }

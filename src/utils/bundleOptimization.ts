@@ -81,10 +81,7 @@ export const analyzeBundleSize = () => {
         navigationEntry.domContentLoadedEventEnd - navigationEntry.fetchStart,
         "ms"
       );
-      debug(
-        "First Contentful Paint:",
-        "Check Lighthouse for FCP metrics"
-      );
+      debug("First Contentful Paint:", "Check Lighthouse for FCP metrics");
       // end group
     }
   }
@@ -103,10 +100,7 @@ export const dynamicImportWithRetry = async <T>(
       return await importFn();
     } catch (error) {
       lastError = error as Error;
-      warn(
-        `Dynamic import failed (attempt ${i + 1}/${maxRetries}):`,
-        error
-      );
+      warn(`Dynamic import failed (attempt ${i + 1}/${maxRetries}):`, error);
 
       if (i < maxRetries - 1) {
         await new Promise((resolve) => setTimeout(resolve, delay * (i + 1)));

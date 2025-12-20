@@ -196,7 +196,9 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       if (!playbookId || playbookId === "demo-playbook-id") {
         debug("[CSVImportModal] Resolving user playbook");
         actualPlaybookId = await PlaysService.ensureUserHasPlaybook();
-        debug("[CSVImportModal] Using playbook ID", { playbookId: actualPlaybookId });
+        debug("[CSVImportModal] Using playbook ID", {
+          playbookId: actualPlaybookId,
+        });
       }
       setImportProgress(25);
 

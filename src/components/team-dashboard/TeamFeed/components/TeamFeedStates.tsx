@@ -65,7 +65,8 @@ export const EmptyFeed: React.FC<EmptyFeedProps> = ({
                 {
                   label: "View Roadmap",
                   variant: "ghost",
-                  onClick: () => debug("[TeamFeedStates] Onboarding roadmap click"),
+                  onClick: () =>
+                    debug("[TeamFeedStates] Onboarding roadmap click"),
                 },
               ]
         }

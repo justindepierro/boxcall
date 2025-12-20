@@ -33,7 +33,9 @@ function usePreloadImageAsset(priority: boolean, src: string) {
     if (!priority || !src) return;
     cdnService
       .preloadAsset(src, "image")
-      .catch((error) => warn("[OptimizedImage] Failed to preload image:", error));
+      .catch((error) =>
+        warn("[OptimizedImage] Failed to preload image:", error)
+      );
   }, [priority, src]);
 }
 

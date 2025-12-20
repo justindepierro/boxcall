@@ -21,7 +21,9 @@ export async function updateProfileAvatarUrl(
 
 export async function getProfileRoleById(
   profileId: string
-): Promise<DbResult<Pick<Database["public"]["Tables"]["profiles"]["Row"], "role"> | null>> {
+): Promise<
+  DbResult<Pick<Database["public"]["Tables"]["profiles"]["Row"], "role"> | null>
+> {
   const { data, error } = await table("profiles")
     .select("role")
     .eq("id", profileId)
