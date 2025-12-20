@@ -6,7 +6,7 @@
 
 import { supabase } from "../lib/supabase";
 import { getCurrentUserId } from "../lib/auth-helpers";
-import { logError } from "../utils/logger";
+import { logError, warn } from "../utils/logger";
 
 const BUCKET_NAME = "announcement-images";
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB original
@@ -115,7 +115,7 @@ export async function uploadImage(file: File): Promise<UploadImageResult> {
       try {
         fileToUpload = await resizeImage(file);
       } catch (error) {
-        console.warn("Failed to resize image, uploading original:", error);
+        warn("Failed to resize image, uploading original:", error);
         // Continue with original file if resize fails
       }
     }

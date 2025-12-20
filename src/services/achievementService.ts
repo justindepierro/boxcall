@@ -421,7 +421,7 @@ class AchievementTracker {
           "[Achievement] achievement_definitions or achievement_progress tables may not exist:",
           earnedError.message
         );
-        console.info(
+        debug(
           "[Achievement] Returning empty achievements - system not fully initialized"
         );
         return { earned: [], progress: [], definitions: [] };
@@ -498,11 +498,11 @@ export class AchievementService {
     devMode?: string
   ): Promise<AchievementData> {
     try {
-      console.info(`[Achievement] Getting achievements for user ${userId}`);
+      debug(`[Achievement] Getting achievements for user ${userId}`);
 
       // For blank slate mode, return empty achievements
       if (devMode === "blank_slate") {
-        console.info("🆕 Returning empty achievements for blank slate mode");
+        debug("[Achievement] Returning empty achievements for blank slate mode");
         return this.getEmptyAchievements();
       }
 

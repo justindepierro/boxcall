@@ -1,4 +1,5 @@
 import type { PracticeBlock } from "./types";
+import { logError } from "../../utils/logger";
 
 // Re-export centralized formatDuration for backwards compatibility
 export { formatDuration } from "../../utils/dateFormatting";
@@ -192,7 +193,7 @@ export const loadPracticeFromStorage = (
     try {
       return JSON.parse(savedPractice);
     } catch (error) {
-      console.error("Error loading saved practice plan:", error);
+      logError("Error loading saved practice plan:", error);
       return null;
     }
   }

@@ -8,13 +8,14 @@
  * 4. Supports request deduplication
  * 5. Works seamlessly online/offline
  *
- * This replaces all scattered direct fetch workarounds with a single,
+ * This replaces all scattered direct fetch calls with a single,
  * well-tested, type-safe API layer.
  */
 
 /* eslint-disable complexity */
 
 import type { Database } from "../../types/database";
+import { debug } from "../../utils/logger";
 
 // Types
 type TableName = keyof Database["public"]["Tables"];
@@ -124,13 +125,13 @@ export class ApiClient {
       const stored = this.getStoredToken();
       if (stored) {
         currentAccessToken = stored;
-        console.log("🔌 [ApiClient] Using token from localStorage");
+        debug("[ApiClient] Using token from localStorage");
       }
     }
 
     this.initialized = true;
-    console.log(
-      "🔌 [ApiClient] Initialized:",
+    debug(
+      "[ApiClient] Initialized:",
       currentAccessToken ? "with auth token" : "with anon key only"
     );
   }
@@ -143,13 +144,13 @@ export class ApiClient {
     try {
       // First try Supabase's storage (most reliable source)
       const supabaseAuth = localStorage.getItem("boxcall-auth");
-      console.log(
+      debug(
         "🔌 [ApiClient] Checking boxcall-auth:",
         supabaseAuth ? "exists" : "missing"
       );
       if (supabaseAuth) {
         const parsed = JSON.parse(supabaseAuth);
-        console.log("🔌 [ApiClient] boxcall-auth parsed:", {
+        debug("[ApiClient] boxcall-auth parsed:", {
           hasAccessToken: !!parsed?.access_token,
           expiresAt: parsed?.expires_at,
           now: Math.floor(Date.now() / 1000),
@@ -159,25 +160,25 @@ export class ApiClient {
 
         // Check if token is not expired (with 60s buffer)
         if (parsed?.access_token && (!expiresAt || expiresAt >= now + 60)) {
-          console.log("🔌 [ApiClient] Using token from Supabase storage");
+          debug("[ApiClient] Using token from Supabase storage");
           return parsed.access_token;
         }
       }
 
       // Fallback: try Zustand's persisted auth store
       const zustandAuth = localStorage.getItem("boxcall-auth-storage");
-      console.log(
+      debug(
         "🔌 [ApiClient] Checking boxcall-auth-storage:",
         zustandAuth ? "exists" : "missing"
       );
       if (zustandAuth) {
         const parsed = JSON.parse(zustandAuth);
-        console.log(
+        debug(
           "🔌 [ApiClient] boxcall-auth-storage full state:",
           parsed?.state
         );
         const session = parsed?.state?.session;
-        console.log("🔌 [ApiClient] boxcall-auth-storage parsed:", {
+        debug("[ApiClient] boxcall-auth-storage parsed:", {
           hasSession: !!session,
           hasAccessToken: !!session?.access_token,
           expiresAt: session?.expires_at,
@@ -191,7 +192,7 @@ export class ApiClient {
 
           // Check if token is not expired (with 60s buffer)
           if (!expiresAt || expiresAt >= now + 60) {
-            console.log("🔌 [ApiClient] Using token from Zustand storage");
+            debug("[ApiClient] Using token from Zustand storage");
             return session.access_token;
           }
         }
@@ -199,7 +200,7 @@ export class ApiClient {
 
       return null;
     } catch (e) {
-      console.log("🔌 [ApiClient] Error reading stored token:", e);
+      debug("[ApiClient] Error reading stored token:", e);
       return null;
     }
   }
@@ -209,12 +210,7 @@ export class ApiClient {
    */
   static setAccessToken(token: string | null): void {
     currentAccessToken = token;
-    if (import.meta.env.DEV) {
-      console.log(
-        "🔌 [ApiClient] Token updated:",
-        token ? "present" : "cleared"
-      );
-    }
+    debug("[ApiClient] Token updated:", token ? "present" : "cleared");
   }
 
   /**
@@ -239,10 +235,7 @@ export class ApiClient {
     // Check for in-flight duplicate request
     const inflight = inflightRequests.get(cacheKey);
     if (inflight) {
-      console.log(
-        "🔌 [ApiClient] Deduplicating request:",
-        cacheKey.substring(0, 50)
-      );
+      debug("[ApiClient] Deduplicating request:", cacheKey.substring(0, 50));
       return inflight;
     }
 
@@ -299,9 +292,7 @@ export class ApiClient {
 
         if (attempt < maxRetries) {
           const delay = retryDelay * Math.pow(2, attempt);
-          console.log(
-            `🔌 [ApiClient] Retry ${attempt + 1}/${maxRetries} in ${delay}ms`
-          );
+          debug(`🔌 [ApiClient] Retry ${attempt + 1}/${maxRetries} in ${delay}ms`);
           await this.sleep(delay);
         }
       }
@@ -449,9 +440,7 @@ export class ApiClient {
       const storedToken = this.getStoredToken();
       if (storedToken) {
         currentAccessToken = storedToken;
-        console.log(
-          "🔌 [ApiClient] Recovered token from storage before request"
-        );
+        debug("[ApiClient] Recovered token from storage before request");
       }
     }
 
@@ -495,7 +484,7 @@ export class ApiClient {
     };
 
     // Log auth status for debugging
-    console.log("🔌 [ApiClient] Request to", table, {
+    debug("[ApiClient] Request to", table, {
       hasAuthToken: !!currentAccessToken,
       tokenPrefix: currentAccessToken?.substring(0, 20) || "none",
       usingAnonKey: !currentAccessToken,

@@ -5,6 +5,8 @@
  * and contextual predictions to improve perceived performance.
  */
 
+import { warn } from "../utils/logger";
+
 interface PreloadableResource {
   id: string;
   loader: () => Promise<any>;
@@ -79,7 +81,7 @@ export class SmartPreloader {
       await resource.loader();
       this.preloadedResources.add(resourceId);
     } catch (error) {
-      console.warn(`Failed to preload resource ${resourceId}:`, error);
+      warn(`Failed to preload resource ${resourceId}:`, error);
     }
   }
 

@@ -3,7 +3,7 @@
  * Part of Phase 3D: Final Mobile Polish & Performance Optimization
  */
 
-import { logError } from "./logger";
+import { debug, logError, warn } from "./logger";
 
 // Route preloading utilities
 export const preloadRoute = (routeName: string) => {
@@ -23,7 +23,7 @@ export const preloadRoute = (routeName: string) => {
     case "login":
       return import("../pages/LoginPage");
     default:
-      console.warn("Unknown route for preloading:", routeName);
+      warn("Unknown route for preloading:", routeName);
       return Promise.resolve();
   }
 };
@@ -45,7 +45,7 @@ export const useSmartPreloading = () => {
       // Preload after a small delay to not interfere with current page loading
       setTimeout(() => {
         preloadRoute(route).catch((error) => {
-          console.warn("Route preloading failed:", route, error);
+          warn("Route preloading failed:", route, error);
         });
       }, 100);
     });
@@ -66,8 +66,8 @@ export const useRouteAnalytics = () => {
     }
 
     // Log performance in development
-    if (process.env.NODE_ENV === "development") {
-      console.info(`📊 Route ${routeName} loaded in ${loadTime}ms`);
+    if (import.meta.env.DEV) {
+      debug(`📊 Route ${routeName} loaded in ${loadTime}ms`);
     }
   };
 

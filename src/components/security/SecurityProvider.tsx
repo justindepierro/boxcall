@@ -11,6 +11,7 @@ import {
   useCSRFProtection,
   useSecureSession,
 } from "../../hooks/useSecurity";
+import { warn } from "../../utils/logger";
 
 interface SecurityProviderProps {
   children: React.ReactNode;
@@ -71,7 +72,7 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({
         // Clicks faster than 100ms
         rapidClickCount++;
         if (rapidClickCount > 10) {
-          console.warn("🚨 Suspicious activity detected: Rapid clicking");
+          warn("🚨 Suspicious activity detected: Rapid clicking");
           rapidClickCount = 0; // Reset
         }
       } else {

@@ -5,7 +5,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { logError } from "../utils/logger";
+import { debug, logError } from "../utils/logger";
 import {
   accessibilityConfig,
   KEYBOARD_KEYS,
@@ -271,7 +271,7 @@ export function useA11yTesting() {
     const checkAccessibility = async () => {
       try {
         // Placeholder for axe-core integration
-        console.log("A11y testing enabled in development mode");
+        debug("A11y testing enabled in development mode");
       } catch (error) {
         logError("Accessibility testing error:", error);
       }

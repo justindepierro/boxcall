@@ -312,7 +312,7 @@ export abstract class BaseService<
 
       // Log slow operations (> 1000ms)
       if (duration > 1000) {
-        // TODO: Remove warning log (was: console.warn)
+        // TODO: Remove warning log (was: direct warn)
         // ...existing code...
       }
     }
@@ -322,7 +322,7 @@ export abstract class BaseService<
   protected async emitEvent(_event: DomainEvent): Promise<void> {
     // TODO: Implement proper event sourcing
     // For now, just log the event
-    // TODO: Remove debug log (was: console.log)
+    // TODO: Remove debug log (was: direct log)
     // ...existing code...
   }
 

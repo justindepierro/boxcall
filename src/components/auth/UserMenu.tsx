@@ -4,11 +4,13 @@
  */
 
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/Button/Button";
 import { useAuth } from "../../app/auth-store";
 import { Typography } from "@components/design-system/Typography";
 import { warn } from "../../utils/logger";
 import { TeamSwitcher } from "../layout/TeamSwitcher";
+import { getActiveTeamId } from "../../utils/activeTeam";
 
 interface UserMenuProps {
   teams?: Array<{ id: string; name: string }>;
@@ -16,6 +18,7 @@ interface UserMenuProps {
 
 export const UserMenu: React.FC<UserMenuProps> = ({ teams = [] }) => {
   const { user, profile, signOut, loading } = useAuth();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -139,7 +142,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ teams = [] }) => {
             <Button
               onClick={() => {
                 setIsOpen(false);
-                console.info("Navigate to profile");
+                navigate("/profile");
               }}
               variant="ghost"
               size="xs"
@@ -151,7 +154,12 @@ export const UserMenu: React.FC<UserMenuProps> = ({ teams = [] }) => {
             <Button
               onClick={() => {
                 setIsOpen(false);
-                console.info("Navigate to team");
+                const teamId = getActiveTeamId();
+                if (teamId) {
+                  navigate(`/team/${teamId}/settings`);
+                } else {
+                  navigate("/team-bulletin");
+                }
               }}
               variant="ghost"
               size="xs"

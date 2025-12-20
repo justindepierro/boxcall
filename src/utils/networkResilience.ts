@@ -2,7 +2,7 @@
  * Network resilience utilities for handling offline scenarios and network failures
  */
 
-import { logError } from "./logger";
+import { logError, warn } from "./logger";
 
 export class NetworkResilience {
   private static online =
@@ -136,7 +136,7 @@ export class NetworkResilience {
         const jitter = Math.random() * 0.1 * delay; // Add up to 10% jitter
         const finalDelay = delay + jitter;
 
-        console.warn(
+        warn(
           `⚠️ Operation failed (attempt ${attempt + 1}/${maxRetries + 1}), retrying in ${Math.round(finalDelay)}ms:`,
           lastError.message
         );

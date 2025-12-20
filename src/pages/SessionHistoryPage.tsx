@@ -22,7 +22,7 @@ import { ExecutionTrackingService } from "../services/executionTrackingService";
 import { triggerHapticFeedback } from "../lib/hapticFeedback";
 import { formatRelativeDate } from "../utils/dateFormatting";
 import type { PracticeSession, GameSession } from "../types/session";
-import { logError } from "../utils/logger";
+import { debug, logError } from "../utils/logger";
 
 /**
  * Skeleton loading state for Session History page
@@ -434,7 +434,7 @@ const SessionHistoryPage: React.FC = () => {
     } else {
       // TODO: Navigate to session detail page when implemented
       // For now, just show a toast that replay isn't available
-      console.log(
+      debug(
         `Session ${session.id} has no linked ${session.type === "practice" ? "script" : "plan"}`
       );
     }

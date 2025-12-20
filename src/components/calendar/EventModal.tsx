@@ -21,7 +21,7 @@ import type {
   CalendarEventCreate,
 } from "../../domain/calendar/types";
 import type { Database } from "../../types/database";
-import { logError } from "../../utils/logger";
+import { debug, logError } from "../../utils/logger";
 
 type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
 
@@ -230,7 +230,7 @@ export const EventModal: React.FC<EventModalProps> = ({
         <PracticeScriptModal
           onClose={() => setShowPracticePlanner(false)}
           onSave={(script) => {
-            console.log("Practice script saved:", script);
+            debug("Practice script saved:", script);
             // TODO: Save to database and show success message
             setShowPracticePlanner(false);
           }}

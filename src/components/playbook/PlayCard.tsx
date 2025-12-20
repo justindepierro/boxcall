@@ -39,7 +39,7 @@ import {
   normalizePlayText,
 } from "./play-card/helpers";
 import { usePlayFieldValues } from "./AddNewPlayModal/hooks/usePlayFieldValues";
-import { logError } from "../../utils/logger";
+import { debug, logError } from "../../utils/logger";
 
 interface PlayCardProps {
   play: PlayType;
@@ -158,7 +158,8 @@ export const PlayCard: React.FC<PlayCardProps> = ({
 
   // DEBUG: Log play data to check what's in the database
   useEffect(() => {
-    console.log("[PlayCard] Play data from database:", {
+    if (!import.meta.env.DEV) return;
+    debug("[PlayCard] Play data from database:", {
       play_name: play.play_name,
       formation: play.formation,
       f_type: play.f_type,

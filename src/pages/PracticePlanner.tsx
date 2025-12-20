@@ -3,7 +3,6 @@ import { format } from "date-fns";
 import { useNavigate, useParams } from "react-router-dom";
 import { Typography } from "../components/design-system/Typography";
 import { Button } from "../components/ui/Button/Button";
-import { PDFExportTrigger } from "../components/practice/LazyPDFExport";
 import { PageLayout } from "../components/layout/PageLayout";
 import { LoadingScreen } from "../components/ui/LoadingScreen";
 import { Aurora } from "../components/ui/Aurora";
@@ -26,6 +25,7 @@ import {
   PracticeBlocksList,
   PracticeSidebar,
 } from "./PracticePlanner/sections";
+import { debug } from "../utils/logger";
 
 const CreateBlockModal = lazy(() =>
   import("./PracticePlanner/components").then((module) => ({
@@ -35,6 +35,12 @@ const CreateBlockModal = lazy(() =>
 const TemplatesModal = lazy(() =>
   import("./PracticePlanner/components").then((module) => ({
     default: module.TemplatesModal,
+  }))
+);
+
+const PDFExportTrigger = lazy(() =>
+  import("../components/practice/LazyPDFExport").then((module) => ({
+    default: module.PDFExportTrigger,
   }))
 );
 
@@ -192,7 +198,7 @@ export function PracticePlanner() {
   // Handler for template selection
   const handleSelectTemplate = async (templateId: string) => {
     // TODO: Implement template loading
-    console.log("Loading template:", templateId);
+    debug("[PracticePlanner] Loading template:", templateId);
     setIsTemplateModalOpen(false);
   };
 
@@ -283,10 +289,12 @@ export function PracticePlanner() {
 
         {/* PDF Export */}
         {isPDFExportOpen && preparePracticeDataForPDF() && (
-          <PDFExportTrigger
-            practiceData={preparePracticeDataForPDF()!}
-            onClose={() => setIsPDFExportOpen(false)}
-          />
+          <Suspense fallback={null}>
+            <PDFExportTrigger
+              practiceData={preparePracticeDataForPDF()!}
+              onClose={() => setIsPDFExportOpen(false)}
+            />
+          </Suspense>
         )}
       </PageLayout>
     </Aurora>

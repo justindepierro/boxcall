@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
 import { getCurrentUserId } from "../lib/auth-helpers";
-import { logError } from "../utils/logger";
+import { debug, logError, warn } from "../utils/logger";
 import {
   PreferenceService,
   type UserPreferences,
@@ -67,10 +67,7 @@ export function usePreference<K extends keyof UserPreferences>(
           if (JSON.stringify(serverValue) === JSON.stringify(localValue))
             return;
 
-          console.log(
-            `[usePreference] Synced ${String(key)} from server:`,
-            serverValue
-          );
+          debug(`[usePreference] Synced ${String(key)} from server:`, serverValue);
           setValue(serverValue);
           // Also update localStorage cache for next load
           saveToLocalStorage(key, serverValue);
@@ -80,13 +77,10 @@ export function usePreference<K extends keyof UserPreferences>(
         // Server has no value but we have a localStorage value - migrate it
         if (localValue === defaultValue) return;
 
-        console.log(
-          `[usePreference] Migrating ${String(key)} to server:`,
-          localValue
-        );
+        debug(`[usePreference] Migrating ${String(key)} to server:`, localValue);
         const success = await PreferenceService.savePreference(key, localValue);
         if (!success) {
-          console.warn(
+          warn(
             `[usePreference] Failed to migrate ${String(key)} to server - will retry on next save`
           );
         }
@@ -151,16 +145,13 @@ export function usePreference<K extends keyof UserPreferences>(
           const userId = getCurrentUserId();
 
           if (userId && isMountedRef.current) {
-            console.log(
-              `[usePreference] Saving ${String(key)} to server:`,
-              newValue
-            );
+            debug(`[usePreference] Saving ${String(key)} to server:`, newValue);
             const success = await PreferenceService.savePreference(
               key,
               newValue
             );
             if (!success) {
-              console.warn(
+              warn(
                 `[usePreference] Failed to save ${String(key)} to server, kept in localStorage`
               );
             }

@@ -1,4 +1,5 @@
 // Minimal telemetry utility (can be expanded later)
+import { debug } from "../utils/logger";
 export type TelemetryEvent = {
   name: string;
   ts: number;
@@ -11,7 +12,7 @@ function emit(name: string, props?: Record<string, unknown>) {
   const evt: TelemetryEvent = { name, ts: Date.now(), props };
   queue.push(evt);
   if (import.meta.env.DEV) {
-    console.debug("[telemetry]", evt);
+    debug("[telemetry]", evt);
   }
 }
 

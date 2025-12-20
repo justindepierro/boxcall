@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
 import { Typography } from "../design-system/Typography";
 import { DashboardCustomizationPanel } from "./DashboardCustomizationPanel";
+import { debug } from "../../utils/logger";
 
 /**
  * Unified Settings & Tools Panel
@@ -207,8 +209,9 @@ export const UnifiedSettingsPanel: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [showCustomization, setShowCustomization] = useState(false);
   const [showDevTools, setShowDevTools] = useState(false);
+  const navigate = useNavigate();
 
-  const isDev = process.env.NODE_ENV === "development";
+  const isDev = import.meta.env.DEV;
 
   const toolCategories: ToolCategory[] = [
     {
@@ -229,7 +232,7 @@ export const UnifiedSettingsPanel: React.FC = () => {
           icon: "refresh-cw",
           action: () => {
             // Add reset logic
-            console.info("Reset dashboard layout");
+            debug("dashboard.reset_layout");
           },
           description: "Reset dashboard to default layout",
         },
@@ -244,7 +247,7 @@ export const UnifiedSettingsPanel: React.FC = () => {
           id: "team-demo",
           label: "Team Collaboration",
           icon: "message",
-          action: () => (window.location.href = "/collaborative-demo"),
+          action: () => navigate("/collaborative-demo"),
           description: "Access team collaboration features",
         },
         {
@@ -253,7 +256,7 @@ export const UnifiedSettingsPanel: React.FC = () => {
           icon: "link",
           action: () => {
             // Add sharing logic
-            console.info("Share dashboard");
+            debug("dashboard.share");
           },
           description: "Share your dashboard with team members",
         },
@@ -279,7 +282,7 @@ export const UnifiedSettingsPanel: React.FC = () => {
           icon: "list",
           action: () => {
             // Add logs logic
-            console.info("View system logs");
+            debug("dashboard.view_logs");
           },
           description: "View application logs and debug info",
           devOnly: true,

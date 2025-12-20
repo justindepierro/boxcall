@@ -3,10 +3,12 @@ import {
   isRouteErrorResponse,
   useRouteError,
   useNavigate,
+  useRevalidator,
 } from "react-router-dom";
 import { Typography } from "../components/design-system/Typography";
 import { Button } from "../components/ui";
 import { useAuth } from "../app/auth-store";
+import { logError } from "../utils/logger";
 
 function getRouteErrorUiState(params: { error: unknown; isOnline: boolean }) {
   let title = "Something went wrong";
@@ -72,6 +74,7 @@ function getRouteErrorUiState(params: { error: unknown; isOnline: boolean }) {
 export const RouteErrorElement: React.FC = () => {
   const error = useRouteError();
   const navigate = useNavigate();
+  const revalidator = useRevalidator();
   const { user, signOut } = useAuth();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [retryCount, setRetryCount] = useState(0);
@@ -95,7 +98,7 @@ export const RouteErrorElement: React.FC = () => {
 
   const handleRetry = () => {
     setRetryCount((prev) => prev + 1);
-    window.location.reload();
+    revalidator.revalidate();
   };
 
   const handleSignOut = async () => {
@@ -103,7 +106,7 @@ export const RouteErrorElement: React.FC = () => {
       await signOut();
       navigate("/login", { replace: true });
     } catch (error) {
-      console.error("Error signing out:", error);
+      logError("Error signing out:", error);
       // Force navigation even if sign out fails
       navigate("/login", { replace: true });
     }
@@ -150,7 +153,7 @@ export const RouteErrorElement: React.FC = () => {
               variant="secondary"
               size="sm"
               onClick={handleRetry}
-              disabled={!isOnline && retryCount >= 3}
+              disabled={(!isOnline && retryCount >= 3) || revalidator.state !== "idle"}
             >
               {retryCount > 0 ? `Retry (${retryCount})` : "Retry"}
             </Button>

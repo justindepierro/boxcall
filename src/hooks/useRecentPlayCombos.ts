@@ -3,6 +3,7 @@ import {
   validateFormationName,
   validatePersonnelValue,
 } from "../utils/playFieldValidation";
+import { warn } from "../utils/logger";
 
 export interface PlayCombo {
   formation: string;
@@ -50,7 +51,7 @@ function loadCombos(): PlayCombo[] {
 
     return sanitized;
   } catch (error) {
-    console.warn("[useRecentPlayCombos] Failed to read localStorage:", error);
+    warn("[useRecentPlayCombos] Failed to read localStorage:", error);
     return [];
   }
 }
@@ -60,7 +61,7 @@ function saveCombos(combos: PlayCombo[]) {
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(combos));
   } catch (error) {
-    console.warn("[useRecentPlayCombos] Failed to persist combos:", error);
+    warn("[useRecentPlayCombos] Failed to persist combos:", error);
   }
 }
 

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
 import { DevTools } from "../dev";
@@ -16,6 +17,7 @@ import { DashboardCustomizationPanel } from "./DashboardCustomizationPanel";
 export const FloatingActionsPanel: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showCustomization, setShowCustomization] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -27,7 +29,7 @@ export const FloatingActionsPanel: React.FC = () => {
             <div className="flex flex-col space-y-2 animate-in slide-in-from-bottom-2 fade-in duration-200">
               {/* Collaboration button */}
               <Button
-                onClick={() => (window.location.href = "/collaborative-demo")}
+                onClick={() => navigate("/collaborative-demo")}
                 className="w-12 h-12 rounded-full bg-text-info text-on-primary hover:bg-text-info/90 transition-colors duration-200 flex items-center justify-center"
                 title="Team Collaboration & Planning"
               >
@@ -44,7 +46,7 @@ export const FloatingActionsPanel: React.FC = () => {
               </Button>
 
               {/* Development tools in development mode */}
-              {process.env.NODE_ENV === "development" && (
+              {import.meta.env.DEV && (
                 <div className="w-12 h-12">
                   <DevTools />
                 </div>

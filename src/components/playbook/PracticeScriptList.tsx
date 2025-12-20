@@ -5,8 +5,7 @@ import { Button } from "../ui/Button/Button";
 import { Badge } from "../ui/Badge";
 import { PracticeScriptService, type PracticeScript } from "@services";
 import { useToast } from "../../hooks/useToast";
-import { PDFExportService } from "../../services/pdfExportService";
-import { logError } from "../../utils/logger";
+import { debug, logError } from "../../utils/logger";
 import { ConfirmationModal } from "../ui/ConfirmationModal/ConfirmationModal";
 import { useAuth } from "../../app/auth-store";
 
@@ -216,13 +215,10 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
     try {
       setLoading(true);
       setFetchError(null);
-      console.log(
-        "📋 [PracticeScriptList] Starting to load scripts for team:",
-        teamId
-      );
+      debug("📋 [PracticeScriptList] Starting to load scripts for team:", teamId);
       const fetchedScripts =
         await PracticeScriptService.getPracticeScripts(teamId);
-      console.log("📋 [PracticeScriptList] Loaded scripts:", {
+      debug("📋 [PracticeScriptList] Loaded scripts:", {
         count: fetchedScripts.length,
         scripts: fetchedScripts.map((s) => ({
           id: s.id,
@@ -243,10 +239,10 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
   useEffect(() => {
     // Only load scripts when we have a valid session
     if (session?.access_token) {
-      console.log("📋 [PracticeScriptList] Session ready, loading scripts...");
+      debug("📋 [PracticeScriptList] Session ready, loading scripts...");
       loadScripts();
     } else {
-      console.log("📋 [PracticeScriptList] Waiting for session...");
+      debug("📋 [PracticeScriptList] Waiting for session...");
     }
   }, [loadScripts, session?.access_token]);
 
@@ -291,6 +287,9 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
     async (script: PracticeScript) => {
       // Automatically use ultra-compact format (best for 50+ play scripts)
       try {
+        const { PDFExportService } = await import(
+          "../../services/pdfExportService"
+        );
         await PDFExportService.exportPracticeScript(script, "ultra-compact");
         success(`PDF downloaded: "${script.name}"`);
       } catch (err) {

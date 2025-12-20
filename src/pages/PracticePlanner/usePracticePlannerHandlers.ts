@@ -6,6 +6,7 @@ import type {
 } from "../../types/practice";
 import { PRACTICE_BLOCK_TYPES } from "../../types/practice";
 import { markFirstPracticeScheduled } from "../../components/onboarding/activationHelpers";
+import { error as logError } from "../../utils/logger";
 
 interface UsePracticePlannerHandlersProps {
   // State setters
@@ -52,7 +53,7 @@ export function usePracticePlannerHandlers({
     } catch (err) {
       // Revert on error
       setCurrentBlocks(currentBlocks);
-      console.error("Failed to reorder blocks:", err);
+      logError("Failed to reorder blocks:", err);
     }
   };
 
@@ -71,7 +72,7 @@ export function usePracticePlannerHandlers({
       const newBlock = await addBlock(blockData);
       setCurrentBlocks((prev) => [...prev, newBlock]);
     } catch (err) {
-      console.error("Failed to add block:", err);
+      logError("Failed to add block:", err);
     }
   };
 
@@ -82,7 +83,7 @@ export function usePracticePlannerHandlers({
       await deleteBlock(blockId);
       setCurrentBlocks((prev) => prev.filter((block) => block.id !== blockId));
     } catch (error) {
-      console.error("Failed to delete block:", error);
+      logError("Failed to delete block:", error);
     }
   };
 

@@ -41,7 +41,7 @@ export const PaymentStep: React.FC<PaymentStepProps> = ({ isSuperAdmin }) => {
           <div className="flex items-center gap-2 text-brand-jade-dark dark:text-brand-jade-light">
             <Icon name="unlock" size="sm" />
             <Typography variant="body-sm" className="font-medium">
-              Super Admin: Payment bypassed - coach account access granted
+              Super Admin: Payment skipped - coach account access granted
             </Typography>
           </div>
         </div>

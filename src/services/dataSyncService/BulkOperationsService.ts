@@ -10,7 +10,7 @@ import { PlaysService } from "../playsService";
 import type { Play } from "../../types/play";
 import type { InboundPlay as _InboundPlay } from "../../utils/playDataStandardization";
 import { CacheService } from "./CacheService";
-import { logError } from "../../utils/logger";
+import { debug, logError } from "../../utils/logger";
 
 export class BulkOperationsService {
   /**
@@ -29,9 +29,7 @@ export class BulkOperationsService {
     const created: Play[] = [];
     const errors: string[] = [];
 
-    console.info(
-      `🚀 Starting delegated bulk import of ${plays.length} plays...`
-    );
+    debug(`🚀 Starting delegated bulk import of ${plays.length} plays...`);
 
     try {
       // Sequential delegation (can be optimized/batched later)
@@ -43,7 +41,7 @@ export class BulkOperationsService {
             playbook_id: p.playbook_id || playbookId,
           };
 
-          // Create play using PlaysService directly (bypasses domain layer validation)
+          // Use PlaysService directly for bulk import; inputs should already be validated/standardized.
           const createdPlay = await PlaysService.createPlay(playWithPlaybookId);
 
           created.push(createdPlay);
@@ -60,7 +58,7 @@ export class BulkOperationsService {
       CacheService.delete(cacheKey);
 
       const duration = performance.now() - startTime;
-      console.info(
+      debug(
         `✅ Delegated bulk import complete: ${created.length}/${plays.length} plays created in ${duration.toFixed(2)}ms`
       );
 
@@ -94,7 +92,7 @@ export class BulkOperationsService {
     errors: string[];
     created: Play[];
   }> {
-    console.info("📊 Parsing CSV content...");
+    debug("📊 Parsing CSV content...");
 
     // Parse CSV using existing CSV service
     const parseResult = CSVService.parseCSVForPreview(csvContent);
@@ -117,7 +115,7 @@ export class BulkOperationsService {
     );
     const plays = convertResult.plays;
 
-    console.info(`📋 Parsed ${plays.length} valid plays from CSV`);
+    debug(`📋 Parsed ${plays.length} valid plays from CSV`);
 
     // Bulk create the parsed plays
     const bulkResult = await this.bulkCreatePlays(playbookId, plays);

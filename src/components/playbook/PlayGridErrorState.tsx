@@ -19,7 +19,7 @@ export interface PlayGridErrorStateProps {
   /** Error message or object */
   error: string | Error;
   /** Retry callback function */
-  onRetry?: () => void;
+  onRetry: () => void;
 }
 
 export const PlayGridErrorState = memo<PlayGridErrorStateProps>(
@@ -69,7 +69,7 @@ export const PlayGridErrorState = memo<PlayGridErrorStateProps>(
         </Typography>
 
         {/* Technical Details (for debugging) */}
-        {process.env.NODE_ENV === "development" && (
+        {import.meta.env.DEV && (
           <details className="mb-6 max-w-md w-full">
             <summary className="cursor-pointer text-sm text-muted hover:text-secondary">
               Technical Details
@@ -82,14 +82,9 @@ export const PlayGridErrorState = memo<PlayGridErrorStateProps>(
 
         {/* Action Buttons */}
         <div className="flex gap-3">
-          {onRetry && (
-            <Button onClick={onRetry} variant="primary">
-              <Icon name="refresh-cw" className="w-4 h-4 mr-2" />
-              Try Again
-            </Button>
-          )}
-          <Button onClick={() => window.location.reload()} variant="secondary">
-            Reload Page
+          <Button onClick={onRetry} variant="primary">
+            <Icon name="refresh-cw" className="w-4 h-4 mr-2" />
+            Try Again
           </Button>
         </div>
 

@@ -5,6 +5,7 @@
  */
 
 import type { CachedData } from "./types";
+import { debug, warn } from "../../utils/logger";
 
 export class IndexedDBService {
   private static db: IDBDatabase | null = null;
@@ -125,9 +126,9 @@ export class IndexedDBService {
       if (keys.length <= keepCount) return;
       const toDelete = keys.slice(0, Math.max(0, keys.length - keepCount));
       await Promise.all(toDelete.map((k) => this.deleteBackup(k)));
-      console.info(`Cleaned up old backups, kept ${keepCount}`);
+      debug(`Cleaned up old backups, kept ${keepCount}`);
     } catch (e) {
-      console.warn("Failed to cleanup backups", e);
+      warn("Failed to cleanup backups", e);
     }
   }
 

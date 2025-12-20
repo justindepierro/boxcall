@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useAuth } from "../../app/auth-store";
+import { debug } from "../../utils/logger";
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -28,7 +29,7 @@ export function AuthGuard({ children }: AuthGuardProps) {
   useEffect(() => {
     if (user?.id && !profile && !profileLoading && !fetchingRef.current) {
       fetchingRef.current = true;
-      console.log("🛡️ [AuthGuard] User exists but no profile, fetching...");
+      debug("🛡️ [AuthGuard] User exists but no profile, fetching...");
       fetchUserProfile(user.id).finally(() => {
         fetchingRef.current = false;
       });
@@ -58,7 +59,7 @@ export function AuthGuard({ children }: AuthGuardProps) {
 
   // Debug log (only once when ready)
   if (import.meta.env.DEV && profile) {
-    console.log("🛡️ [AuthGuard] Ready:", {
+    debug("🛡️ [AuthGuard] Ready:", {
       hasUser: !!user,
       hasProfile: !!profile,
       profileRole: profile?.role,

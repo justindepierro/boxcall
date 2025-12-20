@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useMemo, useReducer } from "react";
 import type { ServerPlaybookViewPreset } from "../types/playbookViewPreset";
+import { debug } from "../utils/logger";
 
 export type CoachingView =
   | "playbook"
@@ -180,7 +181,7 @@ const playbookActionHandlers: Partial<
     advancedFilters: action.filters,
   }),
   TOGGLE_BULK: (state) => {
-    console.log("[PlaybookContext] TOGGLE_BULK:", {
+    debug("[PlaybookContext] TOGGLE_BULK:", {
       currentState: state.enableBulkOperations,
       newState: !state.enableBulkOperations,
     });
@@ -191,7 +192,7 @@ const playbookActionHandlers: Partial<
     };
   },
   SET_SELECTION: (state, action: { selection: Set<string> }) => {
-    console.log("[PlaybookContext] SET_SELECTION:", {
+    debug("[PlaybookContext] SET_SELECTION:", {
       oldSize: state.selectedPlayIds?.size,
       newSize: action.selection.size,
     });

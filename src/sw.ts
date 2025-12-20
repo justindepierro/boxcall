@@ -19,6 +19,7 @@ import {
 } from "workbox-strategies";
 import { ExpirationPlugin } from "workbox-expiration";
 import { CacheableResponsePlugin } from "workbox-cacheable-response";
+import { logError } from "./utils/logger";
 
 declare const self: ServiceWorkerGlobalScope;
 
@@ -194,7 +195,7 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAMES.static).then((cache) => {
       return cache.addAll(["/offline.html", "/favicon.ico"]).catch((err) => {
-        console.error("Failed to cache offline resources:", err);
+        logError("Failed to cache offline resources:", err);
       });
     })
   );
@@ -211,7 +212,6 @@ self.addEventListener("activate", (event) => {
         cacheNames.map((cacheName) => {
           // Delete old caches
           if (!Object.values(CACHE_NAMES).includes(cacheName)) {
-            console.log("Deleting old cache:", cacheName);
             return caches.delete(cacheName);
           }
         })
@@ -265,18 +265,12 @@ self.addEventListener("fetch", (event) => {
           }
           return response;
         })
-        .catch((error) => {
+        .catch((_error) => {
           // Try to serve from cache on network failure
           return caches.match(event.request).then((cachedResponse) => {
             if (cachedResponse) {
               return cachedResponse;
             }
-            // Log error for debugging
-            console.warn(
-              "Failed to fetch image, no cache available:",
-              event.request.url,
-              error
-            );
             // Return a transparent 1x1 pixel as fallback
             return new Response(
               new Blob([
@@ -315,7 +309,6 @@ self.addEventListener("sync", (event: any) => {
 async function replayFailedRequests() {
   // Implementation would retrieve failed requests from IndexedDB
   // and retry them when network is available
-  console.log("Replaying failed requests...");
 }
 
 // =====================================================
@@ -344,34 +337,3 @@ self.addEventListener("notificationclick", (event) => {
 // =====================================================
 // PERFORMANCE MONITORING
 // =====================================================
-
-// Log cache hit rates in development
-if (import.meta.env.DEV) {
-  let cacheHits = 0;
-  let cacheMisses = 0;
-
-  self.addEventListener("fetch", (event) => {
-    event.respondWith(
-      caches.match(event.request).then((response) => {
-        if (response) {
-          cacheHits++;
-          console.log(
-            `✅ Cache hit (${cacheHits}/${cacheHits + cacheMisses}):`,
-            event.request.url
-          );
-        } else {
-          cacheMisses++;
-          console.log(
-            `❌ Cache miss (${cacheHits}/${cacheHits + cacheMisses}):`,
-            event.request.url
-          );
-        }
-        return response || fetch(event.request);
-      })
-    );
-  });
-}
-
-console.log(
-  "✅ BoxCall Service Worker registered with enhanced caching strategies"
-);

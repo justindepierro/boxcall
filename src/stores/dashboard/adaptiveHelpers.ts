@@ -13,6 +13,8 @@ import type {
   WidgetConfig,
   WidgetPriority,
 } from "./types";
+import { debug } from "../../utils/logger";
+import { softNavigate } from "../../utils/softNavigate";
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -115,7 +117,7 @@ export function getContextualActions(
       title: "Quick Game Plan",
       description: "Access today's game strategy",
       icon: "gamepad-2",
-      action: () => console.info("Opening game plan"),
+      action: () => debug("[DashboardAdaptive] Opening game plan"),
       contexts: ["game-day"],
       roles: ["coach", "player"],
       priority: 90,
@@ -128,7 +130,7 @@ export function getContextualActions(
       title: "Practice Checklist",
       description: "Review today's practice plan",
       icon: "check-square",
-      action: () => console.info("Opening practice checklist"),
+      action: () => debug("[DashboardAdaptive] Opening practice checklist"),
       contexts: ["practice-day"],
       roles: ["coach"],
       priority: 85,
@@ -142,7 +144,7 @@ export function getContextualActions(
       title: "Team Messages",
       description: "Chat with your team in real-time",
       icon: "message",
-      action: () => (window.location.href = "/collaborative-demo"),
+      action: () => softNavigate("/collaborative-demo"),
       contexts: ["practice-day", "game-day", "team-meeting"],
       roles: ["coach", "player", "family"],
       priority: 75,
@@ -152,7 +154,7 @@ export function getContextualActions(
       title: "Collaborative Planning",
       description: "Set goals and make decisions together",
       icon: "users",
-      action: () => (window.location.href = "/collaborative-demo"),
+      action: () => softNavigate("/collaborative-demo"),
       contexts: ["practice-day", "team-meeting"],
       roles: ["coach", "player"],
       priority: 70,

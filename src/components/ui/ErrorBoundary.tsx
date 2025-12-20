@@ -6,7 +6,9 @@ import React, { Component } from "react";
 // Use ModularIcon for lightweight, per-icon dynamic imports
 import { Button } from "./Button";
 import { Typography } from "../design-system";
-import { logError } from "../../utils/logger";
+import { debug, logError } from "../../utils/logger";
+import { requestAppReset } from "../../utils/appReset";
+import { softNavigate } from "../../utils/softNavigate";
 
 interface Props {
   children: ReactNode;
@@ -52,7 +54,7 @@ export class ErrorBoundary extends Component<Props, State> {
     }
 
     // In production, send to error reporting service
-    if (process.env.NODE_ENV === "production") {
+    if (import.meta.env.PROD) {
       this.reportError(error, errorInfo);
     }
   }
@@ -68,7 +70,7 @@ export class ErrorBoundary extends Component<Props, State> {
       url: window.location.href,
     };
 
-    console.info("Error report:", errorReport);
+    debug("[ErrorBoundary] Error report:", errorReport);
     try {
       telemetry.enqueue({
         type: TelemetryEventTypes.ErrorBoundary,
@@ -114,7 +116,7 @@ export class ErrorBoundary extends Component<Props, State> {
             </div>
 
             {/* Development Error Details */}
-            {process.env.NODE_ENV === "development" && this.state.error && (
+            {import.meta.env.DEV && this.state.error && (
               <div className="mb-6 p-4 bg-subtle border border-muted rounded-lg">
                 <details className="text-sm">
                   <summary className="cursor-pointer font-medium text-error mb-2">
@@ -152,7 +154,10 @@ export class ErrorBoundary extends Component<Props, State> {
               </Button>
 
               <Button
-                onClick={() => (window.location.href = "/")}
+                onClick={() => {
+                  softNavigate("/", { replace: true });
+                  requestAppReset("error-boundary-home");
+                }}
                 variant="secondary"
                 size="sm"
                 className="w-full flex items-center justify-center"
@@ -163,7 +168,7 @@ export class ErrorBoundary extends Component<Props, State> {
               </Button>
 
               <Button
-                onClick={() => window.location.reload()}
+                onClick={() => requestAppReset("error-boundary-reload")}
                 variant="ghost"
                 size="sm"
                 className="w-full flex items-center justify-center text-muted hover:text-primary"

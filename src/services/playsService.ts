@@ -8,12 +8,11 @@
 
 import { supabase } from "../lib/supabase";
 import { getCurrentUserId } from "../lib/auth-helpers";
-import { DatabaseDebug } from "../utils/databaseDebug";
 import { normalizePlayName, normalizeText } from "../utils/textNormalization";
 import Fuse from "fuse.js";
 import { ActivityService } from "./activityService";
 import { PlayValidationService } from "../validation-services/playValidation";
-import { error as logError, warn } from "../utils/logger";
+import { debug, error as logError, warn } from "../utils/logger";
 import { buildNewPlayData } from "./playDataBuilders";
 
 import type { Play } from "../types/play";
@@ -171,7 +170,7 @@ export class PlaysService {
       // Build database-valid fields using helper
       const newPlay = buildNewPlayData(playData, playId, playbookId, userId);
 
-      console.info("🎯 Creating play in database:", newPlay);
+      debug("[PlaysService] Creating play in database", newPlay);
 
       // Insert into Supabase
       let { data, error } = await supabase
@@ -186,24 +185,21 @@ export class PlaysService {
         error.code === "23503" &&
         error.message.includes("playbook_id")
       ) {
-        console.info("📚 Playbook doesn't exist, creating demo playbook...");
-        await DatabaseDebug.checkPlaybooks();
+        debug("[PlaysService] Playbook missing; resolving user's playbook");
+        const fallbackPlaybookId = await this.ensureUserHasPlaybook();
 
-        const createdPlaybookId = await DatabaseDebug.createDemoPlaybook();
-        if (createdPlaybookId) {
-          // Update the play with the new playbook ID and try again
-          newPlay.playbook_id = createdPlaybookId;
-          console.info("🔄 Retrying play creation with new playbook...");
+        // Update the play with a valid playbook ID and retry
+        newPlay.playbook_id = fallbackPlaybookId;
+        debug("[PlaysService] Retrying play creation with resolved playbook");
 
-          const retryResult = await supabase
-            .from("plays")
-            .insert([newPlay as any])
-            .select()
-            .single();
+        const retryResult = await supabase
+          .from("plays")
+          .insert([newPlay as any])
+          .select()
+          .single();
 
-          data = retryResult.data;
-          error = retryResult.error;
-        }
+        data = retryResult.data;
+        error = retryResult.error;
       }
 
       if (error) {
@@ -220,7 +216,7 @@ export class PlaysService {
         throw new Error("No data returned from play creation");
       }
 
-      console.info("✅ Play created successfully:", data);
+      debug("[PlaysService] Play created successfully", data);
 
       // Record activity for the created play
       await ActivityService.recordActivity({

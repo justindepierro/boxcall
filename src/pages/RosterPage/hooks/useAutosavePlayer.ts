@@ -1,16 +1,13 @@
 /**
  * useAutosavePlayer Hook
- *
- * Provides debounced autosave functionality for the roster edit modal.
- * Saves player data after user stops typing for 800ms.
  * Integrates with global save indicator.
- *
  * @version 1.0.0
  */
 
 import { useEffect, useRef, useCallback, useState } from "react";
 import { useSaveState } from "../../../hooks/useSaveState";
 import type { PlayerRosterUpdate } from "../../../services/rosterService";
+import { debug, error as logError } from "../../../utils/logger";
 
 export type SaveStatus = "idle" | "saving" | "saved" | "error";
 
@@ -67,7 +64,7 @@ export interface UseAutosavePlayerReturn {
   triggerAutosave: (updates: PlayerRosterUpdate) => void;
 
   /**
-   * Trigger a manual save immediately (bypasses debounce)
+    * Trigger a manual save immediately (no debounce)
    */
   saveNow: (updates: PlayerRosterUpdate) => Promise<void>;
 
@@ -118,7 +115,7 @@ export function useAutosavePlayer(
       }
 
       if (!playerId) {
-        console.warn("⚠️ Cannot autosave: no playerId provided");
+        debug("Cannot autosave: no playerId provided");
         return;
       }
 
@@ -154,7 +151,7 @@ export function useAutosavePlayer(
           await performSave(nextUpdates);
         }
       } catch (error) {
-        console.error("❌ Autosave failed:", error);
+        logError("Autosave failed:", error);
         setStatus("error");
 
         onSaveError?.(error as Error);
@@ -195,7 +192,7 @@ export function useAutosavePlayer(
     [enabled, playerId, debounceMs, performSave]
   );
 
-  // Save immediately (bypass debounce)
+  // Save immediately (no debounce)
   const saveNow = useCallback(
     async (updates: PlayerRosterUpdate) => {
       // Clear any pending debounced save

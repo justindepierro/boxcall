@@ -4,6 +4,8 @@
  * Centralized configuration for analytics and error tracking services
  */
 
+import { debug, group, logError, warn } from "../utils/logger";
+
 // Environment variable validation and defaults
 export const analyticsConfig = {
   // Google Analytics 4
@@ -151,52 +153,56 @@ export function logAnalyticsConfig() {
   const config = getEnvironmentConfig();
   const validation = validateAnalyticsConfig();
 
-  console.group("📊 Analytics Configuration");
-  console.log("Environment:", config.environment);
-  console.log("Enabled Providers:", config.enabledProviders);
+  group("📊 Analytics Configuration", () => {
+    debug("Environment:", config.environment);
+    debug("Enabled Providers:", config.enabledProviders);
 
-  if (validation.warnings.length > 0) {
-    console.group("⚠️ Warnings");
-    validation.warnings.forEach((warning) => console.warn(warning));
-    console.groupEnd();
-  }
+    if (validation.warnings.length > 0) {
+      group("⚠️ Warnings", () => {
+        validation.warnings.forEach((warning) => warn(warning));
+      });
+    }
 
-  if (validation.errors.length > 0) {
-    console.group("❌ Errors");
-    validation.errors.forEach((error) => console.error(error));
-    console.groupEnd();
-  }
+    if (validation.errors.length > 0) {
+      group("❌ Errors", () => {
+        validation.errors.forEach((error) => logError(error));
+      });
+    }
 
-  if (analyticsConfig.general.enableDebugMode) {
-    console.group("🔧 Debug Configuration");
-    console.log("Google Analytics:", {
-      enabled: analyticsConfig.googleAnalytics.enabled,
-      measurementId: analyticsConfig.googleAnalytics.measurementId
-        ? "***configured***"
-        : "not set",
-      debugMode: analyticsConfig.googleAnalytics.debugMode,
-    });
-    console.log("PostHog:", {
-      enabled: analyticsConfig.posthog.enabled,
-      apiKey: analyticsConfig.posthog.apiKey ? "***configured***" : "not set",
-      apiHost: analyticsConfig.posthog.apiHost,
-      debugMode: analyticsConfig.posthog.debugMode,
-    });
-    console.log("Sentry:", {
-      enabled: analyticsConfig.sentry.enabled,
-      dsn: analyticsConfig.sentry.dsn ? "***configured***" : "not set",
-      environment: analyticsConfig.sentry.environment,
-      tracesSampleRate: analyticsConfig.sentry.tracesSampleRate,
-    });
-    console.log("Custom Analytics:", {
-      enabled: analyticsConfig.custom.enabled,
-      endpoint: analyticsConfig.custom.endpoint || "not set",
-      apiKey: analyticsConfig.custom.apiKey ? "***configured***" : "not set",
-    });
-    console.groupEnd();
-  }
+    if (analyticsConfig.general.enableDebugMode) {
+      group("🔧 Debug Configuration", () => {
+        debug("Google Analytics:", {
+          enabled: analyticsConfig.googleAnalytics.enabled,
+          measurementId: analyticsConfig.googleAnalytics.measurementId
+            ? "***configured***"
+            : "not set",
+          debugMode: analyticsConfig.googleAnalytics.debugMode,
+        });
+        debug("PostHog:", {
+          enabled: analyticsConfig.posthog.enabled,
+          apiKey: analyticsConfig.posthog.apiKey
+            ? "***configured***"
+            : "not set",
+          apiHost: analyticsConfig.posthog.apiHost,
+          debugMode: analyticsConfig.posthog.debugMode,
+        });
+        debug("Sentry:", {
+          enabled: analyticsConfig.sentry.enabled,
+          dsn: analyticsConfig.sentry.dsn ? "***configured***" : "not set",
+          environment: analyticsConfig.sentry.environment,
+          tracesSampleRate: analyticsConfig.sentry.tracesSampleRate,
+        });
+        debug("Custom Analytics:", {
+          enabled: analyticsConfig.custom.enabled,
+          endpoint: analyticsConfig.custom.endpoint || "not set",
+          apiKey: analyticsConfig.custom.apiKey
+            ? "***configured***"
+            : "not set",
+        });
+      });
+    }
+  });
 
-  console.groupEnd();
 }
 
 // Export configuration as default

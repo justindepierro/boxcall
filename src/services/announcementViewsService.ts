@@ -47,6 +47,63 @@ export interface ReadReceiptStats {
 
 export class AnnouncementViewsService {
   /**
+   * Record that a user has viewed multiple announcements.
+   * Uses UPSERT to prevent duplicates; chunks requests to keep payloads reasonable.
+   */
+  static async recordViews(
+    announcementIds: string[],
+    teamId: string
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const userId = getCurrentUserId();
+
+      if (!userId) {
+        return {
+          success: false,
+          error: "User not authenticated",
+        };
+      }
+
+      const uniqueIds = Array.from(new Set(announcementIds)).filter(Boolean);
+      if (uniqueIds.length === 0) return { success: true };
+
+      const chunkSize = 50;
+      for (let i = 0; i < uniqueIds.length; i += chunkSize) {
+        const chunk = uniqueIds.slice(i, i + chunkSize);
+        const payload = chunk.map((announcementId) => ({
+          announcement_id: announcementId,
+          user_id: userId,
+          team_id: teamId,
+          viewed_at: new Date().toISOString(),
+        }));
+
+        const { error } = await supabase
+          .from("announcement_views" as any)
+          .upsert(payload, {
+            onConflict: "announcement_id,user_id",
+            ignoreDuplicates: true,
+          });
+
+        if (error) {
+          logError("Error recording views:", error);
+          return {
+            success: false,
+            error: error.message,
+          };
+        }
+      }
+
+      return { success: true };
+    } catch (error) {
+      logError("Unexpected error recording views:", error);
+      return {
+        success: false,
+        error: "An unexpected error occurred",
+      };
+    }
+  }
+
+  /**
    * Record that a user has viewed an announcement
    * Safe to call multiple times - uses UPSERT to prevent duplicates
    */

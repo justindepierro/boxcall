@@ -6,6 +6,7 @@
 
 import { useEffect } from "react";
 import { securityConfig, createSecurityHeaders } from "../utils/security";
+import { debug, warn } from "../utils/logger";
 
 /**
  * Hook to apply security headers and CSP
@@ -15,7 +16,7 @@ export function useSecurity() {
     // Note: CSP should be set via HTTP headers on the server
     // Meta tag CSP is ignored by browsers for security reasons
     if (import.meta.env.DEV) {
-      console.log(
+      debug(
         "🔒 Security configuration loaded (CSP should be set via server headers):",
         {
           reportOnly: securityConfig.csp.reportOnly,
@@ -26,7 +27,7 @@ export function useSecurity() {
 
     // Security event listeners for CSP violations (if CSP is set via server headers)
     const handleSecurityViolation = (event: SecurityPolicyViolationEvent) => {
-      console.warn("🚫 CSP Violation:", {
+      warn("🚫 CSP Violation:", {
         directive: event.violatedDirective,
         blockedURI: event.blockedURI,
         documentURI: event.documentURI,
@@ -108,7 +109,7 @@ export function useSecureSession() {
         document.cookie.includes("Secure") &&
         window.location.protocol !== "https:"
       ) {
-        console.warn("🔒 Secure cookies detected on non-HTTPS connection");
+        warn("🔒 Secure cookies detected on non-HTTPS connection");
       }
 
       // Check for session timeout
@@ -118,7 +119,7 @@ export function useSecureSession() {
         const sessionTimeout = 30 * 60 * 1000; // 30 minutes
 
         if (timeSinceLastActivity > sessionTimeout) {
-          console.log("🔒 Session timeout detected");
+          debug("🔒 Session timeout detected");
           // In a real app, you would redirect to login
           // window.location.href = '/login';
         }

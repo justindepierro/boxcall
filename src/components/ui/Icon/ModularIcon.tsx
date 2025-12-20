@@ -10,6 +10,7 @@
 
 import React from "react";
 import { getComponentColor } from "../../../design-system/tokens";
+import { warn } from "../../../utils/logger";
 
 // Import the official dynamic icon imports from lucide-react
 // @ts-ignore - dynamicIconImports has no type definitions but works at runtime
@@ -467,8 +468,7 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
   const [showFallback, setShowFallback] = React.useState(false);
 
   // In test environment, render synchronously to avoid async issues
-  const isTestEnvironment =
-    typeof process !== "undefined" && process.env.NODE_ENV === "test";
+  const isTestEnvironment = import.meta.env.MODE === "test";
 
   React.useEffect(() => {
     // Skip dynamic loading in test environment
@@ -512,7 +512,7 @@ export const ModularIcon: React.FC<ModularIconProps> = ({
         })
         .catch((error) => {
           if (isMounted) {
-            console.warn(`Failed to load icon "${name}":`, error);
+            warn(`Failed to load icon "${name}":`, error);
             setLoading(false);
             setShowFallback(true);
           }

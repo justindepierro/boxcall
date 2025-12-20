@@ -3,7 +3,7 @@
  * Part of Phase 3D: Final Mobile Polish & Performance Optimization
  */
 import React from "react";
-import { logError } from "./logger";
+import { debug, logError, warn } from "./logger";
 
 // Code splitting utilities
 export const loadAsync = <T>(importFn: () => Promise<{ default: T }>) => {
@@ -64,24 +64,24 @@ export const inlineCriticalCSS = (css: string) => {
 
 // Bundle analysis utilities
 export const analyzeBundleSize = () => {
-  if (process.env.NODE_ENV === "development") {
+  if (import.meta.env.DEV) {
     // Log bundle information for development analysis
     const performanceEntries = performance.getEntriesByType("navigation");
     if (performanceEntries.length > 0) {
       const navigationEntry =
         performanceEntries[0] as PerformanceNavigationTiming;
-      console.info("📦 Bundle Analysis");
-      console.info(
+      debug("📦 Bundle Analysis");
+      debug(
         "Total Load Time:",
         navigationEntry.loadEventEnd - navigationEntry.fetchStart,
         "ms"
       );
-      console.info(
+      debug(
         "DOMContentLoaded:",
         navigationEntry.domContentLoadedEventEnd - navigationEntry.fetchStart,
         "ms"
       );
-      console.info(
+      debug(
         "First Contentful Paint:",
         "Check Lighthouse for FCP metrics"
       );
@@ -103,7 +103,7 @@ export const dynamicImportWithRetry = async <T>(
       return await importFn();
     } catch (error) {
       lastError = error as Error;
-      console.warn(
+      warn(
         `Dynamic import failed (attempt ${i + 1}/${maxRetries}):`,
         error
       );
@@ -122,7 +122,7 @@ export const registerServiceWorker = async () => {
   if ("serviceWorker" in navigator) {
     try {
       const registration = await navigator.serviceWorker.register("/sw.js");
-      console.info("Service Worker registered successfully:", registration);
+      debug("Service Worker registered successfully:", registration);
       return registration;
     } catch (error) {
       logError("Service Worker registration failed:", error);
@@ -177,13 +177,13 @@ export const monitorMemoryUsage = () => {
       usage: Math.round((memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100),
     };
 
-    if (process.env.NODE_ENV === "development") {
-      console.info("🧠 Memory Usage:", memoryInfo);
+    if (import.meta.env.DEV) {
+      debug("🧠 Memory Usage:", memoryInfo);
     }
 
     // Warn if memory usage is high
     if (memoryInfo.usage > 70) {
-      console.warn("High memory usage detected:", `${memoryInfo.usage}%`);
+      warn("High memory usage detected:", `${memoryInfo.usage}%`);
     }
 
     return memoryInfo;
@@ -206,10 +206,10 @@ export const optimizeChunkLoading = () => {
 
 // Tree shaking verification (development only)
 export const verifyTreeShaking = (moduleNames: string[]) => {
-  if (process.env.NODE_ENV === "development") {
-    console.info("🌳 Tree Shaking Verification");
+  if (import.meta.env.DEV) {
+    debug("🌳 Tree Shaking Verification");
     moduleNames.forEach((name) => {
-      console.info(`${name}: Module should be tree-shakeable`);
+      debug(`${name}: Module should be tree-shakeable`);
     });
     // end group
   }

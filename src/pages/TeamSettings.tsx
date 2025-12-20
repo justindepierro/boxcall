@@ -9,6 +9,7 @@ import { StaffManagement } from "../components/team/StaffManagement";
 import { FamilyPermissionsSettings } from "../components/team/FamilyPermissionsSettings";
 import type { FamilyPermissions } from "../components/team/FamilyPermissionsSettings";
 import { getActiveTeamId } from "../utils/activeTeam";
+import { debug } from "../utils/logger";
 
 /**
  * TeamSettings - Team configuration and management
@@ -171,7 +172,7 @@ const TeamSettings: React.FC = () => {
               <FamilyPermissionsSettings
                 teamId={teamId}
                 onSave={async (permissions: FamilyPermissions) => {
-                  console.log("Saving family permissions:", permissions);
+                  debug("Saving family permissions:", permissions);
                   // TODO: Implement API call to save permissions
                   // await teamService.updateFamilyPermissions(teamId, permissions);
                 }}

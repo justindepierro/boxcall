@@ -14,8 +14,9 @@ import { socialService } from "../../services/socialService";
 import { MentionsService } from "../../services/mentionsService";
 import { ReactionButton } from "./ReactionButton";
 import { MentionsInput } from "./MentionsInput";
-import { logError } from "../../utils/logger";
+import { debug, logError } from "../../utils/logger";
 import { useToast } from "../../hooks/useToast";
+import { useAuth } from "../../app/auth-store";
 import { ConfirmationModal } from "../ui/ConfirmationModal/ConfirmationModal";
 import type {
   CommentSectionProps,
@@ -50,6 +51,7 @@ interface CommentItemProps {
   depth?: number;
   onReply?: (parentComment: Comment) => void;
   showReactions?: boolean;
+  onRefresh?: () => void | Promise<void>;
 }
 
 const CommentItemActions: React.FC<{
@@ -143,6 +145,7 @@ const CommentItemReplies: React.FC<{
   depth: number;
   onReply?: (parentComment: Comment) => void;
   showReactions: boolean;
+  onRefresh?: () => void | Promise<void>;
 }> = ({
   replies,
   contentType,
@@ -151,6 +154,7 @@ const CommentItemReplies: React.FC<{
   depth,
   onReply,
   showReactions,
+  onRefresh,
 }) => {
   if (replies.length === 0) return null;
 
@@ -166,6 +170,7 @@ const CommentItemReplies: React.FC<{
           depth={depth + 1}
           onReply={onReply}
           showReactions={showReactions}
+          onRefresh={onRefresh}
         />
       ))}
     </div>
@@ -180,6 +185,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
   depth = 0,
   onReply,
   showReactions = true,
+  onRefresh,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(comment.content);
@@ -187,6 +193,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const toast = useToast();
+  const { user } = useAuth();
 
   const handleEdit = async () => {
     if (!editContent.trim()) return;
@@ -197,8 +204,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
         content: editContent.trim(),
       });
       setIsEditing(false);
-      // The parent component should reload comments
-      window.location.reload(); // Temporary - should use proper state management
+      toast.success("Comment updated");
+      await onRefresh?.();
     } catch (error) {
       logError("Failed to edit comment:", error);
     } finally {
@@ -214,7 +221,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
     try {
       await socialService.deleteComment(comment.id);
       toast.success("Comment deleted");
-      window.location.reload(); // Temporary - should use proper state management
+      await onRefresh?.();
     } catch (error) {
       logError("Failed to delete comment:", error);
       toast.error("Failed to delete comment");
@@ -223,7 +230,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
     }
   };
 
-  const canEdit = comment.user_id === "current-user-id"; // TODO: Get from auth context
+  const canEdit = !!user?.id && comment.user_id === user.id;
   const canDelete = canEdit;
 
   const createdAtLabel = comment.created_at
@@ -315,6 +322,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
             depth={depth}
             onReply={onReply}
             showReactions={showReactions}
+            onRefresh={onRefresh}
           />
         </div>
       </div>
@@ -438,7 +446,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
               className="w-full"
               onMentionSelect={(mention) => {
                 // Handle mention selection if needed
-                console.log("Mention selected:", mention);
+                debug("Mention selected:", mention);
               }}
             />
 
@@ -511,6 +519,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
               maxDepth={maxDepth}
               onReply={handleReply}
               showReactions={showReactions}
+              onRefresh={loadComments}
             />
           ));
         })()}

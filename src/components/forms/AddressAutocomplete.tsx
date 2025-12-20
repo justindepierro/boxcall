@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Typography } from "../design-system/Typography";
 import { Icon } from "../ui/Icon/Icon";
-import { logError } from "../../utils/logger";
+import { logError, warn } from "../../utils/logger";
 import {
   GlassmorphicDropdown,
   GlassmorphicDropdownItem,
@@ -312,7 +312,7 @@ async function searchNominatim(params: {
       };
     });
   } catch (error) {
-    console.warn("Nominatim search failed, falling back to mock data:", error);
+    warn("Nominatim search failed, falling back to mock data", error);
     return searchMockAddresses(query);
   }
 }
@@ -324,7 +324,7 @@ async function searchGooglePlaces(params: {
   const { query, countryCode } = params;
 
   if (!GOOGLE_PLACES_API_KEY) {
-    console.warn("Google Places API key not configured. Using mock data.");
+    warn("Google Places API key not configured. Using mock data.");
     return searchMockAddresses(query);
   }
 
@@ -371,7 +371,7 @@ async function searchGooglePlaces(params: {
         );
       });
     } catch {
-      console.warn(
+      warn(
         "Google Maps JS API Loader not installed. Run: npm install @googlemaps/js-api-loader"
       );
       return searchMockAddresses(query);
@@ -389,7 +389,7 @@ async function searchMapBox(params: {
   const { query, countryCode } = params;
 
   if (!MAPBOX_ACCESS_TOKEN) {
-    console.warn("MapBox access token not configured. Using mock data.");
+    warn("MapBox access token not configured. Using mock data.");
     return searchMockAddresses(query);
   }
 

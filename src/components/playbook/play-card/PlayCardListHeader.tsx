@@ -6,6 +6,7 @@ import { WristbandBadge } from "../WristbandBadge";
 import { SelectionCheckbox } from "../../ui/SelectionCheckbox";
 import type { Play as PlayType } from "../../../types/play";
 import type { PersonnelConfiguration } from "../../../types/personnel";
+import { debug } from "../../../utils/logger";
 
 type ToggleHandler = () => void;
 
@@ -277,7 +278,7 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
           <SelectionCheckbox
             isSelected={Boolean(isSelected)}
             onChange={(selected) => {
-              console.log("[PlayCardListHeader] SelectionCheckbox onChange:", {
+              debug("[PlayCardListHeader] SelectionCheckbox onChange:", {
                 playId: play.id,
                 selected,
               });

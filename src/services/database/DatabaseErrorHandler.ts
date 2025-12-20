@@ -478,7 +478,7 @@ export class DatabaseErrorHandler {
         warn("⚠️ MEDIUM DATABASE ERROR:", logData);
         break;
       case "low":
-        console.info("ℹ️ LOW DATABASE ERROR:", logData);
+        debug("ℹ️ LOW DATABASE ERROR:", logData);
         break;
     }
   }

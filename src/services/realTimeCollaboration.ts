@@ -5,7 +5,7 @@
  * Phase 2B Sprint 4: Live Dashboard Sharing
  */
 
-import { logError } from "../utils/logger";
+import { debug, logError, warn } from "../utils/logger";
 
 export interface CollaborationUser {
   id: string;
@@ -162,10 +162,9 @@ class RealTimeCollaborationService {
     return new Promise((resolve, reject) => {
       try {
         // TODO: Replace with actual WebSocket endpoint
-        const wsUrl =
-          process.env.NODE_ENV === "production"
-            ? `wss://${window.location.host}/ws/collaboration`
-            : "ws://localhost:3001/ws/collaboration";
+        const wsUrl = import.meta.env.PROD
+          ? `wss://${window.location.host}/ws/collaboration`
+          : "ws://localhost:3001/ws/collaboration";
 
         this.ws = new WebSocket(wsUrl);
 
@@ -246,7 +245,7 @@ class RealTimeCollaborationService {
         break;
 
       default:
-        console.warn("Unknown message type:", message.type);
+        warn("Unknown message type:", message.type);
     }
   }
 
@@ -257,7 +256,7 @@ class RealTimeCollaborationService {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify(message));
     } else {
-      console.warn("Cannot send message: WebSocket not connected");
+      warn("Cannot send message: WebSocket not connected");
     }
   }
 
@@ -274,8 +273,8 @@ class RealTimeCollaborationService {
 
     setTimeout(() => {
       if (!this.isConnected && this.sessionId) {
-        console.info(`Reconnection attempt ${this.reconnectAttempts}`);
-        this.connect().catch(console.error);
+        debug(`Reconnection attempt ${this.reconnectAttempts}`);
+        this.connect().catch((err) => logError("WebSocket reconnect failed:", err));
       }
     }, this.reconnectDelay * this.reconnectAttempts);
   }

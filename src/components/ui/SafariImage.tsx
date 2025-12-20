@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
+import { warn } from "../../utils/logger";
 
 interface SafariImageProps {
   src: string | null | undefined;
@@ -43,7 +44,7 @@ export const SafariImage: React.FC<SafariImageProps> = ({
   }, [onLoad]);
 
   const handleError = useCallback(() => {
-    console.warn("[SafariImage] Image failed to load:", src);
+    warn("[SafariImage] Image failed to load:", src);
     setHasError(true);
     onError?.(new Error(`Failed to load image: ${src}`));
   }, [src, onError]);
@@ -115,7 +116,7 @@ export const PlayDiagramImage: React.FC<PlayDiagramImageProps> = ({
   }, []);
 
   const handleError = useCallback(() => {
-    console.warn("[PlayDiagramImage] Failed to load diagram:", {
+    warn("[PlayDiagramImage] Failed to load diagram:", {
       playName,
       diagramUrl,
       diagramImageUrl,

@@ -299,7 +299,7 @@ export class DatabaseHealthMonitor {
         });
         break;
       case "low":
-        console.info(logMessage, {
+        debug(logMessage, {
           alertId: alert.id,
           responseTime: alert.metrics.responseTime,
           timestamp: alert.timestamp,

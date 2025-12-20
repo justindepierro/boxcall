@@ -9,6 +9,7 @@ import {
   type TeamInvitation,
 } from "./TeamMemberInviteModal";
 import type { TeamRole } from "../../types/roles";
+import { debug } from "../../utils/logger";
 
 interface StaffMember {
   id: string;
@@ -250,7 +251,7 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ teamId }) => {
 
   const handleSendInvitation = async (invitation: TeamInvitation) => {
     // TODO: Implement actual invitation sending logic
-    console.log("Sending staff invitation:", invitation);
+    debug("Sending staff invitation:", invitation);
     // For now, just close the modal
   };
 

@@ -47,7 +47,7 @@
     "validate": "tsc --noEmit && eslint src --max-warnings 600 && vitest run",
     "check:consistency": "npm run format:check && npm run lint && npm run type-check",
     "find:todos": "grep -rn --include=\\*.{ts,tsx} 'TODO\\|FIXME\\|HACK\\|XXX' src/ || echo 'No TODOs found'",
-    "find:console": "grep -rn --include=\\*.{ts,tsx} 'console\\.(log\\|warn\\|debug)' src/ | grep -v 'ErrorTrackingService' || echo 'No console statements found'",
+    "find:console": "grep -rnE --include='*.ts' --include='*.tsx' 'console\\.(log|warn|debug)' src/ | grep -v 'ErrorTrackingService' || echo 'No console statements found'",
     "db": "node scripts/cli/db-cli.js",
     "db:status": "node scripts/cli/db-cli.js status",
     "db:migrate": "node scripts/cli/db-cli.js migrate",

@@ -1,18 +1,19 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 import type { Database } from "../types/database";
+import { auth as logAuth, debug, warn } from "../utils/logger";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Only log in dev mode to avoid production overhead
 if (import.meta.env.DEV) {
-  console.log("🔧 Supabase module loading...");
-  console.log(
+  debug("[Supabase] Module loading...");
+  debug(
     "🔧 VITE_SUPABASE_URL:",
     supabaseUrl ? `${supabaseUrl.substring(0, 30)}...` : "MISSING"
   );
-  console.log(
+  debug(
     "🔧 VITE_SUPABASE_ANON_KEY:",
     supabaseAnonKey ? "PRESENT" : "MISSING"
   );
@@ -55,7 +56,7 @@ function createDevStub(): SupabaseClient<Database> {
 
   const stub = { auth, from } as unknown as SupabaseClient<Database>;
   // Surface a helpful console warning on first use
-  console.warn(
+  warn(
     "[BoxCall] Using dev Supabase stub – set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to enable real backend."
   );
   return stub;
@@ -65,7 +66,7 @@ let supabaseClient: SupabaseClient<Database>;
 
 if (supabaseUrl && supabaseAnonKey) {
   // Use only anon key for client-side operations - NEVER expose service role key
-  if (import.meta.env.DEV) console.log("✅ Creating real Supabase client");
+  if (import.meta.env.DEV) debug("[Supabase] Creating real Supabase client");
   supabaseClient = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     auth: {
       persistSession: true,
@@ -106,20 +107,18 @@ if (supabaseUrl && supabaseAnonKey) {
   // Log auth state changes in dev mode for debugging
   if (import.meta.env.DEV) {
     supabaseClient.auth.onAuthStateChange((event, session) => {
-      console.log(
-        "🔌 [Auth] State changed:",
+      logAuth(
+        "[Auth] State changed:",
         event,
         session ? "with session" : "no session"
       );
     });
   }
 } else if (import.meta.env.DEV) {
-  console.log("⚠️ Using Supabase dev stub - environment variables missing");
+  warn("[Supabase] Using dev stub - environment variables missing");
   supabaseClient = createDevStub();
 } else {
   // In non-dev environments, fail fast if env is missing
-  if (import.meta.env.DEV)
-    console.log("❌ Missing Supabase environment variables in production");
   throw new Error("Missing Supabase environment variables");
 }
 
@@ -127,27 +126,27 @@ export const supabase = supabaseClient;
 // Export types for better TypeScript support
 export type { Session, User } from "@supabase/supabase-js";
 
-// Expose supabase client globally for debugging in browser console
-if (typeof window !== "undefined") {
+// Expose supabase client globally for debugging in browser console (dev only)
+if (import.meta.env.DEV && typeof window !== "undefined") {
   (window as any).supabase = supabaseClient;
 
   // Add debug helper for testing queries in console
   (window as any).testBoxCallDB = async () => {
-    console.log("🧪 Testing BoxCall database connectivity...");
+    debug("[Supabase] Testing BoxCall database connectivity...");
 
     // 1. Check auth session
     const {
       data: { session },
       error: sessionError,
     } = await supabaseClient.auth.getSession();
-    console.log(
+    debug(
       "1. Session:",
       session ? `Valid (expires: ${session.expires_at})` : "None",
       sessionError?.message || ""
     );
 
     if (!session) {
-      console.log("❌ No session - user needs to log in");
+      warn("[Supabase] No session - user needs to log in");
       return;
     }
 
@@ -157,14 +156,14 @@ if (typeof window !== "undefined") {
       .select("id, full_name, role")
       .eq("id", session.user.id)
       .maybeSingle();
-    console.log("2. Profile:", profile || "None", profileError?.message || "");
+    debug("2. Profile:", profile || "None", profileError?.message || "");
 
     // 3. Try to query team_members
     const { data: memberships, error: memberError } = await supabaseClient
       .from("team_members")
       .select("team_id, team_role, status")
       .eq("user_id", session.user.id);
-    console.log(
+    debug(
       "3. Team memberships:",
       memberships?.length || 0,
       "found",
@@ -172,20 +171,20 @@ if (typeof window !== "undefined") {
     );
 
     if (memberships && memberships.length > 0) {
-      console.log(
+      debug(
         "   Teams:",
         (memberships as any[]).map((m) => m.team_id).join(", ")
       );
     } else {
-      console.log("❌ No team memberships found - this is why nothing loads!");
-      console.log("   User needs to be added to team_members table");
+      warn("[Supabase] No team memberships found - this is why nothing loads");
+      warn("[Supabase] User needs to be added to team_members table");
     }
 
     // 4. Try to query teams
     const { data: teams, error: teamsError } = await supabaseClient
       .from("teams")
       .select("id, name");
-    console.log(
+    debug(
       "4. Teams visible:",
       teams?.length || 0,
       teamsError?.message || ""
@@ -194,7 +193,5 @@ if (typeof window !== "undefined") {
     return { session, profile, memberships, teams };
   };
 
-  console.log(
-    "💡 Run window.testBoxCallDB() in console to diagnose database issues"
-  );
+  debug("[Supabase] Run window.testBoxCallDB() to diagnose DB issues");
 }

@@ -7,6 +7,7 @@
 /* eslint-disable react-refresh/only-export-components */
 
 import React, { useEffect, useState } from "react";
+import { debug } from "../../utils/logger";
 
 type InstallPrompt = any;
 
@@ -73,7 +74,7 @@ export const PWAIntegration: React.FC = () => {
     const handleAppInstalled = () => {
       deferredInstallPrompt = null;
       dispatchInstallAvailability();
-      console.log("🎉 PWA was installed");
+      debug("PWA was installed");
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);

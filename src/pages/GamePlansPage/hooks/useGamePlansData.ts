@@ -12,7 +12,7 @@ import {
 import type { GamePlan as ModalGamePlan } from "../../../components/playbook/GamePlanModal/types";
 import { useAuth } from "../../../app/auth-store";
 import { useToast } from "../../../hooks/useToast";
-import { error as logError } from "../../../utils/logger";
+import { debug, error as logError } from "../../../utils/logger";
 
 /**
  * Maps a ServiceGamePlan to the UI ModalGamePlan type
@@ -99,18 +99,14 @@ export function useGamePlansData() {
     if (isLoading || gamePlans.length === 0) return;
 
     const timer = setTimeout(() => {
-      console.debug(
-        "[GamePlansPage] Preloading heavy modals during idle time..."
-      );
+      debug("[GamePlansPage] Preloading heavy modals during idle time...");
 
       import("../../../components/playbook/GamePlanModal").catch(() => {
-        console.debug("GamePlanModal preload failed (will load on demand)");
+        debug("GamePlanModal preload failed (will load on demand)");
       });
 
       import("../../../components/playbook/ImportGamePlansModal").catch(() => {
-        console.debug(
-          "ImportGamePlansModal preload failed (will load on demand)"
-        );
+        debug("ImportGamePlansModal preload failed (will load on demand)");
       });
     }, 2000);
 

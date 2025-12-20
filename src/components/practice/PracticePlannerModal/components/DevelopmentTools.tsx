@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "../../../../components/ui";
 import { Icon } from "../../../../components/ui/Icon/Icon";
 import { Typography } from "../../../design-system";
+import { requestAppReset } from "../../../../utils/appReset";
 
 interface DevelopmentToolsProps {
   eventId: string;
@@ -14,11 +15,11 @@ export const DevelopmentTools: React.FC<DevelopmentToolsProps> = ({
   const resetToSampleData = () => {
     const savedPracticeKey = `practice_plan_${eventId || "default"}`;
     localStorage.removeItem(savedPracticeKey);
-    window.location.reload(); // Reload to show sample data
+    requestAppReset("practice-reset-to-sample");
   };
 
   // Only show in development
-  if (process.env.NODE_ENV !== "development") {
+  if (!import.meta.env.DEV) {
     return null;
   }
 

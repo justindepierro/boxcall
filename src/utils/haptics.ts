@@ -33,6 +33,8 @@
 /**
  * Check if vibration API is available
  */
+import { debug } from "./logger";
+
 function isVibrationSupported(): boolean {
   return "vibrate" in navigator;
 }
@@ -49,7 +51,7 @@ function vibrate(pattern: number | number[]): void {
     navigator.vibrate(pattern);
   } catch (error) {
     // Silent fail - vibration is non-critical
-    console.debug("Vibration failed:", error);
+    debug("Vibration failed:", error);
   }
 }
 
@@ -151,7 +153,7 @@ export function useHaptics() {
  * @example
  * ```typescript
  * const handleClick = withHaptics(() => {
- *   console.log('Clicked!');
+ *   debug('Clicked!');
  * }, 'light');
  * ```
  */

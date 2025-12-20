@@ -12,7 +12,7 @@
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "../../types/database";
-import { debug, error as logError } from "../../utils/logger";
+import { debug, error as logError, warn } from "../../utils/logger";
 
 interface ConnectionConfig {
   url: string;
@@ -166,7 +166,7 @@ export class DatabaseConnectivityService {
 
       // Move to half-open state
       this.circuitBreaker.state = "HALF_OPEN";
-      console.warn("🔄 Circuit breaker moving to HALF_OPEN state");
+      warn("🔄 Circuit breaker moving to HALF_OPEN state");
     }
 
     try {
@@ -215,7 +215,7 @@ export class DatabaseConnectivityService {
         return result;
       } catch (error) {
         lastError = error as Error;
-        console.warn(
+        warn(
           `⚠️ ${operationName} failed on attempt ${attempt}:`,
           error
         );
@@ -333,7 +333,7 @@ export class DatabaseConnectivityService {
         this.metrics.lastHealthCheck = healthResult;
 
         if (!healthResult.isHealthy) {
-          console.warn("⚠️ Database health check failed:", healthResult.error);
+          warn("⚠️ Database health check failed:", healthResult.error);
           this.recordFailure(new Error(healthResult.error));
         } else {
           debug(

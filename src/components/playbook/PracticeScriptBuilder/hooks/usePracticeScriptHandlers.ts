@@ -3,7 +3,6 @@ import type { DropResult } from "@hello-pangea/dnd";
 import { PracticeScriptService, type PracticeScript } from "@services";
 import type { Play } from "../../../../types/play";
 import { useToast } from "../../../../hooks/useToast";
-import { PDFExportService } from "../../../../services/pdfExportService";
 import { triggerHapticFeedback } from "../../../../lib/hapticFeedback";
 import { debug, error as logError } from "../../../../utils/logger";
 
@@ -390,6 +389,9 @@ function usePracticeScriptPlayHandlers(params: {
     if (!currentScript) return;
 
     try {
+      const { PDFExportService } = await import(
+        "../../../../services/pdfExportService"
+      );
       await PDFExportService.exportPracticeScript(currentScript);
       toast.success("PDF exported successfully");
     } catch (error) {

@@ -12,7 +12,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 import { AchievementService } from "../services/achievementService";
-import { debug, error as logError } from "../utils/logger";
+import { debug, warn, error as logError } from "../utils/logger";
 
 export interface DashboardStats {
   totalPlays: number;
@@ -107,7 +107,7 @@ export function useDashboardStats(userId: string | undefined): DashboardStats {
  */
 async function fetchTotalPlays(userId: string): Promise<number> {
   try {
-    console.log("🔍 [fetchTotalPlays] Starting for userId:", userId);
+    debug("[fetchTotalPlays] Starting for userId:", userId);
 
     // Step 1: Get user's team memberships
     const { data: memberships, error: memberError } = await supabase
@@ -116,15 +116,12 @@ async function fetchTotalPlays(userId: string): Promise<number> {
       .eq("user_id", userId)
       .eq("status", "active");
 
-    console.log("🔍 [fetchTotalPlays] team_members result:", {
+    debug("[fetchTotalPlays] team_members result:", {
       data: memberships,
       error: memberError,
     });
 
     if (memberError || !memberships || memberships.length === 0) {
-      console.log(
-        "🔍 [fetchTotalPlays] No memberships found - THIS IS THE PROBLEM"
-      );
       debug("[fetchTotalPlays] No memberships found");
       return 0;
     }
@@ -157,10 +154,7 @@ async function fetchTotalPlays(userId: string): Promise<number> {
       .in("playbook_id", playbookIds);
 
     if (playsError) {
-      console.warn(
-        "[fetchTotalPlays] Error counting plays:",
-        playsError.message
-      );
+      warn("[fetchTotalPlays] Error counting plays:", playsError.message);
       return 0;
     }
 
@@ -220,9 +214,7 @@ async function fetchThisWeekActivity(userId: string): Promise<number> {
       .gte("created_at", startOfWeekISO);
 
     if (postsError || eventsError) {
-      console.warn(
-        "[fetchThisWeekActivity] Partial error - returning available data"
-      );
+      warn("[fetchThisWeekActivity] Partial error - returning available data");
     }
 
     return (posts?.length ?? 0) + (events?.length ?? 0);

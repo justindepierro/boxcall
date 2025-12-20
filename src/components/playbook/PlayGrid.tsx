@@ -17,10 +17,6 @@ import { useFavoritePlays } from "../../hooks/useFavoritePlays";
 import { usePersonnelConfigurations } from "../../hooks/usePersonnel";
 import { debug, warn, info } from "../../utils/logger";
 import { useSaveState } from "../../hooks/useSaveState";
-import {
-  validatePlaybookData,
-  logValidationResults,
-} from "../../utils/playbook-test-validation";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 // Extracted modules
@@ -163,12 +159,25 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
   // Validate database integration (dev only)
   useEffect(() => {
-    if (plays.length > 0 && process.env.NODE_ENV === "development") {
-      info("🏈 Playbook Database Integration Test");
-      info("📊 Total Plays Loaded:", plays.length);
-      const validationResults = validatePlaybookData(plays);
-      logValidationResults(validationResults);
-    }
+    if (!import.meta.env.DEV || plays.length === 0) return;
+
+    info("🏈 Playbook Database Integration Test");
+    info("📊 Total Plays Loaded:", plays.length);
+
+    let cancelled = false;
+    import("../../utils/playbook-test-validation")
+      .then(({ validatePlaybookData, logValidationResults }) => {
+        if (cancelled) return;
+        const validationResults = validatePlaybookData(plays);
+        logValidationResults(validationResults);
+      })
+      .catch((e) => {
+        warn("Playbook validation import failed", e);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [plays]);
 
   // Play save handler
@@ -226,7 +235,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   const showEmpty = displayPlays.length === 0 && !loading && !error;
 
   // Dev render diagnostics
-  if (process.env.NODE_ENV === "development") {
+  if (import.meta.env.DEV) {
     const selfAny = PlayGrid as unknown as {
       __renderInfo?: { count: number; start: number };
     };
@@ -477,12 +486,12 @@ const MobileGridView: React.FC<{
           playId={play.id}
           onEdit={() => onEdit?.(play)}
           onDuplicate={() => onDuplicate?.(play)}
-          onDelete={() => console.log("Delete play:", play.id)}
+          onDelete={() => debug("Delete play:", play.id)}
         >
           <MobilePlayCard
             play={play}
             onEdit={() => onEdit?.(play)}
-            onMore={() => console.log("More actions:", play.id)}
+            onMore={() => debug("More actions:", play.id)}
             onClick={() => onEdit?.(play)}
             isSelected={selectedPlayIds.has(play.id)}
             showOneWordCalls={showOneWordCalls}
@@ -643,7 +652,7 @@ function arePlayGridPropsEqual(prev: PlayGridProps, next: PlayGridProps) {
 
 export const PlayGrid = React.memo(PlayGridInner, arePlayGridPropsEqual);
 
-if (process.env.NODE_ENV === "development") {
+if (import.meta.env.DEV) {
   interface WdyrMark {
     whyDidYouRender?: boolean;
   }

@@ -1,0 +1,53 @@
+# Elite Code Cleanup Roadmap (Checklist) — Dec 2025
+
+Use this as the single source of truth for “make the code elite.” Check items off as they ship.
+
+Policy: when we implement any item below, we also delete the legacy/duplicate path — see [docs/development/DELETE_OLD_STUFF_POLICY.md](docs/development/DELETE_OLD_STUFF_POLICY.md).
+
+## App Recovery & Navigation
+- [x] (1) Standardize reset/recovery patterns (ErrorBoundary, soft reset, cache clear) into one documented approach
+- [x] (2) Enforce router-first navigation (soft navigation only when hooks aren’t available); ban new `window.location.*` usage
+
+## Architecture & Boundaries
+- [x] (3) Break up large “god components” into small tab/section components with strict props
+- [ ] (4) Define and enforce module boundaries (`src/shared/` / `src/lib/` / `src/features/`) with ESLint import rules
+- [ ] (5) Consolidate duplicate UI panels (floating/settings/dev) into one canonical surface and delete the rest
+- [ ] (6) Move to feature-module ownership: each feature owns routes, hooks, services, and UI locally
+
+## TypeScript & Events
+- [ ] (7) Tighten TypeScript strictness incrementally and track remaining violations
+- [ ] (8) Replace stringly-typed DOM/app events with typed constants + payload types
+- [ ] (9) Normalize service return patterns (consistent Result-style or consistent throw) so components don’t guess failures
+- [ ] (10) Centralize and type all localStorage keys/usage in one storage module
+
+## State & Data Layer
+- [ ] (11) Reduce Zustand store surface area: split by domain, memo-safe selectors, ban ad-hoc store reads in utilities
+- [ ] (12) Unify optimistic update patterns (temp IDs, rollback, toasts) across Playbook/GamePlans/Bulletin/etc.
+- [ ] (13) Standardize React Query config: query keys, stale times, refetch policies; remove bespoke caching
+- [ ] (14) Create a typed Supabase data-access layer (table-level helpers) and reduce direct query scattering
+
+## Dev/Prod Discipline
+- [ ] (15) Guarantee DEV-only tooling never ships in prod bundles (dynamic import + `import.meta.env.DEV` gating)
+- [ ] (16) CI guard: no `console.*` anywhere outside the logger module
+- [ ] (17) CI guard: expand design-token linting (no raw colors / no arbitrary spacing/typography)
+- [ ] (18) CI guard: no direct `fetch` outside a service layer
+
+## Performance
+- [ ] (19) Set per-route performance budgets (max JS/chunks on cold start) and fail CI if exceeded
+- [ ] (20) Audit route-level lazy loading so heavy editors never load on cold-start routes
+- [ ] (21) Add a render-performance checklist for high-traffic pages (memo boundaries, stable callbacks, virtualization)
+- [ ] (22) Normalize telemetry: one schema, consistent fields, single dispatcher integration
+
+## Security & Safety
+- [ ] (23) Security pass: verify no service-role key usage; ensure RLS + team isolation patterns everywhere
+- [ ] (24) Harden auth flows (reset password redirects, invite accept) with consistent allowlist/validation
+- [ ] (25) Add “sensitive logging” scrubber (never log tokens/PII, even in dev)
+
+## Testing & Quality Gates
+- [ ] (26) Add service-layer contract tests (Supabase stubs) to reduce reliance on UI-only tests
+- [ ] (27) Add regression tests for historically fragile areas (reset flows, offline sync, navigation helpers)
+- [ ] (28) Add Playwright smoke tests for top coaching workflows (Playbook, Practice, GamePlan, Bulletin, BoxCall)
+
+## Docs & Housekeeping
+- [ ] (29) Docs cleanup: merge duplicates, keep each doc ≤300 lines, create one “Architecture + Conventions” entrypoint
+- [ ] (30) Add a recurring “delete week”: every sprint remove/merge 5 files/components; track net deletion as a KPI

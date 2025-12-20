@@ -1,6 +1,7 @@
 import {
   forwardRef,
   useEffect,
+  useId,
   useRef,
   type ForwardedRef,
   type RefObject,
@@ -121,11 +122,6 @@ function buildAriaDescribedBy({
 function setTextareaAutoHeight(textarea: HTMLTextAreaElement) {
   textarea.style.height = "auto";
   textarea.style.height = `${textarea.scrollHeight}px`;
-}
-
-function resolveTextareaId(id?: string) {
-  if (id) return id;
-  return `textarea-${Math.random().toString(36).substr(2, 9)}`;
 }
 
 function resolveInternalRef(
@@ -267,7 +263,9 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   ) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const internalRef = resolveInternalRef(ref, textareaRef);
-    const textareaId = resolveTextareaId(id);
+    const reactId = useId();
+    const stableAutoId = reactId.replace(/:/g, "");
+    const textareaId = id ?? `textarea-${stableAutoId}`;
     // Auto-resize functionality
     useEffect(() => {
       if (!autoResize) return;

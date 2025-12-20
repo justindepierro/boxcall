@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase";
+import { warn } from "../utils/logger";
 
 export class ThumbnailUploadService {
   /**
@@ -25,7 +26,7 @@ export class ThumbnailUploadService {
       const { data } = supabase.storage.from("play-assets").getPublicUrl(path);
       return data.publicUrl;
     } catch (e) {
-      console.warn("Thumbnail upload failed; using data URL", e);
+      warn("Thumbnail upload failed; using data URL", e);
       return dataUrl; // graceful fallback
     }
   }

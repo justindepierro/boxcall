@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
 import { useUI } from "../app/store";
-import { logError } from "./logger";
+import { logError, warn } from "./logger";
 /**
  * Error handler hook for consistent error handling across the application
  */
@@ -25,7 +25,7 @@ export function useErrorHandler() {
   const handleWarning = useCallback(
     (warning: string, context?: string) => {
       const title = context ? `Warning in ${context}` : "Warning";
-      console.warn("Warning handled:", { warning, context });
+      warn("Warning handled:", { warning, context });
       addNotification({
         type: "warning",
         title,

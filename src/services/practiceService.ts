@@ -855,7 +855,7 @@ export class PracticeService {
     teamId: string,
     _forceRefresh = false
   ): Promise<PracticeScript[]> {
-    console.log("🔍 [PracticeService] Fetching scripts for team:", teamId);
+    debug("[PracticeService] Fetching scripts for team:", teamId);
     const startTime = performance.now();
 
     try {
@@ -866,7 +866,7 @@ export class PracticeService {
         .eq("team_id", teamId)
         .order("updated_at", { ascending: false });
 
-      console.log("🔍 [PracticeService] Scripts query completed:", {
+      debug("[PracticeService] Scripts query completed:", {
         hasData: !!scripts,
         count: scripts?.length ?? 0,
         error: scriptsError,
@@ -878,7 +878,7 @@ export class PracticeService {
       }
 
       if (!scripts || scripts.length === 0) {
-        console.log("🔍 [PracticeService] No scripts found for team:", teamId);
+        debug("[PracticeService] No scripts found for team:", teamId);
         return [];
       }
 
@@ -893,19 +893,19 @@ export class PracticeService {
           .in("practice_script_id", scriptIds);
 
         if (playsError) {
-          console.warn("🔍 [PracticeService] Plays query error:", playsError);
+          debug("[PracticeService] Plays query error:", playsError);
         }
 
         scriptPlays = playsData || [];
 
-        console.log("🔍 [PracticeService] Script plays query completed:", {
+        debug("[PracticeService] Script plays query completed:", {
           hasData: !!playsData,
           count: scriptPlays?.length ?? 0,
           error: playsError,
         });
       } catch (e) {
-        console.warn(
-          "🔍 [PracticeService] Plays query failed, returning scripts without plays:",
+        debug(
+          "[PracticeService] Plays query failed, returning scripts without plays:",
           e
         );
         scriptPlays = [];
@@ -929,7 +929,7 @@ export class PracticeService {
 
       // DEBUG: Log the raw data to see if plays are returned
       if (scriptsWithPlays.length > 0) {
-        console.log("🔍 [PracticeService] Raw script data:", {
+        debug("[PracticeService] Raw script data:", {
           firstScript: scriptsWithPlays[0],
           hasPlays: !!scriptsWithPlays[0].practice_script_plays,
           playCount: scriptsWithPlays[0].practice_script_plays.length,
@@ -941,7 +941,7 @@ export class PracticeService {
         this.mapDatabaseScriptToPracticeScript(script)
       );
 
-      console.log("✅ [PracticeService] Mapped scripts:", {
+      debug("[PracticeService] Mapped scripts:", {
         count: mappedScripts.length,
         scripts: mappedScripts.map((s) => ({
           id: s.id,
@@ -951,14 +951,13 @@ export class PracticeService {
       });
 
       const queryTime = performance.now() - startTime;
-      console.log(
-        `✅ [PracticeService] Fetched ${mappedScripts.length} scripts in ${queryTime.toFixed(2)}ms`
+      debug(
+        `[PracticeService] Fetched ${mappedScripts.length} scripts in ${queryTime.toFixed(2)}ms`
       );
 
       return mappedScripts;
     } catch (error) {
       logError("Error in getPracticeScripts:", error);
-      console.error("❌ [PracticeService] Error:", error);
       return [];
     }
   }

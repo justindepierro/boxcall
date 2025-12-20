@@ -5,7 +5,8 @@
  */
 
 import React, { useState, useEffect } from "react";
-import { performanceMonitor } from "../../utils/performanceMonitor";
+import { debug } from "../../utils/logger";
+import { getVitalsSnapshot } from "../../telemetry/initWebVitals";
 
 interface PerformanceMetric {
   name: string;
@@ -14,83 +15,115 @@ interface PerformanceMetric {
   unit: string;
 }
 
+// TypeScript definition for Chrome's memory API
+interface MemoryInfo {
+  jsHeapSizeLimit: number;
+  totalJSHeapSize: number;
+  usedJSHeapSize: number;
+}
+
+function getWebVitalsRating(
+  name: "CLS" | "LCP" | "INP" | "FCP" | "TTFB",
+  value: number
+): "good" | "needs-improvement" | "poor" {
+  const thresholds: Record<string, [number, number]> = {
+    CLS: [0.1, 0.25],
+    INP: [200, 500],
+    FCP: [1800, 3000],
+    LCP: [2500, 4000],
+    TTFB: [800, 1800],
+  };
+
+  const [good, poor] = thresholds[name] ?? [0, 0];
+  if (value <= good) return "good";
+  if (value <= poor) return "needs-improvement";
+  return "poor";
+}
+
+function getBundleLoadTimeMs(): number | null {
+  if (typeof window === "undefined" || !window.performance) return null;
+  const navigation = window.performance.getEntriesByType(
+    "navigation"
+  )[0] as PerformanceNavigationTiming | undefined;
+  if (!navigation) return null;
+  const loadTime = navigation.loadEventEnd - navigation.fetchStart;
+  return Number.isFinite(loadTime) && loadTime >= 0 ? loadTime : null;
+}
+
+function getMemoryUsage(): MemoryInfo | null {
+  if (typeof window === "undefined" || !window.performance) return null;
+  const perf = window.performance as any;
+  return perf.memory ? (perf.memory as MemoryInfo) : null;
+}
+
 export const PerformanceDashboard: React.FC = () => {
   const [metrics, setMetrics] = useState<PerformanceMetric[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const updateMetrics = () => {
-    const perfMetrics = performanceMonitor.getMetrics();
+    const vitals = getVitalsSnapshot();
     const formattedMetrics: PerformanceMetric[] = [];
 
     // Format Core Web Vitals
-    if (perfMetrics.LCP) {
+    if (vitals.LCP) {
       formattedMetrics.push({
         name: "LCP (Largest Contentful Paint)",
-        value: perfMetrics.LCP.value,
-        rating: perfMetrics.LCP.rating,
+        value: vitals.LCP.value,
+        rating: getWebVitalsRating("LCP", vitals.LCP.value),
         unit: "ms",
       });
     }
 
-    if (perfMetrics.INP) {
+    if (vitals.INP) {
       formattedMetrics.push({
         name: "INP (Interaction to Next Paint)",
-        value: perfMetrics.INP.value,
-        rating: perfMetrics.INP.rating,
+        value: vitals.INP.value,
+        rating: getWebVitalsRating("INP", vitals.INP.value),
         unit: "ms",
       });
     }
 
-    if (perfMetrics.CLS) {
+    if (vitals.CLS) {
       formattedMetrics.push({
         name: "CLS (Cumulative Layout Shift)",
-        value: perfMetrics.CLS.value,
-        rating: perfMetrics.CLS.rating,
+        value: vitals.CLS.value,
+        rating: getWebVitalsRating("CLS", vitals.CLS.value),
         unit: "",
       });
     }
 
-    if (perfMetrics.FCP) {
+    if (vitals.FCP) {
       formattedMetrics.push({
         name: "FCP (First Contentful Paint)",
-        value: perfMetrics.FCP.value,
-        rating: perfMetrics.FCP.rating,
+        value: vitals.FCP.value,
+        rating: getWebVitalsRating("FCP", vitals.FCP.value),
         unit: "ms",
       });
     }
 
-    if (perfMetrics.TTFB) {
+    if (vitals.TTFB) {
       formattedMetrics.push({
         name: "TTFB (Time to First Byte)",
-        value: perfMetrics.TTFB.value,
-        rating: perfMetrics.TTFB.rating,
+        value: vitals.TTFB.value,
+        rating: getWebVitalsRating("TTFB", vitals.TTFB.value),
         unit: "ms",
       });
     }
 
-    if (perfMetrics.bundleLoadTime) {
+    const bundleLoadTime = getBundleLoadTimeMs();
+    if (bundleLoadTime !== null) {
       formattedMetrics.push({
         name: "Bundle Load Time",
-        value: perfMetrics.bundleLoadTime,
-        rating:
-          perfMetrics.bundleLoadTime < 3000 ? "good" : "needs-improvement",
-        unit: "ms",
-      });
-    }
-
-    if (perfMetrics.routeChangeTime) {
-      formattedMetrics.push({
-        name: "Last Route Change",
-        value: perfMetrics.routeChangeTime,
-        rating:
-          perfMetrics.routeChangeTime < 200 ? "good" : "needs-improvement",
+        value: bundleLoadTime,
+        rating: bundleLoadTime < 3000 ? "good" : "needs-improvement",
         unit: "ms",
       });
     }
 
     // Memory usage
-    if (perfMetrics.memoryUsage) {
-      const memoryMB = perfMetrics.memoryUsage.usedJSHeapSize / (1024 * 1024);
+    const memoryUsage = getMemoryUsage();
+    if (memoryUsage) {
+      const memoryMB = memoryUsage.usedJSHeapSize / (1024 * 1024);
       formattedMetrics.push({
         name: "Memory Usage",
         value: memoryMB,
@@ -120,10 +153,9 @@ export const PerformanceDashboard: React.FC = () => {
   };
 
   const handleLogMetrics = () => {
-    const allMetrics = performanceMonitor.getMetrics();
-    console.group("📊 Performance Metrics");
-    console.table(allMetrics);
-    console.groupEnd();
+    debug("📊 Web Vitals Snapshot", getVitalsSnapshot());
+    debug("📦 Bundle Load Time (ms)", getBundleLoadTimeMs());
+    debug("🧠 Memory Usage", getMemoryUsage());
   };
 
   const getRatingColor = (rating: string) => {

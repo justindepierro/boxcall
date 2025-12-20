@@ -6,6 +6,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { supabase } from "../../../lib/supabase";
 import { colorTokens } from "../../../design-system/tokens";
+import { warn } from "../../../utils/logger";
 
 export interface TeamData {
   id: string;
@@ -88,7 +89,7 @@ export function useTeamBulletinData({
           .eq("id", teamId)
           .single<TeamRow>();
         if (error) {
-          console.warn("team.fetch.error", error);
+          warn("team.fetch.error", error);
           setIsTeamDataLoading(false);
           return;
         }

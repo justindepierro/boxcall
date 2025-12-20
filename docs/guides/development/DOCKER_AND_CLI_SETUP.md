@@ -63,7 +63,7 @@ VITE_SUPABASE_URL=https://lvmuiqwihlpnwppdqqfl.supabase.co
 VITE_SUPABASE_ANON_KEY=your_anon_key_here
 
 # Database Connection (use pooler for stability)
-DATABASE_URL=postgresql://postgres.lvmuiqwihlpnwppdqqfl:N3v3rsayd1e1715@aws-0-us-east-2.pooler.supabase.com:5432/postgres?sslmode=require
+DATABASE_URL=postgresql://postgres.lvmuiqwihlpnwppdqqfl:[YOUR-PASSWORD]@aws-0-us-east-2.pooler.supabase.com:5432/postgres?sslmode=require
 
 # SuperAdmin Configuration
 VITE_SUPER_ADMIN_EMAIL=justindepierro@gmail.com
@@ -165,7 +165,7 @@ docker restart supabase_db_boxcall
 
 ```bash
 # Connect to remote database (production)
-psql "postgresql://postgres.lvmuiqwihlpnwppdqqfl:N3v3rsayd1e1715@aws-0-us-east-2.pooler.supabase.com:5432/postgres?sslmode=require"
+psql "$DATABASE_URL"
 
 # Connect to local database
 psql "postgresql://postgres:postgres@localhost:54322/postgres"

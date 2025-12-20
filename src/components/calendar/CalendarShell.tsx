@@ -56,10 +56,12 @@ export const CalendarShell: React.FC = () => {
     setUrlState,
     profile,
     user,
+    refetchEvents,
   } = controller;
 
   if (loading) return <CalendarPageSkeleton />;
-  if (error) return <CalendarErrorSkeleton message={error} />;
+  if (error)
+    return <CalendarErrorSkeleton message={error} onRetry={refetchEvents} />;
 
   return (
     <div className="calendar-shell-root space-y-lg">

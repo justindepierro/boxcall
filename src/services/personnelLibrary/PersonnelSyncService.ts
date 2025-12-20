@@ -8,7 +8,7 @@
 
 import { supabase } from "../../lib/supabase";
 import type { SyncResult } from "../../types/library";
-import { logError } from "../../utils/logger";
+import { logError, warn } from "../../utils/logger";
 
 export class PersonnelSyncService {
   /**
@@ -66,7 +66,7 @@ export class PersonnelSyncService {
       .eq("id", personnelId);
 
     if (updateError) {
-      console.warn(
+      warn(
         `[PersonnelSyncService] Could not update usage_count:`,
         updateError
       );
@@ -162,7 +162,7 @@ export class PersonnelSyncService {
         .eq("id", config.id);
 
       if (updateError) {
-        console.warn(
+          warn(
           `[PersonnelSyncService] Could not update ${config.name}:`,
           updateError
         );

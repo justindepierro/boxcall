@@ -69,6 +69,8 @@ export const MobileSearchModal: React.FC<MobileSearchModalProps> = ({
             </div>
             <input
               ref={inputRef}
+              id="global-search-mobile"
+              name="globalSearch"
               type="text"
               value={query}
               onChange={onInputChange}

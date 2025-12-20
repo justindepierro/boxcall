@@ -5,6 +5,7 @@
 
 import { useCallback } from "react";
 import type { Play } from "../../../../types/play";
+import { debug, warn } from "../../../../utils/logger";
 
 interface UsePlaySelectionProps {
   selectedPlayIds: Set<string>;
@@ -19,20 +20,23 @@ export function usePlaySelection({
 }: UsePlaySelectionProps) {
   const handlePlaySelect = useCallback(
     (playId: string, selected: boolean) => {
-      console.log("[usePlaySelection] handlePlaySelect called:", {
+      debug("[usePlaySelection] handlePlaySelect called:", {
         playId,
         selected,
         hasCallback: !!onPlaySelectionChange,
         currentSelectionSize: selectedPlayIds.size,
       });
       if (!onPlaySelectionChange) {
-        console.warn("[usePlaySelection] No onPlaySelectionChange callback!");
+        warn("[usePlaySelection] No onPlaySelectionChange callback", {
+          playId,
+          selected,
+        });
         return;
       }
       const newSelection = new Set(selectedPlayIds);
       if (selected) newSelection.add(playId);
       else newSelection.delete(playId);
-      console.log("[usePlaySelection] Calling onPlaySelectionChange with:", {
+      debug("[usePlaySelection] Calling onPlaySelectionChange with:", {
         oldSize: selectedPlayIds.size,
         newSize: newSelection.size,
         playId,

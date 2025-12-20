@@ -37,6 +37,7 @@ export function useCalendarData({
     isLoading: loading,
     isError,
     error: eventsError,
+    refetch: refetchEvents,
   } = useSearchEvents(debouncedSearch, baseQueryParams);
   const error = (() => {
     if (!isError) return null;
@@ -54,6 +55,7 @@ export function useCalendarData({
     events,
     loading,
     error,
+    refetchEvents,
     createEventMutation,
     deleteEventMutation,
     updateEventMutation,

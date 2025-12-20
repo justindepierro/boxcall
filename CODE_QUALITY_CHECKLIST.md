@@ -79,6 +79,7 @@ Use this checklist before committing code to ensure consistency and quality.
 - [ ] Complex functions have JSDoc comments
 - [ ] TODOs include context and timeline (not just "TODO: fix this")
 - [ ] Commented-out code removed (use git history)
+- [ ] Refactors include deletion: old code paths removed, duplicates merged, unused exports/files cleaned up
 - [ ] README updated if adding new features
 - [ ] Comments explain "why", not "what"
 

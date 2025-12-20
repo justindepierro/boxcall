@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable complexity */
 
-import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
+import { forwardRef, useEffect, useId, useMemo, useRef, useState } from "react";
 
 import { Typography } from "../../design-system";
 /**
@@ -145,8 +145,9 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
     const containerRef = useRef<HTMLDivElement>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
-    // Generate unique ID if not provided
-    const selectId = id || `select-${Math.random().toString(36).substr(2, 9)}`;
+    const reactId = useId();
+    const stableAutoId = reactId.replace(/:/g, "");
+    const selectId = id ?? `select-${stableAutoId}`;
     // Sync internal value with prop value
     useEffect(() => {
       if (value !== undefined) {

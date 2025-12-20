@@ -1,4 +1,4 @@
-import { logger } from "./logger";
+import { logger } from "../utils/logger";
 // Lightweight telemetry dispatcher skeleton
 // Provides enqueue + flush (console output for now); future: send to Supabase edge function or REST endpoint.
 

@@ -8,7 +8,14 @@
  * - Can be easily disabled in production
  */
 
-import { logError } from "./logger";
+import {
+  debug,
+  group,
+  groupCollapsed,
+  info,
+  logError,
+  warn,
+} from "./logger";
 
 const isDev = import.meta.env.DEV;
 const isDebugMode = import.meta.env.VITE_DEBUG === "true";
@@ -28,7 +35,7 @@ export const devLogger = {
    */
   warn: (...args: any[]) => {
     if (isDev) {
-      console.warn("⚠️  [WARN]", ...args);
+      warn("[WARN]", ...args);
     }
   },
 
@@ -37,7 +44,7 @@ export const devLogger = {
    */
   info: (...args: any[]) => {
     if (isDev) {
-      console.info("ℹ️  [INFO]", ...args);
+      info("[INFO]", ...args);
     }
   },
 
@@ -46,7 +53,7 @@ export const devLogger = {
    */
   debug: (...args: any[]) => {
     if (isDev && isDebugMode) {
-      console.debug("🐛 [DEBUG]", ...args);
+      debug("[DEBUG]", ...args);
     }
   },
 
@@ -60,7 +67,7 @@ export const devLogger = {
       performance.mark(`${label}-end`);
       performance.measure(label, `${label}-start`, `${label}-end`);
       const measure = performance.getEntriesByName(label)[0];
-      console.log(`⏱️  [PERF] ${label}: ${measure.duration.toFixed(2)}ms`);
+      debug(`⏱️  [PERF] ${label}: ${measure?.duration.toFixed(2)}ms`);
     } else {
       fn();
     }
@@ -71,9 +78,9 @@ export const devLogger = {
    */
   api: (method: string, url: string, data?: any) => {
     if (isDev && isDebugMode) {
-      console.groupCollapsed(`🌐 [API] ${method} ${url}`);
-      if (data) console.log("Data:", data);
-      console.groupEnd();
+      groupCollapsed(`🌐 [API] ${method} ${url}`, () => {
+        if (data) debug("Data:", data);
+      });
     }
   },
 
@@ -91,7 +98,7 @@ export const devLogger = {
         if (action === "unmount") return "🔴";
         return "🔄";
       })();
-      console.log(`${emoji} [COMPONENT] ${name} - ${action}`, data || "");
+      debug(`${emoji} [COMPONENT] ${name} - ${action}`, data || "");
     }
   },
 
@@ -101,12 +108,10 @@ export const devLogger = {
   group: (label: string, fn: () => void, collapsed = true) => {
     if (isDev) {
       if (collapsed) {
-        console.groupCollapsed(label);
+        groupCollapsed(label, fn);
       } else {
-        console.group(label);
+        group(label, fn);
       }
-      fn();
-      console.groupEnd();
     }
   },
 };

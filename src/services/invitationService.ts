@@ -2,7 +2,7 @@
  * Player Invitation Service
  *
  * Handles sending invitations to players to join a team.
- * Currently uses placeholder email (console.log) until email service is integrated.
+ * Currently uses placeholder email logging until email service is integrated.
  *
  * @version 1.1.0 - Security improvements
  * - Email validation

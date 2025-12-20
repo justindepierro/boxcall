@@ -37,7 +37,7 @@ export const reportError = (
   };
 
   // Log to console in development
-  if (process.env.NODE_ENV === "development") {
+  if (import.meta.env.DEV && import.meta.env.MODE !== "test") {
     logError("Manual Error Report:", errorData);
   }
 

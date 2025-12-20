@@ -6,6 +6,7 @@
 
 import type { PracticeScript } from "@services";
 import type { PDFFormat } from "../components/pdf/PracticeScriptPDF";
+import { logError } from "../utils/logger";
 
 export class PDFExportService {
   /**
@@ -59,7 +60,7 @@ export class PDFExportService {
       // Clean up
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error("Error generating PDF:", error);
+      logError("Error generating PDF:", error);
       throw new Error("Failed to generate PDF");
     }
   }
@@ -77,7 +78,7 @@ export class PDFExportService {
         <PracticeScriptPDF script={script} format={format} />
       ).toBlob();
     } catch (error) {
-      console.error("Error generating PDF:", error);
+      logError("Error generating PDF:", error);
       throw new Error("Failed to generate PDF");
     }
   }

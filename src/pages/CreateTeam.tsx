@@ -19,7 +19,7 @@ import type {
   DuplicateCheckResult,
 } from "../services/teamService";
 import type { AddressSuggestion } from "../services/locationFinderService";
-import { logError } from "../utils/logger";
+import { logError, warn } from "../utils/logger";
 
 // Extracted step components
 import {
@@ -52,7 +52,7 @@ const saveProgressSafe = (step: StepId, data: TeamCreationInput) => {
   try {
     ProgressTrackingService.saveProgress(step, data, []);
   } catch (error) {
-    console.warn("Could not save progress:", error);
+    warn("Could not save progress:", error);
   }
 };
 
@@ -177,7 +177,7 @@ const runAddressSearch = async (params: {
       setAddressSuggestions(result.suggestions);
     }
   } catch (error) {
-    console.warn("Address search failed:", error);
+    warn("Address search failed:", error);
   }
 };
 
@@ -243,7 +243,7 @@ const runCreateTeam = async (params: {
       try {
         ProgressTrackingService.clearProgress();
       } catch (error) {
-        console.warn("Could not clear progress:", error);
+        warn("Could not clear progress:", error);
       }
 
       setCurrentStep("complete");

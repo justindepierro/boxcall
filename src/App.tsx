@@ -14,7 +14,7 @@ import { PWAIntegration } from "./components/pwa/PWAIntegration";
 import {
   AnalyticsProvider,
   AnalyticsDebugger,
-} from "./components/analytics/AnalyticsProvider";
+} from "./telemetry/AnalyticsProvider";
 import { AppProvider } from "./components/core";
 import { SaveStateProvider } from "./contexts/SaveStateContext";
 import { useSaveState } from "./hooks/useSaveState";
@@ -23,9 +23,14 @@ import { PopoverProvider } from "./contexts/PopoverContext";
 import { PendingSavesNotification } from "./components/notifications/PendingSavesNotification";
 import { UndoRedoIndicator } from "./components/undo/UndoRedoIndicator";
 import { ConflictDialog } from "./components/conflicts/ConflictDialog";
-import DevPanel from "./components/dev/DevPanel";
 import { OfflineIndicator } from "./components/ui/OfflineIndicator";
 import { logError } from "./utils/logger";
+import { APP_RESET_EVENT } from "./utils/appReset";
+
+type DevPanelProps = {
+  isOpen: boolean;
+  onClose: () => void;
+};
 
 /**
  * ConflictOverlay - Shows conflict dialog when there's an active conflict
@@ -45,7 +50,11 @@ function ConflictOverlay() {
  * Now uses React Router for multi-page navigation with authentication.
  */
 function App() {
+  const [appResetKey, setAppResetKey] = useState(0);
   const [showDevPanel, setShowDevPanel] = useState(false);
+  const [DevPanelComponent, setDevPanelComponent] = useState<
+    React.ComponentType<DevPanelProps> | null
+  >(null);
 
   // Initialize theme system
   useTheme();
@@ -67,8 +76,42 @@ function App() {
     initBoxCall();
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handler = (event: Event) => {
+      const detail = (event as CustomEvent<{ reason?: string }>).detail;
+      if (detail?.reason) {
+        // keep this low-noise; logger already DEV-gated elsewhere
+      }
+      setShowDevPanel(false);
+      setDevPanelComponent(null);
+      setAppResetKey((k) => k + 1);
+    };
+
+    window.addEventListener(APP_RESET_EVENT, handler as EventListener);
+    return () =>
+      window.removeEventListener(APP_RESET_EVENT, handler as EventListener);
+  }, []);
+
+  useEffect(() => {
+    if (!import.meta.env.DEV) return;
+    if (!showDevPanel) return;
+    if (DevPanelComponent) return;
+
+    let mounted = true;
+    void import("./components/dev/DevPanel").then((mod) => {
+      if (!mounted) return;
+      setDevPanelComponent(() => mod.default);
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, [showDevPanel, DevPanelComponent]);
+
   return (
-    <ErrorBoundary>
+    <ErrorBoundary key={appResetKey}>
       <AppProvider
         enableDevTools={import.meta.env.DEV}
         enableShowcase={import.meta.env.DEV}
@@ -93,14 +136,19 @@ function App() {
                     </AppGrid>
                     <PWAIntegration />
                     <OfflineIndicator />
-                    <DevPanel
-                      isOpen={showDevPanel}
-                      onClose={() => setShowDevPanel(false)}
-                    />
+                    {import.meta.env.DEV && DevPanelComponent ? (
+                      <DevPanelComponent
+                        isOpen={showDevPanel}
+                        onClose={() => setShowDevPanel(false)}
+                      />
+                    ) : null}
+
                     {/* DevPanel hotkey: ctrl+shift+D to show/hide DevPanel for authorized users */}
-                    <ToggleDevPanel
-                      onToggle={() => setShowDevPanel((v) => !v)}
-                    />
+                    {import.meta.env.DEV ? (
+                      <ToggleDevPanel
+                        onToggle={() => setShowDevPanel((v) => !v)}
+                      />
+                    ) : null}
 
                     {/* Analytics Debug Panel (dev only) */}
                     <AnalyticsDebugger />
@@ -117,6 +165,8 @@ function App() {
 
 function ToggleDevPanel({ onToggle }: { onToggle: () => void }) {
   useEffect(() => {
+    if (!import.meta.env.DEV) return;
+
     function handler(e: KeyboardEvent) {
       if (e.ctrlKey && e.shiftKey && e.key === "D") {
         e.preventDefault();

@@ -99,7 +99,7 @@ export const TeamCalendar: React.FC<TeamCalendarProps> = ({
               label: "View Roadmap",
               variant: "ghost",
               onClick: () =>
-                console.info("telemetry:onboarding.calendar.view_roadmap"),
+                telemetry.track("onboarding.calendar.view_roadmap", { teamId }),
             },
           ]}
         />

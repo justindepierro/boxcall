@@ -15,6 +15,7 @@ import type {
   FormationCreate,
   FormationUpdate,
 } from "../types/formation";
+import { warn as logWarn } from "../utils/logger";
 
 type MatchName = "exact" | "similar" | "different";
 type MatchDirection = "perfect" | "compatible" | "none";
@@ -39,7 +40,7 @@ export type BulkDeleteResult = { count: number };
 
 function warn(methodName: string) {
   if (import.meta.env.DEV) {
-    console.warn(`[FormationService] ${methodName} is currently a no-op stub.`);
+    logWarn(`[FormationService] ${methodName} is currently a no-op stub.`);
   }
 }
 

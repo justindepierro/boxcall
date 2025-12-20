@@ -2,6 +2,7 @@ import type { SidebarItem } from "../components/ui/Sidebar";
 import type { Database } from "../types/database";
 import React from "react";
 import { Icon } from "../components/ui/Icon/Icon";
+import { softNavigate } from "./softNavigate";
 import type { IconName } from "../components/ui/Icon/Icon";
 import { ROUTES, teamRoutes } from "../routes/paths";
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
@@ -275,8 +276,8 @@ export const toSidebarItems = (
             if (onNavigate) {
               onNavigate(item.href);
             } else {
-              // Fallback: use window.location for navigation
-              window.location.href = item.href;
+              // Fallback: avoid full reload
+              softNavigate(item.href);
             }
           },
       divider: item.divider,

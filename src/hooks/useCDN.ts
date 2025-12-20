@@ -7,6 +7,7 @@
 import { useEffect, useCallback, useState, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { cdnService, AssetLoader } from "../services/cdn/CDNService";
+import { warn } from "../utils/logger";
 
 // Hook for CDN-optimized URLs
 export function useCDN() {
@@ -60,10 +61,7 @@ export function useRouteAssets(routeName?: string) {
         setLoadedRoutes((prev) => new Set(prev).add(currentRoute));
       })
       .catch((error) => {
-        console.warn(
-          `Failed to preload assets for route ${currentRoute}:`,
-          error
-        );
+        warn(`Failed to preload assets for route ${currentRoute}:`, error);
       })
       .finally(() => {
         setIsLoading(false);

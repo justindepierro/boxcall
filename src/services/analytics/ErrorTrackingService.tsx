@@ -6,6 +6,7 @@
 
 import React from "react";
 import * as Sentry from "@sentry/react";
+import { debug, error as logError, warn } from "../../utils/logger";
 
 interface ErrorContext {
   user?: {
@@ -48,7 +49,7 @@ export class ErrorTrackingService {
       !dsn ||
       (!import.meta.env.PROD && import.meta.env.VITE_ENABLE_SENTRY !== "true")
     ) {
-      console.log("🐛 Error tracking disabled in development");
+      debug("🐛 Error tracking disabled in development");
       this.initialized = true;
       return;
     }
@@ -94,9 +95,9 @@ export class ErrorTrackingService {
       });
 
       this.initialized = true;
-      console.log("🐛 Sentry error tracking initialized");
+      debug("🐛 Sentry error tracking initialized");
     } catch (error) {
-      console.warn("Failed to initialize Sentry:", error);
+      warn("Failed to initialize Sentry:", error);
       this.initialized = true; // Mark as initialized to prevent retries
     }
   }
@@ -126,32 +127,6 @@ export class ErrorTrackingService {
         level: "error",
       });
     });
-
-    // React error boundary integration
-    const originalConsoleError = console.error;
-    console.error = (...args) => {
-      // Check if this looks like a React error
-      if (args[0] && typeof args[0] === "string" && args[0].includes("React")) {
-        // Safely stringify args to avoid "Cannot convert object to primitive value" errors
-        const errorMessage = args
-          .map((arg) => {
-            if (typeof arg === "string") return arg;
-            if (arg instanceof Error) return arg.message;
-            try {
-              return JSON.stringify(arg);
-            } catch {
-              return String(arg);
-            }
-          })
-          .join(" ");
-
-        this.captureError(new Error(errorMessage), {
-          tags: { type: "react_error" },
-          level: "error",
-        });
-      }
-      originalConsoleError.apply(console, args);
-    };
   }
 
   async captureError(error: Error, context?: ErrorContext): Promise<void> {
@@ -187,7 +162,7 @@ export class ErrorTrackingService {
         timestamp: Date.now(),
       });
 
-      console.error("🐛 Error captured:", error, context);
+      logError("🐛 Error captured:", error, context);
 
       // Keep only last 100 errors in development
       if (this.developmentErrors.length > 100) {
@@ -221,11 +196,7 @@ export class ErrorTrackingService {
         Sentry.captureMessage(message, context?.level || "info");
       });
     } else {
-      console.log(
-        `🐛 Message captured (${context?.level || "info"}):`,
-        message,
-        context
-      );
+      debug(`🐛 Message captured (${context?.level || "info"}):`, message, context);
     }
   }
 

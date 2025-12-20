@@ -59,34 +59,31 @@ export class RoleService {
     userId: string
   ): any | null {
     if (profileResult?.error) {
-      console.warn(
-        "🔍 RoleService: Profile query error:",
-        profileResult.error.message
-      );
+      warn("RoleService: Profile query error:", profileResult.error.message);
       return null;
     }
 
     if (profileResult?.data) {
       const profile = profileResult.data;
-      console.log("🔍 RoleService: Got profile with role:", profile.role);
+      debug("RoleService: Got profile with role:", profile.role);
       return profile;
     }
 
-    console.log("🔍 RoleService: No profile found for user:", userId);
+    debug("RoleService: No profile found for user:", userId);
     return null;
   }
 
   private static extractMemberships(membershipsResult: any): any[] {
     if (membershipsResult?.error) {
-      console.warn(
-        "🔍 RoleService: Team memberships query error:",
+      warn(
+        "RoleService: Team memberships query error:",
         membershipsResult.error.message
       );
       return [];
     }
 
     const memberships = membershipsResult?.data || [];
-    console.log("🔍 RoleService: Got memberships:", memberships);
+    debug("RoleService: Got memberships:", memberships);
     return memberships;
   }
 
@@ -183,17 +180,17 @@ export class RoleService {
           .eq("status", "active"),
       ]);
 
-      console.log(
-        `🔍 RoleService: Queries completed in ${Date.now() - profileStart}ms`
+      debug(
+        `RoleService: Queries completed in ${Date.now() - profileStart}ms`
       );
-      console.log("🔍 RoleService: profileResult:", profileResult);
-      console.log("🔍 RoleService: membershipsResult:", membershipsResult);
+      debug("RoleService: profileResult:", profileResult);
+      debug("RoleService: membershipsResult:", membershipsResult);
 
       const profile = this.extractProfile(profileResult, userId);
       const memberships = this.extractMemberships(membershipsResult);
 
-      console.log(
-        "🔍 RoleService: Found",
+      debug(
+        "RoleService: Found",
         memberships?.length ?? 0,
         "team memberships for user:",
         userId
@@ -241,8 +238,8 @@ export class RoleService {
       return roleContext;
     } catch (error) {
       if (import.meta.env.DEV) {
-        console.warn(
-          "⚠️ RoleService: Using fallback role due to database setup issues:",
+        warn(
+          "RoleService: Using fallback role due to database setup issues:",
           error
         );
       }

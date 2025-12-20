@@ -15,7 +15,7 @@ import { formatRelativeDate } from "../utils/dateFormatting";
 import type { PracticeScript } from "../services/practiceService";
 import type { GamePlan } from "../services/gamePlanService";
 import type { PracticeSession, GameSession } from "../types/session";
-import { logError } from "../utils/logger";
+import { debug, logError } from "../utils/logger";
 import { useToast } from "../hooks/useToast";
 
 /**
@@ -473,12 +473,12 @@ const BoxCall: React.FC = () => {
 
   const loadData = useCallback(async () => {
     if (!activeTeamId) {
-      console.log("📋 [BoxCall] No active team ID, skipping data load");
+      debug("[BoxCall] No active team ID, skipping data load");
       setLoading(false);
       return;
     }
 
-    console.log("📋 [BoxCall] Loading data for team:", activeTeamId);
+    debug("[BoxCall] Loading data for team:", activeTeamId);
 
     try {
       setLoading(true);
@@ -490,7 +490,7 @@ const BoxCall: React.FC = () => {
         ), // Graceful fallback if tables don't exist yet
       ]);
 
-      console.log("📋 [BoxCall] Loaded:", {
+      debug("[BoxCall] Loaded:", {
         scripts: scripts.length,
         plans: plans.length,
         sessions: sessions.length,

@@ -6,6 +6,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { supabase } from "../lib/supabase";
 import { useActiveTeamStore } from "../stores/activeTeamStore";
+import { logError } from "../utils/logger";
 
 export interface PlayFieldSuggestions {
   coverages: string[];
@@ -114,7 +115,7 @@ export function usePlayFieldSuggestions(): PlayFieldSuggestions {
           });
         }
       } catch (error) {
-        console.error("[usePlayFieldSuggestions] Error fetching:", error);
+        logError("[usePlayFieldSuggestions] Error fetching:", error);
       } finally {
         if (!cancelled) {
           setLoading(false);

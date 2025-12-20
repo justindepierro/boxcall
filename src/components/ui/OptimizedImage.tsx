@@ -7,6 +7,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { colorTokens } from "../../design-system/tokens";
 import { cdnService } from "../../services/cdn/CDNService";
+import { warn } from "../../utils/logger";
 
 interface OptimizedImageProps {
   src: string;
@@ -30,7 +31,9 @@ interface OptimizedImageProps {
 function usePreloadImageAsset(priority: boolean, src: string) {
   useEffect(() => {
     if (!priority || !src) return;
-    cdnService.preloadAsset(src, "image").catch(console.warn);
+    cdnService
+      .preloadAsset(src, "image")
+      .catch((error) => warn("[OptimizedImage] Failed to preload image:", error));
   }, [priority, src]);
 }
 

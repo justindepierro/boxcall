@@ -12,7 +12,7 @@ import type { BackupData } from "./types";
 import { IndexedDBService } from "./IndexedDBService";
 import { CacheService } from "./CacheService";
 import { PlaysQueryService } from "./PlaysQueryService";
-import { logError } from "../../utils/logger";
+import { debug, logError, warn } from "../../utils/logger";
 
 // Minimal CSV escape helper for inline CSV generation
 function csvEscape(v: unknown): string {
@@ -48,7 +48,7 @@ export class BackupService {
       async () => {
         try {
           await this.createAutomaticBackup();
-          console.info("✅ Automatic backup completed");
+          debug("[BackupService] Automatic backup completed");
         } catch (error) {
           logError("❌ Automatic backup failed:", error);
         }
@@ -82,7 +82,7 @@ export class BackupService {
 
     // Fire and forget
     this.createAutomaticBackup().catch((e) =>
-      console.warn("Opportunistic backup failed", e)
+      warn("Opportunistic backup failed", e)
     );
   }
 
@@ -91,7 +91,7 @@ export class BackupService {
    */
   private static async createAutomaticBackup(): Promise<void> {
     if (!this.supabase) {
-      console.warn("Supabase not initialized, skipping backup");
+      warn("Supabase not initialized, skipping backup");
       return;
     }
 
@@ -198,7 +198,7 @@ export class BackupService {
       link.click();
       document.body.removeChild(link);
 
-      console.info("✅ Comprehensive backup exported successfully");
+      debug("✅ Comprehensive backup exported successfully");
     } catch (error) {
       logError("Export backup failed:", error);
       throw error;

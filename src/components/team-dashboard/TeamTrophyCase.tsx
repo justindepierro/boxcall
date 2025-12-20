@@ -3,6 +3,7 @@ import React from "react";
 import { Typography } from "../design-system";
 import { Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
+import { debug } from "../../utils/logger";
 
 interface TeamTrophyCaseProps {
   teamId: string;
@@ -67,7 +68,7 @@ export const TeamTrophyCase: React.FC<TeamTrophyCaseProps> = ({
         <Button
           variant="primary"
           className="w-full btn-overflow-safe"
-          onClick={() => console.info("achievements.help.click", { teamId })}
+          onClick={() => debug("achievements.help.click", { teamId })}
         >
           <span className="text-truncate">Learn Achievements</span>
         </Button>

@@ -5,11 +5,13 @@
  * search results, props, and internal state.
  */
 
+import { debug } from "../../../utils/logger";
+
 // Debug logging flag
 export const DEBUG_SEARCH = false;
 
 export const debugLog = DEBUG_SEARCH
-  ? (...args: unknown[]) => console.log("[GlobalSearch]", ...args)
+  ? (...args: unknown[]) => debug("[GlobalSearch]", ...args)
   : () => {};
 
 /**

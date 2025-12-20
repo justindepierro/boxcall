@@ -5,6 +5,8 @@
  * including caching, performance monitoring, and connection settings
  */
 
+import { debug, error as logError, group } from "../utils/logger";
+
 interface DatabaseConfig {
   // Cache Configuration
   cache: {
@@ -257,17 +259,17 @@ export function initializeDatabaseConfig(): void {
   const validation = validateDatabaseConfig();
 
   if (!validation.isValid) {
-    console.error("❌ Database configuration validation failed:");
-    validation.errors.forEach((error) => console.error(`  - ${error}`));
+    logError("Database configuration validation failed:", validation.errors);
     throw new Error("Invalid database configuration");
   }
 
   if (databaseConfig.development.enableDebugMode) {
-    console.log("🔧 Database Configuration Summary:");
-    console.table(getDatabaseConfigSummary());
+    group("[DatabaseConfig] Summary", () => {
+      debug("Summary:", getDatabaseConfigSummary());
+    });
   }
 
-  console.log("✅ Database configuration initialized successfully");
+  debug("[DatabaseConfig] Initialized successfully");
 }
 
 // Export the configuration object and utility functions

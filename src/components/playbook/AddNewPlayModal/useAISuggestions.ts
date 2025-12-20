@@ -4,6 +4,7 @@ import {
   validateFormationName,
   validatePersonnelValue,
 } from "../../../utils/playFieldValidation";
+import { logError } from "../../../utils/logger";
 
 interface SuggestionState {
   formations: string[];
@@ -92,7 +93,7 @@ export const useAISuggestions = (playbookId?: string) => {
           playTypes,
         });
       } catch (error) {
-        console.error("Failed to load basic suggestions:", error);
+        logError("Failed to load basic suggestions:", error);
         // Keep empty arrays on error
       } finally {
         setIsLoading(false);
@@ -143,7 +144,7 @@ export const useAISuggestions = (playbookId?: string) => {
           generatedPlayNames,
         });
       } catch (error) {
-        console.error("Failed to load AI suggestions:", error);
+        logError("Failed to load AI suggestions:", error);
       } finally {
         setIsAILoading(false);
       }

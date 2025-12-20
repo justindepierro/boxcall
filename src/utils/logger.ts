@@ -47,8 +47,9 @@ class Logger {
   private isDevelopment: boolean;
 
   constructor() {
-    this.isDevelopment = import.meta.env.DEV;
-    // In production, only show WARN and ERROR
+    const isTest = import.meta.env.MODE === "test";
+    this.isDevelopment = import.meta.env.DEV && !isTest;
+    // In production (and test), only show WARN and ERROR
     // In development, show all logs
     this.level = this.isDevelopment ? LogLevel.DEBUG : LogLevel.WARN;
   }
@@ -234,7 +235,7 @@ export const groupCollapsed = logger.groupCollapsed.bind(logger);
  * @example devLog("Debug state:", { user, session });
  */
 export function devLog(message: string, ...args: any[]): void {
-  if (import.meta.env.DEV) {
+  if (import.meta.env.DEV && import.meta.env.MODE !== "test") {
     console.log(`💻 [DEV] ${message}`, ...args);
   }
 }
@@ -250,7 +251,7 @@ export function devLog(message: string, ...args: any[]): void {
  * timeEnd("data-fetch"); // Shows elapsed time
  */
 export function timeStart(label: string): void {
-  if (import.meta.env.DEV) {
+  if (import.meta.env.DEV && import.meta.env.MODE !== "test") {
     console.time(label);
   }
 }
@@ -262,7 +263,7 @@ export function timeStart(label: string): void {
  * @param label - The timer label (must match timeStart)
  */
 export function timeEnd(label: string): void {
-  if (import.meta.env.DEV) {
+  if (import.meta.env.DEV && import.meta.env.MODE !== "test") {
     console.timeEnd(label);
   }
 }

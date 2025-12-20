@@ -5,6 +5,8 @@
  * Uses in-memory storage with automatic cleanup
  */
 
+import { debug } from "./logger";
+
 interface RateLimitConfig {
   maxRequests: number;
   windowMs: number;
@@ -121,9 +123,7 @@ export class RateLimiter {
     keysToDelete.forEach((key) => this.limits.delete(key));
 
     if (keysToDelete.length > 0) {
-      console.debug(
-        `[RateLimiter] Cleaned up ${keysToDelete.length} expired entries`
-      );
+      debug(`[RateLimiter] Cleaned up ${keysToDelete.length} expired entries`);
     }
   }
 

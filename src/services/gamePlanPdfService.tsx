@@ -5,6 +5,7 @@
  */
 
 import type { GamePlan } from "../components/playbook/GamePlanModal/types";
+import { logError } from "../utils/logger";
 
 export type GamePlanPDFFormat = "detailed" | "compact" | "call-sheet";
 
@@ -56,7 +57,7 @@ export class GamePlanPDFService {
       // Clean up
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error("Error generating game plan PDF:", error);
+      logError("Error generating game plan PDF:", error);
       throw new Error("Failed to generate game plan PDF");
     }
   }
@@ -74,7 +75,7 @@ export class GamePlanPDFService {
         <GamePlanPDF gamePlan={gamePlan} format={format} />
       ).toBlob();
     } catch (error) {
-      console.error("Error generating game plan PDF:", error);
+      logError("Error generating game plan PDF:", error);
       throw new Error("Failed to generate game plan PDF");
     }
   }

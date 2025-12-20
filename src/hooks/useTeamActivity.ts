@@ -8,7 +8,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "../lib/supabase";
-import { logError } from "../utils/logger";
+import { logError, warn } from "../utils/logger";
 
 export interface TeamActivityStats {
   newPostsToday: number;
@@ -53,10 +53,7 @@ export function useTeamActivity(teamId: string): TeamActivityStats {
           .limit(100); // Cap at 100 to prevent slow queries
 
         if (membersError) {
-          console.warn(
-            "[useTeamActivity] Failed to fetch team members:",
-            membersError
-          );
+          warn("[useTeamActivity] Failed to fetch team members:", membersError);
           if (mountedRef.current) {
             setStats({ ...INITIAL_STATS, loading: false });
           }

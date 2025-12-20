@@ -7,7 +7,7 @@
 
 import type { CreatePlayExecutionData } from "../types/session";
 import { ExecutionTrackingService } from "../services/executionTrackingService";
-import { logError } from "./logger";
+import { debug, logError } from "./logger";
 
 const QUEUE_STORAGE_KEY = "boxcall_offline_executions";
 const MAX_QUEUE_SIZE = 100;
@@ -80,7 +80,14 @@ export class OfflineExecutionQueue {
       const parsed = JSON.parse(stored);
       return Array.isArray(parsed) ? parsed : [];
     } catch (err) {
-      logError("Failed to parse offline queue:", err);
+      // Corrupted localStorage is a recoverable scenario; clear the bad value
+      // to avoid repeated parse failures.
+      debug("[OfflineExecutionQueue] Failed to parse offline queue; clearing", err);
+      try {
+        localStorage.removeItem(QUEUE_STORAGE_KEY);
+      } catch {
+        // Ignore secondary failures (e.g., storage access blocked)
+      }
       return [];
     }
   }
@@ -183,7 +190,7 @@ export class OfflineExecutionQueue {
 
     // Check if online
     if (!navigator.onLine) {
-      console.log("Offline - skipping sync");
+      debug("Offline - skipping sync");
       return 0;
     }
 
@@ -225,7 +232,7 @@ export class OfflineExecutionQueue {
       return 0;
     }
 
-    console.log(`Retrying ${failed.length} failed syncs...`);
+    debug(`Retrying ${failed.length} failed syncs...`);
 
     // Clear errors and retry
     for (const exec of failed) {

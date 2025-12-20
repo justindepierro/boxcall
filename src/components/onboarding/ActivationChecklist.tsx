@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Typography } from "../design-system";
 import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon/Icon";
@@ -47,6 +48,7 @@ export const ActivationChecklist: React.FC = () => {
   const { profile } = useAuth();
   const [flags, setFlags] = useState<ActivationFlags>(() => loadFlags());
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const updateFlag = useCallback(
     (id: keyof ActivationFlags, val: boolean, emitTelemetry = true) => {
@@ -130,7 +132,7 @@ export const ActivationChecklist: React.FC = () => {
       description: "Unlock collaborative features",
       cta: "Create Team",
       action: () => {
-        window.location.href = "/create-team";
+        navigate("/create-team");
       },
     },
     {
@@ -148,7 +150,7 @@ export const ActivationChecklist: React.FC = () => {
       description: "Plan your team session",
       cta: "Schedule",
       action: () => {
-        window.location.href = "/calendar";
+        navigate("/calendar");
       },
     },
     {

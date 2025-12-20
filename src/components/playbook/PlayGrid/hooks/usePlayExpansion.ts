@@ -4,22 +4,23 @@
  */
 
 import { useState, useCallback, useEffect } from "react";
+import { debug } from "../../../../utils/logger";
 
 export function usePlayExpansion(viewMode: "list" | "grid") {
   const [expandedPlayId, setExpandedPlayId] = useState<string | null>(null);
 
   // Log when expanded play changes (dev tracking)
   useEffect(() => {
-    console.log(`[PlayGrid] expandedPlayId changed:`, {
+    if (!import.meta.env.DEV) return;
+    debug(`[PlayGrid] expandedPlayId changed:`, {
       expandedPlayId,
       viewMode,
-      timestamp: new Date().toISOString(),
     });
   }, [expandedPlayId, viewMode]);
 
   const handleToggleExpand = useCallback(
     (playId: string) => {
-      console.log(`[PlayGrid] handleToggleExpand called:`, {
+      debug(`[PlayGrid] handleToggleExpand called:`, {
         playId,
         currentExpandedId: expandedPlayId,
         willExpand: expandedPlayId !== playId,

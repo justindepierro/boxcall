@@ -1,5 +1,6 @@
 import { supabase } from "./supabase";
 import { getCurrentUserId } from "./auth-helpers";
+import { debug, logError, warn } from "../utils/logger";
 
 import type {
   Game,
@@ -64,14 +65,14 @@ export async function withDatabaseRetry<T>(
 
       // Don't retry on certain errors
       if (isNonRetryableError(lastError)) {
-        console.error(`❌ Non-retryable database error:`, lastError);
+        logError("Non-retryable database error", lastError);
         throw lastError;
       }
 
       if (attempt < maxRetries) {
         const delay = Math.min(baseDelay * Math.pow(2, attempt), maxDelay);
-        console.warn(
-          `⚠️ Database operation failed (attempt ${attempt + 1}/${maxRetries + 1}), retrying in ${delay}ms:`,
+        warn(
+          `Database operation failed (attempt ${attempt + 1}/${maxRetries + 1}), retrying in ${delay}ms`,
           lastError.message
         );
         await new Promise((resolve) => setTimeout(resolve, delay));
@@ -79,8 +80,8 @@ export async function withDatabaseRetry<T>(
     }
   }
 
-  console.error(
-    `❌ Database operation failed after ${maxRetries + 1} attempts:`,
+  logError(
+    `Database operation failed after ${maxRetries + 1} attempts`,
     lastError
   );
   throw lastError;
@@ -124,7 +125,7 @@ function isNonRetryableError(error: Error): boolean {
  */
 export async function testBasicDatabaseConnectivity(): Promise<boolean> {
   try {
-    console.log("🔗 Testing basic database connectivity...");
+    debug("🔗 Testing basic database connectivity...");
 
     // Test basic Supabase connection without requiring auth
     // We'll try to access a public table or make a simple query
@@ -139,16 +140,16 @@ export async function testBasicDatabaseConnectivity(): Promise<boolean> {
         error.code === "PGRST116" ||
         error.message.includes("permission denied")
       ) {
-        console.log("✅ Database reachable (RLS working as expected)");
+        debug("✅ Database reachable (RLS working as expected)");
         return true;
       }
       throw error;
     }
 
-    console.log("✅ Basic database connectivity confirmed");
+    debug("✅ Basic database connectivity confirmed");
     return true;
   } catch (error) {
-    console.error("❌ Basic database connectivity failed:", error);
+    logError("Basic database connectivity failed", error);
     return false;
   }
 }
@@ -160,11 +161,11 @@ export async function testBasicDatabaseConnectivity(): Promise<boolean> {
  */
 export async function testDatabaseConnection(): Promise<boolean> {
   try {
-    console.log("🔗 Testing database connection...");
+    debug("🔗 Testing database connection...");
 
     const userId = getCurrentUserId();
     if (!userId) {
-      console.warn("⚠️ No authenticated user - skipping database test");
+      warn("No authenticated user - skipping database test");
       return false;
     }
 
@@ -176,14 +177,14 @@ export async function testDatabaseConnection(): Promise<boolean> {
       .maybeSingle();
 
     if (error && error.code !== "PGRST116") {
-      console.error("❌ Database connection test failed:", error.message);
+      logError("Database connection test failed", error.message);
       return false;
     }
 
-    console.log("✅ Database connection verified");
+    debug("✅ Database connection verified");
     return true;
   } catch (error) {
-    console.error("❌ Database connection failed:", error);
+    logError("Database connection failed", error);
     return false;
   }
 }
@@ -209,7 +210,7 @@ export async function getUserProfile(userId: string): Promise<Profile | null> {
       return data;
     });
   } catch (error) {
-    console.error("❌ Error fetching user profile:", error);
+    logError("Error fetching user profile", error);
     return null;
   }
 }
@@ -232,7 +233,7 @@ export async function getUserTeams(userId: string): Promise<Team[]> {
       return data || [];
     });
   } catch (error) {
-    console.error("❌ Error fetching user teams:", error);
+    logError("Error fetching user teams", error);
     return [];
   }
 }
@@ -266,7 +267,7 @@ export async function getTeamMembers(teamId: string): Promise<any[]> {
       return data || [];
     });
   } catch (error) {
-    console.error("❌ Error fetching team members:", error);
+    logError("Error fetching team members", error);
     return [];
   }
 }
@@ -276,7 +277,7 @@ export async function getTeams(): Promise<Team[]> {
     .select("*")
     .order("created_at", { ascending: false });
   if (error) {
-    console.error("Error fetching teams:", error);
+    logError("Error fetching teams", error);
     return [];
   }
   return data || [];
@@ -288,7 +289,7 @@ export async function getTeamGames(teamId: string): Promise<Game[]> {
     .eq("team_id", teamId)
     .order("game_date", { ascending: false });
   if (error) {
-    console.error("Error fetching games:", error);
+    logError("Error fetching games", error);
     return [];
   }
   return data || [];
@@ -300,7 +301,7 @@ export async function getPlaybookPlays(playbookId: string): Promise<Play[]> {
     .eq("playbook_id", playbookId)
     .order("play_name");
   if (error) {
-    console.error("Error fetching plays:", error);
+    logError("Error fetching plays", error);
     return [];
   }
   return data || [];
@@ -313,7 +314,7 @@ export async function getGamePlayCalls(gameId: string): Promise<PlayCall[]> {
     .eq("game_id", gameId)
     .order("created_at");
   if (error) {
-    console.error("Error fetching play calls:", error);
+    logError("Error fetching play calls", error);
     return [];
   }
   return data || [];
@@ -329,7 +330,7 @@ export async function getTeamGoals(teamId: string): Promise<TeamGoal[]> {
     .eq("team_id", teamId)
     .order("deadline", { ascending: true });
   if (error) {
-    console.error("Error fetching team goals:", error);
+    logError("Error fetching team goals:", error);
     return [];
   }
   return data || [];
@@ -341,7 +342,7 @@ export async function getTeamFiles(teamId: string): Promise<TeamFile[]> {
     .eq("team_id", teamId)
     .order("created_at", { ascending: false });
   if (error) {
-    console.error("Error fetching team files:", error);
+    logError("Error fetching team files:", error);
     return [];
   }
   return data || [];
@@ -357,7 +358,7 @@ export async function getUserProfileByUserId(
     .eq("user_id", userId)
     .maybeSingle();
   if (error) {
-    console.error("Error fetching user profile:", error);
+    logError("Error fetching user profile", error);
     return null;
   }
   return data as UserProfile | null;
@@ -374,7 +375,7 @@ export async function getPostReactions(
     .eq("post_id", postId)
     .order("created_at", { ascending: false });
   if (error) {
-    console.error("Error fetching post reactions:", error);
+    logError("Error fetching post reactions:", error);
     return [];
   }
   return data || [];

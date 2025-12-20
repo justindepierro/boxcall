@@ -8,6 +8,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../app/auth-store";
 import { useToast } from "../../hooks/useToast";
+import { debug } from "../../utils/logger";
 import { PracticeService } from "../../services/practiceService";
 import type { PracticeScript } from "../../services/practiceService";
 import type { User } from "@supabase/supabase-js";
@@ -137,7 +138,7 @@ function usePracticePlansCrudHandlers(params: {
   } = params;
 
   const handleCreateScript = useCallback(() => {
-    console.log("Create script clicked - opening modal");
+    debug("Create script clicked - opening modal");
     setEditingScript(undefined);
     setShowModal(true);
   }, [setEditingScript, setShowModal]);
@@ -409,7 +410,7 @@ export function usePracticePlansHandlers() {
 
   // Modal handlers
   const handleCloseModal = useCallback(() => {
-    console.log("Modal close clicked");
+    debug("Modal close clicked");
     setShowModal(false);
     setEditingScript(undefined);
   }, []);

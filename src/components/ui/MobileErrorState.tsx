@@ -6,6 +6,7 @@ import React from "react";
 import { Button } from "./Button";
 import { ModularIcon as Icon } from "./Icon";
 import { Typography } from "../design-system/Typography";
+import { softNavigate } from "../../utils/softNavigate";
 
 export interface MobileErrorStateProps {
   /** Error type determines the appropriate UI and messaging */
@@ -85,13 +86,10 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
   const config = ERROR_CONFIGURATIONS[type];
   const IconName = config.icon;
 
+  const canShowRetry = showRetry && !!onRetry;
+
   const handleRetry = () => {
-    if (onRetry) {
-      onRetry();
-    } else {
-      // Default retry behavior - reload page
-      window.location.reload();
-    }
+    onRetry?.();
   };
 
   const handleHome = () => {
@@ -99,7 +97,7 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
       onHome();
     } else {
       // Default home behavior
-      window.location.href = "/";
+      softNavigate("/", { replace: true });
     }
   };
 
@@ -121,7 +119,7 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
             </Typography>
           </div>
         </div>
-        {showRetry && (
+        {canShowRetry && (
           <Button
             onClick={handleRetry}
             variant="ghost"
@@ -157,7 +155,7 @@ export const MobileErrorState: React.FC<MobileErrorStateProps> = ({
 
       {/* Actions */}
       <div className="space-y-3">
-        {showRetry && (
+        {canShowRetry && (
           <Button
             onClick={handleRetry}
             variant="primary"

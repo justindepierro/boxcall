@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useEvents } from "../../stores/calendar/hooks";
 import type { CalendarEvent } from "../../domain/calendar/types";
 import { useDevMode } from "../../app/dev-mode-hooks";
+import { debug } from "../../utils/logger";
 import { Typography } from "../design-system";
 import { Card } from "../ui";
 import { Button } from "../ui/Button/Button";
@@ -218,7 +219,7 @@ export const PersonalCalendar: React.FC<PersonalCalendarProps> = ({
     if (!quickEventTitle.trim()) return;
 
     // TODO: Implement event creation service call
-    console.info("Creating event:", quickEventTitle);
+    debug("[PersonalCalendar] Creating event", { title: quickEventTitle });
     setQuickEventTitle("");
     setShowQuickAdd(false);
   };

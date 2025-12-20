@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
 import type { Database } from "../types/database";
-import { logError } from "../utils/logger";
+import { debug, logError } from "../utils/logger";
 
 type RawTeamMember = Database["public"]["Tables"]["team_members"]["Row"] & {
   teams: Database["public"]["Tables"]["teams"]["Row"] | null;
@@ -12,14 +12,9 @@ type TeamMember = Database["public"]["Tables"]["team_members"]["Row"] & {
 };
 
 async function fetchUserTeamMemberships(userId: string): Promise<TeamMember[]> {
-  console.log(
-    "🔍 [useUserTeamMemberships] Fetching memberships for userId:",
-    userId
-  );
+  debug("[useUserTeamMemberships] Fetching memberships for userId:", userId);
   if (!userId) {
-    console.log(
-      "🔍 [useUserTeamMemberships] No userId provided, returning empty"
-    );
+    debug("[useUserTeamMemberships] No userId provided, returning empty");
     return [];
   }
 
@@ -34,14 +29,13 @@ async function fetchUserTeamMemberships(userId: string): Promise<TeamMember[]> {
     .eq("user_id", userId)
     .eq("status", "active");
 
-  console.log("🔍 [useUserTeamMemberships] Result:", {
+  debug("[useUserTeamMemberships] Result:", {
     data,
     error,
     count: data?.length,
   });
 
   if (error) {
-    console.error("🔍 [useUserTeamMemberships] ERROR:", error);
     logError("Error fetching user team memberships:", error);
     return [];
   }

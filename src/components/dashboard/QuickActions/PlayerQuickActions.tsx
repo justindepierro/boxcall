@@ -2,6 +2,7 @@ import React from "react";
 
 import { Button } from "../../ui";
 import { Icon } from "../../ui/Icon/Icon";
+import { debug } from "../../../utils/logger";
 /**
  * Player Quick Actions - Player-specific dashboard shortcuts
  *
@@ -18,7 +19,7 @@ export const PlayerQuickActions: React.FC = () => {
         variant="primary"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("View Stats")}
+        onClick={() => debug("[PlayerQuickActions] View Stats")}
       >
         <Icon name="bar-chart" size={14} className="mr-2" />
         View My Stats
@@ -27,7 +28,7 @@ export const PlayerQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("Study Playbook")}
+        onClick={() => debug("[PlayerQuickActions] Study Playbook")}
       >
         <Icon name="book" size={14} className="mr-2" />
         Study Playbook
@@ -36,7 +37,7 @@ export const PlayerQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("Check Assignments")}
+        onClick={() => debug("[PlayerQuickActions] Check Assignments")}
       >
         <Icon name="file" size={14} className="mr-2" />
         Check Assignments
@@ -45,7 +46,7 @@ export const PlayerQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("Team Chat")}
+        onClick={() => debug("[PlayerQuickActions] Team Chat")}
       >
         <Icon name="message" size={14} className="mr-2" />
         Team Chat
@@ -54,7 +55,7 @@ export const PlayerQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("Update Gear")}
+        onClick={() => debug("[PlayerQuickActions] Update Gear")}
       >
         <Icon name="shield" size={14} className="mr-2" />
         Update My Gear
@@ -63,7 +64,7 @@ export const PlayerQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("Training Log")}
+        onClick={() => debug("[PlayerQuickActions] Training Log")}
       >
         <Icon name="activity" size={14} className="mr-2" />
         Training Log

@@ -6,6 +6,8 @@
  * and improve performance while maintaining data freshness.
  */
 
+import { debug, warn } from "./logger";
+
 interface CacheEntry<T> {
   data: T;
   timestamp: number;
@@ -113,9 +115,7 @@ export async function cachedQuery<T>(
   if (!force) {
     const cached = queryCache.get<T>(cacheKey);
     if (cached !== null) {
-      if (import.meta.env.DEV) {
-        console.log("🚀 Cache hit for:", cacheKey);
-      }
+      debug("[QueryCache] Cache hit for:", cacheKey);
       return cached;
     }
   }
@@ -125,16 +125,14 @@ export async function cachedQuery<T>(
     const data = await queryFn();
     queryCache.set(cacheKey, data, ttl);
 
-    if (import.meta.env.DEV) {
-      console.log("📡 Fresh data for:", cacheKey);
-    }
+    debug("[QueryCache] Fresh data for:", cacheKey);
 
     return data;
   } catch (error) {
     // On error, try to return stale data if available
     const stale = queryCache.get<T>(cacheKey);
     if (stale !== null) {
-      console.warn("⚠️ Returning stale data due to error:", error);
+      warn("[QueryCache] Returning stale data due to error:", error);
       return stale;
     }
     throw error;

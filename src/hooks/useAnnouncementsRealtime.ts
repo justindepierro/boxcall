@@ -7,6 +7,7 @@
 import { useEffect, useRef, useCallback } from "react";
 import { supabase } from "../lib/supabase";
 import type { RealtimeChannel } from "@supabase/supabase-js";
+import { debug } from "../utils/logger";
 
 interface UseAnnouncementsRealtimeOptions {
   teamId: string;
@@ -44,7 +45,7 @@ export function useAnnouncementsRealtime({
     }
 
     newAnnouncementTimerRef.current = setTimeout(() => {
-      console.info("[Realtime] New announcement received (debounced 300ms)");
+      debug("[Realtime] New announcement received (debounced 300ms)");
       onNewAnnouncement?.();
       newAnnouncementTimerRef.current = null;
     }, announcementDebounceMs);
@@ -56,7 +57,7 @@ export function useAnnouncementsRealtime({
     }
 
     announcementUpdateTimerRef.current = setTimeout(() => {
-      console.info("[Realtime] Announcement updated (debounced 300ms)");
+      debug("[Realtime] Announcement updated (debounced 300ms)");
       onAnnouncementUpdate?.();
       announcementUpdateTimerRef.current = null;
     }, announcementDebounceMs);
@@ -68,7 +69,7 @@ export function useAnnouncementsRealtime({
     }
 
     reactionChangeTimerRef.current = setTimeout(() => {
-      console.info("[Realtime] Reaction changed (debounced 100ms - instant!)");
+      debug("[Realtime] Reaction changed (debounced 100ms - instant!)");
       onReactionChange?.();
       reactionChangeTimerRef.current = null;
     }, interactionDebounceMs); // 100ms for instant feel!
@@ -80,7 +81,7 @@ export function useAnnouncementsRealtime({
     }
 
     commentChangeTimerRef.current = setTimeout(() => {
-      console.info("[Realtime] Comment changed (debounced 100ms - instant!)");
+      debug("[Realtime] Comment changed (debounced 100ms - instant!)");
       onCommentChange?.();
       commentChangeTimerRef.current = null;
     }, interactionDebounceMs); // 100ms for instant feel!
@@ -89,7 +90,7 @@ export function useAnnouncementsRealtime({
   useEffect(() => {
     if (!enabled || !teamId) return;
 
-    console.info("[Realtime] Setting up subscriptions for team:", teamId);
+    debug("[Realtime] Setting up subscriptions for team:", teamId);
 
     // Create a channel for this team's announcements
     const channel = supabase.channel(`team-${teamId}-announcements`);
@@ -142,11 +143,9 @@ export function useAnnouncementsRealtime({
 
     // Subscribe and store reference
     channel.subscribe((status) => {
-      console.info("[Realtime] Subscription status:", status);
+      debug("[Realtime] Subscription status:", status);
       if (status === "SUBSCRIBED") {
-        console.info(
-          "[Realtime] Successfully subscribed to team announcements"
-        );
+        debug("[Realtime] Successfully subscribed to team announcements");
       }
     });
 
@@ -154,7 +153,7 @@ export function useAnnouncementsRealtime({
 
     // Cleanup function
     return () => {
-      console.info("[Realtime] Cleaning up subscriptions and timers");
+      debug("[Realtime] Cleaning up subscriptions and timers");
 
       // Clear all pending timers
       if (newAnnouncementTimerRef.current) {

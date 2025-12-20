@@ -70,7 +70,8 @@ function getDashboardLayoutView(params: {
 
 function renderNonReadyDashboardLayoutView(
   view: Exclude<DashboardLayoutView, "ready">,
-  error: string | null
+  error: string | null,
+  actions?: { onRetryProfile?: () => void }
 ) {
   switch (view) {
     case "loading":
@@ -99,12 +100,14 @@ function renderNonReadyDashboardLayoutView(
           message="Your profile is being set up. Please refresh the page or contact support if this persists."
           variant="primary"
           action={
-            <button
-              onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
-            >
-              Refresh Page
-            </button>
+            actions?.onRetryProfile ? (
+              <button
+                onClick={actions.onRetryProfile}
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
+              >
+                Retry
+              </button>
+            ) : null
           }
         />
       );
@@ -310,10 +313,16 @@ const createDashboardHeroTiles = (
  * - Consistent experience across all breakpoints
  */
 export const ResponsiveDashboardLayout: React.FC = () => {
-  const { user, profile, loading, profileLoading, error } = useAuth();
+  const { user, profile, loading, profileLoading, error, fetchUserProfile } =
+    useAuth();
   const { isStepVisible } = useProgressiveLoading(5, 200);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const handleRetryProfile = useCallback(() => {
+    if (!user?.id) return;
+    fetchUserProfile(user.id);
+  }, [fetchUserProfile, user?.id]);
 
   const handleNavigate = useCallback(
     (href: string) => {
@@ -357,7 +366,9 @@ export const ResponsiveDashboardLayout: React.FC = () => {
   });
 
   if (view !== "ready") {
-    return renderNonReadyDashboardLayoutView(view, error ?? null);
+    return renderNonReadyDashboardLayoutView(view, error ?? null, {
+      onRetryProfile: handleRetryProfile,
+    });
   }
 
   const scrollToSection = (sectionId: string) => {

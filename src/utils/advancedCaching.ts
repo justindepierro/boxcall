@@ -6,6 +6,7 @@
  */
 
 import { useMemo, useCallback, useRef } from "react";
+import { warn } from "./logger";
 
 // Component-level memoization with deep comparison
 export function useDeepMemo<T>(
@@ -149,7 +150,7 @@ export function useOptimizedRender(
   lastRender.current = now;
 
   if (import.meta.env.DEV && renderCount.current > 10) {
-    console.warn(`${componentName} has rendered ${renderCount.current} times`);
+    warn(`${componentName} has rendered ${renderCount.current} times`);
   }
 
   return true;

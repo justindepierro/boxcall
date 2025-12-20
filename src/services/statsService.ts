@@ -1,7 +1,7 @@
 import { supabase } from "../lib/supabase";
 
 import type { PostgrestError } from "@supabase/supabase-js";
-import { logError } from "../utils/logger";
+import { logError, warn } from "../utils/logger";
 
 export interface SeasonStats {
   team_id: string;
@@ -31,8 +31,8 @@ export async function getSeasonStats(
     if (error) {
       const pgErr = error as PostgrestError;
       if (pgErr?.code === "42P01") {
-        if (process.env.NODE_ENV !== "production") {
-          console.warn(
+        if (import.meta.env.DEV && import.meta.env.MODE !== "test") {
+          warn(
             "game_results table not found (likely migrations pending) – returning null"
           );
         }

@@ -36,7 +36,6 @@ const ACTIONS: QuickActionConfig[] = [
     label: "Send Announcement",
     icon: "message",
     variant: "primary",
-    onClick: () => console.info("action.create_post"),
     requires: CAPABILITIES.CREATE_POST,
   },
   {
@@ -44,7 +43,6 @@ const ACTIONS: QuickActionConfig[] = [
     label: "Award Helmet Stickers",
     icon: "award",
     variant: "outline", // constrained to allowed variants
-    onClick: () => console.info("action.award_stickers"),
     requires: CAPABILITIES.AWARD_STICKERS,
   },
   {
@@ -60,7 +58,6 @@ const ACTIONS: QuickActionConfig[] = [
     label: "Upload Game Film",
     icon: "upload",
     variant: "outline",
-    onClick: () => console.info("action.upload_film"),
     requires: CAPABILITIES.UPLOAD_FILM,
   },
   {
@@ -68,7 +65,6 @@ const ACTIONS: QuickActionConfig[] = [
     label: "Manage Roster",
     icon: "users",
     variant: "outline",
-    onClick: () => console.info("action.manage_roster"),
     requires: CAPABILITIES.MANAGE_ROSTER,
   },
   {
@@ -85,7 +81,6 @@ const ACTIONS: QuickActionConfig[] = [
     label: "My Team Stats",
     icon: "bar-chart",
     variant: "primary",
-    onClick: () => console.info("action.view_stats"),
     requires: CAPABILITIES.VIEW_STATS,
   },
   {
@@ -93,7 +88,6 @@ const ACTIONS: QuickActionConfig[] = [
     label: "Study Team Plays",
     icon: "book",
     variant: "outline",
-    onClick: () => console.info("action.study_plays"),
     requires: CAPABILITIES.STUDY_PLAYS,
   },
   {
@@ -101,7 +95,6 @@ const ACTIONS: QuickActionConfig[] = [
     label: "RSVP to Events",
     icon: "calendar",
     variant: "outline",
-    onClick: () => console.info("action.rsvp_events"),
     requires: CAPABILITIES.RSVP_EVENT,
   },
   {
@@ -109,7 +102,6 @@ const ACTIONS: QuickActionConfig[] = [
     label: "Team Chat",
     icon: "message",
     variant: "ghost",
-    onClick: () => console.info("action.team_chat"),
     requires: CAPABILITIES.TEAM_CHAT,
   },
   // Family
@@ -118,7 +110,6 @@ const ACTIONS: QuickActionConfig[] = [
     label: "Player Progress",
     icon: "trending-up",
     variant: "primary",
-    onClick: () => console.info("action.player_progress"),
     requires: CAPABILITIES.PLAYER_PROGRESS,
   },
   {
@@ -126,7 +117,6 @@ const ACTIONS: QuickActionConfig[] = [
     label: "Team Photos",
     icon: "folder",
     variant: "ghost",
-    onClick: () => console.info("action.team_photos"),
     requires: CAPABILITIES.TEAM_PHOTOS,
   },
 ];

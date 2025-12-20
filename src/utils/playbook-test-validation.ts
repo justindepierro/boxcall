@@ -3,8 +3,10 @@
  * Tests for database integration and functionality
  */
 
+import { debug, warn } from "./logger";
+
 export const validatePlaybookData = (plays: unknown[]) => {
-  const isDev = process.env.NODE_ENV === "development";
+  const isDev = import.meta.env.DEV;
   const results = {
     dataLoaded: false,
     playCount: 0,
@@ -81,20 +83,20 @@ export const validatePlaybookData = (plays: unknown[]) => {
 export const logValidationResults = (
   results: ReturnType<typeof validatePlaybookData>
 ) => {
-  console.info("🏈 Playbook Interface Validation");
-  console.info("📊 Data Loading:", results.dataLoaded ? "✅" : "❌");
-  console.info("📈 Play Count:", results.playCount);
-  console.info("🏗️ Structure Valid:", results.hasValidStructure ? "✅" : "❌");
-  console.info("🏟️ Formation Variety:", results.hasFormations ? "✅" : "❌");
-  console.info("⚡ Play Type Variety:", results.hasPlayTypes ? "✅" : "❌");
-  console.info(
+  debug("🏈 Playbook Interface Validation");
+  debug("📊 Data Loading:", results.dataLoaded ? "✅" : "❌");
+  debug("📈 Play Count:", results.playCount);
+  debug("🏗️ Structure Valid:", results.hasValidStructure ? "✅" : "❌");
+  debug("🏟️ Formation Variety:", results.hasFormations ? "✅" : "❌");
+  debug("⚡ Play Type Variety:", results.hasPlayTypes ? "✅" : "❌");
+  debug(
     "🎯 Overall Status:",
     results.validationPassed ? "✅ PASSED" : "❌ FAILED"
   );
 
   if (results.issues.length > 0) {
-    console.info("⚠️ Issues Found");
-    results.issues.forEach((issue) => console.warn(issue));
+    debug("⚠️ Issues Found");
+    results.issues.forEach((issue) => warn(issue));
     // end group
   }
 

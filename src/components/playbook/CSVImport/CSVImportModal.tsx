@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { DataSyncService, CSVService, PlaysService } from "@services";
 import type { CSVParseResult } from "@services/csv";
 import { Modal } from "../../ui/Modal/Modal";
-import { logError } from "../../../utils/logger";
+import { debug, logError } from "../../../utils/logger";
 import { useToast } from "../../../hooks/useToast";
 import {
   UploadStep,
@@ -188,15 +188,15 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
     setImportError(null);
 
     try {
-      console.info("Starting CSV import...");
+      debug("[CSVImportModal] Starting CSV import");
       setImportProgress(10);
 
       let actualPlaybookId = playbookId;
 
       if (!playbookId || playbookId === "demo-playbook-id") {
-        console.info("Getting real playbook for user...");
+        debug("[CSVImportModal] Resolving user playbook");
         actualPlaybookId = await PlaysService.ensureUserHasPlaybook();
-        console.info("✅ Using playbook ID:", actualPlaybookId);
+        debug("[CSVImportModal] Using playbook ID", { playbookId: actualPlaybookId });
       }
       setImportProgress(25);
 

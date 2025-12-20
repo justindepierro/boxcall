@@ -1,4 +1,4 @@
-import { forwardRef, useState } from "react";
+import { forwardRef, useId, useState } from "react";
 
 import { Typography } from "../../design-system";
 /**
@@ -182,11 +182,6 @@ function renderRightAdornment({
   }
 
   return null;
-}
-
-function resolveInputId(id?: string) {
-  if (id) return id;
-  return `input-${Math.random().toString(36).substr(2, 9)}`;
 }
 
 function resolveInputType(
@@ -385,7 +380,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   ) => {
     const [showPassword, setShowPassword] = useState(false);
 
-    const inputId = resolveInputId(id);
+    const reactId = useId();
+    const stableAutoId = reactId.replace(/:/g, "");
+    const inputId = id ?? `input-${stableAutoId}`;
     const inputType = resolveInputType(variant, showPassword);
     const inputDisabled = resolveInputDisabled(disabled, loading);
 

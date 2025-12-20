@@ -4,6 +4,7 @@ import {
   validateFormationName,
   validatePersonnelValue,
 } from "../../../utils/playFieldValidation";
+import { logError } from "../../../utils/logger";
 
 interface SuggestionState {
   formations: string[];
@@ -68,7 +69,7 @@ export const usePlaySuggestions = () => {
           playTypes,
         });
       } catch (error) {
-        console.error("Failed to load suggestions:", error);
+        logError("Failed to load suggestions:", error);
         // Keep empty arrays on error
       } finally {
         setIsLoading(false);

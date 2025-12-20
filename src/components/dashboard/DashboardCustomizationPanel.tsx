@@ -7,7 +7,7 @@ import { Icon } from "../ui/Icon";
 import { Tooltip } from "../ui/Tooltip/Tooltip";
 import { useDashboardStore } from "../../stores/dashboardStore";
 import type { LayoutSize } from "../../stores/dashboardStore";
-import { logError } from "../../utils/logger";
+import { debug, logError } from "../../utils/logger";
 
 /**
  * Dashboard Customization Panel
@@ -208,7 +208,9 @@ export const DashboardCustomizationPanel: React.FC<
                   size="sm"
                   onClick={() => {
                     // TODO: Implement layout switching
-                    console.info("Switch to layout:", layout.id);
+                    debug("[DashboardCustomizationPanel] Switch to layout", {
+                      layoutId: layout.id,
+                    });
                   }}
                 >
                   Use
@@ -222,7 +224,9 @@ export const DashboardCustomizationPanel: React.FC<
                   className="text-error hover:text-error"
                   onClick={() => {
                     // TODO: Implement layout deletion
-                    console.info("Delete layout:", layout.id);
+                    debug("[DashboardCustomizationPanel] Delete layout", {
+                      layoutId: layout.id,
+                    });
                   }}
                 >
                   <Icon name="delete" size="sm" />

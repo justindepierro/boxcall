@@ -98,6 +98,8 @@ export const DesktopSearchField: React.FC<DesktopSearchFieldProps> = ({
         {/* Input Field */}
         <input
           ref={inputRef}
+          id="global-search-desktop"
+          name="globalSearch"
           type="search"
           value={query}
           onChange={onInputChange}

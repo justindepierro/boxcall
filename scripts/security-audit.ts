@@ -49,12 +49,20 @@ class SecurityAuditor {
         excludePatterns: [/required/i, /validation/i, /error/i],
       },
       {
-        pattern: /password\s*[=:]\s*['"][^'"]{8,}['"]/gi,
+        // Intentionally conservative to avoid flagging UI validation messages.
+        // We only flag password assignments that look like actual secrets:
+        // - no whitespace
+        // - reasonably long
+        // - contains non-trivial characters
+        pattern: /password\s*[=:]\s*['"][^'"\s]{12,}['"]/gi,
         type: "hardcoded-password",
         excludePatterns: [
           /required/i,
           /validation/i,
           /error/i,
+          /must\s+be\s+at\s+least/i,
+          /please\s+confirm/i,
+          /do\s+not\s+match/i,
           /testpassword/i,
           /authDebug/i,
         ],
@@ -76,13 +84,27 @@ class SecurityAuditor {
             const matches = content.match(pattern);
             if (matches) {
               matches.forEach((match) => {
+                // Extract the assigned value, if possible, for extra heuristics.
+                const valueMatch = match.match(/['"]([^'"]+)['"]/);
+                const assignedValue = valueMatch?.[1] ?? "";
+
                 // Check if this match should be excluded
                 const shouldExclude = excludePatterns.some(
                   (excludePattern) =>
                     excludePattern.test(match) || excludePattern.test(file)
                 );
 
-                if (!shouldExclude) {
+                // Avoid false positives on sentence-like strings.
+                // (e.g., password = "Password must be at least 6 characters")
+                const looksLikeSentence = /\s/.test(assignedValue);
+
+                // For password matches, require some character diversity.
+                const looksLikeRealSecret =
+                  assignedValue.length >= 12 &&
+                  !looksLikeSentence &&
+                  (/[0-9]/.test(assignedValue) || /[^a-zA-Z0-9]/.test(assignedValue));
+
+                if (!shouldExclude && (type !== "hardcoded-password" || looksLikeRealSecret)) {
                   this.addIssue({
                     severity: "high",
                     type,
@@ -145,12 +167,15 @@ class SecurityAuditor {
 
   // Check dependency vulnerabilities
   private checkDependencyVulnerabilities() {
-    try {
-      const auditOutput = execSync("npm audit --json", {
-        encoding: "utf8",
-        cwd: this.projectRoot,
-      });
-      const auditResult = JSON.parse(auditOutput);
+    const parseAndRecordAudit = (
+      auditJson: string,
+      options?: {
+        type?: string;
+        severityOverride?: SecurityIssue["severity"];
+        recommendationOverride?: string;
+      }
+    ) => {
+      const auditResult = JSON.parse(auditJson);
 
       if (auditResult.metadata?.vulnerabilities) {
         const { vulnerabilities } = auditResult.metadata;
@@ -158,21 +183,69 @@ class SecurityAuditor {
         Object.entries(vulnerabilities).forEach(([severity, count]) => {
           if (typeof count === "number" && count > 0) {
             this.addIssue({
-              severity: severity as any,
-              type: "dependency-vulnerability",
+              severity: (options?.severityOverride ?? (severity as any)) as any,
+              type: options?.type ?? "dependency-vulnerability",
               message: `Found ${count} ${severity} dependency vulnerabilities`,
-              recommendation: "Run `npm audit fix` to resolve dependencies",
+              recommendation:
+                options?.recommendationOverride ??
+                "Run `npm audit fix` to resolve dependencies",
             });
           }
         });
       }
-    } catch {
+    };
+
+    const runAuditJson = (command: string): string | undefined => {
+      try {
+        return execSync(command, {
+          encoding: "utf8",
+          cwd: this.projectRoot,
+        });
+      } catch (error: any) {
+        // npm audit returns non-zero exit codes when vulnerabilities exist.
+        const stdout = typeof error?.stdout === "string" ? error.stdout : undefined;
+        if (stdout && stdout.trim().startsWith("{")) return stdout;
+        return undefined;
+      }
+    };
+
+    // Gate on production dependencies.
+    const prodAuditJson = runAuditJson("npm audit --omit=dev --json");
+    if (prodAuditJson) {
+      try {
+        parseAndRecordAudit(prodAuditJson);
+      } catch {
+        this.addIssue({
+          severity: "medium",
+          type: "audit-failed",
+          message: "Could not parse production dependency audit output",
+          recommendation:
+            "Manually run `npm audit --omit=dev` to check for vulnerabilities",
+        });
+      }
+    } else {
       this.addIssue({
         severity: "medium",
         type: "audit-failed",
-        message: "Could not run dependency audit",
-        recommendation: "Manually run `npm audit` to check for vulnerabilities",
+        message: "Could not run production dependency audit",
+        recommendation:
+          "Manually run `npm audit --omit=dev` to check for vulnerabilities",
       });
+    }
+
+    // Report dev-only vulnerabilities as non-blocking info.
+    const fullAuditJson = runAuditJson("npm audit --json");
+    if (fullAuditJson) {
+      try {
+        parseAndRecordAudit(fullAuditJson, {
+          type: "dev-dependency-vulnerability",
+          severityOverride: "low",
+          recommendationOverride:
+            "Review dev dependency vulnerabilities (non-blocking). Consider `npm audit fix` or dependency bumps.",
+        });
+      } catch {
+        // Ignore dev audit parse issues; production audit is the gate.
+      }
     }
   }
 

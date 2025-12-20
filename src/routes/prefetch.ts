@@ -2,6 +2,8 @@
 // Gated by env and connection heuristics; uses requestIdleCallback where available.
 // Now includes priority-based prefetching and user behavior analysis.
 
+import { warn } from "../utils/logger";
+
 type VoidFn = () => void;
 type PrefetchPriority = "high" | "medium" | "low";
 
@@ -157,7 +159,7 @@ export function initRoutePrefetch(): void {
         const delay = getPriorityDelay(priority, index);
         setTimeout(() => {
           load().catch((error) => {
-            console.warn(`⚠️ Failed to prefetch route:`, error);
+            warn(`⚠️ Failed to prefetch route:`, error);
           });
         }, delay);
       }, config.timeout);

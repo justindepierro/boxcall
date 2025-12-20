@@ -1,4 +1,5 @@
 // Dynamic theme loader for lazy-loading theme definitions
+import { warn } from "../utils/logger";
 async function loadTheme(
   name: ThemeName
 ): Promise<import("./types").ThemeDefinition | undefined> {
@@ -11,7 +12,7 @@ async function loadTheme(
       return (await import("./highContrast")).default;
     default:
       // Unknown theme, return light as fallback
-      console.warn(`Unknown theme "${name}", falling back to light theme`);
+      warn(`Unknown theme "${name}", falling back to light theme`);
       return (await import("./light")).default;
   }
 }

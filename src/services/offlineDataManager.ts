@@ -331,7 +331,7 @@ class ServiceWorkerManager {
   // DISABLED: Service worker methods
   // private showUpdateAvailable(): void {
   //   // Integration with your notification system
-  //   // TODO: Remove update log (was: console.log)
+  //   // TODO: Remove update log (was previously console logging)
   //   // You could show a notification toast here
   //   // notificationService.show('Update available', 'Reload to get the latest features', 'info');
   // }

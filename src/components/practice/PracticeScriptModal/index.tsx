@@ -9,6 +9,7 @@ import {
   hasValidationErrors,
   getFirstError,
 } from "./validation";
+import { debug } from "../../../utils/logger";
 
 import type { PracticeScript } from "../../../services/practiceService";
 import type { PracticeScriptPlay as ServicePracticeScriptPlay } from "../../../services/practiceService";
@@ -136,7 +137,7 @@ export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
   onSave,
   editingScript,
 }) => {
-  console.log("🎬 PracticeScriptModal rendering", { editingScript });
+  debug("🎬 PracticeScriptModal rendering", { editingScript });
   const isEditMode = !!editingScript;
 
   const [scriptData, setScriptData] = useState<PracticeScriptFormData>({
@@ -170,7 +171,7 @@ export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
     if (hasValidationErrors(errors)) {
       const firstError = getFirstError(errors);
       setValidationError(firstError || "Please fix validation errors");
-      console.warn("Validation errors:", errors);
+      debug("Validation errors:", errors);
       return;
     }
 
@@ -187,7 +188,7 @@ export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({
       plays: servicePlays, // Normalize to service type for downstream save
     };
 
-    console.log("💾 Saving script with plays:", {
+    debug("💾 Saving script with plays:", {
       script,
       playCount: plays.length,
     });

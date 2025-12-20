@@ -14,7 +14,7 @@ import {
   type CursorUpdate,
 } from "@services/realTimeCollaboration";
 import { colorTokens } from "../design-system/tokens";
-import { logError } from "../utils/logger";
+import { logError, warn } from "../utils/logger";
 
 // Widget update types that should be sent through collaboration service
 const WIDGET_UPDATE_TYPES = [
@@ -151,8 +151,10 @@ function useCollaborationSessionState({
 
   const sendDashboardUpdate = useCallback(
     (update: Omit<DashboardUpdate, "userId" | "timestamp">) => {
-      if (!isConnected)
-        return console.warn("Cannot send dashboard update: not connected");
+      if (!isConnected) {
+        warn("Cannot send dashboard update: not connected");
+        return;
+      }
       collaborationService.sendDashboardUpdate(update);
     },
     [isConnected]

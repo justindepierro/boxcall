@@ -3,6 +3,8 @@
  * Comprehensive testing for database integration
  */
 
+import { debug } from "./logger";
+
 export interface SearchTestCase {
   name: string;
   searchQuery: string;
@@ -124,12 +126,12 @@ export const runSearchTests = (
   tests: SearchTestCase[],
   searchFunction: (query: string) => number
 ) => {
-  console.info("🔍 Search Function Tests");
+  debug("🔍 Search Function Tests");
   const results = tests.map((test) => {
     const actualResults = searchFunction(test.searchQuery);
     const passed = actualResults === test.expectedMatches;
 
-    console.info(
+    debug(
       `${passed ? "✅" : "❌"} ${test.name}: ${test.description}`,
       `Expected: ${test.expectedMatches}, Got: ${actualResults}`
     );
@@ -138,7 +140,7 @@ export const runSearchTests = (
   });
 
   const passedCount = results.filter((r) => r.passed).length;
-  console.info(`📊 Search Tests: ${passedCount}/${tests.length} passed`);
+  debug(`📊 Search Tests: ${passedCount}/${tests.length} passed`);
   // end group
 
   return results;
@@ -148,12 +150,12 @@ export const runFilterTests = (
   tests: FilterTestCase[],
   filterFunction: (filters: { formation?: string; playType?: string }) => number
 ) => {
-  console.info("🏷️ Filter Function Tests");
+  debug("🏷️ Filter Function Tests");
   const results = tests.map((test) => {
     const actualResults = filterFunction(test.filters);
     const passed = actualResults === test.expectedResults;
 
-    console.info(
+    debug(
       `${passed ? "✅" : "❌"} ${test.name}: ${test.description}`,
       `Expected: ${test.expectedResults}, Got: ${actualResults}`
     );
@@ -162,7 +164,7 @@ export const runFilterTests = (
   });
 
   const passedCount = results.filter((r) => r.passed).length;
-  console.info(`📊 Filter Tests: ${passedCount}/${tests.length} passed`);
+  debug(`📊 Filter Tests: ${passedCount}/${tests.length} passed`);
   // end group
 
   return results;

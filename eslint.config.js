@@ -6,12 +6,14 @@ import tseslint from "typescript-eslint";
 import rawTailwindColors from "./eslint-rules/no-raw-tailwind-colors.js";
 import arbitrarySpacing from "./eslint-rules/no-arbitrary-spacing.js";
 import arbitraryTypography from "./eslint-rules/no-arbitrary-typography.js";
+import windowLocationNavigation from "./eslint-rules/no-window-location-navigation.js";
 
 const boxcallDesignRules = {
   rules: {
     ...rawTailwindColors.rules,
     ...arbitrarySpacing.rules,
     ...arbitraryTypography.rules,
+    ...windowLocationNavigation.rules,
   },
 };
 
@@ -109,6 +111,7 @@ export default [
       "boxcall-design/no-raw-tailwind-colors": "error",
       "boxcall-design/no-arbitrary-spacing": "error",
       "boxcall-design/no-arbitrary-typography": "error",
+      "boxcall-design/no-window-location-navigation": "error",
     },
   },
 ];

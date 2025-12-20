@@ -4,6 +4,7 @@
  */
 import React, { lazy, Suspense, useEffect } from "react";
 import type { ComponentType } from "react";
+import { debug } from "../../utils/logger";
 
 // Route-based code splitting
 export const lazyRoute = (
@@ -42,9 +43,7 @@ export const usePerformanceMonitoring = (componentName: string) => {
 
     return () => {
       const renderTime = performance.now() - startTime;
-      console.info(
-        `⚡ ${componentName} render time: ${renderTime.toFixed(2)}ms`
-      );
+      debug(`⚡ ${componentName} render time: ${renderTime.toFixed(2)}ms`);
     };
   }, [componentName]);
 };

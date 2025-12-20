@@ -19,6 +19,7 @@ import type {
 } from "../domain/calendar/types";
 import type { PostgrestError } from "@supabase/supabase-js";
 import type { AdvancedRSVP } from "../types/rsvp";
+import { debug, warn } from "../utils/logger";
 
 export type { CalendarEventCreate, EventRSVP, CalendarFilters };
 
@@ -118,8 +119,8 @@ export class CalendarService {
     if (error) {
       const pgErr = error as PostgrestError;
       if (status === 404 || pgErr?.code === "42P01") {
-        if (process.env.NODE_ENV !== "production") {
-          console.warn(
+        if (import.meta.env.DEV && import.meta.env.MODE !== "test") {
+          warn(
             "team_events relation not found (likely migrations pending) – returning empty list"
           );
         }
@@ -220,10 +221,7 @@ export class CalendarService {
     userIds?: string[]
   ): Promise<void> {
     // TODO: Implement reminder logic when email service is integrated
-    console.info(
-      `Sending RSVP reminders for event ${eventId} to users:`,
-      userIds
-    );
+    debug(`Sending RSVP reminders for event ${eventId} to users:`, userIds);
   }
 }
 

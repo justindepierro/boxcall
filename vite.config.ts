@@ -317,11 +317,75 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
+          const normalizedId = id.replace(/\\/g, "/");
+
+          // Rollup/Vite virtual modules (not under node_modules)
+          // Keep CommonJS interop helpers out of feature chunks to avoid cycles
+          // like: react-vendor -> charts -> react-vendor.
+          if (id.includes("\u0000commonjsHelpers")) {
+            return "commonjs-helpers";
+          }
+
+          // Vite injects a virtual preload helper for dynamic imports.
+          // If it lands in a feature chunk, that feature becomes a transitive
+          // dependency of many otherwise unrelated chunks.
+          if (
+            id.includes("\u0000vite/preload-helper") ||
+            id.includes("\u0000vite/modulepreload-polyfill")
+          ) {
+            return "vite-helpers";
+          }
+
           // Node modules chunking strategy
           if (id.includes("node_modules")) {
+            // Tiny shared utilities (used everywhere)
+            if (
+              normalizedId.includes("/node_modules/clsx/") ||
+              normalizedId.includes("/node_modules/classnames/")
+            ) {
+              return "ui-utils";
+            }
+            if (
+              normalizedId.includes("/node_modules/tiny-invariant/") ||
+              normalizedId.includes("/node_modules/tiny-warning/")
+            ) {
+              return "ui-utils";
+            }
             // Core React - rarely changes, cache forever
-            if (id.includes("react-dom") || id.includes("/react/")) {
+            if (
+              normalizedId.includes("/node_modules/react/") ||
+              normalizedId.includes("/node_modules/react-dom/") ||
+              normalizedId.includes("/node_modules/scheduler/") ||
+              normalizedId.includes("/node_modules/react-is/")
+            ) {
               return "react-vendor";
+            }
+
+            // React shims shared across many UI libs (Headless UI, Recharts).
+            // If these land in the `charts` chunk, `ui-core` ends up importing
+            // `charts` on boot just to access `useSyncExternalStoreWithSelector`.
+            if (normalizedId.includes("/node_modules/use-sync-external-store/")) {
+              return "react-shims";
+            }
+
+            // Some third-party UI libs (Recharts, react-beautiful-dnd forks)
+            // pull in Redux internals as transitive deps. If those land inside
+            // the `charts` chunk, then unrelated UI chunks (e.g. `ui-dnd`) can
+            // end up importing `charts` just to access `react-redux`/`redux`.
+            // Keep them neutral so `charts` remains route-scoped.
+            if (
+              normalizedId.includes("/node_modules/react-redux/") ||
+              normalizedId.includes("/node_modules/redux/") ||
+              normalizedId.includes("/node_modules/@reduxjs/")
+            ) {
+              return "redux-vendor";
+            }
+            // Recharts pulls Redux Toolkit which uses Immer.
+            // If Immer is first claimed by the `charts` entry, Rollup can
+            // place it into `charts`, causing `redux-vendor` to import `charts`
+            // (and re-introduce charts into unrelated routes). Keep it neutral.
+            if (normalizedId.includes("/node_modules/immer/")) {
+              return "redux-vendor";
             }
             // Router
             if (id.includes("react-router")) {
@@ -352,7 +416,10 @@ export default defineConfig({
               return "pdf-utils";
             }
             // Charts - only on analytics pages
-            if (id.includes("recharts") || id.includes("d3-")) {
+            // NOTE: Avoid matching generic "d3-" packages since some other deps
+            // may pull those in. We want the heavy Recharts bundle to stay fully
+            // route/feature-scoped.
+            if (id.includes("recharts")) {
               return "charts";
             }
             // UI Libraries
@@ -394,10 +461,6 @@ export default defineConfig({
             if (id.includes("date-fns")) {
               return "date-utils";
             }
-            // Search
-            if (id.includes("fuse.js")) {
-              return "search-utils";
-            }
             // Monitoring
             if (id.includes("@sentry")) {
               return "monitoring";
@@ -418,15 +481,58 @@ export default defineConfig({
 
           // App code chunking - split large feature areas
           if (id.includes("/src/")) {
-            // Analytics is a heavy feature used occasionally
+            // Shared app code that should never be "claimed" by a single feature.
+            // Without this, whichever feature imports these first (analytics/pdf)
+            // can accidentally absorb them and then get pulled into core routes.
+            if (normalizedId.includes("/src/components/onboarding/")) {
+              return "app-utils";
+            }
+            if (normalizedId.includes("/src/components/ui/")) {
+              return "ui-components";
+            }
             if (
-              id.includes("/analytics/") ||
-              id.includes("/components/analytics/")
+              normalizedId.includes("/src/design-system/") ||
+              normalizedId.includes("/src/components/design-system/") ||
+              normalizedId.includes("/src/styles/")
+            ) {
+              return "design-system";
+            }
+            if (normalizedId.includes("/src/app/")) {
+              return "app-lib";
+            }
+            if (normalizedId.includes("/src/lib/")) {
+              return "app-lib";
+            }
+            if (normalizedId.includes("/src/utils/")) {
+              return "app-utils";
+            }
+
+            // Analytics UI is a heavy feature used occasionally.
+            // IMPORTANT: Don't match generic "/analytics/" because core telemetry
+            // services live under "/services/analytics/" and are used on boot.
+            // If those are assigned to "feature-analytics", the entrypoint ends up
+            // importing charts on first load.
+            if (
+              normalizedId.includes("/src/components/analytics/") ||
+              normalizedId.includes("/src/components/dashboard/analytics/") ||
+              normalizedId.includes("/src/pages/Analytics")
             ) {
               return "feature-analytics";
             }
-            // PDF components
-            if (id.includes("/pdf/") || id.includes("PDF")) {
+            // PDF feature code
+            // IMPORTANT: Avoid matching generic "PDF" substrings in filenames.
+            // That was accidentally pulling lightweight trigger components
+            // (e.g. `LazyPDFExport.tsx`) into `feature-pdf`, which in turn caused
+            // routes like PracticePlanner to import `pdf-core` on load.
+            if (
+              normalizedId.includes("/src/components/pdf/") ||
+              normalizedId.includes("/src/services/pdf/") ||
+              normalizedId.includes("/src/services/pdfExportService") ||
+              normalizedId.includes("/src/services/gamePlanPdfService") ||
+              normalizedId.includes(
+                "/src/components/practice/PracticePDFExportDialog.tsx"
+              )
+            ) {
               return "feature-pdf";
             }
           }

@@ -1,6 +1,6 @@
 import { supabase } from "../lib/supabase";
 import { getCurrentUserId } from "../lib/auth-helpers";
-import { debug } from "../utils/logger";
+import { debug, warn, error as logError } from "../utils/logger";
 
 /**
  * Service for managing user preferences stored in profiles.settings JSONB column
@@ -56,13 +56,10 @@ export class PreferenceService {
     try {
       const userId = getCurrentUserId();
 
-      console.log(
-        "[PreferenceService] loadPreferences called, userId:",
-        userId
-      );
+      debug("[PreferenceService] loadPreferences called, userId:", userId);
 
       if (!userId) {
-        console.warn("[PreferenceService] No user authenticated");
+        warn("[PreferenceService] No user authenticated");
         return null;
       }
 
@@ -72,17 +69,14 @@ export class PreferenceService {
         this.preferencesCache.userId === userId &&
         Date.now() - this.preferencesCache.timestamp < this.CACHE_DURATION
       ) {
-        console.log(
+        debug(
           "[PreferenceService] Returning cached preferences:",
           this.preferencesCache.data
         );
         return this.preferencesCache.data;
       }
 
-      console.log(
-        "[PreferenceService] Fetching from database for userId:",
-        userId
-      );
+      debug("[PreferenceService] Fetching from database for userId:", userId);
 
       // Use maybeSingle() instead of single() to avoid 406 errors
       // when no profile exists for the user
@@ -92,10 +86,10 @@ export class PreferenceService {
         .eq("id", userId)
         .maybeSingle();
 
-      console.log("[PreferenceService] Database response:", { data, error });
+      debug("[PreferenceService] Database response:", { data, error });
 
       if (error) {
-        console.error("[PreferenceService] Failed to load preferences:", error);
+        warn("[PreferenceService] Failed to load preferences:", error);
         // Cache the failure to prevent repeated failing requests
         this.preferencesCache = {
           data: null,
@@ -107,7 +101,7 @@ export class PreferenceService {
 
       // No profile found - cache this result
       if (!data) {
-        console.warn("[PreferenceService] No profile found for user");
+        warn("[PreferenceService] No profile found for user");
         this.preferencesCache = {
           data: {},
           timestamp: Date.now(),
@@ -120,14 +114,14 @@ export class PreferenceService {
       // Type cast needed because Supabase query builder types don't include settings
       const settings = (data as { settings?: unknown })?.settings;
 
-      console.log("[PreferenceService] Raw settings from DB:", settings);
+      debug("[PreferenceService] Raw settings from DB:", settings);
 
       const preferences =
         !settings || typeof settings !== "object" || Array.isArray(settings)
           ? {}
           : (settings as UserPreferences);
 
-      console.log("[PreferenceService] ✅ Loaded preferences:", preferences);
+      debug("[PreferenceService] Loaded preferences:", preferences);
 
       // Cache the successful result
       this.preferencesCache = {
@@ -138,7 +132,7 @@ export class PreferenceService {
 
       return preferences;
     } catch (err) {
-      console.error("[PreferenceService] Exception loading preferences:", err);
+      logError("[PreferenceService] Exception loading preferences:", err);
       return null;
     }
   }
@@ -166,29 +160,24 @@ export class PreferenceService {
           const prefsToSave = { ...this.pendingPreferences };
           this.pendingPreferences = {}; // Clear pending
 
-          console.log(
-            "[PreferenceService] Saving batched preferences:",
-            prefsToSave
-          );
+          debug("[PreferenceService] Saving batched preferences:", prefsToSave);
 
           try {
             const userId = getCurrentUserId();
 
             if (!userId) {
-              console.warn(
-                "[PreferenceService] No user authenticated, skipping save"
-              );
+              warn("[PreferenceService] No user authenticated, skipping save");
               resolve(false);
               return false;
             }
 
-            console.log("[PreferenceService] Saving for userId:", userId);
+            debug("[PreferenceService] Saving for userId:", userId);
 
             // Load existing preferences to merge
             const existing = (await this.loadPreferences()) || {};
             const merged = { ...existing, ...prefsToSave };
 
-            console.log("[PreferenceService] Merged preferences:", merged);
+            debug("[PreferenceService] Merged preferences:", merged);
 
             // Type cast needed because settings is Json type in database
             // Use .select() to verify the update actually happened
@@ -199,20 +188,17 @@ export class PreferenceService {
               .select("id, settings")
               .maybeSingle();
 
-            console.log("[PreferenceService] Update result:", { data, error });
+            debug("[PreferenceService] Update result:", { data, error });
 
             if (error) {
-              console.error(
-                "[PreferenceService] Failed to save preferences:",
-                error
-              );
+              warn("[PreferenceService] Failed to save preferences:", error);
               resolve(false);
               return false;
             }
 
             // Check if any row was actually updated
             if (!data) {
-              console.error(
+              warn(
                 "[PreferenceService] No profile found to update for userId:",
                 userId
               );
@@ -220,10 +206,7 @@ export class PreferenceService {
               return false;
             }
 
-            console.log(
-              "[PreferenceService] ✅ Saved preferences to server:",
-              data.settings
-            );
+            debug("[PreferenceService] Saved preferences to server:", data.settings);
             // Invalidate cache after successful save
             this.preferencesCache = {
               data: merged,
@@ -233,10 +216,7 @@ export class PreferenceService {
             resolve(true);
             return true;
           } catch (error) {
-            console.error(
-              "[PreferenceService] Exception saving preferences:",
-              error
-            );
+            logError("[PreferenceService] Exception saving preferences:", error);
             resolve(false);
             return false;
           }

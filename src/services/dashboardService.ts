@@ -1,5 +1,5 @@
 import { supabase } from "../lib/supabase";
-import { error as logError, debug } from "../utils/logger";
+import { error as logError, debug, warn } from "../utils/logger";
 
 import type { Database } from "../types/database";
 
@@ -206,18 +206,15 @@ export class DashboardService {
     if (devMode === "production" || devMode === "super_admin_real") {
       try {
         // TODO: Implement real activity feed from Supabase
-        console.info(
-          "[Search/Investigate] Dashboard Service: Attempting to fetch real activity..."
+        debug(
+          "[DashboardService] Attempting to fetch real activity (not implemented)"
         );
 
         // For now, return empty until real implementation
         // In the future, this will fetch from activity/notifications tables
         return [];
       } catch (_error) {
-        console.warn(
-          "Dashboard Service: Could not fetch real activity:",
-          _error
-        );
+        warn("Dashboard Service: Could not fetch real activity:", _error);
         return [];
       }
     }

@@ -22,6 +22,7 @@ import { PlaysQueryService } from "./PlaysQueryService";
 import { BulkOperationsService } from "./BulkOperationsService";
 import { BackupService } from "./BackupService";
 import { RealtimeSyncService } from "./RealtimeSyncService";
+import { debug } from "../../utils/logger";
 
 export class DataSyncServiceOrchestrator {
   private static supabase: SupabaseClient | null = null;
@@ -52,9 +53,7 @@ export class DataSyncServiceOrchestrator {
 
     this.initialized = true;
 
-    console.info(
-      "✅ DataSyncService initialized with bulletproof architecture"
-    );
+    debug("[DataSyncService] Initialized");
   }
 
   /**
@@ -62,7 +61,7 @@ export class DataSyncServiceOrchestrator {
    */
   private static async ensureInitialized(): Promise<void> {
     if (!this.initialized || !this.supabase) {
-      console.info("🔧 DataSyncService not initialized, initializing now...");
+      debug("[DataSyncService] Not initialized; initializing now...");
       await this.initialize();
     }
   }
@@ -172,6 +171,6 @@ export class DataSyncServiceOrchestrator {
     IndexedDBService.close();
     CacheService.clear();
     this.initialized = false;
-    console.info("✅ DataSyncService cleaned up");
+    debug("[DataSyncService] Cleaned up");
   }
 }

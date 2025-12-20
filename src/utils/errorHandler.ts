@@ -3,7 +3,7 @@
  * Provides consistent error logging, reporting, and user feedback
  */
 
-import { logError } from "./logger";
+import { debug, logError, warn } from "./logger";
 
 export interface ErrorReport {
   message: string;
@@ -146,7 +146,7 @@ class ErrorHandler {
     };
 
     // Log to console in development
-    if (process.env.NODE_ENV === "development") {
+    if (import.meta.env.DEV && import.meta.env.MODE !== "test") {
       logError("Error caught by ErrorHandler:", error, context);
     }
 
@@ -174,14 +174,14 @@ class ErrorHandler {
     } catch (error) {
       // Put errors back in queue if sending failed
       this.errorQueue.unshift(...errors);
-      console.warn("Failed to send error reports:", error);
+      warn("Failed to send error reports:", error);
     }
   }
 
   private async sendErrors(errors: ErrorReport[]) {
     // TODO: Integrate with actual error reporting service
-    if (process.env.NODE_ENV === "development") {
-      console.info("Would send error reports:", errors);
+    if (import.meta.env.DEV && import.meta.env.MODE !== "test") {
+      debug("Would send error reports:", errors);
     }
 
     // Example implementation:
@@ -205,7 +205,7 @@ class ErrorHandler {
 
       localStorage.setItem("boxcall_errors", JSON.stringify(errors));
     } catch {
-      console.warn("Failed to store error locally");
+      warn("Failed to store error locally");
     }
   }
 
@@ -213,7 +213,7 @@ class ErrorHandler {
     try {
       localStorage.removeItem("boxcall_errors");
     } catch {
-      console.warn("Failed to clear local errors");
+      warn("Failed to clear local errors");
     }
   }
 

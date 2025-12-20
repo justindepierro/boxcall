@@ -4,6 +4,7 @@ import { Button } from "../../ui";
 import { NotificationBadge } from "../../ui/Badge";
 import { prefetchOnHover } from "../../../navigation/prefetch-utils";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
+import { softNavigate } from "../../../utils/softNavigate";
 
 export interface MobileNavItem {
   id: string;
@@ -66,7 +67,7 @@ export const MobileBottomNavigation: React.FC<MobileBottomNavigationProps> = ({
     if (onNavigate) {
       onNavigate(item.href, item);
     } else {
-      window.location.href = item.href;
+      softNavigate(item.href);
     }
   };
 

@@ -6,7 +6,7 @@
  * @date October 13, 2025
  */
 
-import { logError } from "./logger";
+import { debug, logError } from "./logger";
 
 const DB_NAME = "BoxCallSaveQueue";
 const DB_VERSION = 1;
@@ -68,7 +68,7 @@ export async function persistOperation(
       const request = store.put(operation);
 
       request.onsuccess = () => {
-        console.log(`[SaveQueueDB] Persisted operation: ${operation.id}`);
+        debug(`[SaveQueueDB] Persisted operation: ${operation.id}`);
         resolve();
       };
 
@@ -96,7 +96,7 @@ export async function loadOperations(): Promise<PersistedSaveOperation[]> {
 
       request.onsuccess = () => {
         const operations = request.result as PersistedSaveOperation[];
-        console.log(
+        debug(
           `[SaveQueueDB] Loaded ${operations.length} operations from IndexedDB`
         );
         resolve(operations);
@@ -125,7 +125,7 @@ export async function removeOperation(operationId: string): Promise<void> {
       const request = store.delete(operationId);
 
       request.onsuccess = () => {
-        console.log(`[SaveQueueDB] Removed operation: ${operationId}`);
+        debug(`[SaveQueueDB] Removed operation: ${operationId}`);
         resolve();
       };
 
@@ -152,7 +152,7 @@ export async function clearAllOperations(): Promise<void> {
       const request = store.clear();
 
       request.onsuccess = () => {
-        console.log("[SaveQueueDB] Cleared all operations");
+        debug("[SaveQueueDB] Cleared all operations");
         resolve();
       };
 

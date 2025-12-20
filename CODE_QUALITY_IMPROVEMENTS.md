@@ -120,7 +120,7 @@ variant={(() => {
 - SendInvitationModal, FollowButton (2 fixes), NotificationsBell, ReactionButton (2 fixes)
 - TimelineContainer, ScriptSelectorModal, CommentReactions
 - PasswordStrengthIndicator, ConfirmationModal, DevHealthCheck
-- webVitalsMonitor, performanceMonitor (3 fixes), authMonitoring, advancedCaching
+- webVitalsMonitor (consolidated), authMonitoring, advancedCaching
 - PersonnelLibraryPage, performanceAnalyticsService, smartDataAnalyzer (2 fixes), playValidation
 
 #### Other Warnings

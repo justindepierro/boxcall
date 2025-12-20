@@ -21,6 +21,7 @@ import {
   EXCLUDED_RETURN_ROUTES,
   DEFAULT_LOGIN_DESTINATION,
 } from "./authConstants";
+import { debug, warn } from "./logger";
 
 const RETURN_URL_PARAM = "returnUrl";
 
@@ -46,9 +47,9 @@ export function saveReturnUrl(path?: string): void {
       return;
     }
     sessionStorage.setItem(STORAGE_KEYS.RETURN_URL, url);
-    console.debug("🔖 Saved return URL:", url);
+    debug("🔖 Saved return URL:", url);
   } catch (error) {
-    console.warn("Failed to save return URL:", error);
+    warn("Failed to save return URL", error);
   }
 }
 
@@ -72,11 +73,11 @@ export function getAndClearReturnUrl(
     sessionStorage.removeItem(STORAGE_KEYS.RETURN_URL);
 
     if (url && !isAuthRoute(url)) {
-      console.debug("🔖 Retrieved return URL:", url);
+      debug("🔖 Retrieved return URL:", url);
       return url;
     }
   } catch (error) {
-    console.warn("Failed to get return URL:", error);
+    warn("Failed to get return URL", error);
   }
   return defaultUrl;
 }
@@ -99,11 +100,11 @@ export function getReturnUrlFromQuery(search: string): string | null {
     const returnUrl = params.get(RETURN_URL_PARAM);
 
     if (returnUrl && !isAuthRoute(returnUrl)) {
-      console.debug("🔖 Found return URL in query:", returnUrl);
+      debug("🔖 Found return URL in query:", returnUrl);
       return returnUrl;
     }
   } catch (error) {
-    console.warn("Failed to parse return URL from query:", error);
+    warn("Failed to parse return URL from query", error);
   }
   return null;
 }

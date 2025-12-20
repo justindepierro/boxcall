@@ -10,7 +10,6 @@ import { Typography } from "../../design-system/Typography";
 import { Badge } from "../../ui/Badge";
 import { FormSelect } from "../../ui";
 import { PlaySelectorModal } from "../PlaySelectorModal";
-import { GamePlanPDFService } from "../../../services/gamePlanPdfService";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 import { logError } from "../../../utils/logger";
 import { useToast } from "../../../hooks/useToast";
@@ -621,6 +620,9 @@ export const GamePlanModal: React.FC<GamePlanModalProps> = ({
     try {
       const gamePlan = buildGamePlan({ formData, situations, initialGamePlan });
 
+      const { GamePlanPDFService } = await import(
+        "../../../services/gamePlanPdfService"
+      );
       await GamePlanPDFService.exportGamePlan(gamePlan, "call-sheet");
     } catch (error) {
       logError("Error exporting PDF:", error);

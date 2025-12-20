@@ -5,6 +5,7 @@
  */
 
 import type { CachedData, SyncMetrics } from "./types";
+import { debug } from "../../utils/logger";
 
 export class CacheService {
   private static cache = new Map<string, CachedData>();
@@ -88,7 +89,7 @@ export class CacheService {
    * Update local cache for optimistic updates
    */
   static updateLocal(type: string, id: string, _updates: unknown): void {
-    console.info(`Updated local cache: ${type}:${id}`);
+    debug(`Updated local cache: ${type}:${id}`);
     // Implementation depends on cache structure
   }
 
@@ -96,7 +97,7 @@ export class CacheService {
    * Rollback local cache changes
    */
   static rollbackLocal(type: string, id: string): void {
-    console.info(`Rolled back local cache: ${type}:${id}`);
+    debug(`Rolled back local cache: ${type}:${id}`);
     // Implementation depends on cache structure
   }
 
@@ -104,7 +105,7 @@ export class CacheService {
    * Add item to local cache
    */
   static addToLocal(type: string, _item: unknown): void {
-    console.info(`Added to local cache: ${type}`);
+    debug(`Added to local cache: ${type}`);
     // Implementation depends on cache structure
   }
 
@@ -116,7 +117,7 @@ export class CacheService {
     tempId: string,
     _realItem: unknown
   ): void {
-    console.info(`Replaced in local cache: ${type}:${tempId}`);
+    debug(`Replaced in local cache: ${type}:${tempId}`);
     // Implementation depends on cache structure
   }
 
@@ -124,7 +125,7 @@ export class CacheService {
    * Remove item from local cache
    */
   static removeFromLocal(type: string, id: string): void {
-    console.info(`Removed from local cache: ${type}:${id}`);
+    debug(`Removed from local cache: ${type}:${id}`);
     // Implementation depends on cache structure
   }
 }

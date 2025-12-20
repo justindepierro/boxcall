@@ -1,5 +1,5 @@
 // Auth Monitoring and Observability
-import { logError } from "./logger";
+import { debug, logError } from "./logger";
 
 const AUTH_PHASES = [
   "bootstrap",
@@ -217,7 +217,7 @@ export class AuthMonitoring {
 
     // Only log events in development
     if (import.meta.env.DEV) {
-      console.log(`📊 Auth Event [${event}]:`, metadata);
+      debug(`📊 Auth Event [${event}]:`, metadata);
     }
   }
 

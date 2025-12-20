@@ -6,6 +6,7 @@ import { Button } from "../../../ui/Button/Button";
 import { Icon } from "../../../ui/Icon/Icon";
 import { OnboardingHint } from "../../../onboarding/OnboardingHint";
 import { CreatePostModal } from "./PostComposers";
+import { debug } from "../../../../utils/logger";
 
 interface EmptyFeedProps {
   canCreate: boolean;
@@ -64,8 +65,7 @@ export const EmptyFeed: React.FC<EmptyFeedProps> = ({
                 {
                   label: "View Roadmap",
                   variant: "ghost",
-                  onClick: () =>
-                    console.info("telemetry:onboarding.feed.view_roadmap"),
+                  onClick: () => debug("[TeamFeedStates] Onboarding roadmap click"),
                 },
               ]
         }
@@ -100,21 +100,24 @@ export const LoadingFeed: React.FC = () => {
 
 interface ErrorFeedProps {
   error: Error;
+  onRetry?: () => void;
 }
 
-export const ErrorFeed: React.FC<ErrorFeedProps> = ({ error }) => {
+export const ErrorFeed: React.FC<ErrorFeedProps> = ({ error, onRetry }) => {
   return (
     <div className="rounded border border-text-error bg-subtle bg-surface-error p-4 text-sm text-error">
       Failed to load posts.
-      <Button
-        type="button"
-        variant="link"
-        size="xs"
-        className="ml-1"
-        onClick={() => window.location.reload()}
-      >
-        Retry
-      </Button>
+      {onRetry && (
+        <Button
+          type="button"
+          variant="link"
+          size="xs"
+          className="ml-1"
+          onClick={onRetry}
+        >
+          Retry
+        </Button>
+      )}
       {error.message && (
         <div className="mt-1 text-xs opacity-75">{error.message}</div>
       )}

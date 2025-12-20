@@ -7,6 +7,7 @@ import { LogoIcon } from "../../ui/Logo";
 import { Button } from "../../ui/Button"; // Import the shared Button component
 import { Icon } from "../../ui/Icon/Icon";
 import { NotificationBell } from "../../ui/NotificationBell";
+import { logError } from "../../../utils/logger";
 
 // Removed old inline edit button import usage after redesign
 
@@ -73,7 +74,7 @@ export const TeamBulletinHeader: React.FC<TeamBulletinHeaderProps> = ({
       // if (updateError) throw updateError;
       setLocalLogo(publicUrl);
     } catch (err) {
-      console.warn("team.logo.upload.error", err);
+      logError("team.logo.upload.error", err);
       // Simple fallback: revert input value
       e.target.value = "";
     } finally {

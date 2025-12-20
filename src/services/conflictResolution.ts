@@ -5,7 +5,7 @@
  * Phase 2B Sprint 4: Live Dashboard Sharing
  */
 
-import { logError } from "../utils/logger";
+import { logError, warn } from "../utils/logger";
 
 export interface ConflictResolution {
   widgetId: string;
@@ -181,7 +181,7 @@ class ConflictResolutionService {
   ): unknown | null {
     const strategy = this.mergeStrategies.get(strategyName);
     if (!strategy) {
-      console.warn(`Unknown merge strategy: ${strategyName}`);
+      warn(`Unknown merge strategy: ${strategyName}`);
       return null;
     }
 
@@ -193,7 +193,7 @@ class ConflictResolutionService {
     const [local, remote, base] = versions;
 
     if (!strategy.canApply(local, remote)) {
-      console.warn(
+      warn(
         `Strategy ${strategyName} cannot be applied to these data types`
       );
       return null;

@@ -5,7 +5,7 @@
 
 import type { Play } from "../../../../types/play";
 import type { Database } from "../../../../types/database";
-import { info } from "../../../../utils/logger";
+import { debug, error as logError, info } from "../../../../utils/logger";
 
 type DatabasePlay = Database["public"]["Tables"]["plays"]["Row"];
 
@@ -79,7 +79,7 @@ export function createPlaySaveHandler({
   finishSaving,
 }: CreatePlaySaveHandlerProps) {
   return async (playId: string, updates: Partial<Play>) => {
-    console.log("[PlayGrid] 🔷 handlePlaySave START:", { playId, updates });
+    debug("[PlayGrid] 🔷 handlePlaySave START:", { playId, updates });
 
     // Start global save indicator
     startSaving();
@@ -87,24 +87,24 @@ export function createPlaySaveHandler({
     try {
       const dbUpdates = mapPlayUpdatesToDbUpdates(updates);
 
-      console.log("[PlayGrid] 🔷 Mapped updates:", {
+      debug("[PlayGrid] 🔷 Mapped updates:", {
         playId,
         updates,
         dbUpdates,
         "dbUpdates.f_dir": dbUpdates.f_dir,
         "dbUpdates.p_dir": dbUpdates.p_dir,
       });
-      console.log("[PlayGrid] 🔷 Calling updatePlay...");
+      debug("[PlayGrid] 🔷 Calling updatePlay...");
 
       await updatePlay(playId, dbUpdates);
 
-      console.log("[PlayGrid] 🟢 updatePlay completed successfully");
+      debug("[PlayGrid] 🟢 updatePlay completed successfully");
       info(`Play ${playId} updated successfully`);
 
       // Finish save with success status
       finishSaving("success");
     } catch (error) {
-      console.error("[PlayGrid] 🔴 Failed to save play:", error);
+      logError("[PlayGrid] 🔴 Failed to save play", error);
 
       // Finish save with error status
       finishSaving("error");

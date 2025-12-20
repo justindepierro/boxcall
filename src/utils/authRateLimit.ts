@@ -1,5 +1,5 @@
 // Client-side rate limiting and security utilities
-import { logError } from "./logger";
+import { logError, warn } from "./logger";
 
 // CSRF Protection
 class CSRFProtection {
@@ -122,7 +122,7 @@ class RequestSecurity {
     });
 
     if (!isValid) {
-      console.warn(
+      warn(
         `🚨 Origin validation failed. Current origin: ${currentOrigin}, Allowed: ${allowedOrigins.join(", ")}`
       );
     }
@@ -322,7 +322,7 @@ export class NetworkResilience {
         const jitter = Math.random() * 0.1 * delay; // Add 10% jitter
         const finalDelay = delay + jitter;
 
-        console.warn(
+        warn(
           `🔄 Network request failed, retrying in ${finalDelay.toFixed(0)}ms (attempt ${attempt + 1}/${maxRetries + 1})`
         );
         await new Promise((resolve) => setTimeout(resolve, finalDelay));
@@ -388,7 +388,7 @@ export class NetworkResilience {
 
   static queueForOnline(operation: () => Promise<void>): void {
     if (this.isOnline()) {
-      operation().catch(console.error);
+      operation().catch((err) => logError("Queued operation failed:", err));
       return;
     }
 

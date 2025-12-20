@@ -4,7 +4,7 @@
  * Manages user preferences like confirmation dialogs, UI settings, etc.
  */
 
-import { logError } from "../utils/logger";
+import { logError, warn } from "../utils/logger";
 
 export interface UserPreferences {
   csvImport: {
@@ -63,7 +63,7 @@ export class UserPreferencesService {
         },
       };
     } catch (error) {
-      console.warn("Failed to load user preferences, using defaults:", error);
+      warn("Failed to load user preferences, using defaults:", error);
       return this.getDefaultPreferences();
     }
   }

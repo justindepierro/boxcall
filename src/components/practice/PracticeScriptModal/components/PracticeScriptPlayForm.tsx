@@ -16,7 +16,7 @@ import {
 import { PersonnelBadge } from "../../../playbook/PersonnelBadge";
 
 import type { PracticeScriptPlay } from "../types";
-import { logError } from "../../../../utils/logger";
+import { debug, logError } from "../../../../utils/logger";
 
 type PlaySearchItem = PlayNameSource & {
   id: string;
@@ -80,14 +80,14 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
           if (error) {
             logError("❌ Error loading plays:", error);
           } else {
-            console.log("✅ Loaded plays:", plays?.length || 0);
+            debug("✅ Loaded plays:", plays?.length || 0);
             if (plays && plays.length > 0) {
-              console.log("📋 Sample play:", plays[0]);
+              debug("📋 Sample play:", plays[0]);
             }
             setPlaybookPlays(plays || []);
           }
         } else {
-          console.log("⚠️ No active playbook found for team");
+          debug("⚠️ No active playbook found for team");
         }
       } catch (error) {
         logError("Failed to load playbook plays:", error);
@@ -100,7 +100,7 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
   }, []);
 
   const filteredPlays = useMemo(() => {
-    console.log("🔍 Filtering plays:", {
+    debug("🔍 Filtering plays:", {
       totalPlays: playbookPlays.length,
       searchQuery,
     });
@@ -117,23 +117,23 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
         .includes(searchQuery.toLowerCase());
 
       if (matches) {
-        console.log("✅ Match found:", displayName);
+        debug("✅ Match found:", displayName);
       }
 
       return matches;
     });
 
-    console.log("📊 Filtered results:", filtered.length);
+    debug("📊 Filtered results:", filtered.length);
     return filtered;
   }, [playbookPlays, searchQuery]);
 
   const handleSelectPlay = useCallback((play: PlaySearchItem | null) => {
-    console.log("🎯 Play selected:", play?.play_name);
+    debug("🎯 Play selected:", play?.play_name);
 
     if (play) {
       // Use the same display name logic as the list view
       const displayName = getDisplayName(play, false);
-      console.log("📝 Formatted display name:", displayName);
+      debug("📝 Formatted display name:", displayName);
 
       setSelectedPlay(play);
       setFormData((prev) => ({
@@ -176,17 +176,14 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
               displayValue={(play: PlaySearchItem | null) => {
                 if (play) {
                   const displayName = getDisplayName(play, false);
-                  console.log(
-                    "📺 Display value for selected play:",
-                    displayName
-                  );
+                  debug("📺 Display value for selected play:", displayName);
                   return displayName;
                 }
                 return searchQuery;
               }}
               onChange={(event) => {
                 const value = event.target.value;
-                console.log("⌨️ Input changed:", value);
+                debug("⌨️ Input changed:", value);
                 setSearchQuery(value);
                 updateField("playName", value);
               }}

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, type ReactNode } from "react";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
 import type { CollaborativeCursor } from "../../hooks/useCollaboration";
+import { debug } from "../../utils/logger";
 
 interface CollaborativeWidgetProps {
   widgetId: string;
@@ -74,7 +75,7 @@ export const CollaborativeWidget: React.FC<CollaborativeWidgetProps> = ({
       const y = event.clientY - rect.top;
 
       // TODO: updateCursor when real collaboration is integrated
-      console.info("Cursor move:", { widgetId, x, y });
+      debug("[CollaborativeWidget] Cursor move", { widgetId, x, y });
     };
 
     const handleClick = (event: MouseEvent) => {
@@ -83,7 +84,7 @@ export const CollaborativeWidget: React.FC<CollaborativeWidgetProps> = ({
       const y = event.clientY - rect.top;
 
       // TODO: broadcastUpdate when real collaboration is integrated
-      console.info("Widget interaction:", { widgetId, x, y });
+      debug("[CollaborativeWidget] Widget interaction", { widgetId, x, y });
     };
 
     container.addEventListener("mousemove", handleMouseMove);
@@ -107,7 +108,7 @@ export const CollaborativeWidget: React.FC<CollaborativeWidgetProps> = ({
     if (!conflictData) return;
 
     // TODO: resolveConflict when real collaboration is integrated
-    console.info("Conflict resolution:", {
+    debug("[CollaborativeWidget] Conflict resolution", {
       widgetId,
       resolution,
       conflictData,

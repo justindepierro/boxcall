@@ -14,18 +14,24 @@ interface ContrastIssue {
   large: boolean;
 }
 
+import { debug } from "../utils/logger";
+
 const ACTIVE_FLAG = "debugContrast";
 const isEnabled = () =>
   typeof window !== "undefined" && localStorage.getItem(ACTIVE_FLAG) === "on";
 // Lightweight diagnostic (safe if console blocked)
 try {
-  console.info("[contrastDebug] loaded", { flag: isEnabled() });
+  debug("[contrastDebug] loaded", { flag: isEnabled() });
 } catch {
   /* noop */
 }
 
 let indicatorEl: HTMLDivElement | null = null;
 let active = false;
+
+export function isContrastDebugActive() {
+  return active;
+}
 
 // Config / Modes
 // localStorage.debugContrastMode values:
@@ -131,6 +137,29 @@ function deactivateContrastDebug() {
   indicatorEl = null;
   const btn = document.getElementById("contrast-rescan-btn");
   btn?.remove();
+}
+
+export function enableContrastDebug() {
+  try {
+    localStorage.setItem(ACTIVE_FLAG, "on");
+  } catch {
+    // ignore storage failures
+  }
+  activateContrastDebug();
+}
+
+export function disableContrastDebug() {
+  try {
+    localStorage.removeItem(ACTIVE_FLAG);
+  } catch {
+    // ignore storage failures
+  }
+  deactivateContrastDebug();
+}
+
+export function toggleContrastDebug() {
+  if (active) disableContrastDebug();
+  else enableContrastDebug();
 }
 
 // Auto-activate (dev OR production preview) if flag set
@@ -275,7 +304,8 @@ function runContrastScan() {
   // Log summary table
   if (indicatorEl) updateIndicator(issues.length, near, scanned);
   if (issues.length) {
-    console.info(
+    debug(
+      "Contrast issues (sample):",
       issues.slice(0, 50).map((i) => ({
         text: i.node.textContent?.trim()?.slice(0, 40) || "(element)",
         ratio: i.ratio.toFixed(2),
@@ -284,11 +314,11 @@ function runContrastScan() {
         bg: i.bg,
       }))
     );
-    console.info(`Contrast issues flagged: ${issues.length}`);
+    debug(`Contrast issues flagged: ${issues.length}`);
   } else {
-    console.info("No contrast issues detected by heuristic scanner.");
+    debug("No contrast issues detected by heuristic scanner.");
   }
-  console.info(
+  debug(
     `[contrastDebug] scanned=${scanned} fail=${issues.length} near=${near} mode='${mode || "default"}'`
   );
   return issues;

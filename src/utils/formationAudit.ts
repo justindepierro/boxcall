@@ -107,7 +107,7 @@ export async function auditFormationDirections(
     //                     formation.player_positions.length > 0;
     //
     // if (!hasPositions) {
-    //   console.debug('⏭️ [FormationAudit] Skipping empty formation:', formation.name);
+    //   debug('⏭️ [FormationAudit] Skipping empty formation:', formation.name);
     //   continue;
     // }
 

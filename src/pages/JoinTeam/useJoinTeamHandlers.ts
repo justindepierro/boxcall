@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "../../hooks/useToast";
 import type { JoinStep, TeamSearchResult, JoinTeamState } from "./types";
 import { MOCK_SEARCH_RESULTS, INVITE_CODE_LENGTH } from "./constants";
+import { debug } from "../../utils/logger";
 
 export interface UseJoinTeamHandlersReturn extends JoinTeamState {
   handleMethodSelect: (methodId: string) => void;
@@ -62,7 +63,7 @@ export function useJoinTeamHandlers(): UseJoinTeamHandlersReturn {
     setIsLoading(true);
 
     // TODO: Implement actual invite code verification
-    console.info("🔑 Verifying invite code:", inviteCode);
+    debug("[JoinTeam] Verifying invite code", inviteCode);
 
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -82,7 +83,7 @@ export function useJoinTeamHandlers(): UseJoinTeamHandlersReturn {
     setIsLoading(true);
 
     // TODO: Implement actual team search API
-    console.info("Searching for teams:", searchQuery);
+    debug("[JoinTeam] Searching for teams", searchQuery);
 
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -104,12 +105,12 @@ export function useJoinTeamHandlers(): UseJoinTeamHandlersReturn {
 
     if (team.requiresApproval) {
       // Send join request
-      console.info("📨 Sending join request for team:", team.name);
+      debug("[JoinTeam] Sending join request for team", team.name);
       // TODO: Implement join request logic
       setCurrentStep("request");
     } else {
       // Join immediately
-      console.info("✅ Joining team immediately:", team.name);
+      debug("[JoinTeam] Joining team immediately", team.name);
       // TODO: Implement immediate join logic
       setCurrentStep("complete");
     }

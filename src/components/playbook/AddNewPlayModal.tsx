@@ -36,7 +36,6 @@ import {
 } from "./AddNewPlayModal/components";
 import { MobileWizardView } from "./AddNewPlayModal/MobileWizardView";
 import { useDuplicatePlayDetection } from "./AddNewPlayModal/useDuplicatePlayDetection";
-import { importFormationAsTemplate } from "../../utils/formationDiagramHelpers";
 import { FormationDirectionWarningModal } from "./FormationDirectionWarningModal";
 import {
   detectDirectionInFormationName,
@@ -47,7 +46,7 @@ import {
   validatePersonnelValue,
 } from "../../utils/playFieldValidation";
 import type { PlayCombo } from "../../hooks/useRecentPlayCombos";
-import { logError } from "../../utils/logger";
+import { debug, logError } from "../../utils/logger";
 
 interface AddNewPlayModalProps {
   isOpen: boolean;
@@ -550,7 +549,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                   updates.passStrength = formation.pass_strength;
                 }
 
-                console.log("📋 Formation metadata transferred to play:", {
+                debug("📋 Formation metadata transferred to play:", {
                   formation: formation.name,
                   personnel: updates.personnel,
                   type: updates.formationType,
@@ -562,18 +561,6 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
               }
 
               updateFields(updates);
-
-              // Phase 7: Formation → Diagram Template System
-              // When a formation is selected, import its player positions into diagram editor
-              if (formation && formation.player_positions?.length > 0) {
-                const diagramTemplate = importFormationAsTemplate(formation);
-                console.log("[Phase 7] Formation diagram template ready:", {
-                  formationName: formation.name,
-                  playerCount: diagramTemplate.players.length,
-                  template: diagramTemplate,
-                });
-                // TODO: Formation diagram templates ready for future image upload integration
-              }
             }}
             onFormationDirChange={(value) => {
               // Update formation_direction (database field), not formationDir (legacy field)

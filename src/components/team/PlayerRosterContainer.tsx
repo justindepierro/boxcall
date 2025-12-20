@@ -4,6 +4,7 @@ import { useRoster } from "../../hooks/useRoster";
 import { Button } from "../ui";
 import { UserProfilePopover } from "../ui/UserProfilePopover";
 import { PlayerPlaceholderPopover } from "../ui/PlayerPlaceholderPopover";
+import { debug } from "../../utils/logger";
 
 import { PlayerList } from "./PlayerList";
 
@@ -148,7 +149,7 @@ export const PlayerRosterContainer: React.FC<PlayerRosterContainerProps> = ({
                 jerseyNumber={player.jersey_number}
                 trigger={playerTrigger}
                 showOnHover
-                onInvite={(id) => console.info("Invite player", id)}
+                onInvite={(id) => debug("Invite player", id)}
               />
             );
           })}
@@ -166,9 +167,9 @@ export const PlayerRosterContainer: React.FC<PlayerRosterContainerProps> = ({
   return (
     <PlayerList
       players={mappedPlayers}
-      onEditPlayer={(p) => console.info("edit player", p.id)}
-      onDeletePlayer={(id) => console.info("delete player", id)}
-      onAddPlayer={() => console.info("add player")}
+      onEditPlayer={(p) => debug("edit player", p.id)}
+      onDeletePlayer={(id) => debug("delete player", id)}
+      onAddPlayer={() => debug("add player")}
     />
   );
 };

@@ -6,6 +6,7 @@ import {
   EventRSVPSchema,
   CalendarCommentSchema,
 } from "../../domain/calendar/types";
+import { warn } from "../../utils/logger";
 import { CalendarAPI } from "../../infra/calendar/api";
 import { CalendarRSVP } from "../../infra/calendar/rsvp";
 
@@ -36,7 +37,7 @@ export function useEvents(params: EventsQueryParams) {
         for (const ev of data.slice(0, 25)) {
           const parse = CalendarEventSchema.safeParse(ev);
           if (!parse.success) {
-            console.warn("Invalid CalendarEvent shape", parse.error.issues, ev);
+            warn("Invalid CalendarEvent shape", parse.error.issues, ev);
           }
         }
       }
@@ -87,7 +88,7 @@ export function useEvent(id: string) {
       if (import.meta.env.DEV && match) {
         const parse = CalendarEventSchema.safeParse(match);
         if (!parse.success) {
-          console.warn(
+          warn(
             "Invalid CalendarEvent shape",
             parse.error.issues,
             match
@@ -289,7 +290,7 @@ export function useUpdateRSVP(eventId: string) {
       if (import.meta.env.DEV) {
         const parse = EventRSVPSchema.safeParse(saved);
         if (!parse.success) {
-          console.warn("Invalid EventRSVP shape", parse.error.issues, saved);
+          warn("Invalid EventRSVP shape", parse.error.issues, saved);
         }
       }
       const key = calendarKeys.rsvps(eventId);
@@ -319,7 +320,7 @@ export function useComments(eventId: string) {
         for (const c of data.slice(0, 50)) {
           const parse = CalendarCommentSchema.safeParse(c);
           if (!parse.success) {
-            console.warn(
+            warn(
               "Invalid CalendarComment shape",
               parse.error.issues,
               c

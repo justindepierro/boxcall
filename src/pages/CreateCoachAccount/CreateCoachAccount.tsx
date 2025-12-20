@@ -14,6 +14,7 @@ import { Button } from "../../components/ui/Button/Button";
 import { Icon } from "../../components/ui/Icon/Icon";
 import { usePermissions } from "../../hooks/usePermissions";
 import { ROUTES } from "../../routes/paths";
+import { debug } from "../../utils/logger";
 
 import type { CoachAccountFormData, CoachAccountStep } from "./types";
 import { COACH_ACCOUNT_STEPS, DEFAULT_FORM_DATA } from "./constants";
@@ -67,10 +68,10 @@ export const CreateCoachAccount: React.FC = () => {
 
   const handleSubmit = async () => {
     // TODO: Implement actual coach account creation logic
-    console.info("🏃‍♂️ Creating coach account with data:", formData);
+    debug("[CreateCoachAccount] Creating coach account with data:", formData);
 
     if (isSuperAdmin) {
-      console.info("🔓 Super admin coach account creation - bypassing payment");
+      debug("[CreateCoachAccount] Super admin flow: payment skipped");
     }
 
     // Simulate API call

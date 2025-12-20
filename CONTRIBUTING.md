@@ -130,6 +130,7 @@ Before requesting review:
 - [ ] Functions under 200 lines
 - [ ] Error handling with user-friendly messages
 - [ ] Documentation updated if needed
+- [ ] Cleanup included: removed/replaced legacy/duplicate code paths (no dead toggles, commented code, or unused files left behind)
 
 **Quick command:** `npm run validate`
 
@@ -138,6 +139,7 @@ Before requesting review:
 - Purpose & scope (concise)
 - Any migration steps (and verification)
 - Rollback plan (if non-trivial)
+- If refactor/cleanup: what was deleted/merged (file list or bullets)
 
 ## Testing Guidelines
 

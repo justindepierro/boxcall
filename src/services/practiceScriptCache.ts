@@ -8,6 +8,8 @@
  * - Optimistic updates
  */
 
+import { debug } from "../utils/logger";
+
 interface CacheEntry<T> {
   data: T;
   timestamp: number;
@@ -229,9 +231,7 @@ export const practiceScriptCache = new PracticeScriptCacheService();
 if (typeof window !== "undefined") {
   (window as any).clearPracticeScriptCache = async () => {
     await practiceScriptCache.clear();
-    console.log(
-      "✅ Practice script cache cleared (both memory and IndexedDB)!"
-    );
+    debug("✅ Practice script cache cleared (both memory and IndexedDB)!");
     return "Cache cleared - please refresh the page";
   };
 

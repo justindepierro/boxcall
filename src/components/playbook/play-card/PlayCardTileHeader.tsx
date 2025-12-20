@@ -12,6 +12,7 @@ import type { Play as PlayType } from "../../../types/play";
 import type { PersonnelConfiguration } from "../../../types/personnel";
 import { getTileGradient, getTileIcon } from "./helpers";
 import { useIsMobile } from "../../../hooks/useBreakpoint";
+import { debug } from "../../../utils/logger";
 
 type SelectionHandler = (playId: string, selected: boolean) => void;
 
@@ -191,13 +192,10 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
             <SelectionCheckbox
               isSelected={Boolean(isSelected)}
               onChange={(selected) => {
-                console.log(
-                  "[PlayCardTileHeader] SelectionCheckbox onChange:",
-                  {
-                    playId: play.id,
-                    selected,
-                  }
-                );
+                      debug("[PlayCardTileHeader] SelectionCheckbox onChange:", {
+                        playId: play.id,
+                        selected,
+                      });
                 onSelectionChange(play.id, selected);
               }}
               label={`Select ${tileTitle}`}

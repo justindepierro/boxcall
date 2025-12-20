@@ -11,6 +11,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
+import { warn } from "../utils/logger";
 
 interface Team {
   id: string;
@@ -372,7 +373,7 @@ export function useTeamsDataQuery() {
       getLength(playbooksQuery.data) +
       getLength(playsQuery.data),
     loadMorePlays: async () => {
-      console.warn("Infinite scroll with React Query not yet implemented");
+      warn("Infinite scroll with React Query not yet implemented");
     },
   };
 }

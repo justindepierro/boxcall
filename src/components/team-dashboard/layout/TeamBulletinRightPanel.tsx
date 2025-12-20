@@ -5,6 +5,7 @@ import { OnboardingHint } from "../../onboarding/OnboardingHint";
 import { PlayerRosterContainer } from "../../team/PlayerRosterContainer";
 import { Card } from "../../ui";
 import { TeamCalendar } from "../TeamCalendar";
+import { debug } from "../../../utils/logger";
 
 interface RightPanelProps {
   teamId: string | undefined;
@@ -43,7 +44,8 @@ export const TeamBulletinRightPanel: React.FC<RightPanelProps> = ({
             {
               label: "Open Calendar",
               variant: "primary",
-              onClick: () => console.info("onboarding.upcoming.open_calendar"),
+              onClick: () =>
+                debug("[TeamBulletinRightPanel] Open Calendar (onboarding)"),
             },
           ]}
         />

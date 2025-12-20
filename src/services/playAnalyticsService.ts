@@ -7,7 +7,7 @@
  */
 
 import { supabase } from "../lib/supabase";
-import { logError } from "../utils/logger";
+import { logError, warn } from "../utils/logger";
 import type { PriorityOptimization } from "../types/database/gamePlanningTypes";
 
 type GamePlanEnhancedRow = {
@@ -184,7 +184,7 @@ export class PlayAnalyticsService {
         .order("created_at", { ascending: false });
 
       if (gamePlansError) {
-        console.warn("Game plans table may not exist yet, using mock data");
+        warn("Game plans table may not exist yet, using mock data");
         return PlayAnalyticsService.generateMockGamePlanningData();
       }
 

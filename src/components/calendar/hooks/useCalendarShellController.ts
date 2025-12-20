@@ -59,6 +59,7 @@ export function useCalendarShellController() {
     events,
     loading,
     error,
+    refetchEvents,
     createEventMutation,
     deleteEventMutation,
     updateEventMutation,
@@ -217,6 +218,7 @@ export function useCalendarShellController() {
     events,
     loading,
     error,
+    refetchEvents,
     // selection
     selectedEvent,
     showEventModal,

@@ -16,7 +16,20 @@ import "./index.css";
 import "./styles/responsive-dashboard.css";
 import "./styles/density.css";
 // Development-only contrast debugging overlay (activated via localStorage 'debugContrast')
-import "./dev/contrastDebug";
+if (import.meta.env.DEV) {
+  let shouldLoad = false;
+  try {
+    shouldLoad = localStorage.getItem("debugContrast") === "on";
+  } catch {
+    // Ignore storage access failures (private mode, blocked, etc.)
+  }
+
+  if (shouldLoad) {
+    import("./dev/contrastDebug").catch(() => {
+      /* noop */
+    });
+  }
+}
 import { initWebVitals } from "./telemetry/initWebVitals";
 if (import.meta.env.PROD) initWebVitals();
 // Opportunistic route prefetch (opt-in via env)

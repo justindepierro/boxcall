@@ -8,7 +8,7 @@
  * - Sentry (for error tracking)
  */
 
-import { debug } from "../../utils/logger";
+import { debug, warn } from "../../utils/logger";
 
 interface AnalyticsEvent {
   name: string;
@@ -173,7 +173,7 @@ class CustomAnalyticsProvider implements AnalyticsProvider {
           body: JSON.stringify({ event, user: this.user }),
         });
       } catch (error) {
-        console.warn("Failed to send custom analytics:", error);
+        warn("Failed to send custom analytics", error);
       }
     }
   }
@@ -236,7 +236,7 @@ export class AnalyticsService {
         provider
           .initialize()
           .catch((error) =>
-            console.warn("Analytics provider failed to initialize:", error)
+            warn("Analytics provider failed to initialize", error)
           )
       )
     );
@@ -252,7 +252,7 @@ export class AnalyticsService {
       this.providers.map((provider) =>
         provider
           .track(event)
-          .catch((error) => console.warn("Analytics tracking failed:", error))
+          .catch((error) => warn("Analytics tracking failed", error))
       )
     );
   }
@@ -267,7 +267,7 @@ export class AnalyticsService {
       this.providers.map((provider) =>
         provider
           .identify(userId, properties)
-          .catch((error) => console.warn("Analytics identify failed:", error))
+          .catch((error) => warn("Analytics identify failed:", error))
       )
     );
   }
@@ -279,9 +279,7 @@ export class AnalyticsService {
       this.providers.map((provider) =>
         provider
           .page(path, properties)
-          .catch((error) =>
-            console.warn("Analytics page tracking failed:", error)
-          )
+          .catch((error) => warn("Analytics page tracking failed:", error))
       )
     );
   }

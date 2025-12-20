@@ -17,6 +17,7 @@ import { Card, Button } from "../../../components/ui";
 import { Icon } from "../../../components/ui/Icon/Icon";
 import { Typography } from "../../../components/design-system";
 import type { RosterPlayerView } from "../../../services/rosterService";
+import { debug } from "../../../utils/logger";
 
 export interface PlayerCardProps {
   player: RosterPlayerView;
@@ -40,9 +41,7 @@ export const PlayerCard = React.memo<PlayerCardProps>(
   }) => {
     // Performance monitoring in development
     if (import.meta.env.DEV) {
-      console.log(
-        `PlayerCard rendered: ${player.first_name} ${player.last_name}`
-      );
+      debug(`PlayerCard rendered: ${player.first_name} ${player.last_name}`);
     }
 
     return (

@@ -14,7 +14,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
 import { FormationSelectorSkeleton } from "./FormationSelectorSkeleton";
-import { logError } from "../../utils/logger";
+import { debug, logError } from "../../utils/logger";
 
 interface FormationSelectorProps {
   playbookId: string;
@@ -62,7 +62,7 @@ export function FormationSelector({
         ] as string[];
 
         setFormations(uniqueFormations);
-        console.log(
+        debug(
           `[FormationSelector] Loaded ${uniqueFormations.length} unique formations from plays table`
         );
       } catch (err) {

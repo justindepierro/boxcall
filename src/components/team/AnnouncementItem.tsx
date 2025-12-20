@@ -6,16 +6,12 @@
  * Automatically tracks views for read receipts
  */
 
-import { memo, useState, useEffect } from "react";
+import { memo, useState, lazy, Suspense } from "react";
 import type { Announcement } from "../../services/announcementsService";
 import { AnnouncementReactions } from "./AnnouncementReactions";
-import { AnnouncementComments } from "./AnnouncementComments";
-import { RichTextDisplay } from "./RichTextDisplay";
 import { ReadReceipts } from "./ReadReceipts";
 import { Avatar } from "../ui/Avatar";
 import { UserProfilePopover } from "../ui/UserProfilePopover";
-import { AnnouncementViewsService } from "../../services/announcementViewsService";
-import { supabase } from "../../lib/supabase";
 import { format } from "date-fns";
 import {
   Pin,
@@ -26,9 +22,22 @@ import {
   ChevronUp,
 } from "lucide-react";
 
+const AnnouncementComments = lazy(() =>
+  import("./AnnouncementComments").then((m) => ({
+    default: m.AnnouncementComments,
+  }))
+);
+
+const RichTextDisplay = lazy(() =>
+  import("./RichTextDisplay").then((m) => ({
+    default: m.RichTextDisplay,
+  }))
+);
+
 // Extended type for display
 interface AnnouncementWithMeta extends Announcement {
   author_name?: string;
+  author_avatar_url?: string | null;
   comment_count?: number;
 }
 
@@ -112,34 +121,7 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(
     const [isOptimisticPinned, setIsOptimisticPinned] = useState(
       announcement.is_pinned
     );
-    const [authorAvatarUrl, setAuthorAvatarUrl] = useState<string | null>(null);
-
-    // Load author avatar
-    useEffect(() => {
-      const loadAvatar = async () => {
-        const { data } = await supabase
-          .from("profiles")
-          .select("avatar_url")
-          .eq("id", announcement.created_by)
-          .single();
-
-        if (data?.avatar_url) {
-          setAuthorAvatarUrl(data.avatar_url);
-        }
-      };
-      loadAvatar();
-    }, [announcement.created_by]);
-
-    // Track view when component mounts
-    useEffect(() => {
-      const trackView = async () => {
-        await AnnouncementViewsService.recordView(
-          announcement.id,
-          announcement.team_id
-        );
-      };
-      trackView();
-    }, [announcement.id, announcement.team_id]);
+    const authorAvatarUrl = announcement.author_avatar_url ?? null;
 
     const handleTogglePin = async () => {
       if (!onTogglePin) return;
@@ -227,10 +209,18 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(
               {/* Content - Compact */}
               <div className="text-sm text-primary leading-relaxed mb-3">
                 {announcement.content_json ? (
-                  <RichTextDisplay
-                    content={announcement.content_json}
-                    onHashtagClick={onHashtagClick}
-                  />
+                  <Suspense
+                    fallback={
+                      <p className="whitespace-pre-wrap">
+                        {announcement.content}
+                      </p>
+                    }
+                  >
+                    <RichTextDisplay
+                      content={announcement.content_json}
+                      onHashtagClick={onHashtagClick}
+                    />
+                  </Suspense>
                 ) : (
                   <p className="whitespace-pre-wrap">{announcement.content}</p>
                 )}
@@ -284,10 +274,12 @@ export const AnnouncementItem = memo<AnnouncementItemProps>(
             id={`comments-${announcement.id}`}
             className="border-t border-muted bg-secondary"
           >
-            <AnnouncementComments
-              announcementId={announcement.id}
-              teamId={announcement.team_id}
-            />
+            <Suspense fallback={null}>
+              <AnnouncementComments
+                announcementId={announcement.id}
+                teamId={announcement.team_id}
+              />
+            </Suspense>
           </div>
         )}
       </article>

@@ -16,7 +16,9 @@ import { Footer } from "./Footer";
 import type { DevMode } from "../../types/dev";
 import { emitTelemetry } from "../../lib/telemetry";
 import { isSuperAdminEmail } from "../../config/superAdmin";
-import { debug, error as logError } from "../../utils/logger";
+import { debug, warn, error as logError } from "../../utils/logger";
+import { withDatabaseRetry } from "../../lib/database-helpers";
+import { supabase } from "../../lib/supabase";
 
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 type ExtendedUserRole = UserRole | "super_admin";
@@ -59,92 +61,47 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   // Set active team to user's first team if not already set
   useEffect(() => {
-    console.log("🏈 [Layout] Team sync effect:", {
+    debug("[Layout] Team sync effect:", {
       profileId: profile?.id,
       activeTeamId,
     });
     if (!profile?.id) {
-      console.log("🏈 [Layout] No profile ID, skipping team sync");
+      debug("[Layout] No profile ID, skipping team sync");
       return;
     }
     if (activeTeamId) {
-      console.log("🏈 [Layout] Already have activeTeamId:", activeTeamId);
+      debug("[Layout] Already have activeTeamId:", activeTeamId);
       return;
     }
 
     // Fetch user's teams and set the first one as active
     const fetchUserTeams = async () => {
-      console.log("🏈 [Layout] Fetching teams for user:", profile.id);
       debug("[Layout] Fetching teams for user:", profile.id);
-
-      // WORKAROUND: Supabase client queries hang in browser
-      // Use direct fetch with stored auth token instead
       try {
-        const startTime = Date.now();
+        const teamId = await withDatabaseRetry(
+          async () => {
+            const { data, error } = await supabase
+              .from("team_members")
+              .select("team_id")
+              .eq("user_id", profile.id)
+              .eq("status", "active")
+              .limit(1)
+              .maybeSingle();
 
-        // Get the stored session token
-        const storedAuth = localStorage.getItem("boxcall-auth");
-        let accessToken = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-        if (storedAuth) {
-          try {
-            const parsed = JSON.parse(storedAuth);
-            console.log(
-              "🏈 [Layout] Found stored auth, has access_token:",
-              !!parsed?.access_token
-            );
-            if (parsed?.access_token) {
-              accessToken = parsed.access_token;
+            if (error) {
+              throw new Error(error.message);
             }
-          } catch {
-            // Use anon key
-          }
-        } else {
-          console.log("🏈 [Layout] No stored auth found in localStorage");
-        }
 
-        const url = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/team_members?user_id=eq.${profile.id}&status=eq.active&select=team_id&limit=1`;
-        console.log("🏈 [Layout] Fetching:", url);
-
-        const response = await fetch(url, {
-          headers: {
-            apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
+            return data?.team_id ?? null;
           },
-        });
-
-        const elapsed = Date.now() - startTime;
-        console.log(
-          `🏈 [Layout] Fetch took ${elapsed}ms, status: ${response.status}`
+          { timeout: 10000 }
         );
-        debug(`[Layout] Fetch took ${elapsed}ms, status: ${response.status}`);
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error(
-            "🏈 [Layout] Fetch failed:",
-            response.status,
-            errorText
-          );
-          logError("[Layout] Fetch failed:", response.status, errorText);
-          return;
-        }
-
-        const memberships = await response.json();
-        console.log("🏈 [Layout] Memberships response:", memberships);
-
-        if (memberships && memberships.length > 0) {
-          console.log(
-            "🏈 [Layout] Setting active team to:",
-            memberships[0].team_id
-          );
-          debug("[Layout] Setting active team to:", memberships[0].team_id);
-          setActiveTeamId(memberships[0].team_id);
+        if (teamId) {
+          debug("[Layout] Setting active team to:", teamId);
+          setActiveTeamId(teamId);
         } else {
-          console.warn(
-            "🏈 [Layout] No team memberships found for user - USER IS NOT IN team_members TABLE"
-          );
+          warn("[Layout] No team memberships found for user");
           debug(
             "[Layout] No team memberships found for user (expected in dev)"
           );

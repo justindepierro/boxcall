@@ -17,7 +17,6 @@ import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
 import { CreateOppositeFormationModal } from "./CreateOppositeFormationModal";
 import { FormationDirectionReviewPanel } from "./FormationDirectionReviewPanel";
-import { FormationDataDiagnostic } from "./FormationDataDiagnostic";
 import { FormationTemplateSelector } from "./FormationTemplateSelector";
 import { useBulkSelection } from "./BulkSelectionContext";
 import { FormationService } from "../../services/formationService";
@@ -38,6 +37,12 @@ import {
 } from "./components";
 
 type FormationBuilderState = ReturnType<typeof useFormationBuilderState>;
+
+const FormationDataDiagnosticPanel = React.lazy(() =>
+  import("./FormationDataDiagnostic").then((module) => ({
+    default: module.FormationDataDiagnostic,
+  }))
+);
 
 function usePanelDataLoader({
   playbookId,
@@ -134,7 +139,9 @@ function usePanelOperations({
 
 const FORMATION_BUILDER_TABS = [
   { id: "details" as const, label: "Formation Details", icon: Save },
-  { id: "diagnostic" as const, label: "Data Diagnostic", icon: AlertCircle },
+  ...(import.meta.env.DEV
+    ? [{ id: "diagnostic" as const, label: "Data Diagnostic", icon: AlertCircle }]
+    : []),
   { id: "review" as const, label: "Direction Review", icon: AlertCircle },
   {
     id: "incomplete" as const,
@@ -619,9 +626,11 @@ export const FormationBuilderPanel: React.FC<FormationBuilderPanelProps> =
             />
           )}
 
-          {/* Data Diagnostic Tab */}
-          {!hideSubTabs && activeTab === "diagnostic" && (
-            <FormationDataDiagnostic playbookId={playbookId} />
+          {/* Data Diagnostic Tab (dev-only) */}
+          {!hideSubTabs && import.meta.env.DEV && activeTab === "diagnostic" && (
+            <React.Suspense fallback={null}>
+              <FormationDataDiagnosticPanel playbookId={playbookId} />
+            </React.Suspense>
           )}
 
           {/* Direction Review Tab */}

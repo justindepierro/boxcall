@@ -5,6 +5,8 @@
  * that don't support native haptic feedback.
  */
 
+import { warn } from "../utils/logger";
+
 export type HapticType =
   | "light" // Light tap feedback
   | "medium" // Medium tap feedback
@@ -64,7 +66,7 @@ export const triggerHapticFeedback = (type: HapticType): void => {
       navigator.vibrate(hapticPatterns[type]);
     } catch (error) {
       // Silently fail if vibration fails
-      console.warn("Haptic feedback failed:", error);
+      warn("Haptic feedback failed:", error);
     }
   }
 };

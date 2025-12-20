@@ -10,7 +10,7 @@
  */
 
 import { DevProfileRepository } from "./DevProfileRepository";
-import { logError } from "../../utils/logger";
+import { debug, logError, warn } from "../../utils/logger";
 
 import type {
   DevMode,
@@ -233,7 +233,7 @@ export class DevProfileService implements IDevProfileService {
 
     const permissionKey = permissionMap[action];
     if (!permissionKey) {
-      console.warn(`Unknown permission action: ${action}`);
+      warn(`Unknown permission action: ${action}`);
       return false;
     }
 
@@ -307,7 +307,7 @@ export class DevProfileService implements IDevProfileService {
 
   private emitEvent(event: DevProfileEvent): void {
     if (this.config.enableLogging) {
-      console.info("DevProfile Event:", event);
+      debug("DevProfile Event:", event);
     }
 
     this.eventListeners.forEach((listener) => {
@@ -363,7 +363,7 @@ export class DevProfileService implements IDevProfileService {
       cacheTimeoutMs: 5 * 60 * 1000, // 5 minutes
       autoSwitchOnModeChange: true,
       validatePermissions: true,
-      enableLogging: process.env.NODE_ENV === "development",
+      enableLogging: import.meta.env.DEV && import.meta.env.MODE !== "test",
       fallbackToMock: true,
     };
   }

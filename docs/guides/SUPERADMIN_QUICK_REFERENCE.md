@@ -60,7 +60,7 @@ npm run dev
 
 ```bash
 # Connect to database
-psql "postgresql://postgres.lvmuiqwihlpnwppdqqfl:N3v3rsayd1e1715@aws-0-us-east-2.pooler.supabase.com:5432/postgres?sslmode=require"
+psql "$DATABASE_URL"
 
 # Quick queries
 # Check your user

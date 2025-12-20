@@ -7,6 +7,7 @@ import type {
   SelectedBlock,
   PracticeGroup,
 } from "../types";
+import { logError } from "../../../../utils/logger";
 
 export const usePracticeState = (event: CalendarEvent) => {
   const [practiceBlocks, setPracticeBlocks] = useState<PracticeBlock[]>([]);
@@ -122,7 +123,7 @@ export const usePracticeState = (event: CalendarEvent) => {
         const blocksWithTimes = recalculateBlockTimes(savedBlocks);
         setPracticeBlocks(blocksWithTimes);
       } catch (error) {
-        console.error("Error loading saved practice plan:", error);
+        logError("Error loading saved practice plan:", error);
       }
     }
   }, [event.id, event.start, recalculateBlockTimes]);

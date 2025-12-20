@@ -5,13 +5,12 @@
  */
 
 import { useCallback } from "react";
-import { GamePlanPDFService } from "../../../services/gamePlanPdfService";
 import {
   GamePlanService,
   type GamePlan as ServiceGamePlan,
 } from "../../../services/gamePlanService";
 import type { GamePlan as ModalGamePlan } from "../../../components/playbook/GamePlanModal/types";
-import { error as logError } from "../../../utils/logger";
+import { error as logError, warn } from "../../../utils/logger";
 import {
   exportGamePlans,
   downloadJSON,
@@ -64,7 +63,7 @@ async function importSingleGamePlan(plan: ImportPlan, teamId: string) {
     );
 
     if (!targetSituation) {
-      console.warn(`Skipping plays for unknown situation "${situationName}"`);
+      warn(`Skipping plays for unknown situation "${situationName}"`);
       continue;
     }
 
@@ -101,6 +100,9 @@ export function useGamePlansExport({
   const handleExportPDF = useCallback(
     async (plan: ModalGamePlan) => {
       try {
+        const { GamePlanPDFService } = await import(
+          "../../../services/gamePlanPdfService"
+        );
         await GamePlanPDFService.exportGamePlan(plan, "call-sheet");
         toast.success("PDF exported successfully");
       } catch (error) {

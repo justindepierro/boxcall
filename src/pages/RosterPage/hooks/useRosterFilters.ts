@@ -12,10 +12,27 @@
  * - Filter computation is memoized to prevent unnecessary recalculations
  */
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 import type { RosterPlayerView } from "../../../services/rosterService";
+import { debug, timeEnd, timeStart } from "../../../utils/logger";
+
+function parseRosterFiltersFromSearch(search: string): {
+  positions: string[];
+  grades: string[];
+  status: string;
+  searchTerm: string;
+} {
+  const params = new URLSearchParams(search);
+
+  return {
+    positions: params.get("positions")?.split(",").filter(Boolean) || [],
+    grades: params.get("grades")?.split(",").filter(Boolean) || [],
+    status: params.get("status") || "",
+    searchTerm: params.get("search") || "",
+  };
+}
 
 export interface UseRosterFiltersReturn {
   // Filter state
@@ -44,29 +61,22 @@ export const useRosterFilters = (
   const navigate = useNavigate();
   const location = useLocation();
 
+  const initialFiltersRef = useRef(parseRosterFiltersFromSearch(location.search));
+
   // Filter state
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(
+    initialFiltersRef.current.searchTerm
+  );
   const debouncedSearch = useDebouncedValue(searchTerm, 300); // Debounce expensive filtering
-  const [positionFilters, setPositionFilters] = useState<string[]>([]);
-  const [gradeLevelFilters, setGradeLevelFilters] = useState<string[]>([]);
-  const [statusFilter, setStatusFilter] = useState<string>("");
-
-  // Read filters from URL on mount
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-
-    const urlPositions =
-      params.get("positions")?.split(",").filter(Boolean) || [];
-    const urlGrades = params.get("grades")?.split(",").filter(Boolean) || [];
-    const urlStatus = params.get("status") || "";
-    const urlSearch = params.get("search") || "";
-
-    if (urlPositions.length > 0) setPositionFilters(urlPositions);
-    if (urlGrades.length > 0) setGradeLevelFilters(urlGrades);
-    if (urlStatus) setStatusFilter(urlStatus);
-    if (urlSearch) setSearchTerm(urlSearch);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Only run on mount
+  const [positionFilters, setPositionFilters] = useState<string[]>(
+    initialFiltersRef.current.positions
+  );
+  const [gradeLevelFilters, setGradeLevelFilters] = useState<string[]>(
+    initialFiltersRef.current.grades
+  );
+  const [statusFilter, setStatusFilter] = useState<string>(
+    initialFiltersRef.current.status
+  );
 
   // Update URL when filters change
   useEffect(() => {
@@ -120,7 +130,7 @@ export const useRosterFilters = (
   const filteredPlayers = useMemo(() => {
     // Performance monitoring
     if (import.meta.env.DEV) {
-      console.time("Filter Calculation");
+      timeStart("Filter Calculation");
     }
 
     const result = players.filter((player) => {
@@ -164,8 +174,8 @@ export const useRosterFilters = (
 
     // Performance monitoring
     if (import.meta.env.DEV) {
-      console.timeEnd("Filter Calculation");
-      console.log(`Filtered ${players.length} → ${result.length} players`);
+      timeEnd("Filter Calculation");
+      debug(`Filtered ${players.length} → ${result.length} players`);
     }
 
     return result;

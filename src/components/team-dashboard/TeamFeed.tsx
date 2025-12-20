@@ -38,10 +38,12 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
     data: posts = [],
     isLoading,
     error,
+    refetch,
   } = useTeamPosts(teamId) as {
     data: TeamPostListItem[] | undefined;
     isLoading: boolean;
     error: Error | null;
+    refetch: () => Promise<unknown>;
   };
   const { mutateAsync: createPost, isPending: creating } =
     useCreatePost(teamId);
@@ -131,7 +133,7 @@ export const TeamFeed: React.FC<TeamFeedProps> = ({ teamId, userRole }) => {
 
       {isLoading && <LoadingFeed />}
 
-      {!!error && <ErrorFeed error={error} />}
+      {!!error && <ErrorFeed error={error} onRetry={() => refetch()} />}
 
       {canCreate && !isLoading && !error && posts.length > 0 && (
         <QuickPostComposer

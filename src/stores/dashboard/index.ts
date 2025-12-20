@@ -6,6 +6,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { useAuth } from "../../app/auth-store";
+import { debug } from "../../utils/logger";
 import {
   adaptWidgetsForContext,
   calculateWidgetPriorities,
@@ -482,7 +483,7 @@ function createSimpleActions(set: (partial: Partial<DashboardState>) => void) {
       createDefaultLayout("temp", userRole),
     ],
     optimizeLayout: () =>
-      console.info("Layout optimization not yet implemented"),
+      debug("[DashboardStore] Layout optimization not yet implemented"),
     reset: () => set(initialState),
     clearError: () => set({ error: null }),
   };

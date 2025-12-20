@@ -9,6 +9,7 @@ import {
   componentTokens,
   contrastTokens,
 } from "./tokens";
+import { debug, warn } from "../utils/logger";
 
 /**
  * Get a color value by token path
@@ -31,7 +32,7 @@ export function getTokenColor(path: string): string {
     ) {
       current = (current as Record<string, unknown>)[part];
     } else {
-      console.warn(`Design token path "${path}" not found`);
+      warn(`Design token path "${path}" not found`);
       return semanticTokens.primary; // Fallback to primary color
     }
   }
@@ -147,11 +148,11 @@ export function getAllTokenPaths(): string[] {
  * Development helper: Print all available tokens
  */
 export function printTokens(): void {
-  if (process.env.NODE_ENV === "development") {
-    console.info("🎨 Available Design Tokens:");
+  if (import.meta.env.DEV) {
+    debug("🎨 Available Design Tokens:");
     getAllTokenPaths().forEach((path) => {
-      console.info(`${path}: ${getTokenColor(path)}`);
+      debug(`${path}: ${getTokenColor(path)}`);
     });
-    console.info("— end tokens —");
+    debug("— end tokens —");
   }
 }

@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 import type { ReactNode } from "react";
+import { debug } from "../../utils/logger";
 
 /**
  * BoxCall Design System Provider
@@ -160,8 +161,8 @@ export const DesignSystemProvider: React.FC<DesignSystemProviderProps> = ({
   // Component usage tracking
   const trackUsage = useCallback(
     (usage: ComponentUsage) => {
-      if (enableDevTools && process.env.NODE_ENV === "development") {
-        console.info("🎨 Design System Usage:", usage);
+      if (enableDevTools && import.meta.env.DEV) {
+        debug("🎨 Design System Usage:", usage);
       }
     },
     [enableDevTools]
@@ -171,8 +172,8 @@ export const DesignSystemProvider: React.FC<DesignSystemProviderProps> = ({
   const updateConfig = useCallback(
     (updates: Partial<DesignSystemConfig>) => {
       setConfig((prev) => ({ ...prev, ...updates }));
-      if (enableDevTools && process.env.NODE_ENV === "development") {
-        console.info("🎨 Design System Config Updated:", updates);
+      if (enableDevTools && import.meta.env.DEV) {
+        debug("🎨 Design System Config Updated:", updates);
       }
     },
     [enableDevTools]
@@ -207,7 +208,9 @@ export const DesignSystemProvider: React.FC<DesignSystemProviderProps> = ({
     if (config.performance.enableBundleAnalysis && enableDevTools) {
       // Log performance metrics in development
       const metrics = getPerformanceMetrics();
-      console.info("📊 Performance Metrics:", metrics);
+      if (import.meta.env.DEV) {
+        debug("📊 Performance Metrics:", metrics);
+      }
     }
   }, [config.performance.enableBundleAnalysis, enableDevTools]);
 

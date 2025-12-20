@@ -4,6 +4,8 @@
  * Centralized configuration for CDN, image optimization, and asset caching
  */
 
+import { debug, group, logError, warn } from "../utils/logger";
+
 // CDN Configuration
 export const cdnConfig = {
   // CDN Base URL
@@ -288,34 +290,33 @@ export function logCDNConfig() {
 
   const validation = validateCDNConfig();
 
-  console.group("🚀 CDN & Asset Configuration");
-  console.log("Base URL:", cdnConfig.baseUrl || "Not configured");
-  console.log(
-    "Image Optimization:",
-    cdnConfig.imageOptimization.enabled ? "Enabled" : "Disabled"
-  );
-  console.log(
-    "WebP Support:",
-    cdnConfig.imageOptimization.formats.webp ? "Enabled" : "Disabled"
-  );
-  console.log(
-    "Route Preloading:",
-    cdnConfig.preload.routePreloading ? "Enabled" : "Disabled"
-  );
+  group("🚀 CDN & Asset Configuration", () => {
+    debug("Base URL:", cdnConfig.baseUrl || "Not configured");
+    debug(
+      "Image Optimization:",
+      cdnConfig.imageOptimization.enabled ? "Enabled" : "Disabled"
+    );
+    debug(
+      "WebP Support:",
+      cdnConfig.imageOptimization.formats.webp ? "Enabled" : "Disabled"
+    );
+    debug(
+      "Route Preloading:",
+      cdnConfig.preload.routePreloading ? "Enabled" : "Disabled"
+    );
 
-  if (validation.warnings.length > 0) {
-    console.group("⚠️ Warnings");
-    validation.warnings.forEach((warning) => console.warn(warning));
-    console.groupEnd();
-  }
+    if (validation.warnings.length > 0) {
+      group("⚠️ Warnings", () => {
+        validation.warnings.forEach((warning) => warn(warning));
+      });
+    }
 
-  if (validation.errors.length > 0) {
-    console.group("❌ Errors");
-    validation.errors.forEach((error) => console.error(error));
-    console.groupEnd();
-  }
-
-  console.groupEnd();
+    if (validation.errors.length > 0) {
+      group("❌ Errors", () => {
+        validation.errors.forEach((error) => logError(error));
+      });
+    }
+  });
 }
 
 export default cdnConfig;

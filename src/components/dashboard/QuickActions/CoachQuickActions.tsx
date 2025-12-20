@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 import { Button } from "../../ui";
 import { Icon } from "../../ui/Icon/Icon";
+import { getActiveTeamId } from "../../../utils/activeTeam";
+import { debug } from "../../../utils/logger";
 /**
  * Coach Quick Actions - Coach-specific dashboard shortcuts
  *
@@ -16,7 +18,32 @@ export const CoachQuickActions: React.FC = () => {
   const navigate = useNavigate();
 
   const handleManageRoster = () => {
-    navigate("/team/settings?tab=roster");
+    const teamId = getActiveTeamId();
+    if (teamId) {
+      navigate(`/team/${teamId}/settings?tab=roster`);
+      return;
+    }
+    navigate("/team-bulletin");
+  };
+
+  const handleCreatePlay = () => {
+    navigate("/playbook");
+  };
+
+  const handlePracticePlans = () => {
+    navigate("/practice-plans");
+  };
+
+  const handlePlaybook = () => {
+    navigate("/playbook");
+  };
+
+  const handleAnalytics = () => {
+    navigate("/analytics");
+  };
+
+  const handleAnnouncement = () => {
+    navigate("/team-bulletin");
   };
 
   return (
@@ -25,7 +52,7 @@ export const CoachQuickActions: React.FC = () => {
         variant="primary"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("Create Play")}
+        onClick={handleCreatePlay}
       >
         <Icon name="target" size={14} className="mr-2" />
         Create New Play
@@ -34,7 +61,7 @@ export const CoachQuickActions: React.FC = () => {
         variant="primary"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("Practice Script")}
+        onClick={handlePracticePlans}
       >
         <Icon name="file" size={14} className="mr-2" />
         Build Practice Script
@@ -52,7 +79,7 @@ export const CoachQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("Playbook Editor")}
+        onClick={handlePlaybook}
       >
         <Icon name="book" size={14} className="mr-2" />
         Playbook Editor
@@ -61,7 +88,7 @@ export const CoachQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("Team Analytics")}
+        onClick={handleAnalytics}
       >
         <Icon name="bar-chart" size={14} className="mr-2" />
         Team Analytics
@@ -70,7 +97,7 @@ export const CoachQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("Send Announcement")}
+        onClick={handleAnnouncement}
       >
         <Icon name="info" size={14} className="mr-2" />
         Send Announcement
@@ -79,7 +106,7 @@ export const CoachQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("Award Stickers")}
+        onClick={() => debug("[CoachQuickActions] Award Helmet Stickers")}
       >
         <Icon name="star" size={14} className="mr-2" />
         Award Helmet Stickers
@@ -88,7 +115,7 @@ export const CoachQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("Game Film")}
+        onClick={() => debug("[CoachQuickActions] Upload Game Film")}
       >
         <Icon name="play" size={14} className="mr-2" />
         Upload Game Film
@@ -97,7 +124,7 @@ export const CoachQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("Player Progress")}
+        onClick={() => debug("[CoachQuickActions] Player Progress")}
       >
         <Icon name="trending-up" size={14} className="mr-2" />
         Player Progress

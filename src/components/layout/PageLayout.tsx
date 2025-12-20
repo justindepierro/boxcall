@@ -1,8 +1,12 @@
 import React from "react";
 import clsx from "clsx";
 import { Typography } from "../design-system/Typography";
-import { CompactTrophyShelf } from "../dashboard/CompactTrophyShelf";
 import { useAuth } from "../../app/auth-store";
+
+const CompactTrophyShelf = React.lazy(async () => {
+  const module = await import("../dashboard/CompactTrophyShelf");
+  return { default: module.CompactTrophyShelf };
+});
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -113,7 +117,9 @@ const PageHeader: React.FC<PageHeaderProps> = ({
         {/* Dashboard Trophy Shelf - Aligned with Team Feeds */}
         {variant === "dashboard" && user && (
           <div className="flex items-center gap-4 justify-end">
-            <CompactTrophyShelf userId={user.id} />
+            <React.Suspense fallback={null}>
+              <CompactTrophyShelf userId={user.id} />
+            </React.Suspense>
             {actions && (
               <div className="flex flex-col sm:flex-row gap-3">{actions}</div>
             )}

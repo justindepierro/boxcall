@@ -8,6 +8,7 @@
 import { supabase } from "../../lib/supabase";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "../../types/database";
+import { debug, warn } from "../../utils/logger";
 
 interface QueryMetrics {
   query: string;
@@ -153,7 +154,7 @@ export class DatabaseOptimizationService {
 
     // Log slow queries
     if (metrics.duration > this.config.slowQueryThreshold) {
-      console.warn(
+      warn(
         `🐌 Slow query detected (${metrics.duration}ms):`,
         metrics.query
       );
@@ -161,7 +162,7 @@ export class DatabaseOptimizationService {
 
     // Log all queries in development
     if (this.config.enableQueryLogging && import.meta.env.DEV) {
-      console.log(
+      debug(
         `📊 Query (${metrics.duration}ms, cache: ${metrics.cacheHit}):`,
         metrics.query
       );
@@ -687,9 +688,7 @@ export class DatabaseOptimizationService {
       keysToDelete.forEach((key) => this.cache.delete(key));
 
       if (keysToDelete.length > 0) {
-        console.log(
-          `🧹 Cleaned up ${keysToDelete.length} expired cache entries`
-        );
+        debug(`🧹 Cleaned up ${keysToDelete.length} expired cache entries`);
       }
     }, 60000); // Run every minute
   }

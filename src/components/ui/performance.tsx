@@ -5,6 +5,7 @@
 
 import { lazy, Suspense, useEffect, useState } from "react";
 import type { ComponentType } from "react";
+import { debug } from "../../utils/logger";
 
 // Lazy loading wrapper with performance monitoring
 interface LazyWrapperProps {
@@ -35,7 +36,7 @@ export function LazyWrapper({
   useEffect(() => {
     // Performance monitoring
     if (import.meta.env.DEV) {
-      console.info(`📦 Lazy loading component: ${componentName}`);
+      debug(`📦 Lazy loading component: ${componentName}`);
     }
   }, [componentName]);
 
@@ -131,7 +132,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 export const BundleAnalyzer: React.FC = () => {
   useEffect(() => {
     if (import.meta.env.DEV) {
-      console.info("📊 Bundle analyzer available in development mode");
+      debug("📊 Bundle analyzer available in development mode");
       // TODO: Implement bundle analysis when vite-bundle-analyzer is properly configured
     }
   }, []);

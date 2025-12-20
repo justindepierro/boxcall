@@ -17,6 +17,7 @@ import { create } from "zustand";
 import { supabase } from "../lib/supabase";
 import type { Session, User } from "@supabase/supabase-js";
 import type { Database } from "../types/database";
+import { auth as logAuth, debug, warn, logError } from "../utils/logger";
 
 // Types
 type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
@@ -147,7 +148,7 @@ export const useAuth = create<AuthState>((set, _get) => ({
       .maybeSingle();
 
     if (error) {
-      console.error("[Auth] Profile fetch error:", error.message);
+      logError("[Auth] Profile fetch error:", error.message);
       set({ profileLoading: false });
       return;
     }
@@ -194,7 +195,7 @@ async function initializeAuth() {
   if (initialized) return;
   initialized = true;
 
-  console.log("🔐 [Auth] Initializing...");
+  logAuth("[Auth] Initializing...");
 
   // Get initial session
   const {
@@ -203,13 +204,13 @@ async function initializeAuth() {
   } = await supabase.auth.getSession();
 
   if (error) {
-    console.error("🔐 [Auth] Session error:", error.message);
+    warn("[Auth] Session error:", error.message);
     useAuth.setState({ loading: false });
     return;
   }
 
   if (session) {
-    console.log("🔐 [Auth] Session found:", session.user.email);
+    logAuth("[Auth] Session found:", session.user.email);
     useAuth.setState({
       user: session.user,
       session,
@@ -219,15 +220,15 @@ async function initializeAuth() {
     // Fetch profile in background
     useAuth.getState().fetchUserProfile(session.user.id);
   } else {
-    console.log("🔐 [Auth] No session");
+    debug("[Auth] No session");
     useAuth.setState({ loading: false });
   }
 }
 
 // Listen for auth changes
 supabase.auth.onAuthStateChange(async (event, session) => {
-  console.log(
-    "🔐 [Auth] State changed:",
+  debug(
+    "[Auth] State changed:",
     event,
     session?.user?.email || "no user"
   );

@@ -4,6 +4,7 @@
  */
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card } from "../ui";
 import { Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
@@ -19,6 +20,7 @@ export function CollaborativeFeaturesBanner({
   className = "",
 }: CollaborativeFeaturesBannerProps) {
   const [isDismissed, setIsDismissed] = useState(false);
+  const navigate = useNavigate();
 
   const handleDismiss = () => {
     setIsDismissed(true);
@@ -26,7 +28,7 @@ export function CollaborativeFeaturesBanner({
   };
 
   const handleExplore = () => {
-    window.location.href = "/collaborative-demo";
+    navigate("/collaborative-demo");
   };
 
   if (isDismissed) return null;

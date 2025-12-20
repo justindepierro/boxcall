@@ -117,7 +117,7 @@ export const AdaptiveChart: React.FC<AdaptiveChartProps> = ({
    */
   // const handleChartInteraction = useCallback((eventType: string, eventData: unknown) => {
   //   // Analytics tracking for chart interactions
-  //   console.log(`Chart interaction: ${eventType}`, eventData);
+  //   debug(`Chart interaction: ${eventType}`, eventData);
   //
   //   // Could trigger adaptive recommendations or drill-down views
   //   if (eventType === "dataPoint:click" && context === "dashboard") {
@@ -197,7 +197,7 @@ export const AdaptiveChart: React.FC<AdaptiveChartProps> = ({
       {renderInsights()}
 
       {/* Chart configuration debug info (dev only) */}
-      {process.env.NODE_ENV === "development" && (
+      {import.meta.env.DEV && (
         <details className="mt-2 text-xs text-muted">
           <summary>Chart Config (Dev)</summary>
           <pre>{JSON.stringify(chartConfig, null, 2)}</pre>

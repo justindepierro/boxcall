@@ -11,10 +11,7 @@
 
 import { debug, error as logError } from "../utils/logger";
 import { supabase } from "../lib/supabase";
-import {
-  createTeamDirectly,
-  createTeamMembershipDirectly,
-} from "../utils/direct-api";
+import { withDatabaseRetry } from "../lib/database-helpers";
 import { emitTelemetry } from "../lib/telemetry";
 import { createTeamSchema } from "../validation-services/teamValidation";
 
@@ -538,38 +535,41 @@ export class TeamService {
         mascot: string;
         season_year: number;
       }): Promise<any> => {
-        const directInsertPromise = createTeamDirectly(teamData);
-        const insertTimeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("Team insert timeout")), 20000)
-        );
+        try {
+          return await withDatabaseRetry(
+            async () => {
+              const { data, error } = await supabase
+                .from("teams")
+                .insert(teamData)
+                .select("*")
+                .single();
 
-        const insertResult = (await Promise.race([
-          directInsertPromise,
-          insertTimeoutPromise,
-        ])) as { data: any; error: any };
+              if (error) {
+                throw Object.assign(new Error(error.message), {
+                  code: error.code,
+                  details: error.details,
+                  hint: error.hint,
+                });
+              }
 
-        const teamInsert = insertResult.data;
-        const teamErr = insertResult.error;
+              return data;
+            },
+            { timeout: 20000 }
+          );
+        } catch (err) {
+          logError("❌ Team insert failed:", err);
 
-        if (teamErr || !teamInsert) {
-          logError("❌ Team insert failed:", teamErr);
-
-          if (
-            teamErr?.code === "42501" ||
-            teamErr?.message?.includes("row-level security")
-          ) {
-            logError("🔒 RLS Policy Error - Run the SQL fix in Supabase!");
+          const code = (err as { code?: string } | null)?.code;
+          const message = err instanceof Error ? err.message : String(err);
+          if (code === "42501" || message.toLowerCase().includes("row-level security")) {
+            logError("🔒 RLS Policy Error creating team");
             throw new Error(
               "Database permission error: Your account doesn't have permission to create teams. This might be an RLS policy issue. Please contact support."
             );
           }
 
-          throw new Error(
-            `Failed to create team: ${teamErr?.message || "Unknown database error"}`
-          );
+          throw new Error(`Failed to create team: ${message || "Unknown database error"}`);
         }
-
-        return teamInsert;
       };
 
       const insertMembershipWithTimeout = async (membershipData: {
@@ -578,23 +578,25 @@ export class TeamService {
         team_role: string;
         status: string;
       }): Promise<void> => {
-        const memberInsertPromise =
-          createTeamMembershipDirectly(membershipData);
-        const memberTimeoutPromise = new Promise((_, reject) =>
-          setTimeout(
-            () => reject(new Error("Membership insert timeout")),
-            15000
-          )
-        );
+        try {
+          await withDatabaseRetry(
+            async () => {
+              const { error } = await supabase
+                .from("team_members")
+                .insert(membershipData);
 
-        const memberResult = (await Promise.race([
-          memberInsertPromise,
-          memberTimeoutPromise,
-        ])) as { data: any; error: any };
-
-        const memberErr = memberResult.error;
-        if (memberErr) {
-          debug("⚠️ team_members insert warning:", memberErr);
+              if (error) {
+                throw Object.assign(new Error(error.message), {
+                  code: error.code,
+                  details: error.details,
+                  hint: error.hint,
+                });
+              }
+            },
+            { timeout: 15000 }
+          );
+        } catch (err) {
+          debug("⚠️ team_members insert warning:", err);
         }
       };
 

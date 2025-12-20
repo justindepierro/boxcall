@@ -13,6 +13,8 @@
  * - Support future field types (CFL, high school, etc.)
  */
 
+import { warn } from "../utils/logger";
+
 /**
  * NFL regulation field dimensions
  */
@@ -292,7 +294,7 @@ export function validateAspectRatio(
   const diff = Math.abs(actualRatio - expectedRatio);
 
   if (diff > tolerance) {
-    console.warn(
+    warn(
       `Field aspect ratio ${actualRatio.toFixed(3)} differs from expected ${expectedRatio.toFixed(3)} by ${diff.toFixed(3)}`
     );
     return false;

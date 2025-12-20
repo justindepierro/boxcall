@@ -14,7 +14,7 @@ import {
   conflictResolutionService,
   type ConflictResolution,
 } from "@services/conflictResolution";
-import { logError } from "../../utils/logger";
+import { logError, warn } from "../../utils/logger";
 import {
   CollaborationContext,
   type CollaborationContextValue,
@@ -72,7 +72,7 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
   ) => {
     const conflict = activeConflicts.find((c) => c.conflictId === conflictId);
     if (!conflict) {
-      console.warn("Conflict not found:", conflictId);
+      warn("Conflict not found:", conflictId);
       return;
     }
 

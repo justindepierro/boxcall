@@ -146,7 +146,7 @@ export class AnnouncementsService {
       // Fetch author profiles
       const { data: profiles } = await supabase
         .from("profiles")
-        .select("id, full_name, display_name")
+        .select("id, full_name, display_name, avatar_url")
         .in("id", authorIds);
 
       // Fetch team member roles to check for coaches
@@ -191,6 +191,7 @@ export class AnnouncementsService {
       const enrichedData = announcements.map((announcement: any) => ({
         ...announcement,
         author_name: formatAuthorName(announcement.created_by),
+        author_avatar_url: profileMap.get(announcement.created_by)?.avatar_url,
       }));
 
       return enrichedData as unknown as Announcement[];

@@ -79,9 +79,10 @@ export const CalendarPageSkeleton: React.FC = () => (
   </div>
 );
 
-export const CalendarErrorSkeleton: React.FC<{ message?: string }> = ({
-  message = "Failed to load calendar events",
-}) => (
+export const CalendarErrorSkeleton: React.FC<{
+  message?: string;
+  onRetry?: () => void;
+}> = ({ message = "Failed to load calendar events", onRetry }) => (
   <div className="min-h-screen flex items-center justify-center">
     <div className="text-center space-y-4">
       <div className="mx-auto h-14 w-14 rounded-full bg-surface-error flex items-center justify-center animate-pulse">
@@ -89,13 +90,11 @@ export const CalendarErrorSkeleton: React.FC<{ message?: string }> = ({
       </div>
       <p className="text-error font-medium">Calendar Error</p>
       <p className="text-sm text-secondary content-narrow">{message}</p>
-      <Button
-        variant="primary"
-        size="sm"
-        onClick={() => window.location.reload()}
-      >
-        Reload
-      </Button>
+      {onRetry && (
+        <Button variant="primary" size="sm" onClick={onRetry}>
+          Retry
+        </Button>
+      )}
     </div>
   </div>
 );

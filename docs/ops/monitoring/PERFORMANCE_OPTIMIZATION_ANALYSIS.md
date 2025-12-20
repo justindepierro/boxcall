@@ -269,20 +269,17 @@ WARNING: Expected identifier but found whitespace in CSS
 ```
 WARNING: web-vitals is both statically and dynamically imported
   - Static: src/telemetry/initWebVitals.ts
-  - Dynamic: src/utils/performanceMonitor.ts
+   - Dynamic: (removed)
 ```
 
 **Impact**: Medium (prevents optimal code splitting)  
-**Fix**: Choose one import strategy (prefer dynamic)  
-**Action**: Consolidate imports to dynamic-only
+**Fix**: Use a single integration point  
+**Action**: Consolidate to a single web-vitals pipeline
 
-**Recommended Fix**:
+**Status**: Resolved
 
-```typescript
-// Remove static import from initWebVitals.ts
-// Use dynamic import everywhere:
-const { getCLS, getFID, getFCP, getLCP, getTTFB } = await import("web-vitals");
-```
+- The legacy `src/utils/performanceMonitor.ts` path was removed.
+- Dev tooling reads the latest vitals snapshot via `getVitalsSnapshot()` from `src/telemetry/initWebVitals.ts`.
 
 ---
 

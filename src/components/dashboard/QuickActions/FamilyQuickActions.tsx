@@ -2,6 +2,7 @@ import React from "react";
 
 import { Button } from "../../ui";
 import { Icon } from "../../ui/Icon/Icon";
+import { debug } from "../../../utils/logger";
 /**
  * Family Quick Actions - Family member-specific dashboard shortcuts
  *
@@ -18,7 +19,7 @@ export const FamilyQuickActions: React.FC = () => {
         variant="primary"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("Player Progress")}
+        onClick={() => debug("[FamilyQuickActions] Player Progress")}
       >
         <Icon name="trending-up" size={14} className="mr-2" />
         My Player&apos;s Progress
@@ -27,7 +28,7 @@ export const FamilyQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("Team Schedule")}
+        onClick={() => debug("[FamilyQuickActions] Team Schedule")}
       >
         <Icon name="calendar" size={14} className="mr-2" />
         Team Schedule
@@ -36,7 +37,7 @@ export const FamilyQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("Message Coach")}
+        onClick={() => debug("[FamilyQuickActions] Message Coach")}
       >
         <Icon name="message" size={14} className="mr-2" />
         Message Coach
@@ -45,7 +46,7 @@ export const FamilyQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("Game Highlights")}
+        onClick={() => debug("[FamilyQuickActions] Game Highlights")}
       >
         <Icon name="play" size={14} className="mr-2" />
         Game Highlights
@@ -54,7 +55,7 @@ export const FamilyQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("RSVP Events")}
+        onClick={() => debug("[FamilyQuickActions] RSVP Events")}
       >
         <Icon name="check" size={14} className="mr-2" />
         RSVP to Events
@@ -63,7 +64,7 @@ export const FamilyQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("Team Photos")}
+        onClick={() => debug("[FamilyQuickActions] Team Photos")}
       >
         <Icon name="eye" size={14} className="mr-2" />
         Team Photos
@@ -72,7 +73,7 @@ export const FamilyQuickActions: React.FC = () => {
         variant="ghost"
         size="sm"
         className="w-full justify-start"
-        onClick={() => console.info("Parent Network")}
+        onClick={() => debug("[FamilyQuickActions] Parent Network")}
       >
         <Icon name="users" size={14} className="mr-2" />
         Parent Network

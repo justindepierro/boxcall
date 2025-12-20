@@ -8,6 +8,7 @@
 import { useCallback, useEffect } from "react";
 import { usePreference } from "../../../../hooks/usePreferences";
 import { useIsMobile } from "../../../../hooks/useBreakpoint";
+import { debug } from "../../../../utils/logger";
 
 export function useViewMode() {
   const [hasManualViewModeOverride, setHasManualViewModeOverride] =
@@ -23,13 +24,15 @@ export function useViewMode() {
 
   const setViewMode = useCallback(
     (mode: "list" | "grid", manual = true) => {
-      console.log(`[PlayGrid] setViewMode called:`, {
-        newMode: mode,
-        previousMode: viewMode,
-        manual,
-        hasManualOverride: hasManualViewModeOverride,
-        stackTrace: new Error().stack?.split("\n").slice(1, 4).join("\n"),
-      });
+      if (import.meta.env.DEV) {
+        debug(`[PlayGrid] setViewMode called:`, {
+          newMode: mode,
+          previousMode: viewMode,
+          manual,
+          hasManualOverride: hasManualViewModeOverride,
+          stackTrace: new Error().stack?.split("\n").slice(1, 4).join("\n"),
+        });
+      }
 
       // Only update if different to avoid unnecessary re-renders
       if (mode !== viewMode) {
@@ -52,14 +55,12 @@ export function useViewMode() {
   // Uses centralized useIsMobile() hook instead of manual media queries
   useEffect(() => {
     if (hasManualViewModeOverride) {
-      console.log(
-        "[PlayGrid] Skipping auto view mode - user has manual override"
-      );
+      debug("[PlayGrid] Skipping auto view mode - user has manual override");
       return;
     }
 
     const newMode = isMobile ? "grid" : "list";
-    console.log(`[PlayGrid] Auto-switching view mode based on screen size:`, {
+    debug(`[PlayGrid] Auto-switching view mode based on screen size:`, {
       isMobile,
       newMode,
       previousMode: viewMode,

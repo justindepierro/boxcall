@@ -21,7 +21,7 @@ import {
 import { getCurrentUserId } from "../lib/auth-helpers";
 import type { Play } from "../types/play";
 import { ensureValidFormation } from "../utils/formationGuard";
-import { logError } from "../utils/logger";
+import { debug, logError, warn } from "../utils/logger";
 
 // ========================================
 // Security Events Tracking
@@ -154,10 +154,10 @@ function trackSecurityEvent(event: Omit<SecurityEvent, "timestamp">) {
       logError(prefix, message, event.details);
       break;
     case "medium":
-      console.warn(prefix, message, event.details);
+      warn(prefix, message, event.details);
       break;
     case "low":
-      console.info(prefix, message, event.details);
+      debug(prefix, message, event.details);
       break;
   }
 }

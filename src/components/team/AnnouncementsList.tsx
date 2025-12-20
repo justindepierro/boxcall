@@ -6,13 +6,21 @@
  * Renders rich text content with inline images
  */
 
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
+import { Virtuoso } from "react-virtuoso";
 import type {
   Announcement,
   AnnouncementFilters,
   AnnouncementVisibility,
 } from "../../services/announcementsService";
 import { AnnouncementsService } from "../../services/announcementsService";
+import { AnnouncementViewsService } from "../../services/announcementViewsService";
 import { HashtagService } from "../../services/hashtagService";
 import type { HashtagCount } from "../../services/hashtagService";
 import { useAnnouncementsRealtime } from "../../hooks/useAnnouncementsRealtime";
@@ -216,6 +224,7 @@ type AnnouncementsFeedProps = {
   onTogglePinClick: (announcementId: string) => Promise<void>;
   onReactionChange: () => void;
   onHashtagClick: (hashtag: string) => void;
+  onVisibleRangeChange?: (startIndex: number, endIndex: number) => void;
 };
 
 const AnnouncementsFeed: React.FC<AnnouncementsFeedProps> = ({
@@ -229,26 +238,100 @@ const AnnouncementsFeed: React.FC<AnnouncementsFeedProps> = ({
   onTogglePinClick,
   onReactionChange,
   onHashtagClick,
+  onVisibleRangeChange,
 }) => (
   <div className="bg-primary rounded-lg shadow-md overflow-hidden">
-    {announcements.map((announcement) => (
-      <AnnouncementItem
-        key={announcement.id}
-        announcement={announcement}
-        isExpanded={expandedComments.has(announcement.id)}
-        onToggleComments={() => onToggleComments(announcement.id)}
-        onEdit={onEdit ? () => onEdit(announcement) : undefined}
-        onDelete={onDelete ? () => onDeleteClick(announcement.id) : undefined}
-        onTogglePin={
-          onTogglePin ? () => onTogglePinClick(announcement.id) : undefined
-        }
-        onReactionChange={onReactionChange}
-        onHashtagClick={onHashtagClick}
-        isCoach={true}
-      />
-    ))}
+    <Virtuoso
+      useWindowScroll
+      data={announcements}
+      increaseViewportBy={{ top: 600, bottom: 800 }}
+      rangeChanged={(range) => {
+        onVisibleRangeChange?.(range.startIndex, range.endIndex);
+      }}
+      itemContent={(_index, announcement) => (
+        <AnnouncementItem
+          key={announcement.id}
+          announcement={announcement}
+          isExpanded={expandedComments.has(announcement.id)}
+          onToggleComments={() => onToggleComments(announcement.id)}
+          onEdit={onEdit ? () => onEdit(announcement) : undefined}
+          onDelete={onDelete ? () => onDeleteClick(announcement.id) : undefined}
+          onTogglePin={
+            onTogglePin ? () => onTogglePinClick(announcement.id) : undefined
+          }
+          onReactionChange={onReactionChange}
+          onHashtagClick={onHashtagClick}
+          isCoach={true}
+        />
+      )}
+    />
   </div>
 );
+
+function useAnnouncementViewTracking(params: {
+  teamId: string;
+  announcements: Announcement[];
+}) {
+  const { teamId, announcements } = params;
+
+  const recordedViewsRef = useRef<Set<string>>(new Set());
+  const pendingViewsRef = useRef<Set<string>>(new Set());
+  const pendingViewsTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    // Reset view tracking when switching teams
+    recordedViewsRef.current = new Set();
+    pendingViewsRef.current = new Set();
+    if (pendingViewsTimerRef.current) {
+      clearTimeout(pendingViewsTimerRef.current);
+      pendingViewsTimerRef.current = null;
+    }
+  }, [teamId]);
+
+  const flushPendingViews = useCallback(async () => {
+    const ids = Array.from(pendingViewsRef.current);
+    pendingViewsRef.current.clear();
+    pendingViewsTimerRef.current = null;
+
+    if (ids.length === 0) return;
+    await AnnouncementViewsService.recordViews(ids, teamId);
+  }, [teamId]);
+
+  const scheduleRecordViews = useCallback(
+    (announcementIds: string[]) => {
+      for (const id of announcementIds) {
+        if (!id) continue;
+        if (recordedViewsRef.current.has(id)) continue;
+        recordedViewsRef.current.add(id);
+        pendingViewsRef.current.add(id);
+      }
+
+      if (pendingViewsRef.current.size === 0) return;
+
+      // Debounce to batch rapid scroll range updates
+      if (pendingViewsTimerRef.current) {
+        clearTimeout(pendingViewsTimerRef.current);
+      }
+      pendingViewsTimerRef.current = setTimeout(() => {
+        flushPendingViews();
+      }, 250);
+    },
+    [flushPendingViews]
+  );
+
+  const onVisibleRangeChange = useCallback(
+    (startIndex: number, endIndex: number) => {
+      if (startIndex < 0 || endIndex < 0) return;
+      const visible = announcements
+        .slice(startIndex, endIndex + 1)
+        .map((a) => a.id);
+      scheduleRecordViews(visible);
+    },
+    [announcements, scheduleRecordViews]
+  );
+
+  return { onVisibleRangeChange };
+}
 
 interface AnnouncementsListProps {
   teamId: string;
@@ -298,6 +381,11 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
   const filteredAnnouncements = useMemo(() => {
     return filterAnnouncements(announcements, selectedHashtag, searchQuery);
   }, [announcements, selectedHashtag, searchQuery]);
+
+  const { onVisibleRangeChange } = useAnnouncementViewTracking({
+    teamId,
+    announcements: filteredAnnouncements,
+  });
 
   const toggleComments = (announcementId: string) => {
     setExpandedComments((prev) => {
@@ -431,6 +519,7 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
         onTogglePinClick={handleTogglePin}
         onReactionChange={loadAnnouncements}
         onHashtagClick={handleHashtagClick}
+        onVisibleRangeChange={onVisibleRangeChange}
       />
 
       {/* Delete Confirmation Modal */}

@@ -6,6 +6,7 @@
 
 import { SupabaseClient } from "@supabase/supabase-js";
 import { CacheService } from "./CacheService";
+import { debug } from "../../utils/logger";
 
 export class RealtimeSyncService {
   private static supabase: SupabaseClient | null = null;
@@ -51,7 +52,7 @@ export class RealtimeSyncService {
       )
       .subscribe();
 
-    console.info("✅ Real-time sync enabled");
+    debug("✅ Real-time sync enabled");
   }
 
   /**
@@ -99,6 +100,6 @@ export class RealtimeSyncService {
    */
   private static showSyncNotification(message: string): void {
     // Implementation for showing sync notifications
-    console.info(`Sync notification: ${message}`);
+    debug(`Sync notification: ${message}`);
   }
 }
