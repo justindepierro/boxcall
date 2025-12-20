@@ -5,6 +5,7 @@ import { useState, useCallback, useRef } from "react";
 import type { Database } from "../../../../types/database";
 import { supabase } from "../../../../lib/supabase";
 import { debug, error as logError } from "../../../../utils/logger";
+import { updateProfileAvatarUrl } from "../../../../data/supabase/profiles";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
@@ -116,14 +117,11 @@ export function useProfileAvatar(
         debug("🔗 Public URL:", avatarUrl);
 
         // Update profile with new avatar URL
-        const { error: updateError } = await supabase
-          .from("profiles")
-          .update({ avatar_url: avatarUrl })
-          .eq("id", profile.id);
+        const updateResult = await updateProfileAvatarUrl(profile.id, avatarUrl);
 
-        if (updateError) {
-          logError("Profile update error:", updateError);
-          throw updateError;
+        if (updateResult.error) {
+          logError("Profile update error:", updateResult.error);
+          throw updateResult.error;
         }
 
         debug("✅ Profile updated with new avatar");

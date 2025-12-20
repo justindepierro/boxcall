@@ -6,6 +6,7 @@ import type { Database } from "../../../../types/database";
 import type { ProfileFormData } from "./useProfileForm";
 import { supabase } from "../../../../lib/supabase";
 import { debug } from "../../../../utils/logger";
+import { updateProfileById } from "../../../../data/supabase/profiles";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
@@ -141,10 +142,11 @@ export function useProfileSave(
         }
 
         // First try to update with all new fields
-        let { error } = await supabase
-          .from("profiles")
-          .update(buildFullUpdateData(formData, avatarUrl))
-          .eq("id", profile.id);
+        const updateResult = await updateProfileById(
+          profile.id,
+          buildFullUpdateData(formData, avatarUrl)
+        );
+        let error = updateResult.error;
 
         // If the update failed due to missing columns, try again with just the existing fields
         if (
@@ -155,15 +157,14 @@ export function useProfileSave(
           debug(
             "New columns not available yet, saving with existing fields only"
           );
-          const { error: fallbackError } = await supabase
-            .from("profiles")
-            .update(buildFallbackUpdateData(formData, avatarUrl))
-            .eq("id", profile.id);
+          const fallbackResult = await updateProfileById(
+            profile.id,
+            buildFallbackUpdateData(formData, avatarUrl)
+          );
 
-          if (fallbackError) {
-            error = fallbackError;
+          if (fallbackResult.error) {
+            error = fallbackResult.error;
           } else {
-            error = null;
             setMessage({
               type: "success",
               text: "Profile saved successfully! Note: Coaching info and social media fields will be available after database migration.",
