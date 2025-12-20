@@ -38,7 +38,11 @@ import {
   getPlayTypeColor,
   normalizePlayText,
 } from "./play-card/helpers";
-import { readLocalString, storageKeys, writeLocalString } from "../../utils/storage";
+import {
+  readLocalString,
+  storageKeys,
+  writeLocalString,
+} from "../../utils/storage";
 import { usePlayFieldValues } from "./AddNewPlayModal/hooks/usePlayFieldValues";
 import { debug, logError } from "../../utils/logger";
 

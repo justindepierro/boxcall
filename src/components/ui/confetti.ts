@@ -1,7 +1,11 @@
 /**
  * Confetti helpers: daily gating and keys
  */
-import { readLocalString, storageKeys, writeLocalString } from "../../utils/storage";
+import {
+  readLocalString,
+  storageKeys,
+  writeLocalString,
+} from "../../utils/storage";
 
 function getTodayKey(suffix: string): string {
   const d = new Date();

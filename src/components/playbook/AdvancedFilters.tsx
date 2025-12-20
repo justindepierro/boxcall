@@ -7,7 +7,11 @@ import { QuickFilterPresets } from "./QuickFilterPresets";
 import type { FilterPreset } from "./filterPresets";
 import { BottomSheet } from "../BottomSheet";
 import { useIsMobile } from "../../hooks/useBreakpoint";
-import { readLocalString, storageKeys, writeLocalString } from "../../utils/storage";
+import {
+  readLocalString,
+  storageKeys,
+  writeLocalString,
+} from "../../utils/storage";
 
 interface ActiveFilter {
   id: string;
@@ -244,7 +248,10 @@ function useAdvancedFiltersController({
     const next = !showAdvanced;
     setShowAdvanced(next);
     // Save user preference
-    writeLocalString(storageKeys.playbook.advancedFiltersExpanded, String(next));
+    writeLocalString(
+      storageKeys.playbook.advancedFiltersExpanded,
+      String(next)
+    );
   };
 
   return {

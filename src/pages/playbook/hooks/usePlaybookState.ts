@@ -77,7 +77,9 @@ export function usePlaybookState({
     if (teamPlaybooks.length === 0) return;
 
     const savedPlaybookId = activeTeamId
-      ? readLocalString(storageKeys.playbook.activePlaybookForTeam(activeTeamId))
+      ? readLocalString(
+          storageKeys.playbook.activePlaybookForTeam(activeTeamId)
+        )
       : null;
 
     if (

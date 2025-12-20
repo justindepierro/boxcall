@@ -30,9 +30,12 @@ interface ActivationFlags {
 
 function loadFlags(): ActivationFlags {
   try {
-    const parsed = readLocalJson<ActivationFlags>(storageKeys.activation.flags, {
-      clearOnParseError: true,
-    });
+    const parsed = readLocalJson<ActivationFlags>(
+      storageKeys.activation.flags,
+      {
+        clearOnParseError: true,
+      }
+    );
     if (parsed) return parsed;
   } catch {
     /* ignore */

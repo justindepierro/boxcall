@@ -1,5 +1,9 @@
 import type { PracticeBlock } from "./types";
-import { readLocalJson, storageKeys, writeLocalJson } from "../../utils/storage";
+import {
+  readLocalJson,
+  storageKeys,
+  writeLocalJson,
+} from "../../utils/storage";
 
 // Re-export centralized formatDuration for backwards compatibility
 export { formatDuration } from "../../utils/dateFormatting";
