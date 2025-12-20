@@ -8,11 +8,11 @@ import { useActiveTeamStore } from "../../stores/activeTeamStore";
 import type { Database } from "../../types/database";
 import { getNavigationItems, toSidebarItems } from "../../utils/navigation";
 import { Sidebar } from "../ui/Sidebar";
-import { DevTools } from "../dev";
 import { SidebarLogo } from "../ui/Logo";
 import { AppHeader } from "./AppHeader";
 // import { OfflineBanner } from '../ui/OfflineBanner/OfflineBanner';
 import { Footer } from "./Footer";
+import { UnifiedSettingsPanel } from "../dashboard/UnifiedSettingsPanel";
 import type { DevMode } from "../../types/dev";
 import { emitTelemetry } from "../../lib/telemetry";
 import { isSuperAdminEmail } from "../../config/superAdmin";
@@ -228,8 +228,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           <Footer />
         </main>
 
-        {/* Professional Development Tools Panel */}
-        <DevTools />
+        {/* Canonical floating/settings/dev surface (dashboard only) */}
+        {location.pathname === "/dashboard" ||
+        location.pathname.startsWith("/dashboard/") ||
+        location.pathname === "/player-dashboard" ? (
+          <UnifiedSettingsPanel />
+        ) : null}
       </div>
     </div>
   );

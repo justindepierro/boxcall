@@ -26,6 +26,10 @@ import { ConflictDialog } from "./components/conflicts/ConflictDialog";
 import { OfflineIndicator } from "./components/ui/OfflineIndicator";
 import { logError } from "./utils/logger";
 import { APP_RESET_EVENT } from "./utils/appReset";
+import {
+  DEV_PANEL_CONTROL_EVENT,
+  type DevPanelControlDetail,
+} from "./utils/devPanelControl";
 
 type DevPanelProps = {
   isOpen: boolean;
@@ -92,6 +96,35 @@ function App() {
     window.addEventListener(APP_RESET_EVENT, handler as EventListener);
     return () =>
       window.removeEventListener(APP_RESET_EVENT, handler as EventListener);
+  }, []);
+
+  useEffect(() => {
+    if (!import.meta.env.DEV) return;
+    if (typeof window === "undefined") return;
+
+    const handler = (event: Event) => {
+      const detail = (event as CustomEvent<DevPanelControlDetail>).detail;
+      if (!detail?.action) return;
+
+      setShowDevPanel((prev) => {
+        switch (detail.action) {
+          case "open":
+            return true;
+          case "close":
+            return false;
+          case "toggle":
+          default:
+            return !prev;
+        }
+      });
+    };
+
+    window.addEventListener(DEV_PANEL_CONTROL_EVENT, handler as EventListener);
+    return () =>
+      window.removeEventListener(
+        DEV_PANEL_CONTROL_EVENT,
+        handler as EventListener
+      );
   }, []);
 
   useEffect(() => {

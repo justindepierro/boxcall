@@ -5,6 +5,7 @@ import { Icon } from "../ui/Icon/Icon";
 import { Typography } from "../design-system/Typography";
 import { DashboardCustomizationPanel } from "./DashboardCustomizationPanel";
 import { debug } from "../../utils/logger";
+import { requestDevPanelControl } from "../../utils/devPanelControl";
 
 /**
  * Unified Settings & Tools Panel
@@ -152,63 +153,10 @@ const SettingsPanel: React.FC<{
   );
 };
 
-// Development tools modal
-const DevToolsModal: React.FC<{
-  isOpen: boolean;
-  onClose: () => void;
-}> = ({ isOpen, onClose }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-text-primary/50 z-modal flex items-center justify-center">
-      <div className="bg-primary rounded-lg shadow-xl max-w-4xl max-h-[80vh] w-full mx-4 overflow-hidden">
-        <div className="p-4 border-b border-muted flex justify-between items-center">
-          <Typography variant="headline-sm">Development Tools</Typography>
-          <Button variant="ghost" onClick={onClose}>
-            <Icon name="close" size="sm" />
-          </Button>
-        </div>
-        <div className="p-4 max-h-96 overflow-y-auto">
-          <Typography variant="body-md" className="text-muted">
-            Development tools interface will be embedded here.
-            <br />
-            <small>
-              Note: DevTools component has been temporarily simplified for the
-              unified interface.
-            </small>
-          </Typography>
-
-          <div className="mt-4 space-y-3">
-            <div className="flex items-center justify-between p-3 bg-surface-hover rounded-lg">
-              <span>Debug Mode</span>
-              <Button variant="outline" size="sm">
-                Toggle
-              </Button>
-            </div>
-            <div className="flex items-center justify-between p-3 bg-surface-hover rounded-lg">
-              <span>Console Logs</span>
-              <Button variant="outline" size="sm">
-                View
-              </Button>
-            </div>
-            <div className="flex items-center justify-between p-3 bg-surface-hover rounded-lg">
-              <span>Performance</span>
-              <Button variant="outline" size="sm">
-                Monitor
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 export const UnifiedSettingsPanel: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [showCustomization, setShowCustomization] = useState(false);
-  const [showDevTools, setShowDevTools] = useState(false);
   const navigate = useNavigate();
 
   const isDev = import.meta.env.DEV;
@@ -272,7 +220,11 @@ export const UnifiedSettingsPanel: React.FC = () => {
           id: "dev-panel",
           label: "Development Panel",
           icon: "activity",
-          action: () => setShowDevTools(true),
+          action: () =>
+            requestDevPanelControl({
+              action: "open",
+              source: "unified-settings-panel",
+            }),
           description: "Access development tools and debugging",
           devOnly: true,
         },
@@ -283,6 +235,10 @@ export const UnifiedSettingsPanel: React.FC = () => {
           action: () => {
             // Add logs logic
             debug("dashboard.view_logs");
+            requestDevPanelControl({
+              action: "open",
+              source: "unified-settings-panel",
+            });
           },
           description: "View application logs and debug info",
           devOnly: true,
@@ -331,13 +287,6 @@ export const UnifiedSettingsPanel: React.FC = () => {
         isOpen={showCustomization}
         onClose={() => setShowCustomization(false)}
       />
-
-      {isDev && (
-        <DevToolsModal
-          isOpen={showDevTools}
-          onClose={() => setShowDevTools(false)}
-        />
-      )}
     </>
   );
 };
