@@ -6,6 +6,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { OfflineExecutionQueue } from "../offlineExecutionQueue";
 import type { CreatePlayExecutionData } from "../../types/session";
+import { ExecutionTrackingService } from "../../services/executionTrackingService";
 
 describe("OfflineExecutionQueue", () => {
   beforeEach(() => {
@@ -325,6 +326,9 @@ describe("OfflineExecutionQueue", () => {
       // Should return empty array instead of crashing
       const queue = OfflineExecutionQueue.getAll();
       expect(queue).toEqual([]);
+
+      // Regression: ensure we clear the corrupted value so future calls don't re-fail.
+      expect(localStorage.getItem("boxcall_offline_executions")).toBeNull();
     });
 
     it("should handle missing localStorage", () => {
@@ -394,6 +398,97 @@ describe("OfflineExecutionQueue", () => {
 
       // Sync should be triggered (in real implementation)
       // This test demonstrates the pattern
+    });
+  });
+
+  describe("Sync Queue (integration-ish)", () => {
+    beforeEach(() => {
+      Object.defineProperty(navigator, "onLine", {
+        value: true,
+        configurable: true,
+      });
+    });
+
+    it("returns 0 and does not call service when offline", async () => {
+      Object.defineProperty(navigator, "onLine", {
+        value: false,
+        configurable: true,
+      });
+
+      const logSpy = vi
+        .spyOn(ExecutionTrackingService, "logExecution")
+        .mockResolvedValue({} as any);
+
+      OfflineExecutionQueue.add({
+        practiceSessionId: "session-123",
+        playId: "play-456",
+        result: "success",
+        recordedMode: "live",
+      });
+
+      await expect(OfflineExecutionQueue.syncQueue()).resolves.toBe(0);
+      expect(logSpy).not.toHaveBeenCalled();
+    });
+
+    it("marks items synced on success and failed on error", async () => {
+      const execution1: CreatePlayExecutionData = {
+        practiceSessionId: "session-1",
+        playId: "play-1",
+        result: "success",
+        recordedMode: "live",
+      };
+
+      const execution2: CreatePlayExecutionData = {
+        practiceSessionId: "session-2",
+        playId: "play-2",
+        result: "failure",
+        recordedMode: "live",
+      };
+
+      OfflineExecutionQueue.add(execution1);
+      OfflineExecutionQueue.add(execution2);
+
+      const logSpy = vi
+        .spyOn(ExecutionTrackingService, "logExecution")
+        .mockResolvedValueOnce({} as any)
+        .mockRejectedValueOnce(new Error("boom"));
+
+      await expect(OfflineExecutionQueue.syncQueue()).resolves.toBe(1);
+      expect(logSpy).toHaveBeenCalledTimes(2);
+
+      const all = OfflineExecutionQueue.getAll();
+      const item1 = all.find((i) => i.data.playId === "play-1");
+      const item2 = all.find((i) => i.data.playId === "play-2");
+
+      expect(item1?.synced).toBe(true);
+      expect(item1?.error).toBeUndefined();
+
+      expect(item2?.synced).toBe(false);
+      expect(item2?.error).toBe("boom");
+    });
+
+    it("retryFailedSync clears errors then re-attempts", async () => {
+      const execution: CreatePlayExecutionData = {
+        practiceSessionId: "session-123",
+        playId: "play-456",
+        result: "success",
+        recordedMode: "live",
+      };
+
+      OfflineExecutionQueue.add(execution);
+      const [item] = OfflineExecutionQueue.getAll();
+      OfflineExecutionQueue.markFailed(item.id, "Network error");
+
+      const logSpy = vi
+        .spyOn(ExecutionTrackingService, "logExecution")
+        .mockResolvedValue({} as any);
+
+      await expect(OfflineExecutionQueue.retryFailedSync()).resolves.toBe(1);
+      expect(logSpy).toHaveBeenCalledTimes(1);
+
+      const updated = OfflineExecutionQueue.getAll();
+      expect(updated[0].synced).toBe(true);
+      expect(updated[0].error).toBeUndefined();
     });
   });
 });

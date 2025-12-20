@@ -39,6 +39,7 @@ Verified complete:
 - (19) Perf budgets gate is enforced via `npm run validate` and GitHub Actions (production build + Vite manifest-based per-route gzip JS budgets).
 - (28) Playwright smoke suite is present in `tests/e2e/` and enforced via GitHub Actions (`CI` workflow `e2e-smoke` job).
 - (26) Service-layer contract tests exist (Supabase stub helper + initial contract coverage for `RosterService`).
+- (27) Regression tests added for fragile areas: app reset event (`appReset`), auth loader redirects (`loaderAuth`), and offline sync queue behavior (`OfflineExecutionQueue`).
 
 Verified partial (keep unchecked for now):
 - (11) Zustand store surface area is not yet reduced: `src/app/store.ts` remains a broad “god store” (even though some domain stores exist elsewhere).
@@ -90,7 +91,7 @@ Verified missing:
 
 ## Testing & Quality Gates
 - [x] (26) Add service-layer contract tests (Supabase stubs) to reduce reliance on UI-only tests
-- [ ] (27) Add regression tests for historically fragile areas (reset flows, offline sync, navigation helpers)
+- [x] (27) Add regression tests for historically fragile areas (reset flows, offline sync, navigation helpers)
 - [x] (28) Add Playwright smoke tests for top coaching workflows (Playbook, Practice, GamePlan, Bulletin, BoxCall)
 
 ## Docs & Housekeeping
