@@ -3,8 +3,8 @@
  * Centralized export for all custom hooks
  */
 
-export { useRosterData } from "./useRosterData";
-export type { UseRosterDataReturn } from "./useRosterData";
+export { useRosterData } from "../../../hooks/useRosterData";
+export type { UseRosterDataReturn } from "../../../hooks/useRosterData";
 
 export { useRosterFilters } from "./useRosterFilters";
 export type { UseRosterFiltersReturn } from "./useRosterFilters";

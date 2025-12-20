@@ -9,7 +9,7 @@ import {
   KeyPlayerSelector,
 } from "../components";
 import { ValidatedInput } from "../../../playbook/ValidatedInput";
-import { useRosterData } from "../../../../pages/RosterPage/hooks/useRosterData";
+import { useRosterData } from "../../../../hooks/useRosterData";
 import { usePersonnelConfigurations } from "../../../../hooks/usePersonnel";
 import { usePlayFieldValues } from "../hooks/usePlayFieldValues";
 import type { Play } from "../../../../types/play";
