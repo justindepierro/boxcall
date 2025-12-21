@@ -45,15 +45,23 @@ function readConnectionInfo(): {
     if (!rawType) return "unknown";
     if (rawType === "wifi") return "wifi";
     if (rawType === "ethernet") return "ethernet";
-    if (rawType === "cellular" || rawType.includes("3g") || rawType.includes("4g") || rawType.includes("5g")) {
+    if (
+      rawType === "cellular" ||
+      rawType.includes("3g") ||
+      rawType.includes("4g") ||
+      rawType.includes("5g")
+    ) {
       return "cellular";
     }
     if (rawType === "none" || rawType === "offline") return "none";
     return "other";
   })();
 
-  const effectiveType = (connection?.effectiveType || "").toString().toLowerCase();
-  const downlink = typeof connection?.downlink === "number" ? connection.downlink : undefined;
+  const effectiveType = (connection?.effectiveType || "")
+    .toString()
+    .toLowerCase();
+  const downlink =
+    typeof connection?.downlink === "number" ? connection.downlink : undefined;
   const rtt = typeof connection?.rtt === "number" ? connection.rtt : undefined;
   const saveData = Boolean(connection?.saveData);
 
