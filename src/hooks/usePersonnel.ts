@@ -16,23 +16,12 @@ import type {
 } from "../types/personnel";
 
 /**
- * Query Keys
- */
-export const personnelKeys = {
-  // Compat shim; prefer using `queryKeys.personnel*` directly.
-  all: queryKeys.personnel,
-  configurations: queryKeys.personnelConfigurations,
-  configuration: queryKeys.personnelConfiguration,
-  players: queryKeys.personnelPlayers,
-};
-
-/**
  * Get all personnel configurations for a playbook
  * @param playbookId - Playbook UUID
  */
 export function usePersonnelConfigurations(playbookId: string | undefined) {
   return useQuery({
-    queryKey: personnelKeys.configurations(playbookId || ""),
+    queryKey: queryKeys.personnelConfigurations(playbookId || ""),
     queryFn: () =>
       playbookId
         ? PersonnelService.getPersonnelConfigurations(playbookId)
@@ -53,7 +42,7 @@ export function usePersonnelConfigurationByName(
   name: string | undefined
 ) {
   return useQuery({
-    queryKey: personnelKeys.configuration(playbookId || "", name || ""),
+    queryKey: queryKeys.personnelConfiguration(playbookId || "", name || ""),
     queryFn: () =>
       playbookId && name
         ? PersonnelService.getPersonnelConfigurationByName(playbookId, name)
@@ -69,7 +58,7 @@ export function usePersonnelConfigurationByName(
  */
 export function usePersonnelPlayers(configId: string | undefined) {
   return useQuery({
-    queryKey: personnelKeys.players(configId || ""),
+    queryKey: queryKeys.personnelPlayers(configId || ""),
     queryFn: () =>
       configId
         ? PersonnelService.getPersonnelPlayers(configId)
@@ -92,7 +81,7 @@ export function useCreatePersonnelConfiguration() {
     onSuccess: (data) => {
       // Invalidate configurations list
       queryClient.invalidateQueries({
-        queryKey: personnelKeys.configurations(data.playbook_id),
+        queryKey: queryKeys.personnelConfigurations(data.playbook_id),
       });
     },
   });
@@ -116,15 +105,15 @@ export function useUpdatePersonnelConfiguration() {
     onSuccess: (data) => {
       // Invalidate configurations list
       queryClient.invalidateQueries({
-        queryKey: personnelKeys.configurations(data.playbook_id),
+        queryKey: queryKeys.personnelConfigurations(data.playbook_id),
       });
       // Invalidate specific configuration by name
       queryClient.invalidateQueries({
-        queryKey: personnelKeys.configuration(data.playbook_id, data.name),
+        queryKey: queryKeys.personnelConfiguration(data.playbook_id, data.name),
       });
       // Invalidate players
       queryClient.invalidateQueries({
-        queryKey: personnelKeys.players(data.id),
+        queryKey: queryKeys.personnelPlayers(data.id),
       });
     },
   });
@@ -147,11 +136,11 @@ export function useDeletePersonnelConfiguration() {
     onSuccess: (_, variables) => {
       // Invalidate configurations list
       queryClient.invalidateQueries({
-        queryKey: personnelKeys.configurations(variables.playbookId),
+        queryKey: queryKeys.personnelConfigurations(variables.playbookId),
       });
       // Invalidate players
       queryClient.invalidateQueries({
-        queryKey: personnelKeys.players(variables.id),
+        queryKey: queryKeys.personnelPlayers(variables.id),
       });
     },
   });
@@ -170,7 +159,7 @@ export function usePersonnelConfigurationOptimistic(
 
   // Check for optimistic updates in cache
   const optimisticData = queryClient.getQueryData<PersonnelConfiguration>(
-    personnelKeys.configuration(playbookId || "", name || "")
+    queryKeys.personnelConfiguration(playbookId || "", name || "")
   );
 
   return {

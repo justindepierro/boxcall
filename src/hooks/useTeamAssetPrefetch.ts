@@ -3,7 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { Formation } from "../types/formation";
 import { cdnService } from "../services/cdn/CDNService";
 import { PersonnelService } from "../services/personnelService";
-import { personnelKeys } from "./usePersonnel";
+import { queryKeys } from "../lib/queryKeys";
 import { debug, warn } from "../utils/logger";
 
 const FORMATION_THUMBNAIL_PREFETCH_LIMIT = 18;
@@ -133,7 +133,7 @@ export function useTeamAssetPrefetch({
             return;
           }
           queryClient.setQueryData(
-            personnelKeys.configurations(playbookId),
+            queryKeys.personnelConfigurations(playbookId),
             configs
           );
           debug(
