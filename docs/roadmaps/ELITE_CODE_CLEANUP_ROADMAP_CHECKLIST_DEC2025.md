@@ -51,6 +51,7 @@ Verified complete:
 - (11) Zustand store surface area is reduced and enforced: legacy `src/app/store.ts` was deleted, UI state moved to `src/stores/uiStore.ts`, dashboard store was modularized under `src/stores/dashboard/`, and new guardrails prevent ad-hoc `.getState()` and whole-store subscriptions.
 - (12) Optimistic update patterns are unified via shared helpers in `src/utils/optimistic.ts` (consistent temp IDs + targeted replace/rollback for concurrent optimistic mutations).
 - (14) Supabase table access is centralized behind the DAL in `src/data/supabase/`, and a guardrail blocks new `supabase.from("...")` usage outside the DAL (auth + storage are exempt).
+- (15) DEV-only tooling is guaranteed not to ship in prod: `DevHealthCheck` is lazy-loaded behind `import.meta.env.DEV` check, `testBasicDatabaseConnectivity` and database helpers are dynamically imported only in DEV mode, `AnalyticsDebugger` is gated behind `import.meta.env.DEV`, and `DevPanel` + `PerformanceDashboard` + `FormationDataDiagnostic` are already lazy-loaded and gated (Vite tree-shakes them from production bundles).
 
 Verified partial (keep unchecked for now):
 
@@ -101,7 +102,12 @@ Verified missing:
 
 ## Dev/Prod Discipline
 
-- [ ] (15) Guarantee DEV-only tooling never ships in prod bundles (dynamic import + `import.meta.env.DEV` gating)
+- [x] (15) Guarantee DEV-only tooling never ships in prod bundles (dynamic import + `import.meta.env.DEV` gating)
+  - ✅ Verified: `DevHealthCheck` lazy-loaded behind `import.meta.env.DEV` in App.tsx
+  - ✅ Verified: `testBasicDatabaseConnectivity` dynamically imported only in DEV mode
+  - ✅ Verified: `AnalyticsDebugger` gated behind `import.meta.env.DEV` check
+  - ✅ Verified: `DevPanel`, `PerformanceDashboard`, `FormationDataDiagnostic` already lazy-loaded and gated
+  - ✅ Gate: `npm run type-check` + `npm run lint` pass (Dec 21, 2025)
 - [x] (16) CI guard: no `console.*` anywhere outside the logger module
 - [x] (17) CI guard: expand design-token linting (no raw colors / no arbitrary spacing/typography)
 - [x] (18) CI guard: no direct `fetch` outside a service layer
