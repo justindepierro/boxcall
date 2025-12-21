@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { Toaster } from "sonner";
 
 import { DevModeProvider } from "./app/dev-mode-store.tsx";
-import { DevHealthCheck } from "./components/ui/DevHealthCheck";
 import { ErrorBoundary } from "./components/ui/ErrorBoundary";
 import { AuthGuard } from "./components/auth/AuthGuard";
 import { useTheme } from "./hooks/useTheme";
@@ -35,6 +34,14 @@ type DevPanelProps = {
   isOpen: boolean;
   onClose: () => void;
 };
+
+const DevHealthCheckLazy = import.meta.env.DEV
+  ? lazy(() =>
+      import("./components/ui/DevHealthCheck").then((mod) => ({
+        default: mod.DevHealthCheck,
+      }))
+    )
+  : null;
 
 /**
  * ConflictOverlay - Shows conflict dialog when there's an active conflict
@@ -157,7 +164,11 @@ function App() {
                 <PopoverProvider>
                   <div className="App">
                     <Toaster position="top-right" richColors />
-                    {import.meta.env.DEV ? <DevHealthCheck /> : null}
+                    {import.meta.env.DEV && DevHealthCheckLazy ? (
+                      <Suspense fallback={null}>
+                        <DevHealthCheckLazy />
+                      </Suspense>
+                    ) : null}
                     <PendingSavesNotification />
                     <UndoRedoIndicator />
                     <ConflictOverlay />
