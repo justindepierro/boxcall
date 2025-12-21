@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
-  GamePlanningAnalyticsService,
+  PlayAnalyticsService,
   type GamePlanningAnalyticsData,
 } from "../../../services/playAnalyticsService";
 import { Card } from "../../ui";
@@ -41,7 +41,7 @@ export const GamePlanningAnalytics: React.FC<GamePlanningAnalyticsProps> = ({
       try {
         setLoading(true);
         const data =
-          await GamePlanningAnalyticsService.getGamePlanningAnalytics(
+          await PlayAnalyticsService.getGamePlanningAnalytics(
             primaryTeamId
           );
         setAnalytics(data);

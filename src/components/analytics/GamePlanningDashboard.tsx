@@ -7,7 +7,7 @@ import { Button } from "../ui/Button";
 import { Typography } from "../design-system/Typography";
 import { Icon } from "../ui/Icon";
 import {
-  GamePlanningAnalyticsService,
+  PlayAnalyticsService,
   type GamePlanningAnalyticsData,
 } from "../../services/playAnalyticsService";
 
@@ -28,7 +28,7 @@ export const GamePlanningDashboard: React.FC<GamePlanningDashboardProps> = ({
       setLoading(true);
       setError(null);
       const data =
-        await GamePlanningAnalyticsService.getGamePlanningAnalytics(teamId);
+        await PlayAnalyticsService.getGamePlanningAnalytics(teamId);
       setAnalyticsData(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load analytics");

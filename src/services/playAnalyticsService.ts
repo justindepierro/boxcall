@@ -716,19 +716,3 @@ export class PlayAnalyticsService {
     };
   }
 }
-
-// ============================================
-// LEGACY EXPORTS (for backward compatibility)
-// ============================================
-
-export class GamePlanningAnalyticsService {
-  static async getGamePlanningAnalytics(teamId: string) {
-    return PlayAnalyticsService.getGamePlanningAnalytics(teamId);
-  }
-}
-
-export class PlaybookAnalyticsService {
-  static async getPlaybookAnalytics(playbookId: string) {
-    return PlayAnalyticsService.getPlaybookAnalytics(playbookId);
-  }
-}

@@ -9,7 +9,7 @@ import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
 import { AuroraTile } from "../ui/AuroraTile";
 import {
-  PlaybookAnalyticsService,
+  PlayAnalyticsService,
   type PlaybookAnalyticsSummary,
   type FormationAnalytics,
 } from "../../services/playAnalyticsService";
@@ -56,7 +56,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       setLoading(true);
       setError(null);
       const data =
-        await PlaybookAnalyticsService.getPlaybookAnalytics(playbookId);
+        await PlayAnalyticsService.getPlaybookAnalytics(playbookId);
       setAnalytics(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load analytics");

@@ -17,7 +17,7 @@ import {
   SessionAnalyticsService,
   type PlayTrendData,
 } from "../../services/sessionAnalyticsService";
-import { PlaybookAnalyticsService } from "../../services/playAnalyticsService";
+import { PlayAnalyticsService } from "../../services/playAnalyticsService";
 
 interface TrendAnalyticsDashboardProps {
   playId: string;
@@ -150,7 +150,7 @@ export const TrendAnalyticsDashboard: React.FC<
 
         // Load playbook analytics for formation comparison
         const playbookData =
-          await PlaybookAnalyticsService.getPlaybookAnalytics(playId);
+          await PlayAnalyticsService.getPlaybookAnalytics(playId);
 
         setTrendData(playTrends);
         setFormationData(
