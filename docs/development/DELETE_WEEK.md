@@ -47,3 +47,69 @@ Track these in PR descriptions (and optionally in sprint notes):
 - List the 5+ deletions/merges (file paths)
 - Mention any alias/export rewires
 - Confirm validation commands passed
+
+## Living checklist (Dec 2025)
+
+This checklist is the authoritative “Delete Week” backlog. As we complete items, we:
+
+1. Check the box here
+2. Commit and push immediately
+3. Keep type-check + tests green
+
+### Phase 1 — Routing correctness (prevent 404s)
+
+- [ ] Replace Footer legal links to `/privacy` + `/terms` (src/components/layout/Footer.tsx)
+- [ ] Update hover prefetch importer map to match legal routes (src/routes/importers.ts)
+- [ ] Remove or deprecate unused legacy legal route cases (`/privacy-policy`, `/terms-of-service`) once no longer referenced (src/routes/importers.ts)
+- [ ] Remove unused legacy `ROUTES.TEAMS` constant if no remaining imports (src/routes/paths.ts)
+
+### Phase 2 — Dead / legacy UI components
+
+- [ ] Delete unused DashboardHeader component (src/components/dashboard/DashboardHeader.tsx)
+
+### Phase 3 — Safe deletions of unused legacy exports
+
+- [ ] Remove unused TeamService legacy aliases (TeamCreationService / TeamValidationService / TeamDuplicatePreventionService) (src/services/teamService.ts)
+
+### Phase 4 — Migrate then delete used compatibility shims
+
+- [ ] Migrate analytics UI imports from GamePlanningAnalyticsService → PlayAnalyticsService (src/services/playAnalyticsService.ts)
+- [ ] Migrate analytics UI imports from PlaybookAnalyticsService → PlayAnalyticsService (src/services/playAnalyticsService.ts)
+- [ ] Delete the wrapper classes after migrations (src/services/playAnalyticsService.ts)
+
+- [ ] Migrate all imports from PracticeScriptService → PracticeService (src/services/practiceService.ts)
+- [ ] Delete PracticeScriptService alias export after migration (src/services/practiceService.ts)
+
+- [ ] Decide calendar compatibility stance:
+  - Keep shims (EventsService / listTeamEvents / createEvent / rsvpService)
+  - OR migrate to CalendarService and delete shims (src/services/calendarService.ts)
+
+### Phase 5 — Stub/mock features (requires product decision)
+
+These are not “pure deletion” targets — they are either implement-or-remove candidates.
+
+- [ ] Decide on Join Team mock flow: implement real backend or remove/feature-gate
+  - src/pages/JoinTeam/useJoinTeamHandlers.ts
+  - src/pages/JoinTeam/constants.ts
+
+- [ ] Decide on Player Performance analytics: wire real tables/queries or remove dashboard
+  - src/services/performanceAnalyticsService.ts
+  - src/components/analytics/PlayerPerformanceDashboard.tsx
+
+- [ ] Decide on Formation service no-op: implement backend or keep stub + hide UI
+  - src/services/formationService.ts
+
+- [ ] Replace network status hook stub (currently always online) OR remove abstraction
+  - src/hooks/useNetworkStatus.ts
+  - src/components/ui/MobileLoadingStrategy.tsx
+
+### Phase 6 — Deprecated dead blocks
+
+- [ ] Remove commented-out deprecated DB helpers (tables that don’t exist in production)
+  - src/lib/database-helpers.ts
+
+### Validation gate (run before every push)
+
+- [ ] `npm run type-check`
+- [ ] `npm run lint`
+- [ ] `npm run test`
