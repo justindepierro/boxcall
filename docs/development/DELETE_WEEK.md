@@ -69,7 +69,7 @@ This checklist is the authoritative “Delete Week” backlog. As we complete it
 
 ### Phase 3 — Safe deletions of unused legacy exports
 
-- [ ] Remove unused TeamService legacy aliases (TeamCreationService / TeamValidationService / TeamDuplicatePreventionService) (src/services/teamService.ts)
+- [x] Remove unused TeamService legacy aliases (TeamCreationService / TeamValidationService / TeamDuplicatePreventionService) (src/services/teamService.ts)
 
 ### Phase 4 — Migrate then delete used compatibility shims
 

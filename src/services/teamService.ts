@@ -790,11 +790,3 @@ export class TeamService {
     }
   }
 }
-
-// ============================================
-// LEGACY EXPORTS (for backward compatibility)
-// ============================================
-
-export const TeamCreationService = TeamService;
-export const TeamValidationService = TeamService;
-export const TeamDuplicatePreventionService = TeamService;
