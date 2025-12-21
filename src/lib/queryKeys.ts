@@ -7,6 +7,12 @@
 export const queryKeys = {
   all: ["boxcall"] as const,
 
+  // Cross-cutting / aggregate (admin-style or multi-team views)
+  playbooksAll: () => [...queryKeys.all, "playbooks", "all"] as const,
+  playsAll: () => [...queryKeys.all, "plays", "all"] as const,
+  playsAllPage: (page: number) => [...queryKeys.playsAll(), "page", page] as const,
+  playsAllTotalCount: () => [...queryKeys.playsAll(), "totalCount"] as const,
+
   // Teams
   teams: () => [...queryKeys.all, "teams"] as const,
   team: (teamId: string) => [...queryKeys.teams(), teamId] as const,
@@ -49,6 +55,48 @@ export const queryKeys = {
     [...queryKeys.team(teamId), "gamePlans"] as const,
   gamePlan: (gamePlanId: string) =>
     [...queryKeys.all, "gamePlan", gamePlanId] as const,
+
+  // Roster
+  roster: () => [...queryKeys.all, "roster"] as const,
+  rosterTeam: (teamId: string) => [...queryKeys.roster(), teamId] as const,
+  rosterPlayer: (playerId: string) =>
+    [...queryKeys.roster(), "player", playerId] as const,
+
+  // Personnel
+  personnel: () => [...queryKeys.all, "personnel"] as const,
+  personnelConfigurations: (playbookId: string) =>
+    [...queryKeys.personnel(), "configurations", playbookId] as const,
+  personnelConfiguration: (playbookId: string, name: string) =>
+    [...queryKeys.personnel(), "configuration", playbookId, name] as const,
+  personnelPlayers: (configId: string) =>
+    [...queryKeys.personnel(), "players", configId] as const,
+
+  // Calendar
+  calendar: () => [...queryKeys.all, "calendar"] as const,
+  calendarEventsAll: () => [...queryKeys.calendar(), "events"] as const,
+  calendarEvents: (
+    filters?: {
+      teamIds?: string[];
+      eventTypes?: string[];
+      dateRange?: { start: string; end: string };
+      tags?: string[];
+    },
+    range?: { start: string; end: string },
+    devMode?: string
+  ) =>
+    [
+      ...queryKeys.calendarEventsAll(),
+      {
+        ...(filters || {}),
+        range: range ? { s: range.start, e: range.end } : undefined,
+        devMode,
+      },
+    ] as const,
+  calendarEvent: (id: string) => [...queryKeys.calendar(), "event", id] as const,
+  calendarRsvps: (eventId: string) =>
+    [...queryKeys.calendar(), "rsvps", eventId] as const,
+  calendarComments: (eventId: string) =>
+    [...queryKeys.calendar(), "comments", eventId] as const,
 
   // Practice Scripts
   practiceScripts: (teamId: string) =>

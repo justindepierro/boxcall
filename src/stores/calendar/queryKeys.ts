@@ -1,5 +1,7 @@
-// Calendar query key factory (Phase 3)
-// Centralized keys to prevent collisions and enable partial invalidation.
+// Calendar query key factory (compat shim)
+// Prefer `queryKeys.calendar*` from `src/lib/queryKeys.ts`.
+
+import { queryKeys } from "../../lib/queryKeys";
 export type EventFilters = {
   teamIds?: string[];
   eventTypes?: string[];
@@ -8,23 +10,14 @@ export type EventFilters = {
 };
 
 export const calendarKeys = {
-  all: ["calendar"] as const,
+  all: queryKeys.calendar,
   events: (
     filters?: EventFilters,
     range?: { start: string; end: string },
     devMode?: string
   ) =>
-    [
-      ...calendarKeys.all,
-      "events",
-      {
-        ...(filters || {}),
-        range: range ? { s: range.start, e: range.end } : undefined,
-        devMode,
-      },
-    ] as const,
-  event: (id: string) => [...calendarKeys.all, "event", id] as const,
-  rsvps: (eventId: string) => [...calendarKeys.all, "rsvps", eventId] as const,
-  comments: (eventId: string) =>
-    [...calendarKeys.all, "comments", eventId] as const,
+    queryKeys.calendarEvents(filters, range, devMode),
+  event: queryKeys.calendarEvent,
+  rsvps: queryKeys.calendarRsvps,
+  comments: queryKeys.calendarComments,
 };

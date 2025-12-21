@@ -7,6 +7,8 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { PersonnelService } from "../services/personnelService";
+import { RQ_STALE } from "../app/reactQueryTimes";
+import { queryKeys } from "../lib/queryKeys";
 import type {
   PersonnelConfiguration,
   CreatePersonnelConfiguration,
@@ -17,13 +19,11 @@ import type {
  * Query Keys
  */
 export const personnelKeys = {
-  all: ["personnel"] as const,
-  configurations: (playbookId: string) =>
-    [...personnelKeys.all, "configurations", playbookId] as const,
-  configuration: (playbookId: string, name: string) =>
-    [...personnelKeys.all, "configuration", playbookId, name] as const,
-  players: (configId: string) =>
-    [...personnelKeys.all, "players", configId] as const,
+  // Compat shim; prefer using `queryKeys.personnel*` directly.
+  all: queryKeys.personnel,
+  configurations: queryKeys.personnelConfigurations,
+  configuration: queryKeys.personnelConfiguration,
+  players: queryKeys.personnelPlayers,
 };
 
 /**
@@ -38,7 +38,7 @@ export function usePersonnelConfigurations(playbookId: string | undefined) {
         ? PersonnelService.getPersonnelConfigurations(playbookId)
         : Promise.resolve([]),
     enabled: !!playbookId,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: RQ_STALE.MEDIUM,
   });
 }
 
@@ -59,7 +59,7 @@ export function usePersonnelConfigurationByName(
         ? PersonnelService.getPersonnelConfigurationByName(playbookId, name)
         : Promise.resolve(null),
     enabled: !!playbookId && !!name,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: RQ_STALE.MEDIUM,
   });
 }
 
@@ -75,7 +75,7 @@ export function usePersonnelPlayers(configId: string | undefined) {
         ? PersonnelService.getPersonnelPlayers(configId)
         : Promise.resolve([]),
     enabled: !!configId,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: RQ_STALE.MEDIUM,
   });
 }
 

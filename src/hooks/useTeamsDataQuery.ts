@@ -12,6 +12,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { table } from "../data/supabase/db";
 import { warn } from "../utils/logger";
+import { RQ_GC, RQ_STALE } from "../app/reactQueryTimes";
+import { queryKeys } from "../lib/queryKeys";
 
 interface Team {
   id: string;
@@ -97,16 +99,14 @@ function useUpdatePlayMutation(queryClient: ReturnType<typeof useQueryClient>) {
     }) => updatePlayInDB(playId, updates),
     onMutate: async ({ playId, updates }) => {
       // Cancel outgoing refetches
-      await queryClient.cancelQueries({ queryKey: teamsDataKeys.plays() });
+      await queryClient.cancelQueries({ queryKey: queryKeys.playsAll() });
 
       // Snapshot the previous value
-      const previousPlays = queryClient.getQueryData(
-        teamsDataKeys.playsPage(0)
-      );
+      const previousPlays = queryClient.getQueryData(queryKeys.playsAllPage(0));
 
       // Optimistically update the cache
       queryClient.setQueryData(
-        teamsDataKeys.playsPage(0),
+        queryKeys.playsAllPage(0),
         (old: DatabasePlay[] | undefined) => {
           if (!old) return old;
           return old.map((play) =>
@@ -120,29 +120,15 @@ function useUpdatePlayMutation(queryClient: ReturnType<typeof useQueryClient>) {
     onError: (_err, _variables, context) => {
       // Rollback on error
       if (context?.previousPlays) {
-        queryClient.setQueryData(
-          teamsDataKeys.playsPage(0),
-          context.previousPlays
-        );
+        queryClient.setQueryData(queryKeys.playsAllPage(0), context.previousPlays);
       }
     },
     onSuccess: () => {
       // Invalidate and refetch on success
-      queryClient.invalidateQueries({ queryKey: teamsDataKeys.plays() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.playsAll() });
     },
   });
 }
-
-// Query keys for cache invalidation
-export const teamsDataKeys = {
-  all: ["teamsData"] as const,
-  teams: () => [...teamsDataKeys.all, "teams"] as const,
-  playbooks: () => [...teamsDataKeys.all, "playbooks"] as const,
-  plays: () => [...teamsDataKeys.all, "plays"] as const,
-  playsPage: (page: number) =>
-    [...teamsDataKeys.plays(), "page", page] as const,
-  totalCount: () => [...teamsDataKeys.plays(), "totalCount"] as const,
-};
 
 // Fetch teams
 async function fetchTeams(): Promise<Team[]> {
@@ -294,41 +280,41 @@ export function useTeamsDataQuery() {
 
   // Teams query
   const teamsQuery = useQuery({
-    queryKey: teamsDataKeys.teams(),
+    queryKey: queryKeys.teams(),
     queryFn: fetchTeams,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
+    staleTime: RQ_STALE.MEDIUM,
+    gcTime: RQ_GC.SHORT,
   });
 
   // Playbooks query
   const playbooksQuery = useQuery({
-    queryKey: teamsDataKeys.playbooks(),
+    queryKey: queryKeys.playbooksAll(),
     queryFn: fetchPlaybooks,
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
+    staleTime: RQ_STALE.MEDIUM,
+    gcTime: RQ_GC.SHORT,
   });
 
   // Total plays count query
   const totalCountQuery = useQuery({
-    queryKey: teamsDataKeys.totalCount(),
+    queryKey: queryKeys.playsAllTotalCount(),
     queryFn: fetchTotalPlaysCount,
     staleTime: 2 * 60 * 1000, // 2 minutes (count changes more frequently)
-    gcTime: 5 * 60 * 1000,
+    gcTime: RQ_STALE.MEDIUM,
   });
 
   // Plays query (first page)
   const playsQuery = useQuery({
-    queryKey: teamsDataKeys.playsPage(0),
+    queryKey: queryKeys.playsAllPage(0),
     queryFn: () => fetchPlaysPage(0),
     staleTime: 2 * 60 * 1000, // 2 minutes
-    gcTime: 5 * 60 * 1000,
+    gcTime: RQ_STALE.MEDIUM,
   });
 
   const updatePlayMutation = useUpdatePlayMutation(queryClient);
 
   // Refresh all data
   const refreshData = () => {
-    queryClient.invalidateQueries({ queryKey: teamsDataKeys.all });
+    queryClient.invalidateQueries({ queryKey: queryKeys.all });
   };
 
   // Combined loading state

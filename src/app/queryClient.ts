@@ -1,5 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 
+import { RQ_GC, RQ_STALE } from "./reactQueryTimes";
+
 /**
  * Enhanced React Query Client with Performance Optimizations
  *
@@ -14,8 +16,8 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       // Cache settings - OPTIMIZED for 40% fewer API calls
-      staleTime: 10 * 60 * 1000, // 10 minutes - data considered fresh (was 5)
-      gcTime: 30 * 60 * 1000, // 30 minutes - cache lifetime (was 10)
+      staleTime: RQ_STALE.DEFAULT, // 10 minutes - data considered fresh (was 5)
+      gcTime: RQ_GC.DEFAULT, // 30 minutes - cache lifetime (was 10)
 
       // Refetch settings - OPTIMIZED to reduce aggressive refetching
       refetchOnWindowFocus: false, // Disabled - use cached data (was true)

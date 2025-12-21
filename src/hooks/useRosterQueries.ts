@@ -29,15 +29,18 @@ import type {
 import { info, error as logError } from "../utils/logger";
 import { useSaveState } from "./useSaveState";
 import { makeOptimisticId, replaceById } from "../utils/optimistic";
+import { RQ_GC, RQ_STALE } from "../app/reactQueryTimes";
+import { queryKeys } from "../lib/queryKeys";
 
 // ============================================
 // QUERY KEYS
 // ============================================
 
 export const rosterKeys = {
-  all: ["roster"] as const,
-  team: (teamId: string) => ["roster", teamId] as const,
-  player: (playerId: string) => ["roster", "player", playerId] as const,
+  // Compat shim; prefer using `queryKeys.roster*` directly.
+  all: queryKeys.roster,
+  team: queryKeys.rosterTeam,
+  player: queryKeys.rosterPlayer,
 };
 
 // ============================================
@@ -64,10 +67,8 @@ export function useRosterQuery(teamId: string | null) {
       return roster;
     },
     enabled: !!teamId, // Only run if teamId exists
-    staleTime: 5 * 60 * 1000, // 5 minutes - data is "fresh" for this long
-    gcTime: 10 * 60 * 1000, // 10 minutes - cache persists for this long (formerly cacheTime)
-    refetchOnWindowFocus: true, // Refetch when user returns to tab
-    refetchOnReconnect: true, // Refetch when network reconnects
+    staleTime: RQ_STALE.MEDIUM,
+    gcTime: RQ_GC.SHORT,
   });
 }
 

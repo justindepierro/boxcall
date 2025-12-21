@@ -10,6 +10,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { table } from "../../data/supabase/db";
 import { queryKeys } from "../queryKeys";
+import { RQ_STALE } from "../../app/reactQueryTimes";
 
 export { queryKeys } from "../queryKeys";
 
@@ -29,7 +30,6 @@ export function useTeam(teamId: string | null) {
       return data;
     },
     enabled: !!teamId,
-    staleTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -49,7 +49,6 @@ export function usePlaybooks(teamId: string | null) {
       return data || [];
     },
     enabled: !!teamId,
-    staleTime: 10 * 60 * 1000,
   });
 }
 
@@ -76,7 +75,7 @@ export function usePlays(playbookIds: string[], options?: { limit?: number }) {
       return data || [];
     },
     enabled: playbookIds.length > 0,
-    staleTime: 5 * 60 * 1000, // 5 minutes for plays
+    staleTime: RQ_STALE.MEDIUM,
   });
 }
 
@@ -96,7 +95,6 @@ export function useFormations(playbookIds: string[]) {
       return data || [];
     },
     enabled: playbookIds.length > 0,
-    staleTime: 10 * 60 * 1000,
   });
 }
 
@@ -116,7 +114,7 @@ export function useUserTeamMemberships(userId: string | null) {
       return data || [];
     },
     enabled: !!userId,
-    staleTime: 5 * 60 * 1000,
+    staleTime: RQ_STALE.MEDIUM,
   });
 }
 
@@ -136,7 +134,6 @@ export function useProfile(userId: string | null) {
       return data;
     },
     enabled: !!userId,
-    staleTime: 10 * 60 * 1000,
   });
 }
 
@@ -156,7 +153,7 @@ export function useGamePlans(teamId: string | null) {
       return data || [];
     },
     enabled: !!teamId,
-    staleTime: 5 * 60 * 1000,
+    staleTime: RQ_STALE.MEDIUM,
   });
 }
 
@@ -176,7 +173,7 @@ export function usePracticeScripts(teamId: string | null) {
       return data || [];
     },
     enabled: !!teamId,
-    staleTime: 5 * 60 * 1000,
+    staleTime: RQ_STALE.MEDIUM,
   });
 }
 

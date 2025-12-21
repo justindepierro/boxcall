@@ -19,6 +19,7 @@ import type {
 } from "../../domain/calendar/types";
 import type { QueryKey } from "@tanstack/react-query";
 import { makeOptimisticId, replaceById } from "../../utils/optimistic";
+import { queryKeys } from "../../lib/queryKeys";
 
 // Types for ranges & params
 export interface EventsQueryParams {
@@ -75,7 +76,7 @@ export function useEvent(id: string) {
       // Attempt to hydrate from any cached events query
       const cached = qc
         .getQueryCache()
-        .findAll({ queryKey: ["calendar", "events"] })
+        .findAll({ queryKey: queryKeys.calendarEventsAll() })
         .map((q) => q.state.data as unknown)
         .filter(Boolean) as unknown[];
       for (const dataset of cached) {
@@ -190,7 +191,7 @@ export function useUpdateEvent() {
       ctx?.snapshots.forEach((s) => qc.setQueryData(s.key, s.data));
     },
     onSettled: () => {
-      qc.invalidateQueries({ queryKey: ["calendar", "events"] });
+      qc.invalidateQueries({ queryKey: queryKeys.calendarEventsAll() });
     },
   });
 }
@@ -228,7 +229,7 @@ export function useDeleteEvent() {
     onError: (_err, _vars, ctx) =>
       ctx?.snapshots.forEach((s) => qc.setQueryData(s.key, s.data)),
     onSettled: () => {
-      qc.invalidateQueries({ queryKey: ["calendar", "events"] });
+      qc.invalidateQueries({ queryKey: queryKeys.calendarEventsAll() });
     },
   });
 }
