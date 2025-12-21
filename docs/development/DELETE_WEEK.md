@@ -65,7 +65,7 @@ This checklist is the authoritative “Delete Week” backlog. As we complete it
 
 ### Phase 2 — Dead / legacy UI components
 
-- [ ] Delete unused DashboardHeader component (src/components/dashboard/DashboardHeader.tsx)
+- [x] Delete unused DashboardHeader component (src/components/dashboard/DashboardHeader.tsx)
 
 ### Phase 3 — Safe deletions of unused legacy exports
 
