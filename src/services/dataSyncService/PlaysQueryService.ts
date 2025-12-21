@@ -16,6 +16,7 @@ import { CacheService } from "./CacheService";
 import { IndexedDBService } from "./IndexedDBService";
 import { logError } from "../../utils/logger";
 import { tableWithClient } from "../../data/supabase/db";
+import { makeOptimisticId } from "../../utils/optimistic";
 
 export class PlaysQueryService {
   private static coercePlayTimestampFields(row: unknown): Play {
@@ -132,7 +133,7 @@ export class PlaysQueryService {
     play: Omit<Play, "id" | "created_at" | "updated_at">,
     _onTriggerBackup: () => void
   ): Promise<Play> {
-    const tempId = `temp_${Date.now()}`;
+    const tempId = makeOptimisticId("temp");
 
     // Lightweight optimistic object
     const optimisticPlay: Play = {

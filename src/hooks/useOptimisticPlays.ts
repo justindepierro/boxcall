@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import type { Play } from "../types/play";
 import { error as logError } from "../utils/logger";
 import { SecurePlaysService } from "../services/securePlaysService";
+import { makeOptimisticId, removeById } from "../utils/optimistic";
 
 /**
  * Custom hook for optimistic play updates (Facebook-fast pattern)
@@ -30,9 +31,10 @@ export function useOptimisticPlays(
         return;
       }
 
+      const tempId = makeOptimisticId("temp");
+
       try {
         // ⚡ OPTIMISTIC: Create temporary play with fake ID for instant feedback
-        const tempId = `temp-${Date.now()}`;
         const optimisticPlay: Play = {
           ...playData,
           id: tempId,
@@ -72,9 +74,7 @@ export function useOptimisticPlays(
         toast.error("Failed to create play");
 
         // Remove optimistic play on error
-        setOptimisticPlays((prev) =>
-          prev.filter((p) => !p.id.startsWith("temp-"))
-        );
+        setOptimisticPlays((prev) => removeById(prev, tempId));
         throw error;
       }
     },

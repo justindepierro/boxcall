@@ -11,6 +11,11 @@ import {
 } from "../../../services/gamePlanService";
 import type { GamePlan as ModalGamePlan } from "../../../components/playbook/GamePlanModal/types";
 import { error as logError } from "../../../utils/logger";
+import {
+  makeOptimisticId,
+  removeById,
+  replaceById,
+} from "../../../utils/optimistic";
 
 interface UseGamePlansCrudProps {
   activeTeamId: string | null;
@@ -70,6 +75,8 @@ async function saveGamePlanWithOptimism({
     return;
   }
 
+  let optimisticId: string | null = null;
+
   try {
     toast.success(editingPlan ? "Game plan updated!" : "Game plan created!");
 
@@ -80,7 +87,8 @@ async function saveGamePlanWithOptimism({
         )
       );
     } else {
-      const tempId = `temp-${Date.now()}`;
+      const tempId = makeOptimisticId("temp");
+      optimisticId = tempId;
       const optimisticPlan: ModalGamePlan = {
         ...plan,
         id: tempId,
@@ -112,18 +120,17 @@ async function saveGamePlanWithOptimism({
       gameLocation: plan.gameLocation,
     });
 
-    setGamePlans((prev) =>
-      prev.map((p) =>
-        p.id.startsWith("temp-")
-          ? {
-              ...p,
-              id: newPlan.id,
-              createdAt: newPlan.createdAt,
-              updatedAt: newPlan.updatedAt,
-            }
-          : p
-      )
-    );
+    setGamePlans((prev) => {
+      if (!optimisticId) return prev;
+      const optimistic = prev.find((p) => p.id === optimisticId);
+      if (!optimistic) return prev;
+      return replaceById(prev, optimisticId, {
+        ...optimistic,
+        id: newPlan.id,
+        createdAt: newPlan.createdAt,
+        updatedAt: newPlan.updatedAt,
+      });
+    });
     setRawGamePlans((prev) => [newPlan, ...prev]);
   } catch (error) {
     logError("Failed to save game plan:", error);
@@ -137,7 +144,10 @@ async function saveGamePlanWithOptimism({
         );
       }
     } else {
-      setGamePlans((prev) => prev.filter((p) => !p.id.startsWith("temp-")));
+      const idToRemove = optimisticId;
+      if (idToRemove) {
+        setGamePlans((prev) => removeById(prev, idToRemove));
+      }
     }
 
     toast.error("Failed to save game plan");
@@ -156,7 +166,7 @@ async function duplicateGamePlanWithOptimism({
   setRawGamePlans: UseGamePlansCrudProps["setRawGamePlans"];
 }) {
   const newName = `${plan.name} (Copy)`;
-  const tempId = `temp-${Date.now()}`;
+  const tempId = makeOptimisticId("temp");
 
   try {
     const duplicatedPlan: ModalGamePlan = {
@@ -181,7 +191,7 @@ async function duplicateGamePlanWithOptimism({
     setRawGamePlans((prev) => [newPlan, ...prev]);
   } catch (error) {
     logError("Failed to duplicate game plan:", error);
-    setGamePlans((prev) => prev.filter((p) => !p.id.startsWith("temp-")));
+    setGamePlans((prev) => removeById(prev, tempId));
     toast.error("Failed to duplicate game plan");
   }
 }

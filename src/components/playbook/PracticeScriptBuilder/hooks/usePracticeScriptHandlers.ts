@@ -5,6 +5,7 @@ import type { Play } from "../../../../types/play";
 import { useToast } from "../../../../hooks/useToast";
 import { triggerHapticFeedback } from "../../../../lib/hapticFeedback";
 import { debug, error as logError } from "../../../../utils/logger";
+import { isOptimisticId } from "../../../../utils/optimistic";
 
 interface UsePracticeScriptHandlersProps {
   currentScript: PracticeScript | null;
@@ -41,7 +42,10 @@ function validateCanSave(params: {
 
 function buildBatchUpdates(currentScript: PracticeScript) {
   return (currentScript.plays || [])
-    .filter((scriptPlay) => scriptPlay.id && !scriptPlay.id.startsWith("temp-"))
+    .filter(
+      (scriptPlay) =>
+        scriptPlay.id && !isOptimisticId(scriptPlay.id, ["temp"])
+    )
     .map((scriptPlay) => ({
       scriptPlayId: scriptPlay.id!,
       data: {

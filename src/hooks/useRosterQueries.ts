@@ -28,6 +28,7 @@ import type {
 } from "../services/rosterService";
 import { info, error as logError } from "../utils/logger";
 import { useSaveState } from "./useSaveState";
+import { makeOptimisticId, replaceById } from "../utils/optimistic";
 
 // ============================================
 // QUERY KEYS
@@ -110,6 +111,7 @@ export function useAddPlayerMutation(teamId: string | null) {
       );
 
       // Optimistically update to the new value
+      const tempId = makeOptimisticId("temp");
       queryClient.setQueryData<RosterPlayerView[]>(
         rosterKeys.team(teamId || ""),
         (old) => {
@@ -117,7 +119,7 @@ export function useAddPlayerMutation(teamId: string | null) {
           // Create temporary player with placeholder ID
           const tempPlayer: RosterPlayerView = {
             ...newPlayer,
-            id: `temp-${Date.now()}`, // Temporary ID until server responds
+            id: tempId, // Temporary ID until server responds
             team_id: teamId || "",
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
@@ -127,11 +129,11 @@ export function useAddPlayerMutation(teamId: string | null) {
       );
 
       // Return context with the previous data
-      return { previousRoster };
+      return { previousRoster, tempId };
     },
 
     // On success: Replace temp player with real player from server
-    onSuccess: (newPlayer) => {
+    onSuccess: (newPlayer, _vars, context) => {
       info("[useAddPlayerMutation] Player added successfully");
 
       // Update cache with real data from server
@@ -139,8 +141,8 @@ export function useAddPlayerMutation(teamId: string | null) {
         rosterKeys.team(teamId || ""),
         (old) => {
           if (!old) return [newPlayer];
-          // Remove temp player and add real player
-          return old.filter((p) => !p.id.startsWith("temp-")).concat(newPlayer);
+          if (!context?.tempId) return [...old, newPlayer];
+          return replaceById(old, context.tempId, newPlayer);
         }
       );
 

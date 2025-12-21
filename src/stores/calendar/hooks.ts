@@ -18,6 +18,7 @@ import type {
   CalendarEvent,
 } from "../../domain/calendar/types";
 import type { QueryKey } from "@tanstack/react-query";
+import { makeOptimisticId, replaceById } from "../../utils/optimistic";
 
 // Types for ranges & params
 export interface EventsQueryParams {
@@ -112,7 +113,7 @@ export function useCreateEvent(
         devMode
       ) as unknown as QueryKey;
       const previous = qc.getQueryData<CalendarEvent[]>(key) || [];
-      const tempId = `temp-${Date.now()}`;
+      const tempId = makeOptimisticId("temp");
       const optimisticEvent: CalendarEvent = {
         id: tempId,
         title: data.title,
@@ -134,9 +135,8 @@ export function useCreateEvent(
       if (!created) return;
       if (ctx) {
         const current = qc.getQueryData<CalendarEvent[]>(ctx.key) || [];
-        qc.setQueryData<CalendarEvent[]>(
-          ctx.key,
-          current.map((ev) => (ev.id === ctx.tempId ? created : ev))
+        qc.setQueryData<CalendarEvent[]>(ctx.key, (old) =>
+          replaceById(old || current, ctx.tempId, created)
         );
       }
     },

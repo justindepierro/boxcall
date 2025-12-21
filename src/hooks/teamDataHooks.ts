@@ -24,6 +24,8 @@ import type { TeamEventListItem, CreateEventInput } from "@services";
 import type { GameResultListItem, LogGameResultInput } from "@services";
 import type { TeamPostListItem } from "@services/postsService";
 
+import { makeOptimisticId, replaceById } from "../utils/optimistic";
+
 // Query keys
 const qk = {
   posts: (teamId: string) => ["team", teamId, "posts"] as const,
@@ -59,8 +61,9 @@ export function useCreatePost(teamId: string | undefined) {
       if (!teamId) return;
       await qc.cancelQueries({ queryKey: qk.posts(teamId) });
       const prev = qc.getQueryData(qk.posts(teamId));
+      const optimisticId = makeOptimisticId("optimistic");
       const optimistic: TeamPostListItem = {
-        id: `optimistic-${Date.now()}`,
+        id: optimisticId,
         team_id: teamId,
         author_id: "me",
         content,
@@ -74,21 +77,19 @@ export function useCreatePost(teamId: string | undefined) {
         qk.posts(teamId),
         (old) => (old ? [optimistic, ...old] : [optimistic])
       );
-      return { prev };
+      return { prev, optimisticId };
     },
     onError: (_err, _vars, ctx) => {
       if (teamId && ctx?.prev) qc.setQueryData(qk.posts(teamId), ctx.prev);
     },
-    onSuccess: (data) => {
+    onSuccess: (data, _vars, ctx) => {
       if (!teamId) return;
       qc.setQueryData<TeamPostListItem[] | undefined>(
         qk.posts(teamId),
         (old) => {
           if (!old) return [data];
-          return [
-            data,
-            ...old.filter((p) => !String(p.id).startsWith("optimistic-")),
-          ];
+          if (!ctx?.optimisticId) return [data, ...old];
+          return replaceById(old, ctx.optimisticId, data);
         }
       );
     },
@@ -164,8 +165,9 @@ export function useCreateEvent(teamId: string | undefined) {
       if (!tid) return;
       await qc.cancelQueries({ queryKey: qk.events(tid) });
       const prev = qc.getQueryData(qk.events(tid));
+      const optimisticId = makeOptimisticId("optimistic");
       const optimistic = {
-        id: `optimistic-${Date.now()}`,
+        id: optimisticId,
         team_id: tid,
         created_by: "me",
         title: input.title,
@@ -177,7 +179,7 @@ export function useCreateEvent(teamId: string | undefined) {
       qc.setQueryData<TeamEventListItem[] | undefined>(qk.events(tid), (old) =>
         old ? [optimistic, ...old] : [optimistic]
       );
-      return { prev, tid };
+      return { prev, tid, optimisticId };
     },
     onError: (_err, _vars, ctx) => {
       if (ctx?.tid && ctx.prev) qc.setQueryData(qk.events(ctx.tid), ctx.prev);
@@ -195,10 +197,8 @@ export function useCreateEvent(teamId: string | undefined) {
         qk.events(ctx.tid),
         (old) => {
           if (!old) return [normalized];
-          return [
-            normalized,
-            ...old.filter((e) => !String(e.id).startsWith("optimistic-")),
-          ];
+          if (!ctx.optimisticId) return [normalized, ...old];
+          return replaceById(old, ctx.optimisticId, normalized);
         }
       );
     },
@@ -248,8 +248,9 @@ export function useLogGameResult(teamId: string | undefined) {
       if (!tid) return;
       await qc.cancelQueries({ queryKey: qk.results(tid) });
       const prev = qc.getQueryData(qk.results(tid));
+      const optimisticId = makeOptimisticId("optimistic");
       const optimistic: GameResultListItem = {
-        id: `optimistic-${Date.now()}`,
+        id: optimisticId,
         team_id: tid,
         game_date: input.gameDate,
         opponent: input.opponent,
@@ -264,13 +265,24 @@ export function useLogGameResult(teamId: string | undefined) {
         qk.results(tid),
         (old) => (old ? [optimistic, ...old] : [optimistic])
       );
-      return { prev, tid };
+      return { prev, tid, optimisticId };
     },
     onError: (_err, _vars, ctx) => {
       if (ctx?.tid && ctx.prev) qc.setQueryData(qk.results(ctx.tid), ctx.prev);
     },
-    onSuccess: (_data, _vars, ctx) => {
-      if (ctx?.tid) qc.invalidateQueries({ queryKey: qk.stats(ctx.tid) });
+    onSuccess: (data, _vars, ctx) => {
+      if (!ctx?.tid) return;
+
+      qc.setQueryData<GameResultListItem[] | undefined>(
+        qk.results(ctx.tid),
+        (old) => {
+          if (!old) return [data];
+          if (!ctx.optimisticId) return [data, ...old];
+          return replaceById(old, ctx.optimisticId, data);
+        }
+      );
+
+      qc.invalidateQueries({ queryKey: qk.stats(ctx.tid) });
     },
     onSettled: (_data, _err, _vars, ctx) => {
       if (ctx?.tid) qc.invalidateQueries({ queryKey: qk.results(ctx.tid) });
