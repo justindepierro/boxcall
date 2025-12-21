@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { getCurrentUserId } from "../lib/auth-helpers";
 import { debug, warn, error as logError } from "../utils/logger";
 import {
@@ -86,8 +86,7 @@ export class PreferenceService {
 
       // Use maybeSingle() instead of single() to avoid 406 errors
       // when no profile exists for the user
-      const { data, error } = await supabase
-        .from("profiles")
+      const { data, error } = await table("profiles")
         .select("settings")
         .eq("id", userId)
         .maybeSingle();
@@ -187,8 +186,7 @@ export class PreferenceService {
 
             // Type cast needed because settings is Json type in database
             // Use .select() to verify the update actually happened
-            const { data, error } = await supabase
-              .from("profiles")
+            const { data, error } = await table("profiles")
               .update({ settings: merged } as never)
               .eq("id", userId)
               .select("id, settings")

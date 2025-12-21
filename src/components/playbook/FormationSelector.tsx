@@ -12,7 +12,7 @@
  */
 
 import { useState, useEffect } from "react";
-import { supabase } from "../../lib/supabase";
+import { table } from "../../data/supabase/db";
 import { FormationSelectorSkeleton } from "./FormationSelectorSkeleton";
 import { debug, logError } from "../../utils/logger";
 
@@ -48,8 +48,7 @@ export function FormationSelector({
       setError(null);
       try {
         // Query plays table for unique formation names
-        const { data: plays, error: queryError } = await supabase
-          .from("plays")
+        const { data: plays, error: queryError } = await table("plays")
           .select("formation")
           .eq("playbook_id", playbookId)
           .order("formation");

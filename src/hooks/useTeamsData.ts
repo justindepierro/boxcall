@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 
 import { useAuth } from "../app/auth-store";
 import { useActiveTeamStore } from "../stores/activeTeamStore";
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { NetworkResilience } from "../utils/networkResilience";
 import { debug, warn, error as logError } from "../utils/logger";
 import type { Formation } from "../types/formation";
@@ -143,13 +143,11 @@ function useTeamsDataInitialLoadEffect({
         debug("[useTeamsData] Starting fetchData for teamId:", teamId);
 
         const [teamsResult, playbooksResult] = await Promise.all([
-          supabase
-            .from("teams")
+          table("teams")
             .select(TEAM_FIELDS)
             .eq("id", teamIdForQuery)
             .order("created_at", { ascending: false }),
-          supabase
-            .from("playbooks")
+          table("playbooks")
             .select(PLAYBOOK_FIELDS)
             .eq("team_id", teamIdForQuery)
             .order("created_at", { ascending: false }),
@@ -200,13 +198,11 @@ function useTeamsDataInitialLoadEffect({
         }
 
         const [formationsResult, playsResult] = await Promise.all([
-          supabase
-            .from("formations")
+          table("formations")
             .select("*")
             .in("playbook_id", playbookIds)
             .order("created_at", { ascending: false }),
-          supabase
-            .from("plays")
+          table("plays")
             .select(PLAY_SELECT_FIELDS)
             .in("playbook_id", playbookIds)
             .order("created_at", { ascending: false })
@@ -303,8 +299,7 @@ export function useTeamsData(teamIdOverride?: string | null) {
     async (playId: string, updates: Partial<DatabasePlay>) => {
       try {
         debug("[useTeamsData] Updating play:", { playId, updates });
-        const { data, error } = await supabase
-          .from("plays")
+        const { data, error } = await table("plays")
           .update(updates)
           .eq("id", playId)
           .select()
@@ -373,8 +368,7 @@ export function useTeamsData(teamIdOverride?: string | null) {
       // Query only essential fields for faster loading
       const { data, error } = await NetworkResilience.retryWithBackoff(
         async () =>
-          (await supabase
-            .from("plays")
+          (await table("plays")
             .select(PLAY_SELECT_FIELDS)
             .in("playbook_id", playbookIds)
             .order("created_at", { ascending: false })

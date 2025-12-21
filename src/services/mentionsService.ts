@@ -2,6 +2,7 @@
 // Handles @mention parsing, suggestions, and processing
 
 import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { logError } from "../utils/logger";
 import type { Database } from "../types/database";
 
@@ -29,7 +30,6 @@ export class MentionsService {
     while ((match = mentionRegex.exec(text)) !== null) {
       const mentionText = match[1];
       const position = match.index;
-      const length = match[0].length;
 
       // For now, we'll create mentions with placeholder data
       // In a real implementation, you'd look up the user by username
@@ -53,8 +53,7 @@ export class MentionsService {
 
     try {
       // Search for users by display name or username
-      const { data: users, error } = await supabase
-        .from("profiles")
+      const { data: users, error } = await table("profiles")
         .select("id, display_name, avatar_url")
         .ilike("display_name", `%${query}%`)
         .limit(limit);
@@ -81,8 +80,7 @@ export class MentionsService {
   ): Promise<MentionSuggestion[]> {
     try {
       // Get team members first
-      const { data: members, error: membersError } = await supabase
-        .from("team_members")
+      const { data: members, error: membersError } = await table("team_members")
         .select("user_id, team_role")
         .eq("team_id", teamId)
         .eq("status", "active")
@@ -95,14 +93,12 @@ export class MentionsService {
       const userIds = members.map((m) => m.user_id);
 
       // Fetch profiles
-      const { data: profiles } = await supabase
-        .from("profiles")
+      const { data: profiles } = await table("profiles")
         .select("id, full_name, display_name, avatar_url")
         .in("id", userIds);
 
       // Fetch player info
-      const { data: players } = await supabase
-        .from("team_players")
+      const { data: players } = await table("team_players")
         .select("user_id, jersey_number")
         .eq("team_id", teamId)
         .in("user_id", userIds);
@@ -164,7 +160,7 @@ export class MentionsService {
         length: mention.length,
       }));
 
-      const { error } = await supabase.from("mentions").insert(mentionRecords);
+      const { error } = await table("mentions").insert(mentionRecords);
 
       if (error) throw error;
     } catch (error) {
@@ -175,8 +171,7 @@ export class MentionsService {
   // Get mentions for a user (for notifications)
   static async getMentionsForUser(userId: string, limit = 20): Promise<any[]> {
     try {
-      const { data, error } = await supabase
-        .from("mentions")
+      const { data, error } = await table("mentions")
         .select(
           `
           *,

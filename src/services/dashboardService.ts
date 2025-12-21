@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { error as logError, debug, warn } from "../utils/logger";
 
 import type { Database } from "../types/database";
@@ -46,8 +46,7 @@ export class DashboardService {
     userId: string,
     updates: Partial<{ bio: string; avatar_url: string }>
   ): Promise<UserProfile | null> {
-    const { data, error } = await supabase
-      .from("profiles")
+    const { data, error } = await table("profiles")
       .update(updates)
       .eq("id", userId)
       .select()
@@ -64,8 +63,7 @@ export class DashboardService {
   static async getUserTeams(userId: string): Promise<UserTeamData[]> {
     try {
       // Get user's team memberships first
-      const { data: memberships, error } = await supabase
-        .from("team_members")
+      const { data: memberships, error } = await table("team_members")
         .select("*")
         .eq("user_id", userId)
         .eq("status", "active");
@@ -95,8 +93,7 @@ export class DashboardService {
       }
 
       // Get team data separately
-      const { data: teams, error: teamsError } = await supabase
-        .from("teams")
+      const { data: teams, error: teamsError } = await table("teams")
         .select("*")
         .in("id", teamIds);
 
@@ -113,8 +110,7 @@ export class DashboardService {
       const userTeams: UserTeamData[] = [];
 
       // Get member counts for all teams in a single query to avoid N+1
-      const { data: memberCounts } = await supabase
-        .from("team_members")
+      const { data: memberCounts } = await table("team_members")
         .select("team_id")
         .in("team_id", teamIds)
         .eq("status", "active");

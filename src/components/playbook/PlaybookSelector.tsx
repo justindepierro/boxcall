@@ -13,7 +13,7 @@ import { ChevronDown, Edit2, Plus, Check, X } from "lucide-react";
 import { createPortal } from "react-dom";
 import { Typography } from "../design-system/Typography";
 import { Button } from "../ui/Button/Button";
-import { supabase } from "../../lib/supabase";
+import { table } from "../../data/supabase/db";
 import { logError } from "../../utils/logger";
 import { useToast } from "../../hooks/useToast";
 import { getCurrentUserId } from "../../lib/auth-helpers";
@@ -42,8 +42,7 @@ const savePlaybookName = async (
   newName: string,
   onSuccess?: () => void
 ): Promise<void> => {
-  const { error } = await supabase
-    .from("playbooks")
+  const { error } = await table("playbooks")
     .update({
       name: newName.trim(),
       updated_at: new Date().toISOString(),
@@ -65,8 +64,7 @@ const createNewPlaybook = async (
   const userId = getCurrentUserId();
   if (!userId) throw new Error("No authenticated user");
 
-  const { data, error } = await supabase
-    .from("playbooks")
+  const { data, error } = await table("playbooks")
     .insert({
       team_id: teamId,
       created_by: userId,

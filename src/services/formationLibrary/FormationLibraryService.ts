@@ -5,7 +5,7 @@
  * Clean, focused, 200 lines max per design pattern.
  */
 
-import { supabase } from "../../lib/supabase";
+import { table } from "../../data/supabase/db";
 import { logError } from "../../utils/logger";
 import type { Json } from "../../types/database";
 import type {
@@ -78,8 +78,7 @@ export class FormationLibraryService {
     playbookId: string,
     filters?: LibraryFilterOptions
   ): Promise<PaginatedLibraryResponse<Formation>> {
-    let query = supabase
-      .from("formations")
+    let query = table("formations")
       .select("*", { count: "exact" })
       .eq("playbook_id", playbookId);
 
@@ -111,8 +110,7 @@ export class FormationLibraryService {
    * Get single formation by ID
    */
   static async getFormationById(id: string): Promise<Formation | null> {
-    const { data, error } = await supabase
-      .from("formations")
+    const { data, error } = await table("formations")
       .select("*")
       .eq("id", id)
       .single();
@@ -129,8 +127,7 @@ export class FormationLibraryService {
    * Create new formation
    */
   static async createFormation(formation: FormationCreate): Promise<Formation> {
-    const { data, error } = await supabase
-      .from("formations")
+    const { data, error } = await table("formations")
       .insert({
         playbook_id: formation.playbook_id,
         name: formation.name,
@@ -175,8 +172,7 @@ export class FormationLibraryService {
       updateData.is_standalone = updates.direction === null;
     }
 
-    const { data, error } = await supabase
-      .from("formations")
+    const { data, error } = await table("formations")
       .update(updateData)
       .eq("id", id)
       .select()
@@ -194,7 +190,7 @@ export class FormationLibraryService {
    * Delete formation
    */
   static async deleteFormation(id: string): Promise<void> {
-    const { error } = await supabase.from("formations").delete().eq("id", id);
+    const { error } = await table("formations").delete().eq("id", id);
 
     if (error) {
       logError("[FormationLibraryService] Error deleting formation:", error);
@@ -210,8 +206,7 @@ export class FormationLibraryService {
     oppositeId: string
   ): Promise<void> {
     // Update both formations to point to each other
-    const { error: error1 } = await supabase
-      .from("formations")
+    const { error: error1 } = await table("formations")
       .update({ opposite_formation_id: oppositeId })
       .eq("id", formationId);
 
@@ -220,8 +215,7 @@ export class FormationLibraryService {
       throw new Error(`Failed to link formation: ${error1.message}`);
     }
 
-    const { error: error2 } = await supabase
-      .from("formations")
+    const { error: error2 } = await table("formations")
       .update({ opposite_formation_id: formationId })
       .eq("id", oppositeId);
 
@@ -245,12 +239,10 @@ export class FormationLibraryService {
 
     // Clear both links
     await Promise.all([
-      supabase
-        .from("formations")
+      table("formations")
         .update({ opposite_formation_id: null })
         .eq("id", formationId),
-      supabase
-        .from("formations")
+      table("formations")
         .update({ opposite_formation_id: null })
         .eq("id", oppositeId),
     ]);
@@ -260,8 +252,7 @@ export class FormationLibraryService {
    * Get plays using a formation
    */
   static async getFormationPlays(formationId: string, limit = 10) {
-    const { data, error } = await supabase
-      .from("plays")
+    const { data, error } = await table("plays")
       .select("id, play_name, p_type, formation, personnel")
       .eq("formation_id", formationId)
       .eq("is_archived", false)

@@ -15,6 +15,7 @@ import { supabase } from "../lib/supabase";
 import { info, error as logError } from "../utils/logger";
 import { getCurrentUserId } from "../lib/auth-helpers";
 import { createSameOriginRedirectTo } from "../utils/redirectUtils";
+import { table } from "../data/supabase/db";
 import {
   sendPlayerInvitationEmail,
   sendInvitationReminderEmail,
@@ -62,8 +63,7 @@ async function checkRateLimit(
   try {
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
-    const { data, error } = await supabase
-      .from("invitation_attempts")
+    const { data, error } = await table("invitation_attempts")
       .select("id")
       .eq("team_id", teamId)
       .eq("email", email.toLowerCase())
@@ -104,7 +104,7 @@ async function logInvitationAttempt(
     // Use cached user ID for bulletproof performance
     const userId = getCurrentUserId();
 
-    await supabase.from("invitation_attempts").insert({
+    await table("invitation_attempts").insert({
       team_id: teamId,
       player_id: playerId,
       email: email.toLowerCase(),
@@ -181,7 +181,7 @@ export async function sendPlayerInvitation(params: SendInvitationParams) {
       invited_by: userId,
     };
 
-    const { data, error } = await (supabase.from("team_players") as any)
+    const { data, error } = await table("team_players")
       .update(updateData)
       .eq("id", playerId)
       .select("invitation_token")
@@ -200,6 +200,14 @@ export async function sendPlayerInvitation(params: SendInvitationParams) {
     }
 
     const invitationToken = data?.invitation_token;
+
+    if (!invitationToken) {
+      await logInvitationAttempt(teamId, playerId, email, false);
+      return serviceFail<SendInvitationData, SendInvitationErrorCode>(
+        "supabase_error",
+        "Failed to generate invitation token"
+      );
+    }
 
     // Generate invitation URL
     const invitationPath = `/invite/accept?token=${encodeURIComponent(
@@ -227,7 +235,7 @@ export async function sendPlayerInvitation(params: SendInvitationParams) {
       );
 
       // Update status to failed but don't throw - player is still in system
-      await (supabase.from("team_players") as any)
+      await table("team_players")
         .update({ invitation_status: "failed" })
         .eq("id", playerId);
 
@@ -304,7 +312,7 @@ export async function resendPlayerInvitation(
       invited_by: userId,
     };
 
-    const { error } = await (supabase.from("team_players") as any)
+    const { error } = await table("team_players")
       .update(updateData)
       .eq("id", playerId);
 
@@ -379,8 +387,7 @@ export async function getInvitationByToken(token: string) {
     user_id?: string | null;
   };
 
-  const { data, error } = await supabase
-    .from("team_players")
+  const { data, error } = await table("team_players")
     .select(
       "id, team_id, first_name, last_name, invitation_expires_at, invitation_status, user_id"
     )
@@ -427,7 +434,7 @@ export async function getInvitationByToken(token: string) {
   ) {
     // Mark as expired (best-effort)
     try {
-      await (supabase.from("team_players") as any)
+      await table("team_players")
         .update({ invitation_status: "expired" })
         .eq("invitation_token", token);
     } catch {

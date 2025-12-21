@@ -8,7 +8,7 @@
  */
 
 import React, { useState, useEffect } from "react";
-import { supabase } from "../../lib/supabase";
+import { table } from "../../data/supabase/db";
 import { Typography } from "../design-system/Typography";
 import { Button } from "../ui/Button/Button";
 import { debug, error as logError } from "../../utils/logger";
@@ -51,8 +51,7 @@ async function fetchFormationDiagnosticData(playbookId?: string): Promise<{
   stats: FormationStats;
   rawData: any;
 }> {
-  let query = supabase
-    .from("formations")
+  let query = table("formations")
     .select(
       "id, name, direction, opposite_formation_id, usage_count, playbook_id"
     );
@@ -69,8 +68,7 @@ async function fetchFormationDiagnosticData(playbookId?: string): Promise<{
 
   let playsData = null;
   try {
-    const { data: plays } = await supabase
-      .from("plays")
+    const { data: plays } = await table("plays")
       .select("id, formation, f_dir, f_type, play_name")
       .limit(10);
     playsData = plays;

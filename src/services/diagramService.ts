@@ -3,7 +3,7 @@
  * Starting fresh with basic formation saving functionality
  */
 
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import type { Play } from "../types/play";
 import type { FormationPlayerPosition } from "../types/formation";
 
@@ -28,8 +28,7 @@ export async function saveDiagram(
       lastModified: new Date().toISOString(),
     };
 
-    const { data, error } = await supabase
-      .from("plays")
+    const { data, error } = await table("plays")
       .update({
         diagram_data: diagramData as any,
         updated_at: new Date().toISOString(),

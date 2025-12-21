@@ -3,7 +3,7 @@
  * Tracks and retrieves user activity for plays, practice scripts, and game plans
  */
 
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { getCurrentUserId } from "../lib/auth-helpers";
 import { info, error as logError } from "../utils/logger";
 import type { Json } from "../types/database";
@@ -67,8 +67,7 @@ export class ActivityService {
         created_at: new Date().toISOString(),
       };
 
-      const { data, error } = await supabase
-        .from("activities")
+      const { data, error } = await table("activities")
         .insert(activityData)
         .select()
         .single();
@@ -111,8 +110,7 @@ export class ActivityService {
         return [];
       }
 
-      let query = supabase
-        .from("activities")
+      let query = table("activities")
         .select("*")
         .eq("user_id", userId)
         .order("created_at", { ascending: false })
@@ -165,8 +163,7 @@ export class ActivityService {
    */
   static async getPlayActivities(playId: string): Promise<PlayActivityItem[]> {
     try {
-      const { data, error } = await supabase
-        .from("activities")
+      const { data, error } = await table("activities")
         .select("*")
         .eq("play_id", playId)
         .order("created_at", { ascending: false });
@@ -211,8 +208,7 @@ export class ActivityService {
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() - daysOld);
 
-      const { data, error } = await supabase
-        .from("activities")
+      const { data, error } = await table("activities")
         .delete()
         .lt("created_at", cutoffDate.toISOString())
         .select();
@@ -242,8 +238,7 @@ export class ActivityService {
       const userId = getCurrentUserId();
       if (!userId) return {} as Record<ActivityType, number>;
 
-      let query = supabase
-        .from("activities")
+      let query = table("activities")
         .select("action")
         .eq("user_id", userId);
 

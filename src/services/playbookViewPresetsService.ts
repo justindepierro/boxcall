@@ -5,8 +5,8 @@
  * Handles filtering, creation, updates, and archiving of presets.
  */
 
-import { supabase } from "../lib/supabase";
 import { getCurrentUserId } from "../lib/auth-helpers";
+import { fromAny } from "../data/supabase/db";
 import { error as logError, info } from "../utils/logger";
 import type {
   ServerPlaybookViewPreset,
@@ -28,8 +28,7 @@ export class PlaybookViewPresetsService {
         `[PlaybookViewPresets] Listing presets${teamId ? ` for team ${teamId}` : ""}`
       );
 
-      let query = supabase
-        .from(TABLE)
+      let query = fromAny(TABLE)
         .select("*")
         .order("updated_at", { ascending: false });
 
@@ -65,8 +64,7 @@ export class PlaybookViewPresetsService {
         throw new Error("Must be signed in to create a preset");
       }
 
-      const { data, error } = await supabase
-        .from(TABLE)
+      const { data, error } = await fromAny(TABLE)
         .insert({
           user_id: userId,
           name: input.name,
@@ -102,8 +100,7 @@ export class PlaybookViewPresetsService {
       if (input.filters !== undefined) patch.filters = input.filters;
       if (input.archived !== undefined) patch.archived = input.archived;
 
-      const { data, error } = await supabase
-        .from(TABLE)
+      const { data, error } = await fromAny(TABLE)
         .update(patch)
         .eq("id", input.id)
         .select()
@@ -128,7 +125,7 @@ export class PlaybookViewPresetsService {
     try {
       info("[PlaybookViewPresets] Deleting preset:", id);
 
-      const { error } = await supabase.from(TABLE).delete().eq("id", id);
+      const { error } = await fromAny(TABLE).delete().eq("id", id);
 
       if (error) {
         logError("[PlaybookViewPresets] Failed to delete preset:", error);
@@ -147,8 +144,7 @@ export class PlaybookViewPresetsService {
     try {
       info("[PlaybookViewPresets] Archiving preset:", id);
 
-      const { data, error } = await supabase
-        .from(TABLE)
+      const { data, error } = await fromAny(TABLE)
         .update({ archived: true })
         .eq("id", id)
         .select()

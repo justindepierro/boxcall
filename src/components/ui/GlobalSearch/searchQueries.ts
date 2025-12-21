@@ -4,7 +4,7 @@
  * Handles parallel database queries for global search
  */
 
-import { supabase } from "../../../lib/supabase";
+import { fromAny, table } from "../../../data/supabase/db";
 import { SEARCH_LIMITS } from "./constants";
 
 export interface SearchQueryParams {
@@ -137,8 +137,7 @@ async function searchPlays(
 ) {
   if (!playbookId) return { data: null };
 
-  return supabase
-    .from("plays")
+  return table("plays")
     .select("id, play_name, formation, one_word_play, personnel, p_type")
     .eq("playbook_id", playbookId)
     .or(
@@ -155,8 +154,7 @@ async function searchFormations(
 ) {
   if (!playbookId) return { data: null };
 
-  return supabase
-    .from("formations")
+  return table("formations")
     .select("id, name")
     .eq("playbook_id", playbookId)
     .ilike("name", `%${searchTerm}%`)
@@ -169,8 +167,7 @@ async function searchPlayers(
   searchTerm: string,
   signal: AbortSignal
 ) {
-  return supabase
-    .from("team_players")
+  return table("team_players")
     .select("id, first_name, last_name, jersey_number, position")
     .eq("team_id", teamId)
     .eq("is_active", true)
@@ -187,8 +184,7 @@ async function searchAnnouncements(
   signal: AbortSignal
 ) {
   // team_announcements table not yet in generated Database types
-  return (supabase as any)
-    .from("team_announcements")
+  return fromAny("team_announcements")
     .select("id, title, created_at")
     .eq("team_id", teamId)
     .is("deleted_at", null)
@@ -202,8 +198,7 @@ async function searchGamePlans(
   searchTerm: string,
   signal: AbortSignal
 ) {
-  return supabase
-    .from("game_plans")
+  return table("game_plans")
     .select("id, opponent, game_date")
     .eq("team_id", teamId)
     .ilike("opponent", `%${searchTerm}%`)
@@ -216,8 +211,7 @@ async function searchPracticeScripts(
   searchTerm: string,
   signal: AbortSignal
 ) {
-  return supabase
-    .from("practice_scripts")
+  return table("practice_scripts")
     .select("id, title")
     .eq("team_id", teamId)
     .ilike("title", `%${searchTerm}%`)
@@ -230,8 +224,7 @@ async function searchCalendarEvents(
   searchTerm: string,
   signal: AbortSignal
 ) {
-  return supabase
-    .from("calendar_events")
+  return table("calendar_events")
     .select("id, title, event_date, event_type")
     .eq("team_id", teamId)
     .ilike("title", `%${searchTerm}%`)
@@ -244,8 +237,7 @@ async function searchEquipment(
   searchTerm: string,
   signal: AbortSignal
 ) {
-  return supabase
-    .from("equipment")
+  return table("equipment")
     .select("id, name, category, quantity")
     .eq("team_id", teamId)
     .ilike("name", `%${searchTerm}%`)
@@ -260,8 +252,7 @@ export async function getPlaybookId(
   teamId: string,
   signal: AbortSignal
 ): Promise<string | null> {
-  const { data: playbooks } = await supabase
-    .from("playbooks")
+  const { data: playbooks } = await table("playbooks")
     .select("id")
     .eq("team_id", teamId)
     .eq("is_active", true)

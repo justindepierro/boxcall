@@ -5,7 +5,7 @@ import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon/Icon";
 import { telemetry } from "../../telemetry/dispatcher";
 import { useAuth } from "../../app/auth-store";
-import { supabase } from "../../lib/supabase";
+import { table } from "../../data/supabase/db";
 import {
   ACTIVATION_FLAG_SET_EVENT,
   OPEN_PLAY_BUILDER_EVENT,
@@ -116,8 +116,7 @@ export const ActivationChecklist: React.FC = () => {
         return;
       }
       try {
-        const { data, error } = await supabase
-          .from("team_members")
+        const { data, error } = await table("team_members")
           .select("id", { count: "exact", head: true })
           .eq("user_id", profile.id);
         if (!cancelled) {

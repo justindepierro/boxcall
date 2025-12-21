@@ -5,9 +5,9 @@
  * Supports: 👍 (like), ❤️ (love), 🎉 (celebrate), 🏈 (football), 🔥 (fire), 👏 (clap), 🎯 (target), 💯 (hundred)
  */
 
-import { supabase } from "../lib/supabase";
 import { emitTelemetry } from "../lib/telemetry";
 import { getCurrentUserId } from "../lib/auth-helpers";
+import { table } from "../data/supabase/db";
 import { logError } from "../utils/logger";
 
 export type ReactionType =
@@ -72,8 +72,7 @@ export class CommentReactionsService {
       }
 
       // Fetch all reactions for this comment
-      const { data: reactions, error } = await supabase
-        .from("comment_reactions")
+      const { data: reactions, error } = await table("comment_reactions")
         .select("*")
         .eq("comment_id", commentId)
         .order("created_at", { ascending: false });
@@ -140,8 +139,7 @@ export class CommentReactionsService {
       }
 
       // Check if user already reacted with this type
-      const { data: existing, error: checkError } = await supabase
-        .from("comment_reactions")
+      const { data: existing, error: checkError } = await table("comment_reactions")
         .select("id")
         .eq("comment_id", commentId)
         .eq("user_id", userId)
@@ -194,7 +192,7 @@ export class CommentReactionsService {
         return { success: false, error: "User not authenticated" };
       }
 
-      const { error } = await supabase.from("comment_reactions").insert({
+      const { error } = await table("comment_reactions").insert({
         comment_id: commentId,
         user_id: userId,
         reaction_type: reactionType,
@@ -232,8 +230,7 @@ export class CommentReactionsService {
         return { success: false, error: "User not authenticated" };
       }
 
-      const { error } = await supabase
-        .from("comment_reactions")
+      const { error } = await table("comment_reactions")
         .delete()
         .eq("comment_id", commentId)
         .eq("user_id", userId)
@@ -270,8 +267,7 @@ export class CommentReactionsService {
       if (!userId) return {};
 
       // Fetch all reactions for these comments
-      const { data: reactions, error } = await supabase
-        .from("comment_reactions")
+      const { data: reactions, error } = await table("comment_reactions")
         .select("*")
         .in("comment_id", commentIds);
 

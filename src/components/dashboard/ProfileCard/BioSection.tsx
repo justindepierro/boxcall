@@ -3,7 +3,7 @@ import { Edit2, Save, X } from "lucide-react";
 import { Typography } from "../../design-system";
 import { Button } from "../../ui";
 import { Tooltip } from "../../ui/Tooltip/Tooltip";
-import { supabase } from "../../../lib/supabase";
+import { table } from "../../../data/supabase/db";
 import { logError } from "../../../utils/logger";
 
 interface BioSectionProps {
@@ -37,8 +37,7 @@ export const BioSection: React.FC<BioSectionProps> = ({
 
     setIsSavingBio(true);
     try {
-      const { error } = await supabase
-        .from("profiles")
+      const { error } = await table("profiles")
         .update({ bio: bioText.trim() || null })
         .eq("id", profileId);
 

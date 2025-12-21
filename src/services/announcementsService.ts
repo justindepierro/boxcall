@@ -5,10 +5,11 @@
  * Supports pinning, soft deletes, and visibility controls
  */
 
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { getCurrentUserId } from "../lib/auth-helpers";
 import { emitTelemetry } from "../lib/telemetry";
 import { error as logError } from "../utils/logger";
+import type { Json } from "../types/database";
 
 // ============================================
 // TYPE DEFINITIONS
@@ -26,6 +27,7 @@ export interface Attachment {
   url: string;
   type: string; // MIME type
   size: number; // bytes
+  [key: string]: Json | undefined;
 }
 
 export interface Announcement {
@@ -89,8 +91,7 @@ export class AnnouncementsService {
     filters?: AnnouncementFilters
   ): Promise<Announcement[]> {
     try {
-      let query = supabase
-        .from("team_announcements" as any)
+      let query = table("team_announcements")
         .select("*")
         .eq("team_id", teamId)
         .is("deleted_at", null);
@@ -144,14 +145,12 @@ export class AnnouncementsService {
       ];
 
       // Fetch author profiles
-      const { data: profiles } = await supabase
-        .from("profiles")
+      const { data: profiles } = await table("profiles")
         .select("id, full_name, display_name, avatar_url")
         .in("id", authorIds);
 
       // Fetch team member roles to check for coaches
-      const { data: teamMembers } = await supabase
-        .from("team_members")
+      const { data: teamMembers } = await table("team_members")
         .select("user_id, team_role")
         .eq("team_id", teamId)
         .in("user_id", authorIds);
@@ -208,8 +207,7 @@ export class AnnouncementsService {
     announcementId: string
   ): Promise<Announcement | null> {
     try {
-      const { data, error } = await supabase
-        .from("team_announcements" as any)
+      const { data, error } = await table("team_announcements")
         .select("*")
         .eq("id", announcementId)
         .is("deleted_at", null)
@@ -248,13 +246,13 @@ export class AnnouncementsService {
       const newAnnouncement = {
         ...announcement,
         created_by: userId,
+        content: announcement.content?.trim() || "",
         attachments: announcement.attachments || [],
         visibility: announcement.visibility || "all",
         is_pinned: announcement.is_pinned || false,
       };
 
-      const { data, error } = await supabase
-        .from("team_announcements" as any)
+      const { data, error } = await table("team_announcements")
         .insert(newAnnouncement)
         .select()
         .single();
@@ -299,8 +297,7 @@ export class AnnouncementsService {
     error?: string;
   }> {
     try {
-      const { data, error } = await supabase
-        .from("team_announcements" as any)
+      const { data, error } = await table("team_announcements")
         .update(updates)
         .eq("id", announcementId)
         .select()
@@ -349,8 +346,7 @@ export class AnnouncementsService {
         };
       }
 
-      const { error } = await supabase
-        .from("team_announcements" as any)
+      const { error } = await table("team_announcements")
         .update({ is_pinned: !announcement.is_pinned })
         .eq("id", announcementId);
 
@@ -385,8 +381,9 @@ export class AnnouncementsService {
   ): Promise<{ success: boolean; error?: string }> {
     try {
       // First check if the announcement exists and get the team_id
-      const { data: announcement, error: fetchError } = await supabase
-        .from("team_announcements" as any)
+      const { data: announcement, error: fetchError } = await table(
+        "team_announcements"
+      )
         .select("id, team_id, created_by")
         .eq("id", announcementId)
         .single();
@@ -401,8 +398,7 @@ export class AnnouncementsService {
       }
 
       // Perform soft delete by setting deleted_at timestamp
-      const { error } = await supabase
-        .from("team_announcements" as any)
+      const { error } = await table("team_announcements")
         .update({ deleted_at: new Date().toISOString() } as any)
         .eq("id", announcementId);
 
@@ -437,8 +433,7 @@ export class AnnouncementsService {
     announcementId: string
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { error } = await supabase
-        .from("team_announcements" as any)
+      const { error } = await table("team_announcements")
         .delete()
         .eq("id", announcementId);
 
@@ -498,8 +493,7 @@ export class AnnouncementsService {
       const userId = getCurrentUserId();
       if (!userId) return [];
 
-      const { data, error } = await supabase
-        .from("team_announcements" as any)
+      const { data, error } = await table("team_announcements")
         .select("*")
         .eq("team_id", teamId)
         .eq("status", "draft")
@@ -543,6 +537,7 @@ export class AnnouncementsService {
         ...announcement,
         status: "draft" as AnnouncementStatus,
         created_by: userId,
+        content: announcement.content?.trim() || "",
         attachments: announcement.attachments || [],
         visibility: announcement.visibility || "all",
         is_pinned: announcement.is_pinned || false,
@@ -553,8 +548,7 @@ export class AnnouncementsService {
 
       if (announcement.id) {
         // Update existing draft
-        const updateResult = await supabase
-          .from("team_announcements" as any)
+        const updateResult = await table("team_announcements")
           .update(draftData)
           .eq("id", announcement.id)
           .eq("created_by", userId) // Ensure user owns the draft
@@ -565,8 +559,7 @@ export class AnnouncementsService {
         error = updateResult.error;
       } else {
         // Create new draft
-        const insertResult = await supabase
-          .from("team_announcements" as any)
+        const insertResult = await table("team_announcements")
           .insert(draftData)
           .select()
           .single();
@@ -613,8 +606,7 @@ export class AnnouncementsService {
         return { success: false, error: "Not authenticated" };
       }
 
-      const { error } = await supabase
-        .from("team_announcements" as any)
+      const { error } = await table("team_announcements")
         .update({ status: "published" })
         .eq("id", draftId)
         .eq("created_by", userId)

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import type { AchievementDefinition } from "../services/achievementService";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
@@ -124,8 +124,7 @@ const buildUpdateRow = (formData: AchievementFormData) => ({
 });
 
 const fetchAchievements = async () => {
-  const { data, error } = await supabase
-    .from("achievement_definitions")
+  const { data, error } = await table("achievement_definitions")
     .select("*")
     .order("category", { ascending: true });
 
@@ -136,9 +135,8 @@ const fetchAchievements = async () => {
 const insertAchievement = async (formData: AchievementFormData) => {
   const insertRow = buildInsertRow(formData);
 
-  const { data, error } = await supabase
-    .from("achievement_definitions")
-    .insert([insertRow] as any)
+  const { data, error } = await table("achievement_definitions")
+    .insert([insertRow])
     .select()
     .single();
 
@@ -153,9 +151,8 @@ const updateAchievement = async (params: {
   const { id, formData } = params;
   const updateRow = buildUpdateRow(formData);
 
-  const { data, error } = await supabase
-    .from("achievement_definitions")
-    .update(updateRow as any)
+  const { data, error } = await table("achievement_definitions")
+    .update(updateRow)
     .eq("id", id)
     .select()
     .single();
@@ -165,8 +162,7 @@ const updateAchievement = async (params: {
 };
 
 const deleteAchievement = async (id: string) => {
-  const { error } = await supabase
-    .from("achievement_definitions")
+  const { error } = await table("achievement_definitions")
     .delete()
     .eq("id", id);
 
@@ -574,9 +570,8 @@ export const AchievementAdminPage: React.FC = () => {
       }
 
       const rows = parsed.map(buildInsertRow);
-      const { data: inserted, error } = await supabase
-        .from("achievement_definitions")
-        .insert(rows as any)
+      const { data: inserted, error } = await table("achievement_definitions")
+        .insert(rows)
         .select();
 
       if (error) throw error;

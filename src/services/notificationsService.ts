@@ -8,6 +8,7 @@ import { supabase } from "../lib/supabase";
 import { emitTelemetry } from "../lib/telemetry";
 import { MentionsService } from "./mentionsService";
 import { getCurrentUserId } from "../lib/auth-helpers";
+import { table } from "../data/supabase/db";
 import { logError } from "../utils/logger";
 
 // ============================================
@@ -62,7 +63,7 @@ export class NotificationsService {
     commentId?: string;
   }): Promise<{ success: boolean; error?: string }> {
     try {
-      const { error } = await supabase.from("notifications").insert({
+      const { error } = await table("notifications").insert({
         user_id: params.mentionedUserId,
         type: "mention",
         title: `${params.triggeredByUserName} mentioned you`,
@@ -149,8 +150,7 @@ export class NotificationsService {
       const userId = getCurrentUserId();
       if (!userId) return [];
 
-      let query = supabase
-        .from("notifications")
+      let query = table("notifications")
         .select("*")
         .eq("user_id", userId)
         .order("created_at", { ascending: false });
@@ -181,8 +181,7 @@ export class NotificationsService {
         return notifications as NotificationWithUser[];
       }
 
-      const { data: profiles } = await supabase
-        .from("profiles")
+      const { data: profiles } = await table("profiles")
         .select("id, full_name, display_name, avatar_url")
         .in("id", userIds);
 
@@ -207,8 +206,7 @@ export class NotificationsService {
     notificationId: string
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { error } = await supabase
-        .from("notifications")
+      const { error } = await table("notifications")
         .update({ read: true })
         .eq("id", notificationId);
 
@@ -242,8 +240,7 @@ export class NotificationsService {
         return { success: false, error: "Not authenticated" };
       }
 
-      const { error } = await supabase
-        .from("notifications")
+      const { error } = await table("notifications")
         .update({ read: true })
         .eq("user_id", userId)
         .eq("read", false);
@@ -272,8 +269,7 @@ export class NotificationsService {
     notificationId: string
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { error } = await supabase
-        .from("notifications")
+      const { error } = await table("notifications")
         .delete()
         .eq("id", notificationId);
 
@@ -305,8 +301,7 @@ export class NotificationsService {
       const userId = getCurrentUserId();
       if (!userId) return 0;
 
-      const { count, error } = await supabase
-        .from("notifications")
+      const { count, error } = await table("notifications")
         .select("*", { count: "exact", head: true })
         .eq("user_id", userId)
         .eq("read", false);

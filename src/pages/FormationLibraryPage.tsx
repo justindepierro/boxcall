@@ -14,7 +14,7 @@ import { Icon } from "../components/ui/Icon/Icon";
 import { toast } from "sonner";
 import { useTeamsData } from "../hooks/useTeamsData";
 import { useActiveTeamStore } from "../stores/activeTeamStore";
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { logError } from "../utils/logger";
 import { readLocalString, storageKeys } from "../utils/storage";
 
@@ -228,8 +228,7 @@ const FormationLibraryPageContent: React.FC<
       toast.loading("Importing formations from plays...", { id: "import" });
 
       // Get all unique formation names from plays
-      const { data: plays } = await supabase
-        .from("plays")
+      const { data: plays } = await table("plays")
         .select("formation")
         .eq("playbook_id", playbookId)
         .eq("is_archived", false);
@@ -254,8 +253,7 @@ const FormationLibraryPageContent: React.FC<
       let errorCount = 0;
       for (const formationName of uniqueFormations) {
         // Check if already exists
-        const { data: existing } = await supabase
-          .from("formations")
+        const { data: existing } = await table("formations")
           .select("id")
           .eq("playbook_id", playbookId)
           .ilike("name", formationName)
@@ -268,7 +266,7 @@ const FormationLibraryPageContent: React.FC<
             ?.formation?.trim();
 
           // Create new formation
-          const { error } = await supabase.from("formations").insert({
+          const { error } = await table("formations").insert({
             playbook_id: playbookId,
             name: originalName || formationName,
             is_standalone: true,

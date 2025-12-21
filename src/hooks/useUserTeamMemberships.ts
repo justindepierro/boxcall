@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import type { Database } from "../types/database";
 import { debug, logError } from "../utils/logger";
 
@@ -18,8 +18,7 @@ async function fetchUserTeamMemberships(userId: string): Promise<TeamMember[]> {
     return [];
   }
 
-  const { data, error } = await supabase
-    .from("team_members")
+  const { data, error } = await table("team_members")
     .select(
       `
       *,

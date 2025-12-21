@@ -10,7 +10,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { warn } from "../utils/logger";
 
 interface Team {
@@ -146,8 +146,7 @@ export const teamsDataKeys = {
 
 // Fetch teams
 async function fetchTeams(): Promise<Team[]> {
-  const { data, error } = await supabase
-    .from("teams")
+  const { data, error } = await table("teams")
     .select("*")
     .order("created_at", { ascending: false });
 
@@ -165,8 +164,7 @@ async function fetchTeams(): Promise<Team[]> {
 
 // Fetch playbooks
 async function fetchPlaybooks(): Promise<Playbook[]> {
-  const { data, error } = await supabase
-    .from("playbooks")
+  const { data, error } = await table("playbooks")
     .select(
       `
       *,
@@ -186,8 +184,7 @@ async function fetchPlaybooks(): Promise<Playbook[]> {
 
 // Fetch total play count
 async function fetchTotalPlaysCount(): Promise<number> {
-  const { count, error } = await supabase
-    .from("plays")
+  const { count, error } = await table("plays")
     .select("*", { count: "exact", head: true });
 
   if (error) throw error;
@@ -199,8 +196,7 @@ async function fetchPlaysPage(page: number): Promise<DatabasePlay[]> {
   const from = page * PAGE_SIZE;
   const to = from + PAGE_SIZE - 1;
 
-  const { data, error } = await supabase
-    .from("plays")
+  const { data, error } = await table("plays")
     .select(
       `
       id,
@@ -266,8 +262,7 @@ async function updatePlayInDB(
   playId: string,
   updates: Partial<DatabasePlay>
 ): Promise<DatabasePlay> {
-  const { data, error } = await supabase
-    .from("plays")
+  const { data, error } = await table("plays")
     .update(updates)
     .eq("id", playId)
     .select()

@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { supabase } from "../../../lib/supabase";
+import { table } from "../../../data/supabase/db";
 import { colorTokens } from "../../../design-system/tokens";
 import { warn } from "../../../utils/logger";
 
@@ -83,8 +83,7 @@ export function useTeamBulletinData({
           school_name: string | null;
           mascot: string | null;
         };
-        const { data, error } = await supabase
-          .from("teams")
+        const { data, error } = await table("teams")
           .select("id, name, season_year, school_name, mascot")
           .eq("id", teamId)
           .single<TeamRow>();
@@ -95,8 +94,7 @@ export function useTeamBulletinData({
         }
         let memberCount = 0;
         try {
-          const { count } = await supabase
-            .from("team_members")
+          const { count } = await table("team_members")
             .select("id", { head: true, count: "exact" })
             .eq("team_id", teamId);
           memberCount = count || 0;

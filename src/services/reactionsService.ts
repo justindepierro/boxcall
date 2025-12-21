@@ -5,7 +5,7 @@
  * Supports: 👍 (like), ❤️ (love), 🎉 (celebrate), 🏈 (football)
  */
 
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { getCurrentUserId } from "../lib/auth-helpers";
 import { emitTelemetry } from "../lib/telemetry";
 import { logError } from "../utils/logger";
@@ -77,8 +77,7 @@ export class ReactionsService {
     try {
       const userId = getCurrentUserId();
 
-      const { data, error } = await supabase
-        .from("announcement_reactions" as any)
+      const { data, error } = await table("announcement_reactions")
         .select("*")
         .eq("announcement_id", announcementId)
         .order("created_at", { ascending: false });
@@ -123,8 +122,7 @@ export class ReactionsService {
         reaction_type: reactionType,
       };
 
-      const { data, error } = await supabase
-        .from("announcement_reactions" as any)
+      const { data, error } = await table("announcement_reactions")
         .insert(newReaction)
         .select()
         .single();
@@ -179,8 +177,7 @@ export class ReactionsService {
         };
       }
 
-      const { error } = await supabase
-        .from("announcement_reactions" as any)
+      const { error } = await table("announcement_reactions")
         .delete()
         .eq("announcement_id", announcementId)
         .eq("user_id", userId)
@@ -232,8 +229,7 @@ export class ReactionsService {
       }
 
       // Check if reaction already exists
-      const { data: existing } = await supabase
-        .from("announcement_reactions" as any)
+      const { data: existing } = await table("announcement_reactions")
         .select("id")
         .eq("announcement_id", announcementId)
         .eq("user_id", userId)
@@ -275,8 +271,7 @@ export class ReactionsService {
     try {
       const userId = getCurrentUserId();
 
-      const { data, error } = await supabase
-        .from("announcement_reactions" as any)
+      const { data, error } = await table("announcement_reactions")
         .select("*")
         .in("announcement_id", announcementIds);
 
@@ -319,8 +314,7 @@ export class ReactionsService {
     reactionType: ReactionType
   ): Promise<Array<{ id: string; name: string; avatar_url?: string }>> {
     try {
-      const { data, error } = await supabase
-        .from("announcement_reactions" as any)
+      const { data, error } = await table("announcement_reactions")
         .select("user_id")
         .eq("announcement_id", announcementId)
         .eq("reaction_type", reactionType);
@@ -334,8 +328,7 @@ export class ReactionsService {
       if (userIds.length === 0) return [];
 
       // Fetch user profiles
-      const { data: profiles, error: profilesError } = await supabase
-        .from("profiles")
+      const { data: profiles, error: profilesError } = await table("profiles")
         .select("id, full_name, display_name, avatar_url")
         .in("id", userIds);
 

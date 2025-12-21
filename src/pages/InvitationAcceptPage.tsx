@@ -11,6 +11,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import {
   getInvitationByToken,
   acceptInvitation,
@@ -419,8 +420,7 @@ export function InvitationAcceptPage() {
     };
 
     const fetchTeam = async (teamId: string | null | undefined) => {
-      const { data: teamData, error: teamError } = await supabase
-        .from("teams")
+      const { data: teamData, error: teamError } = await table("teams")
         .select("id, name, school_name")
         .eq("id", teamId || "")
         .single();
@@ -433,8 +433,7 @@ export function InvitationAcceptPage() {
     };
 
     const fetchPlayerEmail = async (userId: string) => {
-      const { data: profileData } = await supabase
-        .from("profiles")
+      const { data: profileData } = await table("profiles")
         .select("email")
         .eq("id", userId)
         .single();

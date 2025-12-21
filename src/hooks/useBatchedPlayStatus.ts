@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { logError } from "../utils/logger";
 
 export interface PlayStatus {
@@ -76,8 +76,9 @@ export function useBatchedPlayStatus(
         // Batch fetch game plan counts
         // NOTE: play_assignments and practice_script_plays tables don't exist yet
         // Those features are not implemented, so we only query game_plan_plays
-        const { data: gamePlanPlays, error: gamePlanError } = await supabase
-          .from("game_plan_plays")
+        const { data: gamePlanPlays, error: gamePlanError } = await table(
+          "game_plan_plays"
+        )
           .select("play_id")
           .in("play_id", playIdsToFetch);
 

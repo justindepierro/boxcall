@@ -6,7 +6,7 @@
  * - playbookSearchService.ts (fuzzy search, filters, suggestions)
  */
 
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { getCurrentUserId } from "../lib/auth-helpers";
 import { normalizePlayName, normalizeText } from "../utils/textNormalization";
 import Fuse from "fuse.js";
@@ -31,15 +31,13 @@ export class PlaysService {
       if (!userId) throw new Error("User not authenticated");
 
       // Get user profile to check role
-      const { data: profile } = await supabase
-        .from("profiles")
+      const { data: profile } = await table("profiles")
         .select("role")
         .eq("id", userId)
         .single();
 
       // Check if user already has a team they own/created
-      const { data: existingTeams } = await supabase
-        .from("teams")
+      const { data: existingTeams } = await table("teams")
         .select("id")
         .eq("created_by", userId)
         .limit(1);
@@ -53,8 +51,7 @@ export class PlaysService {
       const teamName = isCoach ? "Personal Playbook" : "My Team";
       const schoolName = isCoach ? "Personal Collection" : "Auto-Created Team";
 
-      const { data: newTeam, error: teamError } = await supabase
-        .from("teams")
+      const { data: newTeam, error: teamError } = await table("teams")
         .insert({
           name: teamName,
           school_name: schoolName,
@@ -66,8 +63,7 @@ export class PlaysService {
       if (teamError) throw teamError;
 
       // Create team membership for the user as a coach
-      const { error: membershipError } = await supabase
-        .from("team_members")
+      const { error: membershipError } = await table("team_members")
         .insert({
           team_id: newTeam.id,
           user_id: userId,
@@ -96,15 +92,13 @@ export class PlaysService {
       if (!userId) throw new Error("User not authenticated");
 
       // Get user profile to check role
-      const { data: profile } = await supabase
-        .from("profiles")
+      const { data: profile } = await table("profiles")
         .select("role")
         .eq("id", userId)
         .single();
 
       // Check if user already has a playbook
-      const { data: existingPlaybooks } = await supabase
-        .from("playbooks")
+      const { data: existingPlaybooks } = await table("playbooks")
         .select("id")
         .eq("created_by", userId)
         .limit(1);
@@ -123,8 +117,9 @@ export class PlaysService {
         ? "Personal collection of plays and concepts - ready to apply to any program"
         : "Default playbook created automatically";
 
-      const { data: newPlaybook, error: playbookError } = await supabase
-        .from("playbooks")
+      const { data: newPlaybook, error: playbookError } = await table(
+        "playbooks"
+      )
         .insert({
           name: playbookName,
           description: playbookDescription,
@@ -174,8 +169,7 @@ export class PlaysService {
       debug("[PlaysService] Creating play in database", newPlay);
 
       // Insert into Supabase
-      let { data, error } = await supabase
-        .from("plays")
+      let { data, error } = await table("plays")
         .insert([newPlay as any])
         .select()
         .single();
@@ -193,8 +187,7 @@ export class PlaysService {
         newPlay.playbook_id = fallbackPlaybookId;
         debug("[PlaysService] Retrying play creation with resolved playbook");
 
-        const retryResult = await supabase
-          .from("plays")
+        const retryResult = await table("plays")
           .insert([newPlay as any])
           .select()
           .single();
@@ -242,8 +235,7 @@ export class PlaysService {
     options?: { limit?: number; offset?: number }
   ): Promise<Play[]> {
     try {
-      let query = supabase
-        .from("plays")
+      let query = table("plays")
         .select("*")
         .eq("playbook_id", playbookId)
         .eq("is_archived", false)
@@ -278,8 +270,7 @@ export class PlaysService {
    */
   static async getPlay(id: string): Promise<Play | null> {
     try {
-      const { data, error } = await supabase
-        .from("plays")
+      const { data, error } = await table("plays")
         .select("*")
         .eq("id", id)
         .single();
@@ -307,8 +298,7 @@ export class PlaysService {
     try {
       if (ids.length === 0) return [];
 
-      const { data, error } = await supabase
-        .from("plays")
+      const { data, error } = await table("plays")
         .select("*")
         .in("id", ids);
 
@@ -398,8 +388,7 @@ export class PlaysService {
         Object.entries(validUpdates).filter(([_, value]) => value !== undefined)
       );
 
-      const { data, error } = await supabase
-        .from("plays")
+      const { data, error } = await table("plays")
         .update(cleanUpdates)
         .eq("id", id)
         .select()
@@ -437,14 +426,12 @@ export class PlaysService {
   static async deletePlay(id: string): Promise<void> {
     try {
       // First, get the play data for activity recording
-      const { data: play } = await supabase
-        .from("plays")
+      const { data: play } = await table("plays")
         .select("id, play_name")
         .eq("id", id)
         .single();
 
-      const { error } = await supabase
-        .from("plays")
+      const { error } = await table("plays")
         .update({
           is_archived: true,
           updated_at: new Date().toISOString(),
@@ -477,8 +464,7 @@ export class PlaysService {
   static async deletePlays(ids: string[]): Promise<void> {
     if (!ids.length) return;
     try {
-      const { error } = await supabase
-        .from("plays")
+      const { error } = await table("plays")
         .update({ is_archived: true, updated_at: new Date().toISOString() })
         .in("id", ids);
 
@@ -496,8 +482,7 @@ export class PlaysService {
   static async restorePlays(ids: string[]): Promise<void> {
     if (!ids.length) return;
     try {
-      const { error } = await supabase
-        .from("plays")
+      const { error } = await table("plays")
         .update({ is_archived: false, updated_at: new Date().toISOString() })
         .in("id", ids);
       if (error) {
@@ -515,8 +500,7 @@ export class PlaysService {
    */
   static async getUniqueFormations(): Promise<string[]> {
     try {
-      const { data, error } = await supabase
-        .from("plays")
+      const { data, error } = await table("plays")
         .select("formation")
         .not("formation", "is", null)
         .neq("formation", "")
@@ -541,8 +525,7 @@ export class PlaysService {
    */
   static async getUniquePlayNames(): Promise<string[]> {
     try {
-      const { data, error } = await supabase
-        .from("plays")
+      const { data, error } = await table("plays")
         .select("play_name")
         .not("play_name", "is", null)
         .neq("play_name", "")
@@ -567,8 +550,7 @@ export class PlaysService {
    */
   static async getUniquePersonnel(): Promise<string[]> {
     try {
-      const { data, error } = await supabase
-        .from("plays")
+      const { data, error } = await table("plays")
         .select("personnel")
         .not("personnel", "is", null)
         .neq("personnel", "")
@@ -593,8 +575,7 @@ export class PlaysService {
    */
   static async getUniquePlayTypes(): Promise<string[]> {
     try {
-      const { data, error } = await supabase
-        .from("plays")
+      const { data, error } = await table("plays")
         .select("p_type")
         .not("p_type", "is", null)
         .neq("p_type", "")
@@ -624,8 +605,7 @@ export class PlaysService {
     limit = 5
   ): Promise<string[]> {
     try {
-      let query = supabase
-        .from("plays")
+      let query = table("plays")
         .select("formation, play_name, p_type")
         .not("formation", "is", null)
         .neq("formation", "");
@@ -698,8 +678,7 @@ export class PlaysService {
     limit = 5
   ): Promise<string[]> {
     try {
-      let query = supabase
-        .from("plays")
+      let query = table("plays")
         .select("play_name, formation, p_type")
         .not("play_name", "is", null)
         .neq("play_name", "");
@@ -754,8 +733,7 @@ export class PlaysService {
     limit = 5
   ): Promise<string[]> {
     try {
-      let query = supabase
-        .from("plays")
+      let query = table("plays")
         .select("personnel, formation")
         .not("personnel", "is", null)
         .neq("personnel", "");

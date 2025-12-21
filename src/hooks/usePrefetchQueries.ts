@@ -13,7 +13,7 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useRef } from "react";
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 
 // Prefetch delay in milliseconds (wait for stable hover)
 const PREFETCH_DELAY = 300;
@@ -64,8 +64,7 @@ export function usePrefetchQueries() {
         queryClient.prefetchQuery({
           queryKey: ["playbooks", teamId],
           queryFn: async () => {
-            const { data, error } = await supabase
-              .from("playbooks")
+            const { data, error } = await table("playbooks")
               .select("*")
               .eq("team_id", teamId)
               .eq("is_active", true)
@@ -81,15 +80,13 @@ export function usePrefetchQueries() {
         queryClient.prefetchQuery({
           queryKey: ["plays-count", teamId],
           queryFn: async () => {
-            const { count, error } = await supabase
-              .from("plays")
+            const { count, error } = await table("plays")
               .select("id", { count: "exact", head: true })
               .in(
                 "playbook_id",
                 // Get playbook IDs first
                 (
-                  await supabase
-                    .from("playbooks")
+                  await table("playbooks")
                     .select("id")
                     .eq("team_id", teamId)
                     .eq("is_active", true)
@@ -122,8 +119,7 @@ export function usePrefetchQueries() {
         queryClient.prefetchQuery({
           queryKey: ["play", playId],
           queryFn: async () => {
-            const { data, error } = await supabase
-              .from("plays")
+            const { data, error } = await table("plays")
               .select("*")
               .eq("id", playId)
               .single();
@@ -154,8 +150,7 @@ export function usePrefetchQueries() {
         queryClient.prefetchQuery({
           queryKey: ["formation", formationId],
           queryFn: async () => {
-            const { data, error } = await supabase
-              .from("formations")
+            const { data, error } = await table("formations")
               .select("*")
               .eq("id", formationId)
               .single();
@@ -187,8 +182,7 @@ export function usePrefetchQueries() {
         queryClient.prefetchQuery({
           queryKey: ["team", teamId],
           queryFn: async () => {
-            const { data, error } = await supabase
-              .from("teams")
+            const { data, error } = await table("teams")
               .select("*")
               .eq("id", teamId)
               .single();
@@ -203,8 +197,7 @@ export function usePrefetchQueries() {
         queryClient.prefetchQuery({
           queryKey: ["team-members-count", teamId],
           queryFn: async () => {
-            const { count, error } = await supabase
-              .from("team_members")
+            const { count, error } = await table("team_members")
               .select("id", { count: "exact", head: true })
               .eq("team_id", teamId)
               .eq("status", "active");

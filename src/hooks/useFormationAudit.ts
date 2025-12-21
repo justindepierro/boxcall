@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import type { Play } from "../types/play";
 import { logError } from "../utils/logger";
 
@@ -26,8 +26,7 @@ export function useFormationAudit(
     setLoading(true);
     setError(null);
     try {
-      const { data, error: supabaseError } = await supabase
-        .from("plays")
+      const { data, error: supabaseError } = await table("plays")
         .select("*")
         .eq("playbook_id", playbookId)
         .neq("formation_status", "ok")

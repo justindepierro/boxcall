@@ -5,7 +5,7 @@
  * Clean, focused, 200 lines max per design pattern.
  */
 
-import { supabase } from "../../lib/supabase";
+import { table } from "../../data/supabase/db";
 import { logError } from "../../utils/logger";
 import type {
   PersonnelConfiguration,
@@ -65,8 +65,7 @@ export class PersonnelLibraryService {
     playbookId: string,
     filters?: LibraryFilterOptions
   ): Promise<PaginatedLibraryResponse<PersonnelConfiguration>> {
-    let query = supabase
-      .from("personnel_configurations")
+    let query = table("personnel_configurations")
       .select("*, players:personnel_players(*)", { count: "exact" })
       .eq("playbook_id", playbookId);
 
@@ -99,8 +98,7 @@ export class PersonnelLibraryService {
   static async getPersonnelById(
     id: string
   ): Promise<PersonnelConfiguration | null> {
-    const { data, error } = await supabase
-      .from("personnel_configurations")
+    const { data, error } = await table("personnel_configurations")
       .select("*, players:personnel_players(*)")
       .eq("id", id)
       .single();
@@ -120,8 +118,9 @@ export class PersonnelLibraryService {
     config: CreatePersonnelConfiguration
   ): Promise<PersonnelConfiguration> {
     // Create configuration
-    const { data: configData, error: configError } = await supabase
-      .from("personnel_configurations")
+    const { data: configData, error: configError } = await table(
+      "personnel_configurations"
+    )
       .insert({
         playbook_id: config.playbook_id,
         name: config.name,
@@ -152,8 +151,7 @@ export class PersonnelLibraryService {
         is_wildcat_qb: p.is_wildcat_qb || false,
       }));
 
-      const { error: playersError } = await supabase
-        .from("personnel_players")
+      const { error: playersError } = await table("personnel_players")
         .insert(playersToInsert);
 
       if (playersError) {
@@ -162,8 +160,7 @@ export class PersonnelLibraryService {
           playersError
         );
         // Rollback config creation
-        await supabase
-          .from("personnel_configurations")
+        await table("personnel_configurations")
           .delete()
           .eq("id", configData.id);
         throw new Error(`Failed to create players: ${playersError.message}`);
@@ -190,8 +187,7 @@ export class PersonnelLibraryService {
       updated_at: new Date().toISOString(),
     };
 
-    const { error } = await supabase
-      .from("personnel_configurations")
+    const { error } = await table("personnel_configurations")
       .update(updateData)
       .eq("id", id)
       .select()
@@ -205,7 +201,7 @@ export class PersonnelLibraryService {
     // Update players if provided
     if (updates.players) {
       // Delete existing players
-      await supabase.from("personnel_players").delete().eq("config_id", id);
+      await table("personnel_players").delete().eq("config_id", id);
 
       // Insert new players
       if (updates.players.length > 0) {
@@ -217,7 +213,7 @@ export class PersonnelLibraryService {
           is_wildcat_qb: p.is_wildcat_qb || false,
         }));
 
-        await supabase.from("personnel_players").insert(playersToInsert);
+        await table("personnel_players").insert(playersToInsert);
       }
     }
 
@@ -228,8 +224,7 @@ export class PersonnelLibraryService {
    * Delete personnel configuration
    */
   static async deletePersonnel(id: string): Promise<void> {
-    const { error } = await supabase
-      .from("personnel_configurations")
+    const { error } = await table("personnel_configurations")
       .delete()
       .eq("id", id);
 
@@ -247,8 +242,7 @@ export class PersonnelLibraryService {
     playbookId: string,
     limit = 10
   ) {
-    const { data, error } = await supabase
-      .from("plays")
+    const { data, error } = await table("plays")
       .select("id, play_name, p_type, formation, personnel")
       .eq("playbook_id", playbookId)
       .eq("personnel", personnelName)
@@ -274,8 +268,7 @@ export class PersonnelLibraryService {
   static async importFromPlays(playbookId: string) {
     try {
       // Get all unique personnel values from plays
-      const { data: plays, error: playsError } = await supabase
-        .from("plays")
+      const { data: plays, error: playsError } = await table("plays")
         .select("personnel")
         .eq("playbook_id", playbookId)
         .eq("is_archived", false)
@@ -293,8 +286,9 @@ export class PersonnelLibraryService {
       ];
 
       // Get existing personnel configs
-      const { data: existingConfigs, error: configError } = await supabase
-        .from("personnel_configurations")
+      const { data: existingConfigs, error: configError } = await table(
+        "personnel_configurations"
+      )
         .select("name")
         .eq("playbook_id", playbookId);
 
@@ -326,8 +320,7 @@ export class PersonnelLibraryService {
         },
       }));
 
-      const { error: insertError } = await supabase
-        .from("personnel_configurations")
+      const { error: insertError } = await table("personnel_configurations")
         .insert(newConfigs);
 
       if (insertError) throw insertError;
@@ -357,8 +350,7 @@ export class PersonnelLibraryService {
       textColor: string;
     }
   ) {
-    const { error } = await supabase
-      .from("personnel_configurations")
+    const { error } = await table("personnel_configurations")
       .update({ badge_customization: badgeCustomization })
       .eq("id", personnelId);
 

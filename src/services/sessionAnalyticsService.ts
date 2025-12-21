@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabase";
+import { fromAny, table } from "../data/supabase/db";
 
 /**
  * Session Analytics Service - Phase 14.1
@@ -101,8 +101,7 @@ export class SessionAnalyticsService {
   static async getSessionAnalytics(
     sessionId: string
   ): Promise<SessionAnalytics> {
-    const { data: session, error: sessionError } = await supabase
-      .from("live_sessions")
+    const { data: session, error: sessionError } = await fromAny("live_sessions")
       .select("*")
       .eq("id", sessionId)
       .single();
@@ -110,8 +109,7 @@ export class SessionAnalyticsService {
     if (sessionError) throw sessionError;
     if (!session) throw new Error("Session not found");
 
-    const { data: executions, error: execError } = await supabase
-      .from("play_executions")
+    const { data: executions, error: execError } = await table("play_executions")
       .select(
         `
         *,
@@ -191,8 +189,7 @@ export class SessionAnalyticsService {
     startDate?: string,
     endDate?: string
   ): Promise<PlayTrendData[]> {
-    let query = supabase
-      .from("play_executions")
+    let query = table("play_executions")
       .select(
         `
         created_at,
@@ -237,8 +234,7 @@ export class SessionAnalyticsService {
     startDate?: string,
     endDate?: string
   ): Promise<FormationTrendData[]> {
-    let query = supabase
-      .from("play_executions")
+    let query = table("play_executions")
       .select(
         `
         created_at,

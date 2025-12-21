@@ -7,7 +7,7 @@
  * - Provides audit results for playbook health
  */
 
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { error as logError, warn, info } from "../utils/logger";
 
 /**
@@ -69,8 +69,7 @@ export class FormationAuditService {
     info(`[FormationAudit] Starting audit for playbook: ${playbookId}`);
 
     // Fetch all formations with relevant fields (using current schema)
-    const { data: formations, error } = await supabase
-      .from("formations")
+    const { data: formations, error } = await table("formations")
       .select(
         "id, name, diagram_data, personnel_packages, playbook_id, created_at"
       )
@@ -168,8 +167,7 @@ export class FormationAuditService {
     };
 
     // Get total formations count
-    const { count } = await supabase
-      .from("formations")
+    const { count } = await table("formations")
       .select("*", { count: "exact", head: true })
       .eq("playbook_id", playbookId);
 

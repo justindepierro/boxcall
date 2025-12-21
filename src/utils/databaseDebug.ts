@@ -3,7 +3,7 @@
  * Quick tool to check what data exists in the database
  */
 
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { debug, logError } from "./logger";
 
 export class DatabaseDebug {
@@ -11,8 +11,7 @@ export class DatabaseDebug {
     try {
       debug("🔍 Checking playbooks in database...");
 
-      const { data: playbooks, error } = await supabase
-        .from("playbooks")
+      const { data: playbooks, error } = await table("playbooks")
         .select("*");
 
       if (error) {
@@ -40,7 +39,7 @@ export class DatabaseDebug {
     try {
       debug("🔍 Checking teams in database...");
 
-      const { data: teams, error } = await supabase.from("teams").select("*");
+      const { data: teams, error } = await table("teams").select("*");
 
       if (error) {
         logError("❌ Error fetching teams:", error);
@@ -58,8 +57,7 @@ export class DatabaseDebug {
       debug("🔧 Creating demo playbook...");
 
       // Check if demo team exists
-      const { data: teams } = await supabase
-        .from("teams")
+      const { data: teams } = await table("teams")
         .select("id")
         .eq("name", "Demo Team")
         .limit(1);
@@ -69,7 +67,7 @@ export class DatabaseDebug {
       if (!teams || teams.length === 0) {
         // Create demo team first
         debug("🏗️ Creating demo team...");
-        const { error: teamError } = await supabase.from("teams").insert([
+        const { error: teamError } = await table("teams").insert([
           {
             id: teamId,
             name: "Demo Team",
@@ -84,8 +82,7 @@ export class DatabaseDebug {
           logError("❌ Error creating demo team:", teamError);
 
           // Try without created_by if user constraint is the issue
-          const { error: teamErrorFallback } = await supabase
-            .from("teams")
+          const { error: teamErrorFallback } = await table("teams")
             .insert([
               {
                 id: teamId,
@@ -107,8 +104,7 @@ export class DatabaseDebug {
         }
       } // Now create the playbook
       const playbookId = "550e8400-e29b-41d4-a716-446655440001";
-      const { data, error } = await supabase
-        .from("playbooks")
+      const { data, error } = await table("playbooks")
         .insert([
           {
             id: playbookId,

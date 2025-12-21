@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { getCurrentUserId } from "../lib/auth-helpers";
 
 export interface TeamPostListItem {
@@ -21,8 +21,7 @@ export async function listTeamPosts(
   teamId: string
 ): Promise<TeamPostListItem[]> {
   if (!teamId) return [];
-  const { data, error } = await supabase
-    .from("team_posts")
+  const { data, error } = await table("team_posts")
     .select(POST_COLUMNS)
     .eq("team_id", teamId)
     .order("is_pinned", { ascending: false })
@@ -50,8 +49,7 @@ export async function createPost({
   const authorId = getCurrentUserId();
   if (!authorId) throw new Error("User not authenticated");
 
-  const { data, error } = await supabase
-    .from("team_posts")
+  const { data, error } = await table("team_posts")
     .insert({
       team_id: teamId,
       author_id: authorId,
@@ -65,8 +63,7 @@ export async function createPost({
 }
 
 export async function updatePostPin(postId: string, isPinned: boolean) {
-  const { data, error } = await supabase
-    .from("team_posts")
+  const { data, error } = await table("team_posts")
     .update({ is_pinned: isPinned })
     .eq("id", postId)
     .select(POST_COLUMNS)
@@ -104,8 +101,7 @@ export async function likePost(postId: string) {
   const userId = getCurrentUserId();
   if (!userId) throw new Error("User not authenticated");
 
-  const { data, error } = await supabase
-    .from("post_likes")
+  const { data, error } = await table("post_likes")
     .insert({ post_id: postId, user_id: userId })
     .select()
     .single();
@@ -114,8 +110,7 @@ export async function likePost(postId: string) {
 }
 
 export async function unlikePost(postId: string) {
-  const { error } = await supabase
-    .from("post_likes")
+  const { error } = await table("post_likes")
     .delete()
     .eq("post_id", postId);
   if (error) throw error;
@@ -125,8 +120,7 @@ export async function checkUserLike(
   postId: string,
   userId: string
 ): Promise<boolean> {
-  const { data, error } = await supabase
-    .from("post_likes")
+  const { data, error } = await table("post_likes")
     .select("id")
     .eq("post_id", postId)
     .eq("user_id", userId)
@@ -139,8 +133,7 @@ export async function addComment(postId: string, content: string) {
   const authorId = getCurrentUserId();
   if (!authorId) throw new Error("User not authenticated");
 
-  const { data, error } = await supabase
-    .from("post_comments")
+  const { data, error } = await table("post_comments")
     .insert({ post_id: postId, author_id: authorId, content })
     .select("*")
     .single();
@@ -149,8 +142,7 @@ export async function addComment(postId: string, content: string) {
 }
 
 export async function getPostComments(postId: string): Promise<PostComment[]> {
-  const { data, error } = await supabase
-    .from("post_comments")
+  const { data, error } = await table("post_comments")
     .select("*")
     .eq("post_id", postId)
     .order("created_at", { ascending: true });
@@ -162,8 +154,7 @@ export async function sharePost(postId: string) {
   const userId = getCurrentUserId();
   if (!userId) throw new Error("User not authenticated");
 
-  const { data, error } = await supabase
-    .from("post_shares")
+  const { data, error } = await table("post_shares")
     .insert({ post_id: postId, user_id: userId })
     .select()
     .single();
@@ -175,8 +166,7 @@ export async function checkUserShare(
   postId: string,
   userId: string
 ): Promise<boolean> {
-  const { data, error } = await supabase
-    .from("post_shares")
+  const { data, error } = await table("post_shares")
     .select("id")
     .eq("post_id", postId)
     .eq("user_id", userId)

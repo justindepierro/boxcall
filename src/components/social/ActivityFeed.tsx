@@ -2,7 +2,7 @@
 // Displays a timeline of social activities (reactions, follows, comments, etc.)
 
 import React, { useState, useEffect, useCallback } from "react";
-import { supabase } from "../../lib/supabase";
+import { fromAny } from "../../data/supabase/db";
 import { Heart, UserPlus, MessageCircle, Play, FileText } from "lucide-react";
 import type { ActivityType } from "../../types/social";
 import { logError } from "../../utils/logger";
@@ -32,8 +32,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
     setLoading(true);
     try {
       // First, fetch activity data without the join
-      let activityQuery = supabase
-        .from("activity_feed")
+      let activityQuery = fromAny("activity_feed")
         .select("*")
         .order("created_at", { ascending: false })
         .limit(limit);
@@ -52,7 +51,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
       }
 
       // Transform the data to match our interface
-      const transformedActivities: ActivityItem[] = activities.map((item) => {
+          const transformedActivities: ActivityItem[] = activities.map((item: any) => {
         const metadataTitle = (() => {
           const metadata = item.metadata;
           if (!metadata) return undefined;

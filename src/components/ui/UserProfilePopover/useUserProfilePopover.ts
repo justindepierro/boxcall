@@ -6,7 +6,7 @@
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../../lib/supabase";
+import { table } from "../../../data/supabase/db";
 import { usePopoverContext } from "../../../contexts/PopoverContext";
 import { logError } from "../../../utils/logger";
 import type {
@@ -56,8 +56,7 @@ export function useUserProfilePopover({
   // Fetch player info helper
   const fetchPlayerInfo = async (teamIdParam: string, userIdParam: string) => {
     try {
-      const { data: playerData } = await supabase
-        .from("team_players")
+      const { data: playerData } = await table("team_players")
         .select("jersey_number, position, height_inches, weight_lbs")
         .eq("team_id", teamIdParam)
         .eq("user_id", userIdParam)
@@ -80,8 +79,9 @@ export function useUserProfilePopover({
       if (isVisible && !profile && !loading) {
         setLoading(true);
         try {
-          const { data: profileData, error: profileError } = await supabase
-            .from("profiles")
+          const { data: profileData, error: profileError } = await table(
+            "profiles"
+          )
             .select(
               `
               id,
@@ -115,8 +115,7 @@ export function useUserProfilePopover({
           setAchievements([]);
 
           if (teamId) {
-            const { data: memberData } = await supabase
-              .from("team_members")
+            const { data: memberData } = await table("team_members")
               .select("team_role, status, assigned_at")
               .eq("team_id", teamId)
               .eq("user_id", userId)

@@ -6,7 +6,7 @@
  * - playbookAnalyticsService.ts (play performance, formation analytics)
  */
 
-import { supabase } from "../lib/supabase";
+import { fromAny, table } from "../data/supabase/db";
 import { logError, warn } from "../utils/logger";
 import type { PriorityOptimization } from "../types/database/gamePlanningTypes";
 
@@ -177,8 +177,9 @@ export class PlayAnalyticsService {
     teamId: string
   ): Promise<GamePlanningAnalyticsData> {
     try {
-      const { data: gamePlans, error: gamePlansError } = await supabase
-        .from("game_plans_enhanced")
+      const { data: gamePlans, error: gamePlansError } = await fromAny(
+        "game_plans_enhanced"
+      )
         .select("*")
         .eq("team_id", teamId)
         .order("created_at", { ascending: false });
@@ -337,16 +338,16 @@ export class PlayAnalyticsService {
     teamId: string
   ): Promise<GamePlanSituationRow[]> {
     try {
-      const { data: gamePlans } = await supabase
-        .from("game_plans_enhanced")
+      const { data: gamePlansData } = await fromAny("game_plans_enhanced")
         .select("id")
         .eq("team_id", teamId);
 
+      const gamePlans = (gamePlansData || []) as GamePlanEnhancedRow[];
+
       if (!gamePlans || gamePlans.length === 0) return [];
 
-      const gamePlanIds = gamePlans.map((gp) => gp.id);
-      const { data, error } = await supabase
-        .from("game_plan_situations")
+      const gamePlanIds = gamePlans.map((gp) => gp.id).filter(Boolean);
+      const { data, error } = await table("game_plan_situations")
         .select("*")
         .in("game_plan_id", gamePlanIds);
 
@@ -361,16 +362,16 @@ export class PlayAnalyticsService {
     teamId: string
   ): Promise<GamePlanPlayRow[]> {
     try {
-      const { data: gamePlans } = await supabase
-        .from("game_plans_enhanced")
+      const { data: gamePlansData } = await fromAny("game_plans_enhanced")
         .select("id")
         .eq("team_id", teamId);
 
+      const gamePlans = (gamePlansData || []) as GamePlanEnhancedRow[];
+
       if (!gamePlans || gamePlans.length === 0) return [];
 
-      const gamePlanIds = gamePlans.map((gp) => gp.id);
-      const { data, error } = await supabase
-        .from("game_plan_plays")
+      const gamePlanIds = gamePlans.map((gp) => gp.id).filter(Boolean);
+      const { data, error } = await table("game_plan_plays")
         .select("*")
         .in("game_plan_id", gamePlanIds);
 
@@ -385,16 +386,16 @@ export class PlayAnalyticsService {
     teamId: string
   ): Promise<GamePlanAnalyticsRow[]> {
     try {
-      const { data: gamePlans } = await supabase
-        .from("game_plans_enhanced")
+      const { data: gamePlansData } = await fromAny("game_plans_enhanced")
         .select("id")
         .eq("team_id", teamId);
 
+      const gamePlans = (gamePlansData || []) as GamePlanEnhancedRow[];
+
       if (!gamePlans || gamePlans.length === 0) return [];
 
-      const gamePlanIds = gamePlans.map((gp) => gp.id);
-      const { data, error } = await supabase
-        .from("game_plan_analytics")
+      const gamePlanIds = gamePlans.map((gp) => gp.id).filter(Boolean);
+      const { data, error } = await fromAny("game_plan_analytics")
         .select("*")
         .in("game_plan_id", gamePlanIds)
         .order("execution_time", { ascending: false })
@@ -468,8 +469,7 @@ export class PlayAnalyticsService {
   static async getPlaybookAnalytics(
     playbookId: string
   ): Promise<PlaybookAnalyticsSummary> {
-    const { data: plays, error } = await supabase
-      .from("plays")
+    const { data: plays, error } = await table("plays")
       .select(
         `
         id,

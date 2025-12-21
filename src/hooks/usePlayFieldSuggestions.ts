@@ -4,7 +4,7 @@
  */
 
 import { useEffect, useState, useMemo } from "react";
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { logError } from "../utils/logger";
 
@@ -57,8 +57,9 @@ export function usePlayFieldSuggestions(): PlayFieldSuggestions {
     async function fetchSuggestions() {
       try {
         // First get playbook IDs for this team
-        const { data: playbooks, error: playbookError } = await supabase
-          .from("playbooks")
+        const { data: playbooks, error: playbookError } = await table(
+          "playbooks"
+        )
           .select("id")
           .eq("team_id", teamId);
 
@@ -70,8 +71,7 @@ export function usePlayFieldSuggestions(): PlayFieldSuggestions {
         const playbookIds = playbooks.map((pb) => pb.id);
 
         // Fetch unique values for each field
-        const { data: plays, error: playsError } = await supabase
-          .from("plays")
+        const { data: plays, error: playsError } = await table("plays")
           .select(
             "pref_cov, pref_front, pref_field_pos, pref_situation, protection, motion, shift"
           )

@@ -9,8 +9,8 @@
  * Hooks in state/calendar/hooks remain the preferred integration path inside React components.
  */
 import { CalendarAPI, CalendarRSVP, CalendarComments } from "../infra/calendar";
-import { supabase } from "../lib/supabase";
 import { getCurrentUserId } from "../lib/auth-helpers";
+import { table } from "../data/supabase/db";
 
 import type {
   CalendarEventCreate,
@@ -110,8 +110,7 @@ export class CalendarService {
 
   static async listTeamEvents(teamId: string): Promise<TeamEventListItem[]> {
     if (!teamId) return [];
-    const { data, error, status } = await supabase
-      .from("team_events")
+    const { data, error, status } = await table("team_events")
       .select(EVENT_COLUMNS)
       .eq("team_id", teamId)
       .order("starts_at", { ascending: true });
@@ -152,7 +151,7 @@ export class CalendarService {
 
     const event_date = startsAt.slice(0, 10);
 
-    const { data, error } = await (supabase.from("team_events") as any)
+    const { data, error } = await table("team_events")
       .insert({
         team_id: teamId,
         created_by: userId,

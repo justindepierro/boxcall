@@ -11,7 +11,7 @@ import { FormationIntelligenceService } from "../../../services/formationLibrary
 import type { Formation } from "../../../types/formation";
 import { Icon } from "../../ui/Icon/Icon";
 import { toast } from "sonner";
-import { supabase } from "../../../lib/supabase";
+import { table } from "../../../data/supabase/db";
 import { CreateFormationModal } from "./CreateFormationModal";
 import { logError } from "../../../utils/logger";
 
@@ -333,8 +333,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
       setAnalyzing(true);
       toast.loading("Importing formations from plays...", { id: "import" });
 
-      const { data: plays } = await supabase
-        .from("plays")
+      const { data: plays } = await table("plays")
         .select("formation")
         .eq("playbook_id", playbookId)
         .eq("is_archived", false);
@@ -356,8 +355,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
       let createdCount = 0;
       let errorCount = 0;
       for (const formationName of uniqueFormations) {
-        const { data: existing } = await supabase
-          .from("formations")
+        const { data: existing } = await table("formations")
           .select("id")
           .eq("playbook_id", playbookId)
           .ilike("name", formationName)
@@ -368,7 +366,7 @@ export const FormationLibraryModal: React.FC<FormationLibraryModalProps> = ({
             .find((p) => p.formation?.trim().toLowerCase() === formationName)
             ?.formation?.trim();
 
-          const { error } = await supabase.from("formations").insert({
+          const { error } = await table("formations").insert({
             playbook_id: playbookId,
             name: originalName || formationName,
             is_standalone: true,

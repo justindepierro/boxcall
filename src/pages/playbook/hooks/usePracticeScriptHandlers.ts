@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { supabase } from "../../../lib/supabase";
+import { table } from "../../../data/supabase/db";
 import { PracticeScriptService, type PracticeScript } from "@services";
 import { useToast } from "../../../hooks/useToast";
 import { error as logError, debug } from "../../../utils/logger";
@@ -59,8 +59,7 @@ export function usePracticeScriptHandlers({
 
           // Clear existing plays if updating
           if (script.id) {
-            const { error: deleteError } = await supabase
-              .from("practice_script_plays")
+            const { error: deleteError } = await table("practice_script_plays")
               .delete()
               .eq("practice_script_id", savedScriptId);
 

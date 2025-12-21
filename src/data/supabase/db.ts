@@ -9,10 +9,13 @@ export type DbResult<T> = DbOk<T> | DbErr;
 
 export type TableName = keyof Database["public"]["Tables"];
 
-export function table(tableName: TableName) {
-  // Intentionally untyped query builder: keeps strict Supabase generics from
-  // leaking SelectQueryError/column constraints into calling code.
-  return (supabase as any).from(String(tableName));
+export function table<T extends TableName>(tableName: T) {
+  return supabase.from(tableName);
+}
+
+export function fromAny(tableName: string) {
+  // Used for views or tables not represented in generated `Database` types.
+  return (supabase as any).from(tableName);
 }
 
 export async function updateById<T extends TableName>(
@@ -20,8 +23,8 @@ export async function updateById<T extends TableName>(
   id: string,
   updates: Updates<T>
 ): Promise<DbResult<Tables<T>>> {
-  const { data, error } = await table(tableName)
-    .update(updates as unknown as Record<string, unknown>)
+  const { data, error } = await (table(tableName) as any)
+    .update(updates as any)
     .eq("id", id)
     .select("*")
     .single();

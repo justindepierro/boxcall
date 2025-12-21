@@ -14,7 +14,7 @@ import type {
 } from "../../services/announcementsService";
 import { AnnouncementsService } from "../../services/announcementsService";
 import { NotificationsService } from "../../services/notificationsService";
-import { supabase } from "../../lib/supabase";
+import { table } from "../../data/supabase/db";
 import { getCurrentUserId } from "../../lib/auth-helpers";
 import { X } from "lucide-react";
 import { RichTextEditor } from "./RichTextEditor";
@@ -165,8 +165,7 @@ const ModalActions: React.FC<{
 
 const getAuthorName = async (userId: string | null): Promise<string> => {
   if (!userId) return "Someone";
-  const { data: profile } = await supabase
-    .from("profiles")
+  const { data: profile } = await table("profiles")
     .select("display_name, full_name")
     .eq("id", userId)
     .single();

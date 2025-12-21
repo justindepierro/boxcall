@@ -13,7 +13,7 @@ import {
 } from "../../services/commentsService";
 import { Send, Edit2, Trash2, Reply } from "lucide-react";
 import { format } from "date-fns";
-import { supabase } from "../../lib/supabase";
+import { table } from "../../data/supabase/db";
 import { CommentReactions } from "./CommentReactions";
 import { RichTextEditor } from "./RichTextEditor";
 import { RichTextDisplay } from "./RichTextDisplay";
@@ -64,8 +64,7 @@ const loadAvatarUrlsByUserId = async (
 ): Promise<Map<string, string | null>> => {
   if (userIds.length === 0) return new Map();
 
-  const { data } = await supabase
-    .from("profiles")
+  const { data } = await table("profiles")
     .select("id, avatar_url")
     .in("id", userIds);
 

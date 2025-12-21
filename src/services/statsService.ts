@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 
 import type { PostgrestError } from "@supabase/supabase-js";
 import { logError, warn } from "../utils/logger";
@@ -23,8 +23,7 @@ export async function getSeasonStats(
 
   try {
     // Get all game results for the team
-    const { data: games, error } = await supabase
-      .from("game_results")
+    const { data: games, error } = await table("game_results")
       .select("our_score, opponent_score, result, game_date")
       .eq("team_id", teamId);
 

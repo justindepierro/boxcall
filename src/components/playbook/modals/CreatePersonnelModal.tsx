@@ -7,7 +7,7 @@
 import React, { useState } from "react";
 import { Icon } from "../../ui/Icon/Icon";
 import { toast } from "sonner";
-import { supabase } from "../../../lib/supabase";
+import { table } from "../../../data/supabase/db";
 import { logError } from "../../../utils/logger";
 import { DEFAULT_BADGE_COLORS } from "../../../design-system/chartColors";
 
@@ -40,8 +40,7 @@ export const CreatePersonnelModal: React.FC<CreatePersonnelModalProps> = ({
       setCreating(true);
 
       // Check if personnel already exists
-      const { data: existing } = await supabase
-        .from("personnel_configurations")
+      const { data: existing } = await table("personnel_configurations")
         .select("id")
         .eq("playbook_id", playbookId)
         .eq("name", name)
@@ -53,7 +52,7 @@ export const CreatePersonnelModal: React.FC<CreatePersonnelModalProps> = ({
       }
 
       // Create personnel configuration
-      const { error } = await supabase.from("personnel_configurations").insert({
+      const { error } = await table("personnel_configurations").insert({
         playbook_id: playbookId,
         name,
         description: description.trim() || null,

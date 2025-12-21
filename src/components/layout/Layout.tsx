@@ -18,7 +18,7 @@ import { emitTelemetry } from "../../lib/telemetry";
 import { isSuperAdminEmail } from "../../config/superAdmin";
 import { debug, warn, error as logError } from "../../utils/logger";
 import { withDatabaseRetry } from "../../lib/database-helpers";
-import { supabase } from "../../lib/supabase";
+import { table } from "../../data/supabase/db";
 
 type UserRole = Database["public"]["Tables"]["profiles"]["Row"]["role"];
 type ExtendedUserRole = UserRole | "super_admin";
@@ -81,8 +81,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       try {
         const teamId = await withDatabaseRetry(
           async () => {
-            const { data, error } = await supabase
-              .from("team_members")
+            const { data, error } = await table("team_members")
               .select("team_id")
               .eq("user_id", profile.id)
               .eq("status", "active")

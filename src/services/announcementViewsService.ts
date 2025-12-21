@@ -5,8 +5,8 @@
  * Provides analytics on who has/hasn't viewed announcements
  */
 
-import { supabase } from "../lib/supabase";
 import { getCurrentUserId } from "../lib/auth-helpers";
+import { fromAny, table } from "../data/supabase/db";
 import { logError } from "../utils/logger";
 
 // ============================================
@@ -77,8 +77,7 @@ export class AnnouncementViewsService {
           viewed_at: new Date().toISOString(),
         }));
 
-        const { error } = await supabase
-          .from("announcement_views" as any)
+        const { error } = await fromAny("announcement_views")
           .upsert(payload, {
             onConflict: "announcement_id,user_id",
             ignoreDuplicates: true,
@@ -123,7 +122,7 @@ export class AnnouncementViewsService {
       }
 
       // Use upsert to handle duplicates gracefully
-      const { error } = await supabase.from("announcement_views" as any).upsert(
+      const { error } = await fromAny("announcement_views").upsert(
         {
           announcement_id: announcementId,
           user_id: userId,
@@ -164,8 +163,7 @@ export class AnnouncementViewsService {
   ): Promise<ReadReceiptStats | null> {
     try {
       // Get all team members
-      const { data: members, error: membersError } = await supabase
-        .from("team_members" as any)
+      const { data: members, error: membersError } = await table("team_members")
         .select(
           `
           user_id,
@@ -186,8 +184,9 @@ export class AnnouncementViewsService {
       }
 
       // Get all views for this announcement
-      const { data: views, error: viewsError } = await supabase
-        .from("announcement_views" as any)
+      const { data: views, error: viewsError } = await fromAny(
+        "announcement_views"
+      )
         .select("user_id, viewed_at")
         .eq("announcement_id", announcementId);
 
@@ -197,9 +196,12 @@ export class AnnouncementViewsService {
       }
 
       // Create a map of user_id -> viewed_at
-      const viewMap = new Map(
-        (views || []).map((v: any) => [v.user_id, v.viewed_at])
-      );
+      const viewMap = new Map<string, string>();
+      (views || []).forEach((v: any) => {
+        const user_id = typeof v?.user_id === "string" ? v.user_id : null;
+        const viewed_at = typeof v?.viewed_at === "string" ? v.viewed_at : null;
+        if (user_id && viewed_at) viewMap.set(user_id, viewed_at);
+      });
 
       // Build viewers and non-viewers lists
       const viewers: ViewerInfo[] = [];
@@ -269,8 +271,7 @@ export class AnnouncementViewsService {
 
       if (!userId) return false;
 
-      const { data, error } = await supabase
-        .from("announcement_views" as any)
+      const { data, error } = await fromAny("announcement_views")
         .select("id")
         .eq("announcement_id", announcementId)
         .eq("user_id", userId)
@@ -293,8 +294,7 @@ export class AnnouncementViewsService {
    */
   static async getViewCount(announcementId: string): Promise<number> {
     try {
-      const { count, error } = await supabase
-        .from("announcement_views" as any)
+      const { count, error } = await fromAny("announcement_views")
         .select("*", { count: "exact", head: true })
         .eq("announcement_id", announcementId);
 

@@ -7,7 +7,7 @@
  */
 
 import { useState, useEffect, useRef } from "react";
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { logError, warn } from "../utils/logger";
 
 export interface TeamActivityStats {
@@ -46,8 +46,9 @@ export function useTeamActivity(teamId: string): TeamActivityStats {
         ).toISOString();
 
         // Fetch team members - fast query with minimal data
-        const { data: teamMembers, error: membersError } = await supabase
-          .from("team_members")
+        const { data: teamMembers, error: membersError } = await table(
+          "team_members"
+        )
           .select("user_id")
           .eq("team_id", teamId)
           .limit(100); // Cap at 100 to prevent slow queries
@@ -68,8 +69,7 @@ export function useTeamActivity(teamId: string): TeamActivityStats {
         let onlineCount = 0;
         if (userIds.length > 0 && userIds.length <= 50) {
           // Only check online status for teams with <= 50 members (performance)
-          const { data: onlineProfiles } = await supabase
-            .from("profiles")
+          const { data: onlineProfiles } = await table("profiles")
             .select("id")
             .gte("last_login", fiveMinutesAgo)
             .in("id", userIds);

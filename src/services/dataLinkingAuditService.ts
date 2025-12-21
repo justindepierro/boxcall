@@ -6,6 +6,7 @@
  */
 
 import { supabase } from "../lib/supabase";
+import { fromAny } from "../data/supabase/db";
 import { logError } from "../utils/logger";
 
 export interface PlayMissingFormationLink {
@@ -72,7 +73,7 @@ export class DataLinkingAuditService {
   static async getPlaysMissingFormationLink(
     playbookId?: string
   ): Promise<PlayMissingFormationLink[]> {
-    let query = supabase.from("plays_missing_formation_link").select("*");
+    let query = fromAny("plays_missing_formation_link").select("*");
 
     if (playbookId) {
       query = query.eq("playbook_id", playbookId);
@@ -97,7 +98,7 @@ export class DataLinkingAuditService {
   static async getPlaysMissingPersonnelLink(
     playbookId?: string
   ): Promise<PlayMissingPersonnelLink[]> {
-    let query = supabase.from("plays_missing_personnel_link").select("*");
+    let query = fromAny("plays_missing_personnel_link").select("*");
 
     if (playbookId) {
       query = query.eq("playbook_id", playbookId);
@@ -122,7 +123,7 @@ export class DataLinkingAuditService {
   static async getFormationsMissingPersonnel(
     playbookId?: string
   ): Promise<FormationMissingPersonnel[]> {
-    let query = supabase.from("formations_missing_personnel").select("*");
+    let query = fromAny("formations_missing_personnel").select("*");
 
     if (playbookId) {
       query = query.eq("playbook_id", playbookId);
@@ -147,7 +148,7 @@ export class DataLinkingAuditService {
   static async getOrphanedPersonnelConfigs(
     playbookId?: string
   ): Promise<OrphanedPersonnelConfig[]> {
-    let query = supabase.from("orphaned_personnel_configs").select("*");
+    let query = fromAny("orphaned_personnel_configs").select("*");
 
     if (playbookId) {
       query = query.eq("playbook_id", playbookId);

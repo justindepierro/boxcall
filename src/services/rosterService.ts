@@ -1,10 +1,6 @@
-import {
-  type PostgrestError,
-  type SupabaseClient,
-} from "@supabase/supabase-js";
+import type { PostgrestError } from "@supabase/supabase-js";
 
-import { supabase as sharedClient } from "../lib/supabase";
-import type { Database } from "../types/database";
+import { table } from "../data/supabase/db";
 
 // RosterPlayerView matches the team_players table structure
 export interface RosterPlayerView {
@@ -58,18 +54,12 @@ export interface PlayerRosterUpdate {
   parent_contact?: string;
 }
 
-// Use centralized supabase client (browser-safe, avoids process reference)
-function getClient(): SupabaseClient<Database> {
-  return sharedClient;
-}
-
 export class RosterService {
   private static _instance: RosterService;
   static get instance() {
     if (!this._instance) this._instance = new RosterService();
     return this._instance;
   }
-  private client: SupabaseClient<Database> = getClient();
 
   async listByTeam(teamId: string): Promise<RosterPlayerView[]> {
     interface RawRow {
@@ -97,8 +87,7 @@ export class RosterService {
       primary_position?: string | null;
       secondary_positions?: string[] | null;
     }
-    const { data, error } = await this.client
-      .from("team_players")
+    const { data, error } = await table("team_players")
       .select("*")
       .eq("team_id", teamId)
       .order("jersey_number", { ascending: true });
@@ -136,8 +125,7 @@ export class RosterService {
       is_active: playerData.is_active ?? true,
     };
 
-    const { data, error } = await (this.client as any)
-      .from("team_players")
+    const { data, error } = await table("team_players")
       .insert([insertData])
       .select()
       .single();
@@ -153,8 +141,7 @@ export class RosterService {
     playerId: string,
     updateData: PlayerRosterUpdate
   ): Promise<RosterPlayerView> {
-    const { data, error } = await (this.client as any)
-      .from("team_players")
+    const { data, error } = await table("team_players")
       .update({
         ...updateData,
         updated_at: new Date().toISOString(),
@@ -171,8 +158,7 @@ export class RosterService {
   }
 
   async deletePlayer(playerId: string): Promise<void> {
-    const { error } = await this.client
-      .from("team_players")
+    const { error } = await table("team_players")
       .delete()
       .eq("id", playerId);
 
@@ -200,8 +186,7 @@ export class RosterService {
       status === "suspended" ||
       status === "academic_probation";
 
-    const { data, error } = await (this.client as any)
-      .from("team_players")
+    const { data, error } = await table("team_players")
       .update({
         roster_status: status,
         is_active: isActive,
@@ -252,8 +237,7 @@ export class RosterService {
       updateData.weight_lbs = updates.weight_lbs;
     }
 
-    const { data, error } = await (this.client as any)
-      .from("team_players")
+    const { data, error } = await table("team_players")
       .update(updateData)
       .in("id", playerIds)
       .select("id");
@@ -281,8 +265,7 @@ export class RosterService {
       updated_at?: string | null;
     }
 
-    const { data, error } = await this.client
-      .from("team_players")
+    const { data, error } = await table("team_players")
       .select("*")
       .eq("id", playerId)
       .single();
@@ -319,8 +302,7 @@ export class RosterService {
     jerseyNumber: number,
     excludePlayerId?: string
   ): Promise<boolean> {
-    let query = this.client
-      .from("team_players")
+    let query = table("team_players")
       .select("id")
       .eq("team_id", teamId)
       .eq("jersey_number", jerseyNumber);

@@ -7,7 +7,7 @@
 import React, { useState } from "react";
 import { Icon } from "../../ui/Icon/Icon";
 import { toast } from "sonner";
-import { supabase } from "../../../lib/supabase";
+import { table } from "../../../data/supabase/db";
 import { logError } from "../../../utils/logger";
 
 interface CreateFormationModalProps {
@@ -37,8 +37,7 @@ export const CreateFormationModal: React.FC<CreateFormationModalProps> = ({
       setCreating(true);
 
       // Check if formation already exists
-      const { data: existing } = await supabase
-        .from("formations")
+      const { data: existing } = await table("formations")
         .select("id")
         .eq("playbook_id", playbookId)
         .ilike("name", formationName.trim())
@@ -50,7 +49,7 @@ export const CreateFormationModal: React.FC<CreateFormationModalProps> = ({
       }
 
       // Create formation
-      const { error } = await supabase.from("formations").insert({
+      const { error } = await table("formations").insert({
         playbook_id: playbookId,
         name: formationName.trim(),
         description: description.trim() || null,

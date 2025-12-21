@@ -5,7 +5,7 @@
  * Supports threaded replies with parent_id
  */
 
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { getCurrentUserId } from "../lib/auth-helpers";
 import { emitTelemetry } from "../lib/telemetry";
 import { logError } from "../utils/logger";
@@ -61,8 +61,7 @@ export class CommentsService {
   ): Promise<CommentWithAuthor[]> {
     try {
       // First get all comments
-      const { data: comments, error } = await supabase
-        .from("announcement_comments" as any)
+      const { data: comments, error } = await table("announcement_comments")
         .select("*")
         .eq("announcement_id", announcementId)
         .is("deleted_at", null)
@@ -81,8 +80,7 @@ export class CommentsService {
       const userIds = [...new Set(comments.map((c: any) => c.user_id))];
 
       // Fetch all profiles in one query
-      const { data: profiles } = await supabase
-        .from("profiles")
+      const { data: profiles } = await table("profiles")
         .select("id, full_name, display_name")
         .in("id", userIds);
 
@@ -178,8 +176,7 @@ export class CommentsService {
         parent_id: comment.parent_id || null,
       };
 
-      const { data, error } = await supabase
-        .from("announcement_comments" as any)
+      const { data, error } = await table("announcement_comments")
         .insert(newComment)
         .select()
         .single();
@@ -193,8 +190,7 @@ export class CommentsService {
       }
 
       // Get author name
-      const { data: profile } = await supabase
-        .from("profiles")
+      const { data: profile } = await table("profiles")
         .select("full_name, display_name")
         .eq("id", userId)
         .single();
@@ -246,8 +242,7 @@ export class CommentsService {
         updateData.content_json = updates.content_json;
       }
 
-      const { data, error } = await supabase
-        .from("announcement_comments" as any)
+      const { data, error } = await table("announcement_comments")
         .update(updateData)
         .eq("id", commentId)
         .select()
@@ -263,8 +258,7 @@ export class CommentsService {
 
       // Get author name
       const comment = data as any;
-      const { data: profile } = await supabase
-        .from("profiles")
+      const { data: profile } = await table("profiles")
         .select("full_name, display_name")
         .eq("id", comment.user_id)
         .single();
@@ -302,8 +296,7 @@ export class CommentsService {
     commentId: string
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { error } = await supabase
-        .from("announcement_comments" as any)
+      const { error } = await table("announcement_comments")
         .update({ deleted_at: new Date().toISOString() } as any)
         .eq("id", commentId);
 
@@ -334,8 +327,7 @@ export class CommentsService {
    */
   static async getCommentCount(announcementId: string): Promise<number> {
     try {
-      const { count, error } = await supabase
-        .from("announcement_comments" as any)
+      const { count, error } = await table("announcement_comments")
         .select("*", { count: "exact", head: true })
         .eq("announcement_id", announcementId)
         .is("deleted_at", null);
@@ -359,8 +351,7 @@ export class CommentsService {
     announcementIds: string[]
   ): Promise<Map<string, number>> {
     try {
-      const { data, error } = await supabase
-        .from("announcement_comments" as any)
+      const { data, error } = await table("announcement_comments")
         .select("announcement_id")
         .in("announcement_id", announcementIds)
         .is("deleted_at", null);

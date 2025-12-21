@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import type { PracticeScript } from "@services";
 import type { Play } from "../../../../types/play";
-import { supabase } from "../../../../lib/supabase";
+import { table } from "../../../../data/supabase/db";
 import { useToast } from "../../../../hooks/useToast";
 import { debug, error as logError } from "../../../../utils/logger";
 
@@ -61,8 +61,7 @@ export function usePracticeScriptState({
         setIsLoadingPlays(true);
 
         // Fetch plays from Supabase
-        supabase
-          .from("plays")
+        table("plays")
           .select("*")
           .in("id", selectedPlayIds)
           .then(({ data, error }) => {

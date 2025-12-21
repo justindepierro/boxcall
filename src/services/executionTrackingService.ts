@@ -6,7 +6,7 @@
 
 // TODO: Regenerate Supabase types for new tables (practice_sessions, game_sessions, play_executions)
 
-import { supabase } from "../lib/supabase";
+import { fromAny, table } from "../data/supabase/db";
 import { getCurrentUserId } from "../lib/auth-helpers";
 import type {
   PlayExecution,
@@ -28,8 +28,7 @@ export class ExecutionTrackingService {
   static async createPracticeSession(
     data: CreatePracticeSessionData
   ): Promise<PracticeSession> {
-    const { data: session, error } = await supabase
-      .from("practice_sessions")
+    const { data: session, error } = await fromAny("practice_sessions")
       .insert({
         team_id: data.teamId,
         name: data.name,
@@ -50,8 +49,7 @@ export class ExecutionTrackingService {
   }
 
   static async getPracticeSession(sessionId: string): Promise<PracticeSession> {
-    const { data: session, error } = await supabase
-      .from("practice_sessions")
+    const { data: session, error } = await fromAny("practice_sessions")
       .select(
         `
         *,
@@ -75,8 +73,7 @@ export class ExecutionTrackingService {
     teamId: string,
     filters?: { limit?: number; offset?: number; isArchived?: boolean }
   ): Promise<PracticeSession[]> {
-    let query = supabase
-      .from("practice_sessions")
+    let query = fromAny("practice_sessions")
       .select("*")
       .eq("team_id", teamId)
       .order("session_date", { ascending: false });
@@ -108,8 +105,7 @@ export class ExecutionTrackingService {
     sessionId: string,
     updates: UpdateSessionData
   ): Promise<void> {
-    const { error } = await supabase
-      .from("practice_sessions")
+    const { error } = await fromAny("practice_sessions")
       .update({
         ended_at: updates.endedAt?.toISOString(),
         notes: updates.notes,
@@ -125,8 +121,7 @@ export class ExecutionTrackingService {
   }
 
   static async deletePracticeSession(sessionId: string): Promise<void> {
-    const { error } = await supabase
-      .from("practice_sessions")
+    const { error } = await fromAny("practice_sessions")
       .delete()
       .eq("id", sessionId);
 
@@ -141,8 +136,7 @@ export class ExecutionTrackingService {
   static async createGameSession(
     data: CreateGameSessionData
   ): Promise<GameSession> {
-    const { data: session, error } = await supabase
-      .from("game_sessions")
+    const { data: session, error } = await fromAny("game_sessions")
       .insert({
         team_id: data.teamId,
         game_plan_id: data.gamePlanId,
@@ -166,8 +160,7 @@ export class ExecutionTrackingService {
   }
 
   static async getGameSession(sessionId: string): Promise<GameSession> {
-    const { data: session, error } = await supabase
-      .from("game_sessions")
+    const { data: session, error } = await fromAny("game_sessions")
       .select(
         `
         *,
@@ -191,8 +184,7 @@ export class ExecutionTrackingService {
     teamId: string,
     filters?: { limit?: number; offset?: number; isArchived?: boolean }
   ): Promise<GameSession[]> {
-    let query = supabase
-      .from("game_sessions")
+    let query = fromAny("game_sessions")
       .select("*")
       .eq("team_id", teamId)
       .order("game_date", { ascending: false });
@@ -223,8 +215,7 @@ export class ExecutionTrackingService {
     sessionId: string,
     updates: UpdateSessionData
   ): Promise<void> {
-    const { error } = await supabase
-      .from("game_sessions")
+    const { error } = await fromAny("game_sessions")
       .update({
         ended_at: updates.endedAt?.toISOString(),
         team_score: updates.teamScore,
@@ -242,8 +233,7 @@ export class ExecutionTrackingService {
   }
 
   static async deleteGameSession(sessionId: string): Promise<void> {
-    const { error } = await supabase
-      .from("game_sessions")
+    const { error } = await fromAny("game_sessions")
       .delete()
       .eq("id", sessionId);
 
@@ -258,8 +248,7 @@ export class ExecutionTrackingService {
   static async logExecution(
     data: CreatePlayExecutionData
   ): Promise<PlayExecution> {
-    const { data: execution, error } = await supabase
-      .from("play_executions")
+    const { data: execution, error } = await table("play_executions")
       .insert({
         practice_session_id: data.practiceSessionId,
         game_session_id: data.gameSessionId,
@@ -299,8 +288,7 @@ export class ExecutionTrackingService {
   ): Promise<PlayExecution[]> {
     const userId = getCurrentUserId();
 
-    const { data, error } = await supabase
-      .from("play_executions")
+    const { data, error } = await table("play_executions")
       .insert(
         executions.map((e) => ({
           practice_session_id: e.practiceSessionId,
@@ -340,8 +328,7 @@ export class ExecutionTrackingService {
   static async getExecutions(
     filters: ExecutionFilters
   ): Promise<PlayExecution[]> {
-    let query = supabase
-      .from("play_executions")
+    let query = table("play_executions")
       .select(
         `
         *,
@@ -399,8 +386,7 @@ export class ExecutionTrackingService {
     executionId: string,
     updates: Partial<PlayExecution>
   ): Promise<void> {
-    const { error } = await supabase
-      .from("play_executions")
+    const { error } = await table("play_executions")
       .update({
         result: updates.result,
         yards_gained: updates.yardsGained,
@@ -418,8 +404,7 @@ export class ExecutionTrackingService {
   }
 
   static async deleteExecution(executionId: string): Promise<void> {
-    const { error } = await supabase
-      .from("play_executions")
+    const { error } = await table("play_executions")
       .delete()
       .eq("id", executionId);
 
@@ -434,8 +419,7 @@ export class ExecutionTrackingService {
     playId: string,
     teamId: string
   ): Promise<ExecutionStats> {
-    const { data, error } = await supabase
-      .from("play_executions")
+    const { data, error } = await table("play_executions")
       .select("*")
       .eq("play_id", playId)
       .eq("team_id", teamId);
@@ -485,8 +469,7 @@ export class ExecutionTrackingService {
     avgYardsGained: number;
     executionCount: number;
   }> {
-    const { data, error } = await supabase
-      .from("play_executions")
+    const { data, error } = await table("play_executions")
       .select("*")
       .eq("play_id", playId)
       .eq("team_id", teamId)
@@ -538,8 +521,7 @@ export class ExecutionTrackingService {
     };
     bestHash?: "left" | "middle" | "right";
   }> {
-    const { data, error } = await supabase
-      .from("play_executions")
+    const { data, error } = await table("play_executions")
       .select("*")
       .eq("play_id", playId)
       .eq("team_id", teamId)
@@ -617,17 +599,16 @@ export class ExecutionTrackingService {
    * Get recent sessions (both practice and game) for the team
    * Returns combined list sorted by most recent first
    *
-   * NOTE: Uses supabase directly because practice_sessions/game_sessions tables
-   * are not yet in the TypeScript database types. Will migrate when types are updated.
+  * NOTE: Uses fromAny() because practice_sessions/game_sessions tables
+  * are not yet in the TypeScript database types. Will migrate to table() when types are updated.
    */
   static async getRecentSessions(
     teamId: string,
     limit: number = 5
   ): Promise<Array<PracticeSession | GameSession>> {
-    // Use supabase directly - these tables aren't in our typed schema yet
+    // Use fromAny() - these tables aren't in our typed schema yet
     const [practiceResult, gameResult] = await Promise.allSettled([
-      supabase
-        .from("practice_sessions")
+        fromAny("practice_sessions")
         .select(
           `
           *,
@@ -638,8 +619,7 @@ export class ExecutionTrackingService {
         .eq("is_archived", false)
         .order("session_date", { ascending: false })
         .limit(limit),
-      supabase
-        .from("game_sessions")
+      fromAny("game_sessions")
         .select(
           `
           *,

@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 
 // Types
 export interface GameResultListItem {
@@ -31,8 +31,7 @@ export interface LogGameResultInput {
 export async function listGameResults(
   teamId: string
 ): Promise<GameResultListItem[]> {
-  const { data, error } = await supabase
-    .from("game_results")
+  const { data, error } = await table("game_results")
     .select("*")
     .eq("team_id", teamId)
     .order("game_date", { ascending: false });
@@ -51,8 +50,7 @@ export async function logGameResult(
     return "tie";
   })();
 
-  const { data, error } = await supabase
-    .from("game_results")
+  const { data, error } = await table("game_results")
     .insert({
       team_id: input.teamId,
       opponent: input.opponent,

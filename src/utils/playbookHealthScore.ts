@@ -12,7 +12,7 @@
  * - Organization Quality (10pts): tags, categories, structure
  */
 
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { calculatePlayQuality } from "./dataQualityScoring";
 import { info, error as logError } from "./logger";
 
@@ -128,8 +128,7 @@ async function calculateFormationLinkingScore(
 ): Promise<{ score: number; issues: HealthIssue[] }> {
   info("[PlaybookHealth] Calculating formation linking score");
 
-  const { data: plays, error } = await supabase
-    .from("plays")
+  const { data: plays, error } = await table("plays")
     .select("id, play_name, formation_id, formation")
     .eq("playbook_id", playbookId);
 
@@ -188,8 +187,7 @@ async function calculateFormationCompletenessScore(
 ): Promise<{ score: number; issues: HealthIssue[] }> {
   info("[PlaybookHealth] Calculating formation completeness score");
 
-  const { data: formations, error } = await supabase
-    .from("formations")
+  const { data: formations, error } = await table("formations")
     .select("id, name, metadata_quality, metadata_completeness")
     .eq("playbook_id", playbookId);
 
@@ -259,8 +257,7 @@ async function calculatePlayCompletenessScore(
 ): Promise<{ score: number; issues: HealthIssue[] }> {
   info("[PlaybookHealth] Calculating play completeness score");
 
-  const { data: plays, error } = await supabase
-    .from("plays")
+  const { data: plays, error } = await table("plays")
     .select(
       "id, play_name, p_type, formation, personnel, tags, notes, diagram_data, diagram_url, diagram_image_url, key_positions, key_players, protection, flags"
     )
@@ -372,13 +369,11 @@ async function calculateDataConsistencyScore(
 ): Promise<{ score: number; issues: HealthIssue[] }> {
   info("[PlaybookHealth] Calculating data consistency score");
 
-  const { data: plays, error: playsError } = await supabase
-    .from("plays")
+  const { data: plays, error: playsError } = await table("plays")
     .select("id, play_name, formation, personnel")
     .eq("playbook_id", playbookId);
 
-  const { data: formations, error: formationsError } = await supabase
-    .from("formations")
+  const { data: formations, error: formationsError } = await table("formations")
     .select("id, name, direction, opposite_formation_id")
     .eq("playbook_id", playbookId);
 
@@ -458,8 +453,7 @@ async function calculateOrganizationQualityScore(
 ): Promise<{ score: number; issues: HealthIssue[] }> {
   info("[PlaybookHealth] Calculating organization quality score");
 
-  const { data: plays, error } = await supabase
-    .from("plays")
+  const { data: plays, error } = await table("plays")
     .select("id, tags, formation, p_type")
     .eq("playbook_id", playbookId);
 
@@ -611,13 +605,11 @@ export async function calculatePlaybookHealth(
   });
 
   // Fetch stats
-  const { data: plays } = await supabase
-    .from("plays")
+  const { data: plays } = await table("plays")
     .select("id, formation_id, play_name")
     .eq("playbook_id", playbookId);
 
-  const { data: formations } = await supabase
-    .from("formations")
+  const { data: formations } = await table("formations")
     .select("id, metadata_quality")
     .eq("playbook_id", playbookId);
 

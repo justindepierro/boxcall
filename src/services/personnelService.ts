@@ -11,7 +11,7 @@
  * Note: Uses 'player_position' column (not 'position' - PostgreSQL reserved keyword)
  */
 
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { PersonnelValidationService } from "./validationService";
 import { logError } from "../utils/logger";
 import type {
@@ -68,8 +68,7 @@ export class PersonnelService {
     configId: string,
     players: PersonnelPlayerInput[]
   ): Promise<PersonnelPlayer[]> {
-    const { error: deleteError } = await supabase
-      .from("personnel_players")
+    const { error: deleteError } = await table("personnel_players")
       .delete()
       .eq("config_id", configId);
 
@@ -83,8 +82,9 @@ export class PersonnelService {
       is_wildcat_qb: player.is_wildcat_qb ?? false,
     }));
 
-    const { data: insertedPlayers, error: playersError } = await supabase
-      .from("personnel_players")
+    const { data: insertedPlayers, error: playersError } = await table(
+      "personnel_players"
+    )
       .insert(playersToInsert)
       .select();
 
@@ -95,8 +95,7 @@ export class PersonnelService {
   private static async fetchPersonnelPlayers(
     configId: string
   ): Promise<PersonnelPlayer[]> {
-    const { data, error } = await supabase
-      .from("personnel_players")
+    const { data, error } = await table("personnel_players")
       .select("*")
       .eq("config_id", configId)
       .order("sort_order");
@@ -114,8 +113,9 @@ export class PersonnelService {
   ): Promise<PersonnelConfiguration[]> {
     try {
       // Fetch configurations
-      const { data: configs, error: configError } = await supabase
-        .from("personnel_configurations")
+      const { data: configs, error: configError } = await table(
+        "personnel_configurations"
+      )
         .select("*")
         .eq("playbook_id", playbookId)
         .order("name");
@@ -141,8 +141,9 @@ export class PersonnelService {
 
       // Fetch all players for these configurations
       const configIds = typedConfigs.map((c) => c.id);
-      const { data: players, error: playersError } = await supabase
-        .from("personnel_players")
+      const { data: players, error: playersError } = await table(
+        "personnel_players"
+      )
         .select("*")
         .in("config_id", configIds)
         .order("sort_order");
@@ -196,8 +197,9 @@ export class PersonnelService {
   ): Promise<PersonnelConfiguration | null> {
     try {
       // Fetch configuration
-      const { data: config, error: configError } = await supabase
-        .from("personnel_configurations")
+      const { data: config, error: configError } = await table(
+        "personnel_configurations"
+      )
         .select("*")
         .eq("playbook_id", playbookId)
         .eq("name", name)
@@ -226,8 +228,9 @@ export class PersonnelService {
       const typedConfig = config as DBConfig;
 
       // Fetch players for this configuration
-      const { data: players, error: playersError } = await supabase
-        .from("personnel_players")
+      const { data: players, error: playersError } = await table(
+        "personnel_players"
+      )
         .select("*")
         .eq("config_id", typedConfig.id)
         .order("sort_order");
@@ -286,8 +289,9 @@ export class PersonnelService {
       }
 
       // Insert configuration
-      const { data: newConfig, error: configError } = await supabase
-        .from("personnel_configurations")
+      const { data: newConfig, error: configError } = await table(
+        "personnel_configurations"
+      )
         .insert({
           playbook_id: config.playbook_id,
           name: config.name,
@@ -321,8 +325,9 @@ export class PersonnelService {
         is_wildcat_qb: player.is_wildcat_qb ?? false,
       }));
 
-      const { data: players, error: playersError } = await supabase
-        .from("personnel_players")
+      const { data: players, error: playersError } = await table(
+        "personnel_players"
+      )
         .insert(playersToInsert)
         .select();
 
@@ -364,8 +369,9 @@ export class PersonnelService {
   ): Promise<PersonnelConfiguration> {
     try {
       // Update configuration metadata
-      const { data: updatedConfig, error: configError } = await supabase
-        .from("personnel_configurations")
+      const { data: updatedConfig, error: configError } = await table(
+        "personnel_configurations"
+      )
         .update({
           name: updates.name,
           description: updates.description,
@@ -417,16 +423,16 @@ export class PersonnelService {
   ): Promise<{ playsCount: number; formationsCount: number }> {
     try {
       // Check plays using this personnel (via personnel_id FK)
-      const { count: playsCount, error: playsError } = await supabase
-        .from("plays")
+      const { count: playsCount, error: playsError } = await table("plays")
         .select("*", { count: "exact", head: true })
         .eq("personnel_id", id);
 
       if (playsError) throw playsError;
 
       // Check formations using this personnel
-      const { count: formationsCount, error: formationsError } = await supabase
-        .from("formations")
+      const { count: formationsCount, error: formationsError } = await table(
+        "formations"
+      )
         .select("*", { count: "exact", head: true })
         .eq("personnel_id", id);
 
@@ -449,8 +455,7 @@ export class PersonnelService {
    */
   static async deletePersonnelConfiguration(id: string): Promise<void> {
     try {
-      const { error } = await supabase
-        .from("personnel_configurations")
+      const { error } = await table("personnel_configurations")
         .delete()
         .eq("id", id);
 
@@ -470,8 +475,7 @@ export class PersonnelService {
     configId: string
   ): Promise<PersonnelPlayer[]> {
     try {
-      const { data, error } = await supabase
-        .from("personnel_players")
+      const { data, error } = await table("personnel_players")
         .select("*")
         .eq("config_id", configId)
         .order("sort_order");

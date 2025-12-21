@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import {
   validateFormationName,
   validatePersonnelValue,
@@ -36,8 +36,7 @@ export async function ensureValidFormation({
   }
 
   if (formationId) {
-    const { data: formation, error } = await supabase
-      .from("formations")
+    const { data: formation, error } = await table("formations")
       .select("id, name, playbook_id")
       .eq("id", formationId)
       .single();
@@ -66,8 +65,7 @@ export async function ensureValidFormation({
   }
 
   if (!allowCustom) {
-    const { data: formations, error } = await supabase
-      .from("formations")
+    const { data: formations, error } = await table("formations")
       .select("id, name")
       .eq("playbook_id", playbookId);
 

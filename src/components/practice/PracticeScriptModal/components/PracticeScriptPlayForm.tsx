@@ -7,7 +7,7 @@ import { Button } from "../../../ui/Button/Button";
 import { Input, TextArea } from "../../../ui";
 import { Typography } from "../../../design-system/Typography";
 import { Icon } from "../../../ui/Icon";
-import { supabase } from "../../../../lib/supabase";
+import { table } from "../../../../data/supabase/db";
 import { getActiveTeamId } from "../../../../utils/activeTeam";
 import {
   getDisplayName,
@@ -61,16 +61,14 @@ export const PracticeScriptPlayForm: React.FC<PracticeScriptPlayFormProps> = ({
 
       setIsLoadingPlays(true);
       try {
-        const { data: playbooks } = await supabase
-          .from("playbooks")
+        const { data: playbooks } = await table("playbooks")
           .select("id")
           .eq("team_id", teamId)
           .eq("is_active", true)
           .limit(1);
 
         if (playbooks && playbooks.length > 0) {
-          const { data: plays, error } = await supabase
-            .from("plays")
+          const { data: plays, error } = await table("plays")
             .select(
               "id,play_name,formation,personnel,p_type,diagram_image_url,diagram_url,f_dir,f_type,back_align,shift,motion,ftag1,ftag2,p_dir,protection,p_tag1,p_tag2,one_word_play,r_str,p_str"
             )

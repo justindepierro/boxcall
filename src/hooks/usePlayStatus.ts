@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { logError } from "../utils/logger";
 
 export interface PlayStatus {
@@ -31,8 +31,7 @@ export function usePlayStatus(playId: string, playbookId: string): PlayStatus {
       try {
         // Query 1: Check for assignments (count only)
         const { count: assignmentsCount, error: assignmentsError } =
-          await supabase
-            .from("play_assignments")
+          await table("play_assignments")
             .select("*", { count: "exact", head: true })
             .eq("play_id", playId)
             .eq("playbook_id", playbookId);
@@ -42,8 +41,9 @@ export function usePlayStatus(playId: string, playbookId: string): PlayStatus {
         }
 
         // Query 2: Count practice script usage
-        const { count: practiceCount, error: practiceError } = await supabase
-          .from("practice_script_plays")
+        const { count: practiceCount, error: practiceError } = await table(
+          "practice_script_plays"
+        )
           .select("*", { count: "exact", head: true })
           .eq("play_id", playId);
 
@@ -54,8 +54,9 @@ export function usePlayStatus(playId: string, playbookId: string): PlayStatus {
         // Query 3: Count game plan usage
         // Note: HEAD request with RLS on empty tables can return 500 errors
         // Use regular SELECT instead of HEAD for more reliable counting
-        const { count: gamePlanCount, error: gamePlanError } = await supabase
-          .from("game_plan_plays")
+        const { count: gamePlanCount, error: gamePlanError } = await table(
+          "game_plan_plays"
+        )
           .select("id", { count: "exact" })
           .eq("play_id", playId);
 

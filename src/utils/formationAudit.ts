@@ -9,7 +9,7 @@
  * Part of Formation Direction Comprehensive Solution
  */
 
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import type { Formation } from "../types/formation";
 import { error as logError, warn, info } from "./logger";
 
@@ -70,8 +70,7 @@ export async function auditFormationDirections(
   playbookId: string
 ): Promise<FormationAuditResult[]> {
   // Fetch all formations with relevant fields
-  const { data: formations, error } = await supabase
-    .from("formations")
+  const { data: formations, error } = await table("formations")
     .select(
       "id, name, direction, opposite_formation_id, usage_count, player_positions"
     )
@@ -193,8 +192,7 @@ export async function getIncompleteFormations(
   playbookId: string
 ): Promise<Formation[]> {
   // PERFORMANCE: Only select fields needed for Incomplete panel display
-  const { data, error } = await supabase
-    .from("formations")
+  const { data, error } = await table("formations")
     .select(
       `
       id,
@@ -242,8 +240,7 @@ export async function getIncompleteFormations(
 export async function getFormationCompletionStats(
   playbookId: string
 ): Promise<FormationCompletionStats> {
-  const { data: formations, error } = await supabase
-    .from("formations")
+  const { data: formations, error } = await table("formations")
     .select("metadata_quality, direction, opposite_formation_id")
     .eq("playbook_id", playbookId);
 
@@ -331,8 +328,7 @@ export async function getFormationsByPriority(playbookId: string): Promise<{
 export async function formationNeedsAttention(
   formationId: string
 ): Promise<boolean> {
-  const { data: formation, error } = await supabase
-    .from("formations")
+  const { data: formation, error } = await table("formations")
     .select("direction, opposite_formation_id, player_positions")
     .eq("id", formationId)
     .single();

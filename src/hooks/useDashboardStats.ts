@@ -10,7 +10,7 @@
  */
 
 import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { AchievementService } from "../services/achievementService";
 import { debug, warn, error as logError } from "../utils/logger";
 
@@ -110,8 +110,9 @@ async function fetchTotalPlays(userId: string): Promise<number> {
     debug("[fetchTotalPlays] Starting for userId:", userId);
 
     // Step 1: Get user's team memberships
-    const { data: memberships, error: memberError } = await supabase
-      .from("team_members")
+    const { data: memberships, error: memberError } = await table(
+      "team_members"
+    )
       .select("team_id")
       .eq("user_id", userId)
       .eq("status", "active");
@@ -134,8 +135,7 @@ async function fetchTotalPlays(userId: string): Promise<number> {
     debug("[fetchTotalPlays] Team IDs:", teamIds);
 
     // Step 2: Get playbook IDs for these teams
-    const { data: playbooks, error: playbooksError } = await supabase
-      .from("playbooks")
+    const { data: playbooks, error: playbooksError } = await table("playbooks")
       .select("id")
       .in("team_id", teamIds);
 
@@ -148,8 +148,7 @@ async function fetchTotalPlays(userId: string): Promise<number> {
     debug("[fetchTotalPlays] Playbook IDs:", playbookIds);
 
     // Step 3: Count plays across all playbooks
-    const { data: plays, error: playsError } = await supabase
-      .from("plays")
+    const { data: plays, error: playsError } = await table("plays")
       .select("id")
       .in("playbook_id", playbookIds);
 
@@ -181,8 +180,9 @@ async function fetchThisWeekActivity(userId: string): Promise<number> {
     const startOfWeekISO = startOfWeek.toISOString();
 
     // Step 1: Get user's team memberships
-    const { data: memberships, error: memberError } = await supabase
-      .from("team_members")
+    const { data: memberships, error: memberError } = await table(
+      "team_members"
+    )
       .select("team_id")
       .eq("user_id", userId)
       .eq("status", "active");
@@ -200,15 +200,13 @@ async function fetchThisWeekActivity(userId: string): Promise<number> {
     }
 
     // Step 2: Count posts from this week
-    const { data: posts, error: postsError } = await supabase
-      .from("team_posts")
+    const { data: posts, error: postsError } = await table("team_posts")
       .select("id")
       .in("team_id", teamIds)
       .gte("created_at", startOfWeekISO);
 
     // Step 3: Count calendar events from this week
-    const { data: events, error: eventsError } = await supabase
-      .from("calendar_events")
+    const { data: events, error: eventsError } = await table("calendar_events")
       .select("id")
       .in("team_id", teamIds)
       .gte("created_at", startOfWeekISO);

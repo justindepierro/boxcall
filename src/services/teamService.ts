@@ -11,7 +11,7 @@
 
 import { debug, error as logError } from "../utils/logger";
 import { storageKeys, writeLocalString } from "../utils/storage";
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { withDatabaseRetry } from "../lib/database-helpers";
 import { emitTelemetry } from "../lib/telemetry";
 import { createTeamSchema } from "../validation-services/teamValidation";
@@ -188,8 +188,7 @@ export class TeamService {
       debug("🔍 Starting duplicate team check...");
 
       // Fetch all existing teams for comparison
-      const { data: existingTeams, error } = await supabase
-        .from("teams")
+      const { data: existingTeams, error } = await table("teams")
         .select("id, name, school_name")
         .limit(100); // Limit for performance
 
@@ -539,8 +538,7 @@ export class TeamService {
         try {
           return await withDatabaseRetry(
             async () => {
-              const { data, error } = await supabase
-                .from("teams")
+              const { data, error } = await table("teams")
                 .insert(teamData)
                 .select("*")
                 .single();
@@ -587,8 +585,7 @@ export class TeamService {
         try {
           await withDatabaseRetry(
             async () => {
-              const { error } = await supabase
-                .from("team_members")
+              const { error } = await table("team_members")
                 .insert(membershipData);
 
               if (error) {
@@ -706,8 +703,7 @@ export class TeamService {
     canFundraise: boolean;
   }> {
     try {
-      const { data, error } = await supabase
-        .from("teams")
+      const { data, error } = await table("teams")
         .select("family_permissions")
         .eq("id", teamId)
         .single();
@@ -764,8 +760,7 @@ export class TeamService {
     }
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { error } = await supabase
-        .from("teams")
+      const { error } = await table("teams")
         .update({
           family_permissions: permissions,
           updated_at: new Date().toISOString(),

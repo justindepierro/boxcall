@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 
 import type { PostgrestError } from "@supabase/supabase-js";
 
@@ -11,8 +11,7 @@ interface TeamMembershipRow {
 async function fetchTeamMembershipRole(teamId: string, userId: string) {
   if (!teamId || !userId) return null;
 
-  const { data, error } = await supabase
-    .from("team_members")
+  const { data, error } = await table("team_members")
     .select("team_role")
     .eq("team_id", teamId)
     .eq("user_id", userId)
