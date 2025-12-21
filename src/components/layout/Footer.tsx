@@ -25,8 +25,8 @@ export const Footer: React.FC = () => {
     const enabled = String(import.meta.env.VITE_PREFETCH_ROUTES) === "true";
     if (!enabled) return;
     prefetchOnHover(aboutRef.current, getRouteImporter("/about")!);
-    prefetchOnHover(privacyRef.current, getRouteImporter("/privacy-policy")!);
-    prefetchOnHover(termsRef.current, getRouteImporter("/terms-of-service")!);
+    prefetchOnHover(privacyRef.current, getRouteImporter("/privacy")!);
+    prefetchOnHover(termsRef.current, getRouteImporter("/terms")!);
     prefetchOnHover(contactRef.current, getRouteImporter("/contact")!);
   }, []);
 
@@ -54,14 +54,14 @@ export const Footer: React.FC = () => {
             </Link>
             <Link
               ref={privacyRef}
-              to="/privacy-policy"
+              to="/privacy"
               className="text-sm text-secondary hover:text-primary transition-colors min-h-11 flex items-center px-2"
             >
               Privacy Policy
             </Link>
             <Link
               ref={termsRef}
-              to="/terms-of-service"
+              to="/terms"
               className="text-sm text-secondary hover:text-primary transition-colors min-h-11 flex items-center px-2"
             >
               Terms of Service

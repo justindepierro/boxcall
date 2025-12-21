@@ -58,9 +58,9 @@ This checklist is the authoritative “Delete Week” backlog. As we complete it
 
 ### Phase 1 — Routing correctness (prevent 404s)
 
-- [ ] Replace Footer legal links to `/privacy` + `/terms` (src/components/layout/Footer.tsx)
-- [ ] Update hover prefetch importer map to match legal routes (src/routes/importers.ts)
-- [ ] Remove or deprecate unused legacy legal route cases (`/privacy-policy`, `/terms-of-service`) once no longer referenced (src/routes/importers.ts)
+- [x] Replace Footer legal links to `/privacy` + `/terms` (src/components/layout/Footer.tsx)
+- [x] Update hover prefetch importer map to match legal routes (src/routes/importers.ts)
+- [x] Remove or deprecate unused legacy legal route cases (`/privacy-policy`, `/terms-of-service`) once no longer referenced (src/routes/importers.ts)
 - [ ] Remove unused legacy `ROUTES.TEAMS` constant if no remaining imports (src/routes/paths.ts)
 
 ### Phase 2 — Dead / legacy UI components

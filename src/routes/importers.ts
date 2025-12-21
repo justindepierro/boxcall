@@ -20,16 +20,10 @@ export function getRouteImporter(path: string): RouteImporter | undefined {
       return () => import("../pages/BoxCall");
     case "/about":
       return () => import("../pages/legal/AboutPage");
-    case "/privacy-policy":
-      return () =>
-        import("../pages/legal/PrivacyPolicyPage").then((m) => ({
-          default: m.PrivacyPolicyPage,
-        }));
-    case "/terms-of-service":
-      return () =>
-        import("../pages/legal/TermsOfServicePage").then((m) => ({
-          default: m.TermsOfServicePage,
-        }));
+    case "/privacy":
+      return () => import("../pages/legal/PrivacyPolicyPage");
+    case "/terms":
+      return () => import("../pages/legal/TermsOfServicePage");
     case "/contact":
       return () =>
         import("../pages/legal/ContactPage").then((m) => ({
