@@ -62,6 +62,54 @@ export interface PerformanceInsights {
 }
 
 export class PlayerPerformanceAnalyticsService {
+  private static ratingForAttendanceStatus(status: string): number {
+    switch (status) {
+      case "present":
+        return 7;
+      case "excused":
+        return 6;
+      case "late":
+        return 5;
+      case "absent":
+        return 2;
+      default:
+        return 5;
+    }
+  }
+
+  private static ratingForAchievementType(_type: string): number {
+    return 9;
+  }
+
+  private static ratingForStickerType(_type: string): number {
+    return 8;
+  }
+
+  private static average(values: number[]): number {
+    if (values.length === 0) return 0;
+    return values.reduce((sum, v) => sum + v, 0) / values.length;
+  }
+
+  private static formatPlayerName(
+    firstName?: string | null,
+    lastName?: string | null
+  ) {
+    return `${firstName || ""} ${lastName || ""}`.trim() || "Unknown Player";
+  }
+
+  private static computeTrendFromRecent(
+    ratings: number[]
+  ): "improving" | "declining" | "stable" {
+    const recent = ratings.slice(0, 5);
+    const older = ratings.slice(5, 10);
+    const recentAvg = this.average(recent);
+    const olderAvg = this.average(older);
+
+    if (recentAvg > olderAvg + 0.5) return "improving";
+    if (recentAvg < olderAvg - 0.5) return "declining";
+    return "stable";
+  }
+
   /**
    * Get comprehensive performance metrics for a player
    */
@@ -69,51 +117,120 @@ export class PlayerPerformanceAnalyticsService {
     playerId: string
   ): Promise<PlayerPerformanceMetrics | null> {
     try {
-      // Get player basic info
-      const { data: player, error: playerError } = await table("profiles")
-        .select("id, full_name")
+      // Accept either a `team_players.id` or a `profiles.id`.
+      const { data: teamPlayerById } = await table("team_players")
+        .select("id, first_name, last_name, position")
         .eq("id", playerId)
-        .single();
+        .maybeSingle();
 
-      if (playerError || !player) return null;
+      const teamPlayer = teamPlayerById
+        ? {
+            id: teamPlayerById.id as string,
+            first_name: (teamPlayerById as any).first_name as string | null,
+            last_name: (teamPlayerById as any).last_name as string | null,
+            position: (teamPlayerById as any).position as string | null,
+          }
+        : null;
 
-      // Get performance data (using mock data since tables don't exist yet)
-      // In real implementation, this would query player_performance table
-      const mockPerformances = this.generateMockPerformanceData(playerId);
+      // If not a team_players ID, try mapping from profile/user id.
+      const { data: teamPlayerByUser } = teamPlayer
+        ? { data: null }
+        : await table("team_players")
+            .select("id, first_name, last_name, position")
+            .eq("user_id", playerId)
+            .eq("is_active", true)
+            .order("updated_at", { ascending: false })
+            .limit(1)
+            .maybeSingle();
 
-      const totalActivities = mockPerformances.length;
-      const averageRating =
-        totalActivities > 0
-          ? mockPerformances.reduce((sum, p) => sum + p.rating, 0) /
-            totalActivities
-          : 0;
+      const resolvedTeamPlayer =
+        teamPlayer ??
+        (teamPlayerByUser
+          ? {
+              id: teamPlayerByUser.id as string,
+              first_name: (teamPlayerByUser as any).first_name as string | null,
+              last_name: (teamPlayerByUser as any).last_name as string | null,
+              position: (teamPlayerByUser as any).position as string | null,
+            }
+          : null);
 
-      // Calculate improvement trend (simple mock logic)
-      const recentRatings = mockPerformances.slice(0, 5).map((p) => p.rating);
-      const olderRatings = mockPerformances.slice(5, 10).map((p) => p.rating);
-      const recentAvg =
-        recentRatings.length > 0
-          ? recentRatings.reduce((a, b) => a + b) / recentRatings.length
-          : 0;
-      const olderAvg =
-        olderRatings.length > 0
-          ? olderRatings.reduce((a, b) => a + b) / olderRatings.length
-          : 0;
+      if (!resolvedTeamPlayer) {
+        // Fallback to profile name if present.
+        const { data: profile } = await table("profiles")
+          .select("id, full_name")
+          .eq("id", playerId)
+          .maybeSingle();
+        if (!profile) return null;
 
-      let improvementTrend: "improving" | "declining" | "stable" = "stable";
-      if (recentAvg > olderAvg + 0.5) improvementTrend = "improving";
-      else if (recentAvg < olderAvg - 0.5) improvementTrend = "declining";
+        return {
+          playerId,
+          playerName: (profile as any).full_name || "Unknown Player",
+          position: "",
+          totalActivities: 0,
+          averageRating: 0,
+          improvementTrend: "stable",
+          strengths: [],
+          weaknesses: [],
+          recentPerformances: [],
+        };
+      }
+
+      const [achievementsRes, stickersRes] = await Promise.all([
+        table("achievements")
+          .select("player_id, achievement_type, description, earned_date")
+          .eq("player_id", resolvedTeamPlayer.id)
+          .order("earned_date", { ascending: false })
+          .limit(100),
+        table("helmet_stickers")
+          .select("player_id, sticker_type, earned_date")
+          .eq("player_id", resolvedTeamPlayer.id)
+          .order("earned_date", { ascending: false })
+          .limit(100),
+      ]);
+
+      const performances: PlayerPerformanceMetrics["recentPerformances"] = [];
+
+      for (const a of achievementsRes.data ?? []) {
+        const date = (a as any).earned_date as string;
+        const achievementType = (a as any).achievement_type as string;
+        performances.push({
+          date,
+          activity: `Achievement: ${achievementType}`,
+          rating: this.ratingForAchievementType(achievementType),
+          notes: (a as any).description || undefined,
+        });
+      }
+
+      for (const s of stickersRes.data ?? []) {
+        const date = (s as any).earned_date as string;
+        const stickerType = (s as any).sticker_type as string;
+        performances.push({
+          date,
+          activity: `Helmet Sticker: ${stickerType}`,
+          rating: this.ratingForStickerType(stickerType),
+        });
+      }
+
+      performances.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+
+      const ratings = performances.map((p) => p.rating);
+      const averageRating = this.average(ratings);
 
       return {
-        playerId,
-        playerName: player.full_name || "Unknown Player",
-        position: "QB", // Mock position
-        totalActivities,
+        playerId: resolvedTeamPlayer.id,
+        playerName: this.formatPlayerName(
+          resolvedTeamPlayer.first_name,
+          resolvedTeamPlayer.last_name
+        ),
+        position: resolvedTeamPlayer.position || "",
+        totalActivities: performances.length,
         averageRating: Math.round(averageRating * 10) / 10,
-        improvementTrend,
-        strengths: ["Accuracy", "Decision making"], // Mock strengths
-        weaknesses: ["Mobility", "Pocket presence"], // Mock weaknesses
-        recentPerformances: mockPerformances.slice(0, 5),
+        improvementTrend: this.computeTrendFromRecent(ratings),
+        strengths: [],
+        weaknesses: [],
+        recentPerformances: performances.slice(0, 5),
       };
     } catch (error) {
       logError("Error fetching player performance metrics:", error);
@@ -128,24 +245,162 @@ export class PlayerPerformanceAnalyticsService {
     teamId: string
   ): Promise<TeamPerformanceOverview> {
     try {
-      // Get team members
-      const { data: members, error: membersError } = await table("team_members")
-        .select("user_id")
+      // Use roster players (team_players) for team analytics.
+      const { data: players, error: playersError } = await table("team_players")
+        .select("id, first_name, last_name, position")
         .eq("team_id", teamId)
-        .eq("status", "active");
+        .eq("is_active", true);
 
-      if (membersError) throw membersError;
+      if (playersError) throw playersError;
 
-      const playerIds = members?.map((m) => m.user_id) || [];
+      const teamPlayers = (players ?? []) as Array<any>;
+      const playerIds = teamPlayers.map((p) => p.id as string);
 
-      // Get performance metrics for all players (mock data)
-      const playerMetrics = await Promise.all(
-        playerIds.map((id) => this.getPlayerPerformanceMetrics(id))
-      );
+      const [achievementsRes, stickersRes, practicesRes] = await Promise.all([
+        playerIds.length > 0
+          ? table("achievements")
+              .select("player_id, achievement_type, description, earned_date")
+              .in("player_id", playerIds)
+              .order("earned_date", { ascending: false })
+              .limit(500)
+          : Promise.resolve({ data: [], error: null } as any),
+        playerIds.length > 0
+          ? table("helmet_stickers")
+              .select("player_id, sticker_type, earned_date")
+              .in("player_id", playerIds)
+              .order("earned_date", { ascending: false })
+              .limit(500)
+          : Promise.resolve({ data: [], error: null } as any),
+        table("practice_schedules")
+          .select("id, practice_date")
+          .eq("team_id", teamId)
+          .order("practice_date", { ascending: false })
+          .limit(30),
+      ]);
 
-      const validMetrics = playerMetrics.filter(
-        (m): m is PlayerPerformanceMetrics => m !== null
-      );
+      const practices = (practicesRes.data ?? []) as Array<any>;
+      const practiceDateById = new Map<string, string>();
+      for (const pr of practices) {
+        practiceDateById.set(pr.id as string, pr.practice_date as string);
+      }
+
+      const practiceIds = practices.map((p) => p.id as string);
+      const attendanceRes =
+        practiceIds.length > 0
+          ? await table("practice_attendance")
+              .select("practice_id, player_id, status")
+              .in("practice_id", practiceIds)
+              .limit(5000)
+          : ({ data: [], error: null } as any);
+
+      const achievements = (achievementsRes.data ?? []) as Array<any>;
+      const stickers = (stickersRes.data ?? []) as Array<any>;
+      const attendance = (attendanceRes.data ?? []) as Array<any>;
+
+      const achievementsByPlayer = new Map<string, Array<any>>();
+      for (const a of achievements) {
+        const pid = a.player_id as string;
+        const arr = achievementsByPlayer.get(pid) ?? [];
+        arr.push(a);
+        achievementsByPlayer.set(pid, arr);
+      }
+
+      const stickersByPlayer = new Map<string, Array<any>>();
+      for (const s of stickers) {
+        const pid = s.player_id as string;
+        const arr = stickersByPlayer.get(pid) ?? [];
+        arr.push(s);
+        stickersByPlayer.set(pid, arr);
+      }
+
+      const attendanceByPlayer = new Map<string, Array<any>>();
+      for (const at of attendance) {
+        const pid = at.player_id as string;
+        const arr = attendanceByPlayer.get(pid) ?? [];
+        arr.push(at);
+        attendanceByPlayer.set(pid, arr);
+      }
+
+      const validMetrics: PlayerPerformanceMetrics[] = teamPlayers.map((p) => {
+        const playerId = p.id as string;
+        const playerName = this.formatPlayerName(p.first_name, p.last_name);
+        const position = (p.position as string | null) || "";
+
+        const performances: PlayerPerformanceMetrics["recentPerformances"] = [];
+
+        for (const a of achievementsByPlayer.get(playerId) ?? []) {
+          const date = a.earned_date as string;
+          const achievementType = a.achievement_type as string;
+          performances.push({
+            date,
+            activity: `Achievement: ${achievementType}`,
+            rating: this.ratingForAchievementType(achievementType),
+            notes: a.description || undefined,
+          });
+        }
+
+        for (const s of stickersByPlayer.get(playerId) ?? []) {
+          const date = s.earned_date as string;
+          const stickerType = s.sticker_type as string;
+          performances.push({
+            date,
+            activity: `Helmet Sticker: ${stickerType}`,
+            rating: this.ratingForStickerType(stickerType),
+          });
+        }
+
+        for (const at of attendanceByPlayer.get(playerId) ?? []) {
+          const practiceId = at.practice_id as string;
+          const date = practiceDateById.get(practiceId);
+          if (!date) continue;
+          const status = at.status as string;
+          performances.push({
+            date,
+            activity: "Practice",
+            rating: this.ratingForAttendanceStatus(status),
+            notes: status !== "present" ? status : undefined,
+          });
+        }
+
+        performances.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+
+        const ratings = performances.map((pp) => pp.rating);
+        const averageRating = this.average(ratings);
+
+        // Simple heuristics from real data.
+        const strengths: string[] = [];
+        const weaknesses: string[] = [];
+        const attendanceEvents = (attendanceByPlayer.get(playerId) ??
+          []) as any[];
+        const lateOrAbsent = attendanceEvents.filter(
+          (e) => e.status === "late" || e.status === "absent"
+        ).length;
+        if (attendanceEvents.length > 0) {
+          const reliability = 1 - lateOrAbsent / attendanceEvents.length;
+          if (reliability >= 0.9) strengths.push("Reliability");
+          if (reliability <= 0.75) weaknesses.push("Attendance");
+        }
+
+        const recentAchievements = (achievementsByPlayer.get(playerId) ?? [])
+          .slice(0, 3)
+          .map((a) => a.achievement_type as string);
+        if (recentAchievements.length >= 2) strengths.push("Production");
+        if (recentAchievements.length === 0) weaknesses.push("Recognition");
+
+        return {
+          playerId,
+          playerName,
+          position,
+          totalActivities: performances.length,
+          averageRating: Math.round(averageRating * 10) / 10,
+          improvementTrend: this.computeTrendFromRecent(ratings),
+          strengths,
+          weaknesses,
+          recentPerformances: performances.slice(0, 5),
+        };
+      });
 
       const totalPlayers = validMetrics.length;
       const averageTeamRating =
@@ -196,13 +451,31 @@ export class PlayerPerformanceAnalyticsService {
         >
       );
 
+      // Recent activities: last practice sessions.
+      const recentActivities: TeamPerformanceOverview["recentActivities"] = [];
+      for (const pr of practices.slice(0, 5)) {
+        const practiceId = pr.id as string;
+        const date = pr.practice_date as string;
+        const rows = attendance.filter((a) => a.practice_id === practiceId);
+        if (rows.length === 0) continue;
+        const ratings = rows.map((r) =>
+          this.ratingForAttendanceStatus(r.status as string)
+        );
+        recentActivities.push({
+          date,
+          activity: "Practice",
+          participants: rows.length,
+          averageRating: Math.round(this.average(ratings) * 10) / 10,
+        });
+      }
+
       return {
         totalPlayers,
         averageTeamRating: Math.round(averageTeamRating * 10) / 10,
         topPerformers,
         playersNeedingAttention,
         positionBreakdown,
-        recentActivities: [], // Mock empty for now
+        recentActivities,
       };
     } catch (error) {
       logError("Error fetching team performance overview:", error);
@@ -269,7 +542,7 @@ export class PlayerPerformanceAnalyticsService {
           if (overview.averageTeamRating < 6) return "down";
           return "stable";
         })(),
-        change: 0.3, // Mock change
+        change: 0,
         period: "Last 30 days",
       });
 
@@ -286,34 +559,5 @@ export class PlayerPerformanceAnalyticsService {
         alerts: [],
       };
     }
-  }
-
-  /**
-   * Generate mock performance data for development
-   */
-  private static generateMockPerformanceData(_playerId: string) {
-    const activities = [
-      "Practice",
-      "Scrimmage",
-      "Game",
-      "Drill",
-      "Conditioning",
-    ];
-    const performances = [];
-
-    for (let i = 0; i < 15; i++) {
-      performances.push({
-        date: new Date(Date.now() - i * 24 * 60 * 60 * 1000)
-          .toISOString()
-          .split("T")[0],
-        activity: activities[Math.floor(Math.random() * activities.length)],
-        rating: Math.round((Math.random() * 4 + 6) * 10) / 10, // 6-10 rating
-        notes: Math.random() > 0.7 ? "Good performance" : undefined,
-      });
-    }
-
-    return performances.sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
   }
 }

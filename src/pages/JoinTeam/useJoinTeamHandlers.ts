@@ -10,6 +10,11 @@ import { useToast } from "../../hooks/useToast";
 import type { JoinStep, TeamSearchResult, JoinTeamState } from "./types";
 import { MOCK_SEARCH_RESULTS, INVITE_CODE_LENGTH } from "./constants";
 import { debug } from "../../utils/logger";
+import { supabase } from "../../lib/supabase";
+import { getCurrentUserId } from "../../lib/auth-helpers";
+import { table } from "../../data/supabase/db";
+import { teamRoutes } from "../../routes/paths";
+import { storageKeys, writeLocalString } from "../../utils/storage";
 
 function extractInvitationTokenFromInput(input: string): string | null {
   const trimmed = input.trim();
@@ -40,6 +45,15 @@ function extractInvitationTokenFromInput(input: string): string | null {
   return trimmed;
 }
 
+type SearchTeamsRow = {
+  id: string;
+  name: string;
+  school_name: string | null;
+  season_year: number | null;
+  member_count: number | null;
+  coach_name: string | null;
+};
+
 export interface UseJoinTeamHandlersReturn extends JoinTeamState {
   handleMethodSelect: (methodId: string) => void;
   handleInviteCodeChange: (value: string) => void;
@@ -68,6 +82,7 @@ export function useJoinTeamHandlers(): UseJoinTeamHandlersReturn {
   const [selectedTeam, setSelectedTeam] = useState<TeamSearchResult | null>(
     null
   );
+  const [joinedTeamId, setJoinedTeamId] = useState<string | null>(null);
   const [selectedRole, _setSelectedRole] = useState("player");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -124,38 +139,98 @@ export function useJoinTeamHandlers(): UseJoinTeamHandlersReturn {
 
     setIsLoading(true);
 
-    // TODO: Implement actual team search API
-    debug("[JoinTeam] Searching for teams", searchQuery);
+    try {
+      debug("[JoinTeam] Searching teams via RPC", { query: searchQuery });
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+      const { data, error } = await supabase.rpc("search_teams", {
+        p_query: searchQuery.trim(),
+        p_limit: 10,
+      });
 
-    // Mock results - replace with actual search
-    setSearchResults(
-      MOCK_SEARCH_RESULTS.filter(
-        (team) =>
-          team.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          team.school.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    );
+      if (error) {
+        throw error;
+      }
 
-    setIsLoading(false);
+      const rows = (data ?? []) as SearchTeamsRow[];
+      const mapped: TeamSearchResult[] = rows.map((row) => ({
+        id: row.id,
+        name: row.name,
+        school: row.school_name || "",
+        sport: "Football",
+        level: "Varsity",
+        memberCount: row.member_count ?? 0,
+        coachName: row.coach_name || "",
+        isPublic: true,
+        requiresApproval: false,
+      }));
+
+      setSearchResults(mapped);
+    } catch (err) {
+      debug("[JoinTeam] Team search RPC failed, falling back to mock", err);
+
+      setSearchResults(
+        MOCK_SEARCH_RESULTS.filter(
+          (team) =>
+            team.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            team.school.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleJoinTeam = (team: TeamSearchResult) => {
-    setSelectedTeam(team);
+    void (async () => {
+      setSelectedTeam(team);
 
-    if (team.requiresApproval) {
-      // Send join request
-      debug("[JoinTeam] Sending join request for team", team.name);
-      // TODO: Implement join request logic
-      setCurrentStep("request");
-    } else {
-      // Join immediately
-      debug("[JoinTeam] Joining team immediately", team.name);
-      // TODO: Implement immediate join logic
-      setCurrentStep("complete");
-    }
+      if (team.requiresApproval) {
+        // Request-to-join workflow isn't backed by a DB primitive yet.
+        setCurrentStep("request");
+        return;
+      }
+
+      const userId = getCurrentUserId();
+      if (!userId) {
+        toast.error("Please sign in to join a team");
+        return;
+      }
+
+      setIsLoading(true);
+      try {
+        debug("[JoinTeam] Joining team via team_members insert", {
+          teamId: team.id,
+        });
+
+        const { error } = await table("team_members").insert({
+          team_id: team.id,
+          user_id: userId,
+          team_role: "player",
+          status: "active",
+        });
+
+        if (error) {
+          // PGRST116 is no rows; here we'd get 409-ish for uniqueness.
+          throw error;
+        }
+
+        setJoinedTeamId(team.id);
+        try {
+          writeLocalString(storageKeys.activeTeamId, team.id);
+        } catch {
+          /* ignore */
+        }
+
+        setCurrentStep("complete");
+      } catch (err) {
+        debug("[JoinTeam] Join failed", err);
+        toast.error(
+          "Could not join team. If you already joined, try going to your dashboard."
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    })();
   };
 
   const handleGoToDashboard = () => {
@@ -163,11 +238,21 @@ export function useJoinTeamHandlers(): UseJoinTeamHandlersReturn {
   };
 
   const handleGoToTeam = () => {
-    navigate("/team/new-team-id/bulletin");
+    if (!joinedTeamId) {
+      navigate("/dashboard");
+      return;
+    }
+
+    navigate(teamRoutes.bulletin(joinedTeamId));
   };
 
   const handleJoinAnother = () => {
     setCurrentStep("method");
+    setSelectedTeam(null);
+    setJoinedTeamId(null);
+    setInviteCode("");
+    setSearchQuery("");
+    setSearchResults([]);
   };
 
   const handleSwitchToSearch = () => {

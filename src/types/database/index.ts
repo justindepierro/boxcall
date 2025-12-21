@@ -3835,6 +3835,17 @@ export type Database = {
         Args: { field_width?: number; positions: Json };
         Returns: Json;
       };
+      search_teams: {
+        Args: { p_query: string; p_limit?: number };
+        Returns: {
+          id: string;
+          name: string;
+          school_name: string | null;
+          season_year: number | null;
+          member_count: number;
+          coach_name: string;
+        }[];
+      };
       formation_has_variants: {
         Args: { formation_id: string };
         Returns: boolean;

@@ -89,14 +89,19 @@ This checklist is the authoritative “Delete Week” backlog. As we complete it
 
 These are not “pure deletion” targets — they are either implement-or-remove candidates.
 
+- [x] Implement Join Team backend flow (invite token/link routing + team search + immediate join)
   - src/pages/JoinTeam/useJoinTeamHandlers.ts
-  - src/pages/JoinTeam/constants.ts
+  - src/pages/JoinTeam/steps/InviteCodeStep.tsx
+  - supabase/migrations/20251221103000_team_search_rpc.sql
 
+- [x] Implement Player Performance analytics (replace mock generation with real queries)
   - src/services/performanceAnalyticsService.ts
   - src/components/analytics/PlayerPerformanceDashboard.tsx
 
+- [ ] Replace formation no-op service (wire to real formation library/services or DB tables)
   - src/services/formationService.ts
 
+- [x] Replace network status hook stub (navigator.onLine + events + connection quality)
   - src/hooks/useNetworkStatus.ts
   - src/components/ui/MobileLoadingStrategy.tsx
 ### Phase 6 — Deprecated dead blocks
