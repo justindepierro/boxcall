@@ -5,6 +5,7 @@ import { Button } from "../Button";
 import { Card } from "../Card";
 import Icon from "../Icon/Icon";
 import type { User } from "./Auth";
+import { ROUTES } from "../../../routes/paths";
 
 interface OnboardingFlowProps {
   user: User;
@@ -43,7 +44,7 @@ const getCoachSteps = (
     icon: "users",
     action: {
       label: "Create Team",
-      onClick: () => navigate("/teams/create"),
+      onClick: () => navigate(ROUTES.CREATE_TEAM),
     },
     skipLabel: "Skip for now",
   },
@@ -55,7 +56,7 @@ const getCoachSteps = (
     icon: "user-plus",
     action: {
       label: "Invite Players",
-      onClick: () => navigate("/teams/manage"),
+      onClick: () => navigate(ROUTES.ROSTER),
     },
     skipLabel: "Do this later",
   },
@@ -67,7 +68,7 @@ const getCoachSteps = (
     icon: "play",
     action: {
       label: "Start Recording",
-      onClick: () => navigate("/plays/record"),
+      onClick: () => navigate(ROUTES.BOXCALL),
     },
     skipLabel: "Explore first",
   },
@@ -85,7 +86,7 @@ const getPlayerSteps = (
     icon: "user-check",
     action: {
       label: "Find My Team",
-      onClick: () => navigate("/teams/join"),
+      onClick: () => navigate(ROUTES.JOIN_TEAM),
     },
     skipLabel: "I'll do this later",
   },
@@ -109,7 +110,7 @@ const getPlayerSteps = (
     icon: "chart-bar",
     action: {
       label: "View My Plays",
-      onClick: () => navigate("/plays"),
+      onClick: () => navigate("/player-dashboard"),
     },
     skipLabel: "Explore later",
   },
@@ -127,7 +128,7 @@ const getParentSteps = (
     icon: "heart",
     action: {
       label: "Link Account",
-      onClick: () => navigate("/family/link"),
+      onClick: () => navigate(ROUTES.PROFILE),
     },
     skipLabel: "Do this later",
   },
@@ -139,7 +140,7 @@ const getParentSteps = (
     icon: "trending-up",
     action: {
       label: "View Progress",
-      onClick: () => navigate("/family/progress"),
+      onClick: () => navigate(ROUTES.PROFILE),
     },
     skipLabel: "Explore first",
   },
@@ -157,7 +158,7 @@ const getAdminSteps = (
     icon: "cog",
     action: {
       label: "Go to Dashboard",
-      onClick: () => navigate("/admin"),
+      onClick: () => navigate("/coach-management"),
     },
   },
 ];

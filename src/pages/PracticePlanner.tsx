@@ -241,7 +241,7 @@ export function PracticePlanner() {
               onDeleteBlock={handleDeleteBlock}
               onPDFExport={() => setIsPDFExportOpen(true)}
               onNavigateToSchedule={() =>
-                navigate(`/teams/${teamId}/season-schedule`)
+                navigate(`/team/${teamId}/calendar`)
               }
               onStartPractice={handleStartPractice}
               onStopPractice={handleStopPractice}

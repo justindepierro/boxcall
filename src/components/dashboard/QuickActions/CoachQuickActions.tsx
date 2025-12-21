@@ -23,7 +23,7 @@ export const CoachQuickActions: React.FC = () => {
       navigate(`/team/${teamId}/settings?tab=roster`);
       return;
     }
-    navigate("/team-bulletin");
+    navigate("/create-team");
   };
 
   const handleCreatePlay = () => {
@@ -43,7 +43,12 @@ export const CoachQuickActions: React.FC = () => {
   };
 
   const handleAnnouncement = () => {
-    navigate("/team-bulletin");
+    const teamId = getActiveTeamId();
+    if (teamId) {
+      navigate(`/team/${teamId}/bulletin`);
+      return;
+    }
+    navigate("/create-team");
   };
 
   return (

@@ -92,7 +92,7 @@ export const getNavigationItems = (
       "team-bulletin",
       "Team Bulletin",
       "users",
-      resolvedTeamId ? teamRoutes.bulletin(resolvedTeamId) : ROUTES.TEAMS,
+      resolvedTeamId ? teamRoutes.bulletin(resolvedTeamId) : ROUTES.CREATE_TEAM,
       "Team-specific feed, announcements, and quick actions"
     )
   );

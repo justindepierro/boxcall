@@ -87,7 +87,7 @@ export function useGlobalSearch() {
         });
 
         // Map results to SearchResult format
-        const searchResults = mapSearchResults(rawResults);
+        const searchResults = mapSearchResults(rawResults, activeTeamId);
         setResults(searchResults);
 
         // Performance logging (dev only)

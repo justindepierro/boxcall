@@ -6,16 +6,20 @@
 
 import type { SearchResult } from "./types";
 import type { RawSearchResults } from "./searchQueries";
+import { teamRoutes } from "../../../routes/paths";
 
 /**
  * Transform all raw search results into formatted SearchResult array
  */
-export function mapSearchResults(raw: RawSearchResults): SearchResult[] {
+export function mapSearchResults(
+  raw: RawSearchResults,
+  activeTeamId: string
+): SearchResult[] {
   return [
     ...mapPlays(raw.plays),
     ...mapFormations(raw.formations),
     ...mapPlayers(raw.players),
-    ...mapAnnouncements(raw.announcements),
+    ...mapAnnouncements(raw.announcements, activeTeamId),
     ...mapGamePlans(raw.gamePlans),
     ...mapPracticeScripts(raw.practiceScripts),
     ...mapCalendarEvents(raw.calendarEvents),
@@ -74,7 +78,8 @@ function mapPlayers(players: RawSearchResults["players"]): SearchResult[] {
 }
 
 function mapAnnouncements(
-  announcements: RawSearchResults["announcements"]
+  announcements: RawSearchResults["announcements"],
+  activeTeamId: string
 ): SearchResult[] {
   if (!announcements) return [];
 
@@ -83,7 +88,7 @@ function mapAnnouncements(
     id: announcement.id,
     title: announcement.title,
     subtitle: `Announcement • ${new Date(announcement.created_at).toLocaleDateString()}`,
-    url: `/team-bulletin`,
+    url: teamRoutes.bulletin(activeTeamId),
   }));
 }
 
@@ -111,7 +116,7 @@ function mapPracticeScripts(
     id: script.id,
     title: script.title,
     subtitle: "Practice Script",
-    url: `/practice`,
+    url: `/practice-plans`,
   }));
 }
 

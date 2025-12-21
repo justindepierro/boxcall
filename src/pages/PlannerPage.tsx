@@ -1,5 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { getActiveTeamId } from "../utils/activeTeam";
+import { teamRoutes } from "../routes/paths";
 import { Button } from "../components/ui/Button/Button";
 import { Typography } from "../components/design-system";
 import Card from "../components/ui/Card/Card";
@@ -140,7 +142,14 @@ const PlannerPage: React.FC = React.memo(() => {
             title="Team Dashboard"
             description="Update team announcements and important information"
             buttonText="Update Dashboard"
-            onNavigate={() => navigate("/teams")}
+            onNavigate={() => {
+              const teamId = getActiveTeamId();
+              if (teamId) {
+                navigate(teamRoutes.bulletin(teamId));
+                return;
+              }
+              navigate("/dashboard");
+            }}
           />
 
           <PlannerCard

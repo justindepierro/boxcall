@@ -534,7 +534,9 @@ const BoxCall: React.FC = () => {
 
   // Show message if no team is selected
   if (!activeTeamId) {
-    return <BoxCallNoTeamSelected onGoToTeams={() => navigate("/teams")} />;
+    return (
+      <BoxCallNoTeamSelected onGoToTeams={() => navigate("/create-team")} />
+    );
   }
 
   const handleResumeSession = (session: RecentSession) => {

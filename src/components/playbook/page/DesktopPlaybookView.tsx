@@ -190,7 +190,7 @@ const PracticeScriptsSection: FC<PracticeScriptsSectionProps> = ({
             ))}
           </div>
           <Button
-            onClick={() => navigate("/teams")}
+            onClick={() => navigate("/create-team")}
             variant="primary"
             size={mobileButtonSize}
             className="mt-8"

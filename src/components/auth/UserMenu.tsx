@@ -158,7 +158,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ teams = [] }) => {
                 if (teamId) {
                   navigate(`/team/${teamId}/settings`);
                 } else {
-                  navigate("/team-bulletin");
+                  navigate("/create-team");
                 }
               }}
               variant="ghost"

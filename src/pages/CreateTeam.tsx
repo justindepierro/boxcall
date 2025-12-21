@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { teamRoutes } from "../routes/paths";
 import { useAuth } from "../app/auth-store";
 import { useRoles } from "../hooks/useRoles";
 import { Button } from "../components/ui/Button/Button";
@@ -495,7 +496,7 @@ const CreateTeam: React.FC = () => {
   const handleGoToBulletin = () => {
     setShowWelcomeModal(false);
     if (createdTeamId) {
-      navigate(`/teams/${createdTeamId}/bulletin`);
+      navigate(teamRoutes.bulletin(createdTeamId));
     }
   };
 

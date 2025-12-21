@@ -24,8 +24,8 @@ export const ROUTES = {
   PLAYER: "/player",
   ADMIN: "/admin",
   ABOUT: "/about",
-  PRIVACY: "/privacy-policy",
-  TERMS: "/terms-of-service",
+  PRIVACY: "/privacy",
+  TERMS: "/terms",
   CONTACT: "/contact",
   DESIGN_SYSTEM: "/design-system",
 } as const;
