@@ -41,9 +41,7 @@ export const GamePlanningAnalytics: React.FC<GamePlanningAnalyticsProps> = ({
       try {
         setLoading(true);
         const data =
-          await PlayAnalyticsService.getGamePlanningAnalytics(
-            primaryTeamId
-          );
+          await PlayAnalyticsService.getGamePlanningAnalytics(primaryTeamId);
         setAnalytics(data);
         setError(null);
       } catch (err) {

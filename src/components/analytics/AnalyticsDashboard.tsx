@@ -55,8 +55,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     try {
       setLoading(true);
       setError(null);
-      const data =
-        await PlayAnalyticsService.getPlaybookAnalytics(playbookId);
+      const data = await PlayAnalyticsService.getPlaybookAnalytics(playbookId);
       setAnalytics(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load analytics");
