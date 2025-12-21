@@ -100,7 +100,7 @@ These are not “pure deletion” targets — they are either implement-or-remov
 - [ ] Decide on Formation service no-op: implement backend or keep stub + hide UI
   - src/services/formationService.ts
 
-- [ ] Replace network status hook stub (currently always online) OR remove abstraction
+- [x] Replace network status hook stub (navigator.onLine + events + connection quality)
   - src/hooks/useNetworkStatus.ts
   - src/components/ui/MobileLoadingStrategy.tsx
 
