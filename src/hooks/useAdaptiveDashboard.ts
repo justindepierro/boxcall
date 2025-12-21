@@ -7,6 +7,7 @@
  */
 
 import { useEffect, useCallback, useRef } from "react";
+import { useShallow } from "zustand/shallow";
 import { useDashboardStore } from "../stores/dashboardStore";
 import { AdaptiveContentService } from "@services/adaptiveContentService";
 import { useAuth } from "../app/auth-store";
@@ -42,7 +43,21 @@ export function useAdaptiveDashboard() {
     getContextualActions,
     updateAdaptiveRecommendations,
     adaptLayoutForContext,
-  } = useDashboardStore();
+  } = useDashboardStore(
+    useShallow((state) => ({
+      currentContext: state.currentContext,
+      timeContext: state.timeContext,
+      userActivity: state.userActivity,
+      personalizationSettings: state.personalizationSettings,
+      setCurrentContext: state.setCurrentContext,
+      setTimeContext: state.setTimeContext,
+      trackUserActivity: state.trackUserActivity,
+      calculateWidgetPriorities: state.calculateWidgetPriorities,
+      getContextualActions: state.getContextualActions,
+      updateAdaptiveRecommendations: state.updateAdaptiveRecommendations,
+      adaptLayoutForContext: state.adaptLayoutForContext,
+    }))
+  );
 
   const contextUpdateIntervalRef = useRef<NodeJS.Timeout | null>(null);
 

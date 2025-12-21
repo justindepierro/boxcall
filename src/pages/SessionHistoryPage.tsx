@@ -384,7 +384,7 @@ SessionHistorySummary.displayName = "SessionHistorySummary";
  */
 const SessionHistoryPage: React.FC = () => {
   const navigate = useNavigate();
-  const { activeTeamId } = useActiveTeamStore();
+  const activeTeamId = useActiveTeamStore((state) => state.activeTeamId);
   const [sessions, setSessions] = useState<SessionDisplayItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterType, setFilterType] = useState<FilterType>("all");

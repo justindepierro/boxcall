@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 
 import React from "react";
+import { useShallow } from "zustand/shallow";
 import { Button, FormSelect } from "../../components/ui";
 import { Typography } from "../../components/design-system/Typography";
 import { Icon } from "../../components/ui/Icon";
@@ -36,7 +37,20 @@ export const DashboardCustomizationPanel: React.FC<
     resizeWidget,
     setPersonalizationSettings,
     clearError,
-  } = useDashboardStore();
+  } = useDashboardStore(
+    useShallow((state) => ({
+      currentLayout: state.currentLayout,
+      availableLayouts: state.availableLayouts,
+      personalizationSettings: state.personalizationSettings,
+      loading: state.loading,
+      error: state.error,
+      createLayout: state.createLayout,
+      toggleWidgetVisibility: state.toggleWidgetVisibility,
+      resizeWidget: state.resizeWidget,
+      setPersonalizationSettings: state.setPersonalizationSettings,
+      clearError: state.clearError,
+    }))
+  );
 
   const [activeTab, setActiveTab] = React.useState<
     "widgets" | "layouts" | "settings"

@@ -18,7 +18,7 @@ import { readLocalString, storageKeys } from "../utils/storage";
 
 export const PersonnelLibraryPage: React.FC = () => {
   const { playbooks } = useTeamsData();
-  const { activeTeamId } = useActiveTeamStore();
+  const activeTeamId = useActiveTeamStore((state) => state.activeTeamId);
 
   // Filter playbooks for active team (match PlaybookPage logic)
   const teamPlaybooks = React.useMemo(

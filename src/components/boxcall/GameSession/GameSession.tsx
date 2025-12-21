@@ -70,7 +70,7 @@ const GameSession: React.FC = () => {
   const { planId } = useParams<{ planId: string }>();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { activeTeamId } = useActiveTeamStore();
+  const activeTeamId = useActiveTeamStore((state) => state.activeTeamId);
   const toast = useToast();
 
   const mode = (searchParams.get("mode") as "live" | "retroactive") || "live";

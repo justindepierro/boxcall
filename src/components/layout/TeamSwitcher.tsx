@@ -21,7 +21,8 @@ interface TeamSwitcherProps {
 
 export const TeamSwitcher: React.FC<TeamSwitcherProps> = ({ teams }) => {
   const navigate = useNavigate();
-  const { activeTeamId, setActiveTeamId } = useActiveTeamStore();
+  const activeTeamId = useActiveTeamStore((s) => s.activeTeamId);
+  const setActiveTeamId = useActiveTeamStore((s) => s.setActiveTeamId);
   const { user } = useAuth();
   const { prefetchTeamDashboard, cancelPrefetch } = usePrefetchQueries();
 

@@ -43,7 +43,7 @@ const PracticeSession: React.FC = () => {
   const { scriptId } = useParams<{ scriptId: string }>();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { activeTeamId } = useActiveTeamStore();
+  const activeTeamId = useActiveTeamStore((state) => state.activeTeamId);
 
   const mode = (searchParams.get("mode") as "live" | "retroactive") || "live";
 

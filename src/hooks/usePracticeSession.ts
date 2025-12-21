@@ -504,7 +504,7 @@ export function usePracticeSession({
   mode,
   sessionDate = new Date(),
 }: UsePracticeSessionOptions): UsePracticeSessionReturn {
-  const { activeTeamId } = useActiveTeamStore();
+  const activeTeamId = useActiveTeamStore((state) => state.activeTeamId);
 
   const { practiceScript, scriptPlays, isLoading, error } =
     usePracticeScriptLoader(practiceScriptId);

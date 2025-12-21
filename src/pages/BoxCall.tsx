@@ -461,7 +461,7 @@ const BoxCallContent: React.FC<BoxCallContentProps> = ({
  */
 const BoxCall: React.FC = () => {
   const navigate = useNavigate();
-  const { activeTeamId } = useActiveTeamStore();
+  const activeTeamId = useActiveTeamStore((state) => state.activeTeamId);
   const toast = useToast();
   const [practiceScripts, setPracticeScripts] = useState<PracticeScript[]>([]);
   const [gamePlans, setGamePlans] = useState<GamePlan[]>([]);

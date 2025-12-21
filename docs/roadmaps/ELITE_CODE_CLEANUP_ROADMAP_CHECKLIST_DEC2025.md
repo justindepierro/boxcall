@@ -48,10 +48,10 @@ Verified complete:
 - (8) App/DOM custom events are typed and centralized: constants + typed dispatch/listen helpers live in `src/utils/appEvents.ts`, and existing feature events use them (activation, PWA install, PlayGrid).
 - (7) TypeScript strictness is tightened incrementally: `noImplicitOverride` is enabled in TS configs, overrides are fixed (e.g., ErrorBoundary), and remaining candidates are tracked in `docs/development/TYPESCRIPT_STRICTNESS_TRACKER.md`.
 - (10) Web storage is centralized and typed: `src/utils/storage.ts` is the single source of truth for keys + SSR-safe helpers, and direct `localStorage`/`sessionStorage` usage is banned via `boxcall-design/no-direct-web-storage` (tests exempt).
+- (11) Zustand store surface area is reduced and enforced: legacy `src/app/store.ts` was deleted, UI state moved to `src/stores/uiStore.ts`, dashboard store was modularized under `src/stores/dashboard/`, and new guardrails prevent ad-hoc `.getState()` and whole-store subscriptions.
 
 Verified partial (keep unchecked for now):
 
-- (11) Zustand store surface area is not yet reduced: `src/app/store.ts` remains a broad “god store” (even though some domain stores exist elsewhere).
 - (12) Optimistic patterns exist (e.g., temp IDs + rollback utilities in data sync services), but they are not yet unified across major features into one shared approach.
 - (13) React Query defaults are standardized in `src/app/queryClient.ts` and some query-key factories exist (e.g., `src/lib/queryClient.ts`), but there’s still bespoke caching in the codebase and no single shared query-key scheme across features.
 - (14) A typed Supabase DAL exists under `src/data/supabase/`, but direct `supabase.from(...)` usage is still scattered across routes/services.
@@ -86,7 +86,12 @@ Verified missing:
 
 ## State & Data Layer
 
-- [ ] (11) Reduce Zustand store surface area: split by domain, memo-safe selectors, ban ad-hoc store reads in utilities
+- [x] (11) Reduce Zustand store surface area: split by domain, memo-safe selectors, ban ad-hoc store reads in utilities
+  - ✅ Verified: Legacy `src/app/store.ts` removed; UI state lives in `src/stores/uiStore.ts` and dashboard store is modularized under `src/stores/dashboard/`
+  - ✅ Verified: Guardrail bans `.getState()` outside store modules via `boxcall-design/no-direct-zustand-getstate` (tests exempt)
+  - ✅ Verified: Guardrail bans whole-store subscriptions for key stores via `boxcall-design/no-zustand-store-hook-without-selector` (tests exempt)
+  - ✅ Verified: Store consumers use selector-based subscriptions (active team + dashboard + UI)
+  - ✅ Gate: `npm run validate` pass (Dec 20, 2025)
 - [ ] (12) Unify optimistic update patterns (temp IDs, rollback, toasts) across Playbook/GamePlans/Bulletin/etc.
 - [ ] (13) Standardize React Query config: query keys, stale times, refetch policies; remove bespoke caching
 - [ ] (14) Create a typed Supabase data-access layer (table-level helpers) and reduce direct query scattering

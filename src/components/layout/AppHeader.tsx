@@ -377,7 +377,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   const { roleContext } = useRoles();
   const profile = useAuthProfile();
   const { devMode } = useDevMode();
-  const { activeTeamId: _activeTeamId } = useActiveTeamStore();
+  useActiveTeamStore((s) => s.activeTeamId);
   const { queueLength, retryFailedSaves, clearQueue, isOnline } =
     useSaveState();
 

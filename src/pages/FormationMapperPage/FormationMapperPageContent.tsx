@@ -39,7 +39,7 @@ import {
 } from "./components";
 
 const FormationMapperPageContent: React.FC = () => {
-  const { activeTeamId } = useActiveTeamStore();
+  const activeTeamId = useActiveTeamStore((state) => state.activeTeamId);
   const { playbooks } = useTeamsData();
   const { combos } = useRecentPlayCombos(12);
 

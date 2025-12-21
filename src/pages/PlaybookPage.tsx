@@ -653,7 +653,7 @@ function PlaybookPageOverlays({
 const PlaybookPage = () => {
   const { state, dispatch } = usePlaybook();
   const navigate = useNavigate();
-  const { activeTeamId } = useActiveTeamStore();
+  const activeTeamId = useActiveTeamStore((s) => s.activeTeamId);
   const isMobileOrTablet = useIsMobileOrTablet();
 
   // Mobile-optimized button sizes

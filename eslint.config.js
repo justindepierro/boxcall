@@ -14,6 +14,7 @@ import noConsoleOutsideLogger from "./eslint-rules/no-console-outside-logger.js"
 import noDirectFetchOutsideServices from "./eslint-rules/no-direct-fetch-outside-services.js";
 import noDirectWebStorage from "./eslint-rules/no-direct-web-storage.js";
 import noDirectZustandGetState from "./eslint-rules/no-direct-zustand-getstate.js";
+import noZustandStoreHookWithoutSelector from "./eslint-rules/no-zustand-store-hook-without-selector.js";
 
 const boxcallDesignRules = {
   rules: {
@@ -28,6 +29,7 @@ const boxcallDesignRules = {
     ...noDirectFetchOutsideServices.rules,
     ...noDirectWebStorage.rules,
     ...noDirectZustandGetState.rules,
+    ...noZustandStoreHookWithoutSelector.rules,
   },
 };
 
@@ -134,6 +136,7 @@ export default [
       "boxcall-design/no-direct-fetch-outside-services": "error",
       "boxcall-design/no-direct-web-storage": "error",
       "boxcall-design/no-direct-zustand-getstate": "error",
+      "boxcall-design/no-zustand-store-hook-without-selector": "error",
     },
   },
 ];

@@ -57,7 +57,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [headerVisible, setHeaderVisible] = React.useState(true);
   const navigate = useNavigate();
   const location = useLocation();
-  const { activeTeamId, setActiveTeamId } = useActiveTeamStore();
+  const activeTeamId = useActiveTeamStore((s) => s.activeTeamId);
+  const setActiveTeamId = useActiveTeamStore((s) => s.setActiveTeamId);
 
   // Set active team to user's first team if not already set
   useEffect(() => {

@@ -6,8 +6,7 @@
   "sideEffects": [
     "*.css",
     "./src/telemetry/**/*",
-    "./src/lib/supabase.ts",
-    "./src/app/store.ts"
+    "./src/lib/supabase.ts"
   ],
   "description": "Football program management platform - everything Hudl is not. Collaborative, social, and comprehensive.",
   "author": "Justin DePierro",

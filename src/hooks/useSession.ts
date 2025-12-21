@@ -484,7 +484,7 @@ export function useSession({
   sessionMode,
   scriptOrPlanId,
 }: UseSessionProps): UseSessionReturn {
-  const { activeTeamId } = useActiveTeamStore();
+  const activeTeamId = useActiveTeamStore((state) => state.activeTeamId);
   // const { userId } = useAuth(); // Unused - removed
 
   // Core state
