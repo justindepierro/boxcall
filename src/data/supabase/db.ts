@@ -25,7 +25,10 @@ export function fromAny(tableName: string) {
   return (supabase as any).from(tableName);
 }
 
-export function fromAnyWithClient(client: SupabaseClient<Database>, tableName: string) {
+export function fromAnyWithClient(
+  client: SupabaseClient<Database>,
+  tableName: string
+) {
   return (client as any).from(tableName);
 }
 

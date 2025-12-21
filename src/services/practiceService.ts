@@ -614,24 +614,23 @@ export class PracticeService {
     data: AddPlayToPracticeScriptData,
     _play: Play
   ): Promise<PracticeScript> {
-    const { error: playError } = await table("practice_script_plays")
-      .insert({
-        practice_script_id: data.scriptId,
-        play_id: data.playId,
-        sequence_order: data.orderIndex || 1,
-        coaching_points: data.notes ? [data.notes] : [],
-        repetitions: data.repetitions || 5,
-        // Game scenario configuration
-        hash: data.hash || "middle",
-        down_distance: data.downDistance || "1st & 10",
-        field_position: data.fieldPosition || "plus_territory",
-        defensive_front: data.defensiveFront || "base",
-        coverage: data.coverage || "cover_2",
-        blitz: data.blitz || "none",
-        scenario_notes: data.scenarioNotes || null,
-        segment_name: "Drill",
-        segment_type: "drill",
-      });
+    const { error: playError } = await table("practice_script_plays").insert({
+      practice_script_id: data.scriptId,
+      play_id: data.playId,
+      sequence_order: data.orderIndex || 1,
+      coaching_points: data.notes ? [data.notes] : [],
+      repetitions: data.repetitions || 5,
+      // Game scenario configuration
+      hash: data.hash || "middle",
+      down_distance: data.downDistance || "1st & 10",
+      field_position: data.fieldPosition || "plus_territory",
+      defensive_front: data.defensiveFront || "base",
+      coverage: data.coverage || "cover_2",
+      blitz: data.blitz || "none",
+      scenario_notes: data.scenarioNotes || null,
+      segment_name: "Drill",
+      segment_type: "drill",
+    });
 
     if (playError) {
       logError("Error adding play to script:", playError);
@@ -839,7 +838,9 @@ export class PracticeService {
     const startTime = performance.now();
 
     try {
-      const { data: scripts, error: scriptsError } = await table("practice_scripts")
+      const { data: scripts, error: scriptsError } = await table(
+        "practice_scripts"
+      )
         .select("*")
         .eq("team_id", teamId)
         .order("updated_at", { ascending: false });
@@ -960,7 +961,9 @@ export class PracticeService {
     const startTime = performance.now();
 
     try {
-      const { data: scripts, error: scriptError } = await table("practice_scripts")
+      const { data: scripts, error: scriptError } = await table(
+        "practice_scripts"
+      )
         .select(
           `
           *,
@@ -1185,7 +1188,9 @@ export class PracticeService {
   static async deletePracticeScript(scriptId: string): Promise<void> {
     debug(`[PracticeService] Deleting script ${scriptId}`);
 
-    const { error } = await table("practice_scripts").delete().eq("id", scriptId);
+    const { error } = await table("practice_scripts")
+      .delete()
+      .eq("id", scriptId);
 
     if (error) {
       logError("Error deleting script:", error);

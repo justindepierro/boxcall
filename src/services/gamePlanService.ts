@@ -122,8 +122,9 @@ export class GamePlanService {
       display_order: config.displayOrder,
     }));
 
-    const { error: situationsError } = await table("game_plan_situations")
-      .insert(situationInserts as any);
+    const { error: situationsError } = await table(
+      "game_plan_situations"
+    ).insert(situationInserts as any);
 
     if (situationsError) {
       logError("❌ Error creating situations:", situationsError);

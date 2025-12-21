@@ -45,8 +45,7 @@ export const useUIStore = create<UIStore>()(
             false,
             "toggleSidebar"
           ),
-        setUIDensity: (uiDensity) =>
-          set({ uiDensity }, false, "setUIDensity"),
+        setUIDensity: (uiDensity) => set({ uiDensity }, false, "setUIDensity"),
 
         addNotification: (notification) =>
           set(

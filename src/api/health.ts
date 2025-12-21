@@ -44,10 +44,7 @@ async function checkDatabaseHealth(): Promise<ServiceHealth> {
 
   try {
     // Simple query to check database connectivity
-    const { error } = await table("profiles")
-      .select("id")
-      .limit(1)
-      .single();
+    const { error } = await table("profiles").select("id").limit(1).single();
 
     const responseTime = Date.now() - startTime;
 

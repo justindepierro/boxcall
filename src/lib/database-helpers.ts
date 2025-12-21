@@ -129,8 +129,10 @@ export async function testBasicDatabaseConnectivity(): Promise<boolean> {
 
     // Test basic Supabase connection without requiring auth
     // We'll try to access a public table or make a simple query
-    const { error } = await table("teams")
-      .select("count", { count: "exact", head: true });
+    const { error } = await table("teams").select("count", {
+      count: "exact",
+      head: true,
+    });
 
     if (error) {
       // If we get a permission error, that's actually good - it means we can reach the DB

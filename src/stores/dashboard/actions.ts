@@ -67,7 +67,10 @@ export interface DashboardActions {
     updates: Partial<DashboardLayout>
   ) => Promise<void>;
   deleteLayout: (layoutId: string) => Promise<void>;
-  duplicateLayout: (layoutId: string, newName: string) => Promise<DashboardLayout>;
+  duplicateLayout: (
+    layoutId: string,
+    newName: string
+  ) => Promise<DashboardLayout>;
   updateWidget: (widgetId: string, updates: Partial<WidgetConfig>) => void;
   moveWidget: (widgetId: string, newPosition: WidgetConfig["position"]) => void;
   toggleWidgetVisibility: (widgetId: string) => void;
@@ -116,7 +119,8 @@ export function createBasicSetters(
   set: (partial: Partial<DashboardState>) => void
 ) {
   return {
-    setCurrentLayout: (layout: DashboardLayout) => set({ currentLayout: layout }),
+    setCurrentLayout: (layout: DashboardLayout) =>
+      set({ currentLayout: layout }),
     setAvailableLayouts: (layouts: DashboardLayout[]) =>
       set({ availableLayouts: layouts }),
     setPersonalizationSettings: (settings: PersonalizationSettings) =>
@@ -139,9 +143,12 @@ export function createLayoutManagementActions(params: {
       try {
         const state = get();
         const authState = useAuth.getState();
-        const userId = baseLayout?.userId || authState.user?.id || "current-user";
+        const userId =
+          baseLayout?.userId || authState.user?.id || "current-user";
         const userRole =
-          baseLayout?.userRole || (authState.profile?.role as UserRole) || "player";
+          baseLayout?.userRole ||
+          (authState.profile?.role as UserRole) ||
+          "player";
 
         const newLayout: DashboardLayout = baseLayout
           ? {
@@ -169,7 +176,10 @@ export function createLayoutManagementActions(params: {
       }
     },
 
-    updateLayout: async (layoutId: string, updates: Partial<DashboardLayout>) => {
+    updateLayout: async (
+      layoutId: string,
+      updates: Partial<DashboardLayout>
+    ) => {
       set({ saving: true, error: null });
       try {
         const state = get();
@@ -201,11 +211,15 @@ export function createLayoutManagementActions(params: {
 
     deleteLayout: async (layoutId: string) => {
       const state = get();
-      const layoutToDelete = state.availableLayouts.find((l) => l.id === layoutId);
+      const layoutToDelete = state.availableLayouts.find(
+        (l) => l.id === layoutId
+      );
       if (layoutToDelete?.isDefault) {
         throw new Error("Cannot delete default layout");
       }
-      const updatedLayouts = state.availableLayouts.filter((l) => l.id !== layoutId);
+      const updatedLayouts = state.availableLayouts.filter(
+        (l) => l.id !== layoutId
+      );
       const newCurrentLayout =
         state.currentLayout?.id === layoutId
           ? updatedLayouts.find((l) => l.isDefault) || updatedLayouts[0] || null
@@ -218,7 +232,9 @@ export function createLayoutManagementActions(params: {
 
     duplicateLayout: async (layoutId: string, newName: string) => {
       const state = get();
-      const layoutToDuplicate = state.availableLayouts.find((l) => l.id === layoutId);
+      const layoutToDuplicate = state.availableLayouts.find(
+        (l) => l.id === layoutId
+      );
       if (!layoutToDuplicate) throw new Error("Layout not found");
       return get().createLayout(newName, layoutToDuplicate);
     },
@@ -253,7 +269,9 @@ export function createWidgetManagementActions(params: {
 
     toggleWidgetVisibility: (widgetId: string) => {
       const state = get();
-      const widget = state.currentLayout?.widgets.find((w) => w.id === widgetId);
+      const widget = state.currentLayout?.widgets.find(
+        (w) => w.id === widgetId
+      );
       if (widget) get().updateWidget(widgetId, { visible: !widget.visible });
     },
 
@@ -270,10 +288,12 @@ export function createDragAndDropActions(params: {
   const { set, get } = params;
 
   return {
-    startDragging: (widget: WidgetConfig) => set({ isDragging: true, draggedWidget: widget }),
+    startDragging: (widget: WidgetConfig) =>
+      set({ isDragging: true, draggedWidget: widget }),
     stopDragging: () =>
       set({ isDragging: false, draggedWidget: null, previewLayout: null }),
-    updatePreviewLayout: (layout: DashboardLayout) => set({ previewLayout: layout }),
+    updatePreviewLayout: (layout: DashboardLayout) =>
+      set({ previewLayout: layout }),
 
     applyPreviewLayout: () => {
       const state = get();
@@ -420,7 +440,8 @@ export function createAdaptiveActions(params: {
       const state = get();
       if (
         !state.currentLayout ||
-        !state.personalizationSettings.adaptiveFeatures.enableAutoLayoutOptimization
+        !state.personalizationSettings.adaptiveFeatures
+          .enableAutoLayoutOptimization
       ) {
         return;
       }
@@ -439,7 +460,10 @@ export function createAdaptiveActions(params: {
 
     getSmartWidgetOrder: () => {
       const state = get();
-      if (!state.personalizationSettings.adaptiveFeatures.enableSmartPrioritization) {
+      if (
+        !state.personalizationSettings.adaptiveFeatures
+          .enableSmartPrioritization
+      ) {
         return state.currentLayout?.widgets.map((w) => w.id) || [];
       }
       return [...state.widgetPriorities]
@@ -449,7 +473,9 @@ export function createAdaptiveActions(params: {
   };
 }
 
-export function createSimpleActions(set: (partial: Partial<DashboardState>) => void) {
+export function createSimpleActions(
+  set: (partial: Partial<DashboardState>) => void
+) {
   return {
     getRecommendedLayouts: (userRole: UserRole) => [
       createDefaultLayout("temp", userRole),

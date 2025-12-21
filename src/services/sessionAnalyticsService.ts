@@ -101,7 +101,9 @@ export class SessionAnalyticsService {
   static async getSessionAnalytics(
     sessionId: string
   ): Promise<SessionAnalytics> {
-    const { data: session, error: sessionError } = await fromAny("live_sessions")
+    const { data: session, error: sessionError } = await fromAny(
+      "live_sessions"
+    )
       .select("*")
       .eq("id", sessionId)
       .single();
@@ -109,7 +111,9 @@ export class SessionAnalyticsService {
     if (sessionError) throw sessionError;
     if (!session) throw new Error("Session not found");
 
-    const { data: executions, error: execError } = await table("play_executions")
+    const { data: executions, error: execError } = await table(
+      "play_executions"
+    )
       .select(
         `
         *,

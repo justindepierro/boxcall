@@ -11,8 +11,7 @@ export class DatabaseDebug {
     try {
       debug("🔍 Checking playbooks in database...");
 
-      const { data: playbooks, error } = await table("playbooks")
-        .select("*");
+      const { data: playbooks, error } = await table("playbooks").select("*");
 
       if (error) {
         logError("❌ Error fetching playbooks:", error);
@@ -82,17 +81,16 @@ export class DatabaseDebug {
           logError("❌ Error creating demo team:", teamError);
 
           // Try without created_by if user constraint is the issue
-          const { error: teamErrorFallback } = await table("teams")
-            .insert([
-              {
-                id: teamId,
-                name: "Demo Team",
-                school_name: "BoxCall High",
-                mascot: "Eagles",
-                season_year: 2025,
-                // Skip created_by field
-              },
-            ]);
+          const { error: teamErrorFallback } = await table("teams").insert([
+            {
+              id: teamId,
+              name: "Demo Team",
+              school_name: "BoxCall High",
+              mascot: "Eagles",
+              season_year: 2025,
+              // Skip created_by field
+            },
+          ]);
 
           if (teamErrorFallback) {
             logError(

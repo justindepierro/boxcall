@@ -599,8 +599,8 @@ export class ExecutionTrackingService {
    * Get recent sessions (both practice and game) for the team
    * Returns combined list sorted by most recent first
    *
-  * NOTE: Uses fromAny() because practice_sessions/game_sessions tables
-  * are not yet in the TypeScript database types. Will migrate to table() when types are updated.
+   * NOTE: Uses fromAny() because practice_sessions/game_sessions tables
+   * are not yet in the TypeScript database types. Will migrate to table() when types are updated.
    */
   static async getRecentSessions(
     teamId: string,
@@ -608,7 +608,7 @@ export class ExecutionTrackingService {
   ): Promise<Array<PracticeSession | GameSession>> {
     // Use fromAny() - these tables aren't in our typed schema yet
     const [practiceResult, gameResult] = await Promise.allSettled([
-        fromAny("practice_sessions")
+      fromAny("practice_sessions")
         .select(
           `
           *,

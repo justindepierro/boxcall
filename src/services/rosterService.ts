@@ -158,9 +158,7 @@ export class RosterService {
   }
 
   async deletePlayer(playerId: string): Promise<void> {
-    const { error } = await table("team_players")
-      .delete()
-      .eq("id", playerId);
+    const { error } = await table("team_players").delete().eq("id", playerId);
 
     if (error) throw error as PostgrestError;
   }

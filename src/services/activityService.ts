@@ -238,9 +238,7 @@ export class ActivityService {
       const userId = getCurrentUserId();
       if (!userId) return {} as Record<ActivityType, number>;
 
-      let query = table("activities")
-        .select("action")
-        .eq("user_id", userId);
+      let query = table("activities").select("action").eq("user_id", userId);
 
       if (teamId) {
         query = query.eq("team_id", teamId);

@@ -11,10 +11,7 @@
  */
 
 import { debug, error as logError } from "../../utils/logger";
-import {
-  serviceFail,
-  serviceOk,
-} from "../serviceResult";
+import { serviceFail, serviceOk } from "../serviceResult";
 
 export interface SendEmailParams {
   to: string;

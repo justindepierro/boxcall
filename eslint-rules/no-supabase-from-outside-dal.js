@@ -79,11 +79,7 @@ function isStorageFromCall(memberExpr) {
 
 function isBuiltinFromCall(memberExpr) {
   const obj = unwrapExpression(memberExpr.object);
-  return (
-    obj &&
-    obj.type === "Identifier" &&
-    BUILTIN_FROM_OBJECTS.has(obj.name)
-  );
+  return obj && obj.type === "Identifier" && BUILTIN_FROM_OBJECTS.has(obj.name);
 }
 
 function isAllowedFile(filename) {
@@ -107,13 +103,12 @@ export default {
       meta: {
         type: "problem",
         docs: {
-          description:
-            "Disallow calling .from(\"...\") outside the Supabase DAL",
+          description: 'Disallow calling .from("...") outside the Supabase DAL',
         },
         schema: [],
         messages: {
           noFrom:
-            "Do not call .from(\"...\") directly. Use table(\"...\") or fromAny(\"...\") from src/data/supabase/db.ts.",
+            'Do not call .from("...") directly. Use table("...") or fromAny("...") from src/data/supabase/db.ts.',
         },
       },
       create(context) {
@@ -126,7 +121,8 @@ export default {
             if (!callee || callee.type !== "MemberExpression") return;
 
             if (callee.computed) return;
-            if (!callee.property || callee.property.type !== "Identifier") return;
+            if (!callee.property || callee.property.type !== "Identifier")
+              return;
             if (callee.property.name !== "from") return;
 
             // Reduce false positives: only enforce when first arg is a string literal

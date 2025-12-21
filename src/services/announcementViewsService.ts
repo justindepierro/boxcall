@@ -77,11 +77,10 @@ export class AnnouncementViewsService {
           viewed_at: new Date().toISOString(),
         }));
 
-        const { error } = await fromAny("announcement_views")
-          .upsert(payload, {
-            onConflict: "announcement_id,user_id",
-            ignoreDuplicates: true,
-          });
+        const { error } = await fromAny("announcement_views").upsert(payload, {
+          onConflict: "announcement_id,user_id",
+          ignoreDuplicates: true,
+        });
 
         if (error) {
           logError("Error recording views:", error);

@@ -51,28 +51,30 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
       }
 
       // Transform the data to match our interface
-          const transformedActivities: ActivityItem[] = activities.map((item: any) => {
-        const metadataTitle = (() => {
-          const metadata = item.metadata;
-          if (!metadata) return undefined;
-          if (typeof metadata !== "object") return undefined;
-          if (Array.isArray(metadata)) return undefined;
-          const maybeTitle = (metadata as Record<string, unknown>)[
-            "content_title"
-          ];
-          return typeof maybeTitle === "string" ? maybeTitle : undefined;
-        })();
+      const transformedActivities: ActivityItem[] = activities.map(
+        (item: any) => {
+          const metadataTitle = (() => {
+            const metadata = item.metadata;
+            if (!metadata) return undefined;
+            if (typeof metadata !== "object") return undefined;
+            if (Array.isArray(metadata)) return undefined;
+            const maybeTitle = (metadata as Record<string, unknown>)[
+              "content_title"
+            ];
+            return typeof maybeTitle === "string" ? maybeTitle : undefined;
+          })();
 
-        return {
-          id: item.id,
-          activity_type: (item.activity_type ||
-            "comment_posted") as ActivityType,
-          content_type: item.entity_type || "unknown",
-          content_title: item.title || item.description || metadataTitle,
-          created_at: item.created_at || new Date().toISOString(),
-          metadata: item.metadata,
-        };
-      });
+          return {
+            id: item.id,
+            activity_type: (item.activity_type ||
+              "comment_posted") as ActivityType,
+            content_type: item.entity_type || "unknown",
+            content_title: item.title || item.description || metadataTitle,
+            created_at: item.created_at || new Date().toISOString(),
+            metadata: item.metadata,
+          };
+        }
+      );
 
       setActivities(transformedActivities);
     } catch (error) {

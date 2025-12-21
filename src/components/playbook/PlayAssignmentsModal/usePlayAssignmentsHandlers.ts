@@ -335,10 +335,12 @@ export function usePlayAssignmentsHandlers({
       });
 
       // play_assignments table not yet in generated Database types
-      const { error } = await fromAny("play_assignments")
-        .upsert(assignmentsToSave as any, {
+      const { error } = await fromAny("play_assignments").upsert(
+        assignmentsToSave as any,
+        {
           onConflict: "play_id,position",
-        });
+        }
+      );
 
       if (error) {
         logError("Error saving assignments:", error);

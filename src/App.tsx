@@ -5,7 +5,6 @@ import { DevModeProvider } from "./app/dev-mode-store.tsx";
 import { ErrorBoundary } from "./components/ui/ErrorBoundary";
 import { AuthGuard } from "./components/auth/AuthGuard";
 import { useTheme } from "./hooks/useTheme";
-import { testBasicDatabaseConnectivity } from "./lib/database-helpers";
 import { initRoutePrefetch } from "./routes/prefetch";
 import { DataRouterApp } from "./routes";
 import { AppGrid } from "./components/AppGrid";
@@ -23,7 +22,6 @@ import { PendingSavesNotification } from "./components/notifications/PendingSave
 import { UndoRedoIndicator } from "./components/undo/UndoRedoIndicator";
 import { ConflictDialog } from "./components/conflicts/ConflictDialog";
 import { OfflineIndicator } from "./components/ui/OfflineIndicator";
-import { logError } from "./utils/logger";
 import { APP_RESET_EVENT } from "./utils/appReset";
 import {
   DEV_PANEL_CONTROL_EVENT,
@@ -69,16 +67,21 @@ function App() {
   // Initialize theme system
   useTheme();
 
-  // Test database connection on app start
+  // Test database connection on app start (dev only)
   useEffect(() => {
     const initBoxCall = async () => {
-      const connectionOk = await testBasicDatabaseConnectivity();
-      if (connectionOk) {
-        // Connection successful
-      } else {
-        logError(
-          "BoxCall: Database connection failed - check your .env.local configuration"
+      if (import.meta.env.DEV) {
+        // Lazy-import dev-only diagnostic function
+        const { testBasicDatabaseConnectivity } = await import(
+          "./lib/database-helpers"
         );
+        const { logError } = await import("./utils/logger");
+        const connectionOk = await testBasicDatabaseConnectivity();
+        if (!connectionOk) {
+          logError(
+            "BoxCall: Database connection failed - check your .env.local configuration"
+          );
+        }
       }
       // Initialize idle prefetching for popular routes
       initRoutePrefetch();
@@ -194,7 +197,7 @@ function App() {
                     ) : null}
 
                     {/* Analytics Debug Panel (dev only) */}
-                    <AnalyticsDebugger />
+                    {import.meta.env.DEV ? <AnalyticsDebugger /> : null}
                   </div>
                 </PopoverProvider>
               </UndoRedoProvider>

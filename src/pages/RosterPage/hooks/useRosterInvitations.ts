@@ -72,7 +72,9 @@ export function useRosterInvitations(
       info(
         `[RosterPage] ${isResend ? "Resent" : "Sent"} invitation to ${playerName} at ${email}`
       );
-      toast.success(`Invitation ${isResend ? "resent" : "sent"} to ${playerName}`);
+      toast.success(
+        `Invitation ${isResend ? "resent" : "sent"} to ${playerName}`
+      );
       await loadRoster();
     },
     [modals.playerToInvite, teamId, toast, loadRoster]

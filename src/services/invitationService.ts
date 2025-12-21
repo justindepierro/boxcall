@@ -20,10 +20,7 @@ import {
   sendPlayerInvitationEmail,
   sendInvitationReminderEmail,
 } from "./email/emailService";
-import {
-  serviceFail,
-  serviceOk,
-} from "./serviceResult";
+import { serviceFail, serviceOk } from "./serviceResult";
 
 export interface SendInvitationParams {
   playerId: string;
@@ -467,10 +464,7 @@ type AcceptInvitationData = {
  * Uses atomic RPC function for data integrity
  * Creates team_members record automatically
  */
-export async function acceptInvitation(
-  token: string,
-  userId: string
-) {
+export async function acceptInvitation(token: string, userId: string) {
   try {
     info(`[invitationService] Accepting invitation for user ${userId}`);
 

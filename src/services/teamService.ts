@@ -585,8 +585,8 @@ export class TeamService {
         try {
           await withDatabaseRetry(
             async () => {
-              const { error } = await table("team_members")
-                .insert(membershipData);
+              const { error } =
+                await table("team_members").insert(membershipData);
 
               if (error) {
                 throw Object.assign(new Error(error.message), {

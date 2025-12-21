@@ -63,12 +63,11 @@ export class PlaysService {
       if (teamError) throw teamError;
 
       // Create team membership for the user as a coach
-      const { error: membershipError } = await table("team_members")
-        .insert({
-          team_id: newTeam.id,
-          user_id: userId,
-          team_role: "coach",
-        });
+      const { error: membershipError } = await table("team_members").insert({
+        team_id: newTeam.id,
+        user_id: userId,
+        team_role: "coach",
+      });
 
       if (membershipError) {
         logError("Warning: Failed to create team membership:", membershipError);
@@ -298,9 +297,7 @@ export class PlaysService {
     try {
       if (ids.length === 0) return [];
 
-      const { data, error } = await table("plays")
-        .select("*")
-        .in("id", ids);
+      const { data, error } = await table("plays").select("*").in("id", ids);
 
       if (error) {
         logError("❌ Error fetching plays by IDs:", error);

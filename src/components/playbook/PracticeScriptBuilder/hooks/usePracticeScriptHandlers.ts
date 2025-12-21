@@ -43,8 +43,7 @@ function validateCanSave(params: {
 function buildBatchUpdates(currentScript: PracticeScript) {
   return (currentScript.plays || [])
     .filter(
-      (scriptPlay) =>
-        scriptPlay.id && !isOptimisticId(scriptPlay.id, ["temp"])
+      (scriptPlay) => scriptPlay.id && !isOptimisticId(scriptPlay.id, ["temp"])
     )
     .map((scriptPlay) => ({
       scriptPlayId: scriptPlay.id!,

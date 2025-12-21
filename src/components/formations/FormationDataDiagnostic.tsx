@@ -51,10 +51,9 @@ async function fetchFormationDiagnosticData(playbookId?: string): Promise<{
   stats: FormationStats;
   rawData: any;
 }> {
-  let query = table("formations")
-    .select(
-      "id, name, direction, opposite_formation_id, usage_count, playbook_id"
-    );
+  let query = table("formations").select(
+    "id, name, direction, opposite_formation_id, usage_count, playbook_id"
+  );
 
   if (playbookId) {
     query = query.eq("playbook_id", playbookId);

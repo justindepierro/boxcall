@@ -213,9 +213,7 @@ class AchievementTracker {
 
       if (!progress) {
         // Create new progress record
-        const { data: newProgress, error } = await table(
-          "achievement_progress"
-        )
+        const { data: newProgress, error } = await table("achievement_progress")
           .insert({
             user_id: playerId,
             achievement_id: achievement.id,

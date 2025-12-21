@@ -110,9 +110,7 @@ export async function likePost(postId: string) {
 }
 
 export async function unlikePost(postId: string) {
-  const { error } = await table("post_likes")
-    .delete()
-    .eq("post_id", postId);
+  const { error } = await table("post_likes").delete().eq("post_id", postId);
   if (error) throw error;
 }
 

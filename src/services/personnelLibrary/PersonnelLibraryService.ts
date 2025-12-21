@@ -151,8 +151,8 @@ export class PersonnelLibraryService {
         is_wildcat_qb: p.is_wildcat_qb || false,
       }));
 
-      const { error: playersError } = await table("personnel_players")
-        .insert(playersToInsert);
+      const { error: playersError } =
+        await table("personnel_players").insert(playersToInsert);
 
       if (playersError) {
         logError(
@@ -320,8 +320,9 @@ export class PersonnelLibraryService {
         },
       }));
 
-      const { error: insertError } = await table("personnel_configurations")
-        .insert(newConfigs);
+      const { error: insertError } = await table(
+        "personnel_configurations"
+      ).insert(newConfigs);
 
       if (insertError) throw insertError;
 

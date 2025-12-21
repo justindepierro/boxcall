@@ -139,7 +139,9 @@ export class CommentReactionsService {
       }
 
       // Check if user already reacted with this type
-      const { data: existing, error: checkError } = await table("comment_reactions")
+      const { data: existing, error: checkError } = await table(
+        "comment_reactions"
+      )
         .select("id")
         .eq("comment_id", commentId)
         .eq("user_id", userId)
