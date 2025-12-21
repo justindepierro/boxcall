@@ -9,9 +9,7 @@ import { initRoutePrefetch } from "./routes/prefetch";
 import { DataRouterApp } from "./routes";
 import { AppGrid } from "./components/AppGrid";
 import { PWAIntegration } from "./components/pwa/PWAIntegration";
-import {
-  AnalyticsProvider,
-} from "./telemetry/AnalyticsProvider";
+import { AnalyticsProvider } from "./telemetry/AnalyticsProvider";
 import { AppProvider } from "./components/core";
 import { SaveStateProvider } from "./contexts/SaveStateContext";
 import { useSaveState } from "./hooks/useSaveState";
@@ -194,7 +192,6 @@ function App() {
                         onToggle={() => setShowDevPanel((v) => !v)}
                       />
                     ) : null}
-
                   </div>
                 </PopoverProvider>
               </UndoRedoProvider>

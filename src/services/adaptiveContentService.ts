@@ -6,11 +6,7 @@
  * dashboard content and provide intelligent recommendations.
  */
 
-import type {
-  ContextType,
-  TimeContext,
-  UserRole,
-} from "../stores/dashboard";
+import type { ContextType, TimeContext, UserRole } from "../stores/dashboard";
 
 export interface ContextDetectionResult {
   context: ContextType;
