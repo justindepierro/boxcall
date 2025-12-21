@@ -6,8 +6,8 @@ import { Button, FormSelect } from "../../components/ui";
 import { Typography } from "../../components/design-system/Typography";
 import { Icon } from "../../components/ui/Icon";
 import { Tooltip } from "../../components/ui/Tooltip/Tooltip";
-import { useDashboardStore } from "../../stores/dashboardStore";
-import type { LayoutSize } from "../../stores/dashboardStore";
+import { useDashboardStore } from "../../stores/dashboard";
+import type { LayoutSize } from "../../stores/dashboard";
 import { debug, logError } from "../../utils/logger";
 
 /**

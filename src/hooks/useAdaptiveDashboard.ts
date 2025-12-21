@@ -8,7 +8,7 @@
 
 import { useEffect, useCallback, useRef } from "react";
 import { useShallow } from "zustand/shallow";
-import { useDashboardStore } from "../stores/dashboardStore";
+import { useDashboardStore } from "../stores/dashboard";
 import { AdaptiveContentService } from "@services/adaptiveContentService";
 import { useAuth } from "../app/auth-store";
 

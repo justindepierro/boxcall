@@ -10,7 +10,7 @@ import { Icon } from "@components/ui/Icon";
 import { Typography } from "../design-system";
 import { useAuth } from "../../app/auth-store";
 import { AdaptiveContentService } from "../../services/adaptiveContentService";
-import type { UserRole } from "../../stores/dashboardStore";
+import type { UserRole } from "../../stores/dashboard";
 import type { IconName } from "../ui/Icon/Icon";
 
 interface AdaptiveContentWidgetProps {

@@ -10,7 +10,7 @@ import type {
   ContextType,
   TimeContext,
   UserRole,
-} from "../stores/dashboardStore";
+} from "../stores/dashboard";
 
 export interface ContextDetectionResult {
   context: ContextType;
