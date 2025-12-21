@@ -12,7 +12,7 @@
  */
 
 import { table } from "../data/supabase/db";
-import { PersonnelValidationService } from "./validationService";
+import { PersonnelValidationService } from "../validation-services/personnelValidation";
 import { logError } from "../utils/logger";
 import type {
   PersonnelConfiguration,

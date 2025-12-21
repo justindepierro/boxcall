@@ -51,7 +51,7 @@ Verified complete:
 - (11) Zustand store surface area is reduced and enforced: legacy `src/app/store.ts` was deleted, UI state moved to `src/stores/uiStore.ts`, dashboard store was modularized under `src/stores/dashboard/`, and new guardrails prevent ad-hoc `.getState()` and whole-store subscriptions.
 - (12) Optimistic update patterns are unified via shared helpers in `src/utils/optimistic.ts` (consistent temp IDs + targeted replace/rollback for concurrent optimistic mutations).
 - (14) Supabase table access is centralized behind the DAL in `src/data/supabase/`, and a guardrail blocks new `supabase.from("...")` usage outside the DAL (auth + storage are exempt).
-- (15) DEV-only tooling is guaranteed not to ship in prod: `DevHealthCheck` is lazy-loaded behind `import.meta.env.DEV` check, `testBasicDatabaseConnectivity` and database helpers are dynamically imported only in DEV mode, `AnalyticsDebugger` is gated behind `import.meta.env.DEV`, and `DevPanel` + `PerformanceDashboard` + `FormationDataDiagnostic` are already lazy-loaded and gated (Vite tree-shakes them from production bundles).
+- (15) DEV-only tooling is guaranteed not to ship in prod: `DevHealthCheck` is lazy-loaded behind `import.meta.env.DEV` check, `testBasicDatabaseConnectivity` and database helpers are dynamically imported only in DEV mode, and `DevPanel` + `PerformanceDashboard` + `FormationDataDiagnostic` are already lazy-loaded and gated (Vite tree-shakes them from production bundles).
 
 Verified partial (keep unchecked for now):
 
@@ -108,7 +108,6 @@ Verified missing:
 - [x] (15) Guarantee DEV-only tooling never ships in prod bundles (dynamic import + `import.meta.env.DEV` gating)
   - ✅ Verified: `DevHealthCheck` lazy-loaded behind `import.meta.env.DEV` in App.tsx
   - ✅ Verified: `testBasicDatabaseConnectivity` dynamically imported only in DEV mode
-  - ✅ Verified: `AnalyticsDebugger` gated behind `import.meta.env.DEV` check
   - ✅ Verified: `DevPanel`, `PerformanceDashboard`, `FormationDataDiagnostic` already lazy-loaded and gated
   - ✅ Gate: `npm run type-check` + `npm run lint` pass (Dec 21, 2025)
 - [x] (16) CI guard: no `console.*` anywhere outside the logger module
@@ -143,4 +142,7 @@ Verified missing:
 - [x] (29) Docs cleanup: merge duplicates, keep each doc ≤300 lines, create one “Architecture + Conventions” entrypoint
   - ✅ Verified: Added `docs/ARCHITECTURE_AND_CONVENTIONS.md` as the entrypoint
   - ✅ Verified: Rebuilt `docs/README.md` into a clean single-source docs index
-- [ ] (30) Add a recurring “delete week”: every sprint remove/merge 5 files/components; track net deletion as a KPI
+- [x] (30) Add a recurring “delete week”: every sprint remove/merge 5 files/components; track net deletion as a KPI
+  - ✅ Verified: Added `docs/development/DELETE_WEEK.md` and linked it from `CONTRIBUTING.md`
+  - ✅ Verified: Deleted 5 confirmed-unused legacy/shim modules (React Query shim, data sync shim, validation shim, telemetry analytics context, unused formation audit service)
+  - ✅ Gate: `npm run type-check` + `npm run lint` + unit tests pass (Dec 21, 2025)

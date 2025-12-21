@@ -11,7 +11,6 @@ import { AppGrid } from "./components/AppGrid";
 import { PWAIntegration } from "./components/pwa/PWAIntegration";
 import {
   AnalyticsProvider,
-  AnalyticsDebugger,
 } from "./telemetry/AnalyticsProvider";
 import { AppProvider } from "./components/core";
 import { SaveStateProvider } from "./contexts/SaveStateContext";
@@ -196,8 +195,6 @@ function App() {
                       />
                     ) : null}
 
-                    {/* Analytics Debug Panel (dev only) */}
-                    {import.meta.env.DEV ? <AnalyticsDebugger /> : null}
                   </div>
                 </PopoverProvider>
               </UndoRedoProvider>

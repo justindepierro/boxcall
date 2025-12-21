@@ -24,3 +24,6 @@ export { RealtimeSyncService } from "./RealtimeSyncService";
 
 // Export main orchestrator
 export { DataSyncServiceOrchestrator } from "./DataSyncServiceOrchestrator";
+
+// Back-compat alias for existing imports (e.g. `import { DataSyncService } from "@services"`)
+export { DataSyncServiceOrchestrator as DataSyncService } from "./DataSyncServiceOrchestrator";

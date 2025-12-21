@@ -7,13 +7,7 @@ import { useEffect, useState } from "react";
 
 import { analyticsService } from "../services/analytics/AnalyticsService";
 import { errorTracking } from "../services/analytics/ErrorTrackingService";
-import { AnalyticsContext } from "./analyticsContext";
 import { warn } from "../utils/logger";
-
-interface AnalyticsContextType {
-  initialized: boolean;
-  error: string | null;
-}
 
 interface AnalyticsProviderProps {
   children: React.ReactNode;
@@ -118,22 +112,7 @@ export function AnalyticsProvider({
     }
   }, [user, initialized]);
 
-  const contextValue: AnalyticsContextType = {
-    initialized,
-    error,
-  };
-
-  return (
-    <AnalyticsContext.Provider value={contextValue}>
-      {children}
-    </AnalyticsContext.Provider>
-  );
-}
-
-/**
- * Development helper component for debugging analytics
- * Analytics debugging now available in DevPanel (Ctrl+Shift+D)
- */
-export function AnalyticsDebugger() {
-  return null;
+  // Context was unused; preserve behavior but avoid exposing a dead provider.
+  void error;
+  return <>{children}</>;
 }

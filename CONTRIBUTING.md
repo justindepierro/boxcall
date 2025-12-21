@@ -14,6 +14,12 @@ This project uses a strict quality & documentation policy to keep the codebase l
   git show <commit>:docs/FILE.md > /tmp/FILE_legacy.md
   ```
 
+## Delete Week (Cleanup Cadence)
+
+Every sprint we do a focused cleanup pass: remove/merge at least 5 files/components and track net deletion.
+
+- Policy: [docs/development/DELETE_WEEK.md](docs/development/DELETE_WEEK.md)
+
 ## Commit Conventions
 
 Use conventional commits:
