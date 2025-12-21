@@ -26,8 +26,6 @@ import {
  * - HERE Geocoding API
  * - OpenCage Geocoding API
  * - Nominatim (OpenStreetMap - Free)
- *
- * CURRENT STATUS: Using mock data for development
  */
 
 interface ParsedAddress {
@@ -49,7 +47,7 @@ interface AddressAutocompleteProps {
   error?: string;
   label?: string;
   helperText?: string;
-  service?: "nominatim" | "google" | "mapbox" | "mock";
+  service?: "nominatim" | "google" | "mapbox";
   googleApiKey?: string;
   mapboxApiKey?: string;
   countryCode?: string;
@@ -123,7 +121,7 @@ function useDebouncedAddressSuggestions(params: {
         setLoading(true);
         const results = await searchAddresses({
           query: searchTerm,
-          service: (service || "mock") as AddressAutocompleteServiceName,
+          service: (service || "nominatim") as AddressAutocompleteServiceName,
           countryCode,
         });
         if (cancelled) return;

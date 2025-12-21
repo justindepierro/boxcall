@@ -13,113 +13,11 @@ export interface AddressResult {
 export type AddressAutocompleteServiceName =
   | "nominatim"
   | "google"
-  | "mapbox"
-  | "mock";
+  | "mapbox";
 
 // Environment variables
 const GOOGLE_PLACES_API_KEY = import.meta.env.VITE_GOOGLE_PLACES_API_KEY;
 const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
-
-// Mock address data for development
-const MOCK_ADDRESSES: AddressResult[] = [
-  {
-    formatted_address: "123 Main St, Austin, TX 78701, USA",
-    address_components: [
-      { long_name: "123", short_name: "123", types: ["street_number"] },
-      { long_name: "Main Street", short_name: "Main St", types: ["route"] },
-      { long_name: "Austin", short_name: "Austin", types: ["locality"] },
-      {
-        long_name: "Texas",
-        short_name: "TX",
-        types: ["administrative_area_level_1"],
-      },
-      { long_name: "78701", short_name: "78701", types: ["postal_code"] },
-    ],
-    place_id: "mock_1",
-  },
-  {
-    formatted_address: "456 Oak Ave, Dallas, TX 75201, USA",
-    address_components: [
-      { long_name: "456", short_name: "456", types: ["street_number"] },
-      { long_name: "Oak Avenue", short_name: "Oak Ave", types: ["route"] },
-      { long_name: "Dallas", short_name: "Dallas", types: ["locality"] },
-      {
-        long_name: "Texas",
-        short_name: "TX",
-        types: ["administrative_area_level_1"],
-      },
-      { long_name: "75201", short_name: "75201", types: ["postal_code"] },
-    ],
-    place_id: "mock_2",
-  },
-  {
-    formatted_address: "789 Pine Dr, Houston, TX 77001, USA",
-    address_components: [
-      { long_name: "789", short_name: "789", types: ["street_number"] },
-      { long_name: "Pine Drive", short_name: "Pine Dr", types: ["route"] },
-      { long_name: "Houston", short_name: "Houston", types: ["locality"] },
-      {
-        long_name: "Texas",
-        short_name: "TX",
-        types: ["administrative_area_level_1"],
-      },
-      { long_name: "77001", short_name: "77001", types: ["postal_code"] },
-    ],
-    place_id: "mock_3",
-  },
-  {
-    formatted_address:
-      "Lincoln High School, 2001 SW Lincoln St, Portland, OR 97201, USA",
-    address_components: [
-      { long_name: "2001", short_name: "2001", types: ["street_number"] },
-      {
-        long_name: "Southwest Lincoln Street",
-        short_name: "SW Lincoln St",
-        types: ["route"],
-      },
-      { long_name: "Portland", short_name: "Portland", types: ["locality"] },
-      {
-        long_name: "Oregon",
-        short_name: "OR",
-        types: ["administrative_area_level_1"],
-      },
-      { long_name: "97201", short_name: "97201", types: ["postal_code"] },
-    ],
-    place_id: "mock_4",
-  },
-  {
-    formatted_address:
-      "Roosevelt Elementary School, 500 School Ave, Denver, CO 80203, USA",
-    address_components: [
-      { long_name: "500", short_name: "500", types: ["street_number"] },
-      {
-        long_name: "School Avenue",
-        short_name: "School Ave",
-        types: ["route"],
-      },
-      { long_name: "Denver", short_name: "Denver", types: ["locality"] },
-      {
-        long_name: "Colorado",
-        short_name: "CO",
-        types: ["administrative_area_level_1"],
-      },
-      { long_name: "80203", short_name: "80203", types: ["postal_code"] },
-    ],
-    place_id: "mock_5",
-  },
-];
-
-function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function searchMockAddresses(query: string): Promise<AddressResult[]> {
-  await delay(200);
-
-  return MOCK_ADDRESSES.filter((addr) =>
-    addr.formatted_address.toLowerCase().includes(query.toLowerCase())
-  );
-}
 
 function parseMapBoxContext(feature: any): any[] {
   const components = [];
@@ -239,8 +137,8 @@ async function searchNominatim(params: {
       };
     });
   } catch (error) {
-    warn("Nominatim search failed, falling back to mock data", error);
-    return searchMockAddresses(query);
+    warn("Nominatim search failed", error);
+    return [];
   }
 }
 
@@ -251,8 +149,8 @@ async function searchGooglePlaces(params: {
   const { query, countryCode } = params;
 
   if (!GOOGLE_PLACES_API_KEY) {
-    warn("Google Places API key not configured. Using mock data.");
-    return searchMockAddresses(query);
+    warn("Google Places API key not configured. Falling back to Nominatim.");
+    return searchNominatim({ query, countryCode });
   }
 
   try {
@@ -301,11 +199,11 @@ async function searchGooglePlaces(params: {
       warn(
         "Google Maps JS API Loader not installed. Run: npm install @googlemaps/js-api-loader"
       );
-      return searchMockAddresses(query);
+      return searchNominatim({ query, countryCode });
     }
   } catch (error) {
     logError("Google Places API error:", error);
-    return searchMockAddresses(query);
+    return searchNominatim({ query, countryCode });
   }
 }
 
@@ -316,8 +214,8 @@ async function searchMapBox(params: {
   const { query, countryCode } = params;
 
   if (!MAPBOX_ACCESS_TOKEN) {
-    warn("MapBox access token not configured. Using mock data.");
-    return searchMockAddresses(query);
+    warn("MapBox access token not configured. Falling back to Nominatim.");
+    return searchNominatim({ query, countryCode });
   }
 
   try {
@@ -337,7 +235,7 @@ async function searchMapBox(params: {
     }));
   } catch (error) {
     logError("MapBox API error:", error);
-    return searchMockAddresses(query);
+    return searchNominatim({ query, countryCode });
   }
 }
 
@@ -356,8 +254,7 @@ export async function searchAddresses(params: {
       return searchGooglePlaces({ query, countryCode });
     case "mapbox":
       return searchMapBox({ query, countryCode });
-    case "mock":
     default:
-      return searchMockAddresses(query);
+      return searchNominatim({ query, countryCode });
   }
 }

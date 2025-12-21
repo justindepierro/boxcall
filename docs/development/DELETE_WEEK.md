@@ -104,13 +104,23 @@ These are not “pure deletion” targets — they are either implement-or-remov
 - [x] Replace network status hook stub (navigator.onLine + events + connection quality)
   - src/hooks/useNetworkStatus.ts
   - src/components/ui/MobileLoadingStrategy.tsx
+
 ### Phase 6 — Deprecated dead blocks
 
 - [x] Remove commented-out deprecated DB helpers (tables that don't exist in production)
   - src/lib/database-helpers.ts (removed 3 commented blocks: team_goals, team_files, post_reactions)
 
+### Phase 7 — Additional safe deletions found during audit
+
+- [x] Delete unused mock messaging service (no imports/usages)
+  - src/services/messaging/MessagingService.ts
+
+- [x] Fix stale formation hook messaging (FormationService is no longer archived)
+  - src/components/formations/hooks/useFormationAutoSave.ts
+  - src/components/formations/hooks/useFormationOperations.ts
+
 ### Validation gate (run before every push)
 
-- [ ] `npm run type-check`
+- [x] `npm run type-check`
 - [ ] `npm run lint`
-- [ ] `npm run test`
+- [x] `npm run test`

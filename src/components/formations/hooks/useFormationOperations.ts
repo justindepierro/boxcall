@@ -36,8 +36,8 @@ export function useFormationOperations({
 }: Args & { toast: any }) {
   const handleCreateFromTemplate = useCallback(async () => {
     toast?.info?.(
-      "FormationService is currently archived.",
-      "Formation templates are not available"
+      "Formation templates are not wired yet.",
+      "Formation templates are currently unavailable"
     );
   }, [toast]);
 
@@ -45,8 +45,8 @@ export function useFormationOperations({
     setSaving(true);
     try {
       toast?.error?.(
-        "FormationService is currently archived.",
-        "Saving formations is not available"
+        "Formation saving is not wired yet.",
+        "Saving formations is currently unavailable"
       );
     } finally {
       setSaving(false);

@@ -22,7 +22,7 @@ type Args = {
 };
 
 export function useFormationAutoSave(_args: Args) {
-  // FormationService is currently archived; keep a no-op autosave to avoid runtime crashes.
+  // Formation auto-save is not wired yet; keep a no-op autosave to avoid runtime crashes.
   const autoSave = useCallback(async () => {}, []);
 
   return { autoSave };

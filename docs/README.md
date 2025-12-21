@@ -61,6 +61,7 @@ This is the index for active documentation in `/docs`.
 ## Updating This Index
 
 If you add a new doc that should be discoverable, link it here (or in the relevant folder README).
+
 # 📚 BoxCall Documentation# 📚 BoxCall Documentation Index
 
 **Last Updated**: October 23, 2025 **Last Updated**: October 17, 2025

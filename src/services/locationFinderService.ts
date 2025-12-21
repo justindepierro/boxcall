@@ -6,6 +6,10 @@
  */
 
 import { debug, error as logError } from "../utils/logger";
+import {
+  searchAddresses as searchAddressResults,
+  type AddressResult,
+} from "./addressAutocompleteService";
 
 export interface AddressSuggestion {
   id: string;
@@ -34,6 +38,34 @@ export interface GeolocationResult {
 }
 
 export class LocationFinderService {
+  private static parseAddressFromResult(result: AddressResult): AddressSuggestion {
+    const components = result.address_components;
+
+    const streetNumber =
+      components.find((c) => c.types.includes("street_number"))?.long_name ||
+      "";
+    const route =
+      components.find((c) => c.types.includes("route"))?.long_name || "";
+    const city =
+      components.find((c) => c.types.includes("locality"))?.long_name || "";
+    const state =
+      components.find((c) => c.types.includes("administrative_area_level_1"))
+        ?.short_name || "";
+    const zipCode =
+      components.find((c) => c.types.includes("postal_code"))?.long_name || "";
+
+    const streetAddress = [streetNumber, route].filter(Boolean).join(" ");
+
+    return {
+      id: result.place_id || this.generateId(),
+      fullAddress: result.formatted_address,
+      streetAddress,
+      city,
+      state,
+      zipCode,
+    };
+  }
+
   /**
    * Get current location using browser geolocation API
    */
@@ -116,9 +148,13 @@ export class LocationFinderService {
     try {
       debug(`🔍 Searching addresses for: "${query}"`);
 
-      // For demo purposes, we'll use a mock geocoding service
-      // In production, you'd integrate with Google Maps, Mapbox, or similar
-      const suggestions = await this.mockAddressSearch(query);
+      const results = await searchAddressResults({
+        query,
+        service: "nominatim",
+        countryCode: "US",
+      });
+
+      const suggestions = results.map((r) => this.parseAddressFromResult(r));
 
       debug(`🔍 Found ${suggestions.length} address suggestions`);
 
@@ -191,21 +227,14 @@ export class LocationFinderService {
    * Get school district for a given address
    */
   static async getSchoolDistrict(
-    address: AddressSuggestion
+    _address: AddressSuggestion
   ): Promise<string | null> {
     try {
       debug("🏫 Looking up school district for address...");
 
-      // In production, this would query a school district database
-      // For demo, we'll return a mock district based on city/state
-      const district = this.mockSchoolDistrictLookup(
-        address.city,
-        address.state
-      );
-
-      debug(`🏫 Found school district: ${district}`);
-
-      return district;
+      // Not yet wired to a real district provider.
+      // Returning null is safer than guessing wrong data.
+      return null;
     } catch (error) {
       debug("Could not determine school district:", error);
       return null;
@@ -219,106 +248,42 @@ export class LocationFinderService {
     lat: number,
     lng: number
   ): Promise<AddressSuggestion | null> {
-    // In production, you'd use a real geocoding service
-    // For demo, we'll return a mock address based on approximate coordinates
-
     try {
-      // Mock reverse geocoding - in real app use Google Maps, Mapbox, etc.
-      const mockAddress = this.mockReverseGeocode(lat, lng);
-      return mockAddress;
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&addressdetails=1&lat=${encodeURIComponent(
+          String(lat)
+        )}&lon=${encodeURIComponent(String(lng))}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Reverse geocoding failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const address = data.address || {};
+
+      const streetAddress = [address.house_number, address.road]
+        .filter(Boolean)
+        .join(" ");
+
+      const city = address.city || address.town || address.village || "";
+      const state = address.state || "";
+      const zipCode = address.postcode || "";
+
+      return {
+        id: data.place_id ? `nominatim_${data.place_id}` : this.generateId(),
+        fullAddress: data.display_name || "",
+        streetAddress,
+        city,
+        state,
+        zipCode,
+        county: address.county,
+        coordinates: { lat, lng },
+      };
     } catch (error) {
       logError("Reverse geocoding failed:", error);
       return null;
     }
-  }
-
-  /**
-   * Mock address search for demo purposes
-   */
-  private static async mockAddressSearch(
-    query: string
-  ): Promise<AddressSuggestion[]> {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    const mockSuggestions: AddressSuggestion[] = [
-      {
-        id: "addr_1",
-        fullAddress: "123 Main Street, Goshen, NY 10924",
-        streetAddress: "123 Main Street",
-        city: "Goshen",
-        state: "NY",
-        zipCode: "10924",
-        county: "Orange County",
-        coordinates: { lat: 41.4026, lng: -74.3243 },
-      },
-      {
-        id: "addr_2",
-        fullAddress: "456 School Avenue, Goshen, NY 10924",
-        streetAddress: "456 School Avenue",
-        city: "Goshen",
-        state: "NY",
-        zipCode: "10924",
-        county: "Orange County",
-        coordinates: { lat: 41.4056, lng: -74.3213 },
-      },
-      {
-        id: "addr_3",
-        fullAddress: "789 High School Drive, Montgomery, NY 12549",
-        streetAddress: "789 High School Drive",
-        city: "Montgomery",
-        state: "NY",
-        zipCode: "12549",
-        county: "Orange County",
-        coordinates: { lat: 41.5267, lng: -74.2362 },
-      },
-    ];
-
-    // Filter suggestions based on query
-    const filtered = mockSuggestions.filter(
-      (addr) =>
-        addr.fullAddress.toLowerCase().includes(query.toLowerCase()) ||
-        addr.city.toLowerCase().includes(query.toLowerCase()) ||
-        addr.streetAddress.toLowerCase().includes(query.toLowerCase())
-    );
-
-    return filtered;
-  }
-
-  /**
-   * Mock reverse geocoding for demo
-   */
-  private static mockReverseGeocode(
-    lat: number,
-    lng: number
-  ): AddressSuggestion {
-    // Very basic mock - in real app this would query a proper service
-    return {
-      id: this.generateId(),
-      fullAddress: "Current Location, Goshen, NY 10924",
-      streetAddress: "Current Location",
-      city: "Goshen",
-      state: "NY",
-      zipCode: "10924",
-      county: "Orange County",
-      coordinates: { lat, lng },
-    };
-  }
-
-  /**
-   * Mock school district lookup
-   */
-  private static mockSchoolDistrictLookup(city: string, state: string): string {
-    const districts: Record<string, string> = {
-      goshen_ny: "Goshen Central School District",
-      montgomery_ny: "Valley Central School District",
-      newburgh_ny: "Newburgh Enlarged City School District",
-      middletown_ny: "Middletown City School District",
-      warwick_ny: "Warwick Valley Central School District",
-    };
-
-    const key = `${city.toLowerCase()}_${state.toLowerCase()}`;
-    return districts[key] || `${city} School District`;
   }
 
   /**
