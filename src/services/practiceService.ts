@@ -1501,6 +1501,3 @@ export class PracticeService {
     }
   }
 }
-
-// Backward compatibility exports
-export const PracticeScriptService = PracticeService;

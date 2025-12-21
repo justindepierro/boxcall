@@ -6,7 +6,7 @@ import type {
   PlaybookState,
   CoachingView,
 } from "../../../contexts/PlaybookContext";
-import { PlaysService, PracticeScriptService } from "@services";
+import { PlaysService, PracticeService } from "@services";
 import { exportPlays } from "../../../services/exportService";
 import { useToast } from "../../../hooks/useToast";
 import { error as logError, info, debug } from "../../../utils/logger";
@@ -363,7 +363,7 @@ function usePlaybookWorkflowHandlers(params: {
           toast.error("No active team selected");
           return;
         }
-        const script = await PracticeScriptService.createQuickScript(
+        const script = await PracticeService.createQuickScript(
           play,
           activeTeamId
         );

@@ -77,8 +77,8 @@ This checklist is the authoritative “Delete Week” backlog. As we complete it
 - [x] Migrate analytics UI imports from PlaybookAnalyticsService → PlayAnalyticsService (src/services/playAnalyticsService.ts)
 - [x] Delete the wrapper classes after migrations (src/services/playAnalyticsService.ts)
 
-- [ ] Migrate all imports from PracticeScriptService → PracticeService (src/services/practiceService.ts)
-- [ ] Delete PracticeScriptService alias export after migration (src/services/practiceService.ts)
+- [x] Migrate all imports from PracticeScriptService → PracticeService (src/services/practiceService.ts)
+- [x] Delete PracticeScriptService alias export after migration (src/services/practiceService.ts)
 
 - [ ] Decide calendar compatibility stance:
   - Keep shims (EventsService / listTeamEvents / createEvent / rsvpService)

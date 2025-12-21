@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { table } from "../../../data/supabase/db";
-import { PracticeScriptService, type PracticeScript } from "@services";
+import { PracticeService, type PracticeScript } from "@services";
 import { useToast } from "../../../hooks/useToast";
 import { error as logError, debug } from "../../../utils/logger";
 import {
@@ -34,7 +34,7 @@ export function usePracticeScriptHandlers({
 
         if (script.id) {
           // Update existing script metadata
-          await PracticeScriptService.updatePracticeScript(script.id, {
+          await PracticeService.updatePracticeScript(script.id, {
             name: script.title || script.name || "Untitled Script",
             description: script.description,
             tags: script.tags,
@@ -43,7 +43,7 @@ export function usePracticeScriptHandlers({
           debug("✅ Updated script metadata:", savedScriptId);
         } else {
           // Create new script
-          const newScript = await PracticeScriptService.createPracticeScript({
+          const newScript = await PracticeService.createPracticeScript({
             name: script.title || script.name || "Untitled Script",
             description: script.description,
             teamId: activeTeamId!,
@@ -96,7 +96,7 @@ export function usePracticeScriptHandlers({
                 team_id: activeTeamId,
               } as any;
 
-              await PracticeScriptService.addPlayToScript(
+              await PracticeService.addPlayToScript(
                 servicePlay,
                 playForActivity
               );
