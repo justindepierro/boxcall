@@ -80,9 +80,10 @@ This checklist is the authoritative “Delete Week” backlog. As we complete it
 - [x] Migrate all imports from PracticeScriptService → PracticeService (src/services/practiceService.ts)
 - [x] Delete PracticeScriptService alias export after migration (src/services/practiceService.ts)
 
-- [ ] Decide calendar compatibility stance:
-  - Keep shims (EventsService / listTeamEvents / createEvent / rsvpService)
-  - OR migrate to CalendarService and delete shims (src/services/calendarService.ts)
+- [x] **KEEP** calendar compatibility shims (EventsService / listTeamEvents / createEvent / rsvpService)
+  - Decision: Simple proxies, low technical debt, actively used by TeamCalendar
+  - Not worth migration effort (aesthetic only, no runtime impact)
+  - File: src/services/calendarService.ts (lines 229-245)
 
 ### Phase 5 — Stub/mock features (requires product decision)
 
