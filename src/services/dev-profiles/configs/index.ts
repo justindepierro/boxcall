@@ -7,9 +7,6 @@
 
 import { coreProfiles } from "./coreProfiles";
 import { devRoleProfiles } from "./devRoleProfiles";
-// import { legacyProfiles } from "./legacyProfiles"; // Removed legacyProfiles import
-
-// import type { DevMode, DevProfileConfig } from "../../../types/dev-profiles"; // Removed broken type import
 
 /**
  * Complete development profile configuration registry
@@ -21,9 +18,6 @@ export const allProfileConfigs = {
 
   // Development role profiles with realistic data
   ...devRoleProfiles,
-
-  // Legacy profiles for backward compatibility
-  // ...legacyProfiles, // Removed legacyProfiles usage
 };
 
 /**
