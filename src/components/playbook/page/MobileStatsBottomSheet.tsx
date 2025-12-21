@@ -11,7 +11,6 @@ export interface PlaybookStats {
   runPlays: number;
   rpoPlays: number;
   playActionPlays: number;
-  formationsNeedingMapping?: number;
 }
 
 export interface MobileStatsBottomSheetProps {
@@ -89,29 +88,6 @@ const DiagramCoverageCard: React.FC<{ percentage: number }> = ({
   </div>
 );
 
-const FormationMapperCard: React.FC<{ needsMapping: number }> = ({
-  needsMapping,
-}) => (
-  <div className="bg-secondary rounded-lg p-4">
-    <div className="flex items-center justify-between">
-      <div>
-        <Typography variant="body-sm" className="text-secondary font-medium">
-          Formation Mapper
-        </Typography>
-        <Typography variant="headline-md" className="text-primary font-bold">
-          {needsMapping}
-        </Typography>
-        <Typography variant="body-xs" className="text-secondary mt-1">
-          {needsMapping === 0 ? "All plays mapped" : "need mapping"}
-        </Typography>
-      </div>
-      <div className="h-12 w-12 rounded-full bg-warning-500/20 flex items-center justify-center">
-        <Icon name="link" size="md" className="h-6 w-6 text-warning-500" />
-      </div>
-    </div>
-  </div>
-);
-
 const PlayTypeCard: React.FC<{
   icon: IconName;
   label: string;
@@ -176,10 +152,6 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
 
         {/* Diagram Coverage */}
         <DiagramCoverageCard percentage={diagramPercentage} />
-
-        {typeof stats.formationsNeedingMapping === "number" && (
-          <FormationMapperCard needsMapping={stats.formationsNeedingMapping} />
-        )}
 
         {/* Play Type Distribution */}
         <div className="space-y-3">

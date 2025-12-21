@@ -11,7 +11,6 @@ interface FormationSyncPanelProps {
   error?: string | null;
   onRefresh?: () => void;
   onResolve: (play: Play) => void;
-  onOpenMapper?: () => void;
   isMobile?: boolean;
 }
 
@@ -21,7 +20,6 @@ export const FormationSyncPanel: React.FC<FormationSyncPanelProps> = ({
   error,
   onRefresh,
   onResolve,
-  onOpenMapper,
   isMobile = false,
 }) => {
   if (loading) {
@@ -121,19 +119,12 @@ export const FormationSyncPanel: React.FC<FormationSyncPanelProps> = ({
 
       <div className="mt-4 flex flex-col sm:flex-row gap-2">
         <Button
-          onClick={onOpenMapper}
-          variant="primary"
-          disabled={!onOpenMapper}
-        >
-          Open Formation Mapper
-        </Button>
-        <Button
           onClick={() => {
             if (plays.length > 0) {
               onResolve(plays[0]);
             }
           }}
-          variant="ghost"
+          variant="primary"
         >
           Review first play
         </Button>

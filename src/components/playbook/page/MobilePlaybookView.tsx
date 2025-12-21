@@ -48,7 +48,6 @@ interface MobilePlaybookViewProps {
     loading: boolean;
     error: string | null;
   };
-  formationAuditSummary: any; // TODO: Type properly
 
   // Handlers
   setMobileListExpanded: (expanded: boolean) => void;
@@ -73,7 +72,6 @@ interface MobilePlaybookViewProps {
   handleViewChange: (view: CoachingView) => void;
   handleOpenPracticeScriptBuilder: (script?: PracticeScript) => void;
   dispatch: any; // TODO: Type properly
-  navigate: (path: string) => void;
 
   // UI
   mobileButtonSize: any; // TODO: Type properly
@@ -96,7 +94,6 @@ export function MobilePlaybookView({
   debouncedSearchQuery,
   optimisticPlays,
   formationAudit,
-  formationAuditSummary,
   setMobileListExpanded,
   setShowFiltersSheet,
   setShowStatsSheet,
@@ -119,7 +116,6 @@ export function MobilePlaybookView({
   handleViewChange,
   handleOpenPracticeScriptBuilder,
   dispatch,
-  navigate,
   mobileButtonSize,
   mobileSecondaryButtonSize,
   suggestions,
@@ -438,7 +434,6 @@ export function MobilePlaybookView({
                   error={formationAudit.error}
                   onRefresh={() => dispatch({ type: "REFRESH" })}
                   onResolve={handleEditPlay}
-                  onOpenMapper={() => navigate("/playbook/formation-mapper")}
                   isMobile
                 />
               </div>
@@ -544,7 +539,6 @@ export function MobilePlaybookView({
           runPlays: Math.floor((state.playsCreated || 0) * 0.4),
           rpoPlays: Math.floor((state.playsCreated || 0) * 0.15),
           playActionPlays: Math.floor((state.playsCreated || 0) * 0.05),
-          formationsNeedingMapping: formationAuditSummary.needsMapping,
         }}
       />
 

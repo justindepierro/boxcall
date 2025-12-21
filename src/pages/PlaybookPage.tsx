@@ -163,7 +163,6 @@ function PlaybookMainView({
   debouncedSearchQuery,
   optimisticPlays,
   formationAudit,
-  formationAuditSummary,
   setMobileListExpanded,
   handlers,
   handleSavePlay,
@@ -186,7 +185,6 @@ function PlaybookMainView({
   debouncedSearchQuery: string;
   optimisticPlays: any[];
   formationAudit: any;
-  formationAuditSummary: any;
   setMobileListExpanded: (expanded: boolean) => void;
   handlers: any;
   handleSavePlay: any;
@@ -210,7 +208,6 @@ function PlaybookMainView({
         debouncedSearchQuery={debouncedSearchQuery}
         optimisticPlays={optimisticPlays}
         formationAudit={formationAudit}
-        formationAuditSummary={formationAuditSummary}
         setMobileListExpanded={setMobileListExpanded}
         setShowFiltersSheet={(show) =>
           show ? openModal("filtersSheet") : closeModal()
@@ -239,7 +236,6 @@ function PlaybookMainView({
           handlers.handleOpenPracticeScriptBuilder
         }
         dispatch={dispatch}
-        navigate={navigate}
         mobileButtonSize={mobileButtonSize}
         mobileSecondaryButtonSize={mobileSecondaryButtonSize}
         suggestions={suggestions}
@@ -326,7 +322,6 @@ function PlaybookPageView({
   debouncedSearchQuery,
   optimisticPlays,
   formationAudit,
-  formationAuditSummary,
   mobileListExpanded,
   setMobileListExpanded,
   handleSavePlay,
@@ -374,7 +369,6 @@ function PlaybookPageView({
   debouncedSearchQuery: string;
   optimisticPlays: any[];
   formationAudit: any;
-  formationAuditSummary: any;
   mobileListExpanded: boolean;
   setMobileListExpanded: (expanded: boolean) => void;
   handleSavePlay: any;
@@ -434,7 +428,6 @@ function PlaybookPageView({
         debouncedSearchQuery={debouncedSearchQuery}
         optimisticPlays={optimisticPlays}
         formationAudit={formationAudit}
-        formationAuditSummary={formationAuditSummary}
         setMobileListExpanded={setMobileListExpanded}
         handlers={handlers}
         handleSavePlay={handleSavePlay}
@@ -758,7 +751,6 @@ const PlaybookPage = () => {
     recentActivities,
     (formationAudit.plays || []) as unknown as Play[]
   );
-  const formationAuditSummary = playbookStats.formationAudit;
 
   // Handlers hook
   const handlers = usePlaybookHandlers({
@@ -830,7 +822,6 @@ const PlaybookPage = () => {
       debouncedSearchQuery={debouncedSearchQuery}
       optimisticPlays={optimisticPlays}
       formationAudit={formationAudit}
-      formationAuditSummary={formationAuditSummary}
       mobileListExpanded={mobileListExpanded}
       setMobileListExpanded={setMobileListExpanded}
       handleSavePlay={handleSavePlay}

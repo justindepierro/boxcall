@@ -21,7 +21,6 @@ import {
   LazyPracticeSession,
   LazyGameSession,
   LazyPlaybookPage,
-  LazyFormationMapperPage,
   LazyFormationLibraryPage,
   LazyPersonnelLibraryPage,
   LazyRosterPage,
@@ -196,17 +195,6 @@ const ProtectedPlaybookRoutes = (
         <ProtectedPage>
           <PlaybookProvider>
             <LazyPlaybookPage />
-          </PlaybookProvider>
-        </ProtectedPage>
-      }
-    />
-
-    <Route
-      path="/playbook/formation-mapper"
-      element={
-        <ProtectedPage>
-          <PlaybookProvider>
-            <LazyFormationMapperPage />
           </PlaybookProvider>
         </ProtectedPage>
       }

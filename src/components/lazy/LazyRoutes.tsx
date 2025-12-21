@@ -121,11 +121,6 @@ export const LazyGamePlansPage = lazyRoute(
   "Game Plans"
 );
 
-export const LazyFormationMapperPage = lazyRoute(
-  () => import("../../pages/FormationMapperPage"),
-  "Formation Mapper"
-);
-
 export const LazyFormationLibraryPage = lazyRoute(
   () =>
     import("../../pages/FormationLibraryPage").then((module) => ({

@@ -369,7 +369,6 @@ export function DesktopPlaybookView({
             error={formationAudit.error}
             onRefresh={() => dispatch({ type: "REFRESH" })}
             onResolve={handleEditPlay}
-            onOpenMapper={() => navigate("/playbook/formation-mapper")}
           />
         </div>
       )}
