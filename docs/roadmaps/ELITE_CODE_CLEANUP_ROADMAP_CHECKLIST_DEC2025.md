@@ -140,5 +140,7 @@ Verified missing:
 
 ## Docs & Housekeeping
 
-- [ ] (29) Docs cleanup: merge duplicates, keep each doc ≤300 lines, create one “Architecture + Conventions” entrypoint
+- [x] (29) Docs cleanup: merge duplicates, keep each doc ≤300 lines, create one “Architecture + Conventions” entrypoint
+  - ✅ Verified: Added `docs/ARCHITECTURE_AND_CONVENTIONS.md` as the entrypoint
+  - ✅ Verified: Rebuilt `docs/README.md` into a clean single-source docs index
 - [ ] (30) Add a recurring “delete week”: every sprint remove/merge 5 files/components; track net deletion as a KPI

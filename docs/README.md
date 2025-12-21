@@ -1,3 +1,66 @@
+# BoxCall Documentation Index
+
+This is the index for active documentation in `/docs`.
+
+## Quick Start
+
+- Product overview: [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md)
+- Architecture (high level): [ARCHITECTURE.md](ARCHITECTURE.md)
+- Architecture + conventions (entrypoint): [ARCHITECTURE_AND_CONVENTIONS.md](ARCHITECTURE_AND_CONVENTIONS.md)
+- API reference: [API.md](API.md)
+- Environment setup: [guides/ENVIRONMENT_SETUP.md](guides/ENVIRONMENT_SETUP.md)
+
+## Most Used References
+
+- Design system reference: [DESIGN_SYSTEM_REFERENCE.md](DESIGN_SYSTEM_REFERENCE.md)
+- Code quality checklist: [../CODE_QUALITY_CHECKLIST.md](../CODE_QUALITY_CHECKLIST.md)
+- Render performance checklist: [development/RENDER_PERFORMANCE_CHECKLIST.md](development/RENDER_PERFORMANCE_CHECKLIST.md)
+
+## Documentation Structure
+
+- `architecture/`: system diagrams, audits, architecture tooling outputs
+- `features/`: feature guides by domain (playbook, practice, mobile, etc.)
+- `guides/`: setup, workflows, testing, deployment
+- `database/`: schemas, RLS patterns, database references
+- `design-system/`: tokens, components, accessibility, UX patterns
+- `ops/`: deployment and monitoring playbooks
+- `roadmaps/`: product and engineering roadmaps
+- `development/`: engineering process docs and cleanup plans
+
+## Key Areas
+
+### Features
+
+- Feature docs: [features/](features/)
+- Mobile docs: [features/mobile/](features/mobile/)
+- Practice docs: [features/practice/](features/practice/)
+
+### Architecture
+
+- High-level architecture: [ARCHITECTURE.md](ARCHITECTURE.md)
+- Architecture entrypoint: [ARCHITECTURE_AND_CONVENTIONS.md](ARCHITECTURE_AND_CONVENTIONS.md)
+- Architecture outputs index: [architecture/README.md](architecture/README.md)
+
+### Development
+
+- Dev guides: [guides/development/](guides/development/)
+- Testing guides: [guides/testing/](guides/testing/)
+
+### Database
+
+- Database integration overview: [database/DATABASE_INTEGRATION.md](database/DATABASE_INTEGRATION.md)
+- Complete schema reference: [database/COMPLETE_SCHEMA_REFERENCE.md](database/COMPLETE_SCHEMA_REFERENCE.md)
+
+## Documentation Standards
+
+- Keep each Markdown file <= 300 lines (split if necessary)
+- Use a single H1 on the first non-empty line
+- Prefer linking to existing docs rather than duplicating content
+- Archive superseded work under `docs/archive/`
+
+## Updating This Index
+
+If you add a new doc that should be discoverable, link it here (or in the relevant folder README).
 # 📚 BoxCall Documentation# 📚 BoxCall Documentation Index
 
 **Last Updated**: October 23, 2025 **Last Updated**: October 17, 2025
