@@ -16,6 +16,7 @@ window.__BUILD_META__ = {
 import "./index.css";
 import "./styles/responsive-dashboard.css";
 import "./styles/density.css";
+import "./telemetry/persistence";
 // Development-only contrast debugging overlay (activated via localStorage 'debugContrast')
 if (import.meta.env.DEV) {
   let shouldLoad = false;

@@ -120,7 +120,10 @@ function useUpdatePlayMutation(queryClient: ReturnType<typeof useQueryClient>) {
     onError: (_err, _variables, context) => {
       // Rollback on error
       if (context?.previousPlays) {
-        queryClient.setQueryData(queryKeys.playsAllPage(0), context.previousPlays);
+        queryClient.setQueryData(
+          queryKeys.playsAllPage(0),
+          context.previousPlays
+        );
       }
     },
     onSuccess: () => {

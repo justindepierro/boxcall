@@ -3,6 +3,7 @@ import { logger } from "../utils/logger";
 // Provides enqueue + flush (console output for now); future: send to Supabase edge function or REST endpoint.
 
 import type { TelemetryEvent } from "./types";
+import { getSessionId } from "./session";
 
 interface DispatcherOptions {
   flushIntervalMs?: number;
@@ -38,7 +39,14 @@ export class TelemetryDispatcher {
   }
 
   enqueue(event: Omit<TelemetryEvent, "ts">) {
-    const e: TelemetryEvent = { ...event, ts: Date.now() };
+    const e: TelemetryEvent = {
+      ...event,
+      ts: Date.now(),
+      context: {
+        session_id: getSessionId(),
+        ...(event.context ?? {}),
+      },
+    };
     this.buffer.push(e);
     if (this.buffer.length >= this.maxBuffer) {
       this.flush();

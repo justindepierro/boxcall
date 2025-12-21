@@ -10,7 +10,8 @@ export const queryKeys = {
   // Cross-cutting / aggregate (admin-style or multi-team views)
   playbooksAll: () => [...queryKeys.all, "playbooks", "all"] as const,
   playsAll: () => [...queryKeys.all, "plays", "all"] as const,
-  playsAllPage: (page: number) => [...queryKeys.playsAll(), "page", page] as const,
+  playsAllPage: (page: number) =>
+    [...queryKeys.playsAll(), "page", page] as const,
   playsAllTotalCount: () => [...queryKeys.playsAll(), "totalCount"] as const,
 
   // Teams
@@ -92,7 +93,8 @@ export const queryKeys = {
         devMode,
       },
     ] as const,
-  calendarEvent: (id: string) => [...queryKeys.calendar(), "event", id] as const,
+  calendarEvent: (id: string) =>
+    [...queryKeys.calendar(), "event", id] as const,
   calendarRsvps: (eventId: string) =>
     [...queryKeys.calendar(), "rsvps", eventId] as const,
   calendarComments: (eventId: string) =>

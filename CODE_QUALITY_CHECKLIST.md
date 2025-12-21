@@ -73,6 +73,7 @@ Use this checklist before committing code to ensure consistency and quality.
 - [ ] Images optimized (WebP format preferred)
 - [ ] Heavy modals preloaded during idle time
 - [ ] Optimistic UI for mutations
+- [ ] High-traffic pages follow render checklist (`docs/development/RENDER_PERFORMANCE_CHECKLIST.md`)
 
 #### Documentation
 

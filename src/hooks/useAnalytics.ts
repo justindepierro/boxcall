@@ -8,6 +8,7 @@ import React, { useCallback, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { analyticsService } from "../services/analytics/AnalyticsService";
 import { errorTracking } from "../services/analytics/ErrorTrackingService";
+import { telemetry } from "../telemetry/dispatcher";
 
 // Analytics Hook
 export function useAnalytics() {
@@ -17,7 +18,11 @@ export function useAnalytics() {
   // Track page views automatically
   useEffect(() => {
     if (!pageViewTracked.current) {
-      analyticsService.trackPageView(location.pathname);
+      telemetry.enqueue({
+        type: "page_view",
+        data: { path: location.pathname },
+        context: { page: location.pathname },
+      });
       pageViewTracked.current = true;
     }
 
@@ -28,9 +33,10 @@ export function useAnalytics() {
 
   const trackEvent = useCallback(
     (eventName: string, properties?: Record<string, any>) => {
-      analyticsService.trackEvent(eventName, {
-        ...properties,
-        page: location.pathname,
+      telemetry.enqueue({
+        type: eventName,
+        data: properties,
+        context: { page: location.pathname },
       });
     },
     [location.pathname]
@@ -38,11 +44,14 @@ export function useAnalytics() {
 
   const trackUserAction = useCallback(
     (action: string, target?: string, properties?: Record<string, any>) => {
-      analyticsService.trackEvent("user_action", {
-        action,
-        target,
-        ...properties,
-        page: location.pathname,
+      telemetry.enqueue({
+        type: "user_action",
+        data: {
+          action,
+          target,
+          ...properties,
+        },
+        context: { page: location.pathname },
       });
     },
     [location.pathname]
@@ -66,11 +75,14 @@ export function useAnalytics() {
   const trackTiming = useCallback(
     (name: string, startTime: number, properties?: Record<string, any>) => {
       const duration = performance.now() - startTime;
-      analyticsService.trackEvent("timing", {
-        name,
-        duration,
-        ...properties,
-        page: location.pathname,
+      telemetry.enqueue({
+        type: "timing",
+        data: {
+          name,
+          duration,
+          ...properties,
+        },
+        context: { page: location.pathname },
       });
     },
     [location.pathname]
@@ -78,11 +90,14 @@ export function useAnalytics() {
 
   const trackConversion = useCallback(
     (goal: string, value?: number, properties?: Record<string, any>) => {
-      analyticsService.trackEvent("conversion", {
-        goal,
-        value,
-        ...properties,
-        page: location.pathname,
+      telemetry.enqueue({
+        type: "conversion",
+        data: {
+          goal,
+          value,
+          ...properties,
+        },
+        context: { page: location.pathname },
       });
     },
     [location.pathname]
@@ -169,11 +184,14 @@ export function usePerformanceMonitoring() {
     const endTime = performance.now();
     const loadTime = startTime ? endTime - startTime : endTime;
 
-    analyticsService.trackEvent("performance", {
-      metric: "load_time",
-      label,
-      value: loadTime,
-      unit: "ms",
+    telemetry.enqueue({
+      type: "performance",
+      data: {
+        metric: "load_time",
+        label,
+        value: loadTime,
+        unit: "ms",
+      },
     });
 
     errorTracking.recordPerformanceMetric({
@@ -185,11 +203,14 @@ export function usePerformanceMonitoring() {
 
   const trackRenderTime = useCallback(
     (componentName: string, renderTime: number) => {
-      analyticsService.trackEvent("performance", {
-        metric: "render_time",
-        component: componentName,
-        value: renderTime,
-        unit: "ms",
+      telemetry.enqueue({
+        type: "performance",
+        data: {
+          metric: "render_time",
+          component: componentName,
+          value: renderTime,
+          unit: "ms",
+        },
       });
 
       errorTracking.recordPerformanceMetric({
@@ -209,11 +230,14 @@ export function usePerformanceMonitoring() {
       duration: number,
       statusCode: number
     ) => {
-      analyticsService.trackEvent("api_call", {
-        endpoint,
-        method,
-        duration,
-        status_code: statusCode,
+      telemetry.enqueue({
+        type: "api_call",
+        data: {
+          endpoint,
+          method,
+          duration,
+          status_code: statusCode,
+        },
       });
 
       if (duration > 2000) {

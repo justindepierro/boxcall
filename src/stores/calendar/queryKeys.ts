@@ -15,8 +15,7 @@ export const calendarKeys = {
     filters?: EventFilters,
     range?: { start: string; end: string },
     devMode?: string
-  ) =>
-    queryKeys.calendarEvents(filters, range, devMode),
+  ) => queryKeys.calendarEvents(filters, range, devMode),
   event: queryKeys.calendarEvent,
   rsvps: queryKeys.calendarRsvps,
   comments: queryKeys.calendarComments,

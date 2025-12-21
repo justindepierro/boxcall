@@ -97,7 +97,10 @@ Verified missing:
   - ✅ Verified: Shared optimistic helpers live in `src/utils/optimistic.ts`
   - ✅ Verified: Major hotspots migrated (Playbook, GamePlans, Team data hooks, Roster, Calendar, Practice scripts, data-sync create)
   - ✅ Gate: `npm run type-check` + `npm run lint` + `npm run test` pass (Dec 21, 2025)
-- [ ] (13) Standardize React Query config: query keys, stale times, refetch policies; remove bespoke caching
+- [x] (13) Standardize React Query config: query keys, stale times, refetch policies; remove bespoke caching
+  - ✅ Verified: Centralized React Query timing constants in `src/app/reactQueryTimes.ts`
+  - ✅ Verified: Expanded shared query key factory in `src/lib/queryKeys.ts` and migrated key hotspots (Teams data, roster, personnel, calendar)
+  - ✅ Gate: `npm run type-check` + `npm run lint` pass (Dec 21, 2025)
 - [x] (14) Create a typed Supabase data-access layer (table-level helpers) and reduce direct query scattering
 
 ## Dev/Prod Discipline
@@ -116,8 +119,12 @@ Verified missing:
 
 - [x] (19) Set per-route performance budgets (max JS/chunks on cold start) and fail CI if exceeded
 - [x] (20) Audit route-level lazy loading so heavy editors never load on cold-start routes
-- [ ] (21) Add a render-performance checklist for high-traffic pages (memo boundaries, stable callbacks, virtualization)
-- [ ] (22) Normalize telemetry: one schema, consistent fields, single dispatcher integration
+- [x] (21) Add a render-performance checklist for high-traffic pages (memo boundaries, stable callbacks, virtualization)
+  - ✅ Verified: Added `docs/development/RENDER_PERFORMANCE_CHECKLIST.md` and linked from `CODE_QUALITY_CHECKLIST.md`
+- [x] (22) Normalize telemetry: one schema, consistent fields, single dispatcher integration
+  - ✅ Verified: Telemetry events attach `session_id` consistently (dispatcher-level)
+  - ✅ Verified: Telemetry persistence is registered at app bootstrap and forwards flushed events to `AnalyticsService`
+  - ✅ Verified: `useAnalytics` emits via the telemetry dispatcher for a consistent schema
 
 ## Security & Safety
 
