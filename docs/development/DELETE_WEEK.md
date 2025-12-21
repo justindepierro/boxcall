@@ -98,7 +98,7 @@ These are not “pure deletion” targets — they are either implement-or-remov
   - src/services/performanceAnalyticsService.ts
   - src/components/analytics/PlayerPerformanceDashboard.tsx
 
-- [ ] Replace formation no-op service (wire to real formation library/services or DB tables)
+- [x] Replace formation no-op service (wire to real formation library/services or DB tables)
   - src/services/formationService.ts
 
 - [x] Replace network status hook stub (navigator.onLine + events + connection quality)
