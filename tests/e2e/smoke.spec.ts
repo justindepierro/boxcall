@@ -45,14 +45,14 @@ test.describe("smoke", () => {
     });
   }
 
-  test("legacy /team-bulletin resolves to dashboard then redirects to login", async ({
+  test("legacy /team-bulletin is no longer supported and redirects to login", async ({
     page,
   }) => {
     await page.goto("/team-bulletin");
 
     await expect(page).toHaveURL(/\/login(\?|$)/);
-    expect(page.url()).toContain("/login?returnUrl=");
-    expect(page.url()).toContain(encodeURIComponent("/dashboard"));
+    expect(page.url()).toContain("/login");
+    expect(page.url()).not.toContain("returnUrl=");
 
     await expect(page.getByText("Welcome to BoxCall")).toBeVisible();
   });

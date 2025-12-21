@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
-  useNavigate,
   Navigate,
   BrowserRouter,
   Routes,
@@ -53,26 +52,10 @@ import {
 import { InvitationAcceptPage } from "../pages/InvitationAcceptPage";
 import ScrollToTop from "./ScrollToTop";
 import { TeamParamSync } from "./TeamParamSync";
-import { teamRoutes } from "./paths";
 import { Layout } from "../components/layout/Layout";
-import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { PlaybookProvider } from "../contexts/PlaybookContext";
 
 // Component for legacy team bulletin redirects
-const LegacyTeamBulletinRedirect: React.FC = () => {
-  const navigate = useNavigate();
-  const activeTeamId = useActiveTeamStore((state) => state.activeTeamId);
-
-  useEffect(() => {
-    if (activeTeamId) {
-      navigate(teamRoutes.bulletin(activeTeamId), { replace: true });
-    } else {
-      navigate("/dashboard", { replace: true });
-    }
-  }, [activeTeamId, navigate]);
-
-  return <RouteLoadingSpinner />;
-};
 
 // Protected route wrapper with return URL support
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
@@ -139,10 +122,6 @@ const PublicRoutes = (
     <Route path="/contact" element={<LazyContactPage />} />
 
     <Route path="/design-system" element={<LazyDesignSystemShowcase />} />
-
-    {/* Legacy redirects */}
-    <Route path="/teams" element={<LegacyTeamBulletinRedirect />} />
-    <Route path="/team-bulletin" element={<LegacyTeamBulletinRedirect />} />
   </>
 );
 
