@@ -219,8 +219,7 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
         "📋 [PracticeScriptList] Starting to load scripts for team:",
         teamId
       );
-      const fetchedScripts =
-        await PracticeService.getPracticeScripts(teamId);
+      const fetchedScripts = await PracticeService.getPracticeScripts(teamId);
       debug("📋 [PracticeScriptList] Loaded scripts:", {
         count: fetchedScripts.length,
         scripts: fetchedScripts.map((s) => ({
@@ -273,11 +272,10 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
   const handleDuplicateScript = async (script: PracticeScript) => {
     try {
       const copyName = `${script.name} (Copy)`;
-      const duplicatedScript =
-        await PracticeService.duplicatePracticeScript(
-          script.id,
-          copyName
-        );
+      const duplicatedScript = await PracticeService.duplicatePracticeScript(
+        script.id,
+        copyName
+      );
       success(`Duplicated as "${duplicatedScript.name}"`);
       await loadScripts(); // Refresh the list
     } catch (err) {
