@@ -4,12 +4,41 @@
  * Manages state and handlers for the Join Team wizard
  */
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../hooks/useToast";
 import type { JoinStep, TeamSearchResult, JoinTeamState } from "./types";
 import { MOCK_SEARCH_RESULTS, INVITE_CODE_LENGTH } from "./constants";
 import { debug } from "../../utils/logger";
+
+function extractInvitationTokenFromInput(input: string): string | null {
+  const trimmed = input.trim();
+  if (!trimmed) return null;
+
+  // If it's a URL (or looks like one), try to parse and extract `token`.
+  if (/^https?:\/\//i.test(trimmed)) {
+    try {
+      const url = new URL(trimmed);
+      const token = url.searchParams.get("token");
+      return token ? token.trim() : null;
+    } catch {
+      // Fall through to regex extraction.
+    }
+  }
+
+  // Also support pasting an internal path like `/invite/accept?token=...`
+  const tokenMatch = trimmed.match(/[?&]token=([^&]+)/i);
+  if (tokenMatch?.[1]) {
+    try {
+      return decodeURIComponent(tokenMatch[1]).trim();
+    } catch {
+      return tokenMatch[1].trim();
+    }
+  }
+
+  // Otherwise treat the input itself as the token/code.
+  return trimmed;
+}
 
 export interface UseJoinTeamHandlersReturn extends JoinTeamState {
   handleMethodSelect: (methodId: string) => void;
@@ -42,35 +71,48 @@ export function useJoinTeamHandlers(): UseJoinTeamHandlersReturn {
   const [selectedRole, _setSelectedRole] = useState("player");
   const [isLoading, setIsLoading] = useState(false);
 
+  const inviteAcceptPath = useMemo(() => "/invite/accept", []);
+
   // Handlers
   const handleMethodSelect = (methodId: string) => {
     setSelectedMethod(methodId);
+
+    // Email invitations already route through the invitation acceptance page.
+    // Reuse the invite-code entry UI to accept either an invite token or full link.
+    if (methodId === "email-invite") {
+      setCurrentStep("invite-code");
+      return;
+    }
+
     setCurrentStep(methodId as JoinStep);
   };
 
   const handleInviteCodeChange = (value: string) => {
-    setInviteCode(value.toUpperCase());
+    // Preserve user input so they can paste a full invite link.
+    // We normalize on submit (trim/extract token).
+    setInviteCode(value);
   };
 
   const handleInviteCodeSubmit = async () => {
-    if (!inviteCode || inviteCode.length !== INVITE_CODE_LENGTH) {
+    const token = extractInvitationTokenFromInput(inviteCode);
+    if (!token || token.length < INVITE_CODE_LENGTH) {
       toast.error(
-        `Please enter a valid ${INVITE_CODE_LENGTH}-digit invite code`
+        `Please enter a valid invite code (at least ${INVITE_CODE_LENGTH} characters), or paste the full invite link`
       );
       return;
     }
 
     setIsLoading(true);
 
-    // TODO: Implement actual invite code verification
-    debug("[JoinTeam] Verifying invite code", inviteCode);
+    debug("[JoinTeam] Redirecting to invitation acceptance", {
+      hasUrl: inviteCode.includes("/invite/") || inviteCode.includes("http"),
+      tokenLength: token.length,
+    });
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    // Mock success - replace with actual logic
+    // Use the real invitation acceptance flow.
+    // That page handles token validation + auth + atomic membership creation.
+    navigate(`${inviteAcceptPath}?token=${encodeURIComponent(token)}`);
     setIsLoading(false);
-    setCurrentStep("complete");
   };
 
   const handleSearchQueryChange = (value: string) => {

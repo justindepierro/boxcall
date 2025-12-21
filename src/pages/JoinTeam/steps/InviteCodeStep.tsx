@@ -18,15 +18,16 @@ export const InviteCodeStep: React.FC<InviteCodeStepProps> = ({
   onSubmit,
   onSwitchToSearch,
 }) => {
+  const normalizedLength = inviteCode.trim().length;
+
   return (
     <div className="max-w-md mx-auto text-center">
       <Icon name="key" size="xl" color="primary" className="mx-auto mb-6" />
       <Typography variant="headline-lg" className="mb-4">
-        Enter Invite Code
+        Enter Invite Code or Link
       </Typography>
       <Typography variant="body-md" color="muted" className="mb-8">
-        Your coach should have provided you with a {INVITE_CODE_LENGTH}-digit
-        invite code. Enter it below to join your team.
+        Paste the invite code or the full invite link from your coach.
       </Typography>
 
       <div className="mb-6">
@@ -34,19 +35,19 @@ export const InviteCodeStep: React.FC<InviteCodeStepProps> = ({
           type="text"
           value={inviteCode}
           onChange={(e) => onInviteCodeChange(e.target.value)}
-          placeholder="ABC123"
-          maxLength={INVITE_CODE_LENGTH}
+          placeholder="ABC123 or https://.../invite/accept?token=..."
           className="w-full px-4 py-3 text-center font-mono text-3xl leading-none border border-secondary rounded-lg focus:ring-2 focus:ring-interaction-focus focus:border-interaction-focus tracking-widest"
           aria-label="Invite code"
         />
         <Typography variant="body-sm" color="muted" className="mt-2">
-          Enter the {INVITE_CODE_LENGTH}-character code exactly as provided
+          Minimum {INVITE_CODE_LENGTH} characters. You can also paste the full
+          invite link.
         </Typography>
       </div>
 
       <Button
         onClick={onSubmit}
-        disabled={inviteCode.length !== INVITE_CODE_LENGTH || isLoading}
+        disabled={normalizedLength < INVITE_CODE_LENGTH || isLoading}
         variant="primary"
         size="md"
         className="w-full mb-4"

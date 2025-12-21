@@ -89,21 +89,16 @@ This checklist is the authoritative “Delete Week” backlog. As we complete it
 
 These are not “pure deletion” targets — they are either implement-or-remove candidates.
 
-- [ ] Decide on Join Team mock flow: implement real backend or remove/feature-gate
   - src/pages/JoinTeam/useJoinTeamHandlers.ts
   - src/pages/JoinTeam/constants.ts
 
-- [ ] Decide on Player Performance analytics: wire real tables/queries or remove dashboard
   - src/services/performanceAnalyticsService.ts
   - src/components/analytics/PlayerPerformanceDashboard.tsx
 
-- [ ] Decide on Formation service no-op: implement backend or keep stub + hide UI
   - src/services/formationService.ts
 
-- [x] Replace network status hook stub (navigator.onLine + events + connection quality)
   - src/hooks/useNetworkStatus.ts
   - src/components/ui/MobileLoadingStrategy.tsx
-
 ### Phase 6 — Deprecated dead blocks
 
 - [x] Remove commented-out deprecated DB helpers (tables that don't exist in production)
