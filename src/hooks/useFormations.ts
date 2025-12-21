@@ -23,14 +23,8 @@ import {
   getIncompleteFormations,
   auditFormationDirections,
 } from "../utils/formationAudit";
-import {
-  queryClient,
-  cacheKeys,
-  invalidateFormations,
-  invalidateIncompleteFormations,
-  invalidateDirectionReview,
-  invalidateFormation,
-} from "../lib/queryClient";
+import { queryClient } from "../app/queryClient";
+import { queryKeys } from "../lib/queryKeys";
 import type {
   FormationCreate,
   FormationUpdate,
@@ -48,7 +42,7 @@ import type {
  */
 export function useFormations(playbookId: string | undefined) {
   return useQuery({
-    queryKey: cacheKeys.formations(playbookId || ""),
+    queryKey: queryKeys.formationsByPlaybook(playbookId || ""),
     queryFn: () => FormationService.getFormationsListByPlaybook(playbookId!),
     enabled: !!playbookId,
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -61,7 +55,7 @@ export function useFormations(playbookId: string | undefined) {
  */
 export function useFormation(formationId: string | undefined) {
   return useQuery({
-    queryKey: cacheKeys.formation(formationId || ""),
+    queryKey: queryKeys.formation(formationId || ""),
     queryFn: () => FormationService.getFormationById(formationId!),
     enabled: !!formationId,
     staleTime: 5 * 60 * 1000,
@@ -74,7 +68,7 @@ export function useFormation(formationId: string | undefined) {
  */
 export function useIncompleteFormations(playbookId: string | undefined) {
   return useQuery({
-    queryKey: cacheKeys.incompleteFormations(playbookId || ""),
+    queryKey: queryKeys.incompleteFormations(playbookId || ""),
     queryFn: () => getIncompleteFormations(playbookId!),
     enabled: !!playbookId,
     staleTime: 2 * 60 * 1000, // 2 minutes (changes more frequently)
@@ -87,7 +81,7 @@ export function useIncompleteFormations(playbookId: string | undefined) {
  */
 export function useDirectionReview(playbookId: string | undefined) {
   return useQuery({
-    queryKey: cacheKeys.directionReview(playbookId || ""),
+    queryKey: queryKeys.directionReview(playbookId || ""),
     queryFn: () => auditFormationDirections(playbookId!),
     enabled: !!playbookId,
     staleTime: 2 * 60 * 1000, // 2 minutes
@@ -99,7 +93,7 @@ export function useDirectionReview(playbookId: string | undefined) {
  */
 export function useOppositeFormation(formationId: string | undefined) {
   return useQuery({
-    queryKey: cacheKeys.oppositeFormation(formationId || ""),
+    queryKey: queryKeys.oppositeFormation(formationId || ""),
     queryFn: async () => {
       if (!formationId) return null;
       return FormationService.getOppositeFormation(formationId);
@@ -123,9 +117,15 @@ export function useCreateFormation(playbookId: string) {
       FormationService.createFormation(data),
     onSuccess: () => {
       // Invalidate all formation queries for this playbook
-      invalidateFormations(playbookId);
-      invalidateIncompleteFormations(playbookId);
-      invalidateDirectionReview(playbookId);
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.formationsByPlaybook(playbookId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.incompleteFormations(playbookId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.directionReview(playbookId),
+      });
     },
   });
 }
@@ -140,10 +140,18 @@ export function useUpdateFormation(playbookId: string, formationId: string) {
       FormationService.updateFormation(formationId, data),
     onSuccess: () => {
       // Invalidate specific formation and related queries
-      invalidateFormation(formationId);
-      invalidateFormations(playbookId);
-      invalidateIncompleteFormations(playbookId);
-      invalidateDirectionReview(playbookId);
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.formation(formationId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.formationsByPlaybook(playbookId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.incompleteFormations(playbookId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.directionReview(playbookId),
+      });
     },
   });
 }
@@ -157,8 +165,12 @@ export function useDeleteFormation(playbookId: string) {
     mutationFn: (formationId: string) =>
       FormationService.deleteFormation(formationId),
     onSuccess: () => {
-      invalidateFormations(playbookId);
-      invalidateDirectionReview(playbookId);
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.formationsByPlaybook(playbookId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.directionReview(playbookId),
+      });
     },
   });
 }
@@ -177,8 +189,12 @@ export function useCreateOppositeFormation(playbookId: string) {
       customName?: string;
     }) => FormationService.createOppositeFormation(formationId, customName),
     onSuccess: () => {
-      invalidateFormations(playbookId);
-      invalidateDirectionReview(playbookId);
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.formationsByPlaybook(playbookId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.directionReview(playbookId),
+      });
     },
   });
 }
@@ -194,7 +210,7 @@ export function useCreateOppositeFormation(playbookId: string) {
 export function usePrefetchFormations(playbookId: string) {
   return () => {
     queryClient.prefetchQuery({
-      queryKey: cacheKeys.formations(playbookId),
+      queryKey: queryKeys.formationsByPlaybook(playbookId),
       queryFn: () => FormationService.getFormationsListByPlaybook(playbookId),
     });
   };
@@ -206,7 +222,7 @@ export function usePrefetchFormations(playbookId: string) {
 export function useRefetchFormations(playbookId: string) {
   return () => {
     queryClient.invalidateQueries({
-      queryKey: cacheKeys.formations(playbookId),
+      queryKey: queryKeys.formationsByPlaybook(playbookId),
     });
   };
 }
@@ -238,9 +254,15 @@ export function useBulkUpdateMetadata(playbookId: string) {
     },
     onSuccess: () => {
       // Invalidate all formation-related queries
-      invalidateFormations(playbookId);
-      invalidateIncompleteFormations(playbookId);
-      invalidateDirectionReview(playbookId);
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.formationsByPlaybook(playbookId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.incompleteFormations(playbookId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.directionReview(playbookId),
+      });
     },
   });
 }
@@ -264,9 +286,15 @@ export function useBulkSetDirection(playbookId: string) {
     },
     onSuccess: () => {
       // Invalidate all formation-related queries
-      invalidateFormations(playbookId);
-      invalidateDirectionReview(playbookId);
-      invalidateIncompleteFormations(playbookId);
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.formationsByPlaybook(playbookId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.directionReview(playbookId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.incompleteFormations(playbookId),
+      });
     },
   });
 }
@@ -287,9 +315,15 @@ export function useBulkDelete(playbookId: string) {
     },
     onSuccess: () => {
       // Invalidate all formation-related queries
-      invalidateFormations(playbookId);
-      invalidateIncompleteFormations(playbookId);
-      invalidateDirectionReview(playbookId);
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.formationsByPlaybook(playbookId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.incompleteFormations(playbookId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.directionReview(playbookId),
+      });
     },
   });
 }

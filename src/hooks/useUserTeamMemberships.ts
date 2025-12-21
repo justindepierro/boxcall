@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { table } from "../data/supabase/db";
 import type { Database } from "../types/database";
+import { queryKeys } from "../lib/queryKeys";
 import { debug, logError } from "../utils/logger";
 
 type RawTeamMember = Database["public"]["Tables"]["team_members"]["Row"] & {
@@ -45,7 +46,7 @@ async function fetchUserTeamMemberships(userId: string): Promise<TeamMember[]> {
 
 export function useUserTeamMemberships(userId?: string) {
   return useQuery({
-    queryKey: ["user", userId, "team_memberships"],
+    queryKey: queryKeys.userTeamMemberships(userId || ""),
     queryFn: () => fetchUserTeamMemberships(userId || ""),
     enabled: !!userId,
     staleTime: 5 * 60 * 1000, // 5 minutes

@@ -49,12 +49,12 @@ Verified complete:
 - (7) TypeScript strictness is tightened incrementally: `noImplicitOverride` is enabled in TS configs, overrides are fixed (e.g., ErrorBoundary), and remaining candidates are tracked in `docs/development/TYPESCRIPT_STRICTNESS_TRACKER.md`.
 - (10) Web storage is centralized and typed: `src/utils/storage.ts` is the single source of truth for keys + SSR-safe helpers, and direct `localStorage`/`sessionStorage` usage is banned via `boxcall-design/no-direct-web-storage` (tests exempt).
 - (11) Zustand store surface area is reduced and enforced: legacy `src/app/store.ts` was deleted, UI state moved to `src/stores/uiStore.ts`, dashboard store was modularized under `src/stores/dashboard/`, and new guardrails prevent ad-hoc `.getState()` and whole-store subscriptions.
+- (14) Supabase table access is centralized behind the DAL in `src/data/supabase/`, and a guardrail blocks new `supabase.from("...")` usage outside the DAL (auth + storage are exempt).
 
 Verified partial (keep unchecked for now):
 
 - (12) Optimistic patterns exist (e.g., temp IDs + rollback utilities in data sync services), but they are not yet unified across major features into one shared approach.
 - (13) React Query defaults are standardized in `src/app/queryClient.ts` and some query-key factories exist (e.g., `src/lib/queryClient.ts`), but there’s still bespoke caching in the codebase and no single shared query-key scheme across features.
-- (14) A typed Supabase DAL exists under `src/data/supabase/`, but direct `supabase.from(...)` usage is still scattered across routes/services.
 
 Verified missing:
 
@@ -94,7 +94,7 @@ Verified missing:
   - ✅ Gate: `npm run validate` pass (Dec 20, 2025)
 - [ ] (12) Unify optimistic update patterns (temp IDs, rollback, toasts) across Playbook/GamePlans/Bulletin/etc.
 - [ ] (13) Standardize React Query config: query keys, stale times, refetch policies; remove bespoke caching
-- [ ] (14) Create a typed Supabase data-access layer (table-level helpers) and reduce direct query scattering
+- [x] (14) Create a typed Supabase data-access layer (table-level helpers) and reduce direct query scattering
 
 ## Dev/Prod Discipline
 

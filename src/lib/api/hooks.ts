@@ -9,47 +9,9 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { table } from "../../data/supabase/db";
+import { queryKeys } from "../queryKeys";
 
-// Query key factory for consistent cache keys
-export const queryKeys = {
-  all: ["boxcall"] as const,
-
-  // Teams
-  teams: () => [...queryKeys.all, "teams"] as const,
-  team: (id: string) => [...queryKeys.teams(), id] as const,
-  teamMembers: (teamId: string) =>
-    [...queryKeys.team(teamId), "members"] as const,
-
-  // Playbooks
-  playbooks: (teamId: string) =>
-    [...queryKeys.team(teamId), "playbooks"] as const,
-  playbook: (id: string) => [...queryKeys.all, "playbook", id] as const,
-
-  // Plays
-  plays: (playbookIds: string[]) =>
-    [...queryKeys.all, "plays", ...playbookIds] as const,
-  play: (id: string) => [...queryKeys.all, "play", id] as const,
-
-  // Formations
-  formations: (playbookIds: string[]) =>
-    [...queryKeys.all, "formations", ...playbookIds] as const,
-
-  // Game Plans
-  gamePlans: (teamId: string) =>
-    [...queryKeys.team(teamId), "gamePlans"] as const,
-  gamePlan: (id: string) => [...queryKeys.all, "gamePlan", id] as const,
-
-  // Practice Scripts
-  practiceScripts: (teamId: string) =>
-    [...queryKeys.team(teamId), "practiceScripts"] as const,
-  practiceScript: (id: string) =>
-    [...queryKeys.all, "practiceScript", id] as const,
-
-  // User
-  profile: (userId: string) => [...queryKeys.all, "profile", userId] as const,
-  userTeams: (userId: string) =>
-    [...queryKeys.all, "userTeams", userId] as const,
-} as const;
+export { queryKeys } from "../queryKeys";
 
 /**
  * Hook to fetch team data

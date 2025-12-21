@@ -14,6 +14,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useRef } from "react";
 import { table } from "../data/supabase/db";
+import { queryKeys } from "../lib/queryKeys";
 
 // Prefetch delay in milliseconds (wait for stable hover)
 const PREFETCH_DELAY = 300;
@@ -62,7 +63,7 @@ export function usePrefetchQueries() {
       prefetchTimeoutRef.current = setTimeout(() => {
         // Prefetch playbooks for team
         queryClient.prefetchQuery({
-          queryKey: ["playbooks", teamId],
+          queryKey: queryKeys.playbooks(teamId),
           queryFn: async () => {
             const { data, error } = await table("playbooks")
               .select("*")
@@ -78,7 +79,7 @@ export function usePrefetchQueries() {
 
         // Prefetch plays count for team
         queryClient.prefetchQuery({
-          queryKey: ["plays-count", teamId],
+          queryKey: queryKeys.playsCount(teamId),
           queryFn: async () => {
             const { count, error } = await table("plays")
               .select("id", { count: "exact", head: true })
@@ -117,7 +118,7 @@ export function usePrefetchQueries() {
 
       prefetchTimeoutRef.current = setTimeout(() => {
         queryClient.prefetchQuery({
-          queryKey: ["play", playId],
+          queryKey: queryKeys.play(playId),
           queryFn: async () => {
             const { data, error } = await table("plays")
               .select("*")
@@ -148,7 +149,7 @@ export function usePrefetchQueries() {
 
       prefetchTimeoutRef.current = setTimeout(() => {
         queryClient.prefetchQuery({
-          queryKey: ["formation", formationId],
+          queryKey: queryKeys.formation(formationId),
           queryFn: async () => {
             const { data, error } = await table("formations")
               .select("*")
@@ -180,7 +181,7 @@ export function usePrefetchQueries() {
       prefetchTimeoutRef.current = setTimeout(() => {
         // Prefetch team data
         queryClient.prefetchQuery({
-          queryKey: ["team", teamId],
+          queryKey: queryKeys.team(teamId),
           queryFn: async () => {
             const { data, error } = await table("teams")
               .select("*")
@@ -195,7 +196,7 @@ export function usePrefetchQueries() {
 
         // Prefetch team members count
         queryClient.prefetchQuery({
-          queryKey: ["team-members-count", teamId],
+          queryKey: queryKeys.teamMembersCount(teamId),
           queryFn: async () => {
             const { count, error } = await table("team_members")
               .select("id", { count: "exact", head: true })

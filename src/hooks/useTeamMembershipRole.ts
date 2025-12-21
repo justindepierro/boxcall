@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { table } from "../data/supabase/db";
+import { queryKeys } from "../lib/queryKeys";
 
 import type { PostgrestError } from "@supabase/supabase-js";
 
@@ -26,7 +27,7 @@ async function fetchTeamMembershipRole(teamId: string, userId: string) {
 
 export function useTeamMembershipRole(teamId?: string, userId?: string) {
   return useQuery({
-    queryKey: ["team", teamId, "membership_role", userId],
+    queryKey: queryKeys.teamMembershipRole(teamId || "", userId || ""),
     queryFn: () => fetchTeamMembershipRole(teamId || "", userId || ""),
     enabled: !!teamId && !!userId,
     staleTime: 60_000, // 1m
