@@ -240,9 +240,7 @@ export function PracticePlanner() {
               onDragEnd={handleDragEnd}
               onDeleteBlock={handleDeleteBlock}
               onPDFExport={() => setIsPDFExportOpen(true)}
-              onNavigateToSchedule={() =>
-                navigate(`/team/${teamId}/calendar`)
-              }
+              onNavigateToSchedule={() => navigate(`/team/${teamId}/calendar`)}
               onStartPractice={handleStartPractice}
               onStopPractice={handleStopPractice}
               onUnlockSchedule={handleUnlockSchedule}
