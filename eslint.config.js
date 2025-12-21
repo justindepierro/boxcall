@@ -15,6 +15,7 @@ import noDirectFetchOutsideServices from "./eslint-rules/no-direct-fetch-outside
 import noDirectWebStorage from "./eslint-rules/no-direct-web-storage.js";
 import noDirectZustandGetState from "./eslint-rules/no-direct-zustand-getstate.js";
 import noZustandStoreHookWithoutSelector from "./eslint-rules/no-zustand-store-hook-without-selector.js";
+import noSupabaseFromOutsideDal from "./eslint-rules/no-supabase-from-outside-dal.js";
 
 const boxcallDesignRules = {
   rules: {
@@ -30,6 +31,7 @@ const boxcallDesignRules = {
     ...noDirectWebStorage.rules,
     ...noDirectZustandGetState.rules,
     ...noZustandStoreHookWithoutSelector.rules,
+    ...noSupabaseFromOutsideDal.rules,
   },
 };
 
@@ -137,6 +139,7 @@ export default [
       "boxcall-design/no-direct-web-storage": "error",
       "boxcall-design/no-direct-zustand-getstate": "error",
       "boxcall-design/no-zustand-store-hook-without-selector": "error",
+      "boxcall-design/no-supabase-from-outside-dal": "error",
     },
   },
 ];

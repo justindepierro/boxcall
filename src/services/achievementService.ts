@@ -14,7 +14,7 @@
  * Service gracefully degrades to empty achievements until tables are created.
  */
 import { debug, error as logError } from "../utils/logger";
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 
 type Player = {
   id: string;
@@ -152,8 +152,7 @@ class AchievementTracker {
       } // Get all active achievements that could be triggered by this action
       // Note: achievement_definitions table doesn't exist yet in schema
       const { data: relevantAchievements, error: definitionsError } =
-        await supabase
-          .from("achievement_definitions")
+        await table("achievement_definitions")
           .select("*")
           .eq("is_active", true)
           .eq("trigger_target", action);
@@ -206,8 +205,7 @@ class AchievementTracker {
   ): Promise<EarnedAchievement | null> {
     try {
       // Get or create progress record
-      let { data: progress } = await supabase
-        .from("achievement_progress")
+      let { data: progress } = await table("achievement_progress")
         .select("*")
         .eq("user_id", playerId)
         .eq("achievement_id", achievement.id)
@@ -215,8 +213,9 @@ class AchievementTracker {
 
       if (!progress) {
         // Create new progress record
-        const { data: newProgress, error } = await supabase
-          .from("achievement_progress")
+        const { data: newProgress, error } = await table(
+          "achievement_progress"
+        )
           .insert({
             user_id: playerId,
             achievement_id: achievement.id,
@@ -262,8 +261,7 @@ class AchievementTracker {
       const isComplete = newCount >= targetValue;
 
       // Update progress
-      await supabase
-        .from("achievement_progress")
+      await table("achievement_progress")
         .update({
           current_value: newCount,
           completed_at: isComplete ? new Date().toISOString() : null,
@@ -273,8 +271,7 @@ class AchievementTracker {
 
       if (isComplete) {
         // Award the achievement
-        const { data: earnedAchievement, error } = await supabase
-          .from("achievements")
+        const { data: earnedAchievement, error } = await table("achievements")
           .insert({
             player_id: playerId,
             achievement_type: achievement.name,
@@ -313,8 +310,7 @@ class AchievementTracker {
 
     try {
       // Check total points milestone
-      const { data: totalPoints } = await supabase
-        .from("achievements")
+      const { data: totalPoints } = await table("achievements")
         .select("id")
         .eq("player_id", playerId);
 
@@ -367,8 +363,7 @@ class AchievementTracker {
   ): Promise<EarnedAchievement | null> {
     try {
       // Check if already earned
-      const { data: existing } = await supabase
-        .from("achievements")
+      const { data: existing } = await table("achievements")
         .select("id")
         .eq("player_id", playerId)
         .eq("achievement_type", `Milestone: ${triggerTarget} ${milestone}`);
@@ -376,8 +371,7 @@ class AchievementTracker {
       if (existing?.length) return null;
 
       // Create the achievement
-      const { data: earned, error } = await supabase
-        .from("achievements")
+      const { data: earned, error } = await table("achievements")
         .insert({
           player_id: playerId,
           achievement_type: `Milestone: ${triggerTarget} ${milestone}`,
@@ -411,8 +405,7 @@ class AchievementTracker {
       }
 
       // Get player record from profiles table (since player_roster doesn't exist)
-      const { data: player, error: playerError } = await supabase
-        .from("profiles")
+      const { data: player, error: playerError } = await table("profiles")
         .select("id")
         .eq("id", userId)
         .maybeSingle();
@@ -427,8 +420,7 @@ class AchievementTracker {
       }
 
       // Try to get earned achievements - handle if tables don't exist
-      const { data: earned, error: earnedError } = await supabase
-        .from("achievements")
+      const { data: earned, error: earnedError } = await table("achievements")
         .select("*")
         .eq("player_id", player.id);
 
@@ -464,8 +456,7 @@ class AchievementTracker {
     definition: Omit<AchievementDefinition, "id">
   ): Promise<AchievementDefinition | null> {
     try {
-      const { data, error } = await supabase
-        .from("achievement_definitions")
+      const { data, error } = await table("achievement_definitions")
         .insert(definition as any)
         .select()
         .single();
@@ -483,8 +474,7 @@ class AchievementTracker {
    */
   static async getAllDefinitions(): Promise<AchievementDefinition[]> {
     try {
-      const { data } = await supabase
-        .from("achievement_definitions")
+      const { data } = await table("achievement_definitions")
         .select("*")
         .order("category", { ascending: true })
         .order("rarity", { ascending: false });

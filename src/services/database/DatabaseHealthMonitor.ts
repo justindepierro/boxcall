@@ -11,6 +11,7 @@
 
 import { dbConnectivity } from "./DatabaseConnectivityService";
 import { debug, error as logError, warn } from "../../utils/logger";
+import { tableWithClient } from "../../data/supabase/db";
 
 interface HealthMetrics {
   timestamp: Date;
@@ -159,7 +160,9 @@ export class DatabaseHealthMonitor {
       const client = await dbConnectivity.getClient();
       const queryStartTime = performance.now();
 
-      const { error } = await client.from("profiles").select("id").limit(1);
+      const { error } = await tableWithClient(client, "profiles")
+        .select("id")
+        .limit(1);
 
       const queryEndTime = performance.now();
       const responseTime = queryEndTime - queryStartTime;
@@ -426,8 +429,7 @@ export class DatabaseHealthMonitor {
     try {
       const client = await dbConnectivity.getClient();
       // Use maybeSingle() to avoid 406 error when no profiles exist
-      const { error } = await client
-        .from("profiles")
+      const { error } = await tableWithClient(client, "profiles")
         .select("id")
         .limit(1)
         .maybeSingle();

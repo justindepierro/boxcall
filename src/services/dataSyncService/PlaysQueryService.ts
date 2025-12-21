@@ -15,8 +15,26 @@ import type { InboundPlay } from "../../utils/playDataStandardization";
 import { CacheService } from "./CacheService";
 import { IndexedDBService } from "./IndexedDBService";
 import { logError } from "../../utils/logger";
+import { tableWithClient } from "../../data/supabase/db";
 
 export class PlaysQueryService {
+  private static coercePlayTimestampFields(row: unknown): Play {
+    const r = row as Record<string, unknown>;
+
+    return {
+      ...(r as object),
+      created_at: r["created_at"]
+        ? new Date(String(r["created_at"]))
+        : new Date(),
+      updated_at: r["updated_at"]
+        ? new Date(String(r["updated_at"]))
+        : new Date(),
+      last_used_at: r["last_used_at"]
+        ? new Date(String(r["last_used_at"]))
+        : undefined,
+    } as Play;
+  }
+
   /**
    * Get plays with 3-layer caching for sub-100ms response
    */
@@ -48,8 +66,7 @@ export class PlaysQueryService {
       }
 
       // Level 3: Query Supabase (reliable)
-      const { data, error } = await supabase
-        .from("plays")
+      const { data, error } = await tableWithClient(supabase, "plays")
         .select("*")
         .eq("playbook_id", playbookId)
         .eq("is_archived", false)
@@ -57,7 +74,9 @@ export class PlaysQueryService {
 
       if (error) throw error;
 
-      const plays = data as Play[];
+      const plays = (data ?? []).map((row) =>
+        PlaysQueryService.coercePlayTimestampFields(row)
+      );
 
       // Cache the results
       CacheService.set(cacheKey, plays, 1);
@@ -157,8 +176,10 @@ export class PlaysQueryService {
   ): Promise<Play[]> {
     try {
       // Fetch playbook IDs for team
-      const { data: playbooks, error: pbErr } = await supabase
-        .from("playbooks")
+      const { data: playbooks, error: pbErr } = await tableWithClient(
+        supabase,
+        "playbooks"
+      )
         .select("id")
         .eq("team_id", teamId);
 
@@ -166,8 +187,7 @@ export class PlaysQueryService {
 
       const ids = (playbooks as Array<{ id: string }>).map((p) => p.id);
 
-      const { data, error } = await supabase
-        .from("plays")
+      const { data, error } = await tableWithClient(supabase, "plays")
         .select("*")
         .in("playbook_id", ids)
         .eq("is_archived", false);
@@ -175,21 +195,9 @@ export class PlaysQueryService {
       if (error || !data) return [];
 
       // Coerce timestamp fields to Date for Play typing
-      return (data as unknown[]).map((row) => {
-        const r = row as Record<string, unknown>;
-        return {
-          ...(r as object),
-          created_at: r["created_at"]
-            ? new Date(String(r["created_at"]))
-            : new Date(),
-          updated_at: r["updated_at"]
-            ? new Date(String(r["updated_at"]))
-            : new Date(),
-          last_used_at: r["last_used_at"]
-            ? new Date(String(r["last_used_at"]))
-            : undefined,
-        } as Play;
-      });
+      return (data as unknown[]).map((row) =>
+        PlaysQueryService.coercePlayTimestampFields(row)
+      );
     } catch {
       return [];
     }

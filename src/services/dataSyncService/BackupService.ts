@@ -13,6 +13,7 @@ import { IndexedDBService } from "./IndexedDBService";
 import { CacheService } from "./CacheService";
 import { PlaysQueryService } from "./PlaysQueryService";
 import { debug, logError, warn } from "../../utils/logger";
+import { tableWithClient } from "../../data/supabase/db";
 
 // Minimal CSV escape helper for inline CSV generation
 function csvEscape(v: unknown): string {
@@ -211,11 +212,11 @@ export class BackupService {
   private static async getAllPracticeScripts(
     teamId: string
   ): Promise<PracticeScript[]> {
-    if (!this.supabase) return [];
+    const client = this.supabase;
+    if (!client) return [];
 
     try {
-      const { data, error } = await this.supabase
-        .from("practice_scripts")
+      const { data, error } = await tableWithClient(client, "practice_scripts")
         .select(
           "id, team_id, name, description, total_duration, created_by, created_at, updated_at, is_template, tags"
         )
@@ -254,11 +255,11 @@ export class BackupService {
    * Get all game plans for a team
    */
   private static async getAllGamePlans(teamId: string): Promise<GamePlan[]> {
-    if (!this.supabase) return [];
+    const client = this.supabase;
+    if (!client) return [];
 
     try {
-      const { data, error } = await this.supabase
-        .from("game_plans")
+      const { data, error } = await tableWithClient(client, "game_plans")
         .select(
           "id, team_id, name, opponent, game_date, game_location, notes, created_by, created_at, updated_at, is_archived"
         )

@@ -156,43 +156,13 @@ if (import.meta.env.DEV && typeof window !== "undefined") {
       return;
     }
 
-    // 2. Try to query profiles (user's own profile)
-    const { data: profile, error: profileError } = await supabaseClient
-      .from("profiles")
-      .select("id, full_name, role")
-      .eq("id", session.user.id)
-      .maybeSingle();
-    debug("2. Profile:", profile || "None", profileError?.message || "");
-
-    // 3. Try to query team_members
-    const { data: memberships, error: memberError } = await supabaseClient
-      .from("team_members")
-      .select("team_id, team_role, status")
-      .eq("user_id", session.user.id);
+    // NOTE: Direct table queries are intentionally disabled here.
+    // This module defines the Supabase client, so importing the DAL would create a circular dependency.
     debug(
-      "3. Team memberships:",
-      memberships?.length || 0,
-      "found",
-      memberError?.message || ""
+      "2. Table query checks skipped (DAL enforcement). Use app screens / health checks for DB diagnostics."
     );
 
-    if (memberships && memberships.length > 0) {
-      debug(
-        "   Teams:",
-        (memberships as any[]).map((m) => m.team_id).join(", ")
-      );
-    } else {
-      warn("[Supabase] No team memberships found - this is why nothing loads");
-      warn("[Supabase] User needs to be added to team_members table");
-    }
-
-    // 4. Try to query teams
-    const { data: teams, error: teamsError } = await supabaseClient
-      .from("teams")
-      .select("id, name");
-    debug("4. Teams visible:", teams?.length || 0, teamsError?.message || "");
-
-    return { session, profile, memberships, teams };
+    return { session };
   };
 
   debug("[Supabase] Run window.testBoxCallDB() to diagnose DB issues");

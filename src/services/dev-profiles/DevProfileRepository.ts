@@ -8,7 +8,7 @@
  * @author BoxCall Development Team
  */
 
-import { supabase } from "../../lib/supabase";
+import { table } from "../../data/supabase/db";
 import { logError } from "../../utils/logger";
 
 import { getProfileConfigurations, hasProfileConfig } from "./configs";
@@ -76,8 +76,7 @@ export class DevProfileRepository implements IDevProfileRepository {
     }
 
     try {
-      const { data, error } = await supabase
-        .from("achievements")
+      const { data, error } = await table("achievements")
         .select("*")
         .eq("user_id", profileId)
         .order("earned_at", { ascending: false });
@@ -110,8 +109,7 @@ export class DevProfileRepository implements IDevProfileRepository {
     }
 
     try {
-      const { data, error } = await supabase
-        .from("team_members")
+      const { data, error } = await table("team_members")
         .select(
           `
           *,

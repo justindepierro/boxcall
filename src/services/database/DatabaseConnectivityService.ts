@@ -13,6 +13,7 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "../../types/database";
 import { debug, error as logError, warn } from "../../utils/logger";
+import { tableWithClient } from "../../data/supabase/db";
 
 interface ConnectionConfig {
   url: string;
@@ -289,8 +290,7 @@ export class DatabaseConnectivityService {
 
     try {
       // Simple health check query
-      const { error } = await client
-        .from("profiles")
+      const { error } = await tableWithClient(client, "profiles")
         .select("id")
         .limit(1)
         .single();

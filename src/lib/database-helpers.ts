@@ -1,4 +1,4 @@
-import { supabase } from "./supabase";
+import { fromAny, table } from "../data/supabase/db";
 import { getCurrentUserId } from "./auth-helpers";
 import { debug, logError, warn } from "../utils/logger";
 
@@ -129,8 +129,7 @@ export async function testBasicDatabaseConnectivity(): Promise<boolean> {
 
     // Test basic Supabase connection without requiring auth
     // We'll try to access a public table or make a simple query
-    const { error } = await supabase
-      .from("teams")
+    const { error } = await table("teams")
       .select("count", { count: "exact", head: true });
 
     if (error) {
@@ -170,8 +169,7 @@ export async function testDatabaseConnection(): Promise<boolean> {
     }
 
     // Single fast query to verify connection - profiles table with user's own data
-    const { error } = await supabase
-      .from("profiles")
+    const { error } = await table("profiles")
       .select("id")
       .eq("id", userId)
       .maybeSingle();
@@ -197,8 +195,7 @@ export function getCurrentUser(): { id: string } | null {
 export async function getUserProfile(userId: string): Promise<Profile | null> {
   try {
     return await withDatabaseRetry(async () => {
-      const { data, error } = await supabase
-        .from("profiles")
+      const { data, error } = await table("profiles")
         .select("*")
         .eq("id", userId)
         .maybeSingle();
@@ -221,8 +218,7 @@ export async function getUserProfile(userId: string): Promise<Profile | null> {
 export async function getUserTeams(userId: string): Promise<Team[]> {
   try {
     return await withDatabaseRetry(async () => {
-      const { data, error } = await supabase
-        .from("teams")
+      const { data, error } = await table("teams")
         .select("*")
         .eq("head_coach_id", userId);
 
@@ -244,8 +240,7 @@ export async function getUserTeams(userId: string): Promise<Team[]> {
 export async function getTeamMembers(teamId: string): Promise<any[]> {
   try {
     return await withDatabaseRetry(async () => {
-      const { data, error } = await supabase
-        .from("team_members")
+      const { data, error } = await table("team_members")
         .select(
           `
           *,
@@ -272,8 +267,7 @@ export async function getTeamMembers(teamId: string): Promise<any[]> {
   }
 }
 export async function getTeams(): Promise<Team[]> {
-  const { data, error } = await supabase
-    .from("teams")
+  const { data, error } = await table("teams")
     .select("*")
     .order("created_at", { ascending: false });
   if (error) {
@@ -283,8 +277,7 @@ export async function getTeams(): Promise<Team[]> {
   return data || [];
 }
 export async function getTeamGames(teamId: string): Promise<Game[]> {
-  const { data, error } = await supabase
-    .from("games")
+  const { data, error } = await table("games")
     .select("*")
     .eq("team_id", teamId)
     .order("game_date", { ascending: false });
@@ -295,8 +288,7 @@ export async function getTeamGames(teamId: string): Promise<Game[]> {
   return data || [];
 }
 export async function getPlaybookPlays(playbookId: string): Promise<Play[]> {
-  const { data, error } = await supabase
-    .from("plays")
+  const { data, error } = await table("plays")
     .select("*")
     .eq("playbook_id", playbookId)
     .order("play_name");
@@ -308,8 +300,7 @@ export async function getPlaybookPlays(playbookId: string): Promise<Play[]> {
 }
 // New helper functions for additional tables
 export async function getGamePlayCalls(gameId: string): Promise<PlayCall[]> {
-  const { data, error } = await supabase
-    .from("play_calls")
+  const { data, error } = await table("play_calls")
     .select("*")
     .eq("game_id", gameId)
     .order("created_at");
@@ -352,8 +343,7 @@ export async function getTeamFiles(teamId: string): Promise<TeamFile[]> {
 export async function getUserProfileByUserId(
   userId: string
 ): Promise<UserProfile | null> {
-  const { data, error } = await (supabase as any)
-    .from("user_profiles")
+  const { data, error } = await fromAny("user_profiles")
     .select("*")
     .eq("user_id", userId)
     .maybeSingle();

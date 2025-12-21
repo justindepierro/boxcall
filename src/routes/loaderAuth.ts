@@ -2,6 +2,7 @@ import { redirect, type LoaderFunctionArgs } from "react-router-dom";
 import { authorize } from "./authorize";
 import { ROUTES } from "./paths";
 import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import type { AppRole } from "../types/roles";
 import type { AuthorizeInput } from "./authorize";
 import { isSuperAdminEmail } from "../config/superAdmin";
@@ -54,8 +55,7 @@ export async function getCurrentUserWithRole(): Promise<{
     return null;
   }
   // Use maybeSingle() to avoid 406 error when profile doesn't exist
-  const { data: profileRow } = await supabase
-    .from("profiles")
+  const { data: profileRow } = await table("profiles")
     .select("role, email")
     .eq("id", user.id)
     .maybeSingle();

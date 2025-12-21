@@ -6,7 +6,7 @@
  * Clean, focused, 150 lines max per design pattern.
  */
 
-import { supabase } from "../../lib/supabase";
+import { table } from "../../data/supabase/db";
 import type { SyncResult } from "../../types/library";
 import { logError, warn } from "../../utils/logger";
 
@@ -16,8 +16,9 @@ export class PersonnelSyncService {
    */
   static async syncPersonnelToPlays(personnelId: string): Promise<SyncResult> {
     // Get personnel details
-    const { data: personnel, error: personnelError } = await supabase
-      .from("personnel_configurations")
+    const { data: personnel, error: personnelError } = await table(
+      "personnel_configurations"
+    )
       .select("*")
       .eq("id", personnelId)
       .single();
@@ -34,8 +35,7 @@ export class PersonnelSyncService {
     }
 
     // Get all plays using this personnel
-    const { data: plays, error: playsError } = await supabase
-      .from("plays")
+    const { data: plays, error: playsError } = await table("plays")
       .select("id, personnel")
       .eq("playbook_id", personnel.playbook_id)
       .eq("personnel", personnel.name)
@@ -60,8 +60,7 @@ export class PersonnelSyncService {
     }
 
     // Update usage count (if column exists)
-    const { error: updateError } = await supabase
-      .from("personnel_configurations")
+    const { error: updateError } = await table("personnel_configurations")
       .update({ usage_count: plays.length })
       .eq("id", personnelId);
 
@@ -90,16 +89,14 @@ export class PersonnelSyncService {
     }>
   > {
     // Get personnel config
-    const { data: personnel } = await supabase
-      .from("personnel_configurations")
+    const { data: personnel } = await table("personnel_configurations")
       .select("name, playbook_id")
       .eq("id", personnelId)
       .single();
 
     if (!personnel) return [];
 
-    const { data, error } = await supabase
-      .from("plays")
+    const { data, error } = await table("plays")
       .select("id, play_name, formation, personnel")
       .eq("playbook_id", personnel.playbook_id)
       .eq("personnel", personnel.name)
@@ -122,8 +119,7 @@ export class PersonnelSyncService {
     updated_count: number;
     errors: string[];
   }> {
-    const { data: personnelConfigs } = await supabase
-      .from("personnel_configurations")
+    const { data: personnelConfigs } = await table("personnel_configurations")
       .select("id, name")
       .eq("playbook_id", playbookId);
 
@@ -140,8 +136,7 @@ export class PersonnelSyncService {
 
     for (const config of personnelConfigs) {
       // Count plays using this personnel
-      const { count, error } = await supabase
-        .from("plays")
+      const { count, error } = await table("plays")
         .select("id", { count: "exact", head: true })
         .eq("playbook_id", playbookId)
         .eq("personnel", config.name)
@@ -153,8 +148,7 @@ export class PersonnelSyncService {
       }
 
       // Update usage count (skip if column doesn't exist or causes error)
-      const { error: updateError } = await supabase
-        .from("personnel_configurations")
+      const { error: updateError } = await table("personnel_configurations")
         .update({ usage_count: count || 0 })
         .eq("id", config.id);
 
@@ -188,8 +182,7 @@ export class PersonnelSyncService {
     }>
   > {
     // Get all plays grouped by personnel
-    const { data: plays } = await supabase
-      .from("plays")
+    const { data: plays } = await table("plays")
       .select("personnel")
       .eq("playbook_id", playbookId)
       .eq("is_archived", false)
@@ -206,8 +199,7 @@ export class PersonnelSyncService {
     }
 
     // Get existing configs
-    const { data: configs } = await supabase
-      .from("personnel_configurations")
+    const { data: configs } = await table("personnel_configurations")
       .select("name")
       .eq("playbook_id", playbookId);
 

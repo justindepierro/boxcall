@@ -4,7 +4,7 @@
  * Client and server-side validation for personnel configurations
  */
 
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 
 export interface ValidationResult {
   valid: boolean;
@@ -177,8 +177,7 @@ export class PersonnelValidationService {
     // Name uniqueness check
     if (data.name && data.playbook_id) {
       try {
-        const { data: existing } = await supabase
-          .from("personnel_configurations")
+        const { data: existing } = await table("personnel_configurations")
           .select("id")
           .eq("playbook_id", data.playbook_id)
           .ilike("name", data.name.trim())

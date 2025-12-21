@@ -1,5 +1,5 @@
 import type { Database, Tables, Updates } from "../../types/database";
-import type { PostgrestError } from "@supabase/supabase-js";
+import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 
 import { supabase } from "../../lib/supabase";
 
@@ -13,9 +13,20 @@ export function table<T extends TableName>(tableName: T) {
   return supabase.from(tableName);
 }
 
+export function tableWithClient<T extends TableName>(
+  client: SupabaseClient<Database>,
+  tableName: T
+) {
+  return client.from(tableName);
+}
+
 export function fromAny(tableName: string) {
   // Used for views or tables not represented in generated `Database` types.
   return (supabase as any).from(tableName);
+}
+
+export function fromAnyWithClient(client: SupabaseClient<Database>, tableName: string) {
+  return (client as any).from(tableName);
 }
 
 export async function updateById<T extends TableName>(

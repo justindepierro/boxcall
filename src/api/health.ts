@@ -6,6 +6,7 @@
  */
 
 import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 
 export interface HealthStatus {
   status: "healthy" | "degraded" | "unhealthy";
@@ -43,8 +44,7 @@ async function checkDatabaseHealth(): Promise<ServiceHealth> {
 
   try {
     // Simple query to check database connectivity
-    const { error } = await supabase
-      .from("profiles")
+    const { error } = await table("profiles")
       .select("id")
       .limit(1)
       .single();

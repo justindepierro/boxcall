@@ -5,7 +5,7 @@
  * Replaces mock data with real Supabase integration.
  */
 
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { getCurrentUserId } from "../lib/auth-helpers";
 import { error as logError } from "../utils/logger";
 import type { Play } from "../types/play";
@@ -95,8 +95,7 @@ export class GamePlanService {
   static async createGamePlan(data: CreateGamePlanData): Promise<GamePlan> {
     const userId = getCurrentUserId();
 
-    const { data: gamePlan, error } = await supabase
-      .from("game_plans")
+    const { data: gamePlan, error } = await table("game_plans")
       .insert({
         team_id: data.teamId,
         name: data.name,
@@ -123,8 +122,7 @@ export class GamePlanService {
       display_order: config.displayOrder,
     }));
 
-    const { error: situationsError } = await supabase
-      .from("game_plan_situations")
+    const { error: situationsError } = await table("game_plan_situations")
       .insert(situationInserts as any);
 
     if (situationsError) {
@@ -143,7 +141,6 @@ export class GamePlanService {
     includeArchived = false
   ): Promise<GamePlan[]> {
     try {
-      // Use standard supabase client which handles auth internally
       const selectQuery = `
         *,
         game_plan_situations (
@@ -155,8 +152,7 @@ export class GamePlanService {
         )
       `;
 
-      const { data, error } = await supabase
-        .from("game_plans")
+      const { data, error } = await table("game_plans")
         .select(selectQuery)
         .eq("team_id", teamId)
         .order("created_at", { ascending: false });
@@ -183,8 +179,7 @@ export class GamePlanService {
    */
   static async getGamePlan(gamePlanId: string): Promise<GamePlan> {
     try {
-      const { data, error } = await supabase
-        .from("game_plans")
+      const { data, error } = await table("game_plans")
         .select(
           `
           *,
@@ -223,8 +218,7 @@ export class GamePlanService {
     gamePlanId: string,
     updates: UpdateGamePlanData
   ): Promise<GamePlan> {
-    const { data, error } = await supabase
-      .from("game_plans")
+    const { data, error } = await table("game_plans")
       .update({
         name: updates.name,
         opponent: updates.opponent,
@@ -250,10 +244,7 @@ export class GamePlanService {
    * Delete a game plan (cascades to situations and plays)
    */
   static async deleteGamePlan(gamePlanId: string): Promise<void> {
-    const { error } = await supabase
-      .from("game_plans")
-      .delete()
-      .eq("id", gamePlanId);
+    const { error } = await table("game_plans").delete().eq("id", gamePlanId);
 
     if (error) {
       logError("❌ Error deleting game plan:", error);
@@ -281,8 +272,7 @@ export class GamePlanService {
   static async createSituation(
     data: CreateGamePlanSituationData
   ): Promise<GamePlanSituation> {
-    const { data: situation, error } = await supabase
-      .from("game_plan_situations")
+    const { data: situation, error } = await table("game_plan_situations")
       .insert({
         game_plan_id: data.gamePlanId,
         situation_type: data.situationType,
@@ -306,8 +296,7 @@ export class GamePlanService {
   static async addPlayToSituation(
     data: AddPlayToGamePlanData
   ): Promise<GamePlanPlay> {
-    const { data: gamePlanPlay, error } = await supabase
-      .from("game_plan_plays")
+    const { data: gamePlanPlay, error } = await table("game_plan_plays")
       .insert({
         situation_id: data.situationId,
         play_id: data.playId,
@@ -334,8 +323,7 @@ export class GamePlanService {
    * Remove a play from a situation
    */
   static async removePlayFromSituation(gamePlanPlayId: string): Promise<void> {
-    const { error } = await supabase
-      .from("game_plan_plays")
+    const { error } = await table("game_plan_plays")
       .delete()
       .eq("id", gamePlanPlayId);
 
@@ -352,8 +340,7 @@ export class GamePlanService {
     gamePlanPlayId: string,
     priority: number
   ): Promise<void> {
-    const { error } = await supabase
-      .from("game_plan_plays")
+    const { error } = await table("game_plan_plays")
       .update({ priority, updated_at: new Date().toISOString() })
       .eq("id", gamePlanPlayId);
 

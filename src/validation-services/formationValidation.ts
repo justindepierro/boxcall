@@ -4,7 +4,7 @@
  * Client and server-side validation for formations
  */
 
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 
 export interface ValidationResult {
   valid: boolean;
@@ -281,8 +281,7 @@ export class FormationValidationService {
     // Name uniqueness check
     if (data.name && data.playbook_id) {
       try {
-        const { data: existing } = await supabase
-          .from("formations")
+        const { data: existing } = await table("formations")
           .select("id")
           .eq("playbook_id", data.playbook_id)
           .ilike("name", data.name.trim())

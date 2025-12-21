@@ -6,7 +6,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from "react";
 import type { DropResult } from "@hello-pangea/dnd";
-import { supabase } from "../../../lib/supabase";
+import { fromAny } from "../../../data/supabase/db";
 import { useAuth } from "../../../app/auth-store";
 import { useToast } from "../../../hooks/useToast";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
@@ -225,8 +225,7 @@ export function usePlayAssignmentsHandlers({
 
     try {
       // play_assignments table not yet in generated Database types
-      const { data, error } = await (supabase as any)
-        .from("play_assignments")
+      const { data, error } = await fromAny("play_assignments")
         .select("*")
         .eq("play_id", play.id);
 
@@ -336,8 +335,7 @@ export function usePlayAssignmentsHandlers({
       });
 
       // play_assignments table not yet in generated Database types
-      const { error } = await (supabase as any)
-        .from("play_assignments")
+      const { error } = await fromAny("play_assignments")
         .upsert(assignmentsToSave as any, {
           onConflict: "play_id,position",
         });

@@ -8,7 +8,7 @@
  */
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "../supabase";
+import { table } from "../../data/supabase/db";
 
 // Query key factory for consistent cache keys
 export const queryKeys = {
@@ -59,8 +59,7 @@ export function useTeam(teamId: string | null) {
     queryKey: queryKeys.team(teamId || ""),
     queryFn: async () => {
       if (!teamId) return null;
-      const { data, error } = await supabase
-        .from("teams")
+      const { data, error } = await table("teams")
         .select("*")
         .eq("id", teamId)
         .single();
@@ -80,8 +79,7 @@ export function usePlaybooks(teamId: string | null) {
     queryKey: queryKeys.playbooks(teamId || ""),
     queryFn: async () => {
       if (!teamId) return [];
-      const { data, error } = await supabase
-        .from("playbooks")
+      const { data, error } = await table("playbooks")
         .select("*")
         .eq("team_id", teamId)
         .order("created_at", { ascending: false });
@@ -102,8 +100,7 @@ export function usePlays(playbookIds: string[], options?: { limit?: number }) {
     queryFn: async () => {
       if (playbookIds.length === 0) return [];
 
-      let query = supabase
-        .from("plays")
+      let query = table("plays")
         .select("*")
         .in("playbook_id", playbookIds)
         .order("created_at", { ascending: false });
@@ -129,8 +126,7 @@ export function useFormations(playbookIds: string[]) {
     queryKey: queryKeys.formations(playbookIds),
     queryFn: async () => {
       if (playbookIds.length === 0) return [];
-      const { data, error } = await supabase
-        .from("formations")
+      const { data, error } = await table("formations")
         .select("*")
         .in("playbook_id", playbookIds)
         .order("created_at", { ascending: false });
@@ -150,8 +146,7 @@ export function useUserTeamMemberships(userId: string | null) {
     queryKey: queryKeys.userTeams(userId || ""),
     queryFn: async () => {
       if (!userId) return [];
-      const { data, error } = await supabase
-        .from("team_members")
+      const { data, error } = await table("team_members")
         .select("team_id, team_role, capabilities, status, assigned_at")
         .eq("user_id", userId)
         .eq("status", "active");
@@ -171,8 +166,7 @@ export function useProfile(userId: string | null) {
     queryKey: queryKeys.profile(userId || ""),
     queryFn: async () => {
       if (!userId) return null;
-      const { data, error } = await supabase
-        .from("profiles")
+      const { data, error } = await table("profiles")
         .select("*")
         .eq("id", userId)
         .maybeSingle();
@@ -192,8 +186,7 @@ export function useGamePlans(teamId: string | null) {
     queryKey: queryKeys.gamePlans(teamId || ""),
     queryFn: async () => {
       if (!teamId) return [];
-      const { data, error } = await supabase
-        .from("game_plans")
+      const { data, error } = await table("game_plans")
         .select("*")
         .eq("team_id", teamId)
         .order("created_at", { ascending: false });
@@ -213,8 +206,7 @@ export function usePracticeScripts(teamId: string | null) {
     queryKey: queryKeys.practiceScripts(teamId || ""),
     queryFn: async () => {
       if (!teamId) return [];
-      const { data, error } = await supabase
-        .from("practice_scripts")
+      const { data, error } = await table("practice_scripts")
         .select("*")
         .eq("team_id", teamId)
         .order("created_at", { ascending: false });
@@ -286,8 +278,7 @@ export function usePrefetchTeamData() {
       queryClient.prefetchQuery({
         queryKey: queryKeys.team(teamId),
         queryFn: async () => {
-          const { data, error } = await supabase
-            .from("teams")
+          const { data, error } = await table("teams")
             .select("*")
             .eq("id", teamId)
             .single();
@@ -298,8 +289,7 @@ export function usePrefetchTeamData() {
       queryClient.prefetchQuery({
         queryKey: queryKeys.playbooks(teamId),
         queryFn: async () => {
-          const { data, error } = await supabase
-            .from("playbooks")
+          const { data, error } = await table("playbooks")
             .select("*")
             .eq("team_id", teamId);
           if (error) throw new Error(error.message);

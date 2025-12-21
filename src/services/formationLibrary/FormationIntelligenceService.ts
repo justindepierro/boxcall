@@ -6,7 +6,7 @@
  * Clean, focused, 250 lines max per design pattern.
  */
 
-import { supabase } from "../../lib/supabase";
+import { table } from "../../data/supabase/db";
 import { debug, error as logError } from "../../utils/logger";
 import type {
   IntelligenceAnalysis,
@@ -32,8 +32,7 @@ export class FormationIntelligenceService {
     playbookId: string
   ): Promise<Map<string, IntelligenceAnalysis>> {
     // Fetch all non-archived plays
-    const { data: plays, error } = await supabase
-      .from("plays")
+    const { data: plays, error } = await table("plays")
       .select("id, formation, f_type, r_str, p_str, personnel")
       .eq("playbook_id", playbookId)
       .eq("is_archived", false);
@@ -236,8 +235,7 @@ export class FormationIntelligenceService {
     playbookId: string
   ): Promise<OppositeDetection[]> {
     // Get all formations in playbook
-    const { data: formations, error } = await supabase
-      .from("formations")
+    const { data: formations, error } = await table("formations")
       .select("id, name, opposite_formation_id")
       .eq("playbook_id", playbookId);
 
@@ -312,8 +310,7 @@ export class FormationIntelligenceService {
 
     for (const [formationName, analysis] of analyses.entries()) {
       // Find matching formation
-      const { data: formations } = await supabase
-        .from("formations")
+      const { data: formations } = await table("formations")
         .select("id")
         .eq("playbook_id", playbookId)
         .ilike("name", formationName)
@@ -324,8 +321,7 @@ export class FormationIntelligenceService {
       const formationId = formations[0].id;
 
       // Update with analyzed metadata
-      const { error } = await supabase
-        .from("formations")
+      const { error } = await table("formations")
         .update({
           formation_type: analysis.formation_type?.value || null,
           run_strength: analysis.run_strength?.value || null,

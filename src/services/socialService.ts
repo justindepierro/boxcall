@@ -1,7 +1,7 @@
 // Social Service
 // Comprehensive service for all social interactions
 
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { getCurrentUserId } from "../lib/auth-helpers";
 import type {
   Reaction,
@@ -44,8 +44,7 @@ export class SocialServiceImpl implements SocialService {
     const userId = getCurrentUserId();
 
     // Get all reactions for this content
-    const { data: reactions, error } = await supabase
-      .from("reactions")
+    const { data: reactions, error } = await table("reactions")
       .select("*")
       .eq("entity_type", contentType)
       .eq("entity_id", contentId);
@@ -55,8 +54,7 @@ export class SocialServiceImpl implements SocialService {
     // Get current user's reaction (only if logged in)
     let userReaction = null;
     if (userId) {
-      const { data } = await supabase
-        .from("reactions")
+      const { data } = await table("reactions")
         .select("reaction_type")
         .eq("entity_type", contentType)
         .eq("entity_id", contentId)
@@ -88,8 +86,7 @@ export class SocialServiceImpl implements SocialService {
     const userId = getCurrentUserId();
     if (!userId) throw new Error("User not authenticated");
 
-    const { data, error } = await supabase
-      .from("reactions")
+    const { data, error } = await table("reactions")
       .insert({
         user_id: userId,
         ...request,
@@ -111,8 +108,7 @@ export class SocialServiceImpl implements SocialService {
     const userId = getCurrentUserId();
     if (!userId) throw new Error("User not authenticated");
 
-    const { error } = await supabase
-      .from("reactions")
+    const { error } = await table("reactions")
       .delete()
       .eq("entity_type", contentType)
       .eq("entity_id", contentId)
@@ -128,8 +124,7 @@ export class SocialServiceImpl implements SocialService {
     if (!userId) throw new Error("User not authenticated");
 
     // Check if reaction already exists
-    const { data: existing } = await supabase
-      .from("reactions")
+    const { data: existing } = await table("reactions")
       .select("*")
       .eq("user_id", userId)
       .eq("entity_type", request.entity_type)
@@ -143,8 +138,7 @@ export class SocialServiceImpl implements SocialService {
         return null;
       }
       // Different reaction type - update it
-      const { data, error } = await supabase
-        .from("reactions")
+      const { data, error } = await table("reactions")
         .update({
           reaction_type: request.reaction_type,
         })
@@ -173,16 +167,14 @@ export class SocialServiceImpl implements SocialService {
     const userId = getCurrentUserId();
 
     // Get follower count
-    const { count: followerCount } = await supabase
-      .from("follows")
+    const { count: followerCount } = await table("follows")
       .select("*", { count: "exact", head: true })
       .eq("following_id", followingId);
 
     // Check if current user is following
     let isFollowing = false;
     if (userId) {
-      const { data } = await supabase
-        .from("follows")
+      const { data } = await table("follows")
         .select("id")
         .eq("follower_id", userId)
         .eq("following_id", followingId)
@@ -203,8 +195,7 @@ export class SocialServiceImpl implements SocialService {
     const userId = getCurrentUserId();
     if (!userId) throw new Error("User not authenticated");
 
-    const { data, error } = await supabase
-      .from("follows")
+    const { data, error } = await table("follows")
       .insert({
         follower_id: userId,
         ...request,
@@ -223,8 +214,7 @@ export class SocialServiceImpl implements SocialService {
     const userId = getCurrentUserId();
     if (!userId) throw new Error("User not authenticated");
 
-    const { error } = await supabase
-      .from("follows")
+    const { error } = await table("follows")
       .delete()
       .eq("follower_id", userId)
       .eq("following_id", followingId);
@@ -236,8 +226,7 @@ export class SocialServiceImpl implements SocialService {
     _followingType: FollowingType,
     followingId: string
   ): Promise<Follow[]> {
-    const { data, error } = await supabase
-      .from("follows")
+    const { data, error } = await table("follows")
       .select("*")
       .eq("following_id", followingId)
       .order("created_at", { ascending: false });
@@ -247,8 +236,7 @@ export class SocialServiceImpl implements SocialService {
   }
 
   async getFollowing(userId: string): Promise<Follow[]> {
-    const { data, error } = await supabase
-      .from("follows")
+    const { data, error } = await table("follows")
       .select("*")
       .eq("follower_id", userId)
       .order("created_at", { ascending: false });
@@ -266,8 +254,7 @@ export class SocialServiceImpl implements SocialService {
     contentId: string,
     parentId?: string
   ): Promise<Comment[]> {
-    let query = supabase
-      .from("comments")
+    let query = table("comments")
       .select("*")
       .eq("entity_type", contentType)
       .eq("entity_id", contentId)
@@ -298,8 +285,7 @@ export class SocialServiceImpl implements SocialService {
     const userId = getCurrentUserId();
     if (!userId) throw new Error("User not authenticated");
 
-    const { data, error } = await supabase
-      .from("comments")
+    const { data, error } = await table("comments")
       .insert({
         user_id: userId,
         ...request,
@@ -318,8 +304,7 @@ export class SocialServiceImpl implements SocialService {
     const userId = getCurrentUserId();
     if (!userId) throw new Error("User not authenticated");
 
-    const { data, error } = await supabase
-      .from("comments")
+    const { data, error } = await table("comments")
       .update({
         content: request.content,
         updated_at: new Date().toISOString(),
@@ -337,8 +322,7 @@ export class SocialServiceImpl implements SocialService {
     const userId = getCurrentUserId();
     if (!userId) throw new Error("User not authenticated");
 
-    const { error } = await supabase
-      .from("comments")
+    const { error } = await table("comments")
       .delete()
       .eq("id", commentId)
       .eq("user_id", userId);
@@ -354,8 +338,7 @@ export class SocialServiceImpl implements SocialService {
     const userId = getCurrentUserId();
     if (!userId) throw new Error("User not authenticated");
 
-    const { data, error, count } = await supabase
-      .from("notifications")
+    const { data, error, count } = await table("notifications")
       .select("*", { count: "exact" })
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
@@ -363,8 +346,7 @@ export class SocialServiceImpl implements SocialService {
 
     if (error) throw error;
 
-    const { count: unreadCount } = await supabase
-      .from("notifications")
+    const { count: unreadCount } = await table("notifications")
       .select("*", { count: "exact", head: true })
       .eq("user_id", userId)
       .eq("read", false);
@@ -380,8 +362,7 @@ export class SocialServiceImpl implements SocialService {
     const userId = getCurrentUserId();
     if (!userId) throw new Error("User not authenticated");
 
-    const { error } = await supabase
-      .from("notifications")
+    const { error } = await table("notifications")
       .update({
         read: true,
       })
@@ -395,8 +376,7 @@ export class SocialServiceImpl implements SocialService {
     const userId = getCurrentUserId();
     if (!userId) throw new Error("User not authenticated");
 
-    const { error } = await supabase
-      .from("notifications")
+    const { error } = await table("notifications")
       .update({
         read: true,
       })
@@ -414,8 +394,7 @@ export class SocialServiceImpl implements SocialService {
     const userId = getCurrentUserId();
     if (!userId) throw new Error("User not authenticated");
 
-    const { data, error } = await supabase
-      .from("activity_feed")
+    const { data, error } = await table("activity_feed")
       .select("*")
       .eq("user_id", userId)
       .order("created_at", { ascending: false })

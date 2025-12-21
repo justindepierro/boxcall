@@ -15,6 +15,7 @@
 
 import { create } from "zustand";
 import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import type { Session, User } from "@supabase/supabase-js";
 import type { Database } from "../types/database";
 import { auth as logAuth, debug, warn, logError } from "../utils/logger";
@@ -149,8 +150,7 @@ export const useAuth = create<AuthState>((set, _get) => ({
 
     set({ profileLoading: true });
 
-    const { data, error } = await supabase
-      .from("profiles")
+    const { data, error } = await table("profiles")
       .select("*")
       .eq("id", userId)
       .maybeSingle();

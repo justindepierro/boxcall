@@ -6,7 +6,7 @@
  * Clean, focused, 200 lines max per design pattern.
  */
 
-import { supabase } from "../../lib/supabase";
+import { table } from "../../data/supabase/db";
 import { debug, error as logError } from "../../utils/logger";
 import type { SyncResult } from "../../types/library";
 
@@ -25,8 +25,7 @@ export class FormationSyncService {
    */
   static async syncFormationToPlays(formationId: string): Promise<SyncResult> {
     // Get formation details including name for matching plays
-    const { data: formation, error: formationError } = await supabase
-      .from("formations")
+    const { data: formation, error: formationError } = await table("formations")
       .select("*")
       .eq("id", formationId)
       .single();
@@ -41,8 +40,7 @@ export class FormationSyncService {
     }
 
     // Get all plays using this formation (match by name)
-    const { data: plays, error: playsError } = await supabase
-      .from("plays")
+    const { data: plays, error: playsError } = await table("plays")
       .select("id, f_type, r_str, p_str")
       .eq("formation", formation.name)
       .eq("is_archived", false);
@@ -76,8 +74,7 @@ export class FormationSyncService {
     const warnings: string[] = [];
 
     for (const play of plays) {
-      const { error } = await supabase
-        .from("plays")
+      const { error } = await table("plays")
         .update({
           ...updates,
           updated_at: new Date().toISOString(),
@@ -90,8 +87,7 @@ export class FormationSyncService {
     }
 
     // Update usage count
-    await supabase
-      .from("formations")
+    await table("formations")
       .update({ usage_count: plays.length })
       .eq("id", formationId);
 
@@ -108,8 +104,7 @@ export class FormationSyncService {
    */
   static async syncPlayToFormation(playId: string): Promise<void> {
     // Get play details
-    const { data: play, error: playError } = await supabase
-      .from("plays")
+    const { data: play, error: playError } = await table("plays")
       .select("formation, f_type, r_str, p_str")
       .eq("id", playId)
       .single();
@@ -119,8 +114,7 @@ export class FormationSyncService {
     }
 
     // Find formation by name
-    const { data: formation } = await supabase
-      .from("formations")
+    const { data: formation } = await table("formations")
       .select("id")
       .eq("name", play.formation)
       .maybeSingle();
@@ -145,8 +139,7 @@ export class FormationSyncService {
     }>
   > {
     // Get formation name first
-    const { data: formation, error: formationError } = await supabase
-      .from("formations")
+    const { data: formation, error: formationError } = await table("formations")
       .select("name")
       .eq("id", formationId)
       .single();
@@ -156,8 +149,7 @@ export class FormationSyncService {
     }
 
     // Match plays by formation name
-    const { data, error } = await supabase
-      .from("plays")
+    const { data, error } = await table("plays")
       .select("id, play_name, formation, personnel")
       .eq("formation", formation.name)
       .eq("is_archived", false)
@@ -185,8 +177,7 @@ export class FormationSyncService {
     }>;
   }> {
     // Get formation
-    const { data: formation } = await supabase
-      .from("formations")
+    const { data: formation } = await table("formations")
       .select("formation_type, run_strength, pass_strength")
       .eq("id", formationId)
       .single();
@@ -196,8 +187,7 @@ export class FormationSyncService {
     }
 
     // Get plays
-    const { data: plays } = await supabase
-      .from("plays")
+    const { data: plays } = await table("plays")
       .select("id, play_name, f_type, r_str, p_str")
       .eq("formation_id", formationId)
       .eq("is_archived", false);
@@ -276,8 +266,7 @@ export class FormationSyncService {
     total_plays_updated: number;
     errors: string[];
   }> {
-    const { data: formations } = await supabase
-      .from("formations")
+    const { data: formations } = await table("formations")
       .select("id, name")
       .eq("playbook_id", playbookId);
 

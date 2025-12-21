@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { getCurrentUserId } from "../lib/auth-helpers";
 import { practiceScriptCache } from "./practiceScriptCache";
 import { ActivityService } from "./activityService";
@@ -125,8 +125,7 @@ export class PracticeService {
   static async createPracticeSchedule(
     data: CreatePracticeScheduleData
   ): Promise<PracticeSchedule> {
-    const { data: schedule, error } = await supabase
-      .from("practice_schedules")
+    const { data: schedule, error } = await table("practice_schedules")
       // @ts-expect-error - Supabase type issue with practice_schedules table insert
       .insert({
         team_id: data.teamId,
@@ -157,8 +156,7 @@ export class PracticeService {
     teamId: string,
     filters?: PracticeFilters
   ): Promise<PracticeSchedule[]> {
-    let query = supabase
-      .from("practice_schedules")
+    let query = table("practice_schedules")
       .select("*")
       .eq("team_id", teamId)
       .eq("is_template", false)
@@ -191,8 +189,7 @@ export class PracticeService {
     id: string,
     updates: Partial<PracticeSchedule>
   ): Promise<PracticeSchedule> {
-    const { data, error } = await supabase
-      .from("practice_schedules")
+    const { data, error } = await table("practice_schedules")
       .update({
         ...updates,
         updated_at: new Date().toISOString(),
@@ -206,10 +203,7 @@ export class PracticeService {
   }
 
   static async deletePracticeSchedule(id: string): Promise<void> {
-    const { error } = await supabase
-      .from("practice_schedules")
-      .delete()
-      .eq("id", id);
+    const { error } = await table("practice_schedules").delete().eq("id", id);
 
     if (error) throw error;
   }
@@ -267,8 +261,7 @@ export class PracticeService {
   ): Promise<PracticeTemplate> {
     const { name, description, teamId, duration, isPublic, createdBy } =
       template;
-    const { data, error } = await supabase
-      .from("practice_templates")
+    const { data, error } = await table("practice_templates")
       .insert({
         name,
         description: description ?? null,
@@ -287,8 +280,7 @@ export class PracticeService {
   static async getPracticeTemplates(
     teamId: string
   ): Promise<PracticeTemplate[]> {
-    const { data, error } = await supabase
-      .from("practice_templates")
+    const { data, error } = await table("practice_templates")
       .select("*")
       .or(`team_id.eq.${teamId},is_public.eq.true`)
       .order("created_at", { ascending: false });
@@ -315,8 +307,7 @@ export class PracticeService {
     status: "present" | "absent" | "late" | "excused",
     notes?: string
   ): Promise<PracticeAttendance> {
-    const { data, error } = await supabase
-      .from("practice_attendance")
+    const { data, error } = await table("practice_attendance")
       .upsert({
         practice_id: practiceId,
         player_id: playerId,
@@ -338,8 +329,7 @@ export class PracticeService {
   static async getPracticeAttendance(
     practiceId: string
   ): Promise<PracticeAttendance[]> {
-    const { data, error } = await supabase
-      .from("practice_attendance")
+    const { data, error } = await table("practice_attendance")
       .select("*")
       .eq("practice_id", practiceId);
 
@@ -349,8 +339,7 @@ export class PracticeService {
 
   // Equipment Management
   static async getAvailableEquipment(teamId: string): Promise<Equipment[]> {
-    const { data, error } = await supabase
-      .from("equipment")
+    const { data, error } = await table("equipment")
       .select("*")
       .eq("team_id", teamId)
       .order("name");
@@ -377,8 +366,7 @@ export class PracticeService {
     query: string,
     teamId: string
   ): Promise<PracticeSchedule[]> {
-    const { data, error } = await supabase
-      .from("practice_schedules")
+    const { data, error } = await table("practice_schedules")
       .select("*")
       .eq("team_id", teamId)
       .or(
@@ -394,8 +382,7 @@ export class PracticeService {
     query: string,
     teamId: string
   ): Promise<PracticeTemplate[]> {
-    const { data, error } = await supabase
-      .from("practice_templates")
+    const { data, error } = await table("practice_templates")
       .select("*")
       .or(`team_id.eq.${teamId},is_public.eq.true`)
       .or(`name.ilike.%${query}%,description.ilike.%${query}%`)
@@ -503,8 +490,7 @@ export class PracticeService {
     teamId: string
   ): Promise<PracticeScript[]> {
     try {
-      const { data, error } = await supabase
-        .from("practice_scripts")
+      const { data, error } = await table("practice_scripts")
         .select("*")
         .eq("team_id", teamId)
         .or(`title.ilike.%${query}%,description.ilike.%${query}%`)
@@ -515,8 +501,7 @@ export class PracticeService {
 
       // Get plays for these scripts
       const scriptIds = data.map((s) => s.id);
-      const { data: plays } = await supabase
-        .from("practice_script_plays")
+      const { data: plays } = await table("practice_script_plays")
         .select(`*, plays (*)`)
         .in("practice_script_id", scriptIds);
 
@@ -545,8 +530,7 @@ export class PracticeService {
   static async createPracticeScript(
     data: CreatePracticeScriptData
   ): Promise<PracticeScript> {
-    const { data: script, error } = await supabase
-      .from("practice_scripts")
+    const { data: script, error } = await table("practice_scripts")
       .insert({
         title: data.name,
         description: data.description,
@@ -599,8 +583,7 @@ export class PracticeService {
 
     updateData.updated_at = new Date().toISOString();
 
-    const { error } = await supabase
-      .from("practice_scripts")
+    const { error } = await table("practice_scripts")
       .update(updateData)
       .eq("id", scriptId)
       .select()
@@ -631,8 +614,7 @@ export class PracticeService {
     data: AddPlayToPracticeScriptData,
     _play: Play
   ): Promise<PracticeScript> {
-    const { error: playError } = await supabase
-      .from("practice_script_plays")
+    const { error: playError } = await table("practice_script_plays")
       .insert({
         practice_script_id: data.scriptId,
         play_id: data.playId,
@@ -736,8 +718,7 @@ export class PracticeService {
 
     debug("[PracticeService] Updating with data:", updateData);
 
-    const { error } = await supabase
-      .from("practice_script_plays")
+    const { error } = await table("practice_script_plays")
       .update(updateData)
       .eq("id", scriptPlayId);
 
@@ -820,8 +801,7 @@ export class PracticeService {
           if (data.coverage !== undefined) updateData.coverage = data.coverage;
           if (data.blitz !== undefined) updateData.blitz = data.blitz;
 
-          const { error } = await supabase
-            .from("practice_script_plays")
+          const { error } = await table("practice_script_plays")
             .update(updateData)
             .eq("id", scriptPlayId);
 
@@ -859,9 +839,7 @@ export class PracticeService {
     const startTime = performance.now();
 
     try {
-      // Use standard supabase client which handles auth internally via session
-      const { data: scripts, error: scriptsError } = await supabase
-        .from("practice_scripts")
+      const { data: scripts, error: scriptsError } = await table("practice_scripts")
         .select("*")
         .eq("team_id", teamId)
         .order("updated_at", { ascending: false });
@@ -887,8 +865,9 @@ export class PracticeService {
       let scriptPlays: any[] = [];
 
       try {
-        const { data: playsData, error: playsError } = await supabase
-          .from("practice_script_plays")
+        const { data: playsData, error: playsError } = await table(
+          "practice_script_plays"
+        )
           .select("*, plays(*)")
           .in("practice_script_id", scriptIds);
 
@@ -981,9 +960,7 @@ export class PracticeService {
     const startTime = performance.now();
 
     try {
-      // Use standard supabase client which handles auth internally
-      const { data: scripts, error: scriptError } = await supabase
-        .from("practice_scripts")
+      const { data: scripts, error: scriptError } = await table("practice_scripts")
         .select(
           `
           *,
@@ -1057,8 +1034,9 @@ export class PracticeService {
   static async getOrCreateQuickAddsScript(
     teamId: string
   ): Promise<PracticeScript> {
-    const { data: existingScripts, error: fetchError } = await supabase
-      .from("practice_scripts")
+    const { data: existingScripts, error: fetchError } = await table(
+      "practice_scripts"
+    )
       .select("*")
       .eq("team_id", teamId)
       .eq("name", "Quick Adds")
@@ -1156,8 +1134,7 @@ export class PracticeService {
   static async archivePracticeScript(scriptId: string): Promise<void> {
     debug(`[PracticeService] Archiving script ${scriptId}`);
 
-    const { error } = await supabase
-      .from("practice_scripts")
+    const { error } = await table("practice_scripts")
       .update({
         is_archived: true,
         updated_at: new Date().toISOString(),
@@ -1182,8 +1159,7 @@ export class PracticeService {
   static async unarchivePracticeScript(scriptId: string): Promise<void> {
     debug(`[PracticeService] Unarchiving script ${scriptId}`);
 
-    const { error } = await supabase
-      .from("practice_scripts")
+    const { error } = await table("practice_scripts")
       .update({
         is_archived: false,
         updated_at: new Date().toISOString(),
@@ -1209,10 +1185,7 @@ export class PracticeService {
   static async deletePracticeScript(scriptId: string): Promise<void> {
     debug(`[PracticeService] Deleting script ${scriptId}`);
 
-    const { error } = await supabase
-      .from("practice_scripts")
-      .delete()
-      .eq("id", scriptId);
+    const { error } = await table("practice_scripts").delete().eq("id", scriptId);
 
     if (error) {
       logError("Error deleting script:", error);
@@ -1232,8 +1205,7 @@ export class PracticeService {
   static async removePlayFromScript(scriptPlayId: string): Promise<void> {
     debug(`[PracticeService] Removing play ${scriptPlayId} from script`);
 
-    const { error } = await supabase
-      .from("practice_script_plays")
+    const { error } = await table("practice_script_plays")
       .delete()
       .eq("id", scriptPlayId);
 
@@ -1263,8 +1235,7 @@ export class PracticeService {
     // Update order for each play (1-indexed)
     await Promise.all(
       playIds.map(async (playId, index) => {
-        const { error } = await supabase
-          .from("practice_script_plays")
+        const { error } = await table("practice_script_plays")
           .update({ sequence_order: index + 1 })
           .eq("id", playId)
           .eq("practice_script_id", scriptId);
@@ -1335,8 +1306,7 @@ export class PracticeService {
    */
   static async getTemplates(teamId: string): Promise<PracticeTemplate[]> {
     try {
-      const { data, error } = await supabase
-        .from("practice_templates")
+      const { data, error } = await table("practice_templates")
         .select("*")
         .eq("team_id", teamId)
         .order("name", { ascending: true });
@@ -1381,8 +1351,7 @@ export class PracticeService {
       }
 
       // Create the template
-      const { data: template, error } = await supabase
-        .from("practice_templates")
+      const { data: template, error } = await table("practice_templates")
         .insert({
           team_id: templateData.teamId,
           name: templateData.name,
@@ -1430,8 +1399,9 @@ export class PracticeService {
   ): Promise<PracticeScript> {
     try {
       // Get the template
-      const { data: template, error: templateError } = await supabase
-        .from("practice_templates")
+      const { data: template, error: templateError } = await table(
+        "practice_templates"
+      )
         .select("*")
         .eq("id", templateId)
         .single();
@@ -1464,8 +1434,7 @@ export class PracticeService {
    */
   static async deleteTemplate(templateId: string): Promise<void> {
     try {
-      const { error } = await supabase
-        .from("practice_templates")
+      const { error } = await table("practice_templates")
         .delete()
         .eq("id", templateId);
 
@@ -1496,8 +1465,7 @@ export class PracticeService {
       if (updates.isPublic !== undefined)
         updateData.is_public = updates.isPublic;
 
-      const { data: template, error } = await supabase
-        .from("practice_templates")
+      const { data: template, error } = await table("practice_templates")
         .update(updateData)
         .eq("id", templateId)
         .select()

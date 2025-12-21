@@ -12,7 +12,7 @@
  * - Practice execution quality (10%)
  */
 
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import type { GameSituation, ExecutionResult } from "../types/session";
 import { logError } from "../utils/logger";
 
@@ -446,8 +446,7 @@ export class PlayConfidenceService {
     _teamId: string
   ): Promise<number> {
     // Get practice session executions only
-    const { data: practiceExecutions, error } = await supabase
-      .from("play_executions")
+    const { data: practiceExecutions, error } = await table("play_executions")
       .select("result, rep_number")
       .eq("play_id", playId)
       .not("practice_session_id", "is", null)
@@ -487,8 +486,7 @@ export class PlayConfidenceService {
     playId: string,
     teamId: string
   ): Promise<ExecutionRecord[]> {
-    const { data, error } = await supabase
-      .from("play_executions")
+    const { data, error } = await table("play_executions")
       .select("*")
       .eq("play_id", playId)
       .eq("team_id", teamId)
@@ -614,8 +612,7 @@ export class PlayConfidenceService {
     teamId: string,
     days: number = 30
   ): Promise<Array<{ date: Date; score: number }>> {
-    const { data: executions, error } = await supabase
-      .from("play_executions")
+    const { data: executions, error } = await table("play_executions")
       .select("executed_at, result")
       .eq("play_id", playId)
       .eq("team_id", teamId)

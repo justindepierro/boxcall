@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabase";
+import { fromAny, table } from "../data/supabase/db";
 
 import type {
   AppUserType,
@@ -159,8 +159,7 @@ export async function fetchTeamMembership(
   team_role: string; // Unified team role (same as role for consistency)
   status: "active" | "inactive" | "pending" | null;
 } | null> {
-  const { data, error } = await supabase
-    .from("team_members")
+  const { data, error } = await table("team_members")
     .select("team_role, status")
     .eq("user_id", userId)
     .eq("team_id", teamId)
@@ -206,8 +205,7 @@ async function fetchTeamSubscriptionTier(
   teamId: string
 ): Promise<SubscriptionTier> {
   // NOTE: Some environments may not have subscription_tier in generated DB types.
-  const { data } = await (supabase as any)
-    .from("teams")
+  const { data } = await fromAny("teams")
     .select("subscription_tier")
     .eq("id", teamId)
     .maybeSingle();
@@ -224,8 +222,7 @@ export async function fetchSuperAdminStatus(
 ): Promise<boolean> {
   if (!userId || role !== "admin") return false;
   // NOTE: super_admins may not exist in some generated DB types.
-  const { data, error } = await (supabase as any)
-    .from("super_admins")
+  const { data, error } = await fromAny("super_admins")
     .select("admin_level")
     .eq("user_id", userId)
     .maybeSingle();

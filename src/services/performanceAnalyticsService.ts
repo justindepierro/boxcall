@@ -5,7 +5,7 @@
  * (Renamed from playerPerformanceAnalyticsService.ts for consistency)
  */
 
-import { supabase } from "../lib/supabase";
+import { table } from "../data/supabase/db";
 import { logError } from "../utils/logger";
 
 export interface PlayerPerformanceMetrics {
@@ -70,8 +70,7 @@ export class PlayerPerformanceAnalyticsService {
   ): Promise<PlayerPerformanceMetrics | null> {
     try {
       // Get player basic info
-      const { data: player, error: playerError } = await supabase
-        .from("profiles")
+      const { data: player, error: playerError } = await table("profiles")
         .select("id, full_name")
         .eq("id", playerId)
         .single();
@@ -130,8 +129,7 @@ export class PlayerPerformanceAnalyticsService {
   ): Promise<TeamPerformanceOverview> {
     try {
       // Get team members
-      const { data: members, error: membersError } = await supabase
-        .from("team_members")
+      const { data: members, error: membersError } = await table("team_members")
         .select("user_id")
         .eq("team_id", teamId)
         .eq("status", "active");
