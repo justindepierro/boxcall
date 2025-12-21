@@ -157,7 +157,7 @@ function App() {
                 <PopoverProvider>
                   <div className="App">
                     <Toaster position="top-right" richColors />
-                    <DevHealthCheck />
+                    {import.meta.env.DEV ? <DevHealthCheck /> : null}
                     <PendingSavesNotification />
                     <UndoRedoIndicator />
                     <ConflictOverlay />
