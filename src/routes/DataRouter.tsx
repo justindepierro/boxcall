@@ -31,7 +31,6 @@ import {
   LazyCoachManagementPage,
   LazyPlayerDashboardPage,
   LazyAchievementAdminPage,
-  LazySuperAdminAnalyticsTestPage,
   LazyCreateTeam,
   LazyJoinTeam,
   LazyCreateCoachAccount,
@@ -320,15 +319,6 @@ const ProtectedAdminRoutes = (
       element={
         <ProtectedPage>
           <LazyAchievementAdminPage />
-        </ProtectedPage>
-      }
-    />
-
-    <Route
-      path="/superadmin/analytics-test"
-      element={
-        <ProtectedPage>
-          <LazySuperAdminAnalyticsTestPage />
         </ProtectedPage>
       }
     />
