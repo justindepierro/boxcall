@@ -313,35 +313,6 @@ export async function getGamePlayCalls(gameId: string): Promise<PlayCall[]> {
   return data || [];
 }
 
-// DEPRECATED: These tables don't exist in production
-// Commenting out to prevent 404 errors in browser console
-/*
-export async function getTeamGoals(teamId: string): Promise<TeamGoal[]> {
-  const { data, error } = await supabase
-    .from("team_goals")
-    .select("*")
-    .eq("team_id", teamId)
-    .order("deadline", { ascending: true });
-  if (error) {
-    logError("Error fetching team goals:", error);
-    return [];
-  }
-  return data || [];
-}
-export async function getTeamFiles(teamId: string): Promise<TeamFile[]> {
-  const { data, error } = await supabase
-    .from("team_files")
-    .select("*")
-    .eq("team_id", teamId)
-    .order("created_at", { ascending: false });
-  if (error) {
-    logError("Error fetching team files:", error);
-    return [];
-  }
-  return data || [];
-}
-*/
-
 export async function getUserProfileByUserId(
   userId: string
 ): Promise<UserProfile | null> {
@@ -355,21 +326,3 @@ export async function getUserProfileByUserId(
   }
   return data as UserProfile | null;
 }
-
-// DEPRECATED: post_reactions table doesn't exist
-/*
-export async function getPostReactions(
-  postId: string
-): Promise<PostReaction[]> {
-  const { data, error } = await supabase
-    .from("post_reactions")
-    .select("*")
-    .eq("post_id", postId)
-    .order("created_at", { ascending: false });
-  if (error) {
-    logError("Error fetching post reactions:", error);
-    return [];
-  }
-  return data || [];
-}
-*/

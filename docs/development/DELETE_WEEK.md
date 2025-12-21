@@ -106,8 +106,8 @@ These are not “pure deletion” targets — they are either implement-or-remov
 
 ### Phase 6 — Deprecated dead blocks
 
-- [ ] Remove commented-out deprecated DB helpers (tables that don’t exist in production)
-  - src/lib/database-helpers.ts
+- [x] Remove commented-out deprecated DB helpers (tables that don't exist in production)
+  - src/lib/database-helpers.ts (removed 3 commented blocks: team_goals, team_files, post_reactions)
 
 ### Validation gate (run before every push)
 
