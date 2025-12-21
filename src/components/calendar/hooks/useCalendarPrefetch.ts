@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 
 import { CalendarAPI } from "../../../infra/calendar/api";
-import { calendarKeys } from "../../../stores/calendar/queryKeys";
+import { queryKeys } from "../../../lib/queryKeys";
 
 import type { CalendarFilters } from "../../../domain/calendar/types";
 import type { BoxCallCalendarRef } from "../BoxCallCalendar";
@@ -56,7 +56,7 @@ export function useCalendarPrefetch({
         ];
         ranges.forEach((r) => {
           queryClient.prefetchQuery({
-            queryKey: calendarKeys.events(
+            queryKey: queryKeys.calendarEvents(
               { ...filters, dateRange: { start: r.start, end: r.end } },
               r,
               devMode ? "1" : undefined

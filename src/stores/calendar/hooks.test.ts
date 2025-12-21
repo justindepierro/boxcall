@@ -5,6 +5,7 @@ import React from "react";
 import { describe, it, expect } from "vitest";
 
 import { CalendarAPI } from "../../infra/calendar/api";
+import { queryKeys } from "../../lib/queryKeys";
 
 import {
   useCreateEvent,
@@ -27,7 +28,6 @@ interface CalendarAPITestHarness {
   __resetFailures(): void;
 }
 const TestAPI = CalendarAPI as typeof CalendarAPI & CalendarAPITestHarness;
-import { calendarKeys } from "./queryKeys";
 
 import type { CalendarEvent } from "../../domain/calendar/types";
 
@@ -55,7 +55,7 @@ describe("calendar state hooks", () => {
     });
     await waitFor(() => expect(eventsHook.result.current.isSuccess).toBe(true));
     // Capture baseline lengths per events query
-    const eventsKey = calendarKeys.events(undefined, undefined, undefined);
+    const eventsKey = queryKeys.calendarEvents(undefined, undefined, undefined);
     const before = (qc.getQueryData<CalendarEvent[]>(eventsKey) || []).length;
 
     const createHook = renderHook(() => useCreateEvent("u-test"), { wrapper });
@@ -94,7 +94,7 @@ describe("calendar state hooks", () => {
     await waitFor(() => {
       const current = qc.getQueryData<
         import("../../domain/calendar/types").EventRSVP[]
-      >(calendarKeys.rsvps("1"));
+      >(queryKeys.calendarRsvps("1"));
       expect(current).toBeTruthy();
       const updated = current?.find((r) => r.user_id === targetUser);
       expect(updated).toBeTruthy();
@@ -107,7 +107,7 @@ describe("calendar state hooks", () => {
       wrapper,
     });
     await waitFor(() => expect(listHook.result.current.isSuccess).toBe(true));
-    const eventsKey = calendarKeys.events(undefined, undefined, undefined);
+    const eventsKey = queryKeys.calendarEvents(undefined, undefined, undefined);
     const before = qc.getQueryData<CalendarEvent[]>(eventsKey) || [];
     const target = before[0];
     expect(target).toBeTruthy();
@@ -135,7 +135,7 @@ describe("calendar state hooks", () => {
       wrapper,
     });
     await waitFor(() => expect(listHook.result.current.isSuccess).toBe(true));
-    const eventsKey = calendarKeys.events(undefined, undefined, undefined);
+    const eventsKey = queryKeys.calendarEvents(undefined, undefined, undefined);
     const baseline = qc.getQueryData<CalendarEvent[]>(eventsKey) || [];
     const target = baseline[0];
     TestAPI.__setFailure({ delete: true });
@@ -157,7 +157,7 @@ describe("calendar state hooks", () => {
     const eventId = "1";
     const listHook = renderHook(() => useComments(eventId), { wrapper });
     await waitFor(() => expect(listHook.result.current.isSuccess).toBe(true));
-    const key = calendarKeys.comments(eventId);
+    const key = queryKeys.calendarComments(eventId);
     const before =
       qc.getQueryData<import("../../domain/calendar/types").CalendarComment[]>(
         key
@@ -184,7 +184,7 @@ describe("calendar state hooks", () => {
     const eventId = "1";
     const listHook = renderHook(() => useComments(eventId), { wrapper });
     await waitFor(() => expect(listHook.result.current.isSuccess).toBe(true));
-    const key = calendarKeys.comments(eventId);
+    const key = queryKeys.calendarComments(eventId);
     const before =
       qc.getQueryData<import("../../domain/calendar/types").CalendarComment[]>(
         key
