@@ -444,7 +444,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
       <header
         className={`
           fixed top-0 left-0 right-0 z-sticky 
-          bg-surface-card/90 dark:bg-surface-card/90 
+          bg-surface-card/95 dark:bg-surface-card/95 
           backdrop-blur-md
           shadow-[inset_0_-1px_0_rgba(0,0,0,0.05)]
           transition-transform duration-300 ease-out

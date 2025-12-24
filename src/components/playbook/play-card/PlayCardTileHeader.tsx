@@ -60,7 +60,7 @@ const TileImageSection: React.FC<{
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
         <div className="absolute top-3 left-3">
-          <div className="px-2 py-1 bg-white/20 backdrop-blur-sm rounded-lg border border-white/30">
+          <div className="px-2 py-1 bg-white/35 backdrop-blur-sm rounded-lg border border-white/30">
             <Icon name="image" className="w-4 h-4 text-white" />
           </div>
         </div>

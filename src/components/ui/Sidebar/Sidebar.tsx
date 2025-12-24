@@ -87,7 +87,7 @@ const getSidebarStyles = (headerVisible: boolean) => {
   const topPosition = headerVisible ? "top-16" : "top-0";
   return `
     fixed ${topPosition} bottom-0 z-modal flex flex-col
-    bg-primary/95 dark:bg-secondary/95
+    bg-primary/98 dark:bg-secondary/98
     shadow-2xl backdrop-blur-md
     transform transition-all duration-300 ease-out
     motion-reduce:transition-none motion-reduce:transform-none

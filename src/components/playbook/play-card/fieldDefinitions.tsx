@@ -11,10 +11,11 @@ import {
   validateFormationName,
   validatePersonnelValue,
 } from "../../../utils/playFieldValidation";
+import { getFormationDirSelectValue } from "../../../utils/leftRight";
 
 type SaveHandler = (
   field: keyof PlayType,
-  value: string | number | boolean
+  value: string | number | boolean | null | string[]
 ) => Promise<void>;
 
 type FieldRenderer = (
@@ -119,7 +120,7 @@ function createBasicFormationFields(
       label: "Direction",
       render: (optimisticPlay, handleInlineSave, savingFields) => (
         <InlineSelectField
-          value={optimisticPlay.f_dir || ""}
+          value={getFormationDirSelectValue(optimisticPlay)}
           options={directionOptions}
           onSave={(value) => handleInlineSave("f_dir", value)}
           placeholder="Direction"
@@ -239,7 +240,7 @@ export const createFormationFields = ({
     motionValues
   ),
   ftags: {
-    label: "Tags",
+    label: "Formation Tags",
     render: (optimisticPlay, handleInlineSave, savingFields) => (
       <InlineEditField
         value={[optimisticPlay.ftag1, optimisticPlay.ftag2]
@@ -379,7 +380,7 @@ function createPlayMetadataFields(
 ): FieldDefinitionMap {
   return {
     ptags: {
-      label: "Tags",
+      label: "Play Tags",
       render: (optimisticPlay, handleInlineSave, savingFields) => (
         <InlineEditField
           value={[optimisticPlay.p_tag1, optimisticPlay.p_tag2]
@@ -400,21 +401,19 @@ function createPlayMetadataFields(
     },
     tags: {
       label: "Variations",
-      render: (optimisticPlay, _handleInlineSave, _savingFields) => (
-        <div className="flex flex-wrap gap-1">
-          {optimisticPlay.tags && optimisticPlay.tags.length > 0 ? (
-            optimisticPlay.tags.map((tag, index) => (
-              <span
-                key={index}
-                className="inline-flex items-center px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 border border-blue-200"
-              >
-                {tag}
-              </span>
-            ))
-          ) : (
-            <span className="text-sm text-secondary italic">No variations</span>
-          )}
-        </div>
+      render: (optimisticPlay, handleInlineSave, savingFields) => (
+        <InlineEditField
+          value={(optimisticPlay.tags || []).filter(Boolean).join(", ")}
+          onSave={(value) => {
+            const next = value
+              .split(",")
+              .map((t) => t.trim())
+              .filter(Boolean);
+            void handleInlineSave("tags", next);
+          }}
+          placeholder="e.g., Bubble, Read, Screen"
+          isSaving={savingFields.has("tags")}
+        />
       ),
     },
     key_positions: {

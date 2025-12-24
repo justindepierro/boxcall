@@ -13,14 +13,14 @@ import { ConfirmationModal } from "../components/ui/ConfirmationModal";
 import { LoadingScreen } from "../components/ui/LoadingScreen";
 import { useToast } from "../hooks/useToast";
 import { logError } from "../utils/logger";
+import { useActiveTeamStore } from "../stores/activeTeamStore";
 
 type AchievementCategory =
-  | "gameplay"
+  | "general"
+  | "practice"
+  | "game"
   | "social"
-  | "teamwork"
-  | "leadership"
-  | "milestone"
-  | "special";
+  | "milestone";
 
 type AchievementTriggerType =
   | "action_count"
@@ -46,7 +46,7 @@ const defaultFormData: AchievementFormData = {
   name: "",
   description: "",
   icon: "trophy",
-  category: "gameplay",
+  category: "general",
   trigger_type: "action_count",
   trigger_target: "",
   trigger_count: 1,
@@ -55,12 +55,11 @@ const defaultFormData: AchievementFormData = {
 };
 
 const categoryOptions = [
-  { value: "gameplay", label: "Gameplay" },
+  { value: "general", label: "General" },
+  { value: "practice", label: "Practice" },
+  { value: "game", label: "Game" },
   { value: "social", label: "Social" },
-  { value: "teamwork", label: "Teamwork" },
-  { value: "leadership", label: "Leadership" },
   { value: "milestone", label: "Milestone" },
-  { value: "special", label: "Special" },
 ];
 
 const triggerTypeOptions = [
@@ -123,20 +122,36 @@ const buildUpdateRow = (formData: AchievementFormData) => ({
   criteria: buildAchievementCriteria(formData),
 });
 
-const fetchAchievements = async () => {
-  const { data, error } = await table("achievement_definitions")
+const fetchAchievements = async (activeTeamId: string | null) => {
+  let q = table("achievement_definitions")
     .select("*")
     .order("category", { ascending: true });
+
+  if (activeTeamId) {
+    q = q.or(`team_id.is.null,team_id.eq.${activeTeamId}`);
+  } else {
+    q = q.is("team_id", null);
+  }
+
+  const { data, error } = await q;
 
   if (error) throw error;
   return (data || []) as AchievementDefinition[];
 };
 
-const insertAchievement = async (formData: AchievementFormData) => {
+const insertAchievement = async (
+  formData: AchievementFormData,
+  teamId: string | null
+) => {
   const insertRow = buildInsertRow(formData);
 
   const { data, error } = await table("achievement_definitions")
-    .insert([insertRow])
+    .insert([
+      {
+        ...insertRow,
+        team_id: teamId,
+      },
+    ])
     .select()
     .single();
 
@@ -196,11 +211,15 @@ const parseUploadedAchievements = async (file: File) => {
 interface AchievementAdminToolbarProps {
   onUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onCreate: () => void;
+  onSeed: () => void;
+  seedDisabled?: boolean;
 }
 
 const AchievementAdminToolbar: React.FC<AchievementAdminToolbarProps> = ({
   onUpload,
   onCreate,
+  onSeed,
+  seedDisabled,
 }) => {
   return (
     <div className="flex justify-between items-center mb-8">
@@ -226,6 +245,11 @@ const AchievementAdminToolbar: React.FC<AchievementAdminToolbarProps> = ({
         <Button onClick={onCreate}>
           <Icon name="plus" className="w-4 h-4 mr-2" />
           Create Achievement
+        </Button>
+
+        <Button variant="secondary" onClick={onSeed} disabled={seedDisabled}>
+          <Icon name="sparkles" className="w-4 h-4 mr-2" />
+          Seed Defaults
         </Button>
       </div>
     </div>
@@ -456,6 +480,7 @@ const AchievementEditorModal: React.FC<AchievementEditorModalProps> = ({
 
 export const AchievementAdminPage: React.FC = () => {
   const toast = useToast();
+  const activeTeamId = useActiveTeamStore((s) => s.activeTeamId);
   const [achievements, setAchievements] = useState<AchievementDefinition[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -464,16 +489,17 @@ export const AchievementAdminPage: React.FC = () => {
   const [formData, setFormData] =
     useState<AchievementFormData>(defaultFormData);
   const [saving, setSaving] = useState(false);
+  const [seeding, setSeeding] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
     loadAchievements();
-  }, []);
+  }, [activeTeamId]);
 
   const loadAchievements = async () => {
     try {
-      const data = await fetchAchievements();
+      const data = await fetchAchievements(activeTeamId);
       setAchievements(data);
     } catch (error) {
       logError("Error loading achievements:", error);
@@ -485,7 +511,7 @@ export const AchievementAdminPage: React.FC = () => {
   const handleCreate = async () => {
     setSaving(true);
     try {
-      const created = await insertAchievement(formData);
+      const created = await insertAchievement(formData, activeTeamId);
       setAchievements((prev) => [...prev, created]);
       setShowCreateModal(false);
       setFormData(defaultFormData);
@@ -493,6 +519,123 @@ export const AchievementAdminPage: React.FC = () => {
       logError("Error creating achievement:", error);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleSeedDefaults = async () => {
+    if (!activeTeamId) {
+      toast.error("Select a team before seeding achievements");
+      return;
+    }
+
+    setSeeding(true);
+    try {
+      const { count, error: countError } = await table(
+        "achievement_definitions"
+      )
+        .select("id", { count: "exact", head: true })
+        .eq("team_id", activeTeamId);
+
+      if (countError) throw countError;
+
+      if ((count ?? 0) > 0) {
+        toast.success("Defaults already seeded for this team");
+        return;
+      }
+
+      const defaults = [
+        {
+          name: "First Play Created",
+          description: "Create your first play",
+          icon: "trophy",
+          category: "general",
+          points: 10,
+          is_active: true,
+          team_id: activeTeamId,
+          criteria: {
+            trigger_type: "action_count",
+            trigger_target: "play_created",
+            trigger_count: 1,
+            rarity: "common",
+          },
+        },
+        {
+          name: "Playbook Builder",
+          description: "Create 10 plays",
+          icon: "clipboard",
+          category: "practice",
+          points: 25,
+          is_active: true,
+          team_id: activeTeamId,
+          criteria: {
+            trigger_type: "action_count",
+            trigger_target: "play_created",
+            trigger_count: 10,
+            rarity: "uncommon",
+          },
+        },
+        {
+          name: "Team Bulletin Poster",
+          description: "Post on the team bulletin",
+          icon: "message",
+          category: "social",
+          points: 10,
+          is_active: true,
+          team_id: activeTeamId,
+          criteria: {
+            trigger_type: "action_count",
+            trigger_target: "post_sent",
+            trigger_count: 1,
+            rarity: "common",
+          },
+        },
+        {
+          name: "Roster Growing",
+          description: "Add 5 players to your roster",
+          icon: "users",
+          category: "general",
+          points: 20,
+          is_active: true,
+          team_id: activeTeamId,
+          criteria: {
+            trigger_type: "action_count",
+            trigger_target: "player_added",
+            trigger_count: 5,
+            rarity: "uncommon",
+          },
+        },
+        {
+          name: "Milestone: 10 Achievements",
+          description: "Earn 10 achievements",
+          icon: "star",
+          category: "milestone",
+          points: 50,
+          is_active: true,
+          team_id: activeTeamId,
+          criteria: {
+            trigger_type: "milestone",
+            trigger_target: "achievements_earned",
+            trigger_count: 10,
+            rarity: "rare",
+          },
+        },
+      ];
+
+      const { data: inserted, error: insertError } = await table(
+        "achievement_definitions"
+      )
+        .insert(defaults)
+        .select();
+
+      if (insertError) throw insertError;
+
+      setAchievements((prev) => [...prev, ...(inserted || [])]);
+      toast.success(`Seeded ${inserted?.length || 0} default achievements`);
+    } catch (error) {
+      logError("Error seeding default achievements:", error);
+      toast.error("Failed to seed defaults. Please try again.");
+    } finally {
+      setSeeding(false);
     }
   };
 
@@ -546,7 +689,7 @@ export const AchievementAdminPage: React.FC = () => {
       name: achievement.name,
       description: achievement.description ?? "",
       icon: achievement.icon ?? "trophy",
-      category: (achievement.category as AchievementCategory) ?? "gameplay",
+      category: (achievement.category as AchievementCategory) ?? "general",
       trigger_type:
         (criteria.trigger_type as AchievementTriggerType) ?? "action_count",
       trigger_target: String(criteria.trigger_target ?? ""),
@@ -602,6 +745,8 @@ export const AchievementAdminPage: React.FC = () => {
       <AchievementAdminToolbar
         onUpload={handleBulkUpload}
         onCreate={() => setShowCreateModal(true)}
+        onSeed={handleSeedDefaults}
+        seedDisabled={seeding}
       />
 
       <AchievementGrid

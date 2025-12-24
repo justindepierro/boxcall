@@ -5,6 +5,7 @@
  */
 
 import { fromAny, table } from "../../../data/supabase/db";
+import { supabase } from "../../../lib/supabase";
 import { SEARCH_LIMITS } from "./constants";
 
 export interface SearchQueryParams {
@@ -23,6 +24,40 @@ export interface RawSearchResults {
   practiceScripts: PracticeScriptSearchResult[] | null;
   calendarEvents: CalendarEventSearchResult[] | null;
   equipment: EquipmentSearchResult[] | null;
+}
+
+type GlobalSearchRpcResultType =
+  | "play"
+  | "formation"
+  | "player"
+  | "announcement"
+  | "game_plan"
+  | "practice_script"
+  | "calendar_event"
+  | "equipment";
+
+interface GlobalSearchRpcRow {
+  result_type: GlobalSearchRpcResultType;
+  id: string;
+  play_name: string | null;
+  formation: string | null;
+  one_word_play: string | null;
+  personnel: string | null;
+  p_type: string | null;
+  name: string | null;
+  first_name: string | null;
+  last_name: string | null;
+  jersey_number: number | null;
+  player_position: string | null;
+  title: string | null;
+  created_at: string | null;
+  opponent: string | null;
+  game_date: string | null;
+  event_date: string | null;
+  event_type: string | null;
+  category: string | null;
+  quantity: number | null;
+  score: number | null;
 }
 
 // Raw result types from database
@@ -87,6 +122,19 @@ export async function executeSearchQueries(
 ): Promise<RawSearchResults> {
   const { searchTerm, activeTeamId, playbookId, signal } = params;
 
+  // Prefer a single fast RPC when available.
+  // Falls back to existing parallel queries if the RPC isn't deployed yet.
+  const rpcResults = await tryExecuteSearchRpc({
+    searchTerm,
+    activeTeamId,
+    playbookId,
+    signal,
+  });
+
+  if (rpcResults) {
+    return rpcResults;
+  }
+
   const [
     playsResponse,
     formationsResponse,
@@ -127,6 +175,157 @@ export async function executeSearchQueries(
     calendarEvents: calendarEventsResponse.data,
     equipment: equipmentResponse.data,
   };
+}
+
+async function tryExecuteSearchRpc(params: SearchQueryParams) {
+  const { searchTerm, activeTeamId, playbookId, signal } = params;
+
+  // Mirror the existing limits, but allow a slightly larger total so ranking has room.
+  const limitPerType = Math.max(
+    SEARCH_LIMITS.plays,
+    SEARCH_LIMITS.formations,
+    SEARCH_LIMITS.players,
+    SEARCH_LIMITS.announcements,
+    SEARCH_LIMITS.gamePlans,
+    SEARCH_LIMITS.practiceScripts,
+    SEARCH_LIMITS.calendarEvents,
+    SEARCH_LIMITS.equipment
+  );
+
+  const limitTotal =
+    SEARCH_LIMITS.plays +
+    SEARCH_LIMITS.formations +
+    SEARCH_LIMITS.players +
+    SEARCH_LIMITS.announcements +
+    SEARCH_LIMITS.gamePlans +
+    SEARCH_LIMITS.practiceScripts +
+    SEARCH_LIMITS.calendarEvents +
+    SEARCH_LIMITS.equipment;
+
+  try {
+    const { data, error } = await (supabase as any)
+      .rpc("boxcall_global_search", {
+        p_team_id: activeTeamId,
+        p_query: searchTerm,
+        p_playbook_id: playbookId,
+        p_limit_per_type: limitPerType,
+        p_limit_total: limitTotal,
+      })
+      .abortSignal(signal);
+
+    if (error) {
+      // Function doesn't exist yet / not deployed in this environment
+      return null;
+    }
+
+    const rows: GlobalSearchRpcRow[] = Array.isArray(data) ? data : [];
+    if (!rows.length) {
+      return {
+        plays: [],
+        formations: [],
+        players: [],
+        announcements: [],
+        gamePlans: [],
+        practiceScripts: [],
+        calendarEvents: [],
+        equipment: [],
+      } as RawSearchResults;
+    }
+
+    const plays: PlaySearchResult[] = [];
+    const formations: FormationSearchResult[] = [];
+    const players: PlayerSearchResult[] = [];
+    const announcements: AnnouncementSearchResult[] = [];
+    const gamePlans: GamePlanSearchResult[] = [];
+    const practiceScripts: PracticeScriptSearchResult[] = [];
+    const calendarEvents: CalendarEventSearchResult[] = [];
+    const equipment: EquipmentSearchResult[] = [];
+
+    for (const row of rows) {
+      switch (row.result_type) {
+        case "play":
+          plays.push({
+            id: row.id,
+            play_name: row.play_name || "",
+            formation: row.formation,
+            one_word_play: row.one_word_play,
+            personnel: row.personnel,
+            p_type: row.p_type,
+          });
+          break;
+        case "formation":
+          if (row.name) {
+            formations.push({ id: row.id, name: row.name });
+          }
+          break;
+        case "player":
+          players.push({
+            id: row.id,
+            first_name: row.first_name,
+            last_name: row.last_name,
+            jersey_number: row.jersey_number,
+            position: row.player_position,
+          });
+          break;
+        case "announcement":
+          if (row.title && row.created_at) {
+            announcements.push({
+              id: row.id,
+              title: row.title,
+              created_at: row.created_at,
+            });
+          }
+          break;
+        case "game_plan":
+          if (row.opponent && row.game_date) {
+            gamePlans.push({
+              id: row.id,
+              opponent: row.opponent,
+              game_date: row.game_date,
+            });
+          }
+          break;
+        case "practice_script":
+          if (row.title) {
+            practiceScripts.push({ id: row.id, title: row.title });
+          }
+          break;
+        case "calendar_event":
+          if (row.title && row.event_date) {
+            calendarEvents.push({
+              id: row.id,
+              title: row.title,
+              event_date: row.event_date,
+              event_type: row.event_type,
+            });
+          }
+          break;
+        case "equipment":
+          if (row.name && row.category) {
+            equipment.push({
+              id: row.id,
+              name: row.name,
+              category: row.category,
+              quantity: row.quantity,
+            });
+          }
+          break;
+      }
+    }
+
+    return {
+      plays,
+      formations,
+      players,
+      announcements,
+      gamePlans,
+      practiceScripts,
+      calendarEvents,
+      equipment,
+    } as RawSearchResults;
+  } catch {
+    return null;
+  }
 }
 
 // Individual search functions
@@ -252,12 +451,25 @@ export async function getPlaybookId(
   teamId: string,
   signal: AbortSignal
 ): Promise<string | null> {
-  const { data: playbooks } = await table("playbooks")
+  // Prefer the active playbook, but fall back to any playbook so search can still
+  // surface plays/formations for teams that haven't marked one as active.
+  const { data: activePlaybooks } = await table("playbooks")
     .select("id")
     .eq("team_id", teamId)
     .eq("is_active", true)
+    .order("updated_at", { ascending: false })
     .limit(1)
     .abortSignal(signal);
 
-  return playbooks?.[0]?.id || null;
+  const activeId = activePlaybooks?.[0]?.id;
+  if (activeId) return activeId;
+
+  const { data: anyPlaybooks } = await table("playbooks")
+    .select("id")
+    .eq("team_id", teamId)
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .abortSignal(signal);
+
+  return anyPlaybooks?.[0]?.id || null;
 }

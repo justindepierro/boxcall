@@ -18,7 +18,7 @@ export interface PlayCardDetailsProps {
   phaseLabel: string | null;
   handleInlineSave: (
     field: keyof PlayType,
-    value: string | number | boolean | null
+    value: string | number | boolean | null | string[]
   ) => Promise<void>;
   savingFields: Set<string>;
   formationFieldOrder: string[];

@@ -10,11 +10,13 @@
  * Phase 3B: Properly consolidated Achievement Services (2→1)
  * Previous consolidation corrupted (commit 55bea84) - this is the corrected version.
  *
- * NOTE: achievement_definitions and achievement_progress tables don't exist in current schema.
- * Service gracefully degrades to empty achievements until tables are created.
+ * NOTE: Achievement definitions/progress are stored in:
+ * - achievement_definitions (criteria JSON)
+ * - achievement_progress (per-user progress)
  */
 import { debug, error as logError } from "../utils/logger";
 import { table } from "../data/supabase/db";
+import { getActiveTeamIdFromStore } from "../stores/activeTeamStore";
 
 type Player = {
   id: string;
@@ -33,8 +35,9 @@ type Player = {
   };
 };
 
-// Feature flag - disable advanced achievement features until DB tables exist
-const ACHIEVEMENT_SYSTEM_ENABLED = false;
+// Feature flag - default ON. Set VITE_ENABLE_ACHIEVEMENTS="false" to disable.
+const ACHIEVEMENT_SYSTEM_ENABLED =
+  String(import.meta.env.VITE_ENABLE_ACHIEVEMENTS ?? "true") !== "false";
 
 // ============================================================================
 // Types from achievementTracker.ts
@@ -52,9 +55,11 @@ export type AchievementTrigger =
 
 export interface AchievementDefinition {
   id: string;
+  team_id?: string | null;
   name: string;
   description: string | null;
   icon: string | null;
+  // Stored as TEXT in DB with a CHECK constraint; keep this wide to match generated DB types.
   category: string | null;
   criteria: any | null;
   points: number | null;
@@ -75,6 +80,7 @@ export interface AchievementProgress {
   current_value: number | null;
   target_value: number | null;
   completed_at: string | null;
+  definition?: AchievementDefinition;
 }
 
 export interface EarnedAchievement {
@@ -149,13 +155,28 @@ class AchievementTracker {
 
       if (!player?.id) {
         return [];
-      } // Get all active achievements that could be triggered by this action
-      // Note: achievement_definitions table doesn't exist yet in schema
+      }
+
+      const activeTeamId = getActiveTeamIdFromStore();
+
+      // Get all active achievements triggered by this action.
+      // Trigger data is stored in achievement_definitions.criteria JSON.
+      let definitionsQuery = table("achievement_definitions")
+        .select("*")
+        .eq("is_active", true)
+        .eq("criteria->>trigger_target", action);
+
+      // Only include global + active-team definitions.
+      if (activeTeamId) {
+        definitionsQuery = definitionsQuery.or(
+          `team_id.is.null,team_id.eq.${activeTeamId}`
+        );
+      } else {
+        definitionsQuery = definitionsQuery.is("team_id", null);
+      }
+
       const { data: relevantAchievements, error: definitionsError } =
-        await table("achievement_definitions")
-          .select("*")
-          .eq("is_active", true)
-          .eq("trigger_target", action);
+        await definitionsQuery;
 
       if (definitionsError) {
         debug(
@@ -231,10 +252,16 @@ class AchievementTracker {
         return null; // Already earned
       }
 
+      const criteria = (achievement.criteria ?? {}) as any;
+      const triggerType =
+        (criteria.trigger_type as string | undefined) ?? achievement.trigger_type;
+      const triggerCount =
+        Number(criteria.trigger_count ?? achievement.trigger_count ?? 1) || 1;
+
       // Increment progress based on trigger type
       let newCount = progress.current_value ?? 0;
 
-      switch (achievement.trigger_type) {
+      switch (triggerType) {
         case "action_count":
           newCount += 1;
           break;
@@ -253,9 +280,7 @@ class AchievementTracker {
 
       // Check if achievement is now complete
       const targetValue =
-        achievement.trigger_count ??
-        progress.target_value ??
-        Number.POSITIVE_INFINITY;
+        triggerCount ?? progress.target_value ?? Number.POSITIVE_INFINITY;
       const isComplete = newCount >= targetValue;
 
       // Update progress
@@ -268,25 +293,17 @@ class AchievementTracker {
         .eq("id", progress.id);
 
       if (isComplete) {
-        // Award the achievement
-        const { data: earnedAchievement, error } = await table("achievements")
-          .insert({
-            player_id: playerId,
-            achievement_type: achievement.name,
-            description: achievement.description,
-            earned_date: new Date().toISOString().split("T")[0],
-          })
-          .select()
-          .single();
-
-        if (error) throw error;
-
         debug(
           `[Achievement] 🎉 Awarded: ${achievement.name} to player ${playerId}`
         );
 
         return {
-          ...earnedAchievement,
+          id: progress.id,
+          achievement_type: achievement.name,
+          description: achievement.description,
+          earned_date: new Date().toISOString().split("T")[0],
+          created_at: null,
+          player_id: null,
           definition: achievement,
         };
       }
@@ -391,7 +408,10 @@ class AchievementTracker {
   /**
    * Get all achievements for a user
    */
-  static async getUserAchievements(userId: string): Promise<{
+  static async getUserAchievements(
+    userId: string,
+    teamId?: string | null
+  ): Promise<{
     earned: EarnedAchievement[];
     progress: AchievementProgress[];
     definitions: AchievementDefinition[];
@@ -402,44 +422,119 @@ class AchievementTracker {
         return { earned: [], progress: [], definitions: [] };
       }
 
-      // Get player record from profiles table (since player_roster doesn't exist)
-      const { data: player, error: playerError } = await table("profiles")
-        .select("id")
-        .eq("id", userId)
-        .maybeSingle();
+      const activeTeamId = teamId ?? getActiveTeamIdFromStore();
 
-      if (playerError) {
-        debug("[Achievement] Error fetching player:", playerError.message);
-        return { earned: [], progress: [], definitions: [] };
-      }
-
-      if (!player) {
-        return { earned: [], progress: [], definitions: [] };
-      }
-
-      // Try to get earned achievements - handle if tables don't exist
-      const { data: earned, error: earnedError } = await table("achievements")
+      let definitionsQuery = table("achievement_definitions")
         .select("*")
-        .eq("player_id", player.id);
+        .eq("is_active", true)
+        .order("category", { ascending: true })
+        .order("points", { ascending: false });
 
-      if (earnedError) {
-        debug(
-          "[Achievement] achievement_definitions or achievement_progress tables may not exist:",
-          earnedError.message
+      // Only include global + active-team definitions.
+      if (activeTeamId) {
+        definitionsQuery = definitionsQuery.or(
+          `team_id.is.null,team_id.eq.${activeTeamId}`
         );
+      } else {
+        definitionsQuery = definitionsQuery.is("team_id", null);
+      }
+
+      const { data: definitions, error: definitionsError } =
+        await definitionsQuery;
+
+      if (definitionsError) {
         debug(
-          "[Achievement] Returning empty achievements - system not fully initialized"
+          "[Achievement] achievement_definitions table not available:",
+          definitionsError.message
         );
         return { earned: [], progress: [], definitions: [] };
       }
 
-      // Skip queries for tables that don't exist yet
-      // achievement_progress and achievement_definitions are not in the current schema
-      // Return simple achievements only
+      const { data: progress, error: progressError } = await table(
+        "achievement_progress"
+      )
+        .select("*")
+        .eq("user_id", userId);
+
+      if (progressError) {
+        debug(
+          "[Achievement] achievement_progress table not available:",
+          progressError.message
+        );
+        return { earned: [], progress: [], definitions: definitions || [] };
+      }
+
+      const definitionsById = new Map(
+        (definitions || []).map((d: any) => [d.id, d])
+      );
+
+      // Auto-create progress rows for any active definitions that don't have one yet.
+      // This makes the UI show in-progress medals immediately on first open.
+      const existingProgressIds = new Set(
+        (progress || []).map((p: any) => String(p.achievement_id))
+      );
+
+      const missingDefinitions = (definitions || []).filter(
+        (d: any) => !existingProgressIds.has(String(d.id))
+      );
+
+      if (missingDefinitions.length > 0) {
+        const payload = missingDefinitions.map((d: any) => {
+          const criteria = (d.criteria ?? {}) as any;
+          const target = Number(criteria.trigger_count ?? 1) || 1;
+          return {
+            user_id: userId,
+            achievement_id: d.id,
+            current_value: 0,
+            target_value: target,
+          };
+        });
+
+        const { error: upsertError } = await table(
+          "achievement_progress"
+        ).upsert(payload as any, {
+          onConflict: "user_id,achievement_id",
+          ignoreDuplicates: true,
+        });
+
+        if (upsertError) {
+          debug(
+            "[Achievement] Failed to auto-create progress rows:",
+            upsertError.message
+          );
+        }
+      }
+
+      // Re-fetch progress so we return a complete view.
+      const { data: progressAfter } = await table("achievement_progress")
+        .select("*")
+        .eq("user_id", userId);
+
+      const progressWithDefinition: AchievementProgress[] = (progressAfter || [])
+        .map((p: any) => ({
+          ...p,
+          definition: definitionsById.get(p.achievement_id),
+        }));
+
+      const earned: EarnedAchievement[] = progressWithDefinition
+        .filter((p: any) => Boolean(p.completed_at))
+        .map((p: any) => {
+          const def = p.definition as AchievementDefinition | undefined;
+          return {
+            id: p.id,
+            achievement_type: def?.name ?? "Achievement",
+            description: def?.description ?? null,
+            earned_date: String(p.completed_at).split("T")[0],
+            created_at: null,
+            player_id: null,
+            definition: def,
+          };
+        });
+
       return {
-        earned: earned || [],
-        progress: [], // Table doesn't exist yet
-        definitions: [], // Table doesn't exist yet
+        earned,
+        progress: progressWithDefinition,
+        definitions: definitions || [],
       };
     } catch (error) {
       logError("[Achievement] Error getting user achievements:", error);
@@ -475,7 +570,7 @@ class AchievementTracker {
       const { data } = await table("achievement_definitions")
         .select("*")
         .order("category", { ascending: true })
-        .order("rarity", { ascending: false });
+        .order("points", { ascending: false });
 
       return data || [];
     } catch (error) {
@@ -500,6 +595,8 @@ export class AchievementService {
   static async getUserAchievements(
     userId: string,
     devMode?: string
+    ,
+    teamId?: string | null
   ): Promise<AchievementData> {
     try {
       debug(`[Achievement] Getting achievements for user ${userId}`);
@@ -514,7 +611,7 @@ export class AchievementService {
 
       // Get real achievements from the new system
       const { earned, progress, definitions } =
-        await AchievementTracker.getUserAchievements(userId);
+        await AchievementTracker.getUserAchievements(userId, teamId);
 
       // Convert to the expected format
       const boxcallMedals: BoxCallMedal[] = earned.map((achievement: any) => ({
@@ -524,18 +621,23 @@ export class AchievementService {
         description: achievement.description || "",
         earned: true,
         earnedDate: achievement.earned_date,
-        rarity: achievement.definition?.rarity,
-        points: achievement.points_earned,
+        rarity: achievement.definition?.criteria?.rarity,
+        points: achievement.definition?.points ?? 0,
       }));
 
       // Add in-progress achievements
       const inProgressMedals: BoxCallMedal[] = progress
-        .filter((p: any) => !p.is_completed && p.achievement_id)
+        .filter((p: any) => !p.completed_at && p.achievement_id)
         .map((p: any) => {
-          const definition = definitions.find(
-            (d: any) => d.id === p.achievement_id
-          );
+          const definition =
+            p.definition ??
+            definitions.find((d: any) => d.id === p.achievement_id);
           if (!definition) return null;
+
+          const criteria = (definition.criteria ?? {}) as any;
+          const triggerCount =
+            Number(criteria.trigger_count ?? p.target_value ?? 1) || 1;
+          const currentValue = Number(p.current_value ?? 0) || 0;
 
           return {
             id: `progress_${p.id}`,
@@ -543,9 +645,9 @@ export class AchievementService {
             icon: definition.icon,
             description: definition.description,
             earned: false,
-            progress: p.current_count,
-            maxProgress: definition.trigger_count,
-            rarity: definition.rarity,
+            progress: currentValue,
+            maxProgress: triggerCount,
+            rarity: criteria.rarity,
             points: definition.points,
           };
         })
@@ -556,7 +658,7 @@ export class AchievementService {
 
       // Calculate total points
       const totalPoints = earned.reduce(
-        (sum: number, a: any) => sum + (a.points_earned || 0),
+        (sum: number, a: any) => sum + (a.definition?.points || 0),
         0
       );
 

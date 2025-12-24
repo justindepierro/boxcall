@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
 import { BulkActionsToolbar } from "../components/playbook/BulkActionsToolbar";
@@ -24,6 +24,10 @@ import { PersonnelLibraryModal } from "../components/playbook/modals/PersonnelLi
 import { ConfirmationModal } from "../components/ui/ConfirmationModal/ConfirmationModal";
 import { debug } from "../utils/logger";
 import type { Play } from "../types/play";
+import { PlaysService } from "../services/playsService";
+import { exportPlays } from "../services/exportService";
+import { useToast } from "../hooks/useToast";
+import { error as logError } from "../utils/logger";
 
 // Extracted components
 import { MobileFiltersBottomSheet } from "./playbook";
@@ -103,6 +107,7 @@ function PlaybookPageHeader({
   dispatch,
   handlePlaybookChange,
   handlers,
+  onExportCSV,
 }: {
   state: any;
   teamPlaybooks: any[];
@@ -114,6 +119,7 @@ function PlaybookPageHeader({
   dispatch: React.Dispatch<any>;
   handlePlaybookChange: (id: string) => void;
   handlers: any;
+  onExportCSV?: () => void;
 }) {
   return (
     <PlaybookViewTabs
@@ -123,6 +129,8 @@ function PlaybookPageHeader({
       onTeamTypeChange={handlers.handleTeamTypeChange}
       onOpenSettings={handlers.handleOpenSettings}
       onOpenBuilder={handlers.handleOpenBuilder}
+      onOpenBulkQuickAdd={handlers.handleOpenBulkQuickAdd}
+      onExportCSV={onExportCSV}
       onOpenPersonnel={handlers.handleOpenPersonnel}
       onOpenHealth={() => openModal("playbookHealth")}
       onNavigate={(path) => {
@@ -159,6 +167,7 @@ function PlaybookMainView({
   openModal,
   closeModal,
   activeTeamId,
+  activePlaybookId,
   teamsDataLoading,
   debouncedSearchQuery,
   optimisticPlays,
@@ -181,6 +190,7 @@ function PlaybookMainView({
   openModal: (type: Exclude<ModalType, null>, options?: ModalOptions) => void;
   closeModal: () => void;
   activeTeamId: string | null;
+  activePlaybookId: string | null;
   teamsDataLoading: boolean;
   debouncedSearchQuery: string;
   optimisticPlays: any[];
@@ -204,6 +214,7 @@ function PlaybookMainView({
         showFiltersSheet={isModalOpen("filtersSheet")}
         showStatsSheet={isModalOpen("statsSheet")}
         activeTeamId={activeTeamId}
+        activePlaybookId={activePlaybookId}
         isLoadingPlays={teamsDataLoading}
         debouncedSearchQuery={debouncedSearchQuery}
         optimisticPlays={optimisticPlays}
@@ -235,6 +246,7 @@ function PlaybookMainView({
         handleOpenPracticeScriptBuilder={
           handlers.handleOpenPracticeScriptBuilder
         }
+        handleCategoryChange={handlers.handleCategoryChange}
         dispatch={dispatch}
         mobileButtonSize={mobileButtonSize}
         mobileSecondaryButtonSize={mobileSecondaryButtonSize}
@@ -246,6 +258,7 @@ function PlaybookMainView({
   return (
     <DesktopPlaybookView
       state={state}
+      activePlaybookId={activePlaybookId}
       debouncedSearchQuery={debouncedSearchQuery}
       optimisticPlays={optimisticPlays}
       formationAudit={formationAudit}
@@ -263,6 +276,7 @@ function PlaybookMainView({
       handlePlayCountChange={handlers.handlePlayCountChange}
       handleOpenPracticeScriptBuilder={handlers.handleOpenPracticeScriptBuilder}
       handleFiltersChange={handlers.handleFiltersChange}
+      handleCategoryChange={handlers.handleCategoryChange}
       handleClearSelection={handlers.handleClearSelection}
       handleBulkAction={handlers.handleBulkAction}
       handleEnterFullscreen={handleEnterFullscreen}
@@ -399,6 +413,43 @@ function PlaybookPageView({
   mobileButtonSize: MobileButtonSize;
   mobileSecondaryButtonSize: MobileButtonSize;
 }) {
+  const toast = useToast();
+
+  const handleExportCSV = useCallback(async () => {
+    if (!activePlaybookId) {
+      toast.warning("Select a playbook first");
+      return;
+    }
+
+    try {
+      const plays = await PlaysService.getPlaysByPlaybook(activePlaybookId);
+      if (plays.length === 0) {
+        toast.info("No plays to export");
+        return;
+      }
+
+      const playbookName =
+        teamPlaybooks?.find((p) => p?.id === activePlaybookId)?.name ||
+        "playbook";
+      const safeName = String(playbookName)
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-_]/g, "");
+      const date = new Date().toISOString().split("T")[0];
+
+      exportPlays(plays, {
+        format: "csv",
+        filename: `boxcall-${safeName || "playbook"}-${date}.csv`,
+        includeMetadata: true,
+      });
+      toast.success(`Exported ${plays.length} plays to CSV`);
+    } catch (err) {
+      logError("Playbook CSV export failed:", err);
+      toast.error("Failed to export CSV");
+    }
+  }, [activePlaybookId, teamPlaybooks, toast]);
+
   return (
     <div className="min-h-screen">
       {/* Unified Header with Navigation */}
@@ -413,6 +464,7 @@ function PlaybookPageView({
         dispatch={dispatch}
         handlePlaybookChange={handlePlaybookChange}
         handlers={handlers}
+        onExportCSV={handleExportCSV}
       />
 
       {/* Mobile/Tablet-First Layout */}
@@ -424,6 +476,7 @@ function PlaybookPageView({
         openModal={openModal}
         closeModal={closeModal}
         activeTeamId={activeTeamId}
+        activePlaybookId={activePlaybookId}
         teamsDataLoading={teamsDataLoading}
         debouncedSearchQuery={debouncedSearchQuery}
         optimisticPlays={optimisticPlays}
@@ -577,8 +630,12 @@ function PlaybookPageOverlays({
           onClose={closeModal}
           advancedFilters={state.advancedFilters}
           onFiltersChange={handlers.handleFiltersChange}
+          selectedCategory={state.selectedCategory}
+          selectedSubcategory={state.selectedSubcategory}
+          onCategoryChange={handlers.handleCategoryChange}
           onClearAll={() => {
             dispatch({ type: "SET_ADVANCED_FILTERS", filters: [] });
+            dispatch({ type: "SET_CATEGORY", category: undefined, subcategory: undefined });
             closeModal();
           }}
           mobileButtonSize={mobileButtonSize}
@@ -745,9 +802,24 @@ const PlaybookPage = () => {
 
   // Stats and audit hooks
   const formationAudit = useFormationAudit(activePlaybookId || null);
+
+  const scopedPlaysForStats = useMemo(() => {
+    if (!activePlaybookId) return allPlaysForStats as unknown as Play[];
+    return (allPlaysForStats as any[]).filter(
+      (p) => String((p as any).playbook_id ?? "") === String(activePlaybookId)
+    ) as unknown as Play[];
+  }, [allPlaysForStats, activePlaybookId]);
+
+  const scopedFormationsForStats = useMemo(() => {
+    if (!activePlaybookId) return allFormations;
+    return (allFormations as any[]).filter(
+      (f) => String((f as any).playbook_id ?? "") === String(activePlaybookId)
+    ) as any;
+  }, [allFormations, activePlaybookId]);
+
   const playbookStats = usePlaybookStats(
-    allPlaysForStats as unknown as Play[],
-    allFormations,
+    scopedPlaysForStats,
+    scopedFormationsForStats,
     recentActivities,
     (formationAudit.plays || []) as unknown as Play[]
   );

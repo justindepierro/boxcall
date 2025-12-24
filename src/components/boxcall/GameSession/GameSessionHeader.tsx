@@ -29,7 +29,7 @@ export const GameSessionHeader: React.FC<GameSessionHeaderProps> = ({
         <div className="flex items-center gap-4">
           <button
             onClick={onBack}
-            className="w-10 h-10 rounded-xl bg-white/80 backdrop-blur-sm border border-slate-200 flex items-center justify-center hover:bg-white transition-colors shadow-sm"
+            className="w-10 h-10 rounded-xl bg-white/90 backdrop-blur-sm border border-slate-200 flex items-center justify-center hover:bg-white transition-colors shadow-sm"
           >
             <Icon name="arrow-left" size="sm" className="text-slate-600" />
           </button>

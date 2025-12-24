@@ -127,7 +127,7 @@ function DefaultToggle(props: {
         <div
           className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all ${
             isActive
-              ? "bg-white/25 text-white shadow-lg"
+              ? "bg-white/40 text-white shadow-lg"
               : "bg-gradient-to-br from-jade-50 to-jade-100 text-jade-600 border-2 border-jade-200"
           }`}
         >
@@ -163,7 +163,7 @@ function DefaultToggle(props: {
 
       {/* Selection Count Badge */}
       {isActive && selectedCount > 0 && (
-        <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
+        <div className="bg-white/35 backdrop-blur-sm px-4 py-2 rounded-lg">
           <Typography variant="headline-sm" className="text-white font-bold">
             {selectedCount}
           </Typography>

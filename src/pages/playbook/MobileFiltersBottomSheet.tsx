@@ -11,6 +11,9 @@ interface MobileFiltersBottomSheetProps {
   onClose: () => void;
   advancedFilters: PlaybookState["advancedFilters"];
   onFiltersChange: (filters: PlaybookState["advancedFilters"]) => void;
+  selectedCategory?: PlaybookState["selectedCategory"];
+  selectedSubcategory?: PlaybookState["selectedSubcategory"];
+  onCategoryChange?: (category?: string, subcategory?: string) => void;
   onClearAll: () => void;
   mobileButtonSize: "sm" | "md" | "lg";
   mobileSecondaryButtonSize: "sm" | "md" | "lg";
@@ -23,13 +26,16 @@ export const MobileFiltersBottomSheet: React.FC<
   onClose,
   advancedFilters,
   onFiltersChange,
+  selectedCategory,
+  selectedSubcategory,
+  onCategoryChange,
   onClearAll,
   mobileButtonSize,
   mobileSecondaryButtonSize,
 }) => {
   if (!isOpen) return null;
 
-  const filterCount = Object.keys(advancedFilters).length;
+  const filterCount = advancedFilters.length;
 
   return (
     <BottomSheet
@@ -57,6 +63,9 @@ export const MobileFiltersBottomSheet: React.FC<
           <AdvancedFilters
             activeFilters={advancedFilters}
             onFiltersChange={onFiltersChange}
+            selectedCategory={selectedCategory}
+            selectedSubcategory={selectedSubcategory}
+            onCategoryChange={onCategoryChange}
           />
         </div>
 

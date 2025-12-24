@@ -15,6 +15,7 @@ import { useDashboardStats } from "../hooks/useDashboardStats";
 import { Card } from "../components/ui/Card";
 import { Typography } from "../components/design-system/Typography";
 import { Icon } from "../components/ui/Icon";
+import { CompactTrophyShelf } from "../components/dashboard/CompactTrophyShelf";
 import { useNavigate } from "react-router-dom";
 import { shimmerSkeleton, statusIndicator } from "../utils/animations";
 
@@ -367,6 +368,21 @@ const DashboardPage = React.memo(() => {
           stats={dashboardStats as DashboardStats}
           onNavigate={(path) => navigate(path)}
         />
+
+        <Card variant="default" size="lg">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+              <Typography variant="headline-md" className="text-primary mb-1">
+                Achievements
+              </Typography>
+              <Typography variant="body" color="muted">
+                Track streaks, stickers, and medals.
+              </Typography>
+            </div>
+
+            <CompactTrophyShelf userId={user.id} />
+          </div>
+        </Card>
 
         {/* Quick Actions - Colorful gradient buttons */}
         <DashboardQuickActions onNavigate={(path) => navigate(path)} />

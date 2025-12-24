@@ -18,7 +18,7 @@ import type { OverallProgressBarProps } from "./types";
 export const OverallProgressBar: React.FC<OverallProgressBarProps> = ({
   progress,
 }) => (
-  <div className="mb-8 p-4 rounded-2xl bg-white/70 backdrop-blur-sm border border-jade-100 shadow-sm">
+  <div className="mb-8 p-4 rounded-2xl bg-white/85 backdrop-blur-sm border border-jade-100 shadow-sm">
     <div className="flex items-center justify-between mb-2">
       <div className="flex items-center gap-2">
         <Icon name="trending-up" size="sm" className="text-jade-600" />

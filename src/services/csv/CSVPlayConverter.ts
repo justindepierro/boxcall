@@ -8,12 +8,26 @@ import { UserPreferencesService } from "../userPreferencesService";
 
 import type { CSVPlayPreview, CSVImportResult } from "./types";
 import type { Play } from "../../types/play";
+import { leftRightToLegacyValue, parseLeftRight } from "../../utils/leftRight";
 
 export class CSVPlayConverter {
   private static asString(value: unknown): string {
     if (value === null || value === undefined) return "";
     if (typeof value === "string") return value;
     return String(value);
+  }
+
+  private static normalizeFormationDirection(
+    value: unknown
+  ): "base" | "left" | "right" | null {
+    const raw = this.asString(value).trim();
+    if (!raw) return null;
+    const lower = raw.toLowerCase();
+    if (lower === "base" || lower === "middle" || lower === "mid" || lower === "center")
+      return "base";
+    if (lower === "left" || lower === "l" || lower === "lt") return "left";
+    if (lower === "right" || lower === "r" || lower === "rt") return "right";
+    return null;
   }
 
   /**
@@ -25,6 +39,7 @@ export class CSVPlayConverter {
     forceImport: boolean = false
   ): CSVImportResult {
     const plays: Play[] = [];
+    const playsByRowNumber: Record<number, Play> = {};
     const errors: string[] = [];
     const warnings: string[] = [];
 
@@ -64,6 +79,7 @@ export class CSVPlayConverter {
         // Create the Play object
         const play = this.createPlayFromData(playData, playbookId, index);
         plays.push(play);
+        playsByRowNumber[preview.rowNumber] = play;
 
         // Collect warnings for this play
         if (preview.warnings.length > 0) {
@@ -117,6 +133,7 @@ export class CSVPlayConverter {
       errors,
       warnings,
       plays,
+      playsByRowNumber,
       parsedPlays: previews,
       needsConfirmation,
       confirmationMessage,
@@ -140,6 +157,29 @@ export class CSVPlayConverter {
     const formation = this.asString(playData.formation).trim();
     const playName = this.asString(playData.play_name).trim();
 
+    const rawFormationDirection = this.asString(playData.formation_direction).trim();
+    const normalizedVariantDirection = this.normalizeFormationDirection(
+      rawFormationDirection
+    );
+    const explicitFDir = this.asString(playData.f_dir).trim();
+    const normalizedVariantFromFDir = this.normalizeFormationDirection(explicitFDir);
+    const derivedVariantDirection =
+      normalizedVariantDirection ?? normalizedVariantFromFDir;
+        const normalizedExplicitFDir = (() => {
+          const token = parseLeftRight(explicitFDir);
+          if (token) return leftRightToLegacyValue(token);
+          return explicitFDir;
+        })();
+
+        const derivedFDir =
+          explicitFDir !== ""
+            ? normalizedExplicitFDir
+            : derivedVariantDirection === "left"
+              ? "LEFT"
+              : derivedVariantDirection === "right"
+                ? "RIGHT"
+                : rawFormationDirection;
+
     return {
       id: `csv-import-${Date.now()}-${index}`,
       playbook_id: playbookId,
@@ -152,7 +192,8 @@ export class CSVPlayConverter {
       protection: this.asString(playData.protection),
       notes: this.asString(playData.notes),
       // Set defaults for other required fields
-      f_dir: this.asString(playData.f_dir),
+      f_dir: derivedFDir,
+      formation_direction: derivedVariantDirection,
       ftag1: this.asString(playData.ftag1),
       ftag2: this.asString(playData.ftag2),
       back_align: this.asString(playData.back_align),
@@ -168,6 +209,8 @@ export class CSVPlayConverter {
       pref_hash: this.asString(playData.pref_hash),
       pref_cov: this.asString(playData.pref_cov),
       pref_front: this.asString(playData.pref_front),
+      pref_field_pos: this.asString(playData.pref_field_pos),
+      pref_situation: this.asString(playData.pref_situation),
       check_into: this.asString(playData.check_into),
       r_str: this.asString(playData.r_str),
       p_str: this.asString(playData.p_str),

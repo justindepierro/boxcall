@@ -59,6 +59,7 @@ const createPlayGridOnSave =
 interface PlaybookGridSectionProps {
   debouncedSearchQuery: string;
   state: PlaybookState;
+  activePlaybookId?: string | null;
   optimisticPlays: Play[];
   suggestions: DesktopPlaybookViewProps["suggestions"];
   handleEditPlay: DesktopPlaybookViewProps["handleEditPlay"];
@@ -77,6 +78,7 @@ interface PlaybookGridSectionProps {
 const PlaybookGridSection: FC<PlaybookGridSectionProps> = ({
   debouncedSearchQuery,
   state,
+  activePlaybookId,
   optimisticPlays,
   suggestions,
   handleEditPlay,
@@ -106,6 +108,10 @@ const PlaybookGridSection: FC<PlaybookGridSectionProps> = ({
       <PlayGrid
         searchQuery={debouncedSearchQuery}
         filters={state.selectedFilters}
+        advancedFilters={state.advancedFilters}
+        selectedCategory={state.selectedCategory}
+        selectedSubcategory={state.selectedSubcategory}
+        playbookId={activePlaybookId ?? undefined}
         optimisticPlays={optimisticPlays}
         onAddToPracticeScript={handleAddToPracticeScript}
         onAddToGamePlan={handleAddToGamePlan}
@@ -292,6 +298,9 @@ interface DesktopPlaybookViewProps {
   // State
   state: PlaybookState;
 
+  // Scope
+  activePlaybookId?: string | null;
+
   // Data
   debouncedSearchQuery: string;
   optimisticPlays: Play[];
@@ -316,6 +325,7 @@ interface DesktopPlaybookViewProps {
   handlePlayCountChange: (change: number) => void;
   handleOpenPracticeScriptBuilder: (script?: PracticeScript) => void;
   handleFiltersChange: (filters: any) => void;
+  handleCategoryChange: (category?: string, subcategory?: string) => void;
   handleClearSelection: () => void;
   handleBulkAction: (action: string) => void;
   handleEnterFullscreen: (plays: Play[], playIndex: number) => void;
@@ -334,6 +344,7 @@ interface DesktopPlaybookViewProps {
 
 export function DesktopPlaybookView({
   state,
+  activePlaybookId,
   debouncedSearchQuery,
   optimisticPlays,
   formationAudit,
@@ -351,6 +362,7 @@ export function DesktopPlaybookView({
   handlePlayCountChange,
   handleOpenPracticeScriptBuilder,
   handleFiltersChange,
+  handleCategoryChange,
   handleClearSelection,
   handleBulkAction,
   handleEnterFullscreen,
@@ -404,6 +416,9 @@ export function DesktopPlaybookView({
                 <AdvancedFilters
                   activeFilters={state.advancedFilters}
                   onFiltersChange={handleFiltersChange}
+                  selectedCategory={state.selectedCategory}
+                  selectedSubcategory={state.selectedSubcategory}
+                  onCategoryChange={handleCategoryChange}
                 />
               </Card>
 
@@ -437,6 +452,7 @@ export function DesktopPlaybookView({
                 <PlaybookGridSection
                   debouncedSearchQuery={debouncedSearchQuery}
                   state={state}
+                  activePlaybookId={activePlaybookId}
                   optimisticPlays={optimisticPlays}
                   suggestions={suggestions}
                   handleEditPlay={handleEditPlay}

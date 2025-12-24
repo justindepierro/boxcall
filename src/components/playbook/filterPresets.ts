@@ -44,7 +44,7 @@ export const QUICK_PRESETS: FilterPreset[] = [
     id: "rpo",
     label: "RPO Plays",
     icon: "repeat",
-    filters: [{ field: "playType", operator: "equals", value: "rpo" }],
+    filters: [{ field: "playType", operator: "contains", value: "rpo" }],
   },
   {
     id: "redzone",

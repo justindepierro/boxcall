@@ -15,11 +15,29 @@ import { PlayValidationService } from "../validation-services/playValidation";
 import { debug, error as logError, warn } from "../utils/logger";
 import { readLocalJson, storageKeys, writeLocalJson } from "../utils/storage";
 import { buildNewPlayData } from "./playDataBuilders";
+import { leftRightToLegacyValue, parseLeftRight } from "../utils/leftRight";
 
 import type { Play } from "../types/play";
 import type { FuseResultMatch, IFuseOptions } from "fuse.js";
 
 export class PlaysService {
+  private static withLegacyFormationDir(play: Play): Play {
+    const existing = (play.f_dir || "").trim();
+    if (existing) return play;
+
+    const token = parseLeftRight(
+      typeof play.formation_direction === "string" ? play.formation_direction : ""
+    );
+    const legacy = leftRightToLegacyValue(token);
+    if (!legacy) return play;
+
+    return { ...play, f_dir: legacy };
+  }
+
+  private static withLegacyFormationDirMany(plays: Play[]): Play[] {
+    return plays.map((p) => PlaysService.withLegacyFormationDir(p));
+  }
+
   /**
    * Auto-create a default team for a user if they don't have one
    * Creates a "Personal Playbook" team for Coach Account users
@@ -257,7 +275,9 @@ export class PlaysService {
         throw new Error(`Failed to fetch plays: ${error.message}`);
       }
 
-      return (data as unknown as Play[]) || [];
+      return PlaysService.withLegacyFormationDirMany(
+        ((data as unknown as Play[]) || []).slice()
+      );
     } catch (error) {
       logError("❌ PlaysService.getPlaysByPlaybook failed:", error);
       throw error;
@@ -283,7 +303,7 @@ export class PlaysService {
         throw new Error(`Failed to fetch play: ${error.message}`);
       }
 
-      return data as unknown as Play;
+      return PlaysService.withLegacyFormationDir(data as unknown as Play);
     } catch (error) {
       logError("❌ PlaysService.getPlay failed:", error);
       throw error;
@@ -304,7 +324,9 @@ export class PlaysService {
         throw new Error(`Failed to fetch plays: ${error.message}`);
       }
 
-      return (data || []) as unknown as Play[];
+      return PlaysService.withLegacyFormationDirMany(
+        ((data || []) as unknown as Play[]).slice()
+      );
     } catch (error) {
       logError("❌ PlaysService.getPlaysByIds failed:", error);
       throw error;
@@ -327,6 +349,7 @@ export class PlaysService {
           ? normalizeText(updates.formation)
           : undefined,
         formation_id: updates.formation_id,
+        formation_direction: updates.formation_direction,
         formation_status: updates.formation_status,
         sanitized_at: updates.sanitized_at,
 
@@ -363,6 +386,8 @@ export class PlaysService {
         pref_hash: updates.pref_hash,
         pref_cov: updates.pref_cov,
         pref_front: updates.pref_front,
+        pref_field_pos: updates.pref_field_pos,
+        pref_situation: updates.pref_situation,
 
         // Performance
         confidence_base: updates.confidence_base,

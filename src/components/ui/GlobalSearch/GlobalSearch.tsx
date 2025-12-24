@@ -50,6 +50,11 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
     handleClear,
     handleMobileClear,
 
+    // Recent searches
+    recentSearches,
+    handleRecentSearchClick,
+    handleClearHistory,
+
     // Helpers
     getTypeIcon,
     getTypeColor,
@@ -70,6 +75,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
         isLoading={isLoading}
         results={results}
         selectedIndex={selectedIndex}
+        recentSearches={recentSearches}
         inputRef={inputRef}
         containerRef={containerRef}
         onInputChange={handleInputChange}
@@ -78,6 +84,8 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
         onBlur={handleBlur}
         onClear={handleClear}
         onResultClick={handleResultClick}
+        onRecentSearchClick={handleRecentSearchClick}
+        onClearHistory={handleClearHistory}
         getTypeIcon={getTypeIcon}
         getTypeColor={getTypeColor}
         className={className}
@@ -90,12 +98,15 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
         isLoading={isLoading}
         results={results}
         selectedIndex={selectedIndex}
+        recentSearches={recentSearches}
         inputRef={mobileInputRef}
         onClose={handleMobileSearchClose}
         onInputChange={handleInputChange}
         onKeyDown={handleKeyDown}
         onClear={handleMobileClear}
         onResultClick={handleResultClick}
+        onRecentSearchClick={handleRecentSearchClick}
+        onClearHistory={handleClearHistory}
         getTypeIcon={getTypeIcon}
         getTypeColor={getTypeColor}
       />

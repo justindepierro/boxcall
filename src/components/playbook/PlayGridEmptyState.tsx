@@ -342,7 +342,7 @@ const TemplateCard: React.FC<{
 
 const EmptyPlaybookQuickTips: React.FC = () => (
   <div className="max-w-2xl w-full grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
-    <div className="text-center p-4 rounded-2xl bg-secondary dark:bg-navy-800/50">
+    <div className="text-center p-4 rounded-2xl bg-secondary dark:bg-navy-800/80">
       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-electric-500 to-purple-500 flex items-center justify-center mx-auto mb-3">
         <Icon name="zap" className="w-6 h-6 text-white" />
       </div>
@@ -354,7 +354,7 @@ const EmptyPlaybookQuickTips: React.FC = () => (
       </Typography>
     </div>
 
-    <div className="text-center p-4 rounded-2xl bg-secondary dark:bg-navy-800/50">
+    <div className="text-center p-4 rounded-2xl bg-secondary dark:bg-navy-800/80">
       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mx-auto mb-3">
         <Icon name="upload" className="w-6 h-6 text-white" />
       </div>
@@ -366,7 +366,7 @@ const EmptyPlaybookQuickTips: React.FC = () => (
       </Typography>
     </div>
 
-    <div className="text-center p-4 rounded-2xl bg-secondary dark:bg-navy-800/50">
+    <div className="text-center p-4 rounded-2xl bg-secondary dark:bg-navy-800/80">
       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-jade-500 to-emerald-500 flex items-center justify-center mx-auto mb-3">
         <Icon name="image" className="w-6 h-6 text-white" />
       </div>

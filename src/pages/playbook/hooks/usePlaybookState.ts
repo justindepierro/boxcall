@@ -46,10 +46,24 @@ export function usePlaybookState({
     );
   }, [activeTeamId, allPlaysForStats, teamPlaybookIds]);
 
+  const playbookIdsWithPlays = useMemo(() => {
+    const ids = new Set<string>();
+    for (const p of playsForActiveTeam) {
+      if (p?.playbook_id) ids.add(p.playbook_id);
+    }
+    return ids;
+  }, [playsForActiveTeam]);
+
   const teamPlayCount = playsForActiveTeam.length;
 
   // State for selected playbook
   const [selectedPlaybookId, setSelectedPlaybookId] = useState<string>("");
+
+  const selectedPlaybookPlayCount = useMemo(() => {
+    if (!selectedPlaybookId) return teamPlayCount;
+    return playsForActiveTeam.filter((p) => p.playbook_id === selectedPlaybookId)
+      .length;
+  }, [playsForActiveTeam, selectedPlaybookId, teamPlayCount]);
 
   // Recent activities
   const [recentActivities, setRecentActivities] = useState<PlayActivityItem[]>(
@@ -69,8 +83,8 @@ export function usePlaybookState({
       dispatch({ type: "SET_PLAYS_CREATED", count: 0 });
       return;
     }
-    dispatch({ type: "SET_PLAYS_CREATED", count: teamPlayCount });
-  }, [activeTeamId, dispatch, teamPlayCount]);
+    dispatch({ type: "SET_PLAYS_CREATED", count: selectedPlaybookPlayCount });
+  }, [activeTeamId, dispatch, selectedPlaybookPlayCount]);
 
   // Initialize selected playbook from preferences
   useEffect(() => {
@@ -88,14 +102,16 @@ export function usePlaybookState({
     ) {
       setSelectedPlaybookId(savedPlaybookId);
     } else {
-      const playbookWithPlays = teamPlaybooks.find(
-        (pb) => (pb.play_count || 0) > 0
+      // `play_count` isn't always reliable (can be 0 in some fetch paths).
+      // Prefer the first playbook that actually has any plays loaded.
+      const playbookWithPlays = teamPlaybooks.find((pb) =>
+        playbookIdsWithPlays.has(pb.id)
       );
       const defaultPlaybook = playbookWithPlays || teamPlaybooks[0];
       setSelectedPlaybookId(defaultPlaybook.id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTeamId, teamPlaybooks.length]);
+  }, [activeTeamId, teamPlaybooks.length, playbookIdsWithPlays]);
 
   // Save preference when playbook changes
   const handlePlaybookChange = useCallback(
@@ -219,7 +235,9 @@ export function usePlaybookState({
     })();
   }, [allPlaysForStats, dispatch, toast]);
 
-  const activePlaybookId = selectedPlaybookId || activeTeamId || "";
+  // Never fall back to teamId here; PlayGrid expects a real playbook id.
+  const activePlaybookId =
+    selectedPlaybookId || teamPlaybooks[0]?.id || "";
 
   return {
     selectedPlaybookId,

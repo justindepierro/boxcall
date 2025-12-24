@@ -5,6 +5,7 @@ import { memo, useState, useCallback } from "react";
 import { Icon } from "../ui/Icon/Icon";
 import { useIsMobile } from "../../hooks/useBreakpoint";
 import type { Play } from "../../types/play";
+import { getFormationDirDisplayLabel } from "../../utils/leftRight";
 
 interface PlayDetailModalProps {
   play: Play;
@@ -45,6 +46,8 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
       PLAY_TYPE_GRADIENTS[play.p_type as keyof typeof PLAY_TYPE_GRADIENTS] ||
       "from-gray-500 to-slate-500";
 
+    const formationDirectionLabel = getFormationDirDisplayLabel(play, "full");
+
     return (
       <div
         className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md animate-in fade-in duration-200"
@@ -80,7 +83,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-lg"
+              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/35 hover:bg-white/45 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-lg"
               aria-label="Close modal"
             >
               <Icon name="close" className="w-5 h-5 text-white" />
@@ -92,12 +95,12 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
             >
               <div className="flex items-center gap-2 mb-1">
                 <span
-                  className={`inline-flex items-center px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-bold uppercase tracking-wide`}
+                  className={`inline-flex items-center px-2.5 py-1 rounded-full bg-white/35 backdrop-blur-md text-white text-xs font-bold uppercase tracking-wide`}
                 >
                   {play.p_type}
                 </span>
                 {play.f_type && !isMobile && (
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-white/15 backdrop-blur-md text-white text-xs font-semibold">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-white/30 backdrop-blur-md text-white text-xs font-semibold">
                     {play.f_type}
                   </span>
                 )}
@@ -111,7 +114,7 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                 {play.formation} {play.play_name}
               </h2>
               {play.one_word_play && !isMobile && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/25 backdrop-blur-md text-white text-sm font-bold border border-white/30">
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/40 backdrop-blur-md text-white text-sm font-bold border border-white/30">
                   <Icon name="zap" className="w-3.5 h-3.5 mr-1.5" />
                   {play.one_word_play.toUpperCase()}
                 </span>
@@ -287,13 +290,13 @@ export const PlayDetailModal = memo<PlayDetailModalProps>(
                           </div>
                         </div>
                       )}
-                      {play.f_dir && (
+                      {formationDirectionLabel && (
                         <div>
                           <div className="text-xs font-semibold text-muted dark:text-muted mb-2 uppercase tracking-wide">
                             Direction
                           </div>
                           <div className="text-base font-semibold text-primary dark:text-white">
-                            {play.f_dir}
+                            {formationDirectionLabel}
                           </div>
                         </div>
                       )}

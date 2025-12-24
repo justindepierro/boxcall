@@ -40,14 +40,21 @@
     {
       "name": "practice-plans-route",
       "match": [
-        "src/pages/PracticePlansPage.tsx",
-        "src/pages/PracticePlansPage.ts"
+        "src/pages/PracticePlansPage/index.ts",
+        "src/pages/PracticePlansPage/PracticePlansPage.tsx",
+        "PracticePlansPage",
+        "_PracticePlansPage-"
       ],
       "maxGzipBytes": 480000
     },
     {
       "name": "game-plans-route",
-      "match": ["src/pages/GamePlansPage.tsx", "src/pages/GamePlansPage.ts"],
+      "match": [
+        "src/pages/GamePlansPage/index.ts",
+        "src/pages/GamePlansPage/GamePlansPageContent.tsx",
+        "GamePlansPage",
+        "_GamePlansPage-"
+      ],
       "maxGzipBytes": 480000
     },
     {

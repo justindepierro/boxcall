@@ -96,7 +96,7 @@ export const CreatePersonnelModal: React.FC<CreatePersonnelModalProps> = ({
         {/* Header */}
         <div className="bg-gradient-to-r from-purple-600 to-purple-700 p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
               <Icon name="plus" size="sm" className="text-white" />
             </div>
             <h3 className="text-lg font-bold text-white">
@@ -105,7 +105,7 @@ export const CreatePersonnelModal: React.FC<CreatePersonnelModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
           >
             <Icon name="close" size="sm" className="text-white" />
           </button>

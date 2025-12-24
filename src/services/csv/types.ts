@@ -13,9 +13,27 @@ export interface CSVPlayData {
   p_type: string;
   personnel?: string;
   f_type?: string;
+  f_dir?: string;
+  formation_direction?: string;
+  ftag1?: string;
+  ftag2?: string;
+  back_align?: string;
+  shift?: string;
+  motion?: string;
+  p_tag1?: string;
+  p_tag2?: string;
+  p_dir?: string;
   pref_down?: string;
   pref_dis?: string;
+  pref_hash?: string;
+  pref_cov?: string;
+  pref_front?: string;
+  pref_field_pos?: string;
+  pref_situation?: string;
   protection?: string;
+  check_into?: string;
+  key_player1?: string;
+  key_player2?: string;
   r_str?: string;
   p_str?: string;
   notes?: string;
@@ -28,6 +46,8 @@ export interface CSVImportResult {
   errors: string[];
   warnings: string[];
   plays: Play[];
+  /** Convenience mapping for row-level actions (create/update) */
+  playsByRowNumber?: Record<number, Play>;
   parsedPlays: CSVPlayPreview[];
   needsConfirmation?: boolean;
   confirmationMessage?: string;
@@ -67,8 +87,10 @@ export interface CSVParseResult {
   };
   /** Optional: Existing plays for validation suggestions */
   existingPlays?: Array<{
+    id?: string;
     formation?: string | null;
     play_name?: string | null;
+    p_type?: string | null;
     personnel?: string | null;
   }>;
 }

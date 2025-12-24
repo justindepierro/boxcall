@@ -91,14 +91,14 @@ export const CreateFormationModal: React.FC<CreateFormationModalProps> = ({
         {/* Header */}
         <div className="bg-gradient-to-r from-jade-600 to-jade-700 p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
               <Icon name="plus" size="sm" className="text-white" />
             </div>
             <h3 className="text-lg font-bold text-white">Create Formation</h3>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
           >
             <Icon name="close" size="sm" className="text-white" />
           </button>

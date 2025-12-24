@@ -44,7 +44,8 @@ import {
   writeLocalString,
 } from "../../utils/storage";
 import { usePlayFieldValues } from "./AddNewPlayModal/hooks/usePlayFieldValues";
-import { debug, logError } from "../../utils/logger";
+import { info, logError } from "../../utils/logger";
+import { legacyValueToLeftRight } from "../../utils/leftRight";
 
 interface PlayCardProps {
   play: PlayType;
@@ -161,24 +162,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   // Extract unique field values for validation
   const fieldValues = usePlayFieldValues(existingPlays);
 
-  // DEBUG: Log play data to check what's in the database
-  useEffect(() => {
-    if (!import.meta.env.DEV) return;
-    debug("[PlayCard] Play data from database:", {
-      play_name: play.play_name,
-      formation: play.formation,
-      f_type: play.f_type,
-      back_align: play.back_align,
-      shift: play.shift,
-      motion: play.motion,
-      r_str: play.r_str,
-      p_str: play.p_str,
-      protection: play.protection,
-      one_word_play: play.one_word_play,
-      wristband_number: play.wristband_number,
-    });
-  }, [play]);
-
   const [optimisticPlay, setOptimisticPlay] = useState<PlayType>(play);
   const [savingFields, setSavingFields] = useState<SaveQueue>(new Set());
   const [formationFieldOrder, setFormationFieldOrder] = useState<string[]>(
@@ -218,6 +201,32 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     return savedPreference === "true";
   });
   const isExpanded = controlledIsExpanded ?? internalIsExpanded;
+
+  // DEBUG: Log play data for the currently-expanded card (dev only)
+  useEffect(() => {
+    if (!import.meta.env.DEV) return;
+    if (!isExpanded) return;
+
+    info("[PlayCard] Expanded play from database:", {
+      id: play.id,
+      play_name: play.play_name,
+      formation: play.formation,
+      // Direction fields
+      formation_direction: play.formation_direction,
+      f_dir: play.f_dir,
+      formation_id: play.formation_id,
+      // Misc
+      f_type: play.f_type,
+      back_align: play.back_align,
+      shift: play.shift,
+      motion: play.motion,
+      r_str: play.r_str,
+      p_str: play.p_str,
+      protection: play.protection,
+      one_word_play: play.one_word_play,
+      wristband_number: play.wristband_number,
+    });
+  }, [isExpanded, play]);
 
   useEffect(() => {
     // Only sync when play prop actually changes (new data from server)
@@ -338,11 +347,23 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   }, [play.install_phase]);
 
   const handleInlineSave = useCallback(
-    async (field: keyof PlayType, value: string | number | boolean | null) => {
+    async (
+      field: keyof PlayType,
+      value: string | number | boolean | null | string[]
+    ) => {
       const fieldName = field as string;
 
+      const updates: Partial<PlayType> = { [field]: value } as Partial<PlayType>;
+
+      // Keep legacy formation direction (f_dir) and new variant direction (formation_direction)
+      // aligned so the UI stays consistent.
+      if (field === "f_dir") {
+        const dir = legacyValueToLeftRight(String(value ?? ""));
+        updates.formation_direction = dir;
+      }
+
       setOptimisticPlay((prev) => {
-        const updated = { ...prev, [field]: value };
+        const updated = { ...prev, ...updates };
         return updated;
       });
 
@@ -350,11 +371,17 @@ export const PlayCard: React.FC<PlayCardProps> = ({
 
       try {
         if (onSave) {
-          await onSave(play.id, { [field]: value });
+          await onSave(play.id, updates);
         }
       } catch (error) {
         logError(`[PlayCard] Failed to save ${fieldName}, reverting:`, error);
-        setOptimisticPlay((prev) => ({ ...prev, [field]: play[field] }));
+        setOptimisticPlay((prev) => {
+          const reverted: Partial<PlayType> = { [field]: play[field] };
+          if (field === "f_dir") {
+            reverted.formation_direction = play.formation_direction ?? null;
+          }
+          return { ...prev, ...reverted };
+        });
       } finally {
         setSavingFields((prev) => {
           const next = new Set(prev);

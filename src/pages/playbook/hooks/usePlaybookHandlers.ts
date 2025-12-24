@@ -61,6 +61,14 @@ function usePlaybookViewHandlers(params: { dispatch: React.Dispatch<any> }) {
     [dispatch]
   );
 
+  const handleCategoryChange = useCallback(
+    (category?: PlaybookState["selectedCategory"], subcategory?: string) => {
+      triggerHapticFeedback("selection");
+      dispatch({ type: "SET_CATEGORY", category, subcategory });
+    },
+    [dispatch]
+  );
+
   const handleClearSelection = useCallback(() => {
     dispatch({ type: "CLEAR_SELECTION" });
   }, [dispatch]);
@@ -69,6 +77,7 @@ function usePlaybookViewHandlers(params: { dispatch: React.Dispatch<any> }) {
     handleViewChange,
     handleTeamTypeChange,
     handleFiltersChange,
+    handleCategoryChange,
     handleClearSelection,
   };
 }
@@ -85,6 +94,12 @@ function usePlaybookModalHandlers(params: {
     triggerHapticFeedback("light");
     openModal("addNewPlay");
     smartPreloader.recordAction("open_modal", "formation_builder");
+  }, [openModal]);
+
+  const handleOpenBulkQuickAdd = useCallback(() => {
+    triggerHapticFeedback("light");
+    openModal("bulkQuickAddPlays");
+    smartPreloader.recordAction("open_modal", "bulk_quick_add");
   }, [openModal]);
 
   const handleOpenQuickCreate = useCallback(() => {
@@ -136,6 +151,7 @@ function usePlaybookModalHandlers(params: {
 
   return {
     handleOpenBuilder,
+    handleOpenBulkQuickAdd,
     handleOpenQuickCreate,
     handleOpenSettings,
     handleOpenPersonnel,

@@ -9,6 +9,11 @@ const AddNewPlayModal = lazy(() =>
     default: module.AddNewPlayModal,
   }))
 );
+const BulkQuickAddPlaysModal = lazy(() =>
+  import("../BulkQuickAddPlaysModal").then((module) => ({
+    default: module.BulkQuickAddPlaysModal,
+  }))
+);
 const PlaybookSettingsModal = lazy(() =>
   import("../PlaybookSettingsModal").then((module) => ({
     default: module.PlaybookSettingsModal,
@@ -101,6 +106,21 @@ export function PlaybookModals({
             onCreatePlay={handleCreatePlay}
             playbookId={activePlaybookId}
             existingPlays={existingPlays}
+          />
+        </Suspense>
+      )}
+
+      {/* Bulk Quick Add Plays */}
+      {isModalOpen("bulkQuickAddPlays") && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <BulkQuickAddPlaysModal
+            isOpen={isModalOpen("bulkQuickAddPlays")}
+            onClose={() => closeModal()}
+            playbookId={activePlaybookId}
+            existingPlays={existingPlays}
+            onCreated={() => {
+              dispatch({ type: "INCREMENT_REFRESH" });
+            }}
           />
         </Suspense>
       )}

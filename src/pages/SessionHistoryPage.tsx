@@ -137,7 +137,7 @@ const SessionHistoryHeader: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       <div className="flex items-center gap-3 mb-2">
         <button
           onClick={onBack}
-          className="w-10 h-10 rounded-xl bg-white/80 backdrop-blur-sm border border-slate-200 flex items-center justify-center hover:bg-white transition-colors shadow-sm"
+          className="w-10 h-10 rounded-xl bg-white/90 backdrop-blur-sm border border-slate-200 flex items-center justify-center hover:bg-white transition-colors shadow-sm"
         >
           <Icon name="arrow-left" className="h-5 w-5 text-slate-600" />
         </button>
@@ -330,7 +330,7 @@ const SessionHistorySummary: React.FC<{ sessions: SessionDisplayItem[] }> = ({
         📊 Performance Summary
       </Typography>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center">
+        <div className="bg-white/35 backdrop-blur-sm rounded-2xl p-4 text-center">
           <div className="text-3xl font-black text-white">
             {sessions.length}
           </div>
@@ -338,7 +338,7 @@ const SessionHistorySummary: React.FC<{ sessions: SessionDisplayItem[] }> = ({
             Total Sessions
           </div>
         </div>
-        <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center">
+        <div className="bg-white/35 backdrop-blur-sm rounded-2xl p-4 text-center">
           <div className="text-3xl font-black text-white">
             {sessions.filter((s) => s.type === "practice").length}
           </div>
@@ -346,7 +346,7 @@ const SessionHistorySummary: React.FC<{ sessions: SessionDisplayItem[] }> = ({
             Practices
           </div>
         </div>
-        <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center">
+        <div className="bg-white/35 backdrop-blur-sm rounded-2xl p-4 text-center">
           <div className="text-3xl font-black text-white">
             {sessions.filter((s) => s.type === "game").length}
           </div>
@@ -354,7 +354,7 @@ const SessionHistorySummary: React.FC<{ sessions: SessionDisplayItem[] }> = ({
             Games
           </div>
         </div>
-        <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center">
+        <div className="bg-white/35 backdrop-blur-sm rounded-2xl p-4 text-center">
           <div className="text-3xl font-black text-white">
             {Math.round(
               sessions.reduce((acc, s) => acc + s.stats.successRate, 0) /

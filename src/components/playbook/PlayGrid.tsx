@@ -58,9 +58,17 @@ interface PlayGridProps {
     distance?: string;
     tags?: string[];
   };
+  advancedFilters?: Array<{
+    id: string;
+    field: string;
+    operator: "equals" | "contains" | "in";
+    value: string | string[];
+    label: string;
+  }>;
   optimisticPlays?: Play[];
   selectedCategory?: string;
   selectedSubcategory?: string;
+  playbookId?: string;
   onEdit?: (play: Play) => void;
   onSave?: (playId: string, updates: Partial<Play>) => Promise<void>;
   onDuplicate?: (play: Play) => void;
@@ -86,9 +94,11 @@ interface PlayGridProps {
 const PlayGridInner: React.FC<PlayGridProps> = ({
   searchQuery,
   filters,
+  advancedFilters = [],
   optimisticPlays = [],
   selectedCategory,
   selectedSubcategory,
+  playbookId,
   onEdit,
   onDuplicate,
   onOpenAssignments,
@@ -105,6 +115,11 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 }) => {
   const activeTeamId = useActiveTeamStore((state) => state.activeTeamId);
   const isMobile = useIsMobile();
+
+  const effectivePlaybookId = useMemo(() => {
+    const trimmed = String(playbookId ?? "").trim();
+    return trimmed.length > 0 ? trimmed : null;
+  }, [playbookId]);
 
   // Extracted hooks
   const {
@@ -131,7 +146,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     loadingMorePlays,
     totalPlaysCount,
     loadMorePlays,
-  } = useTeamsData();
+  } = useTeamsData(undefined, { playbookId: effectivePlaybookId });
 
   // Refresh on trigger change
   useEffect(() => {
@@ -156,11 +171,34 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     return [...uniqueOptimisticPlays, ...databasePlays];
   }, [optimisticPlays, databasePlays]);
 
+  const scopedPlays: Play[] = useMemo(() => {
+    if (!effectivePlaybookId) return plays;
+    return plays.filter((play) => play.playbook_id === effectivePlaybookId);
+  }, [plays, effectivePlaybookId]);
+
+  // Dev-only tracing for playbook scoping issues
+  useEffect(() => {
+    if (!import.meta.env.DEV) return;
+    if (loading) return;
+    const uniquePlaybookIds = Array.from(
+      new Set((allPlays || []).map((p: any) => String(p?.playbook_id ?? "")))
+    ).filter(Boolean);
+    debug("[PlayGrid] scope trace", {
+      activeTeamId,
+      playbookIdProp: playbookId,
+      effectivePlaybookId,
+      dbPlaysCount: (allPlays || []).length,
+      mergedPlaysCount: plays.length,
+      scopedPlaysCount: scopedPlays.length,
+      uniquePlaybookIdsSample: uniquePlaybookIds.slice(0, 10),
+    });
+  }, [activeTeamId, allPlays, effectivePlaybookId, loading, playbookId, plays.length, scopedPlays.length]);
+
   // Notify parent of play count changes
   useEffect(() => {
     if (!onPlayCountChange || loading) return;
-    onPlayCountChange(plays.length);
-  }, [loading, plays.length, onPlayCountChange]);
+    onPlayCountChange(scopedPlays.length);
+  }, [loading, scopedPlays.length, onPlayCountChange]);
 
   // Validate database integration (dev only)
   useEffect(() => {
@@ -193,9 +231,10 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
   // Filtering
   const { filteredPlays, hasFilters } = usePlayFiltering({
-    plays,
+    plays: scopedPlays,
     searchQuery,
     filters,
+    advancedFilters,
     selectedCategory,
     selectedSubcategory,
     favoriteIds,
@@ -227,9 +266,10 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   });
 
   // Personnel configurations
-  const playbookId = plays.length > 0 ? plays[0].playbook_id : undefined;
+  const playbookIdForPersonnel =
+    playbookId ?? (plays.length > 0 ? plays[0].playbook_id : undefined);
   const { data: personnelConfigurations = [] } =
-    usePersonnelConfigurations(playbookId);
+    usePersonnelConfigurations(playbookIdForPersonnel);
 
   // Collected suggestions
   const collectedSuggestions = useCollectedSuggestions({

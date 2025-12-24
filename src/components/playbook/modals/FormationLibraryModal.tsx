@@ -72,7 +72,7 @@ const FormationLibraryHeader: React.FC<FormationLibraryHeaderProps> = ({
   <div className="bg-gradient-to-r from-jade-600 to-jade-700 p-4 sm:p-6 border-b border-divider shadow-lg">
     <div className="flex items-center justify-between mb-4">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
+        <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
           <Icon name="grid" size="lg" className="text-white" />
         </div>
         <div>
@@ -84,7 +84,7 @@ const FormationLibraryHeader: React.FC<FormationLibraryHeaderProps> = ({
       </div>
       <button
         onClick={onClose}
-        className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+        className="w-10 h-10 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
       >
         <Icon name="close" size="lg" className="text-white" />
       </button>

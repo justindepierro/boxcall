@@ -19,9 +19,17 @@ export const flipPlayName = (playName: string): string => {
 };
 
 export const flipFormationDirection = (direction: string): string => {
-  // Simple flip: swap Left/Right
-  if (direction === "Left") return "Right";
-  if (direction === "Right") return "Left";
+  const raw = (direction || "").trim();
+  const upper = raw.toUpperCase();
+
+  // Preserve the incoming format when possible
+  if (upper === "LEFT") return raw === "LEFT" ? "RIGHT" : "Right";
+  if (upper === "RIGHT") return raw === "RIGHT" ? "LEFT" : "Left";
+  if (upper === "L") return "R";
+  if (upper === "R") return "L";
+  if (upper === "LT") return raw === "LT" ? "RT" : "Rt";
+  if (upper === "RT") return raw === "RT" ? "LT" : "Lt";
+
   return direction;
 };
 

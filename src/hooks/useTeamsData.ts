@@ -52,7 +52,14 @@ interface DatabasePlay {
   ftag2?: string;
   p_tag1?: string;
   p_tag2?: string;
+  // NEW - Play metadata arrays
+  tags?: string[] | null;
+  key_positions?: string[] | null;
+  key_players?: string[] | null;
+  flags?: string[] | null;
   back_align?: string;
+  back_left_of_qb?: boolean;
+  back_right_of_qb?: boolean;
   shift?: string;
   motion?: string;
   key_player1?: string;
@@ -65,6 +72,8 @@ interface DatabasePlay {
   diagram_url?: string | null; // Matches DB schema - see src/types/supabase-schema.ts:840
   diagram_image_url?: string | null; // Uploaded diagram image URL
   diagram_data?: any | null; // JSONB field for Pixi.js diagram data
+  formation_id?: string | null;
+  formation_direction?: "base" | "left" | "right" | null;
   wristband_number?: string | null;
   created_at: string;
   updated_at: string;
@@ -76,7 +85,7 @@ const TEAM_FIELDS =
 const PLAYBOOK_FIELDS =
   "id, team_id, name, description, is_active, play_count, created_at, updated_at";
 const PLAY_SELECT_FIELDS =
-  "id, playbook_id, formation, play_name, one_word_play, p_type, personnel, f_type, f_dir, p_dir, protection, r_str, p_str, pref_down, pref_dis, pref_hash, pref_cov, pref_front, ftag1, ftag2, p_tag1, p_tag2, back_align, back_left_of_qb, back_right_of_qb, shift, motion, key_player1, key_player2, check_into, notes, diagram_url, diagram_image_url, wristband_number, confidence_base, times_called, times_successful, created_at, updated_at";
+  "id, playbook_id, formation, play_name, one_word_play, p_type, personnel, f_type, f_dir, formation_id, formation_direction, p_dir, protection, r_str, p_str, pref_down, pref_dis, pref_hash, pref_cov, pref_front, ftag1, ftag2, p_tag1, p_tag2, tags, key_positions, key_players, flags, back_align, back_left_of_qb, back_right_of_qb, shift, motion, key_player1, key_player2, check_into, notes, diagram_url, diagram_image_url, wristband_number, confidence_base, times_called, times_successful, created_at, updated_at";
 
 function useTeamsDataInitialLoadEffect({
   teamId,
@@ -90,6 +99,7 @@ function useTeamsDataInitialLoadEffect({
   setPlaysPage,
   setHasMorePlays,
   setTotalPlaysCount,
+  playbookId,
 }: {
   teamId: string | null;
   refreshTrigger: number;
@@ -102,6 +112,7 @@ function useTeamsDataInitialLoadEffect({
   setPlaysPage: React.Dispatch<React.SetStateAction<number>>;
   setHasMorePlays: React.Dispatch<React.SetStateAction<boolean>>;
   setTotalPlaysCount: React.Dispatch<React.SetStateAction<number | null>>;
+  playbookId: string | null;
 }) {
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -126,7 +137,6 @@ function useTeamsDataInitialLoadEffect({
       setLoading(false);
       setError(null);
       return () => {
-        isMounted = false;
         controller.abort();
         if (abortControllerRef.current === controller) {
           abortControllerRef.current = null;
@@ -186,7 +196,7 @@ function useTeamsDataInitialLoadEffect({
         }
 
         const playbookIds = scopedPlaybooks.map((pb) => pb.id);
-        if (playbookIds.length === 0) {
+        if (playbookIds.length === 0 && !playbookId) {
           debug("[useTeamsData] No playbooks found");
           setFormations([]);
           setPlays([]);
@@ -197,14 +207,18 @@ function useTeamsDataInitialLoadEffect({
           return;
         }
 
+        // If a playbookId is explicitly requested (e.g., PlayGrid scope), honor it
+        // even if the playbook list hasn't populated yet.
+        const scopedPlaybookIds = playbookId ? [playbookId] : playbookIds;
+
         const [formationsResult, playsResult] = await Promise.all([
           table("formations")
             .select("*")
-            .in("playbook_id", playbookIds)
+            .in("playbook_id", scopedPlaybookIds)
             .order("created_at", { ascending: false }),
           table("plays")
             .select(PLAY_SELECT_FIELDS)
-            .in("playbook_id", playbookIds)
+            .in("playbook_id", scopedPlaybookIds)
             .order("created_at", { ascending: false })
             .limit(PAGE_SIZE),
         ]);
@@ -224,6 +238,17 @@ function useTeamsDataInitialLoadEffect({
           warn("Plays table not available:", playsResult.error.message);
         } else {
           const playsData = (playsResult.data || []) as DatabasePlay[];
+          if (import.meta.env.DEV) {
+            debug("[useTeamsData] Plays fetched", {
+              teamId: teamIdForQuery,
+              requestedPlaybookId: playbookId,
+              scopedPlaybookIds,
+              playsCount: playsData.length,
+              samplePlaybookIds: Array.from(
+                new Set(playsData.slice(0, 10).map((p) => (p as any).playbook_id))
+              ),
+            });
+          }
           debug("[useTeamsData] Loaded", playsData.length, "plays");
           setHasMorePlays(playsData.length === PAGE_SIZE);
           setPlays(playsData);
@@ -263,10 +288,14 @@ function useTeamsDataInitialLoadEffect({
     setPlaysPage,
     setHasMorePlays,
     setTotalPlaysCount,
+    playbookId,
   ]);
 }
 
-export function useTeamsData(teamIdOverride?: string | null) {
+export function useTeamsData(
+  teamIdOverride?: string | null,
+  options?: { playbookId?: string | null }
+) {
   const [teams, setTeams] = useState<Team[]>([]);
   const [playbooks, setPlaybooks] = useState<Playbook[]>([]);
   const [plays, setPlays] = useState<DatabasePlay[]>([]);
@@ -345,6 +374,7 @@ export function useTeamsData(teamIdOverride?: string | null) {
     setPlaysPage,
     setHasMorePlays,
     setTotalPlaysCount,
+    playbookId: options?.playbookId ?? null,
   });
 
   // Function to load more plays (for infinite scroll)
@@ -359,6 +389,9 @@ export function useTeamsData(teamIdOverride?: string | null) {
       return;
     }
 
+    const requestedPlaybookId = options?.playbookId ?? null;
+    const scopedPlaybookIds = requestedPlaybookId ? [requestedPlaybookId] : playbookIds;
+
     try {
       setLoadingMorePlays(true);
       const nextPage = playsPage + 1;
@@ -370,7 +403,7 @@ export function useTeamsData(teamIdOverride?: string | null) {
         async () =>
           (await table("plays")
             .select(PLAY_SELECT_FIELDS)
-            .in("playbook_id", playbookIds)
+            .in("playbook_id", scopedPlaybookIds)
             .order("created_at", { ascending: false })
             .range(from, to)) as any
       );
@@ -395,7 +428,7 @@ export function useTeamsData(teamIdOverride?: string | null) {
     } finally {
       setLoadingMorePlays(false);
     }
-  }, [hasMorePlays, loadingMorePlays, playbooks, playsPage, teamId]);
+  }, [hasMorePlays, loadingMorePlays, options?.playbookId, playbooks, playsPage, teamId]);
 
   return {
     teams,

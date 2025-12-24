@@ -41,6 +41,7 @@ import {
   detectDirectionInFormationName,
   type DirectionDetectionResult,
 } from "../../utils/formationDirectionDetection";
+import { leftRightToLegacyValue, parseLeftRight } from "../../utils/leftRight";
 import {
   validateFormationName,
   validatePersonnelValue,
@@ -163,6 +164,13 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         .map((t: string) => t.trim())
         .filter(Boolean);
 
+      // Direction can come from either legacy formData.formationDir ("R", "Right", etc)
+      // or the newer enum-like formData.formation_direction ("right"). Keep them aligned.
+      const formationDirToken = parseLeftRight(
+        String(formData.formation_direction ?? formData.formationDir)
+      );
+      const canonicalLegacyFDir = leftRightToLegacyValue(formationDirToken);
+
       const playData = {
         formation: formData.formation.trim(), // Just TEXT - simple!
         play_name: formData.playName.trim(),
@@ -171,7 +179,9 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
         // Formation fields
         f_type: formData.formationType.trim() || undefined,
-        f_dir: formData.formationDir || undefined,
+        f_dir:
+          canonicalLegacyFDir || (formData.formationDir || "").trim() || undefined,
+        formation_direction: formationDirToken,
         back_align: formData.backAlign.trim() || undefined,
         back_left_of_qb: formData.backLeftOfQb || undefined,
         back_right_of_qb: formData.backRightOfQb || undefined,
@@ -282,6 +292,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
     updateFields({
       formation: cleanName,
       formationDir: direction,
+      formation_direction: direction === "L" ? "left" : "right",
     });
   };
 
@@ -576,6 +587,35 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             }
           />
 
+          {/* Tags (visible by default) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-sm">
+            <div>
+              <Typography variant="label-md" className="block mb-xs text-secondary">
+                Formation Tags
+              </Typography>
+              <input
+                type="text"
+                value={formData.formationTags}
+                onChange={(e) => updateField("formationTags", e.target.value)}
+                placeholder="e.g., Twins, Trips, Bunch"
+                className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
+              />
+            </div>
+
+            <div>
+              <Typography variant="label-md" className="block mb-xs text-secondary">
+                Play Tags
+              </Typography>
+              <input
+                type="text"
+                value={formData.playTags}
+                onChange={(e) => updateField("playTags", e.target.value)}
+                placeholder="e.g., Red Zone, 3rd&Short"
+                className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
+              />
+            </div>
+          </div>
+
           {/* Play Name Section */}
           <PlayNameSection
             playName={formData.playName}
@@ -650,7 +690,6 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             backRightOfQb={formData.backRightOfQb}
             shift={formData.shift}
             motion={formData.motion}
-            formationTags={formData.formationTags}
             runStrength={formData.runStrength}
             passStrength={formData.passStrength}
             onFormationTypeChange={(value) =>
@@ -664,20 +703,15 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             }
             onShiftChange={(value) => updateField("shift", value)}
             onMotionChange={(value) => updateField("motion", value)}
-            onFormationTagsChange={(value) =>
-              updateField("formationTags", value)
-            }
             onRunStrengthChange={(value) => updateField("runStrength", value)}
             onPassStrengthChange={(value) => updateField("passStrength", value)}
             // Play details
             playDir={formData.playDir}
             protection={formData.protection}
             checkInto={formData.checkInto}
-            playTags={formData.playTags}
             onPlayDirChange={(value) => updateField("playDir", value)}
             onProtectionChange={(value) => updateField("protection", value)}
             onCheckIntoChange={(value) => updateField("checkInto", value)}
-            onPlayTagsChange={(value) => updateField("playTags", value)}
             // Confidence
             confidence={formData.confidence}
             onConfidenceChange={(value) => updateField("confidence", value)}

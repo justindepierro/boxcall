@@ -26,6 +26,7 @@ import { useState, useCallback } from "react";
 
 export type ModalType =
   | "addNewPlay"
+  | "bulkQuickAddPlays"
   | "playbookSettings"
   | "personnel"
   | "playbookHealth"

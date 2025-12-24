@@ -36,6 +36,9 @@ interface FilterField {
 interface AdvancedFiltersProps {
   onFiltersChange: (filters: ActiveFilter[]) => void;
   activeFilters: ActiveFilter[];
+  selectedCategory?: string;
+  selectedSubcategory?: string;
+  onCategoryChange?: (category?: string, subcategory?: string) => void;
 }
 
 const FILTER_FIELDS: FilterField[] = [
@@ -140,6 +143,9 @@ function buildFilterLabel(
 function useAdvancedFiltersController({
   onFiltersChange,
   activeFilters,
+  selectedCategory,
+  selectedSubcategory,
+  onCategoryChange,
 }: AdvancedFiltersProps) {
   const [showAddFilter, setShowAddFilter] = useState(false);
   // Advanced filters collapsed by default, load from localStorage for user preference
@@ -147,7 +153,11 @@ function useAdvancedFiltersController({
     const saved = readLocalString(storageKeys.playbook.advancedFiltersExpanded);
     return saved === "true";
   });
-  const [activePresetId, setActivePresetId] = useState<string>("all");
+  const [activePresetId, setActivePresetId] = useState<string>(() => {
+    if (selectedCategory === "favorites") return "favorites";
+    if (selectedCategory === "most-used") return "most-used";
+    return "all";
+  });
   const [newFilter, setNewFilter] = useState<NewFilterState>({
     field: "",
     operator: "equals",
@@ -167,10 +177,26 @@ function useAdvancedFiltersController({
   const handlePresetSelect = (preset: FilterPreset) => {
     setActivePresetId(preset.id);
 
-    if (preset.filters.length === 0) {
-      // "All Plays" preset - clear all filters
+    // Favorites / Most Used are implemented via PlayGrid's category pipeline.
+    if (preset.id === "favorites" || preset.id === "most-used") {
+      onCategoryChange?.(preset.id, undefined);
       onFiltersChange([]);
       return;
+    }
+
+    // "All Plays" preset - clear category + advanced filters
+    if (preset.filters.length === 0) {
+      if (selectedCategory || selectedSubcategory) {
+        onCategoryChange?.(undefined, undefined);
+      }
+
+      onFiltersChange([]);
+      return;
+    }
+
+    // Any other preset should clear the category filters
+    if (selectedCategory || selectedSubcategory) {
+      onCategoryChange?.(undefined, undefined);
     }
 
     // Convert preset filters to ActiveFilter format
@@ -820,11 +846,17 @@ function DesktopAddFilter({
 export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
   onFiltersChange,
   activeFilters,
+  selectedCategory,
+  selectedSubcategory,
+  onCategoryChange,
 }) => {
   const isMobile = useIsMobile();
   const controller = useAdvancedFiltersController({
     onFiltersChange,
     activeFilters,
+    selectedCategory,
+    selectedSubcategory,
+    onCategoryChange,
   });
 
   if (isMobile) {

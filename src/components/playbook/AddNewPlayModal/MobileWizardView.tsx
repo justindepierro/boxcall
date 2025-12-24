@@ -20,19 +20,17 @@ import { Icon } from "../../ui/Icon/Icon";
 import { Typography } from "../../design-system/Typography";
 import {
   DIRECTION_OPTIONS,
-  DOWN_OPTIONS,
   DISTANCE_OPTIONS,
+  DOWN_OPTIONS,
   HASH_OPTIONS,
 } from "../play-card/constants";
 import { Button } from "../../ui/Button/Button";
 import type { PlayCombo } from "../../../hooks/useRecentPlayCombos";
 
 type WizardController = ReturnType<typeof useWizardState>;
-
 function buildSyntheticSubmitEvent(): React.FormEvent {
   return { preventDefault: () => {} } as React.FormEvent;
 }
-
 function isWizardStepValid(params: {
   step: number;
   formData: PlayFormData;
@@ -335,6 +333,34 @@ const WizardStepFour: React.FC<{
     optional
     className="flex-1"
   >
+    <div className="space-y-sm mb-md">
+      <div>
+        <Typography variant="label-md" className="block mb-xs text-secondary">
+          Formation Tags
+        </Typography>
+        <input
+          type="text"
+          value={formData.formationTags}
+          onChange={(e) => updateField("formationTags", e.target.value)}
+          placeholder="e.g., Twins, Trips, Bunch"
+          className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
+        />
+      </div>
+
+      <div>
+        <Typography variant="label-md" className="block mb-xs text-secondary">
+          Play Tags
+        </Typography>
+        <input
+          type="text"
+          value={formData.playTags}
+          onChange={(e) => updateField("playTags", e.target.value)}
+          placeholder="e.g., Red Zone, 3rd&Short"
+          className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
+        />
+      </div>
+    </div>
+
     <AdvancedOptionsSection
       isOpen={true}
       onToggle={() => {}}
@@ -345,7 +371,6 @@ const WizardStepFour: React.FC<{
       backRightOfQb={formData.backRightOfQb}
       shift={formData.shift}
       motion={formData.motion}
-      formationTags={formData.formationTags}
       runStrength={formData.runStrength}
       passStrength={formData.passStrength}
       onFormationTypeChange={(value) => updateField("formationType", value)}
@@ -355,17 +380,14 @@ const WizardStepFour: React.FC<{
       onBackRightOfQbChange={(value) => updateField("backRightOfQb", value)}
       onShiftChange={(value) => updateField("shift", value)}
       onMotionChange={(value) => updateField("motion", value)}
-      onFormationTagsChange={(value) => updateField("formationTags", value)}
       onRunStrengthChange={(value) => updateField("runStrength", value)}
       onPassStrengthChange={(value) => updateField("passStrength", value)}
       playDir={formData.playDir}
       protection={formData.protection}
       checkInto={formData.checkInto}
-      playTags={formData.playTags}
       onPlayDirChange={(value) => updateField("playDir", value)}
       onProtectionChange={(value) => updateField("protection", value)}
       onCheckIntoChange={(value) => updateField("checkInto", value)}
-      onPlayTagsChange={(value) => updateField("playTags", value)}
       confidence={formData.confidence}
       onConfidenceChange={(value) => updateField("confidence", value)}
       tags={formData.tags}

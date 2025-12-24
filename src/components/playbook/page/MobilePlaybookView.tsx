@@ -38,6 +38,7 @@ interface MobilePlaybookViewProps {
   showFiltersSheet: boolean;
   showStatsSheet: boolean;
   activeTeamId: string | null;
+  activePlaybookId: string | null;
   isLoadingPlays: boolean;
 
   // Data
@@ -70,6 +71,7 @@ interface MobilePlaybookViewProps {
   handleAddToGamePlan: (play: Play) => void;
   handlePlayCountChange: (change: number) => void;
   handleViewChange: (view: CoachingView) => void;
+  handleCategoryChange: (category?: string, subcategory?: string) => void;
   handleOpenPracticeScriptBuilder: (script?: PracticeScript) => void;
   dispatch: any; // TODO: Type properly
 
@@ -90,6 +92,7 @@ export function MobilePlaybookView({
   showFiltersSheet,
   showStatsSheet,
   activeTeamId,
+  activePlaybookId,
   isLoadingPlays,
   debouncedSearchQuery,
   optimisticPlays,
@@ -114,6 +117,7 @@ export function MobilePlaybookView({
   handleAddToGamePlan,
   handlePlayCountChange,
   handleViewChange,
+  handleCategoryChange,
   handleOpenPracticeScriptBuilder,
   dispatch,
   mobileButtonSize,
@@ -194,9 +198,9 @@ export function MobilePlaybookView({
                 >
                   <Icon name="filter" className="mr-1.5 h-4 w-4" />
                   Filter
-                  {Object.keys(state.advancedFilters).length > 0 && (
+                  {state.advancedFilters.length > 0 && (
                     <span className="ml-1.5 rounded-full bg-brand-jade px-1.5 py-0.5 text-center text-xs text-white">
-                      {Object.keys(state.advancedFilters).length}
+                      {state.advancedFilters.length}
                     </span>
                   )}
                 </Button>
@@ -323,6 +327,10 @@ export function MobilePlaybookView({
                       const commonPlayGridProps = {
                         searchQuery: debouncedSearchQuery,
                         filters: state.selectedFilters,
+                        advancedFilters: state.advancedFilters,
+                        selectedCategory: state.selectedCategory,
+                        selectedSubcategory: state.selectedSubcategory,
+                        playbookId: activePlaybookId ?? undefined,
                         optimisticPlays,
                         onAddToPracticeScript: handleAddToPracticeScript,
                         onAddToGamePlan: handleAddToGamePlan,
@@ -576,6 +584,9 @@ export function MobilePlaybookView({
                 onFiltersChange={(filters) =>
                   dispatch({ type: "SET_ADVANCED_FILTERS", filters })
                 }
+                selectedCategory={state.selectedCategory}
+                selectedSubcategory={state.selectedSubcategory}
+                onCategoryChange={handleCategoryChange}
               />
             </div>
 
@@ -585,6 +596,11 @@ export function MobilePlaybookView({
                 <Button
                   onClick={() => {
                     dispatch({ type: "SET_ADVANCED_FILTERS", filters: [] });
+                    dispatch({
+                      type: "SET_CATEGORY",
+                      category: undefined,
+                      subcategory: undefined,
+                    });
                     setShowFiltersSheet(false);
                   }}
                   variant="secondary"
@@ -603,12 +619,10 @@ export function MobilePlaybookView({
                   Apply Filters
                 </Button>
               </div>
-              {Object.keys(state.advancedFilters).length > 0 && (
+              {state.advancedFilters.length > 0 && (
                 <p className="text-center text-xs text-secondary mt-2">
-                  {Object.keys(state.advancedFilters).length} filter
-                  {Object.keys(state.advancedFilters).length === 1
-                    ? ""
-                    : "s"}{" "}
+                  {state.advancedFilters.length} filter
+                  {state.advancedFilters.length === 1 ? "" : "s"} 
                   active
                 </p>
               )}

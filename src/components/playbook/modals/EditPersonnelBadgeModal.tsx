@@ -74,7 +74,7 @@ export const EditPersonnelBadgeModal: React.FC<
         <div className="bg-gradient-to-r from-purple-600 to-purple-700 p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
                 <Icon name="settings" size="lg" className="text-white" />
               </div>
               <div>
@@ -86,7 +86,7 @@ export const EditPersonnelBadgeModal: React.FC<
             </div>
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+              className="w-8 h-8 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
             >
               <Icon name="close" size="md" className="text-white" />
             </button>

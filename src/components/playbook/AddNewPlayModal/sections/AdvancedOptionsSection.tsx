@@ -25,7 +25,6 @@ interface AdvancedOptionsSectionProps {
   backRightOfQb: boolean;
   shift: string;
   motion: string;
-  formationTags: string;
   runStrength: string;
   passStrength: string;
   onFormationTypeChange: (value: string) => void;
@@ -35,18 +34,15 @@ interface AdvancedOptionsSectionProps {
   onBackRightOfQbChange: (value: boolean) => void;
   onShiftChange: (value: string) => void;
   onMotionChange: (value: string) => void;
-  onFormationTagsChange: (value: string) => void;
   onRunStrengthChange: (value: string) => void;
   onPassStrengthChange: (value: string) => void;
   // Play details
   playDir: string;
   protection: string;
   checkInto: string;
-  playTags: string;
   onPlayDirChange: (value: string) => void;
   onProtectionChange: (value: string) => void;
   onCheckIntoChange: (value: string) => void;
-  onPlayTagsChange: (value: string) => void;
   // Confidence
   confidence: number;
   onConfidenceChange: (value: number) => void;
@@ -137,7 +133,6 @@ const FormationDetailsSection: React.FC<{
   backRightOfQb: boolean;
   shift: string;
   motion: string;
-  formationTags: string;
   runStrength: string;
   passStrength: string;
   directionOptions: Array<{ value: string; label: string }>;
@@ -148,7 +143,6 @@ const FormationDetailsSection: React.FC<{
   onBackRightOfQbChange: (value: boolean) => void;
   onShiftChange: (value: string) => void;
   onMotionChange: (value: string) => void;
-  onFormationTagsChange: (value: string) => void;
   onRunStrengthChange: (value: string) => void;
   onPassStrengthChange: (value: string) => void;
 }> = ({
@@ -160,7 +154,6 @@ const FormationDetailsSection: React.FC<{
   backRightOfQb,
   shift,
   motion,
-  formationTags,
   runStrength,
   passStrength,
   directionOptions,
@@ -171,7 +164,6 @@ const FormationDetailsSection: React.FC<{
   onBackRightOfQbChange,
   onShiftChange,
   onMotionChange,
-  onFormationTagsChange,
   onRunStrengthChange,
   onPassStrengthChange,
 }) => (
@@ -262,18 +254,6 @@ const FormationDetailsSection: React.FC<{
       </div>
       <div>
         <Typography variant="label-md" className="block mb-xs text-secondary">
-          Formation Tags
-        </Typography>
-        <input
-          type="text"
-          value={formationTags}
-          onChange={(e) => onFormationTagsChange(e.target.value)}
-          placeholder="e.g., Nickel, Dime"
-          className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
-        />
-      </div>
-      <div>
-        <Typography variant="label-md" className="block mb-xs text-secondary">
           Strength
         </Typography>
         <div className="grid grid-cols-2 gap-xs">
@@ -302,23 +282,19 @@ const PlayDetailsSection: React.FC<{
   playDir: string;
   protection: string;
   checkInto: string;
-  playTags: string;
   directionOptions: Array<{ value: string; label: string }>;
   onPlayDirChange: (value: string) => void;
   onProtectionChange: (value: string) => void;
   onCheckIntoChange: (value: string) => void;
-  onPlayTagsChange: (value: string) => void;
 }> = ({
   fieldValues,
   playDir,
   protection,
   checkInto,
-  playTags,
   directionOptions,
   onPlayDirChange,
   onProtectionChange,
   onCheckIntoChange,
-  onPlayTagsChange,
 }) => (
   <div className="bg-secondary/30 rounded-lg p-md">
     <Typography
@@ -362,18 +338,6 @@ const PlayDetailsSection: React.FC<{
           value={checkInto}
           onChange={(e) => onCheckIntoChange(e.target.value)}
           placeholder="e.g., Kill, Audible, Check"
-          className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
-        />
-      </div>
-      <div className="md:col-span-2">
-        <Typography variant="label-md" className="block mb-xs text-secondary">
-          Play Tags
-        </Typography>
-        <input
-          type="text"
-          value={playTags}
-          onChange={(e) => onPlayTagsChange(e.target.value)}
-          placeholder="e.g., Red Zone, 3rd&Short"
           className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0"
         />
       </div>
@@ -567,7 +531,6 @@ const AdvancedOptionsContent: React.FC<{
   backRightOfQb: boolean;
   shift: string;
   motion: string;
-  formationTags: string;
   runStrength: string;
   passStrength: string;
   onFormationTypeChange: (value: string) => void;
@@ -577,17 +540,14 @@ const AdvancedOptionsContent: React.FC<{
   onBackRightOfQbChange: (value: boolean) => void;
   onShiftChange: (value: string) => void;
   onMotionChange: (value: string) => void;
-  onFormationTagsChange: (value: string) => void;
   onRunStrengthChange: (value: string) => void;
   onPassStrengthChange: (value: string) => void;
   playDir: string;
   protection: string;
   checkInto: string;
-  playTags: string;
   onPlayDirChange: (value: string) => void;
   onProtectionChange: (value: string) => void;
   onCheckIntoChange: (value: string) => void;
-  onPlayTagsChange: (value: string) => void;
   confidence: number;
   onConfidenceChange: (value: number) => void;
   tags: string[];
@@ -615,7 +575,6 @@ const AdvancedOptionsContent: React.FC<{
   backRightOfQb,
   shift,
   motion,
-  formationTags,
   runStrength,
   passStrength,
   onFormationTypeChange,
@@ -625,17 +584,14 @@ const AdvancedOptionsContent: React.FC<{
   onBackRightOfQbChange,
   onShiftChange,
   onMotionChange,
-  onFormationTagsChange,
   onRunStrengthChange,
   onPassStrengthChange,
   playDir,
   protection,
   checkInto,
-  playTags,
   onPlayDirChange,
   onProtectionChange,
   onCheckIntoChange,
-  onPlayTagsChange,
   confidence,
   onConfidenceChange,
   tags,
@@ -662,7 +618,6 @@ const AdvancedOptionsContent: React.FC<{
       backRightOfQb={backRightOfQb}
       shift={shift}
       motion={motion}
-      formationTags={formationTags}
       runStrength={runStrength}
       passStrength={passStrength}
       directionOptions={directionOptions}
@@ -673,7 +628,6 @@ const AdvancedOptionsContent: React.FC<{
       onBackRightOfQbChange={onBackRightOfQbChange}
       onShiftChange={onShiftChange}
       onMotionChange={onMotionChange}
-      onFormationTagsChange={onFormationTagsChange}
       onRunStrengthChange={onRunStrengthChange}
       onPassStrengthChange={onPassStrengthChange}
     />
@@ -683,12 +637,10 @@ const AdvancedOptionsContent: React.FC<{
       playDir={playDir}
       protection={protection}
       checkInto={checkInto}
-      playTags={playTags}
       directionOptions={directionOptions}
       onPlayDirChange={onPlayDirChange}
       onProtectionChange={onProtectionChange}
       onCheckIntoChange={onCheckIntoChange}
-      onPlayTagsChange={onPlayTagsChange}
     />
 
     <ConfidenceSection
@@ -733,7 +685,6 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
   backRightOfQb,
   shift,
   motion,
-  formationTags,
   runStrength,
   passStrength,
   onFormationTypeChange,
@@ -743,17 +694,14 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
   onBackRightOfQbChange,
   onShiftChange,
   onMotionChange,
-  onFormationTagsChange,
   onRunStrengthChange,
   onPassStrengthChange,
   playDir,
   protection,
   checkInto,
-  playTags,
   onPlayDirChange,
   onProtectionChange,
   onCheckIntoChange,
-  onPlayTagsChange,
   confidence,
   onConfidenceChange,
   // NEW: Play Metadata Arrays (October 17, 2025)
@@ -805,7 +753,6 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
           backRightOfQb={backRightOfQb}
           shift={shift}
           motion={motion}
-          formationTags={formationTags}
           runStrength={runStrength}
           passStrength={passStrength}
           onFormationTypeChange={onFormationTypeChange}
@@ -815,17 +762,14 @@ export const AdvancedOptionsSection: React.FC<AdvancedOptionsSectionProps> = ({
           onBackRightOfQbChange={onBackRightOfQbChange}
           onShiftChange={onShiftChange}
           onMotionChange={onMotionChange}
-          onFormationTagsChange={onFormationTagsChange}
           onRunStrengthChange={onRunStrengthChange}
           onPassStrengthChange={onPassStrengthChange}
           playDir={playDir}
           protection={protection}
           checkInto={checkInto}
-          playTags={playTags}
           onPlayDirChange={onPlayDirChange}
           onProtectionChange={onProtectionChange}
           onCheckIntoChange={onCheckIntoChange}
-          onPlayTagsChange={onPlayTagsChange}
           confidence={confidence}
           onConfidenceChange={onConfidenceChange}
           tags={tags}

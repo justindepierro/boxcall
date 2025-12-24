@@ -28,10 +28,19 @@ interface PlayFilters {
   tags?: string[];
 }
 
+interface AdvancedFilter {
+  id: string;
+  field: string;
+  operator: "equals" | "contains" | "in";
+  value: string | string[];
+  label: string;
+}
+
 interface UsePlayFilteringProps {
   plays: Play[];
   searchQuery: string;
   filters: PlayFilters;
+  advancedFilters?: AdvancedFilter[];
   selectedCategory?: string;
   selectedSubcategory?: string;
   favoriteIds: string[];
@@ -46,10 +55,115 @@ export function usePlayFiltering({
   plays,
   searchQuery,
   filters,
+  advancedFilters = [],
   selectedCategory,
   selectedSubcategory,
   favoriteIds,
 }: UsePlayFilteringProps): UsePlayFilteringResult {
+  function normalizeText(value: unknown): string {
+    return String(value ?? "").trim().toLowerCase();
+  }
+
+  function normalizeTextArray(value: unknown): string[] {
+    if (!value) return [];
+    if (Array.isArray(value)) {
+      return value
+        .map((v) => normalizeText(v))
+        .filter((v) => v.length > 0);
+    }
+    const str = normalizeText(value);
+    return str ? [str] : [];
+  }
+
+  function playFieldValue(play: Play, field: string): unknown {
+    switch (field) {
+      case "name":
+        return play.play_name;
+      case "formation":
+        return play.formation;
+      case "playType":
+      case "category":
+        return play.p_type;
+      case "description":
+        return play.notes;
+      case "personnel":
+        return play.personnel;
+      case "down":
+        return play.pref_down;
+      case "distance":
+        return play.pref_dis;
+      case "fieldPosition":
+        // No single source-of-truth column yet; best-effort.
+        return (
+          (play as any).pref_field_pos ??
+          (play as any).pref_field_position ??
+          (play as any).field_position ??
+          play.flags ??
+          play.notes
+        );
+      case "tags":
+        return [
+          ...(play.tags ?? []),
+          ...(play.flags ?? []),
+          ...(play.ftag1 ? [play.ftag1] : []),
+          ...(play.ftag2 ? [play.ftag2] : []),
+          ...(play.p_tag1 ? [play.p_tag1] : []),
+          ...(play.p_tag2 ? [play.p_tag2] : []),
+        ];
+      case "timesUsed":
+        return play.times_called;
+      case "successRate":
+        return (play as any).success_rate;
+      case "yardsPerPlay":
+        return (play as any).avg_yards;
+      default:
+        return (play as any)[field];
+    }
+  }
+
+  function matchesAdvancedFilter(play: Play, filter: AdvancedFilter): boolean {
+    const left = playFieldValue(play, filter.field);
+
+    const leftNumber =
+      typeof left === "number" ? left : Number.parseFloat(String(left));
+    const filterNumber =
+      typeof filter.value === "string"
+        ? Number.parseFloat(filter.value)
+        : Number.NaN;
+
+    if (!Number.isNaN(leftNumber) && !Number.isNaN(filterNumber)) {
+      if (filter.operator === "equals") return leftNumber === filterNumber;
+      return true;
+    }
+
+    const leftValues = Array.isArray(left)
+      ? normalizeTextArray(left)
+      : [normalizeText(left)].filter(Boolean);
+
+    if (filter.operator === "equals") {
+      if (Array.isArray(filter.value)) {
+        const allowed = filter.value.map(normalizeText).filter(Boolean);
+        return leftValues.some((v) => allowed.includes(v));
+      }
+      const expected = normalizeText(filter.value);
+      return leftValues.some((v) => v === expected);
+    }
+
+    if (filter.operator === "contains") {
+      const needle = normalizeText(filter.value);
+      return leftValues.some((v) => v.includes(needle));
+    }
+
+    if (filter.operator === "in") {
+      const allowed = Array.isArray(filter.value)
+        ? filter.value.map(normalizeText).filter(Boolean)
+        : [normalizeText(filter.value)].filter(Boolean);
+      return leftValues.some((v) => allowed.includes(v));
+    }
+
+    return true;
+  }
+
   // Apply filters to plays
   const filteredPlays = useMemo(() => {
     let result = plays.filter((play) => {
@@ -99,7 +213,50 @@ export function usePlayFiltering({
         return false;
 
       // Play type filter
-      if (filters.playType && play.p_type !== filters.playType) return false;
+      if (
+        filters.playType &&
+        play.p_type?.toLowerCase() !== filters.playType.toLowerCase()
+      )
+        return false;
+
+      // Preferred down filter
+      if (filters.down) {
+        const downNeedle = normalizeText(filters.down);
+        const downHaystack = normalizeText(play.pref_down);
+        if (!downHaystack || !downHaystack.includes(downNeedle)) return false;
+      }
+
+      // Preferred distance filter
+      if (filters.distance) {
+        const distanceNeedle = normalizeText(filters.distance);
+        const distanceHaystack = normalizeText(play.pref_dis);
+        if (!distanceHaystack || !distanceHaystack.includes(distanceNeedle)) {
+          return false;
+        }
+      }
+
+      // Tags filter (matches tags + legacy tags + flags)
+      if (filters.tags && filters.tags.length > 0) {
+        const required = filters.tags.map(normalizeText).filter(Boolean);
+        const haystack = normalizeTextArray([
+          ...(play.tags ?? []),
+          ...(play.flags ?? []),
+          ...(play.ftag1 ? [play.ftag1] : []),
+          ...(play.ftag2 ? [play.ftag2] : []),
+          ...(play.p_tag1 ? [play.p_tag1] : []),
+          ...(play.p_tag2 ? [play.p_tag2] : []),
+        ]);
+
+        const hasAny = required.some((tag) => haystack.includes(tag));
+        if (!hasAny) return false;
+      }
+
+      // Advanced filters
+      if (advancedFilters.length > 0) {
+        for (const af of advancedFilters) {
+          if (!matchesAdvancedFilter(play, af)) return false;
+        }
+      }
 
       return true;
     });
@@ -116,6 +273,7 @@ export function usePlayFiltering({
     plays,
     searchQuery,
     filters,
+    advancedFilters,
     selectedCategory,
     selectedSubcategory,
     favoriteIds,
@@ -130,6 +288,7 @@ export function usePlayFiltering({
         searchLength: searchQuery?.length || 0,
         formation: filters.formation || null,
         playType: filters.playType || null,
+        advancedFiltersCount: advancedFilters.length,
         selectedCategory: selectedCategory || null,
         selectedSubcategory: selectedSubcategory || null,
         resultCount: filteredPlays.length,
@@ -139,6 +298,7 @@ export function usePlayFiltering({
       searchQuery,
       filters.formation,
       filters.playType,
+      advancedFilters.length,
       selectedCategory,
       selectedSubcategory,
       filteredPlays.length,
@@ -158,6 +318,7 @@ export function usePlayFiltering({
     !!searchQuery ||
     !!selectedCategory ||
     !!selectedSubcategory ||
+    advancedFilters.length > 0 ||
     Object.values(filters).some(
       (f) => f && (Array.isArray(f) ? f.length > 0 : true)
     );

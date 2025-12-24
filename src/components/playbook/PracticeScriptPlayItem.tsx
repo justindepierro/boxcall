@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import type { DraggableProvidedDragHandleProps } from "@hello-pangea/dnd";
 import type { PracticeScriptPlay } from "@services";
+import { getFormationDirDisplayLabel } from "../../utils/leftRight";
 
 import { PracticeScriptPlayHeader } from "./practice-script-play-item/PracticeScriptPlayHeader";
 import { PracticeScriptPlayNotes } from "./practice-script-play-item/PracticeScriptPlayNotes";
@@ -58,10 +59,15 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
   const [notesValue, setNotesValue] = useState(scriptPlay.notes || "");
 
   const play = scriptPlay.play;
+  const formationDirText = useMemo(
+    () => getFormationDirDisplayLabel(play, "full"),
+    [play]
+  );
+
   const displayName = useMemo(
     () =>
-      `${play.formation}${play.f_dir ? ` ${play.f_dir}` : ""} - ${play.play_name}${play.p_dir ? ` (${play.p_dir})` : ""}`,
-    [play.formation, play.f_dir, play.play_name, play.p_dir]
+      `${play.formation}${formationDirText ? ` ${formationDirText}` : ""} - ${play.play_name}${play.p_dir ? ` (${play.p_dir})` : ""}`,
+    [play.formation, formationDirText, play.play_name, play.p_dir]
   );
 
   useEffect(() => {
@@ -92,6 +98,12 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
         dragHandleProps={dragHandleProps}
       />
 
+      <PracticeScriptPlayScenario
+        scriptPlay={scriptPlay}
+        onUpdateRepetitions={onUpdateRepetitions}
+        onUpdateScenario={onUpdateScenario}
+      />
+
       <PracticeScriptPlayNotes
         isEditing={isEditingNotes}
         value={notesValue}
@@ -99,12 +111,6 @@ export const PracticeScriptPlayItem: React.FC<PracticeScriptPlayItemProps> = ({
         onChange={setNotesValue}
         onSave={handleNotesSave}
         onCancel={handleNotesCancel}
-      />
-
-      <PracticeScriptPlayScenario
-        scriptPlay={scriptPlay}
-        onUpdateRepetitions={onUpdateRepetitions}
-        onUpdateScenario={onUpdateScenario}
       />
     </div>
   );

@@ -16,18 +16,21 @@ export function mapSearchResults(
   activeTeamId: string
 ): SearchResult[] {
   return [
-    ...mapPlays(raw.plays),
+    ...mapPlays(raw.plays, activeTeamId),
     ...mapFormations(raw.formations),
     ...mapPlayers(raw.players),
     ...mapAnnouncements(raw.announcements, activeTeamId),
-    ...mapGamePlans(raw.gamePlans),
-    ...mapPracticeScripts(raw.practiceScripts),
-    ...mapCalendarEvents(raw.calendarEvents),
+    ...mapGamePlans(raw.gamePlans, activeTeamId),
+    ...mapPracticeScripts(raw.practiceScripts, activeTeamId),
+    ...mapCalendarEvents(raw.calendarEvents, activeTeamId),
     ...mapEquipment(raw.equipment),
   ];
 }
 
-function mapPlays(plays: RawSearchResults["plays"]): SearchResult[] {
+function mapPlays(
+  plays: RawSearchResults["plays"],
+  activeTeamId: string
+): SearchResult[] {
   if (!plays) return [];
 
   return plays.map((play) => ({
@@ -35,7 +38,7 @@ function mapPlays(plays: RawSearchResults["plays"]): SearchResult[] {
     id: play.id,
     title: play.one_word_play || play.play_name || "Unnamed Play",
     subtitle: formatPlaySubtitle(play),
-    url: `/playbook`,
+    url: teamRoutes.playbook(activeTeamId),
   }));
 }
 
@@ -61,7 +64,7 @@ function mapFormations(
     id: formation.id,
     title: formation.name,
     subtitle: "Formation",
-    url: `/playbook`,
+    url: `/playbook/formations`,
   }));
 }
 
@@ -73,7 +76,7 @@ function mapPlayers(players: RawSearchResults["players"]): SearchResult[] {
     id: player.id,
     title: `${player.first_name || ""} ${player.last_name || ""}`.trim(),
     subtitle: `Player • #${player.jersey_number || "N/A"} ${player.position || ""}`,
-    url: `/roster`,
+    url: `/roster/${player.id}`,
   }));
 }
 
@@ -88,12 +91,13 @@ function mapAnnouncements(
     id: announcement.id,
     title: announcement.title,
     subtitle: `Announcement • ${new Date(announcement.created_at).toLocaleDateString()}`,
-    url: teamRoutes.bulletin(activeTeamId),
+    url: teamRoutes.announcements(activeTeamId),
   }));
 }
 
 function mapGamePlans(
-  gamePlans: RawSearchResults["gamePlans"]
+  gamePlans: RawSearchResults["gamePlans"],
+  activeTeamId: string
 ): SearchResult[] {
   if (!gamePlans) return [];
 
@@ -102,12 +106,13 @@ function mapGamePlans(
     id: gamePlan.id,
     title: `vs ${gamePlan.opponent}`,
     subtitle: `Game Plan • ${new Date(gamePlan.game_date).toLocaleDateString()}`,
-    url: `/game-plans`,
+    url: teamRoutes.gamePlans(activeTeamId),
   }));
 }
 
 function mapPracticeScripts(
-  practiceScripts: RawSearchResults["practiceScripts"]
+  practiceScripts: RawSearchResults["practiceScripts"],
+  activeTeamId: string
 ): SearchResult[] {
   if (!practiceScripts) return [];
 
@@ -116,12 +121,13 @@ function mapPracticeScripts(
     id: script.id,
     title: script.title,
     subtitle: "Practice Script",
-    url: `/practice-plans`,
+    url: teamRoutes.practicePlans(activeTeamId),
   }));
 }
 
 function mapCalendarEvents(
-  calendarEvents: RawSearchResults["calendarEvents"]
+  calendarEvents: RawSearchResults["calendarEvents"],
+  activeTeamId: string
 ): SearchResult[] {
   if (!calendarEvents) return [];
 
@@ -130,7 +136,7 @@ function mapCalendarEvents(
     id: event.id,
     title: event.title,
     subtitle: `${event.event_type || "Event"} • ${new Date(event.event_date).toLocaleDateString()}`,
-    url: `/calendar`,
+    url: teamRoutes.calendar(activeTeamId),
   }));
 }
 

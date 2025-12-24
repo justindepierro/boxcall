@@ -31,6 +31,7 @@ export function buildNewPlayData(
     p_type: playData.p_type || "Pass",
     formation: normalizeText(playData.formation || ""),
     formation_id: playData.formation_id || null,
+    formation_direction: playData.formation_direction ?? null,
 
     // Optional text fields
     ...buildTextFields(playData),
@@ -149,6 +150,9 @@ export function buildPlayUpdateData(
   });
   applyIfDefined(updates.formation_id, (value) => {
     updateData.formation_id = value;
+  });
+  applyIfDefined(updates.formation_direction, (value) => {
+    updateData.formation_direction = value;
   });
   applyIfDefined(updates.one_word_play, (value) => {
     updateData.one_word_play = normalizeText(value);

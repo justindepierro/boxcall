@@ -345,7 +345,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
             <span className="text-xl font-black tracking-wide drop-shadow-sm">
               SUCCESS
             </span>
-            <span className="text-xs opacity-80 font-medium bg-white/20 px-2.5 py-0.5 rounded-full">
+            <span className="text-xs opacity-80 font-medium bg-white/35 px-2.5 py-0.5 rounded-full">
               Press S
             </span>
           </button>
@@ -370,7 +370,7 @@ export const RepTracker: React.FC<RepTrackerProps> = ({
             <span className="text-xl font-black tracking-wide drop-shadow-sm">
               FAILURE
             </span>
-            <span className="text-xs opacity-80 font-medium bg-white/20 px-2.5 py-0.5 rounded-full">
+            <span className="text-xs opacity-80 font-medium bg-white/35 px-2.5 py-0.5 rounded-full">
               Press F
             </span>
           </button>

@@ -6,10 +6,8 @@
 
 import React from "react";
 import { Icon } from "../../Icon";
-import { Typography } from "../../../design-system";
 import type { DesktopSearchFieldProps } from "../types";
-import { MIN_QUERY_LENGTH_FOR_NO_RESULTS } from "../constants";
-import { SearchResultItem } from "./SearchResultItem";
+import { SearchResults } from "./SearchResults";
 
 export const DesktopSearchField: React.FC<DesktopSearchFieldProps> = ({
   query,
@@ -17,6 +15,7 @@ export const DesktopSearchField: React.FC<DesktopSearchFieldProps> = ({
   isLoading,
   results,
   selectedIndex,
+  recentSearches,
   inputRef,
   containerRef,
   onInputChange,
@@ -25,63 +24,15 @@ export const DesktopSearchField: React.FC<DesktopSearchFieldProps> = ({
   onBlur,
   onClear,
   onResultClick,
+  onRecentSearchClick,
+  onClearHistory,
   getTypeIcon,
   getTypeColor,
   className = "",
 }) => {
-  let dropdownContent: React.ReactNode = null;
-  if (isLoading) {
-    dropdownContent = (
-      <div className="px-6 py-8 text-center">
-        <Icon
-          name="loader"
-          className="h-8 w-8 text-jade-500 animate-spin mx-auto mb-3"
-        />
-        <Typography
-          variant="body-sm"
-          className="text-neutral-500 dark:text-neutral-400"
-        >
-          Searching across your content...
-        </Typography>
-      </div>
-    );
-  } else if (results.length > 0) {
-    dropdownContent = (
-      <div className="py-2 overflow-y-auto max-h-96 custom-scrollbar">
-        {results.map((result, index) => (
-          <SearchResultItem
-            key={`${result.type}-${result.id}`}
-            result={result}
-            index={index}
-            selectedIndex={selectedIndex}
-            getTypeIcon={getTypeIcon}
-            getTypeColor={getTypeColor}
-            onClick={onResultClick}
-          />
-        ))}
-      </div>
-    );
-  } else if (query.length >= MIN_QUERY_LENGTH_FOR_NO_RESULTS) {
-    dropdownContent = (
-      <div className="px-6 py-8 text-center">
-        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-neutral-100 dark:bg-navy-700 flex items-center justify-center">
-          <Icon name="search" className="h-8 w-8 text-neutral-400" />
-        </div>
-        <Typography
-          variant="body-sm"
-          className="font-medium text-navy-900 dark:text-white mb-1"
-        >
-          No results found
-        </Typography>
-        <Typography
-          variant="body-xs"
-          className="text-neutral-500 dark:text-neutral-400"
-        >
-          Try searching for plays, players, or announcements
-        </Typography>
-      </div>
-    );
-  }
+  const shouldShowDropdown =
+    isOpen &&
+    (query.length > 0 || isLoading || (recentSearches?.length || 0) > 0);
 
   return (
     <div ref={containerRef} className={`hidden md:block relative ${className}`}>
@@ -108,7 +59,7 @@ export const DesktopSearchField: React.FC<DesktopSearchFieldProps> = ({
           onBlur={onBlur}
           placeholder="Search anything..."
           className="w-full h-12 pl-12 pr-12 
-          bg-white dark:bg-navy-800/50
+          bg-white/95 dark:bg-navy-800/90
           border-2 border-neutral-200 dark:border-navy-700
           rounded-2xl
           text-navy-900 dark:text-white
@@ -159,7 +110,7 @@ export const DesktopSearchField: React.FC<DesktopSearchFieldProps> = ({
       </div>
 
       {/* Search Results Dropdown */}
-      {isOpen && (query.length > 0 || isLoading) && (
+      {shouldShowDropdown && (
         <div
           className="absolute top-full left-0 right-0 mt-3
           bg-white dark:bg-navy-800 
@@ -172,7 +123,20 @@ export const DesktopSearchField: React.FC<DesktopSearchFieldProps> = ({
           overflow-hidden
           animate-in fade-in slide-in-from-top-2 duration-300"
         >
-          {dropdownContent}
+          <div className="overflow-y-auto max-h-96 custom-scrollbar">
+            <SearchResults
+              isLoading={isLoading}
+              results={results}
+              query={query}
+              selectedIndex={selectedIndex}
+              getTypeIcon={getTypeIcon}
+              getTypeColor={getTypeColor}
+              onResultClick={onResultClick}
+              recentSearches={recentSearches}
+              onRecentSearchClick={onRecentSearchClick}
+              onClearHistory={onClearHistory}
+            />
+          </div>
         </div>
       )}
     </div>

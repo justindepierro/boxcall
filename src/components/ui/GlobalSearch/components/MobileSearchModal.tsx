@@ -16,12 +16,15 @@ export const MobileSearchModal: React.FC<MobileSearchModalProps> = ({
   isLoading,
   results,
   selectedIndex,
+  recentSearches,
   inputRef,
   onClose,
   onInputChange,
   onKeyDown,
   onClear,
   onResultClick,
+  onRecentSearchClick,
+  onClearHistory,
   getTypeIcon,
   getTypeColor,
 }) => {
@@ -101,6 +104,9 @@ export const MobileSearchModal: React.FC<MobileSearchModalProps> = ({
               getTypeIcon={getTypeIcon}
               getTypeColor={getTypeColor}
               onResultClick={onResultClick}
+              recentSearches={recentSearches}
+              onRecentSearchClick={onRecentSearchClick}
+              onClearHistory={onClearHistory}
               emptyMessage="Start typing to search across all your content"
             />
           </div>

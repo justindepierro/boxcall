@@ -170,6 +170,37 @@ const ValidationStateIcon: React.FC<ValidationStateIconProps> = ({
 
 type CSVEditableField = "formation" | "play_name" | "personnel";
 
+type CSVAnyField =
+  | "formation"
+  | "play_name"
+  | "personnel"
+  | "p_type"
+  | "one_word_play"
+  | "p_dir"
+  | "protection"
+  | "check_into"
+  | "r_str"
+  | "p_str"
+  | "f_type"
+  | "f_dir"
+  | "ftag1"
+  | "ftag2"
+  | "p_tag1"
+  | "p_tag2"
+  | "key_player1"
+  | "key_player2"
+  | "back_align"
+  | "shift"
+  | "motion"
+  | "pref_down"
+  | "pref_dis"
+  | "pref_hash"
+  | "pref_cov"
+  | "pref_front"
+  | "pref_field_pos"
+  | "pref_situation"
+  | "notes";
+
 interface CSVValidationFieldEditorProps {
   rowNumber: number;
   field: CSVEditableField;
@@ -339,6 +370,7 @@ export function CSVValidationRowEditor({
     null
   );
   const [editValue, setEditValue] = useState<string>("");
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   // Validate fields
   const formationValidation = validateFormation(
@@ -370,6 +402,16 @@ export function CSVValidationRowEditor({
     }
     setEditingField(null);
     setEditValue("");
+  };
+
+  const getFieldValue = (field: CSVAnyField): string => {
+    const value = preview.data[field];
+    if (value === null || value === undefined) return "";
+    return String(value);
+  };
+
+  const handleFieldChange = (field: CSVAnyField, value: string) => {
+    onUpdate(preview.rowNumber, field, value);
   };
 
   return (
@@ -440,16 +482,311 @@ export function CSVValidationRowEditor({
           onAcceptSuggestion={onAcceptSuggestion}
         />
 
-        {/* Play Type (simple display, no validation yet) */}
+        {/* Play Type */}
         <div className="space-y-2">
-          <label className="text-xs font-medium text-secondary">
-            Play Type
-          </label>
-          <div className="px-3 py-2 rounded-lg text-sm font-medium bg-subtle text-primary border border-border">
-            {preview.data.p_type || "-"}
-          </div>
+          <label className="text-xs font-medium text-secondary">Play Type</label>
+          <input
+            type="text"
+            value={getFieldValue("p_type")}
+            onChange={(e) => handleFieldChange("p_type", e.target.value)}
+            className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+            placeholder="Pass, Run, RPO, Play Action…"
+          />
         </div>
       </div>
+
+      <div className="flex items-center justify-between">
+        <Typography variant="body-sm" className="font-medium text-primary">
+          Advanced Fields
+        </Typography>
+        <Button
+          onClick={() => setShowAdvanced((v) => !v)}
+          variant="neutralLink"
+          size="xs"
+          icon={
+            showAdvanced ? (
+              <Icon name="chevron-up" className="h-4 w-4" />
+            ) : (
+              <Icon name="chevron-down" className="h-4 w-4" />
+            )
+          }
+        >
+          {showAdvanced ? "Hide" : "Show"}
+        </Button>
+      </div>
+
+      {showAdvanced && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">
+              One Word Play
+            </label>
+            <input
+              type="text"
+              value={getFieldValue("one_word_play")}
+              onChange={(e) => handleFieldChange("one_word_play", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+              placeholder="Signal / Audible"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">Play Dir</label>
+            <input
+              type="text"
+              value={getFieldValue("p_dir")}
+              onChange={(e) => handleFieldChange("p_dir", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+              placeholder="Left / Right / Middle"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">
+              Protection
+            </label>
+            <input
+              type="text"
+              value={getFieldValue("protection")}
+              onChange={(e) => handleFieldChange("protection", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+              placeholder="Slide / Man / Full"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">F Type</label>
+            <input
+              type="text"
+              value={getFieldValue("f_type")}
+              onChange={(e) => handleFieldChange("f_type", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">F Dir</label>
+            <input
+              type="text"
+              value={getFieldValue("f_dir")}
+              onChange={(e) => handleFieldChange("f_dir", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+              placeholder="Left / Right"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">Check Into</label>
+            <input
+              type="text"
+              value={getFieldValue("check_into")}
+              onChange={(e) => handleFieldChange("check_into", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+              placeholder="Check / Audible to"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">F Tag 1</label>
+            <input
+              type="text"
+              value={getFieldValue("ftag1")}
+              onChange={(e) => handleFieldChange("ftag1", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">F Tag 2</label>
+            <input
+              type="text"
+              value={getFieldValue("ftag2")}
+              onChange={(e) => handleFieldChange("ftag2", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">P Tag 1</label>
+            <input
+              type="text"
+              value={getFieldValue("p_tag1")}
+              onChange={(e) => handleFieldChange("p_tag1", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">P Tag 2</label>
+            <input
+              type="text"
+              value={getFieldValue("p_tag2")}
+              onChange={(e) => handleFieldChange("p_tag2", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">R Str</label>
+            <input
+              type="text"
+              value={getFieldValue("r_str")}
+              onChange={(e) => handleFieldChange("r_str", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+              placeholder="Left / Right"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">P Str</label>
+            <input
+              type="text"
+              value={getFieldValue("p_str")}
+              onChange={(e) => handleFieldChange("p_str", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+              placeholder="Left / Right"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">
+              Key Player 1
+            </label>
+            <input
+              type="text"
+              value={getFieldValue("key_player1")}
+              onChange={(e) => handleFieldChange("key_player1", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">
+              Key Player 2
+            </label>
+            <input
+              type="text"
+              value={getFieldValue("key_player2")}
+              onChange={(e) => handleFieldChange("key_player2", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">Back Align</label>
+            <input
+              type="text"
+              value={getFieldValue("back_align")}
+              onChange={(e) => handleFieldChange("back_align", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">Shift</label>
+            <input
+              type="text"
+              value={getFieldValue("shift")}
+              onChange={(e) => handleFieldChange("shift", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">Motion</label>
+            <input
+              type="text"
+              value={getFieldValue("motion")}
+              onChange={(e) => handleFieldChange("motion", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">Pref Down</label>
+            <input
+              type="text"
+              value={getFieldValue("pref_down")}
+              onChange={(e) => handleFieldChange("pref_down", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+              placeholder="1st / 2nd / 3rd"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">Pref Dis</label>
+            <input
+              type="text"
+              value={getFieldValue("pref_dis")}
+              onChange={(e) => handleFieldChange("pref_dis", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+              placeholder="Short / Medium / Long"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">Pref Hash</label>
+            <input
+              type="text"
+              value={getFieldValue("pref_hash")}
+              onChange={(e) => handleFieldChange("pref_hash", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+              placeholder="Left / Middle / Right"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">Pref Cov</label>
+            <input
+              type="text"
+              value={getFieldValue("pref_cov")}
+              onChange={(e) => handleFieldChange("pref_cov", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+              placeholder="Cover 1 / Cover 3 / Quarters"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">Pref Front</label>
+            <input
+              type="text"
+              value={getFieldValue("pref_front")}
+              onChange={(e) => handleFieldChange("pref_front", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">Pref Field Pos</label>
+            <input
+              type="text"
+              value={getFieldValue("pref_field_pos")}
+              onChange={(e) => handleFieldChange("pref_field_pos", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-secondary">Pref Situation</label>
+            <input
+              type="text"
+              value={getFieldValue("pref_situation")}
+              onChange={(e) => handleFieldChange("pref_situation", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+            />
+          </div>
+
+          <div className="md:col-span-3 space-y-2">
+            <label className="text-xs font-medium text-secondary">Notes</label>
+            <textarea
+              value={getFieldValue("notes")}
+              onChange={(e) => handleFieldChange("notes", e.target.value)}
+              className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent min-h-20"
+              placeholder="Optional notes"
+            />
+          </div>
+        </div>
+      )}
 
       {/* Warnings List */}
       <WarningsList warnings={preview.warnings} />

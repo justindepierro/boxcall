@@ -949,7 +949,7 @@ export const surfaceTokens = {
 
     // Modal/overlay
     modal: "bg-primary rounded-xl shadow-2xl",
-    overlay: "bg-primary/95 backdrop-blur-sm rounded-xl shadow-2xl",
+    overlay: "bg-primary/98 backdrop-blur-sm rounded-xl shadow-2xl",
 
     // Stat cards (dashboard widgets)
     stat: "bg-primary rounded-lg shadow-md p-6",

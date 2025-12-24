@@ -588,10 +588,11 @@
      9. MATERIAL DESIGN TOKENS (GLASS, SURFACES)
      ============================================ */
 
-  --material-glass-thin: rgba(255, 255, 255, 0.6);
-  --material-glass-regular: rgba(255, 255, 255, 0.7);
-  --material-glass-thick: rgba(255, 255, 255, 0.85);
-  --material-glass-border: rgba(255, 255, 255, 0.2);
+  /* Slightly more opaque glass for improved menu/sidebar readability */
+  --material-glass-thin: rgba(255, 255, 255, 0.72);
+  --material-glass-regular: rgba(255, 255, 255, 0.82);
+  --material-glass-thick: rgba(255, 255, 255, 0.92);
+  --material-glass-border: rgba(255, 255, 255, 0.28);
   --material-glass-blur-sm: 4px;
   --material-glass-blur-md: 8px;
   --material-glass-blur-lg: 16px;
@@ -874,4 +875,13 @@
   --z-index-modal: 1050;
   --z-index-popover: 1060;
   --z-index-tooltip: 1070;
+}
+
+/* Dark theme overrides (DesignSystemProvider toggles .dark on <html>) */
+.dark {
+   /* Use Navy-900 as glass base in dark mode */
+   --material-glass-thin: rgba(15, 23, 42, 0.6);
+   --material-glass-regular: rgba(15, 23, 42, 0.75);
+   --material-glass-thick: rgba(15, 23, 42, 0.88);
+   --material-glass-border: rgba(148, 163, 184, 0.22);
 }

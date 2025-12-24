@@ -32,7 +32,7 @@ export const GlassmorphicDropdown: React.FC<GlassmorphicDropdownProps> = ({
     <div
       className={cn(
         "absolute z-50 mt-1",
-        "backdrop-blur-xl bg-white/95 dark:bg-navy-900/95",
+        "backdrop-blur-xl bg-white/98 dark:bg-navy-900/98",
         "border border-white/20 dark:border-navy-700/30",
         "rounded-xl shadow-2xl shadow-black/10 dark:shadow-black/30",
         "ring-1 ring-black/5 dark:ring-white/10",
@@ -75,7 +75,7 @@ export const GlassmorphicDropdownItem: React.FC<
         "w-full px-4 py-3 text-left transition-all duration-200",
         "flex items-start gap-3",
         "border-b border-white/10 dark:border-navy-700/20",
-        "hover:bg-white/60 dark:hover:bg-navy-800/60 hover:backdrop-blur-sm",
+        "hover:bg-white/95 dark:hover:bg-navy-800/90 hover:backdrop-blur-sm",
         isSelected &&
           "bg-jade-500/20 dark:bg-jade-400/20 backdrop-blur-sm border-jade-500/30 dark:border-jade-400/30",
         isLast && "border-b-0",
@@ -104,7 +104,7 @@ export const GlassmorphicDropdownSeparator: React.FC<
     <div
       className={cn(
         "px-4 py-2 border-t border-white/20 dark:border-navy-700/30",
-        "bg-white/40 dark:bg-navy-800/40 backdrop-blur-sm",
+        "bg-white/90 dark:bg-navy-800/90 backdrop-blur-sm",
         className
       )}
     >

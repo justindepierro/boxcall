@@ -66,6 +66,7 @@ export interface DesktopSearchFieldProps {
   isLoading: boolean;
   results: SearchResult[];
   selectedIndex: number;
+  recentSearches: string[];
   inputRef: React.RefObject<HTMLInputElement | null>;
   containerRef: React.RefObject<HTMLDivElement | null>;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -74,6 +75,8 @@ export interface DesktopSearchFieldProps {
   onBlur: () => void;
   onClear: () => void;
   onResultClick: (result: SearchResult) => void;
+  onRecentSearchClick: (query: string) => void;
+  onClearHistory: () => void;
   getTypeIcon: (type: SearchResultType) => string;
   getTypeColor: (type: SearchResultType) => string;
   className?: string;
@@ -88,12 +91,15 @@ export interface MobileSearchModalProps {
   isLoading: boolean;
   results: SearchResult[];
   selectedIndex: number;
+  recentSearches: string[];
   inputRef: React.RefObject<HTMLInputElement | null>;
   onClose: () => void;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown: (e: React.KeyboardEvent) => void;
   onClear: () => void;
   onResultClick: (result: SearchResult) => void;
+  onRecentSearchClick: (query: string) => void;
+  onClearHistory: () => void;
   getTypeIcon: (type: SearchResultType) => string;
   getTypeColor: (type: SearchResultType) => string;
 }
@@ -109,6 +115,9 @@ export interface SearchResultsProps {
   getTypeIcon: (type: SearchResultType) => string;
   getTypeColor: (type: SearchResultType) => string;
   onResultClick: (result: SearchResult) => void;
+  recentSearches?: string[];
+  onRecentSearchClick?: (query: string) => void;
+  onClearHistory?: () => void;
   emptyMessage?: string;
 }
 

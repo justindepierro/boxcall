@@ -35,6 +35,8 @@ export type PlaybookViewTabsProps = {
   onTeamTypeChange?: (type: TeamType) => void;
   onOpenSettings?: () => void;
   onOpenBuilder?: () => void;
+  onOpenBulkQuickAdd?: () => void;
+  onExportCSV?: () => void;
   onOpenPersonnel?: () => void;
   onOpenHealth?: () => void;
   onNavigate?: (path: string) => void; // For breadcrumb navigation
@@ -59,6 +61,8 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
   onTeamTypeChange,
   onOpenSettings,
   onOpenBuilder,
+  onOpenBulkQuickAdd,
+  onExportCSV,
   onOpenPersonnel: _onOpenPersonnel,
   onOpenHealth,
   onNavigate,
@@ -374,6 +378,38 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
             {/* CSV Import */}
             {activePlaybookId && (
               <div className="relative">
+                {onOpenBulkQuickAdd && (
+                  <Button
+                    onClick={() => {
+                      triggerHapticFeedback("light");
+                      onOpenBulkQuickAdd();
+                    }}
+                    variant="secondary"
+                    size="sm"
+                    className="h-11 px-4 !py-0 flex items-center gap-2 bg-neutral-50 hover:bg-neutral-100 dark:bg-navy-900/20 dark:hover:bg-navy-900/30 text-navy-900 dark:text-neutral-200 rounded-xl transition-all duration-200 mr-2"
+                    title="Bulk quick add plays"
+                  >
+                    <Icon name="plus" className="h-5 w-5" />
+                    <span className="hidden lg:inline">Bulk Quick Add</span>
+                  </Button>
+                )}
+
+                {onExportCSV && (
+                  <Button
+                    onClick={() => {
+                      triggerHapticFeedback("light");
+                      onExportCSV();
+                    }}
+                    variant="secondary"
+                    size="sm"
+                    className="h-11 px-4 !py-0 flex items-center gap-2 bg-neutral-50 hover:bg-neutral-100 dark:bg-navy-900/20 dark:hover:bg-navy-900/30 text-navy-900 dark:text-neutral-200 rounded-xl transition-all duration-200 mr-2"
+                    title="Export playbook plays to CSV"
+                  >
+                    <Icon name="download" className="h-5 w-5" />
+                    <span className="hidden lg:inline">Export CSV</span>
+                  </Button>
+                )}
+
                 <Button
                   onClick={() => {
                     triggerHapticFeedback("light");

@@ -107,7 +107,10 @@ export const UploadStep: React.FC<UploadStepProps> = ({
           </Typography>
           <p className="text-sm text-secondary mb-xs">
             Your CSV should include columns for: formation, play_name, p_type,
-            personnel, one_word_play, etc.
+            personnel, one_word_play. You can also include advanced fields like
+            protection, p_dir, f_dir, tags (ftag/p_tag), strengths (r_str/p_str),
+            preferences (pref_*), check_into, key_player*, motion/shift, and
+            notes.
           </p>
           <Button onClick={onDownloadSample} variant="infoLink" size="xs">
             Download sample CSV template →
@@ -367,6 +370,24 @@ interface PreviewStepProps {
   ) => void;
   onBack: () => void;
   onImport: () => void;
+  importIntent?: CSVImportIntent;
+  onChangeImportIntent?: (intent: CSVImportIntent) => void;
+  rowDecisions?: Record<number, CSVRowMatchDecision>;
+  onApproveUpdate?: (rowNumber: number, approved: boolean) => void;
+  onSetRowMode?: (rowNumber: number, mode: CSVRowImportMode) => void;
+  onApproveAllUpdates?: () => void;
+}
+
+export type CSVImportIntent = "update_existing" | "import_new";
+
+export type CSVRowImportMode = "create" | "update" | "skip";
+
+export interface CSVRowMatchDecision {
+  mode: CSVRowImportMode;
+  approved: boolean;
+  matchedPlayId?: string;
+  matchedPlayName?: string;
+  similarity?: number;
 }
 
 type CSVPreviewRow = CSVParseResult["previews"][number];
@@ -470,6 +491,9 @@ const PreviewPlaysTable: React.FC<{
   existingFormations: string[];
   existingPlayNames: string[];
   existingPersonnel: string[];
+  rowDecisions?: Record<number, CSVRowMatchDecision>;
+  onApproveUpdate?: PreviewStepProps["onApproveUpdate"];
+  onSetRowMode?: PreviewStepProps["onSetRowMode"];
 }> = ({
   previews,
   expandedRows,
@@ -478,6 +502,9 @@ const PreviewPlaysTable: React.FC<{
   existingFormations,
   existingPlayNames,
   existingPersonnel,
+  rowDecisions,
+  onApproveUpdate,
+  onSetRowMode,
 }) => {
   return (
     <div className="border border-muted rounded-lg overflow-hidden">
@@ -495,6 +522,9 @@ const PreviewPlaysTable: React.FC<{
         <table className="w-full text-sm">
           <thead className="bg-subtle sticky top-0">
             <tr>
+              <th className="px-sm py-xs text-left text-xs font-medium text-secondary">
+                Action
+              </th>
               <th className="px-sm py-xs text-left text-xs font-medium text-secondary w-8"></th>
               <th className="px-sm py-xs text-left text-xs font-medium text-secondary">
                 Personnel
@@ -522,6 +552,102 @@ const PreviewPlaysTable: React.FC<{
                 <tr
                   className={`${preview.isValid ? "bg-primary" : "bg-subtle"} hover:bg-subtle`}
                 >
+                  <td className="px-sm py-xs align-top">
+                    {(() => {
+                      const decision = rowDecisions?.[preview.rowNumber];
+                      const mode = decision?.mode || "create";
+                      const isUpdate = mode === "update";
+                      const isSkip = mode === "skip";
+                      const approved = Boolean(decision?.approved);
+                      const similarity =
+                        typeof decision?.similarity === "number"
+                          ? Math.round(decision.similarity * 100)
+                          : null;
+
+                      const badgeClass = isSkip
+                        ? "bg-muted text-tertiary"
+                        : isUpdate
+                          ? approved
+                            ? "bg-success/20 text-success"
+                            : "bg-warning/20 text-warning"
+                          : "bg-subtle text-secondary";
+
+                      const badgeText = isSkip
+                        ? "Skip"
+                        : isUpdate
+                          ? approved
+                            ? "Update (approved)"
+                            : "Update (needs approval)"
+                          : "Create";
+
+                      return (
+                        <div className="space-y-xs">
+                          <div
+                            className={`inline-flex items-center px-xs py-xs rounded-full text-xs font-medium ${badgeClass}`}
+                          >
+                            {badgeText}
+                          </div>
+
+                          {decision?.matchedPlayName && isUpdate && (
+                            <div className="text-xs text-tertiary">
+                              Match: {decision.matchedPlayName}
+                              {similarity !== null ? ` (${similarity}%)` : ""}
+                            </div>
+                          )}
+
+                          {onSetRowMode && (
+                            <div className="flex flex-wrap gap-xs">
+                              {mode !== "create" && (
+                                <Button
+                                  onClick={() =>
+                                    onSetRowMode(preview.rowNumber, "create")
+                                  }
+                                  variant="neutralLink"
+                                  size="xs"
+                                >
+                                  Create
+                                </Button>
+                              )}
+                              {decision?.matchedPlayId && mode !== "update" && (
+                                <Button
+                                  onClick={() =>
+                                    onSetRowMode(preview.rowNumber, "update")
+                                  }
+                                  variant="neutralLink"
+                                  size="xs"
+                                >
+                                  Update
+                                </Button>
+                              )}
+                              {mode !== "skip" && (
+                                <Button
+                                  onClick={() =>
+                                    onSetRowMode(preview.rowNumber, "skip")
+                                  }
+                                  variant="neutralLink"
+                                  size="xs"
+                                >
+                                  Skip
+                                </Button>
+                              )}
+                            </div>
+                          )}
+
+                          {isUpdate && onApproveUpdate && (
+                            <Button
+                              onClick={() =>
+                                onApproveUpdate(preview.rowNumber, !approved)
+                              }
+                              variant={approved ? "neutralLink" : "infoLink"}
+                              size="xs"
+                            >
+                              {approved ? "Unapprove" : "Approve"}
+                            </Button>
+                          )}
+                        </div>
+                      );
+                    })()}
+                  </td>
                   <td className="px-sm py-xs text-xs text-secondary">
                     {preview.rowNumber}
                   </td>
@@ -585,7 +711,7 @@ const PreviewPlaysTable: React.FC<{
 
                 {expandedRows.has(preview.rowNumber) && (
                   <tr className="bg-subtle">
-                    <td colSpan={7} className="px-sm py-md">
+                    <td colSpan={8} className="px-sm py-md">
                       <CSVValidationRowEditor
                         preview={preview}
                         existingFormations={existingFormations}
@@ -613,8 +739,48 @@ export const PreviewStep: React.FC<PreviewStepProps> = ({
   onUpdatePreview,
   onBack,
   onImport,
+  importIntent = "import_new",
+  onChangeImportIntent,
+  rowDecisions,
+  onApproveUpdate,
+  onSetRowMode,
+  onApproveAllUpdates,
 }) => {
   const { previews, summary } = parseResult;
+
+  const validPreviews = previews.filter((p) => p.isValid);
+  const decisions = rowDecisions || {};
+
+  const counts = validPreviews.reduce(
+    (acc, p) => {
+      const d = decisions[p.rowNumber];
+      const mode = d?.mode || "create";
+      if (mode === "skip") {
+        acc.skip += 1;
+        return acc;
+      }
+
+      if (mode === "update") {
+        acc.update += 1;
+        if (d?.approved) acc.updateApproved += 1;
+        else acc.updatePending += 1;
+        return acc;
+      }
+
+      acc.create += 1;
+      return acc;
+    },
+    {
+      create: 0,
+      update: 0,
+      updateApproved: 0,
+      updatePending: 0,
+      skip: 0,
+    }
+  );
+
+  const hasUpdateSuggestions = counts.update > 0;
+  const hasActionableWork = counts.create > 0 || counts.updateApproved > 0;
 
   const existingFormations = (parseResult.existingPlays || [])
     .map((p) => p.formation)
@@ -641,6 +807,39 @@ export const PreviewStep: React.FC<PreviewStepProps> = ({
         </p>
       </div>
 
+      {onChangeImportIntent && (
+        <div className="bg-subtle border border-muted rounded-lg p-md">
+          <Typography
+            variant="body-sm"
+            as="h4"
+            className="font-medium text-primary mb-sm tracking-tight"
+          >
+            Intent
+          </Typography>
+          <div className="flex flex-wrap gap-sm">
+            <Button
+              onClick={() => onChangeImportIntent("update_existing")}
+              variant={importIntent === "update_existing" ? "secondary" : "ghost"}
+              size="sm"
+            >
+              Update Existing Plays
+            </Button>
+            <Button
+              onClick={() => onChangeImportIntent("import_new")}
+              variant={importIntent === "import_new" ? "secondary" : "ghost"}
+              size="sm"
+            >
+              Import New Plays
+            </Button>
+          </div>
+          <p className="text-sm text-secondary mt-sm">
+            {importIntent === "update_existing"
+              ? "Best for re-uploading the same CSV: only approved updates will apply; unmatched rows will be skipped by default."
+              : "Best for adding plays: new rows will be created; rows that look like duplicates may be skipped by default."}
+          </p>
+        </div>
+      )}
+
       <PreviewSummaryStats summary={summary} />
 
       <PreviewColumnMappingInfo suggestedMappings={summary.suggestedMappings} />
@@ -653,20 +852,67 @@ export const PreviewStep: React.FC<PreviewStepProps> = ({
         existingFormations={existingFormations}
         existingPlayNames={existingPlayNames}
         existingPersonnel={existingPersonnel}
+        rowDecisions={rowDecisions}
+        onApproveUpdate={onApproveUpdate}
+        onSetRowMode={onSetRowMode}
       />
 
+      {(counts.update > 0 || counts.skip > 0) && (
+        <div className="bg-subtle border border-muted rounded-lg p-md">
+          <Typography
+            variant="body-sm"
+            as="h4"
+            className="font-medium text-primary mb-xs tracking-tight"
+          >
+            What will happen when you apply this CSV
+          </Typography>
+          <div className="text-sm text-secondary space-y-xs">
+            <p>
+              Create: <span className="text-primary">{counts.create}</span>
+              {"  "}• Update: <span className="text-primary">{counts.update}</span>
+              {counts.update > 0 && (
+                <>
+                  {" "}(
+                  <span className="text-primary">{counts.updateApproved}</span>
+                  {" approved, "}
+                  <span className="text-primary">{counts.updatePending}</span>
+                  {" pending approval"})
+                </>
+              )}
+              {"  "}• Skip: <span className="text-primary">{counts.skip}</span>
+            </p>
+            {hasUpdateSuggestions && counts.updatePending > 0 && (
+              <p>
+                Pending updates will be skipped until approved.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Action Buttons */}
-      <div className="flex justify-between gap-sm">
+      <div className="flex flex-wrap justify-between gap-sm">
         <Button onClick={onBack} variant="ghost" size="sm">
           Back
         </Button>
+
+        {onApproveAllUpdates && hasUpdateSuggestions && (
+          <Button onClick={onApproveAllUpdates} variant="secondary" size="sm">
+            Approve All Updates
+          </Button>
+        )}
+
         <Button
           onClick={onImport}
-          disabled={summary.validPlays === 0}
+          disabled={summary.validPlays === 0 || !hasActionableWork}
           variant="primary"
           size="sm"
         >
-          Import {summary.validPlays} Valid Plays
+          {importIntent === "update_existing"
+            ? `Apply Approved Updates (${counts.updateApproved})`
+            : hasUpdateSuggestions
+              ? `Apply Approved Changes (${counts.create + counts.updateApproved})`
+              : `Import ${summary.validPlays} Valid Plays`}
         </Button>
       </div>
     </div>

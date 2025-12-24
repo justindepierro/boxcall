@@ -47,6 +47,7 @@ function mapPlayUpdatesToDbUpdates(
   applyIfDefined(updates.ftag2, (v) => (dbUpdates.ftag2 = v));
   applyIfDefined(updates.p_tag1, (v) => (dbUpdates.p_tag1 = v));
   applyIfDefined(updates.p_tag2, (v) => (dbUpdates.p_tag2 = v));
+  applyIfDefined(updates.tags, (v) => (dbUpdates.tags = v));
   applyIfDefined(updates.back_align, (v) => (dbUpdates.back_align = v));
   applyIfDefined(
     updates.back_left_of_qb,

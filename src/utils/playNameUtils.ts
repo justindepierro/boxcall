@@ -8,6 +8,7 @@ export type PlayNameSource = {
   formation?: string | null;
   f_type?: string | null;
   f_dir?: string | null;
+  formation_direction?: string | null;
   back_align?: string | null;
   ftag1?: string | null;
   ftag2?: string | null;
@@ -118,7 +119,7 @@ export function generateConcatenatedName(play: PlayNameSource): string {
   const parts: string[] = [];
   // Formation and directional orientation
   const formation = clean(play.formation);
-  const formDir = clean(play.f_dir);
+  const formDir = clean(play.f_dir || play.formation_direction);
   const suppressDir = ["River", "Lake", "East", "West"];
   if (formation) parts.push(formation);
   if (formDir && !suppressDir.includes(formation)) {
@@ -197,7 +198,10 @@ export function getDisplayName(
             value = clean(play.f_type);
             break;
           case "f_dir":
-            value = formatDirection(play.f_dir, directionDisplayFormat);
+            value = formatDirection(
+              play.f_dir || play.formation_direction,
+              directionDisplayFormat
+            );
             break;
           case "back_align":
             value = clean(play.back_align);

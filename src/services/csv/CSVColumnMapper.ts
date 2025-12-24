@@ -50,7 +50,18 @@ export class CSVColumnMapper {
         "personnel_group",
       ],
       f_type: ["f_type", "formation_type", "form_type", "formtype", "formType"],
-      f_dir: ["f_dir", "formation_direction", "form_dir", "direction"],
+      // NOTE: f_dir is a legacy free-text direction field.
+      // Use formation_direction for the newer enum-like formation variant (base/left/right).
+      f_dir: ["f_dir", "form_dir", "formation_dir"],
+      formation_direction: [
+        "formation_direction",
+        "formation direction",
+        "formation_variant",
+        "formation variant",
+        "formation_side",
+        "formation side",
+        "formation_direction_variant",
+      ],
 
       // Tags and alignment
       ftag1: ["ftag1", "formation_tag1", "form_tag1"],
@@ -72,7 +83,14 @@ export class CSVColumnMapper {
       ],
       p_tag1: ["p_tag1", "play_tag1"],
       p_tag2: ["p_tag2", "play_tag2"],
-      play_dir: ["play_dir", "p_dir", "play_direction", "direction", "dir"],
+      // Keep play direction mapping explicit to avoid conflicts with formation direction.
+      p_dir: [
+        "p_dir",
+        "play_dir",
+        "play_direction",
+        "play direction",
+        "playdir",
+      ],
 
       // Protection and blocking
       protection: ["protection", "prot", "pass_pro", "pass_protection"],

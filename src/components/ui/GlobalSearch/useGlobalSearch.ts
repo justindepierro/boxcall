@@ -5,11 +5,12 @@
  * Handles search queries, results, keyboard navigation, and mobile modal state.
  */
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { getActiveTeamId } from "../../../utils/activeTeam";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 import { logError } from "../../../utils/logger";
+import { useSearchHistory } from "../../../hooks/useSearchHistory";
 import type { SearchResult, SearchResultType } from "./types";
 import { debugLog } from "./types";
 import {
@@ -20,9 +21,12 @@ import {
   SEARCH_DEBOUNCE_MS,
   BLUR_CLOSE_DELAY_MS,
   MOBILE_FOCUS_DELAY_MS,
+  MIN_QUERY_LENGTH_FOR_NO_RESULTS,
 } from "./constants";
 import { executeSearchQueries, getPlaybookId } from "./searchQueries";
 import { mapSearchResults } from "./searchResultMappers";
+
+const SEARCH_CACHE_TTL_MS = 2 * 60 * 1000; // 2 minutes
 
 /**
  * Hook for managing global search state and behavior
@@ -42,6 +46,9 @@ export function useGlobalSearch() {
   const containerRef = useRef<HTMLDivElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const playbookIdCacheRef = useRef<string | null>(null);
+  const searchCacheRef = useRef<
+    Map<string, { results: SearchResult[]; timestamp: number }>
+  >(new Map());
 
   // Navigation
   const navigate = useNavigate();
@@ -49,11 +56,33 @@ export function useGlobalSearch() {
   // Get active team
   const activeTeamId = getActiveTeamId();
 
+  // Recent searches (local)
+  const { addToHistory, clearHistory, getRecentSearches } = useSearchHistory();
+
+  const recentSearches = useMemo(() => getRecentSearches(6), [getRecentSearches]);
+
   // Search function - optimized for blazing fast performance
   const performSearch = useCallback(
     async (searchQuery: string) => {
-      if (!searchQuery.trim() || !activeTeamId) {
+      const trimmed = searchQuery.trim();
+      if (!trimmed || !activeTeamId) {
         setResults([]);
+        setIsLoading(false);
+        return;
+      }
+
+      if (trimmed.length < MIN_QUERY_LENGTH_FOR_NO_RESULTS) {
+        // Avoid noisy/expensive 1-char network searches
+        setResults([]);
+        setIsLoading(false);
+        return;
+      }
+
+      const cacheKey = `${activeTeamId}:${trimmed.toLowerCase()}`;
+      const cached = searchCacheRef.current.get(cacheKey);
+      const now = Date.now();
+      if (cached && now - cached.timestamp < SEARCH_CACHE_TTL_MS) {
+        setResults(cached.results);
         setIsLoading(false);
         return;
       }
@@ -64,11 +93,15 @@ export function useGlobalSearch() {
       }
       abortControllerRef.current = new AbortController();
 
+      // If we have stale cached results, keep them rendered while revalidating
+      if (cached?.results?.length) {
+        setResults(cached.results);
+      }
       setIsLoading(true);
       const startTime = performance.now();
 
       try {
-        const searchTerm = searchQuery.toLowerCase().trim();
+        const searchTerm = trimmed.toLowerCase();
         const signal = abortControllerRef.current.signal;
 
         // Cache playbook_id to avoid repeated lookups
@@ -89,6 +122,12 @@ export function useGlobalSearch() {
         // Map results to SearchResult format
         const searchResults = mapSearchResults(rawResults, activeTeamId);
         setResults(searchResults);
+
+        // Cache results for instant repeats
+        searchCacheRef.current.set(cacheKey, {
+          results: searchResults,
+          timestamp: Date.now(),
+        });
 
         // Performance logging (dev only)
         if (import.meta.env.DEV) {
@@ -113,7 +152,15 @@ export function useGlobalSearch() {
   // Clear playbook cache when team changes
   useEffect(() => {
     playbookIdCacheRef.current = null;
+    searchCacheRef.current.clear();
   }, [activeTeamId]);
+
+  // Abort any in-flight search on unmount
+  useEffect(() => {
+    return () => {
+      abortControllerRef.current?.abort();
+    };
+  }, []);
 
   // Debounced search
   useEffect(() => {
@@ -157,13 +204,18 @@ export function useGlobalSearch() {
   const handleResultClick = useCallback(
     (result: SearchResult) => {
       triggerHapticFeedback("light");
+
+      if (query.trim()) {
+        addToHistory(query);
+      }
+
       navigate(result.url);
       setIsOpen(false);
       setIsMobileModalOpen(false);
       setQuery("");
       setResults([]);
     },
-    [navigate]
+    [addToHistory, navigate, query]
   );
 
   const handleMobileSearchOpen = useCallback(() => {
@@ -224,6 +276,28 @@ export function useGlobalSearch() {
     mobileInputRef.current?.focus();
   }, []);
 
+  const handleRecentSearchClick = useCallback(
+    (recentQuery: string) => {
+      triggerHapticFeedback("light");
+      setQuery(recentQuery);
+      setSelectedIndex(-1);
+      setIsOpen(true);
+
+      // If mobile modal is open, keep focus there
+      if (isMobileModalOpen) {
+        setTimeout(() => mobileInputRef.current?.focus(), MOBILE_FOCUS_DELAY_MS);
+      } else {
+        inputRef.current?.focus();
+      }
+    },
+    [isMobileModalOpen]
+  );
+
+  const handleClearHistory = useCallback(() => {
+    triggerHapticFeedback("light");
+    clearHistory();
+  }, [clearHistory]);
+
   // Memoized type helpers
   const getTypeIcon = useCallback(
     (type: SearchResultType) => TYPE_ICON_MAP[type] || DEFAULT_TYPE_ICON,
@@ -263,6 +337,11 @@ export function useGlobalSearch() {
     // Helpers
     getTypeIcon,
     getTypeColor,
+
+    // Recent searches
+    recentSearches,
+    handleRecentSearchClick,
+    handleClearHistory,
   };
 }
 

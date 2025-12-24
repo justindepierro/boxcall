@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { useDevMode } from "../app/dev-mode-hooks";
+import { useActiveTeamStore } from "../stores/activeTeamStore";
 import {
   AchievementService,
   type AchievementData,
@@ -15,6 +16,7 @@ export function useAchievements(userId?: string) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { devMode } = useDevMode();
+  const activeTeamId = useActiveTeamStore((s) => s.activeTeamId);
 
   useEffect(() => {
     let isCancelled = false;
@@ -30,7 +32,8 @@ export function useAchievements(userId?: string) {
       try {
         const data = await AchievementService.getUserAchievements(
           userId,
-          devMode
+          devMode,
+          activeTeamId
         );
         if (!isCancelled) {
           setAchievements(data);
@@ -54,7 +57,7 @@ export function useAchievements(userId?: string) {
     return () => {
       isCancelled = true;
     };
-  }, [userId, devMode]);
+  }, [userId, devMode, activeTeamId]);
 
   return { achievements, loading, error };
 }
