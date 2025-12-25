@@ -34,7 +34,6 @@ const MOBILE_RENDER_WARN_THRESHOLD_MS = 20;
 interface MobilePlaybookViewProps {
   // State
   state: PlaybookState;
-  mobileListExpanded: boolean;
   showFiltersSheet: boolean;
   showStatsSheet: boolean;
   activeTeamId: string | null;
@@ -51,7 +50,6 @@ interface MobilePlaybookViewProps {
   };
 
   // Handlers
-  setMobileListExpanded: (expanded: boolean) => void;
   setShowFiltersSheet: (show: boolean) => void;
   setShowStatsSheet: (show: boolean) => void;
   handleOpenQuickCreate: () => void;
@@ -88,7 +86,6 @@ interface MobilePlaybookViewProps {
 
 export function MobilePlaybookView({
   state,
-  mobileListExpanded,
   showFiltersSheet,
   showStatsSheet,
   activeTeamId,
@@ -97,7 +94,6 @@ export function MobilePlaybookView({
   debouncedSearchQuery,
   optimisticPlays,
   formationAudit,
-  setMobileListExpanded,
   setShowFiltersSheet,
   setShowStatsSheet,
   handleOpenQuickCreate,
@@ -326,7 +322,6 @@ export function MobilePlaybookView({
                     {(() => {
                       const commonPlayGridProps = {
                         searchQuery: debouncedSearchQuery,
-                        filters: state.selectedFilters,
                         advancedFilters: state.advancedFilters,
                         selectedCategory: state.selectedCategory,
                         selectedSubcategory: state.selectedSubcategory,
@@ -364,13 +359,7 @@ export function MobilePlaybookView({
                           dispatch({ type: "SET_SELECTION", selection }),
                       };
 
-                      return (
-                        <PlayGrid
-                          {...commonPlayGridProps}
-                          mobileListExpanded={mobileListExpanded}
-                          onMobileListExpand={() => setMobileListExpanded(true)}
-                        />
-                      );
+                      return <PlayGrid {...commonPlayGridProps} />;
                     })()}
                   </ErrorBoundary>
                 </PullToRefresh>
@@ -536,9 +525,6 @@ export function MobilePlaybookView({
         onClose={() => setShowStatsSheet(false)}
         stats={{
           totalPlays: state.playsCreated || 0,
-          playsWithDiagrams: Math.floor(
-            (state.playsCreated || 0) * (state.diagramCoverage / 100)
-          ),
           formationsCount: Math.max(
             1,
             Math.floor((state.playsCreated || 0) / 3)

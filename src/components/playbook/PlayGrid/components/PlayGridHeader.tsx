@@ -16,8 +16,6 @@ interface PlayGridHeaderProps {
   enableBulkOperations: boolean;
   selectedPlayIds: Set<string>;
   onSelectAll: () => void;
-  viewMode: "grid" | "list";
-  onViewModeChange: (mode: "grid" | "list") => void;
   showOneWordCalls: boolean;
   onShowOneWordCallsChange: (show: boolean) => void;
   directionDisplayFormat: "full" | "abbrev" | "letter";
@@ -33,8 +31,6 @@ export const PlayGridHeader: React.FC<PlayGridHeaderProps> = ({
   enableBulkOperations,
   selectedPlayIds,
   onSelectAll,
-  viewMode,
-  onViewModeChange,
   showOneWordCalls,
   onShowOneWordCallsChange,
   directionDisplayFormat,
@@ -80,40 +76,8 @@ export const PlayGridHeader: React.FC<PlayGridHeaderProps> = ({
         )}
       </div>
 
-      {/* Play Name Display Toggle & View Mode */}
+      {/* Play Display Options */}
       <div className="flex items-center space-x-6">
-        {/* View Mode Toggle */}
-        <div className="flex items-center space-x-2 px-2 py-1 rounded-xl bg-muted">
-          <IconButton
-            aria-label="List view"
-            tooltip="List view"
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              onViewModeChange("list");
-            }}
-            variant="subtle"
-            size="sm"
-            className={viewMode === "list" ? "bg-white dark:bg-navy-700" : ""}
-          >
-            <Icon name="list" className="h-4 w-4" />
-          </IconButton>
-          <IconButton
-            aria-label="Grid view (app icons)"
-            tooltip="Grid view"
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              onViewModeChange("grid");
-            }}
-            variant="subtle"
-            size="sm"
-            className={viewMode === "grid" ? "bg-white dark:bg-navy-700" : ""}
-          >
-            <Icon name="grid" className="h-4 w-4" />
-          </IconButton>
-        </div>
-
         {/* One-word calls toggle */}
         <div className="flex items-center space-x-3">
           <span className="text-sm text-secondary">One-word calls</span>

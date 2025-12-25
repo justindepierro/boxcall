@@ -162,7 +162,6 @@ function PlaybookPageHeader({
 function PlaybookMainView({
   isMobileOrTablet,
   state,
-  mobileListExpanded,
   isModalOpen,
   openModal,
   closeModal,
@@ -172,7 +171,6 @@ function PlaybookMainView({
   debouncedSearchQuery,
   optimisticPlays,
   formationAudit,
-  setMobileListExpanded,
   handlers,
   handleSavePlay,
   handleEnterFullscreen,
@@ -185,7 +183,6 @@ function PlaybookMainView({
 }: {
   isMobileOrTablet: boolean;
   state: any;
-  mobileListExpanded: boolean;
   isModalOpen: (type: Exclude<ModalType, null>) => boolean;
   openModal: (type: Exclude<ModalType, null>, options?: ModalOptions) => void;
   closeModal: () => void;
@@ -195,7 +192,6 @@ function PlaybookMainView({
   debouncedSearchQuery: string;
   optimisticPlays: any[];
   formationAudit: any;
-  setMobileListExpanded: (expanded: boolean) => void;
   handlers: any;
   handleSavePlay: any;
   handleEnterFullscreen: any;
@@ -210,7 +206,6 @@ function PlaybookMainView({
     return (
       <MobilePlaybookView
         state={state}
-        mobileListExpanded={mobileListExpanded}
         showFiltersSheet={isModalOpen("filtersSheet")}
         showStatsSheet={isModalOpen("statsSheet")}
         activeTeamId={activeTeamId}
@@ -219,7 +214,6 @@ function PlaybookMainView({
         debouncedSearchQuery={debouncedSearchQuery}
         optimisticPlays={optimisticPlays}
         formationAudit={formationAudit}
-        setMobileListExpanded={setMobileListExpanded}
         setShowFiltersSheet={(show) =>
           show ? openModal("filtersSheet") : closeModal()
         }
@@ -337,8 +331,6 @@ function PlaybookPageView({
   debouncedSearchQuery,
   optimisticPlays,
   formationAudit,
-  mobileListExpanded,
-  setMobileListExpanded,
   handleSavePlay,
   handleEnterFullscreen,
   playbookStats,
@@ -384,8 +376,6 @@ function PlaybookPageView({
   debouncedSearchQuery: string;
   optimisticPlays: any[];
   formationAudit: any;
-  mobileListExpanded: boolean;
-  setMobileListExpanded: (expanded: boolean) => void;
   handleSavePlay: any;
   handleEnterFullscreen: any;
   playbookStats: any;
@@ -472,7 +462,6 @@ function PlaybookPageView({
       <PlaybookMainView
         isMobileOrTablet={isMobileOrTablet}
         state={state}
-        mobileListExpanded={mobileListExpanded}
         isModalOpen={isModalOpen}
         openModal={openModal}
         closeModal={closeModal}
@@ -482,7 +471,6 @@ function PlaybookPageView({
         debouncedSearchQuery={debouncedSearchQuery}
         optimisticPlays={optimisticPlays}
         formationAudit={formationAudit}
-        setMobileListExpanded={setMobileListExpanded}
         handlers={handlers}
         handleSavePlay={handleSavePlay}
         handleEnterFullscreen={handleEnterFullscreen}
@@ -722,6 +710,8 @@ const PlaybookPage = () => {
   );
 
   // Get playbooks for this team
+  // NOTE: Don't pass playbookId here - PlayGrid handles playbook-scoped fetching
+  // This fetch gets all playbooks/plays for filtering and stats calculation
   const {
     playbooks,
     refreshData,
@@ -767,8 +757,6 @@ const PlaybookPage = () => {
     setPlayToPost,
     showBulkDeleteConfirm,
     setShowBulkDeleteConfirm,
-    mobileListExpanded,
-    setMobileListExpanded,
     fullscreenPlayIndex,
     fullscreenPlays,
     handleEnterFullscreen,
@@ -822,11 +810,81 @@ const PlaybookPage = () => {
     ) as any;
   }, [allFormations, activePlaybookId]);
 
+  // Database counts for accurate stats (not limited by pagination)
+  const [dbTotalCount, setDbTotalCount] = React.useState<number | null>(null);
+  const [dbPlayTypeCounts, setDbPlayTypeCounts] = React.useState<{
+    pass: number;
+    run: number;
+    rpo: number;
+    playAction: number;
+  } | null>(null);
+
+  // Fetch accurate counts from database when activePlaybookId changes
+  useEffect(() => {
+    if (!activePlaybookId) {
+      setDbTotalCount(null);
+      setDbPlayTypeCounts(null);
+      return;
+    }
+
+    const fetchCounts = async () => {
+      try {
+        const { table } = await import("../data/supabase/db");
+        
+        // Fetch all counts in parallel
+        const [totalResult, passResult, runResult, rpoResult, paResult] = await Promise.all([
+          table("plays")
+            .select("id", { count: "exact", head: true })
+            .eq("playbook_id", activePlaybookId),
+          table("plays")
+            .select("id", { count: "exact", head: true })
+            .eq("playbook_id", activePlaybookId)
+            .ilike("p_type", "pass"),
+          table("plays")
+            .select("id", { count: "exact", head: true })
+            .eq("playbook_id", activePlaybookId)
+            .ilike("p_type", "run"),
+          table("plays")
+            .select("id", { count: "exact", head: true })
+            .eq("playbook_id", activePlaybookId)
+            .ilike("p_type", "rpo"),
+          table("plays")
+            .select("id", { count: "exact", head: true })
+            .eq("playbook_id", activePlaybookId)
+            .ilike("p_type", "%play action%"),
+        ]);
+
+        setDbTotalCount(totalResult.count ?? null);
+        setDbPlayTypeCounts({
+          pass: passResult.count ?? 0,
+          run: runResult.count ?? 0,
+          rpo: rpoResult.count ?? 0,
+          playAction: paResult.count ?? 0,
+        });
+        
+        debug("📊 PlaybookPage - DB counts fetched:", {
+          activePlaybookId,
+          total: totalResult.count,
+          pass: passResult.count,
+          run: runResult.count,
+          rpo: rpoResult.count,
+          playAction: paResult.count,
+        });
+      } catch (err) {
+        logError("Failed to fetch playbook counts:", err);
+      }
+    };
+
+    void fetchCounts();
+  }, [activePlaybookId]);
+
   const playbookStats = usePlaybookStats(
     scopedPlaysForStats,
     scopedFormationsForStats,
     recentActivities,
-    (formationAudit.plays || []) as unknown as Play[]
+    (formationAudit.plays || []) as unknown as Play[],
+    dbTotalCount,
+    dbPlayTypeCounts
   );
 
   // Handlers hook
@@ -862,18 +920,6 @@ const PlaybookPage = () => {
 
   // Search query (no debouncing for instant search)
   const debouncedSearchQuery = state.searchQuery;
-  const selectedFiltersKey = JSON.stringify(state.selectedFilters ?? {});
-
-  // Reset mobile list expansion on filter/search change
-  useEffect(() => {
-    if (!isMobileOrTablet) return;
-    setMobileListExpanded(false);
-  }, [
-    isMobileOrTablet,
-    debouncedSearchQuery,
-    selectedFiltersKey,
-    setMobileListExpanded,
-  ]);
 
   const existingPlays = useMemo(
     () => buildExistingPlaysForModals(allPlaysForStats, activePlaybookId),
@@ -899,8 +945,6 @@ const PlaybookPage = () => {
       debouncedSearchQuery={debouncedSearchQuery}
       optimisticPlays={optimisticPlays}
       formationAudit={formationAudit}
-      mobileListExpanded={mobileListExpanded}
-      setMobileListExpanded={setMobileListExpanded}
       handleSavePlay={handleSavePlay}
       handleEnterFullscreen={handleEnterFullscreen}
       playbookStats={playbookStats}

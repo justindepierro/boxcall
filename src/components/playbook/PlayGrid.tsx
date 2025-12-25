@@ -17,53 +17,34 @@ import { useTeamsData } from "../../hooks/useTeamsData";
 import { useActiveTeamStore } from "../../stores/activeTeamStore";
 import type { Play } from "../../types/play";
 import { Typography } from "../design-system/Typography";
-import { useIsMobile } from "../../hooks/useBreakpoint";
 import { useFavoritePlays } from "../../hooks/useFavoritePlays";
 import { usePersonnelConfigurations } from "../../hooks/usePersonnel";
 import { debug, warn, info } from "../../utils/logger";
 import { useSaveState } from "../../hooks/useSaveState";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 // Extracted modules
 import { mapDatabasePlayToFullPlay } from "./PlayGrid/utils/playDataUtils";
 import {
   usePlayPreferences,
-  useViewMode,
   usePlayExpansion,
   usePlaySelection,
   usePlayFiltering,
-  useMobileProgressiveLoading,
   useCollectedSuggestions,
-  useDragAndDrop,
-  MOBILE_INITIAL_PLAYS,
 } from "./PlayGrid/hooks";
 import { createPlaySaveHandler } from "./PlayGrid/handlers";
 import {
   PlayGridHeader,
   NoTeamSelectedState,
-  LoadMoreButton,
-  AllPlaysLoadedMessage,
 } from "./PlayGrid/components";
-
-// Mobile components
-import { MobilePlayCard } from "./page/MobilePlayCard";
-import { SwipeActions } from "./page/SwipeActions";
 
 interface PlayGridProps {
   searchQuery: string;
-  filters: {
-    formation?: string;
-    playType?: string;
-    down?: string;
-    distance?: string;
-    tags?: string[];
-  };
   advancedFilters?: Array<{
     id: string;
     field: string;
     operator: "equals" | "contains" | "in";
     value: string | string[];
-    label: string;
+    label?: string;
   }>;
   optimisticPlays?: Play[];
   selectedCategory?: string;
@@ -87,13 +68,10 @@ interface PlayGridProps {
   formationSuggestions?: string[];
   playNameSuggestions?: string[];
   playTypeSuggestions?: string[];
-  mobileListExpanded?: boolean;
-  onMobileListExpand?: () => void;
 }
 
 const PlayGridInner: React.FC<PlayGridProps> = ({
   searchQuery,
-  filters,
   advancedFilters = [],
   optimisticPlays = [],
   selectedCategory,
@@ -110,11 +88,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   selectedPlayIds = new Set(),
   onPlaySelectionChange,
   onOpenBuilder,
-  mobileListExpanded = false,
-  onMobileListExpand,
 }) => {
   const activeTeamId = useActiveTeamStore((state) => state.activeTeamId);
-  const isMobile = useIsMobile();
 
   const effectivePlaybookId = useMemo(() => {
     const trimmed = String(playbookId ?? "").trim();
@@ -128,12 +103,9 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     directionDisplayFormat,
     setDirectionDisplayFormat,
   } = usePlayPreferences();
-  const { viewMode, setViewMode } = useViewMode();
   const { favoriteIds } = useFavoritePlays();
   const { startSaving, finishSaving } = useSaveState();
-  const { expandedPlayId, handleToggleExpand } = usePlayExpansion(
-    viewMode || "grid"
-  );
+  const { expandedPlayId, handleToggleExpand } = usePlayExpansion("list");
 
   // Get data from database
   const {
@@ -172,8 +144,18 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   }, [optimisticPlays, databasePlays]);
 
   const scopedPlays: Play[] = useMemo(() => {
-    if (!effectivePlaybookId) return plays;
-    return plays.filter((play) => play.playbook_id === effectivePlaybookId);
+    if (!effectivePlaybookId) {
+      debug("[PlayGrid] scopedPlays: No playbook filter, returning all", plays.length);
+      return plays;
+    }
+    const filtered = plays.filter((play) => play.playbook_id === effectivePlaybookId);
+    debug("[PlayGrid] scopedPlays:", {
+      effectivePlaybookId,
+      input: plays.length,
+      output: filtered.length,
+      samplePlaybookIds: plays.slice(0, 5).map(p => p.playbook_id),
+    });
+    return filtered;
   }, [plays, effectivePlaybookId]);
 
   // Dev-only tracing for playbook scoping issues
@@ -237,40 +219,24 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     [updatePlay, startSaving, finishSaving]
   );
 
-  // Filtering
+  // Filtering - SINGLE SOURCE OF TRUTH: advancedFilters
   const { filteredPlays, hasFilters } = usePlayFiltering({
     plays: scopedPlays,
     searchQuery,
-    filters,
     advancedFilters,
     selectedCategory,
     selectedSubcategory,
     favoriteIds,
   });
 
-  // Drag and drop
-  const { displayPlays, handleDragEnd } = useDragAndDrop({ filteredPlays });
+  // Use filtered plays directly (drag-and-drop removed with grid view)
+  const displayPlays = filteredPlays;
 
   // Play selection
   const { handlePlaySelect, handleSelectAll } = usePlaySelection({
     selectedPlayIds,
     onPlaySelectionChange,
     displayPlays,
-  });
-
-  // Mobile progressive loading
-  const {
-    visiblePlays,
-    hasMorePlays,
-    isLoadingMore,
-    loadMoreRef,
-    mobileVisibleCount,
-    loadMore,
-  } = useMobileProgressiveLoading({
-    displayPlays,
-    isMobile,
-    mobileListExpanded,
-    onMobileListExpand,
   });
 
   // Personnel configurations
@@ -363,7 +329,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
   return (
     <div className="space-y-3" aria-live="polite">
-      {loading && <PlayGridSkeleton count={8} viewMode={viewMode} />}
+      {loading && <PlayGridSkeleton count={8} />}
       {error && !loading && (
         <PlayGridErrorState error={error} onRetry={refreshData} />
       )}
@@ -389,8 +355,6 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
           enableBulkOperations={enableBulkOperations}
           selectedPlayIds={selectedPlayIds}
           onSelectAll={handleSelectAll}
-          viewMode={viewMode || "grid"}
-          onViewModeChange={setViewMode}
           showOneWordCalls={showOneWordCalls ?? false}
           onShowOneWordCallsChange={setShowOneWordCalls}
           directionDisplayFormat={directionDisplayFormat || "full"}
@@ -398,57 +362,8 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
         />
       )}
 
-      {/* Grid View */}
-      {!showEmpty && !loading && !error && viewMode === "grid" && (
-        <>
-          {isMobile ? (
-            <MobileGridView
-              visiblePlays={visiblePlays}
-              mobileVisibleCount={mobileVisibleCount}
-              selectedPlayIds={selectedPlayIds}
-              showOneWordCalls={showOneWordCalls ?? false}
-              onEdit={onEdit}
-              onDuplicate={onDuplicate}
-            />
-          ) : (
-            <DesktopGridView
-              visiblePlays={visiblePlays}
-              handleDragEnd={handleDragEnd}
-              expandedPlayId={expandedPlayId}
-              showOneWordCalls={showOneWordCalls ?? false}
-              selectedPlayIds={selectedPlayIds}
-              enableBulkOperations={enableBulkOperations}
-              handlePlaySelect={handlePlaySelect}
-              handlePlaySave={handlePlaySave}
-              collectedSuggestions={collectedSuggestions}
-              personnelConfigurations={personnelConfigurations}
-              directionDisplayFormat={directionDisplayFormat ?? "full"}
-              handleToggleExpand={handleToggleExpand}
-              plays={plays}
-              onEdit={onEdit}
-              onDuplicate={onDuplicate}
-              onOpenAssignments={onOpenAssignments}
-              onPostToTeamBulletin={onPostToTeamBulletin}
-            />
-          )}
-          {hasMorePlays && (
-            <LoadMoreButton
-              loadMoreRef={loadMoreRef}
-              isLoadingMore={isLoadingMore}
-              remainingCount={displayPlays.length - mobileVisibleCount}
-              onLoadMore={loadMore}
-            />
-          )}
-          {isMobile &&
-            (mobileListExpanded || mobileVisibleCount >= displayPlays.length) &&
-            displayPlays.length > MOBILE_INITIAL_PLAYS && (
-              <AllPlaysLoadedMessage totalCount={displayPlays.length} />
-            )}
-        </>
-      )}
-
       {/* List View with Virtuoso */}
-      {!showEmpty && !loading && !error && viewMode === "list" && (
+      {!showEmpty && !loading && !error && (
         <div
           style={{ height: "calc(100vh - 320px)" }}
           aria-label="Play list"
@@ -517,147 +432,6 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   );
 };
 
-// Mobile Grid View Component
-const MobileGridView: React.FC<{
-  visiblePlays: Play[];
-  mobileVisibleCount: number;
-  selectedPlayIds: Set<string>;
-  showOneWordCalls: boolean;
-  onEdit?: (play: Play) => void;
-  onDuplicate?: (play: Play) => void;
-}> = ({
-  visiblePlays,
-  mobileVisibleCount,
-  selectedPlayIds,
-  showOneWordCalls,
-  onEdit,
-  onDuplicate,
-}) => (
-  <div className="space-y-3">
-    {visiblePlays.slice(0, mobileVisibleCount).map((play, index) => (
-      <div key={play.id} data-card-index={index}>
-        <SwipeActions
-          playId={play.id}
-          onEdit={() => onEdit?.(play)}
-          onDuplicate={() => onDuplicate?.(play)}
-          onDelete={() => debug("Delete play:", play.id)}
-        >
-          <MobilePlayCard
-            play={play}
-            onEdit={() => onEdit?.(play)}
-            onMore={() => debug("More actions:", play.id)}
-            onClick={() => onEdit?.(play)}
-            isSelected={selectedPlayIds.has(play.id)}
-            showOneWordCalls={showOneWordCalls}
-          />
-        </SwipeActions>
-      </div>
-    ))}
-  </div>
-);
-
-// Desktop Grid View Component
-const DesktopGridView: React.FC<{
-  visiblePlays: Play[];
-  handleDragEnd: (result: import("@hello-pangea/dnd").DropResult) => void;
-  expandedPlayId: string | null;
-  showOneWordCalls: boolean;
-  selectedPlayIds: Set<string>;
-  enableBulkOperations: boolean;
-  handlePlaySelect: (playId: string, isSelected: boolean) => void;
-  handlePlaySave: (playId: string, updates: Partial<Play>) => Promise<void>;
-  collectedSuggestions: {
-    formations: string[];
-    playNames: string[];
-    playTypes: string[];
-    personnel: string[];
-  };
-  personnelConfigurations: import("../../types/personnel").PersonnelConfiguration[];
-  directionDisplayFormat: "full" | "abbrev" | "letter" | null;
-  handleToggleExpand: (playId: string) => void;
-  plays: Play[];
-  onEdit?: (play: Play) => void;
-  onDuplicate?: (play: Play) => void;
-  onOpenAssignments?: (play: Play) => void;
-  onPostToTeamBulletin?: (play: Play) => void;
-}> = ({
-  visiblePlays,
-  handleDragEnd,
-  expandedPlayId,
-  showOneWordCalls,
-  selectedPlayIds,
-  enableBulkOperations,
-  handlePlaySelect,
-  handlePlaySave,
-  collectedSuggestions,
-  personnelConfigurations,
-  directionDisplayFormat,
-  handleToggleExpand,
-  plays,
-  onEdit,
-  onDuplicate,
-  onOpenAssignments,
-  onPostToTeamBulletin,
-}) => (
-  <DragDropContext onDragEnd={handleDragEnd}>
-    <Droppable droppableId="play-grid" direction="horizontal">
-      {(provided) => (
-        <div
-          ref={provided.innerRef}
-          {...provided.droppableProps}
-          className="grid gap-6 overflow-visible auto-rows-max sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
-          style={{ transition: "grid-template-rows 0.3s ease" }}
-        >
-          {visiblePlays.map((play, index) => (
-            <Draggable key={play.id} draggableId={play.id} index={index}>
-              {(provided, snapshot) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.draggableProps}
-                  {...provided.dragHandleProps}
-                  className={`w-full overflow-visible transition-all duration-300 ${
-                    snapshot.isDragging ? "opacity-50" : ""
-                  } ${
-                    expandedPlayId === play.id
-                      ? "col-span-2 sm:col-span-2 md:col-span-3 lg:col-span-3 xl:col-span-4 2xl:col-span-5"
-                      : ""
-                  }`}
-                >
-                  <PlayCardWrapper
-                    play={play}
-                    variant="tile"
-                    index={index}
-                    showOneWordCalls={showOneWordCalls}
-                    onEdit={onEdit}
-                    onSave={handlePlaySave}
-                    onDuplicate={onDuplicate}
-                    onOpenAssignments={onOpenAssignments}
-                    onPostToTeamBulletin={onPostToTeamBulletin}
-                    isSelected={selectedPlayIds.has(play.id)}
-                    onSelectionChange={
-                      enableBulkOperations ? handlePlaySelect : undefined
-                    }
-                    formationSuggestions={collectedSuggestions.formations}
-                    playNameSuggestions={collectedSuggestions.playNames}
-                    playTypeSuggestions={collectedSuggestions.playTypes}
-                    personnelSuggestions={collectedSuggestions.personnel}
-                    personnelConfigurations={personnelConfigurations}
-                    directionDisplayFormat={directionDisplayFormat ?? "full"}
-                    expandedPlayId={expandedPlayId}
-                    onToggleExpand={handleToggleExpand}
-                    existingPlays={plays}
-                  />
-                </div>
-              )}
-            </Draggable>
-          ))}
-          {provided.placeholder}
-        </div>
-      )}
-    </Droppable>
-  </DragDropContext>
-);
-
 // Props equality checker
 function arePlayGridPropsEqual(prev: PlayGridProps, next: PlayGridProps) {
   if (prev.searchQuery !== next.searchQuery) return false;
@@ -666,16 +440,11 @@ function arePlayGridPropsEqual(prev: PlayGridProps, next: PlayGridProps) {
   if (prev.refreshTrigger !== next.refreshTrigger) return false;
   if (prev.enableBulkOperations !== next.enableBulkOperations) return false;
 
-  const pf = prev.filters;
-  const nf = next.filters;
-  const filterKeys = new Set([
-    ...Object.keys(pf ?? {}),
-    ...Object.keys(nf ?? {}),
-  ]);
-  for (const k of filterKeys) {
-    // @ts-expect-error index
-    if (pf[k] !== nf[k]) return false;
-  }
+  // Compare advancedFilters by length and reference
+  const paf = prev.advancedFilters ?? [];
+  const naf = next.advancedFilters ?? [];
+  if (paf.length !== naf.length) return false;
+  if (paf !== naf && JSON.stringify(paf) !== JSON.stringify(naf)) return false;
 
   const ps = prev.selectedPlayIds;
   const ns = next.selectedPlayIds;

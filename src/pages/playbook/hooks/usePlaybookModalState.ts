@@ -24,9 +24,6 @@ export function usePlaybookModalState() {
   // Bulk delete confirmation
   const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
 
-  // Mobile list expanded state
-  const [mobileListExpanded, setMobileListExpanded] = useState(false);
-
   // Fullscreen diagram viewer state
   const [fullscreenPlayIndex, setFullscreenPlayIndex] = useState<number | null>(
     null
@@ -74,9 +71,6 @@ export function usePlaybookModalState() {
     // Bulk delete
     showBulkDeleteConfirm,
     setShowBulkDeleteConfirm,
-    // Mobile
-    mobileListExpanded,
-    setMobileListExpanded,
     // Fullscreen
     fullscreenPlayIndex,
     fullscreenPlays,
