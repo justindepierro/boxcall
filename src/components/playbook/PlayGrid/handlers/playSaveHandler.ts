@@ -10,7 +10,7 @@ import { debug, error as logError, info } from "../../../../utils/logger";
 type DatabasePlay = Database["public"]["Tables"]["plays"]["Row"];
 
 interface CreatePlaySaveHandlerProps {
-  updatePlay: (playId: string, updates: any) => Promise<DatabasePlay>;
+  updatePlay: (playId: string, updates: any) => Promise<boolean>;
   startSaving: () => void;
   finishSaving: (status: "success" | "error") => void;
 }
@@ -99,15 +99,10 @@ export function createPlaySaveHandler({
       });
       debug("[PlayGrid] 🔷 Calling updatePlay...");
 
-      const saved = await updatePlay(playId, dbUpdates);
+      const success = await updatePlay(playId, dbUpdates);
 
-      if (import.meta.env.DEV) {
-        debug("[PlayGrid] 🧾 Saved row snapshot:", {
-          id: saved?.id,
-          pref_dis: (saved as any)?.pref_dis,
-          pref_field_pos: (saved as any)?.pref_field_pos,
-          pref_situation: (saved as any)?.pref_situation,
-        });
+      if (!success) {
+        throw new Error("Failed to update play - check logs for details");
       }
 
       debug("[PlayGrid] 🟢 updatePlay completed successfully");

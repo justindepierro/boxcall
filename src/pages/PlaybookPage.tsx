@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { PlaybookViewTabs } from "../components/playbook/page/PlaybookViewTabs";
 import { BulkActionsToolbar } from "../components/playbook/BulkActionsToolbar";
 import { usePlaybook } from "../contexts/PlaybookContext";
 import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { useTeamsData } from "../hooks/useTeamsData";
+import { usePlaybookData } from "../hooks/usePlaybookData";
 import { useIsMobileOrTablet } from "../hooks/useBreakpoint";
 import { useMobileButtonProps } from "../hooks/useMobileButtonProps";
 import { useFormationAudit } from "../hooks/useFormationAudit";
@@ -22,12 +23,11 @@ import { FullscreenDiagramViewer } from "../components/playbook/play-card/Fullsc
 import { FormationLibraryModal } from "../components/playbook/modals/FormationLibraryModal";
 import { PersonnelLibraryModal } from "../components/playbook/modals/PersonnelLibraryModal";
 import { ConfirmationModal } from "../components/ui/ConfirmationModal/ConfirmationModal";
-import { debug } from "../utils/logger";
+import { debug, logError } from "../utils/logger";
 import type { Play } from "../types/play";
 import { PlaysService } from "../services/playsService";
 import { exportPlays } from "../services/exportService";
 import { useToast } from "../hooks/useToast";
-import { error as logError } from "../utils/logger";
 
 // Extracted components
 import { MobileFiltersBottomSheet } from "./playbook";
@@ -796,12 +796,22 @@ const PlaybookPage = () => {
   // Stats and audit hooks
   const formationAudit = useFormationAudit(activePlaybookId || null);
 
+  // SINGLE SOURCE OF TRUTH: usePlaybookData provides accurate counts from database
+  const { 
+    plays: playbookPlays, 
+    totalCount: dbTotalCount, 
+    playTypeCounts: dbPlayTypeCounts 
+  } = usePlaybookData(activePlaybookId);
+
+  // Use plays from usePlaybookData for stats (already scoped to activePlaybookId)
   const scopedPlaysForStats = useMemo(() => {
-    if (!activePlaybookId) return allPlaysForStats as unknown as Play[];
-    return (allPlaysForStats as any[]).filter(
-      (p) => String((p as any).playbook_id ?? "") === String(activePlaybookId)
-    ) as unknown as Play[];
-  }, [allPlaysForStats, activePlaybookId]);
+    // Merge optimistic plays with database plays for stats
+    const dbPlayIds = new Set(playbookPlays.map((p) => p.id));
+    const uniqueOptimisticPlays = optimisticPlays.filter(
+      (p) => !dbPlayIds.has(p.id)
+    );
+    return [...uniqueOptimisticPlays, ...playbookPlays];
+  }, [playbookPlays, optimisticPlays]);
 
   const scopedFormationsForStats = useMemo(() => {
     if (!activePlaybookId) return allFormations;
@@ -809,74 +819,6 @@ const PlaybookPage = () => {
       (f) => String((f as any).playbook_id ?? "") === String(activePlaybookId)
     ) as any;
   }, [allFormations, activePlaybookId]);
-
-  // Database counts for accurate stats (not limited by pagination)
-  const [dbTotalCount, setDbTotalCount] = React.useState<number | null>(null);
-  const [dbPlayTypeCounts, setDbPlayTypeCounts] = React.useState<{
-    pass: number;
-    run: number;
-    rpo: number;
-    playAction: number;
-  } | null>(null);
-
-  // Fetch accurate counts from database when activePlaybookId changes
-  useEffect(() => {
-    if (!activePlaybookId) {
-      setDbTotalCount(null);
-      setDbPlayTypeCounts(null);
-      return;
-    }
-
-    const fetchCounts = async () => {
-      try {
-        const { table } = await import("../data/supabase/db");
-        
-        // Fetch all counts in parallel
-        const [totalResult, passResult, runResult, rpoResult, paResult] = await Promise.all([
-          table("plays")
-            .select("id", { count: "exact", head: true })
-            .eq("playbook_id", activePlaybookId),
-          table("plays")
-            .select("id", { count: "exact", head: true })
-            .eq("playbook_id", activePlaybookId)
-            .ilike("p_type", "pass"),
-          table("plays")
-            .select("id", { count: "exact", head: true })
-            .eq("playbook_id", activePlaybookId)
-            .ilike("p_type", "run"),
-          table("plays")
-            .select("id", { count: "exact", head: true })
-            .eq("playbook_id", activePlaybookId)
-            .ilike("p_type", "rpo"),
-          table("plays")
-            .select("id", { count: "exact", head: true })
-            .eq("playbook_id", activePlaybookId)
-            .ilike("p_type", "%play action%"),
-        ]);
-
-        setDbTotalCount(totalResult.count ?? null);
-        setDbPlayTypeCounts({
-          pass: passResult.count ?? 0,
-          run: runResult.count ?? 0,
-          rpo: rpoResult.count ?? 0,
-          playAction: paResult.count ?? 0,
-        });
-        
-        debug("📊 PlaybookPage - DB counts fetched:", {
-          activePlaybookId,
-          total: totalResult.count,
-          pass: passResult.count,
-          run: runResult.count,
-          rpo: rpoResult.count,
-          playAction: paResult.count,
-        });
-      } catch (err) {
-        logError("Failed to fetch playbook counts:", err);
-      }
-    };
-
-    void fetchCounts();
-  }, [activePlaybookId]);
 
   const playbookStats = usePlaybookStats(
     scopedPlaysForStats,

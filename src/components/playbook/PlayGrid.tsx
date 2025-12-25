@@ -13,17 +13,16 @@ import {
   dispatchDocumentAppEvent,
 } from "../../utils/appEvents";
 import { Virtuoso } from "react-virtuoso";
-import { useTeamsData } from "../../hooks/useTeamsData";
+import { usePlaybookData } from "../../hooks/usePlaybookData";
 import { useActiveTeamStore } from "../../stores/activeTeamStore";
 import type { Play } from "../../types/play";
 import { Typography } from "../design-system/Typography";
 import { useFavoritePlays } from "../../hooks/useFavoritePlays";
 import { usePersonnelConfigurations } from "../../hooks/usePersonnel";
-import { debug, warn, info } from "../../utils/logger";
+import { debug, info, warn } from "../../utils/logger";
 import { useSaveState } from "../../hooks/useSaveState";
 
 // Extracted modules
-import { mapDatabasePlayToFullPlay } from "./PlayGrid/utils/playDataUtils";
 import {
   usePlayPreferences,
   usePlayExpansion,
@@ -107,18 +106,18 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   const { startSaving, finishSaving } = useSaveState();
   const { expandedPlayId, handleToggleExpand } = usePlayExpansion("list");
 
-  // Get data from database
+  // Get data from database - SINGLE SOURCE OF TRUTH
   const {
-    plays: allPlays,
+    plays: databasePlays,
     loading,
     error,
     refreshData,
     updatePlay,
     hasMorePlays: hasMorePlaysFromDB,
     loadingMorePlays,
-    totalPlaysCount,
+    totalCount: totalPlaysCount,
     loadMorePlays,
-  } = useTeamsData(undefined, { playbookId: effectivePlaybookId });
+  } = usePlaybookData(effectivePlaybookId);
 
   // Refresh on trigger change
   useEffect(() => {
@@ -127,12 +126,6 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       refreshData();
     }
   }, [refreshTrigger, refreshData]);
-
-  // Convert database plays to full Play type
-  const databasePlays: Play[] = useMemo(
-    () => (allPlays || []).map(mapDatabasePlayToFullPlay),
-    [allPlays]
-  );
 
   // Merge optimistic plays with database plays
   const plays: Play[] = useMemo(() => {
@@ -143,46 +136,19 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     return [...uniqueOptimisticPlays, ...databasePlays];
   }, [optimisticPlays, databasePlays]);
 
-  const scopedPlays: Play[] = useMemo(() => {
-    if (!effectivePlaybookId) {
-      debug("[PlayGrid] scopedPlays: No playbook filter, returning all", plays.length);
-      return plays;
-    }
-    const filtered = plays.filter((play) => play.playbook_id === effectivePlaybookId);
-    debug("[PlayGrid] scopedPlays:", {
-      effectivePlaybookId,
-      input: plays.length,
-      output: filtered.length,
-      samplePlaybookIds: plays.slice(0, 5).map(p => p.playbook_id),
-    });
-    return filtered;
-  }, [plays, effectivePlaybookId]);
+  // Plays are already scoped by usePlaybookData - no additional filtering needed
+  const scopedPlays: Play[] = plays;
 
-  // Dev-only tracing for playbook scoping issues
+  // Dev-only logging
   useEffect(() => {
     if (!import.meta.env.DEV) return;
     if (loading) return;
-    const uniquePlaybookIds = Array.from(
-      new Set((allPlays || []).map((p: any) => String(p?.playbook_id ?? "")))
-    ).filter(Boolean);
-    debug("[PlayGrid] scope trace", {
-      activeTeamId,
-      playbookIdProp: playbookId,
-      effectivePlaybookId,
-      dbPlaysCount: (allPlays || []).length,
-      mergedPlaysCount: plays.length,
-      scopedPlaysCount: scopedPlays.length,
-      uniquePlaybookIdsSample: uniquePlaybookIds.slice(0, 10),
+    debug("[PlayGrid] Data loaded:", {
+      playbookId: effectivePlaybookId,
+      playsCount: plays.length,
+      totalCount: totalPlaysCount,
     });
-  }, [
-    activeTeamId,
-    allPlays,
-    effectivePlaybookId,
-    loading,
-    playbookId,
-    plays.length,
-    scopedPlays.length,
-  ]);
+  }, [effectivePlaybookId, loading, plays.length, totalPlaysCount]);
 
   // Notify parent of play count changes
   useEffect(() => {
