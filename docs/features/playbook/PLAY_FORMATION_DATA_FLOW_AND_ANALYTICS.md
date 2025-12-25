@@ -160,16 +160,13 @@ WHERE p.playbook_id = ?
 #### **1. Play Execution Data** ✅
 
 ```sql
--- From play_calls table
-- How many times a play was called
-- Quarter, down, distance when called
-- Result (success/failure)
-- Yard line position
+-- Canonical source: play_executions table
+-- Each row is one execution event with context + outcome
+-- (session type, down/distance, field position, result)
 
--- From plays table
-- confidence_base: Initial confidence rating (70-100)
-- times_called: Total execution count
-- times_successful: Success count
+-- Derived/cache fields:
+-- plays.times_called / plays.times_successful are maintained from play_executions
+-- and treated as read-only from the client.
 ```
 
 #### **2. Formation Usage Data** ✅

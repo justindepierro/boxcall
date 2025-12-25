@@ -48,6 +48,9 @@ import {
 } from "../../utils/playFieldValidation";
 import type { PlayCombo } from "../../hooks/useRecentPlayCombos";
 import { debug, logError } from "../../utils/logger";
+import { useActiveTeamStore } from "../../stores/activeTeamStore";
+import { TeamSituationDefinitionsService } from "../../services/teamSituationDefinitionsService";
+import { getFieldZoneDefinitions } from "../../utils/situationBucketing";
 
 interface AddNewPlayModalProps {
   isOpen: boolean;
@@ -70,6 +73,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
   existingPlays = [],
   recentCombos,
 }) => {
+  const activeTeamId = useActiveTeamStore((state) => state.activeTeamId);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -147,6 +151,55 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
     setErrorMessage(null);
 
     try {
+      // Validate taxonomy-aligned preferences against team settings
+      if (activeTeamId) {
+        try {
+          const defs = await TeamSituationDefinitionsService.get(activeTeamId);
+          const fieldZoneLabels = getFieldZoneDefinitions(defs).map(
+            (z) => z.label
+          );
+          const customSituationLabels = Array.isArray(
+            (defs as any).custom_situations
+          )
+            ? ((defs as any).custom_situations as any[])
+                .map((s) => String(s?.label ?? "").trim())
+                .filter(Boolean)
+            : [];
+
+          const fieldPos = formData.prefFieldPos.trim();
+          if (
+            fieldPos &&
+            fieldZoneLabels.length > 0 &&
+            !fieldZoneLabels.some(
+              (l) => l.toLowerCase() === fieldPos.toLowerCase()
+            )
+          ) {
+            setErrorMessage(
+              `Preferred field position must match Team Settings (Situation Definitions).`
+            );
+            setIsSubmitting(false);
+            return;
+          }
+
+          const situation = formData.prefSituation.trim();
+          if (
+            situation &&
+            customSituationLabels.length > 0 &&
+            !customSituationLabels.some(
+              (l) => l.toLowerCase() === situation.toLowerCase()
+            )
+          ) {
+            setErrorMessage(
+              `Preferred situation must match a custom situation in Team Settings (Situation Definitions).`
+            );
+            setIsSubmitting(false);
+            return;
+          }
+        } catch {
+          // If we can't load definitions, don't block play creation.
+        }
+      }
+
       // ===================================================================
       // SIMPLIFIED: Formation stored as TEXT in plays table
       // No separate formations table needed!
@@ -180,7 +233,9 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         // Formation fields
         f_type: formData.formationType.trim() || undefined,
         f_dir:
-          canonicalLegacyFDir || (formData.formationDir || "").trim() || undefined,
+          canonicalLegacyFDir ||
+          (formData.formationDir || "").trim() ||
+          undefined,
         formation_direction: formationDirToken,
         back_align: formData.backAlign.trim() || undefined,
         back_left_of_qb: formData.backLeftOfQb || undefined,
@@ -590,7 +645,10 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
           {/* Tags (visible by default) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-sm">
             <div>
-              <Typography variant="label-md" className="block mb-xs text-secondary">
+              <Typography
+                variant="label-md"
+                className="block mb-xs text-secondary"
+              >
                 Formation Tags
               </Typography>
               <input
@@ -603,7 +661,10 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             </div>
 
             <div>
-              <Typography variant="label-md" className="block mb-xs text-secondary">
+              <Typography
+                variant="label-md"
+                className="block mb-xs text-secondary"
+              >
                 Play Tags
               </Typography>
               <input

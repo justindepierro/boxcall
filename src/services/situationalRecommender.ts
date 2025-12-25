@@ -16,14 +16,21 @@
 
 import { PlayConfidenceService } from "./playConfidenceService";
 import { ExecutionTrackingService } from "./executionTrackingService";
+import { TeamSituationDefinitionsService } from "./teamSituationDefinitionsService";
 import type { GameSituation } from "../types/session";
 import type { Play } from "../types/database";
+import type { SituationDefinitions } from "../types/situationDefinitions";
 import { logError } from "../utils/logger";
 import {
   calculateGameUrgency,
   getPlayTypeRecommendation,
   parseTimeRemaining,
 } from "../utils/gameUrgencyCalculator";
+import {
+  bucketDistance,
+  bucketFieldZoneKey,
+  getFieldZoneDefinitions,
+} from "../utils/situationBucketing";
 
 // ==============================================
 // HELPER FUNCTIONS (Extracted to reduce complexity)
@@ -84,18 +91,21 @@ function getDownBonus(
 /** Calculate bonus/penalty based on distance */
 function getDistanceBonus(
   distance: number,
+  teamDefs: Partial<SituationDefinitions> | null | undefined,
   playType: string | null | undefined,
   formation: string | null | undefined,
   concept: string | null | undefined
 ): number {
-  if (distance <= 3) {
+  const distanceBucket = bucketDistance(teamDefs, distance);
+
+  if (distanceBucket === "Short") {
     let bonus = 0;
     if (playType === "run") bonus += 10;
     if (formation?.includes("I-Form") || formation?.includes("Heavy"))
       bonus += 5;
     return bonus;
   }
-  if (distance <= 7) {
+  if (distanceBucket === "Medium") {
     if (concept?.includes("stick") || concept?.includes("mesh")) return 10;
     return 0;
   }
@@ -109,18 +119,22 @@ function getDistanceBonus(
 /** Calculate bonus/penalty based on field zone */
 function getFieldZoneBonus(
   yardLine: number,
+  teamDefs: Partial<SituationDefinitions> | null | undefined,
   playType: string | null | undefined,
   concept: string | null | undefined,
   distance: number,
   confidenceScore: number
 ): number {
-  if (yardLine <= 20) {
+  const zoneKey = bucketFieldZoneKey(teamDefs, yardLine);
+  const distanceBucket = bucketDistance(teamDefs, distance);
+
+  if (zoneKey === "red_zone" || zoneKey === "goal_line") {
     let bonus = 0;
     if (concept?.includes("fade") || concept?.includes("corner")) bonus += 15;
-    if (playType === "run" && distance <= 3) bonus += 10;
+    if (playType === "run" && distanceBucket === "Short") bonus += 10;
     return bonus;
   }
-  if (yardLine <= 50) {
+  if (zoneKey === "plus_territory") {
     let bonus = 0;
     if (playType === "run") bonus += 5;
     if (confidenceScore >= 75) bonus += 5;
@@ -209,17 +223,17 @@ function getPrefDownBonus(
 
 function getPrefDistanceBonus(
   prefDistanceValue: string | null | undefined,
-  distance: number
+  distance: number,
+  teamDefs: Partial<SituationDefinitions> | null | undefined
 ): BonusResult {
   if (!prefDistanceValue) return { bonus: 0, reasons: [] };
   const prefDis = prefDistanceValue.toLowerCase();
-  const isShort = distance <= 3;
-  const isMedium = distance >= 4 && distance <= 7;
-  const isLong = distance >= 8;
+  const bucket = bucketDistance(teamDefs, distance);
   const matches =
-    (prefDis.includes("short") && isShort) ||
-    (prefDis.includes("medium") && isMedium) ||
-    (prefDis.includes("long") && isLong);
+    (prefDis.includes("short") && bucket === "Short") ||
+    (prefDis.includes("medium") && bucket === "Medium") ||
+    (prefDis.includes("very") && bucket === "Very Long") ||
+    (prefDis.includes("long") && (bucket === "Long" || bucket === "Very Long"));
 
   if (!matches) return { bonus: 0, reasons: [] };
   return {
@@ -233,33 +247,41 @@ function getPrefHashBonus(
   hashMark: "left" | "middle" | "right" | undefined
 ): BonusResult {
   if (!prefHashValue || !hashMark) return { bonus: 0, reasons: [] };
-  const prefHash = prefHashValue.toLowerCase();
-  if (prefHash !== hashMark.toLowerCase()) return { bonus: 0, reasons: [] };
-  return { bonus: 10, reasons: [`✓ Best from ${prefHashValue} hash`] };
+  const pref = prefHashValue.toLowerCase();
+  let normalizedPref = pref.trim();
+  if (pref.includes("left")) normalizedPref = "left";
+  else if (pref.includes("right")) normalizedPref = "right";
+  else if (pref.includes("mid")) normalizedPref = "middle";
+
+  if (normalizedPref !== hashMark.toLowerCase())
+    return { bonus: 0, reasons: [] };
+  return { bonus: 10, reasons: [`✓ Best from ${prefHashValue}`] };
 }
 
 function getPrefFieldPositionBonus(
   prefFieldPosValue: string | null | undefined,
-  yardLine: number
+  yardLine: number,
+  teamDefs: Partial<SituationDefinitions> | null | undefined
 ): BonusResult {
   if (!prefFieldPosValue) return { bonus: 0, reasons: [] };
-  const prefFieldPos = prefFieldPosValue.toLowerCase();
 
-  const isRedZone = yardLine <= 20;
-  const isGoalLine = yardLine <= 5;
-  const isPlusTerritory = yardLine <= 50 && yardLine > 20;
-  const isMidfield = yardLine > 40 && yardLine <= 60;
-  const isBackedUp = yardLine >= 90;
+  const prefTrimmed = prefFieldPosValue.trim();
+  const currentZoneKey = bucketFieldZoneKey(teamDefs, yardLine);
 
-  const matches =
-    (prefFieldPos.includes("red") && isRedZone) ||
-    (prefFieldPos.includes("goal") && isGoalLine) ||
-    (prefFieldPos.includes("plus") && isPlusTerritory) ||
-    (prefFieldPos.includes("mid") && isMidfield) ||
-    (prefFieldPos.includes("backed") && isBackedUp);
+  // Canonicalize preference to a zone ID via exact label match when possible
+  const zones = getFieldZoneDefinitions(teamDefs);
+  const matchedZone = zones.find(
+    (z) => z.label.trim().toLowerCase() === prefTrimmed.toLowerCase()
+  );
+
+  const prefZoneKey = matchedZone?.id ?? null;
+  const matches = !!prefZoneKey && prefZoneKey === currentZoneKey;
 
   if (!matches) return { bonus: 0, reasons: [] };
-  return { bonus: 15, reasons: [`✓ ${prefFieldPosValue} play`] };
+  return {
+    bonus: 15,
+    reasons: [`✓ ${matchedZone?.label ?? prefTrimmed} play`],
+  };
 }
 
 function getPrefCoverageBonus(
@@ -438,14 +460,15 @@ function getCoachPreferenceBonus(
     yardLine: number;
     hashMark?: "left" | "middle" | "right";
     opponentCoverage?: string;
-  }
+  },
+  teamDefs: Partial<SituationDefinitions> | null | undefined
 ): { bonus: number; reasons: string[] } {
   const result: BonusResult = { bonus: 0, reasons: [] };
 
   mergeBonusResult(result, getPrefDownBonus(play.pref_down, situation.down));
   mergeBonusResult(
     result,
-    getPrefDistanceBonus(play.pref_dis, situation.distance)
+    getPrefDistanceBonus(play.pref_dis, situation.distance, teamDefs)
   );
   mergeBonusResult(
     result,
@@ -453,7 +476,7 @@ function getCoachPreferenceBonus(
   );
   mergeBonusResult(
     result,
-    getPrefFieldPositionBonus(play.pref_field_pos, situation.yardLine)
+    getPrefFieldPositionBonus(play.pref_field_pos, situation.yardLine, teamDefs)
   );
   mergeBonusResult(
     result,
@@ -556,17 +579,22 @@ function getConfidenceReasons(
 }
 
 /** Get down-specific reasoning */
-function getDownReasons(situation: GameSituation, play: Play): string[] {
+function getDownReasons(
+  situation: GameSituation,
+  play: Play,
+  teamDefs: Partial<SituationDefinitions> | null | undefined
+): string[] {
   const reasons: string[] = [];
   const playType = getPlayTypeCategory(play.p_type);
   const concept = getPlayConceptText(play);
-  if (situation.down === 3 && situation.distance <= 3) {
+  const distanceBucket = bucketDistance(teamDefs, situation.distance);
+  if (situation.down === 3 && distanceBucket === "Short") {
     if (playType === "run") reasons.push("Strong 3rd & short conversion play");
     else if (concept.includes("quick"))
       reasons.push("Quick-hitting 3rd down concept");
   } else if (
     situation.down === 3 &&
-    situation.distance >= 8 &&
+    (distanceBucket === "Long" || distanceBucket === "Very Long") &&
     playType === "pass"
   ) {
     reasons.push("Designed for 3rd & long");
@@ -575,10 +603,13 @@ function getDownReasons(situation: GameSituation, play: Play): string[] {
 }
 
 /** Get field zone reasoning */
-function getFieldZoneReasons(situation: GameSituation): string[] {
-  if (situation.yardLine <= 20 && situation.yardLine >= 5)
-    return ["Red zone tested"];
-  if (situation.yardLine <= 5) return ["Goal line package"];
+function getFieldZoneReasons(
+  situation: GameSituation,
+  teamDefs: Partial<SituationDefinitions> | null | undefined
+): string[] {
+  const zoneKey = bucketFieldZoneKey(teamDefs, situation.yardLine);
+  if (zoneKey === "goal_line") return ["Goal line package"];
+  if (zoneKey === "red_zone") return ["Red zone tested"];
   return [];
 }
 
@@ -738,6 +769,14 @@ export class SituationalRecommender {
   ): Promise<PlayRecommendation[]> {
     const { maxResults = 5, minConfidence = 40, includeStats = true } = options;
 
+    let teamDefs: SituationDefinitions | null = null;
+    try {
+      teamDefs = await TeamSituationDefinitionsService.get(teamId);
+    } catch (error) {
+      logError(error, "Failed to load team situation definitions");
+      teamDefs = null;
+    }
+
     // Calculate confidence scores for all plays
     const confidenceMap = await PlayConfidenceService.getBatchConfidence(
       plays.map((p) => p.id),
@@ -759,7 +798,8 @@ export class SituationalRecommender {
         play,
         situation,
         confidence,
-        teamId
+        teamId,
+        teamDefs
       );
 
       // Calculate overall score (70% confidence, 30% situation match)
@@ -773,7 +813,8 @@ export class SituationalRecommender {
         situation,
         confidence,
         situationMatchScore,
-        teamId
+        teamId,
+        teamDefs
       );
 
       // Optional: Include stats
@@ -835,13 +876,18 @@ export class SituationalRecommender {
       streak?: { isHot?: boolean; isCold?: boolean };
       practiceToGame?: { needsMorePractice?: boolean; transferRate?: number };
     },
-    teamId: string
+    teamId: string,
+    teamDefs: Partial<SituationDefinitions> | null | undefined
   ): Promise<number> {
     let score = 50; // Baseline
 
     // FIRST: Apply coach-defined preferences (highest priority!)
     // If the coach specifically tagged this play for this situation, give it a big boost
-    const { bonus: coachBonus } = getCoachPreferenceBonus(play, situation);
+    const { bonus: coachBonus } = getCoachPreferenceBonus(
+      play,
+      situation,
+      teamDefs
+    );
     score += coachBonus;
 
     // Phase 14: Apply game urgency bonus (score/time awareness)
@@ -862,6 +908,7 @@ export class SituationalRecommender {
     // Add distance bonus
     score += getDistanceBonus(
       situation.distance,
+      teamDefs,
       playType,
       play.formation,
       concept
@@ -870,6 +917,7 @@ export class SituationalRecommender {
     // Add field zone bonus
     score += getFieldZoneBonus(
       situation.yardLine,
+      teamDefs,
       playType,
       concept,
       situation.distance,
@@ -907,10 +955,15 @@ export class SituationalRecommender {
     situation: GameSituation,
     confidence: ConfidenceData,
     matchScore: number,
-    teamId: string
+    teamId: string,
+    teamDefs: Partial<SituationDefinitions> | null | undefined
   ): Promise<string[]> {
     // Start with coach-defined preference reasons (show these first!)
-    const { reasons: coachReasons } = getCoachPreferenceBonus(play, situation);
+    const { reasons: coachReasons } = getCoachPreferenceBonus(
+      play,
+      situation,
+      teamDefs
+    );
 
     // Phase 14: Get game urgency reasons
     const { reasons: urgencyReasons } = getGameUrgencyBonus(play, situation);
@@ -919,8 +972,8 @@ export class SituationalRecommender {
       ...coachReasons,
       ...urgencyReasons,
       ...getConfidenceReasons(confidence, matchScore),
-      ...getDownReasons(situation, play),
-      ...getFieldZoneReasons(situation),
+      ...getDownReasons(situation, play, teamDefs),
+      ...getFieldZoneReasons(situation, teamDefs),
       ...getStreakReasons(confidence),
     ];
 

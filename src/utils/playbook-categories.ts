@@ -49,25 +49,14 @@ function containsAny(text: string, terms: string[]): boolean {
 // Map play attributes to categories
 export const getPlayCategory = (play: Play): string[] => {
   const categories: string[] = [];
-  const playType = play.p_type.toLowerCase();
+  const playType = (play.p_type || "").toLowerCase();
+  const playTypeKey = playType.replace(/[^a-z0-9]+/g, "");
 
-  // Primary category mapping
-  switch (playType) {
-    case "run":
-      categories.push("runs");
-      break;
-    case "pass":
-      categories.push("passes");
-      break;
-    case "rpo":
-      categories.push("rpos");
-      break;
-    case "play action":
-      categories.push("play-action");
-      break;
-    default:
-      break;
-  }
+  // Primary category mapping (supports custom variants like "RPO Read")
+  if (playTypeKey.includes("run")) categories.push("runs");
+  if (playTypeKey.includes("pass")) categories.push("passes");
+  if (playTypeKey.includes("rpo")) categories.push("rpos");
+  if (playTypeKey.includes("playaction")) categories.push("play-action");
 
   // Situational categories based on play characteristics
   const playName = play.play_name.toLowerCase();

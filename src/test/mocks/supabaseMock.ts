@@ -59,7 +59,7 @@ export function mockFromChain(
     };
   }
 
-  supabaseMock.from.mockImplementation((requestedTable: string) => {
+  supabaseMock.from.mockImplementationOnce((requestedTable: string) => {
     if (requestedTable !== table) {
       throw new Error(
         `Unexpected supabase.from("${requestedTable}"); expected "${table}"`

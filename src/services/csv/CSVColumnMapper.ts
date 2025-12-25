@@ -190,9 +190,6 @@ export class CSVColumnMapper {
 
       // Success metrics
       confidence_base: ["confidence_base", "confidence", "base_confidence"],
-      success_rate: ["success_rate", "success", "completion_rate"],
-      times_called: ["times_called", "called", "usage_count"],
-      times_successful: ["times_successful", "successful", "success_count"],
 
       // Media and metadata
       diagram_url: ["diagram_url", "diagram", "play_diagram"],

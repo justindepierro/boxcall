@@ -43,6 +43,8 @@ function mapPlayUpdatesToDbUpdates(
   applyIfDefined(updates.pref_hash, (v) => (dbUpdates.pref_hash = v));
   applyIfDefined(updates.pref_cov, (v) => (dbUpdates.pref_cov = v));
   applyIfDefined(updates.pref_front, (v) => (dbUpdates.pref_front = v));
+  applyIfDefined(updates.pref_field_pos, (v) => (dbUpdates.pref_field_pos = v));
+  applyIfDefined(updates.pref_situation, (v) => (dbUpdates.pref_situation = v));
   applyIfDefined(updates.ftag1, (v) => (dbUpdates.ftag1 = v));
   applyIfDefined(updates.ftag2, (v) => (dbUpdates.ftag2 = v));
   applyIfDefined(updates.p_tag1, (v) => (dbUpdates.p_tag1 = v));
@@ -97,7 +99,16 @@ export function createPlaySaveHandler({
       });
       debug("[PlayGrid] 🔷 Calling updatePlay...");
 
-      await updatePlay(playId, dbUpdates);
+      const saved = await updatePlay(playId, dbUpdates);
+
+      if (import.meta.env.DEV) {
+        debug("[PlayGrid] 🧾 Saved row snapshot:", {
+          id: saved?.id,
+          pref_dis: (saved as any)?.pref_dis,
+          pref_field_pos: (saved as any)?.pref_field_pos,
+          pref_situation: (saved as any)?.pref_situation,
+        });
+      }
 
       debug("[PlayGrid] 🟢 updatePlay completed successfully");
       info(`Play ${playId} updated successfully`);

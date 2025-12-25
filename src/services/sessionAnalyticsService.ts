@@ -1,4 +1,10 @@
 import { fromAny, table } from "../data/supabase/db";
+import { TeamSituationDefinitionsService } from "./teamSituationDefinitionsService";
+import type { SituationDefinitions } from "../types/situationDefinitions";
+import {
+  bucketFieldZoneKey,
+  getFieldZoneDefinitions,
+} from "../utils/situationBucketing";
 
 /**
  * Session Analytics Service - Phase 14.1
@@ -163,7 +169,19 @@ export class SessionAnalyticsService {
     const timeline = this.calculateTimeline(executions);
 
     // Calculate by field zone
-    const byFieldZone = this.calculateByFieldZone(executions);
+    let teamDefs: SituationDefinitions | null = null;
+    try {
+      const inferredTeamId = (executions[0] as any)?.team_id as
+        | string
+        | undefined;
+      if (inferredTeamId) {
+        teamDefs = await TeamSituationDefinitionsService.get(inferredTeamId);
+      }
+    } catch {
+      teamDefs = null;
+    }
+
+    const byFieldZone = this.calculateByFieldZone(executions, teamDefs);
 
     return {
       sessionId,
@@ -450,48 +468,75 @@ export class SessionAnalyticsService {
     });
   }
 
-  private static calculateByFieldZone(executions: any[]) {
-    const zones = [
-      { zone: "Own End Zone", min: 0, max: 10 },
-      { zone: "Own 10-25", min: 10, max: 25 },
-      { zone: "Own 25-40", min: 25, max: 40 },
-      { zone: "Own 40-50", min: 40, max: 50 },
-      { zone: "Opp 50-40", min: 50, max: 60 },
-      { zone: "Opp 40-25", min: 60, max: 75 },
-      { zone: "Red Zone", min: 75, max: 90 },
-      { zone: "Goal Line", min: 90, max: 100 },
-    ];
+  private static calculateByFieldZone(
+    executions: any[],
+    teamDefs: Partial<SituationDefinitions> | null | undefined
+  ) {
+    const zoneStats = new Map<
+      string,
+      { count: number; successes: number; totalYards: number }
+    >();
 
-    return zones
-      .map((zoneConfig) => {
-        const zoneExecs = executions.filter((e) => {
-          const yardLine = e.yard_line || 50;
-          return yardLine >= zoneConfig.min && yardLine < zoneConfig.max;
-        });
+    const zones = getFieldZoneDefinitions(teamDefs);
 
-        const successes = zoneExecs.filter(
-          (e) => e.result === "success"
-        ).length;
-        const totalYards = zoneExecs.reduce(
-          (sum, e) => sum + (e.yards_gained || 0),
-          0
-        );
+    for (const e of executions) {
+      const yardLine = (e?.yard_line ?? 50) as number;
+      const zoneKey = bucketFieldZoneKey(teamDefs, yardLine);
+      const key = zoneKey || "unknown";
+      const current = zoneStats.get(key) || {
+        count: 0,
+        successes: 0,
+        totalYards: 0,
+      };
+
+      zoneStats.set(key, {
+        count: current.count + 1,
+        successes: current.successes + (e.result === "success" ? 1 : 0),
+        totalYards: current.totalYards + (e.yards_gained || 0),
+      });
+    }
+
+    const ordered = zones
+      .map((z) => {
+        const stats = zoneStats.get(z.id);
+        if (!stats) return null;
 
         return {
-          zone: zoneConfig.zone,
-          yardLine: (zoneConfig.min + zoneConfig.max) / 2,
-          attempts: zoneExecs.length,
+          zone: z.label,
+          yardLine: (z.start_yard_line + z.end_yard_line) / 2,
+          attempts: stats.count,
           successRate:
-            zoneExecs.length > 0
-              ? Math.round((successes / zoneExecs.length) * 1000) / 10
+            stats.count > 0
+              ? Math.round((stats.successes / stats.count) * 1000) / 10
               : 0,
           avgYards:
-            zoneExecs.length > 0
-              ? Math.round((totalYards / zoneExecs.length) * 10) / 10
+            stats.count > 0
+              ? Math.round((stats.totalYards / stats.count) * 10) / 10
               : 0,
         };
       })
-      .filter((z) => z.attempts > 0);
+      .filter((z) => z !== null) as any[];
+
+    const unknownStats = zoneStats.get("unknown");
+    if (unknownStats) {
+      ordered.push({
+        zone: "Unknown",
+        yardLine: 50,
+        attempts: unknownStats.count,
+        successRate:
+          unknownStats.count > 0
+            ? Math.round((unknownStats.successes / unknownStats.count) * 1000) /
+              10
+            : 0,
+        avgYards:
+          unknownStats.count > 0
+            ? Math.round((unknownStats.totalYards / unknownStats.count) * 10) /
+              10
+            : 0,
+      });
+    }
+
+    return ordered;
   }
 
   private static groupByWeek(data: any[]) {

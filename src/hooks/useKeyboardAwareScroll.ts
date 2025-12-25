@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { getAppScrollTop, scrollAppTo } from "../utils/appScroll";
 
 /**
  * useKeyboardAwareScroll Hook
@@ -47,12 +48,9 @@ export function useKeyboardAwareScroll(
 
         if (isHiddenByKeyboard) {
           // Calculate scroll position to center input in visible viewport
-          const scrollTop = window.scrollY + rect.top - offset;
+          const scrollTop = getAppScrollTop() + rect.top - offset;
 
-          window.scrollTo({
-            top: scrollTop,
-            behavior: "smooth",
-          });
+          scrollAppTo({ top: scrollTop, behavior: "smooth" });
         }
       }, 300); // Wait for keyboard animation
     };

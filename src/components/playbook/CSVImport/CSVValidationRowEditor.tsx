@@ -358,6 +358,7 @@ interface CSVValidationRowEditorProps {
  * - One-click correction buttons
  * - Visual feedback (green checkmark, yellow warning, red error)
  */
+// eslint-disable-next-line max-lines-per-function
 export function CSVValidationRowEditor({
   preview,
   existingFormations,
@@ -484,7 +485,9 @@ export function CSVValidationRowEditor({
 
         {/* Play Type */}
         <div className="space-y-2">
-          <label className="text-xs font-medium text-secondary">Play Type</label>
+          <label className="text-xs font-medium text-secondary">
+            Play Type
+          </label>
           <input
             type="text"
             value={getFieldValue("p_type")}
@@ -524,14 +527,18 @@ export function CSVValidationRowEditor({
             <input
               type="text"
               value={getFieldValue("one_word_play")}
-              onChange={(e) => handleFieldChange("one_word_play", e.target.value)}
+              onChange={(e) =>
+                handleFieldChange("one_word_play", e.target.value)
+              }
               className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
               placeholder="Signal / Audible"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-medium text-secondary">Play Dir</label>
+            <label className="text-xs font-medium text-secondary">
+              Play Dir
+            </label>
             <input
               type="text"
               value={getFieldValue("p_dir")}
@@ -576,7 +583,9 @@ export function CSVValidationRowEditor({
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-medium text-secondary">Check Into</label>
+            <label className="text-xs font-medium text-secondary">
+              Check Into
+            </label>
             <input
               type="text"
               value={getFieldValue("check_into")}
@@ -587,7 +596,9 @@ export function CSVValidationRowEditor({
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-medium text-secondary">F Tag 1</label>
+            <label className="text-xs font-medium text-secondary">
+              F Tag 1
+            </label>
             <input
               type="text"
               value={getFieldValue("ftag1")}
@@ -597,7 +608,9 @@ export function CSVValidationRowEditor({
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-medium text-secondary">F Tag 2</label>
+            <label className="text-xs font-medium text-secondary">
+              F Tag 2
+            </label>
             <input
               type="text"
               value={getFieldValue("ftag2")}
@@ -607,7 +620,9 @@ export function CSVValidationRowEditor({
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-medium text-secondary">P Tag 1</label>
+            <label className="text-xs font-medium text-secondary">
+              P Tag 1
+            </label>
             <input
               type="text"
               value={getFieldValue("p_tag1")}
@@ -617,7 +632,9 @@ export function CSVValidationRowEditor({
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-medium text-secondary">P Tag 2</label>
+            <label className="text-xs font-medium text-secondary">
+              P Tag 2
+            </label>
             <input
               type="text"
               value={getFieldValue("p_tag2")}
@@ -673,7 +690,9 @@ export function CSVValidationRowEditor({
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-medium text-secondary">Back Align</label>
+            <label className="text-xs font-medium text-secondary">
+              Back Align
+            </label>
             <input
               type="text"
               value={getFieldValue("back_align")}
@@ -703,7 +722,9 @@ export function CSVValidationRowEditor({
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-medium text-secondary">Pref Down</label>
+            <label className="text-xs font-medium text-secondary">
+              Pref Down
+            </label>
             <input
               type="text"
               value={getFieldValue("pref_down")}
@@ -714,7 +735,9 @@ export function CSVValidationRowEditor({
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-medium text-secondary">Pref Dis</label>
+            <label className="text-xs font-medium text-secondary">
+              Pref Dis
+            </label>
             <input
               type="text"
               value={getFieldValue("pref_dis")}
@@ -725,7 +748,9 @@ export function CSVValidationRowEditor({
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-medium text-secondary">Pref Hash</label>
+            <label className="text-xs font-medium text-secondary">
+              Pref Hash
+            </label>
             <input
               type="text"
               value={getFieldValue("pref_hash")}
@@ -736,7 +761,9 @@ export function CSVValidationRowEditor({
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-medium text-secondary">Pref Cov</label>
+            <label className="text-xs font-medium text-secondary">
+              Pref Cov
+            </label>
             <input
               type="text"
               value={getFieldValue("pref_cov")}
@@ -747,7 +774,9 @@ export function CSVValidationRowEditor({
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-medium text-secondary">Pref Front</label>
+            <label className="text-xs font-medium text-secondary">
+              Pref Front
+            </label>
             <input
               type="text"
               value={getFieldValue("pref_front")}
@@ -757,21 +786,29 @@ export function CSVValidationRowEditor({
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-medium text-secondary">Pref Field Pos</label>
+            <label className="text-xs font-medium text-secondary">
+              Pref Field Pos
+            </label>
             <input
               type="text"
               value={getFieldValue("pref_field_pos")}
-              onChange={(e) => handleFieldChange("pref_field_pos", e.target.value)}
+              onChange={(e) =>
+                handleFieldChange("pref_field_pos", e.target.value)
+              }
               className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-medium text-secondary">Pref Situation</label>
+            <label className="text-xs font-medium text-secondary">
+              Pref Situation
+            </label>
             <input
               type="text"
               value={getFieldValue("pref_situation")}
-              onChange={(e) => handleFieldChange("pref_situation", e.target.value)}
+              onChange={(e) =>
+                handleFieldChange("pref_situation", e.target.value)
+              }
               className="w-full px-2 py-2 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
             />
           </div>

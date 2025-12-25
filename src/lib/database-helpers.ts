@@ -5,7 +5,6 @@ import { debug, logError, warn } from "../utils/logger";
 import type {
   Game,
   Play,
-  PlayCall,
   // PostReaction, // Unused - table doesn't exist
   Profile,
   Team,
@@ -296,18 +295,6 @@ export async function getPlaybookPlays(playbookId: string): Promise<Play[]> {
     .order("play_name");
   if (error) {
     logError("Error fetching plays", error);
-    return [];
-  }
-  return data || [];
-}
-// New helper functions for additional tables
-export async function getGamePlayCalls(gameId: string): Promise<PlayCall[]> {
-  const { data, error } = await table("play_calls")
-    .select("*")
-    .eq("game_id", gameId)
-    .order("created_at");
-  if (error) {
-    logError("Error fetching play calls", error);
     return [];
   }
   return data || [];

@@ -109,6 +109,7 @@ function playDisplayTitle(play: Play) {
   return `${title}${play.p_dir ? ` (${play.p_dir})` : ""}`;
 }
 
+// eslint-disable-next-line max-lines-per-function
 export const BulkQuickAddPlaysModal: React.FC<BulkQuickAddPlaysModalProps> = ({
   isOpen,
   onClose,
@@ -148,7 +149,10 @@ export const BulkQuickAddPlaysModal: React.FC<BulkQuickAddPlaysModalProps> = ({
   const activeRows = useMemo(() => {
     return trimmedRows.filter((r) => {
       const anyValue =
-        r.personnel.length || r.formation.length || r.playName.length || r.playDir;
+        r.personnel.length ||
+        r.formation.length ||
+        r.playName.length ||
+        r.playDir;
       return Boolean(anyValue);
     });
   }, [trimmedRows]);
@@ -210,14 +214,11 @@ export const BulkQuickAddPlaysModal: React.FC<BulkQuickAddPlaysModalProps> = ({
   const canSubmit =
     !isSubmitting && !hasBlockingErrors && !hasUnconfirmedDuplicates;
 
-  const setRow = useCallback(
-    (rowId: string, patch: Partial<BulkRow>) => {
-      setRows((prev) =>
-        prev.map((r) => (r.id === rowId ? { ...r, ...patch } : r))
-      );
-    },
-    []
-  );
+  const setRow = useCallback((rowId: string, patch: Partial<BulkRow>) => {
+    setRows((prev) =>
+      prev.map((r) => (r.id === rowId ? { ...r, ...patch } : r))
+    );
+  }, []);
 
   const handleAddRow = useCallback(() => {
     setRows((prev) => [...prev, makeRow()]);
@@ -256,7 +257,9 @@ export const BulkQuickAddPlaysModal: React.FC<BulkQuickAddPlaysModalProps> = ({
         createdCount += 1;
       }
 
-      toast.success(`Created ${createdCount} play${createdCount === 1 ? "" : "s"}`);
+      toast.success(
+        `Created ${createdCount} play${createdCount === 1 ? "" : "s"}`
+      );
       onCreated?.();
       onClose();
 
@@ -267,6 +270,12 @@ export const BulkQuickAddPlaysModal: React.FC<BulkQuickAddPlaysModalProps> = ({
       setIsSubmitting(false);
     }
   }, [activeRows, canSubmit, onClose, onCreated, playbookId]);
+
+  let submitLabel = "Creating…";
+  if (!isSubmitting) {
+    const plural = activeRows.length === 1 ? "" : "s";
+    submitLabel = `Create ${activeRows.length} Play${plural}`;
+  }
 
   return (
     <Modal
@@ -279,13 +288,19 @@ export const BulkQuickAddPlaysModal: React.FC<BulkQuickAddPlaysModalProps> = ({
       footer={
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <Button variant="ghost" onClick={handleClose} disabled={isSubmitting}>
+            <Button
+              variant="ghost"
+              onClick={handleClose}
+              disabled={isSubmitting}
+            >
               Cancel
             </Button>
-            <Button variant="primary" onClick={handleSubmit} disabled={!canSubmit}>
-              {isSubmitting
-                ? "Creating…"
-                : `Create ${activeRows.length} Play${activeRows.length === 1 ? "" : "s"}`}
+            <Button
+              variant="primary"
+              onClick={handleSubmit}
+              disabled={!canSubmit}
+            >
+              {submitLabel}
             </Button>
           </div>
         </div>
@@ -302,11 +317,9 @@ export const BulkQuickAddPlaysModal: React.FC<BulkQuickAddPlaysModalProps> = ({
             const error = validationErrors.get(row.id);
             const dup = duplicatesById.get(row.id);
 
-            const rowBorderClass = error
-              ? "border-text-error"
-              : dup
-                ? "border-text-warning"
-                : "border-divider";
+            let rowBorderClass = "border-divider";
+            if (error) rowBorderClass = "border-text-error";
+            else if (dup) rowBorderClass = "border-text-warning";
 
             return (
               <div

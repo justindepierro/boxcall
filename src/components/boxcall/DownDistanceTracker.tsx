@@ -3,17 +3,29 @@
  * Track and update game situation (down, distance, yard line, quarter)
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import type { GameSituation, HashMark } from "../../types/session";
 import { Typography } from "../design-system";
 import { Button } from "../ui";
 import { Icon } from "../ui/Icon/Icon";
+import {
+  bucketDistance,
+  bucketFieldZone,
+  getDistanceColorByDistance,
+  getFieldZoneColorByYardLine,
+} from "../../utils/situationBucketing";
+import type { SituationDefinitions } from "../../types/situationDefinitions";
+import { TeamSituationDefinitionsService } from "../../services/teamSituationDefinitionsService";
+import { yardLineToBallOn } from "../../utils/ballOn";
+import { Badge } from "../ui/Badge";
 
 interface DownDistanceTrackerProps {
   situation: GameSituation;
   onUpdate: (updates: Partial<GameSituation>) => void;
   onFirstDown: () => void;
   onNextQuarter: () => void;
+  teamId?: string;
+  teamDefs?: SituationDefinitions | null;
   disabled?: boolean;
   className?: string;
 }
@@ -26,39 +38,26 @@ const getOrdinalSuffix = (down: number) => {
   return "th";
 };
 
-const formatYardLine = (yardLine: number) => {
-  if (yardLine < 50) return `OWN ${yardLine}`;
-  if (yardLine === 50) return "MIDFIELD";
-  return `OPP ${100 - yardLine}`;
-};
-
-const getFieldZone = (yardLine: number) => {
-  if (yardLine >= 95) return "Goal Line";
-  if (yardLine >= 80) return "Red Zone";
-  if (yardLine >= 50) return "Opp Territory";
-  return "Own Territory";
-};
-
-const getFieldZoneColor = (yardLine: number) => {
-  if (yardLine >= 95) return "text-error";
-  if (yardLine >= 80) return "text-warning";
-  if (yardLine >= 50) return "text-success";
-  return "text-primary";
-};
-
-const getFieldZoneBgColor = (yardLine: number) => {
-  if (yardLine >= 95) return "bg-error";
-  if (yardLine >= 80) return "bg-warning";
-  if (yardLine >= 50) return "bg-success";
-  return "bg-primary";
-};
+const getFieldZoneLabel = (
+  teamDefs: Partial<SituationDefinitions> | null | undefined,
+  yardLine: number
+) => bucketFieldZone(teamDefs, yardLine);
 
 // Current situation display
 const SituationDisplay: React.FC<{
   situation: GameSituation;
-}> = ({ situation }) => {
-  const fieldZone = getFieldZone(situation.yardLine);
-  const fieldZoneColor = getFieldZoneColor(situation.yardLine);
+  teamDefs: Partial<SituationDefinitions> | null | undefined;
+}> = ({ situation, teamDefs }) => {
+  const fieldZoneLabel = getFieldZoneLabel(teamDefs, situation.yardLine);
+  const fieldZoneColor = getFieldZoneColorByYardLine(
+    teamDefs,
+    situation.yardLine
+  );
+  const distanceLabel = bucketDistance(teamDefs, situation.distance);
+  const distanceColor = getDistanceColorByDistance(
+    teamDefs,
+    situation.distance
+  );
 
   return (
     <div className="bg-secondary border-2 border-primary rounded-lg p-4">
@@ -68,14 +67,21 @@ const SituationDisplay: React.FC<{
       <Typography variant="headline-lg" className="font-mono">
         {situation.down}
         <sup className="text-sm">{getOrdinalSuffix(situation.down)}</sup> &{" "}
-        {situation.distance} at {formatYardLine(situation.yardLine)}
+        {situation.distance} at {yardLineToBallOn(situation.yardLine)}
       </Typography>
-      <Typography variant="body-sm" className={fieldZoneColor}>
-        {fieldZone} ·{" "}
-        {situation.hashMark.charAt(0).toUpperCase() +
-          situation.hashMark.slice(1)}{" "}
-        Hash
-      </Typography>
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        <Badge variant="neutral" scheme={fieldZoneColor} size="sm">
+          {fieldZoneLabel}
+        </Badge>
+        <Badge variant="neutral" scheme={distanceColor} size="sm">
+          {distanceLabel}
+        </Badge>
+        <Badge variant="neutral" size="sm">
+          {situation.hashMark.charAt(0).toUpperCase() +
+            situation.hashMark.slice(1)}{" "}
+          Hash
+        </Badge>
+      </div>
     </div>
   );
 };
@@ -189,7 +195,7 @@ const YardLineSlider: React.FC<{
         Yard Line
       </Typography>
       <Typography variant="body-sm" className="font-mono font-medium">
-        {formatYardLine(yardLine)}
+        {yardLineToBallOn(yardLine)}
       </Typography>
     </div>
     <div className="relative">
@@ -222,10 +228,12 @@ const YardLineSlider: React.FC<{
 );
 
 // Field zone indicator
-const FieldZoneIndicator: React.FC<{ yardLine: number }> = ({ yardLine }) => {
-  const fieldZone = getFieldZone(yardLine);
-  const fieldZoneColor = getFieldZoneColor(yardLine);
-  const bgColor = getFieldZoneBgColor(yardLine);
+const FieldZoneIndicator: React.FC<{
+  yardLine: number;
+  teamDefs: Partial<SituationDefinitions> | null | undefined;
+}> = ({ yardLine, teamDefs }) => {
+  const fieldZone = getFieldZoneLabel(teamDefs, yardLine);
+  const color = getFieldZoneColorByYardLine(teamDefs, yardLine);
 
   return (
     <div className="bg-secondary rounded-lg p-3">
@@ -233,16 +241,13 @@ const FieldZoneIndicator: React.FC<{ yardLine: number }> = ({ yardLine }) => {
         <Typography variant="body-xs" className="text-muted">
           Field Zone
         </Typography>
-        <Typography
-          variant="body-sm"
-          className={`font-medium ${fieldZoneColor}`}
-        >
+        <Badge variant="neutral" scheme={color} size="sm">
           {fieldZone}
-        </Typography>
+        </Badge>
       </div>
       <div className="mt-2 h-1 rounded-full bg-primary overflow-hidden">
         <div
-          className={`h-full transition-all ${bgColor}`}
+          className="h-full transition-all bg-primary"
           style={{ width: `${yardLine}%` }}
         />
       </div>
@@ -265,13 +270,46 @@ export const DownDistanceTracker: React.FC<DownDistanceTrackerProps> = ({
   onUpdate,
   onFirstDown,
   onNextQuarter,
+  teamId,
+  teamDefs,
   disabled = false,
   className = "",
 }) => {
+  const [loadedTeamDefs, setLoadedTeamDefs] =
+    useState<SituationDefinitions | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    if (teamDefs) {
+      setLoadedTeamDefs(null);
+      return () => {
+        isMounted = false;
+      };
+    }
+
+    const load = async () => {
+      if (!teamId) return;
+      try {
+        const defs = await TeamSituationDefinitionsService.get(teamId);
+        if (isMounted) setLoadedTeamDefs(defs);
+      } catch {
+        if (isMounted) setLoadedTeamDefs(null);
+      }
+    };
+
+    void load();
+    return () => {
+      isMounted = false;
+    };
+  }, [teamId, teamDefs]);
+
+  const effectiveDefs = teamDefs ?? loadedTeamDefs;
+
   return (
     <div className={`space-y-4 ${className}`}>
       {/* Current Situation Display */}
-      <SituationDisplay situation={situation} />
+      <SituationDisplay situation={situation} teamDefs={effectiveDefs} />
 
       {/* Quarter & Time */}
       <QuarterTimeControls
@@ -341,7 +379,10 @@ export const DownDistanceTracker: React.FC<DownDistanceTrackerProps> = ({
       </div>
 
       {/* Field Zone Indicator */}
-      <FieldZoneIndicator yardLine={situation.yardLine} />
+      <FieldZoneIndicator
+        yardLine={situation.yardLine}
+        teamDefs={effectiveDefs}
+      />
     </div>
   );
 };

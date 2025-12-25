@@ -3,9 +3,139 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "../app/auth-store";
 import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { table } from "../data/supabase/db";
+import { supabase } from "../lib/supabase";
 import { NetworkResilience } from "../utils/networkResilience";
 import { debug, warn, error as logError } from "../utils/logger";
 import type { Formation } from "../types/formation";
+
+type RlsPlayUpdateDiagnostics = {
+  playId: string;
+  authUserId: string | null;
+  playbookId: string | null;
+  teamId: string | null;
+  profileRole: string | null;
+  teamMember: { team_role?: string | null; status?: string | null } | null;
+  coachingCheck: boolean | null;
+  notes: string[];
+};
+
+// eslint-disable-next-line complexity
+async function getPlayUpdateRlsDiagnostics(
+  playId: string
+): Promise<RlsPlayUpdateDiagnostics> {
+  const notes: string[] = [];
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  const authUserId = user?.id ?? null;
+  if (authError) notes.push(`auth.getUser error: ${authError.message}`);
+  if (!authUserId) notes.push("No authenticated user");
+
+  // Find playbookId (if readable)
+  let playbookId: string | null = null;
+  try {
+    const { data, error } = await table("plays")
+      .select("playbook_id")
+      .eq("id", playId)
+      .limit(1);
+
+    if (error) notes.push(`plays select error: ${error.message}`);
+    playbookId =
+      Array.isArray(data) && data.length > 0 ? data[0]?.playbook_id : null;
+    if (!playbookId) notes.push("Could not resolve playbook_id for play");
+  } catch {
+    notes.push("Exception while resolving playbook_id");
+  }
+
+  // Find teamId (if readable)
+  let teamId: string | null = null;
+  if (playbookId) {
+    try {
+      const { data, error } = await table("playbooks")
+        .select("team_id")
+        .eq("id", playbookId)
+        .limit(1);
+
+      if (error) notes.push(`playbooks select error: ${error.message}`);
+      teamId = Array.isArray(data) && data.length > 0 ? data[0]?.team_id : null;
+      if (!teamId) notes.push("Could not resolve team_id for playbook");
+    } catch {
+      notes.push("Exception while resolving team_id");
+    }
+  }
+
+  // Read profile role (if permitted)
+  let profileRole: string | null = null;
+  if (authUserId) {
+    try {
+      const { data, error } = await table("profiles")
+        .select("role")
+        .eq("id", authUserId)
+        .limit(1);
+      if (error) notes.push(`profiles select error: ${error.message}`);
+      profileRole =
+        Array.isArray(data) && data.length > 0 ? data[0]?.role : null;
+    } catch {
+      notes.push("Exception while reading profiles.role");
+    }
+  }
+
+  // Read team membership row (if permitted)
+  let teamMember: RlsPlayUpdateDiagnostics["teamMember"] = null;
+  if (authUserId && teamId) {
+    try {
+      const { data, error } = await table("team_members")
+        .select("team_role,status")
+        .eq("team_id", teamId)
+        .eq("user_id", authUserId)
+        .limit(1);
+      if (error) notes.push(`team_members select error: ${error.message}`);
+      teamMember =
+        Array.isArray(data) && data.length > 0
+          ? {
+              team_role: data[0]?.team_role,
+              status: data[0]?.status,
+            }
+          : null;
+      if (!teamMember)
+        notes.push("No team_members row found (or not readable)");
+    } catch {
+      notes.push("Exception while reading team_members row");
+    }
+  }
+
+  // Ask DB helper directly
+  let coachingCheck: boolean | null = null;
+  if (authUserId && teamId) {
+    try {
+      const { data, error } = await supabase.rpc("is_coaching_team_member", {
+        p_user_id: authUserId,
+        p_team_id: teamId,
+      });
+      if (error)
+        notes.push(`rpc is_coaching_team_member error: ${error.message}`);
+      coachingCheck = typeof data === "boolean" ? data : null;
+      if (coachingCheck === null)
+        notes.push("is_coaching_team_member returned non-boolean result");
+    } catch {
+      notes.push("Exception while calling is_coaching_team_member RPC");
+    }
+  }
+
+  return {
+    playId,
+    authUserId,
+    playbookId,
+    teamId,
+    profileRole,
+    teamMember,
+    coachingCheck,
+    notes,
+  };
+}
 
 interface Team {
   id: string;
@@ -245,7 +375,9 @@ function useTeamsDataInitialLoadEffect({
               scopedPlaybookIds,
               playsCount: playsData.length,
               samplePlaybookIds: Array.from(
-                new Set(playsData.slice(0, 10).map((p) => (p as any).playbook_id))
+                new Set(
+                  playsData.slice(0, 10).map((p) => (p as any).playbook_id)
+                )
               ),
             });
           }
@@ -328,32 +460,73 @@ export function useTeamsData(
     async (playId: string, updates: Partial<DatabasePlay>) => {
       try {
         debug("[useTeamsData] Updating play:", { playId, updates });
+        // NOTE: Avoid `.single()`/`.maybeSingle()` here.
+        // When RLS blocks the update (0 rows), PostgREST can return 406 if
+        // the client requests an object response. Returning an array avoids
+        // 406 and lets us handle 0 updated rows explicitly.
         const { data, error } = await table("plays")
           .update(updates)
           .eq("id", playId)
-          .select()
-          .maybeSingle(); // Use maybeSingle() to avoid 406 error when RLS blocks or row missing
+          .select();
 
         if (error) {
           logError("[useTeamsData] Error updating play:", error);
           throw new Error(`Failed to update play: ${error.message}`);
         }
 
-        // If no data returned, the play doesn't exist or RLS blocked it
-        if (!data) {
+        const updated = Array.isArray(data) ? data[0] : null;
+
+        // If no row returned, the play doesn't exist or RLS blocked it
+        if (!updated) {
+          // Try to distinguish not-found vs read-but-not-write (common with RLS)
+          const { data: readable, error: readableError } = await table("plays")
+            .select("id")
+            .eq("id", playId)
+            .limit(1);
+
+          if (
+            !readableError &&
+            Array.isArray(readable) &&
+            readable.length > 0
+          ) {
+            const diag = await getPlayUpdateRlsDiagnostics(playId);
+            logError(
+              "[useTeamsData] Play update blocked by permissions (RLS)",
+              {
+                playId,
+                diagnostics: diag,
+              }
+            );
+
+            const detail = {
+              authUserId: diag.authUserId,
+              teamId: diag.teamId,
+              profileRole: diag.profileRole,
+              teamMember: diag.teamMember,
+              coachingCheck: diag.coachingCheck,
+              notes: diag.notes,
+            };
+
+            throw new Error(
+              `You can view this play, but UPDATE was blocked by RLS. Details: ${JSON.stringify(
+                detail
+              )}`
+            );
+          }
+
           logError("[useTeamsData] Play not found or access denied:", playId);
           throw new Error(
             "Play not found or you don't have permission to update it"
           );
         }
 
-        debug("[useTeamsData] Database returned:", data);
+        debug("[useTeamsData] Database returned:", updated);
         setPlays((prevPlays) =>
           prevPlays.map((play) =>
-            play.id === playId ? (data as DatabasePlay) : play
+            play.id === playId ? (updated as DatabasePlay) : play
           )
         );
-        return data;
+        return updated;
       } catch (err) {
         logError("[useTeamsData] Error in updatePlay:", err);
         throw err;
@@ -390,7 +563,9 @@ export function useTeamsData(
     }
 
     const requestedPlaybookId = options?.playbookId ?? null;
-    const scopedPlaybookIds = requestedPlaybookId ? [requestedPlaybookId] : playbookIds;
+    const scopedPlaybookIds = requestedPlaybookId
+      ? [requestedPlaybookId]
+      : playbookIds;
 
     try {
       setLoadingMorePlays(true);
@@ -428,7 +603,14 @@ export function useTeamsData(
     } finally {
       setLoadingMorePlays(false);
     }
-  }, [hasMorePlays, loadingMorePlays, options?.playbookId, playbooks, playsPage, teamId]);
+  }, [
+    hasMorePlays,
+    loadingMorePlays,
+    options?.playbookId,
+    playbooks,
+    playsPage,
+    teamId,
+  ]);
 
   return {
     teams,

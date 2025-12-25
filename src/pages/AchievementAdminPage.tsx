@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { table } from "../data/supabase/db";
 import type { AchievementDefinition } from "../services/achievementService";
 import { Button } from "../components/ui/Button";
@@ -478,6 +478,7 @@ const AchievementEditorModal: React.FC<AchievementEditorModalProps> = ({
   );
 };
 
+// eslint-disable-next-line max-lines-per-function
 export const AchievementAdminPage: React.FC = () => {
   const toast = useToast();
   const activeTeamId = useActiveTeamStore((s) => s.activeTeamId);
@@ -493,11 +494,7 @@ export const AchievementAdminPage: React.FC = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadAchievements();
-  }, [activeTeamId]);
-
-  const loadAchievements = async () => {
+  const loadAchievements = useCallback(async () => {
     try {
       const data = await fetchAchievements(activeTeamId);
       setAchievements(data);
@@ -506,7 +503,11 @@ export const AchievementAdminPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeTeamId]);
+
+  useEffect(() => {
+    loadAchievements();
+  }, [loadAchievements]);
 
   const handleCreate = async () => {
     setSaving(true);

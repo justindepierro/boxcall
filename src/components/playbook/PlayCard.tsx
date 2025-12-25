@@ -19,10 +19,10 @@ import { PlayCardTileHeader } from "./play-card/PlayCardTileHeader";
 import { PlayCardDetails } from "./play-card/PlayCardDetails";
 import { PlayCardQuickActions } from "./play-card/PlayCardQuickActions";
 import { PlayDiagramTooltip } from "./play-card/PlayDiagramTooltip";
-import { usePreference } from "../../hooks/usePreferences";
 import { useRecentPlays } from "../../hooks/useRecentPlays";
 import { useFavoritePlays } from "../../hooks/useFavoritePlays";
 import { useIsMobile } from "../../hooks/useBreakpoint";
+import { usePlayCardLayoutPreferences } from "../../hooks/usePlayCardLayoutPreferences";
 import {
   DEFAULT_FORMATION_SUGGESTIONS,
   DEFAULT_PLAY_NAME_SUGGESTIONS,
@@ -164,9 +164,13 @@ export const PlayCard: React.FC<PlayCardProps> = ({
 
   const [optimisticPlay, setOptimisticPlay] = useState<PlayType>(play);
   const [savingFields, setSavingFields] = useState<SaveQueue>(new Set());
-  const [formationFieldOrder, setFormationFieldOrder] = useState<string[]>(
-    INITIAL_FORMATION_ORDER
-  );
+  const { layout: playCardLayout, patchLayout: patchPlayCardLayout } =
+    usePlayCardLayoutPreferences(play.id, {
+      formationFieldOrder: INITIAL_FORMATION_ORDER,
+      formationFieldVisibility: INITIAL_FORMATION_VISIBILITY,
+      playDetailsFieldOrder: INITIAL_PLAY_DETAILS_ORDER,
+      playDetailsFieldVisibility: INITIAL_PLAY_DETAILS_VISIBILITY,
+    });
   const lastSyncedPlayRef = useRef<PlayType>(play);
   const lastSaveTimeRef = useRef<number>(0);
   // Quick Wins: Recent plays tracking and favorites
@@ -176,21 +180,10 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   // Mobile detection for responsive styling
   const isMobile = useIsMobile();
 
-  // Use server-synced preferences for field visibility
-  const [formationFieldVisibility, setFormationFieldVisibility] = usePreference(
-    "bc_formation_field_visibility",
-    INITIAL_FORMATION_VISIBILITY
-  );
-
-  const [playDetailsFieldOrder, setPlayDetailsFieldOrder] = useState<string[]>(
-    INITIAL_PLAY_DETAILS_ORDER
-  );
-
-  const [playDetailsFieldVisibility, setPlayDetailsFieldVisibility] =
-    usePreference(
-      "bc_play_details_field_visibility",
-      INITIAL_PLAY_DETAILS_VISIBILITY
-    );
+  const formationFieldOrder = playCardLayout.formationFieldOrder;
+  const formationFieldVisibility = playCardLayout.formationFieldVisibility;
+  const playDetailsFieldOrder = playCardLayout.playDetailsFieldOrder;
+  const playDetailsFieldVisibility = playCardLayout.playDetailsFieldVisibility;
 
   // Use controlled expansion if provided, otherwise use internal state with localStorage persistence
   const [internalIsExpanded, setInternalIsExpanded] = useState(() => {
@@ -353,7 +346,9 @@ export const PlayCard: React.FC<PlayCardProps> = ({
     ) => {
       const fieldName = field as string;
 
-      const updates: Partial<PlayType> = { [field]: value } as Partial<PlayType>;
+      const updates: Partial<PlayType> = {
+        [field]: value,
+      } as Partial<PlayType>;
 
       // Keep legacy formation direction (f_dir) and new variant direction (formation_direction)
       // aligned so the UI stays consistent.
@@ -403,9 +398,9 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       const items = Array.from(formationFieldOrder);
       const [reorderedItem] = items.splice(result.source.index, 1);
       items.splice(result.destination.index, 0, reorderedItem);
-      setFormationFieldOrder(items);
+      patchPlayCardLayout({ formationFieldOrder: items });
     },
-    [formationFieldOrder]
+    [formationFieldOrder, patchPlayCardLayout]
   );
 
   const handlePlayDetailsDragEnd = useCallback(
@@ -414,30 +409,31 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       const items = Array.from(playDetailsFieldOrder);
       const [reorderedItem] = items.splice(result.source.index, 1);
       items.splice(result.destination.index, 0, reorderedItem);
-      setPlayDetailsFieldOrder(items);
+      patchPlayCardLayout({ playDetailsFieldOrder: items });
     },
-    [playDetailsFieldOrder]
+    [playDetailsFieldOrder, patchPlayCardLayout]
   );
 
   const toggleFieldVisibility = useCallback(
     (fieldKey: string, section: "formation" | "playDetails") => {
       if (section === "formation") {
-        setFormationFieldVisibility(
-          (prev: Record<string, boolean> | undefined) => ({
-            ...(prev || INITIAL_FORMATION_VISIBILITY),
-            [fieldKey]: prev?.[fieldKey] === false ? true : !prev?.[fieldKey],
-          })
-        );
+        const prev = formationFieldVisibility || INITIAL_FORMATION_VISIBILITY;
+        const next: FieldVisibility = {
+          ...prev,
+          [fieldKey]: prev?.[fieldKey] === false ? true : !prev?.[fieldKey],
+        };
+        patchPlayCardLayout({ formationFieldVisibility: next });
       } else {
-        setPlayDetailsFieldVisibility(
-          (prev: Record<string, boolean> | undefined) => ({
-            ...(prev || INITIAL_PLAY_DETAILS_VISIBILITY),
-            [fieldKey]: prev?.[fieldKey] === false ? true : !prev?.[fieldKey],
-          })
-        );
+        const prev =
+          playDetailsFieldVisibility || INITIAL_PLAY_DETAILS_VISIBILITY;
+        const next: FieldVisibility = {
+          ...prev,
+          [fieldKey]: prev?.[fieldKey] === false ? true : !prev?.[fieldKey],
+        };
+        patchPlayCardLayout({ playDetailsFieldVisibility: next });
       }
     },
-    [setFormationFieldVisibility, setPlayDetailsFieldVisibility]
+    [formationFieldVisibility, playDetailsFieldVisibility, patchPlayCardLayout]
   );
 
   const handleOpenAssignments = useCallback(() => {

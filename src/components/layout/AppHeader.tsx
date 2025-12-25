@@ -15,6 +15,7 @@ import {
 } from "../pwa/PWAIntegration";
 import { triggerHapticFeedback } from "../../lib/hapticFeedback";
 import { debug } from "../../utils/logger";
+import { addAppScrollListener, getAppScrollTop } from "../../utils/appScroll";
 import {
   PWA_INSTALL_AVAILABLE_EVENT,
   addWindowAppEventListener,
@@ -396,7 +397,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          const currentScrollY = window.scrollY;
+          const currentScrollY = getAppScrollTop();
 
           // Show header when scrolling up or at top
           // Hide header when scrolling down (but keep hamburger)
@@ -424,8 +425,10 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
       }
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const removeScrollListener = addAppScrollListener(handleScroll, {
+      passive: true,
+    });
+    return () => removeScrollListener();
   }, [lastScrollY, isVisible, onVisibilityChange]);
 
   useEffect(() => {

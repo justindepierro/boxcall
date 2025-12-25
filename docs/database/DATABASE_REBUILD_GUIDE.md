@@ -418,9 +418,11 @@ test();
 
 ## Step 7: Team Players & Play Calls (07_team_players_and_play_calls.sql)
 
+> Note: `play_calls` is legacy/deprecated in favor of `play_executions` for execution tracking and play analytics.
+
 ### Purpose
 
-Create team_players and play_calls tables for roster and play execution tracking.
+Create team_players table for roster data. The legacy `play_calls` table is retained only for backward compatibility; use `play_executions` for execution tracking and analytics.
 
 ### Prerequisites
 

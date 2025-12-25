@@ -31,6 +31,7 @@ const SEARCH_CACHE_TTL_MS = 2 * 60 * 1000; // 2 minutes
 /**
  * Hook for managing global search state and behavior
  */
+// eslint-disable-next-line max-lines-per-function
 export function useGlobalSearch() {
   // State
   const [query, setQuery] = useState("");
@@ -59,7 +60,10 @@ export function useGlobalSearch() {
   // Recent searches (local)
   const { addToHistory, clearHistory, getRecentSearches } = useSearchHistory();
 
-  const recentSearches = useMemo(() => getRecentSearches(6), [getRecentSearches]);
+  const recentSearches = useMemo(
+    () => getRecentSearches(6),
+    [getRecentSearches]
+  );
 
   // Search function - optimized for blazing fast performance
   const performSearch = useCallback(
@@ -285,7 +289,10 @@ export function useGlobalSearch() {
 
       // If mobile modal is open, keep focus there
       if (isMobileModalOpen) {
-        setTimeout(() => mobileInputRef.current?.focus(), MOBILE_FOCUS_DELAY_MS);
+        setTimeout(
+          () => mobileInputRef.current?.focus(),
+          MOBILE_FOCUS_DELAY_MS
+        );
       } else {
         inputRef.current?.focus();
       }

@@ -22,7 +22,9 @@ const playId = process.argv[2];
 
 if (!playId) {
   console.error("❌ Missing play_id argument");
-  console.log("\nUsage:\n  node scripts/cli/check-play-direction-db.js <play_id>\n");
+  console.log(
+    "\nUsage:\n  node scripts/cli/check-play-direction-db.js <play_id>\n"
+  );
   process.exit(1);
 }
 
@@ -49,14 +51,21 @@ const supabase = createClient(url, key, {
 });
 
 function printField(label, value) {
-  const val = value === undefined ? "<undefined>" : value === null ? "<null>" : JSON.stringify(value);
+  const val =
+    value === undefined
+      ? "<undefined>"
+      : value === null
+        ? "<null>"
+        : JSON.stringify(value);
   console.log(`${label}: ${val}`);
 }
 
 async function main() {
   console.log("\n🔎 Checking play direction in DB");
   console.log(`URL: ${url}`);
-  console.log(`Auth: ${usingServiceRole ? "service role" : "anon (RLS may restrict)"}`);
+  console.log(
+    `Auth: ${usingServiceRole ? "service role" : "anon (RLS may restrict)"}`
+  );
   console.log("─".repeat(60));
 
   const { data: play, error } = await supabase
@@ -122,7 +131,9 @@ async function main() {
     printField("opposite_formation_id", formation.opposite_formation_id);
     printField("updated_at", formation.updated_at);
   } else {
-    console.log("\nℹ️ formation_id is null; this play is not linked to formations table.");
+    console.log(
+      "\nℹ️ formation_id is null; this play is not linked to formations table."
+    );
   }
 
   console.log("\nDone.\n");

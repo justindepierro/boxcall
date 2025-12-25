@@ -318,6 +318,7 @@ function PracticeScriptModalLoader({
   );
 }
 
+// eslint-disable-next-line max-lines-per-function
 function PlaybookPageView({
   state,
   dispatch,
@@ -635,7 +636,11 @@ function PlaybookPageOverlays({
           onCategoryChange={handlers.handleCategoryChange}
           onClearAll={() => {
             dispatch({ type: "SET_ADVANCED_FILTERS", filters: [] });
-            dispatch({ type: "SET_CATEGORY", category: undefined, subcategory: undefined });
+            dispatch({
+              type: "SET_CATEGORY",
+              category: undefined,
+              subcategory: undefined,
+            });
             closeModal();
           }}
           mobileButtonSize={mobileButtonSize}

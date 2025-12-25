@@ -65,7 +65,7 @@ export const DropdownMenuContent: React.FC<DropdownMenuContentProps> = ({
       leaveTo="transform opacity-0 scale-95"
     >
       <Menu.Items
-        className={`absolute z-50 mt-2 w-56 origin-top ${alignment} rounded-lg bg-white dark:bg-navy-800 border border-neutral-200 dark:border-navy-600 shadow-lg focus:outline-none ${className}`}
+        className={`absolute z-50 mt-2 w-56 origin-top ${alignment} rounded-lg bg-bg-primary border border-border shadow-lg focus:outline-none ${className}`}
         {...props}
       >
         <div className="py-1">{children}</div>

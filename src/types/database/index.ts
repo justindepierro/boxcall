@@ -3277,6 +3277,7 @@ export type Database = {
           play_count: number | null;
           school_name: string | null;
           season_year: number | null;
+          settings: Json | null;
           updated_at: string | null;
         };
         Insert: {
@@ -3290,6 +3291,7 @@ export type Database = {
           play_count?: number | null;
           school_name?: string | null;
           season_year?: number | null;
+          settings?: Json | null;
           updated_at?: string | null;
         };
         Update: {
@@ -3303,6 +3305,7 @@ export type Database = {
           play_count?: number | null;
           school_name?: string | null;
           season_year?: number | null;
+          settings?: Json | null;
           updated_at?: string | null;
         };
         Relationships: [];

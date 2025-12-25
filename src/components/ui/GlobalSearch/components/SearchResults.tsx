@@ -131,7 +131,10 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
       <div className="py-1">
         {isLoading && (
           <div className="px-5 pt-3 pb-1 flex items-center gap-2">
-            <Icon name="loader" className="h-4 w-4 text-jade-500 animate-spin" />
+            <Icon
+              name="loader"
+              className="h-4 w-4 text-jade-500 animate-spin"
+            />
             <Typography
               variant="body-xs"
               className="text-neutral-500 dark:text-neutral-400 font-semibold"

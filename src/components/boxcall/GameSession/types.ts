@@ -8,6 +8,7 @@ import type {
   GameSituation,
 } from "../../../types/session";
 import type { GamePlanPlay } from "../../../services/gamePlanService";
+import type { SituationDefinitions } from "../../../types/situationDefinitions";
 
 export interface PlayLogForm {
   yardsGained: string;
@@ -33,6 +34,7 @@ export interface GameSessionHeaderProps {
   onPause: () => void;
   onResume: () => void;
   onEnd: () => void;
+  onEditThresholds?: () => void;
 }
 
 export interface DownDistanceCardProps {
@@ -40,6 +42,8 @@ export interface DownDistanceCardProps {
   onUpdate: (updates: Partial<GameSituation>) => void;
   onFirstDown: () => void;
   onNextQuarter: () => void;
+  teamId: string;
+  teamDefs?: SituationDefinitions | null;
   disabled: boolean;
 }
 
@@ -50,6 +54,7 @@ export interface PlaySelectionCardProps {
   currentPlay: GamePlanPlay | null;
   onSelectPlay: (play: GamePlanPlay) => void;
   teamId: string;
+  teamDefs?: SituationDefinitions | null;
   disabled: boolean;
 }
 

@@ -219,6 +219,7 @@ class AchievementTracker {
   /**
    * Check and potentially award an achievement
    */
+  // eslint-disable-next-line complexity
   private static async checkAndAwardAchievement(
     playerId: string,
     achievement: AchievementDefinition,
@@ -254,7 +255,8 @@ class AchievementTracker {
 
       const criteria = (achievement.criteria ?? {}) as any;
       const triggerType =
-        (criteria.trigger_type as string | undefined) ?? achievement.trigger_type;
+        (criteria.trigger_type as string | undefined) ??
+        achievement.trigger_type;
       const triggerCount =
         Number(criteria.trigger_count ?? achievement.trigger_count ?? 1) || 1;
 
@@ -510,11 +512,12 @@ class AchievementTracker {
         .select("*")
         .eq("user_id", userId);
 
-      const progressWithDefinition: AchievementProgress[] = (progressAfter || [])
-        .map((p: any) => ({
-          ...p,
-          definition: definitionsById.get(p.achievement_id),
-        }));
+      const progressWithDefinition: AchievementProgress[] = (
+        progressAfter || []
+      ).map((p: any) => ({
+        ...p,
+        definition: definitionsById.get(p.achievement_id),
+      }));
 
       const earned: EarnedAchievement[] = progressWithDefinition
         .filter((p: any) => Boolean(p.completed_at))
@@ -594,8 +597,7 @@ export class AchievementService {
    */
   static async getUserAchievements(
     userId: string,
-    devMode?: string
-    ,
+    devMode?: string,
     teamId?: string | null
   ): Promise<AchievementData> {
     try {

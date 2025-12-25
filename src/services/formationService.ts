@@ -527,27 +527,26 @@ export class FormationService {
       .map((candidate) => {
         const candidateBase = normalizeFormationName(candidate.name);
 
-        const nameMatch: MatchName =
-          candidateBase === baseName
-            ? "exact"
-            : candidateBase.includes(baseName) ||
-                baseName.includes(candidateBase)
-              ? "similar"
-              : "different";
+        let nameMatch: MatchName = "different";
+        if (candidateBase === baseName) {
+          nameMatch = "exact";
+        } else if (
+          candidateBase.includes(baseName) ||
+          baseName.includes(candidateBase)
+        ) {
+          nameMatch = "similar";
+        }
 
-        const desiredOpposite: "left" | "right" | null =
-          formation.direction === "left"
-            ? "right"
-            : formation.direction === "right"
-              ? "left"
-              : null;
+        let desiredOpposite: "left" | "right" | null = null;
+        if (formation.direction === "left") desiredOpposite = "right";
+        else if (formation.direction === "right") desiredOpposite = "left";
 
-        const directionMatch: MatchDirection =
-          desiredOpposite && candidate.direction === desiredOpposite
-            ? "perfect"
-            : desiredOpposite === null
-              ? "compatible"
-              : "none";
+        let directionMatch: MatchDirection = "none";
+        if (desiredOpposite && candidate.direction === desiredOpposite) {
+          directionMatch = "perfect";
+        } else if (desiredOpposite === null) {
+          directionMatch = "compatible";
+        }
 
         const candidatePersonnel = new Set(candidate.personnel_packages || []);
         const personnelMatch = Array.from(basePersonnel).some((p) =>

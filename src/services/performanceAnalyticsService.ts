@@ -241,6 +241,7 @@ export class PlayerPerformanceAnalyticsService {
   /**
    * Get team-wide performance overview
    */
+  // eslint-disable-next-line max-lines-per-function, complexity
   static async getTeamPerformanceOverview(
     teamId: string
   ): Promise<TeamPerformanceOverview> {

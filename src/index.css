@@ -51,21 +51,34 @@
 }
 
 /* ============================================================================
-   MOBILE HORIZONTAL SCROLL LOCK
+   APP SCROLL CONTAINER (SINGLE SCROLLER)
    ============================================================================ 
-   Prevents accidental horizontal scrolling on mobile devices.
-   Creates a native app feel with pure vertical scrolling.
+   Long-term architecture: body does not scroll; #root is the only vertical
+   scroll container. This avoids nested-scroll issues with drag-and-drop and
+   keeps scroll behavior consistent across pages.
 */
 html,
-body {
-  overflow-x: hidden;
+body,
+#root {
+  height: 100%;
   max-width: 100vw;
 }
 
-/* Ensure the entire app container respects the scroll lock */
+html,
+body {
+  overflow-x: hidden;
+}
+
+/* Prevent window scrolling; #root is the vertical scroll parent */
+body {
+  overflow-y: hidden;
+}
+
 #root {
   overflow-x: hidden;
-  max-width: 100vw;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Mobile-specific: Stronger enforcement */

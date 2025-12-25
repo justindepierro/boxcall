@@ -68,6 +68,7 @@ export const storageKeys = {
 
   plays: {
     flagsForPlay: (id: string) => `bc_play_flags_${id}`,
+    cardLayoutForPlay: (id: string) => `bc_play_card_layout_${id}`,
   },
 
   playbook: {

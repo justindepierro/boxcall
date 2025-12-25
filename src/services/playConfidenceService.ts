@@ -14,6 +14,9 @@
 
 import { table } from "../data/supabase/db";
 import type { GameSituation, ExecutionResult } from "../types/session";
+import { TeamSituationDefinitionsService } from "./teamSituationDefinitionsService";
+import type { SituationDefinitions } from "../types/situationDefinitions";
+import { bucketDistance, bucketFieldZone } from "../utils/situationBucketing";
 import { logError } from "../utils/logger";
 
 // ==============================================
@@ -85,7 +88,8 @@ export class PlayConfidenceService {
   static async getPlayConfidence(
     playId: string,
     teamId: string,
-    situation?: GameSituation
+    situation?: GameSituation,
+    teamDefs?: Partial<SituationDefinitions> | null
   ): Promise<ConfidenceScore> {
     // Fetch all executions for this play
     const executions = await this.getPlayExecutions(playId, teamId);
@@ -97,8 +101,25 @@ export class PlayConfidenceService {
 
     // Calculate each component
     const historicalSuccess = this.calculateHistoricalSuccess(executions);
+
+    let situationDefinitions: SituationDefinitions | null =
+      (teamDefs as SituationDefinitions | null | undefined) ?? null;
+    if (situation && !situationDefinitions) {
+      try {
+        situationDefinitions =
+          await TeamSituationDefinitionsService.get(teamId);
+      } catch (error) {
+        logError(error, "Failed to load team situation definitions");
+        situationDefinitions = null;
+      }
+    }
+
     const situationalSuccess = situation
-      ? this.calculateSituationalSuccess(executions, situation)
+      ? this.calculateSituationalSuccess(
+          executions,
+          situation,
+          situationDefinitions
+        )
       : historicalSuccess; // Fall back to overall if no situation
     const recentTrend = this.calculateRecentTrend(executions);
     const practiceQuality = await this.calculatePracticeQuality(playId, teamId);
@@ -146,9 +167,22 @@ export class PlayConfidenceService {
   ): Promise<Map<string, ConfidenceScore>> {
     const results = new Map<string, ConfidenceScore>();
 
+    let situationDefinitions: SituationDefinitions | null = null;
+    if (situation) {
+      try {
+        situationDefinitions =
+          await TeamSituationDefinitionsService.get(teamId);
+      } catch (error) {
+        logError(error, "Failed to load team situation definitions");
+        situationDefinitions = null;
+      }
+    }
+
     // Process in parallel
     const scores = await Promise.all(
-      playIds.map((playId) => this.getPlayConfidence(playId, teamId, situation))
+      playIds.map((playId) =>
+        this.getPlayConfidence(playId, teamId, situation, situationDefinitions)
+      )
     );
 
     scores.forEach((score) => {
@@ -208,7 +242,8 @@ export class PlayConfidenceService {
    */
   private static calculateSituationalSuccess(
     executions: ExecutionRecord[],
-    situation: GameSituation
+    situation: GameSituation,
+    teamDefs: Partial<SituationDefinitions> | null | undefined
   ): number {
     // Filter executions that match the situation
     const situationalExecutions = executions.filter((e) => {
@@ -216,16 +251,16 @@ export class PlayConfidenceService {
       if (e.down && e.down !== situation.down) return false;
 
       // Match distance category
-      if (e.distance) {
-        const executionCategory = this.getDistanceCategory(e.distance);
-        const situationCategory = this.getDistanceCategory(situation.distance);
-        if (executionCategory !== situationCategory) return false;
+      if (e.distance != null && situation.distance != null) {
+        const executionBucket = bucketDistance(teamDefs, e.distance);
+        const situationBucket = bucketDistance(teamDefs, situation.distance);
+        if (executionBucket !== situationBucket) return false;
       }
 
       // Match field zone
-      if (e.yard_line) {
-        const executionZone = this.getFieldZone(e.yard_line);
-        const situationZone = this.getFieldZone(situation.yardLine);
+      if (e.yard_line != null && situation.yardLine != null) {
+        const executionZone = bucketFieldZone(teamDefs, e.yard_line);
+        const situationZone = bucketFieldZone(teamDefs, situation.yardLine);
         if (executionZone !== situationZone) return false;
       }
 
@@ -555,29 +590,6 @@ export class PlayConfidenceService {
     if (sampleSize >= 5) return 0.8;
     if (sampleSize >= 3) return 0.7;
     return 0.6; // Low confidence for 1-2 samples
-  }
-
-  /**
-   * Get distance category for filtering
-   */
-  private static getDistanceCategory(
-    distance: number
-  ): "short" | "medium" | "long" {
-    if (distance <= 3) return "short";
-    if (distance <= 7) return "medium";
-    return "long";
-  }
-
-  /**
-   * Get field zone for filtering
-   */
-  private static getFieldZone(
-    yardLine: number
-  ): "own" | "midfield" | "red-zone" | "goal-line" {
-    if (yardLine < 50) return "own";
-    if (yardLine < 80) return "midfield";
-    if (yardLine < 95) return "red-zone";
-    return "goal-line";
   }
 
   /**

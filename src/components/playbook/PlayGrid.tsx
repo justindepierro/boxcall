@@ -192,7 +192,15 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       scopedPlaysCount: scopedPlays.length,
       uniquePlaybookIdsSample: uniquePlaybookIds.slice(0, 10),
     });
-  }, [activeTeamId, allPlays, effectivePlaybookId, loading, playbookId, plays.length, scopedPlays.length]);
+  }, [
+    activeTeamId,
+    allPlays,
+    effectivePlaybookId,
+    loading,
+    playbookId,
+    plays.length,
+    scopedPlays.length,
+  ]);
 
   // Notify parent of play count changes
   useEffect(() => {
@@ -268,8 +276,9 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   // Personnel configurations
   const playbookIdForPersonnel =
     playbookId ?? (plays.length > 0 ? plays[0].playbook_id : undefined);
-  const { data: personnelConfigurations = [] } =
-    usePersonnelConfigurations(playbookIdForPersonnel);
+  const { data: personnelConfigurations = [] } = usePersonnelConfigurations(
+    playbookIdForPersonnel
+  );
 
   // Collected suggestions
   const collectedSuggestions = useCollectedSuggestions({

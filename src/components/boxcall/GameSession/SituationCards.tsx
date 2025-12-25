@@ -13,6 +13,8 @@ export const DownDistanceCard: React.FC<DownDistanceCardProps> = ({
   onUpdate,
   onFirstDown,
   onNextQuarter,
+  teamId,
+  teamDefs,
   disabled,
 }) => {
   return (
@@ -28,6 +30,8 @@ export const DownDistanceCard: React.FC<DownDistanceCardProps> = ({
         onUpdate={onUpdate}
         onFirstDown={onFirstDown}
         onNextQuarter={onNextQuarter}
+        teamId={teamId}
+        teamDefs={teamDefs}
         disabled={disabled}
       />
     </div>
@@ -41,6 +45,7 @@ export const PlaySelectionCard: React.FC<PlaySelectionCardProps> = ({
   currentPlay,
   onSelectPlay,
   teamId,
+  teamDefs,
   disabled,
 }) => {
   return (
@@ -58,6 +63,7 @@ export const PlaySelectionCard: React.FC<PlaySelectionCardProps> = ({
         selectedPlay={currentPlay}
         onSelectPlay={onSelectPlay}
         teamId={teamId}
+        teamDefs={teamDefs}
         disabled={disabled}
       />
     </div>

@@ -132,7 +132,7 @@ export const InlineEditFieldEditing: React.FC<InlineEditFieldEditingProps> = ({
       {showSuggestions && filteredSuggestions.length > 0 && (
         <div
           ref={suggestionsRef}
-          className="absolute left-0 top-full mt-2 w-full bg-primary/95 dark:bg-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-50 max-h-48 overflow-y-auto"
+          className="absolute left-0 top-full mt-2 w-full bg-primary/95 dark:bg-secondary/95 backdrop-blur-md border border-stroke rounded-lg shadow-2xl z-50 max-h-72 overflow-y-auto"
         >
           {filteredSuggestions.map((suggestion, index) => (
             <button

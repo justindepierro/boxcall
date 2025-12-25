@@ -82,8 +82,6 @@ export function exportToJSON(
 
       // Stats
       confidence_base: play.confidence_base,
-      times_called: play.times_called,
-      times_successful: play.times_successful,
 
       // Diagram
       diagram_data: play.diagram_data,
@@ -170,8 +168,6 @@ export function exportToCSV(plays: Play[]): string {
     "Preferred Field Position",
     "Preferred Situation",
     "Confidence",
-    "Times Called",
-    "Times Successful",
     "Success Rate %",
     "Has Diagram",
     "Diagram Thumbnail URL",
@@ -228,8 +224,6 @@ export function exportToCSV(plays: Play[]): string {
       play.pref_field_pos,
       play.pref_situation,
       play.confidence_base,
-      play.times_called || 0,
-      play.times_successful || 0,
       successRate,
       play.diagram_data ? "Yes" : "No",
       play.diagram_url,

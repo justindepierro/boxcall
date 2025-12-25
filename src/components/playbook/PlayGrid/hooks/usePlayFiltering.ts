@@ -13,6 +13,25 @@ import {
 import { telemetry } from "../../../../telemetry/dispatcher";
 import { TelemetryEventTypes } from "../../../../telemetry/events";
 
+function normalizeText(value: unknown): string {
+  return String(value ?? "")
+    .trim()
+    .toLowerCase();
+}
+
+function normalizeComparable(value: unknown): string {
+  return normalizeText(value).replace(/[^a-z0-9]+/g, "");
+}
+
+function normalizeTextArray(value: unknown): string[] {
+  if (!value) return [];
+  if (Array.isArray(value)) {
+    return value.map((v) => normalizeText(v)).filter((v) => v.length > 0);
+  }
+  const str = normalizeText(value);
+  return str ? [str] : [];
+}
+
 function getResultBucket(resultCount: number): "0" | "1-10" | "11-50" | ">50" {
   if (resultCount === 0) return "0";
   if (resultCount <= 10) return "1-10";
@@ -51,6 +70,108 @@ interface UsePlayFilteringResult {
   hasFilters: boolean;
 }
 
+// eslint-disable-next-line complexity
+function playFieldValue(play: Play, field: string): unknown {
+  switch (field) {
+    case "name":
+      return play.play_name;
+    case "formation":
+      return play.formation;
+    case "playType":
+    case "category":
+      return play.p_type;
+    case "description":
+      return play.notes;
+    case "personnel":
+      return play.personnel;
+    case "down":
+      return play.pref_down;
+    case "distance":
+      return play.pref_dis;
+    case "fieldPosition":
+      // No single source-of-truth column yet; best-effort.
+      return (
+        (play as any).pref_field_pos ??
+        (play as any).pref_field_position ??
+        (play as any).field_position ??
+        play.flags ??
+        play.notes
+      );
+    case "tags":
+      return [
+        ...(play.tags ?? []),
+        ...(play.flags ?? []),
+        ...(play.ftag1 ? [play.ftag1] : []),
+        ...(play.ftag2 ? [play.ftag2] : []),
+        ...(play.p_tag1 ? [play.p_tag1] : []),
+        ...(play.p_tag2 ? [play.p_tag2] : []),
+      ];
+    case "timesUsed":
+      return play.times_called;
+    case "successRate":
+      return play.times_called > 0
+        ? (play.times_successful / play.times_called) * 100
+        : 0;
+    case "yardsPerPlay":
+      return (play as any).avg_yards;
+    default:
+      return (play as any)[field];
+  }
+}
+
+function matchesAdvancedFilter(play: Play, filter: AdvancedFilter): boolean {
+  const left = playFieldValue(play, filter.field);
+
+  const leftNumber =
+    typeof left === "number" ? left : Number.parseFloat(String(left));
+  const filterNumber =
+    typeof filter.value === "string"
+      ? Number.parseFloat(filter.value)
+      : Number.NaN;
+
+  if (!Number.isNaN(leftNumber) && !Number.isNaN(filterNumber)) {
+    if (filter.operator === "equals") return leftNumber === filterNumber;
+    return true;
+  }
+
+  const leftValues = Array.isArray(left)
+    ? normalizeTextArray(left)
+    : [normalizeText(left)].filter(Boolean);
+
+  if (filter.operator === "equals") {
+    if (Array.isArray(filter.value)) {
+      const allowed = filter.value.map(normalizeText).filter(Boolean);
+      const allowedKeys = filter.value.map(normalizeComparable).filter(Boolean);
+      return leftValues.some(
+        (v) =>
+          allowed.includes(v) || allowedKeys.includes(normalizeComparable(v))
+      );
+    }
+    const expected = normalizeText(filter.value);
+    const expectedKey = normalizeComparable(filter.value);
+    return leftValues.some(
+      (v) => v === expected || normalizeComparable(v) === expectedKey
+    );
+  }
+
+  if (filter.operator === "contains") {
+    const needle = normalizeText(filter.value);
+    const needleKey = normalizeComparable(filter.value);
+    return leftValues.some(
+      (v) => v.includes(needle) || normalizeComparable(v).includes(needleKey)
+    );
+  }
+
+  if (filter.operator === "in") {
+    const allowed = Array.isArray(filter.value)
+      ? filter.value.map(normalizeText).filter(Boolean)
+      : [normalizeText(filter.value)].filter(Boolean);
+    return leftValues.some((v) => allowed.includes(v));
+  }
+
+  return true;
+}
+
 export function usePlayFiltering({
   plays,
   searchQuery,
@@ -60,112 +181,9 @@ export function usePlayFiltering({
   selectedSubcategory,
   favoriteIds,
 }: UsePlayFilteringProps): UsePlayFilteringResult {
-  function normalizeText(value: unknown): string {
-    return String(value ?? "").trim().toLowerCase();
-  }
-
-  function normalizeTextArray(value: unknown): string[] {
-    if (!value) return [];
-    if (Array.isArray(value)) {
-      return value
-        .map((v) => normalizeText(v))
-        .filter((v) => v.length > 0);
-    }
-    const str = normalizeText(value);
-    return str ? [str] : [];
-  }
-
-  function playFieldValue(play: Play, field: string): unknown {
-    switch (field) {
-      case "name":
-        return play.play_name;
-      case "formation":
-        return play.formation;
-      case "playType":
-      case "category":
-        return play.p_type;
-      case "description":
-        return play.notes;
-      case "personnel":
-        return play.personnel;
-      case "down":
-        return play.pref_down;
-      case "distance":
-        return play.pref_dis;
-      case "fieldPosition":
-        // No single source-of-truth column yet; best-effort.
-        return (
-          (play as any).pref_field_pos ??
-          (play as any).pref_field_position ??
-          (play as any).field_position ??
-          play.flags ??
-          play.notes
-        );
-      case "tags":
-        return [
-          ...(play.tags ?? []),
-          ...(play.flags ?? []),
-          ...(play.ftag1 ? [play.ftag1] : []),
-          ...(play.ftag2 ? [play.ftag2] : []),
-          ...(play.p_tag1 ? [play.p_tag1] : []),
-          ...(play.p_tag2 ? [play.p_tag2] : []),
-        ];
-      case "timesUsed":
-        return play.times_called;
-      case "successRate":
-        return (play as any).success_rate;
-      case "yardsPerPlay":
-        return (play as any).avg_yards;
-      default:
-        return (play as any)[field];
-    }
-  }
-
-  function matchesAdvancedFilter(play: Play, filter: AdvancedFilter): boolean {
-    const left = playFieldValue(play, filter.field);
-
-    const leftNumber =
-      typeof left === "number" ? left : Number.parseFloat(String(left));
-    const filterNumber =
-      typeof filter.value === "string"
-        ? Number.parseFloat(filter.value)
-        : Number.NaN;
-
-    if (!Number.isNaN(leftNumber) && !Number.isNaN(filterNumber)) {
-      if (filter.operator === "equals") return leftNumber === filterNumber;
-      return true;
-    }
-
-    const leftValues = Array.isArray(left)
-      ? normalizeTextArray(left)
-      : [normalizeText(left)].filter(Boolean);
-
-    if (filter.operator === "equals") {
-      if (Array.isArray(filter.value)) {
-        const allowed = filter.value.map(normalizeText).filter(Boolean);
-        return leftValues.some((v) => allowed.includes(v));
-      }
-      const expected = normalizeText(filter.value);
-      return leftValues.some((v) => v === expected);
-    }
-
-    if (filter.operator === "contains") {
-      const needle = normalizeText(filter.value);
-      return leftValues.some((v) => v.includes(needle));
-    }
-
-    if (filter.operator === "in") {
-      const allowed = Array.isArray(filter.value)
-        ? filter.value.map(normalizeText).filter(Boolean)
-        : [normalizeText(filter.value)].filter(Boolean);
-      return leftValues.some((v) => allowed.includes(v));
-    }
-
-    return true;
-  }
-
   // Apply filters to plays
   const filteredPlays = useMemo(() => {
+    // eslint-disable-next-line complexity
     let result = plays.filter((play) => {
       // Search query filter
       if (searchQuery) {
@@ -215,7 +233,9 @@ export function usePlayFiltering({
       // Play type filter
       if (
         filters.playType &&
-        play.p_type?.toLowerCase() !== filters.playType.toLowerCase()
+        !normalizeComparable(play.p_type).includes(
+          normalizeComparable(filters.playType)
+        )
       )
         return false;
 

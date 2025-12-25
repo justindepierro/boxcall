@@ -177,6 +177,7 @@ export async function executeSearchQueries(
   };
 }
 
+// eslint-disable-next-line complexity
 async function tryExecuteSearchRpc(params: SearchQueryParams) {
   const { searchTerm, activeTeamId, playbookId, signal } = params;
 

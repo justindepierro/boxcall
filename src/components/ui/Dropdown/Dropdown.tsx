@@ -78,7 +78,11 @@ export const Dropdown: React.FC<DropdownProps> = ({
   name,
   clearable = false,
 }) => {
-  const selectedOption = options.find((opt) => opt.value === value);
+  // Defensive: callers sometimes pass undefined even though the prop is typed as string.
+  // Keep Listbox controlled to avoid "uncontrolled to controlled" warnings.
+  const safeValue = value ?? "";
+
+  const selectedOption = options.find((opt) => opt.value === safeValue);
 
   // Add empty option at the beginning if clearable
   const optionsWithClear = clearable
@@ -97,7 +101,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       )}
 
       <Listbox
-        value={value}
+        value={safeValue}
         onChange={onChange}
         disabled={disabled}
         name={name}
@@ -106,12 +110,12 @@ export const Dropdown: React.FC<DropdownProps> = ({
           <Listbox.Button
             id={id}
             className={`
-              relative w-full cursor-pointer rounded-lg border bg-surface text-left
+              relative w-full cursor-pointer rounded-lg border bg-bg-primary text-left
               transition-colors duration-200
               focus:outline-none focus:ring-2 focus:ring-jade-500 focus:ring-offset-2
               ${sizeClasses[size]}
               ${error ? "border-error" : "border-border hover:border-jade-400"}
-              ${disabled ? "opacity-50 cursor-not-allowed bg-surface-muted" : ""}
+              ${disabled ? "opacity-50 cursor-not-allowed bg-bg-muted" : ""}
             `}
           >
             <span
@@ -136,7 +140,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Listbox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-lg bg-surface border border-border shadow-lg focus:outline-none">
+            <Listbox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-lg bg-bg-primary border border-border shadow-lg focus:outline-none">
               {optionsWithClear.map((option) => (
                 <Listbox.Option
                   key={option.value}

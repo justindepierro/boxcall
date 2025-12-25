@@ -118,6 +118,25 @@ Major directory and file cleanup completed:
   - personnelValidation.ts
   - teamValidation.ts
 
+## 🧠 Playbook Analytics (Dec 2025)
+
+### Option A (Phase 1) — Views/functions-first situation buckets
+
+- Add team-level situation definitions (field zones + down/distance thresholds)
+- Bucketize via SQL functions (single source of truth)
+- Add read-optimized views for stats by down + by field zone
+
+### Option B (Parked) — Stored buckets + triggers/backfill
+
+- Store `field_zone` and `down_distance_bucket` as columns on `play_executions`
+- Backfill existing rows and add triggers for new rows
+- Re-bucket job when coach definitions change
+
+### Option C (Parked) — Versioned situation definitions
+
+- Version situation definitions so historical analytics can be “as-of” a definition version
+- Store a stable `situation_key`/bucket id and translate via views
+
 ### Scripts Cleaned Up
 
 Retained only essential scripts:

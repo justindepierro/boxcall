@@ -91,14 +91,13 @@ All available columns for complete play details.
 
 ### Analytics & Metadata
 
-| Column             | Description           | Examples                                 |
-| ------------------ | --------------------- | ---------------------------------------- |
-| `confidence_base`  | Base confidence %     | 0-100 (default: 70)                      |
-| `success_rate`     | Historical success %  | 0-100                                    |
-| `times_called`     | Times play was called | Any number                               |
-| `times_successful` | Times play succeeded  | Any number                               |
-| `tags`             | Comma-separated tags  | "quick,rpo,read" or "power,run,physical" |
-| `notes`            | General notes         | Any text description                     |
+| Column            | Description          | Examples                                 |
+| ----------------- | -------------------- | ---------------------------------------- |
+| `confidence_base` | Base confidence %    | 0-100 (default: 70)                      |
+| `tags`            | Comma-separated tags | "quick,rpo,read" or "power,run,physical" |
+| `notes`           | General notes        | Any text description                     |
+
+Note: Usage/success statistics are derived from live execution tracking (`play_executions`) and are not importable via CSV.
 
 ## Column Name Flexibility
 

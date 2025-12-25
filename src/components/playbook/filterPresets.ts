@@ -32,13 +32,13 @@ export const QUICK_PRESETS: FilterPreset[] = [
     id: "run",
     label: "Run Plays",
     icon: "arrow-right",
-    filters: [{ field: "playType", operator: "equals", value: "run" }],
+    filters: [{ field: "playType", operator: "contains", value: "run" }],
   },
   {
     id: "pass",
     label: "Pass Plays",
     icon: "zap",
-    filters: [{ field: "playType", operator: "equals", value: "pass" }],
+    filters: [{ field: "playType", operator: "contains", value: "pass" }],
   },
   {
     id: "rpo",

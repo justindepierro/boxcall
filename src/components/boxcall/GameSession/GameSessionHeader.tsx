@@ -21,6 +21,7 @@ export const GameSessionHeader: React.FC<GameSessionHeaderProps> = ({
   onPause,
   onResume,
   onEnd,
+  onEditThresholds,
 }) => {
   return (
     <div className="mb-6">
@@ -59,6 +60,16 @@ export const GameSessionHeader: React.FC<GameSessionHeaderProps> = ({
                 Syncing...
               </Typography>
             </div>
+          )}
+          {onEditThresholds && (
+            <button
+              onClick={onEditThresholds}
+              className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white/90 backdrop-blur-sm border border-slate-200 text-slate-700 font-semibold hover:bg-white transition-colors shadow-sm"
+              title="Edit situation thresholds"
+            >
+              <Icon name="settings" size="sm" />
+              Thresholds
+            </button>
           )}
           {isPaused ? (
             <button

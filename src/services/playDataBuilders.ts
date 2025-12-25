@@ -107,8 +107,9 @@ function buildPerformanceFields(
 ): Record<string, number> {
   return {
     confidence_base: playData.confidence_base || 70,
-    times_called: playData.times_called || 0,
-    times_successful: playData.times_successful || 0,
+    // Derived from play_executions (single source of truth)
+    times_called: 0,
+    times_successful: 0,
     complexity_score: playData.complexity_score || 1,
   };
 }

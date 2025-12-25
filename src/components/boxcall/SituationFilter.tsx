@@ -13,6 +13,15 @@ import {
   PlayConfidenceService,
   type ConfidenceScore,
 } from "../../services/playConfidenceService";
+import { TeamSituationDefinitionsService } from "../../services/teamSituationDefinitionsService";
+import type { SituationDefinitions } from "../../types/situationDefinitions";
+import {
+  bucketDistance,
+  bucketFieldZone,
+  getDistanceColorByDistance,
+  getFieldZoneColorByYardLine,
+} from "../../utils/situationBucketing";
+import { Badge } from "../ui/Badge";
 import { ConfidenceBreakdown } from "./ConfidenceBreakdown";
 import { StreakIndicator } from "./StreakIndicator";
 import { logError } from "../../utils/logger";
@@ -26,20 +35,12 @@ function getOrdinalSuffix(down: number): string {
 }
 
 /** Get distance and field zone labels */
-function getSituationLabels(situation: GameSituation) {
-  const distanceCategory = (() => {
-    if (situation.distance <= 3) return "Short";
-    if (situation.distance <= 7) return "Medium";
-    return "Long";
-  })();
-
-  const fieldZone = (() => {
-    if (situation.yardLine >= 95) return "Goal Line";
-    if (situation.yardLine >= 80) return "Red Zone";
-    if (situation.yardLine >= 50) return "Midfield/Opp";
-    return "Own Territory";
-  })();
-
+function getSituationLabels(
+  situation: GameSituation,
+  teamDefs: Partial<SituationDefinitions> | null | undefined
+) {
+  const distanceCategory = bucketDistance(teamDefs, situation.distance);
+  const fieldZone = bucketFieldZone(teamDefs, situation.yardLine);
   return { distanceCategory, fieldZone };
 }
 
@@ -64,17 +65,33 @@ interface SituationFilterProps {
   selectedPlay: GamePlanPlay | null;
   onSelectPlay: (play: GamePlanPlay) => void;
   teamId: string;
+  teamDefs?: SituationDefinitions | null;
   disabled?: boolean;
   className?: string;
 }
 
 interface FilterSummaryProps {
   situation: GameSituation;
+  teamDefs: Partial<SituationDefinitions> | null | undefined;
 }
 
 /** Filter summary badge display */
-const FilterSummary: React.FC<FilterSummaryProps> = ({ situation }) => {
-  const { distanceCategory, fieldZone } = getSituationLabels(situation);
+const FilterSummary: React.FC<FilterSummaryProps> = ({
+  situation,
+  teamDefs,
+}) => {
+  const { distanceCategory, fieldZone } = getSituationLabels(
+    situation,
+    teamDefs
+  );
+  const distanceColor = getDistanceColorByDistance(
+    teamDefs,
+    situation.distance
+  );
+  const fieldZoneColor = getFieldZoneColorByYardLine(
+    teamDefs,
+    situation.yardLine
+  );
 
   return (
     <div className="bg-primary/10 border border-primary rounded-lg p-4">
@@ -85,16 +102,16 @@ const FilterSummary: React.FC<FilterSummaryProps> = ({ situation }) => {
             Situational Filter Active
           </Typography>
           <div className="flex flex-wrap gap-2">
-            <span className="px-2 py-1 bg-primary border border-border rounded text-xs font-medium">
+            <Badge variant="neutral" size="sm">
               {situation.down}
               {getOrdinalSuffix(situation.down)} Down
-            </span>
-            <span className="px-2 py-1 bg-primary border border-border rounded text-xs font-medium">
+            </Badge>
+            <Badge variant="neutral" scheme={distanceColor} size="sm">
               {distanceCategory} ({situation.distance} yds)
-            </span>
-            <span className="px-2 py-1 bg-primary border border-border rounded text-xs font-medium">
+            </Badge>
+            <Badge variant="neutral" scheme={fieldZoneColor} size="sm">
               {fieldZone}
-            </span>
+            </Badge>
           </div>
         </div>
       </div>
@@ -326,6 +343,7 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
   selectedPlay,
   onSelectPlay,
   teamId,
+  teamDefs: teamDefsOverride,
   disabled = false,
   className = "",
 }) => {
@@ -337,6 +355,35 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
     confidence: ConfidenceScore;
     playName: string;
   } | null>(null); // Phase 12.2: for breakdown modal
+
+  const [loadedTeamDefs, setLoadedTeamDefs] =
+    useState<SituationDefinitions | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadTeamDefs = async () => {
+      try {
+        if (teamDefsOverride) {
+          if (isMounted) setLoadedTeamDefs(null);
+          return;
+        }
+
+        const defs = await TeamSituationDefinitionsService.get(teamId);
+        if (isMounted) setLoadedTeamDefs(defs);
+      } catch (error) {
+        logError("Error fetching situation definitions:", error);
+        if (isMounted) setLoadedTeamDefs(null);
+      }
+    };
+
+    loadTeamDefs();
+    return () => {
+      isMounted = false;
+    };
+  }, [teamId, teamDefsOverride]);
+
+  const effectiveTeamDefs = teamDefsOverride ?? loadedTeamDefs;
 
   // Fetch confidence scores for filtered plays
   useEffect(() => {
@@ -372,7 +419,7 @@ export const SituationFilter: React.FC<SituationFilterProps> = ({
   return (
     <div className={`space-y-4 ${className}`}>
       {/* Filter Summary */}
-      <FilterSummary situation={situation} />
+      <FilterSummary situation={situation} teamDefs={effectiveTeamDefs} />
 
       {/* Play Count */}
       <div className="flex items-center justify-between">

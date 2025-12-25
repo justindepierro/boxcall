@@ -18,8 +18,8 @@ From your schema file, we identified **21 unique database tables** in your BoxCa
 ### Football-Specific Tables:
 
 9. **`playbooks`** - Team playbooks (offense, defense, special teams)
-10. **`plays`** - Individual plays with formations, routes, and statistics
-11. **`play_calls`** - In-game play calling and results tracking
+10. **`plays`** - Individual plays with formations and metadata
+11. **`play_executions`** - Canonical execution event log (practice/game tracking and analytics)
 12. **`practice_scripts`** - Practice plans and templates
 13. **`script_plays`** - Plays assigned to practice scripts
 
@@ -96,7 +96,6 @@ import {
   getUserProfile,
   getTeams,
   getTeamGames,
-  getGamePlayCalls,
   getTeamGoals,
   getTeamFiles,
   getUserProfileByUserId,
@@ -106,7 +105,6 @@ import type {
   Profile,
   Team,
   Game,
-  PlayCall,
   TeamGoal,
   TeamFile,
   UserProfile,
@@ -118,7 +116,6 @@ const profile: Profile | null = await getUserProfile(userId);
 const userProfile: UserProfile | null = await getUserProfileByUserId(userId);
 const teams: Team[] = await getTeams();
 const games: Game[] = await getTeamGames(teamId);
-const playCalls: PlayCall[] = await getGamePlayCalls(gameId);
 const goals: TeamGoal[] = await getTeamGoals(teamId);
 const files: TeamFile[] = await getTeamFiles(teamId);
 const reactions: PostReaction[] = await getPostReactions(postId);
@@ -147,9 +144,9 @@ src/
 You now have a fully typed, production-ready database integration for your football team management platform. All 21 tables are properly typed and ready for building features like:
 
 - Player recruitment and roster management (profiles, user_profiles, team_members)
-- Playbook creation and play calling (playbooks, plays, play_calls)
+- Playbook creation and play analytics (playbooks, plays, play_executions)
 - Practice planning and execution (practice_scripts, script_plays)
-- Game scheduling and results tracking (games, play_calls)
+- Game scheduling and results tracking (games, game_results, play_executions)
 - Achievement and recognition systems (achievements, helmet_stickers, team_goals)
 - Team communication and social features (team_posts, post_comments, post_reactions)
 - File management and sharing (team_files)

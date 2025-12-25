@@ -879,9 +879,9 @@
 
 /* Dark theme overrides (DesignSystemProvider toggles .dark on <html>) */
 .dark {
-   /* Use Navy-900 as glass base in dark mode */
-   --material-glass-thin: rgba(15, 23, 42, 0.6);
-   --material-glass-regular: rgba(15, 23, 42, 0.75);
-   --material-glass-thick: rgba(15, 23, 42, 0.88);
-   --material-glass-border: rgba(148, 163, 184, 0.22);
+  /* Use Navy-900 as glass base in dark mode */
+  --material-glass-thin: rgba(15, 23, 42, 0.6);
+  --material-glass-regular: rgba(15, 23, 42, 0.75);
+  --material-glass-thick: rgba(15, 23, 42, 0.88);
+  --material-glass-border: rgba(148, 163, 184, 0.22);
 }

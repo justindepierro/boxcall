@@ -13,6 +13,39 @@ import { DISTANCE_OPTIONS, DOWN_OPTIONS, HASH_OPTIONS } from "../../constants";
 import { usePlayFieldSuggestions } from "../../../../../hooks/usePlayFieldSuggestions";
 import type { PreferencesSectionProps } from "../types";
 
+function normalizeToAllowedLabel(value: string, allowed: string[]): string {
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+  const found = allowed.find((a) => a.toLowerCase() === trimmed.toLowerCase());
+  return found ?? trimmed;
+}
+
+function validateAgainstAllowed(
+  value: string,
+  allowed: string[]
+): string | null {
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  const ok = allowed.some((a) => a.toLowerCase() === trimmed.toLowerCase());
+  return ok ? null : "Must match a team-defined value.";
+}
+
+function mergeAllowed(primary: string[], secondary: string[]): string[] {
+  const seen = new Set<string>();
+  const merged: string[] = [];
+
+  for (const v of [...primary, ...secondary]) {
+    const trimmed = v.trim();
+    if (!trimmed) continue;
+    const key = trimmed.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    merged.push(trimmed);
+  }
+
+  return merged;
+}
+
 export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
   optimisticPlay,
   handleInlineSave,
@@ -20,6 +53,21 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
 }) => {
   // Fetch existing values from database for autocomplete suggestions
   const suggestions = usePlayFieldSuggestions();
+
+  const downAllowed = DOWN_OPTIONS.map((o) => o.value);
+  const distanceAllowed = DISTANCE_OPTIONS.map((o) => o.value);
+  const hashAllowed = HASH_OPTIONS.map((o) => o.value);
+
+  // Prefer team-defined taxonomy, but include existing play values too.
+  const fieldPosAllowed = mergeAllowed(
+    suggestions.teamFieldPositions,
+    suggestions.fieldPositions
+  );
+
+  const situationAllowed = mergeAllowed(
+    suggestions.teamSituations,
+    suggestions.situations
+  );
 
   return (
     <div className="bg-subtle rounded-lg p-sm">
@@ -40,8 +88,15 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
               value={optimisticPlay.pref_down || ""}
               onSave={(value) => handleInlineSave("pref_down", value)}
               placeholder="Preferred down (e.g., 1st, 2nd, 3rd)"
-              suggestions={DOWN_OPTIONS.map((option) => option.label)}
+              suggestions={downAllowed}
               enableSuggestions={true}
+              normalizeValue={(v) => normalizeToAllowedLabel(v, downAllowed)}
+              validation={(v) =>
+                validateAgainstAllowed(v, downAllowed) ||
+                (v.trim() && !/^\d/.test(v.trim())
+                  ? "Use 1st/2nd/3rd/4th"
+                  : null)
+              }
               isSaving={savingFields.has("pref_down")}
             />
           </dd>
@@ -55,8 +110,12 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
               value={optimisticPlay.pref_dis || ""}
               onSave={(value) => handleInlineSave("pref_dis", value)}
               placeholder="Preferred distance (e.g., Short, Medium, Long)"
-              suggestions={DISTANCE_OPTIONS.map((option) => option.label)}
+              suggestions={distanceAllowed}
               enableSuggestions={true}
+              normalizeValue={(v) =>
+                normalizeToAllowedLabel(v, distanceAllowed)
+              }
+              validation={(v) => validateAgainstAllowed(v, distanceAllowed)}
               isSaving={savingFields.has("pref_dis")}
             />
           </dd>
@@ -70,8 +129,10 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
               value={optimisticPlay.pref_hash || ""}
               onSave={(value) => handleInlineSave("pref_hash", value)}
               placeholder="Preferred hash (e.g., Left, Right, Middle)"
-              suggestions={HASH_OPTIONS.map((option) => option.label)}
+              suggestions={hashAllowed}
               enableSuggestions={true}
+              normalizeValue={(v) => normalizeToAllowedLabel(v, hashAllowed)}
+              validation={(v) => validateAgainstAllowed(v, hashAllowed)}
               isSaving={savingFields.has("pref_hash")}
             />
           </dd>
@@ -115,8 +176,13 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
               value={optimisticPlay.pref_field_pos || ""}
               onSave={(value) => handleInlineSave("pref_field_pos", value)}
               placeholder="Field position (Red Zone, Goal Line, etc.)"
-              suggestions={suggestions.fieldPositions}
+              suggestions={fieldPosAllowed}
               enableSuggestions={true}
+              normalizeValue={(v) =>
+                normalizeToAllowedLabel(v, fieldPosAllowed)
+              }
+              // Don't hard-block custom labels; suggest canonical values instead.
+              validation={() => null}
               isSaving={savingFields.has("pref_field_pos")}
             />
           </dd>
@@ -130,8 +196,13 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
               value={optimisticPlay.pref_situation || ""}
               onSave={(value) => handleInlineSave("pref_situation", value)}
               placeholder="Custom situation (2-Minute, Backed Up, etc.)"
-              suggestions={suggestions.situations}
+              suggestions={situationAllowed}
               enableSuggestions={true}
+              normalizeValue={(v) =>
+                normalizeToAllowedLabel(v, situationAllowed)
+              }
+              // Don't hard-block custom labels; suggest canonical values instead.
+              validation={() => null}
               isSaving={savingFields.has("pref_situation")}
             />
           </dd>

@@ -14,11 +14,21 @@
 import React from "react";
 import { Icon } from "../../ui/Icon/Icon";
 import { PersonnelBadge } from "../../playbook/PersonnelBadge";
-import { getPlayTypeColor } from "../../playbook/play-card/helpers";
 import { getDisplayName, getSubtitleText } from "../../../utils/playNameUtils";
 import { MiniDiagram } from "../MiniDiagram";
 import type { CurrentPlayCardProps } from "./types";
 import type { Play } from "../../../types/play";
+import { Badge } from "../../ui/Badge";
+import { Dropdown } from "../../ui/Dropdown";
+import type { BadgeColorScheme } from "../../../types/badge";
+import {
+  BADGE_COLOR_SCHEME_OPTIONS,
+  isBadgeColorScheme,
+} from "../../../types/badge";
+import {
+  getPlayTypeBadgeScheme,
+  useTeamBadgeSchemeOverrides,
+} from "../../../hooks/useTeamBadgeSchemeOverrides";
 
 /**
  * Hero card for displaying current play details
@@ -33,6 +43,10 @@ export const CurrentPlayCard: React.FC<CurrentPlayCardProps> = ({
   onPrevious,
   onNext,
 }) => {
+  const { overrides, setPlayTypeScheme } = useTeamBadgeSchemeOverrides();
+  const [openPlayTypeColor, setOpenPlayTypeColor] = React.useState(false);
+  const [savingPlayTypeColor, setSavingPlayTypeColor] = React.useState(false);
+
   if (!currentPlay || !currentPlay.play) {
     return null;
   }
@@ -40,6 +54,8 @@ export const CurrentPlayCard: React.FC<CurrentPlayCardProps> = ({
   const play = currentPlay.play as Play;
   const displayName = getDisplayName(play, false);
   const subtitle = getSubtitleText(play, false);
+
+  const playTypeScheme = getPlayTypeBadgeScheme(overrides, play.p_type);
 
   return (
     <>
@@ -95,10 +111,42 @@ export const CurrentPlayCard: React.FC<CurrentPlayCardProps> = ({
           {/* Play Type Badge + Personnel - Modern pills */}
           <div className="flex flex-wrap items-center gap-2 mb-4">
             {play.p_type && (
-              <span
-                className={`px-4 py-1.5 rounded-full text-sm font-bold shadow-sm ${getPlayTypeColor(play.p_type)}`}
-              >
-                {play.p_type}
+              <span className="relative inline-flex">
+                <Badge
+                  variant="neutral"
+                  scheme={playTypeScheme}
+                  size="lg"
+                  onClick={() => setOpenPlayTypeColor((v) => !v)}
+                  ariaLabel={`Change ${play.p_type} badge color`}
+                >
+                  {play.p_type}
+                </Badge>
+
+                {openPlayTypeColor && (
+                  <div className="absolute top-full left-0 mt-2 z-50 bg-surface border border-divider rounded-lg p-2 shadow-md">
+                    <Dropdown
+                      label="Color"
+                      value={playTypeScheme}
+                      onChange={async (next) => {
+                        if (!play.p_type) return;
+                        if (!isBadgeColorScheme(next)) return;
+                        setSavingPlayTypeColor(true);
+                        try {
+                          await setPlayTypeScheme(
+                            play.p_type,
+                            next as BadgeColorScheme
+                          );
+                          setOpenPlayTypeColor(false);
+                        } finally {
+                          setSavingPlayTypeColor(false);
+                        }
+                      }}
+                      options={BADGE_COLOR_SCHEME_OPTIONS}
+                      size="sm"
+                      disabled={savingPlayTypeColor}
+                    />
+                  </div>
+                )}
               </span>
             )}
             {play.personnel && (

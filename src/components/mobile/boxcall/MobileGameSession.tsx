@@ -22,6 +22,7 @@ import { useGameSession } from "../../../hooks/useGameSession";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 import type { ExecutionResult } from "../../../types/session";
 import { logError } from "../../../utils/logger";
+import { yardLineToBallOn } from "../../../utils/ballOn";
 
 export const MobileGameSession: React.FC = () => {
   const { planId } = useParams<{ planId: string }>();
@@ -259,9 +260,9 @@ export const MobileGameSession: React.FC = () => {
                 className="h-5 w-5 text-secondary"
               />
             </div>
-            {situation?.yardLine && (
+            {situation?.yardLine != null && (
               <Typography variant="body-sm" className="text-secondary">
-                Yard Line: {situation.yardLine}
+                Ball On: {yardLineToBallOn(situation.yardLine)}
               </Typography>
             )}
           </button>

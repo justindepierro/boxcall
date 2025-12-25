@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Icon } from "../ui/Icon/Icon";
 import { Typography } from "../design-system/Typography";
+import { addAppScrollListener } from "../../utils/appScroll";
 
 interface WorkflowStatusBarProps {
   className?: string;
@@ -42,7 +43,9 @@ export const WorkflowStatusBar: React.FC<WorkflowStatusBarProps> = ({
     };
 
     // Listen for scroll events
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    const removeScrollListener = addAppScrollListener(handleScroll, {
+      passive: true,
+    });
 
     // Listen for user activity
     const activityEvents = [
@@ -62,7 +65,7 @@ export const WorkflowStatusBar: React.FC<WorkflowStatusBarProps> = ({
     }, 3000);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      removeScrollListener();
       activityEvents.forEach((event) => {
         document.removeEventListener(event, handleActivity);
       });

@@ -38,7 +38,9 @@ export interface GeolocationResult {
 }
 
 export class LocationFinderService {
-  private static parseAddressFromResult(result: AddressResult): AddressSuggestion {
+  private static parseAddressFromResult(
+    result: AddressResult
+  ): AddressSuggestion {
     const components = result.address_components;
 
     const streetNumber =

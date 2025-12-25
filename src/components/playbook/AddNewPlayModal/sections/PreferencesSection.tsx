@@ -46,6 +46,16 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
   // Fetch existing values from database for autocomplete
   const suggestions = usePlayFieldSuggestions();
 
+  const fieldPosSuggestions =
+    suggestions.teamFieldPositions.length > 0
+      ? suggestions.teamFieldPositions
+      : suggestions.fieldPositions;
+
+  const situationSuggestions =
+    suggestions.teamSituations.length > 0
+      ? suggestions.teamSituations
+      : suggestions.situations;
+
   return (
     <div className="bg-secondary/30 rounded-lg p-md">
       <Typography variant="label-lg" className="block mb-sm text-primary">
@@ -93,14 +103,14 @@ export const PreferencesSection: React.FC<PreferencesSectionProps> = ({
           label="Field Position"
           value={prefFieldPos}
           onChange={onPrefFieldPosChange}
-          suggestions={suggestions.fieldPositions}
+          suggestions={fieldPosSuggestions}
           placeholder="e.g., Red Zone, Goal Line"
         />
         <AutocompleteInput
           label="Custom Situation"
           value={prefSituation}
           onChange={onPrefSituationChange}
-          suggestions={suggestions.situations}
+          suggestions={situationSuggestions}
           placeholder="e.g., 2-Minute, Backed Up"
         />
         <AutocompleteInput

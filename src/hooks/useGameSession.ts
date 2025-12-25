@@ -30,6 +30,9 @@ import {
   shouldBeInHurryUp,
   getPlayTypeRecommendation,
 } from "../utils/gameUrgencyCalculator";
+import { TeamSituationDefinitionsService } from "../services/teamSituationDefinitionsService";
+import type { SituationDefinitions } from "../types/situationDefinitions";
+import { bucketFieldZoneKey } from "../utils/situationBucketing";
 
 interface GameSituation {
   quarter: number;
@@ -230,6 +233,8 @@ export function useGameSession({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
+  const [teamDefs, setTeamDefs] = useState<SituationDefinitions | null>(null);
+
   // Game situation state (Phase 14: added score/timeout/urgency)
   const [situation, setSituation] = useState<GameSituation>({
     quarter: 1,
@@ -293,6 +298,30 @@ export function useGameSession({
   useEffect(() => {
     loadGamePlan();
   }, [gamePlanId, loadGamePlan]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadTeamDefs = async () => {
+      try {
+        const inferredTeamId = (gamePlan as any)?.teamId as string | undefined;
+        if (!inferredTeamId) {
+          if (isMounted) setTeamDefs(null);
+          return;
+        }
+
+        const defs = await TeamSituationDefinitionsService.get(inferredTeamId);
+        if (isMounted) setTeamDefs(defs);
+      } catch {
+        if (isMounted) setTeamDefs(null);
+      }
+    };
+
+    void loadTeamDefs();
+    return () => {
+      isMounted = false;
+    };
+  }, [gamePlan]);
 
   // Start game session
   const startSession = useCallback(async () => {
@@ -492,8 +521,9 @@ export function useGameSession({
   }, []);
 
   // Computed flags
-  const isRedZone = situation.yardLine >= 80;
-  const isGoalLine = situation.yardLine >= 95;
+  const fieldZoneKey = bucketFieldZoneKey(teamDefs, situation.yardLine);
+  const isGoalLine = fieldZoneKey === "goal_line";
+  const isRedZone = fieldZoneKey === "red_zone" || isGoalLine;
   const isSessionActive = sessionState.isActive && !sessionState.isPaused;
   const isPaused = sessionState.isPaused;
 

@@ -3,6 +3,8 @@
  * Individual step renderers for the CSV import wizard
  */
 
+/* eslint-disable max-lines-per-function, complexity, no-nested-ternary */
+
 import React from "react";
 import { Typography } from "../../design-system/Typography";
 import { Icon } from "../../ui/Icon/Icon";
@@ -108,9 +110,9 @@ export const UploadStep: React.FC<UploadStepProps> = ({
           <p className="text-sm text-secondary mb-xs">
             Your CSV should include columns for: formation, play_name, p_type,
             personnel, one_word_play. You can also include advanced fields like
-            protection, p_dir, f_dir, tags (ftag/p_tag), strengths (r_str/p_str),
-            preferences (pref_*), check_into, key_player*, motion/shift, and
-            notes.
+            protection, p_dir, f_dir, tags (ftag/p_tag), strengths
+            (r_str/p_str), preferences (pref_*), check_into, key_player*,
+            motion/shift, and notes.
           </p>
           <Button onClick={onDownloadSample} variant="infoLink" size="xs">
             Download sample CSV template →
@@ -819,7 +821,9 @@ export const PreviewStep: React.FC<PreviewStepProps> = ({
           <div className="flex flex-wrap gap-sm">
             <Button
               onClick={() => onChangeImportIntent("update_existing")}
-              variant={importIntent === "update_existing" ? "secondary" : "ghost"}
+              variant={
+                importIntent === "update_existing" ? "secondary" : "ghost"
+              }
               size="sm"
             >
               Update Existing Plays
@@ -869,11 +873,12 @@ export const PreviewStep: React.FC<PreviewStepProps> = ({
           <div className="text-sm text-secondary space-y-xs">
             <p>
               Create: <span className="text-primary">{counts.create}</span>
-              {"  "}• Update: <span className="text-primary">{counts.update}</span>
+              {"  "}• Update:{" "}
+              <span className="text-primary">{counts.update}</span>
               {counts.update > 0 && (
                 <>
-                  {" "}(
-                  <span className="text-primary">{counts.updateApproved}</span>
+                  {" "}
+                  (<span className="text-primary">{counts.updateApproved}</span>
                   {" approved, "}
                   <span className="text-primary">{counts.updatePending}</span>
                   {" pending approval"})
@@ -882,9 +887,7 @@ export const PreviewStep: React.FC<PreviewStepProps> = ({
               {"  "}• Skip: <span className="text-primary">{counts.skip}</span>
             </p>
             {hasUpdateSuggestions && counts.updatePending > 0 && (
-              <p>
-                Pending updates will be skipped until approved.
-              </p>
+              <p>Pending updates will be skipped until approved.</p>
             )}
           </div>
         </div>

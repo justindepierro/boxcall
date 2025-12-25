@@ -704,7 +704,7 @@ export class TeamService {
   }> {
     try {
       const { data, error } = await table("teams")
-        .select("family_permissions")
+        .select("settings")
         .eq("id", teamId)
         .single();
 
@@ -720,19 +720,24 @@ export class TeamService {
         };
       }
 
-      // Cast data to any to handle type mismatch until Supabase types are regenerated
       const teamData = data as any;
+      const settings =
+        teamData?.settings &&
+        typeof teamData.settings === "object" &&
+        !Array.isArray(teamData.settings)
+          ? teamData.settings
+          : {};
+      const stored = (settings as any)?.family_permissions;
 
-      // Return stored permissions or defaults
-      return (
-        teamData?.family_permissions || {
-          canViewRoster: false,
-          canViewSchedule: true,
-          canViewStats: false,
-          canRSVP: true,
-          canFundraise: false,
-        }
-      );
+      return stored && typeof stored === "object" && !Array.isArray(stored)
+        ? stored
+        : {
+            canViewRoster: false,
+            canViewSchedule: true,
+            canViewStats: false,
+            canRSVP: true,
+            canFundraise: false,
+          };
     } catch (error) {
       logError("Error in getFamilyPermissions:", error);
       // Return safe defaults
@@ -760,9 +765,35 @@ export class TeamService {
     }
   ): Promise<{ success: boolean; error?: string }> {
     try {
+      const { data: team, error: readError } = await table("teams")
+        .select("settings")
+        .eq("id", teamId)
+        .single();
+
+      if (readError) {
+        logError(
+          "Error fetching team settings for family permissions:",
+          readError
+        );
+        return { success: false, error: readError.message };
+      }
+
+      const teamData = team as any;
+      const existingSettings =
+        teamData?.settings &&
+        typeof teamData.settings === "object" &&
+        !Array.isArray(teamData.settings)
+          ? teamData.settings
+          : {};
+
+      const updatedSettings = {
+        ...(existingSettings ?? {}),
+        family_permissions: permissions,
+      };
+
       const { error } = await table("teams")
         .update({
-          family_permissions: permissions,
+          settings: updatedSettings as any,
           updated_at: new Date().toISOString(),
         })
         .eq("id", teamId);

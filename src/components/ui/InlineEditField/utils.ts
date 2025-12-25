@@ -111,6 +111,8 @@ export function levenshteinDistance(a: string, b: string): number {
 /**
  * Filter suggestions based on input using exact, fuzzy, and Levenshtein matching
  */
+const DEFAULT_SUGGESTION_LIMIT = 50;
+
 export function filterSuggestions(
   input: string,
   suggestions: string[]
@@ -118,7 +120,7 @@ export function filterSuggestions(
   if (!suggestions.length) return [];
 
   const normalizedInput = input.toLowerCase().trim();
-  if (!normalizedInput) return suggestions.slice(0, 5);
+  if (!normalizedInput) return suggestions.slice(0, DEFAULT_SUGGESTION_LIMIT);
 
   // Exact matches first
   const exactMatches = suggestions.filter(
@@ -138,7 +140,10 @@ export function filterSuggestions(
     return distance <= Math.max(2, Math.floor(normalizedInput.length * 0.3));
   });
 
-  return [...exactMatches, ...fuzzyMatches, ...levenshteinMatches].slice(0, 5);
+  return [...exactMatches, ...fuzzyMatches, ...levenshteinMatches].slice(
+    0,
+    DEFAULT_SUGGESTION_LIMIT
+  );
 }
 
 /**

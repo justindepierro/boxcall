@@ -2,6 +2,10 @@
 
 # BoxCall Database Schema - Complete Table Reference
 
+> Note: This document is a historical snapshot and some parts are now legacy.
+> For execution tracking and play analytics, `play_executions` is the canonical source of truth.
+> The older `play_calls` table is deprecated and retained only for backward compatibility.
+
 ## All 21 Database Tables
 
 ### 🏠 Core User & Team Management (8 tables)
@@ -19,7 +23,7 @@
 
 9. **`playbooks`** - Team playbooks (offense/defense/special teams)
 10. **`plays`** - Individual plays with formations and routes
-11. **`play_calls`** - In-game play execution and results
+11. **`play_executions`** - Canonical play execution event log (practice/game tracking + analytics)
 12. **`practice_scripts`** - Practice planning and templates
 13. **`script_plays`** - Plays assigned to practice sessions
 
@@ -51,7 +55,7 @@
 
 ### Football Operations
 
-- **Comprehensive Play Management**: Playbooks → Plays → Play Calls
+- **Comprehensive Play Management**: Playbooks → Plays → Play Executions
 - **Practice Planning**: Scripts with assigned plays and timing
 - **Game Tracking**: Full game details with play-by-play calling
 - **Advanced Play Data**: Formations, personnel, success rates, confidence scores
@@ -95,13 +99,15 @@ teams
 └── team_files (1:many)
 
 games
-└── play_calls (1:many)
+└── play_executions (1:many)
 
 playbooks
 └── plays (1:many)
 
 plays
-└── play_calls (1:many)
+└── play_executions (1:many)
+
+> Legacy note: `play_calls` exists in older schema snapshots but is deprecated in favor of `play_executions`.
 
 practice_scripts
 └── script_plays (1:many)

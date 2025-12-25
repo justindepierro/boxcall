@@ -6,6 +6,8 @@ import type { ValidatedInputType } from "../../playbook/ValidatedInput";
 import { logError } from "../../../utils/logger";
 import { getValidationResult, filterSuggestions } from "./utils";
 
+const DEFAULT_SUGGESTION_LIMIT = 50;
+
 export type SaveStatus = "idle" | "saving" | "success" | "error";
 
 interface UseInlineEditProps {
@@ -76,7 +78,9 @@ export function useInlineEdit({
       if (enableSuggestions && suggestions.length > 0) {
         const filtered = filterSuggestions(inputValue, suggestions);
         setFilteredSuggestions(
-          filtered.length > 0 ? filtered : suggestions.slice(0, 5)
+          filtered.length > 0
+            ? filtered
+            : suggestions.slice(0, DEFAULT_SUGGESTION_LIMIT)
         );
         setShowSuggestions(true);
       }

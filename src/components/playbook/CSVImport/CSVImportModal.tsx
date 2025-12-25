@@ -144,6 +144,7 @@ function renderCSVImportModalStep(params: {
   }
 }
 
+// eslint-disable-next-line max-lines-per-function
 export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   isOpen,
   onClose,
@@ -163,7 +164,8 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
   const [resolvedPlaybookId, setResolvedPlaybookId] = useState<string | null>(
     playbookId || null
   );
-  const [importIntent, setImportIntent] = useState<CSVImportIntent>("import_new");
+  const [importIntent, setImportIntent] =
+    useState<CSVImportIntent>("import_new");
   const [rowDecisions, setRowDecisions] = useState<
     Record<number, CSVRowMatchDecision>
   >({});
@@ -219,9 +221,12 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       // Fetch existing plays (for suggestions + smart update matching)
       let existingPlays: Play[] = [];
       try {
-        existingPlays = await PlaysService.getPlaysByPlaybook(actualPlaybookId, {
-          limit: 5000,
-        });
+        existingPlays = await PlaysService.getPlaysByPlaybook(
+          actualPlaybookId,
+          {
+            limit: 5000,
+          }
+        );
       } catch (e) {
         debug("[CSVImportModal] Failed to load existing plays for matching", e);
       }
@@ -261,10 +266,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
   const normalizeForMatch = (value: unknown): string => {
     if (typeof value !== "string") return "";
-    return value
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, " ");
+    return value.trim().toLowerCase().replace(/\s+/g, " ");
   };
 
   const diceCoefficient = (a: string, b: string): number => {
@@ -294,6 +296,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
     return totalBigrams === 0 ? 0 : (2 * intersectionSize) / totalBigrams;
   };
 
+  /* eslint-disable complexity */
   const findBestExistingMatch = (
     preview: CSVParseResult["previews"][number],
     existing: ExistingPlayCandidate[],
@@ -327,7 +330,8 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
     // Optional fallback: if formation doesn't line up but play name is an exact (or near-exact)
     // match, still suggest an update (approval required).
     if (options?.allowLooseNameMatch) {
-      let bestLoose: { play: ExistingPlayCandidate; score: number } | null = null;
+      let bestLoose: { play: ExistingPlayCandidate; score: number } | null =
+        null;
       for (const p of existing) {
         const candidateType = normalizeForMatch(p.p_type);
         if (pType && candidateType && pType !== candidateType) continue;
@@ -344,6 +348,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
 
     return null;
   };
+  /* eslint-enable complexity */
 
   const buildRowDecisionsForIntent = (
     intent: CSVImportIntent,
@@ -363,7 +368,9 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       if (intent === "update_existing") {
         const updateMatch =
           match ||
-          findBestExistingMatch(preview, existing, { allowLooseNameMatch: true });
+          findBestExistingMatch(preview, existing, {
+            allowLooseNameMatch: true,
+          });
 
         if (updateMatch) {
           decisions[preview.rowNumber] = {
@@ -442,7 +449,9 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
     setImportIntent(intent);
     if (!parseResult) return;
 
-    const existingForMatch: ExistingPlayCandidate[] = (parseResult.existingPlays || [])
+    const existingForMatch: ExistingPlayCandidate[] = (
+      parseResult.existingPlays || []
+    )
       .filter((p): p is ExistingPlayCandidate => Boolean(p.id))
       .map((p) => ({
         id: String(p.id),
@@ -457,6 +466,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
     );
   };
 
+  // eslint-disable-next-line complexity
   const handleImport = async () => {
     if (!parseResult) return;
 
@@ -523,8 +533,13 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
             continue;
           }
 
-          const { id: _id, created_at: _ca, updated_at: _ua, created_by: _cb, ...updates } =
-            converted;
+          const {
+            id: _id,
+            created_at: _ca,
+            updated_at: _ua,
+            created_by: _cb,
+            ...updates
+          } = converted;
           updatePlays.push({ id: decision.matchedPlayId, updates });
           continue;
         }
@@ -642,7 +657,9 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
       setParseResult(updatedParse);
 
       const previewRow = updatedPreviews.find((p) => p.rowNumber === rowNumber);
-      const existingForMatch: ExistingPlayCandidate[] = (parseResult.existingPlays || [])
+      const existingForMatch: ExistingPlayCandidate[] = (
+        parseResult.existingPlays || []
+      )
         .filter((p): p is ExistingPlayCandidate => Boolean(p.id))
         .map((p) => ({
           id: String(p.id),

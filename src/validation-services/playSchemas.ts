@@ -159,8 +159,6 @@ export const PlayCreateSchema = z.object({
 
   // Confidence & success tracking
   confidence_level: z.number().min(0).max(100).optional(),
-  times_called: z.number().min(0).optional().default(0),
-  times_successful: z.number().min(0).optional().default(0),
 
   // Play timing
   expected_duration: z.number().min(0).max(60).optional(),
@@ -215,8 +213,6 @@ export const PlayUpdateSchema = z.object({
   has_diagram: z.boolean().optional(),
   check_into: z.string().uuid().optional(),
   confidence_level: z.number().min(0).max(100).optional(),
-  times_called: z.number().min(0).optional(),
-  times_successful: z.number().min(0).optional(),
   expected_duration: z.number().min(0).max(60).optional(),
   formation_status: z.string().max(32).optional(),
   sanitized_at: z.union([z.string(), z.date()]).optional(),

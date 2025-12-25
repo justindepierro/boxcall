@@ -86,6 +86,13 @@ export function useOptimisticPlays(
    */
   const handleUpdatePlay = useCallback(
     async (playId: string, updates: Partial<Play>) => {
+      // Derived from play_executions (single source of truth) — never accept as client updates
+      const {
+        times_called: _timesCalled,
+        times_successful: _timesSuccessful,
+        ...safeUpdates
+      } = updates as Partial<Play>;
+
       // Store previous state for rollback
       let previousPlay: Play | undefined;
 
@@ -96,24 +103,24 @@ export function useOptimisticPlays(
           if (existingPlay) {
             previousPlay = existingPlay; // Save for rollback
             return prev.map((p) =>
-              p.id === playId ? { ...p, ...updates } : p
+              p.id === playId ? { ...p, ...safeUpdates } : p
             );
           }
           // If not in optimistic state, create an optimistic entry
           // (This handles edits from plays that came from database)
           return [
             {
-              ...updates,
+              ...safeUpdates,
               id: playId,
               playbook_id: activePlaybookId,
-              formation: updates.formation || "",
-              play_name: updates.play_name || "",
-              p_type: updates.p_type || "",
-              confidence_base: updates.confidence_base || 70,
-              times_called: updates.times_called || 0,
-              times_successful: updates.times_successful || 0,
-              created_by: updates.created_by || "",
-              created_at: updates.created_at || new Date(),
+              formation: safeUpdates.formation || "",
+              play_name: safeUpdates.play_name || "",
+              p_type: safeUpdates.p_type || "",
+              confidence_base: safeUpdates.confidence_base || 70,
+              times_called: 0,
+              times_successful: 0,
+              created_by: safeUpdates.created_by || "",
+              created_at: safeUpdates.created_at || new Date(),
               updated_at: new Date(),
             } as Play,
             ...prev,
@@ -124,7 +131,7 @@ export function useOptimisticPlays(
         toast.success("Play updated!");
 
         // Background: Update in database
-        await SecurePlaysService.updatePlay(playId, updates);
+        await SecurePlaysService.updatePlay(playId, safeUpdates);
 
         // Remove from optimistic state after database confirms
         setTimeout(() => {

@@ -61,8 +61,9 @@ export function usePlaybookState({
 
   const selectedPlaybookPlayCount = useMemo(() => {
     if (!selectedPlaybookId) return teamPlayCount;
-    return playsForActiveTeam.filter((p) => p.playbook_id === selectedPlaybookId)
-      .length;
+    return playsForActiveTeam.filter(
+      (p) => p.playbook_id === selectedPlaybookId
+    ).length;
   }, [playsForActiveTeam, selectedPlaybookId, teamPlayCount]);
 
   // Recent activities
@@ -236,8 +237,7 @@ export function usePlaybookState({
   }, [allPlaysForStats, dispatch, toast]);
 
   // Never fall back to teamId here; PlayGrid expects a real playbook id.
-  const activePlaybookId =
-    selectedPlaybookId || teamPlaybooks[0]?.id || "";
+  const activePlaybookId = selectedPlaybookId || teamPlaybooks[0]?.id || "";
 
   return {
     selectedPlaybookId,

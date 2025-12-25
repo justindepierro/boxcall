@@ -10,6 +10,8 @@
 import { clsx } from "clsx";
 import React from "react";
 
+import type { BadgeColorScheme } from "../../../types/badge";
+
 // Utility function for combining class names
 const cn = (...classes: (string | undefined | null | false)[]): string => {
   return clsx(classes);
@@ -37,6 +39,8 @@ export type BadgeVariant = CanonicalBadgeVariant | LegacyBadgeVariant;
 export interface BadgeProps {
   children: React.ReactNode;
   variant?: BadgeVariant;
+  /** Optional palette scheme that overrides the variant colors. */
+  scheme?: BadgeColorScheme;
   size?: "sm" | "md" | "lg";
   achievement?: boolean; // kept for backwards compat; triggers bounce + success styling
   progress?: number; // 0-100
@@ -88,6 +92,7 @@ function normalizeBadgeVariant(
 export const Badge: React.FC<BadgeProps> = ({
   children,
   variant = "neutral",
+  scheme,
   size = "md",
   achievement = false,
   progress,
@@ -135,6 +140,9 @@ export const Badge: React.FC<BadgeProps> = ({
     ),
   };
 
+  const schemeClass =
+    canonical !== "premium" && scheme ? `badge-scheme-${scheme}` : undefined;
+
   // Progress badge with filling animation
   const progressElement = progress !== undefined && (
     <div className="absolute inset-0 overflow-hidden">
@@ -152,6 +160,7 @@ export const Badge: React.FC<BadgeProps> = ({
         baseStyles,
         sizeStyles[size],
         variantStyles[canonical],
+        schemeClass,
         className
       )}
       onClick={onClick}

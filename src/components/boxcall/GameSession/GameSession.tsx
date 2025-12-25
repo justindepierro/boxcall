@@ -12,7 +12,7 @@
 
 /* eslint-disable max-lines-per-function */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 
 import { useGameSession } from "../../../hooks/useGameSession";
@@ -20,6 +20,8 @@ import { useActiveTeamStore } from "../../../stores/activeTeamStore";
 import { logError } from "../../../utils/logger";
 import { useToast } from "../../../hooks/useToast";
 import { ConfirmationModal } from "../../ui/ConfirmationModal/ConfirmationModal";
+import { TeamSituationDefinitionsService } from "../../../services/teamSituationDefinitionsService";
+import type { SituationDefinitions } from "../../../types/situationDefinitions";
 
 import type { PlayLogForm } from "./types";
 import { DEFAULT_PLAY_LOG_FORM } from "./types";
@@ -79,6 +81,30 @@ const GameSession: React.FC = () => {
 
   const [form, setForm] = useState<PlayLogForm>(DEFAULT_PLAY_LOG_FORM);
   const [showEndConfirm, setShowEndConfirm] = useState(false);
+  const [teamDefs, setTeamDefs] = useState<SituationDefinitions | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const load = async () => {
+      if (!activeTeamId) {
+        if (isMounted) setTeamDefs(null);
+        return;
+      }
+
+      try {
+        const defs = await TeamSituationDefinitionsService.get(activeTeamId);
+        if (isMounted) setTeamDefs(defs);
+      } catch {
+        if (isMounted) setTeamDefs(null);
+      }
+    };
+
+    void load();
+    return () => {
+      isMounted = false;
+    };
+  }, [activeTeamId]);
 
   const {
     session,
@@ -220,6 +246,12 @@ const GameSession: React.FC = () => {
               isGoalLine={isGoalLine}
               isRedZone={isRedZone}
               onBack={() => navigate("/boxcall")}
+              onEditThresholds={() => {
+                if (!activeTeamId) return;
+                navigate(
+                  `/team/${activeTeamId}/settings?tab=settings#situation-thresholds`
+                );
+              }}
               onPause={pauseSession}
               onResume={resumeSession}
               onEnd={handleEnd}
@@ -233,6 +265,8 @@ const GameSession: React.FC = () => {
                   onUpdate={updateSituation}
                   onFirstDown={resetDowns}
                   onNextQuarter={nextQuarter}
+                  teamId={activeTeamId || ""}
+                  teamDefs={teamDefs}
                   disabled={isPaused}
                 />
 
@@ -243,6 +277,7 @@ const GameSession: React.FC = () => {
                   currentPlay={currentPlay}
                   onSelectPlay={selectPlay}
                   teamId={activeTeamId || ""}
+                  teamDefs={teamDefs}
                   disabled={isPaused}
                 />
 

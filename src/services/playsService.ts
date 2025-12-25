@@ -26,7 +26,9 @@ export class PlaysService {
     if (existing) return play;
 
     const token = parseLeftRight(
-      typeof play.formation_direction === "string" ? play.formation_direction : ""
+      typeof play.formation_direction === "string"
+        ? play.formation_direction
+        : ""
     );
     const legacy = leftRightToLegacyValue(token);
     if (!legacy) return play;
@@ -391,8 +393,6 @@ export class PlaysService {
 
         // Performance
         confidence_base: updates.confidence_base,
-        times_called: updates.times_called,
-        times_successful: updates.times_successful,
         complexity_score: updates.complexity_score,
 
         // Metadata

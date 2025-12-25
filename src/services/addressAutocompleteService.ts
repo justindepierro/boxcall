@@ -10,10 +10,7 @@ export interface AddressResult {
   place_id: string;
 }
 
-export type AddressAutocompleteServiceName =
-  | "nominatim"
-  | "google"
-  | "mapbox";
+export type AddressAutocompleteServiceName = "nominatim" | "google" | "mapbox";
 
 // Environment variables
 const GOOGLE_PLACES_API_KEY = import.meta.env.VITE_GOOGLE_PLACES_API_KEY;

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Icon } from "../components/ui/Icon/Icon";
 import { Typography } from "../components/design-system";
 import { Card } from "../components/ui";
@@ -8,6 +8,7 @@ import { Breadcrumb } from "../components/ui/Breadcrumb";
 import { StaffManagement } from "../components/team/StaffManagement";
 import { FamilyPermissionsSettings } from "../components/team/FamilyPermissionsSettings";
 import type { FamilyPermissions } from "../components/team/FamilyPermissionsSettings";
+import { SituationThresholdSettings } from "../components/team/SituationThresholdSettings";
 import { getActiveTeamId } from "../utils/activeTeam";
 import { debug } from "../utils/logger";
 
@@ -23,9 +24,17 @@ import { debug } from "../utils/logger";
  */
 const TeamSettings: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<"overview" | "staff" | "settings">(
     "overview"
   );
+
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (tab === "overview" || tab === "staff" || tab === "settings") {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
 
   // Get the active team ID
   const teamId = getActiveTeamId();
@@ -213,6 +222,9 @@ const TeamSettings: React.FC = () => {
                   </div>
                 </div>
               </Card>
+
+              {/* Situation Thresholds (BoxCall Live / Analytics bucketing) */}
+              {teamId && <SituationThresholdSettings teamId={teamId} />}
             </div>
           )}
         </div>

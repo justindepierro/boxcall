@@ -166,6 +166,134 @@ export interface PlaybookAnalyticsSummary {
 // ============================================
 
 export class PlayAnalyticsService {
+  private static async getSituationalBreakdownFromExecutions(
+    teamId: string,
+    playIds: string[]
+  ): Promise<{
+    byDown: Record<
+      string,
+      { called: number; successful: number; rate: number }
+    >;
+    byFieldPosition: Record<
+      string,
+      { called: number; successful: number; rate: number }
+    >;
+  } | null> {
+    if (!teamId || playIds.length === 0) return null;
+
+    try {
+      const [
+        { data: downRows, error: downError },
+        { data: zoneRows, error: zoneError },
+      ] = await Promise.all([
+        fromAny("v_play_stats_by_down")
+          .select("down_distance_bucket,times_called,times_successful")
+          .eq("team_id", teamId)
+          .in("play_id", playIds),
+        fromAny("v_play_stats_by_zone")
+          .select("field_zone,times_called,times_successful")
+          .eq("team_id", teamId)
+          .in("play_id", playIds),
+      ]);
+
+      if (downError) throw downError;
+      if (zoneError) throw zoneError;
+
+      const byDown = (downRows || []).reduce(
+        (acc, row: any) => {
+          const key = row.down_distance_bucket || "Unknown";
+          if (!acc[key]) acc[key] = { called: 0, successful: 0, rate: 0 };
+          acc[key].called += row.times_called || 0;
+          acc[key].successful += row.times_successful || 0;
+          return acc;
+        },
+        {} as Record<
+          string,
+          { called: number; successful: number; rate: number }
+        >
+      );
+
+      const byFieldPosition = (zoneRows || []).reduce(
+        (acc, row: any) => {
+          const key = row.field_zone || "Unknown";
+          if (!acc[key]) acc[key] = { called: 0, successful: 0, rate: 0 };
+          acc[key].called += row.times_called || 0;
+          acc[key].successful += row.times_successful || 0;
+          return acc;
+        },
+        {} as Record<
+          string,
+          { called: number; successful: number; rate: number }
+        >
+      );
+
+      Object.values(byDown).forEach((stats) => {
+        stats.rate =
+          stats.called > 0 ? (stats.successful / stats.called) * 100 : 0;
+      });
+      Object.values(byFieldPosition).forEach((stats) => {
+        stats.rate =
+          stats.called > 0 ? (stats.successful / stats.called) * 100 : 0;
+      });
+
+      return { byDown, byFieldPosition };
+    } catch {
+      // If the views haven't been deployed yet, fall back to preference-derived grouping.
+      return null;
+    }
+  }
+
+  private static async getExecutionStatsByPlayId(
+    playIds: string[]
+  ): Promise<Record<string, { timesCalled: number; timesSuccessful: number }>> {
+    if (playIds.length === 0) return {};
+
+    try {
+      const { data, error } = await fromAny("play_execution_stats")
+        .select("play_id,times_called,times_successful")
+        .in("play_id", playIds);
+
+      if (error) throw error;
+
+      const rows = (data || []) as Array<{
+        play_id: string;
+        times_called: number | null;
+        times_successful: number | null;
+      }>;
+
+      return rows.reduce(
+        (acc, row) => {
+          acc[row.play_id] = {
+            timesCalled: row.times_called ?? 0,
+            timesSuccessful: row.times_successful ?? 0,
+          };
+          return acc;
+        },
+        {} as Record<string, { timesCalled: number; timesSuccessful: number }>
+      );
+    } catch {
+      // If the view hasn't been deployed yet, fall back to zeros.
+      return {};
+    }
+  }
+
+  private static withExecutionStats(
+    plays: any[],
+    statsByPlayId: Record<
+      string,
+      { timesCalled: number; timesSuccessful: number }
+    >
+  ): any[] {
+    return plays.map((p) => {
+      const stats = statsByPlayId[p.id];
+      return {
+        ...p,
+        times_called: stats?.timesCalled ?? 0,
+        times_successful: stats?.timesSuccessful ?? 0,
+      };
+    });
+  }
+
   // ============================================
   // GAME PLANNING ANALYTICS METHODS
   // ============================================
@@ -469,6 +597,13 @@ export class PlayAnalyticsService {
   static async getPlaybookAnalytics(
     playbookId: string
   ): Promise<PlaybookAnalyticsSummary> {
+    const { data: playbook, error: playbookError } = await table("playbooks")
+      .select("team_id")
+      .eq("id", playbookId)
+      .single();
+
+    if (playbookError) throw playbookError;
+
     const { data: plays, error } = await table("plays")
       .select(
         `
@@ -477,8 +612,6 @@ export class PlayAnalyticsService {
         formation,
         p_type,
         confidence_base,
-        times_called,
-        times_successful,
         complexity_score,
         personnel,
         pref_dis,
@@ -490,13 +623,30 @@ export class PlayAnalyticsService {
     if (error) throw error;
     if (!plays) return PlayAnalyticsService.getEmptyPlaybookAnalytics();
 
-    const playAnalytics = plays.map((play) =>
+    const statsByPlayId = await PlayAnalyticsService.getExecutionStatsByPlayId(
+      plays.map((p: any) => p.id)
+    );
+    const playsWithStats = PlayAnalyticsService.withExecutionStats(
+      plays,
+      statsByPlayId
+    );
+
+    const derivedSituational =
+      await PlayAnalyticsService.getSituationalBreakdownFromExecutions(
+        (playbook as any)?.team_id || "",
+        playsWithStats.map((p: any) => p.id)
+      );
+
+    const playAnalytics = playsWithStats.map((play) =>
       PlayAnalyticsService.calculatePlayAnalytics(play)
     );
     const formationAnalytics =
-      PlayAnalyticsService.calculateFormationAnalytics(plays);
+      PlayAnalyticsService.calculateFormationAnalytics(playsWithStats);
     const situationalPerformance =
-      PlayAnalyticsService.calculateSituationalPerformance(plays);
+      PlayAnalyticsService.calculateSituationalPerformance(
+        playsWithStats,
+        derivedSituational
+      );
 
     const totalPlays = plays.length;
     const totalSuccessRate =
@@ -523,7 +673,7 @@ export class PlayAnalyticsService {
       totalPlays,
       averageSuccessRate: Math.round(totalSuccessRate * 100) / 100,
       averageComplexity: Math.round(averageComplexity * 100) / 100,
-      formationsCount: new Set(plays.map((p) => p.formation)).size,
+      formationsCount: new Set(playsWithStats.map((p) => p.formation)).size,
       topPerformingPlays,
       formationAnalytics,
       situationalPerformance,
@@ -624,7 +774,47 @@ export class PlayAnalyticsService {
     );
   }
 
-  private static calculateSituationalPerformance(plays: any[]) {
+  private static calculateSituationalPerformance(
+    plays: any[],
+    derived?: {
+      byDown: Record<
+        string,
+        { called: number; successful: number; rate: number }
+      >;
+      byFieldPosition: Record<
+        string,
+        { called: number; successful: number; rate: number }
+      >;
+    } | null
+  ) {
+    if (derived) {
+      const byPersonnel = plays.reduce(
+        (acc, play) => {
+          const personnel = play.personnel || "Unknown";
+          if (!acc[personnel])
+            acc[personnel] = { called: 0, successful: 0, rate: 0 };
+          acc[personnel].called += play.times_called || 0;
+          acc[personnel].successful += play.times_successful || 0;
+          return acc;
+        },
+        {} as Record<
+          string,
+          { called: number; successful: number; rate: number }
+        >
+      );
+
+      Object.values(byPersonnel).forEach((stats) => {
+        stats.rate =
+          stats.called > 0 ? (stats.successful / stats.called) * 100 : 0;
+      });
+
+      return {
+        byDown: derived.byDown,
+        byFieldPosition: derived.byFieldPosition,
+        byPersonnel,
+      };
+    }
+
     const byDown = plays.reduce(
       (acc, play) => {
         const down = play.pref_dis || "Unknown";

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "../../ui/Button/Button";
 import Icon from "../../ui/Icon/Icon";
 import { PersonnelBadge } from "../PersonnelBadge";
@@ -7,12 +7,96 @@ import { SelectionCheckbox } from "../../ui/SelectionCheckbox";
 import type { Play as PlayType } from "../../../types/play";
 import type { PersonnelConfiguration } from "../../../types/personnel";
 import { debug } from "../../../utils/logger";
+import type { SituationDefinitions } from "../../../types/situationDefinitions";
+import { TeamSituationDefinitionsService } from "../../../services/teamSituationDefinitionsService";
+import { useActiveTeamStore } from "../../../stores/activeTeamStore";
+import {
+  getCustomSituationColorByLabel,
+  getDistanceColorByLabel,
+  getFieldZoneColorByLabel,
+} from "../../../utils/situationBucketing";
+import { Badge } from "../../ui/Badge";
+import { Dropdown } from "../../ui/Dropdown";
+import type { BadgeColorScheme } from "../../../types/badge";
+import {
+  BADGE_COLOR_SCHEME_OPTIONS,
+  isBadgeColorScheme,
+} from "../../../types/badge";
+import {
+  getPlayTypeBadgeScheme,
+  useTeamBadgeSchemeOverrides,
+} from "../../../hooks/useTeamBadgeSchemeOverrides";
 
 type ToggleHandler = () => void;
 
 type PlayActionHandler = (play: PlayType) => void;
 
 type StyleResolver = (value: string) => string;
+
+const COLOR_OPTIONS: Array<{ value: BadgeColorScheme; label: string }> =
+  BADGE_COLOR_SCHEME_OPTIONS;
+
+const EditablePlayTypeBadge: React.FC<{
+  value: string;
+  scheme: BadgeColorScheme;
+  onChangeScheme: (scheme: BadgeColorScheme) => Promise<void>;
+}> = ({ value, scheme, onChangeScheme }) => {
+  const [open, setOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const rootRef = useRef<HTMLSpanElement | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const onMouseDown = (e: MouseEvent) => {
+      const target = e.target as Node | null;
+      if (!target) return;
+      if (!rootRef.current?.contains(target)) setOpen(false);
+    };
+
+    document.addEventListener("mousedown", onMouseDown);
+    return () => document.removeEventListener("mousedown", onMouseDown);
+  }, [open]);
+
+  const label = value.trim();
+  if (!label) return null;
+
+  return (
+    <span ref={rootRef} className="relative inline-flex">
+      <Badge
+        variant="neutral"
+        scheme={scheme}
+        size="sm"
+        onClick={() => setOpen((v) => !v)}
+        ariaLabel={`Change ${label} badge color`}
+      >
+        {label}
+      </Badge>
+
+      {open && (
+        <div className="absolute top-full left-0 mt-1 z-50 bg-surface border border-divider rounded-lg p-2 shadow-md">
+          <Dropdown
+            label="Color"
+            value={scheme}
+            onChange={async (next) => {
+              if (!isBadgeColorScheme(next)) return;
+              setSaving(true);
+              try {
+                await onChangeScheme(next);
+                setOpen(false);
+              } finally {
+                setSaving(false);
+              }
+            }}
+            options={COLOR_OPTIONS}
+            size="sm"
+            disabled={saving}
+          />
+        </div>
+      )}
+    </span>
+  );
+};
 
 interface PlayCardListHeaderProps {
   play: PlayType;
@@ -40,7 +124,17 @@ const CollapsedBadges: React.FC<{
   play: PlayType;
   getPlayTypeColor: StyleResolver;
   personnelConfig?: PersonnelConfiguration;
-}> = ({ play, getPlayTypeColor, personnelConfig }) => (
+  teamDefs: Partial<SituationDefinitions> | null;
+  playTypeScheme: BadgeColorScheme;
+  onChangePlayTypeScheme: (scheme: BadgeColorScheme) => Promise<void>;
+}> = ({
+  play,
+  getPlayTypeColor: _getPlayTypeColor,
+  personnelConfig,
+  teamDefs,
+  playTypeScheme,
+  onChangePlayTypeScheme,
+}) => (
   <>
     {play.personnel && (
       <PersonnelBadge
@@ -50,11 +144,13 @@ const CollapsedBadges: React.FC<{
       />
     )}
 
-    <span
-      className={`px-2.5 py-1 rounded-xl text-xs font-semibold shadow-sm ${getPlayTypeColor(play.p_type)}`}
-    >
-      {play.p_type}
-    </span>
+    {play.p_type && (
+      <EditablePlayTypeBadge
+        value={play.p_type}
+        scheme={playTypeScheme}
+        onChangeScheme={onChangePlayTypeScheme}
+      />
+    )}
 
     {play.wristband_number && (
       <WristbandBadge wristbandNumber={play.wristband_number} size="sm" />
@@ -89,6 +185,36 @@ const CollapsedBadges: React.FC<{
         {play.pref_down}
       </span>
     )}
+
+    {play.pref_dis && (
+      <Badge
+        variant="neutral"
+        scheme={getDistanceColorByLabel(teamDefs, play.pref_dis)}
+        size="sm"
+      >
+        {play.pref_dis}
+      </Badge>
+    )}
+
+    {play.pref_field_pos && (
+      <Badge
+        variant="neutral"
+        scheme={getFieldZoneColorByLabel(teamDefs, play.pref_field_pos)}
+        size="sm"
+      >
+        {play.pref_field_pos}
+      </Badge>
+    )}
+
+    {play.pref_situation && (
+      <Badge
+        variant="neutral"
+        scheme={getCustomSituationColorByLabel(teamDefs, play.pref_situation)}
+        size="sm"
+      >
+        {play.pref_situation}
+      </Badge>
+    )}
   </>
 );
 
@@ -98,12 +224,18 @@ const ExpandedBadges: React.FC<{
   getConfidenceColor: (confidence: number) => string;
   phaseLabel: string | null;
   personnelConfig?: PersonnelConfiguration;
+  teamDefs: Partial<SituationDefinitions> | null;
+  playTypeScheme: BadgeColorScheme;
+  onChangePlayTypeScheme: (scheme: BadgeColorScheme) => Promise<void>;
 }> = ({
   play,
-  getPlayTypeColor,
+  getPlayTypeColor: _getPlayTypeColor,
   getConfidenceColor,
   phaseLabel,
   personnelConfig,
+  teamDefs,
+  playTypeScheme,
+  onChangePlayTypeScheme,
 }) => (
   <>
     {play.personnel && (
@@ -114,11 +246,13 @@ const ExpandedBadges: React.FC<{
       />
     )}
 
-    <span
-      className={`px-2.5 py-1 rounded-xl text-xs font-semibold shadow-sm ${getPlayTypeColor(play.p_type)}`}
-    >
-      {play.p_type}
-    </span>
+    {play.p_type && (
+      <EditablePlayTypeBadge
+        value={play.p_type}
+        scheme={playTypeScheme}
+        onChangeScheme={onChangePlayTypeScheme}
+      />
+    )}
 
     {play.wristband_number && (
       <WristbandBadge wristbandNumber={play.wristband_number} size="sm" />
@@ -155,8 +289,69 @@ const ExpandedBadges: React.FC<{
         )}
       </>
     )}
+
+    {play.pref_dis && (
+      <Badge
+        variant="neutral"
+        scheme={getDistanceColorByLabel(teamDefs, play.pref_dis)}
+        size="sm"
+      >
+        {play.pref_dis}
+      </Badge>
+    )}
+
+    {play.pref_field_pos && (
+      <Badge
+        variant="neutral"
+        scheme={getFieldZoneColorByLabel(teamDefs, play.pref_field_pos)}
+        size="sm"
+      >
+        {play.pref_field_pos}
+      </Badge>
+    )}
+
+    {play.pref_situation && (
+      <Badge
+        variant="neutral"
+        scheme={getCustomSituationColorByLabel(teamDefs, play.pref_situation)}
+        size="sm"
+      >
+        {play.pref_situation}
+      </Badge>
+    )}
   </>
 );
+
+function useTeamSituationDefinitionsForBadges(): Partial<SituationDefinitions> | null {
+  const activeTeamId = useActiveTeamStore((s) => s.activeTeamId);
+  const [defs, setDefs] = useState<SituationDefinitions | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (!activeTeamId) {
+      setDefs(null);
+      return () => {
+        isMounted = false;
+      };
+    }
+
+    const load = async () => {
+      try {
+        const loaded = await TeamSituationDefinitionsService.get(activeTeamId);
+        if (isMounted) setDefs(loaded);
+      } catch {
+        if (isMounted) setDefs(null);
+      }
+    };
+
+    void load();
+    return () => {
+      isMounted = false;
+    };
+  }, [activeTeamId]);
+
+  return defs;
+}
 
 const ActionButtons: React.FC<{
   play: PlayType;
@@ -270,6 +465,23 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
     (config) => config.name === optimisticPlay.personnel
   );
 
+  const teamDefs = useTeamSituationDefinitionsForBadges();
+  const { overrides, setPlayTypeScheme } = useTeamBadgeSchemeOverrides();
+
+  const playTypeScheme = useMemo(
+    () =>
+      getPlayTypeBadgeScheme(overrides, optimisticPlay.p_type ?? play.p_type),
+    [overrides, optimisticPlay.p_type, play.p_type]
+  );
+
+  const onChangePlayTypeScheme = useMemo(() => {
+    const playType = (optimisticPlay.p_type ?? play.p_type)?.trim();
+    if (!playType) return async () => {};
+    return async (scheme: BadgeColorScheme) => {
+      await setPlayTypeScheme(playType, scheme);
+    };
+  }, [optimisticPlay.p_type, play.p_type, setPlayTypeScheme]);
+
   return (
     <div className="flex items-center gap-4 overflow-visible">
       {/* Selection checkbox on the left (when selection mode is on) */}
@@ -334,6 +546,9 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
               play={optimisticPlay}
               getPlayTypeColor={getPlayTypeColor}
               personnelConfig={personnelConfig}
+              teamDefs={teamDefs}
+              playTypeScheme={playTypeScheme}
+              onChangePlayTypeScheme={onChangePlayTypeScheme}
             />
           )}
 
@@ -345,6 +560,9 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
               getConfidenceColor={getConfidenceColor}
               phaseLabel={phaseLabel}
               personnelConfig={personnelConfig}
+              teamDefs={teamDefs}
+              playTypeScheme={playTypeScheme}
+              onChangePlayTypeScheme={onChangePlayTypeScheme}
             />
           )}
         </div>

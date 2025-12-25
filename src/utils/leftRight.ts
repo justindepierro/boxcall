@@ -4,7 +4,9 @@ export type FormationDirectionVariant = LeftRight | "base" | null | undefined;
 
 export type DirectionDisplayFormat = "full" | "abbrev" | "letter";
 
-export function parseLeftRight(value: string | null | undefined): LeftRight | null {
+export function parseLeftRight(
+  value: string | null | undefined
+): LeftRight | null {
   const v = (value ?? "").trim().toLowerCase();
   if (!v) return null;
 
@@ -14,13 +16,17 @@ export function parseLeftRight(value: string | null | undefined): LeftRight | nu
   return null;
 }
 
-export function leftRightToLegacyValue(dir: LeftRight | null | undefined): "LEFT" | "RIGHT" | "" {
+export function leftRightToLegacyValue(
+  dir: LeftRight | null | undefined
+): "LEFT" | "RIGHT" | "" {
   if (dir === "left") return "LEFT";
   if (dir === "right") return "RIGHT";
   return "";
 }
 
-export function legacyValueToLeftRight(value: string | null | undefined): LeftRight | null {
+export function legacyValueToLeftRight(
+  value: string | null | undefined
+): LeftRight | null {
   return parseLeftRight(value);
 }
 

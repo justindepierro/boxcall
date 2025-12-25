@@ -622,7 +622,7 @@ export function MobilePlaybookView({
               {state.advancedFilters.length > 0 && (
                 <p className="text-center text-xs text-secondary mt-2">
                   {state.advancedFilters.length} filter
-                  {state.advancedFilters.length === 1 ? "" : "s"} 
+                  {state.advancedFilters.length === 1 ? "" : "s"}
                   active
                 </p>
               )}

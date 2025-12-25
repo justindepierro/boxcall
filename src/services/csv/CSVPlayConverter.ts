@@ -23,7 +23,12 @@ export class CSVPlayConverter {
     const raw = this.asString(value).trim();
     if (!raw) return null;
     const lower = raw.toLowerCase();
-    if (lower === "base" || lower === "middle" || lower === "mid" || lower === "center")
+    if (
+      lower === "base" ||
+      lower === "middle" ||
+      lower === "mid" ||
+      lower === "center"
+    )
       return "base";
     if (lower === "left" || lower === "l" || lower === "lt") return "left";
     if (lower === "right" || lower === "r" || lower === "rt") return "right";
@@ -157,28 +162,31 @@ export class CSVPlayConverter {
     const formation = this.asString(playData.formation).trim();
     const playName = this.asString(playData.play_name).trim();
 
-    const rawFormationDirection = this.asString(playData.formation_direction).trim();
+    const rawFormationDirection = this.asString(
+      playData.formation_direction
+    ).trim();
     const normalizedVariantDirection = this.normalizeFormationDirection(
       rawFormationDirection
     );
     const explicitFDir = this.asString(playData.f_dir).trim();
-    const normalizedVariantFromFDir = this.normalizeFormationDirection(explicitFDir);
+    const normalizedVariantFromFDir =
+      this.normalizeFormationDirection(explicitFDir);
     const derivedVariantDirection =
       normalizedVariantDirection ?? normalizedVariantFromFDir;
-        const normalizedExplicitFDir = (() => {
-          const token = parseLeftRight(explicitFDir);
-          if (token) return leftRightToLegacyValue(token);
-          return explicitFDir;
-        })();
+    const normalizedExplicitFDir = (() => {
+      const token = parseLeftRight(explicitFDir);
+      if (token) return leftRightToLegacyValue(token);
+      return explicitFDir;
+    })();
 
-        const derivedFDir =
-          explicitFDir !== ""
-            ? normalizedExplicitFDir
-            : derivedVariantDirection === "left"
-              ? "LEFT"
-              : derivedVariantDirection === "right"
-                ? "RIGHT"
-                : rawFormationDirection;
+    let derivedFDir = rawFormationDirection;
+    if (explicitFDir !== "") {
+      derivedFDir = normalizedExplicitFDir;
+    } else if (derivedVariantDirection === "left") {
+      derivedFDir = "LEFT";
+    } else if (derivedVariantDirection === "right") {
+      derivedFDir = "RIGHT";
+    }
 
     return {
       id: `csv-import-${Date.now()}-${index}`,
@@ -215,8 +223,6 @@ export class CSVPlayConverter {
       r_str: this.asString(playData.r_str),
       p_str: this.asString(playData.p_str),
       confidence_base: 70,
-      times_called: 0,
-      times_successful: 0,
       created_by: "csv-import",
       created_at: new Date(),
       updated_at: new Date(),
