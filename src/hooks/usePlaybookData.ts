@@ -198,6 +198,9 @@ export function usePlaybookData(playbookId: string | null): PlaybookDataResult {
 
   // Fetch plays and counts
   useEffect(() => {
+    // Set loading FIRST to prevent empty state flash
+    setLoading(true);
+
     // Reset state when playbookId changes
     setPlays([]);
     setPage(0);
@@ -218,7 +221,6 @@ export function usePlaybookData(playbookId: string | null): PlaybookDataResult {
     abortControllerRef.current = controller;
 
     let isMounted = true;
-    setLoading(true);
     setError(null);
 
     const fetchData = async () => {
