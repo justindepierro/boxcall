@@ -14,7 +14,7 @@ import {
  */
 
 export interface UserPreferences {
-  // PlayGrid preferences
+  // PlayList preferences (legacy key names retained for backward compatibility)
   bc_playgrid_oneword?: boolean;
   bc_playgrid_direction_format?: "full" | "abbrev" | "letter";
   bc_playgrid_view_manual?: boolean;

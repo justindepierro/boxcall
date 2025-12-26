@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button } from "../../ui/Button/Button";
 import Icon from "../../ui/Icon/Icon";
 import { PersonnelBadge } from "../PersonnelBadge";
@@ -15,14 +15,10 @@ import {
   getDistanceColorByLabel,
   getFieldZoneColorByLabel,
 } from "../../../utils/situationBucketing";
-import { Badge } from "../../ui/Badge";
-import { Dropdown } from "../../ui/Dropdown";
+import { Badge, EditableSchemeBadge } from "../../ui/Badge";
 import type { BadgeColorScheme } from "../../../types/badge";
 import {
-  BADGE_COLOR_SCHEME_OPTIONS,
-  isBadgeColorScheme,
-} from "../../../types/badge";
-import {
+  getCategoryBadgeScheme,
   getPlayTypeBadgeScheme,
   useTeamBadgeSchemeOverrides,
 } from "../../../hooks/useTeamBadgeSchemeOverrides";
@@ -32,71 +28,6 @@ type ToggleHandler = () => void;
 type PlayActionHandler = (play: PlayType) => void;
 
 type StyleResolver = (value: string) => string;
-
-const COLOR_OPTIONS: Array<{ value: BadgeColorScheme; label: string }> =
-  BADGE_COLOR_SCHEME_OPTIONS;
-
-const EditablePlayTypeBadge: React.FC<{
-  value: string;
-  scheme: BadgeColorScheme;
-  onChangeScheme: (scheme: BadgeColorScheme) => Promise<void>;
-}> = ({ value, scheme, onChangeScheme }) => {
-  const [open, setOpen] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const rootRef = useRef<HTMLSpanElement | null>(null);
-
-  useEffect(() => {
-    if (!open) return;
-
-    const onMouseDown = (e: MouseEvent) => {
-      const target = e.target as Node | null;
-      if (!target) return;
-      if (!rootRef.current?.contains(target)) setOpen(false);
-    };
-
-    document.addEventListener("mousedown", onMouseDown);
-    return () => document.removeEventListener("mousedown", onMouseDown);
-  }, [open]);
-
-  const label = value.trim();
-  if (!label) return null;
-
-  return (
-    <span ref={rootRef} className="relative inline-flex">
-      <Badge
-        variant="neutral"
-        scheme={scheme}
-        size="sm"
-        onClick={() => setOpen((v) => !v)}
-        ariaLabel={`Change ${label} badge color`}
-      >
-        {label}
-      </Badge>
-
-      {open && (
-        <div className="absolute top-full left-0 mt-1 z-50 bg-surface border border-divider rounded-lg p-2 shadow-md">
-          <Dropdown
-            label="Color"
-            value={scheme}
-            onChange={async (next) => {
-              if (!isBadgeColorScheme(next)) return;
-              setSaving(true);
-              try {
-                await onChangeScheme(next);
-                setOpen(false);
-              } finally {
-                setSaving(false);
-              }
-            }}
-            options={COLOR_OPTIONS}
-            size="sm"
-            disabled={saving}
-          />
-        </div>
-      )}
-    </span>
-  );
-};
 
 interface PlayCardListHeaderProps {
   play: PlayType;
@@ -127,6 +58,14 @@ const CollapsedBadges: React.FC<{
   teamDefs: Partial<SituationDefinitions> | null;
   playTypeScheme: BadgeColorScheme;
   onChangePlayTypeScheme: (scheme: BadgeColorScheme) => Promise<void>;
+  personnelScheme: BadgeColorScheme;
+  onChangePersonnelScheme: (scheme: BadgeColorScheme) => Promise<void>;
+  formationScheme: BadgeColorScheme;
+  onChangeFormationScheme: (scheme: BadgeColorScheme) => Promise<void>;
+  protectionScheme: BadgeColorScheme;
+  onChangeProtectionScheme: (scheme: BadgeColorScheme) => Promise<void>;
+  motionScheme: BadgeColorScheme;
+  onChangeMotionScheme: (scheme: BadgeColorScheme) => Promise<void>;
 }> = ({
   play,
   getPlayTypeColor: _getPlayTypeColor,
@@ -134,21 +73,43 @@ const CollapsedBadges: React.FC<{
   teamDefs,
   playTypeScheme,
   onChangePlayTypeScheme,
+  personnelScheme,
+  onChangePersonnelScheme,
+  formationScheme,
+  onChangeFormationScheme,
+  protectionScheme,
+  onChangeProtectionScheme,
+  motionScheme,
+  onChangeMotionScheme,
 }) => (
   <>
     {play.personnel && (
-      <PersonnelBadge
-        personnel={play.personnel}
-        size="sm"
-        badgeCustomization={personnelConfig?.badgeCustomization ?? undefined}
-      />
+      <>
+        {personnelConfig?.badgeCustomization ? (
+          <PersonnelBadge
+            personnel={play.personnel}
+            size="sm"
+            badgeCustomization={personnelConfig.badgeCustomization}
+          />
+        ) : (
+          <EditableSchemeBadge
+            label={play.personnel}
+            scheme={personnelScheme}
+            onChangeScheme={onChangePersonnelScheme}
+            size="sm"
+            ariaLabel={`Change ${play.personnel} badge color`}
+          />
+        )}
+      </>
     )}
 
     {play.p_type && (
-      <EditablePlayTypeBadge
-        value={play.p_type}
+      <EditableSchemeBadge
+        label={play.p_type}
         scheme={playTypeScheme}
         onChangeScheme={onChangePlayTypeScheme}
+        size="sm"
+        ariaLabel={`Change ${play.p_type} badge color`}
       />
     )}
 
@@ -157,9 +118,13 @@ const CollapsedBadges: React.FC<{
     )}
 
     {play.formation && (
-      <span className="px-2 py-1 bg-purple-100 text-purple-800 border border-purple-300 rounded-lg text-xs font-semibold">
-        {play.formation}
-      </span>
+      <EditableSchemeBadge
+        label={play.formation}
+        scheme={formationScheme}
+        onChangeScheme={onChangeFormationScheme}
+        size="sm"
+        ariaLabel={`Change ${play.formation} badge color`}
+      />
     )}
 
     {play.pref_hash && (
@@ -169,15 +134,23 @@ const CollapsedBadges: React.FC<{
     )}
 
     {play.protection && (
-      <span className="px-2 py-1 bg-orange-100 text-orange-800 border border-orange-300 rounded-lg text-xs font-semibold">
-        {play.protection}
-      </span>
+      <EditableSchemeBadge
+        label={play.protection}
+        scheme={protectionScheme}
+        onChangeScheme={onChangeProtectionScheme}
+        size="sm"
+        ariaLabel={`Change ${play.protection} badge color`}
+      />
     )}
 
     {play.motion && (
-      <span className="px-2 py-1 bg-cyan-100 text-cyan-800 border border-cyan-300 rounded-lg text-xs font-semibold">
-        ↗️ {play.motion}
-      </span>
+      <EditableSchemeBadge
+        label={`↗️ ${play.motion}`}
+        scheme={motionScheme}
+        onChangeScheme={onChangeMotionScheme}
+        size="sm"
+        ariaLabel={`Change ${play.motion} badge color`}
+      />
     )}
 
     {play.pref_down && (
@@ -227,6 +200,14 @@ const ExpandedBadges: React.FC<{
   teamDefs: Partial<SituationDefinitions> | null;
   playTypeScheme: BadgeColorScheme;
   onChangePlayTypeScheme: (scheme: BadgeColorScheme) => Promise<void>;
+  personnelScheme: BadgeColorScheme;
+  onChangePersonnelScheme: (scheme: BadgeColorScheme) => Promise<void>;
+  formationScheme: BadgeColorScheme;
+  onChangeFormationScheme: (scheme: BadgeColorScheme) => Promise<void>;
+  protectionScheme: BadgeColorScheme;
+  onChangeProtectionScheme: (scheme: BadgeColorScheme) => Promise<void>;
+  motionScheme: BadgeColorScheme;
+  onChangeMotionScheme: (scheme: BadgeColorScheme) => Promise<void>;
 }> = ({
   play,
   getPlayTypeColor: _getPlayTypeColor,
@@ -236,26 +217,78 @@ const ExpandedBadges: React.FC<{
   teamDefs,
   playTypeScheme,
   onChangePlayTypeScheme,
+  personnelScheme,
+  onChangePersonnelScheme,
+  formationScheme,
+  onChangeFormationScheme,
+  protectionScheme,
+  onChangeProtectionScheme,
+  motionScheme,
+  onChangeMotionScheme,
 }) => (
   <>
     {play.personnel && (
-      <PersonnelBadge
-        personnel={play.personnel}
-        size="sm"
-        badgeCustomization={personnelConfig?.badgeCustomization ?? undefined}
-      />
+      <>
+        {personnelConfig?.badgeCustomization ? (
+          <PersonnelBadge
+            personnel={play.personnel}
+            size="sm"
+            badgeCustomization={personnelConfig.badgeCustomization}
+          />
+        ) : (
+          <EditableSchemeBadge
+            label={play.personnel}
+            scheme={personnelScheme}
+            onChangeScheme={onChangePersonnelScheme}
+            size="sm"
+            ariaLabel={`Change ${play.personnel} badge color`}
+          />
+        )}
+      </>
     )}
 
     {play.p_type && (
-      <EditablePlayTypeBadge
-        value={play.p_type}
+      <EditableSchemeBadge
+        label={play.p_type}
         scheme={playTypeScheme}
         onChangeScheme={onChangePlayTypeScheme}
+        size="sm"
+        ariaLabel={`Change ${play.p_type} badge color`}
       />
     )}
 
     {play.wristband_number && (
       <WristbandBadge wristbandNumber={play.wristband_number} size="sm" />
+    )}
+
+    {play.formation && (
+      <EditableSchemeBadge
+        label={play.formation}
+        scheme={formationScheme}
+        onChangeScheme={onChangeFormationScheme}
+        size="sm"
+        ariaLabel={`Change ${play.formation} badge color`}
+      />
+    )}
+
+    {play.protection && (
+      <EditableSchemeBadge
+        label={play.protection}
+        scheme={protectionScheme}
+        onChangeScheme={onChangeProtectionScheme}
+        size="sm"
+        ariaLabel={`Change ${play.protection} badge color`}
+      />
+    )}
+
+    {play.motion && (
+      <EditableSchemeBadge
+        label={`↗️ ${play.motion}`}
+        scheme={motionScheme}
+        onChangeScheme={onChangeMotionScheme}
+        size="sm"
+        ariaLabel={`Change ${play.motion} badge color`}
+      />
     )}
 
     {phaseLabel && (
@@ -439,6 +472,7 @@ function getSuccessRateBadgeColor(rate: number): string {
   return "bg-error-50 text-error-700 border border-error-200";
 }
 
+// eslint-disable-next-line max-lines-per-function
 export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
   play,
   optimisticPlay,
@@ -466,7 +500,8 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
   );
 
   const teamDefs = useTeamSituationDefinitionsForBadges();
-  const { overrides, setPlayTypeScheme } = useTeamBadgeSchemeOverrides();
+  const { overrides, setPlayTypeScheme, setCategoryScheme } =
+    useTeamBadgeSchemeOverrides();
 
   const playTypeScheme = useMemo(
     () =>
@@ -481,6 +516,78 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
       await setPlayTypeScheme(playType, scheme);
     };
   }, [optimisticPlay.p_type, play.p_type, setPlayTypeScheme]);
+
+  const formationScheme = useMemo(
+    () =>
+      getCategoryBadgeScheme(
+        overrides,
+        "formation",
+        optimisticPlay.formation ?? play.formation
+      ),
+    [overrides, optimisticPlay.formation, play.formation]
+  );
+
+  const onChangeFormationScheme = useMemo(() => {
+    const formation = (optimisticPlay.formation ?? play.formation)?.trim();
+    if (!formation) return async () => {};
+    return async (scheme: BadgeColorScheme) => {
+      await setCategoryScheme("formation", formation, scheme);
+    };
+  }, [optimisticPlay.formation, play.formation, setCategoryScheme]);
+
+  const protectionScheme = useMemo(
+    () =>
+      getCategoryBadgeScheme(
+        overrides,
+        "protection",
+        optimisticPlay.protection ?? play.protection
+      ),
+    [overrides, optimisticPlay.protection, play.protection]
+  );
+
+  const onChangeProtectionScheme = useMemo(() => {
+    const protection = (optimisticPlay.protection ?? play.protection)?.trim();
+    if (!protection) return async () => {};
+    return async (scheme: BadgeColorScheme) => {
+      await setCategoryScheme("protection", protection, scheme);
+    };
+  }, [optimisticPlay.protection, play.protection, setCategoryScheme]);
+
+  const motionScheme = useMemo(
+    () =>
+      getCategoryBadgeScheme(
+        overrides,
+        "motion",
+        optimisticPlay.motion ?? play.motion
+      ),
+    [overrides, optimisticPlay.motion, play.motion]
+  );
+
+  const onChangeMotionScheme = useMemo(() => {
+    const motion = (optimisticPlay.motion ?? play.motion)?.trim();
+    if (!motion) return async () => {};
+    return async (scheme: BadgeColorScheme) => {
+      await setCategoryScheme("motion", motion, scheme);
+    };
+  }, [optimisticPlay.motion, play.motion, setCategoryScheme]);
+
+  const personnelScheme = useMemo(
+    () =>
+      getCategoryBadgeScheme(
+        overrides,
+        "personnel",
+        optimisticPlay.personnel ?? play.personnel
+      ),
+    [overrides, optimisticPlay.personnel, play.personnel]
+  );
+
+  const onChangePersonnelScheme = useMemo(() => {
+    const personnel = (optimisticPlay.personnel ?? play.personnel)?.trim();
+    if (!personnel) return async () => {};
+    return async (scheme: BadgeColorScheme) => {
+      await setCategoryScheme("personnel", personnel, scheme);
+    };
+  }, [optimisticPlay.personnel, play.personnel, setCategoryScheme]);
 
   return (
     <div className="flex items-center gap-4 overflow-visible">
@@ -549,6 +656,14 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
               teamDefs={teamDefs}
               playTypeScheme={playTypeScheme}
               onChangePlayTypeScheme={onChangePlayTypeScheme}
+              personnelScheme={personnelScheme}
+              onChangePersonnelScheme={onChangePersonnelScheme}
+              formationScheme={formationScheme}
+              onChangeFormationScheme={onChangeFormationScheme}
+              protectionScheme={protectionScheme}
+              onChangeProtectionScheme={onChangeProtectionScheme}
+              motionScheme={motionScheme}
+              onChangeMotionScheme={onChangeMotionScheme}
             />
           )}
 
@@ -563,6 +678,14 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
               teamDefs={teamDefs}
               playTypeScheme={playTypeScheme}
               onChangePlayTypeScheme={onChangePlayTypeScheme}
+              personnelScheme={personnelScheme}
+              onChangePersonnelScheme={onChangePersonnelScheme}
+              formationScheme={formationScheme}
+              onChangeFormationScheme={onChangeFormationScheme}
+              protectionScheme={protectionScheme}
+              onChangeProtectionScheme={onChangeProtectionScheme}
+              motionScheme={motionScheme}
+              onChangeMotionScheme={onChangeMotionScheme}
             />
           )}
         </div>

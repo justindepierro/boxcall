@@ -4,17 +4,14 @@ import { AdvancedFilters } from "../../components/playbook/AdvancedFilters";
 import { Button } from "../../components/ui/Button/Button";
 import { Icon } from "../../components/ui/Icon";
 import { Typography } from "../../components/design-system/Typography";
-import type { PlaybookState } from "../../contexts/PlaybookContext";
+import type { PlaybookFilters } from "../../types/filters";
+import { hasActiveFilters, EMPTY_FILTERS } from "../../types/filters";
 
 interface MobileFiltersBottomSheetProps {
   isOpen: boolean;
   onClose: () => void;
-  advancedFilters: PlaybookState["advancedFilters"];
-  onFiltersChange: (filters: PlaybookState["advancedFilters"]) => void;
-  selectedCategory?: PlaybookState["selectedCategory"];
-  selectedSubcategory?: PlaybookState["selectedSubcategory"];
-  onCategoryChange?: (category?: string, subcategory?: string) => void;
-  onClearAll: () => void;
+  filters: PlaybookFilters;
+  onFiltersChange: (filters: PlaybookFilters) => void;
   mobileButtonSize: "sm" | "md" | "lg";
   mobileSecondaryButtonSize: "sm" | "md" | "lg";
 }
@@ -24,18 +21,19 @@ export const MobileFiltersBottomSheet: React.FC<
 > = ({
   isOpen,
   onClose,
-  advancedFilters,
+  filters,
   onFiltersChange,
-  selectedCategory,
-  selectedSubcategory,
-  onCategoryChange,
-  onClearAll,
   mobileButtonSize,
   mobileSecondaryButtonSize,
 }) => {
   if (!isOpen) return null;
 
-  const filterCount = advancedFilters.length;
+  const hasFilters = hasActiveFilters(filters);
+
+  const handleClearAll = () => {
+    onFiltersChange({ ...EMPTY_FILTERS });
+    onClose();
+  };
 
   return (
     <BottomSheet
@@ -61,11 +59,8 @@ export const MobileFiltersBottomSheet: React.FC<
         {/* Scrollable Filters Content */}
         <div className="flex-1 overflow-y-auto p-6 pb-20">
           <AdvancedFilters
-            activeFilters={advancedFilters}
+            filters={filters}
             onFiltersChange={onFiltersChange}
-            selectedCategory={selectedCategory}
-            selectedSubcategory={selectedSubcategory}
-            onCategoryChange={onCategoryChange}
           />
         </div>
 
@@ -73,7 +68,7 @@ export const MobileFiltersBottomSheet: React.FC<
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-primary border-t border-muted shadow-lg">
           <div className="flex gap-3">
             <Button
-              onClick={onClearAll}
+              onClick={handleClearAll}
               variant="secondary"
               size={mobileSecondaryButtonSize}
               className="flex-1"
@@ -90,9 +85,9 @@ export const MobileFiltersBottomSheet: React.FC<
               Apply Filters
             </Button>
           </div>
-          {filterCount > 0 && (
+          {hasFilters && (
             <p className="text-center text-xs text-secondary mt-2">
-              {filterCount} filter{filterCount === 1 ? "" : "s"} active
+              Filters active
             </p>
           )}
         </div>

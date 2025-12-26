@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { Icon } from "../ui/Icon/Icon";
 import { FormSelect } from "../ui";
 import { FORMATION_OPTIONS, PLAY_TYPE_OPTIONS } from "../../types/play";
 import { QuickFilterPresets } from "./QuickFilterPresets";
 import type { FilterPreset } from "./filterPresets";
+import { presetToFilters } from "./filterPresets";
 import { BottomSheet } from "../BottomSheet";
 import { useIsMobile } from "../../hooks/useBreakpoint";
 import {
@@ -12,12 +13,16 @@ import {
   storageKeys,
   writeLocalString,
 } from "../../utils/storage";
+import type { PlaybookFilters } from "../../types/filters";
+import { EMPTY_FILTERS, hasActiveFilters } from "../../types/filters";
 
-interface ActiveFilter {
+/**
+ * Display chip for an active filter (derived from PlaybookFilters)
+ * Used only for rendering - not for data storage
+ */
+interface FilterChip {
   id: string;
   field: string;
-  operator: "equals" | "contains" | "in";
-  value: string | string[];
   label: string;
 }
 
@@ -34,15 +39,15 @@ interface FilterField {
 }
 
 interface AdvancedFiltersProps {
-  onFiltersChange: (filters: ActiveFilter[]) => void;
-  activeFilters: ActiveFilter[];
-  selectedCategory?: string;
-  selectedSubcategory?: string;
-  onCategoryChange?: (category?: string, subcategory?: string) => void;
+  /** Current unified filter state */
+  filters: PlaybookFilters;
+  /** Callback when filters change */
+  onFiltersChange: (filters: PlaybookFilters) => void;
 }
 
 const FILTER_FIELDS: FilterField[] = [
-  { value: "name", label: "Name", type: "text" },
+  // ============ CORE IDENTIFICATION ============
+  { value: "name", label: "Play Name", type: "text" },
   {
     value: "formation",
     label: "Formation",
@@ -55,74 +60,183 @@ const FILTER_FIELDS: FilterField[] = [
     type: "select",
     options: PLAY_TYPE_OPTIONS.map((p) => ({ value: p.value, label: p.label })),
   },
-  { value: "description", label: "Description", type: "text" },
   {
-    value: "category",
-    label: "Category",
+    value: "playFamily",
+    label: "Play Family",
     type: "select",
     options: [
-      { value: "run", label: "Run" },
-      { value: "pass", label: "Pass" },
+      { value: "inside_zone", label: "Inside Zone" },
+      { value: "outside_zone", label: "Outside Zone" },
+      { value: "power", label: "Power" },
+      { value: "counter", label: "Counter" },
+      { value: "trap", label: "Trap" },
+      { value: "draw", label: "Draw" },
+      { value: "screen", label: "Screen" },
+      { value: "sweep", label: "Sweep" },
+      { value: "quick_game", label: "Quick Game" },
+      { value: "drop_back", label: "Drop Back" },
+      { value: "play_action", label: "Play Action" },
       { value: "rpo", label: "RPO" },
-      { value: "play-action", label: "Play Action" },
-      { value: "special", label: "Special" },
+      { value: "boot", label: "Boot/Rollout" },
+      { value: "sprint_out", label: "Sprint Out" },
+    ],
+  },
+  { value: "description", label: "Description / Notes", type: "text" },
+
+  // ============ PERSONNEL & ALIGNMENT ============
+  {
+    value: "personnel",
+    label: "Personnel Grouping",
+    type: "select",
+    options: [
+      { value: "00", label: "00 (Empty)" },
+      { value: "10", label: "10 (1 RB, 0 TE)" },
+      { value: "11", label: "11 (1 RB, 1 TE)" },
+      { value: "12", label: "12 (1 RB, 2 TE)" },
+      { value: "13", label: "13 (1 RB, 3 TE)" },
+      { value: "20", label: "20 (2 RB, 0 TE)" },
+      { value: "21", label: "21 (2 RB, 1 TE)" },
+      { value: "22", label: "22 (2 RB, 2 TE)" },
+      { value: "23", label: "23 (2 RB, 3 TE / Goal Line)" },
     ],
   },
   {
-    value: "complexity",
-    label: "Complexity",
+    value: "prefHash",
+    label: "Hash Preference",
     type: "select",
     options: [
-      { value: "1", label: "Basic" },
-      { value: "2", label: "Intermediate" },
-      { value: "3", label: "Advanced" },
+      { value: "left", label: "Left Hash" },
+      { value: "middle", label: "Middle" },
+      { value: "right", label: "Right Hash" },
+      { value: "any", label: "Any Hash" },
     ],
   },
+
+  // ============ DOWN & DISTANCE (Billick Methodology) ============
   {
     value: "down",
-    label: "Down",
+    label: "Preferred Down",
     type: "select",
     options: [
       { value: "1", label: "1st Down" },
       { value: "2", label: "2nd Down" },
       { value: "3", label: "3rd Down" },
       { value: "4", label: "4th Down" },
+      { value: "1-2", label: "Early Downs (1st & 2nd)" },
     ],
   },
   {
     value: "distance",
-    label: "Distance",
+    label: "Distance Bucket",
     type: "select",
     options: [
-      { value: "short", label: "Short (1-3)" },
-      { value: "medium", label: "Medium (4-7)" },
-      { value: "long", label: "Long (8+)" },
+      { value: "short", label: "Short (1-3 yds)" },
+      { value: "medium", label: "Medium (4-6 yds)" },
+      { value: "long", label: "Long (7+ yds)" },
+      { value: "goal_to_go", label: "Goal to Go" },
     ],
   },
   {
-    value: "fieldPosition",
-    label: "Field Position",
+    value: "downDistanceBucket",
+    label: "Down & Distance",
     type: "select",
     options: [
-      { value: "redzone", label: "Red Zone" },
-      { value: "midfield", label: "Midfield" },
-      { value: "goalline", label: "Goal Line" },
+      { value: "1st_normal", label: "1st & 10" },
+      { value: "2nd_short", label: "2nd & Short (1-3)" },
+      { value: "2nd_medium", label: "2nd & Medium (4-6)" },
+      { value: "2nd_long", label: "2nd & Long (7+)" },
+      { value: "3rd_short", label: "3rd & Short (1-3)" },
+      { value: "3rd_medium", label: "3rd & Medium (4-6)" },
+      { value: "3rd_long", label: "3rd & Long (7+)" },
+      { value: "4th_short", label: "4th & Short" },
+      { value: "goal_to_go", label: "Goal to Go" },
     ],
   },
-  { value: "personnel", label: "Personnel", type: "text" },
-  { value: "tags", label: "Tags", type: "text" },
-  { value: "successRate", label: "Success Rate", type: "number" },
-  { value: "yardsPerPlay", label: "Yards/Play", type: "number" },
-  { value: "timesUsed", label: "Times Used", type: "number" },
-  { value: "lastUsed", label: "Last Used", type: "date" },
-  { value: "created_at", label: "Created", type: "date" },
-  { value: "updated_at", label: "Updated", type: "date" },
-];
 
-const OPERATORS = [
-  { id: "equals", label: "equals", types: ["select", "number"] },
-  { id: "contains", label: "contains", types: ["text"] },
-  { id: "in", label: "is one of", types: ["multi-select"] },
+  // ============ FIELD POSITION (Game Planning) ============
+  {
+    value: "fieldPosition",
+    label: "Field Zone",
+    type: "select",
+    options: [
+      { value: "backed_up", label: "Backed Up (Own 1-10)" },
+      { value: "own_territory", label: "Own Territory (Own 11-49)" },
+      { value: "plus_territory", label: "Plus Territory (Opp 40-21)" },
+      { value: "redzone", label: "Red Zone (Opp 20-6)" },
+      { value: "goalline", label: "Goal Line (Opp 5-1)" },
+    ],
+  },
+  {
+    value: "situation",
+    label: "Game Situation",
+    type: "select",
+    options: [
+      { value: "2-minute", label: "2-Minute Drill" },
+      { value: "4-minute", label: "4-Minute / Ball Control" },
+      { value: "coming_out", label: "Coming Out" },
+      { value: "must_have", label: "Must Have" },
+      { value: "openers", label: "Openers / Script" },
+    ],
+  },
+
+  // ============ DEFENSIVE READS ============
+  {
+    value: "prefCov",
+    label: "Coverage Preference",
+    type: "select",
+    options: [
+      { value: "man", label: "vs Man Coverage" },
+      { value: "zone", label: "vs Zone Coverage" },
+      { value: "cover2", label: "vs Cover 2" },
+      { value: "cover3", label: "vs Cover 3" },
+      { value: "cover4", label: "vs Cover 4 / Quarters" },
+      { value: "press", label: "vs Press" },
+    ],
+  },
+  {
+    value: "prefFront",
+    label: "Front Preference",
+    type: "select",
+    options: [
+      { value: "even", label: "vs Even Front (4-3, 4-2-5)" },
+      { value: "odd", label: "vs Odd Front (3-4, 3-3-5)" },
+      { value: "bear", label: "vs Bear / Goal Line" },
+    ],
+  },
+
+  // ============ TAGS & CATEGORIZATION ============
+  { value: "tags", label: "Tags / Flags", type: "text" },
+  {
+    value: "category",
+    label: "Smart Category",
+    type: "select",
+    options: [
+      { value: "run", label: "Run" },
+      { value: "pass", label: "Pass" },
+      { value: "rpo", label: "RPO" },
+      { value: "play-action", label: "Play Action" },
+      { value: "screen", label: "Screen" },
+      { value: "special", label: "Special" },
+    ],
+  },
+  {
+    value: "complexity",
+    label: "Install Complexity",
+    type: "select",
+    options: [
+      { value: "1", label: "Basic (Week 1)" },
+      { value: "2", label: "Intermediate (Week 2-3)" },
+      { value: "3", label: "Advanced (Week 4+)" },
+    ],
+  },
+
+  // ============ ANALYTICS & PERFORMANCE ============
+  { value: "successRate", label: "Success Rate (%)", type: "number" },
+  { value: "yardsPerPlay", label: "Yards Per Play", type: "number" },
+  { value: "timesUsed", label: "Times Called", type: "number" },
+  { value: "lastUsed", label: "Last Used", type: "date" },
+  { value: "created_at", label: "Date Created", type: "date" },
+  { value: "updated_at", label: "Last Updated", type: "date" },
 ];
 
 type NewFilterState = {
@@ -131,21 +245,152 @@ type NewFilterState = {
   value: string;
 };
 
-function buildFilterLabel(
-  fieldLabel: string,
-  operatorId: string,
+/**
+ * Derive displayable filter chips from unified PlaybookFilters
+ * These are for UI rendering only - the source of truth is PlaybookFilters
+ */
+function getFilterChips(filters: PlaybookFilters): FilterChip[] {
+  const chips: FilterChip[] = [];
+
+  if (filters.playType) {
+    chips.push({
+      id: "playType",
+      field: "playType",
+      label: `Type: ${filters.playType}`,
+    });
+  }
+
+  if (filters.personnel) {
+    chips.push({
+      id: "personnel",
+      field: "personnel",
+      label: `Personnel: ${filters.personnel}`,
+    });
+  }
+
+  if (filters.situation) {
+    chips.push({
+      id: "situation",
+      field: "situation",
+      label: `Situation: ${filters.situation}`,
+    });
+  }
+
+  if (filters.fieldPosition) {
+    chips.push({
+      id: "fieldPosition",
+      field: "fieldPosition",
+      label: `Field: ${filters.fieldPosition}`,
+    });
+  }
+
+  if (filters.down) {
+    chips.push({
+      id: "down",
+      field: "down",
+      label: `Down: ${filters.down}`,
+    });
+  }
+
+  if (filters.distance) {
+    chips.push({
+      id: "distance",
+      field: "distance",
+      label: `Distance: ${filters.distance}`,
+    });
+  }
+
+  if (filters.tags.length > 0) {
+    chips.push({
+      id: "tags",
+      field: "tags",
+      label: `Tags: ${filters.tags.join(", ")}`,
+    });
+  }
+
+  return chips;
+}
+
+/**
+ * Remove a specific filter field from PlaybookFilters
+ */
+function removeFilterField(
+  filters: PlaybookFilters,
+  field: string
+): PlaybookFilters {
+  const updated = { ...filters };
+  switch (field) {
+    case "playType":
+      updated.playType = null;
+      break;
+    case "personnel":
+      updated.personnel = null;
+      break;
+    case "situation":
+      updated.situation = null;
+      break;
+    case "fieldPosition":
+      updated.fieldPosition = null;
+      break;
+    case "down":
+      updated.down = null;
+      break;
+    case "distance":
+      updated.distance = null;
+      break;
+    case "tags":
+      updated.tags = [];
+      break;
+  }
+  return updated;
+}
+
+/**
+ * Add a filter value to PlaybookFilters
+ */
+function addFilterField(
+  filters: PlaybookFilters,
+  field: string,
   value: string
-) {
-  const operatorLabel = OPERATORS.find((o) => o.id === operatorId)?.label;
-  return `${fieldLabel} ${operatorLabel} "${value}"`;
+): PlaybookFilters {
+  const updated = { ...filters };
+  switch (field) {
+    case "playType":
+    case "category":
+      updated.playType = value;
+      break;
+    case "personnel":
+      updated.personnel = value;
+      break;
+    case "situation":
+      updated.situation = value;
+      break;
+    case "fieldPosition":
+      updated.fieldPosition = value;
+      break;
+    case "down":
+      updated.down = value;
+      break;
+    case "distance":
+      updated.distance = value;
+      break;
+    case "tags":
+      // Append to existing tags
+      updated.tags = [...updated.tags, value];
+      break;
+    case "name":
+    case "formation":
+    case "description":
+      // Text search fields append to search
+      updated.search = value;
+      break;
+  }
+  return updated;
 }
 
 function useAdvancedFiltersController({
+  filters,
   onFiltersChange,
-  activeFilters,
-  selectedCategory,
-  selectedSubcategory,
-  onCategoryChange,
 }: AdvancedFiltersProps) {
   const [showAddFilter, setShowAddFilter] = useState(false);
   // Advanced filters collapsed by default, load from localStorage for user preference
@@ -153,21 +398,29 @@ function useAdvancedFiltersController({
     const saved = readLocalString(storageKeys.playbook.advancedFiltersExpanded);
     return saved === "true";
   });
-  const [activePresetId, setActivePresetId] = useState<string>(() => {
-    if (selectedCategory === "favorites") return "favorites";
-    if (selectedCategory === "most-used") return "most-used";
-    return "all";
-  });
+
+  // Derive active preset from current filters
+  const activePresetId = useMemo(() => {
+    if (filters.favoritesOnly) return "favorites";
+    if (filters.mostUsedOnly) return "most-used";
+    if (!hasActiveFilters(filters)) return "all";
+    // For other filters, no preset matches
+    return "";
+  }, [filters]);
+
   const [newFilter, setNewFilter] = useState<NewFilterState>({
     field: "",
     operator: "equals",
     value: "",
   });
 
+  // Derive filter chips from unified filters
+  const filterChips = useMemo(() => getFilterChips(filters), [filters]);
+
   // 🚀 PERFORMANCE: Debounce filter changes to prevent lag during typing (150ms)
   const debouncedFilterChange = useDebouncedCallback(
-    (filters: ActiveFilter[]) => {
-      onFiltersChange(filters);
+    (newFilters: PlaybookFilters) => {
+      onFiltersChange(newFilters);
     },
     150
   );
@@ -175,50 +428,8 @@ function useAdvancedFiltersController({
   const selectedField = FILTER_FIELDS.find((f) => f.value === newFilter.field);
 
   const handlePresetSelect = (preset: FilterPreset) => {
-    setActivePresetId(preset.id);
-
-    // Favorites / Most Used are implemented via PlayGrid's category pipeline.
-    if (preset.id === "favorites" || preset.id === "most-used") {
-      onCategoryChange?.(preset.id, undefined);
-      onFiltersChange([]);
-      return;
-    }
-
-    // "All Plays" preset - clear category + advanced filters
-    if (preset.filters.length === 0) {
-      if (selectedCategory || selectedSubcategory) {
-        onCategoryChange?.(undefined, undefined);
-      }
-
-      onFiltersChange([]);
-      return;
-    }
-
-    // Any other preset should clear the category filters
-    if (selectedCategory || selectedSubcategory) {
-      onCategoryChange?.(undefined, undefined);
-    }
-
-    // Convert preset filters to ActiveFilter format
-    const newFilters: ActiveFilter[] = preset.filters.map((pf) => {
-      const field = FILTER_FIELDS.find((f) => f.value === pf.field);
-      const displayValue = Array.isArray(pf.value)
-        ? pf.value.join(", ")
-        : pf.value;
-
-      return {
-        id: `${pf.field}-${Date.now()}`,
-        field: pf.field,
-        operator: pf.operator,
-        value: pf.value,
-        label: buildFilterLabel(
-          field?.label || pf.field,
-          pf.operator,
-          displayValue
-        ),
-      };
-    });
-
+    // Use presetToFilters for unified conversion
+    const newFilters = presetToFilters(preset);
     onFiltersChange(newFilters);
   };
 
@@ -232,28 +443,29 @@ function useAdvancedFiltersController({
     const field = FILTER_FIELDS.find((f) => f.value === newFilter.field);
     if (!field) return;
 
-    const filter: ActiveFilter = {
-      id: Date.now().toString(),
-      field: newFilter.field,
-      operator: newFilter.operator,
-      value: newFilter.value,
-      label: buildFilterLabel(field.label, newFilter.operator, newFilter.value),
-    };
+    // Add to unified filters
+    const updatedFilters = addFilterField(
+      filters,
+      newFilter.field,
+      newFilter.value
+    );
 
     // Use debounced version for smooth typing experience
-    debouncedFilterChange([...activeFilters, filter]);
+    debouncedFilterChange(updatedFilters);
     resetNewFilter();
     setShowAddFilter(false);
   };
 
-  const removeFilter = (filterId: string) => {
+  const removeFilter = (chipId: string) => {
+    // chipId is the field name (e.g., "playType", "personnel")
+    const updatedFilters = removeFilterField(filters, chipId);
     // Instant removal (no need to debounce deletions)
-    onFiltersChange(activeFilters.filter((f) => f.id !== filterId));
+    onFiltersChange(updatedFilters);
   };
 
   const clearAllFilters = () => {
-    // Instant clear (no need to debounce)
-    onFiltersChange([]);
+    // Instant clear - reset to empty
+    onFiltersChange({ ...EMPTY_FILTERS });
   };
 
   const startAddFilter = () => setShowAddFilter(true);
@@ -297,6 +509,7 @@ function useAdvancedFiltersController({
     addFilter,
     removeFilter,
     clearAllFilters,
+    filterChips,
   };
 }
 
@@ -327,24 +540,24 @@ function MobileFiltersTriggerButton({
 }
 
 function MobileActiveFilterChips({
-  activeFilters,
+  filterChips,
   onRemove,
 }: {
-  activeFilters: ActiveFilter[];
+  filterChips: FilterChip[];
   onRemove: (id: string) => void;
 }) {
-  if (activeFilters.length === 0) return null;
+  if (filterChips.length === 0) return null;
 
   return (
     <div className="mt-3 flex flex-wrap gap-2">
-      {activeFilters.map((filter) => (
+      {filterChips.map((chip) => (
         <div
-          key={filter.id}
+          key={chip.id}
           className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary text-secondary text-xs rounded-full border border-muted"
         >
-          <span className="truncate max-w-36">{filter.label}</span>
+          <span className="truncate max-w-36">{chip.label}</span>
           <button
-            onClick={() => onRemove(filter.id)}
+            onClick={() => onRemove(chip.id)}
             className="text-muted hover:text-secondary rounded-full p-0.5 active:scale-90 transition-transform"
           >
             <Icon name="close" className="h-3 w-3" />
@@ -390,21 +603,21 @@ function MobileSheetHeader({
 }
 
 function MobileSheetActiveFilters({
-  activeFilters,
+  filterChips,
   onClearAll,
   onRemove,
 }: {
-  activeFilters: ActiveFilter[];
+  filterChips: FilterChip[];
   onClearAll: () => void;
   onRemove: (id: string) => void;
 }) {
-  if (activeFilters.length === 0) return null;
+  if (filterChips.length === 0) return null;
 
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
         <h4 className="text-sm font-medium text-secondary">
-          Active Filters ({activeFilters.length})
+          Active Filters ({filterChips.length})
         </h4>
         <button
           onClick={onClearAll}
@@ -414,16 +627,16 @@ function MobileSheetActiveFilters({
         </button>
       </div>
       <div className="space-y-2">
-        {activeFilters.map((filter) => (
+        {filterChips.map((chip) => (
           <div
-            key={filter.id}
+            key={chip.id}
             className="flex items-center justify-between p-3 bg-secondary rounded-lg border border-muted"
           >
             <span className="text-sm text-primary flex-1 truncate">
-              {filter.label}
+              {chip.label}
             </span>
             <button
-              onClick={() => onRemove(filter.id)}
+              onClick={() => onRemove(chip.id)}
               className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-error-hover active:scale-95 transition-all ml-2"
             >
               <Icon name="close" className="h-4 w-4 text-error" />
@@ -559,7 +772,7 @@ function MobileSheetFooter({
 }
 
 function AdvancedFiltersMobile({
-  activeFilters,
+  filterChips,
   showAdvanced,
   setShowAdvanced,
   activePresetId,
@@ -575,7 +788,7 @@ function AdvancedFiltersMobile({
   removeFilter,
   clearAllFilters,
 }: {
-  activeFilters: ActiveFilter[];
+  filterChips: FilterChip[];
   showAdvanced: boolean;
   setShowAdvanced: (v: boolean) => void;
   activePresetId: string;
@@ -594,12 +807,12 @@ function AdvancedFiltersMobile({
   return (
     <div>
       <MobileFiltersTriggerButton
-        activeFiltersCount={activeFilters.length}
+        activeFiltersCount={filterChips.length}
         onOpen={() => setShowAdvanced(true)}
       />
 
       <MobileActiveFilterChips
-        activeFilters={activeFilters}
+        filterChips={filterChips}
         onRemove={removeFilter}
       />
 
@@ -620,7 +833,7 @@ function AdvancedFiltersMobile({
 
             <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
               <MobileSheetActiveFilters
-                activeFilters={activeFilters}
+                filterChips={filterChips}
                 onClearAll={clearAllFilters}
                 onRemove={removeFilter}
               />
@@ -639,7 +852,7 @@ function AdvancedFiltersMobile({
             </div>
 
             <MobileSheetFooter
-              activeFiltersCount={activeFilters.length}
+              activeFiltersCount={filterChips.length}
               onApply={() => setShowAdvanced(false)}
             />
           </div>
@@ -717,25 +930,25 @@ function DesktopHeader({
 }
 
 function DesktopActiveFilters({
-  activeFilters,
+  filterChips,
   onRemove,
 }: {
-  activeFilters: ActiveFilter[];
+  filterChips: FilterChip[];
   onRemove: (id: string) => void;
 }) {
-  if (activeFilters.length === 0) return null;
+  if (filterChips.length === 0) return null;
 
   return (
     <div className="px-4 pb-3">
       <div className="flex flex-wrap gap-2">
-        {activeFilters.map((filter) => (
+        {filterChips.map((chip) => (
           <div
-            key={filter.id}
+            key={chip.id}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary text-secondary text-xs rounded-full border border-muted hover:border-secondary transition-colors"
           >
-            <span className="truncate max-w-40">{filter.label}</span>
+            <span className="truncate max-w-40">{chip.label}</span>
             <button
-              onClick={() => onRemove(filter.id)}
+              onClick={() => onRemove(chip.id)}
               className="text-muted hover:text-secondary hover:bg-muted rounded-full p-0.5 active:scale-90 transition-all"
             >
               <Icon name="close" className="h-3 w-3" />
@@ -844,25 +1057,19 @@ function DesktopAddFilter({
 }
 
 export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
+  filters,
   onFiltersChange,
-  activeFilters,
-  selectedCategory,
-  selectedSubcategory,
-  onCategoryChange,
 }) => {
   const isMobile = useIsMobile();
   const controller = useAdvancedFiltersController({
+    filters,
     onFiltersChange,
-    activeFilters,
-    selectedCategory,
-    selectedSubcategory,
-    onCategoryChange,
   });
 
   if (isMobile) {
     return (
       <AdvancedFiltersMobile
-        activeFilters={activeFilters}
+        filterChips={controller.filterChips}
         showAdvanced={controller.showAdvanced}
         setShowAdvanced={controller.setShowAdvanced}
         activePresetId={controller.activePresetId}
@@ -890,13 +1097,13 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
 
       <DesktopHeader
         showAdvanced={controller.showAdvanced}
-        activeFiltersCount={activeFilters.length}
+        activeFiltersCount={controller.filterChips.length}
         onToggleExpanded={controller.toggleDesktopExpanded}
         onClearAll={controller.clearAllFilters}
       />
 
       <DesktopActiveFilters
-        activeFilters={activeFilters}
+        filterChips={controller.filterChips}
         onRemove={controller.removeFilter}
       />
 

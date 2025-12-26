@@ -37,50 +37,50 @@ export interface PlaybookStats extends PlayStats, ActivityStats {
 /**
  * Custom hook for consolidated playbook statistics
  *
- * Combines play stats, activity stats, and formation audit into a single
- * memoized object with intelligent dependency tracking to minimize recalculations.
+ * Phase 4 Simplification: Stats now calculate directly from passed plays.
+ * This ensures stats ALWAYS match what the user sees (filtered or unfiltered).
  *
- * @param allPlays - All plays for statistics calculation
+ * IMPORTANT: Pass filtered plays to get filtered stats!
+ *
+ * @param plays - Plays to calculate statistics from (should be filtered plays for accurate display)
  * @param allFormations - All formations for counting
  * @param recentActivities - Recent activity items
  * @param formationAuditPlays - Plays needing formation mapping
- * @returns Consolidated playbook statistics
+ * @returns Consolidated playbook statistics that match displayed plays
  */
 export function usePlaybookStats(
-  allPlays: Play[],
+  plays: Play[],
   allFormations: Formation[],
   recentActivities: PlayActivityItem[],
   formationAuditPlays: Play[]
 ): PlaybookStats {
-  // 🚀 PERFORMANCE: Split stats memoization - plays stats separate from activities
-  // This prevents recalculating play stats when activities update (50-70% fewer recalcs)
+  // Play stats calculated directly from passed plays - no overrides needed
   const playStats: PlayStats = useMemo(() => {
-    const totalPlays = allPlays.length;
-    // Check for diagram_image_url field (the actual field name in database)
-    const playsWithDiagrams = allPlays.filter(
+    const totalPlays = plays.length;
+    const playsWithDiagrams = plays.filter(
       (play) => play.diagram_image_url
     ).length;
 
-    // Count unique formations
+    // Count unique formations from plays
     const uniqueFormations = new Set(
-      allPlays.map((play) => play.formation).filter(Boolean)
+      plays.map((play) => play.formation).filter(Boolean)
     );
     const formationsCount = Math.max(
       allFormations.length,
       uniqueFormations.size
     );
 
-    // Count play types from actual data
-    const passPlays = allPlays.filter(
+    // Count play types directly from plays array
+    const passPlays = plays.filter(
       (play) => play.p_type?.toLowerCase() === "pass"
     ).length;
-    const runPlays = allPlays.filter(
+    const runPlays = plays.filter(
       (play) => play.p_type?.toLowerCase() === "run"
     ).length;
-    const rpoPlays = allPlays.filter(
+    const rpoPlays = plays.filter(
       (play) => play.p_type?.toLowerCase() === "rpo"
     ).length;
-    const playActionPlays = allPlays.filter((play) =>
+    const playActionPlays = plays.filter((play) =>
       play.p_type?.toLowerCase()?.includes("play action")
     ).length;
 
@@ -94,7 +94,7 @@ export function usePlaybookStats(
       rpoPlays,
       playActionPlays,
     };
-  }, [allPlays, allFormations]); // ✅ Only depends on plays
+  }, [plays, allFormations]);
 
   // Activity stats calculated separately
   const activityStats: ActivityStats = useMemo(

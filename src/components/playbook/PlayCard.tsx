@@ -445,6 +445,11 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const isTile = variant === "tile";
   const isCompact = !isTile && density === "compact";
 
+  const contentPaddingClass = (() => {
+    if (isCompact) return isMobile ? "p-5" : "p-3 sm:p-4";
+    return isMobile ? "p-6" : "p-4 sm:p-6";
+  })();
+
   const handleToggleExpand = useCallback(
     (event?: React.MouseEvent) => {
       // Prevent any event bubbling
@@ -493,15 +498,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             : "border-secondary/30 shadow-sm hover:shadow-md hover:border-secondary/60 hover:scale-[1.01] hover:-translate-y-0.5"
         } ${isCompact ? "text-[13px]" : ""} ${isMobile ? "text-base" : ""} md:min-h-0`}
       >
-        <div
-          className={`${(() => {
-            if (isCompact) return isMobile ? "p-5" : "p-3 sm:p-4";
-            return isMobile;
-          })()}
-                ? "p-6"
-                : "p-4 sm:p-6"
-          } overflow-visible`}
-        >
+        <div className={`${contentPaddingClass} overflow-visible`}>
           {!isTile && play.diagram_url && (
             <PlayDiagramTooltip
               play={play}

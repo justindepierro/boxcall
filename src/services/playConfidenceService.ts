@@ -109,7 +109,7 @@ export class PlayConfidenceService {
         situationDefinitions =
           await TeamSituationDefinitionsService.get(teamId);
       } catch (error) {
-        logError(error, "Failed to load team situation definitions");
+        logError("Failed to load team situation definitions", error);
         situationDefinitions = null;
       }
     }
@@ -173,7 +173,7 @@ export class PlayConfidenceService {
         situationDefinitions =
           await TeamSituationDefinitionsService.get(teamId);
       } catch (error) {
-        logError(error, "Failed to load team situation definitions");
+        logError("Failed to load team situation definitions", error);
         situationDefinitions = null;
       }
     }

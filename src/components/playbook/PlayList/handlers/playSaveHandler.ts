@@ -82,7 +82,7 @@ export function createPlaySaveHandler({
   finishSaving,
 }: CreatePlaySaveHandlerProps) {
   return async (playId: string, updates: Partial<Play>) => {
-    debug("[PlayGrid] 🔷 handlePlaySave START:", { playId, updates });
+    debug("[PlayList] 🔷 handlePlaySave START:", { playId, updates });
 
     // Start global save indicator
     startSaving();
@@ -90,14 +90,14 @@ export function createPlaySaveHandler({
     try {
       const dbUpdates = mapPlayUpdatesToDbUpdates(updates);
 
-      debug("[PlayGrid] 🔷 Mapped updates:", {
+      debug("[PlayList] 🔷 Mapped updates:", {
         playId,
         updates,
         dbUpdates,
         "dbUpdates.f_dir": dbUpdates.f_dir,
         "dbUpdates.p_dir": dbUpdates.p_dir,
       });
-      debug("[PlayGrid] 🔷 Calling updatePlay...");
+      debug("[PlayList] 🔷 Calling updatePlay...");
 
       const success = await updatePlay(playId, dbUpdates);
 
@@ -105,13 +105,13 @@ export function createPlaySaveHandler({
         throw new Error("Failed to update play - check logs for details");
       }
 
-      debug("[PlayGrid] 🟢 updatePlay completed successfully");
+      debug("[PlayList] 🟢 updatePlay completed successfully");
       info(`Play ${playId} updated successfully`);
 
       // Finish save with success status
       finishSaving("success");
     } catch (error) {
-      logError("[PlayGrid] 🔴 Failed to save play", error);
+      logError("[PlayList] 🔴 Failed to save play", error);
 
       // Finish save with error status
       finishSaving("error");

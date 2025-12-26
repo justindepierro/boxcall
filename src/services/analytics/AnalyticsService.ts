@@ -109,21 +109,44 @@ class PosthogProvider implements AnalyticsProvider {
   async initialize(): Promise<void> {
     if (this.initialized || !this.apiKey) return;
 
-    // Load PostHog
-    const script = document.createElement("script");
-    script.innerHTML = `
-      !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]);t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
-    `;
-    document.head.appendChild(script);
+    // Load PostHog via external script to avoid requiring CSP 'unsafe-inline'.
+    // PostHog exposes a global `window.posthog` when loaded.
+    const existing = document.querySelector<HTMLScriptElement>(
+      'script[data-boxcall="posthog"]'
+    );
 
-    // Initialize PostHog
-    window.posthog.init(this.apiKey, {
-      api_host: "https://app.posthog.com",
-      loaded: () => {
-        this.initialized = true;
-        debug("📊 PostHog initialized");
+    const finalizeInit = () => {
+      const posthog = (window as any).posthog;
+      if (!posthog?.init) return;
+      posthog.init(this.apiKey, {
+        api_host: "https://app.posthog.com",
+        loaded: () => {
+          this.initialized = true;
+          debug("📊 PostHog initialized");
+        },
+      });
+    };
+
+    if (existing) {
+      existing.addEventListener("load", finalizeInit, { once: true });
+      finalizeInit();
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.defer = true;
+    script.dataset.boxcall = "posthog";
+    script.src = "https://app.posthog.com/static/array.js";
+    script.addEventListener("load", finalizeInit, { once: true });
+    script.addEventListener(
+      "error",
+      () => {
+        debug("📊 PostHog failed to load");
       },
-    });
+      { once: true }
+    );
+    document.head.appendChild(script);
   }
 
   async track(event: AnalyticsEvent): Promise<void> {

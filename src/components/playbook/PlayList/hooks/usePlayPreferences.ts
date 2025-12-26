@@ -1,6 +1,6 @@
 /**
  * usePlayPreferences Hook
- * Manages user preferences for PlayGrid display
+ * Manages user preferences for PlayList display
  */
 
 import { usePreference } from "../../../../hooks/usePreferences";

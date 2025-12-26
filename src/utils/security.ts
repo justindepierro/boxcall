@@ -24,11 +24,13 @@ const CSP_DIRECTIVES = {
   "default-src": ["'self'"],
   "script-src": [
     "'self'",
-    "'unsafe-inline'", // Required for Vite dev and some React patterns
-    "'unsafe-eval'", // Required for development
+    // IMPORTANT: Avoid 'unsafe-inline'/'unsafe-eval' in production.
+    ...(import.meta.env.DEV ? ["'unsafe-inline'", "'unsafe-eval'"] : []),
     "https://cdn.jsdelivr.net", // For CDN scripts
     "https://unpkg.com", // For CDN scripts
-    ...(import.meta.env.DEV ? ["'unsafe-eval'", "'unsafe-inline'"] : []),
+    "https://www.googletagmanager.com", // GA4 loader
+    "https://www.google-analytics.com", // GA4 beacon
+    "https://app.posthog.com", // PostHog loader
   ],
   "style-src": [
     "'self'",
@@ -51,6 +53,8 @@ const CSP_DIRECTIVES = {
     "'self'",
     "https://lvmuiqwihlpnwppdqqfl.supabase.co", // Supabase API
     "wss://lvmuiqwihlpnwppdqqfl.supabase.co", // Supabase realtime
+    "https://www.google-analytics.com", // GA4 beacon
+    "https://app.posthog.com", // PostHog ingest
     ...(import.meta.env.DEV ? ["ws://localhost:*", "http://localhost:*"] : []),
   ],
   "frame-src": ["'none'"],

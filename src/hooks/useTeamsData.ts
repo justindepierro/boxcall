@@ -229,6 +229,7 @@ function useTeamsDataInitialLoadEffect({
   setPlaysPage,
   setHasMorePlays,
   setTotalPlaysCount,
+  setPlayTypeCounts,
   playbookId,
 }: {
   teamId: string | null;
@@ -242,6 +243,14 @@ function useTeamsDataInitialLoadEffect({
   setPlaysPage: React.Dispatch<React.SetStateAction<number>>;
   setHasMorePlays: React.Dispatch<React.SetStateAction<boolean>>;
   setTotalPlaysCount: React.Dispatch<React.SetStateAction<number | null>>;
+  setPlayTypeCounts: React.Dispatch<
+    React.SetStateAction<{
+      pass: number;
+      run: number;
+      rpo: number;
+      playAction: number;
+    } | null>
+  >;
   playbookId: string | null;
 }) {
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -341,7 +350,15 @@ function useTeamsDataInitialLoadEffect({
         // even if the playbook list hasn't populated yet.
         const scopedPlaybookIds = playbookId ? [playbookId] : playbookIds;
 
-        const [formationsResult, playsResult] = await Promise.all([
+        const [
+          formationsResult,
+          playsResult,
+          playsCountResult,
+          passCountResult,
+          runCountResult,
+          rpoCountResult,
+          playActionCountResult,
+        ] = await Promise.all([
           table("formations")
             .select("*")
             .in("playbook_id", scopedPlaybookIds)
@@ -351,6 +368,27 @@ function useTeamsDataInitialLoadEffect({
             .in("playbook_id", scopedPlaybookIds)
             .order("created_at", { ascending: false })
             .limit(PAGE_SIZE),
+          // Get actual total count from database
+          table("plays")
+            .select("id", { count: "exact", head: true })
+            .in("playbook_id", scopedPlaybookIds),
+          // Get play type counts
+          table("plays")
+            .select("id", { count: "exact", head: true })
+            .in("playbook_id", scopedPlaybookIds)
+            .ilike("p_type", "pass"),
+          table("plays")
+            .select("id", { count: "exact", head: true })
+            .in("playbook_id", scopedPlaybookIds)
+            .ilike("p_type", "run"),
+          table("plays")
+            .select("id", { count: "exact", head: true })
+            .in("playbook_id", scopedPlaybookIds)
+            .ilike("p_type", "rpo"),
+          table("plays")
+            .select("id", { count: "exact", head: true })
+            .in("playbook_id", scopedPlaybookIds)
+            .ilike("p_type", "%play action%"),
         ]);
 
         if (!isMounted || controller.signal.aborted) return;
@@ -374,6 +412,7 @@ function useTeamsDataInitialLoadEffect({
               requestedPlaybookId: playbookId,
               scopedPlaybookIds,
               playsCount: playsData.length,
+              totalCount: playsCountResult.count,
               samplePlaybookIds: Array.from(
                 new Set(
                   playsData.slice(0, 10).map((p) => (p as any).playbook_id)
@@ -381,10 +420,23 @@ function useTeamsDataInitialLoadEffect({
               ),
             });
           }
-          debug("[useTeamsData] Loaded", playsData.length, "plays");
+          debug(
+            "[useTeamsData] Loaded",
+            playsData.length,
+            "plays, total:",
+            playsCountResult.count
+          );
           setHasMorePlays(playsData.length === PAGE_SIZE);
           setPlays(playsData);
-          setTotalPlaysCount(playsData.length);
+          // Use actual count from database, fallback to loaded count
+          setTotalPlaysCount(playsCountResult.count ?? playsData.length);
+          // Set play type counts from database
+          setPlayTypeCounts({
+            pass: passCountResult.count ?? 0,
+            run: runCountResult.count ?? 0,
+            rpo: rpoCountResult.count ?? 0,
+            playAction: playActionCountResult.count ?? 0,
+          });
         }
 
         setPlaysPage(0);
@@ -444,6 +496,14 @@ export function useTeamsData(
   const [hasMorePlays, setHasMorePlays] = useState(true);
   const [loadingMorePlays, setLoadingMorePlays] = useState(false);
   const [totalPlaysCount, setTotalPlaysCount] = useState<number | null>(null);
+
+  // Play type counts from database (for accurate stats)
+  const [playTypeCounts, setPlayTypeCounts] = useState<{
+    pass: number;
+    run: number;
+    rpo: number;
+    playAction: number;
+  } | null>(null);
 
   // Use main supabase client (now configured with service role key for demo)
 
@@ -547,6 +607,7 @@ export function useTeamsData(
     setPlaysPage,
     setHasMorePlays,
     setTotalPlaysCount,
+    setPlayTypeCounts,
     playbookId: options?.playbookId ?? null,
   });
 
@@ -627,5 +688,7 @@ export function useTeamsData(
     loadingMorePlays,
     totalPlaysCount,
     loadMorePlays,
+    // Play type counts from database
+    playTypeCounts,
   };
 }

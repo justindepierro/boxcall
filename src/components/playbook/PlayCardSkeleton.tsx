@@ -1,10 +1,10 @@
 /**
- * PlayCardSkeleton - Re-exports PlayGridSkeleton for convenience
+ * PlayCardSkeleton - Re-exports PlayListSkeleton for convenience
  *
- * Note: The existing PlayGridSkeleton component provides Facebook-style
+ * Note: The existing PlayListSkeleton component provides Facebook-style
  * skeleton screens with shimmer animations. This file exists for
  * compatibility and convenience.
  *
- * @see PlayGridSkeleton for the actual implementation
+ * @see PlayListSkeleton for the actual implementation
  */
-export { PlayGridSkeleton as PlayCardSkeleton } from "./PlayGridSkeleton";
+export { PlayListSkeleton as PlayCardSkeleton } from "./PlayListSkeleton";

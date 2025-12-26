@@ -14,7 +14,7 @@ import { useState, useEffect } from "react";
  * const debouncedSearch = useDebouncedValue(searchQuery, 300);
  *
  * // Pass debouncedSearch to expensive operations
- * <PlayGrid searchQuery={debouncedSearch} />
+ * <PlayList searchQuery={debouncedSearch} />
  * ```
  */
 export function useDebouncedValue<T>(value: T, delay = 300): T {

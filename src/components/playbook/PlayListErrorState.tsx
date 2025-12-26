@@ -4,25 +4,25 @@ import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
 
 /**
- * PlayGridErrorState Component
+ * PlayListErrorState Component
  *
- * Error state displayed when PlayGrid fails to load data.
+ * Error state displayed when PlayList fails to load data.
  * Provides user-friendly error message and retry action.
  *
  * @example
  * ```tsx
- * {error && <PlayGridErrorState error={error} onRetry={refreshData} />}
+ * {error && <PlayListErrorState error={error} onRetry={refreshData} />}
  * ```
  */
 
-export interface PlayGridErrorStateProps {
+export interface PlayListErrorStateProps {
   /** Error message or object */
   error: string | Error;
   /** Retry callback function */
   onRetry: () => void;
 }
 
-export const PlayGridErrorState = memo<PlayGridErrorStateProps>(
+export const PlayListErrorState = memo<PlayListErrorStateProps>(
   ({ error, onRetry }) => {
     const errorMessage =
       typeof error === "string" ? error : error.message || "Unknown error";
@@ -103,4 +103,4 @@ export const PlayGridErrorState = memo<PlayGridErrorStateProps>(
   }
 );
 
-PlayGridErrorState.displayName = "PlayGridErrorState";
+PlayListErrorState.displayName = "PlayListErrorState";

@@ -7,63 +7,136 @@ interface QuickFilterPresetsProps {
   onPresetSelect: (preset: FilterPreset) => void;
 }
 
+/**
+ * Compact preset styling - clean pill buttons
+ */
+const PRESET_STYLES: Record<
+  string,
+  { bg: string; text: string; icon: string }
+> = {
+  all: {
+    bg: "bg-neutral-100",
+    text: "text-neutral-700",
+    icon: "text-neutral-500",
+  },
+  favorites: {
+    bg: "bg-amber-50",
+    text: "text-amber-700",
+    icon: "text-amber-500",
+  },
+  "most-used": {
+    bg: "bg-rose-50",
+    text: "text-rose-700",
+    icon: "text-rose-500",
+  },
+  run: {
+    bg: "bg-emerald-50",
+    text: "text-emerald-700",
+    icon: "text-emerald-600",
+  },
+  pass: {
+    bg: "bg-violet-50",
+    text: "text-violet-700",
+    icon: "text-violet-600",
+  },
+  rpo: { bg: "bg-orange-50", text: "text-orange-700", icon: "text-orange-600" },
+  playaction: { bg: "bg-sky-50", text: "text-sky-700", icon: "text-sky-600" },
+  redzone: { bg: "bg-red-50", text: "text-red-700", icon: "text-red-600" },
+  goalline: { bg: "bg-red-50", text: "text-red-700", icon: "text-red-600" },
+  backedup: {
+    bg: "bg-slate-100",
+    text: "text-slate-700",
+    icon: "text-slate-600",
+  },
+  thirddown: {
+    bg: "bg-indigo-50",
+    text: "text-indigo-700",
+    icon: "text-indigo-600",
+  },
+  thirdshort: {
+    bg: "bg-green-50",
+    text: "text-green-700",
+    icon: "text-green-600",
+  },
+  thirdlong: {
+    bg: "bg-amber-50",
+    text: "text-amber-700",
+    icon: "text-amber-600",
+  },
+  shortyardage: {
+    bg: "bg-teal-50",
+    text: "text-teal-700",
+    icon: "text-teal-600",
+  },
+  "2minute": { bg: "bg-pink-50", text: "text-pink-700", icon: "text-pink-600" },
+  "11personnel": {
+    bg: "bg-blue-50",
+    text: "text-blue-700",
+    icon: "text-blue-600",
+  },
+  "12personnel": {
+    bg: "bg-cyan-50",
+    text: "text-cyan-700",
+    icon: "text-cyan-600",
+  },
+  "21personnel": {
+    bg: "bg-purple-50",
+    text: "text-purple-700",
+    icon: "text-purple-600",
+  },
+  "22personnel": {
+    bg: "bg-fuchsia-50",
+    text: "text-fuchsia-700",
+    icon: "text-fuchsia-600",
+  },
+  empty: { bg: "bg-gray-100", text: "text-gray-700", icon: "text-gray-600" },
+};
+
+const DEFAULT_STYLE = {
+  bg: "bg-neutral-100",
+  text: "text-neutral-700",
+  icon: "text-neutral-500",
+};
+
 export const QuickFilterPresets: React.FC<QuickFilterPresetsProps> = ({
   activePresetId = "all",
   onPresetSelect,
 }) => {
   return (
-    <div className="space-y-3 pb-4">
+    <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h4 className="text-base font-semibold text-primary">Quick Filters</h4>
+        <h4 className="text-sm font-semibold text-primary">Quick Filters</h4>
         <span className="text-xs text-muted">
           Tap to filter plays instantly
         </span>
       </div>
 
-      {/* 🎯 ENHANCED: 4x2 grid layout - wider buttons, cleaner responsive behavior */}
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+      {/* Compact 4-column grid with pill buttons */}
+      <div className="grid grid-cols-4 gap-2">
         {QUICK_PRESETS.map((preset) => {
           const isActive = activePresetId === preset.id;
-
-          // Custom styling for each preset type
-          const getPresetStyle = () => {
-            if (isActive) {
-              return "bg-jade-600 hover:bg-jade-700 text-white border-jade-700 shadow-lg scale-105";
-            }
-
-            // Custom colors for different preset types
-            switch (preset.id) {
-              case "favorites":
-                return "bg-amber-100 hover:bg-amber-200 text-amber-900 border-amber-300";
-              case "most-used":
-                return "bg-rose-100 hover:bg-rose-200 text-rose-900 border-rose-300";
-              case "run":
-                return "bg-sky-100 hover:bg-sky-200 text-sky-900 border-sky-300";
-              case "pass":
-                return "bg-purple-100 hover:bg-purple-200 text-purple-900 border-purple-300";
-              case "rpo":
-                return "bg-orange-100 hover:bg-orange-200 text-orange-900 border-orange-300";
-              case "redzone":
-                return "bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border-emerald-300";
-              case "thirddown":
-                return "bg-navy-100 hover:bg-navy-200 text-navy-900 border-navy-300";
-              default:
-                return "bg-surface-elevated hover:bg-surface-overlay text-primary border-border";
-            }
-          };
+          const style = PRESET_STYLES[preset.id] || DEFAULT_STYLE;
 
           return (
             <button
               key={preset.id}
               onClick={() => onPresetSelect(preset)}
-              className={`flex flex-col items-center gap-1.5 px-3 py-2.5 rounded-xl border-2 font-medium transition-all active:scale-95 hover:shadow-md ${getPresetStyle()}`}
+              className={`
+                flex flex-col items-center justify-center gap-1 p-2 rounded-lg
+                text-xs font-medium transition-all active:scale-95
+                ${
+                  isActive
+                    ? "bg-jade-600 text-white shadow-md ring-2 ring-jade-300"
+                    : `${style.bg} ${style.text} hover:shadow-sm`
+                }
+              `}
             >
               <Icon
                 name={preset.icon as any}
-                className="h-5 w-5 flex-shrink-0"
+                className={`h-4 w-4 ${isActive ? "text-white" : style.icon}`}
               />
-              <span className="text-xs font-semibold text-center">
-                {preset.label}
+              <span className="text-center leading-tight line-clamp-1">
+                {preset.label.replace(" Plays", "").replace(" Personnel", "")}
               </span>
             </button>
           );

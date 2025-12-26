@@ -4,16 +4,18 @@
 import React, { useMemo, useEffect, useCallback } from "react";
 import { Icon } from "../ui/Icon/Icon";
 import { PlayCardWrapper } from "./PlayCardWrapper";
-import { PlayGridSkeleton } from "./PlayGridSkeleton";
-import { PlayGridErrorState } from "./PlayGridErrorState";
-import { PlayGridEmptyState } from "./PlayGridEmptyState";
+import { PlayListSkeleton } from "./PlayListSkeleton";
+import { PlayListErrorState } from "./PlayListErrorState";
+import { PlayListEmptyState } from "./PlayListEmptyState";
 import {
-  PLAYGRID_CLEAR_FILTERS_EVENT,
-  PLAYGRID_OPEN_IMPORT_EVENT,
+  PLAYLIST_CLEAR_FILTERS_EVENT,
+  PLAYLIST_OPEN_IMPORT_EVENT,
   dispatchDocumentAppEvent,
 } from "../../utils/appEvents";
 import { Virtuoso } from "react-virtuoso";
 import { usePlaybookData } from "../../hooks/usePlaybookData";
+import { useFilteredPlays } from "../../hooks/useFilteredPlays";
+import { type PlaybookFilters, EMPTY_FILTERS } from "../../types/filters";
 import { useActiveTeamStore } from "../../stores/activeTeamStore";
 import type { Play } from "../../types/play";
 import { Typography } from "../design-system/Typography";
@@ -27,27 +29,14 @@ import {
   usePlayPreferences,
   usePlayExpansion,
   usePlaySelection,
-  usePlayFiltering,
   useCollectedSuggestions,
-} from "./PlayGrid/hooks";
-import { createPlaySaveHandler } from "./PlayGrid/handlers";
-import {
-  PlayGridHeader,
-  NoTeamSelectedState,
-} from "./PlayGrid/components";
+} from "./PlayList/hooks";
+import { createPlaySaveHandler } from "./PlayList/handlers";
+import { PlayListHeader, NoTeamSelectedState } from "./PlayList/components";
 
-interface PlayGridProps {
-  searchQuery: string;
-  advancedFilters?: Array<{
-    id: string;
-    field: string;
-    operator: "equals" | "contains" | "in";
-    value: string | string[];
-    label?: string;
-  }>;
+interface PlayListProps {
+  filters?: PlaybookFilters;
   optimisticPlays?: Play[];
-  selectedCategory?: string;
-  selectedSubcategory?: string;
   playbookId?: string;
   onEdit?: (play: Play) => void;
   onSave?: (playId: string, updates: Partial<Play>) => Promise<void>;
@@ -69,12 +58,9 @@ interface PlayGridProps {
   playTypeSuggestions?: string[];
 }
 
-const PlayGridInner: React.FC<PlayGridProps> = ({
-  searchQuery,
-  advancedFilters = [],
+const PlayListInner: React.FC<PlayListProps> = ({
+  filters = EMPTY_FILTERS,
   optimisticPlays = [],
-  selectedCategory,
-  selectedSubcategory,
   playbookId,
   onEdit,
   onDuplicate,
@@ -143,7 +129,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
   useEffect(() => {
     if (!import.meta.env.DEV) return;
     if (loading) return;
-    debug("[PlayGrid] Data loaded:", {
+    debug("[PlayList] Data loaded:", {
       playbookId: effectivePlaybookId,
       playsCount: plays.length,
       totalCount: totalPlaysCount,
@@ -185,15 +171,13 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
     [updatePlay, startSaving, finishSaving]
   );
 
-  // Filtering - SINGLE SOURCE OF TRUTH: advancedFilters
-  const { filteredPlays, hasFilters } = usePlayFiltering({
-    plays: scopedPlays,
-    searchQuery,
-    advancedFilters,
-    selectedCategory,
-    selectedSubcategory,
-    favoriteIds,
-  });
+  // UNIFIED FILTERING (Phase 3) - Convert legacy props to unified PlaybookFilters
+  // Apply filters using the unified hook
+  const { filteredPlays, hasFilters } = useFilteredPlays(
+    scopedPlays,
+    filters,
+    favoriteIds
+  );
 
   // Use filtered plays directly (drag-and-drop removed with grid view)
   const displayPlays = filteredPlays;
@@ -222,7 +206,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
   // Dev render diagnostics
   if (import.meta.env.DEV) {
-    const selfAny = PlayGrid as unknown as {
+    const selfAny = PlayList as unknown as {
       __renderInfo?: { count: number; start: number };
     };
     if (!selfAny.__renderInfo) {
@@ -234,7 +218,7 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
       const elapsed = performance.now() - start;
       if (elapsed < 8000) {
         warn(
-          `[PlayGrid] High render frequency: ${count} renders in ${elapsed.toFixed(0)}ms`
+          `[PlayList] High render frequency: ${count} renders in ${elapsed.toFixed(0)}ms`
         );
       }
     }
@@ -295,29 +279,35 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 
   return (
     <div className="space-y-3" aria-live="polite">
-      {loading && <PlayGridSkeleton count={8} />}
+      {loading && <PlayListSkeleton count={8} />}
       {error && !loading && (
-        <PlayGridErrorState error={error} onRetry={refreshData} />
+        <PlayListErrorState error={error} onRetry={refreshData} />
       )}
       {showEmpty && !loading && !error && (
-        <PlayGridEmptyState
+        <PlayListEmptyState
           onCreatePlay={onOpenBuilder}
           onImportPlays={() =>
-            dispatchDocumentAppEvent(PLAYGRID_OPEN_IMPORT_EVENT)
+            dispatchDocumentAppEvent(PLAYLIST_OPEN_IMPORT_EVENT)
           }
           hasActiveFilters={!!hasFilters}
           totalPlayCount={plays.length}
           onClearFilters={() =>
-            dispatchDocumentAppEvent(PLAYGRID_CLEAR_FILTERS_EVENT)
+            dispatchDocumentAppEvent(PLAYLIST_CLEAR_FILTERS_EVENT)
           }
         />
       )}
 
       {!loading && !error && !showEmpty && (
-        <PlayGridHeader
+        <PlayListHeader
           displayPlays={displayPlays}
-          selectedCategory={selectedCategory}
-          selectedSubcategory={selectedSubcategory}
+          selectedCategory={
+            filters.favoritesOnly
+              ? "favorites"
+              : filters.mostUsedOnly
+                ? "most-used"
+                : (filters.playType ?? undefined)
+          }
+          selectedSubcategory={undefined}
           enableBulkOperations={enableBulkOperations}
           selectedPlayIds={selectedPlayIds}
           onSelectAll={handleSelectAll}
@@ -399,18 +389,29 @@ const PlayGridInner: React.FC<PlayGridProps> = ({
 };
 
 // Props equality checker
-function arePlayGridPropsEqual(prev: PlayGridProps, next: PlayGridProps) {
-  if (prev.searchQuery !== next.searchQuery) return false;
-  if (prev.selectedCategory !== next.selectedCategory) return false;
-  if (prev.selectedSubcategory !== next.selectedSubcategory) return false;
+function arePlayListPropsEqual(prev: PlayListProps, next: PlayListProps) {
+  // CRITICAL: Check playbookId first - this determines which plays to load!
+  if (prev.playbookId !== next.playbookId) return false;
+
+  // Compare unified filters - shallow compare each property
+  const pf = prev.filters ?? EMPTY_FILTERS;
+  const nf = next.filters ?? EMPTY_FILTERS;
+  if (pf.search !== nf.search) return false;
+  if (pf.playType !== nf.playType) return false;
+  if (pf.personnel !== nf.personnel) return false;
+  if (pf.situation !== nf.situation) return false;
+  if (pf.fieldPosition !== nf.fieldPosition) return false;
+  if (pf.down !== nf.down) return false;
+  if (pf.distance !== nf.distance) return false;
+  if (pf.favoritesOnly !== nf.favoritesOnly) return false;
+  if (pf.mostUsedOnly !== nf.mostUsedOnly) return false;
+  // Deep compare tags array
+  if (pf.tags.length !== nf.tags.length) return false;
+  if (pf.tags.length > 0 && JSON.stringify(pf.tags) !== JSON.stringify(nf.tags))
+    return false;
+
   if (prev.refreshTrigger !== next.refreshTrigger) return false;
   if (prev.enableBulkOperations !== next.enableBulkOperations) return false;
-
-  // Compare advancedFilters by length and reference
-  const paf = prev.advancedFilters ?? [];
-  const naf = next.advancedFilters ?? [];
-  if (paf.length !== naf.length) return false;
-  if (paf !== naf && JSON.stringify(paf) !== JSON.stringify(naf)) return false;
 
   const ps = prev.selectedPlayIds;
   const ns = next.selectedPlayIds;
@@ -423,7 +424,7 @@ function arePlayGridPropsEqual(prev: PlayGridProps, next: PlayGridProps) {
     }
   } else if (ps !== ns) return false;
 
-  const handlerKeys: (keyof PlayGridProps)[] = [
+  const handlerKeys: (keyof PlayListProps)[] = [
     "onEdit",
     "onDuplicate",
     "onAddToPracticeScript",
@@ -439,11 +440,11 @@ function arePlayGridPropsEqual(prev: PlayGridProps, next: PlayGridProps) {
   return true;
 }
 
-export const PlayGrid = React.memo(PlayGridInner, arePlayGridPropsEqual);
+export const PlayList = React.memo(PlayListInner, arePlayListPropsEqual);
 
 if (import.meta.env.DEV) {
   interface WdyrMark {
     whyDidYouRender?: boolean;
   }
-  (PlayGrid as unknown as WdyrMark).whyDidYouRender = false;
+  (PlayList as unknown as WdyrMark).whyDidYouRender = false;
 }

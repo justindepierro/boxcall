@@ -11,6 +11,7 @@ export {
   NotificationBadge,
 } from "./Badge";
 export { ComplexityBadge } from "./ComplexityBadge";
+export { EditableSchemeBadge } from "./EditableSchemeBadge";
 export type { BadgeProps, BadgeVariant } from "./Badge";
 
 // Minimal CSS for premium badge gradient effects

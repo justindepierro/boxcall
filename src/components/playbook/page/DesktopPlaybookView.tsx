@@ -4,7 +4,7 @@ import type { IconName } from "../../ui/Icon/Icon";
 import { Button } from "../../ui/Button/Button";
 import { Typography } from "../../design-system/Typography";
 import { ErrorBoundary } from "../../ui/ErrorBoundary";
-import { PlayGrid } from "../PlayGrid";
+import { PlayList } from "../PlayList";
 import { SelectionModeToggle } from "../SelectionModeToggle";
 import { FormationSyncPanel } from "../../formations/FormationSyncPanel";
 import { Card } from "../../ui/Card";
@@ -47,7 +47,7 @@ const GAME_PLAN_STEPS: ReadonlyArray<{
   },
 ] as const;
 
-const createPlayGridOnSave =
+const createPlayListOnSave =
   (optimisticPlays: Play[], handleSavePlay: (play: Play) => Promise<void>) =>
   async (playId: string, updates: Partial<Play>) => {
     const fullPlay = optimisticPlays.find((p) => p.id === playId);
@@ -57,7 +57,6 @@ const createPlayGridOnSave =
   };
 
 interface PlaybookGridSectionProps {
-  debouncedSearchQuery: string;
   state: PlaybookState;
   activePlaybookId?: string | null;
   optimisticPlays: Play[];
@@ -76,7 +75,6 @@ interface PlaybookGridSectionProps {
 }
 
 const PlaybookGridSection: FC<PlaybookGridSectionProps> = ({
-  debouncedSearchQuery,
   state,
   activePlaybookId,
   optimisticPlays,
@@ -93,7 +91,7 @@ const PlaybookGridSection: FC<PlaybookGridSectionProps> = ({
   handleEnterFullscreen,
   dispatch,
 }) => {
-  const onSave = createPlayGridOnSave(optimisticPlays, handleSavePlay);
+  const onSave = createPlayListOnSave(optimisticPlays, handleSavePlay);
 
   return (
     <ErrorBoundary
@@ -105,12 +103,8 @@ const PlaybookGridSection: FC<PlaybookGridSectionProps> = ({
         </div>
       }
     >
-      <PlayGrid
-        searchQuery={debouncedSearchQuery}
-        filters={state.selectedFilters}
-        advancedFilters={state.advancedFilters}
-        selectedCategory={state.selectedCategory}
-        selectedSubcategory={state.selectedSubcategory}
+      <PlayList
+        filters={state.filters}
         playbookId={activePlaybookId ?? undefined}
         optimisticPlays={optimisticPlays}
         onAddToPracticeScript={handleAddToPracticeScript}
@@ -302,7 +296,6 @@ interface DesktopPlaybookViewProps {
   activePlaybookId?: string | null;
 
   // Data
-  debouncedSearchQuery: string;
   optimisticPlays: Play[];
   formationAudit: {
     plays: Play[];
@@ -325,7 +318,6 @@ interface DesktopPlaybookViewProps {
   handlePlayCountChange: (change: number) => void;
   handleOpenPracticeScriptBuilder: (script?: PracticeScript) => void;
   handleFiltersChange: (filters: any) => void;
-  handleCategoryChange: (category?: string, subcategory?: string) => void;
   handleClearSelection: () => void;
   handleBulkAction: (action: string) => void;
   handleEnterFullscreen: (plays: Play[], playIndex: number) => void;
@@ -345,7 +337,6 @@ interface DesktopPlaybookViewProps {
 export function DesktopPlaybookView({
   state,
   activePlaybookId,
-  debouncedSearchQuery,
   optimisticPlays,
   formationAudit,
   playbookStats,
@@ -362,7 +353,6 @@ export function DesktopPlaybookView({
   handlePlayCountChange,
   handleOpenPracticeScriptBuilder,
   handleFiltersChange,
-  handleCategoryChange,
   handleClearSelection,
   handleBulkAction,
   handleEnterFullscreen,
@@ -414,11 +404,8 @@ export function DesktopPlaybookView({
               {/* Filters - Moved to top */}
               <Card variant="default" className="border-muted">
                 <AdvancedFilters
-                  activeFilters={state.advancedFilters}
+                  filters={state.filters}
                   onFiltersChange={handleFiltersChange}
-                  selectedCategory={state.selectedCategory}
-                  selectedSubcategory={state.selectedSubcategory}
-                  onCategoryChange={handleCategoryChange}
                 />
               </Card>
 
@@ -450,7 +437,6 @@ export function DesktopPlaybookView({
             <Card variant="elevated" size="md" className="border-muted">
               {state.currentView === "playbook" && (
                 <PlaybookGridSection
-                  debouncedSearchQuery={debouncedSearchQuery}
                   state={state}
                   activePlaybookId={activePlaybookId}
                   optimisticPlays={optimisticPlays}

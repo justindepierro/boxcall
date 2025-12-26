@@ -7,13 +7,11 @@ import { Tooltip } from "../../ui/Tooltip/Tooltip";
 
 export interface ActiveFilterChipsProps {
   searchQuery: string;
-  selectedFilters: PlaybookFiltersState["selectedFilters"];
   selectedCategory?: string;
   selectedSubcategory?: string;
   advancedFilters: PlaybookFiltersState["advancedFilters"];
   onChange: (partial: {
     searchQuery?: string;
-    selectedFilters?: PlaybookFiltersState["selectedFilters"];
     selectedCategory?: string;
     selectedSubcategory?: string;
     advancedFilters?: PlaybookFiltersState["advancedFilters"];
@@ -34,7 +32,6 @@ const removeBtnClass =
 
 export const ActiveFilterChips: React.FC<ActiveFilterChipsProps> = ({
   searchQuery,
-  selectedFilters,
   selectedCategory,
   selectedSubcategory,
   advancedFilters,
@@ -56,53 +53,6 @@ export const ActiveFilterChips: React.FC<ActiveFilterChipsProps> = ({
         },
       });
     }
-
-    // Basic named filters
-    (Object.entries(selectedFilters) as [string, unknown][]).forEach(
-      ([key, val]) => {
-        if (val == null) return;
-        if (Array.isArray(val)) {
-          val.forEach((v) => {
-            defs.push({
-              id: `${key}:${v}`,
-              label: `${key}:${v}`,
-              remove: () => {
-                type MutableFilters = PlaybookFiltersState["selectedFilters"];
-                const next: MutableFilters = { ...selectedFilters };
-                const current = Array.isArray(val) ? [...val] : [];
-                const filtered = current.filter((x) => x !== v);
-                if (filtered.length) {
-                  // key is string; ensure assignment only if property exists in type
-                  (next as Record<string, unknown>)[key] = filtered;
-                } else {
-                  delete (next as MutableFilters)[key as keyof MutableFilters];
-                }
-                onChange({ selectedFilters: next });
-                telemetry.enqueue({
-                  type: TelemetryEventTypes.FilterApply,
-                  data: { op: "remove", kind: key, value: v },
-                });
-              },
-            });
-          });
-        } else if (typeof val === "string" && val) {
-          defs.push({
-            id: `${key}:${val}`,
-            label: `${key}:${val}`,
-            remove: () => {
-              type MutableFilters = PlaybookFiltersState["selectedFilters"];
-              const next: MutableFilters = { ...selectedFilters };
-              delete (next as MutableFilters)[key as keyof MutableFilters];
-              onChange({ selectedFilters: next });
-              telemetry.enqueue({
-                type: TelemetryEventTypes.FilterApply,
-                data: { op: "remove", kind: key },
-              });
-            },
-          });
-        }
-      }
-    );
 
     if (selectedCategory) {
       defs.push({
@@ -126,7 +76,7 @@ export const ActiveFilterChips: React.FC<ActiveFilterChipsProps> = ({
     advancedFilters.forEach((af) => {
       defs.push({
         id: `adv:${af.id}`,
-        label: af.label,
+        label: af.label || `${af.field}: ${af.value}`,
         remove: () => {
           const next = advancedFilters.filter((f) => f.id !== af.id);
           onChange({ advancedFilters: next });
@@ -141,7 +91,6 @@ export const ActiveFilterChips: React.FC<ActiveFilterChipsProps> = ({
     return defs;
   }, [
     searchQuery,
-    selectedFilters,
     selectedCategory,
     selectedSubcategory,
     advancedFilters,
@@ -153,7 +102,6 @@ export const ActiveFilterChips: React.FC<ActiveFilterChipsProps> = ({
   const handleClearAll = () => {
     onChange({
       searchQuery: "",
-      selectedFilters: {},
       selectedCategory: undefined,
       selectedSubcategory: undefined,
       advancedFilters: [],

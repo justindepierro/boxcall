@@ -1,11 +1,9 @@
 import React from "react";
 import { BottomSheet } from "../../BottomSheet";
-import { Typography } from "../../design-system/Typography";
-import { Icon, type IconName } from "../../ui/Icon";
+import { Icon } from "../../ui/Icon";
 
 export interface PlaybookStats {
   totalPlays: number;
-  playsWithDiagrams: number;
   formationsCount: number;
   passPlays: number;
   runPlays: number;
@@ -20,93 +18,9 @@ export interface MobileStatsBottomSheetProps {
 }
 
 /**
- * MobileStatsBottomSheet - Swipeable stats dashboard for mobile
- *
- * Features:
- * - Snap points: 40% and 90% for peek and full view
- * - Hero stats card showing key metrics
- * - Play type distribution
- * - Formation count
- * - Diagram coverage
- *
- * @example
- * ```tsx
- * <MobileStatsBottomSheet
- *   isOpen={showStats}
- *   onClose={() => setShowStats(false)}
- *   stats={playbookStats}
- * />
- * ```
+ * Clean, compact mobile stats bottom sheet
+ * Matches the simplified desktop PlaybookStatsDashboard
  */
-
-// Extracted stat card components
-const TotalPlaysCard: React.FC<{
-  totalPlays: number;
-  playsWithDiagrams: number;
-}> = ({ totalPlays, playsWithDiagrams }) => (
-  <div className="bg-gradient-to-br from-brand-jade/10 to-brand-jade/5 rounded-lg p-4 border border-brand-jade/20">
-    <div className="flex items-center justify-between">
-      <div>
-        <Typography
-          variant="body-sm"
-          className="text-secondary font-medium mb-1"
-        >
-          Total Plays
-        </Typography>
-        <Typography variant="display-md" className="text-primary font-bold">
-          {totalPlays}
-        </Typography>
-        <Typography variant="body-xs" className="text-secondary mt-1">
-          {playsWithDiagrams} with diagrams
-        </Typography>
-      </div>
-      <div className="h-12 w-12 rounded-full bg-brand-jade/20 flex items-center justify-center">
-        <Icon name="grid" size="md" className="h-6 w-6 text-brand-jade" />
-      </div>
-    </div>
-  </div>
-);
-
-const DiagramCoverageCard: React.FC<{ percentage: number }> = ({
-  percentage,
-}) => (
-  <div className="bg-secondary rounded-lg p-4">
-    <div className="flex items-center justify-between mb-2">
-      <Typography variant="body-sm" className="text-secondary font-medium">
-        Diagram Coverage
-      </Typography>
-      <Typography variant="body-sm" className="text-brand-jade font-semibold">
-        {percentage}%
-      </Typography>
-    </div>
-    <div className="w-full bg-tertiary rounded-full h-2 overflow-hidden">
-      <div
-        className="bg-brand-jade h-full rounded-full transition-all duration-300"
-        style={{ width: `${percentage}%` }}
-      />
-    </div>
-  </div>
-);
-
-const PlayTypeCard: React.FC<{
-  icon: IconName;
-  label: string;
-  count: number;
-  iconColor: string;
-}> = ({ icon, label, count, iconColor }) => (
-  <div className="bg-secondary rounded-lg p-3">
-    <div className="flex items-center gap-2 mb-1">
-      <Icon name={icon} size="sm" className={`h-4 w-4 ${iconColor}`} />
-      <Typography variant="body-xs" className="text-secondary font-medium">
-        {label}
-      </Typography>
-    </div>
-    <Typography variant="headline-md" className="text-primary font-bold">
-      {count}
-    </Typography>
-  </div>
-);
-
 export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
   isOpen,
   onClose,
@@ -114,26 +28,29 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  const diagramPercentage =
-    stats.totalPlays > 0
-      ? Math.round((stats.playsWithDiagrams / stats.totalPlays) * 100)
-      : 0;
+  const total = stats.totalPlays || 1;
+
+  // All play types - always show in legend
+  const allTypes = [
+    { label: "Pass", count: stats.passPlays, color: "bg-violet-500" },
+    { label: "Run", count: stats.runPlays, color: "bg-emerald-500" },
+    { label: "RPO", count: stats.rpoPlays, color: "bg-orange-500" },
+    { label: "PA", count: stats.playActionPlays, color: "bg-sky-500" },
+  ];
+
+  // Only show non-zero in the bar chart
+  const barTypes = allTypes.filter((d) => d.count > 0);
 
   return (
-    <BottomSheet snapPoints={[0.4, 0.9]} initialSnapPoint={0} zIndex={50}>
-      <div className="p-4 space-y-6">
+    <BottomSheet snapPoints={[0.35, 0.6]} initialSnapPoint={0} zIndex={50}>
+      <div className="p-4 space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <div>
-            <Typography
-              variant="headline-sm"
-              className="text-primary font-semibold"
-            >
+          <div className="flex items-center gap-2">
+            <Icon name="bar-chart" className="h-4 w-4 text-jade-600" />
+            <span className="text-sm font-semibold text-primary">
               Playbook Stats
-            </Typography>
-            <Typography variant="body-xs" className="text-secondary">
-              Your playbook overview
-            </Typography>
+            </span>
           </div>
           <button
             onClick={onClose}
@@ -144,67 +61,62 @@ export const MobileStatsBottomSheet: React.FC<MobileStatsBottomSheetProps> = ({
           </button>
         </div>
 
-        {/* Total Plays Card */}
-        <TotalPlaysCard
-          totalPlays={stats.totalPlays}
-          playsWithDiagrams={stats.playsWithDiagrams}
-        />
-
-        {/* Diagram Coverage */}
-        <DiagramCoverageCard percentage={diagramPercentage} />
-
-        {/* Play Type Distribution */}
-        <div className="space-y-3">
-          <Typography variant="body-sm" className="text-secondary font-medium">
-            Play Types
-          </Typography>
-
-          <div className="grid grid-cols-2 gap-3">
-            <PlayTypeCard
-              icon="arrow-right"
-              label="Pass"
-              count={stats.passPlays}
-              iconColor="text-blue-500"
-            />
-            <PlayTypeCard
-              icon="arrow-up"
-              label="Run"
-              count={stats.runPlays}
-              iconColor="text-success-500"
-            />
-            <PlayTypeCard
-              icon="arrow-right"
-              label="RPO"
-              count={stats.rpoPlays}
-              iconColor="text-warning-500"
-            />
-            <PlayTypeCard
-              icon="arrow-down"
-              label="Play Action"
-              count={stats.playActionPlays}
-              iconColor="text-purple-500"
-            />
+        {/* Primary Stats */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="p-4 bg-jade-50 rounded-xl text-center">
+            <div className="text-3xl font-bold text-jade-700">
+              {stats.totalPlays}
+            </div>
+            <div className="text-xs font-medium text-jade-600 mt-1">Plays</div>
+          </div>
+          <div className="p-4 bg-neutral-100 rounded-xl text-center">
+            <div className="text-3xl font-bold text-neutral-700">
+              {stats.formationsCount}
+            </div>
+            <div className="text-xs font-medium text-neutral-600 mt-1">
+              Formations
+            </div>
           </div>
         </div>
 
-        {/* Formations */}
-        <div className="bg-secondary rounded-lg p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Icon name="grid" size="sm" className="h-5 w-5 text-secondary" />
-              <Typography
-                variant="body-sm"
-                className="text-secondary font-medium"
-              >
-                Formations
-              </Typography>
+        {/* Distribution */}
+        <div className="space-y-2">
+          <span className="text-xs font-medium text-secondary uppercase tracking-wide">
+            Distribution
+          </span>
+
+          {/* Stacked bar - only show types with plays */}
+          {barTypes.length > 0 && (
+            <div className="flex h-3 rounded-full overflow-hidden bg-neutral-200">
+              {barTypes.map((d) => (
+                <div
+                  key={d.label}
+                  className={`${d.color}`}
+                  style={{ width: `${(d.count / total) * 100}%` }}
+                />
+              ))}
             </div>
-            <Typography
-              variant="headline-sm"
-              className="text-primary font-bold"
-            >
-              {stats.formationsCount}
-            </Typography>
+          )}
+
+          {/* Legend - always show all 4 types */}
+          <div className="flex flex-wrap gap-3">
+            {allTypes.map((d) => (
+              <div key={d.label} className="flex items-center gap-1.5">
+                <div
+                  className={`w-2 h-2 rounded-full ${d.color} ${d.count === 0 ? "opacity-30" : ""}`}
+                />
+                <span
+                  className={`text-xs ${d.count === 0 ? "text-muted" : "text-secondary"}`}
+                >
+                  {d.label}{" "}
+                  <span
+                    className={`font-semibold ${d.count === 0 ? "text-muted" : "text-primary"}`}
+                  >
+                    {d.count}
+                  </span>
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>

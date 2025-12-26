@@ -1,10 +1,12 @@
 /**
- * PlayGrid Hooks
- * Custom hooks for PlayGrid component
+ * PlayList Hooks
+ * Custom hooks for PlayList component
  */
 
 export { usePlayPreferences } from "./usePlayPreferences";
 export { usePlayExpansion } from "./usePlayExpansion";
 export { usePlaySelection } from "./usePlaySelection";
-export { usePlayFiltering } from "./usePlayFiltering";
 export { useCollectedSuggestions } from "./useCollectedSuggestions";
+
+// NOTE: usePlayFiltering has been replaced by useFilteredPlays in src/hooks/
+// The old hook is kept for reference but no longer exported

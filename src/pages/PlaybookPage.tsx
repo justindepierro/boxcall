@@ -6,11 +6,13 @@ import { usePlaybook } from "../contexts/PlaybookContext";
 import { useActiveTeamStore } from "../stores/activeTeamStore";
 import { useTeamsData } from "../hooks/useTeamsData";
 import { usePlaybookData } from "../hooks/usePlaybookData";
+import { useFilteredPlays } from "../hooks/useFilteredPlays";
 import { useIsMobileOrTablet } from "../hooks/useBreakpoint";
 import { useMobileButtonProps } from "../hooks/useMobileButtonProps";
 import { useFormationAudit } from "../hooks/useFormationAudit";
 import { useOptimisticPlays } from "../hooks/useOptimisticPlays";
 import { usePlaybookStats } from "../hooks/usePlaybookStats";
+import { useFavoritePlays } from "../hooks/useFavoritePlays";
 import {
   useTeamAssetPrefetch,
   type PrefetchablePlayMedia,
@@ -168,7 +170,6 @@ function PlaybookMainView({
   activeTeamId,
   activePlaybookId,
   teamsDataLoading,
-  debouncedSearchQuery,
   optimisticPlays,
   formationAudit,
   handlers,
@@ -189,7 +190,6 @@ function PlaybookMainView({
   activeTeamId: string | null;
   activePlaybookId: string | null;
   teamsDataLoading: boolean;
-  debouncedSearchQuery: string;
   optimisticPlays: any[];
   formationAudit: any;
   handlers: any;
@@ -211,7 +211,6 @@ function PlaybookMainView({
         activeTeamId={activeTeamId}
         activePlaybookId={activePlaybookId}
         isLoadingPlays={teamsDataLoading}
-        debouncedSearchQuery={debouncedSearchQuery}
         optimisticPlays={optimisticPlays}
         formationAudit={formationAudit}
         setShowFiltersSheet={(show) =>
@@ -240,7 +239,6 @@ function PlaybookMainView({
         handleOpenPracticeScriptBuilder={
           handlers.handleOpenPracticeScriptBuilder
         }
-        handleCategoryChange={handlers.handleCategoryChange}
         dispatch={dispatch}
         mobileButtonSize={mobileButtonSize}
         mobileSecondaryButtonSize={mobileSecondaryButtonSize}
@@ -253,7 +251,6 @@ function PlaybookMainView({
     <DesktopPlaybookView
       state={state}
       activePlaybookId={activePlaybookId}
-      debouncedSearchQuery={debouncedSearchQuery}
       optimisticPlays={optimisticPlays}
       formationAudit={formationAudit}
       playbookStats={playbookStats}
@@ -270,7 +267,6 @@ function PlaybookMainView({
       handlePlayCountChange={handlers.handlePlayCountChange}
       handleOpenPracticeScriptBuilder={handlers.handleOpenPracticeScriptBuilder}
       handleFiltersChange={handlers.handleFiltersChange}
-      handleCategoryChange={handlers.handleCategoryChange}
       handleClearSelection={handlers.handleClearSelection}
       handleBulkAction={handlers.handleBulkAction}
       handleEnterFullscreen={handleEnterFullscreen}
@@ -328,7 +324,6 @@ function PlaybookPageView({
   openModal,
   closeModal,
   teamsDataLoading,
-  debouncedSearchQuery,
   optimisticPlays,
   formationAudit,
   handleSavePlay,
@@ -373,7 +368,6 @@ function PlaybookPageView({
   openModal: (type: Exclude<ModalType, null>, options?: ModalOptions) => void;
   closeModal: () => void;
   teamsDataLoading: boolean;
-  debouncedSearchQuery: string;
   optimisticPlays: any[];
   formationAudit: any;
   handleSavePlay: any;
@@ -468,7 +462,6 @@ function PlaybookPageView({
         activeTeamId={activeTeamId}
         activePlaybookId={activePlaybookId}
         teamsDataLoading={teamsDataLoading}
-        debouncedSearchQuery={debouncedSearchQuery}
         optimisticPlays={optimisticPlays}
         formationAudit={formationAudit}
         handlers={handlers}
@@ -617,20 +610,8 @@ function PlaybookPageOverlays({
         <MobileFiltersBottomSheet
           isOpen={isModalOpen("filtersSheet")}
           onClose={closeModal}
-          advancedFilters={state.advancedFilters}
+          filters={state.filters}
           onFiltersChange={handlers.handleFiltersChange}
-          selectedCategory={state.selectedCategory}
-          selectedSubcategory={state.selectedSubcategory}
-          onCategoryChange={handlers.handleCategoryChange}
-          onClearAll={() => {
-            dispatch({ type: "SET_ADVANCED_FILTERS", filters: [] });
-            dispatch({
-              type: "SET_CATEGORY",
-              category: undefined,
-              subcategory: undefined,
-            });
-            closeModal();
-          }}
           mobileButtonSize={mobileButtonSize}
           mobileSecondaryButtonSize={mobileSecondaryButtonSize}
         />
@@ -710,7 +691,7 @@ const PlaybookPage = () => {
   );
 
   // Get playbooks for this team
-  // NOTE: Don't pass playbookId here - PlayGrid handles playbook-scoped fetching
+  // NOTE: Don't pass playbookId here - PlayList handles playbook-scoped fetching
   // This fetch gets all playbooks/plays for filtering and stats calculation
   const {
     playbooks,
@@ -795,23 +776,35 @@ const PlaybookPage = () => {
 
   // Stats and audit hooks
   const formationAudit = useFormationAudit(activePlaybookId || null);
+  const { favoriteIds } = useFavoritePlays();
 
-  // SINGLE SOURCE OF TRUTH: usePlaybookData provides accurate counts from database
-  const { 
-    plays: playbookPlays, 
-    totalCount: dbTotalCount, 
-    playTypeCounts: dbPlayTypeCounts 
-  } = usePlaybookData(activePlaybookId);
+  // SINGLE SOURCE OF TRUTH: usePlaybookData provides plays scoped to playbook
+  const { plays: playbookPlays } = usePlaybookData(activePlaybookId);
 
-  // Use plays from usePlaybookData for stats (already scoped to activePlaybookId)
-  const scopedPlaysForStats = useMemo(() => {
-    // Merge optimistic plays with database plays for stats
+  // DEBUG: Trace what activePlaybookId is being used
+  debug(
+    "🔍 PlaybookPage activePlaybookId:",
+    activePlaybookId,
+    "playbookPlays.length:",
+    playbookPlays.length
+  );
+
+  // Merge optimistic plays with database plays
+  const allPlaysForPlaybook = useMemo(() => {
     const dbPlayIds = new Set(playbookPlays.map((p) => p.id));
     const uniqueOptimisticPlays = optimisticPlays.filter(
       (p) => !dbPlayIds.has(p.id)
     );
     return [...uniqueOptimisticPlays, ...playbookPlays];
   }, [playbookPlays, optimisticPlays]);
+
+  // PHASE 4: Use unified filters from context and apply filtering
+  // Stats now reflect what user sees (filtered plays)
+  const { filteredPlays: filteredPlaysForStats } = useFilteredPlays(
+    allPlaysForPlaybook,
+    state.filters,
+    favoriteIds
+  );
 
   const scopedFormationsForStats = useMemo(() => {
     if (!activePlaybookId) return allFormations;
@@ -820,13 +813,12 @@ const PlaybookPage = () => {
     ) as any;
   }, [allFormations, activePlaybookId]);
 
+  // Stats now calculated from FILTERED plays - always matches what user sees!
   const playbookStats = usePlaybookStats(
-    scopedPlaysForStats,
+    filteredPlaysForStats,
     scopedFormationsForStats,
     recentActivities,
-    (formationAudit.plays || []) as unknown as Play[],
-    dbTotalCount,
-    dbPlayTypeCounts
+    (formationAudit.plays || []) as unknown as Play[]
   );
 
   // Handlers hook
@@ -860,9 +852,6 @@ const PlaybookPage = () => {
     closeAllModals,
   });
 
-  // Search query (no debouncing for instant search)
-  const debouncedSearchQuery = state.searchQuery;
-
   const existingPlays = useMemo(
     () => buildExistingPlaysForModals(allPlaysForStats, activePlaybookId),
     [allPlaysForStats, activePlaybookId]
@@ -884,7 +873,6 @@ const PlaybookPage = () => {
       openModal={openModal}
       closeModal={closeModal}
       teamsDataLoading={teamsDataLoading}
-      debouncedSearchQuery={debouncedSearchQuery}
       optimisticPlays={optimisticPlays}
       formationAudit={formationAudit}
       handleSavePlay={handleSavePlay}

@@ -2,6 +2,8 @@
 import React, { createContext, useContext, useMemo, useReducer } from "react";
 import type { ServerPlaybookViewPreset } from "../types/playbookViewPreset";
 import { debug } from "../utils/logger";
+import type { PlaybookFilters, ContextAdvancedFilter } from "../types/filters";
+import { EMPTY_FILTERS, filtersToLegacy } from "../types/filters";
 
 export type CoachingView =
   | "playbook"
@@ -11,22 +13,11 @@ export type CoachingView =
 
 export interface PlaybookFiltersState {
   searchQuery: string;
-  selectedFilters: {
-    formation?: string;
-    playType?: string;
-    down?: string;
-    distance?: string;
-    tags?: string[];
-  };
   selectedCategory?: string;
   selectedSubcategory?: string;
-  advancedFilters: Array<{
-    id: string;
-    field: string;
-    operator: "equals" | "contains" | "in";
-    value: string | string[];
-    label: string;
-  }>;
+  advancedFilters: ContextAdvancedFilter[];
+  /** Unified filters object (Phase 3 - replaces above legacy state) */
+  filters: PlaybookFilters;
 }
 
 export interface PlaybookSelectionState {
@@ -73,10 +64,10 @@ export interface PlaybookState
 
 const initialState: PlaybookState = {
   searchQuery: "",
-  selectedFilters: {},
   selectedCategory: undefined,
   selectedSubcategory: undefined,
   advancedFilters: [],
+  filters: EMPTY_FILTERS,
   enableBulkOperations: false,
   selectedPlayIds: new Set(),
   filterPresets: [],
@@ -105,11 +96,8 @@ const initialState: PlaybookState = {
 // ACTION TYPES
 export type PlaybookAction =
   | { type: "SET_SEARCH"; query: string }
-  | {
-      type: "SET_SELECTED_FILTERS";
-      filters: PlaybookFiltersState["selectedFilters"];
-    }
   | { type: "SET_CATEGORY"; category?: string; subcategory?: string }
+  | { type: "SET_FILTERS"; filters: PlaybookFilters }
   | {
       type: "SET_ADVANCED_FILTERS";
       filters: PlaybookFiltersState["advancedFilters"];
@@ -154,13 +142,8 @@ const playbookActionHandlers: Partial<
   SET_SEARCH: (state, action: { query: string }) => ({
     ...state,
     searchQuery: action.query,
-  }),
-  SET_SELECTED_FILTERS: (
-    state,
-    action: { filters: PlaybookState["selectedFilters"] }
-  ) => ({
-    ...state,
-    selectedFilters: action.filters,
+    // Also update unified filters for consistency
+    filters: { ...state.filters, search: action.query },
   }),
   SET_CATEGORY: (
     state,
@@ -172,6 +155,18 @@ const playbookActionHandlers: Partial<
     ...state,
     selectedCategory: action.category,
     selectedSubcategory: action.subcategory,
+  }),
+  SET_FILTERS: (state, action: { filters: PlaybookFilters }) => ({
+    ...state,
+    filters: action.filters,
+    // Keep legacy state in sync for backward compatibility
+    searchQuery: action.filters.search,
+    advancedFilters: filtersToLegacy(action.filters),
+    selectedCategory: action.filters.favoritesOnly
+      ? "favorites"
+      : action.filters.mostUsedOnly
+        ? "most-used"
+        : (action.filters.playType ?? undefined),
   }),
   SET_ADVANCED_FILTERS: (
     state,

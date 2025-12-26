@@ -15,9 +15,10 @@ import { MobileStatsBottomSheet } from "../page/MobileStatsBottomSheet";
 import { FormationSyncPanel } from "../../formations/FormationSyncPanel";
 import { MobileQuickActions } from "../../mobile";
 import { MobilePlayCardSkeletonList } from "../../mobile/ui/MobilePlayCardSkeleton";
-import { PlayGrid } from "../PlayGrid";
+import { PlayList } from "../PlayList";
 import { SelectionModeToggle } from "../SelectionModeToggle";
 import { AdvancedFilters } from "../AdvancedFilters";
+import { EMPTY_FILTERS, hasActiveFilters } from "../../../types/filters";
 import { BottomSheet } from "../../BottomSheet";
 import { PracticeScriptList } from "../PracticeScriptList";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
@@ -41,7 +42,6 @@ interface MobilePlaybookViewProps {
   isLoadingPlays: boolean;
 
   // Data
-  debouncedSearchQuery: string;
   optimisticPlays: Play[];
   formationAudit: {
     plays: Play[];
@@ -69,7 +69,6 @@ interface MobilePlaybookViewProps {
   handleAddToGamePlan: (play: Play) => void;
   handlePlayCountChange: (change: number) => void;
   handleViewChange: (view: CoachingView) => void;
-  handleCategoryChange: (category?: string, subcategory?: string) => void;
   handleOpenPracticeScriptBuilder: (script?: PracticeScript) => void;
   dispatch: any; // TODO: Type properly
 
@@ -91,7 +90,6 @@ export function MobilePlaybookView({
   activeTeamId,
   activePlaybookId,
   isLoadingPlays,
-  debouncedSearchQuery,
   optimisticPlays,
   formationAudit,
   setShowFiltersSheet,
@@ -113,7 +111,6 @@ export function MobilePlaybookView({
   handleAddToGamePlan,
   handlePlayCountChange,
   handleViewChange,
-  handleCategoryChange,
   handleOpenPracticeScriptBuilder,
   dispatch,
   mobileButtonSize,
@@ -194,9 +191,9 @@ export function MobilePlaybookView({
                 >
                   <Icon name="filter" className="mr-1.5 h-4 w-4" />
                   Filter
-                  {state.advancedFilters.length > 0 && (
+                  {hasActiveFilters(state.filters) && (
                     <span className="ml-1.5 rounded-full bg-brand-jade px-1.5 py-0.5 text-center text-xs text-white">
-                      {state.advancedFilters.length}
+                      ●
                     </span>
                   )}
                 </Button>
@@ -244,13 +241,16 @@ export function MobilePlaybookView({
                 <input
                   type="search"
                   placeholder="Search plays, formations..."
-                  value={state.searchQuery}
+                  value={state.filters.search}
                   onChange={(e) =>
-                    dispatch({ type: "SET_SEARCH", query: e.target.value })
+                    dispatch({
+                      type: "SET_FILTERS",
+                      filters: { ...state.filters, search: e.target.value },
+                    })
                   }
                   className="h-11 w-full rounded-xl border-0 bg-neutral-100 pl-11 pr-11 text-base text-primary placeholder-neutral-500 transition-all focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-jade/50"
                 />
-                {state.searchQuery && (
+                {state.filters.search && (
                   <motion.button
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
@@ -262,7 +262,10 @@ export function MobilePlaybookView({
                     }}
                     onClick={() => {
                       triggerHapticFeedback("light");
-                      dispatch({ type: "SET_SEARCH", query: "" });
+                      dispatch({
+                        type: "SET_FILTERS",
+                        filters: { ...state.filters, search: "" },
+                      });
                     }}
                     className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 transform items-center justify-center rounded-full transition-colors hover:bg-neutral-200"
                     aria-label="Clear search"
@@ -318,19 +321,16 @@ export function MobilePlaybookView({
                       </div>
                     }
                   >
-                    {/* Define common PlayGrid props once - single source of truth */}
+                    {/* Define common PlayList props once - single source of truth */}
                     {(() => {
-                      const commonPlayGridProps = {
-                        searchQuery: debouncedSearchQuery,
-                        advancedFilters: state.advancedFilters,
-                        selectedCategory: state.selectedCategory,
-                        selectedSubcategory: state.selectedSubcategory,
+                      const commonPlayListProps = {
+                        filters: state.filters,
                         playbookId: activePlaybookId ?? undefined,
                         optimisticPlays,
                         onAddToPracticeScript: handleAddToPracticeScript,
                         onAddToGamePlan: handleAddToGamePlan,
                         onEdit: handleEditPlay,
-                        // Adapter: PlayGrid expects (playId, updates) but handleSavePlay receives full Play object
+                        // Adapter: PlayList expects (playId, updates) but handleSavePlay receives full Play object
                         onSave: async (
                           playId: string,
                           updates: Partial<Play>
@@ -359,7 +359,7 @@ export function MobilePlaybookView({
                           dispatch({ type: "SET_SELECTION", selection }),
                       };
 
-                      return <PlayGrid {...commonPlayGridProps} />;
+                      return <PlayList {...commonPlayListProps} />;
                     })()}
                   </ErrorBoundary>
                 </PullToRefresh>
@@ -566,13 +566,10 @@ export function MobilePlaybookView({
             {/* Scrollable Filters Content */}
             <div className="flex-1 overflow-y-auto p-6 pb-20">
               <AdvancedFilters
-                activeFilters={state.advancedFilters}
+                filters={state.filters}
                 onFiltersChange={(filters) =>
-                  dispatch({ type: "SET_ADVANCED_FILTERS", filters })
+                  dispatch({ type: "SET_FILTERS", filters })
                 }
-                selectedCategory={state.selectedCategory}
-                selectedSubcategory={state.selectedSubcategory}
-                onCategoryChange={handleCategoryChange}
               />
             </div>
 
@@ -581,11 +578,9 @@ export function MobilePlaybookView({
               <div className="flex gap-3">
                 <Button
                   onClick={() => {
-                    dispatch({ type: "SET_ADVANCED_FILTERS", filters: [] });
                     dispatch({
-                      type: "SET_CATEGORY",
-                      category: undefined,
-                      subcategory: undefined,
+                      type: "SET_FILTERS",
+                      filters: { ...EMPTY_FILTERS },
                     });
                     setShowFiltersSheet(false);
                   }}
@@ -605,11 +600,9 @@ export function MobilePlaybookView({
                   Apply Filters
                 </Button>
               </div>
-              {state.advancedFilters.length > 0 && (
+              {hasActiveFilters(state.filters) && (
                 <p className="text-center text-xs text-secondary mt-2">
-                  {state.advancedFilters.length} filter
-                  {state.advancedFilters.length === 1 ? "" : "s"}
-                  active
+                  Filters active
                 </p>
               )}
             </div>

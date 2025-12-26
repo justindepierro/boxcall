@@ -12,7 +12,7 @@ export function usePlayExpansion(viewMode: "list" | "grid") {
   // Log when expanded play changes (dev tracking)
   useEffect(() => {
     if (!import.meta.env.DEV) return;
-    debug(`[PlayGrid] expandedPlayId changed:`, {
+    debug(`[PlayList] expandedPlayId changed:`, {
       expandedPlayId,
       viewMode,
     });
@@ -20,7 +20,7 @@ export function usePlayExpansion(viewMode: "list" | "grid") {
 
   const handleToggleExpand = useCallback(
     (playId: string) => {
-      debug(`[PlayGrid] handleToggleExpand called:`, {
+      debug(`[PlayList] handleToggleExpand called:`, {
         playId,
         currentExpandedId: expandedPlayId,
         willExpand: expandedPlayId !== playId,

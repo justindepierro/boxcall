@@ -4,25 +4,25 @@ import { Card } from "../ui/Card";
 import { useIsMobile } from "../../hooks/useBreakpoint";
 
 /**
- * PlayGridSkeleton Component
+ * PlayListSkeleton Component
  *
- * Loading skeleton for PlayGrid while data is being fetched.
+ * Loading skeleton for PlayList while data is being fetched.
  * Shows placeholder cards with animated shimmer effect.
  *
  * @example
  * ```tsx
- * {loading && <PlayGridSkeleton count={6} />}
+ * {loading && <PlayListSkeleton count={6} />}
  * ```
  */
 
-export interface PlayGridSkeletonProps {
+export interface PlayListSkeletonProps {
   /** Number of skeleton cards to show */
   count?: number;
   /** Display mode */
   viewMode?: "list" | "grid";
 }
 
-export const PlayGridSkeleton = memo<PlayGridSkeletonProps>(
+export const PlayListSkeleton = memo<PlayListSkeletonProps>(
   ({ count = 6, viewMode = "list" }) => {
     const isMobile = useIsMobile();
 
@@ -86,4 +86,4 @@ export const PlayGridSkeleton = memo<PlayGridSkeletonProps>(
   }
 );
 
-PlayGridSkeleton.displayName = "PlayGridSkeleton";
+PlayListSkeleton.displayName = "PlayListSkeleton";

@@ -30,7 +30,7 @@ interface PullToRefreshProps {
  * @example
  * ```tsx
  * <PullToRefresh onRefresh={async () => await refetchData()}>
- *   <PlayGrid />
+ *   <PlayList />
  * </PullToRefresh>
  * ```
  */

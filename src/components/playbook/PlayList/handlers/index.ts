@@ -1,6 +1,6 @@
 /**
- * PlayGrid Handlers
- * Event handlers for PlayGrid component
+ * PlayList Handlers
+ * Event handlers for PlayList component
  */
 
 export { createPlaySaveHandler } from "./playSaveHandler";

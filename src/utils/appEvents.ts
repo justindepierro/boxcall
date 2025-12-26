@@ -20,8 +20,8 @@ export type PwaInstallAvailableDetail = {
   available: boolean;
 };
 
-export const PLAYGRID_OPEN_IMPORT_EVENT = "playgrid:open-import" as const;
-export const PLAYGRID_CLEAR_FILTERS_EVENT = "playgrid:clear-filters" as const;
+export const PLAYLIST_OPEN_IMPORT_EVENT = "playlist:open-import" as const;
+export const PLAYLIST_CLEAR_FILTERS_EVENT = "playlist:clear-filters" as const;
 
 type KeysWithDetail<M extends Record<string, unknown>> = {
   [K in keyof M]-?: M[K] extends undefined ? never : K;
@@ -39,8 +39,8 @@ export type WindowAppEventDetailMap = {
 };
 
 export type DocumentAppEventDetailMap = {
-  [PLAYGRID_OPEN_IMPORT_EVENT]: undefined;
-  [PLAYGRID_CLEAR_FILTERS_EVENT]: undefined;
+  [PLAYLIST_OPEN_IMPORT_EVENT]: undefined;
+  [PLAYLIST_CLEAR_FILTERS_EVENT]: undefined;
 };
 
 export function dispatchWindowAppEvent(

@@ -18,13 +18,7 @@ import { getDisplayName, getSubtitleText } from "../../../utils/playNameUtils";
 import { MiniDiagram } from "../MiniDiagram";
 import type { CurrentPlayCardProps } from "./types";
 import type { Play } from "../../../types/play";
-import { Badge } from "../../ui/Badge";
-import { Dropdown } from "../../ui/Dropdown";
-import type { BadgeColorScheme } from "../../../types/badge";
-import {
-  BADGE_COLOR_SCHEME_OPTIONS,
-  isBadgeColorScheme,
-} from "../../../types/badge";
+import { EditableSchemeBadge } from "../../ui/Badge";
 import {
   getPlayTypeBadgeScheme,
   useTeamBadgeSchemeOverrides,
@@ -44,8 +38,6 @@ export const CurrentPlayCard: React.FC<CurrentPlayCardProps> = ({
   onNext,
 }) => {
   const { overrides, setPlayTypeScheme } = useTeamBadgeSchemeOverrides();
-  const [openPlayTypeColor, setOpenPlayTypeColor] = React.useState(false);
-  const [savingPlayTypeColor, setSavingPlayTypeColor] = React.useState(false);
 
   if (!currentPlay || !currentPlay.play) {
     return null;
@@ -111,43 +103,16 @@ export const CurrentPlayCard: React.FC<CurrentPlayCardProps> = ({
           {/* Play Type Badge + Personnel - Modern pills */}
           <div className="flex flex-wrap items-center gap-2 mb-4">
             {play.p_type && (
-              <span className="relative inline-flex">
-                <Badge
-                  variant="neutral"
-                  scheme={playTypeScheme}
-                  size="lg"
-                  onClick={() => setOpenPlayTypeColor((v) => !v)}
-                  ariaLabel={`Change ${play.p_type} badge color`}
-                >
-                  {play.p_type}
-                </Badge>
-
-                {openPlayTypeColor && (
-                  <div className="absolute top-full left-0 mt-2 z-50 bg-surface border border-divider rounded-lg p-2 shadow-md">
-                    <Dropdown
-                      label="Color"
-                      value={playTypeScheme}
-                      onChange={async (next) => {
-                        if (!play.p_type) return;
-                        if (!isBadgeColorScheme(next)) return;
-                        setSavingPlayTypeColor(true);
-                        try {
-                          await setPlayTypeScheme(
-                            play.p_type,
-                            next as BadgeColorScheme
-                          );
-                          setOpenPlayTypeColor(false);
-                        } finally {
-                          setSavingPlayTypeColor(false);
-                        }
-                      }}
-                      options={BADGE_COLOR_SCHEME_OPTIONS}
-                      size="sm"
-                      disabled={savingPlayTypeColor}
-                    />
-                  </div>
-                )}
-              </span>
+              <EditableSchemeBadge
+                label={play.p_type}
+                scheme={playTypeScheme}
+                size="lg"
+                onChangeScheme={async (scheme) => {
+                  if (!play.p_type) return;
+                  await setPlayTypeScheme(play.p_type, scheme);
+                }}
+                ariaLabel={`Change ${play.p_type} badge color`}
+              />
             )}
             {play.personnel && (
               <PersonnelBadge personnel={play.personnel} size="md" />

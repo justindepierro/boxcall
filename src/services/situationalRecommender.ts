@@ -773,7 +773,7 @@ export class SituationalRecommender {
     try {
       teamDefs = await TeamSituationDefinitionsService.get(teamId);
     } catch (error) {
-      logError(error, "Failed to load team situation definitions");
+      logError("Failed to load team situation definitions", error);
       teamDefs = null;
     }
 

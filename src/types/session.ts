@@ -331,6 +331,22 @@ export interface CreatePlayExecutionData {
   teamId: string;
   recordedMode: SessionMode;
   executedAt?: Date;
+
+  // === DENORMALIZED ANALYTICS FIELDS (A+ System) ===
+  // These are auto-populated by DB trigger, but can be passed explicitly
+  playType?: string;
+  playFamily?:
+    | "run"
+    | "pass"
+    | "screen"
+    | "play_action"
+    | "rpo"
+    | "trick"
+    | "special_teams"
+    | "other";
+  personnel?: string;
+  playName?: string;
+  opponent?: string;
 }
 
 // ================================================

@@ -223,6 +223,9 @@ export class CSVPlayConverter {
       r_str: this.asString(playData.r_str),
       p_str: this.asString(playData.p_str),
       confidence_base: 70,
+      // Execution stats are required by the Play type.
+      times_called: 0,
+      times_successful: 0,
       created_by: "csv-import",
       created_at: new Date(),
       updated_at: new Date(),

@@ -7,20 +7,20 @@ import { useIsMobile } from "../../hooks/useBreakpoint";
 import { triggerHapticFeedback } from "../../lib/hapticFeedback";
 
 /**
- * PlayGridEmptyState Component
+ * PlayListEmptyState Component
  *
- * Empty state displayed when PlayGrid has no plays to show.
+ * Empty state displayed when PlayList has no plays to show.
  * Provides helpful guidance and actions for users to get started.
  *
  * @example
  * ```tsx
  * {!loading && plays.length === 0 && (
- *   <PlayGridEmptyState onCreatePlay={handleOpenBuilder} />
+ *   <PlayListEmptyState onCreatePlay={handleOpenBuilder} />
  * )}
  * ```
  */
 
-export interface PlayGridEmptyStateProps {
+export interface PlayListEmptyStateProps {
   /** Callback when user clicks "Create First Play" */
   onCreatePlay?: () => void;
   /** Callback when user clicks "Import Plays" */
@@ -44,19 +44,19 @@ const SEARCH_SUGGESTIONS = [
   { label: 'Try "run"', query: "run" },
 ];
 
-type PlayGridEmptyStateHandlers = {
+type PlayListEmptyStateHandlers = {
   handleCreatePlay: () => void;
   handleImportPlays: () => void;
   handleClearFilters: () => void;
   handleSuggestedSearch: (query: string) => void;
 };
 
-const usePlayGridEmptyStateHandlers = (
+const usePlayListEmptyStateHandlers = (
   props: Pick<
-    PlayGridEmptyStateProps,
+    PlayListEmptyStateProps,
     "onCreatePlay" | "onImportPlays" | "onClearFilters" | "onSuggestedSearch"
   >
-): PlayGridEmptyStateHandlers => {
+): PlayListEmptyStateHandlers => {
   const isMobile = useIsMobile();
 
   const handleCreatePlay = () => {
@@ -231,7 +231,7 @@ const FilteredEmptyState: React.FC<{
   onCreatePlay?: () => void;
   onClearFilters?: () => void;
   onSuggestedSearch?: (query: string) => void;
-  handlers: PlayGridEmptyStateHandlers;
+  handlers: PlayListEmptyStateHandlers;
 }> = ({
   totalPlayCount,
   searchQuery,
@@ -383,7 +383,7 @@ const EmptyPlaybookQuickTips: React.FC = () => (
 const FirstTimeEmptyState: React.FC<{
   onCreatePlay?: () => void;
   onImportPlays?: () => void;
-  handlers: PlayGridEmptyStateHandlers;
+  handlers: PlayListEmptyStateHandlers;
 }> = ({ onCreatePlay, onImportPlays, handlers }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
@@ -491,7 +491,7 @@ const FirstTimeEmptyState: React.FC<{
   </motion.div>
 );
 
-export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
+export const PlayListEmptyState = memo<PlayListEmptyStateProps>(
   ({
     onCreatePlay,
     onImportPlays,
@@ -501,7 +501,7 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
     searchQuery,
     onSuggestedSearch,
   }) => {
-    const handlers = usePlayGridEmptyStateHandlers({
+    const handlers = usePlayListEmptyStateHandlers({
       onCreatePlay,
       onImportPlays,
       onClearFilters,
@@ -533,4 +533,4 @@ export const PlayGridEmptyState = memo<PlayGridEmptyStateProps>(
   }
 );
 
-PlayGridEmptyState.displayName = "PlayGridEmptyState";
+PlayListEmptyState.displayName = "PlayListEmptyState";

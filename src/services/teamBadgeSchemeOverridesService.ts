@@ -4,9 +4,28 @@ import type { Json } from "../types/database";
 import type { BadgeColorScheme } from "../types/badge";
 import { isBadgeColorScheme } from "../types/badge";
 
+export const TEAM_BADGE_SCHEME_OVERRIDE_CATEGORIES = [
+  "play_type",
+  "personnel",
+  "formation",
+  "protection",
+  "motion",
+] as const;
+
+export type TeamBadgeSchemeOverrideCategory =
+  (typeof TEAM_BADGE_SCHEME_OVERRIDE_CATEGORIES)[number];
+
 export type TeamBadgeSchemeOverrides = {
   /** Overrides for play type badges (e.g. Pass/Run/RPO). Keys are normalized (trimmed, lowercased). */
   play_type?: Record<string, BadgeColorScheme>;
+  /** Overrides for personnel badges (e.g. 11/12/21). Keys are normalized (trimmed, lowercased). */
+  personnel?: Record<string, BadgeColorScheme>;
+  /** Overrides for formation badges (e.g. Shotgun). Keys are normalized (trimmed, lowercased). */
+  formation?: Record<string, BadgeColorScheme>;
+  /** Overrides for protection badges (e.g. Slide). Keys are normalized (trimmed, lowercased). */
+  protection?: Record<string, BadgeColorScheme>;
+  /** Overrides for motion badges (e.g. Jet). Keys are normalized (trimmed, lowercased). */
+  motion?: Record<string, BadgeColorScheme>;
 };
 
 export type TeamBadgeSchemeOverridesPatch = Partial<TeamBadgeSchemeOverrides>;
@@ -28,13 +47,15 @@ function sanitizeOverrides(
 ): TeamBadgeSchemeOverrides {
   const safe: TeamBadgeSchemeOverrides = {};
 
-  if (overrides?.play_type && typeof overrides.play_type === "object") {
+  for (const category of TEAM_BADGE_SCHEME_OVERRIDE_CATEGORIES) {
+    const raw = (overrides as any)?.[category];
+    if (!raw || typeof raw !== "object") continue;
     const next: Record<string, BadgeColorScheme> = {};
-    for (const [k, v] of Object.entries(overrides.play_type as any)) {
+    for (const [k, v] of Object.entries(raw as any)) {
       if (!k || typeof k !== "string") continue;
       if (isBadgeColorScheme(v)) next[k] = v as BadgeColorScheme;
     }
-    safe.play_type = next;
+    (safe as any)[category] = next;
   }
 
   return safe;
@@ -118,11 +139,23 @@ export class TeamBadgeSchemeOverridesService {
     const nextOverrides: TeamBadgeSchemeOverrides = {
       ...existingOverrides,
       ...(patch ?? {}),
-      play_type: {
-        ...(existingOverrides.play_type ?? {}),
-        ...((patch as any)?.play_type ?? {}),
-      },
     };
+
+    for (const category of TEAM_BADGE_SCHEME_OVERRIDE_CATEGORIES) {
+      const existingCategory = (existingOverrides as any)[category];
+      const patchCategory = (patch as any)?.[category];
+      if (
+        (!existingCategory || typeof existingCategory !== "object") &&
+        (!patchCategory || typeof patchCategory !== "object")
+      ) {
+        continue;
+      }
+
+      (nextOverrides as any)[category] = {
+        ...(existingCategory ?? {}),
+        ...(patchCategory ?? {}),
+      };
+    }
 
     const updatedSettings: TeamSettings = {
       ...existingSettings,

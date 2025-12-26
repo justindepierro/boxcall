@@ -6,13 +6,19 @@ import { ScrollingText } from "../../ui/ScrollingText";
 import { ConfidenceBadge } from "../../ui/ConfidenceBadge";
 import { FavoriteButton } from "../../ui/FavoriteButton";
 import { SelectionCheckbox } from "../../ui/SelectionCheckbox";
+import { EditableSchemeBadge } from "../../ui/Badge";
 import { PersonnelBadge } from "../PersonnelBadge";
 import { WristbandBadge } from "../WristbandBadge";
 import type { Play as PlayType } from "../../../types/play";
 import type { PersonnelConfiguration } from "../../../types/personnel";
+import type { BadgeColorScheme } from "../../../types/badge";
 import { getTileGradient, getTileIcon } from "./helpers";
 import { useIsMobile } from "../../../hooks/useBreakpoint";
 import { debug } from "../../../utils/logger";
+import {
+  getCategoryBadgeScheme,
+  useTeamBadgeSchemeOverrides,
+} from "../../../hooks/useTeamBadgeSchemeOverrides";
 
 type SelectionHandler = (playId: string, selected: boolean) => void;
 
@@ -115,9 +121,8 @@ const BadgeSection: React.FC<{
   <div className="mt-3 flex flex-wrap items-center gap-2">
     {/* Personnel badge - ALWAYS VISIBLE */}
     {optimisticPlay.personnel && (
-      <PersonnelBadge
+      <TilePersonnelBadge
         personnel={optimisticPlay.personnel}
-        size="sm"
         badgeCustomization={personnelConfig?.badgeCustomization ?? undefined}
       />
     )}
@@ -140,6 +145,46 @@ const BadgeSection: React.FC<{
     )}
   </div>
 );
+
+const TilePersonnelBadge: React.FC<{
+  personnel: string;
+  badgeCustomization?: PersonnelConfiguration["badgeCustomization"];
+}> = ({ personnel, badgeCustomization }) => {
+  const { overrides, setCategoryScheme } = useTeamBadgeSchemeOverrides();
+
+  const personnelScheme = React.useMemo(
+    () => getCategoryBadgeScheme(overrides, "personnel", personnel),
+    [overrides, personnel]
+  );
+
+  const onChangePersonnelScheme = React.useMemo(() => {
+    const label = personnel.trim();
+    if (!label) return async () => {};
+    return async (scheme: BadgeColorScheme) => {
+      await setCategoryScheme("personnel", label, scheme);
+    };
+  }, [personnel, setCategoryScheme]);
+
+  if (badgeCustomization) {
+    return (
+      <PersonnelBadge
+        personnel={personnel}
+        size="sm"
+        badgeCustomization={badgeCustomization}
+      />
+    );
+  }
+
+  return (
+    <EditableSchemeBadge
+      label={personnel}
+      scheme={personnelScheme}
+      onChangeScheme={onChangePersonnelScheme}
+      size="sm"
+      ariaLabel={`Change ${personnel} badge color`}
+    />
+  );
+};
 
 export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
   play,

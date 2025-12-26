@@ -9,7 +9,7 @@ import { usePrefetchQueries } from "../../hooks/usePrefetchQueries";
  * and handles variant-specific configuration.
  *
  * This component eliminates the duplication of PlayCard instantiation
- * across PlayGrid's list and grid views.
+ * across PlayList's list view.
  */
 
 interface PlayCardWrapperProps {
@@ -17,7 +17,7 @@ interface PlayCardWrapperProps {
   variant: "list" | "tile";
   index?: number;
 
-  // Common props from PlayGrid
+  // Common props from PlayList
   showOneWordCalls?: boolean;
   onEdit?: (play: Play) => void;
   onSave?: (playId: string, updates: Partial<Play>) => Promise<void>;

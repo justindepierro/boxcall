@@ -274,6 +274,13 @@ export class ExecutionTrackingService {
         team_id: data.teamId,
         recorded_by: getCurrentUserId(),
         recorded_mode: data.recordedMode,
+        // Denormalized analytics fields (A+ System)
+        // These are auto-populated by DB trigger if not provided
+        play_type: data.playType,
+        play_family: data.playFamily,
+        personnel: data.personnel,
+        play_name: data.playName,
+        opponent: data.opponent,
       })
       .select()
       .single();
@@ -315,6 +322,12 @@ export class ExecutionTrackingService {
           team_id: e.teamId,
           recorded_by: userId,
           recorded_mode: e.recordedMode,
+          // Denormalized analytics fields (A+ System)
+          play_type: e.playType,
+          play_family: e.playFamily,
+          personnel: e.personnel,
+          play_name: e.playName,
+          opponent: e.opponent,
         }))
       )
       .select();

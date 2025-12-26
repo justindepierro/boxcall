@@ -181,6 +181,18 @@ export class PlayAnalyticsService {
   } | null> {
     if (!teamId || playIds.length === 0) return null;
 
+    type RateStats = { called: number; successful: number; rate: number };
+    type DownViewRow = {
+      down_distance_bucket: string | null;
+      times_called: number | null;
+      times_successful: number | null;
+    };
+    type ZoneViewRow = {
+      field_zone: string | null;
+      times_called: number | null;
+      times_successful: number | null;
+    };
+
     try {
       const [
         { data: downRows, error: downError },
@@ -199,32 +211,26 @@ export class PlayAnalyticsService {
       if (downError) throw downError;
       if (zoneError) throw zoneError;
 
-      const byDown = (downRows || []).reduce(
-        (acc, row: any) => {
-          const key = row.down_distance_bucket || "Unknown";
-          if (!acc[key]) acc[key] = { called: 0, successful: 0, rate: 0 };
-          acc[key].called += row.times_called || 0;
-          acc[key].successful += row.times_successful || 0;
-          return acc;
-        },
-        {} as Record<
-          string,
-          { called: number; successful: number; rate: number }
-        >
-      );
+      const downData = (downRows ?? []) as DownViewRow[];
+      const zoneData = (zoneRows ?? []) as ZoneViewRow[];
 
-      const byFieldPosition = (zoneRows || []).reduce(
-        (acc, row: any) => {
+      const byDown = downData.reduce<Record<string, RateStats>>((acc, row) => {
+        const key = row.down_distance_bucket || "Unknown";
+        if (!acc[key]) acc[key] = { called: 0, successful: 0, rate: 0 };
+        acc[key].called += row.times_called ?? 0;
+        acc[key].successful += row.times_successful ?? 0;
+        return acc;
+      }, {});
+
+      const byFieldPosition = zoneData.reduce<Record<string, RateStats>>(
+        (acc, row) => {
           const key = row.field_zone || "Unknown";
           if (!acc[key]) acc[key] = { called: 0, successful: 0, rate: 0 };
-          acc[key].called += row.times_called || 0;
-          acc[key].successful += row.times_successful || 0;
+          acc[key].called += row.times_called ?? 0;
+          acc[key].successful += row.times_successful ?? 0;
           return acc;
         },
-        {} as Record<
-          string,
-          { called: number; successful: number; rate: number }
-        >
+        {}
       );
 
       Object.values(byDown).forEach((stats) => {
@@ -803,7 +809,13 @@ export class PlayAnalyticsService {
         >
       );
 
-      Object.values(byPersonnel).forEach((stats) => {
+      (
+        Object.values(byPersonnel) as Array<{
+          called: number;
+          successful: number;
+          rate: number;
+        }>
+      ).forEach((stats) => {
         stats.rate =
           stats.called > 0 ? (stats.successful / stats.called) * 100 : 0;
       });

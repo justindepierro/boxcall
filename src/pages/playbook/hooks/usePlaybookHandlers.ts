@@ -6,6 +6,7 @@ import type {
   PlaybookState,
   CoachingView,
 } from "../../../contexts/PlaybookContext";
+import type { PlaybookFilters } from "../../../types/filters";
 import { PlaysService, PracticeService } from "@services";
 import { exportPlays } from "../../../services/exportService";
 import { useToast } from "../../../hooks/useToast";
@@ -53,18 +54,14 @@ function usePlaybookViewHandlers(params: { dispatch: React.Dispatch<any> }) {
     [dispatch]
   );
 
+  /**
+   * UNIFIED FILTERS: Dispatch SET_FILTERS with PlaybookFilters object
+   * This replaces the legacy SET_ADVANCED_FILTERS + SET_CATEGORY pattern
+   */
   const handleFiltersChange = useCallback(
-    (filters: PlaybookState["advancedFilters"]) => {
+    (filters: PlaybookFilters) => {
       triggerHapticFeedback("selection");
-      dispatch({ type: "SET_ADVANCED_FILTERS", filters });
-    },
-    [dispatch]
-  );
-
-  const handleCategoryChange = useCallback(
-    (category?: PlaybookState["selectedCategory"], subcategory?: string) => {
-      triggerHapticFeedback("selection");
-      dispatch({ type: "SET_CATEGORY", category, subcategory });
+      dispatch({ type: "SET_FILTERS", filters });
     },
     [dispatch]
   );
@@ -77,7 +74,6 @@ function usePlaybookViewHandlers(params: { dispatch: React.Dispatch<any> }) {
     handleViewChange,
     handleTeamTypeChange,
     handleFiltersChange,
-    handleCategoryChange,
     handleClearSelection,
   };
 }

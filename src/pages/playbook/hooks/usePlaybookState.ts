@@ -236,7 +236,7 @@ export function usePlaybookState({
     })();
   }, [allPlaysForStats, dispatch, toast]);
 
-  // Never fall back to teamId here; PlayGrid expects a real playbook id.
+  // Never fall back to teamId here; PlayList expects a real playbook id.
   const activePlaybookId = selectedPlaybookId || teamPlaybooks[0]?.id || "";
 
   return {

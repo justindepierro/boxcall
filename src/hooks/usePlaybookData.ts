@@ -170,9 +170,7 @@ async function fetchPlayTypeCounts(
  * @param playbookId - The playbook to fetch plays for (null = no fetch)
  * @returns PlaybookDataResult with plays, counts, pagination, and actions
  */
-export function usePlaybookData(
-  playbookId: string | null
-): PlaybookDataResult {
+export function usePlaybookData(playbookId: string | null): PlaybookDataResult {
   // Core state
   const [plays, setPlays] = useState<Play[]>([]);
   const [loading, setLoading] = useState(true);
@@ -260,7 +258,8 @@ export function usePlaybookData(
         setLoading(false);
       } catch (err) {
         if (!isMounted) return;
-        const message = err instanceof Error ? err.message : "Failed to fetch plays";
+        const message =
+          err instanceof Error ? err.message : "Failed to fetch plays";
         logError("[usePlaybookData] Error:", message);
         setError(message);
         setLoading(false);
@@ -285,7 +284,11 @@ export function usePlaybookData(
     const to = from + PAGE_SIZE - 1;
 
     try {
-      debug("[usePlaybookData] Loading more plays:", { page: nextPage, from, to });
+      debug("[usePlaybookData] Loading more plays:", {
+        page: nextPage,
+        from,
+        to,
+      });
 
       const { data, error: fetchError } = await table("plays")
         .select(PLAY_SELECT_FIELDS)
@@ -302,7 +305,8 @@ export function usePlaybookData(
       setPage(nextPage);
       setHasMorePlays(mappedPlays.length === PAGE_SIZE);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to load more plays";
+      const message =
+        err instanceof Error ? err.message : "Failed to load more plays";
       warn("[usePlaybookData] Load more error:", message);
     } finally {
       setLoadingMorePlays(false);
@@ -323,8 +327,14 @@ export function usePlaybookData(
         // Convert Play updates to database format
         // Exclude computed/readonly fields that shouldn't be sent to DB
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { created_at, updated_at, created_by, creation_context, ...dbUpdates } = updates as Partial<Play> & { 
-          created_at?: Date; 
+        const {
+          created_at,
+          updated_at,
+          created_by,
+          creation_context,
+          ...dbUpdates
+        } = updates as Partial<Play> & {
+          created_at?: Date;
           updated_at?: Date;
           created_by?: string;
           creation_context?: unknown;
@@ -350,7 +360,8 @@ export function usePlaybookData(
 
         return true;
       } catch (err) {
-        const message = err instanceof Error ? err.message : "Failed to update play";
+        const message =
+          err instanceof Error ? err.message : "Failed to update play";
         logError("[usePlaybookData] Update exception:", message);
         return false;
       }

@@ -1,9 +1,17 @@
--- BoxCall Database Schema - Current State (October 4, 2025)
--- This file represents the current database schema after all migrations
--- Includes: base schema + profiles policy + team roles alignment
--- Generated from: supabase/migrations/20250928012435_apply_complete_schema.sql
--- Plus migrations: 20250928013235_add_profiles_insert_policy.sql
--- Plus migrations: 20250928104149_align_team_roles_and_policies.sql
+-- BoxCall Database Schema (Legacy Snapshot)
+--
+-- IMPORTANT:
+-- This file is an older snapshot (Oct 2025) and is NOT the authoritative
+-- source of truth for the current database.
+--
+-- Source of truth:
+-- - Supabase migrations in supabase/migrations/
+-- - Generated TypeScript types in src/types/database.ts (run: npm run db:types)
+-- - Reference docs in docs/database/ (e.g., COMPLETE_SCHEMA_REFERENCE.md)
+--
+-- This file is retained for historical context and may not include newer
+-- tables such as execution tracking (practice_sessions, game_sessions,
+-- play_executions) introduced after Oct 2025.
 
 -- Enable required extensions
 DROP EXTENSION IF EXISTS "uuid-ossp";

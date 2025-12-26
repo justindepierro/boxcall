@@ -1,5 +1,5 @@
 /**
- * PlayGridHeader Component
+ * PlayListHeader Component
  * Renders the header with play count, bulk selection, and view controls
  */
 
@@ -9,7 +9,7 @@ import { IconButton } from "../../../ui";
 import { Typography } from "../../../design-system/Typography";
 import type { Play } from "../../../../types/play";
 
-interface PlayGridHeaderProps {
+interface PlayListHeaderProps {
   displayPlays: Play[];
   selectedCategory?: string;
   selectedSubcategory?: string;
@@ -24,7 +24,7 @@ interface PlayGridHeaderProps {
   ) => void;
 }
 
-export const PlayGridHeader: React.FC<PlayGridHeaderProps> = ({
+export const PlayListHeader: React.FC<PlayListHeaderProps> = ({
   displayPlays,
   selectedCategory,
   selectedSubcategory,
