@@ -2,8 +2,8 @@
 import React, { createContext, useContext, useMemo, useReducer } from "react";
 import type { ServerPlaybookViewPreset } from "../types/playbookViewPreset";
 import { debug } from "../utils/logger";
-import type { PlaybookFilters, ContextAdvancedFilter } from "../types/filters";
-import { EMPTY_FILTERS, filtersToLegacy } from "../types/filters";
+import type { PlaybookFilters } from "../types/filters";
+import { EMPTY_FILTERS } from "../types/filters";
 
 export type CoachingView =
   | "playbook"
@@ -12,11 +12,7 @@ export type CoachingView =
   | "analytics";
 
 export interface PlaybookFiltersState {
-  searchQuery: string;
-  selectedCategory?: string;
-  selectedSubcategory?: string;
-  advancedFilters: ContextAdvancedFilter[];
-  /** Unified filters object (Phase 3 - replaces above legacy state) */
+  /** Unified filters object */
   filters: PlaybookFilters;
 }
 
@@ -63,10 +59,6 @@ export interface PlaybookState
     PlaybookUIState {}
 
 const initialState: PlaybookState = {
-  searchQuery: "",
-  selectedCategory: undefined,
-  selectedSubcategory: undefined,
-  advancedFilters: [],
   filters: EMPTY_FILTERS,
   enableBulkOperations: false,
   selectedPlayIds: new Set(),
@@ -95,13 +87,7 @@ const initialState: PlaybookState = {
 
 // ACTION TYPES
 export type PlaybookAction =
-  | { type: "SET_SEARCH"; query: string }
-  | { type: "SET_CATEGORY"; category?: string; subcategory?: string }
   | { type: "SET_FILTERS"; filters: PlaybookFilters }
-  | {
-      type: "SET_ADVANCED_FILTERS";
-      filters: PlaybookFiltersState["advancedFilters"];
-    }
   | { type: "TOGGLE_BULK" }
   | { type: "SET_SELECTION"; selection: Set<string> }
   | { type: "TOGGLE_PLAY_SELECTION"; playId: string }
@@ -139,41 +125,9 @@ type PlaybookActionHandler = (
 const playbookActionHandlers: Partial<
   Record<PlaybookAction["type"], PlaybookActionHandler>
 > = {
-  SET_SEARCH: (state, action: { query: string }) => ({
-    ...state,
-    searchQuery: action.query,
-    // Also update unified filters for consistency
-    filters: { ...state.filters, search: action.query },
-  }),
-  SET_CATEGORY: (
-    state,
-    action: {
-      category: PlaybookState["selectedCategory"];
-      subcategory?: PlaybookState["selectedSubcategory"];
-    }
-  ) => ({
-    ...state,
-    selectedCategory: action.category,
-    selectedSubcategory: action.subcategory,
-  }),
   SET_FILTERS: (state, action: { filters: PlaybookFilters }) => ({
     ...state,
     filters: action.filters,
-    // Keep legacy state in sync for backward compatibility
-    searchQuery: action.filters.search,
-    advancedFilters: filtersToLegacy(action.filters),
-    selectedCategory: action.filters.favoritesOnly
-      ? "favorites"
-      : action.filters.mostUsedOnly
-        ? "most-used"
-        : (action.filters.playType ?? undefined),
-  }),
-  SET_ADVANCED_FILTERS: (
-    state,
-    action: { filters: PlaybookState["advancedFilters"] }
-  ) => ({
-    ...state,
-    advancedFilters: action.filters,
   }),
   TOGGLE_BULK: (state) => {
     debug("[PlaybookContext] TOGGLE_BULK:", {
