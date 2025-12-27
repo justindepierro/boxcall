@@ -41,6 +41,7 @@ export type ModalType =
   | "personnelLibrary"
   | "filtersSheet"
   | "statsSheet"
+  | "mergePlaybooks"
   | null;
 
 export interface ModalOptions {

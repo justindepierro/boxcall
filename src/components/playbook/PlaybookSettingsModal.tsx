@@ -51,6 +51,7 @@ interface PlaybookSettingsModalProps {
   onDeletePlaybook?: () => Promise<void>;
   onOpenPersonnel?: () => void;
   onOpenFormationLibrary?: () => void;
+  onOpenMergePlaybooks?: () => void;
 }
 
 // ============================================================================
@@ -231,6 +232,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
   onDeletePlaybook,
   onOpenPersonnel,
   onOpenFormationLibrary,
+  onOpenMergePlaybooks,
 }) => {
   // Calculate suggested defaults from playbook usage
   const suggestedDefaults = useMemo(
@@ -464,6 +466,16 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
               label="Duplicate Playbook"
               description="Create a copy with all plays"
               onClick={handleDuplicate}
+              isMobile={isMobile}
+            />
+          )}
+
+          {onOpenMergePlaybooks && (
+            <QuickActionTile
+              icon="copy"
+              label="Merge Playbooks"
+              description="Combine multiple playbooks into one"
+              onClick={onOpenMergePlaybooks}
               isMobile={isMobile}
             />
           )}

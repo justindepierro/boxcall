@@ -44,10 +44,23 @@ const PracticeScriptBuilder = lazy(() =>
     default: module.PracticeScriptBuilder,
   }))
 );
+const MergePlaybooksModal = lazy(() =>
+  import("../MergePlaybooksModal").then((module) => ({
+    default: module.MergePlaybooksModal,
+  }))
+);
+
+interface Playbook {
+  id: string;
+  name: string;
+  description?: string;
+  play_count: number;
+}
 
 interface PlaybookModalsProps {
   // 🚀 PERFORMANCE: Centralized modal management (replaces 8 boolean props + 8 setters)
   isModalOpen: (modalType: Exclude<ModalType, null>) => boolean;
+  openModal: (modalType: Exclude<ModalType, null>) => void;
   closeModal: () => void;
 
   // Modal data
@@ -72,10 +85,19 @@ interface PlaybookModalsProps {
   handleCreatePlay: (playData: Partial<Play>) => Promise<Play | void>;
   handleSavePlay: (play: Play) => Promise<void>;
   dispatch: any; // TODO: Type properly
+
+  // Merge playbooks
+  teamPlaybooks?: Playbook[];
+  onMergePlaybooks?: (
+    sourcePlaybookIds: string[],
+    newPlaybookName: string,
+    newPlaybookDescription?: string
+  ) => Promise<void>;
 }
 
 export function PlaybookModals({
   isModalOpen,
+  openModal,
   closeModal,
   diagramPlay: _diagramPlay,
   diagramMode: _diagramMode,
@@ -94,6 +116,8 @@ export function PlaybookModals({
   handleCreatePlay,
   handleSavePlay: _handleSavePlay,
   dispatch,
+  teamPlaybooks,
+  onMergePlaybooks,
 }: PlaybookModalsProps) {
   return (
     <>
@@ -134,8 +158,16 @@ export function PlaybookModals({
             plays={existingPlays}
             onOpenPersonnel={() => {
               closeModal();
-              // Note: This requires openModal to be passed or personnel modal to open separately
+              openModal("personnel");
             }}
+            onOpenMergePlaybooks={
+              teamPlaybooks && teamPlaybooks.length >= 2
+                ? () => {
+                    closeModal();
+                    openModal("mergePlaybooks");
+                  }
+                : undefined
+            }
           />
         </Suspense>
       )}
@@ -225,6 +257,18 @@ export function PlaybookModals({
             <div>Post to Team Bulletin Modal Component Here</div>
           </Suspense>
         </Modal>
+      )}
+
+      {/* Merge Playbooks Modal */}
+      {isModalOpen("mergePlaybooks") && teamPlaybooks && onMergePlaybooks && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <MergePlaybooksModal
+            isOpen={isModalOpen("mergePlaybooks")}
+            onClose={() => closeModal()}
+            playbooks={teamPlaybooks}
+            onMerge={onMergePlaybooks}
+          />
+        </Suspense>
       )}
     </>
   );

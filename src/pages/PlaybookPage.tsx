@@ -479,6 +479,7 @@ function PlaybookPageView({
         dispatch={dispatch}
         isMobileOrTablet={isMobileOrTablet}
         isModalOpen={isModalOpen}
+        openModal={openModal}
         closeModal={closeModal}
         handlers={handlers}
         diagramPlay={diagramPlay}
@@ -507,6 +508,8 @@ function PlaybookPageView({
         setShowBulkDeleteConfirm={setShowBulkDeleteConfirm}
         mobileButtonSize={mobileButtonSize}
         mobileSecondaryButtonSize={mobileSecondaryButtonSize}
+        teamPlaybooks={teamPlaybooks}
+        onRefreshData={refreshData}
       />
     </div>
   );
@@ -545,11 +548,15 @@ function PlaybookPageOverlays({
   setShowBulkDeleteConfirm,
   mobileButtonSize,
   mobileSecondaryButtonSize,
+  teamPlaybooks,
+  onRefreshData,
+  openModal,
 }: {
   state: any;
   dispatch: React.Dispatch<any>;
   isMobileOrTablet: boolean;
   isModalOpen: (type: Exclude<ModalType, null>) => boolean;
+  openModal: (type: Exclude<ModalType, null>, options?: ModalOptions) => void;
   closeModal: () => void;
   handlers: any;
   diagramPlay: any;
@@ -578,12 +585,39 @@ function PlaybookPageOverlays({
   setShowBulkDeleteConfirm: (show: boolean) => void;
   mobileButtonSize: MobileButtonSize;
   mobileSecondaryButtonSize: MobileButtonSize;
+  teamPlaybooks: any[];
+  onRefreshData?: () => void;
 }) {
+  // Handle merge playbooks
+  const handleMergePlaybooks = useCallback(
+    async (
+      sourcePlaybookIds: string[],
+      newPlaybookName: string,
+      newPlaybookDescription?: string
+    ) => {
+      try {
+        await PlaysService.mergePlaybooks(
+          sourcePlaybookIds,
+          newPlaybookName,
+          newPlaybookDescription,
+          activeTeamId || undefined
+        );
+        // Refresh playbooks list after merge
+        onRefreshData?.();
+      } catch (error) {
+        logError("Failed to merge playbooks:", error);
+        throw error;
+      }
+    },
+    [activeTeamId, onRefreshData]
+  );
+
   return (
     <>
       {/* Modals */}
       <PlaybookModals
         isModalOpen={isModalOpen}
+        openModal={openModal}
         closeModal={closeModal}
         diagramPlay={diagramPlay}
         diagramMode={diagramMode}
@@ -602,6 +636,8 @@ function PlaybookPageOverlays({
         handleCreatePlay={handleCreatePlay}
         handleSavePlay={handleSavePlay}
         dispatch={dispatch}
+        teamPlaybooks={teamPlaybooks}
+        onMergePlaybooks={handleMergePlaybooks}
       />
 
       {/* Mobile/Tablet Filters Bottom Sheet */}

@@ -518,6 +518,123 @@ export class PlaysService {
   }
 
   /**
+   * Merge multiple playbooks into a NEW playbook
+   * Creates a new playbook and copies all plays from source playbooks
+   * Original playbooks remain untouched
+   *
+   * @param sourcePlaybookIds - Array of playbook IDs to merge
+   * @param newName - Name for the new merged playbook
+   * @param newDescription - Optional description for the new playbook
+   * @param teamId - Team ID for the new playbook
+   * @returns The newly created playbook with copied plays
+   */
+  static async mergePlaybooks(
+    sourcePlaybookIds: string[],
+    newName: string,
+    newDescription?: string,
+    teamId?: string
+  ): Promise<{ playbookId: string; playCount: number }> {
+    if (sourcePlaybookIds.length < 2) {
+      throw new Error("At least 2 playbooks are required to merge");
+    }
+
+    try {
+      const userId = getCurrentUserId();
+      if (!userId) throw new Error("User not authenticated");
+
+      // Get team ID if not provided
+      const resolvedTeamId = teamId || (await this.ensureUserHasTeam());
+
+      debug("[PlaysService] Merging playbooks", {
+        sourcePlaybookIds,
+        newName,
+        teamId: resolvedTeamId,
+      });
+
+      // Step 1: Create the new playbook
+      const { data: newPlaybook, error: createError } = await table("playbooks")
+        .insert({
+          name: newName,
+          description: newDescription || `Merged from ${sourcePlaybookIds.length} playbooks`,
+          team_id: resolvedTeamId,
+          created_by: userId,
+          is_active: true,
+          play_count: 0,
+        })
+        .select("id")
+        .single();
+
+      if (createError || !newPlaybook) {
+        throw new Error(`Failed to create merged playbook: ${createError?.message}`);
+      }
+
+      // Step 2: Fetch all plays from source playbooks
+      const { data: sourcePlays, error: fetchError } = await table("plays")
+        .select("*")
+        .in("playbook_id", sourcePlaybookIds)
+        .eq("is_archived", false);
+
+      if (fetchError) {
+        throw new Error(`Failed to fetch source plays: ${fetchError.message}`);
+      }
+
+      if (!sourcePlays || sourcePlays.length === 0) {
+        debug("[PlaysService] No plays to merge");
+        return { playbookId: newPlaybook.id, playCount: 0 };
+      }
+
+      // Step 3: Copy plays to the new playbook with new IDs
+      const copiedPlays = sourcePlays.map((play: any) => {
+        // Generate new ID and update playbook reference
+        const { id: _oldId, created_at: _createdAt, updated_at: _updatedAt, ...playData } = play;
+        return {
+          ...playData,
+          id: crypto.randomUUID(),
+          playbook_id: newPlaybook.id,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          created_by: userId,
+          // Add merge context
+          creation_source: "bulk_import" as const,
+          creation_context: {
+            merged_from: sourcePlaybookIds,
+            original_play_id: play.id,
+            merge_date: new Date().toISOString(),
+          },
+        };
+      });
+
+      // Step 4: Batch insert the copied plays
+      const { error: insertError } = await table("plays").insert(copiedPlays);
+
+      if (insertError) {
+        // Clean up the playbook if insert fails
+        await table("playbooks").delete().eq("id", newPlaybook.id);
+        throw new Error(`Failed to copy plays: ${insertError.message}`);
+      }
+
+      // Step 5: Update the play count on the new playbook
+      const { error: updateError } = await table("playbooks")
+        .update({ play_count: copiedPlays.length })
+        .eq("id", newPlaybook.id);
+
+      if (updateError) {
+        warn("Failed to update play count after merge:", updateError);
+      }
+
+      debug("[PlaysService] Merge complete", {
+        newPlaybookId: newPlaybook.id,
+        playCount: copiedPlays.length,
+      });
+
+      return { playbookId: newPlaybook.id, playCount: copiedPlays.length };
+    } catch (error) {
+      logError("❌ PlaysService.mergePlaybooks failed:", error);
+      throw error;
+    }
+  }
+
+  /**
    * Get unique formation values for suggestions
    */
   static async getUniqueFormations(): Promise<string[]> {
