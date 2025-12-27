@@ -104,11 +104,17 @@ const SectionHeader: React.FC<{
       <Icon name={icon as any} className={`w-5 h-5 ${iconColor}`} />
     </div>
     <div>
-      <Typography variant="headline-sm" className="text-navy-900 dark:text-neutral-100">
+      <Typography
+        variant="headline-sm"
+        className="text-navy-900 dark:text-neutral-100"
+      >
         {title}
       </Typography>
       {subtitle && (
-        <Typography variant="caption" className="mt-0.5 text-neutral-600 dark:text-neutral-400">
+        <Typography
+          variant="caption"
+          className="mt-0.5 text-neutral-600 dark:text-neutral-400"
+        >
           {subtitle}
         </Typography>
       )}
@@ -138,11 +144,17 @@ const ToggleSwitch: React.FC<{
         />
       )}
       <div>
-        <Typography variant="body-sm" className="font-medium text-navy-900 dark:text-neutral-100">
+        <Typography
+          variant="body-sm"
+          className="font-medium text-navy-900 dark:text-neutral-100"
+        >
           {label}
         </Typography>
         {description && (
-          <Typography variant="caption" className="text-neutral-600 dark:text-neutral-400">
+          <Typography
+            variant="caption"
+            className="text-neutral-600 dark:text-neutral-400"
+          >
             {description}
           </Typography>
         )}
@@ -260,11 +272,17 @@ const ActionButton: React.FC<{
       >
         {label}
       </Typography>
-      <Typography variant="caption" className="text-neutral-600 dark:text-neutral-400">
+      <Typography
+        variant="caption"
+        className="text-neutral-600 dark:text-neutral-400"
+      >
         {description}
       </Typography>
     </div>
-    <Icon name="chevron-right" className="w-4 h-4 text-neutral-400 dark:text-neutral-500" />
+    <Icon
+      name="chevron-right"
+      className="w-4 h-4 text-neutral-400 dark:text-neutral-500"
+    />
   </button>
 );
 
@@ -426,7 +444,12 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
 
       {/* Playbook Name */}
       <div className="space-y-2">
-        <Typography variant="label-md" className="text-navy-900 dark:text-neutral-100">Playbook Name</Typography>
+        <Typography
+          variant="label-md"
+          className="text-navy-900 dark:text-neutral-100"
+        >
+          Playbook Name
+        </Typography>
         <Input
           value={playbookName}
           onChange={(e) => setPlaybookName(e.target.value)}
@@ -437,7 +460,12 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
 
       {/* Description */}
       <div className="space-y-2">
-        <Typography variant="label-md" className="text-navy-900 dark:text-neutral-100">Description</Typography>
+        <Typography
+          variant="label-md"
+          className="text-navy-900 dark:text-neutral-100"
+        >
+          Description
+        </Typography>
         <textarea
           value={playbookDescription}
           onChange={(e) => setPlaybookDescription(e.target.value)}
@@ -474,13 +502,21 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
 
       {/* Default Settings */}
       <div className="space-y-4 pt-4 border-t border-neutral-200 dark:border-neutral-700">
-        <Typography variant="label-lg" className="text-navy-900 dark:text-neutral-100 font-semibold">
+        <Typography
+          variant="label-lg"
+          className="text-navy-900 dark:text-neutral-100 font-semibold"
+        >
           Default Values for New Plays
         </Typography>
 
         <div className="space-y-3">
           <div className="space-y-1">
-            <Typography variant="label-md" className="text-navy-800 dark:text-neutral-200">Default Personnel</Typography>
+            <Typography
+              variant="label-md"
+              className="text-navy-800 dark:text-neutral-200"
+            >
+              Default Personnel
+            </Typography>
             <Dropdown
               value={localDefaultSettings.defaultPersonnel}
               onChange={(value) =>
@@ -503,7 +539,12 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
           </div>
 
           <div className="space-y-1">
-            <Typography variant="label-md" className="text-navy-800 dark:text-neutral-200">Default Formation</Typography>
+            <Typography
+              variant="label-md"
+              className="text-navy-800 dark:text-neutral-200"
+            >
+              Default Formation
+            </Typography>
             <Input
               value={localDefaultSettings.defaultFormation}
               onChange={(e) =>
@@ -518,7 +559,12 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
           </div>
 
           <div className="space-y-1">
-            <Typography variant="label-md" className="text-navy-800 dark:text-neutral-200">Default Play Type</Typography>
+            <Typography
+              variant="label-md"
+              className="text-navy-800 dark:text-neutral-200"
+            >
+              Default Play Type
+            </Typography>
             <Dropdown
               value={localDefaultSettings.defaultPlayType}
               onChange={(value) =>
@@ -566,7 +612,12 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
 
       {/* Theme */}
       <div className="space-y-2">
-        <Typography variant="label-md" className="text-navy-900 dark:text-neutral-100">Theme</Typography>
+        <Typography
+          variant="label-md"
+          className="text-navy-900 dark:text-neutral-100"
+        >
+          Theme
+        </Typography>
         <div className="grid grid-cols-3 gap-2">
           {(["light", "dark", "auto"] as const).map((theme) => (
             <SelectionCard
@@ -591,7 +642,12 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
 
       {/* Grid Density */}
       <div className="space-y-2">
-        <Typography variant="label-md" className="text-navy-900 dark:text-neutral-100">Grid Density</Typography>
+        <Typography
+          variant="label-md"
+          className="text-navy-900 dark:text-neutral-100"
+        >
+          Grid Density
+        </Typography>
         <div className="grid grid-cols-2 gap-2">
           {(["comfortable", "compact"] as const).map((density) => (
             <SelectionCard
@@ -613,7 +669,12 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
 
       {/* Default View */}
       <div className="space-y-2">
-        <Typography variant="label-md" className="text-navy-900 dark:text-neutral-100">Default View</Typography>
+        <Typography
+          variant="label-md"
+          className="text-navy-900 dark:text-neutral-100"
+        >
+          Default View
+        </Typography>
         <div className="grid grid-cols-2 gap-2">
           {(["grid", "list"] as const).map((view) => (
             <SelectionCard
@@ -711,7 +772,10 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
         <div className="fixed inset-0 z-modal bg-black/50 flex items-center justify-center p-4">
           <div className="bg-white dark:bg-navy-900 rounded-2xl p-6 max-w-md w-full max-h-[80vh] overflow-y-auto shadow-2xl">
             <div className="flex items-center justify-between mb-4">
-              <Typography variant="headline-md" className="text-navy-900 dark:text-neutral-100">
+              <Typography
+                variant="headline-md"
+                className="text-navy-900 dark:text-neutral-100"
+              >
                 Select Playbooks to Merge
               </Typography>
               <button
@@ -721,14 +785,22 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                 }}
                 className="p-2 hover:bg-neutral-100 dark:hover:bg-navy-800 rounded-full transition-colors"
               >
-                <Icon name="close" className="w-5 h-5 text-neutral-600 dark:text-neutral-400" />
+                <Icon
+                  name="close"
+                  className="w-5 h-5 text-neutral-600 dark:text-neutral-400"
+                />
               </button>
             </div>
 
-            <Typography variant="body-sm" className="mb-4 text-neutral-600 dark:text-neutral-400">
+            <Typography
+              variant="body-sm"
+              className="mb-4 text-neutral-600 dark:text-neutral-400"
+            >
               Select one or more playbooks to merge into{" "}
-              <strong className="text-navy-900 dark:text-neutral-100">{playbook?.name}</strong>. All plays will be copied
-              (originals won&apos;t be deleted).
+              <strong className="text-navy-900 dark:text-neutral-100">
+                {playbook?.name}
+              </strong>
+              . All plays will be copied (originals won&apos;t be deleted).
             </Typography>
 
             <div className="space-y-2 mb-6">
@@ -758,10 +830,16 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                       className="w-5 h-5 rounded border-neutral-300 dark:border-navy-600 accent-brand-jade"
                     />
                     <div className="flex-1">
-                      <Typography variant="body-sm" className="font-medium text-navy-900 dark:text-neutral-100">
+                      <Typography
+                        variant="body-sm"
+                        className="font-medium text-navy-900 dark:text-neutral-100"
+                      >
                         {pb.name}
                       </Typography>
-                      <Typography variant="caption" className="text-neutral-600 dark:text-neutral-400">
+                      <Typography
+                        variant="caption"
+                        className="text-neutral-600 dark:text-neutral-400"
+                      >
                         {pb.play_count} plays
                       </Typography>
                     </div>
@@ -914,7 +992,9 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
       {activeSection !== "danger" && (
         <div
           className={`flex gap-3 pt-4 border-t border-neutral-200 dark:border-neutral-700 ${
-            isMobile ? "sticky bottom-0 bg-white dark:bg-navy-900 pb-safe -mx-4 px-4" : ""
+            isMobile
+              ? "sticky bottom-0 bg-white dark:bg-navy-900 pb-safe -mx-4 px-4"
+              : ""
           }`}
         >
           <Button
@@ -959,9 +1039,17 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                 <Icon name="settings" className="w-5 h-5 text-brand-jade" />
               </div>
               <div>
-                <Typography variant="headline-md" className="text-navy-900 dark:text-neutral-100">Playbook Settings</Typography>
+                <Typography
+                  variant="headline-md"
+                  className="text-navy-900 dark:text-neutral-100"
+                >
+                  Playbook Settings
+                </Typography>
                 {playbook && (
-                  <Typography variant="caption" className="text-neutral-600 dark:text-neutral-400">
+                  <Typography
+                    variant="caption"
+                    className="text-neutral-600 dark:text-neutral-400"
+                  >
                     {playbook.name}
                   </Typography>
                 )}
