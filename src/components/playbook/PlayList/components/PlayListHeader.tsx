@@ -1,13 +1,16 @@
 /**
  * PlayListHeader Component
- * Renders the header with play count, bulk selection, and view controls
+ * Renders the header with play count, search, sort, bulk selection, and view controls
  */
 
 import React from "react";
 import { Icon } from "../../../ui/Icon/Icon";
 import { IconButton } from "../../../ui";
 import { Typography } from "../../../design-system/Typography";
+import { UniversalSearch } from "../../../ui/UniversalSearch";
+import { SortDropdown } from "../../page/SortDropdown";
 import type { Play } from "../../../../types/play";
+import type { PlaySortOption } from "../../../../types/filters";
 
 interface PlayListHeaderProps {
   displayPlays: Play[];
@@ -23,6 +26,11 @@ interface PlayListHeaderProps {
   onDirectionDisplayFormatChange: (
     format: "full" | "abbrev" | "letter"
   ) => void;
+  // Search and Sort props
+  searchQuery?: string;
+  onSearchChange?: (query: string) => void;
+  sortBy?: PlaySortOption;
+  onSortChange?: (value: PlaySortOption) => void;
 }
 
 export const PlayListHeader: React.FC<PlayListHeaderProps> = ({
@@ -37,12 +45,21 @@ export const PlayListHeader: React.FC<PlayListHeaderProps> = ({
   onShowOneWordCallsChange,
   directionDisplayFormat,
   onDirectionDisplayFormatChange,
+  searchQuery = "",
+  onSearchChange,
+  sortBy = "name_asc",
+  onSortChange,
 }) => {
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center space-x-4">
-        <div>
-          <Typography variant="headline-sm" as="h2" className="text-primary">
+    <div className="flex items-center justify-between gap-4">
+      {/* Left section: Play count + Search + Sort */}
+      <div className="flex items-center gap-4 flex-1">
+        <div className="shrink-0">
+          <Typography
+            variant="headline-sm"
+            as="h2"
+            className="text-primary whitespace-nowrap"
+          >
             {totalCount} {totalCount === 1 ? "Play" : "Plays"}
             {selectedCategory && (
               <span className="text-secondary font-normal ml-2">
@@ -55,9 +72,26 @@ export const PlayListHeader: React.FC<PlayListHeaderProps> = ({
           </Typography>
         </div>
 
+        {/* Search and Sort */}
+        {onSearchChange && (
+          <div className="flex items-center gap-2 flex-1 max-w-md">
+            <div className="flex-1">
+              <UniversalSearch
+                searchQuery={searchQuery}
+                onSearchChange={onSearchChange}
+                placeholder="Search plays..."
+                size="sm"
+              />
+            </div>
+            {onSortChange && (
+              <SortDropdown value={sortBy} onChange={onSortChange} compact />
+            )}
+          </div>
+        )}
+
         {/* Bulk Selection Controls */}
         {enableBulkOperations && (
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 shrink-0">
             <label className="flex items-center space-x-2 text-sm text-secondary">
               <input
                 type="checkbox"

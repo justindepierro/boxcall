@@ -15,6 +15,7 @@ import { PracticeScriptList } from "../PracticeScriptList";
 import type { Play } from "../../../types/play";
 import type { PlaybookState } from "../../../contexts/PlaybookContext";
 import type { PracticeScript } from "../../../services/practiceService";
+import type { PlaySortOption } from "../../../types/filters";
 
 const TEAM_SETUP_CHECKLIST = [
   "Unlock practice templates tied to your personnel groups.",
@@ -71,6 +72,8 @@ interface PlaybookGridSectionProps {
   handleAddToGamePlan: DesktopPlaybookViewProps["handleAddToGamePlan"];
   handlePlayCountChange: DesktopPlaybookViewProps["handlePlayCountChange"];
   handleEnterFullscreen: DesktopPlaybookViewProps["handleEnterFullscreen"];
+  handleSearchChange: (query: string) => void;
+  handleSortChange: (sortBy: PlaySortOption) => void;
   dispatch: DesktopPlaybookViewProps["dispatch"];
 }
 
@@ -89,6 +92,8 @@ const PlaybookGridSection: FC<PlaybookGridSectionProps> = ({
   handleAddToGamePlan,
   handlePlayCountChange,
   handleEnterFullscreen,
+  handleSearchChange,
+  handleSortChange,
   dispatch,
 }) => {
   const onSave = createPlayListOnSave(optimisticPlays, handleSavePlay);
@@ -125,6 +130,10 @@ const PlaybookGridSection: FC<PlaybookGridSectionProps> = ({
         onPlaySelectionChange={(selection: Set<string>) =>
           dispatch({ type: "SET_SELECTION", selection })
         }
+        searchQuery={state.filters.search}
+        onSearchChange={handleSearchChange}
+        sortBy={state.filters.sortBy}
+        onSortChange={handleSortChange}
       />
     </ErrorBoundary>
   );
@@ -321,6 +330,7 @@ interface DesktopPlaybookViewProps {
   handleClearSelection: () => void;
   handleBulkAction: (action: string) => void;
   handleEnterFullscreen: (plays: Play[], playIndex: number) => void;
+  handleSortChange: (sortBy: PlaySortOption) => void;
   dispatch: any; // TODO: Type properly
   navigate: (path: string) => void;
 
@@ -356,11 +366,17 @@ export function DesktopPlaybookView({
   handleClearSelection,
   handleBulkAction,
   handleEnterFullscreen,
+  handleSortChange,
   dispatch,
   navigate,
   suggestions,
   mobileButtonSize,
 }: DesktopPlaybookViewProps) {
+  // Create search change handler from filters change
+  const handleSearchChange = (query: string) => {
+    handleFiltersChange({ ...state.filters, search: query });
+  };
+
   return (
     <div className="min-h-screen bg-subtle">
       {formationAudit.plays.length > 0 && (
@@ -451,6 +467,8 @@ export function DesktopPlaybookView({
                   handleAddToGamePlan={handleAddToGamePlan}
                   handlePlayCountChange={handlePlayCountChange}
                   handleEnterFullscreen={handleEnterFullscreen}
+                  handleSearchChange={handleSearchChange}
+                  handleSortChange={handleSortChange}
                   dispatch={dispatch}
                 />
               )}

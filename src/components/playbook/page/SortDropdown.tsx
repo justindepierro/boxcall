@@ -65,10 +65,11 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
         }}
         className={`
           flex items-center gap-2 
-          ${compact ? "h-11 w-11 p-0 justify-center" : "px-3 py-2"}
-          rounded-xl
-          bg-surface-elevated hover:bg-surface-hover
-          border border-muted
+          ${compact ? "h-9 w-9 p-0 justify-center" : "px-3 py-2"}
+          rounded-lg
+          bg-white dark:bg-navy-800 
+          hover:bg-neutral-100 dark:hover:bg-navy-700
+          border border-neutral-200 dark:border-navy-600
           transition-colors
         `}
         aria-label="Sort plays"
@@ -77,7 +78,7 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
       >
         <Icon
           name="list"
-          className={`h-4 w-4 ${value !== "name_asc" ? "text-brand-jade" : "text-secondary"}`}
+          className={`h-4 w-4 ${value !== "name_asc" ? "text-jade-600 dark:text-jade-400" : "text-neutral-500 dark:text-neutral-400"}`}
         />
         {!compact && (
           <>
@@ -98,10 +99,10 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
           className="
             absolute right-0 top-full mt-2 z-50
             min-w-48 py-2
-            bg-surface-elevated
-            border border-muted
+            bg-white dark:bg-navy-800
+            border border-neutral-200 dark:border-navy-600
             rounded-xl
-            shadow-lg shadow-black/10
+            shadow-xl
           "
           role="listbox"
           aria-label="Sort options"
@@ -115,15 +116,18 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
                 text-left transition-colors
                 ${
                   value === option.value
-                    ? "bg-brand-jade/10 text-brand-jade"
-                    : "text-primary hover:bg-surface-hover"
+                    ? "bg-jade-100 dark:bg-jade-900/30 text-jade-700 dark:text-jade-400"
+                    : "text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-navy-700"
                 }
               `}
               role="option"
               aria-selected={value === option.value}
             >
               {value === option.value && (
-                <Icon name="check" className="h-4 w-4 text-brand-jade" />
+                <Icon
+                  name="check"
+                  className="h-4 w-4 text-jade-600 dark:text-jade-400"
+                />
               )}
               <Typography
                 variant="body-sm"

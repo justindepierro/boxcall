@@ -7,6 +7,7 @@ export interface UniversalSearchProps {
   onSearchChange: (query: string) => void;
   placeholder?: string;
   className?: string;
+  size?: "sm" | "md";
 }
 
 export const UniversalSearch: React.FC<UniversalSearchProps> = ({
@@ -14,6 +15,7 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({
   onSearchChange,
   placeholder = "Search plays, formations, tags...",
   className = "",
+  size = "md",
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -33,6 +35,8 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({
       setIsFocused(false);
     }
   };
+
+  const sizeClasses = size === "sm" ? "py-1.5 text-sm" : "py-2 text-sm";
 
   return (
     <div className={`relative ${className}`} role="search">
@@ -56,7 +60,7 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({
           placeholder={placeholder}
           aria-label={placeholder}
           data-search-input
-          className={`block w-full pl-10 pr-10 py-2 text-sm rounded-lg
+          className={`block w-full pl-10 pr-10 ${sizeClasses} rounded-lg
                      focus:ring-2 focus:ring-text-info focus:border-text-info
                      placeholder-text-secondary transition-all duration-200
                      ${isFocused ? "bg-primary shadow-md" : "bg-secondary hover:bg-primary"}`}

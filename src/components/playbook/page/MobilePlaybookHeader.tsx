@@ -76,11 +76,7 @@ export const MobilePlaybookHeader: React.FC<MobilePlaybookHeaderProps> = ({
       <div className="flex items-center gap-2 ml-4">
         {/* Sort Dropdown */}
         {onSortChange && (
-          <SortDropdown
-            value={sortBy}
-            onChange={onSortChange}
-            compact
-          />
+          <SortDropdown value={sortBy} onChange={onSortChange} compact />
         )}
 
         {/* Stats Button (Optional) */}

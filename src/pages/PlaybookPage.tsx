@@ -219,7 +219,9 @@ function PlaybookMainView({
         setShowStatsSheet={(show) =>
           show ? openModal("statsSheet") : closeModal()
         }
-        handleSortChange={(sortBy) => handlers.handleSortChange(sortBy, state.filters)}
+        handleSortChange={(sortBy) =>
+          handlers.handleSortChange(sortBy, state.filters)
+        }
         handleOpenQuickCreate={handlers.handleOpenQuickCreate}
         handleOpenPersonnel={handlers.handleOpenPersonnel}
         handleOpenSettings={handlers.handleOpenSettings}
@@ -271,6 +273,9 @@ function PlaybookMainView({
       handleClearSelection={handlers.handleClearSelection}
       handleBulkAction={handlers.handleBulkAction}
       handleEnterFullscreen={handleEnterFullscreen}
+      handleSortChange={(sortBy) =>
+        handlers.handleSortChange(sortBy, state.filters)
+      }
       dispatch={dispatch}
       navigate={navigate}
       suggestions={suggestions}

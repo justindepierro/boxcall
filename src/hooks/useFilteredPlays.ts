@@ -217,7 +217,9 @@ function sortPlays(plays: Play[], sortBy: PlaySortOption): Play[] {
           new Date(b.created_at || 0).getTime()
       );
     case "most_used":
-      return sorted.sort((a, b) => (b.times_called || 0) - (a.times_called || 0));
+      return sorted.sort(
+        (a, b) => (b.times_called || 0) - (a.times_called || 0)
+      );
     case "confidence_high":
       return sorted.sort(
         (a, b) => (b.confidence_base || 0) - (a.confidence_base || 0)
@@ -262,7 +264,8 @@ export function useFilteredPlays(
     );
 
     // Then sort - use sortBy if set, fall back to mostUsedOnly for backward compatibility
-    const sortOption = filters.sortBy || (filters.mostUsedOnly ? "most_used" : "name_asc");
+    const sortOption =
+      filters.sortBy || (filters.mostUsedOnly ? "most_used" : "name_asc");
     result = sortPlays(result, sortOption);
 
     return result;

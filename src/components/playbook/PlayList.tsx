@@ -15,7 +15,8 @@ import {
 import { Virtuoso } from "react-virtuoso";
 import { usePlaybookData } from "../../hooks/usePlaybookData";
 import { useFilteredPlays } from "../../hooks/useFilteredPlays";
-import { type PlaybookFilters, EMPTY_FILTERS } from "../../types/filters";
+import { EMPTY_FILTERS } from "../../types/filters";
+import type { PlaybookFilters, PlaySortOption } from "../../types/filters";
 import { useActiveTeamStore } from "../../stores/activeTeamStore";
 import type { Play } from "../../types/play";
 import { Typography } from "../design-system/Typography";
@@ -56,6 +57,11 @@ interface PlayListProps {
   formationSuggestions?: string[];
   playNameSuggestions?: string[];
   playTypeSuggestions?: string[];
+  // Search and sort props
+  searchQuery?: string;
+  onSearchChange?: (query: string) => void;
+  sortBy?: PlaySortOption;
+  onSortChange?: (value: PlaySortOption) => void;
 }
 
 const PlayListInner: React.FC<PlayListProps> = ({
@@ -73,6 +79,10 @@ const PlayListInner: React.FC<PlayListProps> = ({
   selectedPlayIds = new Set(),
   onPlaySelectionChange,
   onOpenBuilder,
+  searchQuery,
+  onSearchChange,
+  sortBy,
+  onSortChange,
 }) => {
   const activeTeamId = useActiveTeamStore((state) => state.activeTeamId);
 
@@ -291,15 +301,16 @@ const PlayListInner: React.FC<PlayListProps> = ({
           }
           hasActiveFilters={!!hasFilters}
           totalPlayCount={plays.length}
+          searchQuery={filters.search}
           onClearFilters={() =>
             dispatchDocumentAppEvent(PLAYLIST_CLEAR_FILTERS_EVENT)
           }
+          onSuggestedSearch={onSearchChange}
         />
       )}
 
       {!loading &&
         !error &&
-        !showEmpty &&
         (() => {
           // Derive category for header display
           let selectedCategory: string | undefined;
@@ -324,6 +335,10 @@ const PlayListInner: React.FC<PlayListProps> = ({
               onShowOneWordCallsChange={setShowOneWordCalls}
               directionDisplayFormat={directionDisplayFormat || "full"}
               onDirectionDisplayFormatChange={setDirectionDisplayFormat}
+              searchQuery={searchQuery}
+              onSearchChange={onSearchChange}
+              sortBy={sortBy}
+              onSortChange={onSortChange}
             />
           );
         })()}

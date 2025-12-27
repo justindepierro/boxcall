@@ -94,10 +94,7 @@ export const PlaybookHeader: React.FC<PlaybookHeaderProps> = ({
                 />
               </div>
               {onSortChange && (
-                <SortDropdown
-                  value={sortBy}
-                  onChange={onSortChange}
-                />
+                <SortDropdown value={sortBy} onChange={onSortChange} />
               )}
             </div>
 

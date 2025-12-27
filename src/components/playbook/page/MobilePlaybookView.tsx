@@ -19,7 +19,11 @@ import { MobilePlayCardSkeletonList } from "../../mobile/ui/MobilePlayCardSkelet
 import { PlayList } from "../PlayList";
 import { SelectionModeToggle } from "../SelectionModeToggle";
 import { AdvancedFilters } from "../AdvancedFilters";
-import { EMPTY_FILTERS, hasActiveFilters, type PlaySortOption } from "../../../types/filters";
+import {
+  EMPTY_FILTERS,
+  hasActiveFilters,
+  type PlaySortOption,
+} from "../../../types/filters";
 import { BottomSheet } from "../../BottomSheet";
 import { PracticeScriptList } from "../PracticeScriptList";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
