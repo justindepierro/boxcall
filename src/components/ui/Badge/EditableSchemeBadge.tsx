@@ -41,21 +41,21 @@ export const EditableSchemeBadge: React.FC<EditableSchemeBadgeProps> = ({
   // Calculate position when opening
   useLayoutEffect(() => {
     if (!open || !rootRef.current) return;
-    
+
     const rect = rootRef.current.getBoundingClientRect();
     const popoverWidth = 120; // Approximate width of 3-column grid
-    
+
     // Calculate centered position below the badge
     let left = rect.left + rect.width / 2 - popoverWidth / 2;
     const top = rect.bottom + 8;
-    
+
     // Keep within viewport bounds
     const padding = 8;
     if (left < padding) left = padding;
     if (left + popoverWidth > window.innerWidth - padding) {
       left = window.innerWidth - popoverWidth - padding;
     }
-    
+
     setPosition({ top, left });
   }, [open]);
 
@@ -100,55 +100,56 @@ export const EditableSchemeBadge: React.FC<EditableSchemeBadgeProps> = ({
         {trimmed}
       </Badge>
 
-      {open && createPortal(
-        <div 
-          ref={popoverRef}
-          className="fixed z-modal bg-white dark:bg-navy-800 border border-neutral-300 dark:border-navy-600 rounded-lg p-2 shadow-2xl"
-          style={{
-            top: position.top,
-            left: position.left,
-          }}
-        >
-          <div className="grid grid-cols-3 gap-2">
-            {GRID_SCHEMES.map((opt) => {
-              const isSelected = opt === scheme;
-              return (
-                <button
-                  key={opt}
-                  type="button"
-                  className="relative"
-                  onClick={async () => {
-                    if (saving) return;
-                    setSaving(true);
-                    try {
-                      await onChangeScheme(opt);
-                      setOpen(false);
-                    } finally {
-                      setSaving(false);
-                    }
-                  }}
-                  aria-label={`Set badge color to ${opt}`}
-                >
-                  <Badge
-                    variant="neutral"
-                    scheme={opt}
-                    size="sm"
-                    pill={false}
-                    className="w-8 px-0 justify-center"
+      {open &&
+        createPortal(
+          <div
+            ref={popoverRef}
+            className="fixed z-modal bg-white dark:bg-navy-800 border border-neutral-300 dark:border-navy-600 rounded-lg p-2 shadow-2xl"
+            style={{
+              top: position.top,
+              left: position.left,
+            }}
+          >
+            <div className="grid grid-cols-3 gap-2">
+              {GRID_SCHEMES.map((opt) => {
+                const isSelected = opt === scheme;
+                return (
+                  <button
+                    key={opt}
+                    type="button"
+                    className="relative"
+                    onClick={async () => {
+                      if (saving) return;
+                      setSaving(true);
+                      try {
+                        await onChangeScheme(opt);
+                        setOpen(false);
+                      } finally {
+                        setSaving(false);
+                      }
+                    }}
+                    aria-label={`Set badge color to ${opt}`}
                   >
-                    {isSelected ? (
-                      <Icon name="check" size={12} color="primary" />
-                    ) : (
-                      <span aria-hidden="true">&nbsp;</span>
-                    )}
-                  </Badge>
-                </button>
-              );
-            })}
-          </div>
-        </div>,
-        document.body
-      )}
+                    <Badge
+                      variant="neutral"
+                      scheme={opt}
+                      size="sm"
+                      pill={false}
+                      className="w-8 px-0 justify-center"
+                    >
+                      {isSelected ? (
+                        <Icon name="check" size={12} color="primary" />
+                      ) : (
+                        <span aria-hidden="true">&nbsp;</span>
+                      )}
+                    </Badge>
+                  </button>
+                );
+              })}
+            </div>
+          </div>,
+          document.body
+        )}
     </span>
   );
 };

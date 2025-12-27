@@ -1,11 +1,6 @@
 /* eslint-disable max-lines-per-function */
 
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { DropResult } from "@hello-pangea/dnd";
 import type { Play as PlayType } from "../../types/play";

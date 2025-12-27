@@ -555,7 +555,9 @@ export class PlaysService {
       const { data: newPlaybook, error: createError } = await table("playbooks")
         .insert({
           name: newName,
-          description: newDescription || `Merged from ${sourcePlaybookIds.length} playbooks`,
+          description:
+            newDescription ||
+            `Merged from ${sourcePlaybookIds.length} playbooks`,
           team_id: resolvedTeamId,
           created_by: userId,
           is_active: true,
@@ -565,7 +567,9 @@ export class PlaysService {
         .single();
 
       if (createError || !newPlaybook) {
-        throw new Error(`Failed to create merged playbook: ${createError?.message}`);
+        throw new Error(
+          `Failed to create merged playbook: ${createError?.message}`
+        );
       }
 
       // Step 2: Fetch all plays from source playbooks
@@ -588,20 +592,20 @@ export class PlaysService {
       // formations/personnel specific to the original playbook
       const copiedPlays = sourcePlays.map((play: any) => {
         // Generate new ID and update playbook reference
-        const { 
-          id: _oldId, 
-          created_at: _createdAt, 
+        const {
+          id: _oldId,
+          created_at: _createdAt,
           updated_at: _updatedAt,
-          formation_id: _formationId,  // Clear - references original playbook's formations
-          personnel_id: _personnelId,  // Clear - references original playbook's personnel
-          ...playData 
+          formation_id: _formationId, // Clear - references original playbook's formations
+          personnel_id: _personnelId, // Clear - references original playbook's personnel
+          ...playData
         } = play;
         return {
           ...playData,
           id: crypto.randomUUID(),
           playbook_id: newPlaybook.id,
-          formation_id: null,  // Clear foreign key reference
-          personnel_id: null,  // Clear foreign key reference
+          formation_id: null, // Clear foreign key reference
+          personnel_id: null, // Clear foreign key reference
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           created_by: userId,

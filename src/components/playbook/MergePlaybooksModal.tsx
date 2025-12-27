@@ -81,9 +81,7 @@ const PlaybookSelectCard: React.FC<{
       <Typography
         variant="body-sm"
         className={`font-medium ${
-          selected
-            ? "text-brand-jade"
-            : "text-navy-900 dark:text-neutral-100"
+          selected ? "text-brand-jade" : "text-navy-900 dark:text-neutral-100"
         }`}
       >
         {playbook.name}
@@ -230,7 +228,10 @@ export const MergePlaybooksModal: React.FC<MergePlaybooksModalProps> = ({
       {/* Instructions */}
       <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
         <div className="flex gap-3">
-          <Icon name="info" className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+          <Icon
+            name="info"
+            className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5"
+          />
           <div>
             <Typography
               variant="body-sm"
@@ -445,12 +446,7 @@ export const MergePlaybooksModal: React.FC<MergePlaybooksModalProps> = ({
 
   // Desktop: Modal
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Merge Playbooks"
-      size="md"
-    >
+    <Modal isOpen={isOpen} onClose={onClose} title="Merge Playbooks" size="md">
       <div className="p-6">{renderContent()}</div>
     </Modal>
   );

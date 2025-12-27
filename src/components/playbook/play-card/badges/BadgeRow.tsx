@@ -281,7 +281,11 @@ export const BadgeRow: React.FC<BadgeRowProps> = ({
 
   return (
     <>
-      <CoreBadges play={play} schemes={schemes} personnelConfig={personnelConfig} />
+      <CoreBadges
+        play={play}
+        schemes={schemes}
+        personnelConfig={personnelConfig}
+      />
       {!isExpanded && <CollapsedOnlyBadges play={play} />}
       {isExpanded && (
         <ExpandedOnlyBadges

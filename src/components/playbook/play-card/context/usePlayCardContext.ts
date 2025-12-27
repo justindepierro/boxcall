@@ -15,7 +15,9 @@ import { PlayCardContext, type PlayCardContextValue } from "./PlayCardContext";
 export function usePlayCardContext(): PlayCardContextValue {
   const context = useContext(PlayCardContext);
   if (!context) {
-    throw new Error("usePlayCardContext must be used within a PlayCardProvider");
+    throw new Error(
+      "usePlayCardContext must be used within a PlayCardProvider"
+    );
   }
   return context;
 }

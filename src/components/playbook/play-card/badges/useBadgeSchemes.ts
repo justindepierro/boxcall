@@ -153,7 +153,10 @@ export function useBadgeSchemes({
     playType: { scheme: playTypeScheme, onChange: onChangePlayTypeScheme },
     personnel: { scheme: personnelScheme, onChange: onChangePersonnelScheme },
     formation: { scheme: formationScheme, onChange: onChangeFormationScheme },
-    protection: { scheme: protectionScheme, onChange: onChangeProtectionScheme },
+    protection: {
+      scheme: protectionScheme,
+      onChange: onChangeProtectionScheme,
+    },
     motion: { scheme: motionScheme, onChange: onChangeMotionScheme },
   };
 }

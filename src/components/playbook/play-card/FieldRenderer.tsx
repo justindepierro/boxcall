@@ -95,7 +95,12 @@ const getValidationFn = (
 };
 
 const getSuggestions = (
-  suggestionsKey: "formation" | "personnel" | "playName" | "playType" | undefined,
+  suggestionsKey:
+    | "formation"
+    | "personnel"
+    | "playName"
+    | "playType"
+    | undefined,
   options: FieldRenderOptions
 ): string[] => {
   switch (suggestionsKey) {
@@ -309,7 +314,8 @@ const renderNumberField = (
   savingFields: Set<string>
 ): React.ReactNode => {
   const numValue = play[config.field] as number | null;
-  const value = numValue !== null && numValue !== undefined ? numValue.toString() : "";
+  const value =
+    numValue !== null && numValue !== undefined ? numValue.toString() : "";
 
   const handleSave = (newValue: string) => {
     const num = parseInt(newValue, 10);

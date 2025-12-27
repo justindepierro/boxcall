@@ -174,10 +174,16 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = ({
       )}
 
       {/* Photo thumbnail (if available) */}
-      {(play.diagram_url || (play as PlayType & { diagram_image_url?: string }).diagram_image_url) && (
+      {(play.diagram_url ||
+        (play as PlayType & { diagram_image_url?: string })
+          .diagram_image_url) && (
         <div className="shrink-0 w-20 h-14 rounded-xl overflow-hidden shadow-sm shadow-jade-500/10">
           <img
-            src={play.diagram_url || (play as PlayType & { diagram_image_url?: string }).diagram_image_url}
+            src={
+              play.diagram_url ||
+              (play as PlayType & { diagram_image_url?: string })
+                .diagram_image_url
+            }
             alt={`${displayName} diagram`}
             className="w-full h-full object-cover"
             crossOrigin="anonymous"
