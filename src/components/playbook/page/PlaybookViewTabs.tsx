@@ -351,10 +351,10 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
                 variant="ghost"
                 size="sm"
                 className="h-11 px-4 !py-0 flex items-center gap-2 bg-status-info-bg/80 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-xl transition-all duration-200"
-                title="Customize your playbook"
+                title="Playbook Settings"
               >
                 <Icon name="settings" className="h-5 w-5" />
-                <span className="hidden lg:inline">Customize</span>
+                <span className="hidden lg:inline">Settings</span>
               </Button>
             )}
 
