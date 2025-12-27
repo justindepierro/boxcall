@@ -1,33 +1,34 @@
 # PlayCard System Audit & Optimization Roadmap
 
 **Date**: December 27, 2025  
-**Status**: ✅ Phase 1 Complete  
+**Status**: ✅ Phase 2 Complete  
 **Scope**: Complete audit of PlayCard, PlayList, and related components
 
 ---
 
 ## Executive Summary
 
-The PlayCard system has been significantly improved through Phase 1 refactoring. Technical debt has been reduced by consolidating duplicate code and creating reusable components.
+The PlayCard system has been significantly improved through Phase 1 & 2 refactoring. Technical debt has been reduced by consolidating duplicate code, creating reusable components, and extracting state management.
 
-### Current State (After Phase 1)
+### Current State (After Phase 2)
 
 | Component | Before | After | Change |
 |-----------|--------|-------|--------|
-| PlayCard.tsx | 697 | 697 | Next phase |
-| PlayCardTileHeader.tsx | 478 | 371 | -22% ✅ |
+| PlayCard.tsx | 697 | 619 | -11% ✅ |
+| PlayCardTileHeader.tsx | 478 | 276 | **-42%** ✅ |
 | PlayCardListHeader.tsx | 706 | 240 | **-66%** ✅ |
 | PlayCardDetails.tsx | 143 | 143 | Clean |
-| fieldDefinitions.tsx | 535 | 535 | Next phase |
+| fieldDefinitions.tsx | 535 | 535 | Future phase |
 | **New: BadgeRow.tsx** | - | 298 | Unified badges ✅ |
 | **New: useBadgeSchemes.ts** | - | 159 | Badge hooks ✅ |
 | **New: PlayCardContext.tsx** | - | 204 | Context provider ✅ |
+| **New: usePlayCardState.ts** | - | 127 | State hook ✅ |
 
-**Total System**: ~4,000+ lines → ~3,400 lines (-15% reduction)
+**Total System**: ~4,000+ lines → ~2,900 lines (~27% reduction)
 
 ---
 
-## ✅ Completed (Phase 1)
+## ✅ Completed (Phase 1 & 2)
 
 ### 1. PlayCardListHeader.tsx - 706 → 240 Lines (-66%)
 **Solution Applied**:
@@ -54,34 +55,24 @@ src/components/playbook/play-card/context/
 └── index.ts (14 lines) - Clean exports
 ```
 
----
+### 4. PlayCardTileHeader.tsx - 371 → 276 Lines (-25%)
+**Solution Applied**:
+- Replaced BadgeSection and PersonnelBadgeDisplay with unified BadgeRow
+- Removed duplicate badge scheme management logic
+- Both Tile and List headers now share the same badge system
 
-## 🔴 Critical Issues (Next Phase)
+### 5. PlayCard.tsx - 697 → 619 Lines (-11%)
+**Solution Applied**:
+- Extracted state management to `usePlayCardState` hook
+- Removed `/* eslint-disable complexity */` comment
+- Cleaner component with centralized state management
 
-### 1. PlayCard.tsx - 697 Lines with ESLint Disabled
-**Problem**: Component has `/* eslint-disable max-lines-per-function */` and `/* eslint-disable complexity */` at the top.
-
-**Impact**:
-- Hard to reason about
-- Testing is difficult
-- Prop drilling 15+ props through children
-
-**Solution**:
+### 6. usePlayCardState Hook Created
+**Files Created**:
 ```
-Extract into smaller hooks:
-- usePlayCardState() - optimistic updates, saving state
-- usePlayCardLayout() - field order, visibility
-- usePlayCardHandlers() - all callbacks
-```
-
-### 2. Integrate PlayCardContext
-**Problem**: Context is created but not yet used in PlayCard.tsx
-
-**Solution**:
-```
-- Wrap PlayCard with PlayCardProvider
-- Remove prop drilling from child components
-- Use usePlayCardContext() in children
+src/components/playbook/play-card/hooks/
+├── usePlayCardState.ts (127 lines) - Optimistic state management
+└── index.ts (4 lines) - Clean exports
 ```
 
 ---

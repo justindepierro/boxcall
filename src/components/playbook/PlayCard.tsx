@@ -1,12 +1,10 @@
 /* eslint-disable max-lines-per-function */
-/* eslint-disable complexity */
 
 import React, {
   useCallback,
   useEffect,
   useMemo,
   useState,
-  useRef,
 } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { DropResult } from "@hello-pangea/dnd";
@@ -23,6 +21,7 @@ import { useRecentPlays } from "../../hooks/useRecentPlays";
 import { useFavoritePlays } from "../../hooks/useFavoritePlays";
 import { useIsMobile } from "../../hooks/useBreakpoint";
 import { usePlayCardLayoutPreferences } from "../../hooks/usePlayCardLayoutPreferences";
+import { usePlayCardState } from "./play-card/hooks";
 import {
   DEFAULT_FORMATION_SUGGESTIONS,
   DEFAULT_PLAY_NAME_SUGGESTIONS,
@@ -44,8 +43,7 @@ import {
   writeLocalString,
 } from "../../utils/storage";
 import { usePlayFieldValues } from "./AddNewPlayModal/hooks/usePlayFieldValues";
-import { info, logError } from "../../utils/logger";
-import { legacyValueToLeftRight } from "../../utils/leftRight";
+import { info } from "../../utils/logger";
 
 interface PlayCardProps {
   play: PlayType;
@@ -77,8 +75,6 @@ interface PlayCardProps {
 }
 
 type FieldVisibility = Record<string, boolean>;
-
-type SaveQueue = Set<string>;
 
 const INITIAL_FORMATION_ORDER = [
   "formation",
@@ -162,8 +158,12 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   // Extract unique field values for validation
   const fieldValues = usePlayFieldValues(existingPlays);
 
-  const [optimisticPlay, setOptimisticPlay] = useState<PlayType>(play);
-  const [savingFields, setSavingFields] = useState<SaveQueue>(new Set());
+  // Optimistic state management (extracted to hook)
+  const { optimisticPlay, savingFields, handleInlineSave } = usePlayCardState({
+    play,
+    onSave,
+  });
+
   const { layout: playCardLayout, patchLayout: patchPlayCardLayout } =
     usePlayCardLayoutPreferences(play.id, {
       formationFieldOrder: INITIAL_FORMATION_ORDER,
@@ -171,8 +171,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       playDetailsFieldOrder: INITIAL_PLAY_DETAILS_ORDER,
       playDetailsFieldVisibility: INITIAL_PLAY_DETAILS_VISIBILITY,
     });
-  const lastSyncedPlayRef = useRef<PlayType>(play);
-  const lastSaveTimeRef = useRef<number>(0);
+
   // Quick Wins: Recent plays tracking and favorites
   const { trackPlayView } = useRecentPlays();
   const { isFavorite, toggleFavorite } = useFavoritePlays();
@@ -220,24 +219,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       wristband_number: play.wristband_number,
     });
   }, [isExpanded, play]);
-
-  useEffect(() => {
-    // Only sync when play prop actually changes (new data from server)
-    if (play !== lastSyncedPlayRef.current) {
-      const timeSinceLastSave = Date.now() - lastSaveTimeRef.current;
-
-      lastSyncedPlayRef.current = play;
-
-      // Don't sync if:
-      // 1. We're currently saving any fields, OR
-      // 2. We just finished saving within the last 500ms (optimistic update grace period)
-      if (savingFields.size === 0 && timeSinceLastSave > 500) {
-        setOptimisticPlay(play);
-      }
-    }
-    // We intentionally don't include optimisticPlay in deps to avoid sync loops
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [play]);
 
   const actualFormationSuggestions =
     formationSuggestions.length > 0
@@ -338,59 +319,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
       .replace("gameplan", "Game Plan")
       .replace("situational", "Situational");
   }, [play.install_phase]);
-
-  const handleInlineSave = useCallback(
-    async (
-      field: keyof PlayType,
-      value: string | number | boolean | null | string[]
-    ) => {
-      const fieldName = field as string;
-
-      const updates: Partial<PlayType> = {
-        [field]: value,
-      } as Partial<PlayType>;
-
-      // Keep legacy formation direction (f_dir) and new variant direction (formation_direction)
-      // aligned so the UI stays consistent.
-      if (field === "f_dir") {
-        const dir = legacyValueToLeftRight(String(value ?? ""));
-        updates.formation_direction = dir;
-      }
-
-      setOptimisticPlay((prev) => {
-        const updated = { ...prev, ...updates };
-        return updated;
-      });
-
-      setSavingFields((prev) => new Set(prev).add(fieldName));
-
-      try {
-        if (onSave) {
-          await onSave(play.id, updates);
-        }
-      } catch (error) {
-        logError(`[PlayCard] Failed to save ${fieldName}, reverting:`, error);
-        setOptimisticPlay((prev) => {
-          const reverted: Partial<PlayType> = { [field]: play[field] };
-          if (field === "f_dir") {
-            reverted.formation_direction = play.formation_direction ?? null;
-          }
-          return { ...prev, ...reverted };
-        });
-      } finally {
-        setSavingFields((prev) => {
-          const next = new Set(prev);
-          next.delete(fieldName);
-          return next;
-        });
-        // Track when the save completed to prevent immediate sync
-        lastSaveTimeRef.current = Date.now();
-      }
-    },
-    // optimisticPlay is only used for logging, not needed in deps
-
-    [onSave, play]
-  );
 
   const handleFormationDragEnd = useCallback(
     (result: DropResult) => {
