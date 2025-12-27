@@ -584,13 +584,24 @@ export class PlaysService {
       }
 
       // Step 3: Copy plays to the new playbook with new IDs
+      // Note: formation_id and personnel_id are cleared because they reference
+      // formations/personnel specific to the original playbook
       const copiedPlays = sourcePlays.map((play: any) => {
         // Generate new ID and update playbook reference
-        const { id: _oldId, created_at: _createdAt, updated_at: _updatedAt, ...playData } = play;
+        const { 
+          id: _oldId, 
+          created_at: _createdAt, 
+          updated_at: _updatedAt,
+          formation_id: _formationId,  // Clear - references original playbook's formations
+          personnel_id: _personnelId,  // Clear - references original playbook's personnel
+          ...playData 
+        } = play;
         return {
           ...playData,
           id: crypto.randomUUID(),
           playbook_id: newPlaybook.id,
+          formation_id: null,  // Clear foreign key reference
+          personnel_id: null,  // Clear foreign key reference
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           created_by: userId,
@@ -599,6 +610,8 @@ export class PlaysService {
           creation_context: {
             merged_from: sourcePlaybookIds,
             original_play_id: play.id,
+            original_formation_id: play.formation_id || null,
+            original_personnel_id: play.personnel_id || null,
             merge_date: new Date().toISOString(),
           },
         };
