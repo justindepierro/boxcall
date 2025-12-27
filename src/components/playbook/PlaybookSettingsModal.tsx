@@ -454,7 +454,10 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-brand-jade/10 flex items-center justify-center">
-                <Icon name="clipboard-list" className="w-5 h-5 text-brand-jade" />
+                <Icon
+                  name="clipboard-list"
+                  className="w-5 h-5 text-brand-jade"
+                />
               </div>
               <div>
                 <Typography variant="headline-md" className="text-brand-jade">
@@ -573,7 +576,11 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                 setLocalDisplaySettings((prev) => ({ ...prev, theme }))
               }
               icon={
-                theme === "light" ? "sun" : theme === "dark" ? "moon" : "monitor"
+                theme === "light"
+                  ? "sun"
+                  : theme === "dark"
+                    ? "moon"
+                    : "monitor"
               }
               label={theme}
               isMobile={isMobile}

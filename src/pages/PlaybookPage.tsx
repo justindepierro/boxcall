@@ -779,7 +779,8 @@ const PlaybookPage = () => {
   const { favoriteIds } = useFavoritePlays();
 
   // SINGLE SOURCE OF TRUTH: usePlaybookData provides plays scoped to playbook
-  const { plays: playbookPlays, totalCount: dbTotalCount } = usePlaybookData(activePlaybookId);
+  const { plays: playbookPlays, totalCount: dbTotalCount } =
+    usePlaybookData(activePlaybookId);
 
   // DEBUG: Trace what activePlaybookId is being used
   debug(
