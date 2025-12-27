@@ -12,6 +12,7 @@ import { getTileGradient, getTileIcon } from "./helpers";
 import { useIsMobile } from "../../../hooks/useBreakpoint";
 import { debug } from "../../../utils/logger";
 import { BadgeRow } from "./badges";
+import { useOptionalPlayCardContext } from "./context";
 
 type SelectionHandler = (playId: string, selected: boolean) => void;
 
@@ -104,22 +105,31 @@ const CompactMetadata: React.FC<{ optimisticPlay: PlayType }> = ({
   </div>
 );
 
-export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
-  play,
-  optimisticPlay,
-  displayName,
-  subtitleText,
-  showOneWordCalls,
-  isSelected,
-  onSelectionChange,
-  onOpenAssignments,
-  phaseLabel,
-  isFavorite,
-  onToggleFavorite,
-  isExpanded,
-  onToggleExpand,
-  personnelConfigurations = [],
-}) => {
+export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = (
+  props
+) => {
+  // Try to get values from context, fall back to props
+  const ctx = useOptionalPlayCardContext();
+
+  // Use context values when available, otherwise use props
+  const play = ctx?.play ?? props.play;
+  const optimisticPlay = ctx?.optimisticPlay ?? props.optimisticPlay;
+  const displayName = ctx?.displayName ?? props.displayName;
+  const subtitleText = ctx?.subtitleText ?? props.subtitleText;
+  const showOneWordCalls = ctx?.showOneWordCalls ?? props.showOneWordCalls;
+  const isSelected = ctx?.isSelected ?? props.isSelected;
+  const onSelectionChange = ctx?.onSelectionChange ?? props.onSelectionChange;
+  const phaseLabel = ctx?.phaseLabel ?? props.phaseLabel;
+  const isFavorite = ctx?.isFavorite ?? props.isFavorite;
+  const onToggleFavorite = ctx?.onToggleFavorite ?? props.onToggleFavorite;
+  const isExpanded = ctx?.isExpanded ?? props.isExpanded;
+  const onToggleExpand = ctx?.onToggleExpand ?? props.onToggleExpand;
+  const personnelConfigurations =
+    ctx?.personnelConfigurations ?? props.personnelConfigurations ?? [];
+
+  // Props that are still only passed as props (no context equivalent)
+  const { onOpenAssignments } = props;
+
   // Mobile detection for responsive font sizes
   const isMobile = useIsMobile();
 

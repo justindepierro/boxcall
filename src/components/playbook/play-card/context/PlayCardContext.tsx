@@ -29,6 +29,11 @@ export interface PlayCardContextValue {
   play: PlayType;
   optimisticPlay: PlayType;
 
+  // Display values (computed)
+  displayName: string;
+  subtitleText: string | null;
+  phaseLabel: string | null;
+
   // Saving state
   savingFields: SaveQueue;
   isSaving: (field: string) => boolean;
@@ -38,6 +43,18 @@ export interface PlayCardContextValue {
     field: keyof PlayType,
     value: string | number | boolean | null | string[]
   ) => Promise<void>;
+
+  // Expansion state
+  isExpanded: boolean;
+  onToggleExpand: () => void;
+
+  // Favorites
+  isFavorite: boolean;
+  onToggleFavorite: () => void;
+
+  // Selection
+  isSelected: boolean;
+  onSelectionChange?: (playId: string, selected: boolean) => void;
 
   // Configuration
   personnelConfigurations: PersonnelConfiguration[];
@@ -62,6 +79,19 @@ interface PlayCardProviderProps {
   playNameSuggestions?: string[];
   playTypeSuggestions?: string[];
   personnelSuggestions?: string[];
+  // Display values (pre-computed by parent)
+  displayName: string;
+  subtitleText: string | null;
+  phaseLabel: string | null;
+  // Expansion state
+  isExpanded: boolean;
+  onToggleExpand: () => void;
+  // Favorites
+  isFavorite: boolean;
+  onToggleFavorite: () => void;
+  // Selection
+  isSelected?: boolean;
+  onSelectionChange?: (playId: string, selected: boolean) => void;
 }
 
 // ============================================================================
@@ -85,6 +115,15 @@ export const PlayCardProvider: React.FC<PlayCardProviderProps> = ({
   playNameSuggestions = [],
   playTypeSuggestions = [],
   personnelSuggestions = [],
+  displayName,
+  subtitleText,
+  phaseLabel,
+  isExpanded,
+  onToggleExpand,
+  isFavorite,
+  onToggleFavorite,
+  isSelected = false,
+  onSelectionChange,
 }) => {
   // Optimistic state for instant UI updates
   const [optimisticPlay, setOptimisticPlay] = useState<PlayType>(play);
@@ -167,9 +206,18 @@ export const PlayCardProvider: React.FC<PlayCardProviderProps> = ({
     () => ({
       play,
       optimisticPlay,
+      displayName,
+      subtitleText,
+      phaseLabel,
       savingFields,
       isSaving,
       handleInlineSave,
+      isExpanded,
+      onToggleExpand,
+      isFavorite,
+      onToggleFavorite,
+      isSelected,
+      onSelectionChange,
       personnelConfigurations,
       showOneWordCalls,
       directionDisplayFormat,
@@ -181,9 +229,18 @@ export const PlayCardProvider: React.FC<PlayCardProviderProps> = ({
     [
       play,
       optimisticPlay,
+      displayName,
+      subtitleText,
+      phaseLabel,
       savingFields,
       isSaving,
       handleInlineSave,
+      isExpanded,
+      onToggleExpand,
+      isFavorite,
+      onToggleFavorite,
+      isSelected,
+      onSelectionChange,
       personnelConfigurations,
       showOneWordCalls,
       directionDisplayFormat,

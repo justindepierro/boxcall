@@ -12,6 +12,7 @@ import { PlayCardTileHeader } from "./play-card/PlayCardTileHeader";
 import { PlayCardDetails } from "./play-card/PlayCardDetails";
 import { PlayCardQuickActions } from "./play-card/PlayCardQuickActions";
 import { PlayDiagramTooltip } from "./play-card/PlayDiagramTooltip";
+import { PlayCardProvider } from "./play-card/context";
 import { useRecentPlays } from "../../hooks/useRecentPlays";
 import { useFavoritePlays } from "../../hooks/useFavoritePlays";
 import { useIsMobile } from "../../hooks/useBreakpoint";
@@ -406,46 +407,140 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   );
 
   return (
-    <PlayDiagramTooltip
+    <PlayCardProvider
       play={play}
+      onSave={onSave}
       displayName={displayName}
-      disabled={isExpanded || isMobile}
-      hoverDelay={2000} // 2 second delay for general card hover
-      allPlays={allPlays}
-      onEnterFullscreen={onEnterFullscreen}
+      subtitleText={subtitleText}
+      phaseLabel={phaseLabel}
+      isExpanded={isExpanded}
+      onToggleExpand={handleToggleExpand}
+      isFavorite={isFavorite(play.id)}
+      onToggleFavorite={() => toggleFavorite(play.id)}
+      isSelected={isSelected}
+      onSelectionChange={onSelectionChange}
+      personnelConfigurations={personnelConfigurations}
+      showOneWordCalls={showOneWordCalls}
+      directionDisplayFormat={directionDisplayFormat}
+      formationSuggestions={actualFormationSuggestions}
+      playNameSuggestions={actualPlayNameSuggestions}
+      playTypeSuggestions={playTypeSuggestions}
+      personnelSuggestions={personnelSuggestions}
     >
-      <div
-        className={`w-full rounded-2xl border bg-white transition-all duration-300 overflow-visible ${
-          isSelected
-            ? "ring-2 ring-brand-accent border-accent shadow-lg"
-            : "border-secondary/30 shadow-sm hover:shadow-md hover:border-secondary/60 hover:scale-[1.01] hover:-translate-y-0.5"
-        } ${isCompact ? "text-[13px]" : ""} ${isMobile ? "text-base" : ""} md:min-h-0`}
+      <PlayDiagramTooltip
+        play={play}
+        displayName={displayName}
+        disabled={isExpanded || isMobile}
+        hoverDelay={2000} // 2 second delay for general card hover
+        allPlays={allPlays}
+        onEnterFullscreen={onEnterFullscreen}
       >
-        <div className={`${contentPaddingClass} overflow-visible`}>
-          {!isTile && play.diagram_url && (
-            <PlayDiagramTooltip
-              play={play}
-              displayName={displayName}
-              disabled={isExpanded || isMobile}
-              hoverDelay={0} // Instant for image hover
-              allPlays={allPlays}
-              onEnterFullscreen={onEnterFullscreen}
-            >
-              <div className="mb-3 -mt-1">
-                <img
-                  src={play.diagram_url}
-                  alt={`${displayName} diagram preview`}
-                  className="w-full h-40 object-cover rounded-xl border border-muted cursor-pointer"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-            </PlayDiagramTooltip>
-          )}
+        <div
+          className={`w-full rounded-2xl border bg-white transition-all duration-300 overflow-visible ${
+            isSelected
+              ? "ring-2 ring-brand-accent border-accent shadow-lg"
+              : "border-secondary/30 shadow-sm hover:shadow-md hover:border-secondary/60 hover:scale-[1.01] hover:-translate-y-0.5"
+          } ${isCompact ? "text-[13px]" : ""} ${isMobile ? "text-base" : ""} md:min-h-0`}
+        >
+          <div className={`${contentPaddingClass} overflow-visible`}>
+            {!isTile && play.diagram_url && (
+              <PlayDiagramTooltip
+                play={play}
+                displayName={displayName}
+                disabled={isExpanded || isMobile}
+                hoverDelay={0} // Instant for image hover
+                allPlays={allPlays}
+                onEnterFullscreen={onEnterFullscreen}
+              >
+                <div className="mb-3 -mt-1">
+                  <img
+                    src={play.diagram_url}
+                    alt={`${displayName} diagram preview`}
+                    className="w-full h-40 object-cover rounded-xl border border-muted cursor-pointer"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+              </PlayDiagramTooltip>
+            )}
 
-          {isTile ? (
-            <>
-              <PlayCardTileHeader
+            {isTile ? (
+              <>
+                <PlayCardTileHeader
+                  play={play}
+                  optimisticPlay={optimisticPlay}
+                  displayName={displayName}
+                  subtitleText={subtitleText}
+                  showOneWordCalls={showOneWordCalls}
+                  isSelected={isSelected}
+                  onSelectionChange={onSelectionChange}
+                  onOpenAssignments={handleOpenAssignments}
+                  phaseLabel={phaseLabel}
+                  isFavorite={isFavorite(play.id)}
+                  onToggleFavorite={() => toggleFavorite(play.id)}
+                  isExpanded={isExpanded}
+                  onToggleExpand={handleToggleExpand}
+                  personnelConfigurations={personnelConfigurations}
+                />
+
+                {/* Quick Actions - always visible */}
+                <PlayCardQuickActions
+                  play={play}
+                  onAddToPracticeScript={onAddToPracticeScript}
+                  onAddToGamePlan={onAddToGamePlan}
+                  onOpenAssignments={handleOpenAssignments}
+                  onPostToTeamBulletin={onPostToTeamBulletin}
+                />
+
+                {/* Animated expansion for tile details */}
+                {/* 3-TIER DESIGN: Fast expand/collapse animation (Facebook-fast: 200ms) */}
+                <AnimatePresence>
+                  {isExpanded && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{
+                        duration: 0.2,
+                        ease: [0.4, 0, 0.2, 1],
+                        opacity: { duration: 0.15 },
+                      }}
+                      className="overflow-hidden"
+                    >
+                      <div className="pt-6 mt-6 border-t border-muted">
+                        <PlayCardDetails
+                          play={play}
+                          optimisticPlay={optimisticPlay}
+                          showOneWordCalls={showOneWordCalls}
+                          phaseLabel={phaseLabel}
+                          handleInlineSave={handleInlineSave}
+                          savingFields={savingFields}
+                          formationFieldOrder={formationFieldOrder}
+                          formationFields={formationFields}
+                          formationFieldVisibility={
+                            formationFieldVisibility ||
+                            INITIAL_FORMATION_VISIBILITY
+                          }
+                          toggleFieldVisibility={toggleFieldVisibility}
+                          handleFormationDragEnd={handleFormationDragEnd}
+                          playDetailsFieldOrder={playDetailsFieldOrder}
+                          playDetailsFields={playDetailsFields}
+                          playDetailsFieldVisibility={
+                            playDetailsFieldVisibility ||
+                            INITIAL_PLAY_DETAILS_VISIBILITY
+                          }
+                          handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
+                          getPlayTypeColor={getPlayTypeColor}
+                          getConfidenceColor={getConfidenceColor}
+                          existingPlays={existingPlays}
+                        />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </>
+            ) : (
+              <PlayCardListHeader
                 play={play}
                 optimisticPlay={optimisticPlay}
                 displayName={displayName}
@@ -453,16 +548,23 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 showOneWordCalls={showOneWordCalls}
                 isSelected={isSelected}
                 onSelectionChange={onSelectionChange}
+                isCompact={isCompact}
+                isExpanded={isExpanded}
+                onToggleExpand={handleToggleExpand}
+                onEdit={onEdit}
+                onDuplicate={onDuplicate}
                 onOpenAssignments={handleOpenAssignments}
+                getPlayTypeColor={getPlayTypeColor}
+                getConfidenceColor={getConfidenceColor}
                 phaseLabel={phaseLabel}
                 isFavorite={isFavorite(play.id)}
                 onToggleFavorite={() => toggleFavorite(play.id)}
-                isExpanded={isExpanded}
-                onToggleExpand={handleToggleExpand}
                 personnelConfigurations={personnelConfigurations}
               />
+            )}
 
-              {/* Quick Actions - always visible */}
+            {/* Quick Actions - always visible in list view too */}
+            {!isTile && (
               <PlayCardQuickActions
                 play={play}
                 onAddToPracticeScript={onAddToPracticeScript}
@@ -470,118 +572,38 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 onOpenAssignments={handleOpenAssignments}
                 onPostToTeamBulletin={onPostToTeamBulletin}
               />
+            )}
 
-              {/* Animated expansion for tile details */}
-              {/* 3-TIER DESIGN: Fast expand/collapse animation (Facebook-fast: 200ms) */}
-              <AnimatePresence>
-                {isExpanded && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{
-                      duration: 0.2,
-                      ease: [0.4, 0, 0.2, 1],
-                      opacity: { duration: 0.15 },
-                    }}
-                    className="overflow-hidden"
-                  >
-                    <div className="pt-6 mt-6 border-t border-muted">
-                      <PlayCardDetails
-                        play={play}
-                        optimisticPlay={optimisticPlay}
-                        showOneWordCalls={showOneWordCalls}
-                        phaseLabel={phaseLabel}
-                        handleInlineSave={handleInlineSave}
-                        savingFields={savingFields}
-                        formationFieldOrder={formationFieldOrder}
-                        formationFields={formationFields}
-                        formationFieldVisibility={
-                          formationFieldVisibility ||
-                          INITIAL_FORMATION_VISIBILITY
-                        }
-                        toggleFieldVisibility={toggleFieldVisibility}
-                        handleFormationDragEnd={handleFormationDragEnd}
-                        playDetailsFieldOrder={playDetailsFieldOrder}
-                        playDetailsFields={playDetailsFields}
-                        playDetailsFieldVisibility={
-                          playDetailsFieldVisibility ||
-                          INITIAL_PLAY_DETAILS_VISIBILITY
-                        }
-                        handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
-                        getPlayTypeColor={getPlayTypeColor}
-                        getConfidenceColor={getConfidenceColor}
-                        existingPlays={existingPlays}
-                      />
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </>
-          ) : (
-            <PlayCardListHeader
-              play={play}
-              optimisticPlay={optimisticPlay}
-              displayName={displayName}
-              subtitleText={subtitleText}
-              showOneWordCalls={showOneWordCalls}
-              isSelected={isSelected}
-              onSelectionChange={onSelectionChange}
-              isCompact={isCompact}
-              isExpanded={isExpanded}
-              onToggleExpand={handleToggleExpand}
-              onEdit={onEdit}
-              onDuplicate={onDuplicate}
-              onOpenAssignments={handleOpenAssignments}
-              getPlayTypeColor={getPlayTypeColor}
-              getConfidenceColor={getConfidenceColor}
-              phaseLabel={phaseLabel}
-              isFavorite={isFavorite(play.id)}
-              onToggleFavorite={() => toggleFavorite(play.id)}
-              personnelConfigurations={personnelConfigurations}
-            />
-          )}
-
-          {/* Quick Actions - always visible in list view too */}
-          {!isTile && (
-            <PlayCardQuickActions
-              play={play}
-              onAddToPracticeScript={onAddToPracticeScript}
-              onAddToGamePlan={onAddToGamePlan}
-              onOpenAssignments={handleOpenAssignments}
-              onPostToTeamBulletin={onPostToTeamBulletin}
-            />
-          )}
-
-          {!isTile && isExpanded && (
-            <PlayCardDetails
-              play={play}
-              optimisticPlay={optimisticPlay}
-              showOneWordCalls={showOneWordCalls}
-              phaseLabel={phaseLabel}
-              handleInlineSave={handleInlineSave}
-              savingFields={savingFields}
-              formationFieldOrder={formationFieldOrder}
-              formationFields={formationFields}
-              formationFieldVisibility={
-                formationFieldVisibility || INITIAL_FORMATION_VISIBILITY
-              }
-              toggleFieldVisibility={toggleFieldVisibility}
-              handleFormationDragEnd={handleFormationDragEnd}
-              playDetailsFieldOrder={playDetailsFieldOrder}
-              playDetailsFields={playDetailsFields}
-              playDetailsFieldVisibility={
-                playDetailsFieldVisibility || INITIAL_PLAY_DETAILS_VISIBILITY
-              }
-              handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
-              getPlayTypeColor={getPlayTypeColor}
-              getConfidenceColor={getConfidenceColor}
-              existingPlays={existingPlays}
-            />
-          )}
+            {!isTile && isExpanded && (
+              <PlayCardDetails
+                play={play}
+                optimisticPlay={optimisticPlay}
+                showOneWordCalls={showOneWordCalls}
+                phaseLabel={phaseLabel}
+                handleInlineSave={handleInlineSave}
+                savingFields={savingFields}
+                formationFieldOrder={formationFieldOrder}
+                formationFields={formationFields}
+                formationFieldVisibility={
+                  formationFieldVisibility || INITIAL_FORMATION_VISIBILITY
+                }
+                toggleFieldVisibility={toggleFieldVisibility}
+                handleFormationDragEnd={handleFormationDragEnd}
+                playDetailsFieldOrder={playDetailsFieldOrder}
+                playDetailsFields={playDetailsFields}
+                playDetailsFieldVisibility={
+                  playDetailsFieldVisibility || INITIAL_PLAY_DETAILS_VISIBILITY
+                }
+                handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
+                getPlayTypeColor={getPlayTypeColor}
+                getConfidenceColor={getConfidenceColor}
+                existingPlays={existingPlays}
+              />
+            )}
+          </div>
         </div>
-      </div>
-    </PlayDiagramTooltip>
+      </PlayDiagramTooltip>
+    </PlayCardProvider>
   );
 };
 
