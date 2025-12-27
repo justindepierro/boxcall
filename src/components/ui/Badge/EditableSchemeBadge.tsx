@@ -64,7 +64,13 @@ export const EditableSchemeBadge: React.FC<EditableSchemeBadgeProps> = ({
       </Badge>
 
       {open && (
-        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 z-popover w-max bg-surface border border-divider rounded-lg p-2 shadow-md">
+        <div className="fixed z-modal w-max bg-white dark:bg-navy-800 border border-neutral-300 dark:border-navy-600 rounded-lg p-2 shadow-2xl"
+          style={{
+            top: rootRef.current ? rootRef.current.getBoundingClientRect().bottom + 8 : 0,
+            left: rootRef.current ? rootRef.current.getBoundingClientRect().left + rootRef.current.getBoundingClientRect().width / 2 : 0,
+            transform: 'translateX(-50%)',
+          }}
+        >
           <div className="grid grid-cols-3 gap-2">
             {GRID_SCHEMES.map((opt) => {
               const isSelected = opt === scheme;
