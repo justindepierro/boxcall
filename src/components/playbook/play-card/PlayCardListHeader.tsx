@@ -19,7 +19,7 @@ import type { Play as PlayType } from "../../../types/play";
 import type { PersonnelConfiguration } from "../../../types/personnel";
 import { debug } from "../../../utils/logger";
 import { BadgeRow } from "./badges";
-import { useOptionalPlayCardContext } from "./context";
+import { usePlayCardProps } from "./hooks/usePlayCardProps";
 
 // ============================================================================
 // Types
@@ -138,24 +138,27 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
 export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = (
   props
 ) => {
-  // Try to get values from context, fall back to props
-  const ctx = useOptionalPlayCardContext();
+  // Merge context and props via hook (context takes precedence)
+  const merged = usePlayCardProps(props);
 
-  // Use context values when available, otherwise use props
-  const play = ctx?.play ?? props.play;
-  const optimisticPlay = ctx?.optimisticPlay ?? props.optimisticPlay;
-  const displayName = ctx?.displayName ?? props.displayName;
-  const subtitleText = ctx?.subtitleText ?? props.subtitleText;
-  const showOneWordCalls = ctx?.showOneWordCalls ?? props.showOneWordCalls;
-  const isSelected = ctx?.isSelected ?? props.isSelected;
-  const onSelectionChange = ctx?.onSelectionChange ?? props.onSelectionChange;
-  const isExpanded = ctx?.isExpanded ?? props.isExpanded ?? false;
-  const onToggleExpand = ctx?.onToggleExpand ?? props.onToggleExpand;
-  const phaseLabel = ctx?.phaseLabel ?? props.phaseLabel;
-  const isFavorite = ctx?.isFavorite ?? props.isFavorite;
-  const onToggleFavorite = ctx?.onToggleFavorite ?? props.onToggleFavorite;
-  const personnelConfigurations =
-    ctx?.personnelConfigurations ?? props.personnelConfigurations ?? [];
+  // Destructure with guaranteed fallbacks for required props
+  const {
+    play,
+    optimisticPlay,
+    displayName,
+    subtitleText,
+    showOneWordCalls,
+    isSelected,
+    onSelectionChange,
+    phaseLabel,
+    isFavorite,
+    onToggleFavorite,
+    personnelConfigurations,
+  } = merged;
+
+  // These are required in this header - use props as guaranteed fallback
+  const isExpanded = merged.isExpanded ?? props.isExpanded;
+  const onToggleExpand = merged.onToggleExpand ?? props.onToggleExpand;
 
   // Props that are still only passed as props (no context equivalent)
   const {

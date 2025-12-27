@@ -137,6 +137,197 @@ const MergeSummary: React.FC<{
   </div>
 );
 
+/** Instructions card */
+const InstructionsCard: React.FC = () => (
+  <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+    <div className="flex gap-3">
+      <Icon
+        name="info"
+        className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5"
+      />
+      <div>
+        <Typography
+          variant="body-sm"
+          className="font-medium text-blue-700 dark:text-blue-400"
+        >
+          How it works
+        </Typography>
+        <Typography
+          variant="caption"
+          className="text-blue-600/80 dark:text-blue-400/80 mt-1"
+        >
+          Select playbooks to combine into a new playbook. All plays will be
+          copied—your original playbooks stay untouched.
+        </Typography>
+      </div>
+    </div>
+  </div>
+);
+
+/** Playbook selection list */
+const PlaybookSelectionList: React.FC<{
+  playbooks: Playbook[];
+  selectedIds: Set<string>;
+  onToggle: (id: string) => void;
+  isMobile: boolean;
+}> = ({ playbooks, selectedIds, onToggle, isMobile }) => (
+  <div className="space-y-3">
+    <Typography
+      variant="label-lg"
+      className="text-navy-900 dark:text-neutral-100 font-semibold"
+    >
+      Select Playbooks
+    </Typography>
+
+    <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+      {playbooks.map((playbook) => (
+        <PlaybookSelectCard
+          key={playbook.id}
+          playbook={playbook}
+          selected={selectedIds.has(playbook.id)}
+          onToggle={() => onToggle(playbook.id)}
+          isMobile={isMobile}
+        />
+      ))}
+
+      {playbooks.length === 0 && (
+        <div className="p-6 text-center">
+          <Icon
+            name="book"
+            className="w-10 h-10 mx-auto text-neutral-300 dark:text-neutral-600 mb-2"
+          />
+          <Typography variant="body-sm" className="text-neutral-500">
+            No playbooks available
+          </Typography>
+        </div>
+      )}
+    </div>
+  </div>
+);
+
+/** New playbook form fields */
+const NewPlaybookForm: React.FC<{
+  newName: string;
+  setNewName: (v: string) => void;
+  newDescription: string;
+  setNewDescription: (v: string) => void;
+  suggestName: () => string;
+  showSuggest: boolean;
+  isMobile: boolean;
+}> = ({
+  newName,
+  setNewName,
+  newDescription,
+  setNewDescription,
+  suggestName,
+  showSuggest,
+  isMobile,
+}) => (
+  <div className="space-y-4 pt-4 border-t border-neutral-200 dark:border-navy-700">
+    <div className="flex items-center justify-between">
+      <Typography
+        variant="label-lg"
+        className="text-navy-900 dark:text-neutral-100 font-semibold"
+      >
+        New Playbook
+      </Typography>
+      {showSuggest && !newName && (
+        <button
+          onClick={() => {
+            triggerHapticFeedback("light");
+            setNewName(suggestName());
+          }}
+          className="text-xs text-brand-jade hover:text-brand-jade/80 font-medium"
+        >
+          Suggest name
+        </button>
+      )}
+    </div>
+
+    <div className="space-y-3">
+      <div className="space-y-2">
+        <Typography
+          variant="label-md"
+          className="text-navy-800 dark:text-neutral-200 font-medium"
+        >
+          Name <span className="text-error-500">*</span>
+        </Typography>
+        <Input
+          value={newName}
+          onChange={(e) => setNewName(e.target.value)}
+          placeholder="e.g., Master Playbook 2025"
+          className={`w-full ${isMobile ? "h-12" : ""}`}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Typography
+          variant="label-md"
+          className="text-navy-800 dark:text-neutral-200 font-medium"
+        >
+          Description
+        </Typography>
+        <textarea
+          value={newDescription}
+          onChange={(e) => setNewDescription(e.target.value)}
+          placeholder="Optional description..."
+          className={`w-full px-3 py-2.5 rounded-xl border border-neutral-300 dark:border-navy-600 bg-white dark:bg-navy-800 text-navy-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 resize-none focus:outline-none focus:ring-2 focus:ring-brand-jade/50 focus:border-brand-jade transition-all ${
+            isMobile ? "min-h-[80px]" : "min-h-[60px]"
+          }`}
+        />
+      </div>
+    </div>
+  </div>
+);
+
+/** Action buttons footer */
+const ActionFooter: React.FC<{
+  onClose: () => void;
+  onMerge: () => void;
+  canMerge: boolean;
+  merging: boolean;
+  isMobile: boolean;
+}> = ({ onClose, onMerge, canMerge, merging, isMobile }) => (
+  <div
+    className={`flex gap-3 pt-4 border-t border-neutral-200 dark:border-navy-700 ${
+      isMobile
+        ? "sticky bottom-0 bg-white dark:bg-navy-900 pb-safe -mx-4 px-4 pt-4"
+        : ""
+    }`}
+  >
+    <Button
+      onClick={() => {
+        triggerHapticFeedback("light");
+        onClose();
+      }}
+      variant="outline"
+      size={isMobile ? "lg" : "md"}
+      className="flex-1"
+    >
+      Cancel
+    </Button>
+    <Button
+      onClick={onMerge}
+      variant="primary"
+      size={isMobile ? "lg" : "md"}
+      className="flex-1"
+      disabled={!canMerge || merging}
+    >
+      {merging ? (
+        <>
+          <Icon name="loader" className="w-4 h-4 mr-2 animate-spin" />
+          Merging...
+        </>
+      ) : (
+        <>
+          <Icon name="copy" className="w-4 h-4 mr-2" />
+          Create Playbook
+        </>
+      )}
+    </Button>
+  </div>
+);
+
 // ============================================================================
 // Main Component
 // ============================================================================
@@ -225,66 +416,15 @@ export const MergePlaybooksModal: React.FC<MergePlaybooksModalProps> = ({
 
   const renderContent = () => (
     <div className="space-y-6">
-      {/* Instructions */}
-      <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-        <div className="flex gap-3">
-          <Icon
-            name="info"
-            className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5"
-          />
-          <div>
-            <Typography
-              variant="body-sm"
-              className="font-medium text-blue-700 dark:text-blue-400"
-            >
-              How it works
-            </Typography>
-            <Typography
-              variant="caption"
-              className="text-blue-600/80 dark:text-blue-400/80 mt-1"
-            >
-              Select playbooks to combine into a new playbook. All plays will be
-              copied—your original playbooks stay untouched.
-            </Typography>
-          </div>
-        </div>
-      </div>
+      <InstructionsCard />
 
-      {/* Playbook Selection */}
-      <div className="space-y-3">
-        <Typography
-          variant="label-lg"
-          className="text-navy-900 dark:text-neutral-100 font-semibold"
-        >
-          Select Playbooks
-        </Typography>
+      <PlaybookSelectionList
+        playbooks={playbooks}
+        selectedIds={selectedIds}
+        onToggle={togglePlaybook}
+        isMobile={isMobile}
+      />
 
-        <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
-          {playbooks.map((playbook) => (
-            <PlaybookSelectCard
-              key={playbook.id}
-              playbook={playbook}
-              selected={selectedIds.has(playbook.id)}
-              onToggle={() => togglePlaybook(playbook.id)}
-              isMobile={isMobile}
-            />
-          ))}
-
-          {playbooks.length === 0 && (
-            <div className="p-6 text-center">
-              <Icon
-                name="book"
-                className="w-10 h-10 mx-auto text-neutral-300 dark:text-neutral-600 mb-2"
-              />
-              <Typography variant="body-sm" className="text-neutral-500">
-                No playbooks available
-              </Typography>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Merge Summary */}
       {selectedIds.size > 0 && (
         <MergeSummary
           selectedCount={selectedIds.size}
@@ -292,102 +432,23 @@ export const MergePlaybooksModal: React.FC<MergePlaybooksModalProps> = ({
         />
       )}
 
-      {/* New Playbook Details */}
-      <div className="space-y-4 pt-4 border-t border-neutral-200 dark:border-navy-700">
-        <div className="flex items-center justify-between">
-          <Typography
-            variant="label-lg"
-            className="text-navy-900 dark:text-neutral-100 font-semibold"
-          >
-            New Playbook
-          </Typography>
-          {selectedPlaybooks.length >= 2 && !newName && (
-            <button
-              onClick={() => {
-                triggerHapticFeedback("light");
-                setNewName(suggestName());
-              }}
-              className="text-xs text-brand-jade hover:text-brand-jade/80 font-medium"
-            >
-              Suggest name
-            </button>
-          )}
-        </div>
+      <NewPlaybookForm
+        newName={newName}
+        setNewName={setNewName}
+        newDescription={newDescription}
+        setNewDescription={setNewDescription}
+        suggestName={suggestName}
+        showSuggest={selectedPlaybooks.length >= 2}
+        isMobile={isMobile}
+      />
 
-        <div className="space-y-3">
-          <div className="space-y-2">
-            <Typography
-              variant="label-md"
-              className="text-navy-800 dark:text-neutral-200 font-medium"
-            >
-              Name <span className="text-error-500">*</span>
-            </Typography>
-            <Input
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              placeholder="e.g., Master Playbook 2025"
-              className={`w-full ${isMobile ? "h-12" : ""}`}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Typography
-              variant="label-md"
-              className="text-navy-800 dark:text-neutral-200 font-medium"
-            >
-              Description
-            </Typography>
-            <textarea
-              value={newDescription}
-              onChange={(e) => setNewDescription(e.target.value)}
-              placeholder="Optional description..."
-              className={`w-full px-3 py-2.5 rounded-xl border border-neutral-300 dark:border-navy-600 bg-white dark:bg-navy-800 text-navy-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 resize-none focus:outline-none focus:ring-2 focus:ring-brand-jade/50 focus:border-brand-jade transition-all ${
-                isMobile ? "min-h-[80px]" : "min-h-[60px]"
-              }`}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Actions */}
-      <div
-        className={`flex gap-3 pt-4 border-t border-neutral-200 dark:border-navy-700 ${
-          isMobile
-            ? "sticky bottom-0 bg-white dark:bg-navy-900 pb-safe -mx-4 px-4 pt-4"
-            : ""
-        }`}
-      >
-        <Button
-          onClick={() => {
-            triggerHapticFeedback("light");
-            onClose();
-          }}
-          variant="outline"
-          size={isMobile ? "lg" : "md"}
-          className="flex-1"
-        >
-          Cancel
-        </Button>
-        <Button
-          onClick={handleMerge}
-          variant="primary"
-          size={isMobile ? "lg" : "md"}
-          className="flex-1"
-          disabled={!canMerge || merging}
-        >
-          {merging ? (
-            <>
-              <Icon name="loader" className="w-4 h-4 mr-2 animate-spin" />
-              Merging...
-            </>
-          ) : (
-            <>
-              <Icon name="copy" className="w-4 h-4 mr-2" />
-              Create Playbook
-            </>
-          )}
-        </Button>
-      </div>
+      <ActionFooter
+        onClose={onClose}
+        onMerge={handleMerge}
+        canMerge={canMerge}
+        merging={merging}
+        isMobile={isMobile}
+      />
     </div>
   );
 
