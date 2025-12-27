@@ -104,11 +104,11 @@ const SectionHeader: React.FC<{
       <Icon name={icon as any} className={`w-5 h-5 ${iconColor}`} />
     </div>
     <div>
-      <Typography variant="headline-sm" className="text-primary">
+      <Typography variant="headline-sm" className="text-navy-900 dark:text-neutral-100">
         {title}
       </Typography>
       {subtitle && (
-        <Typography variant="caption" color="muted" className="mt-0.5">
+        <Typography variant="caption" className="mt-0.5 text-neutral-600 dark:text-neutral-400">
           {subtitle}
         </Typography>
       )}
@@ -128,7 +128,7 @@ const ToggleSwitch: React.FC<{
   <label
     className={`flex items-center justify-between ${
       isMobile ? "p-4 min-h-[64px]" : "p-3"
-    } rounded-xl bg-secondary hover:bg-tertiary transition-colors cursor-pointer`}
+    } rounded-xl bg-neutral-100 dark:bg-navy-800 hover:bg-neutral-200 dark:hover:bg-navy-700 transition-colors cursor-pointer border border-neutral-200 dark:border-navy-700`}
   >
     <div className="flex items-center gap-3">
       {icon && (
@@ -138,11 +138,11 @@ const ToggleSwitch: React.FC<{
         />
       )}
       <div>
-        <Typography variant="body-sm" className="font-medium text-primary">
+        <Typography variant="body-sm" className="font-medium text-navy-900 dark:text-neutral-100">
           {label}
         </Typography>
         {description && (
-          <Typography variant="caption" color="muted">
+          <Typography variant="caption" className="text-neutral-600 dark:text-neutral-400">
             {description}
           </Typography>
         )}
@@ -186,21 +186,21 @@ const SelectionCard: React.FC<{
     }}
     className={`${
       isMobile ? "p-4 min-h-[56px]" : "p-3"
-    } rounded-xl border-2 transition-all flex flex-col items-center justify-center gap-1 ${
+    } rounded-xl border-2 transition-all flex flex-col items-center justify-center gap-1 bg-white dark:bg-navy-800 ${
       selected
         ? "border-brand-jade bg-brand-jade/10 shadow-sm"
-        : "border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600"
+        : "border-neutral-200 dark:border-navy-600 hover:border-neutral-300 dark:hover:border-navy-500"
     }`}
   >
     {icon && (
       <Icon
         name={icon as any}
-        className={`${isMobile ? "w-6 h-6" : "w-5 h-5"} ${selected ? "text-brand-jade" : "text-secondary"}`}
+        className={`${isMobile ? "w-6 h-6" : "w-5 h-5"} ${selected ? "text-brand-jade" : "text-neutral-600 dark:text-neutral-400"}`}
       />
     )}
     <Typography
       variant="caption"
-      className={`capitalize text-center ${selected ? "text-brand-jade font-medium" : "text-secondary"}`}
+      className={`capitalize text-center ${selected ? "text-brand-jade font-medium" : "text-neutral-700 dark:text-neutral-300"}`}
     >
       {label}
     </Typography>
@@ -233,12 +233,12 @@ const ActionButton: React.FC<{
       }
     }}
     disabled={disabled}
-    className={`w-full flex items-center gap-4 ${isMobile ? "p-4" : "p-3"} rounded-xl transition-all ${
+    className={`w-full flex items-center gap-4 ${isMobile ? "p-4" : "p-3"} rounded-xl transition-all border ${
       disabled
-        ? "opacity-50 cursor-not-allowed bg-neutral-100 dark:bg-neutral-800"
+        ? "opacity-50 cursor-not-allowed bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
         : variant === "danger"
-          ? "bg-error-50 dark:bg-error-900/20 hover:bg-error-100 dark:hover:bg-error-900/30"
-          : "bg-secondary hover:bg-tertiary"
+          ? "bg-error-50 dark:bg-error-900/20 hover:bg-error-100 dark:hover:bg-error-900/30 border-error-200 dark:border-error-800"
+          : "bg-white dark:bg-navy-800 hover:bg-neutral-50 dark:hover:bg-navy-700 border-neutral-200 dark:border-navy-600"
     }`}
   >
     <div
@@ -256,15 +256,15 @@ const ActionButton: React.FC<{
     <div className="flex-1 text-left">
       <Typography
         variant="body-sm"
-        className={`font-medium ${variant === "danger" ? "text-error-700 dark:text-error-400" : "text-primary"}`}
+        className={`font-medium ${variant === "danger" ? "text-error-700 dark:text-error-400" : "text-navy-900 dark:text-neutral-100"}`}
       >
         {label}
       </Typography>
-      <Typography variant="caption" color="muted">
+      <Typography variant="caption" className="text-neutral-600 dark:text-neutral-400">
         {description}
       </Typography>
     </div>
-    <Icon name="chevron-right" className="w-4 h-4 text-muted" />
+    <Icon name="chevron-right" className="w-4 h-4 text-neutral-400 dark:text-neutral-500" />
   </button>
 );
 
@@ -426,7 +426,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
 
       {/* Playbook Name */}
       <div className="space-y-2">
-        <Typography variant="label-md">Playbook Name</Typography>
+        <Typography variant="label-md" className="text-navy-900 dark:text-neutral-100">Playbook Name</Typography>
         <Input
           value={playbookName}
           onChange={(e) => setPlaybookName(e.target.value)}
@@ -437,12 +437,12 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
 
       {/* Description */}
       <div className="space-y-2">
-        <Typography variant="label-md">Description</Typography>
+        <Typography variant="label-md" className="text-navy-900 dark:text-neutral-100">Description</Typography>
         <textarea
           value={playbookDescription}
           onChange={(e) => setPlaybookDescription(e.target.value)}
           placeholder="Optional description..."
-          className={`w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-primary text-primary resize-none focus:outline-none focus:ring-2 focus:ring-brand-jade ${
+          className={`w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-navy-600 bg-white dark:bg-navy-800 text-navy-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 resize-none focus:outline-none focus:ring-2 focus:ring-brand-jade focus:border-brand-jade ${
             isMobile ? "min-h-[100px]" : "min-h-[80px]"
           }`}
         />
@@ -474,13 +474,13 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
 
       {/* Default Settings */}
       <div className="space-y-4 pt-4 border-t border-neutral-200 dark:border-neutral-700">
-        <Typography variant="label-lg" className="text-primary">
+        <Typography variant="label-lg" className="text-navy-900 dark:text-neutral-100 font-semibold">
           Default Values for New Plays
         </Typography>
 
         <div className="space-y-3">
           <div className="space-y-1">
-            <Typography variant="label-md">Default Personnel</Typography>
+            <Typography variant="label-md" className="text-navy-800 dark:text-neutral-200">Default Personnel</Typography>
             <Dropdown
               value={localDefaultSettings.defaultPersonnel}
               onChange={(value) =>
@@ -503,7 +503,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
           </div>
 
           <div className="space-y-1">
-            <Typography variant="label-md">Default Formation</Typography>
+            <Typography variant="label-md" className="text-navy-800 dark:text-neutral-200">Default Formation</Typography>
             <Input
               value={localDefaultSettings.defaultFormation}
               onChange={(e) =>
@@ -518,7 +518,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
           </div>
 
           <div className="space-y-1">
-            <Typography variant="label-md">Default Play Type</Typography>
+            <Typography variant="label-md" className="text-navy-800 dark:text-neutral-200">Default Play Type</Typography>
             <Dropdown
               value={localDefaultSettings.defaultPlayType}
               onChange={(value) =>
@@ -566,7 +566,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
 
       {/* Theme */}
       <div className="space-y-2">
-        <Typography variant="label-md">Theme</Typography>
+        <Typography variant="label-md" className="text-navy-900 dark:text-neutral-100">Theme</Typography>
         <div className="grid grid-cols-3 gap-2">
           {(["light", "dark", "auto"] as const).map((theme) => (
             <SelectionCard
@@ -591,7 +591,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
 
       {/* Grid Density */}
       <div className="space-y-2">
-        <Typography variant="label-md">Grid Density</Typography>
+        <Typography variant="label-md" className="text-navy-900 dark:text-neutral-100">Grid Density</Typography>
         <div className="grid grid-cols-2 gap-2">
           {(["comfortable", "compact"] as const).map((density) => (
             <SelectionCard
@@ -613,7 +613,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
 
       {/* Default View */}
       <div className="space-y-2">
-        <Typography variant="label-md">Default View</Typography>
+        <Typography variant="label-md" className="text-navy-900 dark:text-neutral-100">Default View</Typography>
         <div className="grid grid-cols-2 gap-2">
           {(["grid", "list"] as const).map((view) => (
             <SelectionCard
@@ -709,9 +709,9 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
       {/* Merge Modal */}
       {showMergeModal && (
         <div className="fixed inset-0 z-modal bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-primary rounded-2xl p-6 max-w-md w-full max-h-[80vh] overflow-y-auto">
+          <div className="bg-white dark:bg-navy-900 rounded-2xl p-6 max-w-md w-full max-h-[80vh] overflow-y-auto shadow-2xl">
             <div className="flex items-center justify-between mb-4">
-              <Typography variant="headline-md">
+              <Typography variant="headline-md" className="text-navy-900 dark:text-neutral-100">
                 Select Playbooks to Merge
               </Typography>
               <button
@@ -719,15 +719,15 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                   setShowMergeModal(false);
                   setSelectedMergePlaybooks([]);
                 }}
-                className="p-2 hover:bg-secondary rounded-full"
+                className="p-2 hover:bg-neutral-100 dark:hover:bg-navy-800 rounded-full transition-colors"
               >
-                <Icon name="close" className="w-5 h-5" />
+                <Icon name="close" className="w-5 h-5 text-neutral-600 dark:text-neutral-400" />
               </button>
             </div>
 
-            <Typography variant="body-sm" color="muted" className="mb-4">
+            <Typography variant="body-sm" className="mb-4 text-neutral-600 dark:text-neutral-400">
               Select one or more playbooks to merge into{" "}
-              <strong>{playbook?.name}</strong>. All plays will be copied
+              <strong className="text-navy-900 dark:text-neutral-100">{playbook?.name}</strong>. All plays will be copied
               (originals won&apos;t be deleted).
             </Typography>
 
@@ -740,7 +740,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                     className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors ${
                       selectedMergePlaybooks.includes(pb.id)
                         ? "bg-brand-jade/10 border-2 border-brand-jade"
-                        : "bg-secondary hover:bg-tertiary border-2 border-transparent"
+                        : "bg-neutral-50 dark:bg-navy-800 hover:bg-neutral-100 dark:hover:bg-navy-700 border-2 border-transparent"
                     }`}
                   >
                     <input
@@ -755,13 +755,13 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                           );
                         }
                       }}
-                      className="w-5 h-5 rounded border-neutral-300"
+                      className="w-5 h-5 rounded border-neutral-300 dark:border-navy-600 accent-brand-jade"
                     />
                     <div className="flex-1">
-                      <Typography variant="body-sm" className="font-medium">
+                      <Typography variant="body-sm" className="font-medium text-navy-900 dark:text-neutral-100">
                         {pb.name}
                       </Typography>
-                      <Typography variant="caption" color="muted">
+                      <Typography variant="caption" className="text-neutral-600 dark:text-neutral-400">
                         {pb.play_count} plays
                       </Typography>
                     </div>
@@ -884,7 +884,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                 ? section.id === "danger"
                   ? "bg-error-500 text-white shadow-md"
                   : "bg-brand-jade text-white shadow-md"
-                : "bg-secondary text-secondary hover:bg-tertiary"
+                : "bg-neutral-100 dark:bg-navy-800 text-navy-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-navy-700"
             }`}
           >
             <Icon
@@ -914,7 +914,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
       {activeSection !== "danger" && (
         <div
           className={`flex gap-3 pt-4 border-t border-neutral-200 dark:border-neutral-700 ${
-            isMobile ? "sticky bottom-0 bg-primary pb-safe -mx-4 px-4" : ""
+            isMobile ? "sticky bottom-0 bg-white dark:bg-navy-900 pb-safe -mx-4 px-4" : ""
           }`}
         >
           <Button
@@ -959,9 +959,9 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
                 <Icon name="settings" className="w-5 h-5 text-brand-jade" />
               </div>
               <div>
-                <Typography variant="headline-md">Playbook Settings</Typography>
+                <Typography variant="headline-md" className="text-navy-900 dark:text-neutral-100">Playbook Settings</Typography>
                 {playbook && (
-                  <Typography variant="caption" color="muted">
+                  <Typography variant="caption" className="text-neutral-600 dark:text-neutral-400">
                     {playbook.name}
                   </Typography>
                 )}
