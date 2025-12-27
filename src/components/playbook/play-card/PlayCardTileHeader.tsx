@@ -260,29 +260,25 @@ const EditablePersonnelBadge: React.FC<{
 
   if (badgeCustomization) {
     return (
-      <button
-        onClick={handleClick}
-        className="group relative cursor-pointer"
-        aria-label={`Edit personnel: ${personnel}`}
-      >
+      <div className="group relative inline-flex items-center gap-1">
         <PersonnelBadge
           personnel={personnel}
           size="sm"
           badgeCustomization={badgeCustomization}
         />
-        <span className="absolute -top-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <button
+          onClick={handleClick}
+          className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 rounded hover:bg-jade-100"
+          aria-label={`Edit personnel: ${personnel}`}
+        >
           <Icon name="edit" className="w-3 h-3 text-jade-600" />
-        </span>
-      </button>
+        </button>
+      </div>
     );
   }
 
   return (
-    <button
-      onClick={handleClick}
-      className="group relative cursor-pointer"
-      aria-label={`Edit personnel: ${personnel}`}
-    >
+    <div className="group relative inline-flex items-center gap-1">
       <EditableSchemeBadge
         label={personnel}
         scheme={personnelScheme}
@@ -290,10 +286,14 @@ const EditablePersonnelBadge: React.FC<{
         size="sm"
         ariaLabel={`Change ${personnel} badge color`}
       />
-      <span className="absolute -top-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+      <button
+        onClick={handleClick}
+        className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 rounded hover:bg-jade-100"
+        aria-label={`Edit personnel: ${personnel}`}
+      >
         <Icon name="edit" className="w-3 h-3 text-jade-600" />
-      </span>
-    </button>
+      </button>
+    </div>
   );
 };
 
