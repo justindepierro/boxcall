@@ -51,7 +51,9 @@
     "NETLIFY_SITE_ID",
     "cssConflict",
     "partialize",
-    "pkce"
+    "pkce",
+    "overscan",
+    "Wdyr"
   ],
   "ignorePaths": [
     "node_modules",

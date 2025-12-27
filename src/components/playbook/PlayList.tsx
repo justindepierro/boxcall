@@ -297,26 +297,32 @@ const PlayListInner: React.FC<PlayListProps> = ({
         />
       )}
 
-      {!loading && !error && !showEmpty && (
-        <PlayListHeader
-          displayPlays={displayPlays}
-          selectedCategory={
-            filters.favoritesOnly
-              ? "favorites"
-              : filters.mostUsedOnly
-                ? "most-used"
-                : (filters.playType ?? undefined)
-          }
-          selectedSubcategory={undefined}
-          enableBulkOperations={enableBulkOperations}
-          selectedPlayIds={selectedPlayIds}
-          onSelectAll={handleSelectAll}
-          showOneWordCalls={showOneWordCalls ?? false}
-          onShowOneWordCallsChange={setShowOneWordCalls}
-          directionDisplayFormat={directionDisplayFormat || "full"}
-          onDirectionDisplayFormatChange={setDirectionDisplayFormat}
-        />
-      )}
+      {!loading && !error && !showEmpty && (() => {
+        // Derive category for header display
+        let selectedCategory: string | undefined;
+        if (filters.favoritesOnly) {
+          selectedCategory = "favorites";
+        } else if (filters.mostUsedOnly) {
+          selectedCategory = "most-used";
+        } else {
+          selectedCategory = filters.playType ?? undefined;
+        }
+
+        return (
+          <PlayListHeader
+            displayPlays={displayPlays}
+            selectedCategory={selectedCategory}
+            selectedSubcategory={undefined}
+            enableBulkOperations={enableBulkOperations}
+            selectedPlayIds={selectedPlayIds}
+            onSelectAll={handleSelectAll}
+            showOneWordCalls={showOneWordCalls ?? false}
+            onShowOneWordCallsChange={setShowOneWordCalls}
+            directionDisplayFormat={directionDisplayFormat || "full"}
+            onDirectionDisplayFormatChange={setDirectionDisplayFormat}
+          />
+        );
+      })()}
 
       {/* List View with Virtuoso */}
       {!showEmpty && !loading && !error && (
