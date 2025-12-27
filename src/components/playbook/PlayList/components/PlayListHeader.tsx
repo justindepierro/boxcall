@@ -11,6 +11,7 @@ import type { Play } from "../../../../types/play";
 
 interface PlayListHeaderProps {
   displayPlays: Play[];
+  totalCount: number;
   selectedCategory?: string;
   selectedSubcategory?: string;
   enableBulkOperations: boolean;
@@ -26,6 +27,7 @@ interface PlayListHeaderProps {
 
 export const PlayListHeader: React.FC<PlayListHeaderProps> = ({
   displayPlays,
+  totalCount,
   selectedCategory,
   selectedSubcategory,
   enableBulkOperations,
@@ -41,7 +43,7 @@ export const PlayListHeader: React.FC<PlayListHeaderProps> = ({
       <div className="flex items-center space-x-4">
         <div>
           <Typography variant="headline-sm" as="h2" className="text-primary">
-            {displayPlays.length} {displayPlays.length === 1 ? "Play" : "Plays"}
+            {totalCount} {totalCount === 1 ? "Play" : "Plays"}
             {selectedCategory && (
               <span className="text-secondary font-normal ml-2">
                 in{" "}

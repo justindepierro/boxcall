@@ -779,7 +779,7 @@ const PlaybookPage = () => {
   const { favoriteIds } = useFavoritePlays();
 
   // SINGLE SOURCE OF TRUTH: usePlaybookData provides plays scoped to playbook
-  const { plays: playbookPlays } = usePlaybookData(activePlaybookId);
+  const { plays: playbookPlays, totalCount: dbTotalCount } = usePlaybookData(activePlaybookId);
 
   // DEBUG: Trace what activePlaybookId is being used
   debug(
@@ -818,7 +818,8 @@ const PlaybookPage = () => {
     filteredPlaysForStats,
     scopedFormationsForStats,
     recentActivities,
-    (formationAudit.plays || []) as unknown as Play[]
+    (formationAudit.plays || []) as unknown as Play[],
+    dbTotalCount // Pass DB total for accurate count during pagination
   );
 
   // Handlers hook

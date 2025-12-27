@@ -311,6 +311,7 @@ const PlayListInner: React.FC<PlayListProps> = ({
         return (
           <PlayListHeader
             displayPlays={displayPlays}
+            totalCount={totalPlaysCount}
             selectedCategory={selectedCategory}
             selectedSubcategory={undefined}
             enableBulkOperations={enableBulkOperations}

@@ -46,17 +46,20 @@ export interface PlaybookStats extends PlayStats, ActivityStats {
  * @param allFormations - All formations for counting
  * @param recentActivities - Recent activity items
  * @param formationAuditPlays - Plays needing formation mapping
+ * @param totalCountOverride - Optional DB total count (for pagination scenarios)
  * @returns Consolidated playbook statistics that match displayed plays
  */
 export function usePlaybookStats(
   plays: Play[],
   allFormations: Formation[],
   recentActivities: PlayActivityItem[],
-  formationAuditPlays: Play[]
+  formationAuditPlays: Play[],
+  totalCountOverride?: number
 ): PlaybookStats {
   // Play stats calculated directly from passed plays - no overrides needed
   const playStats: PlayStats = useMemo(() => {
-    const totalPlays = plays.length;
+    // Use DB total count if provided (pagination scenario), otherwise use array length
+    const totalPlays = totalCountOverride ?? plays.length;
     const playsWithDiagrams = plays.filter(
       (play) => play.diagram_image_url
     ).length;
@@ -94,7 +97,7 @@ export function usePlaybookStats(
       rpoPlays,
       playActionPlays,
     };
-  }, [plays, allFormations]);
+  }, [plays, allFormations, totalCountOverride]);
 
   // Activity stats calculated separately
   const activityStats: ActivityStats = useMemo(
