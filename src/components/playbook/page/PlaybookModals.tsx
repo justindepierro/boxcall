@@ -131,6 +131,7 @@ export function PlaybookModals({
           <PlaybookSettingsModal
             isOpen={isModalOpen("playbookSettings")}
             onClose={() => closeModal()}
+            plays={existingPlays}
             onOpenPersonnel={() => {
               closeModal();
               // Note: This requires openModal to be passed or personnel modal to open separately

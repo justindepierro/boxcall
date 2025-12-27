@@ -8,7 +8,7 @@
  * - Danger Zone: Delete playbook
  */
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Icon } from "../ui/Icon";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
@@ -19,6 +19,7 @@ import { Dropdown } from "../ui/Dropdown";
 import { triggerHapticFeedback } from "../../lib/hapticFeedback";
 import { useIsMobile } from "../../hooks/useBreakpoint";
 import { useToast } from "../../hooks/useToast";
+import type { Play } from "../../types/play";
 
 // ============================================================================
 // Types
@@ -50,6 +51,7 @@ interface PlaybookSettingsModalProps {
   onClose: () => void;
   playbook?: PlaybookInfo | null;
   playbooks?: PlaybookInfo[];
+  plays?: Play[]; // Used to calculate most-used defaults
   displaySettings?: DisplaySettings;
   defaultSettings?: DefaultSettings;
   onSaveDisplaySettings?: (settings: DisplaySettings) => void;
@@ -74,11 +76,56 @@ const DEFAULT_DISPLAY_SETTINGS: DisplaySettings = {
   enableAutoTagging: true,
 };
 
-const DEFAULT_SETTINGS: DefaultSettings = {
-  defaultPersonnel: "11",
-  defaultFormation: "",
-  defaultPlayType: "Pass",
-};
+// ============================================================================
+// Helper Functions
+// ============================================================================
+
+/**
+ * Calculate the most frequently used value from an array of plays
+ */
+function getMostUsedValue<K extends keyof Play>(
+  plays: Play[],
+  field: K,
+  fallback: string
+): string {
+  if (!plays || plays.length === 0) return fallback;
+
+  const counts = new Map<string, number>();
+
+  plays.forEach((play) => {
+    const value = play[field];
+    if (value && typeof value === "string" && value.trim()) {
+      const normalized = value.trim();
+      counts.set(normalized, (counts.get(normalized) || 0) + 1);
+    }
+  });
+
+  if (counts.size === 0) return fallback;
+
+  // Find the most used value
+  let mostUsed = fallback;
+  let maxCount = 0;
+
+  counts.forEach((count, value) => {
+    if (count > maxCount) {
+      maxCount = count;
+      mostUsed = value;
+    }
+  });
+
+  return mostUsed;
+}
+
+/**
+ * Calculate suggested defaults based on playbook usage patterns
+ */
+function calculateSuggestedDefaults(plays: Play[]): DefaultSettings {
+  return {
+    defaultPersonnel: getMostUsedValue(plays, "personnel", "11"),
+    defaultFormation: getMostUsedValue(plays, "formation", ""),
+    defaultPlayType: getMostUsedValue(plays, "p_type", "Pass"),
+  };
+}
 
 // ============================================================================
 // Sub-Components
@@ -295,8 +342,9 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
   onClose,
   playbook,
   playbooks = [],
+  plays = [],
   displaySettings = DEFAULT_DISPLAY_SETTINGS,
-  defaultSettings = DEFAULT_SETTINGS,
+  defaultSettings,
   onSaveDisplaySettings,
   onSaveDefaultSettings,
   onRenamePlaybook,
@@ -306,6 +354,15 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
   onMergePlaybooks,
   onOpenPersonnel,
 }) => {
+  // Calculate suggested defaults from playbook usage patterns
+  const suggestedDefaults = useMemo(
+    () => calculateSuggestedDefaults(plays),
+    [plays]
+  );
+
+  // Use provided defaults, or fall back to suggested defaults from playbook data
+  const effectiveDefaults = defaultSettings ?? suggestedDefaults;
+
   // State
   const [activeSection, setActiveSection] = useState<
     "general" | "display" | "data" | "danger"
@@ -313,7 +370,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
   const [localDisplaySettings, setLocalDisplaySettings] =
     useState<DisplaySettings>(displaySettings);
   const [localDefaultSettings, setLocalDefaultSettings] =
-    useState<DefaultSettings>(defaultSettings);
+    useState<DefaultSettings>(effectiveDefaults);
   const [playbookName, setPlaybookName] = useState(playbook?.name || "");
   const [playbookDescription, setPlaybookDescription] = useState(
     playbook?.description || ""
@@ -334,8 +391,8 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
   }, [displaySettings]);
 
   useEffect(() => {
-    setLocalDefaultSettings(defaultSettings);
-  }, [defaultSettings]);
+    setLocalDefaultSettings(effectiveDefaults);
+  }, [effectiveDefaults]);
 
   useEffect(() => {
     setPlaybookName(playbook?.name || "");
