@@ -537,11 +537,6 @@ export const PlayCard: React.FC<PlayCardProps> = ({
                 isExpanded={isExpanded}
                 onToggleExpand={handleToggleExpand}
                 personnelConfigurations={personnelConfigurations}
-                onPersonnelChange={async (value) => {
-                  await handleInlineSave("personnel", value);
-                }}
-                personnelSuggestions={personnelSuggestions}
-                isSavingPersonnel={savingFields.has("personnel")}
               />
 
               {/* Quick Actions - always visible */}

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "../../ui/Button/Button";
 import Icon from "../../ui/Icon/Icon";
@@ -9,7 +9,6 @@ import { SelectionCheckbox } from "../../ui/SelectionCheckbox";
 import { EditableSchemeBadge } from "../../ui/Badge";
 import { PersonnelBadge } from "../PersonnelBadge";
 import { WristbandBadge } from "../WristbandBadge";
-import { InlineEditField } from "../../ui/InlineEditField";
 import type { Play as PlayType } from "../../../types/play";
 import type { PersonnelConfiguration } from "../../../types/personnel";
 import type { BadgeColorScheme } from "../../../types/badge";
@@ -38,10 +37,6 @@ interface PlayCardTileHeaderProps {
   isExpanded?: boolean;
   onToggleExpand?: () => void;
   personnelConfigurations?: PersonnelConfiguration[];
-  // NEW: For inline personnel editing
-  onPersonnelChange?: (value: string) => Promise<void>;
-  personnelSuggestions?: string[];
-  isSavingPersonnel?: boolean;
 }
 
 // Extracted tile image section with photo/gradient variants
@@ -122,27 +117,20 @@ const BadgeSection: React.FC<{
   personnelConfig?: PersonnelConfiguration;
   phaseLabel: string | null;
   isExpanded?: boolean;
-  onPersonnelChange?: (value: string) => Promise<void>;
-  personnelSuggestions?: string[];
-  isSavingPersonnel?: boolean;
 }> = ({ 
   optimisticPlay, 
   personnelConfig, 
   phaseLabel, 
   isExpanded,
-  onPersonnelChange,
-  personnelSuggestions,
-  isSavingPersonnel,
 }) => (
   <div className="mt-3 flex flex-wrap items-center gap-2">
-    {/* Personnel badge - ALWAYS VISIBLE, now editable */}
-    <EditablePersonnelBadge
-      personnel={optimisticPlay.personnel || ""}
-      badgeCustomization={personnelConfig?.badgeCustomization}
-      onPersonnelChange={onPersonnelChange}
-      personnelSuggestions={personnelSuggestions}
-      isSaving={isSavingPersonnel}
-    />
+    {/* Personnel badge - ALWAYS VISIBLE, color scheme editable */}
+    {optimisticPlay.personnel && (
+      <PersonnelBadgeDisplay
+        personnel={optimisticPlay.personnel}
+        badgeCustomization={personnelConfig?.badgeCustomization}
+      />
+    )}
 
     {/* Secondary badges - ONLY SHOW WHEN EXPANDED */}
     {isExpanded && (
@@ -163,15 +151,11 @@ const BadgeSection: React.FC<{
   </div>
 );
 
-// Editable personnel badge - click to edit inline
-const EditablePersonnelBadge: React.FC<{
+// Personnel badge with color scheme editing (click to change color)
+const PersonnelBadgeDisplay: React.FC<{
   personnel: string;
   badgeCustomization?: PersonnelConfiguration["badgeCustomization"];
-  onPersonnelChange?: (value: string) => Promise<void>;
-  personnelSuggestions?: string[];
-  isSaving?: boolean;
-}> = ({ personnel, badgeCustomization, onPersonnelChange, personnelSuggestions, isSaving }) => {
-  const [isEditing, setIsEditing] = useState(false);
+}> = ({ personnel, badgeCustomization }) => {
   const { overrides, setCategoryScheme } = useTeamBadgeSchemeOverrides();
 
   const personnelScheme = React.useMemo(
@@ -179,121 +163,36 @@ const EditablePersonnelBadge: React.FC<{
     [overrides, personnel]
   );
 
-  const onChangePersonnelScheme = React.useMemo(() => {
-    const label = (personnel || "").trim();
-    if (!label) return async () => {};
-    return async (scheme: BadgeColorScheme) => {
-      await setCategoryScheme("personnel", label, scheme);
-    };
-  }, [personnel, setCategoryScheme]);
+  const onChangePersonnelScheme = React.useCallback(
+    async (scheme: BadgeColorScheme) => {
+      const label = (personnel || "").trim();
+      if (label) {
+        await setCategoryScheme("personnel", label, scheme);
+      }
+    },
+    [personnel, setCategoryScheme]
+  );
 
-  const handleSave = useCallback(async (value: string) => {
-    if (onPersonnelChange) {
-      await onPersonnelChange(value);
-    }
-    setIsEditing(false);
-  }, [onPersonnelChange]);
-
-  // If we're in editing mode, show the inline edit field
-  if (isEditing && onPersonnelChange) {
-    return (
-      <div 
-        className="inline-flex items-center min-w-20"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <InlineEditField
-          value={personnel}
-          onSave={handleSave}
-          suggestions={personnelSuggestions}
-          enableSuggestions={!!personnelSuggestions?.length}
-          isSaving={isSaving}
-          placeholder="Personnel"
-          className="text-xs"
-        />
-      </div>
-    );
-  }
-
-  // If there's no edit handler, show the regular badge (read-only)
-  if (!onPersonnelChange) {
-    if (!personnel) return null;
-    
-    if (badgeCustomization) {
-      return (
-        <PersonnelBadge
-          personnel={personnel}
-          size="sm"
-          badgeCustomization={badgeCustomization}
-        />
-      );
-    }
-    return (
-      <EditableSchemeBadge
-        label={personnel}
-        scheme={personnelScheme}
-        onChangeScheme={onChangePersonnelScheme}
-        size="sm"
-        ariaLabel={`Change ${personnel} badge color`}
-      />
-    );
-  }
-
-  // Show clickable badge that opens edit mode
-  const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsEditing(true);
-  };
-
-  if (!personnel) {
-    // Show "Add Personnel" button when no personnel set
-    return (
-      <button
-        onClick={handleClick}
-        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-2xs font-medium bg-surface-muted text-muted border border-dashed border-border-divider hover:border-jade-500 hover:text-jade-600 transition-colors"
-        aria-label="Add personnel"
-      >
-        <Icon name="plus" className="w-3 h-3" />
-        Personnel
-      </button>
-    );
-  }
-
+  // If there's a custom badge configuration, use it (no color editing)
   if (badgeCustomization) {
     return (
-      <div className="group relative inline-flex items-center gap-1">
-        <PersonnelBadge
-          personnel={personnel}
-          size="sm"
-          badgeCustomization={badgeCustomization}
-        />
-        <button
-          onClick={handleClick}
-          className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 rounded hover:bg-jade-100"
-          aria-label={`Edit personnel: ${personnel}`}
-        >
-          <Icon name="edit" className="w-3 h-3 text-jade-600" />
-        </button>
-      </div>
+      <PersonnelBadge
+        personnel={personnel}
+        size="sm"
+        badgeCustomization={badgeCustomization}
+      />
     );
   }
 
+  // Otherwise use EditableSchemeBadge for color scheme editing
   return (
-    <div className="group relative inline-flex items-center gap-1">
-      <EditableSchemeBadge
-        label={personnel}
-        scheme={personnelScheme}
-        onChangeScheme={onChangePersonnelScheme}
-        size="sm"
-        ariaLabel={`Change ${personnel} badge color`}
-      />
-      <button
-        onClick={handleClick}
-        className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 rounded hover:bg-jade-100"
-        aria-label={`Edit personnel: ${personnel}`}
-      >
-        <Icon name="edit" className="w-3 h-3 text-jade-600" />
-      </button>
-    </div>
+    <EditableSchemeBadge
+      label={personnel}
+      scheme={personnelScheme}
+      onChangeScheme={onChangePersonnelScheme}
+      size="sm"
+      ariaLabel={`Change ${personnel} badge color`}
+    />
   );
 };
 
@@ -312,9 +211,6 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
   isExpanded,
   onToggleExpand,
   personnelConfigurations = [],
-  onPersonnelChange,
-  personnelSuggestions,
-  isSavingPersonnel,
 }) => {
   // Mobile detection for responsive font sizes
   const isMobile = useIsMobile();
@@ -441,9 +337,6 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
         personnelConfig={personnelConfig}
         phaseLabel={phaseLabel}
         isExpanded={isExpanded}
-        onPersonnelChange={onPersonnelChange}
-        personnelSuggestions={personnelSuggestions}
-        isSavingPersonnel={isSavingPersonnel}
       />
 
       {/* Details button - outside the tile */}
