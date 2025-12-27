@@ -6,19 +6,12 @@ import { ScrollingText } from "../../ui/ScrollingText";
 import { ConfidenceBadge } from "../../ui/ConfidenceBadge";
 import { FavoriteButton } from "../../ui/FavoriteButton";
 import { SelectionCheckbox } from "../../ui/SelectionCheckbox";
-import { EditableSchemeBadge } from "../../ui/Badge";
-import { PersonnelBadge } from "../PersonnelBadge";
-import { WristbandBadge } from "../WristbandBadge";
 import type { Play as PlayType } from "../../../types/play";
 import type { PersonnelConfiguration } from "../../../types/personnel";
-import type { BadgeColorScheme } from "../../../types/badge";
 import { getTileGradient, getTileIcon } from "./helpers";
 import { useIsMobile } from "../../../hooks/useBreakpoint";
 import { debug } from "../../../utils/logger";
-import {
-  getCategoryBadgeScheme,
-  useTeamBadgeSchemeOverrides,
-} from "../../../hooks/useTeamBadgeSchemeOverrides";
+import { BadgeRow } from "./badges";
 
 type SelectionHandler = (playId: string, selected: boolean) => void;
 
@@ -111,91 +104,6 @@ const CompactMetadata: React.FC<{ optimisticPlay: PlayType }> = ({
   </div>
 );
 
-// Badge section with conditional rendering and editable personnel
-const BadgeSection: React.FC<{
-  optimisticPlay: PlayType;
-  personnelConfig?: PersonnelConfiguration;
-  phaseLabel: string | null;
-  isExpanded?: boolean;
-}> = ({ 
-  optimisticPlay, 
-  personnelConfig, 
-  phaseLabel, 
-  isExpanded,
-}) => (
-  <div className="mt-3 flex flex-wrap items-center gap-2">
-    {/* Personnel badge - ALWAYS VISIBLE, color scheme editable */}
-    {optimisticPlay.personnel && (
-      <PersonnelBadgeDisplay
-        personnel={optimisticPlay.personnel}
-        badgeCustomization={personnelConfig?.badgeCustomization}
-      />
-    )}
-
-    {/* Secondary badges - ONLY SHOW WHEN EXPANDED */}
-    {isExpanded && (
-      <>
-        {optimisticPlay.wristband_number && (
-          <WristbandBadge
-            wristbandNumber={optimisticPlay.wristband_number}
-            size="sm"
-          />
-        )}
-        {phaseLabel && (
-          <span className="px-2 py-0.5 bg-warning-500 text-primary rounded-full text-2xs font-semibold tracking-wide uppercase border border-warning-600">
-            {phaseLabel}
-          </span>
-        )}
-      </>
-    )}
-  </div>
-);
-
-// Personnel badge with color scheme editing (click to change color)
-const PersonnelBadgeDisplay: React.FC<{
-  personnel: string;
-  badgeCustomization?: PersonnelConfiguration["badgeCustomization"];
-}> = ({ personnel, badgeCustomization }) => {
-  const { overrides, setCategoryScheme } = useTeamBadgeSchemeOverrides();
-
-  const personnelScheme = React.useMemo(
-    () => getCategoryBadgeScheme(overrides, "personnel", personnel),
-    [overrides, personnel]
-  );
-
-  const onChangePersonnelScheme = React.useCallback(
-    async (scheme: BadgeColorScheme) => {
-      const label = (personnel || "").trim();
-      if (label) {
-        await setCategoryScheme("personnel", label, scheme);
-      }
-    },
-    [personnel, setCategoryScheme]
-  );
-
-  // If there's a custom badge configuration, use it (no color editing)
-  if (badgeCustomization) {
-    return (
-      <PersonnelBadge
-        personnel={personnel}
-        size="sm"
-        badgeCustomization={badgeCustomization}
-      />
-    );
-  }
-
-  // Otherwise use EditableSchemeBadge for color scheme editing
-  return (
-    <EditableSchemeBadge
-      label={personnel}
-      scheme={personnelScheme}
-      onChangeScheme={onChangePersonnelScheme}
-      size="sm"
-      ariaLabel={`Change ${personnel} badge color`}
-    />
-  );
-};
-
 export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
   play,
   optimisticPlay,
@@ -214,11 +122,6 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
 }) => {
   // Mobile detection for responsive font sizes
   const isMobile = useIsMobile();
-
-  // Find the badge customization for this play's personnel
-  const personnelConfig = personnelConfigurations.find(
-    (config) => config.name === optimisticPlay.personnel
-  );
 
   const tileTitle =
     showOneWordCalls && play.one_word_play
@@ -330,14 +233,17 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = ({
         {!isExpanded && <CompactMetadata optimisticPlay={optimisticPlay} />}
       </div>
 
-      {/* Badges - PRIMARY INFO ONLY (personnel badge) */}
+      {/* Badges - Uses unified BadgeRow component */}
       {/* 3-TIER DESIGN: Show only essential info in collapsed state */}
-      <BadgeSection
-        optimisticPlay={optimisticPlay}
-        personnelConfig={personnelConfig}
-        phaseLabel={phaseLabel}
-        isExpanded={isExpanded}
-      />
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <BadgeRow
+          play={optimisticPlay}
+          originalPlay={play}
+          isExpanded={isExpanded}
+          personnelConfigurations={personnelConfigurations}
+          phaseLabel={phaseLabel}
+        />
+      </div>
 
       {/* Details button - outside the tile */}
       {/* 3-TIER DESIGN: Clear expand/collapse action */}
