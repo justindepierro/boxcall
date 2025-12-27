@@ -281,8 +281,15 @@ export function bucketDownDistance(
   down: number,
   distance: number
 ): DownDistanceBucket {
-  const distanceCategory =
-    distance <= 3 ? "short" : distance <= 7 ? "medium" : "long";
+  // Categorize distance
+  let distanceCategory: "short" | "medium" | "long";
+  if (distance <= 3) {
+    distanceCategory = "short";
+  } else if (distance <= 7) {
+    distanceCategory = "medium";
+  } else {
+    distanceCategory = "long";
+  }
 
   switch (down) {
     case 1:

@@ -391,12 +391,15 @@ export class CoachAnalytics {
           : 0;
 
       const sampleSize = getSampleSizeCategory(stats.attempts);
-      const confidence =
-        sampleSize === "strong" || sampleSize === "reliable"
-          ? "high"
-          : sampleSize === "limited"
-            ? "medium"
-            : "low";
+      // Map sample size to confidence level
+      let confidence: "high" | "medium" | "low";
+      if (sampleSize === "strong" || sampleSize === "reliable") {
+        confidence = "high";
+      } else if (sampleSize === "limited") {
+        confidence = "medium";
+      } else {
+        confidence = "low";
+      }
 
       recommendations.push({
         playId,
@@ -424,7 +427,10 @@ export class CoachAnalytics {
     return recommendations
       .sort((a, b) => {
         if (a.confidence !== b.confidence) {
-          return a.confidence === "high" ? -1 : b.confidence === "high" ? 1 : 0;
+          // High confidence comes first
+          if (a.confidence === "high") return -1;
+          if (b.confidence === "high") return 1;
+          return 0;
         }
         return b.situationStats.successRate - a.situationStats.successRate;
       })

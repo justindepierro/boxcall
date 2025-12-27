@@ -127,6 +127,60 @@ function calculateSuggestedDefaults(plays: Play[]): DefaultSettings {
   };
 }
 
+/**
+ * Get background color class for icon based on color variant
+ */
+function getIconBgColor(iconColor: string): string {
+  if (iconColor === "text-brand-jade") return "bg-brand-jade/10";
+  if (iconColor === "text-error-500") return "bg-error-500/10";
+  return "bg-blue-500/10";
+}
+
+/**
+ * Get theme icon name
+ */
+function getThemeIcon(theme: "light" | "dark" | "auto"): string {
+  if (theme === "light") return "sun";
+  if (theme === "dark") return "moon";
+  return "monitor";
+}
+
+/**
+ * Get ActionButton container classes based on state
+ */
+function getActionButtonClasses(
+  disabled: boolean,
+  variant: "default" | "danger"
+): string {
+  if (disabled) {
+    return "opacity-50 cursor-not-allowed bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700";
+  }
+  if (variant === "danger") {
+    return "bg-error-50 dark:bg-error-900/20 hover:bg-error-100 dark:hover:bg-error-900/30 border-error-200 dark:border-error-800";
+  }
+  return "bg-white dark:bg-navy-800 hover:bg-neutral-50 dark:hover:bg-navy-700 border-neutral-200 dark:border-navy-600";
+}
+
+/**
+ * Get section tab classes based on active state
+ */
+function getSectionTabClasses(isActive: boolean, isDanger: boolean): string {
+  if (isActive) {
+    return isDanger
+      ? "bg-error-500 text-white shadow-md"
+      : "bg-brand-jade text-white shadow-md";
+  }
+  return "bg-neutral-100 dark:bg-navy-800 text-navy-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-navy-700";
+}
+
+/**
+ * Get toggle switch translation class
+ */
+function getToggleTranslation(checked: boolean, isMobile: boolean): string {
+  if (!checked) return "translate-x-1";
+  return isMobile ? "translate-x-7" : "translate-x-6";
+}
+
 // ============================================================================
 // Sub-Components
 // ============================================================================
@@ -140,13 +194,7 @@ const SectionHeader: React.FC<{
 }> = ({ icon, title, subtitle, iconColor = "text-brand-jade" }) => (
   <div className="flex items-start gap-3 mb-4">
     <div
-      className={`w-10 h-10 rounded-xl bg-opacity-10 flex items-center justify-center flex-shrink-0 ${
-        iconColor === "text-brand-jade"
-          ? "bg-brand-jade/10"
-          : iconColor === "text-error-500"
-            ? "bg-error-500/10"
-            : "bg-blue-500/10"
-      }`}
+      className={`w-10 h-10 rounded-xl bg-opacity-10 flex items-center justify-center flex-shrink-0 ${getIconBgColor(iconColor)}`}
     >
       <Icon name={icon as any} className={`w-5 h-5 ${iconColor}`} />
     </div>
@@ -218,13 +266,7 @@ const ToggleSwitch: React.FC<{
       }}
     >
       <div
-        className={`absolute top-1 ${isMobile ? "w-6 h-6" : "w-4 h-4"} bg-white rounded-full shadow transition-transform ${
-          checked
-            ? isMobile
-              ? "translate-x-7"
-              : "translate-x-6"
-            : "translate-x-1"
-        }`}
+        className={`absolute top-1 ${isMobile ? "w-6 h-6" : "w-4 h-4"} bg-white rounded-full shadow transition-transform ${getToggleTranslation(checked, isMobile ?? false)}`}
       />
     </div>
   </label>
@@ -281,7 +323,7 @@ const ActionButton: React.FC<{
   label,
   description,
   variant = "default",
-  disabled,
+  disabled = false,
   isMobile,
 }) => (
   <button
@@ -292,13 +334,7 @@ const ActionButton: React.FC<{
       }
     }}
     disabled={disabled}
-    className={`w-full flex items-center gap-4 ${isMobile ? "p-4" : "p-3"} rounded-xl transition-all border ${
-      disabled
-        ? "opacity-50 cursor-not-allowed bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
-        : variant === "danger"
-          ? "bg-error-50 dark:bg-error-900/20 hover:bg-error-100 dark:hover:bg-error-900/30 border-error-200 dark:border-error-800"
-          : "bg-white dark:bg-navy-800 hover:bg-neutral-50 dark:hover:bg-navy-700 border-neutral-200 dark:border-navy-600"
-    }`}
+    className={`w-full flex items-center gap-4 ${isMobile ? "p-4" : "p-3"} rounded-xl transition-all border ${getActionButtonClasses(disabled, variant)}`}
   >
     <div
       className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
@@ -337,6 +373,7 @@ const ActionButton: React.FC<{
 // Main Component
 // ============================================================================
 
+// eslint-disable-next-line max-lines-per-function -- Complex settings modal with multiple sections
 export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
   isOpen = true,
   onClose,
@@ -683,13 +720,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
               onClick={() =>
                 setLocalDisplaySettings((prev) => ({ ...prev, theme }))
               }
-              icon={
-                theme === "light"
-                  ? "sun"
-                  : theme === "dark"
-                    ? "moon"
-                    : "monitor"
-              }
+              icon={getThemeIcon(theme)}
               label={theme}
               isMobile={isMobile}
             />
@@ -1014,13 +1045,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
             }}
             className={`flex items-center gap-2 ${
               isMobile ? "px-4 py-3 min-h-[44px]" : "px-3 py-2"
-            } rounded-full whitespace-nowrap transition-all ${
-              activeSection === section.id
-                ? section.id === "danger"
-                  ? "bg-error-500 text-white shadow-md"
-                  : "bg-brand-jade text-white shadow-md"
-                : "bg-neutral-100 dark:bg-navy-800 text-navy-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-navy-700"
-            }`}
+            } rounded-full whitespace-nowrap transition-all ${getSectionTabClasses(activeSection === section.id, section.id === "danger")}`}
           >
             <Icon
               name={section.icon as any}

@@ -217,6 +217,7 @@ const PLAYBOOK_FIELDS =
 const PLAY_SELECT_FIELDS =
   "id, playbook_id, formation, play_name, one_word_play, p_type, personnel, f_type, f_dir, formation_id, formation_direction, p_dir, protection, r_str, p_str, pref_down, pref_dis, pref_hash, pref_cov, pref_front, ftag1, ftag2, p_tag1, p_tag2, tags, key_positions, key_players, flags, back_align, back_left_of_qb, back_right_of_qb, shift, motion, key_player1, key_player2, check_into, notes, diagram_url, diagram_image_url, wristband_number, confidence_base, times_called, times_successful, created_at, updated_at";
 
+// eslint-disable-next-line max-lines-per-function -- Complex data fetching with multiple parallel queries
 function useTeamsDataInitialLoadEffect({
   teamId,
   refreshTrigger,
@@ -285,6 +286,7 @@ function useTeamsDataInitialLoadEffect({
 
     const teamIdForQuery: string = teamId;
 
+    // eslint-disable-next-line complexity -- Complex data fetching with multiple parallel queries
     async function fetchData() {
       try {
         setLoading(true);
@@ -472,6 +474,7 @@ function useTeamsDataInitialLoadEffect({
     setPlaysPage,
     setHasMorePlays,
     setTotalPlaysCount,
+    setPlayTypeCounts,
     playbookId,
   ]);
 }

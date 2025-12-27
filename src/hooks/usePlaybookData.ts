@@ -328,12 +328,11 @@ export function usePlaybookData(playbookId: string | null): PlaybookDataResult {
 
         // Convert Play updates to database format
         // Exclude computed/readonly fields that shouldn't be sent to DB
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const {
-          created_at,
-          updated_at,
-          created_by,
-          creation_context,
+          created_at: _created_at,
+          updated_at: _updated_at,
+          created_by: _created_by,
+          creation_context: _creation_context,
           ...dbUpdates
         } = updates as Partial<Play> & {
           created_at?: Date;

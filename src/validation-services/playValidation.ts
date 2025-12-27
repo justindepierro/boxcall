@@ -28,6 +28,7 @@ export class PlayValidationService {
   /**
    * Comprehensive play validation (client-side)
    */
+  // eslint-disable-next-line complexity -- Comprehensive validation requires many checks
   static validatePlay(data: any): ValidationResult {
     const errors: ValidationError[] = [];
     const warnings: ValidationWarning[] = [];
@@ -189,6 +190,7 @@ export class PlayValidationService {
    * Detect standard play type family from p_type string
    * Returns null if no standard family matches
    */
+  // eslint-disable-next-line complexity -- Play type detection requires checking many keywords
   static detectPlayTypeFamily(pType: string | undefined | null): string | null {
     if (!pType) return null;
 

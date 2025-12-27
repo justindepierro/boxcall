@@ -308,7 +308,6 @@ function PracticeScriptModalLoader({
   );
 }
 
-// eslint-disable-next-line max-lines-per-function
 function PlaybookPageView({
   state,
   dispatch,

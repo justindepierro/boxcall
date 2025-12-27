@@ -30,6 +30,7 @@ interface FastAnalyticsDashboardProps {
   className?: string;
 }
 
+// eslint-disable-next-line max-lines-per-function -- Dashboard component with multiple sections
 export const FastAnalyticsDashboard: React.FC<FastAnalyticsDashboardProps> = ({
   teamId,
   className = "",
