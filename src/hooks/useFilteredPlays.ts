@@ -9,7 +9,7 @@
 
 import { useMemo, useEffect, useRef } from "react";
 import type { Play } from "../types/play";
-import type { PlaybookFilters } from "../types/filters";
+import type { PlaybookFilters, PlaySortOption } from "../types/filters";
 import { hasActiveFilters } from "../types/filters";
 import { getPlayFlags } from "@utils/localPlayFlags";
 import { telemetry } from "../telemetry/dispatcher";
@@ -187,6 +187,50 @@ function getResultBucket(resultCount: number): "0" | "1-10" | "11-50" | ">50" {
   return ">50";
 }
 
+// ============ SORTING ============
+
+/**
+ * Sort plays based on sort option
+ */
+function sortPlays(plays: Play[], sortBy: PlaySortOption): Play[] {
+  const sorted = [...plays];
+
+  switch (sortBy) {
+    case "name_asc":
+      return sorted.sort((a, b) =>
+        a.play_name.toLowerCase().localeCompare(b.play_name.toLowerCase())
+      );
+    case "name_desc":
+      return sorted.sort((a, b) =>
+        b.play_name.toLowerCase().localeCompare(a.play_name.toLowerCase())
+      );
+    case "newest":
+      return sorted.sort(
+        (a, b) =>
+          new Date(b.created_at || 0).getTime() -
+          new Date(a.created_at || 0).getTime()
+      );
+    case "oldest":
+      return sorted.sort(
+        (a, b) =>
+          new Date(a.created_at || 0).getTime() -
+          new Date(b.created_at || 0).getTime()
+      );
+    case "most_used":
+      return sorted.sort((a, b) => (b.times_called || 0) - (a.times_called || 0));
+    case "confidence_high":
+      return sorted.sort(
+        (a, b) => (b.confidence_base || 0) - (a.confidence_base || 0)
+      );
+    case "confidence_low":
+      return sorted.sort(
+        (a, b) => (a.confidence_base || 0) - (b.confidence_base || 0)
+      );
+    default:
+      return sorted;
+  }
+}
+
 // ============ MAIN HOOK ============
 
 export interface UseFilteredPlaysResult {
@@ -212,16 +256,14 @@ export function useFilteredPlays(
   favoriteIds: string[] = []
 ): UseFilteredPlaysResult {
   const filteredPlays = useMemo(() => {
+    // Filter first
     let result = plays.filter((play) =>
       playMatchesFilters(play, filters, favoriteIds)
     );
 
-    // Sort by most used if that filter is active
-    if (filters.mostUsedOnly) {
-      result = [...result].sort(
-        (a, b) => (b.times_called || 0) - (a.times_called || 0)
-      );
-    }
+    // Then sort - use sortBy if set, fall back to mostUsedOnly for backward compatibility
+    const sortOption = filters.sortBy || (filters.mostUsedOnly ? "most_used" : "name_asc");
+    result = sortPlays(result, sortOption);
 
     return result;
   }, [plays, filters, favoriteIds]);

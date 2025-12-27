@@ -4,6 +4,8 @@ import { Badge, ProgressBadge } from "../../ui/Badge";
 import { Typography } from "../../design-system/Typography";
 import { WeeklyChallengePopover } from "../WeeklyChallengePopover";
 import { UniversalSearch } from "../../ui/UniversalSearch";
+import { SortDropdown } from "./SortDropdown";
+import type { PlaySortOption } from "../../../types/filters";
 
 type WeeklyChallenge = {
   id: string;
@@ -23,6 +25,8 @@ export type PlaybookHeaderProps = {
   streakDays: number;
   searchQuery: string;
   onSearchChange: (query: string) => void;
+  sortBy?: PlaySortOption;
+  onSortChange?: (value: PlaySortOption) => void;
   onOpenSettings?: () => void;
   onOpenHealth?: () => void;
 };
@@ -34,6 +38,8 @@ export const PlaybookHeader: React.FC<PlaybookHeaderProps> = ({
   streakDays,
   searchQuery,
   onSearchChange,
+  sortBy = "name_asc",
+  onSortChange,
   onOpenSettings,
   onOpenHealth,
 }) => {
@@ -78,13 +84,21 @@ export const PlaybookHeader: React.FC<PlaybookHeaderProps> = ({
               </div>
             </div>
 
-            {/* Universal Search */}
-            <div className="flex-1 max-w-md mx-8">
-              <UniversalSearch
-                searchQuery={searchQuery}
-                onSearchChange={onSearchChange}
-                placeholder="Search plays, formations, tags..."
-              />
+            {/* Universal Search + Sort */}
+            <div className="flex-1 max-w-lg mx-8 flex items-center gap-3">
+              <div className="flex-1">
+                <UniversalSearch
+                  searchQuery={searchQuery}
+                  onSearchChange={onSearchChange}
+                  placeholder="Search plays, formations, tags..."
+                />
+              </div>
+              {onSortChange && (
+                <SortDropdown
+                  value={sortBy}
+                  onChange={onSortChange}
+                />
+              )}
             </div>
 
             <div className="flex items-center space-x-4">

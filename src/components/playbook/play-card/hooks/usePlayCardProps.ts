@@ -105,7 +105,9 @@ function mergeWithContext<T extends PlayCardHeaderProps>(
  * Merges context values with props, preferring context when available.
  * This reduces complexity in header components by centralizing the merge logic.
  */
-export function usePlayCardProps(props: PlayCardHeaderProps): MergedPlayCardProps {
+export function usePlayCardProps(
+  props: PlayCardHeaderProps
+): MergedPlayCardProps {
   const ctx = useOptionalPlayCardContext();
   return mergeWithContext(ctx, props);
 }

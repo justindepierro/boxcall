@@ -9,6 +9,28 @@
  */
 
 /**
+ * Sort options for plays
+ */
+export type PlaySortOption =
+  | "name_asc"
+  | "name_desc"
+  | "newest"
+  | "oldest"
+  | "most_used"
+  | "confidence_high"
+  | "confidence_low";
+
+export const SORT_OPTIONS: { value: PlaySortOption; label: string }[] = [
+  { value: "name_asc", label: "Name (A-Z)" },
+  { value: "name_desc", label: "Name (Z-A)" },
+  { value: "newest", label: "Newest First" },
+  { value: "oldest", label: "Oldest First" },
+  { value: "most_used", label: "Most Used" },
+  { value: "confidence_high", label: "Confidence (High)" },
+  { value: "confidence_low", label: "Confidence (Low)" },
+];
+
+/**
  * Core filter interface - all filtering flows through this shape
  */
 export interface PlaybookFilters {
@@ -39,8 +61,11 @@ export interface PlaybookFilters {
   /** Show only favorited plays */
   favoritesOnly: boolean;
 
-  /** Show only most-used plays (sorted by usage) */
+  /** Show only most-used plays (sorted by usage) - DEPRECATED: use sortBy instead */
   mostUsedOnly: boolean;
+
+  /** Sort order for plays */
+  sortBy: PlaySortOption;
 }
 
 /**
@@ -57,6 +82,7 @@ export const EMPTY_FILTERS: PlaybookFilters = {
   tags: [],
   favoritesOnly: false,
   mostUsedOnly: false,
+  sortBy: "name_asc",
 };
 
 /**

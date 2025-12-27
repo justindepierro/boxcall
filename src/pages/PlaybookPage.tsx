@@ -219,6 +219,7 @@ function PlaybookMainView({
         setShowStatsSheet={(show) =>
           show ? openModal("statsSheet") : closeModal()
         }
+        handleSortChange={(sortBy) => handlers.handleSortChange(sortBy, state.filters)}
         handleOpenQuickCreate={handlers.handleOpenQuickCreate}
         handleOpenPersonnel={handlers.handleOpenPersonnel}
         handleOpenSettings={handlers.handleOpenSettings}

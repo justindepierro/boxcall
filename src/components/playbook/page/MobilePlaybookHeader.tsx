@@ -2,11 +2,15 @@ import React from "react";
 import { Icon } from "../../ui/Icon";
 import { Button } from "../../ui/Button";
 import { Typography } from "../../design-system/Typography";
+import { SortDropdown } from "./SortDropdown";
+import type { PlaySortOption } from "../../../types/filters";
 
 export interface MobilePlaybookHeaderProps {
   title: string;
   playCount: number;
   filterCount?: number;
+  sortBy?: PlaySortOption;
+  onSortChange?: (value: PlaySortOption) => void;
   onSearchClick: () => void;
   onFilterClick: () => void;
   onStatsClick?: () => void;
@@ -39,6 +43,8 @@ export const MobilePlaybookHeader: React.FC<MobilePlaybookHeaderProps> = ({
   title,
   playCount,
   filterCount = 0,
+  sortBy = "name_asc",
+  onSortChange,
   onSearchClick,
   onFilterClick,
   onStatsClick,
@@ -68,6 +74,15 @@ export const MobilePlaybookHeader: React.FC<MobilePlaybookHeaderProps> = ({
 
       {/* Right: Action Buttons */}
       <div className="flex items-center gap-2 ml-4">
+        {/* Sort Dropdown */}
+        {onSortChange && (
+          <SortDropdown
+            value={sortBy}
+            onChange={onSortChange}
+            compact
+          />
+        )}
+
         {/* Stats Button (Optional) */}
         {onStatsClick && (
           <Button

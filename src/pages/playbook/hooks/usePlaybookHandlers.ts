@@ -6,7 +6,7 @@ import type {
   PlaybookState,
   CoachingView,
 } from "../../../contexts/PlaybookContext";
-import type { PlaybookFilters } from "../../../types/filters";
+import type { PlaybookFilters, PlaySortOption } from "../../../types/filters";
 import { PlaysService, PracticeService } from "@services";
 import { exportPlays } from "../../../services/exportService";
 import { useToast } from "../../../hooks/useToast";
@@ -66,6 +66,17 @@ function usePlaybookViewHandlers(params: { dispatch: React.Dispatch<any> }) {
     [dispatch]
   );
 
+  /**
+   * Update sort order while preserving other filters
+   */
+  const handleSortChange = useCallback(
+    (sortBy: PlaySortOption, currentFilters: PlaybookFilters) => {
+      triggerHapticFeedback("selection");
+      dispatch({ type: "SET_FILTERS", filters: { ...currentFilters, sortBy } });
+    },
+    [dispatch]
+  );
+
   const handleClearSelection = useCallback(() => {
     dispatch({ type: "CLEAR_SELECTION" });
   }, [dispatch]);
@@ -74,6 +85,7 @@ function usePlaybookViewHandlers(params: { dispatch: React.Dispatch<any> }) {
     handleViewChange,
     handleTeamTypeChange,
     handleFiltersChange,
+    handleSortChange,
     handleClearSelection,
   };
 }

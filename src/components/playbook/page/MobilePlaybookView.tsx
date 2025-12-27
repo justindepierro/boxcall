@@ -12,13 +12,14 @@ import { FloatingActionButton } from "../../FloatingActionButton";
 import { FABPresets } from "../../FABPresets";
 import { PlaybookBottomNav } from "../page/PlaybookBottomNav";
 import { MobileStatsBottomSheet } from "../page/MobileStatsBottomSheet";
+import { SortDropdown } from "../page/SortDropdown";
 import { FormationSyncPanel } from "../../formations/FormationSyncPanel";
 import { MobileQuickActions } from "../../mobile";
 import { MobilePlayCardSkeletonList } from "../../mobile/ui/MobilePlayCardSkeleton";
 import { PlayList } from "../PlayList";
 import { SelectionModeToggle } from "../SelectionModeToggle";
 import { AdvancedFilters } from "../AdvancedFilters";
-import { EMPTY_FILTERS, hasActiveFilters } from "../../../types/filters";
+import { EMPTY_FILTERS, hasActiveFilters, type PlaySortOption } from "../../../types/filters";
 import { BottomSheet } from "../../BottomSheet";
 import { PracticeScriptList } from "../PracticeScriptList";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
@@ -52,6 +53,7 @@ interface MobilePlaybookViewProps {
   // Handlers
   setShowFiltersSheet: (show: boolean) => void;
   setShowStatsSheet: (show: boolean) => void;
+  handleSortChange: (sortBy: PlaySortOption) => void;
   handleOpenQuickCreate: () => void;
   handleOpenPersonnel: () => void;
   handleOpenSettings: () => void;
@@ -94,6 +96,7 @@ export function MobilePlaybookView({
   formationAudit,
   setShowFiltersSheet,
   setShowStatsSheet,
+  handleSortChange,
   handleOpenQuickCreate,
   handleOpenPersonnel,
   handleOpenSettings,
@@ -180,23 +183,32 @@ export function MobilePlaybookView({
               <div className="h-9 w-16 flex-shrink-0 rounded-lg bg-neutral-200 animate-pulse" />
             ) : (
               hasPlays && (
-                <Button
-                  onClick={() => {
-                    triggerHapticFeedback("light");
-                    setShowFiltersSheet(true);
-                  }}
-                  variant="ghost"
-                  size="sm"
-                  className="h-9 px-3"
-                >
-                  <Icon name="filter" className="mr-1.5 h-4 w-4" />
-                  Filter
-                  {hasActiveFilters(state.filters) && (
-                    <span className="ml-1.5 rounded-full bg-brand-jade px-1.5 py-0.5 text-center text-xs text-white">
-                      ●
-                    </span>
-                  )}
-                </Button>
+                <div className="flex items-center gap-2">
+                  {/* Sort Dropdown */}
+                  <SortDropdown
+                    value={state.filters.sortBy || "name_asc"}
+                    onChange={handleSortChange}
+                    compact
+                  />
+                  {/* Filter Button */}
+                  <Button
+                    onClick={() => {
+                      triggerHapticFeedback("light");
+                      setShowFiltersSheet(true);
+                    }}
+                    variant="ghost"
+                    size="sm"
+                    className="h-9 px-3"
+                  >
+                    <Icon name="filter" className="mr-1.5 h-4 w-4" />
+                    Filter
+                    {hasActiveFilters(state.filters) && (
+                      <span className="ml-1.5 rounded-full bg-brand-jade px-1.5 py-0.5 text-center text-xs text-white">
+                        ●
+                      </span>
+                    )}
+                  </Button>
+                </div>
               )
             ))}
           {state.currentView === "practice-script" && (
