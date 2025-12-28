@@ -264,8 +264,9 @@ export const BulkQuickAddPlaysModal: React.FC<BulkQuickAddPlaysModalProps> = ({
       onClose();
 
       setRows(Array.from({ length: DEFAULT_ROW_COUNT }, () => makeRow()));
-    } catch (e: any) {
-      toast.error(e?.message ? String(e.message) : "Failed to create plays");
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : "Failed to create plays";
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }

@@ -3,6 +3,9 @@ import { Button } from "../../../ui/Button/Button";
 import { Icon } from "../../../ui/Icon/Icon";
 import { ValidatedInput } from "../../ValidatedInput";
 import type { Play } from "../../../../types/play";
+import type { Database } from "../../../../types/database";
+
+type FormationRow = Database["public"]["Tables"]["formations"]["Row"];
 
 interface FormationSectionProps {
   formation: string;
@@ -15,7 +18,7 @@ interface FormationSectionProps {
   onFormationChange: (formation: string) => void;
   onFormationIdChange: (
     formationId: string | null,
-    formation: any | null
+    formation: FormationRow | null
   ) => void;
   onFormationDirChange: (dir: string) => void;
   onFormationShowInNameChange: (show: boolean) => void;

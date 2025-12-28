@@ -47,6 +47,10 @@ interface PlayCardWrapperProps {
   expandedPlayId?: string | null;
   onToggleExpand?: (playId: string) => void;
 
+  // Keyboard navigation
+  isFocused?: boolean;
+  searchQuery?: string;
+
   // NEW: For validation
   existingPlays?: Play[];
 }
@@ -75,6 +79,8 @@ export const PlayCardWrapper: React.FC<PlayCardWrapperProps> = ({
   directionDisplayFormat,
   expandedPlayId,
   onToggleExpand,
+  isFocused,
+  searchQuery,
   existingPlays,
 }) => {
   const { prefetchPlayDetails, cancelPrefetch } = usePrefetchQueries();
@@ -108,13 +114,19 @@ export const PlayCardWrapper: React.FC<PlayCardWrapperProps> = ({
     directionDisplayFormat: directionDisplayFormat || "full",
     isExpanded: expandedPlayId === play.id,
     onToggleExpand,
+    isFocused,
+    searchQuery,
     existingPlays,
   };
 
   return (
     <div
-      className={variant === "list" ? "mb-4" : ""}
-      role="listitem"
+      id={`play-card-${play.id}`}
+      className={`${variant === "list" ? "mb-2" : ""} ${
+        isFocused ? "ring-2 ring-jade-500 ring-offset-2 rounded-lg" : ""
+      }`}
+      role="option"
+      aria-selected={isSelected}
       data-index={index}
       onMouseEnter={() => prefetchPlayDetails(play.id)}
       onMouseLeave={cancelPrefetch}
@@ -134,6 +146,8 @@ export default React.memo(PlayCardWrapper, (prevProps, nextProps) => {
   if (prevProps.directionDisplayFormat !== nextProps.directionDisplayFormat)
     return false;
   if (prevProps.variant !== nextProps.variant) return false;
+  if (prevProps.isFocused !== nextProps.isFocused) return false;
+  if (prevProps.searchQuery !== nextProps.searchQuery) return false;
 
   // Check if play data changed
   const p = prevProps.play;

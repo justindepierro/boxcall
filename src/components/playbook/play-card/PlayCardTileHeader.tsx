@@ -47,15 +47,17 @@ const TileImageSection: React.FC<{
     whileHover={{ scale: 1.03 }}
     transition={{ type: "spring", stiffness: 400, damping: 17 }}
   >
-    {play.diagram_url || (play as any).diagram_image_url ? (
-      /* Photo thumbnail */
+    {play.diagram_url || play.diagram_image_url ? (
+      /* Photo thumbnail with loading skeleton */
       <>
+        <div className="absolute inset-0 bg-gradient-to-br from-neutral-200 to-neutral-300 animate-pulse" />
         <img
-          src={play.diagram_url || (play as any).diagram_image_url}
+          src={play.diagram_url || play.diagram_image_url || undefined}
           alt={`${tileTitle} diagram`}
-          className="w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover"
           crossOrigin="anonymous"
           decoding="async"
+          loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
@@ -221,9 +223,9 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = (
       <div className="mt-4 w-full px-1">
         <ScrollingText
           as="h3"
-          className={`font-mono font-bold leading-snug text-primary ${
+          className={`font-bold font-mono tracking-tight leading-snug text-neutral-900 dark:text-white ${
             isMobile ? "text-lg" : "text-base"
-          } ${showOneWordCalls && play.one_word_play ? "text-jade-600" : ""}`}
+          } ${showOneWordCalls && play.one_word_play ? "text-emerald-600 dark:text-emerald-400" : ""}`}
           title={tileTitle}
           speed={50}
         >
@@ -231,7 +233,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = (
         </ScrollingText>
         {tileSubtitle && (
           <p
-            className={`text-secondary mt-1 italic ${isMobile ? "text-sm" : "text-xs"}`}
+            className={`text-neutral-500 dark:text-neutral-400 mt-1 font-medium ${isMobile ? "text-sm" : "text-xs"}`}
           >
             {tileSubtitle}
           </p>
@@ -243,7 +245,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = (
 
       {/* Badges - Uses unified BadgeRow component */}
       {/* 3-TIER DESIGN: Show only essential info in collapsed state */}
-      <div className="mt-3 flex flex-wrap items-center gap-2">
+      <div className="mt-3 flex flex-wrap items-center gap-1.5">
         <BadgeRow
           play={optimisticPlay}
           originalPlay={play}
@@ -273,7 +275,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = (
               )
             }
             iconPosition="right"
-            className="w-full"
+            className={`w-full border-neutral-200 dark:border-navy-600 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-navy-800 ${isExpanded ? "bg-neutral-50 dark:bg-navy-800" : ""}`}
           >
             {isExpanded ? "Hide Details" : "Show More"}
           </Button>

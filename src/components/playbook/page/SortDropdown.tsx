@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useRef, useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Icon } from "../../ui/Icon";
 import { Typography } from "../../design-system/Typography";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
@@ -68,9 +69,10 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
           ${compact ? "h-9 w-9 p-0 justify-center" : "px-3 py-2"}
           rounded-lg
           bg-white dark:bg-navy-800 
-          hover:bg-neutral-100 dark:hover:bg-navy-700
-          border border-neutral-200 dark:border-navy-600
-          transition-colors
+          hover:bg-neutral-50 dark:hover:bg-navy-700
+          border border-neutral-200/60 dark:border-navy-600
+          shadow-sm hover:shadow-md transition-all duration-200
+          focus:outline-none focus:ring-2 focus:ring-primary/20
         `}
         aria-label="Sort plays"
         aria-haspopup="listbox"
@@ -78,67 +80,76 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
       >
         <Icon
           name="list"
-          className={`h-4 w-4 ${value !== "name_asc" ? "text-jade-600 dark:text-jade-400" : "text-neutral-500 dark:text-neutral-400"}`}
+          className={`h-4 w-4 ${value !== "name_asc" ? "text-primary" : "text-neutral-500 dark:text-neutral-400"}`}
         />
         {!compact && (
           <>
-            <Typography variant="body-sm" className="text-primary">
+            <Typography variant="body-sm" className="font-medium text-neutral-700 dark:text-neutral-200">
               {currentLabel}
             </Typography>
             <Icon
               name="chevron-down"
-              className={`h-4 w-4 text-secondary transition-transform ${isOpen ? "rotate-180" : ""}`}
+              className={`h-3.5 w-3.5 text-neutral-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
             />
           </>
         )}
       </button>
 
       {/* Dropdown Menu */}
-      {isOpen && (
-        <div
-          className="
-            absolute right-0 top-full mt-2 z-50
-            min-w-48 py-2
-            bg-white dark:bg-navy-800
-            border border-neutral-200 dark:border-navy-600
-            rounded-xl
-            shadow-xl
-          "
-          role="listbox"
-          aria-label="Sort options"
-        >
-          {SORT_OPTIONS.map((option) => (
-            <button
-              key={option.value}
-              onClick={() => handleSelect(option.value)}
-              className={`
-                w-full flex items-center gap-3 px-4 py-2.5
-                text-left transition-colors
-                ${
-                  value === option.value
-                    ? "bg-jade-100 dark:bg-jade-900/30 text-jade-700 dark:text-jade-400"
-                    : "text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-navy-700"
-                }
-              `}
-              role="option"
-              aria-selected={value === option.value}
-            >
-              {value === option.value && (
-                <Icon
-                  name="check"
-                  className="h-4 w-4 text-jade-600 dark:text-jade-400"
-                />
-              )}
-              <Typography
-                variant="body-sm"
-                className={value === option.value ? "font-medium" : ""}
-              >
-                {option.label}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 4, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 4, scale: 0.98 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="
+              absolute right-0 top-full mt-2 z-50
+              w-56 rounded-xl
+              bg-white dark:bg-navy-800
+              border border-neutral-100 dark:border-navy-600
+              shadow-xl shadow-neutral-200/50 dark:shadow-black/40
+              overflow-hidden
+              py-1.5
+            "
+          >
+            <div className="px-3 py-2 border-b border-neutral-100 dark:border-navy-700 mb-1">
+              <Typography variant="label-md" className="text-neutral-500 dark:text-neutral-400 uppercase tracking-wider text-xs">
+                Sort By
               </Typography>
-            </button>
-          ))}
-        </div>
-      )}
+            </div>
+            
+            <div className="max-h-72 overflow-y-auto custom-scrollbar">
+              {SORT_OPTIONS.map((option) => {
+                const isSelected = value === option.value;
+                return (
+                  <button
+                    key={option.value}
+                    onClick={() => handleSelect(option.value)}
+                    className={`
+                      w-full text-left px-3 py-2.5 mx-1 rounded-lg
+                      flex items-center justify-between
+                      transition-colors duration-150
+                      ${
+                        isSelected
+                          ? "bg-primary/5 text-primary dark:bg-primary/10 dark:text-primary-400"
+                          : "text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-navy-700"
+                      }
+                    `}
+                  >
+                    <span className={`text-sm ${isSelected ? "font-semibold" : "font-medium"}`}>
+                      {option.label}
+                    </span>
+                    {isSelected && (
+                      <Icon name="check" className="h-4 w-4 text-primary" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

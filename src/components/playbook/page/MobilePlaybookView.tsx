@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Icon } from "../../ui/Icon/Icon";
 import { Button } from "../../ui/Button/Button";
+import type { ButtonSize } from "../../ui/Button/Button.types";
 import { Typography } from "../../design-system/Typography";
 import { ErrorBoundary } from "../../ui/ErrorBoundary";
 import { PullToRefresh } from "../../PullToRefresh";
@@ -12,28 +13,25 @@ import { FloatingActionButton } from "../../FloatingActionButton";
 import { FABPresets } from "../../FABPresets";
 import { PlaybookBottomNav } from "../page/PlaybookBottomNav";
 import { MobileStatsBottomSheet } from "../page/MobileStatsBottomSheet";
+import { MobileFiltersSheet } from "./MobileFiltersSheet";
 import { SortDropdown } from "../page/SortDropdown";
 import { FormationSyncPanel } from "../../formations/FormationSyncPanel";
 import { MobileQuickActions } from "../../mobile";
 import { MobilePlayCardSkeletonList } from "../../mobile/ui/MobilePlayCardSkeleton";
 import { PlayList } from "../PlayList";
 import { SelectionModeToggle } from "../SelectionModeToggle";
-import { AdvancedFilters } from "../AdvancedFilters";
-import {
-  EMPTY_FILTERS,
-  hasActiveFilters,
-  type PlaySortOption,
-} from "../../../types/filters";
-import { BottomSheet } from "../../BottomSheet";
+import { hasActiveFilters, type PlaySortOption } from "../../../types/filters";
 import { PracticeScriptList } from "../PracticeScriptList";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 import { debug } from "../../../utils/logger";
 import type { Play } from "../../../types/play";
 import type {
   PlaybookState,
+  PlaybookAction,
   CoachingView,
 } from "../../../contexts/PlaybookContext";
 import type { PracticeScript } from "../../../services/practiceService";
+
 
 const MOBILE_RENDER_WARN_THRESHOLD_MS = 20;
 
@@ -76,11 +74,11 @@ interface MobilePlaybookViewProps {
   handlePlayCountChange: (change: number) => void;
   handleViewChange: (view: CoachingView) => void;
   handleOpenPracticeScriptBuilder: (script?: PracticeScript) => void;
-  dispatch: any; // TODO: Type properly
+  dispatch: React.Dispatch<PlaybookAction>;
 
   // UI
-  mobileButtonSize: any; // TODO: Type properly
-  mobileSecondaryButtonSize: any; // TODO: Type properly
+  mobileButtonSize: ButtonSize;
+  mobileSecondaryButtonSize: ButtonSize;
 
   // Suggestions
   suggestions: {
@@ -445,7 +443,7 @@ export function MobilePlaybookView({
                   plays={formationAudit.plays}
                   loading={formationAudit.loading}
                   error={formationAudit.error}
-                  onRefresh={() => dispatch({ type: "REFRESH" })}
+                  onRefresh={() => dispatch({ type: "INCREMENT_REFRESH" })}
                   onResolve={handleEditPlay}
                   isMobile
                 />
@@ -553,78 +551,16 @@ export function MobilePlaybookView({
       />
 
       {/* Mobile Filters Bottom Sheet */}
-      {showFiltersSheet && (
-        <BottomSheet
-          snapPoints={[0.1, 0.6, 0.9]}
-          initialSnapPoint={1}
-          onSnapPointChange={(snapPoint) => {
-            // Close when fully minimized
-            if (snapPoint < 0.15) {
-              setShowFiltersSheet(false);
-            }
-          }}
-        >
-          <div className="flex flex-col h-full">
-            {/* Header */}
-            <div className="flex items-center justify-between p-6 pb-4 border-b border-muted">
-              <Typography variant="headline-md" className="text-primary">
-                Filters & Search
-              </Typography>
-              <Button
-                onClick={() => setShowFiltersSheet(false)}
-                variant="ghost"
-                size="sm"
-              >
-                <Icon name="close" className="h-5 w-5" />
-              </Button>
-            </div>
-
-            {/* Scrollable Filters Content */}
-            <div className="flex-1 overflow-y-auto p-6 pb-20">
-              <AdvancedFilters
-                filters={state.filters}
-                onFiltersChange={(filters) =>
-                  dispatch({ type: "SET_FILTERS", filters })
-                }
-              />
-            </div>
-
-            {/* Action Footer - Fixed at Bottom */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 bg-primary border-t border-muted shadow-lg">
-              <div className="flex gap-3">
-                <Button
-                  onClick={() => {
-                    dispatch({
-                      type: "SET_FILTERS",
-                      filters: { ...EMPTY_FILTERS },
-                    });
-                    setShowFiltersSheet(false);
-                  }}
-                  variant="secondary"
-                  size={mobileSecondaryButtonSize}
-                  className="flex-1"
-                >
-                  Clear All
-                </Button>
-                <Button
-                  onClick={() => setShowFiltersSheet(false)}
-                  variant="primary"
-                  size={mobileButtonSize}
-                  className="flex-1"
-                >
-                  <Icon name="check" className="h-4 w-4 mr-2" />
-                  Apply Filters
-                </Button>
-              </div>
-              {hasActiveFilters(state.filters) && (
-                <p className="text-center text-xs text-secondary mt-2">
-                  Filters active
-                </p>
-              )}
-            </div>
-          </div>
-        </BottomSheet>
-      )}
+      <MobileFiltersSheet
+        isOpen={showFiltersSheet}
+        onClose={() => setShowFiltersSheet(false)}
+        filters={state.filters}
+        onFiltersChange={(filters) =>
+          dispatch({ type: "SET_FILTERS", filters })
+        }
+        primaryButtonSize={mobileButtonSize}
+        secondaryButtonSize={mobileSecondaryButtonSize}
+      />
     </>
   );
 }

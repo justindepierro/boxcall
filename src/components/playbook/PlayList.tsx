@@ -3,6 +3,7 @@
 
 import React, { useMemo, useEffect, useCallback } from "react";
 import { Icon } from "../ui/Icon/Icon";
+import { Button } from "../ui/Button/Button";
 import { PlayCardWrapper } from "./PlayCardWrapper";
 import { PlayListSkeleton } from "./PlayListSkeleton";
 import { PlayListErrorState } from "./PlayListErrorState";
@@ -12,7 +13,6 @@ import {
   PLAYLIST_OPEN_IMPORT_EVENT,
   dispatchDocumentAppEvent,
 } from "../../utils/appEvents";
-import { Virtuoso } from "react-virtuoso";
 import { usePlaybookData } from "../../hooks/usePlaybookData";
 import { useFilteredPlays } from "../../hooks/useFilteredPlays";
 import { EMPTY_FILTERS } from "../../types/filters";
@@ -31,6 +31,7 @@ import {
   usePlayExpansion,
   usePlaySelection,
   useCollectedSuggestions,
+  usePlaylistKeyboard,
 } from "./PlayList/hooks";
 import { createPlaySaveHandler } from "./PlayList/handlers";
 import { PlayListHeader, NoTeamSelectedState } from "./PlayList/components";
@@ -62,6 +63,7 @@ interface PlayListProps {
   onSearchChange?: (query: string) => void;
   sortBy?: PlaySortOption;
   onSortChange?: (value: PlaySortOption) => void;
+  useWindowScroll?: boolean;
 }
 
 const PlayListInner: React.FC<PlayListProps> = ({
@@ -83,6 +85,8 @@ const PlayListInner: React.FC<PlayListProps> = ({
   onSearchChange,
   sortBy,
   onSortChange,
+  // useWindowScroll prop kept for API compatibility but not used (Virtuoso removed)
+  useWindowScroll: _useWindowScroll = false,
 }) => {
   const activeTeamId = useActiveTeamStore((state) => state.activeTeamId);
 
@@ -199,6 +203,15 @@ const PlayListInner: React.FC<PlayListProps> = ({
     displayPlays,
   });
 
+  // Keyboard navigation
+  const playIds = useMemo(() => displayPlays.map((p) => p.id), [displayPlays]);
+  const { focusedPlayId, containerProps } = usePlaylistKeyboard({
+    playIds,
+    expandedPlayId,
+    onToggleExpand: handleToggleExpand,
+    enabled: !loading && displayPlays.length > 0,
+  });
+
   // Personnel configurations
   const playbookIdForPersonnel =
     playbookId ?? (plays.length > 0 ? plays[0].playbook_id : undefined);
@@ -259,6 +272,8 @@ const PlayListInner: React.FC<PlayListProps> = ({
         directionDisplayFormat={directionDisplayFormat}
         expandedPlayId={expandedPlayId}
         onToggleExpand={handleToggleExpand}
+        isFocused={focusedPlayId === play.id}
+        searchQuery={searchQuery}
         existingPlays={plays}
       />
     ),
@@ -275,6 +290,8 @@ const PlayListInner: React.FC<PlayListProps> = ({
       collectedSuggestions,
       personnelConfigurations,
       plays,
+      focusedPlayId,
+      searchQuery,
       directionDisplayFormat,
       expandedPlayId,
       handleToggleExpand,
@@ -323,9 +340,10 @@ const PlayListInner: React.FC<PlayListProps> = ({
           }
 
           return (
-            <PlayListHeader
-              displayPlays={displayPlays}
-              totalCount={totalPlaysCount}
+            <div className="sticky top-[var(--playbook-sticky-offset,96px)] z-20 bg-surface-primary pb-3 pt-2 -mx-4 px-4 border-b border-border mb-2 shadow-sm">
+              <PlayListHeader
+                displayPlays={displayPlays}
+                totalCount={totalPlaysCount}
               selectedCategory={selectedCategory}
               selectedSubcategory={undefined}
               enableBulkOperations={enableBulkOperations}
@@ -340,73 +358,63 @@ const PlayListInner: React.FC<PlayListProps> = ({
               sortBy={sortBy}
               onSortChange={onSortChange}
             />
+            </div>
           );
         })()}
 
-      {/* List View with Virtuoso */}
+      {/* List View - Simple render without virtualization for window scroll mode */}
       {!showEmpty && !loading && !error && (
         <div
-          style={{ height: "calc(100vh - 320px)" }}
-          aria-label="Play list"
-          role="list"
+          className="outline-none focus-visible:ring-2 focus-visible:ring-jade-500 focus-visible:ring-offset-2 rounded-lg"
+          {...containerProps}
         >
-          <Virtuoso
-            data={displayPlays}
-            overscan={5}
-            computeItemKey={(_: number, playItem: Play) => playItem.id}
-            itemContent={renderPlayItem}
-            endReached={() => {
-              if (hasMorePlaysFromDB && !loadingMorePlays) {
-                debug("Virtuoso endReached - loading more plays");
-                loadMorePlays();
-              }
-            }}
-            components={{
-              Footer: () => {
-                if (loadingMorePlays) {
-                  return (
-                    <div className="flex justify-center py-4">
-                      <div className="flex items-center gap-2 text-muted">
-                        <Icon
-                          name="refresh-cw"
-                          className="h-4 w-4 animate-spin"
-                        />
-                        <Typography variant="body-sm">
-                          Loading more plays...
-                        </Typography>
-                      </div>
-                    </div>
-                  );
-                }
+          {/* Render all plays directly - virtualization disabled for now due to height calculation issues */}
+          <div className="space-y-2">
+            {displayPlays.map((play, index) => renderPlayItem(index, play))}
+          </div>
 
-                if (hasMorePlaysFromDB) {
-                  return (
-                    <div className="flex justify-center py-2">
-                      <Typography variant="body-sm" className="text-muted">
-                        Scroll down to load more
-                      </Typography>
-                    </div>
-                  );
-                }
+          {/* Footer content */}
+          <div className="mt-4">
+            {loadingMorePlays && (
+              <div className="flex justify-center py-6">
+                <div className="flex items-center gap-2 text-muted">
+                  <Icon name="refresh-cw" className="h-4 w-4 animate-spin" />
+                  <Typography variant="body-sm">
+                    Loading more plays...
+                  </Typography>
+                </div>
+              </div>
+            )}
 
-                if (
-                  totalPlaysCount !== null &&
-                  totalPlaysCount > 0 &&
-                  displayPlays.length >= totalPlaysCount
-                ) {
-                  return (
-                    <div className="flex justify-center py-4">
-                      <Typography variant="body-sm" className="text-muted">
-                        All {totalPlaysCount} plays loaded
-                      </Typography>
-                    </div>
-                  );
-                }
+            {!loadingMorePlays && hasMorePlaysFromDB && (
+              <div className="flex justify-center py-6 pb-8">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    debug("Manual load more triggered");
+                    loadMorePlays();
+                  }}
+                  className="w-52"
+                  icon={<Icon name="arrow-down" />}
+                  iconPosition="right"
+                >
+                  Load More Plays
+                </Button>
+              </div>
+            )}
 
-                return null;
-              },
-            }}
-          />
+            {!loadingMorePlays &&
+              !hasMorePlaysFromDB &&
+              totalPlaysCount !== null &&
+              totalPlaysCount > 0 &&
+              displayPlays.length >= totalPlaysCount && (
+                <div className="flex justify-center py-6 pb-8">
+                  <Typography variant="body-sm" className="text-muted">
+                    All {totalPlaysCount} plays loaded
+                  </Typography>
+                </div>
+              )}
+          </div>
         </div>
       )}
     </div>
@@ -437,6 +445,7 @@ function arePlayListPropsEqual(prev: PlayListProps, next: PlayListProps) {
 
   if (prev.refreshTrigger !== next.refreshTrigger) return false;
   if (prev.enableBulkOperations !== next.enableBulkOperations) return false;
+  if (prev.useWindowScroll !== next.useWindowScroll) return false;
 
   const ps = prev.selectedPlayIds;
   const ns = next.selectedPlayIds;

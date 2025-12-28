@@ -28,7 +28,7 @@ export const DiagramUploadSection: React.FC<DiagramUploadSectionProps> = ({
         <ImageUpload
           value={
             optimisticPlay.diagram_url ||
-            (optimisticPlay as any).diagram_image_url ||
+            optimisticPlay.diagram_image_url ||
             undefined
           }
           onChange={async (url: string | null) => {

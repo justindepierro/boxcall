@@ -10,16 +10,13 @@ import { InlineEditField } from "../../ui/InlineEditField";
 import { InlineSelectField } from "../../ui/InlineSelectField";
 import type { Play as PlayType } from "../../../types/play";
 import type { FieldConfig } from "./fieldConfigs";
-import {
-  DIRECTION_RL_OPTIONS,
-  FORMATION_OPTIONS,
-  PLAY_TYPE_OPTIONS,
-} from "./constants";
-import {
-  validateFormationName,
-  validatePersonnelValue,
-} from "../../../utils/playFieldValidation";
+import { DIRECTION_RL_OPTIONS } from "./constants";
 import { getFormationDirSelectValue } from "../../../utils/leftRight";
+import {
+  getValidationFn,
+  getSuggestions,
+  getExistingValues,
+} from "./fieldRendererHelpers";
 
 // ============================================================================
 // TYPES
@@ -52,84 +49,6 @@ interface FieldRendererProps {
   savingFields: Set<string>;
   options: FieldRenderOptions;
 }
-
-// ============================================================================
-// VALIDATION HELPERS
-// ============================================================================
-
-const getValidationFn = (
-  validationKey: "formation" | "personnel" | "playName" | "confidence"
-): ((value: string) => string | null) | undefined => {
-  switch (validationKey) {
-    case "formation": {
-      return (value: string) => {
-        const result = validateFormationName(value);
-        return result.isValid ? null : result.error || "Invalid formation";
-      };
-    }
-    case "personnel": {
-      return (value: string) => {
-        const result = validatePersonnelValue(value);
-        return result.isValid ? null : result.error || "Invalid personnel";
-      };
-    }
-    case "playName": {
-      return (value: string) => {
-        if (!value.trim()) return "Play name is required";
-        return null;
-      };
-    }
-    case "confidence": {
-      return (value: string) => {
-        if (!value.trim()) return null;
-        const num = parseInt(value, 10);
-        if (isNaN(num) || num < 0 || num > 100) {
-          return "Must be 0-100";
-        }
-        return null;
-      };
-    }
-    default:
-      return undefined;
-  }
-};
-
-const getSuggestions = (
-  suggestionsKey:
-    | "formation"
-    | "personnel"
-    | "playName"
-    | "playType"
-    | undefined,
-  options: FieldRenderOptions
-): string[] => {
-  switch (suggestionsKey) {
-    case "formation":
-      return [
-        ...FORMATION_OPTIONS.map((opt) => opt.label),
-        ...options.formationSuggestions,
-      ];
-    case "personnel":
-      return options.personnelSuggestions;
-    case "playName":
-      return options.playNameSuggestions;
-    case "playType":
-      return [
-        ...PLAY_TYPE_OPTIONS.map((opt) => opt.label),
-        ...options.playTypeSuggestions,
-      ];
-    default:
-      return [];
-  }
-};
-
-const getExistingValues = (
-  key: string | undefined,
-  options: FieldRenderOptions
-): string[] => {
-  if (!key) return [];
-  return (options[key as keyof FieldRenderOptions] as string[]) || [];
-};
 
 // ============================================================================
 // FIELD TYPE RENDERERS
@@ -422,46 +341,3 @@ export const FieldRow: React.FC<FieldRowProps> = ({
     </div>
   );
 };
-
-// ============================================================================
-// HOOK FOR CREATING FIELD MAP (Legacy compatibility)
-// ============================================================================
-
-interface FieldDefinition {
-  label: string;
-  render: (
-    optimisticPlay: PlayType,
-    handleInlineSave: SaveHandler,
-    savingFields: Set<string>
-  ) => React.ReactNode;
-}
-
-type FieldDefinitionMap = Record<string, FieldDefinition>;
-
-/**
- * Creates a FieldDefinitionMap from configs for legacy compatibility.
- * Use this to gradually migrate from the old fieldDefinitions.tsx pattern.
- */
-export function createFieldDefinitionsFromConfigs(
-  configs: FieldConfig[],
-  options: FieldRenderOptions
-): FieldDefinitionMap {
-  const map: FieldDefinitionMap = {};
-
-  for (const config of configs) {
-    map[config.field] = {
-      label: config.label,
-      render: (play, onSave, savingFields) => (
-        <FieldRenderer
-          config={config}
-          play={play}
-          onSave={onSave}
-          savingFields={savingFields}
-          options={options}
-        />
-      ),
-    };
-  }
-
-  return map;
-}

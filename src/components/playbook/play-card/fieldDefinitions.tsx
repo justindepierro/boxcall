@@ -102,13 +102,15 @@ export const createFormationFields = ({
 
   const map: FieldDefinitionMap = {};
 
+  // Helper to determine field key from config
+  const getFieldKey = (config: typeof FORMATION_FIELD_CONFIGS[number]): string => {
+    if (config.type === "checkbox-pair") return "back_position";
+    if (config.type === "tags" && config.sourceFields.includes("ftag1")) return "ftags";
+    return String(config.field);
+  };
+
   for (const config of FORMATION_FIELD_CONFIGS) {
-    const fieldKey =
-      config.type === "checkbox-pair"
-        ? "back_position"
-        : config.type === "tags" && config.sourceFields.includes("ftag1")
-          ? "ftags"
-          : String(config.field);
+    const fieldKey = getFieldKey(config);
 
     map[fieldKey] = {
       label: config.label,

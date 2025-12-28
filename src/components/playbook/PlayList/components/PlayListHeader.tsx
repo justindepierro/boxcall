@@ -60,7 +60,9 @@ export const PlayListHeader: React.FC<PlayListHeaderProps> = ({
             as="h2"
             className="text-primary whitespace-nowrap"
           >
-            {totalCount} {totalCount === 1 ? "Play" : "Plays"}
+            <span aria-live="polite" aria-atomic="true">
+              {totalCount} {totalCount === 1 ? "Play" : "Plays"}
+            </span>
             {selectedCategory && (
               <span className="text-secondary font-normal ml-2">
                 in{" "}

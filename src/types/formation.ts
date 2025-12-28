@@ -133,7 +133,7 @@ export interface Formation {
 
   // Player Positions (JSONB in database)
   player_positions: FormationPlayerPosition[] | null; // Array of positions with x/y coords
-  diagram_data: any | null; // Full diagram data (Pixi.js format)
+  diagram_data: any | null; // Legacy field - no longer used (canvas editor removed)
 
   // Personnel Integration
   personnel_packages: string[]; // Array of personnel_configuration UUIDs

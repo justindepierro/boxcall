@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { rateLimiter, getUserRateLimitKey } from "../utils/rateLimiter";
 import { useAuthUser } from "../app/auth-store";
 
-interface RateLimitFeedback {
+export interface RateLimitFeedback {
   remaining: number;
   total: number;
   resetTime: number | null;

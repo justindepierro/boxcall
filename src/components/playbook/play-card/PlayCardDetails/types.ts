@@ -4,7 +4,9 @@
  * Type definitions for the PlayCardDetails component and its subcomponents.
  */
 
+import type { DropResult } from "@hello-pangea/dnd";
 import type { Play as PlayType } from "../../../../types/play";
+import type { IconName } from "../../../ui/Icon/Icon";
 import type { FieldDefinitionMap } from "../fieldDefinitions";
 import type { PlayFlags } from "../../../../utils/localPlayFlags";
 
@@ -28,11 +30,11 @@ export interface PlayCardDetailsProps {
     fieldKey: string,
     section: "formation" | "playDetails"
   ) => void;
-  handleFormationDragEnd: (result: any) => void;
+  handleFormationDragEnd: (result: DropResult) => void;
   playDetailsFieldOrder: string[];
   playDetailsFields: FieldDefinitionMap;
   playDetailsFieldVisibility: Record<string, boolean>;
-  handlePlayDetailsDragEnd: (result: any) => void;
+  handlePlayDetailsDragEnd: (result: DropResult) => void;
   getPlayTypeColor: (type: string) => string;
   getConfidenceColor: (confidence: number) => string;
   existingPlays?: PlayType[];
@@ -61,7 +63,7 @@ export interface PlayBadgesProps {
  */
 export interface DraggableFieldSectionProps {
   title: string;
-  icon: string;
+  icon: IconName;
   droppableId: string;
   fieldOrder: string[];
   fields: FieldDefinitionMap;
@@ -70,7 +72,7 @@ export interface DraggableFieldSectionProps {
   handleInlineSave: PlayCardDetailsProps["handleInlineSave"];
   savingFields: Set<string>;
   toggleFieldVisibility: (fieldKey: string) => void;
-  onDragEnd: (result: any) => void;
+  onDragEnd: (result: DropResult) => void;
 }
 
 /**

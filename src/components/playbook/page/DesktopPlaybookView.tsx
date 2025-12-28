@@ -2,6 +2,7 @@ import type { FC } from "react";
 import { Icon } from "../../ui/Icon/Icon";
 import type { IconName } from "../../ui/Icon/Icon";
 import { Button } from "../../ui/Button/Button";
+import type { ButtonSize } from "../../ui/Button/Button.types";
 import { Typography } from "../../design-system/Typography";
 import { ErrorBoundary } from "../../ui/ErrorBoundary";
 import { PlayList } from "../PlayList";
@@ -13,9 +14,11 @@ import { PlaybookStatsDashboard } from "../PlaybookStatsDashboard";
 import { BulkActionsToolbar } from "../BulkActionsToolbar";
 import { PracticeScriptList } from "../PracticeScriptList";
 import type { Play } from "../../../types/play";
-import type { PlaybookState } from "../../../contexts/PlaybookContext";
+import type { PlaybookState, PlaybookAction } from "../../../contexts/PlaybookContext";
+import type { PlaybookFilters } from "../../../types/filters";
 import type { PracticeScript } from "../../../services/practiceService";
 import type { PlaySortOption } from "../../../types/filters";
+import type { PlaybookStats } from "../../../hooks/usePlaybookStats";
 
 const TEAM_SETUP_CHECKLIST = [
   "Unlock practice templates tied to your personnel groups.",
@@ -134,6 +137,7 @@ const PlaybookGridSection: FC<PlaybookGridSectionProps> = ({
         onSearchChange={handleSearchChange}
         sortBy={state.filters.sortBy}
         onSortChange={handleSortChange}
+        useWindowScroll={true}
       />
     </ErrorBoundary>
   );
@@ -311,7 +315,7 @@ interface DesktopPlaybookViewProps {
     loading: boolean;
     error: string | null;
   };
-  playbookStats: any; // TODO: Type properly
+  playbookStats: PlaybookStats;
   activeTeamId: string | null;
 
   // Handlers
@@ -326,12 +330,12 @@ interface DesktopPlaybookViewProps {
   handleAddToGamePlan: (play: Play) => void;
   handlePlayCountChange: (change: number) => void;
   handleOpenPracticeScriptBuilder: (script?: PracticeScript) => void;
-  handleFiltersChange: (filters: any) => void;
+  handleFiltersChange: (filters: PlaybookFilters) => void;
   handleClearSelection: () => void;
   handleBulkAction: (action: string) => void;
   handleEnterFullscreen: (plays: Play[], playIndex: number) => void;
   handleSortChange: (sortBy: PlaySortOption) => void;
-  dispatch: any; // TODO: Type properly
+  dispatch: React.Dispatch<PlaybookAction>;
   navigate: (path: string) => void;
 
   // Suggestions
@@ -341,7 +345,7 @@ interface DesktopPlaybookViewProps {
   };
 
   // UI
-  mobileButtonSize: any; // TODO: Type properly
+  mobileButtonSize: ButtonSize;
 }
 
 export function DesktopPlaybookView({
@@ -378,14 +382,14 @@ export function DesktopPlaybookView({
   };
 
   return (
-    <div className="min-h-screen bg-subtle">
+    <div className="min-h-screen bg-subtle" data-testid="desktop-playbook-view">
       {formationAudit.plays.length > 0 && (
         <div className="px-8 pt-6 mb-6">
           <FormationSyncPanel
             plays={formationAudit.plays}
             loading={formationAudit.loading}
             error={formationAudit.error}
-            onRefresh={() => dispatch({ type: "REFRESH" })}
+            onRefresh={() => dispatch({ type: "INCREMENT_REFRESH" })}
             onResolve={handleEditPlay}
           />
         </div>
@@ -393,16 +397,10 @@ export function DesktopPlaybookView({
 
       {/* Main Content - Optimized Desktop Layout (20%/80% split) */}
       <div className="max-w-screen-2xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-lg px-8 py-6 overflow-visible">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-lg px-4 md:px-8 py-6 overflow-visible">
           {/* Left Sidebar - Controls (20% width on desktop) */}
-          <div className="lg:col-span-1">
-            <div
-              className="space-y-md overflow-visible lg:sticky lg:self-start lg:overflow-y-auto lg:pr-2"
-              style={{
-                top: "var(--playbook-sticky-offset, 96px)",
-                maxHeight: "calc(100vh - var(--playbook-sticky-offset, 96px))",
-              }}
-            >
+          <div className="md:col-span-1 order-2 md:order-1">
+            <div className="space-y-md">
               {/* Selection Mode Toggle - NEW! */}
               <Card
                 variant="default"
@@ -449,7 +447,7 @@ export function DesktopPlaybookView({
           </div>
 
           {/* Main Content Area (80% width on desktop) */}
-          <div className="lg:col-span-4 overflow-visible">
+          <div className="md:col-span-4 overflow-visible order-1 md:order-2">
             <Card variant="elevated" size="md" className="border-muted">
               {state.currentView === "playbook" && (
                 <PlaybookGridSection

@@ -14,7 +14,10 @@ import { logError } from "../../../utils/logger";
 import type { Play } from "../../../types/play";
 import type { PersonnelConfiguration } from "../../../types/personnel";
 import type { AssignmentData } from "./types";
+import type { Database } from "../../../types/database";
 import { DEFAULT_PERSONNEL_POSITIONS, SAVE_SUCCESS_TIMEOUT } from "./constants";
+
+type PlayAssignmentRow = Database["public"]["Tables"]["play_assignments"]["Row"];
 
 function reorderList<T>(
   items: readonly T[],
@@ -95,9 +98,9 @@ function buildDefaultPositions({
   );
 }
 
-function mapDbRowsToState(data: any[] | null | undefined) {
+function mapDbRowsToState(data: PlayAssignmentRow[] | null | undefined) {
   const assignmentMap = new Map<string, AssignmentData>();
-  data?.forEach((assignment: any) => {
+  data?.forEach((assignment) => {
     assignmentMap.set(assignment.position, {
       id: assignment.id,
       position: assignment.position,
@@ -105,10 +108,10 @@ function mapDbRowsToState(data: any[] | null | undefined) {
     });
   });
 
-  const firstAssignment = data?.[0] as any;
+  const firstAssignment = data?.[0];
   return {
     assignmentMap,
-    playNotes: (firstAssignment?.play_notes as string | undefined) || "",
+    playNotes: firstAssignment?.play_notes || "",
   };
 }
 

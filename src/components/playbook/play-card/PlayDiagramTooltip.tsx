@@ -137,7 +137,7 @@ export const PlayDiagramTooltip: React.FC<PlayDiagramTooltipProps> = ({
 
   // Only show tooltip if play has a diagram
   const hasDiagram = Boolean(
-    play.diagram_url || (play as any).diagram_image_url
+    play.diagram_url || play.diagram_image_url
   );
   const shouldShow = hasDiagram && !disabled;
 

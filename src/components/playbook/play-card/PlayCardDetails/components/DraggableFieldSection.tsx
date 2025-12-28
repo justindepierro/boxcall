@@ -31,7 +31,7 @@ export const DraggableFieldSection: React.FC<DraggableFieldSectionProps> = ({
         as="h4"
         className="text-primary flex items-center mb-sm"
       >
-        <Icon name={icon as any} className="h-4 w-4 mr-xs" /> {title}
+        <Icon name={icon} className="h-4 w-4 mr-xs" /> {title}
       </Typography>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId={droppableId}>

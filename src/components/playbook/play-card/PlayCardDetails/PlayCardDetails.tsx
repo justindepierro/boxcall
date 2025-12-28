@@ -64,7 +64,7 @@ export const PlayCardDetails: React.FC<PlayCardDetailsProps> = ({
       {/* Play Diagram Preview */}
       <PlayDiagramPreview
         diagramUrl={optimisticPlay.diagram_url}
-        diagramImageUrl={(optimisticPlay as any).diagram_image_url}
+        diagramImageUrl={optimisticPlay.diagram_image_url}
         playName={play.play_name}
       />
 

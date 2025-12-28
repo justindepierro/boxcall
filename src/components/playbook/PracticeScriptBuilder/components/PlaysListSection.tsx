@@ -12,6 +12,40 @@ import { PracticeScriptPlayItem } from "../../PracticeScriptPlayItem";
 import type { PracticeScript } from "@services";
 import { triggerHapticFeedback } from "../../../../lib/hapticFeedback";
 
+/**
+ * Scenario configuration for practice script plays
+ */
+interface ScenarioUpdate {
+  hash?: "left" | "middle" | "right";
+  downDistance?: string;
+  fieldPosition?: "plus_territory" | "red_zone" | "backed_up" | "midfield";
+  defensiveFront?:
+    | "base"
+    | "4-3"
+    | "3-4"
+    | "nickel"
+    | "dime"
+    | "bear"
+    | "tite";
+  coverage?:
+    | "cover_0"
+    | "cover_1"
+    | "cover_2"
+    | "cover_3"
+    | "cover_4"
+    | "cover_6"
+    | "quarters"
+    | "man";
+  blitz?:
+    | "none"
+    | "edge"
+    | "a_gap"
+    | "b_gap"
+    | "sim_pressure"
+    | "zone_blitz"
+    | "all_out";
+}
+
 interface PlaysListSectionProps {
   currentScript: PracticeScript | null;
   isLoadingPlays: boolean;
@@ -21,7 +55,7 @@ interface PlaysListSectionProps {
   onRemovePlay: (playId: string) => void;
   onUpdateNotes: (playId: string, notes: string) => void;
   onUpdateRepetitions: (playId: string, reps: number) => void;
-  onUpdateScenario: (playId: string, scenario: any) => void;
+  onUpdateScenario: (playId: string, scenario: ScenarioUpdate) => void;
 }
 
 export const PlaysListSection: React.FC<PlaysListSectionProps> = ({

@@ -15,6 +15,8 @@ import {
 } from "./sections";
 import type { Play } from "../../../types/play";
 import type { PlayFormData } from "./usePlayFormState";
+import type { Database } from "../../../types/database";
+import type { RateLimitFeedback } from "../../../hooks/useRateLimitFeedback";
 import { Modal } from "../../ui/Modal/Modal";
 import { Icon } from "../../ui/Icon/Icon";
 import { Typography } from "../../design-system/Typography";
@@ -26,6 +28,8 @@ import {
 } from "../play-card/constants";
 import { Button } from "../../ui/Button/Button";
 import type { PlayCombo } from "../../../hooks/useRecentPlayCombos";
+
+type FormationRow = Database["public"]["Tables"]["formations"]["Row"];
 
 type WizardController = ReturnType<typeof useWizardState>;
 function buildSyntheticSubmitEvent(): React.FormEvent {
@@ -122,7 +126,7 @@ const MobileWizardErrorBanner: React.FC<{ errorMessage: string }> = ({
   </div>
 );
 
-const MobileWizardRateLimitBanner: React.FC<{ rateLimitFeedback: any }> = ({
+const MobileWizardRateLimitBanner: React.FC<{ rateLimitFeedback: RateLimitFeedback }> = ({
   rateLimitFeedback,
 }) => (
   <div className="mx-6 mt-4 bg-warning-subtle border border-warning-default rounded-lg p-4 flex items-center gap-3">
@@ -146,7 +150,7 @@ const WizardStepOne: React.FC<{
   ) => void;
   updateFields: (updates: Partial<PlayFormData>) => void;
   onFormationChange: (value: string) => void;
-  onFormationIdChange: (id: string | null, formation: any) => void;
+  onFormationIdChange: (id: string | null, formation: FormationRow | null) => void;
 }> = ({
   wizard,
   formData,
@@ -450,7 +454,7 @@ interface MobileWizardViewProps {
 
   // Formation handling
   onFormationChange: (value: string) => void;
-  onFormationIdChange: (id: string | null, formation: any) => void;
+  onFormationIdChange: (id: string | null, formation: FormationRow | null) => void;
 
   // Personnel
   personnelPanelOpen: boolean;
@@ -469,7 +473,7 @@ interface MobileWizardViewProps {
   errorMessage: string | null;
 
   // Rate limiting
-  rateLimitFeedback: any;
+  rateLimitFeedback: RateLimitFeedback;
   recentCombos?: PlayCombo[];
 }
 

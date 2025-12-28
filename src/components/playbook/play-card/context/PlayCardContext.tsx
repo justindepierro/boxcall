@@ -1,12 +1,13 @@
 /**
- * PlayCardContext
+ * PlayCardContext Provider
  *
  * Provides shared state and handlers for PlayCard components,
  * eliminating prop drilling and centralizing state management.
+ * 
+ * Note: Context definition is in PlayCardContextDef.ts for Fast Refresh compatibility.
  */
 
 import React, {
-  createContext,
   useCallback,
   useState,
   useRef,
@@ -17,56 +18,14 @@ import type { Play as PlayType } from "../../../../types/play";
 import type { PersonnelConfiguration } from "../../../../types/personnel";
 import { logError } from "../../../../utils/logger";
 import { legacyValueToLeftRight } from "../../../../utils/leftRight";
+import { PlayCardContext, type PlayCardContextValue, type SaveQueue } from "./PlayCardContextDef";
+
+// Re-export for backward compatibility
+export { PlayCardContext, type PlayCardContextValue };
 
 // ============================================================================
-// Types (exported for hook file)
+// Provider Props
 // ============================================================================
-
-type SaveQueue = Set<string>;
-
-export interface PlayCardContextValue {
-  // Play data
-  play: PlayType;
-  optimisticPlay: PlayType;
-
-  // Display values (computed)
-  displayName: string;
-  subtitleText: string | null;
-  phaseLabel: string | null;
-
-  // Saving state
-  savingFields: SaveQueue;
-  isSaving: (field: string) => boolean;
-
-  // Handlers
-  handleInlineSave: (
-    field: keyof PlayType,
-    value: string | number | boolean | null | string[]
-  ) => Promise<void>;
-
-  // Expansion state
-  isExpanded: boolean;
-  onToggleExpand: () => void;
-
-  // Favorites
-  isFavorite: boolean;
-  onToggleFavorite: () => void;
-
-  // Selection
-  isSelected: boolean;
-  onSelectionChange?: (playId: string, selected: boolean) => void;
-
-  // Configuration
-  personnelConfigurations: PersonnelConfiguration[];
-  showOneWordCalls: boolean;
-  directionDisplayFormat: "full" | "abbrev" | "letter";
-
-  // Suggestions
-  formationSuggestions: string[];
-  playNameSuggestions: string[];
-  playTypeSuggestions: string[];
-  personnelSuggestions: string[];
-}
 
 interface PlayCardProviderProps {
   play: PlayType;
@@ -93,12 +52,6 @@ interface PlayCardProviderProps {
   isSelected?: boolean;
   onSelectionChange?: (playId: string, selected: boolean) => void;
 }
-
-// ============================================================================
-// Context (exported for hook file)
-// ============================================================================
-
-export const PlayCardContext = createContext<PlayCardContextValue | null>(null);
 
 // ============================================================================
 // Provider

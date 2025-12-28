@@ -91,33 +91,33 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
     Boolean(onPlaybookChange) &&
     Boolean(teamId);
   return (
-    <div className="divider-b bg-gradient-to-b from-white/95 to-white/80 dark:from-navy-900/95 dark:to-navy-900/80 shadow-sm">
+    <div className="bg-white dark:bg-navy-900 border-b border-neutral-200 dark:border-navy-700 sticky top-0 z-30 backdrop-blur-md bg-white/95 dark:bg-navy-900/95">
       <div className="container-page px-6">
         {/* Breadcrumb */}
         <div className="pt-4 pb-2">
-          <Typography variant="body-sm" className="text-muted">
+          <Typography variant="body-sm" className="text-neutral-500 dark:text-neutral-400">
             <span
               onClick={() => onNavigate?.("/dashboard")}
-              className="hover:text-primary cursor-pointer transition-colors"
+              className="hover:text-primary cursor-pointer transition-colors font-medium"
             >
               Dashboard
             </span>
-            <span className="mx-2">/</span>
-            <span className="text-primary font-medium">Playbook</span>
+            <span className="mx-2 text-neutral-300 dark:text-navy-600">/</span>
+            <span className="text-primary font-semibold">Playbook</span>
           </Typography>
         </div>
 
         {/* Top row: Title, stats, team type selector, and search */}
         <div className="flex flex-col gap-4 py-3 overflow-visible md:flex-row md:items-center md:justify-between">
           <div className="flex min-w-0 items-start gap-4 overflow-visible">
-            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-jade-600 shadow-lg shadow-emerald-500/25 overflow-visible">
-              <Icon name="file" className="h-6 w-6 text-white" />
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-sm overflow-visible">
+              <Icon name="file" className="h-6 w-6" />
             </div>
             <div className="flex min-w-0 flex-col">
               <Typography
                 variant="headline-md"
                 as="h1"
-                className="text-primary font-semibold leading-tight line-clamp-2 md:line-clamp-1"
+                className="text-neutral-900 dark:text-white font-bold leading-tight line-clamp-2 md:line-clamp-1 tracking-tight"
               >
                 {title || "Playbook"}
               </Typography>
@@ -125,11 +125,11 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
                 <ProgressBadge progress={completionPercent}>
                   {playsCreated}/100 plays
                 </ProgressBadge>
-                <Badge variant="info" size="sm">
+                <Badge variant="info" size="sm" className="bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800">
                   Diagram {diagramCoverage}%
                 </Badge>
                 {streakDays > 0 && (
-                  <Badge variant="success" size="sm">
+                  <Badge variant="success" size="sm" className="bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-900/20 dark:text-emerald-300 dark:border-emerald-800">
                     🔥 {streakDays} day streak
                   </Badge>
                 )}
@@ -148,9 +148,9 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
         </div>
 
         {/* Bottom row: Navigation tabs and actions */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pb-2">
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-0">
           {/* View Tabs - Left side */}
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1 -mb-px">
             <Button
               id="tab-playbook"
               role="tab"
@@ -160,18 +160,18 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               onClick={() => onViewChange("playbook")}
               variant="ghost"
               size="sm"
-              className={`px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm ${
+              className={`px-4 py-3 rounded-t-lg rounded-b-none border-b-2 transition-all duration-200 ${
                 currentView === "playbook"
-                  ? "bg-interactive-primary-base hover:bg-interactive-primary-hover text-white shadow-lg"
-                  : "bg-subtle hover:bg-muted dark:bg-navy-800/60 dark:hover:bg-navy-800/90 text-jade-600 dark:text-jade-400"
+                  ? "border-primary text-primary bg-primary/5 font-semibold"
+                  : "border-transparent text-neutral-500 hover:text-neutral-700 hover:bg-neutral-50 dark:text-neutral-400 dark:hover:text-neutral-200 dark:hover:bg-navy-800"
               }`}
               icon={
                 <Icon
                   name="file"
                   className={
                     currentView === "playbook"
-                      ? "text-white"
-                      : "text-jade-600 dark:text-jade-400"
+                      ? "text-primary"
+                      : "text-neutral-400 group-hover:text-neutral-500"
                   }
                 />
               }
@@ -188,18 +188,18 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               onClick={() => onViewChange("practice-script")}
               variant="ghost"
               size="sm"
-              className={`px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm ${
+              className={`px-4 py-3 rounded-t-lg rounded-b-none border-b-2 transition-all duration-200 ${
                 currentView === "practice-script"
-                  ? "bg-interactive-primary-base hover:bg-interactive-primary-hover text-white shadow-lg"
-                  : "bg-subtle hover:bg-muted dark:bg-navy-800/60 dark:hover:bg-navy-800/90 text-jade-600 dark:text-jade-400"
+                  ? "border-primary text-primary bg-primary/5 font-semibold"
+                  : "border-transparent text-neutral-500 hover:text-neutral-700 hover:bg-neutral-50 dark:text-neutral-400 dark:hover:text-neutral-200 dark:hover:bg-navy-800"
               }`}
               icon={
                 <Icon
                   name="clock"
                   className={
                     currentView === "practice-script"
-                      ? "text-white"
-                      : "text-jade-600 dark:text-jade-400"
+                      ? "text-primary"
+                      : "text-neutral-400 group-hover:text-neutral-500"
                   }
                 />
               }
@@ -216,18 +216,18 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               onClick={() => onViewChange("game-plan")}
               variant="ghost"
               size="sm"
-              className={`px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm ${
+              className={`px-4 py-3 rounded-t-lg rounded-b-none border-b-2 transition-all duration-200 ${
                 currentView === "game-plan"
-                  ? "bg-interactive-primary-base hover:bg-interactive-primary-hover text-white shadow-lg"
-                  : "bg-subtle hover:bg-muted dark:bg-navy-800/60 dark:hover:bg-navy-800/90 text-jade-600 dark:text-jade-400"
+                  ? "border-primary text-primary bg-primary/5 font-semibold"
+                  : "border-transparent text-neutral-500 hover:text-neutral-700 hover:bg-neutral-50 dark:text-neutral-400 dark:hover:text-neutral-200 dark:hover:bg-navy-800"
               }`}
               icon={
                 <Icon
                   name="users"
                   className={
                     currentView === "game-plan"
-                      ? "text-white"
-                      : "text-jade-600 dark:text-jade-400"
+                      ? "text-primary"
+                      : "text-neutral-400 group-hover:text-neutral-500"
                   }
                 />
               }
@@ -244,18 +244,18 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               onClick={() => onViewChange("analytics")}
               variant="ghost"
               size="sm"
-              className={`px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm ${
+              className={`px-4 py-3 rounded-t-lg rounded-b-none border-b-2 transition-all duration-200 ${
                 currentView === "analytics"
-                  ? "bg-interactive-primary-base hover:bg-interactive-primary-hover text-white shadow-lg"
-                  : "bg-subtle hover:bg-muted dark:bg-navy-800/60 dark:hover:bg-navy-800/90 text-jade-600 dark:text-jade-400"
+                  ? "border-primary text-primary bg-primary/5 font-semibold"
+                  : "border-transparent text-neutral-500 hover:text-neutral-700 hover:bg-neutral-50 dark:text-neutral-400 dark:hover:text-neutral-200 dark:hover:bg-navy-800"
               }`}
               icon={
                 <Icon
                   name="bar-chart"
                   className={
                     currentView === "analytics"
-                      ? "text-white"
-                      : "text-jade-600 dark:text-jade-400"
+                      ? "text-primary"
+                      : "text-neutral-400 group-hover:text-neutral-500"
                   }
                 />
               }

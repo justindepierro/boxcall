@@ -2,6 +2,8 @@ import { Suspense, lazy } from "react";
 import { Modal } from "../../ui/Modal";
 import type { Play } from "../../../types/play";
 import type { ModalType } from "../../../hooks/useModalManager";
+import type { PlaybookAction } from "../../../contexts/PlaybookContext";
+import type { PracticeScript } from "../../../services/practiceService";
 
 // Lazy load modal components for code splitting (~120KB savings)
 const AddNewPlayModal = lazy(() =>
@@ -67,13 +69,13 @@ interface PlaybookModalsProps {
   diagramPlay: Play | null;
   diagramMode: "edit" | "quick-play";
   assignmentsPlay: Play | null;
-  editingScript: any; // TODO: Type properly
+  editingScript: PracticeScript | null;
   playToPost: Play | null;
 
   // Data setters
   setDiagramPlay: (play: Play | null) => void;
   setAssignmentsPlay: (play: Play | null) => void;
-  setEditingScript: (script: any) => void;
+  setEditingScript: (script: PracticeScript | null) => void;
   setPlayToPost: (play: Play | null) => void;
 
   // Other props
@@ -84,7 +86,7 @@ interface PlaybookModalsProps {
   existingPlays: Play[];
   handleCreatePlay: (playData: Partial<Play>) => Promise<Play | void>;
   handleSavePlay: (play: Play) => Promise<void>;
-  dispatch: any; // TODO: Type properly
+  dispatch: React.Dispatch<PlaybookAction>;
 
   // Merge playbooks
   teamPlaybooks?: Playbook[];
@@ -235,7 +237,7 @@ export function PlaybookModals({
               closeModal();
               setEditingScript(null);
               setSelectedPlaysForPractice([]);
-              dispatch({ type: "REFRESH" });
+              dispatch({ type: "INCREMENT_REFRESH" });
             }}
           />
         </Suspense>

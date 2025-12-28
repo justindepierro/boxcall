@@ -20,6 +20,7 @@ import type { PersonnelConfiguration } from "../../../types/personnel";
 import { debug } from "../../../utils/logger";
 import { BadgeRow } from "./badges";
 import { usePlayCardProps } from "./hooks/usePlayCardProps";
+import { SearchHighlight } from "./SearchHighlight";
 
 // ============================================================================
 // Types
@@ -47,6 +48,10 @@ interface PlayCardListHeaderProps {
   isFavorite: boolean;
   onToggleFavorite: () => void;
   personnelConfigurations?: PersonnelConfiguration[];
+  /** Search query for highlighting matches */
+  searchQuery?: string;
+  /** Whether this card is keyboard-focused */
+  isFocused?: boolean;
 }
 
 // ============================================================================
@@ -168,10 +173,16 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = (
     onOpenAssignments,
     getPlayTypeColor: _getPlayTypeColor,
     getConfidenceColor,
+    searchQuery,
+    isFocused,
   } = props;
 
   return (
-    <div className="flex items-center gap-4 overflow-visible">
+    <div
+      className={`flex items-center gap-4 overflow-visible transition-all duration-150 ${
+        isFocused ? "ring-2 ring-jade-500 ring-offset-2 rounded-lg" : ""
+      }`}
+    >
       {/* Selection checkbox on the left (when selection mode is on) */}
       {onSelectionChange && (
         <div className="shrink-0">
@@ -193,7 +204,7 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = (
       {(play.diagram_url ||
         (play as PlayType & { diagram_image_url?: string })
           .diagram_image_url) && (
-        <div className="shrink-0 w-20 h-14 rounded-xl overflow-hidden shadow-sm shadow-jade-500/10">
+        <div className="shrink-0 w-24 h-16 rounded-lg overflow-hidden border border-neutral-200 dark:border-navy-600 shadow-sm bg-neutral-50 dark:bg-navy-800">
           <img
             src={
               play.diagram_url ||
@@ -212,27 +223,27 @@ export const PlayCardListHeader: React.FC<PlayCardListHeaderProps> = (
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-3 min-w-0">
           <h3
-            className={`truncate font-mono font-bold ${
+            className={`truncate font-bold font-mono tracking-tight ${
               isCompact ? "text-base" : "text-lg"
             } ${
               showOneWordCalls && play.one_word_play
-                ? "text-jade-600"
-                : "text-primary"
+                ? "text-emerald-600 dark:text-emerald-400"
+                : "text-neutral-900 dark:text-white"
             }`}
           >
-            {displayName}
+            <SearchHighlight text={displayName} query={searchQuery} />
           </h3>
           {subtitleText && (
-            <span className="text-secondary text-sm italic ml-2">
-              {subtitleText}
+            <span className="text-neutral-500 dark:text-neutral-400 text-sm font-medium ml-1">
+              <SearchHighlight text={subtitleText} query={searchQuery} />
             </span>
           )}
         </div>
 
         {/* Unified BadgeRow - handles both collapsed and expanded states */}
         <div
-          className={`flex flex-wrap items-center gap-2 transition-all duration-300 ease-in-out ${
-            isCompact ? "mt-1.5" : "mt-2"
+          className={`flex flex-wrap items-center gap-1.5 transition-all duration-300 ease-in-out ${
+            isCompact ? "mt-1" : "mt-1.5"
           }`}
         >
           <BadgeRow

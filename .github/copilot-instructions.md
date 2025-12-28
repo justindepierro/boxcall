@@ -44,7 +44,7 @@ BoxCall is a professional football coaching platform implementing Brian Billick'
 
 Three interconnected coaching workflows:
 
-1. **Playbook View** → Create/edit plays with Fabric.js canvas (formations, routes, assignments)
+1. **Playbook View** → Create/edit plays with image uploads (coach-drawn diagrams, formation metadata)
 2. **Practice Script View** → 8-box layout system with automatic duration tracking
 3. **Game Plan View** → Billick situational methodology (down/distance, field position, personnel groupings)
 
@@ -203,7 +203,7 @@ The **Playbook page** (`src/pages/PlaybookPage.tsx`) uses Facebook-fast performa
 
 **Preload Heavy Modals**:
 
-- FormationBuilderModal, DiagramEditor preloaded during idle time (2s delay)
+- FormationBuilderModal preloaded during idle time (2s delay)
 - Modals cached by browser for instant open
 - Silent failure handling (loads on-demand if preload fails)
 
@@ -237,46 +237,6 @@ The **Game Plans page** (`src/pages/GamePlansPage.tsx`) uses the same Facebook-f
 - ✅ Duplicate: <50ms perceived response (was 800ms)
 - ✅ Archive/Delete: <50ms perceived response (was 600ms)
 - ✅ Modal open: <100ms (preloaded)
-
-### Canvas & Diagram Performance Patterns
-
-The **Diagram Editor** (`src/components/playbook/diagram-editor/`) uses Facebook-fast patterns for smooth canvas interactions:
-
-**Optimistic Autosave**:
-
-- Instant "saved" indicator without waiting for server (330x faster: 3.3s→<10ms)
-- Non-blocking autosave with 2.5s debounce
-- Background sync with silent success, error toast only on failure
-- Implemented in `useAutosave.ts` hook
-
-**Throttled Player Movement**:
-
-- 60fps smooth dragging with 16ms throttle
-- Prevents excessive Zustand store updates during drag
-- Custom throttle utility in `usePixiApp.ts` hook
-- Batched position updates for single canvas render
-
-**Error Boundaries**:
-
-- React error boundary wraps DiagramEditor
-- Catches Pixi.js canvas crashes gracefully
-- Provides retry button and detailed error info (dev mode)
-- Prevents entire app from crashing on canvas errors
-
-**Performance Targets**:
-
-- ✅ Autosave: <10ms perceived response (was 3.3s)
-- ✅ Player drag: 60fps smooth (was 30-45fps)
-- ✅ Canvas render: Batched via throttle
-- ✅ Error recovery: Graceful fallback with retry
-
-**Technical Implementation**:
-
-- `useAutosave.ts`: Optimistic instant feedback + background sync
-- `usePixiApp.ts`: Throttled movement handler (16ms = 60fps)
-- `DiagramEditorErrorBoundary.tsx`: Error boundary for Pixi.js crashes
-- Pixi.js v8.5.2: WebGL hardware-accelerated rendering
-- Zustand store: Fast, minimal re-renders
 
 ### BoxCall Live Session Tracking
 
@@ -337,15 +297,15 @@ Practice planning with hierarchical time blocks (`src/components/practice/`):
 - **Role-based access**: Head coach sees all groups; position coaches see assigned groups only
 - **Components**: `PracticeHeader`, `TimeSummary`, `TimelineAllocation`, `PracticeBlocksList` (see `README.md`)
 
-### Formation Builder Canvas
+### Formation Builder Panel
 
-Playbook visual editor (`src/components/playbook/FormationBuilderModal/`):
+Playbook metadata editor (`src/components/formations/FormationBuilderPanel.tsx`):
 
-- **Interactive field diagram**: Drag-drop player positioning
-- **Tabbed interface**: Tab 1 (Quick Config) → Tab 2 (Visual Draw)
+- **Formation metadata**: Personnel groupings, formation categories, tags
+- **Tabbed interface**: Details → Diagnostic → Review tabs
 - **Personnel integration**: 11, 12, 21, 22 personnel groupings
 - **Formation library**: Pre-built formations with directional warnings
-- **Export formats**: CSV, PDF via `@react-pdf/renderer`
+- **Note**: No visual canvas drawing - coaches upload their own diagram images via `PlayImageUpload`
 
 ### Custom ESLint Rules
 

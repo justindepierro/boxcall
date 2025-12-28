@@ -51,6 +51,9 @@ import { debug, logError } from "../../utils/logger";
 import { useActiveTeamStore } from "../../stores/activeTeamStore";
 import { TeamSituationDefinitionsService } from "../../services/teamSituationDefinitionsService";
 import { getFieldZoneDefinitions } from "../../utils/situationBucketing";
+import type { Database } from "../../types/database";
+
+type FormationRow = Database["public"]["Tables"]["formations"]["Row"];
 
 interface AddNewPlayModalProps {
   isOpen: boolean;
@@ -379,12 +382,12 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
           showSuggestions={showSuggestions}
           hideSuggestions={hideSuggestions}
           onFormationChange={handleFormationChange}
-          onFormationIdChange={(id, formation) => {
+          onFormationIdChange={(id: string | null, formation: FormationRow | null) => {
             // Same logic as desktop - pull in ALL formation metadata
             const updates: Partial<typeof formData> = {
               formation_id: id,
               formation: formation?.name || "",
-              formation_direction: formation?.direction || null,
+              formation_direction: formation?.direction as "base" | "left" | "right" | null ?? null,
             };
 
             if (formation) {
@@ -558,12 +561,12 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             playbookId={playbookId}
             existingPlays={existingPlays}
             onFormationChange={handleFormationChange}
-            onFormationIdChange={(id, formation) => {
+            onFormationIdChange={(id: string | null, formation: FormationRow | null) => {
               // When formation is selected, pull in ALL formation metadata
               const updates: Partial<typeof formData> = {
                 formation_id: id,
                 formation: formation?.name || "",
-                formation_direction: formation?.direction || null,
+                formation_direction: formation?.direction as "base" | "left" | "right" | null ?? null,
               };
 
               // Transfer formation metadata to play
@@ -592,14 +595,13 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
                 }
 
                 // Formation tags (twins, trips, bunch, etc.)
-                if (formation.tags?.length > 0) {
+                if (formation.tags && formation.tags.length > 0) {
                   const existingTags = formData.formationTags
                     .split(",")
                     .map((t) => t.trim())
                     .filter(Boolean);
                   // Merge formation tags with existing tags
-                  formation.tags.forEach((tag: unknown) => {
-                    if (typeof tag !== "string") return;
+                  formation.tags.forEach((tag: string) => {
                     if (!existingTags.includes(tag)) {
                       existingTags.push(tag);
                     }

@@ -4,41 +4,52 @@ import { Skeleton } from "../../ui/Skeleton";
 /**
  * MobilePlayCardSkeleton Component
  *
- * Skeleton loading state that matches MobilePlayCard layout exactly.
+ * Skeleton loading state that matches PlayCard list view layout exactly.
  * Uses Facebook-style shimmer effect for perceived speed.
  *
+ * Dimensions matched from PlayCardListHeader:
+ * - Thumbnail: w-24 (96px) x h-16 (64px) with rounded-lg
+ * - Title: text-lg for comfortable, text-base for compact
+ * - Badge row: gap-1.5, small badge heights
+ * - Action buttons: sm size with gap-1
+ *
  * Features:
- * - Matches MobilePlayCard structure (thumbnail, title, badges, actions)
+ * - Matches PlayCardListHeader structure exactly
+ * - Zero layout shift when content loads
  * - Smooth shimmer animation
- * - Same dimensions for zero layout shift
  */
 export const MobilePlayCardSkeleton: React.FC = () => {
   return (
-    <div className="flex items-stretch w-full bg-surface-card border border-border border-l-4 border-l-neutral-300 rounded-xl shadow-sm overflow-hidden">
-      {/* Thumbnail skeleton - 80x80px like MobilePlayCard */}
-      <div className="w-20 h-20 flex-shrink-0">
-        <Skeleton className="w-full h-full rounded-none" />
-      </div>
-
-      {/* Content skeleton */}
-      <div className="flex-1 min-w-0 py-3 pr-2 space-y-2">
-        {/* Title */}
-        <Skeleton className="h-5 w-3/4" />
-
-        {/* Badges row */}
-        <div className="flex gap-2">
-          <Skeleton className="h-5 w-16 rounded-md" />
-          <Skeleton className="h-5 w-10 rounded-md" />
+    <div className="bg-surface-card border border-border rounded-xl shadow-sm p-5 space-y-3">
+      {/* Header row - matches PlayCardListHeader flex layout */}
+      <div className="flex items-center gap-4">
+        {/* Thumbnail skeleton - matches w-24 h-16 from PlayCardListHeader */}
+        <div className="shrink-0 w-24 h-16 rounded-lg overflow-hidden">
+          <Skeleton className="w-full h-full rounded-lg" />
         </div>
 
-        {/* Play type */}
-        <Skeleton className="h-3 w-12" />
-      </div>
+        {/* Content skeleton - matches flex-1 min-w-0 structure */}
+        <div className="flex-1 min-w-0 space-y-2">
+          {/* Title row */}
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-6 w-3/5" />
+            <Skeleton className="h-4 w-16" />
+          </div>
 
-      {/* Action buttons skeleton */}
-      <div className="flex flex-col items-center justify-center gap-1 px-2 py-2 border-l border-border">
-        <Skeleton className="w-11 h-11 rounded-lg" />
-        <Skeleton className="w-11 h-11 rounded-lg" />
+          {/* Badge row - matches gap-1.5 from BadgeRow */}
+          <div className="flex flex-wrap gap-1.5">
+            <Skeleton className="h-6 w-14 rounded-full" />
+            <Skeleton className="h-6 w-16 rounded-full" />
+            <Skeleton className="h-6 w-12 rounded-full" />
+          </div>
+        </div>
+
+        {/* Action buttons - matches ActionButtons structure */}
+        <div className="flex items-center gap-1 ml-4">
+          <Skeleton className="w-8 h-8 rounded-md" />
+          <Skeleton className="w-8 h-8 rounded-md" />
+          <Skeleton className="w-8 h-8 rounded-md" />
+        </div>
       </div>
     </div>
   );
