@@ -58,7 +58,7 @@ const ChipSelector: React.FC<{
   <div className="space-y-xs">
     <Typography
       variant="caption"
-      className="text-tertiary uppercase tracking-wide"
+      className="text-tertiary uppercase tracking-wide font-medium"
     >
       {label}
     </Typography>
@@ -68,10 +68,10 @@ const ChipSelector: React.FC<{
           key={option.value}
           type="button"
           onClick={() => onChange(value === option.value ? "" : option.value)}
-          className={`px-sm py-xs rounded-lg text-xs font-medium transition-all ${
+          className={`px-sm py-xs rounded-xl text-xs font-medium transition-all duration-150 ${
             value === option.value
-              ? "bg-primary text-white"
-              : "bg-surface-elevated text-secondary hover:bg-surface-muted"
+              ? "bg-gradient-to-r from-jade-600 to-jade-500 text-white shadow-sm"
+              : "bg-white/80 text-secondary border border-neutral-200/80 hover:border-jade-300 hover:bg-jade-50/50"
           }`}
         >
           {option.label}
@@ -91,7 +91,7 @@ const TextInput: React.FC<{
   <div className="space-y-xs">
     <Typography
       variant="caption"
-      className="text-tertiary uppercase tracking-wide"
+      className="text-tertiary uppercase tracking-wide font-medium"
     >
       {label}
     </Typography>
@@ -100,7 +100,7 @@ const TextInput: React.FC<{
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+      className="w-full px-sm py-xs text-sm border border-neutral-200 rounded-xl bg-white/80 focus:ring-2 focus:ring-jade-500/30 focus:border-jade-400 transition-all"
     />
   </div>
 );
@@ -127,31 +127,38 @@ export const GameSituationSection: React.FC<GameSituationSectionProps> = ({
   hashOptions,
 }) => {
   return (
-    <div className="border-t border-secondary pt-md">
+    <div className="border-t border-neutral-200/60 pt-md">
       {/* Collapsible Header */}
       <Button
         type="button"
         variant="ghost"
         onClick={onToggle}
-        className="w-full justify-between p-0 h-auto"
+        className="w-full justify-between p-xs h-auto hover:bg-success-50/50 rounded-xl transition-colors"
       >
         <div className="flex items-center gap-sm">
-          <div className="p-xs bg-success-500/10 rounded-lg">
+          <div className="p-xs bg-gradient-to-br from-success-500/20 to-success-600/10 rounded-lg shadow-sm">
             <Icon name="target" className="h-5 w-5 text-success-600" />
           </div>
-          <Typography variant="label-lg" className="text-primary font-semibold">
-            Game Situation Preferences
-          </Typography>
+          <div className="text-left">
+            <Typography variant="label-lg" className="text-primary font-semibold">
+              Game Situation Preferences
+            </Typography>
+            <Typography variant="caption" className="text-tertiary">
+              Down, distance, hash & situational settings
+            </Typography>
+          </div>
         </div>
-        <Icon
-          name={isOpen ? "chevron-up" : "chevron-down"}
-          className="h-5 w-5 text-secondary"
-        />
+        <div className={`p-xs rounded-full transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
+          <Icon
+            name="chevron-down"
+            className="h-5 w-5 text-secondary"
+          />
+        </div>
       </Button>
 
       {/* Collapsible Content */}
       {isOpen && (
-        <div className="mt-md space-y-md bg-surface-muted rounded-lg p-md">
+        <div className="mt-md space-y-md bg-gradient-to-br from-success-50/30 to-surface-muted rounded-xl p-md border border-success-100/50 animate-in fade-in slide-in-from-top-2 duration-200">
           {/* Down & Distance Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
             <ChipSelector

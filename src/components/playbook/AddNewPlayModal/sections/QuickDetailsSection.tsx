@@ -67,12 +67,17 @@ export const QuickDetailsSection: React.FC<QuickDetailsSectionProps> = ({
     <div className="space-y-md">
       {/* Section Header */}
       <div className="flex items-center gap-sm">
-        <div className="p-xs bg-warning-500/10 rounded-lg">
+        <div className="p-xs bg-gradient-to-br from-warning-500/20 to-warning-600/10 rounded-lg shadow-sm">
           <Icon name="zap" className="h-5 w-5 text-warning-600" />
         </div>
-        <Typography variant="label-lg" className="text-primary font-semibold">
-          Quick Reference
-        </Typography>
+        <div>
+          <Typography variant="label-lg" className="text-primary font-semibold">
+            Quick Reference
+          </Typography>
+          <Typography variant="caption" className="text-tertiary">
+            Sideline calls and coaching notes
+          </Typography>
+        </div>
       </div>
 
       {/* Two-column grid for compact layout */}
@@ -120,7 +125,7 @@ export const QuickDetailsSection: React.FC<QuickDetailsSectionProps> = ({
           onChange={(e) => onNotesChange(e.target.value)}
           placeholder="Key coaching points, reads, progressions..."
           rows={3}
-          className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+          className="w-full px-sm py-xs text-sm border border-neutral-200 rounded-xl bg-surface-muted/50 focus:ring-2 focus:ring-jade-500/30 focus:border-jade-400 focus:bg-white resize-none transition-all"
         />
       </div>
     </div>

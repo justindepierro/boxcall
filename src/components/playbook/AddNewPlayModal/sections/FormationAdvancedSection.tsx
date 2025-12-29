@@ -111,31 +111,38 @@ export const FormationAdvancedSection: React.FC<
   );
 
   return (
-    <div className="border-t border-secondary pt-md">
+    <div className="border-t border-neutral-200/60 pt-md">
       {/* Collapsible Header */}
       <Button
         type="button"
         variant="ghost"
         onClick={onToggle}
-        className="w-full justify-between p-0 h-auto"
+        className="w-full justify-between p-xs h-auto hover:bg-purple-50/50 rounded-xl transition-colors"
       >
         <div className="flex items-center gap-sm">
-          <div className="p-xs bg-purple-500/10 rounded-lg">
+          <div className="p-xs bg-gradient-to-br from-purple-500/20 to-purple-600/10 rounded-lg shadow-sm">
             <Icon name="settings" className="h-5 w-5 text-purple-600" />
           </div>
-          <Typography variant="label-lg" className="text-primary font-semibold">
-            Advanced Formation Details
-          </Typography>
+          <div className="text-left">
+            <Typography variant="label-lg" className="text-primary font-semibold">
+              Advanced Formation Details
+            </Typography>
+            <Typography variant="caption" className="text-tertiary">
+              Formation type, backfield, motion & shifts
+            </Typography>
+          </div>
         </div>
-        <Icon
-          name={isOpen ? "chevron-up" : "chevron-down"}
-          className="h-5 w-5 text-secondary"
-        />
+        <div className={`p-xs rounded-full transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
+          <Icon
+            name="chevron-down"
+            className="h-5 w-5 text-secondary"
+          />
+        </div>
       </Button>
 
       {/* Collapsible Content */}
       {isOpen && (
-        <div className="mt-md space-y-md bg-surface-muted rounded-lg p-md">
+        <div className="mt-md space-y-md bg-gradient-to-br from-purple-50/30 to-surface-muted rounded-xl p-md border border-purple-100/50 animate-in fade-in slide-in-from-top-2 duration-200">
           {/* Formation Type & Check Into */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-sm">
             <ValidatedInput
@@ -155,7 +162,7 @@ export const FormationAdvancedSection: React.FC<
                 value={checkInto}
                 onChange={(e) => onCheckIntoChange(e.target.value)}
                 placeholder="e.g., Kill, Alert, Check"
-                className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-sm py-xs text-sm border border-neutral-200 rounded-xl bg-white/80 focus:ring-2 focus:ring-jade-500/30 focus:border-jade-400 transition-all"
               />
             </div>
           </div>

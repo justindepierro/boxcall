@@ -457,42 +457,60 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
       title={existingPlay ? "Edit Play" : "Create New Play"}
       size="lg"
       footer={
-        <div className="flex justify-end gap-sm">
-          <Button
-            type="button"
-            variant="secondary"
-            size={mobileSecondaryButtonSize}
-            onClick={onClose}
-            disabled={isSubmitting}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            variant="primary"
-            size={mobileButtonSize}
-            disabled={isSubmitting || !isValid()}
-            onClick={handleSubmit}
-          >
-            {isSubmitting ? (
-              <>{existingPlay ? "Updating..." : "Creating..."}</>
-            ) : (
-              <>
-                <Icon
-                  name={existingPlay ? "edit" : "plus"}
-                  className="h-4 w-4 mr-xs"
-                />
-                {existingPlay ? "Update Play" : "Create Play"}
-              </>
-            )}
-          </Button>
+        <div className="flex items-center justify-between gap-md border-t border-divider pt-md -mx-md px-md -mb-md pb-md bg-surface-primary">
+          {/* Progress indicator */}
+          <div className="hidden sm:flex items-center gap-xs text-xs text-tertiary">
+            <span className={formData.formation && formData.playName ? "text-jade-600" : ""}>
+              ●
+            </span>
+            <span>Core Info</span>
+            <span className="text-divider">→</span>
+            <span className={formData.diagram_image_url ? "text-jade-600" : ""}>
+              ○
+            </span>
+            <span>Diagram</span>
+          </div>
+          <div className="flex gap-sm ml-auto">
+            <Button
+              type="button"
+              variant="secondary"
+              size={mobileSecondaryButtonSize}
+              onClick={onClose}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="primary"
+              size={mobileButtonSize}
+              disabled={isSubmitting || !isValid()}
+              onClick={handleSubmit}
+              className="min-w-36"
+            >
+              {isSubmitting ? (
+                <span className="flex items-center gap-xs">
+                  <span className="animate-spin">⏳</span>
+                  {existingPlay ? "Updating..." : "Creating..."}
+                </span>
+              ) : (
+                <>
+                  <Icon
+                    name={existingPlay ? "edit" : "plus"}
+                    className="h-4 w-4 mr-xs"
+                  />
+                  {existingPlay ? "Update Play" : "Create Play"}
+                </>
+              )}
+            </Button>
+          </div>
         </div>
       }
     >
-      <div className="space-y-lg max-h-[70vh] overflow-y-auto pr-sm">
+      <div className="space-y-lg max-h-[70vh] overflow-y-auto pr-sm -mr-sm scrollbar-thin scrollbar-thumb-neutral-300 scrollbar-track-transparent">
         {/* Error Messages */}
         {errorMessage && (
-          <div className="bg-danger-subtle border border-danger-default rounded-lg p-md flex items-start gap-sm">
+          <div className="bg-gradient-to-r from-danger-subtle to-danger-subtle/50 border-l-4 border-danger-default rounded-r-lg p-md flex items-start gap-sm animate-in slide-in-from-top-2 duration-200">
             <Icon
               name="alert-triangle"
               className="h-5 w-5 text-danger-default flex-shrink-0 mt-0.5"
@@ -508,7 +526,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             <button
               type="button"
               onClick={() => setErrorMessage(null)}
-              className="text-danger-default hover:text-danger-emphasis"
+              className="text-danger-default/60 hover:text-danger-default transition-colors"
             >
               <Icon name="close" className="h-4 w-4" />
             </button>
@@ -517,7 +535,7 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
         {/* Rate Limit Warning */}
         {!existingPlay && rateLimitFeedback.isNearLimit && (
-          <div className="bg-warning-subtle border border-warning-default rounded-lg p-md flex items-center gap-sm">
+          <div className="bg-gradient-to-r from-warning-subtle to-warning-subtle/50 border-l-4 border-warning-default rounded-r-lg p-md flex items-center gap-sm animate-in fade-in duration-200">
             <Icon name="clock" className="h-5 w-5 text-warning-default" />
             <Typography
               variant="body-sm"
@@ -531,10 +549,10 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
         {/* Rate Limit Exceeded */}
         {!existingPlay && rateLimitFeedback.isLimited && (
-          <div className="bg-danger-subtle border border-danger-default rounded-lg p-md flex items-center gap-sm">
+          <div className="bg-gradient-to-r from-danger-subtle to-danger-subtle/50 border-l-4 border-danger-default rounded-r-lg p-md flex items-center gap-sm animate-in fade-in duration-200">
             <Icon
               name="alert-triangle"
-              className="h-5 w-5 text-danger-default"
+              className="h-5 w-5 text-danger-default animate-pulse"
             />
             <Typography
               variant="body-sm"
@@ -549,27 +567,30 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         {/* Form Content */}
         <form onSubmit={handleSubmit} className="space-y-lg">
           {/* 1. Core Info */}
-          <CoreInfoSection
-            formation={formData.formation}
-            formationDir={formData.formation_direction || ""}
-            onFormationChange={handleFormationChange}
-            onFormationDirChange={(dir) =>
-              updateField("formation_direction", dir)
-            }
-            playName={formData.playName}
-            playDir={formData.playDir}
-            onPlayNameChange={(value) => updateField("playName", value)}
-            onPlayDirChange={(value) => updateField("playDir", value)}
-            personnel={formData.personnel}
-            onPersonnelChange={(value) => updateField("personnel", value)}
-            onAddNewPersonnel={() => setPersonnelPanelOpen(true)}
-            playType={formData.playType}
-            onPlayTypeChange={(value) => {
-              updateField("playType", value);
-              updateContext("playType", value);
-            }}
-            existingPlays={existingPlays}
-          />
+          <div className="relative">
+            <div className="absolute -left-3 top-0 bottom-0 w-1 bg-gradient-to-b from-jade-500 to-jade-300 rounded-full" />
+            <CoreInfoSection
+              formation={formData.formation}
+              formationDir={formData.formation_direction || ""}
+              onFormationChange={handleFormationChange}
+              onFormationDirChange={(dir) =>
+                updateField("formation_direction", dir)
+              }
+              playName={formData.playName}
+              playDir={formData.playDir}
+              onPlayNameChange={(value) => updateField("playName", value)}
+              onPlayDirChange={(value) => updateField("playDir", value)}
+              personnel={formData.personnel}
+              onPersonnelChange={(value) => updateField("personnel", value)}
+              onAddNewPersonnel={() => setPersonnelPanelOpen(true)}
+              playType={formData.playType}
+              onPlayTypeChange={(value) => {
+                updateField("playType", value);
+                updateContext("playType", value);
+              }}
+              existingPlays={existingPlays}
+            />
+          </div>
 
           {/* Play Similarity Indicator */}
           {!existingPlay && similarity.showIndicator && (

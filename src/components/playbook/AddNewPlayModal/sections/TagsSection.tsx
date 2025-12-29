@@ -97,12 +97,17 @@ export const TagsSection: React.FC<TagsSectionProps> = ({
     <div className="space-y-md">
       {/* Section Header */}
       <div className="flex items-center gap-sm">
-        <div className="p-xs bg-blue-500/10 rounded-lg">
+        <div className="p-xs bg-gradient-to-br from-blue-500/20 to-blue-600/10 rounded-lg shadow-sm">
           <Icon name="tag" className="h-5 w-5 text-blue-600" />
         </div>
-        <Typography variant="label-lg" className="text-primary font-semibold">
-          Tags & Organization
-        </Typography>
+        <div>
+          <Typography variant="label-lg" className="text-primary font-semibold">
+            Tags & Organization
+          </Typography>
+          <Typography variant="caption" className="text-tertiary">
+            Categorize for quick filtering
+          </Typography>
+        </div>
       </div>
 
       {/* Quick Tags Grid */}
@@ -116,7 +121,7 @@ export const TagsSection: React.FC<TagsSectionProps> = ({
             value={formationTags}
             onChange={(e) => onFormationTagsChange(e.target.value)}
             placeholder="e.g., Twins, Trips, Bunch"
-            className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-sm py-xs text-sm border border-neutral-200 rounded-xl bg-surface-muted/50 focus:ring-2 focus:ring-jade-500/30 focus:border-jade-400 focus:bg-white transition-all"
           />
         </div>
 
@@ -129,7 +134,7 @@ export const TagsSection: React.FC<TagsSectionProps> = ({
             value={playTags}
             onChange={(e) => onPlayTagsChange(e.target.value)}
             placeholder="e.g., Red Zone, 3rd&Short"
-            className="w-full px-sm py-xs text-sm border border-secondary rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-sm py-xs text-sm border border-neutral-200 rounded-xl bg-surface-muted/50 focus:ring-2 focus:ring-jade-500/30 focus:border-jade-400 focus:bg-white transition-all"
           />
         </div>
       </div>

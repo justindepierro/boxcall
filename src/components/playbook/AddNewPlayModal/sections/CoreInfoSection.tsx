@@ -56,19 +56,19 @@ const DirectionToggle: React.FC<{
 
   return (
     <div className="flex items-center gap-xs">
-      <Typography variant="caption" className="text-tertiary">
+      <Typography variant="caption" className="text-tertiary font-medium">
         {label}
       </Typography>
-      <div className="flex rounded-lg overflow-hidden border border-secondary">
+      <div className="flex rounded-xl overflow-hidden border border-neutral-200/80 shadow-sm">
         {options.map((opt) => (
           <button
             key={opt.value}
             type="button"
             onClick={() => onChange(opt.value)}
-            className={`px-xs py-xs text-xs font-medium transition-colors ${
+            className={`px-xs py-xs text-xs font-medium transition-all duration-150 ${
               value === opt.value
-                ? "bg-primary text-white"
-                : "bg-surface-primary text-secondary hover:bg-surface-muted"
+                ? "bg-gradient-to-r from-jade-600 to-jade-500 text-white"
+                : "bg-white text-secondary hover:bg-jade-50"
             }`}
           >
             {opt.label}
@@ -120,10 +120,10 @@ const PlayTypeSelector: React.FC<{
             type="button"
             onClick={() => onChange(value === option.value ? "" : option.value)}
             title={option.description}
-            className={`px-sm py-xs rounded-full text-sm font-medium transition-all ${
+            className={`px-sm py-xs rounded-xl text-sm font-medium transition-all duration-150 ${
               value === option.value
-                ? "bg-primary text-white shadow-sm"
-                : "bg-surface-muted text-secondary hover:bg-surface-elevated"
+                ? "bg-gradient-to-r from-jade-600 to-jade-500 text-white shadow-sm"
+                : "bg-white border border-neutral-200/80 text-secondary hover:border-jade-300 hover:bg-jade-50/50"
             }`}
           >
             <span className="mr-xs">{option.icon}</span>
@@ -135,10 +135,10 @@ const PlayTypeSelector: React.FC<{
         <button
           type="button"
           onClick={() => setShowCustomInput(!showCustomInput)}
-          className={`px-sm py-xs rounded-full text-sm font-medium transition-all ${
+          className={`px-sm py-xs rounded-xl text-sm font-medium transition-all duration-150 ${
             showCustomInput || isCustomType
-              ? "bg-primary/20 text-primary border border-primary"
-              : "bg-surface-muted text-secondary hover:bg-surface-elevated border border-transparent"
+              ? "bg-jade-100 text-jade-700 border border-jade-300"
+              : "bg-white border border-neutral-200/80 text-secondary hover:border-jade-300 hover:bg-jade-50/50"
           }`}
         >
           <Icon name="plus" className="h-3 w-3 mr-xs inline" />
@@ -157,10 +157,10 @@ const PlayTypeSelector: React.FC<{
               key={type}
               type="button"
               onClick={() => onChange(value === type ? "" : type)}
-              className={`px-sm py-xs rounded-full text-xs font-medium transition-all ${
+              className={`px-sm py-xs rounded-xl text-xs font-medium transition-all duration-150 ${
                 value === type
-                  ? "bg-primary text-white shadow-sm"
-                  : "bg-surface-elevated text-secondary hover:bg-surface-muted"
+                  ? "bg-gradient-to-r from-jade-600 to-jade-500 text-white shadow-sm"
+                  : "bg-white border border-neutral-200/80 text-secondary hover:border-jade-300 hover:bg-jade-50/50"
               }`}
             >
               {type}
@@ -178,7 +178,7 @@ const PlayTypeSelector: React.FC<{
             onChange={(e) => setCustomValue(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleCustomSubmit()}
             placeholder="Type custom play type..."
-            className="flex-1 px-sm py-xs text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+            className="flex-1 px-sm py-xs text-sm border border-neutral-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-jade-500/30 focus:border-jade-400 transition-all"
             autoFocus
           />
           <Button
@@ -279,12 +279,17 @@ export const CoreInfoSection: React.FC<CoreInfoSectionProps> = ({
     <div className="space-y-md">
       {/* Section Header */}
       <div className="flex items-center gap-sm">
-        <div className="p-xs bg-primary/10 rounded-lg">
-          <Icon name="clipboard" className="h-5 w-5 text-primary" />
+        <div className="p-xs bg-gradient-to-br from-jade-500/20 to-jade-600/10 rounded-lg shadow-sm">
+          <Icon name="clipboard" className="h-5 w-5 text-jade-600" />
         </div>
-        <Typography variant="label-lg" className="text-primary font-semibold">
-          Play Information
-        </Typography>
+        <div>
+          <Typography variant="label-lg" className="text-primary font-semibold">
+            Play Information
+          </Typography>
+          <Typography variant="caption" className="text-tertiary">
+            Formation, name, personnel & play type
+          </Typography>
+        </div>
       </div>
 
       {/* Formation Row */}

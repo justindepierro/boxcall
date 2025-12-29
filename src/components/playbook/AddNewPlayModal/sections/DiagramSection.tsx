@@ -25,7 +25,7 @@ export const DiagramSection: React.FC<DiagramSectionProps> = ({
     <div className="space-y-sm">
       {/* Section Header */}
       <div className="flex items-center gap-sm">
-        <div className="p-xs bg-jade-500/10 rounded-lg">
+        <div className="p-xs bg-gradient-to-br from-jade-500/20 to-jade-600/10 rounded-lg shadow-sm">
           <Icon name="image" className="h-5 w-5 text-jade-600" />
         </div>
         <div>
@@ -39,7 +39,7 @@ export const DiagramSection: React.FC<DiagramSectionProps> = ({
       </div>
 
       {/* Image Upload */}
-      <div className="bg-surface-muted rounded-lg p-sm">
+      <div className="bg-gradient-to-br from-surface-muted to-surface-elevated rounded-xl p-sm border border-neutral-200/50 transition-all hover:border-jade-300/50 hover:shadow-sm">
         <ImageUpload
           value={diagramUrl}
           onChange={onDiagramChange}
