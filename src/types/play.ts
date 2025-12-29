@@ -353,15 +353,19 @@ export const DISTANCE_OPTIONS = [
 ] as const;
 // Hash preferences
 export const HASH_OPTIONS = ["Any", "Left", "Right", "Middle"] as const;
-// Play type options for filtering
+// Play type options - source of truth for all play type UI
 export const PLAY_TYPE_OPTIONS: {
   value: PlayType;
   label: string;
+  icon: string;
   description: string;
 }[] = [
-  { value: "Pass", label: "Pass", description: "Passing plays" },
-  { value: "Run", label: "Run", description: "Running plays" },
-  { value: "RPO", label: "RPO", description: "Run-Pass Options" },
+  { value: "Run", label: "Run", icon: "🏃", description: "Running plays" },
+  { value: "Pass", label: "Pass", icon: "🎯", description: "Passing plays" },
+  { value: "RPO", label: "RPO", icon: "⚡", description: "Run-Pass Options" },
+  { value: "Play Action", label: "Play Action", icon: "🎭", description: "Play action passes" },
+  { value: "Screen", label: "Screen", icon: "🛡️", description: "Screen passes" },
+  { value: "Special", label: "Special", icon: "✨", description: "Special teams plays" },
 ];
 
 // Forward-looking standard install phase taxonomy (UI + future DB enum)

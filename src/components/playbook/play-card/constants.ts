@@ -49,13 +49,8 @@ export const PERSONNEL_OPTIONS = [
   { value: "22", label: "22 Personnel (2 RB, 2 TE)" },
 ];
 
-export const PLAY_TYPE_OPTIONS = [
-  { value: "Pass", label: "Pass" },
-  { value: "Run", label: "Run" },
-  { value: "Option", label: "Option" },
-  { value: "RPO", label: "RPO" },
-  { value: "Play Action", label: "Play Action" },
-];
+// Re-export from source of truth
+export { PLAY_TYPE_OPTIONS } from "../../../types/play";
 
 export const DIRECTION_OPTIONS = [
   { value: "Left", label: "Left" },

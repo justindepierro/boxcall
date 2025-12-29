@@ -14,15 +14,7 @@ import { Icon } from "../../../ui/Icon/Icon";
 import { Button } from "../../../ui/Button/Button";
 import { ValidatedInput } from "../../ValidatedInput";
 import type { Play } from "../../../../types/play";
-
-// Play type options
-const PLAY_TYPE_OPTIONS = [
-  { value: "Run", icon: "🏃" },
-  { value: "Pass", icon: "🎯" },
-  { value: "RPO", icon: "⚡" },
-  { value: "Screen", icon: "🛡️" },
-  { value: "Special", icon: "✨" },
-] as const;
+import { PLAY_TYPE_OPTIONS } from "../../../../types/play";
 
 interface CoreInfoSectionProps {
   // Formation
