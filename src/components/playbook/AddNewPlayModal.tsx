@@ -43,10 +43,10 @@ import {
 } from "./AddNewPlayModal/sections";
 import {
   PersonnelCreationPanel,
-  DuplicatePlayWarning,
+  SimilarityIndicator,
 } from "./AddNewPlayModal/components";
 import { MobileWizardView } from "./AddNewPlayModal/MobileWizardView";
-import { useDuplicatePlayDetection } from "./AddNewPlayModal/useDuplicatePlayDetection";
+import { usePlaySimilarity } from "./AddNewPlayModal/usePlaySimilarity";
 import { FormationDirectionWarningModal } from "./FormationDirectionWarningModal";
 import {
   detectDirectionInFormationName,
@@ -114,10 +114,14 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
   // Rate limiting
   const rateLimitFeedback = useRateLimitFeedback("play-create", 10);
 
-  // Duplicate detection
-  const duplicateDetection = useDuplicatePlayDetection(existingPlays, {
+  // Play similarity detection (replaces simple duplicate detection)
+  const similarity = usePlaySimilarity(existingPlays, {
     play_name: formData.playName,
     formation: formData.formation,
+    personnel: formData.personnel,
+    p_type: formData.playType,
+    motion: formData.motion,
+    shift: formData.shift,
   });
 
   // Mobile detection
@@ -484,9 +488,17 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             existingPlays={existingPlays}
           />
 
-          {/* Duplicate Warning */}
-          {duplicateDetection.isDuplicate && !existingPlay && (
-            <DuplicatePlayWarning matchingPlays={duplicateDetection.matchingPlays} />
+          {/* Play Similarity Indicator */}
+          {!existingPlay && similarity.showIndicator && (
+            <SimilarityIndicator
+              similarity={similarity}
+              onAddMotion={() => setIsAdvancedOpen(true)}
+              onAddShift={() => setIsAdvancedOpen(true)}
+              onChangeFormation={() => {
+                // Focus formation field - scroll to top
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            />
           )}
 
           {/* 2. Diagram */}
