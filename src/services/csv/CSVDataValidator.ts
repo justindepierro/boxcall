@@ -42,14 +42,17 @@ export class CSVDataValidator {
 
   /**
    * Validate and auto-correct play types
+   * Core types match PLAY_TYPE_OPTIONS in src/types/play.ts
+   * Additional types (Punt, FG, PAT) supported for CSV flexibility
    */
   private static validateAndCorrectPlayType(
     rowData: Record<string, string>,
     warnings: string[]
   ): void {
     const validPlayTypes: PlayTypeMapping[] = [
-      { canonical: "Pass", variants: ["pass", "passing", "throw"] },
+      // Core play types (match PlayType union)
       { canonical: "Run", variants: ["run", "running", "rush", "rushing"] },
+      { canonical: "Pass", variants: ["pass", "passing", "throw"] },
       {
         canonical: "RPO",
         variants: ["rpo", "run-pass-option", "run pass option"],
@@ -58,7 +61,9 @@ export class CSVDataValidator {
         canonical: "Play Action",
         variants: ["play action", "playaction", "pa", "play-action"],
       },
+      { canonical: "Screen", variants: ["screen", "screens", "scr"] },
       { canonical: "Special", variants: ["special", "special teams", "st"] },
+      // Extended types for CSV flexibility
       { canonical: "Punt", variants: ["punt", "punting"] },
       { canonical: "FG", variants: ["fg", "field goal", "fieldgoal", "kick"] },
       { canonical: "PAT", variants: ["pat", "extra point", "xp"] },
@@ -74,7 +79,7 @@ export class CSVDataValidator {
 
       if (!matchedType) {
         warnings.push(
-          `Play type "${rowData.p_type}" may not be recognized. Suggested: Pass, Run, RPO, Play Action`
+          `Play type "${rowData.p_type}" may not be recognized. Suggested: Run, Pass, RPO, Play Action, Screen, Special`
         );
       } else if (matchedType.canonical.toLowerCase() !== lowerType) {
         // Auto-correct the play type

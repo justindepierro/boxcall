@@ -15,11 +15,17 @@ export function normalizeBadgeOverrideKey(label: string): string {
   return label.trim().toLowerCase();
 }
 
+/**
+ * Default badge color schemes for play types
+ * Matches PLAY_TYPE_OPTIONS in src/types/play.ts
+ */
 const DEFAULT_PLAY_TYPE_SCHEMES: Record<string, BadgeColorScheme> = {
-  pass: "blue",
   run: "jade",
+  pass: "blue",
   rpo: "purple",
   "play action": "amber",
+  screen: "cyan",
+  special: "orange",
 };
 
 export function getPlayTypeBadgeScheme(

@@ -72,14 +72,16 @@ export function getSuccessRateColor(successRate: number): string {
 
 /**
  * Play type color mapping for consistent visualization
+ * Matches PLAY_TYPE_OPTIONS in src/types/play.ts
  */
 export const PLAY_TYPE_COLORS: Record<string, string> = {
   run: CHART_COLORS.blue,
   pass: CHART_COLORS.red,
-  screen: CHART_COLORS.emerald,
   rpo: CHART_COLORS.amber,
+  "play action": CHART_COLORS.orange,
+  screen: CHART_COLORS.emerald,
   special: CHART_COLORS.purple,
-  "special teams": CHART_COLORS.emerald,
+  "special teams": CHART_COLORS.purple,
 } as const;
 
 /**
@@ -93,13 +95,15 @@ export function getPlayTypeColor(playType: string): string {
 
 /**
  * Pie chart / donut chart default data with colors
- * For distribution charts
+ * Matches PLAY_TYPE_OPTIONS order in src/types/play.ts
  */
 export const DEFAULT_PIE_COLORS = [
   { name: "Run", color: CHART_COLORS.blue },
   { name: "Pass", color: CHART_COLORS.red },
-  { name: "Special Teams", color: CHART_COLORS.emerald },
-  { name: "Screen", color: CHART_COLORS.amber },
+  { name: "RPO", color: CHART_COLORS.amber },
+  { name: "Play Action", color: CHART_COLORS.orange },
+  { name: "Screen", color: CHART_COLORS.emerald },
+  { name: "Special", color: CHART_COLORS.purple },
 ] as const;
 
 /**
