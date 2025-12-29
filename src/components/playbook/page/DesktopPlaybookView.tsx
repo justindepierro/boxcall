@@ -14,7 +14,10 @@ import { PlaybookStatsDashboard } from "../PlaybookStatsDashboard";
 import { BulkActionsToolbar } from "../BulkActionsToolbar";
 import { PracticeScriptList } from "../PracticeScriptList";
 import type { Play } from "../../../types/play";
-import type { PlaybookState, PlaybookAction } from "../../../contexts/PlaybookContext";
+import type {
+  PlaybookState,
+  PlaybookAction,
+} from "../../../contexts/PlaybookContext";
 import type { PlaybookFilters } from "../../../types/filters";
 import type { PracticeScript } from "../../../services/practiceService";
 import type { PlaySortOption } from "../../../types/filters";

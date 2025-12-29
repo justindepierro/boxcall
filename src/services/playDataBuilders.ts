@@ -42,6 +42,9 @@ export function buildNewPlayData(
     // Play details
     ...buildPlayDetailFields(playData),
 
+    // Array fields (tags, key players, positions, flags)
+    ...buildArrayFields(playData),
+
     // Performance fields
     ...buildPerformanceFields(playData),
 
@@ -62,6 +65,7 @@ function buildTextFields(playData: Partial<Play>): Record<string, string> {
     one_word_play: playData.one_word_play
       ? normalizeText(playData.one_word_play)
       : "",
+    wristband_number: playData.wristband_number || "",
     notes: playData.notes || "",
     personnel: playData.personnel || "",
     f_type: playData.f_type || "",
@@ -84,9 +88,11 @@ function buildTagFields(playData: Partial<Play>): Record<string, string> {
 
 function buildPlayDetailFields(
   playData: Partial<Play>
-): Record<string, string> {
+): Record<string, unknown> {
   return {
     back_align: playData.back_align || "",
+    back_left_of_qb: playData.back_left_of_qb ?? null,
+    back_right_of_qb: playData.back_right_of_qb ?? null,
     shift: playData.shift || "",
     motion: playData.motion || "",
     key_player1: playData.key_player1 || "",
@@ -99,6 +105,15 @@ function buildPlayDetailFields(
     pref_front: playData.pref_front || "",
     pref_field_pos: playData.pref_field_pos || "",
     pref_situation: playData.pref_situation || "",
+  };
+}
+
+function buildArrayFields(playData: Partial<Play>): Record<string, unknown> {
+  return {
+    tags: playData.tags || null,
+    key_players: playData.key_players || null,
+    key_positions: playData.key_positions || null,
+    flags: playData.flags || null,
   };
 }
 
@@ -119,6 +134,7 @@ function buildDiagramFields(playData: Partial<Play>): Record<string, unknown> {
     diagram_data: playData.diagram_data || null,
     diagram_version: playData.diagram_version || null,
     diagram_url: playData.diagram_url || null,
+    diagram_image_url: playData.diagram_image_url || null,
   };
 }
 
@@ -158,6 +174,9 @@ export function buildPlayUpdateData(
   applyIfDefined(updates.one_word_play, (value) => {
     updateData.one_word_play = normalizeText(value);
   });
+  applyIfDefined(updates.wristband_number, (value) => {
+    updateData.wristband_number = value;
+  });
   applyIfDefined(updates.notes, (value) => {
     updateData.notes = value;
   });
@@ -196,6 +215,12 @@ export function buildPlayUpdateData(
   });
   applyIfDefined(updates.back_align, (value) => {
     updateData.back_align = value;
+  });
+  applyIfDefined(updates.back_left_of_qb, (value) => {
+    updateData.back_left_of_qb = value;
+  });
+  applyIfDefined(updates.back_right_of_qb, (value) => {
+    updateData.back_right_of_qb = value;
   });
   applyIfDefined(updates.shift, (value) => {
     updateData.shift = value;
@@ -239,6 +264,22 @@ export function buildPlayUpdateData(
   applyIfDefined(updates.is_archived, (value) => {
     updateData.is_archived = value;
   });
+
+  // Array fields
+  applyIfDefined(updates.tags, (value) => {
+    updateData.tags = value;
+  });
+  applyIfDefined(updates.key_players, (value) => {
+    updateData.key_players = value;
+  });
+  applyIfDefined(updates.key_positions, (value) => {
+    updateData.key_positions = value;
+  });
+  applyIfDefined(updates.flags, (value) => {
+    updateData.flags = value;
+  });
+
+  // Diagram fields
   applyIfDefined(updates.diagram_data, (value) => {
     updateData.diagram_data = value;
   });
@@ -247,6 +288,9 @@ export function buildPlayUpdateData(
   });
   applyIfDefined(updates.diagram_url, (value) => {
     updateData.diagram_url = value;
+  });
+  applyIfDefined(updates.diagram_image_url, (value) => {
+    updateData.diagram_image_url = value;
   });
 
   return updateData;

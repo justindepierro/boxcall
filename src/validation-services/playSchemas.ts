@@ -11,9 +11,10 @@ import { z } from "zod";
 // Base Schemas
 // ========================================
 
-// Match database constraint: p_type CHECK (p_type IN ('Pass', 'Run', 'RPO', 'Play Action'))
-// Using capitalized values to match existing database schema
-const PlayTypeEnum = z.enum([
+// Known play types for reference (but we allow custom types too)
+// This list is maintained for documentation purposes
+// Actual validation uses flexible string matching
+const KNOWN_PLAY_TYPES = [
   "Run",
   "Pass",
   "Option",
@@ -29,7 +30,8 @@ const PlayTypeEnum = z.enum([
   "Field Goal",
   "Kickoff",
   "Special",
-]);
+] as const;
+export type KnownPlayType = (typeof KNOWN_PLAY_TYPES)[number];
 
 const FormationSchema = z
   .string()
@@ -102,8 +104,20 @@ const DiagramDataSchema = z
 // Play CRUD Schemas
 // ========================================
 
+// Reusable text field schema with max length and XSS protection
+const TextFieldSchema = (maxLen: number) =>
+  z.preprocess(
+    (val) => (val === "" || val === null ? undefined : val),
+    z
+      .string()
+      .max(maxLen)
+      .transform((val) => (val ? val.replace(/<[^>]*>/g, "") : val))
+      .optional()
+  );
+
 /**
  * Schema for creating a new play
+ * Includes ALL fields from the AddNewPlayModal
  */
 export const PlayCreateSchema = z.object({
   // Required fields
@@ -111,19 +125,99 @@ export const PlayCreateSchema = z.object({
   play_name: PlayNameSchema,
   formation: FormationSchema,
   formation_id: OptionalUUIDSchema,
+
+  // Play type - allow any string (custom types supported)
   p_type: z.preprocess(
     (val) => (val === "" || val === null ? undefined : val),
-    PlayTypeEnum.optional()
-  ), // Made optional - users don't always set this initially
+    z.string().max(50).optional()
+  ),
 
-  // Optional descriptive fields
+  // ========================================
+  // Formation Fields
+  // ========================================
+  f_type: TextFieldSchema(50), // Formation type (e.g., "Shotgun", "Under Center")
+  f_dir: TextFieldSchema(20), // Formation direction (L/R)
+  formation_direction: z.preprocess(
+    (val) => (val === "" || val === null ? undefined : val),
+    z.enum(["base", "left", "right"]).optional()
+  ), // Formation direction (canonical token - must match Play type)
+  back_align: TextFieldSchema(50), // Back alignment
+  back_left_of_qb: z.boolean().optional(),
+  back_right_of_qb: z.boolean().optional(),
+  shift: TextFieldSchema(100), // Shift description
+  motion: TextFieldSchema(100), // Motion description
+  ftag1: TextFieldSchema(50), // Formation tag 1
+  ftag2: TextFieldSchema(50), // Formation tag 2
+  r_str: TextFieldSchema(20), // Run strength
+  p_str: TextFieldSchema(20), // Pass strength
+
+  // ========================================
+  // Play Details
+  // ========================================
+  p_dir: TextFieldSchema(20), // Play direction
+  protection: TextFieldSchema(100), // Protection scheme
+  check_into: TextFieldSchema(100), // Check/audible name
+  p_tag1: TextFieldSchema(50), // Play tag 1
+  p_tag2: TextFieldSchema(50), // Play tag 2
+  one_word_play: TextFieldSchema(50), // One-word play call
+  wristband_number: TextFieldSchema(20), // Wristband number
+
+  // ========================================
+  // Game Situation Preferences
+  // ========================================
+  pref_down: TextFieldSchema(20), // Preferred down(s)
+  pref_dis: TextFieldSchema(20), // Preferred distance
+  pref_hash: TextFieldSchema(20), // Preferred hash
+  pref_cov: TextFieldSchema(50), // Preferred coverage
+  pref_front: TextFieldSchema(50), // Preferred front
+  pref_field_pos: TextFieldSchema(50), // Preferred field position
+  pref_situation: TextFieldSchema(100), // Preferred game situation
+
+  // ========================================
+  // Personnel & Key Players
+  // ========================================
+  personnel: z.preprocess(
+    (val) => (val === "" || val === null ? undefined : val),
+    z.string().max(50, "Personnel name too long").optional()
+  ),
+  personnel_id: OptionalUUIDSchema,
+  key_player1: z.string().max(50).optional(),
+  key_player2: z.string().max(50).optional(),
+  key_players: z
+    .array(z.string().max(50))
+    .max(22, "Max 22 key players")
+    .optional(),
+  key_positions: z
+    .array(z.string().max(20))
+    .max(22, "Max 22 key positions")
+    .optional(),
+
+  // ========================================
+  // Notes, Tags & Flags
+  // ========================================
+  notes: NotesSchema,
+  tags: z.array(z.string().max(50)).max(20, "Max 20 tags").optional(),
+  flags: z.array(z.string().max(50)).max(10, "Max 10 flags").optional(),
+
+  // ========================================
+  // Diagram & Media
+  // ========================================
+  diagram_data: DiagramDataSchema,
+  diagram_image_url: z.string().url().max(500).optional(),
+  has_diagram: z.boolean().optional().default(false),
+
+  // ========================================
+  // Confidence & Tracking
+  // ========================================
+  confidence_base: z.number().min(0).max(100).optional(),
+  confidence_level: z.number().min(0).max(100).optional(),
+
+  // ========================================
+  // Legacy & Categorization
+  // ========================================
   play_call: z.string().max(50).optional(),
   strength: z.enum(["left", "right", "middle"]).optional(),
   hash: z.enum(["left", "right", "middle"]).optional(),
-  notes: NotesSchema,
-  tags: z.array(z.string().max(50)).max(20, "Max 20 tags").optional(),
-
-  // Play categorization
   category: z
     .enum([
       "run",
@@ -139,31 +233,14 @@ export const PlayCreateSchema = z.object({
     ])
     .optional(),
 
-  // Personnel - allow any string (configuration names like "11 Personnel", "Blue", etc.)
-  // Database field is TEXT with no constraints
-  personnel: z.preprocess(
-    (val) => (val === "" || val === null ? undefined : val),
-    z.string().max(50, "Personnel name too long").optional()
-  ),
-
-  // Key players (legacy - validate as strings for now)
-  key_player1: z.string().max(50).optional(),
-  key_player2: z.string().max(50).optional(),
-
-  // Diagram data (JSON)
-  diagram_data: DiagramDataSchema,
-  has_diagram: z.boolean().optional().default(false),
-
-  // Audible/check-into system
-  check_into: z.string().uuid().optional(),
-
-  // Confidence & success tracking
-  confidence_level: z.number().min(0).max(100).optional(),
-
-  // Play timing
+  // ========================================
+  // Play Timing
+  // ========================================
   expected_duration: z.number().min(0).max(60).optional(),
 
-  // AI/ML features
+  // ========================================
+  // AI/ML & Metadata
+  // ========================================
   ai_generated: z.boolean().optional().default(false),
   ai_confidence: z.number().min(0).max(1).optional(),
   ai_model_version: z.string().max(50).optional(),
@@ -174,20 +251,102 @@ export const PlayCreateSchema = z.object({
 /**
  * Schema for updating an existing play
  * All fields optional except id
+ * Mirrors PlayCreateSchema for consistency
  */
 export const PlayUpdateSchema = z.object({
   id: UUIDSchema,
 
-  // All other fields optional for partial updates
+  // Core fields
   play_name: PlayNameSchema.optional(),
   formation: FormationSchema.optional(),
   formation_id: OptionalUUIDSchema,
-  p_type: PlayTypeEnum.optional(),
+
+  // Play type - allow any string (custom types supported)
+  p_type: z.preprocess(
+    (val) => (val === "" || val === null ? undefined : val),
+    z.string().max(50).optional()
+  ),
+
+  // ========================================
+  // Formation Fields
+  // ========================================
+  f_type: TextFieldSchema(50),
+  f_dir: TextFieldSchema(20),
+  formation_direction: z.preprocess(
+    (val) => (val === "" || val === null ? undefined : val),
+    z.enum(["base", "left", "right"]).optional()
+  ),
+  back_align: TextFieldSchema(50),
+  back_left_of_qb: z.boolean().optional(),
+  back_right_of_qb: z.boolean().optional(),
+  shift: TextFieldSchema(100),
+  motion: TextFieldSchema(100),
+  ftag1: TextFieldSchema(50),
+  ftag2: TextFieldSchema(50),
+  r_str: TextFieldSchema(20),
+  p_str: TextFieldSchema(20),
+
+  // ========================================
+  // Play Details
+  // ========================================
+  p_dir: TextFieldSchema(20),
+  protection: TextFieldSchema(100),
+  check_into: TextFieldSchema(100),
+  p_tag1: TextFieldSchema(50),
+  p_tag2: TextFieldSchema(50),
+  one_word_play: TextFieldSchema(50),
+  wristband_number: TextFieldSchema(20),
+
+  // ========================================
+  // Game Situation Preferences
+  // ========================================
+  pref_down: TextFieldSchema(20),
+  pref_dis: TextFieldSchema(20),
+  pref_hash: TextFieldSchema(20),
+  pref_cov: TextFieldSchema(50),
+  pref_front: TextFieldSchema(50),
+  pref_field_pos: TextFieldSchema(50),
+  pref_situation: TextFieldSchema(100),
+
+  // ========================================
+  // Personnel & Key Players
+  // ========================================
+  personnel: z.preprocess(
+    (val) => (val === "" || val === null ? undefined : val),
+    z.string().max(50, "Personnel name too long").optional()
+  ),
+  personnel_id: OptionalUUIDSchema,
+  key_player1: z.string().max(50).optional(),
+  key_player2: z.string().max(50).optional(),
+  key_players: z.array(z.string().max(50)).max(22).optional(),
+  key_positions: z.array(z.string().max(20)).max(22).optional(),
+
+  // ========================================
+  // Notes, Tags & Flags
+  // ========================================
+  notes: NotesSchema,
+  tags: z.array(z.string().max(50)).max(20).optional(),
+  flags: z.array(z.string().max(50)).max(10).optional(),
+
+  // ========================================
+  // Diagram & Media
+  // ========================================
+  diagram_data: DiagramDataSchema,
+  diagram_image_url: z.string().url().max(500).optional(),
+  has_diagram: z.boolean().optional(),
+
+  // ========================================
+  // Confidence & Tracking
+  // ========================================
+  confidence_base: z.number().min(0).max(100).optional(),
+  confidence_level: z.number().min(0).max(100).optional(),
+
+  // ========================================
+  // Legacy & Categorization
+  // ========================================
   play_call: z.string().max(50).optional(),
   strength: z.enum(["left", "right", "middle"]).optional(),
   hash: z.enum(["left", "right", "middle"]).optional(),
-  notes: NotesSchema,
-  tags: z.array(z.string().max(50)).max(20).optional(),
   category: z
     .enum([
       "run",
@@ -203,17 +362,14 @@ export const PlayUpdateSchema = z.object({
     ])
     .optional(),
 
-  // Personnel - allow any string (configuration names like "11 Personnel", "Blue", etc.)
-  // Database field is TEXT with no constraints
-  personnel: z.string().max(50, "Personnel name too long").optional(),
-
-  key_player1: z.string().max(50).optional(),
-  key_player2: z.string().max(50).optional(),
-  diagram_data: DiagramDataSchema,
-  has_diagram: z.boolean().optional(),
-  check_into: z.string().uuid().optional(),
-  confidence_level: z.number().min(0).max(100).optional(),
+  // ========================================
+  // Play Timing
+  // ========================================
   expected_duration: z.number().min(0).max(60).optional(),
+
+  // ========================================
+  // Metadata
+  // ========================================
   formation_status: z.string().max(32).optional(),
   sanitized_at: z.union([z.string(), z.date()]).optional(),
 });

@@ -354,7 +354,7 @@ export const RosterQuickAdd: React.FC = () => {
         team_id: teamId,
         first_name: quickAddData.firstName.trim(),
         last_name: quickAddData.lastName.trim(),
-        primary_position: quickAddData.position,
+        position: quickAddData.position, // Match database field name
         jersey_number: jerseyNumber,
         height_inches: heightInches,
       };

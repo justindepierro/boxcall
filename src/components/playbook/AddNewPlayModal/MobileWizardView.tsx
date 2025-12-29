@@ -77,7 +77,9 @@ function useMobileWizardActions(params: {
   };
 
   const handleSkip = () => {
-    wizard.isLastStep ? void onSubmit(buildSyntheticSubmitEvent()) : wizard.goNext();
+    wizard.isLastStep
+      ? void onSubmit(buildSyntheticSubmitEvent())
+      : wizard.goNext();
   };
 
   const handleClose = () => {
@@ -117,22 +119,29 @@ const MobileWizardHeader: React.FC<{
   </div>
 );
 
-const MobileWizardErrorBanner: React.FC<{ errorMessage: string }> = ({ errorMessage }) => (
+const MobileWizardErrorBanner: React.FC<{ errorMessage: string }> = ({
+  errorMessage,
+}) => (
   <div className="mx-6 mt-4 bg-danger-subtle border border-danger-default rounded-lg p-4 flex items-start gap-3">
-    <Icon name="alert-triangle" size="md" className="text-danger-default flex-shrink-0 mt-0.5" />
+    <Icon
+      name="alert-triangle"
+      size="md"
+      className="text-danger-default flex-shrink-0 mt-0.5"
+    />
     <Typography variant="body-sm" className="text-danger-default flex-1">
       {errorMessage}
     </Typography>
   </div>
 );
 
-const MobileWizardRateLimitBanner: React.FC<{ rateLimitFeedback: RateLimitFeedback }> = ({
-  rateLimitFeedback,
-}) => (
+const MobileWizardRateLimitBanner: React.FC<{
+  rateLimitFeedback: RateLimitFeedback;
+}> = ({ rateLimitFeedback }) => (
   <div className="mx-6 mt-4 bg-warning-subtle border border-warning-default rounded-lg p-4 flex items-center gap-3">
     <Icon name="clock" size="md" className="text-warning-default" />
     <Typography variant="body-sm" className="text-warning-default">
-      {rateLimitFeedback.remaining} play creation{rateLimitFeedback.remaining === 1 ? "" : "s"} remaining
+      {rateLimitFeedback.remaining} play creation
+      {rateLimitFeedback.remaining === 1 ? "" : "s"} remaining
     </Typography>
   </div>
 );
@@ -145,7 +154,10 @@ const WizardStepOne: React.FC<{
   formData: PlayFormData;
   existingPlays: Play[];
   quickCombos: PlayCombo[];
-  updateField: <K extends keyof PlayFormData>(field: K, value: PlayFormData[K]) => void;
+  updateField: <K extends keyof PlayFormData>(
+    field: K,
+    value: PlayFormData[K]
+  ) => void;
   updateFields: (updates: Partial<PlayFormData>) => void;
   onFormationChange: (value: string) => void;
   setPersonnelPanelOpen: (open: boolean) => void;
@@ -158,11 +170,19 @@ const WizardStepOne: React.FC<{
   onFormationChange,
   setPersonnelPanelOpen,
 }) => (
-  <WizardStep title="Play Info" step={1} totalSteps={4} className="flex-1 px-6 py-4 overflow-y-auto">
+  <WizardStep
+    title="Play Info"
+    step={1}
+    totalSteps={4}
+    className="flex-1 px-6 py-4 overflow-y-auto"
+  >
     {/* Quick Combos */}
     {quickCombos.length > 0 && (
       <div className="mb-4">
-        <Typography variant="caption" className="mb-2 text-tertiary uppercase tracking-wide">
+        <Typography
+          variant="caption"
+          className="mb-2 text-tertiary uppercase tracking-wide"
+        >
           Recent combos
         </Typography>
         <div className="flex flex-wrap gap-2">
@@ -214,9 +234,18 @@ const WizardStepOne: React.FC<{
 const WizardStepTwo: React.FC<{
   formData: PlayFormData;
   existingPlays: Play[];
-  updateField: <K extends keyof PlayFormData>(field: K, value: PlayFormData[K]) => void;
+  updateField: <K extends keyof PlayFormData>(
+    field: K,
+    value: PlayFormData[K]
+  ) => void;
 }> = ({ formData, existingPlays, updateField }) => (
-  <WizardStep title="Details" step={2} totalSteps={4} optional className="flex-1 px-6 py-4 overflow-y-auto">
+  <WizardStep
+    title="Details"
+    step={2}
+    totalSteps={4}
+    optional
+    className="flex-1 px-6 py-4 overflow-y-auto"
+  >
     {/* Diagram Section */}
     <DiagramSection
       diagramUrl={formData.diagram_image_url}
@@ -232,7 +261,9 @@ const WizardStepTwo: React.FC<{
         notes={formData.description}
         onOneWordPlayChange={(value) => updateField("oneWordPlay", value)}
         onProtectionChange={(value) => updateField("protection", value)}
-        onWristbandNumberChange={(value) => updateField("wristbandNumber", value)}
+        onWristbandNumberChange={(value) =>
+          updateField("wristbandNumber", value)
+        }
         onNotesChange={(value) => updateField("description", value)}
         existingPlays={existingPlays}
       />
@@ -243,9 +274,18 @@ const WizardStepTwo: React.FC<{
 const WizardStepThree: React.FC<{
   formData: PlayFormData;
   playbookId?: string;
-  updateField: <K extends keyof PlayFormData>(field: K, value: PlayFormData[K]) => void;
+  updateField: <K extends keyof PlayFormData>(
+    field: K,
+    value: PlayFormData[K]
+  ) => void;
 }> = ({ formData, playbookId, updateField }) => (
-  <WizardStep title="Organization" step={3} totalSteps={4} optional className="flex-1 px-6 py-4 overflow-y-auto">
+  <WizardStep
+    title="Organization"
+    step={3}
+    totalSteps={4}
+    optional
+    className="flex-1 px-6 py-4 overflow-y-auto"
+  >
     <TagsSection
       formationTags={formData.formationTags}
       playTags={formData.playTags}
@@ -255,7 +295,9 @@ const WizardStepThree: React.FC<{
       onTagsChange={(tags) => updateField("tags", tags)}
       keyPositions={formData.key_positions}
       keyPlayers={formData.key_players}
-      onKeyPositionsChange={(positions) => updateField("key_positions", positions)}
+      onKeyPositionsChange={(positions) =>
+        updateField("key_positions", positions)
+      }
       onKeyPlayersChange={(players) => updateField("key_players", players)}
       personnel={formData.personnel}
       playbookId={playbookId}
@@ -265,9 +307,18 @@ const WizardStepThree: React.FC<{
 
 const WizardStepFour: React.FC<{
   formData: PlayFormData;
-  updateField: <K extends keyof PlayFormData>(field: K, value: PlayFormData[K]) => void;
+  updateField: <K extends keyof PlayFormData>(
+    field: K,
+    value: PlayFormData[K]
+  ) => void;
 }> = ({ formData, updateField }) => (
-  <WizardStep title="Situations" step={4} totalSteps={4} optional className="flex-1 px-6 py-4 overflow-y-auto">
+  <WizardStep
+    title="Situations"
+    step={4}
+    totalSteps={4}
+    optional
+    className="flex-1 px-6 py-4 overflow-y-auto"
+  >
     <GameSituationSection
       isOpen={true}
       onToggle={() => {}}
@@ -300,18 +351,34 @@ interface MobileWizardViewProps {
   isOpen: boolean;
   onClose: () => void;
   formData: PlayFormData;
-  updateField: <K extends keyof PlayFormData>(field: K, value: PlayFormData[K]) => void;
+  updateField: <K extends keyof PlayFormData>(
+    field: K,
+    value: PlayFormData[K]
+  ) => void;
   updateFields: (updates: Partial<PlayFormData>) => void;
   isValid: () => boolean;
   onSubmit: (e: React.FormEvent) => Promise<void>;
   isSubmitting: boolean;
-  suggestions: { formations: string[]; playNames: string[]; personnel: string[] };
-  aiSuggestions?: { aiFormations: string[]; aiPlayNames: string[]; generatedPlayNames: string[] };
-  isSuggestionsVisible: (type: "formation" | "playName" | "personnel") => boolean;
+  suggestions: {
+    formations: string[];
+    playNames: string[];
+    personnel: string[];
+  };
+  aiSuggestions?: {
+    aiFormations: string[];
+    aiPlayNames: string[];
+    generatedPlayNames: string[];
+  };
+  isSuggestionsVisible: (
+    type: "formation" | "playName" | "personnel"
+  ) => boolean;
   showSuggestions: (type: "formation" | "playName" | "personnel") => void;
   hideSuggestions: (type: "formation" | "playName" | "personnel") => void;
   onFormationChange: (value: string) => void;
-  onFormationIdChange: (id: string | null, formation: FormationRow | null) => void;
+  onFormationIdChange: (
+    id: string | null,
+    formation: FormationRow | null
+  ) => void;
   personnelPanelOpen: boolean;
   setPersonnelPanelOpen: (open: boolean) => void;
   isAdvancedOpen: boolean;
@@ -356,7 +423,11 @@ export const MobileWizardView: React.FC<MobileWizardViewProps> = ({
       size="fullscreen"
       className="h-screen rounded-none"
     >
-      <MobileWizardHeader existingPlay={existingPlay} isSubmitting={isSubmitting} onClose={handleClose} />
+      <MobileWizardHeader
+        existingPlay={existingPlay}
+        isSubmitting={isSubmitting}
+        onClose={handleClose}
+      />
 
       <WizardProgress currentStep={wizard.currentStep} totalSteps={4} />
 

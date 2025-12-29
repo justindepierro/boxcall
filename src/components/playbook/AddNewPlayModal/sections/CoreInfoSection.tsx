@@ -89,11 +89,14 @@ const PlayTypeSelector: React.FC<{
   const [customValue, setCustomValue] = React.useState("");
 
   // Check if current value is a custom type (not in predefined options)
-  const isCustomType = value && !PLAY_TYPE_OPTIONS.some((opt) => opt.value === value);
+  const isCustomType =
+    value && !PLAY_TYPE_OPTIONS.some((opt) => opt.value === value);
 
   // Get unique custom types from existing plays (not in predefined options)
   const customTypesFromPlays = React.useMemo(() => {
-    const predefinedValues = new Set(PLAY_TYPE_OPTIONS.map((opt) => opt.value.toLowerCase()));
+    const predefinedValues = new Set(
+      PLAY_TYPE_OPTIONS.map((opt) => opt.value.toLowerCase())
+    );
     return [...new Set(existingPlayTypes)]
       .filter((t) => t && !predefinedValues.has(t.toLowerCase()))
       .slice(0, 3); // Show max 3 custom types
@@ -178,7 +181,12 @@ const PlayTypeSelector: React.FC<{
             className="flex-1 px-sm py-xs text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
             autoFocus
           />
-          <Button type="button" variant="primary" size="sm" onClick={handleCustomSubmit}>
+          <Button
+            type="button"
+            variant="primary"
+            size="sm"
+            onClick={handleCustomSubmit}
+          >
             Add
           </Button>
           <Button
@@ -235,19 +243,35 @@ export const CoreInfoSection: React.FC<CoreInfoSectionProps> = ({
 }) => {
   // Extract unique values for validation
   const existingFormations = React.useMemo(
-    () => [...new Set(existingPlays.map((p) => p.formation).filter(Boolean) as string[])],
+    () => [
+      ...new Set(
+        existingPlays.map((p) => p.formation).filter(Boolean) as string[]
+      ),
+    ],
     [existingPlays]
   );
   const existingPlayNames = React.useMemo(
-    () => [...new Set(existingPlays.map((p) => p.play_name).filter(Boolean) as string[])],
+    () => [
+      ...new Set(
+        existingPlays.map((p) => p.play_name).filter(Boolean) as string[]
+      ),
+    ],
     [existingPlays]
   );
   const existingPersonnel = React.useMemo(
-    () => [...new Set(existingPlays.map((p) => p.personnel).filter(Boolean) as string[])],
+    () => [
+      ...new Set(
+        existingPlays.map((p) => p.personnel).filter(Boolean) as string[]
+      ),
+    ],
     [existingPlays]
   );
   const existingPlayTypes = React.useMemo(
-    () => [...new Set(existingPlays.map((p) => p.p_type).filter(Boolean) as string[])],
+    () => [
+      ...new Set(
+        existingPlays.map((p) => p.p_type).filter(Boolean) as string[]
+      ),
+    ],
     [existingPlays]
   );
 

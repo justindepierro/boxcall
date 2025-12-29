@@ -143,8 +143,7 @@ async function calculatePlayEssentialsScore(
       (p) => !p.formation || p.formation.trim() === ""
     );
     issues.push({
-      severity:
-        missingFormation.length > totalPlays * 0.3 ? "warning" : "info",
+      severity: missingFormation.length > totalPlays * 0.3 ? "warning" : "info",
       category: "Formation",
       description: `${missingFormation.length} plays missing formation`,
       affectedItems: missingFormation.map((p) => p.id),

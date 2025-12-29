@@ -23,7 +23,7 @@ type DatabasePlayRow = Record<string, unknown> & {
 /**
  * Convert database play data to full Play type
  * Pass through all database fields and add any missing defaults
- * 
+ *
  * Note: Database rows may have nullable fields that Play requires as non-null.
  * This function handles those conversions with appropriate defaults.
  */

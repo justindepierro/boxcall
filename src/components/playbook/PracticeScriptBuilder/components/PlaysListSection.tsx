@@ -19,14 +19,7 @@ interface ScenarioUpdate {
   hash?: "left" | "middle" | "right";
   downDistance?: string;
   fieldPosition?: "plus_territory" | "red_zone" | "backed_up" | "midfield";
-  defensiveFront?:
-    | "base"
-    | "4-3"
-    | "3-4"
-    | "nickel"
-    | "dime"
-    | "bear"
-    | "tite";
+  defensiveFront?: "base" | "4-3" | "3-4" | "nickel" | "dime" | "bear" | "tite";
   coverage?:
     | "cover_0"
     | "cover_1"

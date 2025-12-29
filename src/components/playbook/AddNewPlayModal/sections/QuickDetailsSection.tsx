@@ -39,15 +39,27 @@ export const QuickDetailsSection: React.FC<QuickDetailsSectionProps> = ({
 }) => {
   // Extract unique values for validation
   const existingOneWordPlays = React.useMemo(
-    () => [...new Set(existingPlays.map((p) => p.one_word_play).filter(Boolean) as string[])],
+    () => [
+      ...new Set(
+        existingPlays.map((p) => p.one_word_play).filter(Boolean) as string[]
+      ),
+    ],
     [existingPlays]
   );
   const existingProtections = React.useMemo(
-    () => [...new Set(existingPlays.map((p) => p.protection).filter(Boolean) as string[])],
+    () => [
+      ...new Set(
+        existingPlays.map((p) => p.protection).filter(Boolean) as string[]
+      ),
+    ],
     [existingPlays]
   );
   const existingWristbandNumbers = React.useMemo(
-    () => [...new Set(existingPlays.map((p) => p.wristband_number).filter(Boolean) as string[])],
+    () => [
+      ...new Set(
+        existingPlays.map((p) => p.wristband_number).filter(Boolean) as string[]
+      ),
+    ],
     [existingPlays]
   );
 

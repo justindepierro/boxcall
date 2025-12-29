@@ -139,8 +139,8 @@ const PlaybookHealthOverallCard: React.FC<{
           {healthScore.stats.uniqueFormations} formations
         </Typography>
         <Typography variant="label-md" className="text-accent-600">
-          {healthScore.stats.playsWithDiagrams}/
-          {healthScore.stats.totalPlays} with diagrams
+          {healthScore.stats.playsWithDiagrams}/{healthScore.stats.totalPlays}{" "}
+          with diagrams
         </Typography>
       </div>
     </div>

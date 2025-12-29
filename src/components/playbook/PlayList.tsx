@@ -344,20 +344,20 @@ const PlayListInner: React.FC<PlayListProps> = ({
               <PlayListHeader
                 displayPlays={displayPlays}
                 totalCount={totalPlaysCount}
-              selectedCategory={selectedCategory}
-              selectedSubcategory={undefined}
-              enableBulkOperations={enableBulkOperations}
-              selectedPlayIds={selectedPlayIds}
-              onSelectAll={handleSelectAll}
-              showOneWordCalls={showOneWordCalls ?? false}
-              onShowOneWordCallsChange={setShowOneWordCalls}
-              directionDisplayFormat={directionDisplayFormat || "full"}
-              onDirectionDisplayFormatChange={setDirectionDisplayFormat}
-              searchQuery={searchQuery}
-              onSearchChange={onSearchChange}
-              sortBy={sortBy}
-              onSortChange={onSortChange}
-            />
+                selectedCategory={selectedCategory}
+                selectedSubcategory={undefined}
+                enableBulkOperations={enableBulkOperations}
+                selectedPlayIds={selectedPlayIds}
+                onSelectAll={handleSelectAll}
+                showOneWordCalls={showOneWordCalls ?? false}
+                onShowOneWordCallsChange={setShowOneWordCalls}
+                directionDisplayFormat={directionDisplayFormat || "full"}
+                onDirectionDisplayFormatChange={setDirectionDisplayFormat}
+                searchQuery={searchQuery}
+                onSearchChange={onSearchChange}
+                sortBy={sortBy}
+                onSortChange={onSortChange}
+              />
             </div>
           );
         })()}

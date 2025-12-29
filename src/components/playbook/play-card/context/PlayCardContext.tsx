@@ -3,7 +3,7 @@
  *
  * Provides shared state and handlers for PlayCard components,
  * eliminating prop drilling and centralizing state management.
- * 
+ *
  * Note: Context definition is in PlayCardContextDef.ts for Fast Refresh compatibility.
  */
 
@@ -18,7 +18,11 @@ import type { Play as PlayType } from "../../../../types/play";
 import type { PersonnelConfiguration } from "../../../../types/personnel";
 import { logError } from "../../../../utils/logger";
 import { legacyValueToLeftRight } from "../../../../utils/leftRight";
-import { PlayCardContext, type PlayCardContextValue, type SaveQueue } from "./PlayCardContextDef";
+import {
+  PlayCardContext,
+  type PlayCardContextValue,
+  type SaveQueue,
+} from "./PlayCardContextDef";
 
 // Re-export for backward compatibility
 export { PlayCardContext, type PlayCardContextValue };

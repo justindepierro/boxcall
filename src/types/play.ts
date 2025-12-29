@@ -368,11 +368,36 @@ export const PLAY_TYPE_OPTIONS: {
   { value: "Run", label: "Run", icon: "🏃", description: "Running plays" },
   { value: "Pass", label: "Pass", icon: "🎯", description: "Passing plays" },
   { value: "RPO", label: "RPO", icon: "⚡", description: "Run-Pass Options" },
-  { value: "Option", label: "Option", icon: "🎰", description: "Option plays (triple, speed, zone read)" },
-  { value: "Play Action", label: "Play Action", icon: "🎭", description: "Play action passes" },
-  { value: "Screen", label: "Screen", icon: "🛡️", description: "Screen passes" },
-  { value: "Boot", label: "Boot", icon: "🥾", description: "Bootleg and rollout passes" },
-  { value: "Special", label: "Special", icon: "✨", description: "Special teams plays" },
+  {
+    value: "Option",
+    label: "Option",
+    icon: "🎰",
+    description: "Option plays (triple, speed, zone read)",
+  },
+  {
+    value: "Play Action",
+    label: "Play Action",
+    icon: "🎭",
+    description: "Play action passes",
+  },
+  {
+    value: "Screen",
+    label: "Screen",
+    icon: "🛡️",
+    description: "Screen passes",
+  },
+  {
+    value: "Boot",
+    label: "Boot",
+    icon: "🥾",
+    description: "Bootleg and rollout passes",
+  },
+  {
+    value: "Special",
+    label: "Special",
+    icon: "✨",
+    description: "Special teams plays",
+  },
 ];
 
 // Forward-looking standard install phase taxonomy (UI + future DB enum)

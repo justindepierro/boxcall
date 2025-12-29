@@ -36,7 +36,10 @@ interface UsePlaylistKeyboardResult {
 }
 
 /** Scroll a play card into view */
-function scrollPlayIntoView(playId: string, block: ScrollLogicalPosition = "nearest") {
+function scrollPlayIntoView(
+  playId: string,
+  block: ScrollLogicalPosition = "nearest"
+) {
   const element = document.getElementById(`play-card-${playId}`);
   element?.scrollIntoView({ behavior: "smooth", block });
 }
@@ -71,7 +74,11 @@ export function usePlaylistKeyboard({
   const navigateToPlay = useCallback(
     (direction: "next" | "prev") => {
       const currentIndex = focusedPlayId ? playIds.indexOf(focusedPlayId) : -1;
-      const newIndex = getNavigatedIndex(currentIndex, direction, playIds.length);
+      const newIndex = getNavigatedIndex(
+        currentIndex,
+        direction,
+        playIds.length
+      );
       const newPlayId = playIds[newIndex];
       setFocusedPlayId(newPlayId);
       scrollPlayIntoView(newPlayId);
@@ -124,15 +131,25 @@ export function usePlaylistKeyboard({
         scrollPlayIntoView(lastId, "end");
       }
     },
-    [enabled, playIds, focusedPlayId, expandedPlayId, onToggleExpand, navigateToPlay]
+    [
+      enabled,
+      playIds,
+      focusedPlayId,
+      expandedPlayId,
+      onToggleExpand,
+      navigateToPlay,
+    ]
   );
 
   const containerProps = {
     tabIndex: enabled ? 0 : -1,
     onKeyDown: handleKeyDown,
     role: "listbox" as const,
-    "aria-label": "Play list - use J/K or arrow keys to navigate, Enter to expand",
-    "aria-activedescendant": focusedPlayId ? `play-card-${focusedPlayId}` : undefined,
+    "aria-label":
+      "Play list - use J/K or arrow keys to navigate, Enter to expand",
+    "aria-activedescendant": focusedPlayId
+      ? `play-card-${focusedPlayId}`
+      : undefined,
   };
 
   return {

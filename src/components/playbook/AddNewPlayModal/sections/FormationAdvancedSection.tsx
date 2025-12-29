@@ -51,7 +51,9 @@ interface FormationAdvancedSectionProps {
   existingPlays: Play[];
 }
 
-export const FormationAdvancedSection: React.FC<FormationAdvancedSectionProps> = ({
+export const FormationAdvancedSection: React.FC<
+  FormationAdvancedSectionProps
+> = ({
   isOpen,
   onToggle,
   formationType,
@@ -78,19 +80,33 @@ export const FormationAdvancedSection: React.FC<FormationAdvancedSectionProps> =
 }) => {
   // Extract unique values for validation
   const formationTypes = React.useMemo(
-    () => [...new Set(existingPlays.map((p) => p.f_type).filter(Boolean) as string[])],
+    () => [
+      ...new Set(
+        existingPlays.map((p) => p.f_type).filter(Boolean) as string[]
+      ),
+    ],
     [existingPlays]
   );
   const backAligns = React.useMemo(
-    () => [...new Set(existingPlays.map((p) => p.back_align).filter(Boolean) as string[])],
+    () => [
+      ...new Set(
+        existingPlays.map((p) => p.back_align).filter(Boolean) as string[]
+      ),
+    ],
     [existingPlays]
   );
   const shifts = React.useMemo(
-    () => [...new Set(existingPlays.map((p) => p.shift).filter(Boolean) as string[])],
+    () => [
+      ...new Set(existingPlays.map((p) => p.shift).filter(Boolean) as string[]),
+    ],
     [existingPlays]
   );
   const motions = React.useMemo(
-    () => [...new Set(existingPlays.map((p) => p.motion).filter(Boolean) as string[])],
+    () => [
+      ...new Set(
+        existingPlays.map((p) => p.motion).filter(Boolean) as string[]
+      ),
+    ],
     [existingPlays]
   );
 

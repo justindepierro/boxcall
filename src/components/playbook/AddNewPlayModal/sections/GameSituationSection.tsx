@@ -56,7 +56,10 @@ const ChipSelector: React.FC<{
   onChange: (value: string) => void;
 }> = ({ label, value, options, onChange }) => (
   <div className="space-y-xs">
-    <Typography variant="caption" className="text-tertiary uppercase tracking-wide">
+    <Typography
+      variant="caption"
+      className="text-tertiary uppercase tracking-wide"
+    >
       {label}
     </Typography>
     <div className="flex flex-wrap gap-xs">
@@ -86,7 +89,10 @@ const TextInput: React.FC<{
   onChange: (value: string) => void;
 }> = ({ label, value, placeholder, onChange }) => (
   <div className="space-y-xs">
-    <Typography variant="caption" className="text-tertiary uppercase tracking-wide">
+    <Typography
+      variant="caption"
+      className="text-tertiary uppercase tracking-wide"
+    >
       {label}
     </Typography>
     <input

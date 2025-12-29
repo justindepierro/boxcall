@@ -144,7 +144,9 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
     // Validate formation field
     if (formData.formation.trim()) {
-      const formationValidation = validateFormationName(formData.formation.trim());
+      const formationValidation = validateFormationName(
+        formData.formation.trim()
+      );
       if (!formationValidation.isValid) {
         setErrorMessage(formationValidation.error || "Invalid formation name");
         return;
@@ -153,7 +155,9 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
     // Validate personnel field
     if (formData.personnel.trim()) {
-      const personnelValidation = validatePersonnelValue(formData.personnel.trim());
+      const personnelValidation = validatePersonnelValue(
+        formData.personnel.trim()
+      );
       if (!personnelValidation.isValid) {
         setErrorMessage(personnelValidation.error || "Invalid personnel value");
         return;
@@ -168,22 +172,40 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
       if (activeTeamId) {
         try {
           const defs = await TeamSituationDefinitionsService.get(activeTeamId);
-          const fieldZoneLabels = getFieldZoneDefinitions(defs).map((z) => z.label);
-          const customSituationLabels = Array.isArray((defs as any).custom_situations)
+          const fieldZoneLabels = getFieldZoneDefinitions(defs).map(
+            (z) => z.label
+          );
+          const customSituationLabels = Array.isArray(
+            (defs as any).custom_situations
+          )
             ? ((defs as any).custom_situations as any[])
                 .map((s) => String(s?.label ?? "").trim())
                 .filter(Boolean)
             : [];
 
           const fieldPos = formData.prefFieldPos.trim();
-          if (fieldPos && fieldZoneLabels.length > 0 && !fieldZoneLabels.some((l) => l.toLowerCase() === fieldPos.toLowerCase())) {
-            setErrorMessage("Preferred field position must match Team Settings");
+          if (
+            fieldPos &&
+            fieldZoneLabels.length > 0 &&
+            !fieldZoneLabels.some(
+              (l) => l.toLowerCase() === fieldPos.toLowerCase()
+            )
+          ) {
+            setErrorMessage(
+              "Preferred field position must match Team Settings"
+            );
             setIsSubmitting(false);
             return;
           }
 
           const situation = formData.prefSituation.trim();
-          if (situation && customSituationLabels.length > 0 && !customSituationLabels.some((l) => l.toLowerCase() === situation.toLowerCase())) {
+          if (
+            situation &&
+            customSituationLabels.length > 0 &&
+            !customSituationLabels.some(
+              (l) => l.toLowerCase() === situation.toLowerCase()
+            )
+          ) {
             setErrorMessage("Preferred situation must match Team Settings");
             setIsSubmitting(false);
             return;
@@ -194,11 +216,19 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
       }
 
       // Parse tags
-      const fTags = formData.formationTags.split(",").map((t) => t.trim()).filter(Boolean);
-      const pTags = formData.playTags.split(",").map((t) => t.trim()).filter(Boolean);
+      const fTags = formData.formationTags
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
+      const pTags = formData.playTags
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
 
       // Handle direction
-      const formationDirToken = parseLeftRight(String(formData.formation_direction ?? formData.formationDir));
+      const formationDirToken = parseLeftRight(
+        String(formData.formation_direction ?? formData.formationDir)
+      );
       const canonicalLegacyFDir = leftRightToLegacyValue(formationDirToken);
 
       const playData = {
@@ -246,8 +276,12 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
 
         // Metadata arrays
         tags: formData.tags.length > 0 ? formData.tags : undefined,
-        key_positions: formData.key_positions.length > 0 ? formData.key_positions : undefined,
-        key_players: formData.key_players.length > 0 ? formData.key_players : undefined,
+        key_positions:
+          formData.key_positions.length > 0
+            ? formData.key_positions
+            : undefined,
+        key_players:
+          formData.key_players.length > 0 ? formData.key_players : undefined,
         flags: formData.flags.length > 0 ? formData.flags : undefined,
       };
 
@@ -268,7 +302,10 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         const issues = (error as { issues: Array<{ message: string }> }).issues;
         setErrorMessage(issues.map((i) => i.message).join(", "));
       } else if (error instanceof Error) {
-        if (error.message.includes("Rate limit") || error.message.includes("too quickly")) {
+        if (
+          error.message.includes("Rate limit") ||
+          error.message.includes("too quickly")
+        ) {
           setErrorMessage(error.message);
         } else {
           setErrorMessage("Failed to create play. Please try again.");
@@ -296,7 +333,10 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
     }
   };
 
-  const handleAcceptDirectionSuggestion = (cleanName: string, direction: "R" | "L") => {
+  const handleAcceptDirectionSuggestion = (
+    cleanName: string,
+    direction: "R" | "L"
+  ) => {
     updateFields({
       formation: cleanName,
       formationDir: direction,
@@ -310,32 +350,49 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
     }
   };
 
-  const handleFormationIdChange = (id: string | null, formation: FormationRow | null) => {
+  const handleFormationIdChange = (
+    id: string | null,
+    formation: FormationRow | null
+  ) => {
     const updates: Partial<typeof formData> = {
       formation_id: id,
       formation: formation?.name || "",
-      formation_direction: (formation?.direction as "base" | "left" | "right" | null) ?? null,
+      formation_direction:
+        (formation?.direction as "base" | "left" | "right" | null) ?? null,
     };
 
     if (formation) {
-      if (formation.personnel_name) updates.personnel = formation.personnel_name;
-      if (formation.formation_type) updates.formationType = formation.formation_type;
+      if (formation.personnel_name)
+        updates.personnel = formation.personnel_name;
+      if (formation.formation_type)
+        updates.formationType = formation.formation_type;
       if (formation.category) {
-        const existingTags = formData.formationTags.split(",").map((t) => t.trim()).filter(Boolean);
-        if (!existingTags.includes(formation.category)) existingTags.push(formation.category);
+        const existingTags = formData.formationTags
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean);
+        if (!existingTags.includes(formation.category))
+          existingTags.push(formation.category);
         updates.formationTags = existingTags.join(", ");
       }
       if (formation.tags?.length) {
-        const existingTags = formData.formationTags.split(",").map((t) => t.trim()).filter(Boolean);
+        const existingTags = formData.formationTags
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean);
         formation.tags.forEach((tag: string) => {
           if (!existingTags.includes(tag)) existingTags.push(tag);
         });
         updates.formationTags = existingTags.join(", ");
       }
       if (formation.run_strength) updates.runStrength = formation.run_strength;
-      if (formation.pass_strength) updates.passStrength = formation.pass_strength;
+      if (formation.pass_strength)
+        updates.passStrength = formation.pass_strength;
 
-      debug("📋 Formation metadata transferred:", { formation: formation.name, updates });
+      debug("📋 Formation metadata transferred:", {
+        formation: formation.name,
+        updates,
+      });
     }
 
     updateFields(updates);
@@ -421,7 +478,10 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
               <>{existingPlay ? "Updating..." : "Creating..."}</>
             ) : (
               <>
-                <Icon name={existingPlay ? "edit" : "plus"} className="h-4 w-4 mr-xs" />
+                <Icon
+                  name={existingPlay ? "edit" : "plus"}
+                  className="h-4 w-4 mr-xs"
+                />
                 {existingPlay ? "Update Play" : "Create Play"}
               </>
             )}
@@ -433,13 +493,23 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         {/* Error Messages */}
         {errorMessage && (
           <div className="bg-danger-subtle border border-danger-default rounded-lg p-md flex items-start gap-sm">
-            <Icon name="alert-triangle" className="h-5 w-5 text-danger-default flex-shrink-0 mt-0.5" />
+            <Icon
+              name="alert-triangle"
+              className="h-5 w-5 text-danger-default flex-shrink-0 mt-0.5"
+            />
             <div className="flex-1">
-              <Typography variant="body-sm" className="text-danger-default font-medium">
+              <Typography
+                variant="body-sm"
+                className="text-danger-default font-medium"
+              >
                 {errorMessage}
               </Typography>
             </div>
-            <button type="button" onClick={() => setErrorMessage(null)} className="text-danger-default hover:text-danger-emphasis">
+            <button
+              type="button"
+              onClick={() => setErrorMessage(null)}
+              className="text-danger-default hover:text-danger-emphasis"
+            >
               <Icon name="close" className="h-4 w-4" />
             </button>
           </div>
@@ -449,8 +519,12 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         {!existingPlay && rateLimitFeedback.isNearLimit && (
           <div className="bg-warning-subtle border border-warning-default rounded-lg p-md flex items-center gap-sm">
             <Icon name="clock" className="h-5 w-5 text-warning-default" />
-            <Typography variant="body-sm" className="text-warning-default font-medium">
-              {rateLimitFeedback.remaining} play creation{rateLimitFeedback.remaining === 1 ? "" : "s"} remaining
+            <Typography
+              variant="body-sm"
+              className="text-warning-default font-medium"
+            >
+              {rateLimitFeedback.remaining} play creation
+              {rateLimitFeedback.remaining === 1 ? "" : "s"} remaining
             </Typography>
           </div>
         )}
@@ -458,9 +532,16 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         {/* Rate Limit Exceeded */}
         {!existingPlay && rateLimitFeedback.isLimited && (
           <div className="bg-danger-subtle border border-danger-default rounded-lg p-md flex items-center gap-sm">
-            <Icon name="alert-triangle" className="h-5 w-5 text-danger-default" />
-            <Typography variant="body-sm" className="text-danger-default font-medium">
-              Rate limit reached. Please wait {formatCountdown(rateLimitFeedback.secondsUntilReset)}
+            <Icon
+              name="alert-triangle"
+              className="h-5 w-5 text-danger-default"
+            />
+            <Typography
+              variant="body-sm"
+              className="text-danger-default font-medium"
+            >
+              Rate limit reached. Please wait{" "}
+              {formatCountdown(rateLimitFeedback.secondsUntilReset)}
             </Typography>
           </div>
         )}
@@ -472,7 +553,9 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             formation={formData.formation}
             formationDir={formData.formation_direction || ""}
             onFormationChange={handleFormationChange}
-            onFormationDirChange={(dir) => updateField("formation_direction", dir)}
+            onFormationDirChange={(dir) =>
+              updateField("formation_direction", dir)
+            }
             playName={formData.playName}
             playDir={formData.playDir}
             onPlayNameChange={(value) => updateField("playName", value)}
@@ -515,7 +598,9 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             notes={formData.description}
             onOneWordPlayChange={(value) => updateField("oneWordPlay", value)}
             onProtectionChange={(value) => updateField("protection", value)}
-            onWristbandNumberChange={(value) => updateField("wristbandNumber", value)}
+            onWristbandNumberChange={(value) =>
+              updateField("wristbandNumber", value)
+            }
             onNotesChange={(value) => updateField("description", value)}
             existingPlays={existingPlays}
           />
@@ -524,14 +609,20 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
           <TagsSection
             formationTags={formData.formationTags}
             playTags={formData.playTags}
-            onFormationTagsChange={(value) => updateField("formationTags", value)}
+            onFormationTagsChange={(value) =>
+              updateField("formationTags", value)
+            }
             onPlayTagsChange={(value) => updateField("playTags", value)}
             tags={formData.tags}
             onTagsChange={(tags) => updateField("tags", tags)}
             keyPositions={formData.key_positions}
             keyPlayers={formData.key_players}
-            onKeyPositionsChange={(positions) => updateField("key_positions", positions)}
-            onKeyPlayersChange={(players) => updateField("key_players", players)}
+            onKeyPositionsChange={(positions) =>
+              updateField("key_positions", positions)
+            }
+            onKeyPlayersChange={(players) =>
+              updateField("key_players", players)
+            }
             personnel={formData.personnel}
             playbookId={playbookId}
           />
@@ -549,14 +640,18 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             backLeftOfQb={formData.backLeftOfQb}
             backRightOfQb={formData.backRightOfQb}
             checkInto={formData.checkInto}
-            onFormationTypeChange={(value) => updateField("formationType", value)}
+            onFormationTypeChange={(value) =>
+              updateField("formationType", value)
+            }
             onBackAlignChange={(value) => updateField("backAlign", value)}
             onShiftChange={(value) => updateField("shift", value)}
             onMotionChange={(value) => updateField("motion", value)}
             onRunStrengthChange={(value) => updateField("runStrength", value)}
             onPassStrengthChange={(value) => updateField("passStrength", value)}
             onBackLeftOfQbChange={(value) => updateField("backLeftOfQb", value)}
-            onBackRightOfQbChange={(value) => updateField("backRightOfQb", value)}
+            onBackRightOfQbChange={(value) =>
+              updateField("backRightOfQb", value)
+            }
             onCheckIntoChange={(value) => updateField("checkInto", value)}
             confidence={formData.confidence}
             onConfidenceChange={(value) => updateField("confidence", value)}
@@ -580,7 +675,9 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
             onPrefCoverageChange={(value) => updateField("prefCoverage", value)}
             onPrefFrontChange={(value) => updateField("prefFront", value)}
             onPrefFieldPosChange={(value) => updateField("prefFieldPos", value)}
-            onPrefSituationChange={(value) => updateField("prefSituation", value)}
+            onPrefSituationChange={(value) =>
+              updateField("prefSituation", value)
+            }
             downOptions={DOWN_OPTIONS}
             distanceOptions={DISTANCE_OPTIONS}
             hashOptions={HASH_OPTIONS}

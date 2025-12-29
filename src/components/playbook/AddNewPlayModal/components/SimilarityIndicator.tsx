@@ -184,7 +184,13 @@ export const SimilarityIndicator: React.FC<SimilarityIndicatorProps> = ({
   if (!similarity.showIndicator) return null;
 
   const config = LEVEL_CONFIG[similarity.level];
-  const { recommendation, similarPlays, maxSimilarity, level, isExactDuplicate } = similarity;
+  const {
+    recommendation,
+    similarPlays,
+    maxSimilarity,
+    level,
+    isExactDuplicate,
+  } = similarity;
 
   const handleAction = (action: RecommendationAction) => {
     switch (action.action) {
@@ -252,9 +258,15 @@ export const SimilarityIndicator: React.FC<SimilarityIndicatorProps> = ({
           {recommendation && (
             <div className="p-4 border-b border-inherit">
               <div className="flex items-start gap-3">
-                <Icon name={config.icon} className={`${config.color} flex-shrink-0 mt-0.5`} />
+                <Icon
+                  name={config.icon}
+                  className={`${config.color} flex-shrink-0 mt-0.5`}
+                />
                 <div className="flex-1">
-                  <Typography variant="body-sm" className={`font-semibold ${config.color}`}>
+                  <Typography
+                    variant="body-sm"
+                    className={`font-semibold ${config.color}`}
+                  >
                     {recommendation.title}
                   </Typography>
                   <Typography variant="body-xs" className="text-secondary mt-1">
@@ -262,21 +274,28 @@ export const SimilarityIndicator: React.FC<SimilarityIndicatorProps> = ({
                   </Typography>
 
                   {/* Quick Actions */}
-                  {recommendation.actions && recommendation.actions.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-3">
-                      {recommendation.actions.map((action: RecommendationAction, idx: number) => (
-                        <Button
-                          key={idx}
-                          type="button"
-                          variant={action.action === "proceed" ? "ghost" : "secondary"}
-                          size="sm"
-                          onClick={() => handleAction(action)}
-                        >
-                          {action.label}
-                        </Button>
-                      ))}
-                    </div>
-                  )}
+                  {recommendation.actions &&
+                    recommendation.actions.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-3">
+                        {recommendation.actions.map(
+                          (action: RecommendationAction, idx: number) => (
+                            <Button
+                              key={idx}
+                              type="button"
+                              variant={
+                                action.action === "proceed"
+                                  ? "ghost"
+                                  : "secondary"
+                              }
+                              size="sm"
+                              onClick={() => handleAction(action)}
+                            >
+                              {action.label}
+                            </Button>
+                          )
+                        )}
+                      </div>
+                    )}
                 </div>
               </div>
             </div>
@@ -285,7 +304,10 @@ export const SimilarityIndicator: React.FC<SimilarityIndicatorProps> = ({
           {/* Similar Plays List */}
           {similarPlays.length > 0 && (
             <div className="p-4">
-              <Typography variant="caption" className="text-tertiary uppercase tracking-wide mb-3">
+              <Typography
+                variant="caption"
+                className="text-tertiary uppercase tracking-wide mb-3"
+              >
                 Similar Plays ({similarPlays.length})
               </Typography>
               <div className="space-y-2 max-h-48 overflow-y-auto">
@@ -303,9 +325,13 @@ export const SimilarityIndicator: React.FC<SimilarityIndicatorProps> = ({
           {/* Duplicate Warning */}
           {isExactDuplicate && (
             <div className="px-4 py-3 bg-danger-default/10 border-t border-danger-default/30">
-              <Typography variant="body-xs" className="text-danger-default flex items-center gap-2">
+              <Typography
+                variant="body-xs"
+                className="text-danger-default flex items-center gap-2"
+              >
                 <Icon name="alert-octagon" size="sm" />
-                This exact combination already exists. Add motion, shift, or direction to differentiate.
+                This exact combination already exists. Add motion, shift, or
+                direction to differentiate.
               </Typography>
             </div>
           )}
@@ -324,10 +350,9 @@ interface CompactSimilarityIndicatorProps {
   onClick?: () => void;
 }
 
-export const CompactSimilarityIndicator: React.FC<CompactSimilarityIndicatorProps> = ({
-  similarity,
-  onClick,
-}) => {
+export const CompactSimilarityIndicator: React.FC<
+  CompactSimilarityIndicatorProps
+> = ({ similarity, onClick }) => {
   if (!similarity.showIndicator) return null;
 
   const config = LEVEL_CONFIG[similarity.level];
@@ -347,7 +372,8 @@ export const CompactSimilarityIndicator: React.FC<CompactSimilarityIndicatorProp
       <Icon name={config.icon} size="sm" />
 
       {/* Glow effect */}
-      {(similarity.level === "exact_duplicate" || similarity.level === "very_similar") && (
+      {(similarity.level === "exact_duplicate" ||
+        similarity.level === "very_similar") && (
         <span
           className={`absolute inset-0 rounded-full animate-ping-slow opacity-40 ${config.bgColor}`}
         />

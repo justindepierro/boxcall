@@ -17,7 +17,8 @@ import type { AssignmentData } from "./types";
 import type { Database } from "../../../types/database";
 import { DEFAULT_PERSONNEL_POSITIONS, SAVE_SUCCESS_TIMEOUT } from "./constants";
 
-type PlayAssignmentRow = Database["public"]["Tables"]["play_assignments"]["Row"];
+type PlayAssignmentRow =
+  Database["public"]["Tables"]["play_assignments"]["Row"];
 
 function reorderList<T>(
   items: readonly T[],

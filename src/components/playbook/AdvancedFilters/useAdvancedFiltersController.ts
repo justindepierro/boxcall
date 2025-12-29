@@ -68,7 +68,7 @@ export function useAdvancedFiltersController({
   const [hasLoadedPersisted, setHasLoadedPersisted] = useState(false);
   useEffect(() => {
     if (hasLoadedPersisted) return;
-    
+
     const persisted = loadPersistedFilters();
     if (persisted && hasActiveFilters(persisted)) {
       // Only restore if there are active filters
@@ -120,11 +120,14 @@ export function useAdvancedFiltersController({
 
   const selectedField = FILTER_FIELDS.find((f) => f.value === newFilter.field);
 
-  const handlePresetSelect = useCallback((preset: FilterPreset) => {
-    // Use presetToFilters for unified conversion
-    const newFilters = presetToFilters(preset);
-    onFiltersChange(newFilters);
-  }, [onFiltersChange]);
+  const handlePresetSelect = useCallback(
+    (preset: FilterPreset) => {
+      // Use presetToFilters for unified conversion
+      const newFilters = presetToFilters(preset);
+      onFiltersChange(newFilters);
+    },
+    [onFiltersChange]
+  );
 
   const resetNewFilter = useCallback(() => {
     setNewFilter({ field: "", operator: "equals", value: "" });
@@ -149,12 +152,15 @@ export function useAdvancedFiltersController({
     setShowAddFilter(false);
   }, [newFilter, filters, debouncedFilterChange, resetNewFilter]);
 
-  const removeFilter = useCallback((chipId: string) => {
-    // chipId is the field name (e.g., "playType", "personnel")
-    const updatedFilters = removeFilterField(filters, chipId);
-    // Instant removal (no need to debounce deletions)
-    onFiltersChange(updatedFilters);
-  }, [filters, onFiltersChange]);
+  const removeFilter = useCallback(
+    (chipId: string) => {
+      // chipId is the field name (e.g., "playType", "personnel")
+      const updatedFilters = removeFilterField(filters, chipId);
+      // Instant removal (no need to debounce deletions)
+      onFiltersChange(updatedFilters);
+    },
+    [filters, onFiltersChange]
+  );
 
   const clearAllFilters = useCallback(() => {
     // Instant clear - reset to empty
@@ -162,7 +168,7 @@ export function useAdvancedFiltersController({
   }, [onFiltersChange]);
 
   const startAddFilter = useCallback(() => setShowAddFilter(true), []);
-  
+
   const cancelAddFilter = useCallback(() => {
     setShowAddFilter(false);
     resetNewFilter();

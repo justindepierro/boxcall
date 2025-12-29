@@ -75,7 +75,13 @@ export interface SimilarityRecommendation {
 
 export interface RecommendationAction {
   label: string;
-  action: "view_play" | "add_motion" | "add_shift" | "change_formation" | "change_personnel" | "proceed";
+  action:
+    | "view_play"
+    | "add_motion"
+    | "add_shift"
+    | "change_formation"
+    | "change_personnel"
+    | "proceed";
   playId?: string;
 }
 
@@ -84,10 +90,10 @@ export interface RecommendationAction {
 // =============================================================================
 
 const SIMILARITY_WEIGHTS = {
-  playName: 0.40,
+  playName: 0.4,
   formation: 0.25,
   personnel: 0.15,
-  playType: 0.10,
+  playType: 0.1,
   motion: 0.05,
   shift: 0.05,
 } as const;
@@ -136,7 +142,10 @@ function levenshteinDistance(a: string, b: string): number {
 /**
  * Calculate string similarity (0-100) using Levenshtein distance
  */
-function stringSimilarity(a: string | undefined | null, b: string | undefined | null): number {
+function stringSimilarity(
+  a: string | undefined | null,
+  b: string | undefined | null
+): number {
   const strA = (a || "").toLowerCase().trim();
   const strB = (b || "").toLowerCase().trim();
 
@@ -152,7 +161,10 @@ function stringSimilarity(a: string | undefined | null, b: string | undefined | 
 /**
  * Check for exact match (case-insensitive)
  */
-function exactMatch(a: string | undefined | null, b: string | undefined | null): boolean {
+function exactMatch(
+  a: string | undefined | null,
+  b: string | undefined | null
+): boolean {
   const strA = (a || "").toLowerCase().trim();
   const strB = (b || "").toLowerCase().trim();
   return strA === strB && strA !== "";
@@ -171,7 +183,10 @@ interface CurrentPlayData {
   shift?: string;
 }
 
-function calculateMatchDetails(current: CurrentPlayData, existing: Play): MatchDetails {
+function calculateMatchDetails(
+  current: CurrentPlayData,
+  existing: Play
+): MatchDetails {
   return {
     nameMatch: stringSimilarity(current.play_name, existing.play_name),
     formationMatch: stringSimilarity(current.formation, existing.formation),
@@ -195,7 +210,8 @@ function calculateWeightedSimilarity(details: MatchDetails): number {
 }
 
 function getSimilarityLevel(similarity: number): SimilarityLevel {
-  if (similarity >= SIMILARITY_THRESHOLDS.exact_duplicate) return "exact_duplicate";
+  if (similarity >= SIMILARITY_THRESHOLDS.exact_duplicate)
+    return "exact_duplicate";
   if (similarity >= SIMILARITY_THRESHOLDS.very_similar) return "very_similar";
   if (similarity >= SIMILARITY_THRESHOLDS.similar) return "similar";
   if (similarity >= SIMILARITY_THRESHOLDS.related) return "related";
@@ -314,14 +330,21 @@ export function usePlaySimilarity(
       .sort((a, b) => b.similarity - a.similarity) // Sort by similarity desc
       .slice(0, 5); // Top 5 matches
 
-    const maxSimilarity = similarPlays.length > 0 ? similarPlays[0].similarity : 0;
+    const maxSimilarity =
+      similarPlays.length > 0 ? similarPlays[0].similarity : 0;
     const level = getSimilarityLevel(maxSimilarity);
 
     // Check for exact duplicate (same formation + play name)
-    const exactDup = existingPlays.some((play) => isExactDuplicate(currentPlay, play));
+    const exactDup = existingPlays.some((play) =>
+      isExactDuplicate(currentPlay, play)
+    );
 
     // Generate recommendation
-    const recommendation = generateRecommendation(level, similarPlays, currentPlay);
+    const recommendation = generateRecommendation(
+      level,
+      similarPlays,
+      currentPlay
+    );
 
     return {
       maxSimilarity,

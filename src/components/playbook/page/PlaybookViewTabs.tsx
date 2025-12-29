@@ -95,7 +95,10 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
       <div className="container-page px-6">
         {/* Breadcrumb */}
         <div className="pt-4 pb-2">
-          <Typography variant="body-sm" className="text-neutral-500 dark:text-neutral-400">
+          <Typography
+            variant="body-sm"
+            className="text-neutral-500 dark:text-neutral-400"
+          >
             <span
               onClick={() => onNavigate?.("/dashboard")}
               className="hover:text-primary cursor-pointer transition-colors font-medium"
@@ -125,11 +128,19 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
                 <ProgressBadge progress={completionPercent}>
                   {playsCreated}/100 plays
                 </ProgressBadge>
-                <Badge variant="info" size="sm" className="bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800">
+                <Badge
+                  variant="info"
+                  size="sm"
+                  className="bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800"
+                >
                   Diagram {diagramCoverage}%
                 </Badge>
                 {streakDays > 0 && (
-                  <Badge variant="success" size="sm" className="bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-900/20 dark:text-emerald-300 dark:border-emerald-800">
+                  <Badge
+                    variant="success"
+                    size="sm"
+                    className="bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-900/20 dark:text-emerald-300 dark:border-emerald-800"
+                  >
                     🔥 {streakDays} day streak
                   </Badge>
                 )}

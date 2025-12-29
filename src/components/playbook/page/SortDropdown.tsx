@@ -84,7 +84,10 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
         />
         {!compact && (
           <>
-            <Typography variant="body-sm" className="font-medium text-neutral-700 dark:text-neutral-200">
+            <Typography
+              variant="body-sm"
+              className="font-medium text-neutral-700 dark:text-neutral-200"
+            >
               {currentLabel}
             </Typography>
             <Icon
@@ -114,11 +117,14 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
             "
           >
             <div className="px-3 py-2 border-b border-neutral-100 dark:border-navy-700 mb-1">
-              <Typography variant="label-md" className="text-neutral-500 dark:text-neutral-400 uppercase tracking-wider text-xs">
+              <Typography
+                variant="label-md"
+                className="text-neutral-500 dark:text-neutral-400 uppercase tracking-wider text-xs"
+              >
                 Sort By
               </Typography>
             </div>
-            
+
             <div className="max-h-72 overflow-y-auto custom-scrollbar">
               {SORT_OPTIONS.map((option) => {
                 const isSelected = value === option.value;
@@ -137,7 +143,9 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({
                       }
                     `}
                   >
-                    <span className={`text-sm ${isSelected ? "font-semibold" : "font-medium"}`}>
+                    <span
+                      className={`text-sm ${isSelected ? "font-semibold" : "font-medium"}`}
+                    >
                       {option.label}
                     </span>
                     {isSelected && (

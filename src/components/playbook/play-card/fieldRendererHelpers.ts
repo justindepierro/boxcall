@@ -1,15 +1,12 @@
 /**
  * FieldRenderer Constants
- * 
+ *
  * Extracted from FieldRenderer.tsx for Fast Refresh compatibility.
  * Components should only export React components, not mixed exports.
  */
 
 import type { FieldRenderOptions } from "./FieldRenderer";
-import {
-  FORMATION_OPTIONS,
-  PLAY_TYPE_OPTIONS,
-} from "./constants";
+import { FORMATION_OPTIONS, PLAY_TYPE_OPTIONS } from "./constants";
 import {
   validateFormationName,
   validatePersonnelValue,

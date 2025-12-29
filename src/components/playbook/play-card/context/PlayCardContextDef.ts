@@ -1,6 +1,6 @@
 /**
  * PlayCardContext Definition
- * 
+ *
  * Extracted to separate file for Fast Refresh compatibility.
  * Context definitions should be in their own file, separate from components.
  */

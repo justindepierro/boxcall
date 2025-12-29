@@ -32,7 +32,6 @@ import type {
 } from "../../../contexts/PlaybookContext";
 import type { PracticeScript } from "../../../services/practiceService";
 
-
 const MOBILE_RENDER_WARN_THRESHOLD_MS = 20;
 
 interface MobilePlaybookViewProps {

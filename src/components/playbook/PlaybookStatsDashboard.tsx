@@ -50,7 +50,9 @@ export const PlaybookStatsDashboard: React.FC<PlaybookStatsDashboardProps> = ({
           <div className="text-3xl font-bold text-emerald-700 dark:text-emerald-400 tracking-tight">
             {stats.totalPlays}
           </div>
-          <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-500 mt-1 uppercase tracking-wide">Plays</div>
+          <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-500 mt-1 uppercase tracking-wide">
+            Plays
+          </div>
         </div>
         <div className="p-4 bg-neutral-50 dark:bg-navy-800 border border-neutral-100 dark:border-navy-700 rounded-xl text-center">
           <div className="text-3xl font-bold text-neutral-800 dark:text-neutral-200 tracking-tight">

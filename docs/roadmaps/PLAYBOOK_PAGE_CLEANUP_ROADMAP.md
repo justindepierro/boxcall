@@ -7,15 +7,17 @@
 ## 📊 Current Status (Dec 28, 2025)
 
 ### ✅ Quality Gates
-| Check | Status | Notes |
-|-------|--------|-------|
-| TypeScript | ✅ Pass | `npm run type-check` - 0 errors |
-| ESLint | ✅ 3 warnings | Complexity warnings in main modal |
-| Build | ✅ Pass | Production build succeeds |
+
+| Check      | Status        | Notes                             |
+| ---------- | ------------- | --------------------------------- |
+| TypeScript | ✅ Pass       | `npm run type-check` - 0 errors   |
+| ESLint     | ✅ 3 warnings | Complexity warnings in main modal |
+| Build      | ✅ Pass       | Production build succeeds         |
 
 ### 📈 AddNewPlayModal Reorganization (Dec 28, 2025)
 
 #### Before
+
 - **857 lines** in main modal
 - **792 lines** in AdvancedOptionsSection (buried critical fields)
 - **6 scattered sections** with poor organization
@@ -23,6 +25,7 @@
 - Important fields (diagram, notes, protection) hidden in "Advanced"
 
 #### After
+
 - **604 lines** in main modal (30% smaller)
 - **415 lines** in MobileWizardView (32% smaller from 613)
 - **6 logical sections** with clear purposes
@@ -31,6 +34,7 @@
 - Quick Details section for commonly-used fields
 
 #### New Section Structure
+
 1. **CoreInfoSection** (247 lines) - Formation, Play Name, Personnel, Play Type
 2. **DiagramSection** (55 lines) - Play diagram upload (moved up!)
 3. **QuickDetailsSection** (116 lines) - One Word Call, Protection, Notes
@@ -39,6 +43,7 @@
 6. **GameSituationSection** (208 lines) - Collapsible Billick situational preferences
 
 #### Files Deleted (1,474 lines removed)
+
 - AdvancedOptionsSection.tsx (792 lines)
 - FormationSection.tsx (92 lines)
 - PlayNameSection.tsx (80 lines)
@@ -50,6 +55,7 @@
 - MobilePlaybookHeader.tsx (123 lines) - dead code
 
 ### 📈 Previous Improvements (Dec 27, 2025)
+
 1. **Fixed white space issue** - Removed Virtuoso, using simple map() render
 2. **Improved responsive layout** - md breakpoint (1024px) for grid, mobile-first ordering
 3. **Reduced spacing** - Tighter card spacing, removed excess padding
@@ -63,17 +69,20 @@
 ### 🎯 Next Priority Actions
 
 #### Quick Wins (15-30 min each)
+
 1. ~~Fix complexity warning in `usePlaylistKeyboard.ts`~~ ✅ DONE
 2. ~~Type the `any` props in DesktopPlaybookView~~ ✅ DONE (10 types fixed)
 3. **Collapse filters by default** on desktop (less visual noise)
 
 #### Medium Effort (1-2 hours)
+
 4. **Split AdvancedFilters.tsx** (1,126 lines) into Desktop + Mobile variants
 5. **Extract MobilePlaybookView sections** into smaller components
 6. **Add loading skeleton** that matches actual card dimensions
 7. **Type remaining `any` props** (15 remaining in playbook components)
 
 #### Backlog
+
 - Profile render performance with React DevTools
 - Remember filter state across sessions
 - Add intersection observer for visibility tracking
@@ -134,6 +143,7 @@ PlaybookPage.tsx (955 lines - orchestrator)
 ```
 
 ### Key Data Flow
+
 ```
 PlaybookPage
   ↓ usePlaybookData(playbookId) → { plays, loading, error }
@@ -154,11 +164,11 @@ PlaybookPage
 **Problem**: Large white space gaps appearing in play list during loading/scrolling
 
 **Root Causes Identified**:
+
 1. **Container height mismatch**: `h-[calc(100vh-220px)]` doesn't account for:
    - Variable header height (70px vs 110px with search)
    - Sticky PlayListHeader offset
    - Mobile safe areas
-   
 2. **Spacing accumulation**:
    - `space-y-4` on outer container (16px between sections)
    - `mb-3` on each PlayCardWrapper (12px between cards)
@@ -171,6 +181,7 @@ PlaybookPage
    - No `defaultItemHeight` specified (can cause layout shifts)
 
 **✅ FIXES APPLIED (Dec 27, 2025)**:
+
 ```tsx
 // 1. REMOVED Virtuoso entirely - replaced with simple map() render
 // - Virtuoso with useWindowScroll caused height miscalculation
@@ -185,19 +196,19 @@ PlaybookPage
 // 3. Reduced spacing throughout
 // - PlayCardWrapper: mb-3 → mb-2 (12px → 8px)
 // - Outer container: space-y-4 → space-y-3
-// - PlayListHeader: pb-4 → pb-3, mb-4 → mb-2  
+// - PlayListHeader: pb-4 → pb-3, mb-4 → mb-2
 // - Footer: py-8 pb-12 → py-6 pb-8
 ```
 
 ### 6.2 Responsive Layout ✅ FIXED
 
-| File | Lines | Complexity | Recommendation |
-|------|-------|------------|----------------|
-| `AdvancedFilters.tsx` | 1,127 | Mobile + Desktop | Split into 2 files |
-| `PlayCard.tsx` | 651 | 33 (high) | Document, don't split |
-| `MobilePlaybookView.tsx` | 631 | Many concerns | Extract sections |
-| `PlayList.tsx` | 512 | Hooks + render | OK with extractions |
-| `DesktopPlaybookView.tsx` | 496 | Section components | Already extracted |
+| File                      | Lines | Complexity         | Recommendation        |
+| ------------------------- | ----- | ------------------ | --------------------- |
+| `AdvancedFilters.tsx`     | 1,127 | Mobile + Desktop   | Split into 2 files    |
+| `PlayCard.tsx`            | 651   | 33 (high)          | Document, don't split |
+| `MobilePlaybookView.tsx`  | 631   | Many concerns      | Extract sections      |
+| `PlayList.tsx`            | 512   | Hooks + render     | OK with extractions   |
+| `DesktopPlaybookView.tsx` | 496   | Section components | Already extracted     |
 
 ### 6.3 Performance Observations 🟡 MEDIUM PRIORITY
 
@@ -219,23 +230,27 @@ PlaybookPage
 ## 🎉 Completed Work Summary
 
 ### Dead Code Deletion (~1,172 lines)
+
 - ✅ `diagramService.ts` (57 lines) - never imported
-- ✅ `diagramHelpers.ts` (22 lines) - never imported  
+- ✅ `diagramHelpers.ts` (22 lines) - never imported
 - ✅ `FormationPositioningEngine.ts` (695 lines) - never imported
 - ✅ `types/diagram.ts` (398 lines) - orphaned after above deletions
 
 ### Documentation Updates
+
 - ✅ `.github/copilot-instructions.md` - removed all Fabric.js/Pixi.js/DiagramEditor references
 - ✅ Updated FormationBuilder section to reflect metadata-only functionality
 - ✅ Removed obsolete Canvas & Diagram Performance Patterns section
 
 ### Lint Warnings Fixed (3 → 0)
+
 - ✅ `FieldRenderer.tsx` - removed unused legacy code
 - ✅ `PlayCardContext.tsx` - context moved to `PlayCardContextDef.ts`
 - ✅ `fieldDefinitions.tsx` - extracted helper function
 - ✅ `PlayCard.tsx` - documented complexity, added eslint-disable
 
 ### Visual & UX Improvements
+
 - ✅ Monospace font for play names
 - ✅ Window scroll (removed nested scrollbars)
 - ✅ Scroll loading improvements (atBottomStateChange, increaseViewportBy)
@@ -243,6 +258,7 @@ PlaybookPage
 - ✅ Spacing normalization
 
 ### Phase 5 Features (Complete)
+
 - ✅ Search highlighting (SearchHighlight component)
 - ✅ Keyboard navigation (J/K, arrows, Enter, Escape, Home/End)
 - ✅ ARIA accessibility (live regions, activedescendant, roles)
@@ -254,14 +270,14 @@ PlaybookPage
 
 ### 1. Currently Active Systems ✅ (KEEP)
 
-| Component | Location | Purpose | Status |
-|-----------|----------|---------|--------|
-| `PlayImageUpload.tsx` | `src/components/playbook/` | Coach image upload with compression | ✅ Active |
-| `FullscreenDiagramViewer.tsx` | `src/components/playbook/play-card/` | Fullscreen play presentation | ✅ Active |
-| `PlayDiagramTooltip.tsx` | `src/components/playbook/play-card/` | Hover preview popover | ✅ Active |
-| `diagram_url` field | Database | Legacy image URL storage | ✅ Active |
-| `diagram_image_url` field | Database | Current image URL storage | ✅ Active |
-| `browser-image-compression` | package.json | Image compression (1MB max) | ✅ Active |
+| Component                     | Location                             | Purpose                             | Status    |
+| ----------------------------- | ------------------------------------ | ----------------------------------- | --------- |
+| `PlayImageUpload.tsx`         | `src/components/playbook/`           | Coach image upload with compression | ✅ Active |
+| `FullscreenDiagramViewer.tsx` | `src/components/playbook/play-card/` | Fullscreen play presentation        | ✅ Active |
+| `PlayDiagramTooltip.tsx`      | `src/components/playbook/play-card/` | Hover preview popover               | ✅ Active |
+| `diagram_url` field           | Database                             | Legacy image URL storage            | ✅ Active |
+| `diagram_image_url` field     | Database                             | Current image URL storage           | ✅ Active |
+| `browser-image-compression`   | package.json                         | Image compression (1MB max)         | ✅ Active |
 
 **Data Flow**: Coach uploads image → `PlayImageUpload` compresses → stores in `diagram_image_url` → displayed via `PlayDiagramTooltip`/`FullscreenDiagramViewer`
 
@@ -270,10 +286,13 @@ PlaybookPage
 ### 2. Legacy/Potentially Unused Systems 🔍 (AUDIT NEEDED)
 
 #### 2.1 `src/types/diagram.ts` (398 lines) - ⚠️ PARTIALLY USED
+
 **Only 1 real import found:**
+
 - `FormationPositioningEngine.ts` imports: `PlayerPosition`, `FormationCategory`, `FormationType`, `PersonnelGrouping`, `FormationPlayer`, `FormationData`
 
 **UNUSED types** (never imported):
+
 - `UnifiedDiagramData` - 0 real imports (only self-references)
 - `CanvasMetadata` - unused
 - `PlayData`, `Route`, `PlayerAssignment` - unused
@@ -284,15 +303,19 @@ PlaybookPage
 **Recommendation**: Extract the 6 used types into `src/types/formation.ts`, delete remainder
 
 #### 2.2 `src/services/diagramService.ts` - ✅ DELETED
+
 **Deleted on Dec 2025** - 57 lines of dead code removed
 
 #### 2.3 `src/utils/diagramHelpers.ts` - ✅ DELETED
+
 **Deleted on Dec 2025** - 22 lines of dead code removed
 
 #### 2.4 `src/services/FormationPositioningEngine.ts` - ✅ DELETED
+
 **Deleted on Dec 2025** - 695 lines of dead code removed
 
 #### 2.5 `src/types/diagram.ts` - ✅ DELETED
+
 **Deleted on Dec 2025** - 398 lines of dead code removed
 
 **Total dead code removed: ~1,172 lines**
@@ -301,15 +324,15 @@ PlaybookPage
 
 ### 3. Canvas/Drawing Systems - 🚫 NOT PRESENT
 
-| System | Status | Notes |
-|--------|--------|-------|
-| **Fabric.js** | ❌ Not installed | Referenced in docs only, not in package.json |
-| **Pixi.js** | ❌ Not installed | No `pixi.js` or `@pixi/*` packages |
-| `diagram-editor/` folder | ❌ Deleted | No longer exists |
-| `diagram-editor-v2/` folder | ❌ Deleted | No longer exists |
-| `FieldCanvas.tsx` | ❌ Deleted | Not found |
-| `usePixiApp.ts` | ❌ Deleted | Not found |
-| `DiagramEditorErrorBoundary.tsx` | ❌ Deleted | Not found |
+| System                           | Status           | Notes                                        |
+| -------------------------------- | ---------------- | -------------------------------------------- |
+| **Fabric.js**                    | ❌ Not installed | Referenced in docs only, not in package.json |
+| **Pixi.js**                      | ❌ Not installed | No `pixi.js` or `@pixi/*` packages           |
+| `diagram-editor/` folder         | ❌ Deleted       | No longer exists                             |
+| `diagram-editor-v2/` folder      | ❌ Deleted       | No longer exists                             |
+| `FieldCanvas.tsx`                | ❌ Deleted       | Not found                                    |
+| `usePixiApp.ts`                  | ❌ Deleted       | Not found                                    |
+| `DiagramEditorErrorBoundary.tsx` | ❌ Deleted       | Not found                                    |
 
 **Note**: ✅ Documentation (`.github/copilot-instructions.md`) updated - removed references to deleted systems
 
@@ -319,13 +342,13 @@ PlaybookPage
 
 The `diagram_data` JSONB field is still referenced in multiple places but **no canvas editor exists to populate it**:
 
-| File | Usage | Status |
-|------|-------|--------|
-| `exportService.ts` | Exports `play.diagram_data` | ✅ Safe (null-safe) |
-| `playDataBuilders.ts` | Includes in create/update | ✅ Safe |
-| `playsService.ts` | Updates `diagram_data` | ✅ Safe |
-| `PlaybookPage.tsx` | Parses JSON string | ⚠️ Complex null handling |
-| `usePlaybookHandlers.ts` | `flipDiagramPositions()` | ⚠️ Used for flip operation |
+| File                     | Usage                       | Status                     |
+| ------------------------ | --------------------------- | -------------------------- |
+| `exportService.ts`       | Exports `play.diagram_data` | ✅ Safe (null-safe)        |
+| `playDataBuilders.ts`    | Includes in create/update   | ✅ Safe                    |
+| `playsService.ts`        | Updates `diagram_data`      | ✅ Safe                    |
+| `PlaybookPage.tsx`       | Parses JSON string          | ⚠️ Complex null handling   |
+| `usePlaybookHandlers.ts` | `flipDiagramPositions()`    | ⚠️ Used for flip operation |
 
 **Recommendation**: Keep field but document it's unused until visual editor added
 
@@ -333,13 +356,13 @@ The `diagram_data` JSONB field is still referenced in multiple places but **no c
 
 ### 5. Modal Inventory (`src/components/playbook/modals/`)
 
-| Modal | Imported By | Status |
-|-------|-------------|--------|
-| `CreateFormationModal.tsx` | `FormationLibraryModal` | ✅ Active |
-| `CreatePersonnelModal.tsx` | `PersonnelLibraryModal` | ✅ Active |
+| Modal                         | Imported By             | Status    |
+| ----------------------------- | ----------------------- | --------- |
+| `CreateFormationModal.tsx`    | `FormationLibraryModal` | ✅ Active |
+| `CreatePersonnelModal.tsx`    | `PersonnelLibraryModal` | ✅ Active |
 | `EditPersonnelBadgeModal.tsx` | `PersonnelLibraryModal` | ✅ Active |
-| `FormationLibraryModal.tsx` | `PlaybookPage.tsx` | ✅ Active |
-| `PersonnelLibraryModal.tsx` | `PlaybookPage.tsx` | ✅ Active |
+| `FormationLibraryModal.tsx`   | `PlaybookPage.tsx`      | ✅ Active |
+| `PersonnelLibraryModal.tsx`   | `PlaybookPage.tsx`      | ✅ Active |
 
 **All modals are actively used** ✅
 
@@ -347,17 +370,17 @@ The `diagram_data` JSONB field is still referenced in multiple places but **no c
 
 ### 6. FormationBuilder Components (`src/components/formations/`)
 
-| Component | Lines | Status | Notes |
-|-----------|-------|--------|-------|
-| `FormationBuilderPanel.tsx` | 665 | ✅ Active | Main panel, well-refactored |
-| `BulkActionToolbar.tsx` | - | ✅ Active | Bulk operations |
-| `FormationTemplateSelector.tsx` | - | ✅ Active | Template selection |
-| `CreateOppositeFormationModal.tsx` | - | ✅ Active | Create mirrored formation |
-| `FormationDirectionReviewPanel.tsx` | - | ✅ Active | Review L/R consistency |
-| `hooks/useFormationBuilderState.ts` | - | ✅ Active | State management |
-| `hooks/useFormationDataLoader.ts` | - | ✅ Active | Data loading |
-| `hooks/useFormationAutoSave.ts` | - | ✅ Active | Auto-save logic |
-| `hooks/useFormationOperations.ts` | - | ✅ Active | CRUD operations |
+| Component                           | Lines | Status    | Notes                       |
+| ----------------------------------- | ----- | --------- | --------------------------- |
+| `FormationBuilderPanel.tsx`         | 665   | ✅ Active | Main panel, well-refactored |
+| `BulkActionToolbar.tsx`             | -     | ✅ Active | Bulk operations             |
+| `FormationTemplateSelector.tsx`     | -     | ✅ Active | Template selection          |
+| `CreateOppositeFormationModal.tsx`  | -     | ✅ Active | Create mirrored formation   |
+| `FormationDirectionReviewPanel.tsx` | -     | ✅ Active | Review L/R consistency      |
+| `hooks/useFormationBuilderState.ts` | -     | ✅ Active | State management            |
+| `hooks/useFormationDataLoader.ts`   | -     | ✅ Active | Data loading                |
+| `hooks/useFormationAutoSave.ts`     | -     | ✅ Active | Auto-save logic             |
+| `hooks/useFormationOperations.ts`   | -     | ✅ Active | CRUD operations             |
 
 **FormationBuilder system is fully active** - manages formation metadata (personnel, category, tags) but **NO visual canvas editing**
 
@@ -366,18 +389,22 @@ The `diagram_data` JSONB field is still referenced in multiple places but **no c
 ### 7. Cleanup Recommendations Summary
 
 #### 🗑️ DELETE (Dead Code):
+
 1. `src/services/diagramService.ts` - 0 imports
-2. `src/utils/diagramHelpers.ts` - 0 imports  
+2. `src/utils/diagramHelpers.ts` - 0 imports
 3. `src/services/FormationPositioningEngine.ts` - 0 imports (695 lines!)
 
 #### ✂️ REFACTOR (Reduce):
+
 1. `src/types/diagram.ts` - Extract 6 used types to `formation.ts`, delete 398-line file
 
 #### 📝 UPDATE (Documentation):
+
 1. `.github/copilot-instructions.md` - Remove Pixi.js/diagram-editor references
 2. `docs/DIAGRAM_CONSOLIDATION_ROADMAP.md` - Mark as obsolete or update
 
 #### ✅ KEEP (Active):
+
 - `PlayImageUpload.tsx`, `FullscreenDiagramViewer.tsx`, `PlayDiagramTooltip.tsx`
 - All 5 modals in `modals/`
 - All FormationBuilder components
@@ -388,6 +415,7 @@ The `diagram_data` JSONB field is still referenced in multiple places but **no c
 ## ✅ Completed (Dec 27, 2025)
 
 ### Phase 1: Critical Bug Fixes
+
 - [x] **Lint Errors Fixed** (10→0)
   - `SortDropdown.tsx`: Fixed `max-h-[300px]` → `max-h-72`
   - `PlayCardQuickActions.tsx`: Fixed arbitrary spacing (`min-w-[1.125rem]`, `text-[10px]`)
@@ -412,26 +440,30 @@ The `diagram_data` JSONB field is still referenced in multiple places but **no c
 ## 🔄 Phase 2: Performance Optimization (Priority: HIGH)
 
 ### 2.1 React Query Optimization
+
 - [ ] Audit `usePlaybookData` cache settings
 - [ ] Ensure `staleTime: 10 * 60 * 1000` is applied
 - [ ] Add prefetching for visible plays
 - [ ] Implement optimistic updates for play edits
 
 ### 2.2 Virtuoso Tuning
+
 - [ ] Profile render performance with React DevTools
 - [ ] Consider `rangeChanged` for dynamic loading
 - [ ] Test scroll performance with 500+ plays
 
 ### 2.3 Memoization Audit
+
 ```tsx
 // Files to audit:
-PlayCard.tsx          // complexity warning (33/20)
-PlayCardWrapper.tsx   // ✅ Already memoized
-PlayList.tsx          // Check renderPlayItem callback
-DesktopPlaybookView.tsx
+PlayCard.tsx; // complexity warning (33/20)
+PlayCardWrapper.tsx; // ✅ Already memoized
+PlayList.tsx; // Check renderPlayItem callback
+DesktopPlaybookView.tsx;
 ```
 
 ### 2.4 Bundle Size
+
 - [ ] Lazy load heavy modals (FormationBuilder, DiagramEditor)
 - [ ] Code-split PlayCard details section
 
@@ -440,20 +472,24 @@ DesktopPlaybookView.tsx
 ## 🎨 Phase 3: Visual Polish (Priority: MEDIUM)
 
 ### 3.1 Card Design Refinement
+
 - [x] Add subtle hover states to PlayCard ✅ (translate + shadow)
 - [x] Improve badge visual hierarchy ✅ (EditableSchemeBadge with size="sm")
 - [x] Add skeleton placeholder while loading diagram images ✅ (CSS pulse animation)
 - [x] Add keyboard focus ring for navigation ✅
 
 ### 3.2 Sidebar Cleanup
+
 - [x] Clear All Filters button ✅ (already exists in AdvancedFilters)
 
 ### 3.3 Header Polish
+
 - [ ] Review tab styling (Playbook/Practice Scripts/Game Plans)
 - [ ] Consider breadcrumb refinement
 - [ ] Add playbook selector visual enhancement
 
 ### 3.4 Empty States
+
 - [ ] Design zero-state for new playbooks
 - [ ] Add onboarding hints for first-time users
 
@@ -462,6 +498,7 @@ DesktopPlaybookView.tsx
 ## 🧹 Phase 4: Code Organization (Priority: MEDIUM)
 
 ### 4.1 Component Structure
+
 ```
 src/components/playbook/
 ├── page/
@@ -478,6 +515,7 @@ src/components/playbook/
 ```
 
 ### 4.2 Address Lint Warnings
+
 - [ ] `PlayCard.tsx` complexity (33/20) - extract sub-functions (REMAINING)
 - [x] `FieldRenderer.tsx` fast refresh warning - ✅ Removed unused legacy code
 - [x] `PlayCardContext.tsx` fast refresh - ✅ Context moved to PlayCardContextDef.ts
@@ -486,6 +524,7 @@ src/components/playbook/
 **Current lint status: 1 warning (PlayCard complexity)**
 
 ### 4.3 Type Safety
+
 - [x] Remove `as any` casts in play-card components ✅ (9 casts removed)
 - [ ] Ensure consistent `Play` vs `PlayType` usage
 - [ ] Add strict null checks for optional fields
@@ -495,11 +534,13 @@ src/components/playbook/
 ## 🚀 Phase 5: Feature Enhancements (Priority: LOW)
 
 ### 5.1 Search & Filter UX
+
 - [x] Add search result highlighting in play names ✅ (SearchHighlight component)
 - [ ] Remember filter state across sessions
 - [x] Add "Clear All Filters" one-click button ✅ (Already exists in AdvancedFilters)
 
 ### 5.2 Keyboard Navigation ✅ COMPLETE
+
 - [x] Add keyboard shortcuts (J/K to navigate plays) ✅ (usePlaylistKeyboard hook)
 - [x] Arrow keys for card focus ✅
 - [x] Enter to expand/collapse ✅
@@ -507,6 +548,7 @@ src/components/playbook/
 - [x] Home/End to jump to first/last ✅
 
 ### 5.3 Accessibility ✅ COMPLETE
+
 - [x] ARIA labels for all interactive elements ✅
 - [x] Screen reader announcements for play count changes ✅ (aria-live region)
 - [x] Focus management - visible focus ring ✅
@@ -516,14 +558,14 @@ src/components/playbook/
 
 ## 📋 Implementation Priority
 
-| Phase | Effort | Impact | Priority |
-|-------|--------|--------|----------|
-| Phase 1 (Bugs) | ✅ Done | High | Critical |
-| Phase 2 (Performance) | In Progress | High | **Active** |
-| Phase 3 (Visual) | ✅ Done | Medium | Complete |
-| Phase 4 (Code) | ✅ Done | Medium | Complete |
-| Phase 5 (Features) | ✅ Done | Low | Complete |
-| Phase 6 (Polish) | In Progress | Medium | Active |
+| Phase                 | Effort      | Impact | Priority   |
+| --------------------- | ----------- | ------ | ---------- |
+| Phase 1 (Bugs)        | ✅ Done     | High   | Critical   |
+| Phase 2 (Performance) | In Progress | High   | **Active** |
+| Phase 3 (Visual)      | ✅ Done     | Medium | Complete   |
+| Phase 4 (Code)        | ✅ Done     | Medium | Complete   |
+| Phase 5 (Features)    | ✅ Done     | Low    | Complete   |
+| Phase 6 (Polish)      | In Progress | Medium | Active     |
 
 ---
 
@@ -562,12 +604,14 @@ src/components/playbook/
 ## 🚀 Phase 7: Future Improvements (Backlog)
 
 ### 7.1 Advanced Performance
+
 - [ ] Implement virtualized keyboard navigation (currently re-renders all)
 - [ ] Add intersection observer for card visibility tracking
 - [ ] Lazy load PlayCardDetails component
 - [ ] Use Web Workers for filtering large datasets
 
 ### 7.2 UX Enhancements
+
 - [ ] Remember scroll position when returning to list
 - [ ] Add "jump to letter" quick nav (A-Z sidebar)
 - [ ] Batch selection with shift+click
@@ -575,6 +619,7 @@ src/components/playbook/
 - [ ] Export selected plays to PDF
 
 ### 7.3 Visual Refinements
+
 - [ ] Micro-animations for card state transitions
 - [ ] Progressive image loading (blur-up)
 - [ ] Dark mode contrast improvements

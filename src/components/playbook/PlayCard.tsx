@@ -127,14 +127,14 @@ const INITIAL_PLAY_DETAILS_VISIBILITY: FieldVisibility = {
 
 /**
  * PlayCard Component
- * 
+ *
  * High complexity score (33) is due to many useMemo/useCallback hooks for performance.
  * The component is well-structured - each hook handles a specific concern:
  * - Display value computation (displayName, subtitleText, phaseLabel)
  * - Field configuration (formationFields, playDetailsFields)
  * - Visibility filtering (visibleFormationFields, visiblePlayDetailsFields)
  * - Event handlers (handleFormationDragEnd, handlePlayDetailsDragEnd, etc.)
- * 
+ *
  * Refactoring into smaller components would require significant prop drilling
  * or additional context, which would add more complexity.
  */

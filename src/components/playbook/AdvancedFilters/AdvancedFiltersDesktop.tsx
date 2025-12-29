@@ -4,7 +4,12 @@ import { FormSelect } from "../../ui";
 import { QuickFilterPresets } from "../QuickFilterPresets";
 import type { FilterPreset } from "../filterPresets";
 import { FILTER_FIELDS } from "./constants";
-import type { FilterChip, FilterField, FilterOption, NewFilterState } from "./types";
+import type {
+  FilterChip,
+  FilterField,
+  FilterOption,
+  NewFilterState,
+} from "./types";
 
 // ============================================================================
 // Desktop Sub-Components
@@ -257,10 +262,7 @@ export const AdvancedFiltersDesktop: React.FC<AdvancedFiltersDesktopProps> = ({
         onClearAll={clearAllFilters}
       />
 
-      <DesktopActiveFilters
-        filterChips={filterChips}
-        onRemove={removeFilter}
-      />
+      <DesktopActiveFilters filterChips={filterChips} onRemove={removeFilter} />
 
       {showAdvanced && (
         <div className="px-4 pb-4 space-y-3 animate-in fade-in-0 slide-in-from-top-2 duration-300 ease-in-out">

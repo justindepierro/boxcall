@@ -81,7 +81,10 @@ export const MobileFiltersSheet: React.FC<MobileFiltersSheetProps> = ({
 
         {/* Scrollable Filters Content */}
         <div className="flex-1 overflow-y-auto p-6 pb-20">
-          <AdvancedFilters filters={filters} onFiltersChange={onFiltersChange} />
+          <AdvancedFilters
+            filters={filters}
+            onFiltersChange={onFiltersChange}
+          />
         </div>
 
         {/* Action Footer - Fixed at Bottom */}

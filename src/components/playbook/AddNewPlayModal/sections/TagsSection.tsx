@@ -12,7 +12,11 @@
 import React from "react";
 import { Typography } from "../../../design-system/Typography";
 import { Icon } from "../../../ui/Icon/Icon";
-import { TagInput, KeyPositionSelector, KeyPlayerSelector } from "../components";
+import {
+  TagInput,
+  KeyPositionSelector,
+  KeyPlayerSelector,
+} from "../components";
 import { useRosterData } from "../../../../hooks/useRosterData";
 import { usePersonnelConfigurations } from "../../../../hooks/usePersonnel";
 

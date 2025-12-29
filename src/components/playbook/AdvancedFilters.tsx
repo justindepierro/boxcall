@@ -1,6 +1,6 @@
 /**
  * AdvancedFilters - Re-export from modular folder structure
- * 
+ *
  * The component has been split into:
  * - AdvancedFilters/index.tsx - Main component
  * - AdvancedFilters/AdvancedFiltersMobile.tsx - Mobile variant
@@ -9,7 +9,7 @@
  * - AdvancedFilters/helpers.ts - Filter manipulation utilities
  * - AdvancedFilters/constants.ts - Filter field definitions
  * - AdvancedFilters/types.ts - TypeScript types
- * 
+ *
  * Features:
  * - Collapsed by default on desktop
  * - Filter persistence via localStorage

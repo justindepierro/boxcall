@@ -23,10 +23,7 @@ export const FullscreenDiagramViewer: React.FC<
 > = ({ plays, initialPlayIndex, onClose }) => {
   // Filter to only plays with diagram_image_url
   const playsWithDiagrams = useMemo(
-    () =>
-      plays.filter(
-        (play) => play.diagram_url || play.diagram_image_url
-      ),
+    () => plays.filter((play) => play.diagram_url || play.diagram_image_url),
     [plays]
   );
 
@@ -123,7 +120,9 @@ export const FullscreenDiagramViewer: React.FC<
         {currentPlay.diagram_url || currentPlay.diagram_image_url ? (
           <img
             src={
-              currentPlay.diagram_url || currentPlay.diagram_image_url || undefined
+              currentPlay.diagram_url ||
+              currentPlay.diagram_image_url ||
+              undefined
             }
             alt={`${displayName} diagram`}
             className="w-full h-full object-contain p-4"

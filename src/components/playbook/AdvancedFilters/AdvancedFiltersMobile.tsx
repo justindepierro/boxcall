@@ -5,7 +5,12 @@ import { BottomSheet } from "../../BottomSheet";
 import { QuickFilterPresets } from "../QuickFilterPresets";
 import type { FilterPreset } from "../filterPresets";
 import { FILTER_FIELDS } from "./constants";
-import type { FilterChip, FilterField, FilterOption, NewFilterState } from "./types";
+import type {
+  FilterChip,
+  FilterField,
+  FilterOption,
+  NewFilterState,
+} from "./types";
 
 // ============================================================================
 // Mobile Sub-Components
