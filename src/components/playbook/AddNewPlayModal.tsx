@@ -62,6 +62,7 @@ import { debug, logError } from "../../utils/logger";
 import { useActiveTeamStore } from "../../stores/activeTeamStore";
 import { TeamSituationDefinitionsService } from "../../services/teamSituationDefinitionsService";
 import { getFieldZoneDefinitions } from "../../utils/situationBucketing";
+import { getPlayErrorMessage, isDuplicateError, isRateLimitError } from "../../errors/playErrors";
 import type { Database } from "../../types/database";
 
 type FormationRow = Database["public"]["Tables"]["formations"]["Row"];
@@ -298,20 +299,19 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
     } catch (error) {
       logError("Failed to create play:", error);
 
-      if (error && typeof error === "object" && "issues" in error) {
-        const issues = (error as { issues: Array<{ message: string }> }).issues;
-        setErrorMessage(issues.map((i) => i.message).join(", "));
-      } else if (error instanceof Error) {
-        if (
-          error.message.includes("Rate limit") ||
-          error.message.includes("too quickly")
-        ) {
-          setErrorMessage(error.message);
-        } else {
-          setErrorMessage("Failed to create play. Please try again.");
-        }
+      // Use centralized error message handling
+      if (isDuplicateError(error)) {
+        const formation = formData.formation.trim();
+        const playName = formData.playName.trim();
+        setErrorMessage(
+          `A play named "${playName}" already exists in "${formation}". Try a different name or formation.`
+        );
+      } else if (isRateLimitError(error)) {
+        setErrorMessage(
+          error instanceof Error ? error.message : "You're creating plays too quickly. Please wait."
+        );
       } else {
-        setErrorMessage("Failed to create play. Please try again.");
+        setErrorMessage(getPlayErrorMessage(error));
       }
     } finally {
       setIsSubmitting(false);

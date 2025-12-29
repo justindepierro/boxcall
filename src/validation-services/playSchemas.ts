@@ -100,6 +100,9 @@ const DiagramDataSchema = z
   })
   .optional();
 
+// Export for use in type generation
+export { DiagramDataSchema };
+
 // ========================================
 // Play CRUD Schemas
 // ========================================

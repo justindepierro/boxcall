@@ -51,8 +51,8 @@ export function useOptimisticPlays(
 
         setOptimisticPlays((prev) => [optimisticPlay, ...prev]);
 
-        // ⚡ INSTANT FEEDBACK: Show success immediately
-        toast.success("Play created!");
+        // Note: No toast here - let calling component (AddNewPlayModal) handle user feedback
+        // This prevents double-toast issues and gives modal control over error messages
 
         // Background: Create in database
         const createdPlay = await SecurePlaysService.createPlay({
@@ -71,9 +71,9 @@ export function useOptimisticPlays(
         return createdPlay;
       } catch (error) {
         logError("Failed to create play:", error);
-        toast.error("Failed to create play");
+        // Note: No toast here - let calling component handle error display
 
-        // Remove optimistic play on error
+        // Remove optimistic play on error (rollback)
         setOptimisticPlays((prev) => removeById(prev, tempId));
         throw error;
       }

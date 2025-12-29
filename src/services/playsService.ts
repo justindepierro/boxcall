@@ -8,12 +8,11 @@
 
 import { table } from "../data/supabase/db";
 import { getCurrentUserId } from "../lib/auth-helpers";
-import { normalizePlayName, normalizeText } from "../utils/textNormalization";
 import Fuse from "fuse.js";
 import { ActivityService } from "./activityService";
 import { debug, error as logError, warn } from "../utils/logger";
 import { readLocalJson, storageKeys, writeLocalJson } from "../utils/storage";
-import { buildNewPlayData } from "./playDataBuilders";
+import { buildNewPlayData, buildPlayUpdateData } from "./playDataBuilders";
 import { leftRightToLegacyValue, parseLeftRight } from "../utils/leftRight";
 
 import type { Play } from "../types/play";
@@ -330,81 +329,15 @@ export class PlaysService {
 
   /**
    * Update an existing play
+   * Uses buildPlayUpdateData helper for consistent field handling
    */
   static async updatePlay(id: string, updates: Partial<Play>): Promise<Play> {
     try {
-      // Prepare updates with only database-valid fields
-      const validUpdates = {
-        // Core fields
-        play_name: updates.play_name
-          ? normalizePlayName(updates.play_name)
-          : undefined,
-        p_type: updates.p_type,
-        formation: updates.formation
-          ? normalizeText(updates.formation)
-          : undefined,
-        formation_id: updates.formation_id,
-        formation_direction: updates.formation_direction,
-        formation_status: updates.formation_status,
-        sanitized_at: updates.sanitized_at,
-
-        // Optional fields
-        one_word_play: updates.one_word_play
-          ? normalizeText(updates.one_word_play)
-          : updates.one_word_play,
-        notes: updates.notes,
-        personnel: updates.personnel,
-        f_type: updates.f_type,
-        f_dir: updates.f_dir,
-        protection: updates.protection,
-        p_dir: updates.p_dir,
-        r_str: updates.r_str,
-        p_str: updates.p_str,
-
-        // Tags
-        ftag1: updates.ftag1,
-        ftag2: updates.ftag2,
-        p_tag1: updates.p_tag1,
-        p_tag2: updates.p_tag2,
-
-        // Additional data
-        back_align: updates.back_align,
-        shift: updates.shift,
-        motion: updates.motion,
-        key_player1: updates.key_player1,
-        key_player2: updates.key_player2,
-        check_into: updates.check_into,
-
-        // Preferences
-        pref_down: updates.pref_down,
-        pref_dis: updates.pref_dis,
-        pref_hash: updates.pref_hash,
-        pref_cov: updates.pref_cov,
-        pref_front: updates.pref_front,
-        pref_field_pos: updates.pref_field_pos,
-        pref_situation: updates.pref_situation,
-
-        // Performance
-        confidence_base: updates.confidence_base,
-        complexity_score: updates.complexity_score,
-
-        // Metadata
-        is_archived: updates.is_archived,
-        updated_at: new Date().toISOString(),
-
-        // Diagram data (v2 system with JSONB storage)
-        diagram_data: updates.diagram_data,
-        diagram_version: updates.diagram_version,
-        diagram_url: updates.diagram_url,
-      };
-
-      // Remove undefined values
-      const cleanUpdates = Object.fromEntries(
-        Object.entries(validUpdates).filter(([_, value]) => value !== undefined)
-      );
+      // Use helper function for consistent field mapping
+      const validUpdates = buildPlayUpdateData(updates);
 
       const { data, error } = await table("plays")
-        .update(cleanUpdates)
+        .update(validUpdates)
         .eq("id", id)
         .select()
         .maybeSingle(); // Use maybeSingle() to avoid 406 error when RLS blocks or row missing
