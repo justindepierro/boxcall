@@ -39,14 +39,14 @@
 
 /* Global app scale - Makes entire app feel compact and information-dense */
 :root {
-  /* Scale everything to 87.5% (between 85-90%) for that "zoomed out" feel */
-  font-size: 87.5%; /* 14px base instead of 16px */
+  /* Scale everything to 75% for maximum information density */
+  font-size: 75%; /* 12px base instead of 16px */
 }
 
 /* Maintain readable text on mobile */
 @media (max-width: 640px) {
   :root {
-    font-size: 90%; /* Slightly larger on mobile for readability */
+    font-size: 81.25%; /* 13px on mobile for readability */
   }
 }
 

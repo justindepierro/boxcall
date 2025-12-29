@@ -1,19 +1,55 @@
 # Playbook Page Cleanup & Professionalization Roadmap
 
-> **Last Updated**: December 27, 2025  
-> **Status**: ✅ Phase 1-6 Complete, Phase 7 Planning  
+> **Last Updated**: December 28, 2025  
+> **Status**: ✅ Phase 1-7 Complete  
 > **Goal**: Create a polished, professional, performant Playbook experience
 
-## 📊 Current Status (Dec 27, 2025)
+## 📊 Current Status (Dec 28, 2025)
 
 ### ✅ Quality Gates
 | Check | Status | Notes |
 |-------|--------|-------|
 | TypeScript | ✅ Pass | `npm run type-check` - 0 errors |
-| ESLint | ✅ 0 warnings | All lint warnings fixed! |
+| ESLint | ✅ 3 warnings | Complexity warnings in main modal |
 | Build | ✅ Pass | Production build succeeds |
 
-### 📈 Improvements Made This Session
+### 📈 AddNewPlayModal Reorganization (Dec 28, 2025)
+
+#### Before
+- **857 lines** in main modal
+- **792 lines** in AdvancedOptionsSection (buried critical fields)
+- **6 scattered sections** with poor organization
+- **2,219 total lines** across 7 files
+- Important fields (diagram, notes, protection) hidden in "Advanced"
+
+#### After
+- **604 lines** in main modal (30% smaller)
+- **415 lines** in MobileWizardView (32% smaller from 613)
+- **6 logical sections** with clear purposes
+- **2,081 total lines** (7% reduction)
+- Diagram section moved up (key feature)
+- Quick Details section for commonly-used fields
+
+#### New Section Structure
+1. **CoreInfoSection** (247 lines) - Formation, Play Name, Personnel, Play Type
+2. **DiagramSection** (55 lines) - Play diagram upload (moved up!)
+3. **QuickDetailsSection** (116 lines) - One Word Call, Protection, Notes
+4. **TagsSection** (182 lines) - Tags & organization
+5. **FormationAdvancedSection** (254 lines) - Collapsible advanced formation details
+6. **GameSituationSection** (208 lines) - Collapsible Billick situational preferences
+
+#### Files Deleted (1,474 lines removed)
+- AdvancedOptionsSection.tsx (792 lines)
+- FormationSection.tsx (92 lines)
+- PlayNameSection.tsx (80 lines)
+- PersonnelSection.tsx (116 lines)
+- PlayTypeSection.tsx (150 lines)
+- PreferencesSection.tsx (133 lines)
+- WeeklyChallengePopover.tsx (181 lines) - broken feature
+- PlaybookHeader.tsx (155 lines) - dead code
+- MobilePlaybookHeader.tsx (123 lines) - dead code
+
+### 📈 Previous Improvements (Dec 27, 2025)
 1. **Fixed white space issue** - Removed Virtuoso, using simple map() render
 2. **Improved responsive layout** - md breakpoint (1024px) for grid, mobile-first ordering
 3. **Reduced spacing** - Tighter card spacing, removed excess padding

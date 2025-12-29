@@ -39,29 +39,26 @@ const CATEGORY_MAX_POINTS: Record<
   keyof PlaybookHealthScore["breakdown"],
   number
 > = {
-  formationLinking: 30,
-  formationCompleteness: 20,
-  playCompleteness: 25,
-  dataConsistency: 15,
-  organizationQuality: 10,
+  playEssentials: 40,
+  diagrams: 25,
+  organization: 20,
+  coachingNotes: 15,
 };
 
 const CATEGORY_ICONS: Record<keyof PlaybookHealthScore["breakdown"], IconName> =
   {
-    formationLinking: "link",
-    formationCompleteness: "check-circle",
-    playCompleteness: "file",
-    dataConsistency: "shield",
-    organizationQuality: "folder",
+    playEssentials: "file",
+    diagrams: "image",
+    organization: "tag",
+    coachingNotes: "message",
   };
 
 const CATEGORY_LABELS: Record<keyof PlaybookHealthScore["breakdown"], string> =
   {
-    formationLinking: "Formation Linking",
-    formationCompleteness: "Formation Completeness",
-    playCompleteness: "Play Completeness",
-    dataConsistency: "Data Consistency",
-    organizationQuality: "Organization Quality",
+    playEssentials: "Play Essentials",
+    diagrams: "Diagrams",
+    organization: "Organization",
+    coachingNotes: "Coaching Notes",
   };
 
 function getSeverityColor(
@@ -136,15 +133,14 @@ const PlaybookHealthOverallCard: React.FC<{
 
       <div className="text-right space-y-1">
         <Typography variant="label-md" className="text-tertiary">
-          {healthScore.stats.totalPlays} plays (
-          {healthScore.stats.uniquePlayNames} unique)
+          {healthScore.stats.totalPlays} plays
         </Typography>
         <Typography variant="label-md" className="text-tertiary">
-          {healthScore.stats.totalFormations} formations
+          {healthScore.stats.uniqueFormations} formations
         </Typography>
         <Typography variant="label-md" className="text-accent-600">
-          {healthScore.stats.playsWithFormationLink}/
-          {healthScore.stats.totalPlays} linked
+          {healthScore.stats.playsWithDiagrams}/
+          {healthScore.stats.totalPlays} with diagrams
         </Typography>
       </div>
     </div>

@@ -328,19 +328,6 @@ export const PlaybookViewTabs: React.FC<PlaybookViewTabsProps> = ({
               </Button>
             )}
 
-            {/* Weekly Challenges - moved here */}
-            <Button
-              onClick={() => {
-                triggerHapticFeedback("light");
-              }}
-              variant="ghost"
-              size="sm"
-              className="w-11 h-11 !p-0 flex items-center justify-center bg-warning-bg/80 hover:bg-warning-bg dark:bg-warning-900/20 dark:hover:bg-warning-900/30 text-warning-600 dark:text-warning-500 rounded-xl transition-all duration-200 overflow-visible"
-              title="Weekly Challenges"
-            >
-              <Icon name="trophy" className="h-5 w-5" />
-            </Button>
-
             {/* Settings */}
             {onOpenSettings && (
               <Button

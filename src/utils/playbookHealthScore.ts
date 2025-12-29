@@ -1,85 +1,18 @@
 /**
- * Playbook Health Score System
+ * Playbook Health Score System (Simplified - December 2025)
  *
- * Comprehensive scoring system that evaluates playbook data quality
- * and provides actionable recommendations for coaches.
+ * Practical scoring system that evaluates playbook data quality
+ * based on what coaches ACTUALLY fill out.
  *
  * Total Score: 100 points
- * - Formation Linking (30pts): formation_id linkage
- * - Formation Completeness (20pts): formation metadata quality
- * - Play Completeness (25pts): play data completeness
- * - Data Consistency (15pts): naming conventions, duplicates
- * - Organization Quality (10pts): tags, categories, structure
+ * - Play Essentials (40pts): name, type, formation text, personnel
+ * - Diagrams (25pts): uploaded diagram images
+ * - Organization (20pts): tags, flags, situational preferences
+ * - Coaching Notes (15pts): notes, protection, key players
  */
 
 import { table } from "../data/supabase/db";
-import { calculatePlayQuality } from "./dataQualityScoring";
 import { info, error as logError } from "./logger";
-
-// ========================================
-// Helper Functions
-// ========================================
-
-/**
- * Normalizes a play name to identify unique base plays
- * Strips directional indicators, formation prefixes, and common variations
- *
- * Examples:
- * - "Power Left" → "power"
- * - "I Form Counter Right" → "counter"
- * - "Shotgun Draw" → "draw"
- */
-function normalizePlayName(playName: string): string {
-  let normalized = playName.trim().toLowerCase();
-
-  // Remove common directional suffixes
-  const directionalSuffixes = [
-    " left",
-    " right",
-    " lt",
-    " rt",
-    " strong",
-    " weak",
-    " str",
-    " wk",
-    " open",
-    " closed",
-  ];
-
-  for (const suffix of directionalSuffixes) {
-    if (normalized.endsWith(suffix)) {
-      normalized = normalized.slice(0, -suffix.length).trim();
-    }
-  }
-
-  // Remove common formation prefixes (e.g., "I Form Power" → "power")
-  const formationPrefixes = [
-    "i form ",
-    "i-form ",
-    "ace ",
-    "singleback ",
-    "single back ",
-    "shotgun ",
-    "pistol ",
-    "wildcat ",
-    "empty ",
-    "trips ",
-    "doubles ",
-    "stack ",
-    "bunch ",
-  ];
-
-  for (const prefix of formationPrefixes) {
-    if (normalized.startsWith(prefix)) {
-      normalized = normalized.slice(prefix.length).trim();
-    }
-  }
-
-  // Remove extra whitespace
-  normalized = normalized.replace(/\s+/g, " ").trim();
-
-  return normalized;
-}
 
 // ========================================
 // Types
@@ -91,17 +24,16 @@ export interface HealthIssue {
   severity: HealthIssueSeverity;
   category: string;
   description: string;
-  affectedItems: string[]; // play IDs or formation IDs
+  affectedItems: string[]; // play IDs
   howToFix: string;
   pointsToGain: number;
 }
 
 export interface PlaybookHealthBreakdown {
-  formationLinking: number; // 0-30 points
-  formationCompleteness: number; // 0-20 points
-  playCompleteness: number; // 0-25 points
-  dataConsistency: number; // 0-15 points
-  organizationQuality: number; // 0-10 points
+  playEssentials: number; // 0-40 points
+  diagrams: number; // 0-25 points
+  organization: number; // 0-20 points
+  coachingNotes: number; // 0-15 points
 }
 
 export interface PlaybookHealthScore {
@@ -111,25 +43,153 @@ export interface PlaybookHealthScore {
   recommendations: string[];
   stats: {
     totalPlays: number;
-    totalFormations: number;
-    playsWithFormationLink: number;
-    completeFormations: number;
-    averagePlayQuality: number;
-    uniquePlayNames: number;
+    playsWithDiagrams: number;
+    playsWithTags: number;
+    playsWithNotes: number;
+    uniqueFormations: number;
+    playTypeDistribution: Record<string, number>;
   };
 }
 
 // ========================================
-// Formation Linking Score (30 points)
+// Play Essentials Score (40 points)
 // ========================================
+// Checks: play_name, p_type, formation, personnel
 
-async function calculateFormationLinkingScore(
+interface PlayEssentialsResult {
+  score: number;
+  issues: HealthIssue[];
+  plays: Array<{
+    id: string;
+    play_name: string;
+    p_type: string | null;
+    formation: string | null;
+    personnel: string | null;
+  }>;
+}
+
+async function calculatePlayEssentialsScore(
   playbookId: string
-): Promise<{ score: number; issues: HealthIssue[] }> {
-  info("[PlaybookHealth] Calculating formation linking score");
+): Promise<PlayEssentialsResult> {
+  info("[PlaybookHealth] Calculating play essentials score");
 
   const { data: plays, error } = await table("plays")
-    .select("id, play_name, formation_id, formation")
+    .select("id, play_name, p_type, formation, personnel")
+    .eq("playbook_id", playbookId);
+
+  if (error) {
+    logError("[PlaybookHealth] Failed to fetch plays:", error);
+    return { score: 0, issues: [], plays: [] };
+  }
+
+  const totalPlays = plays?.length || 0;
+  if (totalPlays === 0) {
+    return {
+      score: 40, // Full points if no plays yet
+      issues: [
+        {
+          severity: "info",
+          category: "Getting Started",
+          description: "No plays in playbook yet",
+          affectedItems: [],
+          howToFix: "Create your first play using the New Play button",
+          pointsToGain: 0,
+        },
+      ],
+      plays: [],
+    };
+  }
+
+  let score = 0;
+  const issues: HealthIssue[] = [];
+
+  // Check play_name (10 points) - all plays should have names
+  const playsWithName = plays.filter(
+    (p) => p.play_name && p.play_name.trim().length > 0
+  );
+  const nameRate = playsWithName.length / totalPlays;
+  score += Math.round(nameRate * 10);
+
+  // Check p_type (10 points) - Run, Pass, RPO, etc.
+  const playsWithType = plays.filter(
+    (p) => p.p_type && p.p_type.trim().length > 0
+  );
+  const typeRate = playsWithType.length / totalPlays;
+  score += Math.round(typeRate * 10);
+
+  if (typeRate < 1) {
+    const missingType = plays.filter(
+      (p) => !p.p_type || p.p_type.trim() === ""
+    );
+    issues.push({
+      severity: missingType.length > totalPlays * 0.3 ? "critical" : "warning",
+      category: "Play Type",
+      description: `${missingType.length} plays missing play type (Run/Pass/RPO)`,
+      affectedItems: missingType.map((p) => p.id),
+      howToFix: "Edit play → Select type from dropdown",
+      pointsToGain: Math.round((1 - typeRate) * 10),
+    });
+  }
+
+  // Check formation (10 points) - formation text field
+  const playsWithFormation = plays.filter(
+    (p) => p.formation && p.formation.trim().length > 0
+  );
+  const formationRate = playsWithFormation.length / totalPlays;
+  score += Math.round(formationRate * 10);
+
+  if (formationRate < 1) {
+    const missingFormation = plays.filter(
+      (p) => !p.formation || p.formation.trim() === ""
+    );
+    issues.push({
+      severity:
+        missingFormation.length > totalPlays * 0.3 ? "warning" : "info",
+      category: "Formation",
+      description: `${missingFormation.length} plays missing formation`,
+      affectedItems: missingFormation.map((p) => p.id),
+      howToFix: "Edit play → Enter formation name (e.g., Ace, I-Form, Shotgun)",
+      pointsToGain: Math.round((1 - formationRate) * 10),
+    });
+  }
+
+  // Check personnel (10 points) - 11, 12, 21, etc.
+  const playsWithPersonnel = plays.filter(
+    (p) => p.personnel && p.personnel.trim().length > 0
+  );
+  const personnelRate = playsWithPersonnel.length / totalPlays;
+  score += Math.round(personnelRate * 10);
+
+  if (personnelRate < 0.5) {
+    const missingPersonnel = plays.filter(
+      (p) => !p.personnel || p.personnel.trim() === ""
+    );
+    issues.push({
+      severity: "info",
+      category: "Personnel",
+      description: `${missingPersonnel.length} plays missing personnel grouping`,
+      affectedItems: missingPersonnel.slice(0, 10).map((p) => p.id), // Limit to 10
+      howToFix:
+        "Edit play → Select personnel (11 = 1 RB 1 TE, 12 = 1 RB 2 TE, etc.)",
+      pointsToGain: Math.round((1 - personnelRate) * 10),
+    });
+  }
+
+  return { score, issues, plays: plays || [] };
+}
+
+// ========================================
+// Diagrams Score (25 points)
+// ========================================
+// Checks: diagram_image_url (uploaded images)
+
+async function calculateDiagramsScore(
+  playbookId: string
+): Promise<{ score: number; issues: HealthIssue[] }> {
+  info("[PlaybookHealth] Calculating diagrams score");
+
+  const { data: plays, error } = await table("plays")
+    .select("id, play_name, diagram_image_url")
     .eq("playbook_id", playbookId);
 
   if (error) {
@@ -139,109 +199,37 @@ async function calculateFormationLinkingScore(
 
   const totalPlays = plays?.length || 0;
   if (totalPlays === 0) {
-    return {
-      score: 30,
-      issues: [
-        {
-          severity: "info",
-          category: "Formation Linking",
-          description: "No plays in playbook yet",
-          affectedItems: [],
-          howToFix: "Create plays to start building your playbook",
-          pointsToGain: 0,
-        },
-      ],
-    };
+    return { score: 25, issues: [] }; // Full points if no plays
   }
-
-  const playsWithFormationId = plays?.filter((p) => p.formation_id) || [];
-  const linkageRate = playsWithFormationId.length / totalPlays;
-  const score = Math.round(linkageRate * 30);
-
-  const issues: HealthIssue[] = [];
-  const unlinkedPlays = plays?.filter((p) => !p.formation_id) || [];
-
-  if (unlinkedPlays.length > 0) {
-    const severity: HealthIssueSeverity =
-      unlinkedPlays.length > totalPlays * 0.5 ? "critical" : "warning";
-    issues.push({
-      severity,
-      category: "Formation Linking",
-      description: `${unlinkedPlays.length} plays missing formation_id link`,
-      affectedItems: unlinkedPlays.map((p) => p.id),
-      howToFix:
-        "Edit plays → Select formation from dropdown → This enables formation-based analytics",
-      pointsToGain: Math.round((unlinkedPlays.length / totalPlays) * 30),
-    });
-  }
-
-  return { score, issues };
-}
-
-// ========================================
-// Formation Completeness Score (20 points)
-// ========================================
-
-async function calculateFormationCompletenessScore(
-  playbookId: string
-): Promise<{ score: number; issues: HealthIssue[] }> {
-  info("[PlaybookHealth] Calculating formation completeness score");
-
-  const { data: formations, error } = await table("formations")
-    .select("id, name, metadata_quality, metadata_completeness")
-    .eq("playbook_id", playbookId);
-
-  if (error) {
-    logError("[PlaybookHealth] Failed to fetch formations:", error);
-    return { score: 0, issues: [] };
-  }
-
-  const totalFormations = formations?.length || 0;
-  if (totalFormations === 0) {
-    return {
-      score: 20,
-      issues: [
-        {
-          severity: "info",
-          category: "Formation Completeness",
-          description: "No formations created yet",
-          affectedItems: [],
-          howToFix: "Use Formation Builder to create formations",
-          pointsToGain: 0,
-        },
-      ],
-    };
-  }
-
-  // Calculate average completeness
-  const avgCompleteness =
-    formations.reduce((sum, f) => sum + (f.metadata_completeness || 0), 0) /
-    totalFormations;
-  const score = Math.round((avgCompleteness / 100) * 20);
 
   const issues: HealthIssue[] = [];
 
-  // Identify incomplete formations
-  const incompleteFormations = formations.filter(
-    (f) =>
-      f.metadata_quality === "incomplete" || f.metadata_quality === "needs_work"
+  // Check for uploaded diagrams
+  const playsWithDiagram = plays.filter(
+    (p) => p.diagram_image_url && p.diagram_image_url.trim().length > 0
   );
+  const diagramRate = playsWithDiagram.length / totalPlays;
+  const score = Math.round(diagramRate * 25);
 
-  if (incompleteFormations.length > 0) {
-    const severity: HealthIssueSeverity =
-      incompleteFormations.length > totalFormations * 0.5 ? "warning" : "info";
+  if (diagramRate < 0.8) {
+    const missingDiagrams = plays.filter(
+      (p) => !p.diagram_image_url || p.diagram_image_url.trim() === ""
+    );
+
+    let severity: HealthIssueSeverity = "info";
+    if (diagramRate < 0.3) {
+      severity = "critical";
+    } else if (diagramRate < 0.6) {
+      severity = "warning";
+    }
+
     issues.push({
       severity,
-      category: "Formation Completeness",
-      description: `${incompleteFormations.length} formations need more metadata`,
-      affectedItems: incompleteFormations.map((f) => f.id),
-      howToFix:
-        "Formation Builder → Add personnel, category, tags, and player positions",
-      pointsToGain: Math.round(
-        ((100 - avgCompleteness) / 100) *
-          20 *
-          (incompleteFormations.length / totalFormations)
-      ),
+      category: "Diagrams",
+      description: `${missingDiagrams.length} plays without diagrams (${Math.round(diagramRate * 100)}% coverage)`,
+      affectedItems: missingDiagrams.slice(0, 20).map((p) => p.id), // Limit to 20
+      howToFix: "Edit play → Upload a diagram image",
+      pointsToGain: Math.round((1 - diagramRate) * 25),
     });
   }
 
@@ -249,17 +237,18 @@ async function calculateFormationCompletenessScore(
 }
 
 // ========================================
-// Play Completeness Score (25 points)
+// Organization Score (20 points)
 // ========================================
+// Checks: tags, flags, preferences (situational fit)
 
-async function calculatePlayCompletenessScore(
+async function calculateOrganizationScore(
   playbookId: string
 ): Promise<{ score: number; issues: HealthIssue[] }> {
-  info("[PlaybookHealth] Calculating play completeness score");
+  info("[PlaybookHealth] Calculating organization score");
 
   const { data: plays, error } = await table("plays")
     .select(
-      "id, play_name, p_type, formation, personnel, tags, notes, diagram_data, diagram_url, diagram_image_url, key_positions, key_players, protection, flags"
+      "id, play_name, tags, flags, pref_down, pref_dis, pref_hash, pref_field_pos"
     )
     .eq("playbook_id", playbookId);
 
@@ -270,90 +259,55 @@ async function calculatePlayCompletenessScore(
 
   const totalPlays = plays?.length || 0;
   if (totalPlays === 0) {
-    return { score: 25, issues: [] };
+    return { score: 20, issues: [] };
   }
 
-  // Calculate average play quality
-  const playScores = plays.map((play) =>
-    calculatePlayQuality({
-      play_name: play.play_name ?? undefined,
-      formation: play.formation ?? undefined,
-      p_type: play.p_type ?? undefined,
-      personnel: play.personnel ?? undefined,
-      tags: play.tags ?? undefined,
-      notes: play.notes ?? undefined,
-      key_positions: play.key_positions ?? undefined,
-      key_players: play.key_players ?? undefined,
-      protection: play.protection ?? undefined,
-      flags: play.flags ?? undefined,
-      diagram_data: (play as { diagram_data?: unknown }).diagram_data as any,
-      diagram_url:
-        (play as { diagram_url?: string | null }).diagram_url ?? undefined,
-      diagram_image_url:
-        (play as { diagram_image_url?: string | null }).diagram_image_url ??
-        undefined,
-    })
-  );
-  const avgQuality =
-    playScores.reduce((sum, s) => sum + s.total, 0) / totalPlays;
-  const score = Math.round((avgQuality / 100) * 25);
-
+  let score = 0;
   const issues: HealthIssue[] = [];
 
-  // Plays missing diagrams
-  const playsNoDiagram = plays.filter((p) => {
-    const anyPlay = p as {
-      diagram_data?: unknown;
-      diagram_url?: string | null;
-      diagram_image_url?: string | null;
-    };
-    return (
-      !anyPlay.diagram_data &&
-      !anyPlay.diagram_url &&
-      !anyPlay.diagram_image_url
-    );
-  });
-  if (playsNoDiagram.length > 0) {
+  // Tags (10 points)
+  const playsWithTags = plays.filter(
+    (p) => p.tags && Array.isArray(p.tags) && p.tags.length > 0
+  );
+  const tagRate = playsWithTags.length / totalPlays;
+  score += Math.round(tagRate * 10);
+
+  if (tagRate < 0.5) {
     issues.push({
       severity: "info",
-      category: "Play Completeness",
-      description: `${playsNoDiagram.length} plays missing diagrams`,
-      affectedItems: playsNoDiagram.map((p) => p.id),
-      howToFix: "Edit play → Upload diagram or use Diagram Editor",
-      pointsToGain: Math.round((playsNoDiagram.length / totalPlays) * 8),
+      category: "Tags",
+      description: `Only ${Math.round(tagRate * 100)}% of plays have tags`,
+      affectedItems: plays
+        .filter((p) => !p.tags || p.tags.length === 0)
+        .slice(0, 10)
+        .map((p) => p.id),
+      howToFix:
+        "Add tags like 'Red Zone', 'Short Yardage', 'Screen' for better filtering",
+      pointsToGain: Math.round((0.5 - tagRate) * 10),
     });
   }
 
-  // Plays with minimal metadata
-  const playsMinimalData = plays.filter(
+  // Situational Preferences (10 points)
+  const playsWithPrefs = plays.filter(
     (p) =>
-      (typeof p.personnel !== "string" || p.personnel.trim() === "") &&
-      (!p.tags || p.tags.length === 0) &&
-      (typeof p.notes !== "string" || p.notes.trim() === "")
+      (p.pref_down && p.pref_down.trim()) ||
+      (p.pref_dis && p.pref_dis.trim()) ||
+      (p.pref_hash && p.pref_hash.trim()) ||
+      (p.pref_field_pos && p.pref_field_pos.trim()) ||
+      (p.flags && Array.isArray(p.flags) && p.flags.length > 0)
   );
-  if (playsMinimalData.length > 0) {
-    issues.push({
-      severity: "warning",
-      category: "Play Completeness",
-      description: `${playsMinimalData.length} plays need more details`,
-      affectedItems: playsMinimalData.map((p) => p.id),
-      howToFix: "Add personnel, tags, and coaching notes to plays",
-      pointsToGain: Math.round((playsMinimalData.length / totalPlays) * 6),
-    });
-  }
+  const prefRate = playsWithPrefs.length / totalPlays;
+  score += Math.round(prefRate * 10);
 
-  // Plays missing play type
-  const playsNoType = plays.filter(
-    (p) => typeof p.p_type !== "string" || p.p_type.trim() === ""
-  );
-  if (playsNoType.length > 0) {
+  if (prefRate < 0.3) {
     issues.push({
-      severity: "critical",
-      category: "Play Completeness",
-      description: `${playsNoType.length} plays missing play type`,
-      affectedItems: playsNoType.map((p) => p.id),
-      howToFix: "Edit play → Select type (Run, Pass, RPO, etc.)",
-      pointsToGain: Math.round((playsNoType.length / totalPlays) * 4),
+      severity: "info",
+      category: "Situational Fit",
+      description: `Only ${Math.round(prefRate * 100)}% of plays have situational preferences`,
+      affectedItems: [],
+      howToFix:
+        "Add preferred down, distance, or field position to help with game planning",
+      pointsToGain: Math.round((0.3 - prefRate) * 10),
     });
   }
 
@@ -361,100 +315,17 @@ async function calculatePlayCompletenessScore(
 }
 
 // ========================================
-// Data Consistency Score (15 points)
+// Coaching Notes Score (15 points)
 // ========================================
+// Checks: notes, protection, key_positions, key_players
 
-async function calculateDataConsistencyScore(
+async function calculateCoachingNotesScore(
   playbookId: string
 ): Promise<{ score: number; issues: HealthIssue[] }> {
-  info("[PlaybookHealth] Calculating data consistency score");
-
-  const { data: plays, error: playsError } = await table("plays")
-    .select("id, play_name, formation, personnel")
-    .eq("playbook_id", playbookId);
-
-  const { data: formations, error: formationsError } = await table("formations")
-    .select("id, name, direction, opposite_formation_id")
-    .eq("playbook_id", playbookId);
-
-  if (playsError || formationsError) {
-    logError(
-      "[PlaybookHealth] Failed to fetch data:",
-      playsError || formationsError
-    );
-    return { score: 0, issues: [] };
-  }
-
-  let score = 15; // Start with full points
-  const issues: HealthIssue[] = [];
-
-  // Check for duplicate play names (case-insensitive)
-  const playNames = plays?.map((p) => p.play_name.toLowerCase()) || [];
-  const duplicateNames = playNames.filter(
-    (name, index) => playNames.indexOf(name) !== index
-  );
-  if (duplicateNames.length > 0) {
-    score -= 5;
-    issues.push({
-      severity: "warning",
-      category: "Data Consistency",
-      description: `${duplicateNames.length} duplicate play names found`,
-      affectedItems:
-        plays
-          ?.filter((p) => duplicateNames.includes(p.play_name.toLowerCase()))
-          .map((p) => p.id) || [],
-      howToFix: "Rename duplicate plays to be unique",
-      pointsToGain: 5,
-    });
-  }
-
-  // Check for formations missing opposite variants
-  const formationsNeedingOpposite =
-    formations?.filter((f) => f.direction && !f.opposite_formation_id) || [];
-  if (formationsNeedingOpposite.length > 0) {
-    score -= 5;
-    issues.push({
-      severity: "info",
-      category: "Data Consistency",
-      description: `${formationsNeedingOpposite.length} formations missing opposite variant`,
-      affectedItems: formationsNeedingOpposite.map((f) => f.id),
-      howToFix: "Formation Builder → Link Left/Right variants",
-      pointsToGain: 5,
-    });
-  }
-
-  // Check for inconsistent personnel naming
-  const personnelVariations =
-    plays?.map((p) => p.personnel?.trim()).filter(Boolean) || [];
-  const uniquePersonnel = new Set(personnelVariations);
-  if (uniquePersonnel.size > 15) {
-    // Too many variations
-    score -= 5;
-    issues.push({
-      severity: "warning",
-      category: "Data Consistency",
-      description: `${uniquePersonnel.size} different personnel groupings (recommend standardizing)`,
-      affectedItems: [],
-      howToFix:
-        "Settings → Personnel → Standardize naming (e.g., '11 Personnel', '12 Personnel')",
-      pointsToGain: 5,
-    });
-  }
-
-  return { score: Math.max(0, score), issues };
-}
-
-// ========================================
-// Organization Quality Score (10 points)
-// ========================================
-
-async function calculateOrganizationQualityScore(
-  playbookId: string
-): Promise<{ score: number; issues: HealthIssue[] }> {
-  info("[PlaybookHealth] Calculating organization quality score");
+  info("[PlaybookHealth] Calculating coaching notes score");
 
   const { data: plays, error } = await table("plays")
-    .select("id, tags, formation, p_type")
+    .select("id, play_name, notes, protection, key_positions, key_players")
     .eq("playbook_id", playbookId);
 
   if (error) {
@@ -464,55 +335,45 @@ async function calculateOrganizationQualityScore(
 
   const totalPlays = plays?.length || 0;
   if (totalPlays === 0) {
-    return { score: 10, issues: [] };
+    return { score: 15, issues: [] };
   }
 
   let score = 0;
   const issues: HealthIssue[] = [];
 
-  // Plays with tags (5 points)
-  const playsWithTags = plays?.filter((p) => p.tags && p.tags.length > 0) || [];
-  const tagRate = playsWithTags.length / totalPlays;
-  score += Math.round(tagRate * 5);
-
-  if (tagRate < 0.5) {
-    issues.push({
-      severity: "info",
-      category: "Organization Quality",
-      description: `Only ${Math.round(tagRate * 100)}% of plays have tags`,
-      affectedItems:
-        plays?.filter((p) => !p.tags || p.tags.length === 0).map((p) => p.id) ||
-        [],
-      howToFix: "Add tags to plays for better filtering and organization",
-      pointsToGain: Math.round((1 - tagRate) * 5),
-    });
-  }
-
-  // Formation diversity (3 points)
-  const uniqueFormations = new Set(
-    plays?.map((p) => p.formation).filter(Boolean)
+  // Notes (8 points)
+  const playsWithNotes = plays.filter(
+    (p) => p.notes && p.notes.trim().length > 10
   );
-  const formationDiversity = Math.min(uniqueFormations.size / 10, 1); // Ideal: 10+ formations
-  score += Math.round(formationDiversity * 3);
+  const notesRate = playsWithNotes.length / totalPlays;
+  score += Math.round(notesRate * 8);
 
-  if (uniqueFormations.size < 5) {
+  if (notesRate < 0.3) {
     issues.push({
       severity: "info",
-      category: "Organization Quality",
-      description: `Only ${uniqueFormations.size} unique formations used`,
+      category: "Coaching Notes",
+      description: `Only ${Math.round(notesRate * 100)}% of plays have coaching notes`,
       affectedItems: [],
-      howToFix: "Create more formations for offensive variety",
-      pointsToGain: Math.round((1 - formationDiversity) * 3),
+      howToFix: "Add coaching points, technique cues, or opponent tendencies",
+      pointsToGain: Math.round((0.3 - notesRate) * 8),
     });
   }
 
-  // Play type distribution (2 points)
-  const playTypes = plays?.map((p) => p.p_type).filter(Boolean) || [];
-  const uniquePlayTypes = new Set(playTypes);
-  const typeBalance = Math.min(uniquePlayTypes.size / 5, 1); // Ideal: 5+ types (Run, Pass, RPO, Screen, etc.)
-  score += Math.round(typeBalance * 2);
+  // Protection or Key Players (7 points)
+  const playsWithDetails = plays.filter(
+    (p) =>
+      (p.protection && p.protection.trim().length > 0) ||
+      (p.key_positions &&
+        Array.isArray(p.key_positions) &&
+        p.key_positions.length > 0) ||
+      (p.key_players &&
+        Array.isArray(p.key_players) &&
+        p.key_players.length > 0)
+  );
+  const detailsRate = playsWithDetails.length / totalPlays;
+  score += Math.round(detailsRate * 7);
 
-  return { score: Math.max(0, score), issues };
+  return { score, issues };
 }
 
 // ========================================
@@ -533,36 +394,28 @@ export async function calculatePlaybookHealth(
     playbookId
   );
 
-  // Run all calculations in parallel
-  const [
-    formationLinking,
-    formationCompleteness,
-    playCompleteness,
-    dataConsistency,
-    organizationQuality,
-  ] = await Promise.all([
-    calculateFormationLinkingScore(playbookId),
-    calculateFormationCompletenessScore(playbookId),
-    calculatePlayCompletenessScore(playbookId),
-    calculateDataConsistencyScore(playbookId),
-    calculateOrganizationQualityScore(playbookId),
-  ]);
+  // Run all calculations
+  const [playEssentials, diagrams, organization, coachingNotes] =
+    await Promise.all([
+      calculatePlayEssentialsScore(playbookId),
+      calculateDiagramsScore(playbookId),
+      calculateOrganizationScore(playbookId),
+      calculateCoachingNotesScore(playbookId),
+    ]);
 
   // Calculate overall score
   const overall =
-    formationLinking.score +
-    formationCompleteness.score +
-    playCompleteness.score +
-    dataConsistency.score +
-    organizationQuality.score;
+    playEssentials.score +
+    diagrams.score +
+    organization.score +
+    coachingNotes.score;
 
   // Combine all issues and sort by severity
   const allIssues = [
-    ...formationLinking.issues,
-    ...formationCompleteness.issues,
-    ...playCompleteness.issues,
-    ...dataConsistency.issues,
-    ...organizationQuality.issues,
+    ...playEssentials.issues,
+    ...diagrams.issues,
+    ...organization.issues,
+    ...coachingNotes.issues,
   ].sort((a, b) => {
     const severityOrder = { critical: 0, warning: 1, info: 2 };
     return severityOrder[a.severity] - severityOrder[b.severity];
@@ -572,56 +425,81 @@ export async function calculatePlaybookHealth(
   const recommendations: string[] = [];
 
   if (overall >= 90) {
-    recommendations.push("🎉 Excellent! Your playbook is in great shape!");
+    recommendations.push("🎉 Excellent! Your playbook is game-ready!");
     recommendations.push(
-      "✅ All key metrics are strong. Keep maintaining this quality."
+      "✅ Keep maintaining this quality as you add new plays."
     );
   } else if (overall >= 80) {
-    recommendations.push("💪 Good job! Your playbook is well-organized.");
-    recommendations.push("🎯 Focus on the issues below to reach 90+.");
+    recommendations.push("💪 Great job! Your playbook is well-organized.");
+    recommendations.push("🎯 Focus on the suggestions below to reach 90+.");
   } else if (overall >= 70) {
     recommendations.push("📊 Your playbook has a solid foundation.");
+    recommendations.push("🔧 Address the issues below to improve quality.");
+  } else if (overall >= 50) {
+    recommendations.push("⚠️ Your playbook needs some attention.");
     recommendations.push(
-      "🔧 Address the critical and warning issues to improve analytics quality."
-    );
-  } else if (overall >= 60) {
-    recommendations.push("⚠️ Your playbook needs attention.");
-    recommendations.push(
-      "🚨 Prioritize linking plays to formations and completing required fields."
+      "📝 Focus on adding diagrams and filling in play types."
     );
   } else {
-    recommendations.push("🚀 Let's build a better playbook!");
+    recommendations.push("🚀 Let's build out your playbook!");
     recommendations.push(
-      "📝 Start by ensuring all plays have: name, type, and formation linked."
+      "📝 Start by ensuring plays have: name, type, and formation."
     );
   }
 
   // Add specific recommendations based on top issues
-  const topIssues = allIssues.slice(0, 3);
-  topIssues.forEach((issue) => {
-    if (issue.severity === "critical") {
-      recommendations.push(`🔴 Critical: ${issue.description}`);
-    }
+  const criticalIssues = allIssues.filter((i) => i.severity === "critical");
+  criticalIssues.forEach((issue) => {
+    recommendations.push(`🔴 ${issue.description}`);
   });
 
-  // Fetch stats
-  const { data: plays } = await table("plays")
-    .select("id, formation_id, play_name")
+  // Calculate stats
+  const plays = playEssentials.plays;
+  const uniqueFormations = new Set(
+    plays.map((p) => p.formation?.toLowerCase().trim()).filter(Boolean)
+  );
+
+  // Get diagram count
+  const { data: diagramPlays } = await table("plays")
+    .select("diagram_image_url")
     .eq("playbook_id", playbookId);
 
-  const { data: formations } = await table("formations")
-    .select("id, metadata_quality")
+  const playsWithDiagrams =
+    diagramPlays?.filter((p) => p.diagram_image_url).length || 0;
+
+  // Get tags count
+  const { data: tagPlays } = await table("plays")
+    .select("tags")
     .eq("playbook_id", playbookId);
+
+  const playsWithTags =
+    tagPlays?.filter(
+      (p) => p.tags && Array.isArray(p.tags) && p.tags.length > 0
+    ).length || 0;
+
+  // Get notes count
+  const { data: notesPlays } = await table("plays")
+    .select("notes")
+    .eq("playbook_id", playbookId);
+
+  const playsWithNotes =
+    notesPlays?.filter((p) => p.notes && p.notes.trim().length > 10).length ||
+    0;
+
+  // Play type distribution
+  const playTypeDistribution: Record<string, number> = {};
+  plays.forEach((p) => {
+    const type = p.p_type || "Unknown";
+    playTypeDistribution[type] = (playTypeDistribution[type] || 0) + 1;
+  });
 
   const stats = {
-    totalPlays: plays?.length || 0,
-    totalFormations: formations?.length || 0,
-    playsWithFormationLink: plays?.filter((p) => p.formation_id).length || 0,
-    completeFormations:
-      formations?.filter((f) => f.metadata_quality === "complete").length || 0,
-    averagePlayQuality: playCompleteness.score * 4, // Convert 25-point scale to 100-point
-    uniquePlayNames: new Set(plays?.map((p) => normalizePlayName(p.play_name)))
-      .size,
+    totalPlays: plays.length,
+    playsWithDiagrams,
+    playsWithTags,
+    playsWithNotes,
+    uniqueFormations: uniqueFormations.size,
+    playTypeDistribution,
   };
 
   info("[PlaybookHealth] Calculation complete. Overall score:", overall);
@@ -629,11 +507,10 @@ export async function calculatePlaybookHealth(
   return {
     overall,
     breakdown: {
-      formationLinking: formationLinking.score,
-      formationCompleteness: formationCompleteness.score,
-      playCompleteness: playCompleteness.score,
-      dataConsistency: dataConsistency.score,
-      organizationQuality: organizationQuality.score,
+      playEssentials: playEssentials.score,
+      diagrams: diagrams.score,
+      organization: organization.score,
+      coachingNotes: coachingNotes.score,
     },
     issues: allIssues,
     recommendations,
