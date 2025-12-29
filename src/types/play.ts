@@ -170,13 +170,17 @@ export interface Play {
 }
 
 // Play type enumeration matching database constraint (text field)
+// Note: Database field is TEXT so coaches can use custom types too
 export type PlayType =
   | "Pass"
   | "Run"
   | "RPO"
+  | "Option"
   | "Play Action"
   | "Screen"
-  | "Special";
+  | "Boot"
+  | "Special"
+  | string; // Allow custom types
 // Formation types commonly used in football
 export interface FormationOption {
   name: string;
@@ -354,8 +358,9 @@ export const DISTANCE_OPTIONS = [
 // Hash preferences
 export const HASH_OPTIONS = ["Any", "Left", "Right", "Middle"] as const;
 // Play type options - source of truth for all play type UI
+// Common play types shown as chips, but coaches can type custom types
 export const PLAY_TYPE_OPTIONS: {
-  value: PlayType;
+  value: string;
   label: string;
   icon: string;
   description: string;
@@ -363,8 +368,10 @@ export const PLAY_TYPE_OPTIONS: {
   { value: "Run", label: "Run", icon: "🏃", description: "Running plays" },
   { value: "Pass", label: "Pass", icon: "🎯", description: "Passing plays" },
   { value: "RPO", label: "RPO", icon: "⚡", description: "Run-Pass Options" },
+  { value: "Option", label: "Option", icon: "🎰", description: "Option plays (triple, speed, zone read)" },
   { value: "Play Action", label: "Play Action", icon: "🎭", description: "Play action passes" },
   { value: "Screen", label: "Screen", icon: "🛡️", description: "Screen passes" },
+  { value: "Boot", label: "Boot", icon: "🥾", description: "Bootleg and rollout passes" },
   { value: "Special", label: "Special", icon: "✨", description: "Special teams plays" },
 ];
 

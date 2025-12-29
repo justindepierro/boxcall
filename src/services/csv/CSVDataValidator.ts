@@ -58,10 +58,18 @@ export class CSVDataValidator {
         variants: ["rpo", "run-pass-option", "run pass option"],
       },
       {
+        canonical: "Option",
+        variants: ["option", "triple option", "speed option", "zone read"],
+      },
+      {
         canonical: "Play Action",
         variants: ["play action", "playaction", "pa", "play-action"],
       },
       { canonical: "Screen", variants: ["screen", "screens", "scr"] },
+      {
+        canonical: "Boot",
+        variants: ["boot", "bootleg", "rollout", "roll out", "waggle"],
+      },
       { canonical: "Special", variants: ["special", "special teams", "st"] },
       // Extended types for CSV flexibility
       { canonical: "Punt", variants: ["punt", "punting"] },
@@ -78,9 +86,8 @@ export class CSVDataValidator {
       );
 
       if (!matchedType) {
-        warnings.push(
-          `Play type "${rowData.p_type}" may not be recognized. Suggested: Run, Pass, RPO, Play Action, Screen, Special`
-        );
+        // Don't warn - allow custom play types, just log info
+        // Custom play types are valid in BoxCall
       } else if (matchedType.canonical.toLowerCase() !== lowerType) {
         // Auto-correct the play type
         rowData.p_type = matchedType.canonical;

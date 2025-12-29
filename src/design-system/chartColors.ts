@@ -78,8 +78,10 @@ export const PLAY_TYPE_COLORS: Record<string, string> = {
   run: CHART_COLORS.blue,
   pass: CHART_COLORS.red,
   rpo: CHART_COLORS.amber,
+  option: CHART_COLORS.cyan,
   "play action": CHART_COLORS.orange,
   screen: CHART_COLORS.emerald,
+  boot: CHART_COLORS.pink,
   special: CHART_COLORS.purple,
   "special teams": CHART_COLORS.purple,
 } as const;
@@ -101,8 +103,10 @@ export const DEFAULT_PIE_COLORS = [
   { name: "Run", color: CHART_COLORS.blue },
   { name: "Pass", color: CHART_COLORS.red },
   { name: "RPO", color: CHART_COLORS.amber },
+  { name: "Option", color: CHART_COLORS.cyan },
   { name: "Play Action", color: CHART_COLORS.orange },
   { name: "Screen", color: CHART_COLORS.emerald },
+  { name: "Boot", color: CHART_COLORS.pink },
   { name: "Special", color: CHART_COLORS.purple },
 ] as const;
 

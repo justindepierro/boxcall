@@ -79,29 +79,143 @@ const DirectionToggle: React.FC<{
   );
 };
 
-// Play Type Chip Selector
+// Play Type Chip Selector with custom input option
 const PlayTypeSelector: React.FC<{
   value: string;
   onChange: (value: string) => void;
-}> = ({ value, onChange }) => (
-  <div className="flex flex-wrap gap-xs">
-    {PLAY_TYPE_OPTIONS.map((option) => (
-      <button
-        key={option.value}
-        type="button"
-        onClick={() => onChange(value === option.value ? "" : option.value)}
-        className={`px-sm py-xs rounded-full text-sm font-medium transition-all ${
-          value === option.value
-            ? "bg-primary text-white shadow-sm"
-            : "bg-surface-muted text-secondary hover:bg-surface-elevated"
-        }`}
-      >
-        <span className="mr-xs">{option.icon}</span>
-        {option.value}
-      </button>
-    ))}
-  </div>
-);
+  existingPlayTypes?: string[];
+}> = ({ value, onChange, existingPlayTypes = [] }) => {
+  const [showCustomInput, setShowCustomInput] = React.useState(false);
+  const [customValue, setCustomValue] = React.useState("");
+
+  // Check if current value is a custom type (not in predefined options)
+  const isCustomType = value && !PLAY_TYPE_OPTIONS.some((opt) => opt.value === value);
+
+  // Get unique custom types from existing plays (not in predefined options)
+  const customTypesFromPlays = React.useMemo(() => {
+    const predefinedValues = new Set(PLAY_TYPE_OPTIONS.map((opt) => opt.value.toLowerCase()));
+    return [...new Set(existingPlayTypes)]
+      .filter((t) => t && !predefinedValues.has(t.toLowerCase()))
+      .slice(0, 3); // Show max 3 custom types
+  }, [existingPlayTypes]);
+
+  const handleCustomSubmit = () => {
+    if (customValue.trim()) {
+      onChange(customValue.trim());
+      setCustomValue("");
+      setShowCustomInput(false);
+    }
+  };
+
+  return (
+    <div className="space-y-xs">
+      {/* Predefined play types */}
+      <div className="flex flex-wrap gap-xs">
+        {PLAY_TYPE_OPTIONS.map((option) => (
+          <button
+            key={option.value}
+            type="button"
+            onClick={() => onChange(value === option.value ? "" : option.value)}
+            title={option.description}
+            className={`px-sm py-xs rounded-full text-sm font-medium transition-all ${
+              value === option.value
+                ? "bg-primary text-white shadow-sm"
+                : "bg-surface-muted text-secondary hover:bg-surface-elevated"
+            }`}
+          >
+            <span className="mr-xs">{option.icon}</span>
+            {option.value}
+          </button>
+        ))}
+
+        {/* Custom type button */}
+        <button
+          type="button"
+          onClick={() => setShowCustomInput(!showCustomInput)}
+          className={`px-sm py-xs rounded-full text-sm font-medium transition-all ${
+            showCustomInput || isCustomType
+              ? "bg-primary/20 text-primary border border-primary"
+              : "bg-surface-muted text-secondary hover:bg-surface-elevated border border-transparent"
+          }`}
+        >
+          <Icon name="plus" className="h-3 w-3 mr-xs inline" />
+          Custom
+        </button>
+      </div>
+
+      {/* Custom types from existing plays */}
+      {customTypesFromPlays.length > 0 && !showCustomInput && (
+        <div className="flex flex-wrap gap-xs">
+          <Typography variant="caption" className="text-tertiary mr-xs">
+            Your types:
+          </Typography>
+          {customTypesFromPlays.map((type) => (
+            <button
+              key={type}
+              type="button"
+              onClick={() => onChange(value === type ? "" : type)}
+              className={`px-sm py-xs rounded-full text-xs font-medium transition-all ${
+                value === type
+                  ? "bg-primary text-white shadow-sm"
+                  : "bg-surface-elevated text-secondary hover:bg-surface-muted"
+              }`}
+            >
+              {type}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Custom input field */}
+      {showCustomInput && (
+        <div className="flex gap-xs items-center">
+          <input
+            type="text"
+            value={customValue}
+            onChange={(e) => setCustomValue(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleCustomSubmit()}
+            placeholder="Type custom play type..."
+            className="flex-1 px-sm py-xs text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+            autoFocus
+          />
+          <Button type="button" variant="primary" size="sm" onClick={handleCustomSubmit}>
+            Add
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setShowCustomInput(false);
+              setCustomValue("");
+            }}
+          >
+            Cancel
+          </Button>
+        </div>
+      )}
+
+      {/* Show current custom type if selected */}
+      {isCustomType && !showCustomInput && (
+        <div className="flex items-center gap-xs">
+          <Typography variant="caption" className="text-tertiary">
+            Selected:
+          </Typography>
+          <span className="px-sm py-xs rounded-full text-sm font-medium bg-primary text-white">
+            {value}
+          </span>
+          <button
+            type="button"
+            onClick={() => onChange("")}
+            className="text-tertiary hover:text-primary"
+          >
+            <Icon name="close" className="h-3 w-3" />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const CoreInfoSection: React.FC<CoreInfoSectionProps> = ({
   formation,
@@ -130,6 +244,10 @@ export const CoreInfoSection: React.FC<CoreInfoSectionProps> = ({
   );
   const existingPersonnel = React.useMemo(
     () => [...new Set(existingPlays.map((p) => p.personnel).filter(Boolean) as string[])],
+    [existingPlays]
+  );
+  const existingPlayTypes = React.useMemo(
+    () => [...new Set(existingPlays.map((p) => p.p_type).filter(Boolean) as string[])],
     [existingPlays]
   );
 
@@ -232,7 +350,11 @@ export const CoreInfoSection: React.FC<CoreInfoSectionProps> = ({
         <Typography variant="label-md" className="text-secondary">
           Play Type
         </Typography>
-        <PlayTypeSelector value={playType} onChange={onPlayTypeChange} />
+        <PlayTypeSelector
+          value={playType}
+          onChange={onPlayTypeChange}
+          existingPlayTypes={existingPlayTypes}
+        />
       </div>
     </div>
   );

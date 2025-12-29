@@ -23,8 +23,10 @@ const DEFAULT_PLAY_TYPE_SCHEMES: Record<string, BadgeColorScheme> = {
   run: "jade",
   pass: "blue",
   rpo: "purple",
+  option: "indigo",
   "play action": "amber",
   screen: "cyan",
+  boot: "pink",
   special: "orange",
 };
 
