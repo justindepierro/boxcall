@@ -100,23 +100,23 @@ export const getDirectionOptions = (format: "full" | "abbrev" | "letter") => {
   switch (format) {
     case "full":
       return [
-        { value: "LEFT", label: "Left" },
-        { value: "RIGHT", label: "Right" },
+        { value: "Left", label: "Left" },
+        { value: "Right", label: "Right" },
       ];
     case "abbrev":
       return [
-        { value: "LEFT", label: "Lt" },
-        { value: "RIGHT", label: "Rt" },
+        { value: "Left", label: "Lt" },
+        { value: "Right", label: "Rt" },
       ];
     case "letter":
       return [
-        { value: "LEFT", label: "L" },
-        { value: "RIGHT", label: "R" },
+        { value: "Left", label: "L" },
+        { value: "Right", label: "R" },
       ];
     default:
       return [
-        { value: "LEFT", label: "Left" },
-        { value: "RIGHT", label: "Right" },
+        { value: "Left", label: "Left" },
+        { value: "Right", label: "Right" },
       ];
   }
 };

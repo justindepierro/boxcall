@@ -11,7 +11,6 @@ import { getCurrentUserId } from "../lib/auth-helpers";
 import { normalizePlayName, normalizeText } from "../utils/textNormalization";
 import Fuse from "fuse.js";
 import { ActivityService } from "./activityService";
-import { PlayValidationService } from "../validation-services/playValidation";
 import { debug, error as logError, warn } from "../utils/logger";
 import { readLocalJson, storageKeys, writeLocalJson } from "../utils/storage";
 import { buildNewPlayData } from "./playDataBuilders";
@@ -159,18 +158,12 @@ export class PlaysService {
   /**
    * Create a new play in the database
    * Only saves fields that exist in the database schema
+   * 
+   * NOTE: Validation is handled by SecurePlaysService using Zod schemas.
+   * This method assumes data has already been validated.
    */
   static async createPlay(playData: Partial<Play>): Promise<Play> {
     try {
-      // Validate play data
-      const validation =
-        await PlayValidationService.validatePlayServer(playData);
-      if (!validation.valid) {
-        throw new Error(
-          `Validation failed: ${validation.errors.map((e) => e.message).join(", ")}`
-        );
-      }
-
       // Get current user for created_by field
       const userId = getCurrentUserId();
       if (!userId) throw new Error("User not authenticated");

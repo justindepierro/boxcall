@@ -370,7 +370,11 @@ const PlayListInner: React.FC<PlayListProps> = ({
         >
           {/* Render all plays directly - virtualization disabled for now due to height calculation issues */}
           <div className="space-y-2">
-            {displayPlays.map((play, index) => renderPlayItem(index, play))}
+            {displayPlays.map((play, index) => (
+              <React.Fragment key={play.id}>
+                {renderPlayItem(index, play)}
+              </React.Fragment>
+            ))}
           </div>
 
           {/* Footer content */}

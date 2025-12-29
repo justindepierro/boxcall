@@ -18,9 +18,9 @@ export function parseLeftRight(
 
 export function leftRightToLegacyValue(
   dir: LeftRight | null | undefined
-): "LEFT" | "RIGHT" | "" {
-  if (dir === "left") return "LEFT";
-  if (dir === "right") return "RIGHT";
+): "Left" | "Right" | "" {
+  if (dir === "left") return "Left";
+  if (dir === "right") return "Right";
   return "";
 }
 
@@ -33,7 +33,7 @@ export function legacyValueToLeftRight(
 export function getFormationDirSelectValue(play: {
   f_dir?: string | null;
   formation_direction?: FormationDirectionVariant;
-}): "" | "LEFT" | "RIGHT" {
+}): "" | "Left" | "Right" {
   const legacy = legacyValueToLeftRight(play.f_dir);
   if (legacy) return leftRightToLegacyValue(legacy);
 

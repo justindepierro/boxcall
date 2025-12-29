@@ -14,7 +14,7 @@ import { z } from "zod";
 // Known play types for reference (but we allow custom types too)
 // This list is maintained for documentation purposes
 // Actual validation uses flexible string matching
-const KNOWN_PLAY_TYPES = [
+const _KNOWN_PLAY_TYPES = [
   "Run",
   "Pass",
   "Option",
@@ -31,7 +31,7 @@ const KNOWN_PLAY_TYPES = [
   "Kickoff",
   "Special",
 ] as const;
-export type KnownPlayType = (typeof KNOWN_PLAY_TYPES)[number];
+export type KnownPlayType = (typeof _KNOWN_PLAY_TYPES)[number];
 
 const FormationSchema = z
   .string()
@@ -45,7 +45,7 @@ const FormationSchema = z
 const PlayNameSchema = z
   .string()
   .min(1, "Play name required")
-  .max(100, "Play name too long")
+  .max(200, "Play name too long (max 200 characters)")
   .regex(
     /^[a-zA-Z0-9\s\-.']+$/,
     "Play name can only contain letters, numbers, spaces, hyphens, periods, and apostrophes"

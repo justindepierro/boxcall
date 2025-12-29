@@ -20,7 +20,7 @@ import type { Play } from "../types/play";
 const PAGE_SIZE = 50;
 
 const PLAY_SELECT_FIELDS =
-  "id, playbook_id, formation, play_name, one_word_play, p_type, personnel, f_type, f_dir, formation_id, formation_direction, p_dir, protection, r_str, p_str, pref_down, pref_dis, pref_hash, pref_cov, pref_front, ftag1, ftag2, p_tag1, p_tag2, tags, key_positions, key_players, flags, back_align, back_left_of_qb, back_right_of_qb, shift, motion, key_player1, key_player2, check_into, notes, diagram_url, diagram_image_url, wristband_number, confidence_base, times_called, times_successful, created_at, updated_at";
+  "id, playbook_id, formation, play_name, one_word_play, p_type, personnel, f_type, f_dir, formation_id, formation_direction, p_dir, protection, r_str, p_str, pref_down, pref_dis, pref_hash, pref_cov, pref_front, pref_field_pos, pref_situation, ftag1, ftag2, p_tag1, p_tag2, tags, key_positions, key_players, flags, back_align, back_left_of_qb, back_right_of_qb, shift, motion, key_player1, key_player2, check_into, notes, diagram_url, diagram_image_url, wristband_number, confidence_base, times_called, times_successful, created_at, updated_at";
 
 // Database play type (raw from Supabase)
 interface DatabasePlay {
@@ -42,6 +42,8 @@ interface DatabasePlay {
   pref_hash?: string;
   pref_cov?: string;
   pref_front?: string;
+  pref_field_pos?: string;
+  pref_situation?: string;
   ftag1?: string;
   ftag2?: string;
   p_tag1?: string;
