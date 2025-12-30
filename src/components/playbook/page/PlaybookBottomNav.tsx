@@ -75,8 +75,8 @@ export const PlaybookBottomNav: React.FC<PlaybookBottomNavProps> = ({
       id: "gameplan",
       label: "Game Plan",
       icon: "target",
-      href: "view:game-plan",
-      isActive: currentView === "game-plan",
+      href: "/gameplans",
+      isActive: location.pathname === "/gameplans",
     },
     {
       id: "more",

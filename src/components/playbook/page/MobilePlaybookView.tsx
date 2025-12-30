@@ -7,16 +7,19 @@ import { Icon } from "../../ui/Icon/Icon";
 import { Button } from "../../ui/Button/Button";
 import type { ButtonSize } from "../../ui/Button/Button.types";
 import { Typography } from "../../design-system/Typography";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "../../ui/DropdownMenu";
 import { ErrorBoundary } from "../../ui/ErrorBoundary";
 import { PullToRefresh } from "../../PullToRefresh";
-import { FloatingActionButton } from "../../FloatingActionButton";
-import { FABPresets } from "../../FABPresets";
 import { PlaybookBottomNav } from "../page/PlaybookBottomNav";
 import { MobileStatsBottomSheet } from "../page/MobileStatsBottomSheet";
 import { MobileFiltersSheet } from "./MobileFiltersSheet";
 import { SortDropdown } from "../page/SortDropdown";
 import { FormationSyncPanel } from "../../formations/FormationSyncPanel";
-import { MobileQuickActions } from "../../mobile";
 import { MobilePlayCardSkeletonList } from "../../mobile/ui/MobilePlayCardSkeleton";
 import { PlayList } from "../PlayList";
 import { SelectionModeToggle } from "../SelectionModeToggle";
@@ -101,8 +104,8 @@ export function MobilePlaybookView({
   handleOpenQuickCreate,
   handleOpenPersonnel,
   handleOpenSettings,
-  handleQuickNewPracticeScript,
-  handleQuickNewGamePlan,
+  handleQuickNewPracticeScript: _handleQuickNewPracticeScript,
+  handleQuickNewGamePlan: _handleQuickNewGamePlan,
   handleOpenKeyboardShortcuts,
   handlePullRefresh,
   handleEditPlay,
@@ -212,16 +215,67 @@ export function MobilePlaybookView({
                     }}
                     variant="ghost"
                     size="sm"
-                    className="h-9 px-3"
+                    className="h-9 px-2"
                   >
-                    <Icon name="filter" className="mr-1.5 h-4 w-4" />
-                    Filter
+                    <Icon name="filter" className="h-4 w-4" />
                     {hasActiveFilters(state.filters) && (
-                      <span className="ml-1.5 rounded-full bg-brand-jade px-1.5 py-0.5 text-center text-xs text-white">
+                      <span className="ml-1 rounded-full bg-brand-jade px-1.5 py-0.5 text-center text-xs text-white">
                         ●
                       </span>
                     )}
                   </Button>
+                  {/* More Actions Menu */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        className="h-9 w-9 flex items-center justify-center rounded-lg bg-neutral-100 hover:bg-neutral-200 transition-colors"
+                        aria-label="More actions"
+                      >
+                        <Icon
+                          name="menu"
+                          className="h-4 w-4 text-neutral-600"
+                        />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuItem
+                        onSelect={() => {
+                          triggerHapticFeedback("light");
+                          handleOpenPersonnel();
+                        }}
+                      >
+                        <Icon name="users" className="h-4 w-4 mr-2" />
+                        Personnel
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onSelect={() => {
+                          triggerHapticFeedback("light");
+                          handleOpenSettings();
+                        }}
+                      >
+                        <Icon name="settings" className="h-4 w-4 mr-2" />
+                        Settings
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onSelect={() => {
+                          triggerHapticFeedback("light");
+                          handleOpenKeyboardShortcuts();
+                        }}
+                      >
+                        <Icon name="zap" className="h-4 w-4 mr-2" />
+                        Shortcuts
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onSelect={() => {
+                          triggerHapticFeedback("light");
+                          setShowStatsSheet(true);
+                        }}
+                      >
+                        <Icon name="bar-chart-2" className="h-4 w-4 mr-2" />
+                        Stats
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               )
             ))}
@@ -239,20 +293,7 @@ export function MobilePlaybookView({
               New
             </Button>
           )}
-          {state.currentView === "game-plan" && (
-            <Button
-              onClick={() => {
-                triggerHapticFeedback("light");
-                handleQuickNewGamePlan();
-              }}
-              variant="primary"
-              size="sm"
-              className="h-9 px-3"
-            >
-              <Icon name="plus" className="h-4 w-4 mr-1.5" />
-              New
-            </Button>
-          )}
+          {/* Game Plan view removed - bottom nav navigates to /gameplans page */}
         </div>
 
         {/* Search input - only for playbook view */}
@@ -325,9 +366,59 @@ export function MobilePlaybookView({
         {state.currentView === "playbook" && (
           <>
             {/* Loading State - Show skeleton while data loads */}
-            {!hasPlays && (
+            {isLoadingPlays && !hasPlays && (
               <div className="px-4 py-6">
                 <MobilePlayCardSkeletonList count={4} />
+              </div>
+            )}
+
+            {/* Empty State - Show when no plays exist (after loading completes) */}
+            {!isLoadingPlays && !hasPlays && (
+              <div className="px-4 py-8">
+                <div className="flex flex-col items-center justify-center text-center">
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-jade-500 to-emerald-600 flex items-center justify-center mb-6 shadow-lg shadow-jade-500/25">
+                    <Icon name="file" className="w-10 h-10 text-white" />
+                  </div>
+                  <Typography
+                    variant="headline-md"
+                    className="text-primary mb-2"
+                  >
+                    Your Playbook is Empty
+                  </Typography>
+                  <Typography
+                    variant="body-sm"
+                    className="text-secondary mb-6 max-w-xs"
+                  >
+                    Get started by creating your first play or importing from a
+                    spreadsheet.
+                  </Typography>
+                  <div className="flex flex-col gap-3 w-full max-w-xs">
+                    <Button
+                      onClick={() => {
+                        triggerHapticFeedback("medium");
+                        handleOpenQuickCreate();
+                      }}
+                      variant="primary"
+                      size="lg"
+                      className="w-full"
+                    >
+                      <Icon name="plus" className="h-5 w-5 mr-2" />
+                      Create First Play
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        triggerHapticFeedback("light");
+                        handleOpenBuilder();
+                      }}
+                      variant="secondary"
+                      size="lg"
+                      className="w-full"
+                    >
+                      <Icon name="upload" className="h-5 w-5 mr-2" />
+                      Import Plays
+                    </Button>
+                  </div>
+                </div>
               </div>
             )}
 
@@ -410,39 +501,7 @@ export function MobilePlaybookView({
               </div>
             )}
 
-            {/* Quick Actions - Simplified grid */}
-            {hasPlays && (
-              <div className="px-4 py-4">
-                <Typography
-                  variant="label-md"
-                  className="text-secondary uppercase tracking-wide mb-3"
-                >
-                  Quick Actions
-                </Typography>
-                <MobileQuickActions
-                  actions={[
-                    {
-                      id: "personnel",
-                      icon: "users",
-                      label: "Personnel",
-                      onTap: handleOpenPersonnel,
-                    },
-                    {
-                      id: "settings",
-                      icon: "settings",
-                      label: "Settings",
-                      onTap: handleOpenSettings,
-                    },
-                    {
-                      id: "shortcuts",
-                      icon: "zap",
-                      label: "Shortcuts",
-                      onTap: handleOpenKeyboardShortcuts,
-                    },
-                  ]}
-                />
-              </div>
-            )}
+            {/* Quick Actions moved to header "More" menu for easier access */}
 
             {/* Formation Cleanup (show only if needed) */}
             {formationAudit.plays.length > 0 && (
@@ -497,48 +556,9 @@ export function MobilePlaybookView({
           </div>
         )}
 
-        {/* ============================================
-            GAME PLAN VIEW
-            ============================================ */}
-        {state.currentView === "game-plan" && (
-          <div className="px-4 py-4">
-            <div className="text-center py-12">
-              <Icon
-                name="target"
-                className="h-16 w-16 text-neutral-300 mx-auto mb-4"
-              />
-              <Typography variant="headline-sm" className="text-secondary mb-2">
-                No Game Plans Yet
-              </Typography>
-              <Typography variant="body-sm" className="text-neutral-500 mb-6">
-                Create your first game plan to strategize plays for upcoming
-                matches.
-              </Typography>
-              <Button
-                onClick={() => {
-                  triggerHapticFeedback("light");
-                  handleQuickNewGamePlan();
-                }}
-                variant="primary"
-                size={mobileButtonSize}
-              >
-                <Icon name="plus" className="h-4 w-4 mr-2" />
-                Create Game Plan
-              </Button>
-            </div>
-          </div>
-        )}
+        {/* Game Plan view removed - bottom nav now navigates to /gameplans page */}
 
-        {/* Floating Action Button - context-aware */}
-        <FloatingActionButton
-          actions={FABPresets.playbook({
-            onNewPlay: handleOpenQuickCreate,
-            onWhiteboard: handleOpenKeyboardShortcuts,
-            onPractice: handleQuickNewPracticeScript,
-            onGamePlan: handleQuickNewGamePlan,
-          })}
-          icon="plus"
-        />
+        {/* FAB removed - redundant with header New button and bottom nav tabs */}
       </div>
 
       {/* Mobile Bottom Navigation */}
