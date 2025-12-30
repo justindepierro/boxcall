@@ -301,8 +301,8 @@ export function MobilePlaybookView({
         className="min-h-screen bg-surface-secondary"
         style={{
           paddingTop: showSearchHeader
-            ? `calc(110px + env(safe-area-inset-top, 0px))`
-            : `calc(70px + env(safe-area-inset-top, 0px))`,
+            ? `calc(130px + env(safe-area-inset-top, 0px))`
+            : `calc(80px + env(safe-area-inset-top, 0px))`,
           paddingBottom: "calc(100px + env(safe-area-inset-bottom, 0px))",
         }}
       >

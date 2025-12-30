@@ -442,20 +442,22 @@ function PlaybookPageView({
 
   return (
     <div className="min-h-screen">
-      {/* Unified Header with Navigation */}
-      <PlaybookPageHeader
-        state={state}
-        teamPlaybooks={teamPlaybooks}
-        activePlaybookId={activePlaybookId}
-        activeTeamId={activeTeamId || ""}
-        refreshData={refreshData}
-        openModal={openModal}
-        navigate={navigate}
-        dispatch={dispatch}
-        handlePlaybookChange={handlePlaybookChange}
-        handlers={handlers}
-        onExportCSV={handleExportCSV}
-      />
+      {/* Unified Header with Navigation - Hidden on mobile (MobilePlaybookView has its own header) */}
+      {!isMobileOrTablet && (
+        <PlaybookPageHeader
+          state={state}
+          teamPlaybooks={teamPlaybooks}
+          activePlaybookId={activePlaybookId}
+          activeTeamId={activeTeamId || ""}
+          refreshData={refreshData}
+          openModal={openModal}
+          navigate={navigate}
+          dispatch={dispatch}
+          handlePlaybookChange={handlePlaybookChange}
+          handlers={handlers}
+          onExportCSV={handleExportCSV}
+        />
+      )}
 
       {/* Mobile/Tablet-First Layout */}
       <PlaybookMainView
