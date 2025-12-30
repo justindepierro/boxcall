@@ -132,7 +132,7 @@ export const QuickFilterPresets: React.FC<QuickFilterPresetsProps> = ({
               `}
             >
               <Icon
-                name={preset.icon as any}
+                name={preset.icon}
                 className={`h-4 w-4 ${isActive ? "text-white" : style.icon}`}
               />
               <span className="text-center leading-tight line-clamp-1">

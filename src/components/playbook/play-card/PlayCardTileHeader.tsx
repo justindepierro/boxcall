@@ -1,5 +1,4 @@
 import React from "react";
-import { motion } from "framer-motion";
 import { Button } from "../../ui/Button/Button";
 import Icon from "../../ui/Icon/Icon";
 import { ScrollingText } from "../../ui/ScrollingText";
@@ -40,12 +39,10 @@ const TileImageSection: React.FC<{
   tileTitle: string;
   isExpanded?: boolean;
 }> = ({ play, optimisticPlay, tileTitle, isExpanded }) => (
-  <motion.div
-    className={`relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-md shadow-jade-500/10 hover:shadow-xl hover:shadow-jade-500/20 transition-all duration-300 ${
+  <div
+    className={`relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-md shadow-jade-500/10 hover:shadow-xl hover:shadow-jade-500/20 hover:scale-[1.03] transition-all duration-200 ${
       isExpanded ? "ring-2 ring-jade-500" : ""
     }`}
-    whileHover={{ scale: 1.03 }}
-    transition={{ type: "spring", stiffness: 400, damping: 17 }}
   >
     {play.diagram_url || play.diagram_image_url ? (
       /* Photo thumbnail with loading skeleton */
@@ -83,7 +80,7 @@ const TileImageSection: React.FC<{
         />
       </>
     )}
-  </motion.div>
+  </div>
 );
 
 // Compact metadata shown when collapsed
@@ -148,11 +145,7 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = (
     })();
 
   return (
-    <motion.div
-      className="flex flex-col overflow-visible group"
-      whileHover={{ y: -4 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-    >
+    <div className="flex flex-col overflow-visible group hover:-translate-y-1 transition-transform duration-200">
       <div className="relative w-full overflow-visible">
         {/* Selection checkbox - top-left (when selection mode is on) */}
         {onSelectionChange && (
@@ -281,6 +274,6 @@ export const PlayCardTileHeader: React.FC<PlayCardTileHeaderProps> = (
           </Button>
         </div>
       )}
-    </motion.div>
+    </div>
   );
 };

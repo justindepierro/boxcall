@@ -176,10 +176,8 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
           const fieldZoneLabels = getFieldZoneDefinitions(defs).map(
             (z) => z.label
           );
-          const customSituationLabels = Array.isArray(
-            (defs as any).custom_situations
-          )
-            ? ((defs as any).custom_situations as any[])
+          const customSituationLabels = Array.isArray(defs.custom_situations)
+            ? defs.custom_situations
                 .map((s) => String(s?.label ?? "").trim())
                 .filter(Boolean)
             : [];

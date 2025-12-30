@@ -1,6 +1,5 @@
 import React, { useRef } from "react";
 import { Typography } from "../../../design-system/Typography";
-import { useIsMobile } from "../../../../hooks/useBreakpoint";
 import { useKeyboardAwareScroll } from "../../../../hooks/useKeyboardAwareScroll";
 import { Icon } from "../../../ui/Icon/Icon";
 
@@ -46,9 +45,6 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
   maxSuggestions = 5,
   className = "",
 }) => {
-  // Mobile detection for responsive input sizing
-  const isMobile = useIsMobile();
-
   // Input ref for keyboard-aware scrolling
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -135,11 +131,7 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
           onFocus={() => onShowSuggestionsChange(true)}
           onBlur={() => setTimeout(() => onShowSuggestionsChange(false), 200)}
           placeholder={placeholder}
-          className={`w-full border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0 ${
-            isMobile
-              ? "px-5 py-4 text-base" // Mobile: 48px height, 16px font (prevents iOS zoom)
-              : "px-sm py-xs" // Desktop: normal spacing
-          }`}
+          className="w-full border border-secondary rounded-lg focus:ring-2 focus:ring-text-info focus:border-bg-primary/0 px-5 py-4 text-base sm:px-sm sm:py-xs sm:text-sm"
           required={required}
         />
         {showSuggestions && allSuggestions.length > 0 && (

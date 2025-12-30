@@ -383,10 +383,10 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   const isTile = variant === "tile";
   const isCompact = !isTile && density === "compact";
 
-  const contentPaddingClass = (() => {
-    if (isCompact) return isMobile ? "p-5" : "p-3 sm:p-4";
-    return isMobile ? "p-6" : "p-4 sm:p-6";
-  })();
+  // Mobile-first padding: larger on mobile, scales down on desktop
+  const contentPaddingClass = isCompact
+    ? "p-5 sm:p-3 md:p-4"
+    : "p-6 sm:p-4 md:p-6";
 
   const handleToggleExpand = useCallback(
     (event?: React.MouseEvent) => {
@@ -454,7 +454,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
             isSelected
               ? "ring-2 ring-primary border-primary shadow-md"
               : "border-neutral-200 dark:border-navy-700 shadow-sm hover:shadow-lg hover:border-jade-300 dark:hover:border-jade-600 hover:-translate-y-0.5"
-          } ${isCompact ? "text-[13px]" : ""} ${isMobile ? "text-base" : ""} md:min-h-0`}
+          } ${isCompact ? "text-[13px]" : ""} text-base sm:text-sm md:min-h-0`}
         >
           <div className={`${contentPaddingClass} overflow-visible`}>
             {!isTile && play.diagram_url && (

@@ -10,6 +10,7 @@ import { Icon } from "../../ui/Icon/Icon";
 import { toast } from "sonner";
 import { PersonnelLibraryService } from "../../../services/personnelLibrary/PersonnelLibraryService";
 import type { PersonnelConfiguration } from "../../../types/personnel";
+import { isColorBadgeCustomization } from "../../../types/personnel";
 import { logError } from "../../../utils/logger";
 import {
   PERSONNEL_BADGE_PRESETS,
@@ -30,12 +31,16 @@ const COLOR_PRESETS = PERSONNEL_BADGE_PRESETS;
 export const EditPersonnelBadgeModal: React.FC<
   EditPersonnelBadgeModalProps
 > = ({ isOpen, onClose, personnel, onSuccess }) => {
-  const existingBadge = personnel.badgeCustomization as any;
+  const existingBadge = personnel.badgeCustomization;
   const [backgroundColor, setBackgroundColor] = useState(
-    existingBadge?.backgroundColor || DEFAULT_BADGE_COLORS.bg
+    isColorBadgeCustomization(existingBadge)
+      ? existingBadge.backgroundColor
+      : DEFAULT_BADGE_COLORS.bg
   );
   const [textColor, setTextColor] = useState(
-    existingBadge?.textColor || DEFAULT_BADGE_COLORS.text
+    isColorBadgeCustomization(existingBadge)
+      ? existingBadge.textColor
+      : DEFAULT_BADGE_COLORS.text
   );
   const [saving, setSaving] = useState(false);
 

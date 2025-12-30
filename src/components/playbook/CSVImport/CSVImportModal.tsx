@@ -553,7 +553,7 @@ export const CSVImportModal: React.FC<CSVImportModalProps> = ({
           ...playData
         } = converted;
         createPlays.push({
-          ...(playData as any),
+          ...playData,
           playbook_id: actualPlaybookId,
         });
       }

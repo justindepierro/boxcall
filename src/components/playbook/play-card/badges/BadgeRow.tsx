@@ -8,6 +8,7 @@
 import React, { useEffect, useState } from "react";
 import type { Play as PlayType } from "../../../../types/play";
 import type { PersonnelConfiguration } from "../../../../types/personnel";
+import { isPresetBadgeCustomization } from "../../../../types/personnel";
 import type { SituationDefinitions } from "../../../../types/situationDefinitions";
 import { TeamSituationDefinitionsService } from "../../../../services/teamSituationDefinitionsService";
 import { useActiveTeamStore } from "../../../../stores/activeTeamStore";
@@ -102,7 +103,7 @@ const CoreBadges: React.FC<{
 }> = ({ play, schemes, personnelConfig }) => (
   <>
     {play.personnel &&
-      (personnelConfig?.badgeCustomization ? (
+      (isPresetBadgeCustomization(personnelConfig?.badgeCustomization) ? (
         <PersonnelBadge
           personnel={play.personnel}
           size="sm"

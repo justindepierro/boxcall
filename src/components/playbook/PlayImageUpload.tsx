@@ -1,8 +1,8 @@
 /**
  * Play Image Upload Component
  *
- * Mobile-optimized image upload with:
- * - Native camera capture (rear camera)
+ * Mobile-first image upload with:
+ * - Native camera capture (rear camera) on mobile
  * - Image compression (max 1MB)
  * - Preview with rotate/crop
  * - File library selection
@@ -10,7 +10,6 @@
 
 import React, { useRef, useState, useCallback } from "react";
 import imageCompression from "browser-image-compression";
-import { useIsMobile } from "../../hooks/useBreakpoint";
 import { Button } from "../ui/Button/Button";
 import { Icon } from "../ui/Icon";
 import { Typography } from "../design-system/Typography";
@@ -31,7 +30,6 @@ export const PlayImageUpload: React.FC<PlayImageUploadProps> = ({
   maxWidthOrHeight = 1920,
 }) => {
   const toast = useToast();
-  const isMobile = useIsMobile();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | undefined>(currentImage);
   const [isCompressing, setIsCompressing] = useState(false);
@@ -128,49 +126,49 @@ export const PlayImageUpload: React.FC<PlayImageUploadProps> = ({
         disabled={isCompressing}
       />
 
-      {/* Upload buttons */}
+      {/* Upload buttons - Mobile-first design */}
       {!preview && (
         <div className="flex flex-col gap-3">
-          {isMobile ? (
-            <>
-              {/* Mobile: Camera button + Upload from library */}
-              <Button
-                size="lg"
-                variant="primary"
-                onClick={handleCameraClick}
-                disabled={isCompressing}
-                className="w-full h-14 justify-center"
-              >
-                <Icon name="camera" size="lg" />
-                <span className="ml-2">Take Photo of Playbook</span>
-              </Button>
-              <Button
-                size="lg"
-                variant="secondary"
-                onClick={handleLibraryClick}
-                disabled={isCompressing}
-                className="w-full h-14 justify-center"
-              >
-                <Icon name="image" size="lg" />
-                <span className="ml-2">Upload from Library</span>
-              </Button>
-            </>
-          ) : (
-            /* Desktop: Standard file upload */
-            <Button
-              variant="primary"
-              onClick={handleLibraryClick}
-              disabled={isCompressing}
-            >
-              <Icon name="upload" size="md" />
-              <span className="ml-2">Upload Play Image</span>
-            </Button>
-          )}
+          {/* Mobile: Camera + Library buttons stacked */}
+          <Button
+            size="lg"
+            variant="primary"
+            onClick={handleCameraClick}
+            disabled={isCompressing}
+            className="w-full h-14 justify-center md:hidden"
+          >
+            <Icon name="camera" size="lg" />
+            <span className="ml-2">Take Photo of Playbook</span>
+          </Button>
+          <Button
+            size="lg"
+            variant="secondary"
+            onClick={handleLibraryClick}
+            disabled={isCompressing}
+            className="w-full h-14 justify-center md:hidden"
+          >
+            <Icon name="image" size="lg" />
+            <span className="ml-2">Upload from Library</span>
+          </Button>
+
+          {/* Desktop: Standard file upload */}
+          <Button
+            variant="primary"
+            onClick={handleLibraryClick}
+            disabled={isCompressing}
+            className="hidden md:inline-flex"
+          >
+            <Icon name="upload" size="md" />
+            <span className="ml-2">Upload Play Image</span>
+          </Button>
 
           <Typography variant="caption" className="text-tertiary text-center">
-            {isMobile
-              ? "Take a photo or select from your device"
-              : "Maximum file size: 5MB (will be compressed to 1MB)"}
+            <span className="md:hidden">
+              Take a photo or select from your device
+            </span>
+            <span className="hidden md:inline">
+              Maximum file size: 5MB (will be compressed to 1MB)
+            </span>
           </Typography>
         </div>
       )}

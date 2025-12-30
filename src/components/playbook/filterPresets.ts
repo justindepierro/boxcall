@@ -1,7 +1,9 @@
+import type { IconName } from "../ui/Icon/Icon";
+
 export interface FilterPreset {
   id: string;
   label: string;
-  icon: string;
+  icon: IconName;
   /** Group for organizing presets in UI */
   group?: "core" | "situational" | "personnel" | "analytics";
   filters: {
@@ -130,7 +132,7 @@ export const QUICK_PRESETS: FilterPreset[] = [
   {
     id: "playaction",
     label: "Play Action",
-    icon: "shuffle",
+    icon: "move",
     group: "core",
     filters: [{ field: "playType", operator: "equals", value: "Play Action" }],
   },

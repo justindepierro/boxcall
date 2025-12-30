@@ -122,7 +122,7 @@ const PlaybookHealthOverallCard: React.FC<{
             {healthScore.overall}
             <span className="text-2xl text-tertiary">/100</span>
           </Typography>
-          <Badge variant={getHealthColor(healthScore.overall) as any} size="lg">
+          <Badge variant={getHealthColor(healthScore.overall)} size="lg">
             Grade {getHealthGrade(healthScore.overall)}
           </Badge>
           <span className="text-4xl">
@@ -275,7 +275,7 @@ const PlaybookHealthIssuesList: React.FC<{ issues: HealthIssue[] }> = ({
               <div className="flex-1">
                 <div className="flex items-center space-x-2 mb-1">
                   <Badge
-                    variant={getSeverityColor(issue.severity) as any}
+                    variant={getSeverityColor(issue.severity)}
                     size="sm"
                   >
                     {issue.severity.toUpperCase()}

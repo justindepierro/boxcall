@@ -1,7 +1,6 @@
 import React from "react";
 import { Icon } from "../../ui/Icon";
 import { Typography } from "../../design-system/Typography";
-import { motion } from "framer-motion";
 
 export interface SelectionModeToggleProps {
   /**
@@ -43,15 +42,13 @@ function IconOnlyToggle(props: {
 }) {
   const { isActive, onToggle, selectedCount, className } = props;
   return (
-    <motion.button
+    <button
       onClick={onToggle}
-      className={`relative p-2.5 rounded-lg transition-all ${
+      className={`relative p-2.5 rounded-lg transition-all duration-150 hover:scale-105 active:scale-95 ${
         isActive
           ? "bg-success-bg text-success-text"
           : "bg-muted text-secondary hover:bg-subtle hover:text-primary"
       } ${className}`}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
       aria-label={isActive ? "Exit selection mode" : "Enter selection mode"}
       aria-pressed={isActive}
     >
@@ -61,7 +58,7 @@ function IconOnlyToggle(props: {
           {selectedCount > 9 ? "9+" : selectedCount}
         </span>
       )}
-    </motion.button>
+    </button>
   );
 }
 
@@ -74,15 +71,13 @@ function CompactToggle(props: {
 }) {
   const { isActive, onToggle, selectedCount, label, className } = props;
   return (
-    <motion.button
+    <button
       onClick={onToggle}
-      className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all font-semibold ${
+      className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-150 font-semibold hover:scale-[1.03] active:scale-[0.97] ${
         isActive
           ? "bg-gradient-to-r from-green-500 to-green-600 text-white ring-2 ring-success-border/30 shadow-lg"
           : "bg-white dark:bg-navy-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-navy-700 border-2 border-neutral-200 dark:border-navy-600"
       } ${className}`}
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.97 }}
       aria-label={isActive ? "Exit selection mode" : "Enter selection mode"}
       aria-pressed={isActive}
     >
@@ -91,13 +86,9 @@ function CompactToggle(props: {
         {isActive && selectedCount > 0 ? `${selectedCount} selected` : label}
       </Typography>
       {isActive && selectedCount === 0 && (
-        <motion.div
-          className="w-2 h-2 bg-white rounded-full"
-          animate={{ scale: [1, 1.3, 1] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
-        />
+        <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
       )}
-    </motion.button>
+    </button>
   );
 }
 
@@ -110,15 +101,13 @@ function DefaultToggle(props: {
 }) {
   const { isActive, onToggle, selectedCount, label, className } = props;
   return (
-    <motion.button
+    <button
       onClick={onToggle}
-      className={`relative flex items-center justify-between w-full px-5 py-4 rounded-xl transition-all ${
+      className={`relative flex items-center justify-between w-full px-5 py-4 rounded-xl transition-all duration-150 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] ${
         isActive
           ? "bg-gradient-to-br from-jade-500 via-jade-600 to-emerald-600 text-white shadow-lg shadow-jade-500/30 hover:shadow-xl hover:shadow-jade-500/40"
           : "bg-white text-primary hover:bg-secondary shadow-md hover:shadow-lg border border-secondary hover:border-jade-300"
       } ${className}`}
-      whileHover={{ scale: 1.02, y: -2 }}
-      whileTap={{ scale: 0.98 }}
       aria-label={isActive ? "Exit selection mode" : "Enter selection mode"}
       aria-pressed={isActive}
     >
@@ -175,7 +164,7 @@ function DefaultToggle(props: {
           </Typography>
         </div>
       )}
-    </motion.button>
+    </button>
   );
 }
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "../../../ui/Button/Button";
-import { Icon } from "../../../ui/Icon/Icon";
+import { Icon, type IconName } from "../../../ui/Icon/Icon";
 import { Typography } from "../../../design-system/Typography";
 
 interface TagInputProps {
@@ -11,7 +11,7 @@ interface TagInputProps {
   onAddTag: () => void;
   onRemoveTag?: (tag: string) => void;
   placeholder?: string;
-  icon?: string;
+  icon?: IconName;
   tagColor?: "info" | "success" | "warning" | "error";
   maxTags?: number;
   className?: string;
@@ -67,7 +67,7 @@ export const TagInput: React.FC<TagInputProps> = ({
   return (
     <div className={className}>
       <Typography variant="label-md" className="block mb-xs text-secondary">
-        {icon && <Icon name={icon as any} className="h-4 w-4 mr-xs inline" />}
+        {icon && <Icon name={icon} className="h-4 w-4 mr-xs inline" />}
         {label}
         {maxTags && (
           <Typography

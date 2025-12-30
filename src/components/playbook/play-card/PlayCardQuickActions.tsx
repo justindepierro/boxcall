@@ -31,6 +31,11 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
           variant="secondary"
           size="sm"
           onClick={() => onAddToPracticeScript?.(play)}
+          aria-label={
+            status.practiceCount > 0
+              ? `Practice: Used in ${status.practiceCount} practice script${status.practiceCount > 1 ? "s" : ""}`
+              : "Add to practice script"
+          }
           title={
             status.practiceCount > 0
               ? `Used in ${status.practiceCount} practice script${status.practiceCount > 1 ? "s" : ""}`
@@ -52,6 +57,11 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
           variant="secondary"
           size="sm"
           onClick={() => onAddToGamePlan?.(play)}
+          aria-label={
+            status.gamePlanCount > 0
+              ? `Game Plan: Used in ${status.gamePlanCount} game plan${status.gamePlanCount > 1 ? "s" : ""}`
+              : "Add to game plan"
+          }
           title={
             status.gamePlanCount > 0
               ? `Used in ${status.gamePlanCount} game plan${status.gamePlanCount > 1 ? "s" : ""}`
@@ -73,6 +83,11 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
           variant="secondary"
           size="sm"
           onClick={() => onOpenAssignments?.(play)}
+          aria-label={
+            status.hasAssignments
+              ? "View player assignments"
+              : "Add player assignments"
+          }
           title={
             status.hasAssignments
               ? "Assignments created - Click to view/edit"
@@ -96,6 +111,7 @@ export const PlayCardQuickActions: React.FC<PlayCardQuickActionsProps> = ({
             variant="secondary"
             size="sm"
             onClick={() => onPostToTeamBulletin(play)}
+            aria-label="Share play to team bulletin"
             title="Share this play on the team bulletin"
             className="bg-jade-50 hover:bg-jade-100 text-jade-700 border-jade-200 transition-all hover:shadow-sm"
           >

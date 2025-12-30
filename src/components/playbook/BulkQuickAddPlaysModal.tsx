@@ -246,14 +246,10 @@ export const BulkQuickAddPlaysModal: React.FC<BulkQuickAddPlaysModalProps> = ({
           formation: r.formation,
           play_name: r.playName,
           personnel: r.personnel,
-          p_dir: r.playDir,
+          p_dir: r.playDir || undefined,
           // Required by validation/DB; default to Pass for quick add.
           p_type: "Pass",
-          creation_source: "unknown",
-          creation_context: {
-            user_action: "bulk_quick_add",
-          },
-        } as any);
+        });
         createdCount += 1;
       }
 

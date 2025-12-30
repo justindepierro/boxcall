@@ -9,6 +9,7 @@ import React, { useState, useEffect } from "react";
 import { PersonnelLibraryService } from "../../../services/personnelLibrary/PersonnelLibraryService";
 import { PersonnelSyncService } from "../../../services/personnelLibrary/PersonnelSyncService";
 import type { PersonnelConfiguration } from "../../../types/personnel";
+import { isColorBadgeCustomization } from "../../../types/personnel";
 import { Icon } from "../../ui/Icon/Icon";
 import { toast } from "sonner";
 import { CreatePersonnelModal } from "./CreatePersonnelModal";
@@ -152,9 +153,13 @@ const PersonnelCard: React.FC<PersonnelCardProps> = ({
   config,
   onEditBadge,
 }) => {
-  const badge = config.badgeCustomization as any;
-  const bgColor = badge?.backgroundColor || DEFAULT_BADGE_COLORS.bg;
-  const textColor = badge?.textColor || DEFAULT_BADGE_COLORS.text;
+  const badge = config.badgeCustomization;
+  const bgColor = isColorBadgeCustomization(badge)
+    ? badge.backgroundColor
+    : DEFAULT_BADGE_COLORS.bg;
+  const textColor = isColorBadgeCustomization(badge)
+    ? badge.textColor
+    : DEFAULT_BADGE_COLORS.text;
 
   return (
     <div className="card p-6 hover:shadow-xl hover:border-purple-500/40 hover:scale-[1.02] transition-all duration-200">

@@ -14,6 +14,7 @@ import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
 import { BadgeCustomizer } from "../BadgeCustomizer";
 import { PersonnelBadge } from "../PersonnelBadge";
 import type { PlayerPosition } from "../../../types/personnel";
+import { isPresetBadgeCustomization } from "../../../types/personnel";
 import type { ConfigurationItemProps } from "./types";
 
 type CollapsedHeaderProps = Pick<
@@ -60,7 +61,7 @@ const CollapsedHeader: React.FC<CollapsedHeaderProps> = ({
         <div className="flex-1">
           <div className="font-semibold text-primary flex items-center gap-2">
             {config.name || "Unnamed Personnel"}
-            {config.badgeCustomization && (
+            {isPresetBadgeCustomization(config.badgeCustomization) && (
               <PersonnelBadge
                 personnel={config.name || "Personnel"}
                 size="sm"
@@ -149,11 +150,13 @@ const BadgeCustomizerSection: React.FC<
           <BadgeCustomizer
             personnelName={config.name || "Personnel"}
             customization={
-              config.badgeCustomization || {
-                style: "solid",
-                colorPresetId: "electric-blue",
-                fontFamily: "default",
-              }
+              isPresetBadgeCustomization(config.badgeCustomization)
+                ? config.badgeCustomization
+                : {
+                    style: "solid",
+                    colorPresetId: "electric-blue",
+                    fontFamily: "default",
+                  }
             }
             onChange={onUpdateBadgeCustomization}
             onSave={onToggleCustomizer}

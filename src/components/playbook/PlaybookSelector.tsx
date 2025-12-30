@@ -76,8 +76,8 @@ const createNewPlaybook = async (
 
   if (error) throw error;
 
-  if (data && onSuccess) {
-    onSuccess((data as any).id);
+  if (data?.id && onSuccess) {
+    onSuccess(data.id);
   }
 };
 
@@ -100,9 +100,11 @@ const EditMode: React.FC<{
       autoFocus
       onKeyDown={(e) => {
         if (e.key === "Enter") {
-          onSave(e as any);
+          e.preventDefault();
+          onSave(e as unknown as React.MouseEvent);
         } else if (e.key === "Escape") {
-          onCancel(e as any);
+          e.preventDefault();
+          onCancel(e as unknown as React.MouseEvent);
         }
       }}
       disabled={saving}

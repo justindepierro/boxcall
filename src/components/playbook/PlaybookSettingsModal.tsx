@@ -9,7 +9,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Icon } from "../ui/Icon";
+import { Icon, type IconName } from "../ui/Icon";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
 import { BottomSheet } from "../BottomSheet";
@@ -110,7 +110,7 @@ function calculateSuggestedDefaults(plays: Play[]): DefaultSettings {
 
 /** Quick action tile for navigation */
 const QuickActionTile: React.FC<{
-  icon: string;
+  icon: IconName;
   label: string;
   description: string;
   onClick: () => void;
@@ -124,7 +124,7 @@ const QuickActionTile: React.FC<{
     className={`group w-full flex items-center gap-4 ${isMobile ? "p-4" : "p-3"} rounded-xl bg-neutral-50 dark:bg-navy-800/50 hover:bg-neutral-100 dark:hover:bg-navy-800 border border-neutral-200 dark:border-navy-700 hover:border-brand-jade/50 transition-all`}
   >
     <div className="w-10 h-10 rounded-xl bg-brand-jade/10 group-hover:bg-brand-jade/20 flex items-center justify-center flex-shrink-0 transition-colors">
-      <Icon name={icon as any} className="w-5 h-5 text-brand-jade" />
+      <Icon name={icon} className="w-5 h-5 text-brand-jade" />
     </div>
     <div className="flex-1 text-left">
       <Typography
@@ -188,14 +188,14 @@ const FormField: React.FC<{
 
 /** Section header with icon */
 const SectionTitle: React.FC<{
-  icon: string;
+  icon: IconName;
   title: string;
   subtitle?: string;
   iconColor?: string;
 }> = ({ icon, title, subtitle, iconColor = "text-brand-jade" }) => (
   <div className="space-y-0.5">
     <div className="flex items-center gap-2">
-      <Icon name={icon as any} className={`w-5 h-5 ${iconColor}`} />
+      <Icon name={icon} className={`w-5 h-5 ${iconColor}`} />
       <Typography
         variant="label-lg"
         className="text-navy-900 dark:text-neutral-100 font-semibold"
@@ -362,7 +362,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
       {/* Default Values */}
       <div className="space-y-4 pt-4 border-t border-neutral-200 dark:border-navy-700">
         <SectionTitle
-          icon="sliders"
+          icon="settings"
           title="Default Values"
           subtitle="Pre-fill these values when creating new plays"
         />
@@ -442,7 +442,7 @@ export const PlaybookSettingsModal: React.FC<PlaybookSettingsModalProps> = ({
 
           {onOpenFormationLibrary && (
             <QuickActionTile
-              icon="layout"
+              icon="grid"
               label="Formation Library"
               description="Manage team formations and templates"
               onClick={onOpenFormationLibrary}

@@ -1,12 +1,12 @@
 import React from "react";
-import type { BadgeCustomization } from "../../types/personnel";
+import type { PresetBadgeCustomization } from "../../types/personnel";
 import { BADGE_COLOR_PRESETS, BADGE_FONT_OPTIONS } from "../../types/personnel";
 
 interface PersonnelBadgeProps {
   personnel?: string | null;
   size?: "sm" | "md";
   className?: string;
-  badgeCustomization?: BadgeCustomization;
+  badgeCustomization?: PresetBadgeCustomization;
 }
 
 /**

@@ -415,13 +415,17 @@ export function PracticeScriptPlayScenario({
     (next: Scenario) => {
       setScenario(next);
       if (onUpdateScenario) {
+        // Type assertion needed: internal Scenario allows arbitrary strings for custom values,
+        // but the callback expects narrower enum types. Runtime values are always valid.
         onUpdateScenario({
           hash: next.hash,
           downDistance: next.downDistance,
           fieldPosition: next.fieldPosition,
-          defensiveFront: next.defensiveFront as any,
-          coverage: next.coverage as any,
-          blitz: next.blitz as any,
+          defensiveFront:
+            next.defensiveFront as Parameters<typeof onUpdateScenario>[0]["defensiveFront"],
+          coverage:
+            next.coverage as Parameters<typeof onUpdateScenario>[0]["coverage"],
+          blitz: next.blitz as Parameters<typeof onUpdateScenario>[0]["blitz"],
         });
       }
     },

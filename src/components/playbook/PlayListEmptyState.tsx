@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { Icon, type IconName } from "../ui/Icon/Icon";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
-import { useIsMobile } from "../../hooks/useBreakpoint";
 import { triggerHapticFeedback } from "../../lib/hapticFeedback";
 
 /**
@@ -57,25 +56,23 @@ const usePlayListEmptyStateHandlers = (
     "onCreatePlay" | "onImportPlays" | "onClearFilters" | "onSuggestedSearch"
   >
 ): PlayListEmptyStateHandlers => {
-  const isMobile = useIsMobile();
-
   const handleCreatePlay = () => {
-    if (isMobile) triggerHapticFeedback("medium");
+    triggerHapticFeedback("medium");
     props.onCreatePlay?.();
   };
 
   const handleImportPlays = () => {
-    if (isMobile) triggerHapticFeedback("medium");
+    triggerHapticFeedback("medium");
     props.onImportPlays?.();
   };
 
   const handleClearFilters = () => {
-    if (isMobile) triggerHapticFeedback("light");
+    triggerHapticFeedback("light");
     props.onClearFilters?.();
   };
 
   const handleSuggestedSearch = (query: string) => {
-    if (isMobile) triggerHapticFeedback("light");
+    triggerHapticFeedback("light");
     props.onSuggestedSearch?.(query);
   };
 
@@ -313,11 +310,9 @@ const TemplateCard: React.FC<{
   subtitle: string;
   onClick: () => void;
 }> = ({ iconBg, icon, title, subtitle, onClick }) => (
-  <motion.button
-    whileHover={{ scale: 1.02 }}
-    whileTap={{ scale: 0.98 }}
+  <button
     onClick={onClick}
-    className="p-4 rounded-xl bg-secondary hover:bg-tertiary border border-muted hover:border-brand-jade transition-all text-left"
+    className="p-4 rounded-xl bg-secondary hover:bg-tertiary border border-muted hover:border-brand-jade transition-all duration-150 text-left hover:scale-[1.02] active:scale-[0.98]"
   >
     <div className="flex items-start gap-3">
       <div
@@ -337,7 +332,7 @@ const TemplateCard: React.FC<{
         </Typography>
       </div>
     </div>
-  </motion.button>
+  </button>
 );
 
 const EmptyPlaybookQuickTips: React.FC = () => (

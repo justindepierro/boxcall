@@ -520,7 +520,9 @@ export async function calculatePlaybookHealth(
 /**
  * Get health status color based on score
  */
-export function getHealthColor(score: number): string {
+export function getHealthColor(
+  score: number
+): "success" | "warning" | "danger" {
   if (score >= 80) return "success";
   if (score >= 60) return "warning";
   return "danger";

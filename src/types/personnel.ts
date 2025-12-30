@@ -26,12 +26,45 @@ export interface ColorPreset {
 }
 
 /**
- * Badge customization settings
+ * Badge customization settings using preset system (used by BadgeCustomizer)
  */
-export interface BadgeCustomization {
+export interface PresetBadgeCustomization {
   style: BadgeStyle;
   colorPresetId: string;
   fontFamily?: string;
+}
+
+/**
+ * Badge customization settings with explicit colors (used by PersonnelLibrary)
+ */
+export interface ColorBadgeCustomization {
+  backgroundColor: string;
+  textColor: string;
+}
+
+/**
+ * Badge customization settings
+ * Stored as JSONB in personnel_configurations.badge_customization
+ * Can be either preset-based or explicit color-based
+ */
+export type BadgeCustomization = PresetBadgeCustomization | ColorBadgeCustomization;
+
+/**
+ * Type guard to check if badge customization uses explicit colors
+ */
+export function isColorBadgeCustomization(
+  badge: BadgeCustomization | null | undefined
+): badge is ColorBadgeCustomization {
+  return badge !== null && badge !== undefined && 'backgroundColor' in badge;
+}
+
+/**
+ * Type guard to check if badge customization uses preset system
+ */
+export function isPresetBadgeCustomization(
+  badge: BadgeCustomization | null | undefined
+): badge is PresetBadgeCustomization {
+  return badge !== null && badge !== undefined && 'style' in badge;
 }
 
 /**

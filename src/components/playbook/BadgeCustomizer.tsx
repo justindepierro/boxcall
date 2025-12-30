@@ -1,14 +1,14 @@
 import React from "react";
 import { Icon } from "../ui/Icon/Icon";
 import { Typography } from "../design-system/Typography";
-import type { BadgeCustomization, BadgeStyle } from "../../types/personnel";
+import type { PresetBadgeCustomization, BadgeStyle } from "../../types/personnel";
 import { BADGE_COLOR_PRESETS, BADGE_FONT_OPTIONS } from "../../types/personnel";
 import { PersonnelBadge } from "./PersonnelBadge";
 
 interface BadgeCustomizerProps {
   personnelName: string;
-  customization: BadgeCustomization;
-  onChange: (customization: BadgeCustomization) => void;
+  customization: PresetBadgeCustomization;
+  onChange: (customization: PresetBadgeCustomization) => void;
   onSave: () => void;
 }
 
