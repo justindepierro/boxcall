@@ -157,11 +157,11 @@ export function MobilePlaybookView({
 
   return (
     <>
-      {/* Fixed Header - Shows for playbook view with plays, or view title for other views */}
+      {/* Fixed Header - Below AppHeader (top-16 = 64px), shows for playbook view with plays */}
       <div
-        className="fixed top-0 left-0 right-0 z-sticky bg-surface-primary/98 backdrop-blur-lg border-b border-border shadow-sm"
+        className="fixed top-16 left-0 right-0 z-sticky bg-surface-primary/98 backdrop-blur-lg border-b border-border shadow-sm"
         style={{
-          paddingTop: "max(env(safe-area-inset-top, 0px), var(--spacing-md))",
+          paddingTop: "var(--spacing-md)",
           paddingBottom: "var(--spacing-md)",
           paddingLeft: "var(--spacing-lg)",
           paddingRight: "var(--spacing-lg)",
@@ -296,13 +296,13 @@ export function MobilePlaybookView({
         )}
       </div>
 
-      {/* Content area with proper padding for fixed header */}
+      {/* Content area with proper padding for fixed headers (AppHeader 64px + MobileHeader ~80-110px) */}
       <div
         className="min-h-screen bg-surface-secondary"
         style={{
           paddingTop: showSearchHeader
-            ? `calc(130px + env(safe-area-inset-top, 0px))`
-            : `calc(80px + env(safe-area-inset-top, 0px))`,
+            ? "calc(64px + 110px)" // AppHeader (64px) + MobileHeader with search (~110px)
+            : "calc(64px + 60px)", // AppHeader (64px) + MobileHeader without search (~60px)
           paddingBottom: "calc(100px + env(safe-area-inset-bottom, 0px))",
         }}
       >
