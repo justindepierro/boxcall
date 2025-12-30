@@ -86,7 +86,7 @@ describe("buildNewPlayData", () => {
       play_name: "Test",
       formation: "Shotgun",
       f_dir: "Left",
-      formation_direction: "left",
+      formation_direction: "left" as const,
     };
 
     const result = buildNewPlayData(playData, baseArgs.playId, baseArgs.playbookId, baseArgs.userId);
@@ -197,7 +197,7 @@ describe("buildPlayUpdateData", () => {
   it("should include direction fields", () => {
     const updates = {
       f_dir: "Right",
-      formation_direction: "right",
+      formation_direction: "right" as const,
       p_dir: "L",
     };
 

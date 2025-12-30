@@ -7,6 +7,7 @@
     "PGRST",
     "pangea",
     "ftag",
+    "ptag",
     "singleback",
     "gameplan",
     "ilike",
@@ -18,7 +19,9 @@
     "redzone",
     "goalline",
     "NFHS",
-    "pointerupoutside"
+    "pointerupoutside",
+    "varchar",
+    "timestamptz"
   ],
   "ignoreWords": [
     "Pixi",
