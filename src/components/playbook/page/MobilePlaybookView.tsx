@@ -185,6 +185,19 @@ export function MobilePlaybookView({
             ) : (
               hasPlays && (
                 <div className="flex items-center gap-2">
+                  {/* New Play Button */}
+                  <Button
+                    onClick={() => {
+                      triggerHapticFeedback("light");
+                      handleOpenQuickCreate();
+                    }}
+                    variant="primary"
+                    size="sm"
+                    className="h-9 px-3"
+                  >
+                    <Icon name="plus" className="h-4 w-4 mr-1.5" />
+                    New
+                  </Button>
                   {/* Sort Dropdown */}
                   <SortDropdown
                     value={state.filters.sortBy || "name_asc"}
@@ -370,6 +383,8 @@ export function MobilePlaybookView({
                         selectedPlayIds: state.selectedPlayIds,
                         onPlaySelectionChange: (selection: Set<string>) =>
                           dispatch({ type: "SET_SELECTION", selection }),
+                        // Hide PlayListHeader on mobile - MobilePlaybookView has its own header
+                        hideHeader: true,
                       };
 
                       return <PlayList {...commonPlayListProps} />;

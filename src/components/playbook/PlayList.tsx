@@ -64,6 +64,8 @@ interface PlayListProps {
   sortBy?: PlaySortOption;
   onSortChange?: (value: PlaySortOption) => void;
   useWindowScroll?: boolean;
+  // Mobile-specific
+  hideHeader?: boolean;
 }
 
 const PlayListInner: React.FC<PlayListProps> = ({
@@ -87,6 +89,7 @@ const PlayListInner: React.FC<PlayListProps> = ({
   onSortChange,
   // useWindowScroll prop kept for API compatibility but not used (Virtuoso removed)
   useWindowScroll: _useWindowScroll = false,
+  hideHeader = false,
 }) => {
   const activeTeamId = useActiveTeamStore((state) => state.activeTeamId);
 
@@ -328,6 +331,7 @@ const PlayListInner: React.FC<PlayListProps> = ({
 
       {!loading &&
         !error &&
+        !hideHeader &&
         (() => {
           // Derive category for header display
           let selectedCategory: string | undefined;
@@ -450,6 +454,7 @@ function arePlayListPropsEqual(prev: PlayListProps, next: PlayListProps) {
   if (prev.refreshTrigger !== next.refreshTrigger) return false;
   if (prev.enableBulkOperations !== next.enableBulkOperations) return false;
   if (prev.useWindowScroll !== next.useWindowScroll) return false;
+  if (prev.hideHeader !== next.hideHeader) return false;
 
   const ps = prev.selectedPlayIds;
   const ns = next.selectedPlayIds;
