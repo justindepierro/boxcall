@@ -26,11 +26,6 @@ const PersonnelConfigurationModal = lazy(() =>
     default: module.PersonnelConfigurationModal,
   }))
 );
-const PlaybookHealthModal = lazy(() =>
-  import("../PlaybookHealthModal").then((module) => ({
-    default: module.PlaybookHealthModal,
-  }))
-);
 const PlayAssignmentsModal = lazy(() =>
   import("../PlayAssignmentsModal").then((module) => ({
     default: module.PlayAssignmentsModal,
@@ -179,17 +174,6 @@ export function PlaybookModals({
         <Suspense fallback={<div>Loading...</div>}>
           <PersonnelConfigurationModal
             isOpen={isModalOpen("personnel")}
-            onClose={() => closeModal()}
-            playbookId={activePlaybookId}
-          />
-        </Suspense>
-      )}
-
-      {/* Playbook Health Modal */}
-      {isModalOpen("playbookHealth") && (
-        <Suspense fallback={<div>Loading...</div>}>
-          <PlaybookHealthModal
-            isOpen={isModalOpen("playbookHealth")}
             onClose={() => closeModal()}
             playbookId={activePlaybookId}
           />

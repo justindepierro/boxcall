@@ -1,8 +1,22 @@
 import React, { useEffect, useRef, useState, type ReactNode } from "react";
 import { Button } from "../ui/Button/Button";
 import { Typography } from "../design-system/Typography";
-import type { CollaborativeCursor } from "../../hooks/useCollaboration";
 import { debug } from "../../utils/logger";
+
+// Local type since useCollaboration was removed
+interface CollaborativeCursor {
+  x: number;
+  y: number;
+  color: string;
+  user?: { id: string; name: string };
+  // Legacy format support
+  userId?: string;
+  userName?: string;
+  widgetId?: string;
+  widgetX?: number;
+  widgetY?: number;
+  action?: string;
+}
 
 interface CollaborativeWidgetProps {
   widgetId: string;
@@ -98,7 +112,7 @@ export const CollaborativeWidget: React.FC<CollaborativeWidgetProps> = ({
 
   // Get cursors for this widget
   const widgetCursors = cursors.filter(
-    (cursor) => cursor.widgetId === widgetId
+    (cursor) => !cursor.widgetId || cursor.widgetId === widgetId
   );
 
   // Get active participants for this widget (mock)
@@ -154,15 +168,15 @@ export const CollaborativeWidget: React.FC<CollaborativeWidgetProps> = ({
       {children}
 
       {/* Collaborative cursors - simplified for now */}
-      {widgetCursors.map((cursor) => (
+      {widgetCursors.map((cursor, idx) => (
         <div
-          key={cursor.userId}
+          key={cursor.userId || cursor.user?.id || idx}
           className="absolute pointer-events-none w-3 h-3 bg-text-info rounded-full"
           style={{
-            left: cursor.widgetX || 0,
-            top: cursor.widgetY || 0,
+            left: cursor.widgetX || cursor.x || 0,
+            top: cursor.widgetY || cursor.y || 0,
           }}
-          title={`${cursor.userName} - ${cursor.action}`}
+          title={`${cursor.userName || cursor.user?.name || "User"} - ${cursor.action || "active"}`}
         />
       ))}
 

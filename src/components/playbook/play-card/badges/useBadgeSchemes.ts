@@ -8,11 +8,15 @@
 import { useMemo } from "react";
 import type { Play as PlayType } from "../../../../types/play";
 import type { BadgeColorScheme } from "../../../../types/badge";
-import {
-  getCategoryBadgeScheme,
-  getPlayTypeBadgeScheme,
-  useTeamBadgeSchemeOverrides,
-} from "../../../../hooks/useTeamBadgeSchemeOverrides";
+
+// Hook deleted - using fallback functions
+const getCategoryBadgeScheme = (_overrides: unknown, _category: string, _value: string): BadgeColorScheme => "navy";
+const getPlayTypeBadgeScheme = (_overrides: unknown, _playType: string): BadgeColorScheme => "jade";
+const useTeamBadgeSchemeOverrides = () => ({
+  overrides: null,
+  setCategoryScheme: (_category: string, _value: string, _scheme: unknown) => Promise.resolve(),
+  setPlayTypeScheme: (_playType: string, _scheme: unknown) => Promise.resolve(),
+});
 
 // ============================================================================
 // Types
@@ -79,7 +83,7 @@ export function useBadgeSchemes({
       getCategoryBadgeScheme(
         overrides,
         "personnel",
-        play.personnel ?? fallback.personnel
+        play.personnel ?? fallback.personnel ?? ""
       ),
     [overrides, play.personnel, fallback.personnel]
   );
@@ -117,7 +121,7 @@ export function useBadgeSchemes({
       getCategoryBadgeScheme(
         overrides,
         "protection",
-        play.protection ?? fallback.protection
+        play.protection ?? fallback.protection ?? ""
       ),
     [overrides, play.protection, fallback.protection]
   );
@@ -136,7 +140,7 @@ export function useBadgeSchemes({
       getCategoryBadgeScheme(
         overrides,
         "motion",
-        play.motion ?? fallback.motion
+        play.motion ?? fallback.motion ?? ""
       ),
     [overrides, play.motion, fallback.motion]
   );

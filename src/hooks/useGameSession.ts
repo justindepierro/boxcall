@@ -24,15 +24,48 @@ import type {
 } from "../types/session";
 import type { GamePlan, GamePlanPlay } from "../services/gamePlanService";
 import { logError } from "../utils/logger";
-import {
-  calculateGameUrgency,
-  shouldGoForTwo,
-  shouldBeInHurryUp,
-  getPlayTypeRecommendation,
-} from "../utils/gameUrgencyCalculator";
 import { TeamSituationDefinitionsService } from "../services/teamSituationDefinitionsService";
 import type { SituationDefinitions } from "../types/situationDefinitions";
 import { bucketFieldZoneKey } from "../utils/situationBucketing";
+
+// Inline game urgency helpers (originally from gameUrgencyCalculator)
+function calculateGameUrgency(
+  quarter: number,
+  timeRemaining: string,
+  teamScore: number,
+  opponentScore: number
+): GameUrgency {
+  const scoreDiff = Math.abs(teamScore - opponentScore);
+  const [mins, secs] = timeRemaining.split(":").map(Number);
+  const secondsLeft = mins * 60 + secs;
+  
+  if (quarter <= 2) return "normal" as GameUrgency;
+  if (quarter === 3) return (secondsLeft < 300 ? "elevated" : "normal") as GameUrgency;
+  
+  // 4th quarter urgency
+  if (scoreDiff > 14) return "normal" as GameUrgency;
+  if (scoreDiff > 7) return (secondsLeft < 300 ? "critical" : "elevated") as GameUrgency;
+  return (secondsLeft < 600 ? "critical" : "elevated") as GameUrgency;
+}
+
+function shouldGoForTwo(teamScore: number, opponentScore: number, quarter: number): boolean {
+  if (quarter < 4) return false;
+  const diff = teamScore - opponentScore;
+  return diff === -8 || diff === -2;
+}
+
+function shouldBeInHurryUp(timeRemaining: string, teamScore: number, opponentScore: number): boolean {
+  const [mins, secs] = timeRemaining.split(":").map(Number);
+  const secondsLeft = mins * 60 + secs;
+  return secondsLeft < 120 && teamScore < opponentScore;
+}
+
+function getPlayTypeRecommendation(urgency: string, down: number, distance: number): string {
+  if (urgency === "high" && down >= 3) return "aggressive";
+  if (down === 1 && distance <= 3) return "power";
+  if (distance > 10) return "explosive";
+  return "balanced";
+}
 
 interface GameSituation {
   quarter: number;
@@ -350,8 +383,17 @@ export function useGameSession({
         updates.teamScore !== undefined ||
         updates.opponentScore !== undefined
       ) {
-        next.gameUrgency = calculateGameUrgency(next);
-        next.isHurryUp = shouldBeInHurryUp(next);
+        next.gameUrgency = calculateGameUrgency(
+          next.quarter,
+          next.timeRemaining,
+          next.teamScore,
+          next.opponentScore
+        );
+        next.isHurryUp = shouldBeInHurryUp(
+          next.timeRemaining,
+          next.teamScore,
+          next.opponentScore
+        );
       }
 
       return next;
@@ -367,8 +409,17 @@ export function useGameSession({
           : { ...prev, opponentScore: prev.opponentScore + points };
 
       // Recalculate game urgency after score change
-      next.gameUrgency = calculateGameUrgency(next);
-      next.isHurryUp = shouldBeInHurryUp(next);
+      next.gameUrgency = calculateGameUrgency(
+        next.quarter,
+        next.timeRemaining,
+        next.teamScore,
+        next.opponentScore
+      );
+      next.isHurryUp = shouldBeInHurryUp(
+        next.timeRemaining,
+        next.teamScore,
+        next.opponentScore
+      );
 
       return next;
     });
@@ -402,12 +453,23 @@ export function useGameSession({
 
   // Phase 14: Should go for 2-point conversion?
   const shouldGoForTwoDecision = useMemo(() => {
-    return shouldGoForTwo(situation);
+    return {
+      should: shouldGoForTwo(situation.teamScore, situation.opponentScore, situation.quarter),
+      reason: "Based on score differential"
+    };
   }, [situation]);
 
   // Phase 14: Play type recommendation based on game urgency
   const playTypeRecommendation = useMemo(() => {
-    return getPlayTypeRecommendation(situation);
+    const type = getPlayTypeRecommendation(
+      situation.gameUrgency,
+      situation.down,
+      situation.distance
+    ) as "run" | "pass" | "balanced";
+    return {
+      type,
+      reason: `Based on ${situation.gameUrgency} urgency`
+    };
   }, [situation]);
 
   // Filter plays by situation (Billick Situations)

@@ -10,7 +10,6 @@ export {
   ProgressBadge,
   NotificationBadge,
 } from "./Badge";
-export { ComplexityBadge } from "./ComplexityBadge";
 export { EditableSchemeBadge } from "./EditableSchemeBadge";
 export type { BadgeProps, BadgeVariant } from "./Badge";
 

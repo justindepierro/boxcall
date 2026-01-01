@@ -1,10 +1,8 @@
 import { create } from "zustand";
 
-import {
-  TeamBadgeSchemeOverridesService,
-  type TeamBadgeSchemeOverrides,
-  type TeamBadgeSchemeOverridesPatch,
-} from "../services/teamBadgeSchemeOverridesService";
+// Service deleted - using local types
+type TeamBadgeSchemeOverrides = Record<string, unknown>;
+type TeamBadgeSchemeOverridesPatch = Partial<TeamBadgeSchemeOverrides>;
 
 type OverridesEntry = {
   overrides: TeamBadgeSchemeOverrides | null;
@@ -47,7 +45,8 @@ export const useTeamBadgeSchemeOverridesStore =
       }));
 
       try {
-        const loaded = await TeamBadgeSchemeOverridesService.get(teamId);
+        // Service deleted - return empty overrides
+        const loaded = {};
         set((s) => ({
           byTeamId: {
             ...s.byTeamId,
@@ -87,7 +86,8 @@ export const useTeamBadgeSchemeOverridesStore =
       }));
 
       try {
-        const saved = await TeamBadgeSchemeOverridesService.set(teamId, patch);
+        // Service deleted - return merged overrides
+        const saved = { ...(current?.overrides ?? {}), ...patch };
         set((s) => ({
           byTeamId: {
             ...s.byTeamId,

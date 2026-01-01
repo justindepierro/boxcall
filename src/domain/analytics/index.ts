@@ -96,14 +96,3 @@ export {
   type PlayRecommendation,
   type EfficiencyMetrics,
 } from "./coachAnalytics";
-
-// Fast analytics service (A+ System - uses denormalized views)
-export {
-  FastAnalyticsService,
-  type PlayFamilyStats,
-  type SituationalStats as FastSituationalStats,
-  type PersonnelStats,
-  type OpponentStats,
-  type TendencyReport as FastTendencyReport,
-  type TendencyInsight,
-} from "../../services/fastAnalyticsService";

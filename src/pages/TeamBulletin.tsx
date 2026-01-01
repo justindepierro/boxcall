@@ -11,9 +11,6 @@ import { ROUTES } from "../routes/paths";
 import { useRoles } from "../hooks/useRoles";
 import { LoadingScreen } from "../components/ui/LoadingScreen";
 
-// Collaboration components and provider
-import { CollaborationProvider } from "../components/collaboration/CollaborationProvider";
-
 // Extracted components and hooks
 import { useTeamBulletinData, type TeamData } from "./TeamBulletin/hooks";
 import {
@@ -64,16 +61,6 @@ function getLoadingSubtitle(flags: {
   );
 }
 
-function getCollaborationRole(params: {
-  profileRole: string | null | undefined;
-  isCoach: boolean;
-  userRole: string;
-}): "coach" | "parent" | "player" {
-  if (params.profileRole === "admin" || params.isCoach) return "coach";
-  if (params.userRole === "family") return "parent";
-  return "player";
-}
-
 function getModalUserRole(
   profileRole: string | null | undefined,
   userRole: string
@@ -111,7 +98,7 @@ function TeamBulletinReady({
   user,
   profile,
   userRole,
-  isCoach,
+  isCoach: _isCoach,
   openSeasonStats,
   openTrophyCase,
   openTeamGoals,
@@ -169,50 +156,36 @@ function TeamBulletinReady({
           onOpenSeasonStats={openSeasonStats}
         />
 
-        <CollaborationProvider
-          teamId={teamId}
-          dashboardId="team-bulletin"
-          user={{
-            id: user?.id || "anonymous",
-            name: profile?.display_name || profile?.full_name || "Team Member",
-            role: getCollaborationRole({
-              profileRole: profile?.role,
-              isCoach,
-              userRole,
-            }),
-          }}
+        <main
+          id="main-content"
+          role="main"
+          aria-labelledby="team-dashboard-heading"
         >
-          <main
-            id="main-content"
-            role="main"
-            aria-labelledby="team-dashboard-heading"
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              <LeftSidebar
-                teamId={teamId}
-                userRole={userRole}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <LeftSidebar
+              teamId={teamId}
+              userRole={userRole}
+              onOpenTrophyCase={openTrophyCase}
+              onOpenTeamGoals={openTeamGoals}
+              onOpenTeamVotes={openTeamVotes}
+            />
+
+            <section className="lg:col-span-6 space-y-4">
+              <MobileQuickActions
                 onOpenTrophyCase={openTrophyCase}
                 onOpenTeamGoals={openTeamGoals}
                 onOpenTeamVotes={openTeamVotes}
+                onOpenSeasonStats={openSeasonStats}
               />
+              <AnnouncementsList teamId={teamId} />
+            </section>
 
-              <section className="lg:col-span-6 space-y-4">
-                <MobileQuickActions
-                  onOpenTrophyCase={openTrophyCase}
-                  onOpenTeamGoals={openTeamGoals}
-                  onOpenTeamVotes={openTeamVotes}
-                  onOpenSeasonStats={openSeasonStats}
-                />
-                <AnnouncementsList teamId={teamId} />
-              </section>
-
-              <RightSidebar
-                teamId={teamId}
-                memberCount={teamData?.memberCount || 0}
-              />
-            </div>
-          </main>
-        </CollaborationProvider>
+            <RightSidebar
+              teamId={teamId}
+              memberCount={teamData?.memberCount || 0}
+            />
+          </div>
+        </main>
 
         {/* Modal Components (lazy loaded with Suspense) */}
         <Suspense fallback={null}>

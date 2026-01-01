@@ -8,12 +8,10 @@ export * from "./dashboardService";
 export * from "./dataSyncService";
 export * from "./gamePlanService";
 export * from "./gameResultsService"; // Game results tracking
-export * from "./performanceAnalyticsService"; // Renamed from playerPerformanceAnalyticsService
 export * from "./playAnalyticsService"; // Consolidates game planning + playbook analytics
 export * from "./playsService"; // Now includes playbook search
 export * from "./postsService";
 export * from "./practiceService"; // Now includes practice scripts
-export * from "./realTimeCollaboration";
 export * from "./roleService";
 export * from "./rosterService";
 export * from "./statsService";

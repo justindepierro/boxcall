@@ -1,15 +1,42 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { readLocalJson, writeLocalJson } from "../utils/storage";
 
-import {
-  getPlayCardLayoutPreferences,
-  patchPlayCardLayoutPreferences,
-  type PlayCardLayoutPreferences,
-} from "../utils/localPlayCardLayout";
 import {
   PreferenceService,
   type UserPreferences,
 } from "../services/preferenceService";
 import { getCurrentUserId } from "../lib/auth-helpers";
+
+// Inline type (originally from localPlayCardLayout)
+export interface PlayCardLayoutPreferences {
+  showImage: boolean;
+  showFormation: boolean;
+  showPersonnel: boolean;
+  showTags: boolean;
+  showNotes: boolean;
+  cardSize: "small" | "medium" | "large";
+}
+
+// Inline helpers (originally from localPlayCardLayout)
+function getPlayCardLayoutPreferences(playId: string): Partial<PlayCardLayoutPreferences> | null {
+  const key = `bc_play_card_layout_${playId}`;
+  return readLocalJson<PlayCardLayoutPreferences>(key) ?? null;
+}
+
+function patchPlayCardLayoutPreferences(
+  playId: string,
+  patch: Partial<PlayCardLayoutPreferences>
+): Partial<PlayCardLayoutPreferences> {
+  try {
+    const key = `bc_play_card_layout_${playId}`;
+    const existing = getPlayCardLayoutPreferences(playId) || {};
+    const merged = { ...existing, ...patch };
+    writeLocalJson(key, merged);
+    return merged;
+  } catch {
+    return patch;
+  }
+}
 
 type StoredLayoutPatch = Partial<PlayCardLayoutPreferences>;
 
@@ -18,38 +45,17 @@ type UsePlayCardLayoutPreferencesResult = {
   patchLayout: (patch: StoredLayoutPatch) => void;
 };
 
-function arrayEqual(a: string[], b: string[]): boolean {
-  if (a === b) return true;
-  if (a.length !== b.length) return false;
-  for (let i = 0; i < a.length; i += 1) {
-    if (a[i] !== b[i]) return false;
-  }
-  return true;
-}
-
-function recordEqual(
-  a: Record<string, boolean>,
-  b: Record<string, boolean>
-): boolean {
-  if (a === b) return true;
-  const aKeys = Object.keys(a);
-  const bKeys = Object.keys(b);
-  if (aKeys.length !== bKeys.length) return false;
-  for (const key of aKeys) {
-    if (a[key] !== b[key]) return false;
-  }
-  return true;
-}
-
 function layoutEqual(
   a: PlayCardLayoutPreferences,
   b: PlayCardLayoutPreferences
 ): boolean {
   return (
-    arrayEqual(a.formationFieldOrder, b.formationFieldOrder) &&
-    recordEqual(a.formationFieldVisibility, b.formationFieldVisibility) &&
-    arrayEqual(a.playDetailsFieldOrder, b.playDetailsFieldOrder) &&
-    recordEqual(a.playDetailsFieldVisibility, b.playDetailsFieldVisibility)
+    a.showImage === b.showImage &&
+    a.showFormation === b.showFormation &&
+    a.showPersonnel === b.showPersonnel &&
+    a.showTags === b.showTags &&
+    a.showNotes === b.showNotes &&
+    a.cardSize === b.cardSize
   );
 }
 
@@ -58,15 +64,12 @@ function mergeWithDefaults(
   partial: Partial<PlayCardLayoutPreferences> | null
 ): PlayCardLayoutPreferences {
   return {
-    formationFieldOrder:
-      partial?.formationFieldOrder ?? defaults.formationFieldOrder,
-    formationFieldVisibility:
-      partial?.formationFieldVisibility ?? defaults.formationFieldVisibility,
-    playDetailsFieldOrder:
-      partial?.playDetailsFieldOrder ?? defaults.playDetailsFieldOrder,
-    playDetailsFieldVisibility:
-      partial?.playDetailsFieldVisibility ??
-      defaults.playDetailsFieldVisibility,
+    showImage: partial?.showImage ?? defaults.showImage,
+    showFormation: partial?.showFormation ?? defaults.showFormation,
+    showPersonnel: partial?.showPersonnel ?? defaults.showPersonnel,
+    showTags: partial?.showTags ?? defaults.showTags,
+    showNotes: partial?.showNotes ?? defaults.showNotes,
+    cardSize: partial?.cardSize ?? defaults.cardSize,
   };
 }
 

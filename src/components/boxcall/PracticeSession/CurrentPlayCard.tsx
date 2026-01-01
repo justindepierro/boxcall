@@ -19,10 +19,10 @@ import { MiniDiagram } from "../MiniDiagram";
 import type { CurrentPlayCardProps } from "./types";
 import type { Play } from "../../../types/play";
 import { EditableSchemeBadge } from "../../ui/Badge";
-import {
-  getPlayTypeBadgeScheme,
-  useTeamBadgeSchemeOverrides,
-} from "../../../hooks/useTeamBadgeSchemeOverrides";
+import type { BadgeColorScheme } from "../../../types/badge";
+
+// Hook deleted - using fallback type
+const getPlayTypeBadgeScheme = (_overrides: unknown, _playType: string): BadgeColorScheme => "jade";
 
 /**
  * Hero card for displaying current play details
@@ -37,7 +37,9 @@ export const CurrentPlayCard: React.FC<CurrentPlayCardProps> = ({
   onPrevious,
   onNext,
 }) => {
-  const { overrides, setPlayTypeScheme } = useTeamBadgeSchemeOverrides();
+  // Hook deleted - using fallback
+  const overrides = null;
+  const setPlayTypeScheme = (_playType: string, _scheme: unknown) => Promise.resolve();
 
   if (!currentPlay || !currentPlay.play) {
     return null;

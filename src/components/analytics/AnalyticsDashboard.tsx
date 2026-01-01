@@ -13,12 +13,7 @@ import {
   type PlaybookAnalyticsSummary,
   type FormationAnalytics,
 } from "../../services/playAnalyticsService";
-import { PlayerPerformanceDashboard } from "./PlayerPerformanceDashboard";
 import { GamePlanningDashboard } from "./GamePlanningDashboard";
-import { SessionAnalyticsDashboard } from "./SessionAnalyticsDashboard";
-import { TrendAnalyticsDashboard } from "./TrendAnalyticsDashboard";
-import { FastAnalyticsDashboard } from "./FastAnalyticsDashboard";
-import { useActiveTeamStore } from "../../stores/activeTeamStore";
 
 /**
  * Advanced Analytics Dashboard - Phase 4
@@ -554,33 +549,38 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         <PerformanceView analytics={analytics} />
       )}
       {selectedView === "player-performance" && (
-        <PlayerPerformanceDashboard teamId="demo-team-id" />
+        <Card className="p-lg text-center">
+          <Typography variant="body-md" className="text-secondary">
+            Player Performance Analytics - Coming Soon
+          </Typography>
+        </Card>
       )}
       {selectedView === "game-planning" && (
         <GamePlanningDashboard teamId="demo-team-id" />
       )}
-      {selectedView === "session-analytics" && <SessionAnalyticsView />}
-      {selectedView === "trend-analytics" && <TrendAnalyticsView />}
-      {selectedView === "fast-analytics" && <FastAnalyticsView />}
+      {selectedView === "session-analytics" && (
+        <Card className="p-lg text-center">
+          <Typography variant="body-md" className="text-secondary">
+            Session Analytics - Coming Soon
+          </Typography>
+        </Card>
+      )}
+      {selectedView === "trend-analytics" && (
+        <Card className="p-lg text-center">
+          <Typography variant="body-md" className="text-secondary">
+            Trend Analytics - Coming Soon
+          </Typography>
+        </Card>
+      )}
+      {selectedView === "fast-analytics" && (
+        <Card className="p-lg text-center">
+          <Typography variant="body-md" className="text-secondary">
+            Fast Analytics - Coming Soon
+          </Typography>
+        </Card>
+      )}
     </div>
   );
-};
-
-// Fast Analytics View - A+ Grade denormalized execution analytics
-const FastAnalyticsView: React.FC = () => {
-  const activeTeamId = useActiveTeamStore((state) => state.activeTeamId);
-
-  if (!activeTeamId) {
-    return (
-      <Card className="p-lg text-center">
-        <Typography variant="body-md" className="text-secondary">
-          Select a team to view Fast Analytics
-        </Typography>
-      </Card>
-    );
-  }
-
-  return <FastAnalyticsDashboard teamId={activeTeamId} />;
 };
 
 // Overview View Component
@@ -985,14 +985,4 @@ const PerformanceView: React.FC<{ analytics: PlaybookAnalyticsSummary }> = ({
       </Card>
     </div>
   </div>
-);
-
-// Session Analytics View Component
-const SessionAnalyticsView: React.FC = () => (
-  <SessionAnalyticsDashboard sessionId="demo-session-id" />
-);
-
-// Trend Analytics View Component
-const TrendAnalyticsView: React.FC = () => (
-  <TrendAnalyticsDashboard playId="demo-play-id" teamId="demo-team-id" />
 );
