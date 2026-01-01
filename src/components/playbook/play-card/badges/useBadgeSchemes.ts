@@ -10,11 +10,19 @@ import type { Play as PlayType } from "../../../../types/play";
 import type { BadgeColorScheme } from "../../../../types/badge";
 
 // Hook deleted - using fallback functions
-const getCategoryBadgeScheme = (_overrides: unknown, _category: string, _value: string): BadgeColorScheme => "navy";
-const getPlayTypeBadgeScheme = (_overrides: unknown, _playType: string): BadgeColorScheme => "jade";
+const getCategoryBadgeScheme = (
+  _overrides: unknown,
+  _category: string,
+  _value: string
+): BadgeColorScheme => "navy";
+const getPlayTypeBadgeScheme = (
+  _overrides: unknown,
+  _playType: string
+): BadgeColorScheme => "jade";
 const useTeamBadgeSchemeOverrides = () => ({
   overrides: null,
-  setCategoryScheme: (_category: string, _value: string, _scheme: unknown) => Promise.resolve(),
+  setCategoryScheme: (_category: string, _value: string, _scheme: unknown) =>
+    Promise.resolve(),
   setPlayTypeScheme: (_playType: string, _scheme: unknown) => Promise.resolve(),
 });
 

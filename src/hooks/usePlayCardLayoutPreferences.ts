@@ -18,7 +18,9 @@ export interface PlayCardLayoutPreferences {
 }
 
 // Inline helpers (originally from localPlayCardLayout)
-function getPlayCardLayoutPreferences(playId: string): Partial<PlayCardLayoutPreferences> | null {
+function getPlayCardLayoutPreferences(
+  playId: string
+): Partial<PlayCardLayoutPreferences> | null {
   const key = `bc_play_card_layout_${playId}`;
   return readLocalJson<PlayCardLayoutPreferences>(key) ?? null;
 }

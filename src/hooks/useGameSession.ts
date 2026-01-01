@@ -38,29 +38,43 @@ function calculateGameUrgency(
   const scoreDiff = Math.abs(teamScore - opponentScore);
   const [mins, secs] = timeRemaining.split(":").map(Number);
   const secondsLeft = mins * 60 + secs;
-  
+
   if (quarter <= 2) return "normal" as GameUrgency;
-  if (quarter === 3) return (secondsLeft < 300 ? "elevated" : "normal") as GameUrgency;
-  
+  if (quarter === 3)
+    return (secondsLeft < 300 ? "elevated" : "normal") as GameUrgency;
+
   // 4th quarter urgency
   if (scoreDiff > 14) return "normal" as GameUrgency;
-  if (scoreDiff > 7) return (secondsLeft < 300 ? "critical" : "elevated") as GameUrgency;
+  if (scoreDiff > 7)
+    return (secondsLeft < 300 ? "critical" : "elevated") as GameUrgency;
   return (secondsLeft < 600 ? "critical" : "elevated") as GameUrgency;
 }
 
-function shouldGoForTwo(teamScore: number, opponentScore: number, quarter: number): boolean {
+function shouldGoForTwo(
+  teamScore: number,
+  opponentScore: number,
+  quarter: number
+): boolean {
   if (quarter < 4) return false;
   const diff = teamScore - opponentScore;
   return diff === -8 || diff === -2;
 }
 
-function shouldBeInHurryUp(timeRemaining: string, teamScore: number, opponentScore: number): boolean {
+function shouldBeInHurryUp(
+  timeRemaining: string,
+  teamScore: number,
+  opponentScore: number
+): boolean {
   const [mins, secs] = timeRemaining.split(":").map(Number);
   const secondsLeft = mins * 60 + secs;
   return secondsLeft < 120 && teamScore < opponentScore;
 }
 
-function getPlayTypeRecommendation(urgency: string, down: number, distance: number): string {
+function getPlayTypeRecommendation(
+  urgency: string,
+  down: number,
+  distance: number
+): string {
   if (urgency === "high" && down >= 3) return "aggressive";
   if (down === 1 && distance <= 3) return "power";
   if (distance > 10) return "explosive";
@@ -454,8 +468,12 @@ export function useGameSession({
   // Phase 14: Should go for 2-point conversion?
   const shouldGoForTwoDecision = useMemo(() => {
     return {
-      should: shouldGoForTwo(situation.teamScore, situation.opponentScore, situation.quarter),
-      reason: "Based on score differential"
+      should: shouldGoForTwo(
+        situation.teamScore,
+        situation.opponentScore,
+        situation.quarter
+      ),
+      reason: "Based on score differential",
     };
   }, [situation]);
 
@@ -468,7 +486,7 @@ export function useGameSession({
     ) as "run" | "pass" | "balanced";
     return {
       type,
-      reason: `Based on ${situation.gameUrgency} urgency`
+      reason: `Based on ${situation.gameUrgency} urgency`,
     };
   }, [situation]);
 

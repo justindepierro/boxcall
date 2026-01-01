@@ -178,11 +178,11 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   usePlayCardLayoutPreferences(play.id, {
     showImage: true,
     showFormation: true,
-      showPersonnel: true,
-      showTags: true,
-      showNotes: false,
-      cardSize: "medium",
-    });
+    showPersonnel: true,
+    showTags: true,
+    showNotes: false,
+    cardSize: "medium",
+  });
 
   // Quick Wins: Recent plays tracking and favorites
   const { trackPlayView } = useRecentPlays();
