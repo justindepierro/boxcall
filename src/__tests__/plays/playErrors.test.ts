@@ -30,7 +30,11 @@ describe("PlayError", () => {
 
 describe("PlayValidationError", () => {
   it("should create error with field and code", () => {
-    const error = new PlayValidationError("Field is required", "play_name", "REQUIRED");
+    const error = new PlayValidationError(
+      "Field is required",
+      "play_name",
+      "REQUIRED"
+    );
     expect(error.message).toBe("Field is required");
     expect(error.field).toBe("play_name");
     expect(error.code).toBe("REQUIRED");
@@ -139,7 +143,9 @@ describe("isDuplicateError", () => {
   });
 
   it("should detect 23505 error code", () => {
-    const dbError = new Error("Duplicate key violation") as Error & { code?: string };
+    const dbError = new Error("Duplicate key violation") as Error & {
+      code?: string;
+    };
     dbError.code = "23505";
     expect(isDuplicateError(dbError)).toBe(true);
   });

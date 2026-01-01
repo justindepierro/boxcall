@@ -3,8 +3,6 @@ import type { ReactNode } from "react";
 import { ErrorBoundary } from "../components/ui/ErrorBoundary";
 import { ToastProvider } from "../components/ui/Toast";
 import { queryClient } from "./queryClient";
-import { ConfirmProvider } from "../contexts/ConfirmContext";
-import { UndoQueueProvider } from "../contexts/UndoQueueContext";
 import { TelemetryProvider } from "../telemetry/context";
 import { RoleProvider } from "../hooks/useRoles";
 import { OfflineProvider } from "../contexts/OfflineContext";
@@ -26,11 +24,7 @@ export function AppProviders({ children }: AppProvidersProps) {
         <OfflineProvider>
           <QueryClientProvider client={queryClient}>
             <ToastProvider>
-              <ConfirmProvider>
-                <UndoQueueProvider>
-                  <RoleProvider>{children}</RoleProvider>
-                </UndoQueueProvider>
-              </ConfirmProvider>
+              <RoleProvider>{children}</RoleProvider>
             </ToastProvider>
           </QueryClientProvider>
         </OfflineProvider>

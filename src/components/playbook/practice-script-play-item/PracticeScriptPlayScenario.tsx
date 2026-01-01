@@ -421,10 +421,12 @@ export function PracticeScriptPlayScenario({
           hash: next.hash,
           downDistance: next.downDistance,
           fieldPosition: next.fieldPosition,
-          defensiveFront:
-            next.defensiveFront as Parameters<typeof onUpdateScenario>[0]["defensiveFront"],
-          coverage:
-            next.coverage as Parameters<typeof onUpdateScenario>[0]["coverage"],
+          defensiveFront: next.defensiveFront as Parameters<
+            typeof onUpdateScenario
+          >[0]["defensiveFront"],
+          coverage: next.coverage as Parameters<
+            typeof onUpdateScenario
+          >[0]["coverage"],
           blitz: next.blitz as Parameters<typeof onUpdateScenario>[0]["blitz"],
         });
       }

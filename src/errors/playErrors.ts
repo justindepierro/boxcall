@@ -53,9 +53,10 @@ export class PlayDuplicateError extends PlayError {
     public readonly formation?: string,
     public readonly playName?: string
   ) {
-    const message = formation && playName
-      ? `A play named "${playName}" already exists in formation "${formation}"`
-      : "A play with this name and formation already exists";
+    const message =
+      formation && playName
+        ? `A play named "${playName}" already exists in formation "${formation}"`
+        : "A play with this name and formation already exists";
     super(message, "DUPLICATE_PLAY");
     this.name = "PlayDuplicateError";
   }
@@ -173,7 +174,10 @@ export function getPlayErrorMessage(error: unknown): string {
     if ((error as { code?: string }).code === "23505") {
       return "A play with this name and formation already exists. Try a different name.";
     }
-    if (error.message.includes("Rate limit") || error.message.includes("too quickly")) {
+    if (
+      error.message.includes("Rate limit") ||
+      error.message.includes("too quickly")
+    ) {
       return error.message;
     }
   }

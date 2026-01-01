@@ -1,3 +1,12 @@
+// Play combo for recent play tracking
+export interface PlayCombo {
+  formation: string;
+  formationId?: string;
+  personnel?: string;
+  playType?: string;
+  timestamp: number;
+}
+
 // Play creation source tracking
 export type PlayCreationSource =
   | "add_play_modal" // From AddNewPlayModal (hero tile)

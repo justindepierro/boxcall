@@ -1,8 +1,16 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable complexity */
 
-import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import React, {
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+  memo,
+  useDeferredValue,
+  useState,
+} from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Icon } from "../../ui/Icon/Icon";
 import { Button } from "../../ui/Button/Button";
 import type { ButtonSize } from "../../ui/Button/Button.types";
@@ -22,10 +30,16 @@ import { SortDropdown } from "../page/SortDropdown";
 import { FormationSyncPanel } from "../../formations/FormationSyncPanel";
 import { MobilePlayCardSkeletonList } from "../../mobile/ui/MobilePlayCardSkeleton";
 import { PlayList } from "../PlayList";
+import { PlayListEmptyState } from "../PlayListEmptyState";
 import { SelectionModeToggle } from "../SelectionModeToggle";
-import { hasActiveFilters, type PlaySortOption } from "../../../types/filters";
+import {
+  hasActiveFilters,
+  type PlaySortOption,
+  type PlaybookFilters,
+} from "../../../types/filters";
 import { PracticeScriptList } from "../PracticeScriptList";
 import { triggerHapticFeedback } from "../../../lib/hapticFeedback";
+import { softNavigate } from "../../../utils/softNavigate";
 import { debug } from "../../../utils/logger";
 import type { Play } from "../../../types/play";
 import type {
@@ -36,6 +50,13 @@ import type {
 import type { PracticeScript } from "../../../services/practiceService";
 
 const MOBILE_RENDER_WARN_THRESHOLD_MS = 20;
+
+// CSS custom properties for header heights (prevents magic numbers)
+const HEADER_HEIGHTS = {
+  appHeader: "64px",
+  mobileHeaderWithSearch: "110px",
+  mobileHeaderNoSearch: "60px",
+} as const;
 
 interface MobilePlaybookViewProps {
   // State
@@ -61,8 +82,6 @@ interface MobilePlaybookViewProps {
   handleOpenQuickCreate: () => void;
   handleOpenPersonnel: () => void;
   handleOpenSettings: () => void;
-  handleQuickNewPracticeScript: () => void;
-  handleQuickNewGamePlan: () => void;
   handleOpenKeyboardShortcuts: () => void;
   handlePullRefresh: () => Promise<void>;
   handleEditPlay: (play: Play) => void;
@@ -89,7 +108,7 @@ interface MobilePlaybookViewProps {
   };
 }
 
-export function MobilePlaybookView({
+function MobilePlaybookViewInner({
   state,
   showFiltersSheet,
   showStatsSheet,
@@ -104,8 +123,6 @@ export function MobilePlaybookView({
   handleOpenQuickCreate,
   handleOpenPersonnel,
   handleOpenSettings,
-  handleQuickNewPracticeScript: _handleQuickNewPracticeScript,
-  handleQuickNewGamePlan: _handleQuickNewGamePlan,
   handleOpenKeyboardShortcuts,
   handlePullRefresh,
   handleEditPlay,
@@ -129,23 +146,204 @@ export function MobilePlaybookView({
     renderStartRef.current = performance.now();
   }
 
+  // Local search state for instant UI feedback (deferred for performance)
+  const [localSearch, setLocalSearch] = useState(state.filters.search);
+  const deferredSearch = useDeferredValue(localSearch);
+  const isSearchStale = localSearch !== deferredSearch;
+
+  // Sync deferred search back to state (batched updates)
+  useEffect(() => {
+    if (deferredSearch !== state.filters.search) {
+      dispatch({
+        type: "SET_FILTERS",
+        filters: { ...state.filters, search: deferredSearch },
+      });
+    }
+  }, [deferredSearch, dispatch, state.filters]);
+
   // Use playsCreated from state as the source of truth for whether plays exist
-  // optimisticPlays only contains newly created/updated plays, not all plays
   const hasPlays = state.playsCreated > 0;
   const showHeaderSkeleton =
     isLoadingPlays && state.currentView === "playbook" && !hasPlays;
-
-  // View titles for header
-  const viewTitles: Record<CoachingView, string> = {
-    playbook: `${state.playsCreated} ${state.playsCreated === 1 ? "Play" : "Plays"}`,
-    "practice-script": "Practice Scripts",
-    "game-plan": "Game Plans",
-    analytics: "Analytics",
-  };
-
-  // Determine if we should show the search/filter header
   const showSearchHeader = state.currentView === "playbook" && hasPlays;
 
+  // Memoized view titles
+  const viewTitles = useMemo<Record<CoachingView, string>>(
+    () => ({
+      playbook: `${state.playsCreated} ${state.playsCreated === 1 ? "Play" : "Plays"}`,
+      "practice-script": "Practice Scripts",
+      "game-plan": "Game Plans",
+      analytics: "Analytics",
+    }),
+    [state.playsCreated]
+  );
+
+  // Memoized content padding style (uses CSS custom properties)
+  const contentPaddingStyle = useMemo(
+    () => ({
+      paddingTop: showSearchHeader
+        ? `calc(${HEADER_HEIGHTS.appHeader} + ${HEADER_HEIGHTS.mobileHeaderWithSearch})`
+        : `calc(${HEADER_HEIGHTS.appHeader} + ${HEADER_HEIGHTS.mobileHeaderNoSearch})`,
+      paddingBottom: "calc(100px + env(safe-area-inset-bottom, 0px))",
+    }),
+    [showSearchHeader]
+  );
+
+  // Memoized stats for bottom sheet
+  const mobileStats = useMemo(
+    () => ({
+      totalPlays: state.playsCreated || 0,
+      formationsCount: Math.max(1, Math.floor((state.playsCreated || 0) / 3)),
+      passPlays: Math.floor((state.playsCreated || 0) * 0.4),
+      runPlays: Math.floor((state.playsCreated || 0) * 0.4),
+      rpoPlays: Math.floor((state.playsCreated || 0) * 0.15),
+      playActionPlays: Math.floor((state.playsCreated || 0) * 0.05),
+    }),
+    [state.playsCreated]
+  );
+
+  // Memoized callbacks for button handlers
+  const handleNewPlayClick = useCallback(() => {
+    triggerHapticFeedback("light");
+    handleOpenQuickCreate();
+  }, [handleOpenQuickCreate]);
+
+  const handleFilterClick = useCallback(() => {
+    triggerHapticFeedback("light");
+    setShowFiltersSheet(true);
+  }, [setShowFiltersSheet]);
+
+  const handlePersonnelClick = useCallback(() => {
+    triggerHapticFeedback("light");
+    handleOpenPersonnel();
+  }, [handleOpenPersonnel]);
+
+  const handleSettingsClick = useCallback(() => {
+    triggerHapticFeedback("light");
+    handleOpenSettings();
+  }, [handleOpenSettings]);
+
+  const handleShortcutsClick = useCallback(() => {
+    triggerHapticFeedback("light");
+    handleOpenKeyboardShortcuts();
+  }, [handleOpenKeyboardShortcuts]);
+
+  const handleStatsClick = useCallback(() => {
+    triggerHapticFeedback("light");
+    setShowStatsSheet(true);
+  }, [setShowStatsSheet]);
+
+  const handleBulkToggle = useCallback(() => {
+    triggerHapticFeedback("light");
+    dispatch({ type: "TOGGLE_BULK" });
+  }, [dispatch]);
+
+  const handleSelectionChange = useCallback(
+    (selection: Set<string>) => {
+      dispatch({ type: "SET_SELECTION", selection });
+    },
+    [dispatch]
+  );
+
+  // Search handlers use local state for instant feedback
+  const handleSearchChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setLocalSearch(e.target.value);
+    },
+    []
+  );
+
+  const handleClearSearch = useCallback(() => {
+    triggerHapticFeedback("light");
+    setLocalSearch("");
+  }, []);
+
+  // Memoized handler for new practice script
+  const handleNewPracticeScript = useCallback(() => {
+    triggerHapticFeedback("light");
+    handleOpenPracticeScriptBuilder();
+  }, [handleOpenPracticeScriptBuilder]);
+
+  // Memoized handler for import plays
+  const handleImportPlays = useCallback(() => {
+    triggerHapticFeedback("light");
+    handleOpenBuilder();
+  }, [handleOpenBuilder]);
+
+  // Memoized handler for team selection navigation
+  const handleSelectTeam = useCallback(() => {
+    triggerHapticFeedback("light");
+    softNavigate("/profile");
+  }, []);
+
+  const handleFiltersChange = useCallback(
+    (filters: PlaybookFilters) => {
+      dispatch({ type: "SET_FILTERS", filters });
+    },
+    [dispatch]
+  );
+
+  const handleRefreshFormations = useCallback(() => {
+    dispatch({ type: "INCREMENT_REFRESH" });
+  }, [dispatch]);
+
+  // Memoized save handler adapter (PlayList expects different signature)
+  const handlePlaySave = useCallback(
+    async (playId: string, updates: Partial<Play>) => {
+      const existingPlay = optimisticPlays.find((p) => p.id === playId);
+      if (existingPlay) {
+        await handleSavePlay({ ...existingPlay, ...updates });
+      }
+    },
+    [optimisticPlays, handleSavePlay]
+  );
+
+  // Memoized PlayList props to prevent re-renders
+  const playListProps = useMemo(
+    () => ({
+      filters: state.filters,
+      playbookId: activePlaybookId ?? undefined,
+      optimisticPlays,
+      onAddToPracticeScript: handleAddToPracticeScript,
+      onAddToGamePlan: handleAddToGamePlan,
+      onEdit: handleEditPlay,
+      onSave: handlePlaySave,
+      onDuplicate: handleDuplicatePlay,
+      onOpenBuilder: handleOpenBuilder,
+      onOpenAssignments: handleOpenAssignments,
+      onPostToTeamBulletin: handlePostToTeamBulletin,
+      refreshTrigger: state.refreshTrigger,
+      onPlayCountChange: handlePlayCountChange,
+      formationSuggestions: suggestions.formations,
+      playNameSuggestions: suggestions.playNames,
+      enableBulkOperations: state.enableBulkOperations,
+      selectedPlayIds: state.selectedPlayIds,
+      onPlaySelectionChange: handleSelectionChange,
+      hideHeader: true,
+    }),
+    [
+      state.filters,
+      state.refreshTrigger,
+      state.enableBulkOperations,
+      state.selectedPlayIds,
+      activePlaybookId,
+      optimisticPlays,
+      handleAddToPracticeScript,
+      handleAddToGamePlan,
+      handleEditPlay,
+      handlePlaySave,
+      handleDuplicatePlay,
+      handleOpenBuilder,
+      handleOpenAssignments,
+      handlePostToTeamBulletin,
+      handlePlayCountChange,
+      handleSelectionChange,
+      suggestions.formations,
+      suggestions.playNames,
+    ]
+  );
+
+  // Dev render timing
   useEffect(() => {
     if (!import.meta.env.DEV || typeof performance === "undefined") {
       return;
@@ -160,20 +358,25 @@ export function MobilePlaybookView({
 
   return (
     <>
-      {/* Fixed Header - Below AppHeader (top-16 = 64px), shows for playbook view with plays */}
-      <div
-        className="fixed top-16 left-0 right-0 z-sticky bg-surface-primary/98 backdrop-blur-lg border-b border-border shadow-sm"
+      {/* Fixed Header - Below AppHeader (top-16 = 64px) */}
+      <header
+        className="fixed top-16 left-0 right-0 z-sticky bg-surface-primary/98 backdrop-blur-lg border-b border-border shadow-sm touch-manipulation"
         style={{
           paddingTop: "var(--spacing-md)",
           paddingBottom: "var(--spacing-md)",
           paddingLeft: "var(--spacing-lg)",
           paddingRight: "var(--spacing-lg)",
         }}
+        role="banner"
+        aria-label="Playbook controls"
       >
         {/* View header */}
         <div className="mb-2 flex items-center justify-between gap-3">
           {showHeaderSkeleton ? (
-            <div className="h-7 flex-1 rounded-lg bg-neutral-200 animate-pulse" />
+            <div
+              className="h-7 flex-1 rounded-lg bg-neutral-200 animate-pulse"
+              aria-hidden="true"
+            />
           ) : (
             <Typography
               variant="headline-sm"
@@ -190,15 +393,17 @@ export function MobilePlaybookView({
                 <div className="flex items-center gap-2">
                   {/* New Play Button */}
                   <Button
-                    onClick={() => {
-                      triggerHapticFeedback("light");
-                      handleOpenQuickCreate();
-                    }}
+                    onClick={handleNewPlayClick}
                     variant="primary"
                     size="sm"
                     className="h-9 px-3"
+                    aria-label="Create new play"
                   >
-                    <Icon name="plus" className="h-4 w-4 mr-1.5" />
+                    <Icon
+                      name="plus"
+                      className="h-4 w-4 mr-1.5"
+                      aria-hidden="true"
+                    />
                     New
                   </Button>
                   {/* Sort Dropdown */}
@@ -209,17 +414,26 @@ export function MobilePlaybookView({
                   />
                   {/* Filter Button */}
                   <Button
-                    onClick={() => {
-                      triggerHapticFeedback("light");
-                      setShowFiltersSheet(true);
-                    }}
+                    onClick={handleFilterClick}
                     variant="ghost"
                     size="sm"
                     className="h-9 px-2"
+                    aria-label={
+                      hasActiveFilters(state.filters)
+                        ? "Filters (active)"
+                        : "Open filters"
+                    }
                   >
-                    <Icon name="filter" className="h-4 w-4" />
+                    <Icon
+                      name="filter"
+                      className="h-4 w-4"
+                      aria-hidden="true"
+                    />
                     {hasActiveFilters(state.filters) && (
-                      <span className="ml-1 rounded-full bg-brand-jade px-1.5 py-0.5 text-center text-xs text-white">
+                      <span
+                        className="ml-1 rounded-full bg-brand-jade px-1.5 py-0.5 text-center text-xs text-white"
+                        aria-label="Active filter indicator"
+                      >
                         ●
                       </span>
                     )}
@@ -228,50 +442,47 @@ export function MobilePlaybookView({
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <button
-                        className="h-9 w-9 flex items-center justify-center rounded-lg bg-neutral-100 hover:bg-neutral-200 transition-colors"
+                        className="h-9 w-9 flex items-center justify-center rounded-lg bg-neutral-100 hover:bg-neutral-200 transition-colors touch-manipulation"
                         aria-label="More actions"
                       >
                         <Icon
                           name="menu"
                           className="h-4 w-4 text-neutral-600"
+                          aria-hidden="true"
                         />
                       </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-48">
-                      <DropdownMenuItem
-                        onSelect={() => {
-                          triggerHapticFeedback("light");
-                          handleOpenPersonnel();
-                        }}
-                      >
-                        <Icon name="users" className="h-4 w-4 mr-2" />
+                      <DropdownMenuItem onSelect={handlePersonnelClick}>
+                        <Icon
+                          name="users"
+                          className="h-4 w-4 mr-2"
+                          aria-hidden="true"
+                        />
                         Personnel
                       </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onSelect={() => {
-                          triggerHapticFeedback("light");
-                          handleOpenSettings();
-                        }}
-                      >
-                        <Icon name="settings" className="h-4 w-4 mr-2" />
+                      <DropdownMenuItem onSelect={handleSettingsClick}>
+                        <Icon
+                          name="settings"
+                          className="h-4 w-4 mr-2"
+                          aria-hidden="true"
+                        />
                         Settings
                       </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onSelect={() => {
-                          triggerHapticFeedback("light");
-                          handleOpenKeyboardShortcuts();
-                        }}
-                      >
-                        <Icon name="zap" className="h-4 w-4 mr-2" />
+                      <DropdownMenuItem onSelect={handleShortcutsClick}>
+                        <Icon
+                          name="zap"
+                          className="h-4 w-4 mr-2"
+                          aria-hidden="true"
+                        />
                         Shortcuts
                       </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onSelect={() => {
-                          triggerHapticFeedback("light");
-                          setShowStatsSheet(true);
-                        }}
-                      >
-                        <Icon name="bar-chart-2" className="h-4 w-4 mr-2" />
+                      <DropdownMenuItem onSelect={handleStatsClick}>
+                        <Icon
+                          name="bar-chart-2"
+                          className="h-4 w-4 mr-2"
+                          aria-hidden="true"
+                        />
                         Stats
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -281,15 +492,13 @@ export function MobilePlaybookView({
             ))}
           {state.currentView === "practice-script" && (
             <Button
-              onClick={() => {
-                triggerHapticFeedback("light");
-                handleOpenPracticeScriptBuilder();
-              }}
+              onClick={handleNewPracticeScript}
               variant="primary"
               size="sm"
               className="h-9 px-3"
+              aria-label="Create new practice script"
             >
-              <Icon name="plus" className="h-4 w-4 mr-1.5" />
+              <Icon name="plus" className="h-4 w-4 mr-1.5" aria-hidden="true" />
               New
             </Button>
           )}
@@ -303,21 +512,18 @@ export function MobilePlaybookView({
               <div className="relative">
                 <Icon
                   name="search"
-                  className="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 transform text-neutral-400"
+                  className={`pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 transform transition-colors ${isSearchStale ? "text-brand-jade animate-pulse" : "text-neutral-400"}`}
+                  aria-hidden="true"
                 />
                 <input
                   type="search"
                   placeholder="Search plays, formations..."
-                  value={state.filters.search}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "SET_FILTERS",
-                      filters: { ...state.filters, search: e.target.value },
-                    })
-                  }
+                  value={localSearch}
+                  onChange={handleSearchChange}
                   className="h-11 w-full rounded-xl border-0 bg-neutral-100 pl-11 pr-11 text-base text-primary placeholder-neutral-500 transition-all focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-jade/50"
+                  aria-label="Search plays"
                 />
-                {state.filters.search && (
+                {localSearch && (
                   <motion.button
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
@@ -327,17 +533,15 @@ export function MobilePlaybookView({
                       stiffness: 500,
                       damping: 25,
                     }}
-                    onClick={() => {
-                      triggerHapticFeedback("light");
-                      dispatch({
-                        type: "SET_FILTERS",
-                        filters: { ...state.filters, search: "" },
-                      });
-                    }}
-                    className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 transform items-center justify-center rounded-full transition-colors hover:bg-neutral-200"
+                    onClick={handleClearSearch}
+                    className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 transform items-center justify-center rounded-full transition-colors hover:bg-neutral-200 touch-manipulation"
                     aria-label="Clear search"
                   >
-                    <Icon name="close" className="h-4 w-4 text-neutral-500" />
+                    <Icon
+                      name="close"
+                      className="h-4 w-4 text-neutral-500"
+                      aria-hidden="true"
+                    />
                   </motion.button>
                 )}
               </div>
@@ -348,218 +552,169 @@ export function MobilePlaybookView({
             )}
           </>
         )}
-      </div>
+      </header>
 
-      {/* Content area with proper padding for fixed headers (AppHeader 64px + MobileHeader ~80-110px) */}
-      <div
+      {/* Content area with proper padding for fixed headers */}
+      <main
         className="min-h-screen bg-surface-secondary"
-        style={{
-          paddingTop: showSearchHeader
-            ? "calc(64px + 110px)" // AppHeader (64px) + MobileHeader with search (~110px)
-            : "calc(64px + 60px)", // AppHeader (64px) + MobileHeader without search (~60px)
-          paddingBottom: "calc(100px + env(safe-area-inset-bottom, 0px))",
-        }}
+        style={contentPaddingStyle}
+        role="main"
+        aria-label="Playbook content"
+        aria-live="polite"
+        aria-busy={isLoadingPlays}
       >
-        {/* ============================================
-            PLAYBOOK VIEW - Plays List
-            ============================================ */}
-        {state.currentView === "playbook" && (
-          <>
-            {/* Loading State - Show skeleton while data loads */}
-            {isLoadingPlays && !hasPlays && (
-              <div className="px-4 py-6">
-                <MobilePlayCardSkeletonList count={4} />
-              </div>
-            )}
+        <AnimatePresence mode="wait">
+          {/* ============================================
+              PLAYBOOK VIEW - Plays List
+              ============================================ */}
+          {state.currentView === "playbook" && (
+            <motion.div
+              key="playbook-view"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 10 }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
+            >
+              {/* Loading State - Show skeleton while data loads */}
+              {isLoadingPlays && !hasPlays && (
+                <div className="px-4 py-6">
+                  <MobilePlayCardSkeletonList count={4} />
+                </div>
+              )}
 
-            {/* Empty State - Show when no plays exist (after loading completes) */}
-            {!isLoadingPlays && !hasPlays && (
-              <div className="px-4 py-8">
-                <div className="flex flex-col items-center justify-center text-center">
-                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-jade-500 to-emerald-600 flex items-center justify-center mb-6 shadow-lg shadow-jade-500/25">
-                    <Icon name="file" className="w-10 h-10 text-white" />
-                  </div>
-                  <Typography
-                    variant="headline-md"
-                    className="text-primary mb-2"
-                  >
-                    Your Playbook is Empty
-                  </Typography>
-                  <Typography
-                    variant="body-sm"
-                    className="text-secondary mb-6 max-w-xs"
-                  >
-                    Get started by creating your first play or importing from a
-                    spreadsheet.
-                  </Typography>
-                  <div className="flex flex-col gap-3 w-full max-w-xs">
-                    <Button
-                      onClick={() => {
-                        triggerHapticFeedback("medium");
-                        handleOpenQuickCreate();
-                      }}
-                      variant="primary"
-                      size="lg"
-                      className="w-full"
+              {/* Empty State - Show when no plays exist (after loading completes) */}
+              {!isLoadingPlays && !hasPlays && (
+                <div className="px-4 py-8">
+                  <PlayListEmptyState
+                    onCreatePlay={handleNewPlayClick}
+                    onImportPlays={handleImportPlays}
+                  />
+                </div>
+              )}
+
+              {/* Main Content - Plays List (show when we have plays) */}
+              {hasPlays && (
+                <div className="px-4">
+                  <PullToRefresh onRefresh={handlePullRefresh}>
+                    <ErrorBoundary
+                      fallback={
+                        <div className="p-6 text-center">
+                          <Typography
+                            variant="body-md"
+                            className="text-secondary"
+                          >
+                            Failed to load plays. Please refresh the page.
+                          </Typography>
+                        </div>
+                      }
                     >
-                      <Icon name="plus" className="h-5 w-5 mr-2" />
-                      Create First Play
-                    </Button>
+                      <PlayList {...playListProps} />
+                    </ErrorBoundary>
+                  </PullToRefresh>
+                </div>
+              )}
+
+              {/* Selection Mode Toggle - Mobile (moved inline with better styling) */}
+              {hasPlays && (
+                <div className="px-4 py-3 border-t border-border bg-surface-primary/50">
+                  <SelectionModeToggle
+                    isActive={state.enableBulkOperations}
+                    onToggle={handleBulkToggle}
+                    selectedCount={state.selectedPlayIds?.size || 0}
+                    variant="compact"
+                    className="w-full"
+                  />
+                </div>
+              )}
+
+              {/* Quick Actions moved to header "More" menu for easier access */}
+
+              {/* Formation Cleanup (show only if needed) */}
+              {formationAudit.plays.length > 0 && (
+                <div className="px-4 py-4 border-t border-border">
+                  <Typography
+                    variant="label-md"
+                    className="text-secondary uppercase tracking-wide mb-3"
+                  >
+                    Formation Cleanup
+                  </Typography>
+                  <FormationSyncPanel
+                    plays={formationAudit.plays}
+                    loading={formationAudit.loading}
+                    error={formationAudit.error}
+                    onRefresh={handleRefreshFormations}
+                    onResolve={handleEditPlay}
+                    isMobile
+                  />
+                </div>
+              )}
+            </motion.div>
+          )}
+
+          {/* ============================================
+              PRACTICE SCRIPT VIEW
+              ============================================ */}
+          {state.currentView === "practice-script" && (
+            <motion.div
+              key="practice-script-view"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 10 }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
+            >
+              <section className="px-4 py-4" aria-label="Practice scripts">
+                {activeTeamId ? (
+                  <PracticeScriptList
+                    teamId={activeTeamId}
+                    onEditScript={handleOpenPracticeScriptBuilder}
+                    onCreateNew={handleNewPracticeScript}
+                  />
+                ) : (
+                  <div className="flex flex-col items-center justify-center text-center py-12">
+                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-neutral-200 to-neutral-300 flex items-center justify-center mb-6 shadow-md">
+                      <Icon
+                        name="users"
+                        className="w-10 h-10 text-neutral-500"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <Typography
+                      variant="headline-md"
+                      className="text-primary mb-2"
+                    >
+                      No Team Selected
+                    </Typography>
+                    <Typography
+                      variant="body-sm"
+                      className="text-secondary mb-6 max-w-xs"
+                    >
+                      Select a team from your profile to view and manage
+                      practice scripts.
+                    </Typography>
                     <Button
-                      onClick={() => {
-                        triggerHapticFeedback("light");
-                        handleOpenBuilder();
-                      }}
+                      onClick={handleSelectTeam}
                       variant="secondary"
                       size="lg"
-                      className="w-full"
+                      className="w-full max-w-xs"
                     >
-                      <Icon name="upload" className="h-5 w-5 mr-2" />
-                      Import Plays
+                      <Icon
+                        name="users"
+                        className="h-5 w-5 mr-2"
+                        aria-hidden="true"
+                      />
+                      Select Team
                     </Button>
                   </div>
-                </div>
-              </div>
-            )}
-
-            {/* Main Content - Plays List (show when we have plays) */}
-            {hasPlays && (
-              <div className="px-4">
-                <PullToRefresh onRefresh={handlePullRefresh}>
-                  <ErrorBoundary
-                    fallback={
-                      <div className="p-6 text-center">
-                        <Typography
-                          variant="body-md"
-                          className="text-secondary"
-                        >
-                          Failed to load plays. Please refresh the page.
-                        </Typography>
-                      </div>
-                    }
-                  >
-                    {/* Define common PlayList props once - single source of truth */}
-                    {(() => {
-                      const commonPlayListProps = {
-                        filters: state.filters,
-                        playbookId: activePlaybookId ?? undefined,
-                        optimisticPlays,
-                        onAddToPracticeScript: handleAddToPracticeScript,
-                        onAddToGamePlan: handleAddToGamePlan,
-                        onEdit: handleEditPlay,
-                        // Adapter: PlayList expects (playId, updates) but handleSavePlay receives full Play object
-                        onSave: async (
-                          playId: string,
-                          updates: Partial<Play>
-                        ) => {
-                          const existingPlay = optimisticPlays.find(
-                            (p) => p.id === playId
-                          );
-                          if (existingPlay) {
-                            await handleSavePlay({
-                              ...existingPlay,
-                              ...updates,
-                            });
-                          }
-                        },
-                        onDuplicate: handleDuplicatePlay,
-                        onOpenBuilder: handleOpenBuilder,
-                        onOpenAssignments: handleOpenAssignments,
-                        onPostToTeamBulletin: handlePostToTeamBulletin,
-                        refreshTrigger: state.refreshTrigger,
-                        onPlayCountChange: handlePlayCountChange,
-                        formationSuggestions: suggestions.formations,
-                        playNameSuggestions: suggestions.playNames,
-                        enableBulkOperations: state.enableBulkOperations,
-                        selectedPlayIds: state.selectedPlayIds,
-                        onPlaySelectionChange: (selection: Set<string>) =>
-                          dispatch({ type: "SET_SELECTION", selection }),
-                        // Hide PlayListHeader on mobile - MobilePlaybookView has its own header
-                        hideHeader: true,
-                      };
-
-                      return <PlayList {...commonPlayListProps} />;
-                    })()}
-                  </ErrorBoundary>
-                </PullToRefresh>
-              </div>
-            )}
-
-            {/* Selection Mode Toggle - Mobile (moved inline with better styling) */}
-            {hasPlays && (
-              <div className="px-4 py-3 border-t border-border bg-surface-primary/50">
-                <SelectionModeToggle
-                  isActive={state.enableBulkOperations}
-                  onToggle={() => {
-                    triggerHapticFeedback("light");
-                    dispatch({ type: "TOGGLE_BULK" });
-                  }}
-                  selectedCount={state.selectedPlayIds?.size || 0}
-                  variant="compact"
-                  className="w-full"
-                />
-              </div>
-            )}
-
-            {/* Quick Actions moved to header "More" menu for easier access */}
-
-            {/* Formation Cleanup (show only if needed) */}
-            {formationAudit.plays.length > 0 && (
-              <div className="px-4 py-4 border-t border-border">
-                <Typography
-                  variant="label-md"
-                  className="text-secondary uppercase tracking-wide mb-3"
-                >
-                  Formation Cleanup
-                </Typography>
-                <FormationSyncPanel
-                  plays={formationAudit.plays}
-                  loading={formationAudit.loading}
-                  error={formationAudit.error}
-                  onRefresh={() => dispatch({ type: "INCREMENT_REFRESH" })}
-                  onResolve={handleEditPlay}
-                  isMobile
-                />
-              </div>
-            )}
-          </>
-        )}
-
-        {/* ============================================
-            PRACTICE SCRIPT VIEW
-            ============================================ */}
-        {state.currentView === "practice-script" && (
-          <div className="px-4 py-4">
-            {activeTeamId ? (
-              <PracticeScriptList
-                teamId={activeTeamId}
-                onEditScript={handleOpenPracticeScriptBuilder}
-                onCreateNew={() => handleOpenPracticeScriptBuilder()}
-              />
-            ) : (
-              <div className="text-center py-12">
-                <Icon
-                  name="clock"
-                  className="h-16 w-16 text-neutral-300 mx-auto mb-4"
-                />
-                <Typography
-                  variant="headline-sm"
-                  className="text-secondary mb-2"
-                >
-                  Select a Team
-                </Typography>
-                <Typography variant="body-sm" className="text-neutral-500">
-                  Please select a team to view practice scripts.
-                </Typography>
-              </div>
-            )}
-          </div>
-        )}
+                )}
+              </section>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Game Plan view removed - bottom nav now navigates to /gameplans page */}
 
         {/* FAB removed - redundant with header New button and bottom nav tabs */}
-      </div>
+      </main>
 
       {/* Mobile Bottom Navigation */}
       <PlaybookBottomNav
@@ -570,31 +725,22 @@ export function MobilePlaybookView({
       {/* Stats Bottom Sheet */}
       <MobileStatsBottomSheet
         isOpen={showStatsSheet}
-        onClose={() => setShowStatsSheet(false)}
-        stats={{
-          totalPlays: state.playsCreated || 0,
-          formationsCount: Math.max(
-            1,
-            Math.floor((state.playsCreated || 0) / 3)
-          ),
-          passPlays: Math.floor((state.playsCreated || 0) * 0.4),
-          runPlays: Math.floor((state.playsCreated || 0) * 0.4),
-          rpoPlays: Math.floor((state.playsCreated || 0) * 0.15),
-          playActionPlays: Math.floor((state.playsCreated || 0) * 0.05),
-        }}
+        onClose={handleStatsClick}
+        stats={mobileStats}
       />
 
       {/* Mobile Filters Bottom Sheet */}
       <MobileFiltersSheet
         isOpen={showFiltersSheet}
-        onClose={() => setShowFiltersSheet(false)}
+        onClose={handleFilterClick}
         filters={state.filters}
-        onFiltersChange={(filters) =>
-          dispatch({ type: "SET_FILTERS", filters })
-        }
+        onFiltersChange={handleFiltersChange}
         primaryButtonSize={mobileButtonSize}
         secondaryButtonSize={mobileSecondaryButtonSize}
       />
     </>
   );
 }
+
+// Export memoized component to prevent unnecessary re-renders
+export const MobilePlaybookView = memo(MobilePlaybookViewInner);

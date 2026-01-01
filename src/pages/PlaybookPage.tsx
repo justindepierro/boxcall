@@ -226,8 +226,6 @@ function PlaybookMainView({
         handleOpenPersonnel={handlers.handleOpenPersonnel}
         handleOpenSettings={handlers.handleOpenSettings}
         handleEditPlay={handlers.handleEditPlay}
-        handleQuickNewPracticeScript={handlers.handleQuickNewPracticeScript}
-        handleQuickNewGamePlan={handlers.handleQuickNewGamePlan}
         handleOpenKeyboardShortcuts={handlers.handleOpenKeyboardShortcuts}
         handlePullRefresh={handlers.handlePullRefresh}
         handleSavePlay={handleSavePlay}

@@ -1,14 +1,12 @@
 import { describe, it, expect } from "vitest";
 
-import { FullCalendarAdapter } from "../../adapters/fullcalendar/FullCalendarAdapter";
-
 import { CalendarAPI } from "./api";
 import { eventToICS } from "./ics";
 
 const iso = () => new Date().toISOString();
 
 describe("Calendar Infra Phase 2 scaffolding", () => {
-  it("creates event via API and converts to FullCalendar & ICS", async () => {
+  it("creates event via API and converts to ICS", async () => {
     const created = await CalendarAPI.createEvent({
       title: "Adapter Test",
       start: iso(),
@@ -16,10 +14,7 @@ describe("Calendar Infra Phase 2 scaffolding", () => {
     });
     expect(created).not.toBeNull();
     if (!created) return;
-    const fc = FullCalendarAdapter.toFullCalendar(created);
-    expect(fc.id).toBe(created.id);
-    const domainAgain = FullCalendarAdapter.fromFullCalendar(fc);
-    expect(domainAgain.title).toBe(created.title);
+    expect(created.title).toBe("Adapter Test");
     const ics = eventToICS(created);
     expect(ics).toMatch(/BEGIN:VCALENDAR/);
     expect(ics).toMatch(/SUMMARY:Adapter Test/);

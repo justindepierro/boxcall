@@ -157,7 +157,7 @@ export class PlaysService {
   /**
    * Create a new play in the database
    * Only saves fields that exist in the database schema
-   * 
+   *
    * NOTE: Validation is handled by SecurePlaysService using Zod schemas.
    * This method assumes data has already been validated.
    */

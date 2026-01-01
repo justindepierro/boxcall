@@ -5,7 +5,7 @@ import { Input } from "../ui/Input";
 import { Icon } from "../ui/Icon";
 import { Typography } from "../design-system/Typography";
 import { PLAY_TYPE_OPTIONS } from "../../types/play";
-import type { PlayCombo } from "../../hooks/useRecentPlayCombos";
+import type { PlayCombo } from "../../types/play";
 import {
   validateFormationName,
   validatePersonnelValue,

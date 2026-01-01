@@ -47,7 +47,9 @@ export interface ColorBadgeCustomization {
  * Stored as JSONB in personnel_configurations.badge_customization
  * Can be either preset-based or explicit color-based
  */
-export type BadgeCustomization = PresetBadgeCustomization | ColorBadgeCustomization;
+export type BadgeCustomization =
+  | PresetBadgeCustomization
+  | ColorBadgeCustomization;
 
 /**
  * Type guard to check if badge customization uses explicit colors
@@ -55,7 +57,7 @@ export type BadgeCustomization = PresetBadgeCustomization | ColorBadgeCustomizat
 export function isColorBadgeCustomization(
   badge: BadgeCustomization | null | undefined
 ): badge is ColorBadgeCustomization {
-  return badge !== null && badge !== undefined && 'backgroundColor' in badge;
+  return badge !== null && badge !== undefined && "backgroundColor" in badge;
 }
 
 /**
@@ -64,7 +66,7 @@ export function isColorBadgeCustomization(
 export function isPresetBadgeCustomization(
   badge: BadgeCustomization | null | undefined
 ): badge is PresetBadgeCustomization {
-  return badge !== null && badge !== undefined && 'style' in badge;
+  return badge !== null && badge !== undefined && "style" in badge;
 }
 
 /**

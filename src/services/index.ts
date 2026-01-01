@@ -16,7 +16,5 @@ export * from "./practiceService"; // Now includes practice scripts
 export * from "./realTimeCollaboration";
 export * from "./roleService";
 export * from "./rosterService";
-export * from "./smartDataAnalyzer";
 export * from "./statsService";
-export * from "./thumbnailUploadService";
 export * from "./userPreferencesService";

@@ -22,7 +22,7 @@ import type { Play } from "../../types/play";
 import { Typography } from "../design-system/Typography";
 import { useFavoritePlays } from "../../hooks/useFavoritePlays";
 import { usePersonnelConfigurations } from "../../hooks/usePersonnel";
-import { debug, info, warn } from "../../utils/logger";
+import { debug, warn } from "../../utils/logger";
 import { useSaveState } from "../../hooks/useSaveState";
 
 // Extracted modules
@@ -158,29 +158,6 @@ const PlayListInner: React.FC<PlayListProps> = ({
     if (!onPlayCountChange || loading) return;
     onPlayCountChange(scopedPlays.length);
   }, [loading, scopedPlays.length, onPlayCountChange]);
-
-  // Validate database integration (dev only)
-  useEffect(() => {
-    if (!import.meta.env.DEV || plays.length === 0) return;
-
-    info("🏈 Playbook Database Integration Test");
-    info("📊 Total Plays Loaded:", plays.length);
-
-    let cancelled = false;
-    import("../../utils/playbook-test-validation")
-      .then(({ validatePlaybookData, logValidationResults }) => {
-        if (cancelled) return;
-        const validationResults = validatePlaybookData(plays);
-        logValidationResults(validationResults);
-      })
-      .catch((e) => {
-        warn("Playbook validation import failed", e);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [plays]);
 
   // Play save handler
   const handlePlaySave = useMemo(

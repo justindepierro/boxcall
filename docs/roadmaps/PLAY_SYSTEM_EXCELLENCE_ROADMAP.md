@@ -67,6 +67,7 @@ After:   SecurePlaysService (Zod only) → PlaysService (no validation)
 ```
 
 **Completed**:
+
 - [x] Removed `PlayValidationService.validatePlayServer` call from `PlaysService.createPlay`
 - [x] Removed unused import of PlayValidationService
 - [x] Zod validation in SecurePlaysService is now single source of truth
@@ -76,13 +77,14 @@ After:   SecurePlaysService (Zod only) → PlaysService (no validation)
 
 **Status**: Complete
 
-| Location | Max Length |
-|----------|------------|
-| Zod Schema | ~~100~~ → **200** |
-| PlayValidationService | 200 |
-| Database | 200 |
+| Location              | Max Length        |
+| --------------------- | ----------------- |
+| Zod Schema            | ~~100~~ → **200** |
+| PlayValidationService | 200               |
+| Database              | 200               |
 
 **Completed**:
+
 - [x] Updated PlayCreateSchema to use 200 chars for play_name
 - [x] Updated PlayNameSchema max length error message
 - [x] Add test for max length validation (in playSchemas.test.ts)
@@ -97,6 +99,7 @@ After:   SecurePlaysService (Zod only) → PlaysService (no validation)
 **Created**: `src/errors/playErrors.ts`
 
 Contains:
+
 - `PlayError` - Base class
 - `PlayValidationError` - Field-specific validation errors
 - `PlayDuplicateError` - Duplicate play detection
@@ -112,6 +115,7 @@ Plus helpers: `isPlayError()`, `isDuplicateError()`, `isRateLimitError()`, `getP
 **Updated**: `AddNewPlayModal.tsx`
 
 Now uses centralized error handling with specific messages for:
+
 - Duplicate plays (shows formation and play name)
 - Rate limiting (shows retry time)
 - Zod validation (shows field-specific errors)
@@ -136,6 +140,7 @@ Now uses centralized error handling with specific messages for:
 **Created**: `src/types/play.schema.ts`
 
 Contains:
+
 - `PlayCreateInput` - Type from Zod schema
 - `PlayUpdateInput` - Type from Zod schema
 - `PlayRecord` - Full database record type
@@ -148,14 +153,15 @@ export type PlayUpdateInput = z.infer<typeof PlayUpdateSchema>;
 
 // Full Play type (database row + computed fields)
 export interface Play extends PlayCreateInput {
-  id: string;
-  created_at: Date;
-  updated_at: Date;
-  created_by: string;
-  // Computed fields
-  times_called: number;
-  times_successful: number;
+id: string;
+created_at: Date;
+updated_at: Date;
+created_by: string;
+// Computed fields
+times_called: number;
+times_successful: number;
 }
+
 ```
 
 ### 3.2 Field Mapping Documentation
@@ -164,7 +170,7 @@ export interface Play extends PlayCreateInput {
 
 ### 3.2 ✅ Field Mapping Documentation
 
-**Status**: Complete  
+**Status**: Complete
 **Created**: `docs/PLAY_FIELD_MAPPING.md`
 
 Full mapping reference for:
@@ -207,7 +213,7 @@ The current 1314-line file works well. Decomposition can be done when we need to
 
 ### 4.3 ✅ Use buildPlayUpdateData Consistently
 
-**Status**: Complete  
+**Status**: Complete
 **Updated**: `playsService.ts`
 
 `PlaysService.updatePlay()` now uses `buildPlayUpdateData()` helper:
@@ -221,14 +227,16 @@ The current 1314-line file works well. Decomposition can be done when we need to
 
 ### 5.1 ✅ Unit Tests for Play Flow
 
-**Status**: Complete  
+**Status**: Complete
 **Created**: `src/__tests__/plays/`
 
 ```
+
 plays/
-├── playSchemas.test.ts      # 29 tests - Zod validation
+├── playSchemas.test.ts # 29 tests - Zod validation
 ├── playDataBuilders.test.ts # 17 tests - Field mapping
-├── playErrors.test.ts       # 27 tests - Error types & helpers
+├── playErrors.test.ts # 27 tests - Error types & helpers
+
 ```
 
 **Total: 73 tests passing**
@@ -256,20 +264,21 @@ Key test coverage:
 
 ## Success Metrics
 
-| Metric | Before | After | Status |
-|--------|--------|-------|--------|
-| Play creation success rate | ~95% | 99%+ | ✅ Improved |
-| Validation error clarity | Generic | Field-specific | ✅ Complete |
-| Fields saved correctly | ~45/50 | 50/50 | ✅ Fixed |
-| Code coverage (plays) | 0% | 73 tests | ✅ Complete |
-| PlaysService.ts lines | 1387 | 1314 | ✅ Reduced |
-| Test files | 0 | 3 | ✅ Created |
+| Metric                     | Before  | After          | Status      |
+| -------------------------- | ------- | -------------- | ----------- |
+| Play creation success rate | ~95%    | 99%+           | ✅ Improved |
+| Validation error clarity   | Generic | Field-specific | ✅ Complete |
+| Fields saved correctly     | ~45/50  | 50/50          | ✅ Fixed    |
+| Code coverage (plays)      | 0%      | 73 tests       | ✅ Complete |
+| PlaysService.ts lines      | 1387    | 1314           | ✅ Reduced  |
+| Test files                 | 0       | 3              | ✅ Created  |
 
 ---
 
 ## Files Changed Summary
 
 ### New Files Created
+
 - `src/errors/playErrors.ts` - Custom error types and helpers
 - `src/errors/index.ts` - Error exports
 - `src/types/play.schema.ts` - Type definitions from Zod schemas
@@ -279,6 +288,7 @@ Key test coverage:
 - `src/__tests__/plays/playErrors.test.ts` - 27 tests
 
 ### Files Modified
+
 - `src/services/playsService.ts` - Use buildPlayUpdateData, remove redundant validation
 - `src/validation-services/playSchemas.ts` - Fix max length, export DiagramDataSchema
 - `src/components/playbook/AddNewPlayModal.tsx` - Use centralized error handling

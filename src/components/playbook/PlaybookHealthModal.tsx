@@ -274,10 +274,7 @@ const PlaybookHealthIssuesList: React.FC<{ issues: HealthIssue[] }> = ({
               />
               <div className="flex-1">
                 <div className="flex items-center space-x-2 mb-1">
-                  <Badge
-                    variant={getSeverityColor(issue.severity)}
-                    size="sm"
-                  >
+                  <Badge variant={getSeverityColor(issue.severity)} size="sm">
                     {issue.severity.toUpperCase()}
                   </Badge>
                   <Typography variant="label-md" className="text-tertiary">

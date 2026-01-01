@@ -124,7 +124,10 @@ export const FormationAdvancedSection: React.FC<
             <Icon name="settings" className="h-5 w-5 text-purple-600" />
           </div>
           <div className="text-left">
-            <Typography variant="label-lg" className="text-primary font-semibold">
+            <Typography
+              variant="label-lg"
+              className="text-primary font-semibold"
+            >
               Advanced Formation Details
             </Typography>
             <Typography variant="caption" className="text-tertiary">
@@ -132,11 +135,10 @@ export const FormationAdvancedSection: React.FC<
             </Typography>
           </div>
         </div>
-        <div className={`p-xs rounded-full transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
-          <Icon
-            name="chevron-down"
-            className="h-5 w-5 text-secondary"
-          />
+        <div
+          className={`p-xs rounded-full transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+        >
+          <Icon name="chevron-down" className="h-5 w-5 text-secondary" />
         </div>
       </Button>
 

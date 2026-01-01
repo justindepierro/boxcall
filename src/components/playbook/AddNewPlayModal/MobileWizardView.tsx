@@ -35,7 +35,7 @@ import {
   HASH_OPTIONS,
 } from "../play-card/constants";
 import { Button } from "../../ui/Button/Button";
-import type { PlayCombo } from "../../../hooks/useRecentPlayCombos";
+import type { PlayCombo } from "../../../types/play";
 
 type FormationRow = Database["public"]["Tables"]["formations"]["Row"];
 type WizardController = ReturnType<typeof useWizardState>;

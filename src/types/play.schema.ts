@@ -94,7 +94,13 @@ export interface PlayRecord extends PlayCreateInput {
 // ========================================
 
 /** Valid formation direction values for f_dir field */
-export type FormationDirection = "L" | "R" | "Left" | "Right" | "left" | "right";
+export type FormationDirection =
+  | "L"
+  | "R"
+  | "Left"
+  | "Right"
+  | "left"
+  | "right";
 
 /** Canonical formation direction token */
 export type FormationDirectionToken = "base" | "left" | "right";

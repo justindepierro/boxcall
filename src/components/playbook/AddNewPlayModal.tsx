@@ -57,12 +57,16 @@ import {
   validateFormationName,
   validatePersonnelValue,
 } from "../../utils/playFieldValidation";
-import type { PlayCombo } from "../../hooks/useRecentPlayCombos";
+import type { PlayCombo } from "../../types/play";
 import { debug, logError } from "../../utils/logger";
 import { useActiveTeamStore } from "../../stores/activeTeamStore";
 import { TeamSituationDefinitionsService } from "../../services/teamSituationDefinitionsService";
 import { getFieldZoneDefinitions } from "../../utils/situationBucketing";
-import { getPlayErrorMessage, isDuplicateError, isRateLimitError } from "../../errors/playErrors";
+import {
+  getPlayErrorMessage,
+  isDuplicateError,
+  isRateLimitError,
+} from "../../errors/playErrors";
 import type { Database } from "../../types/database";
 
 type FormationRow = Database["public"]["Tables"]["formations"]["Row"];
@@ -306,7 +310,9 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         );
       } else if (isRateLimitError(error)) {
         setErrorMessage(
-          error instanceof Error ? error.message : "You're creating plays too quickly. Please wait."
+          error instanceof Error
+            ? error.message
+            : "You're creating plays too quickly. Please wait."
         );
       } else {
         setErrorMessage(getPlayErrorMessage(error));
@@ -458,7 +464,11 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
         <div className="flex items-center justify-between gap-md border-t border-divider pt-md -mx-md px-md -mb-md pb-md bg-surface-primary">
           {/* Progress indicator */}
           <div className="hidden sm:flex items-center gap-xs text-xs text-tertiary">
-            <span className={formData.formation && formData.playName ? "text-jade-600" : ""}>
+            <span
+              className={
+                formData.formation && formData.playName ? "text-jade-600" : ""
+              }
+            >
               ●
             </span>
             <span>Core Info</span>

@@ -140,7 +140,10 @@ export const GameSituationSection: React.FC<GameSituationSectionProps> = ({
             <Icon name="target" className="h-5 w-5 text-success-600" />
           </div>
           <div className="text-left">
-            <Typography variant="label-lg" className="text-primary font-semibold">
+            <Typography
+              variant="label-lg"
+              className="text-primary font-semibold"
+            >
               Game Situation Preferences
             </Typography>
             <Typography variant="caption" className="text-tertiary">
@@ -148,11 +151,10 @@ export const GameSituationSection: React.FC<GameSituationSectionProps> = ({
             </Typography>
           </div>
         </div>
-        <div className={`p-xs rounded-full transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
-          <Icon
-            name="chevron-down"
-            className="h-5 w-5 text-secondary"
-          />
+        <div
+          className={`p-xs rounded-full transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+        >
+          <Icon name="chevron-down" className="h-5 w-5 text-secondary" />
         </div>
       </Button>
 

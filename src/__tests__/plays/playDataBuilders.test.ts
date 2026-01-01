@@ -5,7 +5,10 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { buildNewPlayData, buildPlayUpdateData } from "../../services/playDataBuilders";
+import {
+  buildNewPlayData,
+  buildPlayUpdateData,
+} from "../../services/playDataBuilders";
 
 describe("buildNewPlayData", () => {
   const baseArgs = {
@@ -21,7 +24,12 @@ describe("buildNewPlayData", () => {
       p_type: "Run",
     };
 
-    const result = buildNewPlayData(playData, baseArgs.playId, baseArgs.playbookId, baseArgs.userId);
+    const result = buildNewPlayData(
+      playData,
+      baseArgs.playId,
+      baseArgs.playbookId,
+      baseArgs.userId
+    );
 
     expect(result.id).toBe(baseArgs.playId);
     expect(result.playbook_id).toBe(baseArgs.playbookId);
@@ -35,7 +43,12 @@ describe("buildNewPlayData", () => {
   it("should use default values for missing fields", () => {
     const playData = {};
 
-    const result = buildNewPlayData(playData, baseArgs.playId, baseArgs.playbookId, baseArgs.userId);
+    const result = buildNewPlayData(
+      playData,
+      baseArgs.playId,
+      baseArgs.playbookId,
+      baseArgs.userId
+    );
 
     expect(result.play_name).toBe("Untitled Play");
     expect(result.p_type).toBe("Pass");
@@ -50,7 +63,12 @@ describe("buildNewPlayData", () => {
       formation: "  I-Form Strong  ",
     };
 
-    const result = buildNewPlayData(playData, baseArgs.playId, baseArgs.playbookId, baseArgs.userId);
+    const result = buildNewPlayData(
+      playData,
+      baseArgs.playId,
+      baseArgs.playbookId,
+      baseArgs.userId
+    );
 
     // Should be trimmed
     expect(result.play_name).not.toContain("  ");
@@ -70,7 +88,12 @@ describe("buildNewPlayData", () => {
       pref_situation: "Goal Line",
     };
 
-    const result = buildNewPlayData(playData, baseArgs.playId, baseArgs.playbookId, baseArgs.userId);
+    const result = buildNewPlayData(
+      playData,
+      baseArgs.playId,
+      baseArgs.playbookId,
+      baseArgs.userId
+    );
 
     expect(result.pref_down).toBe("1st");
     expect(result.pref_dis).toBe("Medium");
@@ -89,7 +112,12 @@ describe("buildNewPlayData", () => {
       formation_direction: "left" as const,
     };
 
-    const result = buildNewPlayData(playData, baseArgs.playId, baseArgs.playbookId, baseArgs.userId);
+    const result = buildNewPlayData(
+      playData,
+      baseArgs.playId,
+      baseArgs.playbookId,
+      baseArgs.userId
+    );
 
     expect(result.f_dir).toBe("Left");
     expect(result.formation_direction).toBe("left");
@@ -105,7 +133,12 @@ describe("buildNewPlayData", () => {
       flags: ["review"],
     };
 
-    const result = buildNewPlayData(playData, baseArgs.playId, baseArgs.playbookId, baseArgs.userId);
+    const result = buildNewPlayData(
+      playData,
+      baseArgs.playId,
+      baseArgs.playbookId,
+      baseArgs.userId
+    );
 
     expect(result.tags).toEqual(["red-zone", "favorite"]);
     expect(result.key_players).toEqual(["WR1", "RB1"]);
@@ -121,7 +154,12 @@ describe("buildNewPlayData", () => {
       diagram_data: { version: 1, players: [] },
     };
 
-    const result = buildNewPlayData(playData, baseArgs.playId, baseArgs.playbookId, baseArgs.userId);
+    const result = buildNewPlayData(
+      playData,
+      baseArgs.playId,
+      baseArgs.playbookId,
+      baseArgs.userId
+    );
 
     expect(result.diagram_image_url).toBe("https://example.com/diagram.png");
     expect(result.diagram_data).toEqual({ version: 1, players: [] });
@@ -136,7 +174,12 @@ describe("buildNewPlayData", () => {
       times_successful: 5,
     };
 
-    const result = buildNewPlayData(playData, baseArgs.playId, baseArgs.playbookId, baseArgs.userId);
+    const result = buildNewPlayData(
+      playData,
+      baseArgs.playId,
+      baseArgs.playbookId,
+      baseArgs.userId
+    );
 
     // These should always be 0 for new plays
     expect(result.times_called).toBe(0);
@@ -241,9 +284,9 @@ describe("buildPlayUpdateData", () => {
     const result = buildPlayUpdateData(updates);
 
     expect(result.updated_at).toBeDefined();
-    expect(new Date(result.updated_at as string).getTime()).toBeGreaterThanOrEqual(
-      new Date(before).getTime() - 1000
-    );
+    expect(
+      new Date(result.updated_at as string).getTime()
+    ).toBeGreaterThanOrEqual(new Date(before).getTime() - 1000);
   });
 
   it("should include is_archived field", () => {
