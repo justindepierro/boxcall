@@ -88,11 +88,3 @@ export {
   type MissingContextIssue,
   type DataCoverageIssue,
 } from "./analyticsHealthService";
-
-// Coach analytics (will be added)
-export {
-  CoachAnalytics,
-  type TendencyReport,
-  type PlayRecommendation,
-  type EfficiencyMetrics,
-} from "./coachAnalytics";

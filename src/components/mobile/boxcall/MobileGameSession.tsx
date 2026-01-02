@@ -25,6 +25,13 @@ import type { ExecutionResult } from "../../../types/session";
 import { logError } from "../../../utils/logger";
 import { yardLineToBallOn } from "../../../utils/ballOn";
 
+// Helper to get background class based on result type
+function getResultBgClass(result: ExecutionResult | null): string {
+  if (result === "success") return "bg-success-500/10";
+  if (result === "failure") return "bg-error-500/10";
+  return "bg-neutral-500/10";
+}
+
 // Animation variants for smooth transitions
 const pageVariants = {
   initial: { opacity: 0, y: 10 },
@@ -702,13 +709,7 @@ function MobileGameSessionInner() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              className={`absolute inset-0 pointer-events-none ${
-                lastLogResult === "success"
-                  ? "bg-success-500/10"
-                  : lastLogResult === "failure"
-                    ? "bg-error-500/10"
-                    : "bg-neutral-500/10"
-              }`}
+              className={`absolute inset-0 pointer-events-none ${getResultBgClass(lastLogResult)}`}
             />
           )}
         </AnimatePresence>
