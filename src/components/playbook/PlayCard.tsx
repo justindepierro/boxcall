@@ -35,6 +35,8 @@ import {
 } from "./play-card/helpers";
 import {
   readLocalString,
+  readLocalJson,
+  writeLocalJson,
   storageKeys,
   writeLocalString,
 } from "../../utils/storage";
@@ -191,11 +193,29 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   // Mobile detection for responsive styling
   const isMobile = useIsMobile();
 
-  // Stub fields for legacy code (simplified from complex layout system)
-  const formationFieldOrder = INITIAL_FORMATION_ORDER;
-  const formationFieldVisibility = INITIAL_FORMATION_VISIBILITY;
-  const playDetailsFieldOrder = INITIAL_PLAY_DETAILS_ORDER;
-  const playDetailsFieldVisibility = INITIAL_PLAY_DETAILS_VISIBILITY;
+  // Field order and visibility state (restored from commit 8887b220)
+  const [formationFieldOrder] = useState<string[]>(INITIAL_FORMATION_ORDER);
+
+  // Initialize field visibility from localStorage with fallback to defaults
+  const [formationFieldVisibility, setFormationFieldVisibility] =
+    useState<FieldVisibility>(() => {
+      const stored = readLocalJson<FieldVisibility>(
+        storageKeys.preferences.formationFieldVisibility
+      );
+      return stored || INITIAL_FORMATION_VISIBILITY;
+    });
+
+  const [playDetailsFieldOrder] = useState<string[]>(
+    INITIAL_PLAY_DETAILS_ORDER
+  );
+
+  const [playDetailsFieldVisibility, setPlayDetailsFieldVisibility] =
+    useState<FieldVisibility>(() => {
+      const stored = readLocalJson<FieldVisibility>(
+        storageKeys.preferences.playDetailsFieldVisibility
+      );
+      return stored || INITIAL_PLAY_DETAILS_VISIBILITY;
+    });
 
   // Use controlled expansion if provided, otherwise use internal state with localStorage persistence
   const [internalIsExpanded, setInternalIsExpanded] = useState(() => {
@@ -358,8 +378,34 @@ export const PlayCard: React.FC<PlayCardProps> = ({
   );
 
   const toggleFieldVisibility = useCallback(
-    (_fieldKey: string, _section: "formation" | "playDetails") => {
-      // Field visibility toggling removed with layout simplification
+    (fieldKey: string, section: "formation" | "playDetails") => {
+      if (section === "formation") {
+        setFormationFieldVisibility((prev) => {
+          const updated = {
+            ...prev,
+            [fieldKey]: prev[fieldKey] === false ? true : !prev[fieldKey],
+          };
+          // Persist to localStorage
+          writeLocalJson(
+            storageKeys.preferences.formationFieldVisibility,
+            updated
+          );
+          return updated;
+        });
+      } else {
+        setPlayDetailsFieldVisibility((prev) => {
+          const updated = {
+            ...prev,
+            [fieldKey]: prev[fieldKey] === false ? true : !prev[fieldKey],
+          };
+          // Persist to localStorage
+          writeLocalJson(
+            storageKeys.preferences.playDetailsFieldVisibility,
+            updated
+          );
+          return updated;
+        });
+      }
     },
     []
   );
