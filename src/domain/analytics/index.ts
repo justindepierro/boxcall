@@ -78,13 +78,3 @@ export {
   // Constants
   ANALYTICS_CONSTANTS,
 } from "./analyticsContract";
-
-// Health check service
-export {
-  AnalyticsHealthService,
-  type HealthCheckResult,
-  type OrphanExecutionIssue,
-  type CounterMismatchIssue,
-  type MissingContextIssue,
-  type DataCoverageIssue,
-} from "./analyticsHealthService";
