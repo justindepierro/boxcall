@@ -53,6 +53,7 @@ interface FormationAdvancedSectionProps {
 
 export const FormationAdvancedSection: React.FC<
   FormationAdvancedSectionProps
+  // eslint-disable-next-line max-lines-per-function
 > = ({
   isOpen,
   onToggle,

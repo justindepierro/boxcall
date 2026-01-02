@@ -52,21 +52,21 @@ import {
   detectDirectionInFormationName,
   type DirectionDetectionResult,
 } from "../../utils/formationDirectionDetection";
-import { leftRightToLegacyValue, parseLeftRight } from "../../utils/leftRight";
-import {
-  validateFormationName,
-  validatePersonnelValue,
-} from "../../utils/playFieldValidation";
 import type { PlayCombo } from "../../types/play";
 import { debug, logError } from "../../utils/logger";
 import { useActiveTeamStore } from "../../stores/activeTeamStore";
-import { TeamSituationDefinitionsService } from "../../services/teamSituationDefinitionsService";
-import { getFieldZoneDefinitions } from "../../utils/situationBucketing";
 import {
   getPlayErrorMessage,
   isDuplicateError,
   isRateLimitError,
 } from "../../errors/playErrors";
+import {
+  validateBasicFields,
+  validatePersonnel,
+  validateFieldPosition,
+  validateSituation,
+  transformFormDataToPlayData,
+} from "./AddNewPlayModal/helpers/submitHelpers";
 import type { Database } from "../../types/database";
 
 type FormationRow = Database["public"]["Tables"]["formations"]["Row"];
@@ -82,6 +82,7 @@ interface AddNewPlayModalProps {
   recentCombos?: PlayCombo[];
 }
 
+// eslint-disable-next-line max-lines-per-function, complexity
 export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
   isOpen,
   onClose,
@@ -142,31 +143,21 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isValid()) {
-      setErrorMessage("Please enter formation and play name");
+    // Validate basic fields
+    const basicValidation = validateBasicFields(
+      formData.formation,
+      formData.playName
+    );
+    if (!basicValidation.isValid) {
+      setErrorMessage(basicValidation.error || "Validation failed");
       return;
     }
 
-    // Validate formation field
-    if (formData.formation.trim()) {
-      const formationValidation = validateFormationName(
-        formData.formation.trim()
-      );
-      if (!formationValidation.isValid) {
-        setErrorMessage(formationValidation.error || "Invalid formation name");
-        return;
-      }
-    }
-
     // Validate personnel field
-    if (formData.personnel.trim()) {
-      const personnelValidation = validatePersonnelValue(
-        formData.personnel.trim()
-      );
-      if (!personnelValidation.isValid) {
-        setErrorMessage(personnelValidation.error || "Invalid personnel value");
-        return;
-      }
+    const personnelValidation = validatePersonnel(formData.personnel);
+    if (!personnelValidation.isValid) {
+      setErrorMessage(personnelValidation.error || "Invalid personnel");
+      return;
     }
 
     setIsSubmitting(true);
@@ -175,119 +166,31 @@ export const AddNewPlayModal: React.FC<AddNewPlayModalProps> = ({
     try {
       // Validate preferences against team settings
       if (activeTeamId) {
-        try {
-          const defs = await TeamSituationDefinitionsService.get(activeTeamId);
-          const fieldZoneLabels = getFieldZoneDefinitions(defs).map(
-            (z) => z.label
-          );
-          const customSituationLabels = Array.isArray(defs.custom_situations)
-            ? defs.custom_situations
-                .map((s) => String(s?.label ?? "").trim())
-                .filter(Boolean)
-            : [];
+        const fieldPosValidation = await validateFieldPosition(
+          formData.prefFieldPos,
+          activeTeamId
+        );
+        if (!fieldPosValidation.isValid) {
+          setErrorMessage(fieldPosValidation.error || "Invalid field position");
+          setIsSubmitting(false);
+          return;
+        }
 
-          const fieldPos = formData.prefFieldPos.trim();
-          if (
-            fieldPos &&
-            fieldZoneLabels.length > 0 &&
-            !fieldZoneLabels.some(
-              (l) => l.toLowerCase() === fieldPos.toLowerCase()
-            )
-          ) {
-            setErrorMessage(
-              "Preferred field position must match Team Settings"
-            );
-            setIsSubmitting(false);
-            return;
-          }
-
-          const situation = formData.prefSituation.trim();
-          if (
-            situation &&
-            customSituationLabels.length > 0 &&
-            !customSituationLabels.some(
-              (l) => l.toLowerCase() === situation.toLowerCase()
-            )
-          ) {
-            setErrorMessage("Preferred situation must match Team Settings");
-            setIsSubmitting(false);
-            return;
-          }
-        } catch {
-          // Don't block play creation if definitions fail to load
+        const situationValidation = await validateSituation(
+          formData.prefSituation,
+          activeTeamId
+        );
+        if (!situationValidation.isValid) {
+          setErrorMessage(situationValidation.error || "Invalid situation");
+          setIsSubmitting(false);
+          return;
         }
       }
 
-      // Parse tags
-      const fTags = formData.formationTags
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean);
-      const pTags = formData.playTags
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean);
+      // Transform form data to play data
+      const playData = transformFormDataToPlayData(formData);
 
-      // Handle direction
-      const formationDirToken = parseLeftRight(
-        String(formData.formation_direction ?? formData.formationDir)
-      );
-      const canonicalLegacyFDir = leftRightToLegacyValue(formationDirToken);
-
-      const playData = {
-        formation: formData.formation.trim(),
-        play_name: formData.playName.trim(),
-        p_type: formData.playType?.trim() || undefined,
-        personnel: formData.personnel.trim() || undefined,
-
-        // Formation fields
-        f_type: formData.formationType.trim() || undefined,
-        f_dir: canonicalLegacyFDir || formData.formationDir.trim() || undefined,
-        formation_direction: formationDirToken,
-        back_align: formData.backAlign.trim() || undefined,
-        back_left_of_qb: formData.backLeftOfQb || undefined,
-        back_right_of_qb: formData.backRightOfQb || undefined,
-        shift: formData.shift.trim() || undefined,
-        motion: formData.motion.trim() || undefined,
-        ftag1: fTags[0] || undefined,
-        ftag2: fTags[1] || undefined,
-        r_str: formData.runStrength.trim() || undefined,
-        p_str: formData.passStrength.trim() || undefined,
-
-        // Play details
-        p_dir: formData.playDir || undefined,
-        protection: formData.protection.trim() || undefined,
-        check_into: formData.checkInto.trim() || undefined,
-        p_tag1: pTags[0] || undefined,
-        p_tag2: pTags[1] || undefined,
-
-        // Preferences
-        pref_down: formData.prefDown || undefined,
-        pref_dis: formData.prefDistance || undefined,
-        pref_hash: formData.prefHash || undefined,
-        pref_cov: formData.prefCoverage.trim() || undefined,
-        pref_front: formData.prefFront.trim() || undefined,
-        pref_field_pos: formData.prefFieldPos.trim() || undefined,
-        pref_situation: formData.prefSituation.trim() || undefined,
-
-        // Other
-        confidence_base: formData.confidence,
-        one_word_play: formData.oneWordPlay.trim() || undefined,
-        wristband_number: formData.wristbandNumber.trim() || undefined,
-        notes: formData.description.trim() || undefined,
-        diagram_image_url: formData.diagram_image_url || undefined,
-
-        // Metadata arrays
-        tags: formData.tags.length > 0 ? formData.tags : undefined,
-        key_positions:
-          formData.key_positions.length > 0
-            ? formData.key_positions
-            : undefined,
-        key_players:
-          formData.key_players.length > 0 ? formData.key_players : undefined,
-        flags: formData.flags.length > 0 ? formData.flags : undefined,
-      };
-
+      // Create the play
       const createdPlay = await onCreatePlay?.(playData);
 
       if (!existingPlay && createdPlay && onPlayCreated) {

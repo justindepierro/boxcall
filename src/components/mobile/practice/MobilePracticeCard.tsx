@@ -30,6 +30,7 @@ interface MobilePracticeCardProps {
  * - Compact but readable layout
  * - Memoized for performance
  */
+// eslint-disable-next-line max-lines-per-function
 function MobilePracticeCardInner({
   name,
   description,

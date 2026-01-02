@@ -107,6 +107,51 @@ const getPersonnelBadgeClasses = (
 };
 
 // ============================================================================
+// PLAY CARD ITEM (MEMOIZED)
+// ============================================================================
+interface PlayCardItemProps {
+  play: PlayPreview;
+  idx: number;
+}
+
+const PlayCardItem = memo<PlayCardItemProps>(({ play, idx }) => (
+  <div className="px-4 py-3 flex items-center justify-between">
+    <div className="flex items-center gap-3 min-w-0 flex-1">
+      <span className="w-6 h-6 rounded-full bg-neutral-700 flex items-center justify-center text-xs text-neutral-400 font-medium flex-shrink-0">
+        {idx + 1}
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="text-white text-sm font-medium font-mono truncate">
+          {play.name}
+        </p>
+        <div className="flex items-center gap-2 mt-0.5">
+          {play.personnel && (
+            <span className="text-jade-400 text-xs font-medium">
+              {play.personnel}
+            </span>
+          )}
+          <span className="text-neutral-500 text-xs">
+            {play.reps} rep{play.reps !== 1 ? "s" : ""}
+          </span>
+        </div>
+      </div>
+    </div>
+    {play.type && (
+      <span
+        className={`px-2 py-0.5 rounded text-xs font-medium flex-shrink-0 ml-2 ${
+          play.type.toLowerCase() === "run"
+            ? "bg-warning-500/20 text-warning-400"
+            : "bg-blue-500/20 text-blue-400"
+        }`}
+      >
+        {play.type.toUpperCase()}
+      </span>
+    )}
+  </div>
+));
+PlayCardItem.displayName = "PlayCardItem";
+
+// ============================================================================
 // LOADING STATE
 // ============================================================================
 const LoadingScreen = memo(() => (
@@ -255,42 +300,7 @@ const StartScreen = memo(
               </div>
               <div className="divide-y divide-neutral-700/50">
                 {displayPlays.map((play, idx) => (
-                  <div
-                    key={idx}
-                    className="px-4 py-3 flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-3 min-w-0 flex-1">
-                      <span className="w-6 h-6 rounded-full bg-neutral-700 flex items-center justify-center text-xs text-neutral-400 font-medium flex-shrink-0">
-                        {idx + 1}
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-white text-sm font-medium font-mono truncate">
-                          {play.name}
-                        </p>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          {play.personnel && (
-                            <span className="text-jade-400 text-xs font-medium">
-                              {play.personnel}
-                            </span>
-                          )}
-                          <span className="text-neutral-500 text-xs">
-                            {play.reps} rep{play.reps !== 1 ? "s" : ""}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    {play.type && (
-                      <span
-                        className={`px-2 py-0.5 rounded text-xs font-medium flex-shrink-0 ml-2 ${
-                          play.type.toLowerCase() === "run"
-                            ? "bg-warning-500/20 text-warning-400"
-                            : "bg-blue-500/20 text-blue-400"
-                        }`}
-                      >
-                        {play.type.toUpperCase()}
-                      </span>
-                    )}
-                  </div>
+                  <PlayCardItem key={idx} play={play} idx={idx} />
                 ))}
               </div>
               {plays.length > 3 && (
@@ -415,6 +425,7 @@ interface ActiveSessionProps {
   onAddNote: (note: string) => void;
 }
 
+// eslint-disable-next-line complexity
 function ActiveSession({
   playName,
   playType,

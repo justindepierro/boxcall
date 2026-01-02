@@ -21,7 +21,9 @@
     "NFHS",
     "pointerupoutside",
     "varchar",
-    "timestamptz"
+    "timestamptz",
+    "WCAG",
+    "Contentful"
   ],
   "ignoreWords": [
     "Pixi",

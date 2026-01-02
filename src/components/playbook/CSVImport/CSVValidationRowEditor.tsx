@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { Button } from "../../ui/Button/Button";
 import { Icon } from "../../ui/Icon";
 import { Typography } from "../../design-system/Typography";
@@ -37,12 +37,12 @@ const getValidationTextClass = (state: ValidationResult["state"]) => {
   }
 };
 
-// Warnings List Component
+// Warnings List Component - Memoized to prevent re-renders
 interface WarningsListProps {
   warnings: string[];
 }
 
-const WarningsList: React.FC<WarningsListProps> = ({ warnings }) => {
+const WarningsList = memo<WarningsListProps>(({ warnings }) => {
   if (warnings.length === 0) return null;
 
   return (
@@ -60,14 +60,15 @@ const WarningsList: React.FC<WarningsListProps> = ({ warnings }) => {
       </ul>
     </div>
   );
-};
+});
+WarningsList.displayName = "WarningsList";
 
-// Errors List Component
+// Errors List Component - Memoized to prevent re-renders
 interface ErrorsListProps {
   errors: string[];
 }
 
-const ErrorsList: React.FC<ErrorsListProps> = ({ errors }) => {
+const ErrorsList = memo<ErrorsListProps>(({ errors }) => {
   if (errors.length === 0) return null;
 
   return (
@@ -85,88 +86,89 @@ const ErrorsList: React.FC<ErrorsListProps> = ({ errors }) => {
       </ul>
     </div>
   );
-};
+});
+ErrorsList.displayName = "ErrorsList";
 
-// Fuzzy Match Suggestions Component
+// Fuzzy Match Suggestions Component - Memoized to prevent re-renders
 interface FuzzyMatchSuggestionsProps {
   matches: SimilarMatch[];
   onAccept: (value: string) => void;
 }
 
-const FuzzyMatchSuggestions: React.FC<FuzzyMatchSuggestionsProps> = ({
-  matches,
-  onAccept,
-}) => {
-  if (matches.length === 0) return null;
+const FuzzyMatchSuggestions = memo<FuzzyMatchSuggestionsProps>(
+  ({ matches, onAccept }) => {
+    if (matches.length === 0) return null;
 
-  return (
-    <div className="bg-subtle border border-muted rounded-lg p-2 space-y-1">
-      <p className="text-xs font-medium text-secondary mb-1">
-        💡 Did you mean:
-      </p>
-      {matches.map((match, idx) => (
-        <button
-          key={idx}
-          onClick={() => onAccept(match.value)}
-          className="w-full text-left px-2 py-1 rounded hover:bg-bg-secondary transition-colors group flex items-center justify-between"
-        >
-          <span className="text-sm font-medium group-hover:text-accent transition-colors">
-            {match.value}
-          </span>
-          <span className="text-xs text-muted bg-bg-muted px-2 py-0.5 rounded">
-            {match.confidence}% match
-          </span>
-        </button>
-      ))}
-    </div>
-  );
-};
+    return (
+      <div className="bg-subtle border border-muted rounded-lg p-2 space-y-1">
+        <p className="text-xs font-medium text-secondary mb-1">
+          💡 Did you mean:
+        </p>
+        {matches.map((match, idx) => (
+          <button
+            key={idx}
+            onClick={() => onAccept(match.value)}
+            className="w-full text-left px-2 py-1 rounded hover:bg-bg-secondary transition-colors group flex items-center justify-between"
+          >
+            <span className="text-sm font-medium group-hover:text-accent transition-colors">
+              {match.value}
+            </span>
+            <span className="text-xs text-muted bg-bg-muted px-2 py-0.5 rounded">
+              {match.confidence}% match
+            </span>
+          </button>
+        ))}
+      </div>
+    );
+  }
+);
+FuzzyMatchSuggestions.displayName = "FuzzyMatchSuggestions";
 
-// Auto-correction Suggestion Component
+// Auto-correction Suggestion Component - Memoized to prevent re-renders
 interface AutoCorrectionProps {
   normalizedValue: string;
   onAccept: () => void;
 }
 
-const AutoCorrectionSuggestion: React.FC<AutoCorrectionProps> = ({
-  normalizedValue,
-  onAccept,
-}) => (
-  <div className="bg-info/10 border border-info/20 rounded-lg p-2 flex items-start justify-between">
-    <div className="flex-1">
-      <p className="text-xs font-medium text-info mb-1">
-        🔧 Auto-correction available
-      </p>
-      <p className="text-xs text-secondary">
-        Normalize to:{" "}
-        <span className="font-mono font-medium">{normalizedValue}</span>
-      </p>
+const AutoCorrectionSuggestion = memo<AutoCorrectionProps>(
+  ({ normalizedValue, onAccept }) => (
+    <div className="bg-info/10 border border-info/20 rounded-lg p-2 flex items-start justify-between">
+      <div className="flex-1">
+        <p className="text-xs font-medium text-info mb-1">
+          🔧 Auto-correction available
+        </p>
+        <p className="text-xs text-secondary">
+          Normalize to:{" "}
+          <span className="font-mono font-medium">{normalizedValue}</span>
+        </p>
+      </div>
+      <Button onClick={onAccept} variant="infoLink" size="xs">
+        Apply
+      </Button>
     </div>
-    <Button onClick={onAccept} variant="infoLink" size="xs">
-      Apply
-    </Button>
-  </div>
+  )
 );
+AutoCorrectionSuggestion.displayName = "AutoCorrectionSuggestion";
 
-// Validation State Icon Component
+// Validation State Icon Component - Memoized to prevent re-renders
 interface ValidationStateIconProps {
   state: ValidationResult["state"];
   isEditing: boolean;
 }
 
-const ValidationStateIcon: React.FC<ValidationStateIconProps> = ({
-  state,
-  isEditing,
-}) => {
-  if (isEditing) return null;
-  if (state === "valid")
-    return <Icon name="check-circle" className="h-4 w-4 text-success" />;
-  if (state === "warning")
-    return <Icon name="alert-triangle" className="h-4 w-4 text-warning" />;
-  if (state === "error")
-    return <Icon name="x-circle" className="h-4 w-4 text-error" />;
-  return null;
-};
+const ValidationStateIcon = memo<ValidationStateIconProps>(
+  ({ state, isEditing }) => {
+    if (isEditing) return null;
+    if (state === "valid")
+      return <Icon name="check-circle" className="h-4 w-4 text-success" />;
+    if (state === "warning")
+      return <Icon name="alert-triangle" className="h-4 w-4 text-warning" />;
+    if (state === "error")
+      return <Icon name="x-circle" className="h-4 w-4 text-error" />;
+    return null;
+  }
+);
+ValidationStateIcon.displayName = "ValidationStateIcon";
 
 type CSVEditableField = "formation" | "play_name" | "personnel";
 
@@ -221,120 +223,126 @@ interface CSVValidationFieldEditorProps {
   ) => void;
 }
 
-const CSVValidationFieldEditor: React.FC<CSVValidationFieldEditorProps> = ({
-  rowNumber,
-  field,
-  label,
-  value,
-  validation,
-  existingValues,
-  editingField,
-  editValue,
-  onStartEditing,
-  onCancelEditing,
-  onSaveEdit,
-  onEditValueChange,
-  onAcceptSuggestion,
-}) => {
-  const isEditing = editingField === field;
-  const hasWarnings = validation.state === "warning";
-  const hasErrors = validation.state === "error";
+const CSVValidationFieldEditor = memo<CSVValidationFieldEditorProps>(
+  ({
+    rowNumber,
+    field,
+    label,
+    value,
+    validation,
+    existingValues,
+    editingField,
+    editValue,
+    onStartEditing,
+    onCancelEditing,
+    onSaveEdit,
+    onEditValueChange,
+    onAcceptSuggestion,
+  }) => {
+    const isEditing = editingField === field;
+    const hasWarnings = validation.state === "warning";
+    const hasErrors = validation.state === "error";
 
-  const similarMatches: SimilarMatch[] =
-    hasWarnings || hasErrors
-      ? findSimilarMatches(value, existingValues, 3)
-      : [];
+    const similarMatches: SimilarMatch[] =
+      hasWarnings || hasErrors
+        ? findSimilarMatches(value, existingValues, 3)
+        : [];
 
-  return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <label className="text-xs font-medium text-secondary">{label}</label>
-        <div className="flex items-center space-x-2">
-          <ValidationStateIcon state={validation.state} isEditing={isEditing} />
-          {!isEditing && (
-            <Button
-              onClick={() => onStartEditing(field, value)}
-              variant="neutralLink"
-              size="xs"
-              icon={<Icon name="edit" className="h-3 w-3" />}
-              iconPosition="only"
-              aria-label={`Edit ${label}`}
+    return (
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-medium text-secondary">{label}</label>
+          <div className="flex items-center space-x-2">
+            <ValidationStateIcon
+              state={validation.state}
+              isEditing={isEditing}
             />
-          )}
+            {!isEditing && (
+              <Button
+                onClick={() => onStartEditing(field, value)}
+                variant="neutralLink"
+                size="xs"
+                icon={<Icon name="edit" className="h-3 w-3" />}
+                iconPosition="only"
+                aria-label={`Edit ${label}`}
+              />
+            )}
+          </div>
         </div>
-      </div>
 
-      {isEditing ? (
-        <div className="flex items-center space-x-2">
-          <input
-            type="text"
-            value={editValue}
-            onChange={(e) => onEditValueChange(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") onSaveEdit(field);
-              if (e.key === "Escape") onCancelEditing();
-            }}
-            className="flex-1 px-2 py-1 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
-            autoFocus
-          />
-          <Button
-            onClick={() => onSaveEdit(field)}
-            variant="primary"
-            size="xs"
-            icon={<Icon name="check" className="h-3 w-3" />}
-            iconPosition="only"
-            aria-label="Save"
-          />
-          <Button
-            onClick={onCancelEditing}
-            variant="outline"
-            size="xs"
-            icon={<Icon name="x-circle" className="h-3 w-3" />}
-            iconPosition="only"
-            aria-label="Cancel"
-          />
-        </div>
-      ) : (
-        <div
-          className={`px-3 py-2 rounded-lg text-sm font-medium ${getValidationStateClass(validation.state)}`}
-        >
-          {value || "-"}
-        </div>
-      )}
+        {isEditing ? (
+          <div className="flex items-center space-x-2">
+            <input
+              type="text"
+              value={editValue}
+              onChange={(e) => onEditValueChange(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") onSaveEdit(field);
+                if (e.key === "Escape") onCancelEditing();
+              }}
+              className="flex-1 px-2 py-1 text-sm border border-border rounded focus:outline-none focus:ring-2 focus:ring-accent"
+              autoFocus
+            />
+            <Button
+              onClick={() => onSaveEdit(field)}
+              variant="primary"
+              size="xs"
+              icon={<Icon name="check" className="h-3 w-3" />}
+              iconPosition="only"
+              aria-label="Save"
+            />
+            <Button
+              onClick={onCancelEditing}
+              variant="outline"
+              size="xs"
+              icon={<Icon name="x-circle" className="h-3 w-3" />}
+              iconPosition="only"
+              aria-label="Cancel"
+            />
+          </div>
+        ) : (
+          <div
+            className={`px-3 py-2 rounded-lg text-sm font-medium ${getValidationStateClass(validation.state)}`}
+          >
+            {value || "-"}
+          </div>
+        )}
 
-      {validation.message && !isEditing && (
-        <p
-          className={`text-xs flex items-center space-x-1 ${getValidationTextClass(validation.state)}`}
-        >
-          {hasWarnings && <span>⚠️</span>}
-          {hasErrors && <span>❌</span>}
-          <span>{validation.message}</span>
-        </p>
-      )}
+        {validation.message && !isEditing && (
+          <p
+            className={`text-xs flex items-center space-x-1 ${getValidationTextClass(validation.state)}`}
+          >
+            {hasWarnings && <span>⚠️</span>}
+            {hasErrors && <span>❌</span>}
+            <span>{validation.message}</span>
+          </p>
+        )}
 
-      {!isEditing && (hasWarnings || hasErrors) && (
-        <FuzzyMatchSuggestions
-          matches={similarMatches}
-          onAccept={(matchValue) =>
-            onAcceptSuggestion(rowNumber, field, matchValue)
-          }
-        />
-      )}
-
-      {validation.normalizedValue &&
-        validation.normalizedValue !== value &&
-        !isEditing &&
-        validation.state !== "error" && (
-          <AutoCorrectionSuggestion
-            normalizedValue={validation.normalizedValue}
-            onAccept={() =>
-              onAcceptSuggestion(rowNumber, field, validation.normalizedValue)
+        {!isEditing && (hasWarnings || hasErrors) && (
+          <FuzzyMatchSuggestions
+            matches={similarMatches}
+            onAccept={(matchValue) =>
+              onAcceptSuggestion(rowNumber, field, matchValue)
             }
           />
         )}
-    </div>
-  );
-};
+
+        {validation.normalizedValue &&
+          validation.normalizedValue !== value &&
+          !isEditing &&
+          validation.state !== "error" && (
+            <AutoCorrectionSuggestion
+              normalizedValue={validation.normalizedValue}
+              onAccept={() =>
+                onAcceptSuggestion(rowNumber, field, validation.normalizedValue)
+              }
+            />
+          )}
+      </div>
+    );
+  }
+);
+CSVValidationFieldEditor.displayName = "CSVValidationFieldEditor";
 
 interface CSVValidationRowEditorProps {
   preview: CSVPlayPreview;
