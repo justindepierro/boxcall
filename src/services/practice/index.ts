@@ -18,4 +18,4 @@ export type {
   PracticeTemplate,
   CreatePracticeTemplateData,
   PracticeSearchResult,
-} from "./types";
+} from "../../types/practice-service";

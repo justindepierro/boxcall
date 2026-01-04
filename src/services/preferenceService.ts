@@ -7,6 +7,7 @@ import {
   readLocalString,
   storageKeys,
 } from "../utils/storage";
+import type { BadgeColorScheme } from "../types/badge";
 
 /**
  * Service for managing user preferences stored in profiles.settings JSONB column
@@ -29,6 +30,12 @@ export interface UserPreferences {
 
   // Quick Wins: Favorite plays
   bc_favorite_plays?: string[]; // Play IDs
+
+  // Playbook badge color overrides (synced with local overrides)
+  badge_scheme_overrides?: {
+    playType?: Record<string, BadgeColorScheme>;
+    categories?: Record<string, Record<string, BadgeColorScheme>>;
+  };
 
   // Expandable for future preferences
   [key: string]: unknown;

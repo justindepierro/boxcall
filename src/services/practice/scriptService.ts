@@ -8,13 +8,12 @@ import { getCurrentUserId } from "../../lib/auth-helpers";
 import { practiceScriptCache } from "../practiceScriptCache";
 import { ActivityService } from "../activityService";
 import { debug, error as logError } from "../../utils/logger";
-
 import type {
   PracticeScript,
   PracticeScriptPlay,
   CreatePracticeScriptData,
   AddPlayToPracticeScriptData,
-} from "./types";
+} from "../../types/practice-service";
 import type { Play } from "../../types/play";
 
 /**

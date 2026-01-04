@@ -97,7 +97,7 @@
 #### Old Design
 
 ```tsx
-<span className="text-xs font-medium text-white bg-jade-600 px-1.5 py-0.5 rounded font-semibold">
+<span className="text-xs font-semibold text-white bg-jade-600 px-1.5 py-0.5 rounded">
   70%
 </span>
 ```

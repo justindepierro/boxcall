@@ -5,26 +5,181 @@
  * Provides memoized schemes and change handlers for all badge categories.
  */
 
-import { useMemo } from "react";
+import { useMemo, useCallback, useSyncExternalStore, useEffect } from "react";
 import type { Play as PlayType } from "../../../../types/play";
 import type { BadgeColorScheme } from "../../../../types/badge";
+import { readLocalJson, writeLocalJson } from "../../../../utils/storage";
+import { PreferenceService } from "../../../../services/preferenceService";
 
-// Hook deleted - using fallback functions
-const getCategoryBadgeScheme = (
-  _overrides: unknown,
-  _category: string,
-  _value: string
-): BadgeColorScheme => "navy";
-const getPlayTypeBadgeScheme = (
-  _overrides: unknown,
-  _playType: string
-): BadgeColorScheme => "jade";
-const useTeamBadgeSchemeOverrides = () => ({
-  overrides: null,
-  setCategoryScheme: (_category: string, _value: string, _scheme: unknown) =>
-    Promise.resolve(),
-  setPlayTypeScheme: (_playType: string, _scheme: unknown) => Promise.resolve(),
+type BadgeOverrides = {
+  playType: Record<string, BadgeColorScheme>;
+  categories: Record<string, Record<string, BadgeColorScheme>>;
+};
+
+const STORAGE_KEY = "bc_badge_scheme_overrides";
+
+const defaultOverrides: BadgeOverrides = {
+  playType: {},
+  categories: {},
+};
+
+const parseOverrides = (raw: string | null): Partial<BadgeOverrides> => {
+  if (!raw) return {};
+  try {
+    return JSON.parse(raw) as Partial<BadgeOverrides>;
+  } catch {
+    return {};
+  }
+};
+
+const sanitizeOverrides = (
+  value: Partial<BadgeOverrides> | null | undefined
+): BadgeOverrides => ({
+  playType: value?.playType ?? {},
+  categories: value?.categories ?? {},
 });
+
+const mergeOverrides = (
+  base: BadgeOverrides,
+  incoming: BadgeOverrides
+): BadgeOverrides => {
+  const mergedCategories = { ...base.categories };
+  Object.entries(incoming.categories).forEach(([category, map]) => {
+    mergedCategories[category] = {
+      ...(base.categories[category] || {}),
+      ...map,
+    };
+  });
+
+  return {
+    playType: { ...base.playType, ...incoming.playType },
+    categories: mergedCategories,
+  };
+};
+
+const normalizeKey = (value: string | null | undefined): string =>
+  (value ?? "").trim();
+
+const getCategoryBadgeScheme = (
+  overrides: BadgeOverrides,
+  category: string,
+  value: string
+): BadgeColorScheme => {
+  const normalized = normalizeKey(value);
+  if (!normalized) return "navy";
+  const categoryOverrides = overrides.categories[category] || {};
+  return categoryOverrides[normalized] || "navy";
+};
+
+const getPlayTypeBadgeScheme = (
+  overrides: BadgeOverrides,
+  playType: string
+): BadgeColorScheme => {
+  const normalized = normalizeKey(playType);
+  if (!normalized) return "jade";
+  return overrides.playType[normalized] || "jade";
+};
+
+// Module-level store so updates fan out to every consumer
+let overridesRef: BadgeOverrides = sanitizeOverrides(
+  readLocalJson<BadgeOverrides>(STORAGE_KEY) || defaultOverrides
+);
+
+const listeners = new Set<() => void>();
+
+const notify = () => {
+  listeners.forEach((listener) => listener());
+};
+
+const updateOverrides = (next: BadgeOverrides) => {
+  overridesRef = sanitizeOverrides(next);
+  writeLocalJson(STORAGE_KEY, overridesRef);
+  notify();
+};
+
+if (typeof window !== "undefined") {
+  window.addEventListener("storage", (event) => {
+    if (event.key !== STORAGE_KEY) return;
+    const parsed = parseOverrides(event.newValue);
+    overridesRef = sanitizeOverrides(parsed);
+    notify();
+  });
+}
+
+const subscribe = (listener: () => void) => {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+};
+
+const getSnapshot = () => overridesRef || defaultOverrides;
+
+const useBadgeOverrideState = () => {
+  const overrides = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+
+  useEffect(() => {
+    let isMounted = true;
+    const hydrate = async () => {
+      const prefs = await PreferenceService.loadPreferences();
+      const remote = sanitizeOverrides(prefs?.badge_scheme_overrides);
+      const hasRemote =
+        Object.keys(remote.playType).length > 0 ||
+        Object.keys(remote.categories).length > 0;
+      if (!hasRemote) return;
+
+      if (!isMounted) return;
+      const merged = mergeOverrides(getSnapshot(), remote);
+      updateOverrides(merged);
+    };
+
+    void hydrate();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const persist = useCallback((next: BadgeOverrides) => {
+    const normalized = sanitizeOverrides(next);
+    updateOverrides(normalized);
+    void PreferenceService.savePreferences({
+      badge_scheme_overrides: normalized,
+    });
+  }, []);
+
+  const setCategoryScheme = useCallback(
+    async (category: string, value: string, scheme: BadgeColorScheme) => {
+      const normalized = normalizeKey(value);
+      if (!normalized) return;
+      persist({
+        playType: overrides.playType,
+        categories: {
+          ...overrides.categories,
+          [category]: {
+            ...(overrides.categories[category] || {}),
+            [normalized]: scheme,
+          },
+        },
+      });
+    },
+    [overrides.playType, overrides.categories, persist]
+  );
+
+  const setPlayTypeScheme = useCallback(
+    async (playType: string, scheme: BadgeColorScheme) => {
+      const normalized = normalizeKey(playType);
+      if (!normalized) return;
+      persist({
+        playType: {
+          ...overrides.playType,
+          [normalized]: scheme,
+        },
+        categories: overrides.categories,
+      });
+    },
+    [overrides.playType, overrides.categories, persist]
+  );
+
+  return { overrides, setCategoryScheme, setPlayTypeScheme };
+};
 
 // ============================================================================
 // Types
@@ -66,7 +221,7 @@ export function useBadgeSchemes({
   originalPlay,
 }: UseBadgeSchemesOptions): BadgeSchemes {
   const { overrides, setPlayTypeScheme, setCategoryScheme } =
-    useTeamBadgeSchemeOverrides();
+    useBadgeOverrideState();
 
   // Use provided originalPlay or fall back to play
   const fallback = originalPlay ?? play;
@@ -78,7 +233,7 @@ export function useBadgeSchemes({
   );
 
   const onChangePlayTypeScheme = useMemo(() => {
-    const playType = (play.p_type ?? fallback.p_type)?.trim();
+    const playType = normalizeKey(play.p_type ?? fallback.p_type);
     if (!playType) return async () => {};
     return async (scheme: BadgeColorScheme) => {
       await setPlayTypeScheme(playType, scheme);
@@ -97,7 +252,7 @@ export function useBadgeSchemes({
   );
 
   const onChangePersonnelScheme = useMemo(() => {
-    const personnel = (play.personnel ?? fallback.personnel)?.trim();
+    const personnel = normalizeKey(play.personnel ?? fallback.personnel);
     if (!personnel) return async () => {};
     return async (scheme: BadgeColorScheme) => {
       await setCategoryScheme("personnel", personnel, scheme);
@@ -116,7 +271,7 @@ export function useBadgeSchemes({
   );
 
   const onChangeFormationScheme = useMemo(() => {
-    const formation = (play.formation ?? fallback.formation)?.trim();
+    const formation = normalizeKey(play.formation ?? fallback.formation);
     if (!formation) return async () => {};
     return async (scheme: BadgeColorScheme) => {
       await setCategoryScheme("formation", formation, scheme);
@@ -135,7 +290,7 @@ export function useBadgeSchemes({
   );
 
   const onChangeProtectionScheme = useMemo(() => {
-    const protection = (play.protection ?? fallback.protection)?.trim();
+    const protection = normalizeKey(play.protection ?? fallback.protection);
     if (!protection) return async () => {};
     return async (scheme: BadgeColorScheme) => {
       await setCategoryScheme("protection", protection, scheme);
@@ -154,7 +309,7 @@ export function useBadgeSchemes({
   );
 
   const onChangeMotionScheme = useMemo(() => {
-    const motion = (play.motion ?? fallback.motion)?.trim();
+    const motion = normalizeKey(play.motion ?? fallback.motion);
     if (!motion) return async () => {};
     return async (scheme: BadgeColorScheme) => {
       await setCategoryScheme("motion", motion, scheme);

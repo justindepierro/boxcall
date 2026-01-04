@@ -23,7 +23,12 @@
     "varchar",
     "timestamptz",
     "WCAG",
-    "Contentful"
+    "Contentful",
+    "ftags",
+    "ptags",
+    "playcard",
+    "playtype",
+    "morphism"
   ],
   "ignoreWords": [
     "Pixi",

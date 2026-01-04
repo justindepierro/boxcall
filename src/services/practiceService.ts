@@ -20,7 +20,7 @@ export type {
   PracticeTemplate,
   CreatePracticeTemplateData,
   PracticeSearchResult,
-} from "./practice/types";
+} from "../types/practice-service";
 
 // Import modular services
 import { PracticeScriptService } from "./practice/scriptService";
@@ -45,7 +45,7 @@ import type {
   AddPlayToPracticeScriptData,
   CreatePracticeTemplateData,
   PracticeTemplate,
-} from "./practice/types";
+} from "../types/practice-service";
 import type { Play } from "../types/play";
 
 /**

@@ -50,6 +50,7 @@
       "@utils/*": ["./src/utils/*"],
       "@design-system/*": ["./src/design-system/*"],
       "@types/*": ["./src/types/*"],
+      "@types/practice-service": ["./src/types/practice-service.ts"],
       "@telemetry/*": ["./src/telemetry/*"]
     }
   },

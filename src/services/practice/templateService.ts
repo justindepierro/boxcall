@@ -6,12 +6,11 @@
 import { table } from "../../data/supabase/db";
 import { getCurrentUserId } from "../../lib/auth-helpers";
 import { error as logError } from "../../utils/logger";
-
 import type {
   PracticeTemplate,
   CreatePracticeTemplateData,
   PracticeScript,
-} from "./types";
+} from "../../types/practice-service";
 
 /**
  * Service for managing practice templates

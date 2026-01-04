@@ -10,7 +10,7 @@ import type {
   PracticeSearchResult,
   PracticeScript,
   PracticeTemplate,
-} from "./types";
+} from "../../types/practice-service";
 import type { PracticeSchedule } from "../../types/practice";
 
 /**

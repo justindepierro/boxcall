@@ -1,5 +1,6 @@
 import React from "react";
-import { PlayCard } from "./PlayCard";
+import { PlayCard as LegacyPlayCard } from "./PlayCard";
+import { PlayCardV2 } from "./PlayCard.v2";
 import type { Play } from "../../types/play";
 import type { PersonnelConfiguration } from "../../types/personnel";
 import { usePrefetchQueries } from "../../hooks/usePrefetchQueries";
@@ -85,6 +86,10 @@ export const PlayCardWrapper: React.FC<PlayCardWrapperProps> = ({
 }) => {
   const { prefetchPlayDetails, cancelPrefetch } = usePrefetchQueries();
 
+  const usePlayCardV2 =
+    (import.meta.env.VITE_PLAYCARD_V2_ENABLED ?? "true") !== "false";
+  const ActivePlayCard = usePlayCardV2 ? PlayCardV2 : LegacyPlayCard;
+
   // Determine variant-specific props
   const variantProps =
     variant === "tile"
@@ -131,7 +136,7 @@ export const PlayCardWrapper: React.FC<PlayCardWrapperProps> = ({
       onMouseEnter={() => prefetchPlayDetails(play.id)}
       onMouseLeave={cancelPrefetch}
     >
-      <PlayCard {...commonProps} {...variantProps} />
+      <ActivePlayCard {...commonProps} {...variantProps} />
     </div>
   );
 };

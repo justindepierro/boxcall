@@ -8,7 +8,6 @@
 import React, { useEffect, useState } from "react";
 import type { Play as PlayType } from "../../../../types/play";
 import type { PersonnelConfiguration } from "../../../../types/personnel";
-import { isPresetBadgeCustomization } from "../../../../types/personnel";
 import type { SituationDefinitions } from "../../../../types/situationDefinitions";
 import { TeamSituationDefinitionsService } from "../../../../services/teamSituationDefinitionsService";
 import { useActiveTeamStore } from "../../../../stores/activeTeamStore";
@@ -18,7 +17,6 @@ import {
   getFieldZoneColorByLabel,
 } from "../../../../utils/situationBucketing";
 import { Badge, EditableSchemeBadge } from "../../../ui/Badge";
-import { PersonnelBadge } from "../../PersonnelBadge";
 import { WristbandBadge } from "../../WristbandBadge";
 import Icon from "../../../ui/Icon/Icon";
 import { useBadgeSchemes, type BadgeSchemes } from "./useBadgeSchemes";
@@ -99,25 +97,17 @@ function getSuccessRateBadgeColor(rate: number): string {
 const CoreBadges: React.FC<{
   play: PlayType;
   schemes: BadgeSchemes;
-  personnelConfig?: PersonnelConfiguration;
-}> = ({ play, schemes, personnelConfig }) => (
+}> = ({ play, schemes }) => (
   <>
-    {play.personnel &&
-      (isPresetBadgeCustomization(personnelConfig?.badgeCustomization) ? (
-        <PersonnelBadge
-          personnel={play.personnel}
-          size="sm"
-          badgeCustomization={personnelConfig.badgeCustomization}
-        />
-      ) : (
-        <EditableSchemeBadge
-          label={play.personnel}
-          scheme={schemes.personnel.scheme}
-          onChangeScheme={schemes.personnel.onChange}
-          size="sm"
-          ariaLabel={`Change ${play.personnel} badge color`}
-        />
-      ))}
+    {play.personnel && (
+      <EditableSchemeBadge
+        label={play.personnel}
+        scheme={schemes.personnel.scheme}
+        onChangeScheme={schemes.personnel.onChange}
+        size="sm"
+        ariaLabel={`Change ${play.personnel} badge color`}
+      />
+    )}
 
     {play.p_type && (
       <EditableSchemeBadge
@@ -269,24 +259,15 @@ export const BadgeRow: React.FC<BadgeRowProps> = ({
   play,
   originalPlay,
   isExpanded = false,
-  personnelConfigurations = [],
   phaseLabel,
   getConfidenceColor,
 }) => {
   const teamDefs = useTeamSituationDefinitions();
   const schemes = useBadgeSchemes({ play, originalPlay });
 
-  const personnelConfig = personnelConfigurations.find(
-    (config) => config.name === play.personnel
-  );
-
   return (
-    <>
-      <CoreBadges
-        play={play}
-        schemes={schemes}
-        personnelConfig={personnelConfig}
-      />
+    <div className="flex flex-wrap items-center gap-2 rounded-2xl bg-bg-muted/50 px-3 py-2">
+      <CoreBadges play={play} schemes={schemes} />
       {!isExpanded && <CollapsedOnlyBadges play={play} />}
       {isExpanded && (
         <ExpandedOnlyBadges
@@ -296,7 +277,7 @@ export const BadgeRow: React.FC<BadgeRowProps> = ({
         />
       )}
       <SituationBadges play={play} teamDefs={teamDefs} />
-    </>
+    </div>
   );
 };
 

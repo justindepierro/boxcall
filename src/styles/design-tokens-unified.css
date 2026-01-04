@@ -441,7 +441,7 @@
   --font-family-primary: "Inter", system-ui, sans-serif;
   --font-family-heading: "Poppins", system-ui, sans-serif;
   --font-family-display: "Poppins", system-ui, sans-serif;
-  --font-family-mono: "Fira Code", "Courier New", monospace;
+  --font-family-mono: "JetBrains Mono", "Fira Code", "Courier New", monospace;
 
   --font-size-xs: 0.75rem; /* 12px */
   --font-size-sm: 0.875rem; /* 14px */
