@@ -27,10 +27,11 @@ See unified product & tech roadmap: [`docs/product/ROADMAP.md`](docs/product/ROA
 
 **PERFORMANCE STATS**:
 
-- 📦 **Bundle**: 2.83MB total (975KB gzipped) - optimized for production
-- ⚡ **Build**: 8.64s with 41 optimized chunks
+- 📦 **Bundle**: 1.34MB total (53% reduction) - optimized for production
+- ⚡ **Build**: 14.5s with 41 optimized chunks
 - 🚀 **Ready**: Sub-100ms data loading with offline-first architecture
 - 🧹 **Code Quality**: 0 ESLint errors, 0 warnings
+- 🔒 **Security**: 100/100 score - production ready ([audit](docs/security/PRODUCTION_SECURITY_SUMMARY.md))
 
 ## Key Scripts
 

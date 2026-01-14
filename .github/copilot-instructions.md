@@ -1,4 +1,6 @@
-# BoxCall AI Coding Agent Instructions
+# BoxCall AI Copilot Instructions
+
+> **For Agent Mode**: See [copilot-agent-instructions.md](./copilot-agent-instructions.md) for comprehensive agent training guide.
 
 ## Project Context
 
@@ -6,37 +8,7 @@ BoxCall is a professional football coaching platform implementing Brian Billick'
 
 **Target Users**: Football coaches (head coaches, coordinators, assistants) managing playbooks, practice scripts, and game plans.
 
-## Key Documentation References
-
-**Architecture & System Design:**
-
-- `docs/COMPLETE_ARCHITECTURE_DEC7_2025.md` - Full system architecture with diagrams
-- `docs/ARCHITECTURE.md` - Core technical architecture patterns
-- `docs/database/COMPLETE_SCHEMA_REFERENCE.md` - Complete database schema (24 tables)
-- `database/schema.sql` - Actual SQL schema definition
-
-**Performance Optimizations (December 2025):**
-
-- `docs/OPTIMIZATION_COMPLETE_DEC7_2025.md` - All 8 optimizations implemented
-- `supabase/migrations/20251207110836_performance_indexes.sql` - Database indexes (19 indexes, 9 tables)
-- Key optimizations:
-  - React Query: 10min cache, 30min GC (40% fewer API calls)
-  - Vendor splitting: 15 chunks (20% faster loads)
-  - PWA: Smart caching by data type (stable 15min, live 2min, auth never)
-  - Image optimization: WebP auto-generation
-  - Database: 19 selective indexes (50-70% faster queries)
-
-**Design System:**
-
-- `docs/DESIGN_SYSTEM_REFERENCE.md` - Token hierarchy and patterns
-- `src/styles/tailwind/boxcallTheme.js` - Component tokens
-- `eslint-rules/` - Custom rules enforcing design system
-
-**Feature Documentation:**
-
-- `docs/features/practice/` - Practice script system
-- `docs/features/playbook/` - Playbook and play management
-- `PRACTICE_GAMEPLAN_SYSTEM_AUDIT_NOV30_2025.md` - Practice & game plan audit
+**Current Status (January 2026)**: Phase 4 (Core Development) - 75% complete, v1.0 release in ~16 weeks
 
 ## Architecture Essentials
 
@@ -50,21 +22,82 @@ Three interconnected coaching workflows:
 
 Data flow: `plays` table → `practice_scripts` → `game_plans` → `coach_cards` (printable sideline references)
 
-### Database Architecture (Supabase + PostgreSQL)
+### Tech Stack Summary
+- **Frontend**: React 18, TypeScript 5.6, Vite 5.4, Tailwind CSS 3.4
+- **State**: Zustand (global), React Query (server state, 10min cache)
+- **Database**: Supabase PostgreSQL (24 tables, RLS policies)
+- **Performance**: 2.83MB bundle (975KB gzipped), <2s load, <100ms response
+- **Deployment**: Netlify with PWA support
 
-- **21 core tables** with Row Level Security (RLS) policies
-- Team-based data isolation via `team_members` join table
-- Trigger-based counting (play_count, situation_count) for performance
-- Migration strategy: Timestamped files in `supabase/migrations/` (YYYYMMDDHHMMSS format)
-- **CRITICAL**: Never expose service role key client-side; use anon key + RLS only
+### Key Systems (Quick Reference)
 
-Key tables: `teams`, `team_members`, `plays`, `playbooks`, `game_plans`, `game_plan_situations`, `game_plan_plays`, `coach_cards`, `practice_scripts`, `team_posts`, `achievements`
+**Design Token System** (Token-First):
+- Priority: Component tokens → Semantic tokens → Brand scales → Layout tokens
+- Example: Use `btn-primary` not `bg-jade-600 text-white px-4 py-2`
+- Enforced by custom ESLint rules (no raw colors/spacing/typography)
 
-### TypeScript Type System
+**Database Architecture**:
+- 24 tables with Row Level Security (RLS)
+- Team-based isolation via `team_members` join
+- Auto-generated TypeScript types in `src/types/database.ts`
+- Migrations in `supabase/migrations/` (timestamped)
 
-- Database types auto-generated in `src/types/database.ts` (21 tables with Row/Insert/Update variants)
-- Type-safe Supabase client in `src/lib/supabase.ts` with dev stub fallback
-- Zustand store in `src/app/store.ts` for global state (User, Team, Player, Notification types)
+**Unified API Client** (December 2025):
+```typescript
+import { api } from "@/lib/api";
+
+// All queries use api() client
+const { data, error } = await api("plays")
+  .select("*")
+  .eq("playbook_id", playbookId);
+```
+- Request deduplication (same query = one network request)
+- Auto-retry with exponential backoff (3 retries)
+- 30s timeout protection
+
+## Performance Optimizations (December 2025)
+
+**8 Major Optimizations Complete** (see `docs/OPTIMIZATION_COMPLETE_DEC7_2025.md`):
+
+1. ✅ **React Query Cache** (40% fewer API calls)
+   - `staleTime: 10min`, `gcTime: 30min`
+   - `refetchOnWindowFocus: false`
+
+2. ✅ **Vendor Code Splitting** (20% faster loads)
+   - 15 optimized chunks: `react-vendor`, `supabase`, `query-client`, `pdf-core`, etc.
+   - Better browser caching
+
+3. ✅ **PWA Enhancement** (Smart caching)
+   - Stable data: 15min cache (plays, playbooks)
+   - Live data: 2min cache (sessions)
+   - Auth: Never cache
+
+4. ✅ **Database Indexes** (50-70% query speedup)
+   - 19 selective indexes across 9 tables
+   - See `supabase/migrations/20251207110836_performance_indexes.sql`
+
+5. ✅ **Image Optimization**
+   - Auto-resize to 1200x800px
+   - 85% quality compression
+   - WebP generation
+
+6. ✅ **Optimistic UI** (Facebook-fast)
+   - <50ms perceived response
+   - Playbook, Game Plans, Team Bulletin
+   - Instant feedback with background sync
+
+7. ✅ **Preload Heavy Modals**
+   - FormationBuilderModal, GamePlanModal preloaded during idle (2s delay)
+   - <100ms modal open time
+
+8. ✅ **Virtual Scrolling**
+   - `react-virtuoso` for 200+ items
+   - PlayGrid component
+
+**Performance Targets**:
+- Page load: <2s initial, <1s cached
+- API response: <100ms perceived (optimistic UI)
+- Bundle: 2.83MB (975KB gzipped) - target <1.5MB
 
 ## Design System (MANDATORY)
 
@@ -78,7 +111,7 @@ Key tables: `teams`, `team_members`, `plays`, `playbooks`, `game_plans`, `game_p
 
 ### Design Token Hierarchy (Priority Order)
 
-1. **Component tokens** (highest): `btn-primary`, `card-padding`, `input-border` → See `src/styles/tailwind/boxcallTheme.js`
+1. **Component tokens** (highest): `btn-primary`, `card-padding`, `input-border`
 2. **Semantic tokens**: `text-primary`, `bg-surface-muted`, `border-divider`
 3. **Brand scales**: `jade-*`, `navy-*`, `neutral-*` (50-900 steps)
 4. **Layout tokens**: `spacing-md`, `space-4`, CSS variables (`--space-*`)
@@ -90,7 +123,83 @@ Example: Use `className="btn-primary"` not `bg-jade-600 text-white px-4 py-2`
 
 See `src/components/ui/Button/Button.tsx` - uses component tokens (`btn-primary`), haptic feedback on click, and focus-ring utility for accessibility.
 
-## Development Workflows
+## Key Systems & Patterns
+
+### 1. Unified API Client (December 2025)
+
+**Best Practice**: Use `api()` client for all Supabase queries (see `src/lib/api/client.ts`).
+
+```typescript
+import { api } from "@/lib/api";
+
+// Simple query
+const { data, error } = await api("plays")
+  .select("*")
+  .eq("playbook_id", playbookId);
+
+// Parallel queries (deduplicated)
+const [plays, formations] = await Promise.all([
+  api("plays").select("*").in("playbook_id", ids),
+  api("formations").select("*").in("playbook_id", ids),
+]);
+```
+
+**Features**:
+- Request deduplication (same query = one network request)
+- Automatic retry with exponential backoff (3 retries)
+- 30s timeout protection
+- Auth token sync (automatic)
+
+**Files**: `src/lib/api/client.ts`, `docs/architecture/API_ARCHITECTURE_DEC9_2025.md`
+
+### 2. React Query Configuration
+
+**Cache Strategy** (Optimized December 2025):
+- `staleTime: 10min` (data considered fresh)
+- `gcTime: 30min` (cache lifetime)
+- `refetchOnWindowFocus: false` (use cached data)
+- **Result**: 40% fewer API calls
+
+**Files**: `src/app/queryClient.ts`, `src/lib/queryClient.ts`
+
+### 3. Optimistic UI Pattern (Facebook-Fast)
+
+**Target**: <50ms perceived response time
+
+```typescript
+// 1. Instant UI update
+setOptimisticData(newData);
+
+// 2. Background server sync
+try {
+  const result = await api("table").insert(newData);
+  setData(result);
+} catch (error) {
+  // 3. Automatic rollback on error
+  setData(originalData);
+  toast.error("Failed to save");
+}
+```
+
+**Implemented In**: Playbook (play saves), Game Plans (CRUD), Team Bulletin (reactions/comments)
+
+### 4. Real-time Subscriptions
+
+```typescript
+useEffect(() => {
+  const channel = supabaseClient
+    .channel("my_channel")
+    .on("postgres_changes", { event: "*", schema: "public", table: "my_table" }, handleChange)
+    .subscribe();
+
+  // CRITICAL: Always clean up
+  return () => {
+    supabaseClient.removeChannel(channel);
+  };
+}, []);
+```
+
+**Used In**: Team Bulletin (announcements, reactions, comments)
 
 ### Initial Environment Setup
 
