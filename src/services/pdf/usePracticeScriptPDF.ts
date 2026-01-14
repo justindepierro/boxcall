@@ -3,7 +3,7 @@
  *
  * React hook and component for integrating PDF export functionality
  * with the practice planner components.
- * 
+ *
  * PERFORMANCE OPTIMIZATION: PDF exports use dynamic imports to avoid
  * loading 1.49MB of PDF libraries on initial page load.
  */
@@ -46,15 +46,16 @@ export const usePracticeScriptPDF = (): UsePracticeScriptPDFReturn => {
       try {
         setIsExporting(true);
         setError(null);
-        
+
         // Lazy load PDF library (1.49MB) only when needed
         const { exportPracticeScriptToPDF } = await import("./index");
-        
+
         const blob = await exportPracticeScriptToPDF(data, options);
         return blob;
       } catch (err) {
         // Handle both PDFError and dynamic import errors
-        const errorMessage = err instanceof Error ? err.message : "Failed to export PDF";
+        const errorMessage =
+          err instanceof Error ? err.message : "Failed to export PDF";
         setError(errorMessage);
         return null;
       } finally {
@@ -72,14 +73,15 @@ export const usePracticeScriptPDF = (): UsePracticeScriptPDFReturn => {
       try {
         setIsExporting(true);
         setError(null);
-        
+
         // Lazy load PDF library (1.49MB) only when needed
         const { downloadPracticeScriptPDF } = await import("./index");
-        
+
         await downloadPracticeScriptPDF(data, filename, options);
       } catch (err) {
         // Handle both PDFError and dynamic import errors
-        const errorMessage = err instanceof Error ? err.message : "Failed to download PDF";
+        const errorMessage =
+          err instanceof Error ? err.message : "Failed to download PDF";
         setError(errorMessage);
       } finally {
         setIsExporting(false);
@@ -95,15 +97,16 @@ export const usePracticeScriptPDF = (): UsePracticeScriptPDFReturn => {
       try {
         setIsExporting(true);
         setError(null);
-        
+
         // Lazy load PDF library (1.49MB) only when needed
         const { previewPracticeScriptPDF } = await import("./index");
-        
+
         const previewUrl = await previewPracticeScriptPDF(data, options);
         return previewUrl;
       } catch (err) {
         // Handle both PDFError and dynamic import errors
-        const errorMessage = err instanceof Error ? err.message : "Failed to generate PDF preview";
+        const errorMessage =
+          err instanceof Error ? err.message : "Failed to generate PDF preview";
         setError(errorMessage);
         return null;
       } finally {
