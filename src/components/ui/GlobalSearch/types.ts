@@ -80,6 +80,8 @@ export interface DesktopSearchFieldProps {
   getTypeIcon: (type: SearchResultType) => string;
   getTypeColor: (type: SearchResultType) => string;
   className?: string;
+  inputId?: string;
+  inputName?: string;
 }
 
 /**

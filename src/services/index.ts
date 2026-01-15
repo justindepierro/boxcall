@@ -11,7 +11,7 @@ export * from "./gameResultsService"; // Game results tracking
 export * from "./playAnalyticsService"; // Consolidates game planning + playbook analytics
 export * from "./playsService"; // Now includes playbook search
 export * from "./postsService";
-export * from "./practiceService"; // Now includes practice scripts
+export * from "./practice"; // Modular practice services and types
 export * from "./roleService";
 export * from "./rosterService";
 export * from "./statsService";

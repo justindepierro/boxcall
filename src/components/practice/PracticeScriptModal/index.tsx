@@ -11,8 +11,7 @@ import {
 } from "./validation";
 import { debug } from "../../../utils/logger";
 
-import type { PracticeScript } from "../../../services/practiceService";
-import type { PracticeScriptPlay as ServicePracticeScriptPlay } from "../../../services/practiceService";
+import type { PracticeScript, PracticeScriptPlay as ServicePracticeScriptPlay } from "@services";
 import type { PracticeScriptFormData, PracticeScriptPlay } from "./types";
 import type { Play } from "../../../types/play";
 
@@ -129,7 +128,7 @@ function buildServicePlays(plays: PracticeScriptPlay[]) {
 interface PracticeScriptModalProps {
   onClose: () => void;
   onSave: (script: Partial<PracticeScript>) => void;
-  editingScript?: PracticeScript; // From PracticeService
+  editingScript?: PracticeScript;
 }
 
 export const PracticeScriptModal: React.FC<PracticeScriptModalProps> = ({

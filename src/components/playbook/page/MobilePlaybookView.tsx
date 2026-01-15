@@ -47,7 +47,7 @@ import type {
   PlaybookAction,
   CoachingView,
 } from "../../../contexts/PlaybookContext";
-import type { PracticeScript } from "../../../services/practiceService";
+import type { PracticeScript } from "@services";
 
 const MOBILE_RENDER_WARN_THRESHOLD_MS = 20;
 

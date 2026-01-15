@@ -7,7 +7,7 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { CSVService } from "../csv";
 import type { GamePlan } from "../gamePlanService";
-import type { PracticeScript } from "../practiceService";
+import type { PracticeScript } from "../practice";
 import type { BackupData } from "./types";
 import { IndexedDBService } from "./IndexedDBService";
 import { CacheService } from "./CacheService";

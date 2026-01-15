@@ -9,8 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../app/auth-store";
 import { useToast } from "../../hooks/useToast";
 import { debug } from "../../utils/logger";
-import { PracticeService } from "../../services/practiceService";
-import type { PracticeScript } from "../../services/practiceService";
+import { PracticeScriptService } from "../../services/practice";
+import type { PracticeScript } from "../../services/practice";
 import type { User } from "@supabase/supabase-js";
 import {
   exportPracticeScripts,
@@ -45,7 +45,9 @@ function usePracticeScriptsData(params: {
 
     setLoading(true);
     try {
-      const scripts = await PracticeService.getPracticeScripts(activeTeamId);
+      const scripts = await PracticeScriptService.getPracticeScripts(
+        activeTeamId
+      );
       setPracticeScripts(scripts);
     } catch (error) {
       logError("Failed to load practice scripts:", error);
@@ -165,14 +167,14 @@ function usePracticePlansCrudHandlers(params: {
             if (!script.id) {
               throw new Error("Missing script ID for update");
             }
-            await PracticeService.updatePracticeScript(script.id, {
+            await PracticeScriptService.updatePracticeScript(script.id, {
               name: script.title || script.name || "Untitled Script",
               description: script.description,
               tags: script.tags,
             });
             toast.success("Practice script updated successfully");
           } else {
-            await PracticeService.createPracticeScript({
+            await PracticeScriptService.createPracticeScript({
               name: script.title || script.name || "Untitled Script",
               description: script.description,
               teamId: activeTeamId,
@@ -204,7 +206,10 @@ function usePracticePlansCrudHandlers(params: {
     async (script: PracticeScript) => {
       try {
         const newName = `${script.title || script.name} (Copy)`;
-        await PracticeService.duplicatePracticeScript(script.id, newName);
+          await PracticeScriptService.duplicatePracticeScript(
+            script.id,
+            newName
+          );
         await loadPracticeScripts();
         toast.success("Practice script duplicated successfully");
       } catch (error) {
@@ -219,10 +224,10 @@ function usePracticePlansCrudHandlers(params: {
     async (script: PracticeScript) => {
       try {
         if (script.isArchived) {
-          await PracticeService.unarchivePracticeScript(script.id);
+            await PracticeScriptService.unarchivePracticeScript(script.id);
           toast.success("Practice script restored");
         } else {
-          await PracticeService.archivePracticeScript(script.id);
+            await PracticeScriptService.archivePracticeScript(script.id);
           toast.success("Practice script archived");
         }
         await loadPracticeScripts();
@@ -283,7 +288,7 @@ function usePracticePlansImportExportHandlers(params: {
 
         for (const script of data.scripts) {
           try {
-            await PracticeService.createPracticeScript({
+            await PracticeScriptService.createPracticeScript({
               name: script.name,
               description: script.description || undefined,
               teamId: activeTeamId,
@@ -381,7 +386,7 @@ export function usePracticePlansHandlers() {
     if (!deleteScriptId) return;
 
     try {
-      await PracticeService.deletePracticeScript(deleteScriptId);
+      await PracticeScriptService.deletePracticeScript(deleteScriptId);
       await loadPracticeScripts();
       toast.success("Practice script deleted successfully");
     } catch (error) {

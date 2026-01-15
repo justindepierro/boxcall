@@ -3,7 +3,7 @@ import { Modal } from "../../ui/Modal";
 import type { Play } from "../../../types/play";
 import type { ModalType } from "../../../hooks/useModalManager";
 import type { PlaybookAction } from "../../../contexts/PlaybookContext";
-import type { PracticeScript } from "../../../services/practiceService";
+import type { PracticeScript } from "@services";
 
 // Lazy load modal components for code splitting (~120KB savings)
 const AddNewPlayModal = lazy(() =>

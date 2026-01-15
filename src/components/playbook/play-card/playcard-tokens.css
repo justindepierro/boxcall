@@ -1,0 +1,44 @@
+@tailwind components;
+
+@layer components {
+  /* PlayCard component tokens for play-type gradients */
+  .playcard-gradient-run {
+    @apply from-jade-500 to-emerald-600;
+  }
+
+  .playcard-badge-run {
+    @apply bg-gradient-to-r from-jade-500 to-emerald-600;
+  }
+
+  .playcard-gradient-pass {
+    @apply from-purple-500 to-indigo-500;
+  }
+
+  .playcard-badge-pass {
+    @apply bg-gradient-to-r from-purple-500 to-indigo-500;
+  }
+
+  .playcard-gradient-rpo {
+    @apply from-amber-500 to-orange-600;
+  }
+
+  .playcard-badge-rpo {
+    @apply bg-gradient-to-r from-amber-500 to-orange-600;
+  }
+
+  .playcard-gradient-playaction {
+    @apply from-orange-500 to-amber-600;
+  }
+
+  .playcard-badge-playaction {
+    @apply bg-gradient-to-r from-orange-500 to-amber-600;
+  }
+
+  .playcard-gradient-default {
+    @apply from-navy-600 to-blue-600;
+  }
+
+  .playcard-badge-default {
+    @apply bg-gradient-to-r from-navy-600 to-blue-600;
+  }
+}

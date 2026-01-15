@@ -79,7 +79,7 @@ const loadJson = <T,>(key: string, fallback: T): T => {
     : (stored ?? fallback);
 };
 
-export interface LegacyFeatureOptions {
+export interface PlayCardFeatureOptions {
   play: Play;
   showOneWordCalls?: boolean;
   directionDisplayFormat?: "full" | "abbrev" | "letter";
@@ -92,7 +92,7 @@ export interface LegacyFeatureOptions {
 }
 
 // eslint-disable-next-line max-lines-per-function
-export function useLegacyPlayCardFeatures({
+export function usePlayCardFeatures({
   play,
   showOneWordCalls = false,
   directionDisplayFormat = "full",
@@ -102,7 +102,7 @@ export function useLegacyPlayCardFeatures({
   playTypeSuggestions = [],
   personnelSuggestions = [],
   personnelConfigurations = [],
-}: LegacyFeatureOptions) {
+}: PlayCardFeatureOptions) {
   const { optimisticPlay, savingFields, handleInlineSave } = usePlayCardState({
     play,
     onSave,

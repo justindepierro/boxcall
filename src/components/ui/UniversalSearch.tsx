@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useId, useState, useRef } from "react";
 import { Icon } from "../ui/Icon";
 import { Tooltip } from "./Tooltip/Tooltip";
 
@@ -8,6 +8,8 @@ export interface UniversalSearchProps {
   placeholder?: string;
   className?: string;
   size?: "sm" | "md";
+  inputId?: string;
+  name?: string;
 }
 
 export const UniversalSearch: React.FC<UniversalSearchProps> = ({
@@ -16,9 +18,12 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({
   placeholder = "Search plays, formations, tags...",
   className = "",
   size = "md",
+  inputId,
+  name = "search-query",
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const generatedId = useId();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onSearchChange(e.target.value);
@@ -52,6 +57,8 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({
         <input
           ref={inputRef}
           type="search"
+          id={inputId ?? generatedId}
+          name={name}
           value={searchQuery}
           onChange={handleInputChange}
           onFocus={() => setIsFocused(true)}

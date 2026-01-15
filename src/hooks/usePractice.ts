@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { PracticeService } from "@services/practiceService";
+import {
+  PracticeScheduleService,
+  PracticeTemplateService,
+  PracticeSearchService,
+} from "@services";
 
 import type {
   CreatePracticeBlockData,
@@ -22,7 +26,10 @@ export function usePracticeSchedule(teamId: string, filters?: PracticeFilters) {
     try {
       setLoading(true);
       setError(null);
-      const data = await PracticeService.getPracticeSchedules(teamId, filters);
+      const data = await PracticeScheduleService.getPracticeSchedules(
+        teamId,
+        filters
+      );
       setSchedules(data);
     } catch (err) {
       setError(
@@ -39,7 +46,9 @@ export function usePracticeSchedule(teamId: string, filters?: PracticeFilters) {
   }, [fetchSchedules]);
   const createSchedule = async (data: CreatePracticeScheduleData) => {
     try {
-      const newSchedule = await PracticeService.createPracticeSchedule(data);
+      const newSchedule = await PracticeScheduleService.createPracticeSchedule(
+        data
+      );
       setSchedules((prev) => [...prev, newSchedule]);
       return newSchedule;
     } catch (err) {
@@ -56,7 +65,7 @@ export function usePracticeSchedule(teamId: string, filters?: PracticeFilters) {
     updates: Partial<PracticeSchedule>
   ) => {
     try {
-      const updatedSchedule = await PracticeService.updatePracticeSchedule(
+      const updatedSchedule = await PracticeScheduleService.updatePracticeSchedule(
         id,
         updates
       );
@@ -77,7 +86,7 @@ export function usePracticeSchedule(teamId: string, filters?: PracticeFilters) {
   };
   const deleteSchedule = async (id: string) => {
     try {
-      await PracticeService.deletePracticeSchedule(id);
+      await PracticeScheduleService.deletePracticeSchedule(id);
       setSchedules((prev) => prev.filter((schedule) => schedule.id !== id));
     } catch (err) {
       setError(
@@ -106,7 +115,7 @@ export function usePracticeBlocks(scheduleId: string) {
     try {
       setLoading(true);
       setError(null);
-      const newBlock = await PracticeService.addPracticeBlock(
+      const newBlock = await PracticeScheduleService.addPracticeBlock(
         scheduleId,
         blockData
       );
@@ -127,7 +136,11 @@ export function usePracticeBlocks(scheduleId: string) {
     try {
       setLoading(true);
       setError(null);
-      await PracticeService.updatePracticeBlock(scheduleId, blockId, updates);
+      await PracticeScheduleService.updatePracticeBlock(
+        scheduleId,
+        blockId,
+        updates
+      );
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to update practice block"
@@ -141,7 +154,7 @@ export function usePracticeBlocks(scheduleId: string) {
     try {
       setLoading(true);
       setError(null);
-      await PracticeService.reorderPracticeBlocks(scheduleId, blocks);
+      await PracticeScheduleService.reorderPracticeBlocks(scheduleId, blocks);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to reorder practice blocks"
@@ -155,7 +168,7 @@ export function usePracticeBlocks(scheduleId: string) {
     try {
       setLoading(true);
       setError(null);
-      await PracticeService.deletePracticeBlock(scheduleId, blockId);
+      await PracticeScheduleService.deletePracticeBlock(scheduleId, blockId);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to delete practice block"
@@ -184,7 +197,7 @@ export function usePracticeTemplates(teamId: string) {
     try {
       setLoading(true);
       setError(null);
-      const data = await PracticeService.getPracticeTemplates(teamId);
+      const data = await PracticeTemplateService.getPracticeTemplates(teamId);
       setTemplates(data);
     } catch (err) {
       setError(
@@ -204,7 +217,7 @@ export function usePracticeTemplates(teamId: string) {
   ) => {
     try {
       const newTemplate =
-        await PracticeService.createPracticeTemplate(template);
+        await PracticeTemplateService.createPracticeTemplate(template);
       setTemplates((prev) => [...prev, newTemplate]);
       return newTemplate;
     } catch (err) {
@@ -221,7 +234,7 @@ export function usePracticeTemplates(teamId: string) {
     scheduleData: CreatePracticeScheduleData
   ) => {
     try {
-      const schedule = await PracticeService.createScheduleFromTemplate(
+      const schedule = await PracticeTemplateService.createScheduleFromTemplate(
         templateId,
         scheduleData
       );
@@ -254,7 +267,9 @@ export function usePracticeAttendance(practiceId: string) {
     try {
       setLoading(true);
       setError(null);
-      const data = await PracticeService.getPracticeAttendance(practiceId);
+      const data = await PracticeScheduleService.getPracticeAttendance(
+        practiceId
+      );
       setAttendance(data);
     } catch (err) {
       setError(
@@ -275,7 +290,7 @@ export function usePracticeAttendance(practiceId: string) {
     notes?: string
   ) => {
     try {
-      const record = await PracticeService.recordAttendance(
+      const record = await PracticeScheduleService.recordAttendance(
         practiceId,
         playerId,
         status,
@@ -314,7 +329,7 @@ export function useEquipment(teamId: string) {
     try {
       setLoading(true);
       setError(null);
-      const data = await PracticeService.getAvailableEquipment(teamId);
+      const data = await PracticeScheduleService.getAvailableEquipment(teamId);
       setEquipment(data);
     } catch (err) {
       setError(
@@ -342,7 +357,10 @@ export function usePracticeSearch() {
     try {
       setLoading(true);
       setError(null);
-      const results = await PracticeService.searchPractices(query, teamId);
+      const results = await PracticeSearchService.searchPractices(
+        query,
+        teamId
+      );
       return results;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Search failed");

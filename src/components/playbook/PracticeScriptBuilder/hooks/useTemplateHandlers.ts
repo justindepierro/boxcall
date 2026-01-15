@@ -1,5 +1,8 @@
 import { useCallback } from "react";
-import { PracticeService, type PracticeScript } from "@services";
+import {
+  PracticeTemplateService,
+  type PracticeScript,
+} from "@services";
 import { useToast } from "../../../../hooks/useToast";
 import { error as logError } from "../../../../utils/logger";
 
@@ -32,13 +35,16 @@ export function useTemplateHandlers({
       }
 
       try {
-        await PracticeService.createTemplateFromScript(currentScript.id, {
+        await PracticeTemplateService.createTemplateFromScript(
+          currentScript.id,
+          {
           name: templateName,
           description,
           teamId,
           duration: currentScript.duration,
           isPublic: false,
-        });
+          }
+        );
         toast.success(`Template "${templateName}" created successfully`);
         setShowTemplateModal(false);
       } catch (error) {
@@ -52,7 +58,7 @@ export function useTemplateHandlers({
   const handleLoadFromTemplate = useCallback(
     async (templateId: string, scriptName: string) => {
       try {
-        const newScript = await PracticeService.createScriptFromTemplate(
+        const newScript = await PracticeTemplateService.createScriptFromTemplate(
           templateId,
           scriptName
         );

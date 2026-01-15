@@ -5,7 +5,7 @@
  */
 
 import type { IconName } from "../../components/ui/Icon";
-import type { PracticeScript } from "../../services/practiceService";
+import type { PracticeScript } from "../../services/practice";
 import type { SortOption } from "../../components/ui/SortDropdown";
 
 /**

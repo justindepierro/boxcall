@@ -6,7 +6,7 @@ import { Typography } from "../design-system/Typography";
 import Input from "../ui/Input/Input";
 import Textarea from "../ui/TextArea/TextArea";
 import { Badge } from "../ui/Badge";
-import { PracticeService } from "@services";
+import { PracticeTemplateService } from "@services";
 import type { PracticeTemplate } from "../../types/practice";
 import { useToast } from "../../hooks/useToast";
 import { triggerHapticFeedback } from "../../lib/hapticFeedback";
@@ -169,7 +169,9 @@ export const TemplateManagementModal: React.FC<
   const loadTemplates = useCallback(async () => {
     setLoading(true);
     try {
-      const loadedTemplates = await PracticeService.getTemplates(teamId);
+      const loadedTemplates = await PracticeTemplateService.getTemplates(
+        teamId
+      );
       setTemplates(loadedTemplates);
     } catch (error) {
       logError("Failed to load templates:", error);
@@ -220,7 +222,7 @@ export const TemplateManagementModal: React.FC<
     if (!deleteTemplateId) return;
 
     try {
-      await PracticeService.deleteTemplate(deleteTemplateId);
+      await PracticeTemplateService.deleteTemplate(deleteTemplateId);
       toast.success("Template deleted");
       loadTemplates(); // Refresh list
     } catch (error) {

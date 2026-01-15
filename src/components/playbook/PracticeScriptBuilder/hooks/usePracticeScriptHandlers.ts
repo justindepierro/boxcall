@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import type { DropResult } from "@hello-pangea/dnd";
-import { PracticeService, type PracticeScript } from "@services";
+import { PracticeScriptService, type PracticeScript } from "@services";
 import type { Play } from "../../../../types/play";
 import { useToast } from "../../../../hooks/useToast";
 import { triggerHapticFeedback } from "../../../../lib/hapticFeedback";
@@ -67,7 +67,7 @@ async function saveExistingScript(params: {
 }) {
   const { currentScript, scriptName, scriptDescription } = params;
 
-  let savedScript = await PracticeService.updatePracticeScript(
+  let savedScript = await PracticeScriptService.updatePracticeScript(
     currentScript.id,
     {
       name: scriptName.trim(),
@@ -78,10 +78,10 @@ async function saveExistingScript(params: {
 
   const batchUpdates = buildBatchUpdates(currentScript);
   if (batchUpdates.length > 0) {
-    await PracticeService.batchUpdateScriptPlays(batchUpdates);
+    await PracticeScriptService.batchUpdateScriptPlays(batchUpdates);
   }
 
-  const reloadedScript = await PracticeService.getPracticeScript(
+  const reloadedScript = await PracticeScriptService.getPracticeScript(
     currentScript.id
   );
   if (reloadedScript) {
@@ -99,14 +99,14 @@ async function createNewScriptWithPlays(params: {
 }) {
   const { currentScript, scriptName, scriptDescription, teamId } = params;
 
-  const savedScript = await PracticeService.createPracticeScript({
+  const savedScript = await PracticeScriptService.createPracticeScript({
     name: scriptName.trim(),
     description: scriptDescription.trim(),
     teamId,
   });
 
   for (const scriptPlay of currentScript.plays || []) {
-    await PracticeService.addPlayToScript(
+    await PracticeScriptService.addPlayToScript(
       {
         scriptId: savedScript.id,
         playId: scriptPlay.playId,
@@ -227,7 +227,7 @@ function usePracticeScriptPlayHandlers(params: {
       if (!currentScript) return;
 
       try {
-        const updatedScript = await PracticeService.addPlayToScript(
+        const updatedScript = await PracticeScriptService.addPlayToScript(
           {
             scriptId: currentScript.id,
             playId: play.id,

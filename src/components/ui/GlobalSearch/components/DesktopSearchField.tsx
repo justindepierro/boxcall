@@ -4,7 +4,7 @@
  * Desktop search input with dropdown results.
  */
 
-import React from "react";
+import React, { useId } from "react";
 import { Icon } from "../../Icon";
 import type { DesktopSearchFieldProps } from "../types";
 import { SearchResults } from "./SearchResults";
@@ -29,7 +29,10 @@ export const DesktopSearchField: React.FC<DesktopSearchFieldProps> = ({
   getTypeIcon,
   getTypeColor,
   className = "",
+  inputId,
+  inputName = "globalSearch",
 }) => {
+  const generatedId = useId();
   const shouldShowDropdown =
     isOpen &&
     (query.length > 0 || isLoading || (recentSearches?.length || 0) > 0);
@@ -49,8 +52,8 @@ export const DesktopSearchField: React.FC<DesktopSearchFieldProps> = ({
         {/* Input Field */}
         <input
           ref={inputRef}
-          id="global-search-desktop"
-          name="globalSearch"
+          id={inputId ?? generatedId}
+          name={inputName}
           type="search"
           value={query}
           onChange={onInputChange}

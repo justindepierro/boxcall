@@ -7,12 +7,12 @@ import { Card } from "../components/ui";
 import { Icon } from "../components/ui/Icon/Icon";
 import { Dropdown } from "../components/ui/Dropdown";
 import { useActiveTeamStore } from "../stores/activeTeamStore";
-import { PracticeService } from "../services/practiceService";
+import { PracticeScriptService } from "../services/practice";
 import { GamePlanService } from "../services/gamePlanService";
 import { ExecutionTrackingService } from "../services/executionTrackingService";
 import { triggerHapticFeedback } from "../lib/hapticFeedback";
 import { formatRelativeDate } from "../utils/dateFormatting";
-import type { PracticeScript } from "../services/practiceService";
+import type { PracticeScript } from "../services/practice";
 import type { GamePlan } from "../services/gamePlanService";
 import type { PracticeSession, GameSession } from "../types/session";
 import { debug, logError } from "../utils/logger";
@@ -483,7 +483,7 @@ const BoxCall: React.FC = () => {
     try {
       setLoading(true);
       const [scripts, plans, sessions] = await Promise.all([
-        PracticeService.getPracticeScripts(activeTeamId),
+        PracticeScriptService.getPracticeScripts(activeTeamId),
         GamePlanService.getGamePlans(activeTeamId),
         ExecutionTrackingService.getRecentSessions(activeTeamId, 5).catch(
           () => []

@@ -3,7 +3,7 @@ import { Typography } from "../design-system/Typography";
 import { Icon } from "../ui/Icon";
 import { Button } from "../ui/Button/Button";
 import { Badge } from "../ui/Badge";
-import { PracticeService, type PracticeScript } from "@services";
+import { PracticeScriptService, type PracticeScript } from "@services";
 import { useToast } from "../../hooks/useToast";
 import { debug, logError } from "../../utils/logger";
 import { ConfirmationModal } from "../ui/ConfirmationModal/ConfirmationModal";
@@ -219,7 +219,9 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
         "📋 [PracticeScriptList] Starting to load scripts for team:",
         teamId
       );
-      const fetchedScripts = await PracticeService.getPracticeScripts(teamId);
+      const fetchedScripts = await PracticeScriptService.getPracticeScripts(
+        teamId
+      );
       debug("📋 [PracticeScriptList] Loaded scripts:", {
         count: fetchedScripts.length,
         scripts: fetchedScripts.map((s) => ({
@@ -257,7 +259,7 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
     if (!deleteTarget) return;
 
     try {
-      await PracticeService.deletePracticeScript(deleteTarget.id);
+      await PracticeScriptService.deletePracticeScript(deleteTarget.id);
       success(`Deleted "${deleteTarget.name}"`);
       await loadScripts(); // Refresh the list
     } catch (err) {
@@ -272,7 +274,8 @@ export const PracticeScriptList: React.FC<PracticeScriptListProps> = ({
   const handleDuplicateScript = async (script: PracticeScript) => {
     try {
       const copyName = `${script.name} (Copy)`;
-      const duplicatedScript = await PracticeService.duplicatePracticeScript(
+      const duplicatedScript =
+        await PracticeScriptService.duplicatePracticeScript(
         script.id,
         copyName
       );

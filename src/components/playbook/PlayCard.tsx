@@ -1,686 +1,567 @@
-/* eslint-disable max-lines-per-function */
-
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import type { DropResult } from "@hello-pangea/dnd";
-import type { Play as PlayType } from "../../types/play";
-import type { PersonnelConfiguration } from "../../types/personnel";
-import { INSTALL_PHASES, type InstallPhase } from "../../types/play";
-import { getDisplayName, getSubtitleText } from "../../utils/playNameUtils";
-import { PlayCardListHeader } from "./play-card/PlayCardListHeader";
-import { PlayCardTileHeader } from "./play-card/PlayCardTileHeader";
-import { PlayCardDetails } from "./play-card/PlayCardDetails";
-import { PlayCardQuickActions } from "./play-card/PlayCardQuickActions";
-import { PlayDiagramTooltip } from "./play-card/PlayDiagramTooltip";
-import { PlayCardProvider } from "./play-card/context";
-import { useRecentPlays } from "../../hooks/useRecentPlays";
-import { useFavoritePlays } from "../../hooks/useFavoritePlays";
+/* eslint-disable max-lines-per-function, complexity */
+import React, { useEffect, useMemo, useState } from "react";
+import "./play-card/playcard-tokens.css";
+import { Icon, type IconName } from "../ui/Icon/Icon";
 import { useIsMobile } from "../../hooks/useBreakpoint";
-import { usePlayCardLayoutPreferences } from "../../hooks/usePlayCardLayoutPreferences";
-import { usePlayCardState } from "./play-card/hooks";
-import {
-  DEFAULT_FORMATION_SUGGESTIONS,
-  DEFAULT_PLAY_NAME_SUGGESTIONS,
-  getDirectionOptions,
-} from "./play-card/constants";
-import {
-  createFormationFields,
-  createPlayDetailsFields,
-  type FieldDefinitionMap,
-} from "./play-card/fieldDefinitions";
-import {
-  getConfidenceColor,
-  getPlayTypeColor,
-  normalizePlayText,
-} from "./play-card/helpers";
-import {
-  readLocalString,
-  readLocalJson,
-  writeLocalJson,
-  storageKeys,
-  writeLocalString,
-} from "../../utils/storage";
-import { usePlayFieldValues } from "./AddNewPlayModal/hooks/usePlayFieldValues";
-import { info } from "../../utils/logger";
+import { triggerHapticFeedback } from "../../lib/hapticFeedback";
+import type { Play } from "../../types/play";
+import type { PersonnelConfiguration } from "../../types/personnel";
+import { BadgeRow } from "./play-card/badges";
+import { PlayDiagramTooltip } from "./play-card/PlayDiagramTooltip";
+import { usePlayCardFeatures } from "./usePlayCardFeatures";
 
-interface PlayCardProps {
-  play: PlayType;
+const PLAYTYPE_STYLES: Record<string, { gradient: string; badge: string }> = {
+  run: {
+    gradient: "playcard-gradient-run",
+    badge: "playcard-badge-run",
+  },
+  pass: {
+    gradient: "playcard-gradient-pass",
+    badge: "playcard-badge-pass",
+  },
+  rpo: {
+    gradient: "playcard-gradient-rpo",
+    badge: "playcard-badge-rpo",
+  },
+  "play action": {
+    gradient: "playcard-gradient-playaction",
+    badge: "playcard-badge-playaction",
+  },
+  default: {
+    gradient: "playcard-gradient-default",
+    badge: "playcard-badge-default",
+  },
+};
+
+const clamp = (value: number, min = 0, max = 100) =>
+  Math.min(max, Math.max(min, value));
+
+const getPlayTypeStyle = (playType?: string) => {
+  if (!playType) return PLAYTYPE_STYLES.default;
+  const normalized = playType.toLowerCase();
+  return PLAYTYPE_STYLES[normalized] ?? PLAYTYPE_STYLES.default;
+};
+
+const confidenceColor = (value: number) => {
+  if (value >= 85) return "text-jade-600";
+  if (value >= 70) return "text-emerald-600";
+  if (value >= 60) return "text-amber-600";
+  if (value >= 50) return "text-orange-600";
+  return "text-red-600";
+};
+
+const StatPill: React.FC<{
+  icon: IconName;
+  label: string;
+  value?: string | number | null;
+}> = ({ icon, label, value }) => {
+  if (!value) return null;
+  return (
+    <div className="flex items-center gap-2 rounded-xl bg-bg-muted px-3 py-2 text-sm text-text-primary">
+      <Icon
+        name={icon}
+        size="sm"
+        className="text-text-secondary"
+        aria-hidden="true"
+      />
+      <div className="flex flex-col leading-tight">
+        <span className="text-xs text-text-secondary">{label}</span>
+        <span className="font-medium text-text-primary">{value}</span>
+      </div>
+    </div>
+  );
+};
+
+const ActionButton: React.FC<{
+  icon: IconName;
+  label: string;
+  colorClass: string;
+  onClick?: () => void;
+}> = ({ icon, label, colorClass, onClick }) => {
+  if (!onClick) return null;
+  return (
+    <button
+      type="button"
+      className={`h-9 w-9 rounded-full ${colorClass} transition-transform duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-jade-500 focus-visible:ring-offset-2 hover:scale-105 active:scale-95`}
+      onClick={(event) => {
+        event.stopPropagation();
+        triggerHapticFeedback("light");
+        onClick();
+      }}
+      aria-label={label}
+    >
+      <Icon name={icon} size="sm" className="text-current" aria-hidden="true" />
+    </button>
+  );
+};
+
+export interface PlayCardV2Props {
+  play: Play;
   showOneWordCalls?: boolean;
-  onEdit?: (play: PlayType) => void;
-  onSave?: (playId: string, updates: Partial<PlayType>) => Promise<void>;
-  onDuplicate?: (play: PlayType) => void;
-  onAddToPracticeScript?: (play: PlayType) => void;
-  onAddToGamePlan?: (play: PlayType) => void;
-  onOpenAssignments?: (play: PlayType) => void;
-  onPostToTeamBulletin?: (play: PlayType) => void;
-  onEnterFullscreen?: (plays: PlayType[], playIndex: number) => void;
-  allPlays?: PlayType[];
-  isSelected?: boolean;
+  onEdit?: (play: Play) => void;
+  onDuplicate?: (play: Play) => void;
+  onEnterFullscreen?: (plays: Play[], playIndex: number) => void;
+  onCreateDiagram?: (play: Play) => void;
+  onAddToPracticeScript?: (play: Play) => void;
+  onAddToGamePlan?: (play: Play) => void;
+  onOpenAssignments?: (play: Play) => void;
+  onPostToTeamBulletin?: (play: Play) => void;
   onSelectionChange?: (playId: string, selected: boolean) => void;
-  density?: "comfortable" | "compact";
-  variant?: "list" | "tile";
+  isSelected?: boolean;
+  isExpanded?: boolean;
+  onToggleExpand?: (playId: string) => void;
   directionDisplayFormat?: "full" | "abbrev" | "letter";
+  allPlays?: Play[];
+  isFocused?: boolean;
+  searchQuery?: string;
+  variant?: "list" | "tile";
+  density?: "comfortable" | "compact";
   formationSuggestions?: string[];
   playNameSuggestions?: string[];
   playTypeSuggestions?: string[];
   personnelSuggestions?: string[];
   personnelConfigurations?: PersonnelConfiguration[];
-  // Controlled expansion state
-  isExpanded?: boolean;
-  onToggleExpand?: (playId: string) => void;
-  // NEW: For validation
-  existingPlays?: PlayType[];
+  onSave?: (playId: string, updates: Partial<Play>) => Promise<void>;
+  existingPlays?: Play[];
 }
 
-type FieldVisibility = Record<string, boolean>;
-
-const INITIAL_FORMATION_ORDER = [
-  "formation",
-  // NOTE: "personnel" removed - should NOT appear in play display name
-  // Personnel is shown in the badge, not the title
-  "f_dir",
-  "back_align",
-  "back_position",
-  "shift",
-  "motion",
-  "ftags",
-];
-
-const INITIAL_FORMATION_VISIBILITY: FieldVisibility = {
-  formation: true,
-  personnel: false, // Personnel should NOT be in the display name
-  f_dir: true,
-  back_align: true,
-  back_position: true,
-  shift: true,
-  motion: true,
-  ftags: true,
-};
-
-const INITIAL_PLAY_DETAILS_ORDER = [
-  "play_name",
-  "p_dir",
-  "p_type",
-  "protection",
-  "check_into",
-  "ptags",
-  "tags",
-  "key_positions",
-  "key_players",
-  "one_word_play",
-  "wristband_number",
-  "confidence_base",
-];
-
-const INITIAL_PLAY_DETAILS_VISIBILITY: FieldVisibility = {
-  play_name: true,
-  p_dir: true,
-  p_type: true,
-  protection: true,
-  check_into: true,
-  ptags: true,
-  tags: true,
-  key_positions: true,
-  key_players: true,
-  one_word_play: true,
-  wristband_number: true,
-  confidence_base: true,
-};
-
-/**
- * PlayCard Component
- *
- * High complexity score (33) is due to many useMemo/useCallback hooks for performance.
- * The component is well-structured - each hook handles a specific concern:
- * - Display value computation (displayName, subtitleText, phaseLabel)
- * - Field configuration (formationFields, playDetailsFields)
- * - Visibility filtering (visibleFormationFields, visiblePlayDetailsFields)
- * - Event handlers (handleFormationDragEnd, handlePlayDetailsDragEnd, etc.)
- *
- * Refactoring into smaller components would require significant prop drilling
- * or additional context, which would add more complexity.
- */
-// eslint-disable-next-line complexity
-export const PlayCard: React.FC<PlayCardProps> = ({
-  play,
-  showOneWordCalls = false,
-  onEdit,
-  onSave,
-  onDuplicate,
-  onAddToPracticeScript,
-  onAddToGamePlan,
-  onOpenAssignments,
-  onPostToTeamBulletin,
-  onEnterFullscreen,
-  allPlays = [],
-  isSelected = false,
-  onSelectionChange,
-  density = "compact",
-  variant = "list",
-  directionDisplayFormat = "full",
-  formationSuggestions = [],
-  playNameSuggestions = [],
-  playTypeSuggestions = [],
-  personnelSuggestions = [],
-  personnelConfigurations = [],
-  isExpanded: controlledIsExpanded,
-  onToggleExpand,
-  existingPlays = [],
-}) => {
-  // Extract unique field values for validation
-  const fieldValues = usePlayFieldValues(existingPlays);
-
-  // Optimistic state management (extracted to hook)
-  const { optimisticPlay, savingFields, handleInlineSave } = usePlayCardState({
+export const PlayCardV2: React.FC<PlayCardV2Props> = React.memo(
+  ({
     play,
+    showOneWordCalls,
+    onEdit,
+    onDuplicate,
+    onEnterFullscreen,
+    onCreateDiagram,
+    onAddToPracticeScript,
+    onAddToGamePlan,
+    onOpenAssignments,
+    onPostToTeamBulletin,
     onSave,
-  });
+    onSelectionChange,
+    isSelected = false,
+    isExpanded,
+    onToggleExpand,
+    directionDisplayFormat = "full",
+    allPlays,
+    isFocused,
+    formationSuggestions,
+    playNameSuggestions,
+    playTypeSuggestions,
+    personnelSuggestions,
+    personnelConfigurations,
+  }) => {
+    const [expanded, setExpanded] = useState<boolean>(Boolean(isExpanded));
+    const isMobile = useIsMobile();
+    useEffect(() => {
+      if (typeof isExpanded === "boolean") {
+        setExpanded(isExpanded);
+      }
+    }, [isExpanded]);
 
-  // Layout preferences hook (currently unused)
-  usePlayCardLayoutPreferences(play.id, {
-    showImage: true,
-    showFormation: true,
-    showPersonnel: true,
-    showTags: true,
-    showNotes: false,
-    cardSize: "medium",
-  });
-
-  // Quick Wins: Recent plays tracking and favorites
-  const { trackPlayView } = useRecentPlays();
-  const { isFavorite, toggleFavorite } = useFavoritePlays();
-
-  // Mobile detection for responsive styling
-  const isMobile = useIsMobile();
-
-  // Field order and visibility state (restored from commit 8887b220)
-  const [formationFieldOrder] = useState<string[]>(INITIAL_FORMATION_ORDER);
-
-  // Initialize field visibility from localStorage with fallback to defaults
-  const [formationFieldVisibility, setFormationFieldVisibility] =
-    useState<FieldVisibility>(() => {
-      const stored = readLocalJson<FieldVisibility>(
-        storageKeys.preferences.formationFieldVisibility
-      );
-      return stored || INITIAL_FORMATION_VISIBILITY;
-    });
-
-  const [playDetailsFieldOrder] = useState<string[]>(
-    INITIAL_PLAY_DETAILS_ORDER
-  );
-
-  const [playDetailsFieldVisibility, setPlayDetailsFieldVisibility] =
-    useState<FieldVisibility>(() => {
-      const stored = readLocalJson<FieldVisibility>(
-        storageKeys.preferences.playDetailsFieldVisibility
-      );
-      return stored || INITIAL_PLAY_DETAILS_VISIBILITY;
-    });
-
-  // Use controlled expansion if provided, otherwise use internal state with localStorage persistence
-  const [internalIsExpanded, setInternalIsExpanded] = useState(() => {
-    // Load user's default preference from localStorage
-    const savedPreference = readLocalString(
-      storageKeys.playbook.playcardDefaultExpanded
-    );
-    return savedPreference === "true";
-  });
-  const isExpanded = controlledIsExpanded ?? internalIsExpanded;
-
-  // DEBUG: Log play data for the currently-expanded card (dev only)
-  useEffect(() => {
-    if (!import.meta.env.DEV) return;
-    if (!isExpanded) return;
-
-    info("[PlayCard] Expanded play from database:", {
-      id: play.id,
-      play_name: play.play_name,
-      formation: play.formation,
-      // Direction fields
-      formation_direction: play.formation_direction,
-      f_dir: play.f_dir,
-      formation_id: play.formation_id,
-      // Misc
-      f_type: play.f_type,
-      back_align: play.back_align,
-      shift: play.shift,
-      motion: play.motion,
-      r_str: play.r_str,
-      p_str: play.p_str,
-      protection: play.protection,
-      one_word_play: play.one_word_play,
-      wristband_number: play.wristband_number,
-    });
-  }, [isExpanded, play]);
-
-  const actualFormationSuggestions =
-    formationSuggestions.length > 0
-      ? formationSuggestions
-      : DEFAULT_FORMATION_SUGGESTIONS;
-  const actualPlayNameSuggestions =
-    playNameSuggestions.length > 0
-      ? playNameSuggestions
-      : DEFAULT_PLAY_NAME_SUGGESTIONS;
-
-  const directionOptions = getDirectionOptions(directionDisplayFormat);
-
-  const formationFields: FieldDefinitionMap = useMemo(
-    () =>
-      createFormationFields({
-        normalizeValue: normalizePlayText,
-        formationSuggestions: actualFormationSuggestions,
-        personnelSuggestions,
-        directionOptions,
-        formationTypeValues: fieldValues.formationTypes,
-        backfieldAlignmentValues: fieldValues.backfieldAlignments,
-        shiftValues: fieldValues.shifts,
-        motionValues: fieldValues.motions,
-      }),
-    [
-      actualFormationSuggestions,
-      personnelSuggestions,
-      directionOptions,
-      fieldValues,
-    ]
-  );
-
-  const playDetailsFields: FieldDefinitionMap = useMemo(
-    () =>
-      createPlayDetailsFields({
-        normalizeValue: normalizePlayText,
-        playNameSuggestions: actualPlayNameSuggestions,
-        playTypeSuggestions,
-        directionOptions,
-        protectionValues: fieldValues.protections,
-        wristbandValues: fieldValues.wristbandNumbers,
-      }),
-    [
-      actualPlayNameSuggestions,
-      playTypeSuggestions,
-      directionOptions,
-      fieldValues,
-    ]
-  );
-
-  const visibleFormationFields = useMemo(
-    () =>
-      formationFieldOrder.filter(
-        (key) => (formationFieldVisibility?.[key] ?? true) !== false
-      ),
-    [formationFieldOrder, formationFieldVisibility]
-  );
-
-  const visiblePlayDetailsFields = useMemo(
-    () =>
-      playDetailsFieldOrder.filter(
-        (key) => (playDetailsFieldVisibility?.[key] ?? true) !== false
-      ),
-    [playDetailsFieldOrder, playDetailsFieldVisibility]
-  );
-
-  const displayName = useMemo(
-    () =>
-      getDisplayName(
-        optimisticPlay,
-        showOneWordCalls,
-        visibleFormationFields,
-        visiblePlayDetailsFields,
-        directionDisplayFormat
-      ),
-    [
-      optimisticPlay,
-      showOneWordCalls,
-      visibleFormationFields,
-      visiblePlayDetailsFields,
+    const playCardFeatures = usePlayCardFeatures({
+      play,
+      showOneWordCalls: Boolean(showOneWordCalls),
       directionDisplayFormat,
-    ]
-  );
+      onSave,
+      formationSuggestions,
+      playNameSuggestions,
+      playTypeSuggestions,
+      personnelSuggestions,
+      personnelConfigurations,
+    });
 
-  const subtitleText = useMemo(
-    () => getSubtitleText(play, showOneWordCalls),
-    [play, showOneWordCalls]
-  );
+    const optimisticPlay = playCardFeatures.optimisticPlay;
+    const displayName = playCardFeatures.displayName;
+    const subtitleText = playCardFeatures.subtitleText;
 
-  const phaseLabel = useMemo(() => {
-    if (!play.install_phase) return null;
-    const value = play.install_phase as string;
-    const isPhase = (val: string): val is InstallPhase =>
-      (INSTALL_PHASES as readonly string[]).includes(val);
-    if (!isPhase(value)) return null;
-    return value
-      .replace("install", "Install ")
-      .replace("gameplan", "Game Plan")
-      .replace("situational", "Situational");
-  }, [play.install_phase]);
+    const playTypeStyle = useMemo(
+      () => getPlayTypeStyle(optimisticPlay.p_type),
+      [optimisticPlay.p_type]
+    );
 
-  const handleFormationDragEnd = useCallback(
-    (result: DropResult) => {
-      if (!result.destination) return;
-      const items = Array.from(formationFieldOrder);
-      const [reorderedItem] = items.splice(result.source.index, 1);
-      items.splice(result.destination.index, 0, reorderedItem);
-      // Field reordering removed with layout simplification
-      // patchPlayCardLayout({ formationFieldOrder: items });
-    },
-    [formationFieldOrder]
-  );
+    const confidence = useMemo(
+      () => clamp(optimisticPlay.confidence_base ?? 70),
+      [optimisticPlay.confidence_base]
+    );
 
-  const handlePlayDetailsDragEnd = useCallback(
-    (result: DropResult) => {
-      if (!result.destination) return;
-      const items = Array.from(playDetailsFieldOrder);
-      const [reorderedItem] = items.splice(result.source.index, 1);
-      items.splice(result.destination.index, 0, reorderedItem);
-      // Field reordering removed with layout simplification
-      // patchPlayCardLayout({ playDetailsFieldOrder: items });
-    },
-    [playDetailsFieldOrder]
-  );
+    const confidenceStroke = useMemo(() => {
+      const radius = 14;
+      const circumference = 2 * Math.PI * radius;
+      const filled = (confidence / 100) * circumference;
+      return `${Math.round(filled)} ${Math.round(circumference)}`;
+    }, [confidence]);
 
-  const toggleFieldVisibility = useCallback(
-    (fieldKey: string, section: "formation" | "playDetails") => {
-      if (section === "formation") {
-        setFormationFieldVisibility((prev) => {
-          const updated = {
-            ...prev,
-            [fieldKey]: prev[fieldKey] === false ? true : !prev[fieldKey],
-          };
-          // Persist to localStorage
-          writeLocalJson(
-            storageKeys.preferences.formationFieldVisibility,
-            updated
-          );
-          return updated;
-        });
-      } else {
-        setPlayDetailsFieldVisibility((prev) => {
-          const updated = {
-            ...prev,
-            [fieldKey]: prev[fieldKey] === false ? true : !prev[fieldKey],
-          };
-          // Persist to localStorage
-          writeLocalJson(
-            storageKeys.preferences.playDetailsFieldVisibility,
-            updated
-          );
-          return updated;
-        });
-      }
-    },
-    []
-  );
+    const directionLabel = useMemo(() => {
+      const dir = optimisticPlay.p_dir || optimisticPlay.f_dir;
+      if (!dir) return null;
+      if (directionDisplayFormat === "letter") return dir.charAt(0);
+      if (directionDisplayFormat === "abbrev") return dir.slice(0, 3);
+      return dir;
+    }, [directionDisplayFormat, optimisticPlay.f_dir, optimisticPlay.p_dir]);
 
-  const handleOpenAssignments = useCallback(() => {
-    if (onOpenAssignments) {
-      onOpenAssignments(play);
-    }
-  }, [onOpenAssignments, play]);
+    const tags = useMemo(
+      () =>
+        Array.isArray(optimisticPlay.tags)
+          ? optimisticPlay.tags.filter(Boolean)
+          : [],
+      [optimisticPlay.tags]
+    );
 
-  const isTile = variant === "tile";
-  const isCompact = !isTile && density === "compact";
+    const diagramUrl =
+      optimisticPlay.diagram_image_url ||
+      (optimisticPlay as any).diagram_url ||
+      undefined;
 
-  // Mobile-first padding: larger on mobile, scales down on desktop
-  const contentPaddingClass = isCompact
-    ? "p-5 sm:p-3 md:p-4"
-    : "p-6 sm:p-4 md:p-6";
+    const quickStats = useMemo(
+      () =>
+        [
+          {
+            icon: "users" as IconName,
+            label: "Personnel",
+            value: optimisticPlay.personnel,
+          },
+          {
+            icon: "chevron-right" as IconName,
+            label: "Direction",
+            value: directionLabel,
+          },
+          {
+            icon: "shield" as IconName,
+            label: "Protection",
+            value: optimisticPlay.protection,
+          },
+          {
+            icon: "activity" as IconName,
+            label: "Called",
+            value: optimisticPlay.times_called
+              ? `${optimisticPlay.times_called}x`
+              : null,
+          },
+        ].filter((stat) => Boolean(stat.value)),
+      [
+        directionLabel,
+        optimisticPlay.personnel,
+        optimisticPlay.protection,
+        optimisticPlay.times_called,
+      ]
+    );
 
-  const handleToggleExpand = useCallback(
-    (event?: React.MouseEvent) => {
-      // Prevent any event bubbling
-      if (event) {
-        event.stopPropagation();
+    const handleHeaderKeyDown = (
+      event: React.KeyboardEvent<HTMLDivElement>
+    ) => {
+      if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
+        handleToggleExpand();
+      }
+    };
+
+    const handleToggleExpand = () => {
+      const next = !expanded;
+      setExpanded(next);
+      onToggleExpand?.(optimisticPlay.id);
+      triggerHapticFeedback("selection");
+    };
+
+    const handleSelectChange = (selected: boolean) => {
+      onSelectionChange?.(optimisticPlay.id, selected);
+      triggerHapticFeedback("selection");
+    };
+
+    const handlePreviewClick = () => {
+      if (onEnterFullscreen) {
+        handleFullscreen();
+        return;
       }
 
-      // Track play view when expanding
-      if (!isExpanded) {
-        trackPlayView(play.id);
+      if (onCreateDiagram) {
+        onCreateDiagram(optimisticPlay);
       }
+    };
 
-      if (onToggleExpand) {
-        // Controlled mode - notify parent
-        onToggleExpand(play.id);
-      } else {
-        // Uncontrolled mode - manage internally and save preference
-        setInternalIsExpanded((prev) => {
-          const newState = !prev;
-          // Save user's preference for next time
-          writeLocalString(
-            storageKeys.playbook.playcardDefaultExpanded,
-            String(newState)
-          );
-          return newState;
-        });
-      }
-    },
-    [onToggleExpand, play.id, isExpanded, trackPlayView]
-  );
+    const handleFullscreen = () => {
+      if (!onEnterFullscreen) return;
+      const list =
+        allPlays && allPlays.length > 0 ? allPlays : [optimisticPlay];
+      const index = list.findIndex((p) => p.id === optimisticPlay.id);
+      onEnterFullscreen(list, index >= 0 ? index : 0);
+    };
 
-  return (
-    <PlayCardProvider
-      play={play}
-      onSave={onSave}
-      displayName={displayName}
-      subtitleText={subtitleText}
-      phaseLabel={phaseLabel}
-      isExpanded={isExpanded}
-      onToggleExpand={handleToggleExpand}
-      isFavorite={isFavorite(play.id)}
-      onToggleFavorite={() => toggleFavorite(play.id)}
-      isSelected={isSelected}
-      onSelectionChange={onSelectionChange}
-      personnelConfigurations={personnelConfigurations}
-      showOneWordCalls={showOneWordCalls}
-      directionDisplayFormat={directionDisplayFormat}
-      formationSuggestions={actualFormationSuggestions}
-      playNameSuggestions={actualPlayNameSuggestions}
-      playTypeSuggestions={playTypeSuggestions}
-      personnelSuggestions={personnelSuggestions}
-    >
+    return (
       <PlayDiagramTooltip
-        play={play}
+        play={optimisticPlay}
         displayName={displayName}
-        disabled={isExpanded || isMobile}
-        hoverDelay={2000} // 2 second delay for general card hover
-        allPlays={allPlays}
+        disabled={expanded || isMobile}
+        hoverDelay={900}
+        allPlays={allPlays || []}
         onEnterFullscreen={onEnterFullscreen}
       >
-        <div
-          className={`w-full rounded-xl border bg-white dark:bg-navy-800 transition-all duration-200 overflow-visible group ${
-            isSelected
-              ? "ring-2 ring-primary border-primary shadow-md"
-              : "border-neutral-200 dark:border-navy-700 shadow-sm hover:shadow-lg hover:border-jade-300 dark:hover:border-jade-600 hover:-translate-y-0.5"
-          } ${isCompact ? "text-[13px]" : ""} text-base sm:text-sm md:min-h-0`}
+        <article
+          className={`group relative overflow-hidden rounded-3xl border border-border bg-bg-surface/80 backdrop-blur-xl shadow-xl transition duration-200 hover:-translate-y-0.5 hover:shadow-2xl ${
+            isFocused ? "ring-2 ring-jade-500 ring-offset-2" : ""
+          } ${isSelected ? "outline outline-2 outline-offset-2 outline-jade-500" : ""}`}
+          aria-pressed={expanded}
+          aria-selected={isSelected}
         >
-          <div className={`${contentPaddingClass} overflow-visible`}>
-            {!isTile && play.diagram_url && (
-              <PlayDiagramTooltip
-                play={play}
-                displayName={displayName}
-                disabled={isExpanded || isMobile}
-                hoverDelay={0} // Instant for image hover
-                allPlays={allPlays}
-                onEnterFullscreen={onEnterFullscreen}
-              >
-                <div className="mb-3 -mt-1">
-                  <img
-                    src={play.diagram_url}
-                    alt={`${displayName} diagram preview`}
-                    className="w-full h-40 object-cover rounded-xl border border-muted cursor-pointer"
-                    loading="lazy"
-                    decoding="async"
+          <div
+            className={`absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r ${playTypeStyle.gradient}`}
+            aria-hidden="true"
+          />
+
+          <div className="flex flex-col gap-4 p-4">
+            <header
+              className="flex items-start gap-3 cursor-pointer"
+              role="button"
+              tabIndex={0}
+              aria-expanded={expanded}
+              onClick={handleToggleExpand}
+              onKeyDown={handleHeaderKeyDown}
+            >
+              {onSelectionChange && (
+                <div className="pt-1">
+                  <input
+                    type="checkbox"
+                    className="h-5 w-5 rounded-md border-border bg-bg-surface text-jade-600 focus:ring-2 focus:ring-jade-500"
+                    checked={isSelected}
+                    onChange={(event) =>
+                      handleSelectChange(event.target.checked)
+                    }
+                    onClick={(event) => event.stopPropagation()}
+                    aria-label="Select play"
                   />
                 </div>
-              </PlayDiagramTooltip>
-            )}
+              )}
 
-            {isTile ? (
-              <>
-                <PlayCardTileHeader
-                  play={play}
-                  optimisticPlay={optimisticPlay}
-                  displayName={displayName}
-                  subtitleText={subtitleText}
-                  showOneWordCalls={showOneWordCalls}
-                  isSelected={isSelected}
-                  onSelectionChange={onSelectionChange}
-                  onOpenAssignments={handleOpenAssignments}
-                  phaseLabel={phaseLabel}
-                  isFavorite={isFavorite(play.id)}
-                  onToggleFavorite={() => toggleFavorite(play.id)}
-                  isExpanded={isExpanded}
-                  onToggleExpand={handleToggleExpand}
-                  personnelConfigurations={personnelConfigurations}
-                />
-
-                {/* Quick Actions - always visible */}
-                <PlayCardQuickActions
-                  play={play}
-                  onAddToPracticeScript={onAddToPracticeScript}
-                  onAddToGamePlan={onAddToGamePlan}
-                  onOpenAssignments={handleOpenAssignments}
-                  onPostToTeamBulletin={onPostToTeamBulletin}
-                />
-
-                {/* Animated expansion for tile details */}
-                {/* 3-TIER DESIGN: Fast expand/collapse animation (Facebook-fast: 200ms) */}
-                <AnimatePresence>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{
-                        duration: 0.2,
-                        ease: [0.4, 0, 0.2, 1],
-                        opacity: { duration: 0.15 },
-                      }}
-                      className="overflow-hidden"
-                    >
-                      <div className="pt-6 mt-6 border-t border-muted">
-                        <PlayCardDetails
-                          play={play}
-                          optimisticPlay={optimisticPlay}
-                          showOneWordCalls={showOneWordCalls}
-                          phaseLabel={phaseLabel}
-                          handleInlineSave={handleInlineSave}
-                          savingFields={savingFields}
-                          formationFieldOrder={formationFieldOrder}
-                          formationFields={formationFields}
-                          formationFieldVisibility={
-                            formationFieldVisibility ||
-                            INITIAL_FORMATION_VISIBILITY
-                          }
-                          toggleFieldVisibility={toggleFieldVisibility}
-                          handleFormationDragEnd={handleFormationDragEnd}
-                          playDetailsFieldOrder={playDetailsFieldOrder}
-                          playDetailsFields={playDetailsFields}
-                          playDetailsFieldVisibility={
-                            playDetailsFieldVisibility ||
-                            INITIAL_PLAY_DETAILS_VISIBILITY
-                          }
-                          handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
-                          getPlayTypeColor={getPlayTypeColor}
-                          getConfidenceColor={getConfidenceColor}
-                          existingPlays={existingPlays}
-                        />
-                      </div>
-                    </motion.div>
+              <div className="flex-1 space-y-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h3 className="truncate font-mono text-lg font-semibold text-text-primary tracking-tight">
+                    {displayName}
+                  </h3>
+                  {subtitleText && (
+                    <span className="text-sm font-mono font-medium text-text-secondary truncate">
+                      {subtitleText}
+                    </span>
                   )}
-                </AnimatePresence>
-              </>
-            ) : (
-              <PlayCardListHeader
-                play={play}
-                optimisticPlay={optimisticPlay}
-                displayName={displayName}
-                subtitleText={subtitleText}
-                showOneWordCalls={showOneWordCalls}
-                isSelected={isSelected}
-                onSelectionChange={onSelectionChange}
-                isCompact={isCompact}
-                isExpanded={isExpanded}
-                onToggleExpand={handleToggleExpand}
-                onEdit={onEdit}
-                onDuplicate={onDuplicate}
-                onOpenAssignments={handleOpenAssignments}
-                getPlayTypeColor={getPlayTypeColor}
-                getConfidenceColor={getConfidenceColor}
-                phaseLabel={phaseLabel}
-                isFavorite={isFavorite(play.id)}
-                onToggleFavorite={() => toggleFavorite(play.id)}
-                personnelConfigurations={personnelConfigurations}
+                  <span
+                    className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold text-white shadow-sm ${playTypeStyle.badge}`}
+                  >
+                    {optimisticPlay.p_type || "Play"}
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2 text-sm text-text-secondary">
+                  <span className="font-medium text-text-primary">
+                    {optimisticPlay.formation}
+                  </span>
+                  {directionLabel && <span>• {directionLabel}</span>}
+                  {optimisticPlay.personnel && (
+                    <span>• {optimisticPlay.personnel}</span>
+                  )}
+                  {optimisticPlay.one_word_play && !showOneWordCalls && (
+                    <span className="rounded-md bg-bg-muted px-2 py-0.5 text-xs font-medium text-text-secondary">
+                      {optimisticPlay.one_word_play}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className="relative flex items-center justify-center">
+                <div className="relative h-16 w-16">
+                  <svg
+                    className="h-full w-full -rotate-90"
+                    viewBox="0 0 36 36"
+                    role="img"
+                    aria-label={`Confidence ${confidence}%`}
+                  >
+                    <circle
+                      cx="18"
+                      cy="18"
+                      r="14"
+                      fill="none"
+                      className="stroke-border"
+                      strokeWidth="3"
+                    />
+                    <circle
+                      cx="18"
+                      cy="18"
+                      r="14"
+                      fill="none"
+                      className={confidenceColor(confidence)}
+                      strokeWidth="3"
+                      stroke="currentColor"
+                      strokeDasharray={confidenceStroke}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-text-primary">
+                    {confidence}
+                  </span>
+                </div>
+              </div>
+            </header>
+
+            <BadgeRow
+              play={optimisticPlay}
+              isExpanded={expanded}
+              personnelConfigurations={personnelConfigurations}
+                phaseLabel={playCardFeatures.phaseLabel}
+              getConfidenceColor={confidenceColor}
+            />
+
+            <div className="flex flex-wrap items-center gap-2">
+              <ActionButton
+                icon="edit"
+                label="Edit play"
+                colorClass="bg-jade-100 text-jade-700 hover:bg-jade-200"
+                onClick={onEdit ? () => onEdit(optimisticPlay) : undefined}
               />
+              <ActionButton
+                icon="copy"
+                label="Duplicate play"
+                colorClass="bg-blue-100 text-blue-700 hover:bg-blue-200"
+                onClick={
+                  onDuplicate ? () => onDuplicate(optimisticPlay) : undefined
+                }
+              />
+              <ActionButton
+                icon="image"
+                label="Open diagram"
+                colorClass="bg-purple-100 text-purple-700 hover:bg-purple-200"
+                onClick={
+                  onCreateDiagram
+                    ? () => onCreateDiagram(optimisticPlay)
+                    : handleFullscreen
+                }
+              />
+              <ActionButton
+                icon="clipboard"
+                label="Add to practice"
+                colorClass="bg-amber-100 text-amber-700 hover:bg-amber-200"
+                onClick={
+                  onAddToPracticeScript
+                    ? () => onAddToPracticeScript(optimisticPlay)
+                    : undefined
+                }
+              />
+              <ActionButton
+                icon="target"
+                label="Add to game plan"
+                colorClass="bg-navy-100 text-navy-700 hover:bg-navy-200"
+                onClick={
+                  onAddToGamePlan
+                    ? () => onAddToGamePlan(optimisticPlay)
+                    : undefined
+                }
+              />
+              <ActionButton
+                icon="users"
+                label="Assignments"
+                colorClass="bg-cyan-100 text-cyan-700 hover:bg-cyan-200"
+                onClick={
+                  onOpenAssignments
+                    ? () => onOpenAssignments(optimisticPlay)
+                    : undefined
+                }
+              />
+              <ActionButton
+                icon="message-circle"
+                label="Post to team bulletin"
+                colorClass="bg-pink-100 text-pink-700 hover:bg-pink-200"
+                onClick={
+                  onPostToTeamBulletin
+                    ? () => onPostToTeamBulletin(optimisticPlay)
+                    : undefined
+                }
+              />
+            </div>
+
+            {diagramUrl && (
+              <div className="relative">
+                <button
+                  type="button"
+                  className="group relative w-full overflow-hidden rounded-2xl border border-border bg-bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-jade-500 focus-visible:ring-offset-2"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    handlePreviewClick();
+                  }}
+                  aria-label="Open play diagram preview"
+                >
+                  <img
+                    src={diagramUrl}
+                    alt="Play diagram"
+                    className="h-44 w-full object-cover transition duration-200 group-hover:scale-[1.02]"
+                    loading="lazy"
+                  />
+                  <div
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg-surface/40 via-transparent to-transparent transition duration-200 group-hover:from-bg-surface/60"
+                    aria-hidden="true"
+                  />
+                  <div className="pointer-events-none absolute bottom-3 right-3 flex items-center gap-2 rounded-full bg-bg-surface px-3 py-1 text-xs font-semibold text-text-primary shadow-md">
+                    <Icon
+                      name="maximize"
+                      size="sm"
+                      className="text-text-secondary"
+                      aria-hidden="true"
+                    />
+                    <span>Fullscreen preview</span>
+                  </div>
+                </button>
+              </div>
             )}
 
-            {/* Quick Actions - always visible in list view too */}
-            {!isTile && (
-              <PlayCardQuickActions
-                play={play}
-                onAddToPracticeScript={onAddToPracticeScript}
-                onAddToGamePlan={onAddToGamePlan}
-                onOpenAssignments={handleOpenAssignments}
-                onPostToTeamBulletin={onPostToTeamBulletin}
-              />
+            {expanded && (
+              <div className="space-y-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {quickStats.map((stat) => (
+                    <StatPill
+                      key={stat.label}
+                      icon={stat.icon}
+                      label={stat.label}
+                      value={stat.value}
+                    />
+                  ))}
+                </div>
+
+                {tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {tags.slice(0, 8).map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full bg-bg-muted px-3 py-1 text-xs font-medium text-text-primary"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                <div className="pt-2">{playCardFeatures.details}</div>
+              </div>
             )}
 
-            {!isTile && isExpanded && (
-              <PlayCardDetails
-                play={play}
-                optimisticPlay={optimisticPlay}
-                showOneWordCalls={showOneWordCalls}
-                phaseLabel={phaseLabel}
-                handleInlineSave={handleInlineSave}
-                savingFields={savingFields}
-                formationFieldOrder={formationFieldOrder}
-                formationFields={formationFields}
-                formationFieldVisibility={
-                  formationFieldVisibility || INITIAL_FORMATION_VISIBILITY
-                }
-                toggleFieldVisibility={toggleFieldVisibility}
-                handleFormationDragEnd={handleFormationDragEnd}
-                playDetailsFieldOrder={playDetailsFieldOrder}
-                playDetailsFields={playDetailsFields}
-                playDetailsFieldVisibility={
-                  playDetailsFieldVisibility || INITIAL_PLAY_DETAILS_VISIBILITY
-                }
-                handlePlayDetailsDragEnd={handlePlayDetailsDragEnd}
-                getPlayTypeColor={getPlayTypeColor}
-                getConfidenceColor={getConfidenceColor}
-                existingPlays={existingPlays}
+            <button
+              type="button"
+              className="flex w-full items-center justify-between rounded-2xl bg-bg-muted px-3 py-2 text-sm font-medium text-text-primary transition hover:bg-bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-jade-500 focus-visible:ring-offset-2"
+              onClick={(event) => {
+                event.stopPropagation();
+                handleToggleExpand();
+              }}
+              aria-expanded={expanded}
+            >
+              <span>{expanded ? "Hide details" : "Show details"}</span>
+              <Icon
+                name={expanded ? "chevron-up" : "chevron-down"}
+                size="sm"
+                className="text-text-secondary"
+                aria-hidden="true"
               />
-            )}
+            </button>
           </div>
-        </div>
+        </article>
       </PlayDiagramTooltip>
-    </PlayCardProvider>
-  );
-};
+    );
+  }
+);
 
-// 🚀 PERFORMANCE: Memoize PlayCard to prevent unnecessary re-renders
-// Only re-render when props actually change (not on parent re-renders)
-export default React.memo(PlayCard, (prevProps, nextProps) => {
-  // Quick bailout for identity checks
-  if (prevProps.play.id !== nextProps.play.id) return false;
-  if (prevProps.isSelected !== nextProps.isSelected) return false;
-  if (prevProps.isExpanded !== nextProps.isExpanded) return false;
-  if (prevProps.showOneWordCalls !== nextProps.showOneWordCalls) return false;
-  if (prevProps.variant !== nextProps.variant) return false;
-  if (prevProps.density !== nextProps.density) return false;
-  if (prevProps.directionDisplayFormat !== nextProps.directionDisplayFormat)
-    return false;
-
-  // Deep check on play object (only critical fields that affect rendering)
-  const p = prevProps.play;
-  const n = nextProps.play;
-  if (p.play_name !== n.play_name) return false;
-  if (p.formation !== n.formation) return false;
-  if (p.p_type !== n.p_type) return false;
-  if (p.times_called !== n.times_called) return false;
-  if (p.install_phase !== n.install_phase) return false;
-
-  // Functions are stable via useCallback, so we can skip deep comparison
-  // If they change, parent wants a re-render anyway
-
-  return true; // Props are equal, skip re-render
-});
+PlayCardV2.displayName = "PlayCard";
+export const PlayCard = PlayCardV2;

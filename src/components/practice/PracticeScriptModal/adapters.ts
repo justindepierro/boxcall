@@ -6,7 +6,7 @@
  */
 
 import type { PracticeScriptPlay as ModalPlay } from "./types";
-import type { AddPlayToPracticeScriptData } from "../../../services/practiceService";
+import type { AddPlayToPracticeScriptData } from "@services";
 
 // Hash mapping
 const mapHash = (hash?: string): "left" | "middle" | "right" => {

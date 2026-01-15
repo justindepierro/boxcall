@@ -9,7 +9,7 @@ import Icon from "../../../components/ui/Icon/Icon";
 import { Button } from "../../../components/ui/Button/Button";
 import { Typography } from "../../../components/design-system/Typography";
 import { ScriptCard } from "./ScriptCard";
-import type { PracticeScript } from "../../../services/practiceService";
+import type { PracticeScript } from "../../../services/practice";
 
 interface ScriptsListSectionProps {
   activeScripts: PracticeScript[];

@@ -3,7 +3,7 @@
  * Handles JSON export and import for practice scripts with validation
  */
 
-import type { PracticeScript } from "../services/practiceService";
+import type { PracticeScript } from "../services/practice";
 
 export interface ExportedPracticeScript {
   version: "1.0";

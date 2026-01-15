@@ -19,7 +19,7 @@ import type {
   PlaybookAction,
 } from "../../../contexts/PlaybookContext";
 import type { PlaybookFilters } from "../../../types/filters";
-import type { PracticeScript } from "../../../services/practiceService";
+import type { PracticeScript } from "@services";
 import type { PlaySortOption } from "../../../types/filters";
 import type { PlaybookStats } from "../../../hooks/usePlaybookStats";
 

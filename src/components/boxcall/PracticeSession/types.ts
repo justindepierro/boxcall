@@ -8,7 +8,7 @@ import type { ExecutionResult } from "../../../types/session";
 import type {
   PracticeScript,
   PracticeScriptPlay,
-} from "../../../services/practiceService";
+} from "@services";
 import type { Play } from "../../../types/play";
 import type { SessionStats } from "../../../hooks/usePracticeSession";
 

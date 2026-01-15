@@ -5,7 +5,7 @@
  */
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { PracticeService } from "../services/practiceService";
+import { PracticeScriptService } from "../services/practice";
 import { ExecutionTrackingService } from "../services/executionTrackingService";
 import { useActiveTeamStore } from "../stores/activeTeamStore";
 import type {
@@ -13,10 +13,7 @@ import type {
   ExecutionResult,
   CreatePracticeSessionData,
 } from "../types/session";
-import type {
-  PracticeScript,
-  PracticeScriptPlay,
-} from "../services/practiceService";
+import type { PracticeScript, PracticeScriptPlay } from "../services/practice";
 import { debug, error as logError } from "../utils/logger";
 
 /**
@@ -137,7 +134,7 @@ function usePracticeScriptLoader(practiceScriptId: string) {
         debug(`[usePracticeSession] Loading script: ${practiceScriptId}`);
 
         const script =
-          await PracticeService.getPracticeScript(practiceScriptId);
+          await PracticeScriptService.getPracticeScript(practiceScriptId);
         if (!script) {
           debug(
             `[usePracticeSession] Script not found for ID: ${practiceScriptId}`

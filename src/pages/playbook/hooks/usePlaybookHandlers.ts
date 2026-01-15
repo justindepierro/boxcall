@@ -1,13 +1,13 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Play } from "../../../types/play";
-import type { PracticeScript } from "../../../services/practiceService";
+import type { PracticeScript } from "@services";
 import type {
   PlaybookState,
   CoachingView,
 } from "../../../contexts/PlaybookContext";
 import type { PlaybookFilters, PlaySortOption } from "../../../types/filters";
-import { PlaysService, PracticeService } from "@services";
+import { PlaysService, PracticeScriptService } from "@services";
 import { exportPlays } from "../../../services/exportService";
 import { useToast } from "../../../hooks/useToast";
 import { error as logError, info, debug } from "../../../utils/logger";
@@ -387,7 +387,7 @@ function usePlaybookWorkflowHandlers(params: {
           toast.error("No active team selected");
           return;
         }
-        const script = await PracticeService.createQuickScript(
+        const script = await PracticeScriptService.createQuickScript(
           play,
           activeTeamId
         );
